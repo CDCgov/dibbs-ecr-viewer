@@ -286,7 +286,7 @@ def test_upload_bundle_to_fhir_server_request_params_success_500(
         bundle["entry"].append(single_resource)
 
     my_count = len(bundle.get("entry"))
-    assert my_count == 545
+    assert my_count == 518
     manager = "azure"
     fhir_url = "some-FHIR-server-URL"
     test_request = {
@@ -348,7 +348,7 @@ def test_upload_bundle_to_fhir_server_partial_success_500(
         bundle["entry"].append(single_resource)
 
     my_count = len(bundle.get("entry"))
-    assert my_count == 545
+    assert my_count == 518
     test_request = {
         "bundle": bundle,
         "cred_manager": "azure",
