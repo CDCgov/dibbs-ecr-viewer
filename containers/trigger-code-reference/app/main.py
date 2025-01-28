@@ -2,7 +2,6 @@ import string
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import Body
 from fastapi import Query
 from fastapi import Response
 
@@ -31,15 +30,6 @@ app = BaseService(
     openapi_url="/trigger-code-reference/openapi.json",
 ).start()
 
-# Load up the stamping annotated examples
-stamp_conditions_request_examples = read_json_from_assets(
-    "sample_stamp_condition_extensions_requests.json"
-)
-stamp_conditions_response_examples_raw = read_json_from_assets(
-    "sample_stamp_condition_extensions_responses.json"
-)
-stamp_conditions_response_examples = {200: stamp_conditions_response_examples_raw}
-
 
 @app.get("/")
 async def health_check():
@@ -51,15 +41,9 @@ async def health_check():
     return {"status": "OK"}
 
 
-@app.post(
-    "/stamp-condition-extensions",
-    status_code=200,
-    responses=stamp_conditions_response_examples,
-)
+@app.post("/stamp-condition-extensions", status_code=200)
 async def stamp_condition_extensions(
-    input: Annotated[
-        InsertConditionInput, Body(examples=stamp_conditions_request_examples)
-    ],
+    input: InsertConditionInput,
 ) -> Response:
     """
     Extends the resources of a supplied FHIR bundle with extension tags
