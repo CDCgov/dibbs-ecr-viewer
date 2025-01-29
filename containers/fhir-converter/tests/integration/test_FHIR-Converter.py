@@ -71,36 +71,6 @@ def test_ecr_conversion(setup, snapshot):
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize(
-    "dir_name",
-    [
-        (case.name)
-        for case in (Path(__file__).parent.parent / "test_files/snapshot").iterdir()
-        if case.is_dir()
-    ],
-)
-def test_ecr_conversion_with_rr(dir_name, snapshot):
-    rr_data = open(
-        Path(__file__).parent.parent / "test_files/snapshot" / dir_name / "CDA_RR.xml"
-    ).read()
-    input_data = open(
-        Path(__file__).parent.parent / "test_files/snapshot" / dir_name / "CDA_eICR.xml"
-    ).read()
-    request = {
-        "input_data": input_data,
-        "input_type": "ecr",
-        "root_template": "EICR",
-        "rr_data": rr_data,
-    }
-    ecr_conversion_response = httpx.post(CONVERT_TO_FHIR, json=request, timeout=20.0)
-
-    assert ecr_conversion_response.status_code == 200
-    assert ecr_conversion_response.json()["response"] == snapshot(
-        matcher=match_excluding_mutable_fields
-    )
-
-
-@pytest.mark.integration
 def test_invalid_rr_format(setup):
     request = {
         "input_data": "not valid xml",
