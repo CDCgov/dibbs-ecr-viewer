@@ -221,7 +221,6 @@ def test_convert_valid_request(
     global valid_response
     patched_subprocess_run.return_value = mock.Mock(returncode=0)
     patched_json_load.return_value = valid_response
-    patched_file_path = mock.Mock()
     actual_response = client.post(
         "/convert-to-fhir",
         json=valid_request,
@@ -253,7 +252,6 @@ def test_convert_valid_request_with_rr_data(
 ):
     patched_subprocess_run.return_value = mock.Mock(returncode=0)
     patched_json_load.return_value = valid_response
-    patched_file_path = mock.Mock()
     patched_add_rr_data_to_eicr.return_value = "VALID_INPUT_DATA + RR"
     actual_response = client.post(
         "/convert-to-fhir",
@@ -276,7 +274,6 @@ def test_convert_conversion_failure(
 ):
     patched_subprocess_run.return_value = mock.Mock(returncode=1)
     patched_json_load.return_value = valid_response
-    patched_file_path = mock.Mock()
 
     actual_response = client.post(
         "/convert-to-fhir",
