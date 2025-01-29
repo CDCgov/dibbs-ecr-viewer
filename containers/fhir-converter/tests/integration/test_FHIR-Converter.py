@@ -116,4 +116,3 @@ def test_invalid_rr_format(setup):
         == "Reportability Response and eICR message both "
         "must be valid XML messages."
     )
-
