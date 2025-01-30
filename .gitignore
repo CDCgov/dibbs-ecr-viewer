@@ -14,7 +14,11 @@
 
 # Local Data Storage
 __pycache__/
+
 # Code coverage
 **/coverage/
 .coverage
 coverage.xml
+
+#Environment
+.env
