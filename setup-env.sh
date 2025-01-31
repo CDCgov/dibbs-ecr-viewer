@@ -7,7 +7,7 @@ YELLOW="\033[33m"
 CYAN="\033[36m"
 RESET="\033[0m"
 
-ENV_FILE_NAME="${1:-.env.local}"
+ENV_FILE_NAME="${1:-.env}"
 
 
 if [ ! -f  $ENV_FILE_NAME ]; then
