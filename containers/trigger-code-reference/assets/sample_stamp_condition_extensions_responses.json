@@ -1,0 +1,978 @@
+{
+  "description": "Success",
+  "content": {
+    "application/json": {
+      "examples": {
+        "Stamping an eICR": {
+          "summary": "Extended bundle response for a stamped eICR",
+          "value": {
+            "extended_bundle": {
+              "resourceType": "Bundle",
+              "id": "eicr-rr-batch-bundle",
+              "type": "batch",
+              "entry": [
+                {
+                  "fullUrl": "urn:uuid:2efff959-4359-458b-8b69-f1c60f5070bc",
+                  "resource": {
+                    "resourceType": "Patient",
+                    "id": "patient-saga-anderson-001",
+                    "meta": {
+                      "profile": [
+                        "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-patient"
+                      ]
+                    },
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Patient:</b> Ms. Saga Anderson, Female, DoB: 1987-11-11</p></div>"
+                    },
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+                        "extension": [
+                          {
+                            "url": "ombCategory",
+                            "valueCoding": {
+                              "system": "urn:oid:2.16.840.1.113883.6.238",
+                              "code": "2054-5",
+                              "display": "Black or African American"
+                            }
+                          },
+                          {
+                            "url": "text",
+                            "valueString": "Black or African American"
+                          }
+                        ]
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
+                        "extension": [
+                          {
+                            "url": "ombCategory",
+                            "valueCoding": {
+                              "system": "urn:oid:2.16.840.1.113883.6.238",
+                              "code": "2186-5",
+                              "display": "Not Hispanic or Latino"
+                            }
+                          },
+                          {
+                            "url": "text",
+                            "valueString": "Not Hispanic or Latino"
+                          }
+                        ]
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+                        "valueCode": "F"
+                      }
+                    ],
+                    "identifier": [
+                      {
+                        "use": "usual",
+                        "type": {
+                          "coding": [
+                            {
+                              "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                              "code": "MR",
+                              "display": "Medical Record Number"
+                            }
+                          ]
+                        },
+                        "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                        "value": "MRN123456"
+                      },
+                      {
+                        "use": "official",
+                        "type": {
+                          "coding": [
+                            {
+                              "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                              "code": "SB",
+                              "display": "Social Beneficiary Identifier"
+                            }
+                          ]
+                        },
+                        "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                        "value": "SSN987-65-4320"
+                      },
+                      {
+                        "use": "secondary",
+                        "system": "http://hospital-system.org",
+                        "value": "HSP12345678"
+                      }
+                    ],
+                    "active": true,
+                    "name": [
+                      {
+                        "use": "official",
+                        "text": "Ms. Saga Anderson",
+                        "family": "Anderson",
+                        "given": ["Saga"],
+                        "prefix": ["Ms."]
+                      }
+                    ],
+                    "telecom": [
+                      {
+                        "system": "phone",
+                        "value": "206-555-0123",
+                        "use": "home"
+                      },
+                      {
+                        "system": "email",
+                        "value": "saga.anderson@example.com",
+                        "use": "home"
+                      }
+                    ],
+                    "gender": "female",
+                    "birthDate": "1987-11-11",
+                    "deceasedBoolean": false,
+                    "address": [
+                      {
+                        "use": "home",
+                        "type": "both",
+                        "text": "6 Watery Lighthouse Trailer Park Way, Unit #2, Watery, WA, 98440",
+                        "line": [
+                          "6 Watery Lighthouse Trailer Park Way",
+                          "Unit #2"
+                        ],
+                        "city": "Watery",
+                        "state": "WA",
+                        "postalCode": "98440",
+                        "country": "US"
+                      }
+                    ],
+                    "maritalStatus": {
+                      "coding": [
+                        {
+                          "system": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
+                          "code": "M",
+                          "display": "Married"
+                        }
+                      ]
+                    },
+                    "contact": [
+                      {
+                        "relationship": [
+                          {
+                            "coding": [
+                              {
+                                "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+                                "code": "C",
+                                "display": "Emergency Contact"
+                              }
+                            ]
+                          }
+                        ],
+                        "name": {
+                          "family": "Woods",
+                          "given": ["David"]
+                        },
+                        "telecom": [
+                          {
+                            "system": "phone",
+                            "value": "(703) 555-1234",
+                            "use": "home"
+                          }
+                        ],
+                        "address": {
+                          "line": ["3 Night Springs Lane"],
+                          "city": "Fairfax",
+                          "state": "VA",
+                          "postalCode": "22030",
+                          "country": "US"
+                        }
+                      },
+                      {
+                        "relationship": [
+                          {
+                            "coding": [
+                              {
+                                "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+                                "code": "N",
+                                "display": "Next-of-Kin"
+                              }
+                            ]
+                          }
+                        ],
+                        "name": {
+                          "family": "Anderson",
+                          "given": ["Logan"]
+                        },
+                        "gender": "female",
+                        "telecom": [
+                          {
+                            "system": "phone",
+                            "value": "(703) 555-5678",
+                            "use": "home"
+                          }
+                        ],
+                        "address": {
+                          "line": ["3 Night Springs Lane"],
+                          "city": "Fairfax",
+                          "state": "VA",
+                          "postalCode": "22030",
+                          "country": "US"
+                        }
+                      }
+                    ],
+                    "communication": [
+                      {
+                        "language": {
+                          "coding": [
+                            {
+                              "system": "urn:ietf:bcp:47",
+                              "code": "en-US",
+                              "display": "English (Region=United)"
+                            }
+                          ]
+                        },
+                        "preferred": true
+                      }
+                    ]
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Patient/patient-saga-anderson-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:d4a6b124-0aea-4b5d-9453-ba70f7770d26",
+                  "resource": {
+                    "resourceType": "Practitioner",
+                    "id": "practitioner-emma-nelson-001",
+                    "meta": {
+                      "profile": [
+                        "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
+                      ]
+                    },
+                    "identifier": [
+                      {
+                        "use": "official",
+                        "system": "http://hl7.org/fhir/sid/us-npi",
+                        "value": "1234567890",
+                        "type": {
+                          "coding": [
+                            {
+                              "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                              "code": "NPI",
+                              "display": "National Provider Identifier"
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "name": [
+                      {
+                        "family": "Nelson",
+                        "given": ["Emma"],
+                        "prefix": ["Dr."]
+                      }
+                    ],
+                    "telecom": [
+                      {
+                        "system": "phone",
+                        "value": "206-555-0987",
+                        "use": "work"
+                      },
+                      {
+                        "system": "email",
+                        "value": "emma.nelson@nelsonpractice.org",
+                        "use": "work"
+                      }
+                    ],
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Generated Narrative for Practitioner</div>"
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Practitioner/practitioner-emma-nelson-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:e591b5a8-06f5-4ca6-a074-527f9a17ab0f",
+                  "resource": {
+                    "resourceType": "Organization",
+                    "id": "organization-nelson-family-practice-001",
+                    "meta": {
+                      "profile": [
+                        "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-organization"
+                      ]
+                    },
+                    "identifier": [
+                      {
+                        "use": "official",
+                        "system": "http://hl7.org/fhir/sid/us-npi",
+                        "value": "9876543210",
+                        "type": {
+                          "coding": [
+                            {
+                              "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                              "code": "NPI",
+                              "display": "National Provider Identifier"
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "name": "Nelson Family Practice",
+                    "address": [
+                      {
+                        "line": ["123 Harbor St"],
+                        "city": "Bright Falls",
+                        "state": "WA",
+                        "postalCode": "98440",
+                        "country": "United States"
+                      }
+                    ],
+                    "telecom": [
+                      {
+                        "system": "phone",
+                        "value": "206-555-0199",
+                        "use": "work"
+                      },
+                      {
+                        "system": "email",
+                        "value": "info@nelsonpractice.org",
+                        "use": "work"
+                      }
+                    ],
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Generated Narrative for Organization</div>"
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Organization/organization-nelson-family-practice-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:bb63a3d8-714d-4418-adbb-4f585f069c0b",
+                  "resource": {
+                    "resourceType": "Encounter",
+                    "id": "encounter-eicr-saga-anderson-001",
+                    "status": "finished",
+                    "class": {
+                      "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                      "code": "AMB",
+                      "display": "Ambulatory"
+                    },
+                    "subject": {
+                      "reference": "Patient/patient-saga-anderson-001"
+                    },
+                    "period": {
+                      "start": "2021-08-02T09:00:00Z",
+                      "end": "2021-08-02T10:30:00Z"
+                    },
+                    "type": [
+                      {
+                        "coding": [
+                          {
+                            "system": "http://snomed.info/sct",
+                            "code": "11429006",
+                            "display": "Consultation"
+                          }
+                        ]
+                      }
+                    ],
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Generated Narrative for Encounter</div>"
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Encounter/encounter-eicr-saga-anderson-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:f4416101-ff31-4dce-b262-da92ed4bac11",
+                  "resource": {
+                    "resourceType": "Condition",
+                    "id": "condition-covid19-001",
+                    "clinicalStatus": {
+                      "coding": [
+                        {
+                          "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                          "code": "active",
+                          "display": "Active"
+                        }
+                      ]
+                    },
+                    "verificationStatus": {
+                      "coding": [
+                        {
+                          "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                          "code": "confirmed",
+                          "display": "Confirmed"
+                        }
+                      ]
+                    },
+                    "category": [
+                      {
+                        "coding": [
+                          {
+                            "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+                            "code": "encounter-diagnosis",
+                            "display": "Encounter Diagnosis"
+                          }
+                        ]
+                      }
+                    ],
+                    "code": {
+                      "coding": [
+                        {
+                          "system": "http://snomed.info/sct",
+                          "code": "840539006",
+                          "display": "COVID-19"
+                        }
+                      ]
+                    },
+                    "subject": {
+                      "reference": "Patient/patient-saga-anderson-001"
+                    },
+                    "encounter": {
+                      "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                    },
+                    "onsetDateTime": "2021-08-02T09:15:00Z",
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Generated Narrative for Condition</div>"
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Condition/condition-covid19-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:5c2227c9-4266-405c-b488-02683ef5dd37",
+                  "resource": {
+                    "resourceType": "Observation",
+                    "id": "observation-covid19-pcr-001",
+                    "meta": {
+                      "profile": [
+                        "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-observation"
+                      ]
+                    },
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">COVID-19 PCR Test Result: Detected</div>"
+                    },
+                    "status": "final",
+                    "category": [
+                      {
+                        "coding": [
+                          {
+                            "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                            "code": "laboratory",
+                            "display": "Laboratory"
+                          }
+                        ]
+                      }
+                    ],
+                    "code": {
+                      "coding": [
+                        {
+                          "system": "http://loinc.org",
+                          "code": "94500-6",
+                          "display": "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory system specimen by NAA with probe detection"
+                        }
+                      ],
+                      "text": "COVID-19 PCR Test"
+                    },
+                    "subject": {
+                      "reference": "Patient/patient-saga-anderson-001"
+                    },
+                    "encounter": {
+                      "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                    },
+                    "effectiveDateTime": "2021-08-03T12:45:00Z",
+                    "performer": [
+                      {
+                        "reference": "Organization/organization-nelson-family-practice-001"
+                      }
+                    ],
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://snomed.info/sct",
+                          "code": "260373001",
+                          "display": "Detected"
+                        }
+                      ],
+                      "text": "COVID-19 RNA Detected"
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Observation/observation-covid19-pcr-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:a228ecdc-1fd9-46b2-a01c-37f9dd5b73ac",
+                  "resource": {
+                    "resourceType": "Observation",
+                    "id": "observation-rr-covid19-001",
+                    "status": "final",
+                    "category": [
+                      {
+                        "coding": [
+                          {
+                            "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                            "code": "laboratory",
+                            "display": "Laboratory"
+                          }
+                        ]
+                      }
+                    ],
+                    "code": {
+                      "coding": [
+                        {
+                          "system": "http://loinc.org",
+                          "code": "94531-1",
+                          "display": "SARS-CoV-2 (COVID-19) RNA panel - Respiratory system specimen by NAA with probe detection"
+                        }
+                      ]
+                    },
+                    "subject": {
+                      "reference": "Patient/patient-saga-anderson-001"
+                    },
+                    "encounter": {
+                      "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                    },
+                    "effectiveDateTime": "2021-08-03T12:45:00Z",
+                    "performer": [
+                      {
+                        "reference": "Organization/organization-nelson-family-practice-001"
+                      }
+                    ],
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://snomed.info/sct",
+                          "code": "260373001",
+                          "display": "Detected"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "profile": [
+                        "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-observation"
+                      ]
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Observation/observation-rr-covid19-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:8dd7b315-1993-4327-b486-87822fe4b013",
+                  "resource": {
+                    "resourceType": "Observation",
+                    "id": "observation-condition-status-001",
+                    "status": "final",
+                    "code": {
+                      "coding": [
+                        {
+                          "system": "http://loinc.org",
+                          "code": "85668-2",
+                          "display": "Deprecated Long-Term Care Hospital (LTCH) Continuity Assessment Record and Evaluation (CARE) Data Set (LCDS) - Unplanned Discharge - version 3.00 [CMS Assessment]"
+                        }
+                      ]
+                    },
+                    "subject": {
+                      "reference": "Patient/patient-saga-anderson-001"
+                    },
+                    "effectiveDateTime": "2021-08-03T12:45:00Z",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://snomed.info/sct",
+                          "code": "840539006",
+                          "display": "COVID-19"
+                        }
+                      ]
+                    },
+                    "performer": [
+                      {
+                        "reference": "Organization/organization-nelson-family-practice-001"
+                      }
+                    ],
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Generated Narrative for Reportable Condition Observation</div>"
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Observation/observation-condition-status-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:bdeb53b2-b19a-4d3d-a110-35115fd8a486",
+                  "resource": {
+                    "resourceType": "Observation",
+                    "id": "observation-eicr-status-001",
+                    "meta": {
+                      "profile": [
+                        "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation"
+                      ]
+                    },
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>eICR was processed</p></div>"
+                    },
+                    "status": "final",
+                    "code": {
+                      "coding": [
+                        {
+                          "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                          "code": "RRVS17",
+                          "display": "eICR was processed"
+                        }
+                      ]
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Observation/observation-eicr-status-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:777f46c2-2969-4520-9d7a-3c32d7fef55c",
+                  "resource": {
+                    "resourceType": "Composition",
+                    "id": "composition-eicr-covid19-001",
+                    "meta": {
+                      "profile": [
+                        "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
+                      ]
+                    },
+                    "identifier": {
+                      "system": "http://hospital-system.org/compositions",
+                      "value": "eicr-covid19-identifier-001"
+                    },
+                    "status": "final",
+                    "type": {
+                      "coding": [
+                        {
+                          "system": "http://loinc.org",
+                          "code": "55751-2",
+                          "display": "Public health Case report"
+                        }
+                      ]
+                    },
+                    "subject": {
+                      "reference": "Patient/patient-saga-anderson-001"
+                    },
+                    "encounter": {
+                      "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                    },
+                    "date": "2021-08-03T12:45:00Z",
+                    "author": [
+                      {
+                        "reference": "Practitioner/practitioner-emma-nelson-001"
+                      }
+                    ],
+                    "custodian": {
+                      "reference": "Organization/organization-nelson-family-practice-001"
+                    },
+                    "title": "COVID-19 Public Health Case Report",
+                    "section": [
+                      {
+                        "title": "Reason for Visit",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "51852-2",
+                              "display": "Letter"
+                            }
+                          ]
+                        },
+                        "entry": [
+                          {
+                            "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                          }
+                        ]
+                      },
+                      {
+                        "title": "Chief Complaint",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "10154-3",
+                              "display": "Chief complaint Narrative - Reported"
+                            }
+                          ]
+                        },
+                        "entry": [
+                          {
+                            "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                          }
+                        ],
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Chief Complaint: COVID-19 related symptoms reported by the patient.</div>"
+                        }
+                      },
+                      {
+                        "title": "Condition",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://snomed.info/sct",
+                              "code": "840539006",
+                              "display": "COVID-19"
+                            }
+                          ]
+                        },
+                        "entry": [
+                          {
+                            "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                          }
+                        ]
+                      },
+                      {
+                        "title": "Results",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "11502-2",
+                              "display": "Laboratory report"
+                            }
+                          ]
+                        },
+                        "entry": [
+                          {
+                            "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                          }
+                        ]
+                      },
+                      {
+                        "title": "History of Present Illness",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "11348-0",
+                              "display": "History of Past illness Narrative"
+                            }
+                          ]
+                        },
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Patient reports 5-day history of fever, cough, and difficulty breathing, consistent with COVID-19.</div>"
+                        }
+                      },
+                      {
+                        "title": "Problem Section",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "11450-4",
+                              "display": "Problem list - Reported"
+                            }
+                          ]
+                        },
+                        "entry": [
+                          {
+                            "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                          }
+                        ],
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Primary Problem: COVID-19 infection.</div>"
+                        }
+                      },
+                      {
+                        "title": "Medications Administered",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "29549-3",
+                              "display": "Medication administered Narrative"
+                            }
+                          ]
+                        },
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Administered medications include acetaminophen for fever management.</div>"
+                        }
+                      },
+                      {
+                        "title": "Social History",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "29762-2",
+                              "display": "Social history Narrative"
+                            }
+                          ]
+                        },
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Patient reports no recent travel, but has been in contact with confirmed COVID-19 cases.</div>"
+                        }
+                      }
+                    ],
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">COVID-19 Public Health Case Report</div>"
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Composition/composition-eicr-covid19-001"
+                  }
+                },
+                {
+                  "fullUrl": "urn:uuid:91efaa54-69f2-4cd7-a43d-2e739a9c7730",
+                  "resource": {
+                    "resourceType": "Composition",
+                    "id": "composition-rr-covid19-001",
+                    "meta": {
+                      "versionId": "1",
+                      "lastUpdated": "2024-09-26T00:00:00.000Z",
+                      "profile": [
+                        "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-composition"
+                      ]
+                    },
+                    "identifier": {
+                      "system": "http://acme.org/identifiers",
+                      "value": "RR12347"
+                    },
+                    "status": "final",
+                    "type": {
+                      "coding": [
+                        {
+                          "system": "http://loinc.org",
+                          "code": "88085-6",
+                          "display": "Reportability response report Document Public health"
+                        }
+                      ]
+                    },
+                    "subject": {
+                      "reference": "Patient/patient-saga-anderson-001"
+                    },
+                    "encounter": {
+                      "reference": "Encounter/encounter-eicr-saga-anderson-001"
+                    },
+                    "date": "2024-09-26T12:30:00Z",
+                    "author": [
+                      {
+                        "reference": "Organization/organization-nelson-family-practice-001"
+                      }
+                    ],
+                    "custodian": {
+                      "reference": "Organization/organization-nelson-family-practice-001"
+                    },
+                    "title": "COVID-19 Reportability Response",
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber",
+                        "valueString": "1"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-information-recipient-extension",
+                        "valueReference": {
+                          "reference": "Practitioner/practitioner-emma-nelson-001"
+                        }
+                      }
+                    ],
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">This is the narrative content for the reportability response</div>"
+                    },
+                    "section": [
+                      {
+                        "title": "Reportability Response Subject Section",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "88084-9",
+                              "display": "Reportable condition response information and summary Document"
+                            }
+                          ]
+                        },
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Public Health Reporting: COVID-19 is reportable.</div>"
+                        },
+                        "entry": [
+                          {
+                            "reference": "Observation/observation-rr-covid19-001"
+                          }
+                        ]
+                      },
+                      {
+                        "extension": [
+                          {
+                            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension",
+                            "extension": [
+                              {
+                                "url": "eICRProcessingStatus",
+                                "valueReference": {
+                                  "reference": "Observation/observation-eicr-status-001",
+                                  "display": "Processed"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-priority-extension",
+                            "valueCodeableConcept": {
+                              "coding": [
+                                {
+                                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                                  "code": "RRVS17",
+                                  "display": "Immediate action required"
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "title": "COVID-19 Reportability Response Summary Section",
+                        "code": {
+                          "coding": [
+                            {
+                              "system": "http://loinc.org",
+                              "code": "55112-7",
+                              "display": "Document summary"
+                            }
+                          ]
+                        },
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">COVID-19 is reportable to public health. Immediate action is required.</div>"
+                        },
+                        "entry": [
+                          {
+                            "reference": "Observation/observation-rr-covid19-001"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "url": "Composition/composition-rr-covid19-001"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
