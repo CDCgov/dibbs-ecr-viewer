@@ -272,10 +272,6 @@ export const evaluateSocialData = (
       value: evaluateValue(fhirBundle, mappings["patientSexualOrientation"]),
     },
     {
-      title: "Gender Identity",
-      value: evaluateValue(fhirBundle, mappings["patientGenderIdentity"]),
-    },
-    {
       title: "Occupation",
       value: evaluateValue(fhirBundle, mappings["patientCurrentJobTitle"]),
     },
@@ -301,6 +297,8 @@ export const evaluateDemographicsData = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
+  const patientSex = toTitleCase(evaluate(fhirBundle, mappings.patientGender)[0]);
+
   const demographicsData: DisplayDataProps[] = [
     {
       title: "Patient Name",
@@ -331,7 +329,7 @@ export const evaluateDemographicsData = (
     },
     {
       title: "Sex",
-      value: toTitleCase(evaluate(fhirBundle, mappings.patientGender)[0]),
+      value: patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "Unknown",
     },
     {
       title: "Race",
