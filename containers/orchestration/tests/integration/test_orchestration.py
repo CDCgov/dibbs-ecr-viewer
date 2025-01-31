@@ -302,7 +302,7 @@ async def test_websocket_process_message_endpoint(setup):
                     "message_ids": {
                         "eicr": {
                             "extension": None,
-                            "root": "1.2.840.114350.1.13.297.3.7.8.688883.532013",
+                            "root": "c34356e3-e6e7-4905-b239-c26c6e493921",
                         },
                         "rr": {},
                     },
