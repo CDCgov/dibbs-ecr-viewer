@@ -1,0 +1,86 @@
+{
+  "message": "Parsing succeeded!",
+  "parsed_values": {
+    "patient_id": "c800bcb0-642b-4ecc-8166-ca70b0c730c3",
+    "person_id": null,
+    "last_name": "Patient",
+    "first_name": "Joseph",
+    "birth_date": "1989-07-30",
+    "gender": "male",
+    "race": "American Indian or Alaska Native",
+    "ethnicity": "Hispanic or Latino",
+    "street_address1": "2222 Home Street",
+    "street_address2": null,
+    "state": "CA",
+    "zip": "94203",
+    "latitude": null,
+    "longitude": null,
+    "rr_id": "2b9f69c9-1a9b-4190-8514-f56304600c1b",
+    "status": "RRVS19",
+    "conditions": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+    "eicr_set_id": "8d86218e-0fea-11eb-8216-a80388425cfb",
+    "eicr_id": "38e6a983-38ad-484f-a7d2-b294cdbe5435",
+    "eicr_version_number": "1",
+    "replaced_eicr_id": null,
+    "replaced_eicr_version": null,
+    "authoring_datetime": "2020-05-05T11:05:15-04:00",
+    "provider_id": "66666666666",
+    "facility_id_number": "2.16.840.1.113883.4.6",
+    "facility_name": "Sacramento Hospital",
+    "facility_type": "Hospital",
+    "encounter_type": "inpatient encounter",
+    "encounter_start_date": "2020-05-13",
+    "encounter_end_date": "2020-05-13",
+    "reason_for_visit": "recent travel for vacation to Wuhan China from April 22, 2020 to                            May 5, 2020 ",
+    "active_problems": [],
+    "labs": [
+      {
+        "test_type": "SARS coronavirus 2 N gene [Presence] in Unspecified specimen by Nucleic acid amplification using primer-probe set N2",
+        "test_type_code": "94310-0",
+        "test_type_system": "http://loinc.org",
+        "test_result_qualitative": null,
+        "test_result_quantitative": null,
+        "test_result_units": null,
+        "test_result_code": "260373001",
+        "test_result_code_display": "Detected (qualifier value)",
+        "test_result_code_system": "http://snomed.info/sct",
+        "test_result_interp": null,
+        "test_result_interp_code": null,
+        "test_result_interp_system": null,
+        "test_result_ref_range_low": null,
+        "test_result_ref_range_low_units": null,
+        "test_result_ref_range_high": null,
+        "test_result_ref_range_high_units": null,
+        "specimen_type": null,
+        "performing_lab": null,
+        "specimen_collection_date": null
+      }
+    ],
+    "birth_sex": null,
+    "gender_identity": null,
+    "homelessness_status": null,
+    "disabilities": null,
+    "tribal_affiliation": null,
+    "tribal_enrollment_status": null,
+    "current_job_title": null,
+    "current_job_industry": null,
+    "usual_occupation": null,
+    "usual_industry": null,
+    "preferred_language": "Spanish",
+    "pregnancy_status": null,
+    "rr": [
+      {
+        "uuid": "ec693d87-8f08-47cb-845f-eb72ea0cd019",
+        "condition": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+        "rule_summaries": [
+          {
+            "summary": "COVID-19 (as a diagnosis or                                                  active problem)"
+          },
+          {
+            "summary": "Detection of SARS-CoV-2                                                  nucleic acid in a clinical specimen by any                                                  method"
+          }
+        ]
+      }
+    ]
+  }
+}
