@@ -66,7 +66,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up env vars
         working-directory: ./containers/${{env.CONTAINER}}
-        run: ../setup-env.sh
+        run: ../../setup-env.sh
       - name: Setup python ${{env.TEST_RUNNER_PYTHON_VERSION}}
         uses: actions/setup-python@v5
         with:
@@ -100,7 +100,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up env vars
         working-directory: ./containers/${{env.CONTAINER}}
-        run: ../setup-env.sh
+        run: ../../setup-env.sh
       - name: Setup python ${{env.TEST_RUNNER_PYTHON_VERSION}}
         uses: actions/setup-python@v5
         with:

@@ -10,7 +10,7 @@
     "local-docker": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up'",
     "local-docker:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --build'",
     "local-docker:silent": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up -d'",
-    "setup-local-env": "./setup-env.sh",
+    "setup-local-env": "../../setup-env.sh .env.local",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
