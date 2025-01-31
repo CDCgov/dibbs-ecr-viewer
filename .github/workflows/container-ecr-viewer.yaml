@@ -72,8 +72,10 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
 
       - name: Set up env vars
-        run: npm run setup-local-env
         working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          npm run setup-local-env
+          ../../setup-env.sh ../orchestration/.env
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}
@@ -129,8 +131,10 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
 
       - name: Set up env vars
-        run: npm run setup-local-env
         working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          npm run setup-local-env
+          ../../setup-env.sh ../orchestration/.env
 
       - name: Run seed data conversion
         run: npm run convert-seed-data
@@ -157,7 +161,9 @@ jobs:
 
       - name: Set up env vars
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run setup-local-env
+        run: |
+          npm run setup-local-env
+          ../../setup-env.sh ../orchestration/.env
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}
