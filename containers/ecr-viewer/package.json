@@ -56,15 +56,19 @@
     "html-react-parser": "^5.1.4",
     "jose": "5.2.2",
     "js-yaml": "4.1.0",
+    "kysely": "^0.27.5",
     "mssql": "^11.0.1",
     "next": "^14.2.14",
     "next-auth": "^4.24.7",
     "next-router-mock": "^0.9.13",
     "next-runtime-env": "^3.2.2",
+    "pg": "^8.13.1",
     "pg-promise": "^11.6.0",
     "react": "^18",
     "react-dom": "^18",
-    "sanitize-html": "^2.13.1"
+    "sanitize-html": "^2.13.1",
+    "tarn": "^3.0.2",
+    "tedious": "^18.6.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
