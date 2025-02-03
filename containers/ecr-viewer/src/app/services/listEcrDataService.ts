@@ -145,7 +145,22 @@ async function listEcrDataSqlserver(
       searchTerm,
       filterConditions,
     );
-    const query = `SELECT ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number, (${conditionsSubQuery}) AS conditions, (${ruleSummariesSubQuery}) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereStatement} GROUP BY ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number ${sortStatement} OFFSET ${startIndex} ROWS FETCH NEXT ${itemsPerPage} ROWS ONLY`;
+    const query = `
+    WITH max_version_cte AS (
+      SELECT set_id, max(eicr_version_number) as max_eicr_version_number, STRING_AGG(eicr_version_number, ',') as all_versions, STRING_AGG(date_created, ',') as all_dates_created
+      FROM ecr_data ed
+      WHERE ${whereStatement}
+      GROUP BY set_id
+    )
+    SELECT ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number, (${conditionsSubQuery}) AS conditions, (${ruleSummariesSubQuery}) AS rule_summaries 
+    FROM max_version_cte mv
+    INNER JOIN ecr_data ed ON mv.set_id = ed.set_id AND mv.max_eicr_version_number = ed.eicr_version_number
+    LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID 
+    LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id 
+    WHERE ${whereStatement} 
+    GROUP BY ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number 
+    ${sortStatement} 
+    OFFSET ${startIndex} ROWS FETCH NEXT ${itemsPerPage} ROWS ONLY`;
     const list = await pool.request().query<ExtendedMetadataModel[]>(query);
 
     return processExtendedMetadata(list.recordset);
