@@ -17,6 +17,7 @@ namespace NodeJS {
       | "AZURE_SQLSERVER_NON_INTEGRATED";
     DATABASE_TYPE: string;
     DATABASE_URL: string;
+    DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
     GITHUB_ID: string;
     GITHUB_SECRET: string;
