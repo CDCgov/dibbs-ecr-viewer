@@ -239,7 +239,7 @@ export const EcrLoadingSkeleton = () => {
     <ECRViewerLayout>
       <div>
         <SideNavLoadingSkeleton
-          isNonIntegratedViewer={_isNonIntegratedViewer ? true : false}
+          isNonIntegratedViewer={_isNonIntegratedViewer}
         />
       </div>
       <div className={"ecr-viewer-container"}>
