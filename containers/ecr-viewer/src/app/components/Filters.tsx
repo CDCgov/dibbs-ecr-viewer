@@ -9,12 +9,12 @@ import React, {
 } from "react";
 import { Button, Icon } from "@trussworks/react-uswds";
 import {
-  useQueryParam,
   Filter,
   RadioDateOption,
   RadioDateOptions,
   CustomDateInput,
 } from "@/app/components/BaseFilter";
+import { useQueryParam } from "@/app/hooks/useQueryParam";
 import {
   CustomDateRangeOption,
   DEFAULT_DATE_RANGE,
