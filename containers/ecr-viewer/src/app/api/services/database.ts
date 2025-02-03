@@ -13,9 +13,6 @@ import { Kysely, PostgresDialect, MssqlDialect } from 'kysely'
 import * as tedious from 'tedious'
 import * as tarn from 'tarn'
 
-// Environment unpacking
-// url?
-
 const pg_dialect = new PostgresDialect({
     pool: new Pool({
         database: 'ecr_viewer_db',
@@ -26,54 +23,51 @@ const pg_dialect = new PostgresDialect({
     })
 })
 
-const ms_dialect = new MssqlDialect({
-    tarn: {
-      ...tarn,
-      options: {
-        min: 0,
-        max: 10,
-      },
-    },
-    tedious: {
-      ...tedious,
-      connectionFactory: () => new tedious.Connection({
-        authentication: {
-          options: {
-            password: process.env.SQL_SERVER_PASSWORD,
-            userName: process.env.SQL_SERVER_USER,
-          },
-          type: 'default',
-        },
-        options: {
-          database: 'some_db',
-          port: 1433,
-          trustServerCertificate: true,
-          connectTimeout: 30000,
-        },
-        server: process.env.SQL_SERVER_HOST || "localhost",
-      }),
-    },
-  })
+// const ms_dialect = new MssqlDialect({
+//     tarn: {
+//       ...tarn,
+//       options: {
+//         min: 0,
+//         max: 10,
+//       },
+//     },
+//     tedious: {
+//       ...tedious,
+//       connectionFactory: () => new tedious.Connection({
+//         authentication: {
+//           options: {
+//             password: process.env.SQL_SERVER_PASSWORD,
+//             userName: process.env.SQL_SERVER_USER,
+//           },
+//           type: 'default',
+//         },
+//         options: {
+//           // database: 'some_db',
+//           port: 1433,
+//           trustServerCertificate: true,
+//           connectTimeout: 30000,
+//         },
+//         server: process.env.SQL_SERVER_HOST || "localhost",
+//       }),
+//     },
+//   })
 
 
 /**
-Determines the dialect for the connection to the database based the METADATA_DATABASE_TYPE environment variable.
+Determines the ORM dialect based the METADATA_DATABASE_TYPE environment variable.
 */
 const determineDialect = () => {
     switch (process.env.METADATA_DATABASE_TYPE) {
         case 'postgres':
             return pg_dialect
         case 'sqlserver':
-            return ms_dialect
+            // return ms_dialect
         default:
             throw new Error("Invalid database type")
     }
 }
 
-// Database interface is passed to Kysely's constructor, and from now on, Kysely
-// knows your database structure.
-// Dialect is passed to Kysely's constructor, and from now on, Kysely knows how
-// to communicate with your database.
+// Dialect to communicate with the database, interface to define its structure.
 export const db = new Kysely<Database>({
-    dialect: determineDialect(),
+    dialect: pg_dialect,
 })
