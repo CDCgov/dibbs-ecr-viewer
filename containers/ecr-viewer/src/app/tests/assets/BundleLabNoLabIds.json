@@ -1,0 +1,324 @@
+{
+  "resourceType": "Bundle",
+  "id": "12345",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:30551ce1-5a28-4356-b684-1e639094ad4d",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "30551ce1-5a28-4356-b684-1e639094ad4d",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><a name=\"Composition_30551ce1-5a28-4356-b684-1e639094ad4d\">Test</a></div>"
+        },
+        "identifier": {
+          "system": "urn:oid:2.16.724.4.8.10.200.10",
+          "value": "3f69e0a5-2177-4540-baab-7a5d0877428f"
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "60591-5",
+              "display": "Patient summary Document"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:2b90dd2b-2dab-4c75-9bb9-a355e07401e8"
+        },
+        "date": "2017-12-11T14:30:00+01:00",
+        "author": [
+          {
+            "reference": "urn:uuid:1c616b24-3895-48c4-9a02-9a64110351ef"
+          }
+        ],
+        "title": "Patient Summary as of December 11, 2017 14:30",
+        "confidentiality": "N",
+        "attester": [
+          {
+            "mode": "legal",
+            "time": "2017-12-11T14:30:00+01:00",
+            "party": {
+              "reference": "urn:uuid:1c616b24-3895-48c4-9a02-9a64110351ef"
+            }
+          },
+          {
+            "mode": "legal",
+            "time": "2017-12-11T14:30:00+01:00",
+            "party": {
+              "reference": "urn:uuid:890751f4-2924-4636-bab7-efffc7f3cf15"
+            }
+          }
+        ],
+        "custodian": {
+          "reference": "urn:uuid:890751f4-2924-4636-bab7-efffc7f3cf15"
+        },
+        "relatesTo": [
+          {
+            "code": "appends",
+            "targetIdentifier": {
+              "system": "urn:oid:2.16.724.4.8.10.200.10",
+              "value": "c2277753-9f90-4a95-8ddb-a0b3f6e7d292"
+            }
+          }
+        ],
+        "event": [
+          {
+            "code": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/v3-ActClass",
+                    "code": "PCPR"
+                  }
+                ]
+              }
+            ],
+            "period": {
+              "end": "2017-12-11T14:30:00+01:00"
+            }
+          }
+        ],
+        "section": [
+          {
+            "title": "Active Problems",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11450-4",
+                  "display": "Problem list - Reported"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Hot flushes</div>"
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:c64139e7-f02d-409c-bf34-75e8bf23bc80"
+              }
+            ]
+          },
+          {
+            "title": "Medication",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10160-0",
+                  "display": "History of Medication use Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><table><thead><tr><th>Medication</th><th>Strength</th><th>Form</th><th>Dosage</th><th>Comment</th></tr></thead><tbody><tr><td>Anastrozole</td><td>1 mg</td><td>tablet</td><td>once daily</td><td>treatment for breast cancer</td></tr><tr><td>Black Cohosh Extract</td><td></td><td>pil</td><td></td><td>herbal supplement</td></tr></tbody></table></div>"
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:c220e36c-eb67-4fc4-9ba1-2fabc52acec6"
+              },
+              {
+                "reference": "urn:uuid:47524493-846a-4a26-bae2-4ab03e60f02e"
+              }
+            ]
+          },
+          {
+            "title": "Allergies and Intolerances",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "48765-2",
+                  "display": "Allergies and adverse reactions Document"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Allergy to penicillin, high criticality, active No known food allergies</div>"
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:72884cad-ebe6-4f43-a51a-2f978275f132"
+              },
+              {
+                "reference": "urn:uuid:c7781f44-6df8-4a8b-9e06-0b34263a47c5"
+              }
+            ]
+          },
+          {
+            "title": "History of Past Illness",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11348-0",
+                  "display": "History of Past illness Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Breast cancer Stage II with no evidence of recurrence following treatment</div>"
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:c4597aa2-688a-401b-a658-70acc6de28c6"
+              }
+            ]
+          },
+          {
+            "title": "Plan of Treatment",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "18776-5",
+                  "display": "Plan of care note"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Continue hormone medication with Anastrozole for total of 5 years and monitor for potential breast cancer recurrence</div>"
+            }
+          },
+          {
+            "title": "Results",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "30954-2",
+                  "display": "Relevant diagnostic tests/laboratory data Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><li><table><thead><tr><th colspan=\"3\">Blood typing</th><th colspan=\"3\">Blood group</th></tr></thead><tbody><tr><td>Blood group</td><td>A+</td></tr><tr><td>C Ab [Presence] in Serum or Plasma</td><td>Positive</td></tr><tr><td>E Ab [Presence] in Serum or Plasma</td><td>Positive</td></tr><tr><td>Little c Ab [Presence] in Serum or Plasma</td><td>Negative</td></tr></tbody></table><table><thead><tr><th colspan=\"3\">Hemoglobin A1c monitoring</th><th colspan=\"3\">Result</th></tr></thead><tbody><tr><td>Hemoglobin A1c/Hemoglobin.total in Blood by HPLC</td><td>7.5 %</td></tr></tbody></table><table><thead><tr><th colspan=\"3\">Bacteriology</th><th colspan=\"3\">Result</th></tr></thead><tbody><tr><td colspan=\"3\">Methicillin resistant Staphylococcus aureus</td></tr><tr><td colspan=\"3\">Healthy carrier of MRSA</td></tr></tbody></table></li></div>"
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:2639657a-c19a-48e2-82cc-471e13b8ad94"
+              },
+              {
+                "reference": "urn:uuid:cc354e00-a419-47ea-8b6c-1768b2a01646"
+              },
+              {
+                "reference": "urn:uuid:26bee0a9-5997-4557-ab9d-c6adbb05b572"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.com/base/DiagnosticReport/sda",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "sda",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">>Stuff</div>"
+        },
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "252275004",
+                "display": "Haematology test"
+              },
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
+                "code": "HM"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "58410-2",
+              "display": "CBC panel - Blood by Automated count"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/f001",
+          "display": "P. van den Heuvel"
+        },
+        "issued": "2013-05-15T19:32:52+01:00",
+        "performer": [
+          {
+            "reference": "Organization/f001",
+            "display": "Burgers University Medical Centre"
+          }
+        ],
+        "result": [
+          {
+            "reference": "Observation/f001"
+          }
+        ],
+        "conclusion": "Core lab"
+      }
+    },
+    {
+      "fullUrl": "https://example.com/base/Observation/f001",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "f001",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> The RR Relevant Reportable Condition Observation does not contain narrative text.</div>"
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "64572001"
+            },
+            {
+              "system": "http://loinc.org",
+              "code": "75323-6"
+            }
+          ],
+          "text": "Condition"
+        },
+        "hasMember": [
+          {
+            "reference": "Condition/f001"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/patient-ecr-eve-everywoman",
+          "display": "Eve Everywoman"
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "3928002",
+              "display": "Zika virus disease (disorder)"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

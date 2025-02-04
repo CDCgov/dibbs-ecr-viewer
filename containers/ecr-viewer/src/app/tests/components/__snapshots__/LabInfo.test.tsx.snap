@@ -1,0 +1,665 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot test 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="lab-results-from-unknown-organization"
+          >
+            Lab Results from Unknown Organization
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Number of Results
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  1
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="display-flex"
+            >
+              <div
+                class="margin-left-auto padding-top-1"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-unknown-organization-expand-button"
+                  type="button"
+                >
+                  Expand all labs
+                </button>
+                <span
+                  class="vertical-line"
+                />
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-unknown-organization-collapse-button"
+                  type="button"
+                >
+                  Collapse all labs
+                </button>
+              </div>
+            </div>
+            <div
+              class="usa-accordion accordion-rr accordion_f001 margin-bottom-3"
+              data-testid="accordion"
+            >
+              <h5
+                class="usa-accordion__heading acc_item_f001 side-nav-ignore"
+              >
+                <button
+                  aria-controls="cbc-panel---blood-by-automated-count"
+                  aria-expanded="false"
+                  class="usa-accordion__button"
+                  data-testid="accordionButton_cbc-panel---blood-by-automated-count"
+                  type="button"
+                >
+                  CBC panel - Blood by Automated count
+                </button>
+              </h5>
+              <div
+                class="usa-accordion__content usa-prose acc_item_f001 side-nav-ignore"
+                data-testid="accordionItem_cbc-panel---blood-by-automated-count"
+                hidden=""
+                id="cbc-panel---blood-by-automated-count"
+              >
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Specimen (Source)
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Authorizing Provider
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Type
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Narrative
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LabInfo when labResults is LabReportElementData[] should match snapshot test 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="lab-results-from-unknown-organization"
+          >
+            Lab Results from Unknown Organization
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Number of Results
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  1
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="display-flex"
+            >
+              <div
+                class="margin-left-auto padding-top-1"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-unknown-organization-expand-button"
+                  type="button"
+                >
+                  Expand all labs
+                </button>
+                <span
+                  class="vertical-line"
+                />
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-unknown-organization-collapse-button"
+                  type="button"
+                >
+                  Collapse all labs
+                </button>
+              </div>
+            </div>
+            <div
+              class="usa-accordion accordion-rr accordion_f001 margin-bottom-3"
+              data-testid="accordion"
+            >
+              <h5
+                class="usa-accordion__heading acc_item_f001 side-nav-ignore"
+              >
+                <button
+                  aria-controls="cbc-panel---blood-by-automated-count"
+                  aria-expanded="false"
+                  class="usa-accordion__button"
+                  data-testid="accordionButton_cbc-panel---blood-by-automated-count"
+                  type="button"
+                >
+                  CBC panel - Blood by Automated count
+                </button>
+              </h5>
+              <div
+                class="usa-accordion__content usa-prose acc_item_f001 side-nav-ignore"
+                data-testid="accordionItem_cbc-panel---blood-by-automated-count"
+                hidden=""
+                id="cbc-panel---blood-by-automated-count"
+              >
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Specimen (Source)
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Authorizing Provider
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Type
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Narrative
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
