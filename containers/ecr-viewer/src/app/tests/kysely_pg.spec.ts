@@ -5,18 +5,18 @@ import * as ecr_data_repo from '../api/services/ecr_data_repo'
 describe('ecr_data_repo', () => {
   beforeAll(async () => {
     await db.schema.createTable('ecr_data')
-      .addColumn('eICR_ID', 'varchar(255)', (cb) => cb.primaryKey().modifyEnd(sql`identity`))
+      .addColumn('eICR_ID', 'varchar(255)', (cb) => cb.primaryKey())
       .addColumn('data_source', 'varchar(255)')
       .addColumn('set_id', 'varchar(255)')
       .addColumn('fhir_reference_link', 'varchar(255)')
 
       .addColumn('patient_name_first', 'varchar(255)')
       .addColumn('patient_name_last', 'varchar(255)')
-      .addColumn('patient_birth_date', 'datetime', (cb) => cb.notNull())
+      .addColumn('patient_birth_date', 'timestamp', (cb) => cb.notNull())
 
-      .addColumn('date_created', 'datetime', (cb) => cb.notNull())
-      .addColumn('report_date', 'datetime', (cb) =>
-        cb.notNull().defaultTo(sql`GETDATE()`)
+      .addColumn('date_created', 'timestamp', (cb) => cb.notNull())
+      .addColumn('report_date', 'timestamp', (cb) =>
+        cb.notNull().defaultTo(sql`CURRENT_TIMESTAMP()`)
       )
       .execute()
   })
