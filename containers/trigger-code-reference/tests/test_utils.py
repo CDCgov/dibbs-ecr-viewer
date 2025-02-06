@@ -107,7 +107,8 @@ def test_get_concepts_dict_filter_services():
 def test_find_codes_by_resource_type():
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
-    # Get resources from the updated bundle
+    # get the Observation resource with the LOINC for SARS-like Coronavirus
+    # and the SNOMED for a positive detected test
     observation_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
@@ -115,6 +116,7 @@ def test_find_codes_by_resource_type():
         and e.get("resource", {}).get("id") == "ef84511f-a88a-0a84-2353-d44f641673b0"
     )
 
+    # get the Condition resource that has the SNOMED code for covid-19
     condition_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
@@ -122,12 +124,14 @@ def test_find_codes_by_resource_type():
         and e.get("resource", {}).get("id") == "d42c4a1f-f700-61bf-62a0-c034257d6a79"
     )
 
+    # get the one Immunization resource that has the COVID-19 vaccine
     immunization_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
         if e.get("resource", {}).get("resourceType") == "Immunization"
     )
 
+    # get the DiagnosticReport resource with the PCR test for COVID-19
     diagnostic_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
@@ -135,11 +139,22 @@ def test_find_codes_by_resource_type():
     )
 
     # Update assertions with actual codes from the bundle
+    # * LOINC code for SARS-like Coronavirus
+    # * SNOMED code for "Detected (qualifier value)" - indicates a positive test result
     assert ["94310-0", "260373001"] == _find_codes_by_resource_type(
         observation_resource
     )
+
+    # SNOMED code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+    # this is the official SNOMED code for COVID-19
     assert ["840539006"] == _find_codes_by_resource_type(condition_resource)
+
+    # CVX code for "COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose"
+    # * specifically refers to the Moderna COVID-19 Vaccine
     assert ["207"] == _find_codes_by_resource_type(immunization_resource)
+
+    # LOINC code for SARS-like Coronavirus
+    # * standard LOINC code for COVID-19 PCR diagnostic test
     assert ["94310-0"] == _find_codes_by_resource_type(diagnostic_resource)
 
     # Test for a resource we don't stamp for (Patient - unchanged)
@@ -150,7 +165,7 @@ def test_find_codes_by_resource_type():
     )
     assert [] == _find_codes_by_resource_type(patient_resource)
 
-    # Test for a resource we do stamp that doesn't have any codes (unchanged)
+    # test for a resource we do stamp that doesn't have any codes
     del observation_resource["code"]
     del observation_resource["valueCodeableConcept"]
     assert [] == _find_codes_by_resource_type(observation_resource)
@@ -160,7 +175,8 @@ def test_find_codes_by_resource_type():
 def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
-    # Get the COVID test observation
+    # get the Observation resource with the LOINC for SARS-like Coronavirus
+    # and the SNOMED for a positive detected test
     observation_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
@@ -168,7 +184,7 @@ def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
         and e.get("resource", {}).get("id") == "ef84511f-a88a-0a84-2353-d44f641673b0"
     )
 
-    # Get the COVID condition
+    # get the Condition resource that has the SNOMED code for covid-19
     condition_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
@@ -181,9 +197,11 @@ def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
         "Disease caused by severe acute respiratory syndrome coronavirus 2"
     )
 
+    # using SNOMED code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+    # * this code is used below as well
     stamped_obs = add_code_extension_and_human_readable_name(
         observation_resource,
-        "840539006",  # Using actual COVID-19 SNOMED code
+        "840539006",
     )
     found_stamp = False
     for ext in stamped_obs.get("extension", []):
