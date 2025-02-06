@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Download FHIR-Converter
-RUN git clone https://github.com/skylight-hq/FHIR-Converter.git --branch v7.0-skylight-20 --single-branch /build/FHIR-Converter
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-1 --depth 1 /build/FHIR-Converter
 
 WORKDIR /build/FHIR-Converter
 

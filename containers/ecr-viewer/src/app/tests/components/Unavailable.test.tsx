@@ -32,10 +32,6 @@ describe("UnavailableInfo", () => {
         title: "Sexual Orientation",
         value: "",
       },
-      {
-        title: "Gender Identity",
-        value: "",
-      },
     ];
     const encounterUnavailableData = [
       {

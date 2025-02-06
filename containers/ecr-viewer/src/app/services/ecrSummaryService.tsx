@@ -38,6 +38,8 @@ export const evaluateEcrSummaryPatientDetails = (
   fhirBundle: Bundle,
   fhirPathMappings: PathMappings,
 ) => {
+  const patientSex = toTitleCase(evaluate(fhirBundle, fhirPathMappings.patientGender)[0]);
+  
   return evaluateData([
     {
       title: "Patient Name",
@@ -50,9 +52,8 @@ export const evaluateEcrSummaryPatientDetails = (
     },
     {
       title: "Sex",
-      value: toTitleCase(
-        evaluate(fhirBundle, fhirPathMappings.patientGender)[0],
-      ),
+      // Unknown and Other sex options removed to be in compliance with Executive Order 14168
+      value: patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
     },
     {
       title: "Patient Address",
