@@ -5,13 +5,13 @@ exports[`LabsService tests Labs Utils returnFieldValueFromLabHtmlString extracts
   <p>
     <span>
       <i>
-        09/28/1822 1:59:00 PM PDT
+        09/28/2000 1:59:00 PM PDT
       </i>
     </span>
   </p>
   <p>
     <span>
-      09/28/1822 1:59:00 PM PDT
+      09/28/2000 1:59:00 PM PDT
     </span>
   </p>
 </React.Fragment>

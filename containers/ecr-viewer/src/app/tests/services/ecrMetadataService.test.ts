@@ -30,7 +30,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
       {
         title: "Date/Time eCR Created",
-        value: "02/04/1825 7:01 AM GMT-6:59:56",
+        value: "02/04/2000 9:01\u00A0AM\u00A0EST",
       },
       { title: "eICR Release Version", value: "2016-12-12" },
       { title: "EHR Manufacturer Model Name", value: "Epic - Version 10.1" },

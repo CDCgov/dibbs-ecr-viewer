@@ -290,14 +290,14 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     expect(expectedTable[0]).toBeInTheDocument();
 
     // Check Vital Signs table contents
-    const expectedValues = ["65 in", "150 lb", "25 kg/m2"];
-    const expectedDate = "03/14/2022 1:48 PM EDT";
+    const expectedValues = ["60 in", "140 lb", "20 kg/m2"];
+    const expectedDate = "02/04/2025 12:48 PM EST";
 
     // Check if all expected values are present in the document
     expectedValues.forEach((value) => {
       expect(screen.getByText(value)).toBeInTheDocument();
     });
-    const numVitalSignsDate = screen.queryAllByText(expectedDate);
+    const numVitalSignsDate = screen.getAllByText(expectedDate);
     expect(numVitalSignsDate.length).toBe(3);
   });
 

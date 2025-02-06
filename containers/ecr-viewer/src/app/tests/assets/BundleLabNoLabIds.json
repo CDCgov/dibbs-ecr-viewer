@@ -48,7 +48,7 @@
             }
           ]
         },
-        "date": "1825-02-04T01:11:08Z",
+        "date": "2000-02-04T01:11:08Z",
         "title": "Initial Public Health Case Report",
         "confidentiality": "N",
         "section": [
@@ -97,7 +97,7 @@
             "title": "ENCOUNTERS",
             "text": {
               "status": "generated",
-              "div": "<table border=\"1\" width=\"100%\" xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Encounter Reason</th><th>Date of Encounter</th></tr></thead><tbody><tr><td><content ID=\"encounter1\">Emergency</content></td><td><content ID=\"encounterDate1\">18250204195500+0000</content></td></tr></tbody></table>"
+              "div": "<table border=\"1\" width=\"100%\" xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Encounter Reason</th><th>Date of Encounter</th></tr></thead><tbody><tr><td><content ID=\"encounter1\">Emergency</content></td><td><content ID=\"encounterDate1\">20000204195500+0000</content></td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -115,7 +115,7 @@
             "title": "RESULTS",
             "text": {
               "status": "generated",
-              "div": "<table border=\"1\" width=\"100%\" xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Lab Test Name</th><th>Lab Test Result Value</th><th>Lab Test Result Date</th></tr></thead><tbody><tr><td><content ID=\"labTestName1\">SARS-CoV-2, NAA CL</content></td><td><content ID=\"labTestResultValue1\">POS</content></td><td><content ID=\"labTestResultValueDate1\">1825-02-04T21:02:00.000Z</content></td></tr><tr><td><content ID=\"labTestName2\">Symptomatic as defined by CDC?</content></td><td><content ID=\"labTestResultValue2\">YES</content></td><td><content ID=\"labTestResultValueDate2\">1825-02-04T21:02:00.000Z</content></td></tr></tbody></table>"
+              "div": "<table border=\"1\" width=\"100%\" xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Lab Test Name</th><th>Lab Test Result Value</th><th>Lab Test Result Date</th></tr></thead><tbody><tr><td><content ID=\"labTestName1\">SARS-CoV-2, NAA CL</content></td><td><content ID=\"labTestResultValue1\">POS</content></td><td><content ID=\"labTestResultValueDate1\">2000-02-04T21:02:00.000Z</content></td></tr><tr><td><content ID=\"labTestName2\">Symptomatic as defined by CDC?</content></td><td><content ID=\"labTestResultValue2\">YES</content></td><td><content ID=\"labTestResultValueDate2\">2000-02-04T21:02:00.000Z</content></td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -516,8 +516,8 @@
           }
         ],
         "period": {
-          "start": "1825-02-03T19:00:00Z",
-          "end": "1825-02-04T21:00:00Z"
+          "start": "2000-02-03T19:00:00Z",
+          "end": "2000-02-04T21:00:00Z"
         },
         "subject": {
           "reference": "Patient/61e55448-662c-9a22-3920-FAKE00ba36f9"
@@ -1397,7 +1397,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T21:02:00Z",
+        "effectiveDateTime": "2000-02-04T21:02:00Z",
         "valueString": "POS",
         "interpretation": [
           {
@@ -1503,7 +1503,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T21:02:00Z",
+        "effectiveDateTime": "2000-02-04T21:02:00Z",
         "valueString": "YES",
         "subject": {
           "reference": "Patient/61e55448-662c-9a22-3920-FAKE00ba36f9"
@@ -1589,7 +1589,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T21:02:00Z",
+        "effectiveDateTime": "2000-02-04T21:02:00Z",
         "valueString": "NO",
         "subject": {
           "reference": "Patient/61e55448-662c-9a22-3920-FAKE00ba36f9"
@@ -1675,7 +1675,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T21:02:00Z",
+        "effectiveDateTime": "2000-02-04T21:02:00Z",
         "valueString": "NO",
         "subject": {
           "reference": "Patient/61e55448-662c-9a22-3920-FAKE00ba36f9"
@@ -1761,7 +1761,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T21:02:00Z",
+        "effectiveDateTime": "2000-02-04T21:02:00Z",
         "valueString": "NO",
         "subject": {
           "reference": "Patient/61e55448-662c-9a22-3920-FAKE00ba36f9"
@@ -1847,7 +1847,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:47:58Z",
+        "effectiveDateTime": "2000-02-04T20:47:58Z",
         "valueQuantity": {
           "value": 75.63,
           "unit": "mL/min"
@@ -1936,7 +1936,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:24:00Z",
+        "effectiveDateTime": "2000-02-04T20:24:00Z",
         "interpretation": [
           {
             "coding": [
@@ -2032,7 +2032,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "valueCodeableConcept": {
           "coding": [
             {
@@ -2126,7 +2126,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "subject": {
           "reference": "Patient/61e55448-662c-9a22-3920-FAKE00ba36f9"
         }
@@ -2211,7 +2211,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "valueCodeableConcept": {
           "coding": [
             {
@@ -2316,7 +2316,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "valueCodeableConcept": {
           "coding": [
             {
@@ -2421,7 +2421,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "interpretation": [
           {
             "coding": [
@@ -2517,7 +2517,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "interpretation": [
           {
             "coding": [
@@ -2613,7 +2613,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "valueCodeableConcept": {
           "coding": [
             {
@@ -2718,7 +2718,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "interpretation": [
           {
             "coding": [
@@ -2814,7 +2814,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "valueCodeableConcept": {
           "coding": [
             {
@@ -2919,7 +2919,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:23:00Z",
+        "effectiveDateTime": "2000-02-04T20:23:00Z",
         "interpretation": [
           {
             "coding": [
@@ -3015,7 +3015,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueString": "Not Reported",
         "subject": {
           "reference": "Patient/61e55448-662c-9a22-3920-FAKE00ba36f9"
@@ -3101,7 +3101,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 273,
           "unit": "mOsmol/kg"
@@ -3201,7 +3201,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 1.1
         },
@@ -3300,7 +3300,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 60.0,
           "unit": "mL/min/1.73m2"
@@ -3389,7 +3389,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 60.0,
           "unit": "mL/min/1.73m2"
@@ -3478,7 +3478,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 138,
           "unit": "mmol/L"
@@ -3578,7 +3578,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 3.2,
           "unit": "mmol/L"
@@ -3678,7 +3678,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 4.1,
           "unit": "gm/dL"
@@ -3778,7 +3778,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 8.7,
           "unit": "mg/dL"
@@ -3878,7 +3878,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 13.0,
           "unit": "%"
@@ -3978,7 +3978,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 102,
           "unit": "mmol/L"
@@ -4078,7 +4078,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 5,
           "unit": "mg/dL"
@@ -4178,7 +4178,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 229,
           "unit": "x10e3/mcL"
@@ -4278,7 +4278,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 4.8,
           "unit": "x10e3/mcL"
@@ -4378,7 +4378,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 7.8,
           "unit": "gm/dL"
@@ -4478,7 +4478,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 4.01,
           "unit": "x10e6/mcL"
@@ -4578,7 +4578,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 9.2,
           "unit": "Femtoliters"
@@ -4678,7 +4678,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 85.8,
           "unit": "Femtoliters"
@@ -4778,7 +4778,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 34.0,
           "unit": "gm/dL"
@@ -4878,7 +4878,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 29.2,
           "unit": "pg"
@@ -4978,7 +4978,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 11.7,
           "unit": "gm/dL"
@@ -5078,7 +5078,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 34.4,
           "unit": "%"
@@ -5178,7 +5178,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 95,
           "unit": "mg/dL"
@@ -5278,7 +5278,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 25,
           "unit": "mmol/L"
@@ -5378,7 +5378,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 0.1,
           "unit": "mg/dL"
@@ -5478,7 +5478,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 16,
           "unit": "Intl_units/L"
@@ -5578,7 +5578,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 21,
           "unit": "Intl_units/L"
@@ -5678,7 +5678,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 53,
           "unit": "Intl_units/L"
@@ -5778,7 +5778,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 7,
           "unit": "Ratio"
@@ -5867,7 +5867,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 11,
           "unit": "mmol/L"
@@ -5967,7 +5967,7 @@
             }
           ]
         },
-        "effectiveDateTime": "1825-02-04T20:21:00Z",
+        "effectiveDateTime": "2000-02-04T20:21:00Z",
         "valueQuantity": {
           "value": 0.76,
           "unit": "mg/dL"
@@ -6027,7 +6027,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T20:31:19Z"
+        "effectiveDateTime": "2000-02-04T20:31:19Z"
       },
       "request": {
         "method": "PUT",
@@ -6069,7 +6069,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T19:58:00Z"
+        "effectiveDateTime": "2000-02-04T19:58:00Z"
       },
       "request": {
         "method": "PUT",
@@ -6111,7 +6111,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T19:58:00Z"
+        "effectiveDateTime": "2000-02-04T19:58:00Z"
       },
       "request": {
         "method": "PUT",
@@ -6153,7 +6153,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T19:58:00Z"
+        "effectiveDateTime": "2000-02-04T19:58:00Z"
       },
       "request": {
         "method": "PUT",
@@ -6195,7 +6195,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T19:58:00Z"
+        "effectiveDateTime": "2000-02-04T19:58:00Z"
       },
       "request": {
         "method": "PUT",
@@ -6237,7 +6237,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T19:58:00Z"
+        "effectiveDateTime": "2000-02-04T19:58:00Z"
       },
       "request": {
         "method": "PUT",
@@ -6279,7 +6279,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T19:58:00Z"
+        "effectiveDateTime": "2000-02-04T19:58:00Z"
       },
       "request": {
         "method": "PUT",
@@ -6321,7 +6321,7 @@
             }
           }
         ],
-        "effectiveDateTime": "1825-02-04T19:58:00Z"
+        "effectiveDateTime": "2000-02-04T19:58:00Z"
       },
       "request": {
         "method": "PUT",

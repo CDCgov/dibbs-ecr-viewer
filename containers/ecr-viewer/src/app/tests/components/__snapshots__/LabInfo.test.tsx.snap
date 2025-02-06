@@ -95,7 +95,7 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                             </td>
                             <td>
                               <span>
-                                1825-02-04T21:02:00.000Z
+                                2000-02-04T21:02:00.000Z
                               </span>
                             </td>
                           </tr>
@@ -112,7 +112,7 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                             </td>
                             <td>
                               <span>
-                                1825-02-04T21:02:00.000Z
+                                2000-02-04T21:02:00.000Z
                               </span>
                             </td>
                           </tr>
@@ -366,7 +366,7 @@ Mos Eisley, CO
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      09/28/1822 4:03 PM GMT-4:56:02
+                      09/28/2000 5:00 PM EDT
                     </div>
                   </div>
                   <div
@@ -385,7 +385,7 @@ Mos Eisley, CO
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      02/04/1825 3:54 PM GMT-4:56:02
+                      02/04/2000 3:51 PM EST
                     </div>
                   </div>
                   <div
@@ -404,7 +404,7 @@ Mos Eisley, CO
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      02/04/1825 3:55 PM GMT-4:56:02
+                      02/04/2000 3:51 PM EST
                     </div>
                   </div>
                   <div
@@ -696,7 +696,7 @@ Mos Eisley, CO
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      09/28/1822 4:02 PM GMT-4:56:02
+                      09/28/2000 4:59 PM EDT
                     </div>
                   </div>
                   <div
@@ -715,7 +715,7 @@ Mos Eisley, CO
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      02/04/1825 3:54 PM GMT-4:56:02
+                      02/04/2000 3:51 PM EST
                     </div>
                   </div>
                   <div
@@ -734,7 +734,7 @@ Mos Eisley, CO
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      02/04/1825 3:55 PM GMT-4:56:02
+                      02/04/2000 3:51 PM EST
                     </div>
                   </div>
                   <div
@@ -1302,7 +1302,7 @@ Coruscant, MA
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      02/03/1825 2:49 PM GMT-4:56:02
+                      02/03/2000 2:46 PM EST
                     </div>
                   </div>
                   <div

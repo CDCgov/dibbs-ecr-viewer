@@ -51,7 +51,7 @@
             }
           ]
         },
-        "date": "1825-02-04T09:01:22-05:00",
+        "date": "2000-02-04T09:01:22-05:00",
         "title": "Initial Public Health Case Report",
         "confidentiality": "N",
         "section": [
@@ -812,8 +812,8 @@
           }
         ],
         "period": {
-          "start": "1825-02-03",
-          "end": "1825-02-04"
+          "start": "2000-02-03",
+          "end": "2000-02-04"
         },
         "subject": {
           "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
