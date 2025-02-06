@@ -224,10 +224,60 @@
                   ]
                 },
                 "mode": "snapshot"
+              },
+              {
+                "id": "dfc7ff2d-838c-ff07-7319-cc234c676ecf",
+                "title": "Reportability Response Information Section",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Reportability Response Information Section</div>"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-initiation-type-extension",
+                    "valueCodeableConcept": {
+                      "text": "official",
+                      "coding": [
+                        {
+                          "code": "88085-6",
+                          "system": "http://loinc.org",
+                          "display": "Reportability response report Document Public health"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "code": "RRVS19",
+                          "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                          "display": "eICR processed"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "code": {
+                  "coding": [
+                    {
+                      "code": "88085-6",
+                      "system": "http://loinc.org",
+                      "display": "Reportability response report Document Public health"
+                    }
+                  ]
+                },
+                "entry": [
+                  {
+                    "display": "Relevant Reportable Condition Observation - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "reference": "Observation/17f6392f-9340-45d3-a1c8-bc0a30d09f53"
+                  }
+                ]
               }
             ],
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             },
             "encounter": {
               "reference": "Encounter/be03f31c-a6b4-e27e-0373-26e08c54c232"
@@ -268,7 +318,7 @@
               "end": "2025-02-05"
             },
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             },
             "location": [
               {
@@ -509,6 +559,64 @@
           }
         },
         {
+          "fullUrl": "urn:uuid:17f6392f-9340-45d3-a1c8-bc0a30d09f53",
+          "resource": {
+            "resourceType": "Observation",
+            "id": "17f6392f-9340-45d3-a1c8-bc0a30d09f53",
+            "meta": {
+              "profile": [
+                "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+              ],
+              "source": "ecr"
+            },
+            "identifier": [
+              {
+                "system": "urn:ietf:rfc:3986",
+                "value": "urn:uuid:17f6392f-9340-45d3-a1c8-bc0a30d09f53"
+              }
+            ],
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "code": "64572001",
+                  "display": "Condition",
+                  "system": "http://snomed.info/sct"
+                },
+                {
+                  "code": "75323-6",
+                  "display": "Condition",
+                  "system": "http://loinc.org"
+                }
+              ]
+            },
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "840539006",
+                  "system": "http://snomed.info/sct",
+                  "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+                "valueString": "All results of tests for detection of SARS-CoV-2                                nucleic acid in a clinical specimen by any method"
+              }
+            ],
+            "performer": [
+              {
+                "reference": "Organization/"
+              }
+            ]
+          },
+          "request": {
+            "method": "PUT",
+            "url": "Observation/17f6392f-9340-45d3-a1c8-bc0a30d09f53"
+          }
+        },
+        {
           "fullUrl": "urn:uuid:01d8e93e-a96e-a79e-2d65-41842d9a2515",
           "resource": {
             "resourceType": "Device",
@@ -547,10 +655,10 @@
           }
         },
         {
-          "fullUrl": "urn:uuid:37544a48-8313-46c5-916f-322986d533a6",
+          "fullUrl": "urn:uuid:94abb041-5989-484a-848c-83012bcbfb3d",
           "resource": {
             "resourceType": "Patient",
-            "id": "37544a48-8313-46c5-916f-322986d533a6",
+            "id": "94abb041-5989-484a-848c-83012bcbfb3d",
             "meta": {
               "profile": [
                 "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
@@ -704,7 +812,7 @@
           },
           "request": {
             "method": "PUT",
-            "url": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+            "url": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
           }
         },
         {
@@ -712,7 +820,7 @@
           "resource": {
             "resourceType": "CareTeam",
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             },
             "meta": {
               "source": "ecr"
@@ -726,7 +834,7 @@
             "status": "unknown",
             "intent": "proposal",
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             },
             "meta": {
               "source": "ecr"
@@ -770,7 +878,7 @@
             },
             "onsetDateTime": "2025-02-05",
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             },
             "meta": {
               "source": "ecr"
@@ -807,7 +915,7 @@
               "end": "2025-02-05"
             },
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             },
             "result": [
               {
@@ -882,7 +990,7 @@
               }
             ],
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             }
           },
           "request": {
@@ -943,7 +1051,7 @@
               ]
             },
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             }
           },
           "request": {
@@ -1004,7 +1112,7 @@
               ]
             },
             "subject": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             }
           },
           "request": {
@@ -1065,7 +1173,7 @@
               ]
             },
             "patient": {
-              "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+              "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
             },
             "meta": {
               "source": "ecr"
