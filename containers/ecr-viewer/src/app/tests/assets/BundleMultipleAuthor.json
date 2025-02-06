@@ -820,13 +820,13 @@
         ],
         "name": "Merisee Grand Medical Facility",
         "address": {
-            "use": "work",
-            "line": ["1 River Way"],
-            "city": "Ferrix City",
-            "state": "AZ",
-            "country": "USA",
-            "postalCode": "00123",
-            "district": "FERRIX"
+          "use": "work",
+          "line": ["1 River Way"],
+          "city": "Ferrix City",
+          "state": "AZ",
+          "country": "USA",
+          "postalCode": "00123",
+          "district": "FERRIX"
         },
         "telecom": [
           {

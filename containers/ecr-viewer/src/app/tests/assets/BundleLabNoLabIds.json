@@ -966,8 +966,7 @@
           ],
           "source": "ecr"
         },
-        "identifier": [
-        ],
+        "identifier": [],
         "name": [
           {
             "family": "Kenobi",
