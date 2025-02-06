@@ -105,108 +105,143 @@ def test_get_concepts_dict_filter_services():
 
 
 def test_find_codes_by_resource_type():
-    message = json.load(
-        open(
-            Path(__file__).parent / "assets" / "sample_ecr_with_diagnostic_report.json"
-        )
-    )
-    message_with_immunization = json.load(
-        open(Path(__file__).parent / "assets" / "sample_ecr.json")
-    )
-    observation_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Observation"
-    ][0]
-    condition_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Condition"
-    ][0]
-    immunization_resource = [
-        e.get("resource")
-        for e in message_with_immunization.get("entry", [])
-        if e.get("resource").get("resourceType") == "Immunization"
-    ][3]
-    diagnostic_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "DiagnosticReport"
-    ][0]
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
-    # Find each resource's chief clinical code
-    assert ["64572001", "75323-6", "240372001"] == _find_codes_by_resource_type(
-        observation_resource
-    )
-    assert ["C50.511"] == _find_codes_by_resource_type(condition_resource)
-    assert ["24"] == _find_codes_by_resource_type(immunization_resource)
-    assert ["LAB10082"] == _find_codes_by_resource_type(diagnostic_resource)
+    # Test Observation codes
+    observation_resources = [
+        e["resource"]
+        for e in message["entry"]
+        if e.get("resource", {}).get("resourceType") == "Observation"
+    ]
 
-    # Test for a resource we don't stamp for
-    patient_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Patient"
-    ][0]
-    assert [] == _find_codes_by_resource_type(patient_resource)
+    # Test the COVID-19 test result observation (ef84511f-a88a-0a84-2353-d44f641673b0)
+    covid_test_observation = next(
+        obs
+        for obs in observation_resources
+        if obs.get("id") == "ef84511f-a88a-0a84-2353-d44f641673b0"
+    )
+    assert _find_codes_by_resource_type(covid_test_observation) == [
+        "94310-0",  # LOINC code for SARS-CoV-2 test
+        "260373001",  # SNOMED CT code for "Detected"
+    ]
+
+    # Test the occupation observation (060a3bab-0fb6-6122-f4fe-12f352df4ff8)
+    occupation_observation = next(
+        obs
+        for obs in observation_resources
+        if obs.get("id") == "060a3bab-0fb6-6122-f4fe-12f352df4ff8"
+    )
+    assert _find_codes_by_resource_type(occupation_observation) == [
+        "364703007",  # SNOMED CT code for "Employment detail"
+        "11295-3",  # LOINC code for "Occupation history"
+        "410001",  # SNOMED CT code for "Senator"
+    ]
+
+    # Test DiagnosticReport codes
+    diagnostic_report = next(
+        e["resource"]
+        for e in message["entry"]
+        if e.get("resource", {}).get("resourceType") == "DiagnosticReport"
+        and e.get("resource", {}).get("id") == "e6aa3537-cb1d-9e2e-9060-08828602339a"
+    )
+    assert _find_codes_by_resource_type(diagnostic_report) == [
+        "94310-0"
+    ]  # LOINC code for SARS-CoV-2 test
+
+    # Test Immunization codes
+    immunization = next(
+        e["resource"]
+        for e in message["entry"]
+        if e.get("resource", {}).get("resourceType") == "Immunization"
+        and e.get("resource", {}).get("id") == "427d703c-b43c-53c7-e966-97ee5f217d03"
+    )
+    assert _find_codes_by_resource_type(immunization) == [
+        "207"
+    ]  # Code for COVID-19 mRNA vaccine
+
+    # Test Patient (should return empty list as we don't extract codes from Patient)
+    patient = next(
+        e["resource"]
+        for e in message["entry"]
+        if e.get("resource", {}).get("resourceType") == "Patient"
+        and e.get("resource", {}).get("id") == "edf8412c-6398-433f-8ca7-18f3214cf815"
+    )
+    assert _find_codes_by_resource_type(patient) == []
 
     # Test for a resource we do stamp that doesn't have any codes
-    del observation_resource["code"]
-    del observation_resource["valueCodeableConcept"]
-    assert [] == _find_codes_by_resource_type(observation_resource)
+    observation_without_codes = covid_test_observation.copy()
+    del observation_without_codes["code"]
+    del observation_without_codes["valueCodeableConcept"]
+    assert _find_codes_by_resource_type(observation_without_codes) == []
 
 
 @patch("app.utils._get_condition_name_from_snomed_code")
 def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
-    message = json.load(
-        open(
-            Path(__file__).parent / "assets" / "sample_ecr_with_diagnostic_report.json"
-        )
-    )
-    observation_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Observation"
-    ][0]
-    condition_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Condition"
-    ][0]
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
-    # Mock the condition name lookup
-    mock_get_condition_name.return_value = "Cyclosporiasis"
+    # Test Case 1: Regular Observation (should only add extension)
+    observation = next(
+        e["resource"]
+        for e in message["entry"]
+        if e.get("resource", {}).get("resourceType") == "Observation"
+        and e.get("resource", {}).get("id") == "ef84511f-a88a-0a84-2353-d44f641673b0"
+    )
 
     stamped_obs = add_code_extension_and_human_readable_name(
-        observation_resource, "test_obs_code"
+        observation.copy(),
+        "840539006",  # SNOMED CT code for COVID-19
     )
+
+    # Verify extension was added
     found_stamp = False
     for ext in stamped_obs.get("extension", []):
-        if ext == {
-            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
-            "valueCoding": {
-                "code": "test_obs_code",
-                "system": "http://snomed.info/sct",
-            },
-        }:
+        if (
+            ext.get("url")
+            == "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code"
+        ):
             found_stamp = True
+            assert ext["valueCoding"]["code"] == "840539006"
+            assert ext["valueCoding"]["system"] == "http://snomed.info/sct"
             break
     assert found_stamp
 
-    assert stamped_obs["valueCodeableConcept"]["text"] == "Cyclosporiasis"
+    # Verify original valueCodeableConcept wasn't modified
+    assert stamped_obs["valueCodeableConcept"] == observation["valueCodeableConcept"]
+
+    # Test Case 2: Condition resource (should add both extension and text)
+    condition = {
+        "resourceType": "Condition",
+        "code": {
+            "coding": [
+                {
+                    "system": "http://snomed.info/sct",
+                    "code": "64572001",
+                    "display": "Condition",
+                }
+            ]
+        },
+        "valueCodeableConcept": {},
+    }
+
+    mock_get_condition_name.return_value = "SARS-CoV-2 (COVID-19)"
 
     stamped_condition = add_code_extension_and_human_readable_name(
-        condition_resource, "test_cond_code"
+        condition.copy(),
+        "840539006",  # SNOMED CT code for COVID-19
     )
+
+    # Verify extension was added
     found_stamp = False
     for ext in stamped_condition.get("extension", []):
-        if ext == {
-            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
-            "valueCoding": {
-                "code": "test_cond_code",
-                "system": "http://snomed.info/sct",
-            },
-        }:
+        if (
+            ext.get("url")
+            == "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code"
+        ):
             found_stamp = True
+            assert ext["valueCoding"]["code"] == "840539006"
+            assert ext["valueCoding"]["system"] == "http://snomed.info/sct"
             break
     assert found_stamp
+
+    # Verify text was added to valueCodeableConcept for Condition
+    assert stamped_condition["valueCodeableConcept"]["text"] == "SARS-CoV-2 (COVID-19)"
