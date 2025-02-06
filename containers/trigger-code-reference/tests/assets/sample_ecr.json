@@ -57,7 +57,7 @@
             "title": "Encounters",
             "text": {
               "status": "generated",
-              "div": "<table xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Encounter<\/th><th>Date(s)<\/th><th>Location<\/th><\/tr><\/thead><tbody><tr ID=\"id_fd7ee2ec-4d8e-4169-aeb6-836731cc7201_ref\"><td>Office outpatient visit 15 minutes<\/td><td>02/05/2025<\/td><td>Grand Republic Medical Facility Clinic<\/td><\/tr><\/tbody><\/table>"
+              "div": "<table xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Encounter</th><th>Date(s)</th><th>Location</th></tr></thead><tbody><tr ID=\"id_fd7ee2ec-4d8e-4169-aeb6-836731cc7201_ref\"><td>Office outpatient visit 15 minutes</td><td>02/05/2025</td><td>Grand Republic Medical Facility Clinic</td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -111,7 +111,7 @@
             "title": "Problems",
             "text": {
               "status": "generated",
-              "div": "Potential exposure to SARS-CoV-2"
+              "div": "<paragraph xmlns=\"urn:hl7-org:v3\">Potential exposure to SARS-CoV-2 with confirmed infectious disease encounter</paragraph>"
             },
             "code": {
               "coding": [
@@ -126,7 +126,7 @@
             "entry": [
               {
                 "display": "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
-                "reference": "Condition/0d130a69-877d-1f68-6b71-4f42f3add962"
+                "reference": "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79"
               }
             ]
           },
@@ -135,7 +135,7 @@
             "title": "Reason for Visit",
             "text": {
               "status": "generated",
-              "div": "<paragraph xmlns=\"urn:hl7-org:v3\">COVID-19 screening due to potential exposure<\/paragraph>"
+              "div": "<paragraph xmlns=\"urn:hl7-org:v3\">COVID-19 screening due to potential exposure</paragraph>"
             },
             "code": {
               "coding": [
@@ -159,7 +159,7 @@
             "title": "Results",
             "text": {
               "status": "generated",
-              "div": "<table xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Test<\/th><th>Result<\/th><th>Date<\/th><\/tr><\/thead><tbody><tr ID=\"id_9890e2c3-019a-4168-8403-a0a069994440_ref\"><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection<\/td><td>Detected<\/td><td>02/05/2025<\/td><\/tr><\/tbody><\/table>"
+              "div": "<table xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Test</th><th>Result</th><th>Date</th></tr></thead><tbody><tr ID=\"id_9890e2c3-019a-4168-8403-a0a069994440_ref\"><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection</td><td>Detected</td><td>02/05/2025</td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -182,7 +182,7 @@
             "title": "Social History",
             "text": {
               "status": "generated",
-              "div": "<table xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Social History Element<\/th><th>Description<\/th><\/tr><\/thead><tbody><tr><td>Occupation<\/td><td>Senator<\/td><\/tr><\/tbody><\/table>"
+              "div": "<table xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Social History Element</th><th>Description</th><th>Date</th></tr></thead><tbody><tr><td>Occupation</td><td>Senator</td><td>20250206</td></tr><tr><td>Pregnancy Status</td><td>No</td><td>20250206</td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -196,7 +196,10 @@
             "mode": "snapshot",
             "entry": [
               {
-                "reference": "Observation/060a3bab-0fb6-6122-f4fe-12f352df4ff8"
+                "reference": "Observation/e1fe955d-a39b-14da-901e-a21a1b9c0ec0"
+              },
+              {
+                "reference": "Observation/6dc07146-a186-9f88-5cc8-af0aef7d7cd2"
               }
             ]
           },
@@ -205,7 +208,7 @@
             "title": "Immunizations",
             "text": {
               "status": "generated",
-              "div": "<table border=\"1\" width=\"100%\" xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Name<\/th><th>Administration Dates<\/th><th>Status<\/th><\/tr><\/thead><tbody><tr><td><content ID=\"immunization1Name\" />SARS-CoV-2 (COVID-19) vaccine, mRNA-LNP, spike protein<\/td><td>Jan 2025<\/td><td>Completed<\/td><\/tr><\/tbody><\/table>"
+              "div": "<table border=\"1\" width=\"100%\" xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Name</th><th>Administration Dates</th><th>Status</th></tr></thead><tbody><tr><td><content ID=\"immunization1Name\" />SARS-CoV-2 (COVID-19) vaccine, mRNA-LNP, spike protein</td><td>Jan 2025</td><td>Completed</td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -220,7 +223,7 @@
           }
         ],
         "subject": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         },
         "encounter": {
           "reference": "Encounter/be03f31c-a6b4-e27e-0373-26e08c54c232"
@@ -261,7 +264,7 @@
           "end": "2025-02-05"
         },
         "subject": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         },
         "location": [
           {
@@ -540,10 +543,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:edf8412c-6398-433f-8ca7-18f3214cf815",
+      "fullUrl": "urn:uuid:37544a48-8313-46c5-916f-322986d533a6",
       "resource": {
         "resourceType": "Patient",
-        "id": "edf8412c-6398-433f-8ca7-18f3214cf815",
+        "id": "37544a48-8313-46c5-916f-322986d533a6",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
@@ -697,7 +700,7 @@
       },
       "request": {
         "method": "PUT",
-        "url": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+        "url": "Patient/37544a48-8313-46c5-916f-322986d533a6"
       }
     },
     {
@@ -705,7 +708,7 @@
       "resource": {
         "resourceType": "CareTeam",
         "subject": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         },
         "meta": {
           "source": "ecr"
@@ -719,7 +722,7 @@
         "status": "unknown",
         "intent": "proposal",
         "subject": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         },
         "meta": {
           "source": "ecr"
@@ -728,6 +731,50 @@
       "request": {
         "method": "PUT",
         "url": "CarePlan/"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d42c4a1f-f700-61bf-62a0-c034257d6a79",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-item-list",
+                "display": "Problem List Item",
+                "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "840539006",
+              "system": "http://snomed.info/sct",
+              "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+            }
+          ]
+        },
+        "onsetDateTime": "2025-02-05",
+        "subject": {
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+        },
+        "meta": {
+          "source": "ecr"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79"
       }
     },
     {
@@ -756,7 +803,7 @@
           "end": "2025-02-05"
         },
         "subject": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         },
         "result": [
           {
@@ -831,7 +878,7 @@
           }
         ],
         "subject": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         }
       },
       "request": {
@@ -840,10 +887,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:060a3bab-0fb6-6122-f4fe-12f352df4ff8",
+      "fullUrl": "urn:uuid:e1fe955d-a39b-14da-901e-a21a1b9c0ec0",
       "resource": {
         "resourceType": "Observation",
-        "id": "060a3bab-0fb6-6122-f4fe-12f352df4ff8",
+        "id": "e1fe955d-a39b-14da-901e-a21a1b9c0ec0",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
@@ -881,7 +928,7 @@
             }
           ]
         },
-        "effectiveDateTime": "2025-02-05T22:43:18Z",
+        "effectiveDateTime": "2025-02-06T03:28:11Z",
         "valueCodeableConcept": {
           "coding": [
             {
@@ -892,12 +939,73 @@
           ]
         },
         "subject": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         }
       },
       "request": {
         "method": "PUT",
-        "url": "Observation/060a3bab-0fb6-6122-f4fe-12f352df4ff8"
+        "url": "Observation/e1fe955d-a39b-14da-901e-a21a1b9c0ec0"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6dc07146-a186-9f88-5cc8-af0aef7d7cd2",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "6dc07146-a186-9f88-5cc8-af0aef7d7cd2",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:82f61228-21bc-4c0e-8491-d68bf0207d2f"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "442311008",
+              "system": "http://snomed.info/sct",
+              "display": "Pregnancy status"
+            },
+            {
+              "code": "82810-3",
+              "system": "http://loinc.org",
+              "display": "Pregnancy status"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-02-06T03:28:11Z",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "60001007",
+              "system": "http://snomed.info/sct",
+              "display": "Not pregnant"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/6dc07146-a186-9f88-5cc8-af0aef7d7cd2"
       }
     },
     {
@@ -953,7 +1061,7 @@
           ]
         },
         "patient": {
-          "reference": "Patient/edf8412c-6398-433f-8ca7-18f3214cf815"
+          "reference": "Patient/37544a48-8313-46c5-916f-322986d533a6"
         },
         "meta": {
           "source": "ecr"
