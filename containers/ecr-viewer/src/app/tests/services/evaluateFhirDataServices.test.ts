@@ -295,7 +295,7 @@ describe("evaluateFhirDataServices tests", () => {
           telecom: [
             {
               system: "phone",
-              value: "+1-615-995-9999",
+              value: "+1-555-995-9999",
               use: "home",
             },
           ],
@@ -319,7 +319,7 @@ describe("evaluateFhirDataServices tests", () => {
         mappings,
       );
       expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 615-995-9999`,
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999`,
       );
     });
     it("should return multiple emergency contacts", () => {
@@ -346,7 +346,7 @@ describe("evaluateFhirDataServices tests", () => {
           telecom: [
             {
               system: "phone",
-              value: "+1-615-995-9999",
+              value: "+1-555-995-9999",
               use: "home",
             },
           ],
@@ -381,12 +381,12 @@ describe("evaluateFhirDataServices tests", () => {
           telecom: [
             {
               system: "phone",
-              value: "+1-615-995-1000",
+              value: "+1-555-995-1000",
               use: "home",
             },
             {
               system: "fax",
-              value: "+1-615-995-1001",
+              value: "+1-555-995-1001",
               use: "home",
             },
           ],
@@ -397,7 +397,7 @@ describe("evaluateFhirDataServices tests", () => {
         mappings,
       );
       expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 615-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 615-995-1000\nHome Fax: 615-995-1001`,
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
       );
     });
     it("should not return empty space when address is not available in", () => {
@@ -428,7 +428,7 @@ describe("evaluateFhirDataServices tests", () => {
           telecom: [
             {
               system: "phone",
-              value: "+1-615-995-9999",
+              value: "+1-555-995-9999",
               use: "home",
             },
           ],
@@ -439,7 +439,7 @@ describe("evaluateFhirDataServices tests", () => {
         mappings,
       );
       expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\nHome: 615-995-9999`,
+        `Sister\nAnastasia Bubbletea Pizza\nHome: 555-995-9999`,
       );
     });
     it("should return undefined if a patient has no contact", () => {

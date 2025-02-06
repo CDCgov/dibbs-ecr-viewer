@@ -666,7 +666,7 @@ describe("LabsService tests", () => {
     const orgMappings = [
       {
         id: "d6930155-009b-92a0-d2b9-007761c45ad2",
-        name: "California Department of Public Health",
+        name: "Coruscant Department of Public Health",
         active: true,
         address: [
           {
@@ -678,7 +678,7 @@ describe("LabsService tests", () => {
         telecom: [
           {
             use: "work",
-            value: "CalREDIEeCR@cdph.ca.gov",
+            value: "fakeemail@example.com",
             system: "email",
           },
         ],
@@ -686,34 +686,34 @@ describe("LabsService tests", () => {
       },
       {
         id: "f87de327-7272-42ac-012d-58904caf7ef1",
-        name: "Los Angeles County Department of Public Health",
+        name: "Coruscant City Department of Public Health",
         active: true,
         resourceType: "Organization",
       },
       {
         id: "21e7aca1-7a03-43dc-15e6-8f7ee24b6613",
-        name: "Tennessee Department of Health",
+        name: "Mos Eisley Department of Health",
         active: true,
         resourceType: "Organization",
       },
       {
         id: "d319a926-0eb3-5847-3b21-db8b778b4f07",
-        name: "Vanderbilt University Medical Center",
+        name: "Naboo University Medical Center",
         address: [
           {
             use: "work",
-            city: "NASHVILLE",
-            line: ["3401 West End Ave"],
+            city: "Naboo City",
+            line: ["0000 Up Ave"],
             state: "TN",
             country: "USA",
-            district: "DAVIDSON",
-            postalCode: "37203",
+            district: "Central",
+            postalCode: "00123",
           },
         ],
         telecom: [
           {
             use: "work",
-            value: "+1-615-322-5000",
+            value: "+1-555-555-5555",
             system: "phone",
           },
         ],
@@ -721,37 +721,39 @@ describe("LabsService tests", () => {
       },
       {
         id: "22c6cdd0-bde1-e220-9ba4-2c2802f795ad",
-        name: "VUMC CERNER LAB",
+        name: "Mos Espa Lab",
         address: [
           {
             use: "work",
-            city: "NASHVILLE",
-            line: ["4605 TVC VUMC", "1301 Medical Center Drive"],
+            city: "Naboo City",
+            line: ["0000 Up Ave"],
             state: "TN",
             country: "USA",
-            district: "DAVIDSON",
-            postalCode: "37232-5310",
+            district: "Central",
+            postalCode: "00123",
           },
         ],
         resourceType: "Organization",
         telecom: [
           {
-            value: "+1-615-875-5227",
+            value: "+1-555-555-5555",
             system: "phone",
           },
         ],
       },
       {
         id: "e3ece69c-0968-59c9-47dd-f16db731621a",
-        name: "VUMC CERNER LAB",
+        name: "Mos Espa Lab",
         address: [
           {
-            city: "NASHVILLE",
-            line: ["4605 TVC VUMC", "1301 Medical Center Drive"],
+            use: "work",
+            city: "Naboo City",
+            line: ["0000 Up Ave"],
             state: "TN",
-            postalCode: "37232-5310",
-          },
-        ],
+            country: "USA",
+            district: "Central",
+            postalCode: "00123",
+          }],
         telecom: [
           {
             value: "+1-615-875-5227",
@@ -769,16 +771,16 @@ describe("LabsService tests", () => {
 
     const matchedOrg1: Organization = {
       id: "22c6cdd0-bde1-e220-9ba4-2c2802f795ad",
-      name: "VUMC CERNER LAB",
+      name: "Mos Espa Lab",
       address: [
         {
           use: "work",
-          city: "NASHVILLE",
-          line: ["4605 TVC VUMC", "1301 Medical Center Drive"],
+          city: "Naboo City",
+          line: ["0000 Up Ave"],
           state: "TN",
           country: "USA",
-          district: "DAVIDSON",
-          postalCode: "37232-5310",
+          district: "Central",
+          postalCode: "00123",
         },
       ],
       resourceType: "Organization",

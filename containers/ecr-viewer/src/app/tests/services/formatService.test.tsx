@@ -623,8 +623,8 @@ describe("FormatService tests", () => {
 
   describe("toTitleCase", () => {
     it("should return string in title case", () => {
-      const input = "ABEL CASTILLO";
-      const expected = "Abel Castillo";
+      const input = "HAN SOLO";
+      const expected = "Han Solo";
 
       const result = toTitleCase(input);
       expect(result).toEqual(expected);
@@ -755,16 +755,16 @@ describe("FormatService tests", () => {
       const contactPoints: ContactPoint[] = [
         {
           system: "phone",
-          value: "+12485551234",
+          value: "+15555551234",
           use: "work",
         },
         {
           system: "phone",
-          value: "+13135551234",
+          value: "+15555551234",
         },
       ];
       const actual = formatContactPoint(contactPoints);
-      expect(actual).toEqual("Work: 248-555-1234\n313-555-1234");
+      expect(actual).toEqual("Work: 555-555-1234\n555-555-1234");
     });
     it("should return email information ", () => {
       const contactPoints: ContactPoint[] = [
@@ -785,22 +785,22 @@ describe("FormatService tests", () => {
       const contactPoints: ContactPoint[] = [
         {
           system: "fax",
-          value: "+13135551234",
+          value: "+15555551234",
           use: "work",
         },
         {
           system: "fax",
-          value: "+1 313 555-1235",
+          value: "+1 555 555-1235",
         },
       ];
       const actual = formatContactPoint(contactPoints);
-      expect(actual).toEqual("Work Fax: 313-555-1234\nFax: 313-555-1235");
+      expect(actual).toEqual("Work Fax: 555-555-1234\nFax: 555-555-1235");
     });
     it("should sort by system ", () => {
       const contactPoints: ContactPoint[] = [
         {
           system: "fax",
-          value: "+13135551234",
+          value: "+15555551234",
           use: "work",
         },
         {
@@ -809,11 +809,11 @@ describe("FormatService tests", () => {
         },
         {
           system: "pager",
-          value: "+1 313 555-1235",
+          value: "+1 555 555-1235",
         },
         {
           system: "phone",
-          value: "+1 313 555-1236",
+          value: "+1 555 555-1236",
         },
         {
           system: "email",
@@ -826,7 +826,7 @@ describe("FormatService tests", () => {
       ];
       const actual = formatContactPoint(contactPoints);
       expect(actual).toEqual(
-        "313-555-1236\nWork Fax: 313-555-1234\nPager: 313-555-1235\nmedicine@example.com\nmedicine@example.com\nOther: 123",
+        "555-555-1236\nWork Fax: 555-555-1234\nPager: 555-555-1235\nmedicine@example.com\nmedicine@example.com\nOther: 123",
       );
     });
   });

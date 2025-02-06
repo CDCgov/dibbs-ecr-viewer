@@ -48,17 +48,17 @@ describe("Encounter", () => {
     const facilityData = [
       {
         title: "Facility Name",
-        value: "PRM- Palmdale Regional Medical Center",
+        value: "Hoth Medical",
       },
       {
         title: "Facility Address",
         value:
-          "5001 North Mount Washington Circle Drive\nNorth Canton, MA 02740",
+          "50 Snowy Drive\nEcho Base, MA 00123",
       },
       {
         title: "Facility Contact Address",
         value:
-          "5001 North Mount Washington Circle Drive\nNorth Canton, MA 02740",
+          "50 Snowy Drive\nEcho Base, MA 00123",
       },
       {
         title: "Facility Type",
@@ -66,7 +66,7 @@ describe("Encounter", () => {
       },
       {
         title: "Facility ID",
-        value: "2.16.840.1.113883.4.6",
+        value: "112233445566",
       },
     ];
     const providerData = [

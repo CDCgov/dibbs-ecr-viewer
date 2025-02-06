@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Utils safeParse should map xml-y HTML 1`] = `
+<DocumentFragment>
+  <p>
+    hi there
+  </p>
+  <span>
+    I'm content
+  </span>
+  <ul>
+    <li>
+      one
+    </li>
+    <li>
+      two
+    </li>
+  </ul>
+</DocumentFragment>
+`;
+
+exports[`Utils safeParse should remove comments 1`] = `
+<DocumentFragment>
+  <p>
+    hi there
+  </p>
+  I'm content
+  <ul>
+    <li>
+      one
+    </li>
+    <li>
+      two
+    </li>
+  </ul>
+</DocumentFragment>
+`;
+
+exports[`Utils safeParse should remove empty nodes 1`] = `
+<DocumentFragment>
+  <br />
+  <span>
+    hiya
+  </span>
+</DocumentFragment>
+`;

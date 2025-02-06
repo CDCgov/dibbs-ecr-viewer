@@ -10,11 +10,11 @@ describe("EcrSummary tests", () => {
     const patientDetails = [
       {
         title: "Patient Name",
-        value: "ABEL CASTILLO",
+        value: "Han Solo",
       },
       {
         title: "DOB",
-        value: "04/15/2015",
+        value: "04/15/1900",
       },
       {
         title: "Sex",
@@ -22,25 +22,25 @@ describe("EcrSummary tests", () => {
       },
       {
         title: "Patient Address",
-        value: "1050 CARPENTER ST\nEDWARDS, CA\n93523-2800, US",
+        value: "1050 Millennium Falcon ST\nSpace, CA\n00123, US",
       },
       {
         title: "Patient Contact",
-        value: "Home (818)419-5968\nMELLY.C.A.16@GMAIL.COM",
+        value: "Home 555-555-55555\nHANSOLOFAKEEMAIL@EXAMPLE.COM",
       },
     ];
     const encounterDetails = [
       {
         title: "Facility Name",
-        value: "PRM- Palmdale Regional Medical Center",
+        value: "Millennium Falcon Med Bay",
       },
       {
         title: "Facility Contact",
-        value: "(661)382-5000",
+        value: "555-555-5555",
       },
       {
         title: "Encounter Date/Time",
-        value: "Start: 05/13/2022 7:25 AM UTC\nEnd: 05/13/2022 9:57 AM UTC",
+        value: "Start: 05/13/2000 7:25 AM UTC\nEnd: 05/13/2000 9:57 AM UTC",
       },
       {
         title: "Encounter Type",

@@ -22,13 +22,13 @@ describe("ECR Metadata", () => {
         {
           "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method":
             new Set([
-              "California Department of Public Health",
-              "Los Angeles County Department of Public Health",
+              "Coruscant Department of Public Health",
+              "Coruscant City Department of Public Health",
             ]),
           "Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)":
-            new Set(["Los Angeles County Department of Public Health"]),
+            new Set(["Coruscant City Department of Public Health"]),
           "COVID-19 (as a diagnosis or active problem)": new Set([
-            "Los Angeles County Department of Public Health",
+            "Coruscant City Department of Public Health",
           ]),
         },
     };
@@ -64,19 +64,19 @@ describe("ECR Metadata", () => {
     const ecrCustodianDetails: DisplayDataProps[] = [
       {
         title: "Custodian ID",
-        value: "1104202761",
+        value: "112233445566",
       },
       {
         title: "Custodian Name",
-        value: "Vanderbilt University Medical Center",
+        value: "Hoth University Medical Center",
       },
       {
         title: "Custodian Address",
-        value: "3401 West End Ave\nNashville, TN\n37203, USA",
+        value: "5555 Snowy Ave\nSnowtown, TN\n00123, USA",
       },
       {
         title: "Custodian Contact",
-        value: "Work 1-615-322-5000",
+        value: "Work 1-555-555-5555",
       },
     ];
 
@@ -84,27 +84,27 @@ describe("ECR Metadata", () => {
       [
         {
           title: "Author Name",
-          value: "Dr. Stella Zinman",
+          value: "Dr. R2D2",
         },
         {
           title: "Author Address",
-          value: "1 Main st",
+          value: "1 Droid st",
         },
         {
           title: "Author Contact",
-          value: "(661)382-5000",
+          value: "(555)555-5555",
         },
         {
           title: "Author Facility Name",
-          value: "PRM- Palmdale Regional Medical Center",
+          value: "Echo Base Medical Facility",
         },
         {
           title: "Author Facility Address",
-          value: "38600 Medical Center Drive\nPalmdale, CA\n93551, USA",
+          value: "5555 Echo Base Drive\nEcho Base, CA\n00123, USA",
         },
         {
           title: "Author Facility Contact",
-          value: "(661)382-5000",
+          value: "555-555-5555",
         },
       ],
     ];

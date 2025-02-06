@@ -147,7 +147,7 @@ describe("Immunizations Table", () => {
         status: "completed",
         identifier: [
           {
-            value: "58354",
+            value: "123456",
             system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
           },
         ],

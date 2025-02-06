@@ -129,12 +129,12 @@ exports[`ECR Metadata should match snapshot 1`] = `
                     Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method
                   </td>
                   <td>
-                    California Department of Public Health
+                    Coruscant Department of Public Health
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    Los Angeles County Department of Public Health
+                    Coruscant City Department of Public Health
                   </td>
                 </tr>
                 <tr>
@@ -144,7 +144,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                     Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)
                   </td>
                   <td>
-                    Los Angeles County Department of Public Health
+                    Coruscant City Department of Public Health
                   </td>
                 </tr>
                 <tr>
@@ -154,7 +154,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                     COVID-19 (as a diagnosis or active problem)
                   </td>
                   <td>
-                    Los Angeles County Department of Public Health
+                    Coruscant City Department of Public Health
                   </td>
                 </tr>
               </tbody>
@@ -373,7 +373,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  Dr. Stella Zinman
+                  Dr. R2D2
                 </div>
               </div>
               <div
@@ -392,7 +392,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  1 Main st
+                  1 Droid st
                 </div>
               </div>
               <div
@@ -411,7 +411,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  (661)382-5000
+                  (555)555-5555
                 </div>
               </div>
               <div
@@ -430,7 +430,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  PRM- Palmdale Regional Medical Center
+                  Echo Base Medical Facility
                 </div>
               </div>
               <div
@@ -449,9 +449,9 @@ exports[`ECR Metadata should match snapshot 1`] = `
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  38600 Medical Center Drive
-Palmdale, CA
-93551, USA
+                  5555 Echo Base Drive
+Echo Base, CA
+00123, USA
                 </div>
               </div>
               <div
@@ -470,7 +470,7 @@ Palmdale, CA
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  (661)382-5000
+                  555-555-5555
                 </div>
               </div>
               <div
@@ -526,7 +526,7 @@ Palmdale, CA
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  1104202761
+                  112233445566
                 </div>
               </div>
               <div
@@ -545,7 +545,7 @@ Palmdale, CA
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  Vanderbilt University Medical Center
+                  Hoth University Medical Center
                 </div>
               </div>
               <div
@@ -564,9 +564,9 @@ Palmdale, CA
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  3401 West End Ave
-Nashville, TN
-37203, USA
+                  5555 Snowy Ave
+Snowtown, TN
+00123, USA
                 </div>
               </div>
               <div
@@ -585,7 +585,7 @@ Nashville, TN
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  Work 1-615-322-5000
+                  Work 1-555-555-5555
                 </div>
               </div>
               <div
