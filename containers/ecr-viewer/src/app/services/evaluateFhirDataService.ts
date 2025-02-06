@@ -181,6 +181,30 @@ export const calculatePatientAge = (
 };
 
 /**
+ * Evaluates patient's vital status from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle The FHIR bundle containing the patient's vital status
+ * @param fhirPathMappings The mappings for retrieving patient vital status
+ * @returns The vital status of the patient, either `Alive`, `Deceased`, or `""` (if not found)
+ */
+export const evaluatePatientVitalStatus = (
+  fhirBundle: Bundle,
+  fhirPathMappings: PathMappings,
+) => {
+  const patientVitalStatus = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientVitalStatus,
+  );
+
+  if (!patientVitalStatus.length) {
+    return "";
+  }
+
+  const isPatientDeceased = patientVitalStatus[0];
+
+  return isPatientDeceased ? "Deceased" : "Alive";
+};
+
+/**
  * Calculates Patient Age at Death if DOB and DOD exist, otherwise returns undefined
  * @param fhirBundle - The FHIR bundle containing patient information.
  * @param fhirPathMappings - The mappings for retrieving patient date of birth and date of death.
@@ -297,7 +321,9 @@ export const evaluateDemographicsData = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
-  const patientSex = toTitleCase(evaluate(fhirBundle, mappings.patientGender)[0]);
+  const patientSex = toTitleCase(
+    evaluate(fhirBundle, mappings.patientGender)[0],
+  );
 
   const demographicsData: DisplayDataProps[] = [
     {
@@ -318,10 +344,7 @@ export const evaluateDemographicsData = (
     },
     {
       title: "Vital Status",
-      value:
-        evaluate(fhirBundle, mappings.patientVitalStatus)[0] === false
-          ? "Alive"
-          : "Deceased",
+      value: evaluatePatientVitalStatus(fhirBundle, mappings),
     },
     {
       title: "Date of Death",
@@ -330,7 +353,8 @@ export const evaluateDemographicsData = (
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value: patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
+      value:
+        patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
     },
     {
       title: "Race",
