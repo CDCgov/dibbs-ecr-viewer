@@ -99,8 +99,8 @@ templateId.
       <!--Could
       have multiple addresses-->
       <addr use="H">
-        <streetAddressLine>5101 Peachtree St NE</streetAddressLine>
-        <city>Atlanta</city>
+        <streetAddressLine>123 Galactic Senate Drive</streetAddressLine>
+        <city>Coruscant</city>
         <state>GA</state>
         <postalCode>30302</postalCode>
         <!-- Although "county" is not explicitly specified in the US Realm Address, 
@@ -113,11 +113,11 @@ templateId.
       <telecom use="WP" value="tel:+1(555)555-2003" />
       <patient>
         <name use="L">
-          <given>Jane</given>
+          <given>Kylo</given>
           <given qualifier="IN">H</given>
-          <family>Stinn</family>
+          <family>Ren</family>
         </name>
-        <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1" />
+        <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" />
         <birthTime value="19741124" />
         <!-- If sdtc:deceasedInd is true then sdtc:deceasedTime must be present -->
         <sdtc:deceasedInd value="false" />
@@ -130,22 +130,22 @@ templateId.
         <guardian>
           <!-- Parent/Guardian Address -->
           <addr use="H">
-            <streetAddressLine>1700 Dawes St</streetAddressLine>
-            <city>Lowell</city>
-            <state>MA</state>
-            <postalCode>02368</postalCode>
+            <streetAddressLine>123 Galactic Senate Drive</streetAddressLine>
+            <city>Coruscant</city>
+            <state>GA</state>
+            <postalCode>30302</postalCode>
             <country>US</country>
           </addr>
           <!-- Parent/Guardian phone -->
           <telecom use="HP" value="tel:+1(999)555-1212" />
           <!-- Parent/Guardian email -->
-          <telecom value="mailto:mail@guardian.com" />
+          <telecom value="mailto:mail@example.com" />
           <guardianPerson>
             <!-- Parent/guardian name -->
             <name use="L">
-              <given>Ruth</given>
+              <given>Leia</given>
               <given qualifier="IN">L</given>
-              <family>Stinn</family>
+              <family>Organa</family>
             </name>
           </guardianPerson>
         </guardian>
@@ -177,8 +177,8 @@ templateId.
       <!--authoring
       device address - may or may not be same as facility where care provided for case-->
       <addr>
-        <streetAddressLine>4646 Brown Rd</streetAddressLine>
-        <city>Salem</city>
+        <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+        <city>Endor</city>
         <state>MA</state>
         <postalCode>02368</postalCode>
         <country>US</country>
@@ -199,11 +199,11 @@ templateId.
     <assignedCustodian>
       <representedCustodianOrganization>
         <id extension="88888888" root="2.16.840.1.113883.4.6" />
-        <name>Salem Medical Center</name>
+        <name>Endor Medical Center</name>
         <telecom use="WP" value="tel:+1(555)555-1212" />
         <addr>
-          <streetAddressLine>4646 Brown Rd</streetAddressLine>
-          <city>Salem</city>
+          <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+          <city>Endor</city>
           <state>MA</state>
           <postalCode>02368</postalCode>
           <country>US</country>
@@ -242,8 +242,8 @@ templateId.
         <assignedEntity>
           <id extension="6666666666666" root="2.16.840.1.113883.4.6" />
           <addr>
-            <streetAddressLine>2100 North Ave</streetAddressLine>
-            <city>Burlington</city>
+            <streetAddressLine>2100 Rebel Alliance Way</streetAddressLine>
+            <city>Endor</city>
             <state>MA</state>
             <postalCode>02368</postalCode>
             <country>US</country>
@@ -257,18 +257,18 @@ templateId.
           <assignedPerson>
             <!-- Provider Name -->
             <name>
-              <given>Michael</given>
-              <family>Coletta</family>
+              <given>Darth</given>
+              <family>Vader</family>
               <suffix qualifier="AC">M.D.</suffix>
             </name>
           </assignedPerson>
           <representedOrganization>
             <!-- Provider Facility/Office Name -->
-            <name>BMass Doctors</name>
+            <name>Endor Doctors</name>
             <!-- Provider Address -->
             <addr>
-              <streetAddressLine>2100 North Ave</streetAddressLine>
-              <city>Burlington</city>
+              <streetAddressLine>2100 Rebel Alliance Way</streetAddressLine>
+              <city>Endor</city>
               <state>MA</state>
               <postalCode>02368</postalCode>
               <country>US</country>
@@ -286,8 +286,8 @@ templateId.
           Kaiser North-->
           <location>
             <addr>
-              <streetAddressLine>4646 Brown Rd</streetAddressLine>
-              <city>Salem</city>
+              <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+              <city>Endor</city>
               <state>MA</state>
               <postalCode>02368</postalCode>
               <country>US</country>
@@ -297,15 +297,15 @@ templateId.
           contact information-->
           <serviceProviderOrganization>
             <!-- Facility Name -->
-            <name>Salem Medical Center</name>
+            <name>Endor Medical Center</name>
             <!-- Facility Phone -->
             <telecom use="WP" value="tel: 1+(555)-555-1212" />
             <!-- Facility Fax -->
             <telecom use="WP" value="fax: 1+(555)-555-3333" />
             <!-- Facility Addr -->
             <addr>
-              <streetAddressLine>4646 Brown Rd</streetAddressLine>
-              <city>Salem</city>
+              <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+              <city>Endor</city>
               <state>MA</state>
               <postalCode>02368</postalCode>
               <country>US</country>
@@ -1731,7 +1731,7 @@ templateId.
               <tbody>
                 <tr ID="id_6049baec-80df-4dea-82b2-345f6546cda3_ref">
                   <td>Employment detail</td>
-                  <td>Centers for Disease Control 1, Peachtree St South Atlanta, GA, 404-564-7865</td>
+                  <td>Galactic Centers for Disease Control 1, Jedi Temple St South Coruscant, GA, 555-123-7865</td>
                   <td>JAN 1, 1993</td>
                 </tr>
               </tbody>
@@ -1756,7 +1756,7 @@ templateId.
               <tbody>
                 <tr ID="id_79565142-eae0-4213-a3b3-b73cdf474682_ref">
                   <td>1999 to 2007</td>
-                  <td>Spent 8 years in the UK during the BSE outbreak</td>
+                  <td>Spent 8 years in Tattooine during the BSE outbreak</td>
                   <td />
                 </tr>
                 <tr ID="id_030df1dc-1d31-4e5d-abdd-5edd0b74c5c3_ref">
@@ -1764,7 +1764,7 @@ templateId.
                   <td />
                   <td>
                     <list styleCode="none">
-                      <item>Brazil</item>
+                      <item>Dagobah</item>
                     </list>
                   </td>
                 </tr>
@@ -1773,7 +1773,7 @@ templateId.
                   <td />
                   <td>
                     <list styleCode="none">
-                      <item>Nadi, FJ</item>
+                      <item>Kachirho, KY</item>
                     </list>
                   </td>
                 </tr>
@@ -1782,7 +1782,7 @@ templateId.
                   <td />
                   <td>
                     <list styleCode="none">
-                      <item>Montreal, QC, CA</item>
+                      <item>Echo Base, HT, CA</item>
                     </list>
                   </td>
                 </tr>
@@ -1791,7 +1791,7 @@ templateId.
                   <td />
                   <td>
                     <list styleCode="none">
-                      <item>Sydney, NSW, AU</item>
+                      <item>Theed, NB, AU</item>
                     </list>
                   </td>
                 </tr>
@@ -1800,7 +1800,7 @@ templateId.
                   <td />
                   <td>
                     <list styleCode="none">
-                      <item>1170 N Rancho Robles Rd Oracle, AZ8562, US</item>
+                      <item>1170 Lava Rd Mustafar, AZ 8562, US</item>
                     </list>
                   </td>
                 </tr>
@@ -1861,8 +1861,8 @@ templateId.
               <effectiveTime>
                 <low value="19930101" />
               </effectiveTime>
-              <value xsi:type="ST">Centers for Disease Control 1, Peachtree St South Atlanta, GA,
-                404-564-7865</value>
+              <value xsi:type="ST">Galactic Centers for Disease Control 1, Jedi Temple St South Coruscant, GA,
+                555-123-7865</value>
             </observation>
           </entry>
           <entry typeCode="DRIV">
@@ -1873,7 +1873,7 @@ templateId.
               <id root="79565142-eae0-4213-a3b3-b73cdf474682" />
               <code code="420008001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT"
                 displayName="Travel" />
-              <text>Spent 8 years in the UK during the BSE outbreak</text>
+              <text>Spent 8 years in Tattooine during the BSE outbreak</text>
               <statusCode code="completed" />
               <!-- Duration (from 1999 to 2007) -->
               <effectiveTime>
@@ -1899,8 +1899,8 @@ templateId.
               <participant typeCode="LOC">
                 <participantRole classCode="TERR">
                   <!-- Code specifiying the location traveled -->
-                  <code code="BRA" displayName="Brazil" codeSystem="1.0.3166.1"
-                    codeSystemName="Country (ISO 3166-1)" />
+                  <code code="DAG" displayName="Dagobah" codeSystem="1.0.3166.1"
+                    codeSystemName="Country (ISO 1234-1)" />
                 </participantRole>
               </participant>
             </act>
@@ -1923,8 +1923,8 @@ templateId.
                 <participantRole classCode="TERR">
                   <!-- Address specific to city -->
                   <addr>
-                    <country>FJ</country>
-                    <city>Nadi</city>
+                    <country>KY</country>
+                    <city>Kachirho</city>
                   </addr>
                 </participantRole>
               </participant>
@@ -1949,8 +1949,8 @@ templateId.
                 <participantRole classCode="TERR">
                   <addr>
                     <country>CA</country>
-                    <city>Montreal</city>
-                    <state>QC</state>
+                    <city>Echo Base</city>
+                    <state>HT</state>
                   </addr>
                 </participantRole>
               </participant>
@@ -1974,8 +1974,8 @@ templateId.
                 <participantRole classCode="TERR">
                   <addr>
                     <country>AU</country>
-                    <city>Sydney</city>
-                    <state>NSW</state>
+                    <city>Theed</city>
+                    <state>NB</state>
                   </addr>
                 </participantRole>
               </participant>
@@ -1998,8 +1998,8 @@ templateId.
               <participant typeCode="LOC">
                 <participantRole classCode="TERR">
                   <addr>
-                    <streetAddressLine>1170 N Rancho Robles Rd</streetAddressLine>
-                    <city>Oracle</city>
+                    <streetAddressLine>1170 Lava Rd</streetAddressLine>
+                    <city>Mustafar</city>
                     <state>AZ</state>
                     <postalCode>8562</postalCode>
                     <country>US</country>
