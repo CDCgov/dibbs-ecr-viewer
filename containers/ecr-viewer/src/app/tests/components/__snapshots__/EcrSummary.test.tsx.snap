@@ -30,7 +30,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
             <div
               class="grid-col maxw7 text-pre-line p-list"
             >
-              ABEL CASTILLO
+              Han Solo
             </div>
           </div>
           <div
@@ -49,7 +49,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
             <div
               class="grid-col maxw7 text-pre-line p-list"
             >
-              04/15/2015
+              04/15/1900
             </div>
           </div>
           <div
@@ -87,9 +87,9 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
             <div
               class="grid-col maxw7 text-pre-line p-list"
             >
-              1050 CARPENTER ST
-EDWARDS, CA
-93523-2800, US
+              1050 Millennium Falcon ST
+Space, CA
+00123, US
             </div>
           </div>
           <div
@@ -108,8 +108,8 @@ EDWARDS, CA
             <div
               class="grid-col maxw7 text-pre-line p-list"
             >
-              Home (818)419-5968
-MELLY.C.A.16@GMAIL.COM
+              Home 555-555-55555
+HANSOLOFAKEEMAIL@EXAMPLE.COM
             </div>
           </div>
           <div
@@ -142,7 +142,7 @@ MELLY.C.A.16@GMAIL.COM
             <div
               class="grid-col maxw7 text-pre-line p-list"
             >
-              PRM- Palmdale Regional Medical Center
+              Millennium Falcon Med Bay
             </div>
           </div>
           <div
@@ -161,7 +161,7 @@ MELLY.C.A.16@GMAIL.COM
             <div
               class="grid-col maxw7 text-pre-line p-list"
             >
-              (661)382-5000
+              555-555-5555
             </div>
           </div>
           <div
@@ -180,8 +180,8 @@ MELLY.C.A.16@GMAIL.COM
             <div
               class="grid-col maxw7 text-pre-line p-list"
             >
-              Start: 05/13/2022 7:25 AM UTC
-End: 05/13/2022 9:57 AM UTC
+              Start: 05/13/2000 7:25 AM UTC
+End: 05/13/2000 9:57 AM UTC
             </div>
           </div>
           <div

@@ -149,7 +149,7 @@ exports[`Encounter should match snapshot 1`] = `
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  PRM- Palmdale Regional Medical Center
+                  Hoth Medical
                 </div>
               </div>
               <div
@@ -168,8 +168,8 @@ exports[`Encounter should match snapshot 1`] = `
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  5001 North Mount Washington Circle Drive
-North Canton, MA 02740
+                  50 Snowy Drive
+Echo Base, MA 00123
                 </div>
               </div>
               <div
@@ -188,8 +188,8 @@ North Canton, MA 02740
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  5001 North Mount Washington Circle Drive
-North Canton, MA 02740
+                  50 Snowy Drive
+Echo Base, MA 00123
                 </div>
               </div>
               <div
@@ -227,7 +227,7 @@ North Canton, MA 02740
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
-                  2.16.840.1.113883.4.6
+                  112233445566
                 </div>
               </div>
               <div
