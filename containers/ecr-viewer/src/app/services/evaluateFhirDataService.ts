@@ -297,7 +297,9 @@ export const evaluateDemographicsData = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
-  const patientSex = toTitleCase(evaluate(fhirBundle, mappings.patientGender)[0]);
+  const patientSex = toTitleCase(
+    evaluate(fhirBundle, mappings.patientGender)[0],
+  );
 
   const demographicsData: DisplayDataProps[] = [
     {
@@ -330,7 +332,8 @@ export const evaluateDemographicsData = (
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value: patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
+      value:
+        patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
     },
     {
       title: "Race",

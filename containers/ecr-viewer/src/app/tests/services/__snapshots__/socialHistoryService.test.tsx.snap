@@ -40,13 +40,13 @@ exports[`Travel History should display a table  1`] = `
     <tbody>
       <tr>
         <td>
-          Traveled to Singapore, Malaysia and Bali with my family.
+          Traveled to Naboo, Tatooine and Alderaan
         </td>
         <td>
-          01/18/2018
+          01/18/1888
         </td>
         <td>
-          02/18/2018
+          02/18/1898
         </td>
         <td>
           Active duty military (occupation)
