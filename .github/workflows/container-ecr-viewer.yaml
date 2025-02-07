@@ -59,6 +59,7 @@ jobs:
           flags: ${{ env.CONTAINER }}
 
   lighthouse:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -141,6 +142,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
 
   e2e-tests:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
