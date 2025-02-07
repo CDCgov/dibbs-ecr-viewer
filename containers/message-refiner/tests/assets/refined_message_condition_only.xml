@@ -39,8 +39,8 @@
       <!--Could
       have multiple addresses-->
       <addr use="H">
-        <streetAddressLine>5101 Peachtree St NE</streetAddressLine>
-        <city>Atlanta</city>
+        <streetAddressLine>123 Galactic Senate Drive</streetAddressLine>
+        <city>Coruscant</city>
         <state>GA</state>
         <postalCode>30302</postalCode>
         <!-- Although "county" is not explicitly specified in the US Realm Address, 
@@ -53,11 +53,11 @@
       <telecom use="WP" value="tel:+1(555)555-2003" />
       <patient>
         <name use="L">
-          <given>Jane</given>
+          <given>Kylo</given>
           <given qualifier="IN">H</given>
-          <family>Stinn</family>
+          <family>Ren</family>
         </name>
-        <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1" />
+        <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" />
         <birthTime value="19741124" />
         <!-- If sdtc:deceasedInd is true then sdtc:deceasedTime must be present -->
         <sdtc:deceasedInd value="false" />
@@ -69,22 +69,22 @@
         <guardian>
           <!-- Parent/Guardian Address -->
           <addr use="H">
-            <streetAddressLine>1700 Dawes St</streetAddressLine>
-            <city>Lowell</city>
-            <state>MA</state>
-            <postalCode>02368</postalCode>
+            <streetAddressLine>123 Galactic Senate Drive</streetAddressLine>
+            <city>Coruscant</city>
+            <state>GA</state>
+            <postalCode>30302</postalCode>
             <country>US</country>
           </addr>
           <!-- Parent/Guardian phone -->
           <telecom use="HP" value="tel:+1(999)555-1212" />
           <!-- Parent/Guardian email -->
-          <telecom value="mailto:mail@guardian.com" />
+          <telecom value="mailto:mail@example.com" />
           <guardianPerson>
             <!-- Parent/guardian name -->
             <name use="L">
-              <given>Ruth</given>
+              <given>Leia</given>
               <given qualifier="IN">L</given>
-              <family>Stinn</family>
+              <family>Organa</family>
             </name>
           </guardianPerson>
         </guardian>
@@ -116,8 +116,8 @@
       <!--authoring
       device address - may or may not be same as facility where care provided for case-->
       <addr>
-        <streetAddressLine>4646 Brown Rd</streetAddressLine>
-        <city>Salem</city>
+        <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+        <city>Endor</city>
         <state>MA</state>
         <postalCode>02368</postalCode>
         <country>US</country>
@@ -138,11 +138,11 @@
     <assignedCustodian>
       <representedCustodianOrganization>
         <id extension="88888888" root="2.16.840.1.113883.4.6" />
-        <name>Salem Medical Center</name>
+        <name>Endor Medical Center</name>
         <telecom use="WP" value="tel:+1(555)555-1212" />
         <addr>
-          <streetAddressLine>4646 Brown Rd</streetAddressLine>
-          <city>Salem</city>
+          <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+          <city>Endor</city>
           <state>MA</state>
           <postalCode>02368</postalCode>
           <country>US</country>
@@ -180,8 +180,8 @@
         <assignedEntity>
           <id extension="6666666666666" root="2.16.840.1.113883.4.6" />
           <addr>
-            <streetAddressLine>2100 North Ave</streetAddressLine>
-            <city>Burlington</city>
+            <streetAddressLine>2100 Rebel Alliance Way</streetAddressLine>
+            <city>Endor</city>
             <state>MA</state>
             <postalCode>02368</postalCode>
             <country>US</country>
@@ -191,22 +191,22 @@
           <!-- Provider Fax -->
           <telecom use="WP" value="fax:+1(555)555-1234" />
           <!-- Provider Email -->
-          <telecom use="WP" value="mailto:mail@provider_domain.com" />
+          <telecom use="WP" value="mailto:mail@example.com" />
           <assignedPerson>
             <!-- Provider Name -->
             <name>
-              <given>Michael</given>
-              <family>Coletta</family>
+              <given>Darth</given>
+              <family>Vader</family>
               <suffix qualifier="AC">M.D.</suffix>
             </name>
           </assignedPerson>
           <representedOrganization>
             <!-- Provider Facility/Office Name -->
-            <name>BMass Doctors</name>
+            <name>Endor Doctors</name>
             <!-- Provider Address -->
             <addr>
-              <streetAddressLine>2100 North Ave</streetAddressLine>
-              <city>Burlington</city>
+              <streetAddressLine>2100 Rebel Alliance Way</streetAddressLine>
+              <city>Endor</city>
               <state>MA</state>
               <postalCode>02368</postalCode>
               <country>US</country>
@@ -224,8 +224,8 @@
           Kaiser North-->
           <location>
             <addr>
-              <streetAddressLine>4646 Brown Rd</streetAddressLine>
-              <city>Salem</city>
+              <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+              <city>Endor</city>
               <state>MA</state>
               <postalCode>02368</postalCode>
               <country>US</country>
@@ -235,15 +235,15 @@
           contact information-->
           <serviceProviderOrganization>
             <!-- Facility Name -->
-            <name>Salem Medical Center</name>
+            <name>Endor Medical Center</name>
             <!-- Facility Phone -->
             <telecom use="WP" value="tel: 1+(555)-555-1212" />
             <!-- Facility Fax -->
             <telecom use="WP" value="fax: 1+(555)-555-3333" />
             <!-- Facility Addr -->
             <addr>
-              <streetAddressLine>4646 Brown Rd</streetAddressLine>
-              <city>Salem</city>
+              <streetAddressLine>4646 Ewok Village Blvd</streetAddressLine>
+              <city>Endor</city>
               <state>MA</state>
               <postalCode>02368</postalCode>
               <country>US</country>

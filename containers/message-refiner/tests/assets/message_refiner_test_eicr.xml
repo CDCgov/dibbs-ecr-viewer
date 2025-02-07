@@ -253,7 +253,7 @@ templateId.
           <!-- Provider Fax -->
           <telecom use="WP" value="fax:+1(555)555-1234" />
           <!-- Provider Email -->
-          <telecom use="WP" value="mailto:mail@provider_domain.com" />
+          <telecom use="WP" value="mailto:mail@example.com" />
           <assignedPerson>
             <!-- Provider Name -->
             <name>
