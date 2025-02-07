@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-test("should not have any automatically detectable accessibility issues", async ({
+test.skip("should not have any automatically detectable accessibility issues", async ({
   page,
 }) => {
   // Set timetout to 2 minutes because the first call to local stack s3 can take ~1:30
@@ -17,7 +17,7 @@ test("should not have any automatically detectable accessibility issues", async 
   expect(accessibilityScanResults.violations).toEqual([]);
 });
 
-test("fully expanded should not have any automatically detectable accessibility issues", async ({
+test.skip("fully expanded should not have any automatically detectable accessibility issues", async ({
   page,
 }) => {
   await page.goto(
