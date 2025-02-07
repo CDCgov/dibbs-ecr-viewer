@@ -13,30 +13,6 @@
           ],
           "source": ["ecr"]
         },
-        "identifier": [
-          {
-            "use": "official",
-            "type": {
-              "coding": [
-                {
-                  "code": "55751-2",
-                  "display": "Initial Public Health Case Report",
-                  "system": "http://loinc.org"
-                }
-              ]
-            },
-            "value": "28beb5ae-3f68-11ed-8bdc-005056a7fb21",
-            "assigner": {
-              "display": "EPC"
-            }
-          }
-        ],
-        "extension": [
-          {
-            "url": "http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber",
-            "valueString": "28"
-          }
-        ],
         "status": "final",
         "type": {
           "coding": [
@@ -49,32 +25,13 @@
         },
         "date": "2022-10-04T17:01:48-07:00",
         "title": "Initial Public Health Case Report",
-        "confidentiality": "N",
         "section": [
-          {
-            "id": "7dfb261e-4d95-b4c2-9906-efe4979bc1aa",
-            "title": "Miscellaneous Notes",
-            "text": {
-              "status": "generated",
-              "div": "<table><thead><tr><th>Active Problems</th><th>Noted Date</th></tr></thead><tbody><tr><td>Parkinson's syndrome</td><td>7/25/1845</td></tr><tr><td>Essential hypertension</td><td>7/21/1845</td></tr></tbody></table>"
-            },
-            "code": {
-              "coding": [
-                {
-                  "code": "10164-2",
-                  "display": "HISTORY OF PRESENT ILLNESS",
-                  "system": "http://loinc.org"
-                }
-              ]
-            },
-            "mode": "snapshot"
-          },
           {
             "id": "eb08daad-1e00-4280-4846-4276acb00888",
             "title": "Plan of Treatment",
             "text": {
               "status": "generated",
-              "div": "<table><caption>Pending Results</caption> <thead><tr><th>Name</th><th>Type</th><th>Priority</th><th>Associated Diagnoses</th><th>Date/Time</th></tr></thead><tbody><tr><!-- data-id: procedure11 --><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure12'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure13'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure14'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure15'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure16'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure17'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure18'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure19'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure20'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure21'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure22'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure23'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr></tbody></table>documented as of this encounter"
+              "div": "<table><caption>Pending Results</caption> <thead><tr><th>Name</th><th>Type</th><th>Priority</th><th>Associated Diagnoses</th><th>Date/Time</th></tr></thead><tbody><tr><!-- data-id: procedure11 --><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure12'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr></tbody></table>documented as of this encounter"
             },
             "code": {
               "coding": [
