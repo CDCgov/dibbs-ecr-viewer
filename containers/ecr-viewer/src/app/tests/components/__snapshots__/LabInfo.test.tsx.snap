@@ -1,0 +1,1464 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot test 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="lab-results"
+          >
+            Lab Results
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              data-testid="lab-results"
+            >
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="grid-col-auto width-full text-pre-line"
+                >
+                  <div
+                    class="usa-accordion accordion-rr accordion_0 margin-bottom-3"
+                    data-testid="accordion"
+                  >
+                    <h5
+                      class="usa-accordion__heading acc_item_0 side-nav-ignore padding-bottom-0"
+                    >
+                      <button
+                        aria-controls="all-lab-results"
+                        aria-expanded="false"
+                        class="usa-accordion__button"
+                        data-testid="accordionButton_all-lab-results"
+                        type="button"
+                      >
+                        All Lab Results
+                      </button>
+                    </h5>
+                    <div
+                      class="usa-accordion__content usa-prose acc_item_0 side-nav-ignore padding-bottom-0"
+                      data-testid="accordionItem_all-lab-results"
+                      hidden=""
+                      id="all-lab-results"
+                    >
+                      <table
+                        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 lab-results-table-from-div"
+                        data-testid="table"
+                      >
+                        <thead>
+                          <tr>
+                            <th
+                              class="tableHeader bg-gray-5 minw-10"
+                              scope="col"
+                            >
+                              Lab Test Name
+                            </th>
+                            <th
+                              class="tableHeader bg-gray-5 minw-10"
+                              scope="col"
+                            >
+                              Lab Test Result Value
+                            </th>
+                            <th
+                              class="tableHeader bg-gray-5 minw-10"
+                              scope="col"
+                            >
+                              Lab Test Result Date
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <span>
+                                SARS-CoV-2, NAA CL
+                              </span>
+                            </td>
+                            <td>
+                              <span>
+                                POS
+                              </span>
+                            </td>
+                            <td>
+                              <span>
+                                2000-02-04T21:02:00.000Z
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span>
+                                Symptomatic as defined by CDC?
+                              </span>
+                            </td>
+                            <td>
+                              <span>
+                                YES
+                              </span>
+                            </td>
+                            <td>
+                              <span>
+                                2000-02-04T21:02:00.000Z
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LabInfo when labResults is LabReportElementData[] should match snapshot test 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="lab-results-from-unknown-organization"
+          >
+            Lab Results from Unknown Organization
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Lab Address
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  501 S. Sand Street
+Mos Eisley, CO
+00055
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Number of Results
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  2
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="display-flex"
+            >
+              <div
+                class="margin-left-auto padding-top-1"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-unknown-organization-expand-button"
+                  type="button"
+                >
+                  Expand all labs
+                </button>
+                <span
+                  class="vertical-line"
+                />
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-unknown-organization-collapse-button"
+                  type="button"
+                >
+                  Collapse all labs
+                </button>
+              </div>
+            </div>
+            <div
+              class="usa-accordion accordion-rr accordion_14394818-a1e9-4882-ca8b-FAKE793bb5cc margin-bottom-3"
+              data-testid="accordion"
+            >
+              <h5
+                class="usa-accordion__heading acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+              >
+                <button
+                  aria-controls="stool-pathogens-naat-12-to-25-targets"
+                  aria-expanded="false"
+                  class="usa-accordion__button"
+                  data-testid="accordionButton_stool-pathogens-naat-12-to-25-targets"
+                  type="button"
+                >
+                  STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS
+                  <span
+                    class="usa-tag margin-left-105"
+                    data-testid="tag"
+                    style="background: rgb(181, 9, 9);"
+                  >
+                    Abnormal
+                  </span>
+                </button>
+              </h5>
+              <div
+                class="usa-accordion__content usa-prose acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+                data-testid="accordionItem_stool-pathogens-naat-12-to-25-targets"
+                hidden=""
+                id="stool-pathogens-naat-12-to-25-targets"
+              >
+                <table
+                  class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0"
+                  data-testid="table"
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        class="tableHeader minw-10 width-40"
+                        scope="col"
+                      >
+                        Component
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-40"
+                        scope="col"
+                      >
+                        Value
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Ref Range
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Test Method
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Lab Comment
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Campylobacter, NAAT
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Abnormal (Abnormal)
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Not Detected
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Plesiomonas shigelloides, NAAT
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Not Detected
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Not Detected
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      09/28/2000 5:00 PM EDT
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Specimen (Source)
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Stool
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      STOOL SPECIMEN / Unknown
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Authorizing Provider
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Darth Test MD
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Type
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      MICROBIOLOGY - GENERAL ORDERABLES
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Narrative
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="usa-accordion accordion-rr accordion_14394818-a1e9-4882-ca8b-FAKE793bb5cc margin-bottom-3"
+              data-testid="accordion"
+            >
+              <h5
+                class="usa-accordion__heading acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+              >
+                <button
+                  aria-controls="stool-pathogens-naat-12-to-25-targets"
+                  aria-expanded="false"
+                  class="usa-accordion__button"
+                  data-testid="accordionButton_stool-pathogens-naat-12-to-25-targets"
+                  type="button"
+                >
+                  STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS
+                </button>
+              </h5>
+              <div
+                class="usa-accordion__content usa-prose acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+                data-testid="accordionItem_stool-pathogens-naat-12-to-25-targets"
+                hidden=""
+                id="stool-pathogens-naat-12-to-25-targets"
+              >
+                <table
+                  class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0"
+                  data-testid="table"
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        class="tableHeader minw-10 width-40"
+                        scope="col"
+                      >
+                        Component
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-40"
+                        scope="col"
+                      >
+                        Value
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Ref Range
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Test Method
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Lab Comment
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Campylobacter, NAAT
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Not Detected
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Not Detected
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Plesiomonas shigelloides, NAAT
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Not Detected
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Not Detected
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      09/28/2000 4:59 PM EDT
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Specimen (Source)
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Stool
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      STOOL SPECIMEN / Unknown
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Authorizing Provider
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Darth Test MD
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Type
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      MICROBIOLOGY - GENERAL ORDERABLES
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Narrative
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="lab-results-from-coruscant-medical"
+          >
+            Lab Results from Coruscant Medical
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Lab Performing Name
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  Coruscant Medical
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Lab Address
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  Apt 37
+555 Medical Drive
+Coruscant, MA
+00010, USA
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Number of Results
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  1
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="display-flex"
+            >
+              <div
+                class="margin-left-auto padding-top-1"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-coruscant-medical-expand-button"
+                  type="button"
+                >
+                  Expand all labs
+                </button>
+                <span
+                  class="vertical-line"
+                />
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  id="lab-info-lab-results-from-coruscant-medical-collapse-button"
+                  type="button"
+                >
+                  Collapse all labs
+                </button>
+              </div>
+            </div>
+            <div
+              class="usa-accordion accordion-rr accordion_3a1cb409-6f94-0231-86d6-FAKE1ecc5fda margin-bottom-3"
+              data-testid="accordion"
+            >
+              <h5
+                class="usa-accordion__heading acc_item_3a1cb409-6f94-0231-86d6-FAKE1ecc5fda side-nav-ignore"
+              >
+                <button
+                  aria-controls="cytogenomic-snp-microarray"
+                  aria-expanded="false"
+                  class="usa-accordion__button"
+                  data-testid="accordionButton_cytogenomic-snp-microarray"
+                  type="button"
+                >
+                  Cytogenomic SNP microarray
+                </button>
+              </h5>
+              <div
+                class="usa-accordion__content usa-prose acc_item_3a1cb409-6f94-0231-86d6-FAKE1ecc5fda side-nav-ignore"
+                data-testid="accordionItem_cytogenomic-snp-microarray"
+                hidden=""
+                id="cytogenomic-snp-microarray"
+              >
+                <table
+                  class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0"
+                  data-testid="table"
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        class="tableHeader minw-10 width-40"
+                        scope="col"
+                      >
+                        Component
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-40"
+                        scope="col"
+                      >
+                        Value
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Ref Range
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Test Method
+                      </th>
+                      <th
+                        class="tableHeader minw-10 width-20"
+                        scope="col"
+                      >
+                        Lab Comment
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Organism ID
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Acinetobacter baumannii
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <button
+                          aria-controls="hidden-comment-4"
+                          aria-expanded="false"
+                          class="usa-button usa-button--unstyled"
+                          data-test-id="comment-button"
+                          data-testid="button"
+                          type="button"
+                        >
+                          View
+                           
+                          comment
+                        </button>
+                      </td>
+                    </tr>
+                    <tr
+                      hidden=""
+                      id="hidden-comment-4"
+                    >
+                      <td
+                        class="hideableData p-list"
+                        colspan="5"
+                      >
+                        <p>
+                          Lab comment
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Sodium
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        139 mmol/L
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        138 mmol/L - 145 mmol/L
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        <span
+                          class="no-data text-italic text-base"
+                        >
+                          No data
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table
+                  class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0"
+                  data-testid="table"
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        class="tableHeader"
+                        scope="col"
+                      >
+                        Organism
+                      </th>
+                      <th
+                        class="tableHeader"
+                        scope="col"
+                      >
+                        Antibiotic
+                      </th>
+                      <th
+                        class="tableHeader"
+                        scope="col"
+                      >
+                        Method
+                      </th>
+                      <th
+                        class="tableHeader"
+                        scope="col"
+                      >
+                        Susceptibility
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Acinetobacter baumannii
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Amikacin
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        MIC
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        0.25: Susceptible
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Acinetobacter baumannii
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Avycaz (Ceftazidime/Avibactam)
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        MIC
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        0.05: Intermediate
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top"
+                      >
+                        Acinetobacter baumannii
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        Levofloxacin
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        MIC
+                      </td>
+                      <td
+                        class="text-top"
+                      >
+                        0.75: Resistant
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      05/05/1824 11:58 AM GMT-4:56:02
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/03/2000 2:46 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Specimen (Source)
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Blood
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="no-data text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Collection / Unknown
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <p>
+                        testing comment
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Authorizing Provider
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Carda Testprovqa MD
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Type
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      LAB GENETIC TESTING
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Narrative
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <p>
+                        Gungan Swamp Lab - 04/18/1497 2:57 PM CDT
+                      </p>
+                      <p>
+                         MICROARRAY REPORT NARRATIVE
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

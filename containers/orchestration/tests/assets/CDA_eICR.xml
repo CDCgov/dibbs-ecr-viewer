@@ -1,0 +1,719 @@
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:cda="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc"
+      xmlns:voc="http://www.lantanagroup.com/voc"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="urn:hl7-org:v3 ../../schema/infrastructure/cda/CDA_SDTC.xsd">
+      <realmCode code="US"/>
+      <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"
+            ><!--[C-CDA R1.1] US Realm Header--></typeId>
+      <templateId root="2.16.840.1.113883.10.20.22.1.1"
+            ><!-- [C-CDA R2.1] US Realm Header (V3) --></templateId>
+      <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.1.1"
+            ><!--[eICR R2 STU1.1] Initial Public Health Case Report Document (eICR) (V2) --></templateId>
+      <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2"/>
+      <id root="9408ddce-4dcb-416c-a153-82cce01839e2"
+            ><!--Globally unique document ID (extension) is scoped by vendor/software--></id>
+      <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Public Health Case Report"><!--Document Code--></code>
+      <title>Initial Public Health Case Report</title>
+      <effectiveTime value="20200505150045-0400"/>
+      <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal"/>
+      <languageCode code="en-US"/>
+      <setId extension="8d86218e-0fea-11eb-8216-a80388425cfb" root="1.2.840.114350.1.13.380.3.7.1.1"/>
+      <versionNumber value="1"/>
+      <recordTarget>
+            <!--******************************************************** recordTarget: The patient ********************************************************-->
+            <patientRole>
+                  <id extension="PT-470124" root="2.16.840.1.113883.19.5"><!--Patient ID--></id>
+                  <!--SSN-->
+                  <id extension="111-11-1111" root="2.16.840.1.113883.4.1"/>
+                  <addr use="H">
+                        <streetAddressLine>1234 Patient Street</streetAddressLine>
+                        <city>New York City</city>
+                        <state>NY</state>
+                        <postalCode>10012</postalCode>
+                        <county>New York County</county>
+                        <country>US</country>
+                  </addr>
+                  <telecom use="HP" value="tel:555-555-2003"/>
+                  <telecom use="HP" value="mailto:eeeverywoman@email.com"/>
+                  <patient>
+                        <name use="L">
+                              <given>Eve</given>
+                              <family>Everywoman</family>
+                        </name>
+                        <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1"
+                              displayName="Female"/>
+                        <birthTime value="19951212"/>
+                        <sdtc:deceasedInd value="false"/>
+                        <raceCode code="2106-3" codeSystem="2.16.840.1.113883.6.238"
+                              codeSystemName="Race &amp; Ethnicity - CDC" displayName="WHITE"/>
+                        <ethnicGroupCode code="2135-2" codeSystem="2.16.840.1.113883.6.238"
+                              codeSystemName="Race &amp; Ethnicity - CDC"
+                              displayName="Hispanic or Latino"/>
+                        <languageCommunication>
+                              <languageCode code="en"/>
+                              <preferenceInd value="true"/>
+                        </languageCommunication>
+                  </patient>
+            </patientRole>
+      </recordTarget>
+      <author>
+            <!--Author/authenticator may be software or may be a provider such as "infection control professional"-->
+            <time value="20200505150045-0400"/>
+            <assignedAuthor>
+                  <id root="2.16.840.1.113883.3.72.5.20"/>
+                  <addr use="WP">
+                        <streetAddressLine>0987 Facility Drive</streetAddressLine>
+                        <city>New York City</city>
+                        <state>NY</state>
+                        <postalCode>10012</postalCode>
+                        <county/>
+                        <country/>
+                  </addr>
+                  <telecom use="WP" value="tel:555-555-5678"/>
+                  <telecom use="WP" value="fax:555-555-1234"/>
+                  <assignedAuthoringDevice>
+                        <manufacturerModelName displayName="Device"/>
+                        <softwareName/>
+                  </assignedAuthoringDevice>
+            </assignedAuthor>
+      </author>
+      <custodian>
+            <assignedCustodian>
+                  <representedCustodianOrganization>
+                        <id extension="TBDFacility#" root="2.16.840.1.113883.4.6"
+                              ><!--Custodian ID--></id>
+                        <name>New York City Outpatient Clinic</name>
+                        <telecom use="WP" value="tel:555-555-5678"/>
+                        <addr use="WP">
+                              <streetAddressLine>0987 Facility Drive</streetAddressLine>
+                              <city>New York City</city>
+                              <state>NY</state>
+                              <postalCode>10012</postalCode>
+                              <county/>
+                              <country/>
+                        </addr>
+                  </representedCustodianOrganization>
+            </assignedCustodian>
+      </custodian>
+      <participant typeCode="IND">
+            <time nullFlavor="UNK"/>
+            <associatedEntity classCode="ECON">
+                  <addr nullFlavor="NI"/>
+                  <telecom value="tel:+1-555-555-0987" use="MC"/>
+                  <associatedPerson>
+                        <name use="L">
+                              <prefix>Mr</prefix>
+                              <given>Emer</given>
+                              <family>Contact</family>
+                        </name>
+                  </associatedPerson>
+            </associatedEntity>
+      </participant>
+      <componentOf>
+            <!--******************************************************** componentOf: contains the encompassingEncouter and the provider and facility infomation for the case ********************************************************-->
+            <encompassingEncounter>
+                  <id extension="9937013" root="2.16.840.1.113883.19"><!--encounter ID--></id>
+                  <code code="AMB" codeSystem="2.16.840.1.113883.5.4"
+                        codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory"/>
+                  <effectiveTime>
+                        <low value="20200513"/>
+                        <high value="20200513"/>
+                  </effectiveTime>
+                  <responsibleParty>
+                        <assignedEntity>
+                              <id extension="66666666666" root="2.16.840.1.113883.4.6"
+                                    ><!--Provider ID--></id>
+                              <addr use="H">
+                                    <streetAddressLine>1234 Provider Street</streetAddressLine>
+                                    <city>New York City</city>
+                                    <state>NY</state>
+                                    <postalCode>10012</postalCode>
+                                    <county>New York County</county>
+                                    <country>US</country>
+                              </addr>
+                              <telecom use="WP" value="tel:555-777-0123"/>
+                              <telecom use="WP" value="fax:555-777-0987"/>
+                              <assignedPerson>
+                                    <name>
+                                          <given>Amanda</given>
+                                          <family>Assigned</family>
+                                          <suffix>MD</suffix>
+                                    </name>
+                              </assignedPerson>
+                              <representedOrganization>
+                                    <id extension="TBDFacility#" root="2.16.840.1.113883.4.6"
+                                          ><!--Represented Organization--></id>
+                                    <name>New York City Outpatient
+                                          Clinic<!--Provider Facility/Office Name--></name>
+                                    <addr use="WP">
+                                          <streetAddressLine>0987 Facility Drive</streetAddressLine>
+                                          <city>New York City</city>
+                                          <state>NY</state>
+                                          <postalCode>10012</postalCode>
+                                          <county/>
+                                          <country/>
+                                    </addr>
+                              </representedOrganization>
+                        </assignedEntity>
+                  </responsibleParty>
+                  <location>
+                        <healthCareFacility>
+                              <id extension="9554" root="2.16.840.1.113883.4.6"
+                                    ><!--Facility ID--></id>
+                              <code code="OF" codeSystem="2.16.840.1.113883.5.111"
+                                    codeSystemName="HL7RoleCode" displayName="Outpatient Facility"
+                                    ><!--Facility location within larger healthcare organization e.g Kaiser Vacaville within Kaiser North--></code>
+                              <location>
+                                    <addr use="WP">
+                                          <streetAddressLine>0987 Facility Drive</streetAddressLine>
+                                          <city>New York City</city>
+                                          <state>NY</state>
+                                          <postalCode>10012</postalCode>
+                                          <county/>
+                                          <country/>
+                                    </addr>
+                              </location>
+                              <serviceProviderOrganization>
+                                    <name>New York City Outpatient
+                                          Clinic<!--Provider Facility/Office Name--></name>
+                                    <telecom use="WP" value="tel:555-234-5678"/>
+                                    <telecom use="WP" value="fax:555-333-1234"/>
+                                    <addr use="WP">
+                                          <streetAddressLine>0987 Facility Drive</streetAddressLine>
+                                          <city>New York City</city>
+                                          <state>NY</state>
+                                          <postalCode>10012</postalCode>
+                                          <county/>
+                                          <country/>
+                                    </addr>
+                              </serviceProviderOrganization>
+                        </healthCareFacility>
+                  </location>
+            </encompassingEncounter>
+      </componentOf>
+      <component>
+            <structuredBody>
+                  <component>
+                        <!--******************************************************** Encounters Section ********************************************************-->
+                        <section>
+                              <!--[C-CDA R1.1] Encounters Section (entries optional)-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.22"/>
+                              <!--[C-CDA R2.1] Encounters Section (entries optional) (V3)-->
+                              <templateId extension="2015-08-01"
+                                    root="2.16.840.1.113883.10.20.22.2.22"/>
+                              <templateId root="2.16.840.1.113883.10.20.22.2.22.1"/>
+                              <!-- [C-CDA R2.1] Encounters Section (entries required) (V3)-->
+                              <templateId extension="2015-08-01"
+                                    root="2.16.840.1.113883.10.20.22.2.22.1"/>
+                              <code code="46240-8" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC" displayName="History of encounters"/>
+                              <title>Encounters</title>
+                              <text>
+                                    <table>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <thead>
+                                                <tr>
+                                                  <th>Encounter</th>
+                                                  <th>Date(s)</th>
+                                                  <th>Location</th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr ID="id_8c69827d-fc6e-4580-a1af-17f03078bbf0_ref">
+                                                  <td>Office outpatient visit 15 minutes</td>
+                                                  <td>05/13/2020</td>
+                                                  <td>New York City Outpatient Clinic</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>
+                                                  <list styleCode="none">
+                                                  <item>
+                                                  <table>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <thead>
+                                                  <tr>
+                                                  <th/>
+                                                  </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                  <tr>
+                                                  <td/>
+                                                  </tr>
+                                                  </tbody>
+                                                  </table>
+                                                  </item>
+                                                  </list>
+                                                  </td>
+                                                </tr>
+                                          </tbody>
+                                    </table>
+                              </text>
+                              <entry typeCode="DRIV">
+                                    <!---->
+                                    <encounter classCode="ENC" moodCode="EVN">
+                                          <!--[C-CDA R1.1] Encounter Activities-->
+                                          <templateId root="2.16.840.1.113883.10.20.22.4.49"/>
+                                          <!--[C-CDA R2.1] Encounter Activities (V3)-->
+                                          <templateId extension="2015-08-01"
+                                                root="2.16.840.1.113883.10.20.22.4.49"/>
+                                          <id root="8c69827d-fc6e-4580-a1af-17f03078bbf0"/>
+                                          <code code="99213" codeSystem="2.16.840.1.113883.6.12"
+                                                codeSystemName="CPT-4"
+                                                displayName="Office outpatient visit 15 minutes"/>
+                                          <effectiveTime value="20200513"/>
+                                    </encounter>
+                              </entry>
+                        </section>
+                  </component>
+                  <component>
+                        <!--******************************************************** History of Present Illness Section ********************************************************-->
+                        <section>
+                              <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.4"/>
+                              <code code="10164-2" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC" displayName="History of Present Illness"/>
+                              <title>History of Present Illness</title>
+                              <text mediaType="text/x-hl7-text+xml">
+                                    <paragraph>fever, cough, exposure to COVID-19 hot zone;
+                                    </paragraph>
+                              </text>
+                        </section>
+                  </component>
+                  <component>
+                        <!--******************************************************** Medications Administered Section ********************************************************-->
+                        <section nullFlavor="NI">
+                              <!--[C-CDA R1.1] Medications Administered Section-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.38"/>
+                              <!--[C-CDA R2.0] Medications Administered Section (V2) -->
+                              <templateId extension="2014-06-09"
+                                    root="2.16.840.1.113883.10.20.22.2.38"/>
+                              <code code="29549-3" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC" displayName="Medications Administered"/>
+                              <title>Medications Administered</title>
+                              <text>No medications administered</text>
+                        </section>
+                  </component>
+                  <component>
+                        <!--******************************************************** Problems Section ********************************************************-->
+                        <section>
+                              <!--[C-CDA R1.1] Problem Section (entries optional)-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.5"/>
+                              <!--[C-CDA R2.1] Problem Section (entries optional) (V3)-->
+                              <templateId extension="2015-08-01"
+                                    root="2.16.840.1.113883.10.20.22.2.5"/>
+                              <!--[C-CDA R1.1] Problem Section (entries required)-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.5.1"/>
+                              <!-- [C-CDA R2.1] Problem Section (entries required) (V3)-->
+                              <templateId extension="2015-08-01"
+                                    root="2.16.840.1.113883.10.20.22.2.5.1"/>
+                              <code code="11450-4" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC" displayName="Problem List"/>
+                              <title>Problem List</title>
+                              <text>
+                                    <table>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <thead>
+                                                <tr>
+                                                  <th>Concern</th>
+                                                  <th>Concern Status</th>
+                                                  <th>Date(s)</th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr ID="id_420ffc00-7bd3-4191-82cd-1ebd4367f6a6_ref">
+                                                  <td>Problem</td>
+                                                  <td>active</td>
+                                                  <td>05/13/2020</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>
+                                                  <list styleCode="none">
+                                                  <item>
+                                                  <paragraph>*** In the table below, row entries
+                                                  with values under RCTC columns triggered this
+                                                  Electronic Initial Case Report (eICR)</paragraph>
+                                                  <table>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <col width="15%"/>
+                                                  <thead>
+                                                  <tr>
+                                                  <th>Problem Type</th>
+                                                  <th>Problem</th>
+                                                  <th>Date(s)</th>
+                                                  <th>Code</th>
+                                                  <th>Code System</th>
+                                                  <th>RCTC OID ***</th>
+                                                  <th>RCTC Version ***</th>
+                                                  </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                  <tr>
+                                                  <td>symptom</td>
+                                                  <td>Difficulty Breathing )finding)</td>
+                                                  <td>05/13/2020</td>
+                                                  <td>230145002</td>
+                                                  <td>SNOMED-CT</td>
+                                                  <td/>
+                                                  <td/>
+                                                  </tr>
+                                                  <tr>
+                                                  <td>symptom</td>
+                                                  <td/>
+                                                  <td/>
+                                                  <td/>
+                                                  <td/>
+                                                  <td/>
+                                                  <td/>
+                                                  </tr>
+                                                  </tbody>
+                                                  </table>
+                                                  </item>
+                                                  </list>
+                                                  </td>
+                                                </tr>
+                                          </tbody>
+                                    </table>
+                              </text>
+                              <entry typeCode="DRIV">
+                                    <act classCode="ACT" moodCode="EVN">
+                                          <!--[C-CDA 1.1] Problem Concern Act-->
+                                          <templateId root="2.16.840.1.113883.10.20.22.4.3"/>
+                                          <!--[C-CDA 2.1] Problem Concern Act (V3)-->
+                                          <templateId extension="2015-08-01"
+                                                root="2.16.840.1.113883.10.20.22.4.3"/>
+                                          <id root="420ffc00-7bd3-4191-82cd-1ebd4367f6a6"/>
+                                          <code code="CONC" codeSystem="2.16.840.1.113883.5.6"
+                                                displayName="Concern"/>
+                                          <statusCode code="active"/>
+                                          <effectiveTime>
+                                                <low value="20200513"/>
+                                          </effectiveTime>
+                                          <entryRelationship typeCode="SUBJ">
+                                                <observation classCode="OBS" moodCode="EVN"
+                                                  negationInd="false">
+                                                  <!--[C-CDA R1.1] Problem Observation-->
+                                                  <templateId root="2.16.840.1.113883.10.20.22.4.4"/>
+                                                  <templateId extension="2015-08-01"
+                                                  root="2.16.840.1.113883.10.20.22.4.4"/>
+                                                  <id root="5024cf76-074d-471b-b0f2-1330f73aa45f"/>
+                                                  <code code="75325-1"
+                                                  codeSystem="2.16.840.1.113883.6.1"
+                                                  codeSystemName="LOINC" displayName="SYMPTOM">
+                                                  <translation code="418799008"
+                                                  codeSystem="2.16.840.1.113883.6.96"
+                                                  codeSystemName="SNOMED CT" displayName="SYMPTOM"/>
+                                                  </code>
+                                                  <statusCode code="completed"/>
+                                                  <effectiveTime>
+                                                  <low value="20200513"/>
+                                                  </effectiveTime>
+                                                  <value code="230145002"
+                                                  codeSystem="2.16.840.1.113883.6.96"
+                                                  codeSystemName="SNOMED-CT"
+                                                  displayName="Difficulty Breathing )finding)"
+                                                  xsi:type="CD"/>
+                                                </observation>
+                                          </entryRelationship>
+                                    </act>
+                              </entry>
+                        </section>
+                  </component>
+                  <component>
+                        <!--******************************************************** Reason for visit Section ********************************************************-->
+                        <section>
+                              <templateId root="2.16.840.1.113883.10.20.22.2.12"/>
+                              <code code="29299-5" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC" displayName="Reason for visit"/>
+                              <title>Reason for visit</title>
+                              <text>
+                                    <paragraph>fever, cough, exposure to COVID-19 hot zone
+                                    </paragraph>
+                              </text>
+                        </section>
+                  </component>
+                  <component>
+                        <!--******************************************************** Results Section ********************************************************-->
+                        <section nullFlavor="NI">
+                              <!--[C-CDA R1.1] Results Section (entries optional)-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.3"/>
+                              <!--[C-CDA R2.1] Results Section (entries optional) (V3)-->
+                              <templateId extension="2015-08-01"
+                                    root="2.16.840.1.113883.10.20.22.2.3"/>
+                              <!--[C-CDA R1.1] Results Section (entries required)-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.3.1"/>
+                              <!-- [C-CDA R2.1] Results Section (entries required) (V3)-->
+                              <templateId extension="2015-08-01"
+                                    root="2.16.840.1.113883.10.20.22.2.3.1"/>
+                              <code code="30954-2" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC"
+                                    displayName="Relevant diagnostic tests and/or laboratory data"/>
+                              <title>Results</title>
+                              <text>No Lab Results</text>
+                        </section>
+                  </component>
+                  <component>
+                        <!--******************************************************** Plan of Care/Treatment Section ********************************************************-->
+                        <section>
+                              <!--[C-CDA R1.1] Plan of Care Section new-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.22.1"/>
+                              <templateId extension="2014-06-09"
+                                    root="2.16.840.1.113883.10.20.22.2.22.1"/>
+                              <code code="18776-5" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC" displayName="Plan of Treatment"/>
+                              <title>Plan of Treatment</title>
+                              <text>
+                                    <paragraph>*** In the table below, row entries with values under
+                                          RCTC columns triggered this Electronic Initial Case Report
+                                          (eICR)</paragraph>
+                                    <table>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <col width="15%"/>
+                                          <thead>
+                                                <tr>
+                                                  <th>Lab Test Order</th>
+                                                  <th>Code</th>
+                                                  <th>CodeSystem</th>
+                                                  <th>RCTC OID ***</th>
+                                                  <th>RCTC Version ***</th>
+                                                  <th>Ordered Date</th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr ID="id_f2a3031b-f71a-4296-9bcd-fdf30031f68f_ref">
+                                                  <td>SARS-like Coronavirus N gene [Presence] in
+                                                  Unspecified specimen by NAA with probe
+                                                  detection</td>
+                                                  <td>94310-0 </td>
+                                                  <td>LOINC</td>
+                                                  <td>2.16.840.1.114222.4.11.7508</td>
+                                                  <td>20200429</td>
+                                                  <td>05/13/2020</td>
+                                                </tr>
+                                          </tbody>
+                                    </table>
+                              </text>
+                              <entry typeCode="DRIV">
+                                    <!--This is a request for a test to be performed (a lab test order)-->
+                                    <observation classCode="OBS" moodCode="RQO">
+                                          <!--[C-CDA R1.1] Plan of Care Activity Observation-->
+                                          <templateId root="2.16.840.1.113883.10.20.22.4.44"/>
+                                          <!--[C-CDA R2.0] Planned Observation (V2)-->
+                                          <templateId extension="2014-06-09"
+                                                root="2.16.840.1.113883.10.20.22.4.44"/>
+                                          <templateId extension="2016-12-01"
+                                                root="2.16.840.1.113883.10.20.15.2.3.4"/>
+                                          <!--[eICR R2 STU1.1] Initial Case Report Trigger Code Lab Test Order-->
+                                          <id root="f2a3031b-f71a-4296-9bcd-fdf30031f68f"/>
+                                          <code code="94310-0 " codeSystem="2.16.840.1.113883.6.1"
+                                                codeSystemName="LOINC"
+                                                displayName="SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection"
+                                                sdtc:valueSet="2.16.840.1.114222.4.11.7508"
+                                                sdtc:valueSetVersion="20200429"/>
+                                          <statusCode code="active"/>
+                                          <effectiveTime value="20200513"/>
+                                    </observation>
+                              </entry>
+                        </section>
+                  </component>
+                  <component>
+                        <!--******************************************************** Social History Section ********************************************************-->
+                        <section>
+                              <!-- [C-CDA 1.1] Social History Section-->
+                              <templateId root="2.16.840.1.113883.10.20.22.2.17"/>
+                              <!--[C-CDA 2.1] Social History Section (V3)-->
+                              <templateId extension="2015-08-01"
+                                    root="2.16.840.1.113883.10.20.22.2.17"/>
+                              <code code="29762-2" codeSystem="2.16.840.1.113883.6.1"
+                                    codeSystemName="LOINC" displayName="Social History"/>
+                              <title>Social History</title>
+                              <text>
+                                    <table>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <thead>
+                                                <tr>
+                                                  <th>Birth Sex</th>
+                                                  <th>Value</th>
+                                                  <th>Date</th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr>
+                                                  <td>Sex Assigned At Birth</td>
+                                                  <td>Female</td>
+                                                  <td/>
+                                                </tr>
+                                          </tbody>
+                                    </table>
+                                    <table>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <thead>
+                                                <tr>
+                                                  <th>Social History Observation Type</th>
+                                                  <th>Value</th>
+                                                  <th>Dates(s)</th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr ID="id_db524287-4744-4ff8-a496-d775755a1ef2_ref">
+                                                  <td>Occupation / Employment details</td>
+                                                  <td>Sales</td>
+                                                  <td/>
+                                                </tr>
+                                                <tr>
+                                                  <td>Pregnancy Status</td>
+                                                  <td>No</td>
+                                                  <td/>
+                                                </tr>
+                                          </tbody>
+                                    </table>
+                                    <table>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <col width="10%"/>
+                                          <thead>
+                                                <tr>
+                                                  <th>Travel History: Date(s)</th>
+                                                  <th>Notes</th>
+                                                  <th>Location</th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr ID="id_2ebe259e-2561-4362-8964-17f68ea95582_ref">
+                                                  <td>04/20/2020 - 05/10/2020</td>
+                                                  <td>Recent travel to China</td>
+                                                  <td/>
+                                                </tr>
+                                          </tbody>
+                                    </table>
+                              </text>
+                              <entry typeCode="DRIV">
+                                    <observation classCode="OBS" moodCode="EVN">
+                                          <!--[C-CDA R2.1 Companion Guide] Birth Sex Observation -->
+                                          <templateId root="2.16.840.1.113883.10.20.22.4.200"/>
+                                          <templateId extension="2016-06-01"
+                                                root="2.16.840.1.113883.10.20.22.4.200"/>
+                                          <code code="76689-9" codeSystem="2.16.840.1.113883.6.1"
+                                                codeSystemName="LOINC"
+                                                displayName="Sex Assigned At Birth"/>
+                                          <statusCode code="completed"/>
+                                          <effectiveTime><!--effectiveTime if present should match birthTime--></effectiveTime>
+                                          <value code="F" codeSystem="2.16.840.1.113883.5.1"
+                                                codeSystemName="AdministrativeGender"
+                                                displayName="Female" xsi:type="CD"/>
+                                    </observation>
+                              </entry>
+                              <entry typeCode="DRIV">
+                                    <!--Occupation-->
+                                    <observation classCode="OBS" moodCode="EVN">
+                                          <!--[C-CDA R1.1] Social History Observation-->
+                                          <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
+                                          <!--[C-CDA R2.1] Social History Observation (V3)-->
+                                          <templateId extension="2015-08-01"
+                                                root="2.16.840.1.113883.10.20.22.4.38"/>
+                                          <id root="db524287-4744-4ff8-a496-d775755a1ef2"/>
+                                          <code code="364703007" codeSystem="2.16.840.1.113883.6.96"
+                                                codeSystemName="SNOMED CT"
+                                                displayName="Employment detail">
+                                                <translation code="11295-3"
+                                                  codeSystem="2.16.840.1.113883.6.1"
+                                                  codeSystemName="LOINC"
+                                                  displayName="Current employment - Reported"/>
+                                          </code>
+                                          <statusCode code="completed"/>
+                                          <effectiveTime/>
+                                          <value code="159606005"
+                                                codeSystem="2.16.840.1.113883.6.96"
+                                                codeSystemName="SNOMED CT" displayName="Sales"
+                                                xsi:type="CD"/>
+                                    </observation>
+                              </entry>
+                              <entry typeCode="DRIV">
+                                    <act classCode="ACT" moodCode="EVN">
+                                          <!--[eICR R2 STU1.1] Travel History -->
+                                          <templateId root="2.16.840.1.113883.10.20.15.2.3.1"/>
+                                          <templateId extension="2016-12-01"
+                                                root="2.16.840.1.113883.10.20.15.2.3.1"/>
+                                          <id root="79565142-eae0-4213-a3b3-b73cdf474682"/>
+                                          <code code="420008001" codeSystem="2.16.840.1.113883.6.96"
+                                                codeSystemName="SNOMED-CT" displayName="Travel"/>
+                                          <text>Recent travel to China</text>
+                                          <statusCode code="completed"/>
+                                          <effectiveTime>
+                                                <low value="20200420"/>
+                                                <high value="20200510"/>
+                                          </effectiveTime>
+                                    </act>
+                              </entry>
+                        </section>
+                  </component>
+            </structuredBody>
+      </component>
+</ClinicalDocument>

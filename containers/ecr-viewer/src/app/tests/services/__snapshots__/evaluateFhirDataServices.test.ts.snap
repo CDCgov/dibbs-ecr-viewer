@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
+exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <BaseTable
   caption="Encounter Care Team"
   className="caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
