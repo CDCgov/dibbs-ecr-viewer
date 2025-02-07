@@ -7,7 +7,6 @@ from fastapi import Request
 from fastapi import Response
 from fastapi import status
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import FileResponse
 
 from app.base_service import BaseService
 from app.config import get_settings
