@@ -75,7 +75,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env
+          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}
@@ -134,7 +134,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env
+          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
         run: npm run convert-seed-data
@@ -163,7 +163,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env
+          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}
