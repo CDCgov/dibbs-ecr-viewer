@@ -42,7 +42,7 @@ const ms_dialect = new MssqlDialect({
           type: 'default',
         },
         options: {
-          // database: 'some_db',
+          database: 'some_db',
           port: 1433,
           trustServerCertificate: true,
           connectTimeout: 30000,
@@ -61,13 +61,14 @@ const determineDialect = () => {
         case 'postgres':
             return pg_dialect
         case 'sqlserver':
-            // return ms_dialect
+            return ms_dialect
         default:
-            throw new Error("Invalid database type")
+            // throw new Error("Invalid database type")
+            return pg_dialect
     }
 }
 
 // Dialect to communicate with the database, interface to define its structure.
 export const db = new Kysely<Database>({
-    dialect: pg_dialect,
+    dialect: determineDialect(),
 })
