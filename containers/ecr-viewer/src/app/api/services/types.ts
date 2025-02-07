@@ -15,6 +15,7 @@ export interface ecr_data {
    set_id: string
    data_source: string
    fhir_reference_link: string
+   eicr_version_number: string
 
    patient_name_first: string
    patient_name_last: string

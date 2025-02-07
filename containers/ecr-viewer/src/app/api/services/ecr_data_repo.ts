@@ -47,16 +47,10 @@ export async function findEcr(criteria: Partial<ECR>) {
 }
 
 export async function createEcr(ecr: NewECR) {
-    const compiledQuery = db.insertInto('ecr_data').values(ecr).compile()
-  
-    const {
-      rows: [{ eICR_ID }],
-    } = await db.executeQuery<Pick<ECR, 'eICR_ID'>>({
-      ...compiledQuery,
-      sql: `${compiledQuery.sql}; select scope_identity() as eICR_ID`,
-    })
-  
-    return await findEcrById(eICR_ID)
+  return await db.insertInto('ecr_data')
+    .values(ecr)
+    .returningAll()
+    .executeTakeFirstOrThrow()
 }
 
 export async function updateEcr(eICR_ID: string, updateWith: ECRUpdate) {
