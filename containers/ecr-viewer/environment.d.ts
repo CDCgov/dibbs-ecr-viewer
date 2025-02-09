@@ -28,7 +28,7 @@ namespace NodeJS {
     NEXT_RUNTIME: string;
     NEXTAUTH_SECRET: string;
     NON_INTEGRATED_VIEWER: "true" | "false";
-    SOURCE: "s3" | "azure" | "postgres";
+    SOURCE: "s3" | "azure";
     SQL_SERVER_HOST: string;
     SQL_SERVER_PASSWORD: string;
     SQL_SERVER_USER: string;

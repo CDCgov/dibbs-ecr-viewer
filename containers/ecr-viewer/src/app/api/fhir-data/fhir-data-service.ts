@@ -7,12 +7,10 @@ import {
 } from "@azure/storage-blob";
 import {
   AZURE_SOURCE,
-  POSTGRES_SOURCE,
   S3_SOURCE,
   loadYamlConfig,
   streamToJson,
 } from "../utils";
-import { getDB } from "../services/postgres_db";
 import { s3Client } from "../services/s3Client";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
@@ -33,8 +31,6 @@ export async function get_fhir_data(ecr_id: string | null) {
     res = await get_s3(ecr_id);
   } else if (process.env.SOURCE === AZURE_SOURCE) {
     res = await get_azure(ecr_id);
-  } else if (process.env.SOURCE === POSTGRES_SOURCE) {
-    res = await get_postgres(ecr_id);
   } else {
     res = { payload: { message: "Invalid source" }, status: 500 };
   }
@@ -57,34 +53,6 @@ export async function get_fhir_data(ecr_id: string | null) {
     { status },
   );
 }
-
-/**
- * Retrieves FHIR data from PostgreSQL database based on eCR ID.
- * @param ecr_id - The id of the ecr to fetch.
- * @returns A promise resolving to the data and status.
- */
-export const get_postgres = async (
-  ecr_id: string | null,
-): Promise<FhirDataResponse> => {
-  const { database, pgPromise } = getDB();
-
-  const { ParameterizedQuery: PQ } = pgPromise;
-  const findFhir = new PQ({
-    text: "SELECT * FROM fhir WHERE ecr_id = $1",
-    values: [ecr_id],
-  });
-  try {
-    const entry = await database.one(findFhir);
-    return { payload: { fhirBundle: entry.data }, status: 200 };
-  } catch (error: any) {
-    console.error("Error fetching data:", error);
-    if (error.message == "No data returned from the query.") {
-      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-    } else {
-      return { payload: { message: error.message }, status: 500 };
-    }
-  }
-};
 
 /**
  * Retrieves FHIR data from S3 based on eCR ID.
