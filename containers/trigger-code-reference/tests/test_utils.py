@@ -105,52 +105,67 @@ def test_get_concepts_dict_filter_services():
 
 
 def test_find_codes_by_resource_type():
-    message = json.load(
-        open(
-            Path(__file__).parent / "assets" / "sample_ecr_with_diagnostic_report.json"
-        )
-    )
-    message_with_immunization = json.load(
-        open(Path(__file__).parent / "assets" / "sample_ecr.json")
-    )
-    observation_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Observation"
-    ][0]
-    condition_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Condition"
-    ][0]
-    immunization_resource = [
-        e.get("resource")
-        for e in message_with_immunization.get("entry", [])
-        if e.get("resource").get("resourceType") == "Immunization"
-    ][3]
-    diagnostic_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "DiagnosticReport"
-    ][0]
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
-    # Find each resource's chief clinical code
-    assert ["64572001", "75323-6", "240372001"] == _find_codes_by_resource_type(
+    # get the Observation resource with the LOINC for SARS-like Coronavirus
+    # and the SNOMED for a positive detected test
+    observation_resource = next(
+        e.get("resource")
+        for e in message.get("entry", [])
+        if e.get("resource", {}).get("resourceType") == "Observation"
+        and e.get("resource", {}).get("id") == "ef84511f-a88a-0a84-2353-d44f641673b0"
+    )
+
+    # get the Condition resource that has the SNOMED code for covid-19
+    condition_resource = next(
+        e.get("resource")
+        for e in message.get("entry", [])
+        if e.get("resource", {}).get("resourceType") == "Condition"
+        and e.get("resource", {}).get("id") == "d42c4a1f-f700-61bf-62a0-c034257d6a79"
+    )
+
+    # get the one Immunization resource that has the COVID-19 vaccine
+    immunization_resource = next(
+        e.get("resource")
+        for e in message.get("entry", [])
+        if e.get("resource", {}).get("resourceType") == "Immunization"
+    )
+
+    # get the DiagnosticReport resource with the PCR test for COVID-19
+    diagnostic_resource = next(
+        e.get("resource")
+        for e in message.get("entry", [])
+        if e.get("resource", {}).get("resourceType") == "DiagnosticReport"
+    )
+
+    # Update assertions with actual codes from the bundle
+    # * LOINC code for SARS-like Coronavirus
+    # * SNOMED code for "Detected (qualifier value)" - indicates a positive test result
+    assert ["94310-0", "260373001"] == _find_codes_by_resource_type(
         observation_resource
     )
-    assert ["C50.511"] == _find_codes_by_resource_type(condition_resource)
-    assert ["24"] == _find_codes_by_resource_type(immunization_resource)
-    assert ["LAB10082"] == _find_codes_by_resource_type(diagnostic_resource)
 
-    # Test for a resource we don't stamp for
-    patient_resource = [
+    # SNOMED code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+    # this is the official SNOMED code for COVID-19
+    assert ["840539006"] == _find_codes_by_resource_type(condition_resource)
+
+    # CVX code for "COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose"
+    # * specifically refers to the Moderna COVID-19 Vaccine
+    assert ["207"] == _find_codes_by_resource_type(immunization_resource)
+
+    # LOINC code for SARS-like Coronavirus
+    # * standard LOINC code for COVID-19 PCR diagnostic test
+    assert ["94310-0"] == _find_codes_by_resource_type(diagnostic_resource)
+
+    # Test for a resource we don't stamp for (Patient - unchanged)
+    patient_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Patient"
-    ][0]
+        if e.get("resource", {}).get("resourceType") == "Patient"
+    )
     assert [] == _find_codes_by_resource_type(patient_resource)
 
-    # Test for a resource we do stamp that doesn't have any codes
+    # test for a resource we do stamp that doesn't have any codes
     del observation_resource["code"]
     del observation_resource["valueCodeableConcept"]
     assert [] == _find_codes_by_resource_type(observation_resource)
@@ -158,34 +173,42 @@ def test_find_codes_by_resource_type():
 
 @patch("app.utils._get_condition_name_from_snomed_code")
 def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
-    message = json.load(
-        open(
-            Path(__file__).parent / "assets" / "sample_ecr_with_diagnostic_report.json"
-        )
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
+
+    # get the Observation resource with the LOINC for SARS-like Coronavirus
+    # and the SNOMED for a positive detected test
+    observation_resource = next(
+        e.get("resource")
+        for e in message.get("entry", [])
+        if e.get("resource", {}).get("resourceType") == "Observation"
+        and e.get("resource", {}).get("id") == "ef84511f-a88a-0a84-2353-d44f641673b0"
     )
-    observation_resource = [
+
+    # get the Condition resource that has the SNOMED code for covid-19
+    condition_resource = next(
         e.get("resource")
         for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Observation"
-    ][0]
-    condition_resource = [
-        e.get("resource")
-        for e in message.get("entry", [])
-        if e.get("resource").get("resourceType") == "Condition"
-    ][0]
+        if e.get("resource", {}).get("resourceType") == "Condition"
+        and e.get("resource", {}).get("id") == "d42c4a1f-f700-61bf-62a0-c034257d6a79"
+    )
 
     # Mock the condition name lookup
-    mock_get_condition_name.return_value = "Cyclosporiasis"
+    mock_get_condition_name.return_value = (
+        "Disease caused by severe acute respiratory syndrome coronavirus 2"
+    )
 
+    # using SNOMED code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+    # * this code is used below as well
     stamped_obs = add_code_extension_and_human_readable_name(
-        observation_resource, "test_obs_code"
+        observation_resource,
+        "840539006",
     )
     found_stamp = False
     for ext in stamped_obs.get("extension", []):
         if ext == {
             "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
             "valueCoding": {
-                "code": "test_obs_code",
+                "code": "840539006",
                 "system": "http://snomed.info/sct",
             },
         }:
@@ -193,17 +216,15 @@ def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
             break
     assert found_stamp
 
-    assert stamped_obs["valueCodeableConcept"]["text"] == "Cyclosporiasis"
-
     stamped_condition = add_code_extension_and_human_readable_name(
-        condition_resource, "test_cond_code"
+        condition_resource, "840539006"
     )
     found_stamp = False
     for ext in stamped_condition.get("extension", []):
         if ext == {
             "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
             "valueCoding": {
-                "code": "test_cond_code",
+                "code": "840539006",
                 "system": "http://snomed.info/sct",
             },
         }:

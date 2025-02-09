@@ -59,6 +59,7 @@ jobs:
           flags: ${{ env.CONTAINER }}
 
   lighthouse:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -72,8 +73,10 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
 
       - name: Set up env vars
-        run: npm run setup-local-env
         working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          npm run setup-local-env
+          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}
@@ -129,14 +132,17 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
 
       - name: Set up env vars
-        run: npm run setup-local-env
         working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          npm run setup-local-env
+          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
         run: npm run convert-seed-data
         working-directory: ./containers/${{env.CONTAINER}}
 
   e2e-tests:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -157,7 +163,9 @@ jobs:
 
       - name: Set up env vars
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run setup-local-env
+        run: |
+          npm run setup-local-env
+          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}

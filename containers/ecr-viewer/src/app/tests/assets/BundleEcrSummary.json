@@ -1,0 +1,518 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "0.0.000.000000.0.00.000.0.0.0.000000.000",
+        "section": [
+          {
+            "id": "C38436E8-0E7D-11ED-B8BA-0050561597B4",
+            "title": "Results",
+            "text": {
+              "status": "generated",
+              "div": "<ul><li data-id='Result.1.2.3.4.5'><caption data-id='Result.1.2.3.4.5.Procedure'>SARS-CoV-2 PCR</caption><table><thead><tr><th>Component</th><th>Value</th><th>Ref Range</th><th>Test Method</th><th>Analysis Time</th><th>Performed At</th><th>Pathologist Signature</th></tr></thead><tbody><tr data-id='Result.1.2.3.4.5.Comp1'><td data-id='Result.1.2.3.4.5.Comp1Name'>SARS-CoV-2 Nucleic Acid (Result)</td><td>Not Detected</td><td>Not Detected</td><td></td><td></td><td>Dathomiri Main Dermatology Clinic</td><td data-id='Result.1.2.3.4.5.Comp1Signature'></td></tr><tr><td>Comment: <br>This test was performed using a multiplexed nucleic acid amplification test. <br></td></tr></tbody></table></li></ul>documented in this encounter"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "30954-2",
+                  "display": "Relevant diagnostic tests/laboratory data Narrative",
+                  "system": "http://loinc.org"
+                }
+              ]
+            },
+            "mode": "snapshot"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Composition/0.0.000.000000.0.00.000.0.0.0.000000.000"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "e384c999-311f-fca8-5814-FAKE791a520b",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": ["ecr"]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "64572001",
+              "display": "Condition",
+              "system": "http://snomed.info/sct"
+            },
+            {
+              "code": "75323-6",
+              "display": "Condition",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "50711007",
+              "display": "Viral hepatitis type C (disorder)",
+              "system": "http://snomed.info/sct"
+            }
+          ],
+          "text": "Hepatitis C"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Detection of Hepatitis C virus antibody in a clinical specimen by any method"
+          },
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "50711007",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/e384c999-311f-fca8-5814-FAKE791a520b"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "65474f7c-d1d7-4ef8-004a-FAKE6ec42c97",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": ["ecr"]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "64572001",
+              "display": "Condition",
+              "system": "http://snomed.info/sct"
+            },
+            {
+              "code": "75323-6",
+              "display": "Condition",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "840539006",
+              "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "COVID-19 (as a diagnosis or active problem)"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method"
+          },
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "840539006",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/65474f7c-d1d7-4ef8-004a-FAKE6ec42c97"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "5511c790-c926-ebf4-ddf6-d7399b240627",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "191589",
+              "display": "SARS-CoV-2 PCR",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "1825-02-04T19:05:00Z",
+          "end": "1825-02-04T19:05:00Z"
+        },
+        "subject": {
+          "reference": "Patient/9745ad43-ad53-4928-ac88-1a2dce1f5777"
+        },
+        "performer": [
+          {
+            "reference": "Organization/22c6cdd0-bde1-e220-9ba4-2c2802f795ad"
+          }
+        ],
+        "result": [
+          {
+            "reference": "Observation/7036bbf6-d303-461b-6d62-FAKE9ab4d144"
+          },
+          {
+            "reference": "Observation/c54054d5-eff8-6b25-af46-FAKE7e0927cc"
+          },
+          {
+            "reference": "Observation/8f05dff1-b082-a20f-20e8-FAKE04a37a14"
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "DiagnosticReport/5511c790-c926-ebf4-ddf6-d7399b240627"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "7036bbf6-d303-461b-6d62-FAKE9ab4d144",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "94533-7",
+              "display": "SARS-CoV-2 Nucleic Acid (Result)",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectiveDateTime": "1825-02-04T19:49:19Z",
+        "valueString": "Not Detected",
+        "referenceRange": [
+          {
+            "text": "Not Detected"
+          }
+        ],
+        "note": [
+          {
+            "elems": [
+              {
+                "elemText": "test"
+              }
+            ],
+            "text": "This test was performed using a multiplexed nucleic acid amplification test that is labeled Emergence Use Only by the U.S. FDA. Results of this test should not be used as the sole basis for diagnosis, treatment, or other management decisions.<br>A detected result is positive and indicates the presence of the virus in the sample. A not detected result indicates that the test did not detect the virus in the sample."
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Nares"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "1825-02-04T19:05:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "1825-02-04T19:46:00Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.5.Comp1"
+              }
+            ]
+          },
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "840539006",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ],
+        "subject": {
+          "reference": "Patient/9745ad43-ad53-4928-ac88-1a2dce1f5777"
+        },
+        "performer": [
+          {
+            "display": "TATOOINE LAB",
+            "reference": "Organization/e3ece69c-0968-59c9-47dd-f16db731621a"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/7036bbf6-d303-461b-6d62-FAKE9ab4d144"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c54054d5-eff8-6b25-af46-FAKE7e0927cc",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "2061339.2"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "16535",
+              "display": "SARS-CoV-2 Nucleic Acid Method (Comment)",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+            }
+          ]
+        },
+        "effectiveDateTime": "1825-02-04T19:49:19Z",
+        "valueString": "Nares<br/>This test was performed using the Hologic Panther COVID-19 test. This test is currently approved for clinical diagnostic testing under Emergency Use Authorization of the FDA; the result should not be considered experimental or for research purposes.",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Nares"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "1825-02-04T19:05:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "1825-02-04T19:46:00Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.5.Comp2"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/9745ad43-ad53-4928-ac88-1a2dce1f5777"
+        },
+        "performer": [
+          {
+            "display": "TATOOINE LAB",
+            "reference": "Organization/e3ece69c-0968-59c9-47dd-f16db731621a"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/c54054d5-eff8-6b25-af46-FAKE7e0927cc"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "8f05dff1-b082-a20f-20e8-FAKE04a37a14",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "2061339"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "effectiveDateTime": "1825-02-04T19:49:19Z",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "16",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Nares"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "1825-02-04T19:05:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "1825-02-04T19:46:00Z"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/8f05dff1-b082-a20f-20e8-FAKE04a37a14"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "0.0.000.000000.0.00.000.0.0.0.000000.000",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "55561003",
+              "display": "Active",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-item-list",
+                "display": "Problem List Item",
+                "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "U07.1",
+              "display": "COVID toes",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+            }
+          ]
+        },
+        "onsetDateTime": "2024-05-15",
+        "extension": [
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "840539006",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/0.0.000.000000.0.00.000.0.0.0.000000.000"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "0.0.000.000000.0.00.000.0.0.0.000000.000",
+        "protocolApplied": [
+          {
+            "doseNumberPositiveInt": "2"
+          }
+        ],
+        "occurrenceDateTime": "2024-01-15T09:34:00-04:00",
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "24",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+              "display": "SARS-CoV-2 PCR Vaccine"
+            }
+          ]
+        },
+        "lotNumber": "LOT942X",
+        "status": "completed",
+        "extension": [
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": [
+              {
+                "code": "840539006",
+                "system": "http://snomed.info/sct"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Immunization/0.0.000.000000.0.00.000.0.0.0.000000.000"
+      }
+    }
+  ]
+}

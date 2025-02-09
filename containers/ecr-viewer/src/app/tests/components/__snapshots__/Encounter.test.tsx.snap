@@ -1,0 +1,318 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Encounter should match snapshot 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="encounter-details"
+          >
+            Encounter Details
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Encounter Type
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  Ambulatory
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Encounter ID
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  123456789
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="grid-col-auto width-full text-pre-line"
+              >
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        Name
+                      </th>
+                      <th>
+                        Role
+                      </th>
+                      <th>
+                        Dates
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        Test
+                      </td>
+                      <td>
+                        ATND
+                      </td>
+                      <td>
+                        Start: 1/2/2023
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div
+              class="section__line_gray"
+            />
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
+          <span
+            class="usa-tooltip"
+            data-testid="tooltipWrapper"
+          >
+            <div
+              aria-describedby="[object Object]"
+              class="usa-tooltip__trigger usa-tooltip short-tooltip"
+              data-testid="triggerElement"
+              tabindex="0"
+              title=""
+            >
+              <h4
+                class="usa-summary-box__heading padding-y-105"
+                id="facility-details"
+              >
+                Facility Details
+              </h4>
+            </div>
+            <span
+              aria-hidden="true"
+              class="usa-tooltip__body"
+              data-testid="tooltipBody"
+              id="[object Object]"
+              role="tooltip"
+              title="Specific healthcare facility where the encounter took place."
+            >
+              Specific healthcare facility where the encounter took place.
+            </span>
+          </span>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Facility Name
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  Hoth Medical
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Facility Address
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  50 Snowy Drive
+Echo Base, MA 00123
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Facility Contact Address
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  50 Snowy Drive
+Echo Base, MA 00123
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Facility Type
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  Healthcare Provider
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Facility ID
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  112233445566
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
+          <span
+            class="usa-tooltip"
+            data-testid="tooltipWrapper"
+          >
+            <div
+              aria-describedby="[object Object]"
+              class="usa-tooltip__trigger usa-tooltip short-tooltip"
+              data-testid="triggerElement"
+              tabindex="0"
+              title=""
+            >
+              <h4
+                class="usa-summary-box__heading padding-y-105"
+                id="provider-details"
+              >
+                Provider Details
+              </h4>
+            </div>
+            <span
+              aria-hidden="true"
+              class="usa-tooltip__body"
+              data-testid="tooltipBody"
+              id="[object Object]"
+              role="tooltip"
+              title="Person or organization that provided care during the encounter."
+            >
+              Person or organization that provided care during the encounter.
+            </span>
+          </span>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Provider Name
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  test provider name
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Provider Contact
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  test provider contact
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
