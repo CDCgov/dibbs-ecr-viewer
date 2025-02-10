@@ -70,9 +70,9 @@ def _process_files(args):
             if not os.path.isdir(folder_path):
                 continue
 
-            if (
-                os.path.exists(os.path.join(folder_path, "bundle.json"))
-                and args.skip_convert
+            if os.path.exists(os.path.join(folder_path, "bundle.json")) and (
+                args.skip_convert
+                or not os.path.exists(os.path.join(folder_path, "CDA_eICR.xml"))
             ):
                 # Just upload the bundle
                 with open(os.path.join(folder_path, "bundle.json")) as fhir_file:
