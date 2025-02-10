@@ -2,7 +2,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 import { getDB } from "../services/postgres_db";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
-import { S3_SOURCE, AZURE_SOURCE, POSTGRES_SOURCE } from "@/app/api/utils";
+import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import sql from "mssql";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
@@ -13,45 +13,6 @@ interface SaveResponse {
   message: string;
   status: number;
 }
-
-/**
- * Saves a FHIR bundle to a postgres database.
- * @async
- * @function saveToPostgres
- * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @returns An object containing the status and message.
- */
-export const saveToPostgres = async (
-  fhirBundle: Bundle,
-  ecrId: string,
-): Promise<SaveResponse> => {
-  const { database, pgPromise } = getDB();
-  const { ParameterizedQuery: PQ } = pgPromise;
-  const addFhir = new PQ({
-    text: "INSERT INTO fhir VALUES ($1, $2)",
-    values: [ecrId, fhirBundle],
-  });
-
-  try {
-    await database.none(addFhir);
-
-    return {
-      message: "Success. Saved FHIR bundle.",
-      status: 200,
-    };
-  } catch (error: any) {
-    console.error({
-      message: `Failed to save FHIR bundle to postgres.`,
-      error,
-      ecrId,
-    });
-    return {
-      message: "Failed to save FHIR bundle.",
-      status: 500,
-    };
-  }
-};
 
 /**
  * Saves a FHIR bundle to an AWS S3 bucket.
@@ -156,7 +117,7 @@ export const saveToAzure = async (
  * @function saveFhirData
  * @param fhirBundle - The FHIR bundle to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @param saveSource - The location to save the FHIR bundle. Valid values are "postgres", "s3", or "azure".
+ * @param saveSource - The location to save the FHIR bundle.
  * @returns An object containing the status and message.
  */
 export const saveFhirData = async (
@@ -168,12 +129,10 @@ export const saveFhirData = async (
     return await saveToS3(fhirBundle, ecrId);
   } else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(fhirBundle, ecrId);
-  } else if (saveSource === POSTGRES_SOURCE) {
-    return await saveToPostgres(fhirBundle, ecrId);
   } else {
     return {
       message:
-        'Invalid save source. Please provide a valid value for \'saveSource\' ("postgres", "s3", or "azure").',
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", or "azure").',
       status: 400,
     };
   }
@@ -557,7 +516,7 @@ export const saveMetadataToPostgres = async (
  * @function saveWithMetadata
  * @param fhirBundle - The FHIR bundle to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @param saveSource - The location to save the FHIR bundle. Valid values are "postgres", "s3", or "azure".
+ * @param saveSource - The location to save the FHIR bundle.
  * @param metadata - The metadata to be saved with the FHIR bundle.
  * @returns An object containing the status and message.
  */
