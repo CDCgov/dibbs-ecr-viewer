@@ -1,0 +1,775 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Filter by Date Component - custom dates Renders correctly after opening Filter by Date box and clicking Custom date range option 1`] = `
+<div>
+  <div>
+    <div
+      class="border-top border-base-lighter"
+    />
+    <div
+      class="margin-x-3 margin-y-105 display-flex flex-align-center gap-105"
+    >
+      <span
+        class="line-height-sans-6"
+      >
+        FILTERS:
+      </span>
+      <div>
+        <div
+          class="position-relative display-flex flex-column"
+        >
+          <button
+            aria-expanded="true"
+            aria-haspopup="listbox"
+            aria-label="Filter by Received Date"
+            class="usa-button margin-right-0 filters-applied"
+            data-testid="button"
+            type="button"
+          >
+            <span
+              class="square-205 usa-icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon square-205"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                />
+              </svg>
+            </span>
+            <span
+              class="text-ink"
+            >
+              Received Date
+            </span>
+          </button>
+          <div
+            class="usa-combo-box top-full left-0"
+          >
+            <form>
+              <fieldset
+                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+              >
+                <legend
+                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-x-105 text-no-wrap"
+                >
+                  Filter by 
+                  Received Date
+                </legend>
+                <div
+                  class="display-flex flex-column"
+                >
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-24-hours"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-24-hours"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-24-hours"
+                    >
+                      Last 24 hours
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-7-days"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-7-days"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-7-days"
+                    >
+                      Last 7 days
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-30-days"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-30-days"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-30-days"
+                    >
+                      Last 30 days
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-3-months"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-3-months"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-3-months"
+                    >
+                      Last 3 months
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-6-months"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-6-months"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-6-months"
+                    >
+                      Last 6 months
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      checked=""
+                      class="usa-radio__input"
+                      id="filter-date-last-year"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-year"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-year"
+                    >
+                      Last year
+                    </label>
+                  </div>
+                  <div
+                    class="border-top-1px border-base-lighter margin-x-105 padding-bottom-1"
+                  />
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 undefined"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-custom"
+                      name="filter-date-options"
+                      type="radio"
+                      value="custom"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-custom"
+                    >
+                      Custom date range
+                    </label>
+                  </div>
+                  <div
+                    class="padding-x-105"
+                  >
+                    <div>
+                      <label
+                        class="usa-label margin-top-1"
+                        data-testid="label"
+                        for="start-date"
+                      >
+                        Start date
+                      </label>
+                      <input
+                        aria-label="Start date"
+                        class="usa-input width-card margin-top-0 border-base-dark"
+                        data-testid="start-date"
+                        id="start-date"
+                        max="2025-01-09"
+                        required=""
+                        type="date"
+                        value=""
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="usa-label margin-top-1"
+                        data-testid="label"
+                        for="end-date"
+                      >
+                        End date
+                      </label>
+                      <input
+                        aria-label="End date"
+                        class="usa-input width-card margin-top-0 border-base-dark"
+                        data-testid="end-date"
+                        id="end-date"
+                        max="2025-01-09"
+                        min=""
+                        type="date"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="display-flex flex-column flex-stretch padding-x-105"
+                >
+                  <button
+                    aria-label="Apply Filter for Received Date"
+                    class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
+                    data-testid="button"
+                    type="submit"
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="position-relative display-flex flex-column"
+        >
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-label="Filter by Reportable Condition"
+            class="usa-button margin-right-0 filter-button"
+            data-testid="button"
+            type="button"
+          >
+            <span
+              class="square-205 usa-icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon square-205"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21.25 10.5c-.41 0-.75.34-.75.75h-1.54a6.978 6.978 0 0 0-1.52-3.65l1.09-1.09.01.01c.29.29.77.29 1.06 0s.29-.77 0-1.06L18.54 4.4a.754.754 0 0 0-1.06 0c-.29.29-.29.76-.01 1.05l-1.09 1.09a7.015 7.015 0 0 0-3.64-1.51V3.5h.01c.41 0 .75-.34.75-.75S13.16 2 12.75 2h-1.5c-.41 0-.75.34-.75.75s.33.74.74.75v1.55c-1.37.14-2.62.69-3.64 1.51L6.51 5.47l.01-.01c.29-.29.29-.77 0-1.06a.754.754 0 0 0-1.06 0L4.4 5.46c-.29.29-.29.77 0 1.06.29.29.76.29 1.05.01l1.09 1.09a6.89 6.89 0 0 0-1.5 3.63H3.5c0-.41-.34-.75-.75-.75s-.75.34-.75.75v1.5c0 .41.34.75.75.75s.75-.34.75-.75h1.54c.15 1.37.69 2.61 1.5 3.63l-1.09 1.09a.742.742 0 0 0-1.05.01c-.29.29-.29.77 0 1.06l1.06 1.06c.29.29.77.29 1.06 0 .29-.29.29-.77 0-1.06l-.01-.01 1.09-1.09c1.02.82 2.26 1.36 3.63 1.51v1.55c-.41.01-.74.34-.74.75s.34.75.75.75h1.5c.41 0 .75-.34.75-.75s-.34-.75-.75-.75h-.01v-1.54c1.37-.14 2.62-.69 3.64-1.51l1.09 1.09c-.29.29-.28.76.01 1.05.29.29.77.29 1.06 0l1.06-1.06c.29-.29.29-.77 0-1.06a.754.754 0 0 0-1.06 0l-.01.01-1.09-1.09a7.025 7.025 0 0 0 1.52-3.65h1.54c0 .41.34.75.75.75s.75-.34.75-.75v-1.5c.01-.4-.33-.74-.74-.74zM13.75 8c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM12 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1.75-5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM8.5 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm1.75 3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3.5 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm.75-4c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"
+                />
+              </svg>
+            </span>
+            <span
+              class="text-ink"
+            >
+              Reportable Condition
+            </span>
+            <span
+              class="usa-tag padding-05 bg-base-darker radius-md"
+              data-testid="filter-tag"
+            >
+              2
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Filter by Date Component Renders correctly after opening Filter by Date box 1`] = `
+<div>
+  <div>
+    <div
+      class="border-top border-base-lighter"
+    />
+    <div
+      class="margin-x-3 margin-y-105 display-flex flex-align-center gap-105"
+    >
+      <span
+        class="line-height-sans-6"
+      >
+        FILTERS:
+      </span>
+      <div>
+        <div
+          class="position-relative display-flex flex-column"
+        >
+          <button
+            aria-expanded="true"
+            aria-haspopup="listbox"
+            aria-label="Filter by Received Date"
+            class="usa-button margin-right-0 filters-applied"
+            data-testid="button"
+            type="button"
+          >
+            <span
+              class="square-205 usa-icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon square-205"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                />
+              </svg>
+            </span>
+            <span
+              class="text-ink"
+            >
+              Last year
+            </span>
+          </button>
+          <div
+            class="usa-combo-box top-full left-0"
+          >
+            <form>
+              <fieldset
+                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+              >
+                <legend
+                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-x-105 text-no-wrap"
+                >
+                  Filter by 
+                  Received Date
+                </legend>
+                <div
+                  class="display-flex flex-column"
+                >
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-24-hours"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-24-hours"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-24-hours"
+                    >
+                      Last 24 hours
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-7-days"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-7-days"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-7-days"
+                    >
+                      Last 7 days
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-30-days"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-30-days"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-30-days"
+                    >
+                      Last 30 days
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-3-months"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-3-months"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-3-months"
+                    >
+                      Last 3 months
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-last-6-months"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-6-months"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-6-months"
+                    >
+                      Last 6 months
+                    </label>
+                  </div>
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 padding-bottom-1"
+                  >
+                    <input
+                      checked=""
+                      class="usa-radio__input"
+                      id="filter-date-last-year"
+                      name="filter-date-options"
+                      type="radio"
+                      value="last-year"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-last-year"
+                    >
+                      Last year
+                    </label>
+                  </div>
+                  <div
+                    class="border-top-1px border-base-lighter margin-x-105 padding-bottom-1"
+                  />
+                  <div
+                    class="checkbox-color usa-radio padding-x-105 undefined"
+                  >
+                    <input
+                      class="usa-radio__input"
+                      id="filter-date-custom"
+                      name="filter-date-options"
+                      type="radio"
+                      value="custom"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-radio__label text-no-wrap"
+                      for="filter-date-custom"
+                    >
+                      Custom date range
+                    </label>
+                  </div>
+                </div>
+                <div
+                  class="display-flex flex-column flex-stretch padding-x-105"
+                >
+                  <button
+                    aria-label="Apply Filter for Received Date"
+                    class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
+                    data-testid="button"
+                    type="submit"
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="position-relative display-flex flex-column"
+        >
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-label="Filter by Reportable Condition"
+            class="usa-button margin-right-0 filter-button"
+            data-testid="button"
+            type="button"
+          >
+            <span
+              class="square-205 usa-icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon square-205"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21.25 10.5c-.41 0-.75.34-.75.75h-1.54a6.978 6.978 0 0 0-1.52-3.65l1.09-1.09.01.01c.29.29.77.29 1.06 0s.29-.77 0-1.06L18.54 4.4a.754.754 0 0 0-1.06 0c-.29.29-.29.76-.01 1.05l-1.09 1.09a7.015 7.015 0 0 0-3.64-1.51V3.5h.01c.41 0 .75-.34.75-.75S13.16 2 12.75 2h-1.5c-.41 0-.75.34-.75.75s.33.74.74.75v1.55c-1.37.14-2.62.69-3.64 1.51L6.51 5.47l.01-.01c.29-.29.29-.77 0-1.06a.754.754 0 0 0-1.06 0L4.4 5.46c-.29.29-.29.77 0 1.06.29.29.76.29 1.05.01l1.09 1.09a6.89 6.89 0 0 0-1.5 3.63H3.5c0-.41-.34-.75-.75-.75s-.75.34-.75.75v1.5c0 .41.34.75.75.75s.75-.34.75-.75h1.54c.15 1.37.69 2.61 1.5 3.63l-1.09 1.09a.742.742 0 0 0-1.05.01c-.29.29-.29.77 0 1.06l1.06 1.06c.29.29.77.29 1.06 0 .29-.29.29-.77 0-1.06l-.01-.01 1.09-1.09c1.02.82 2.26 1.36 3.63 1.51v1.55c-.41.01-.74.34-.74.75s.34.75.75.75h1.5c.41 0 .75-.34.75-.75s-.34-.75-.75-.75h-.01v-1.54c1.37-.14 2.62-.69 3.64-1.51l1.09 1.09c-.29.29-.28.76.01 1.05.29.29.77.29 1.06 0l1.06-1.06c.29-.29.29-.77 0-1.06a.754.754 0 0 0-1.06 0l-.01.01-1.09-1.09a7.025 7.025 0 0 0 1.52-3.65h1.54c0 .41.34.75.75.75s.75-.34.75-.75v-1.5c.01-.4-.33-.74-.74-.74zM13.75 8c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM12 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1.75-5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM8.5 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm1.75 3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3.5 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm.75-4c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"
+                />
+              </svg>
+            </span>
+            <span
+              class="text-ink"
+            >
+              Reportable Condition
+            </span>
+            <span
+              class="usa-tag padding-05 bg-base-darker radius-md"
+              data-testid="filter-tag"
+            >
+              2
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Filter by Reportable Conditions Component renders correctly after opening conditions filter box 1`] = `
+<div>
+  <div>
+    <div
+      class="border-top border-base-lighter"
+    />
+    <div
+      class="margin-x-3 margin-y-105 display-flex flex-align-center gap-105"
+    >
+      <span
+        class="line-height-sans-6"
+      >
+        FILTERS:
+      </span>
+      <div>
+        <div
+          class="position-relative display-flex flex-column"
+        >
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-label="Filter by Received Date"
+            class="usa-button margin-right-0 filters-applied"
+            data-testid="button"
+            type="button"
+          >
+            <span
+              class="square-205 usa-icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon square-205"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                />
+              </svg>
+            </span>
+            <span
+              class="text-ink"
+            >
+              Last year
+            </span>
+          </button>
+        </div>
+      </div>
+      <div>
+        <div
+          class="position-relative display-flex flex-column"
+        >
+          <button
+            aria-expanded="true"
+            aria-haspopup="listbox"
+            aria-label="Filter by Reportable Condition"
+            class="usa-button margin-right-0 filter-button"
+            data-testid="button"
+            type="button"
+          >
+            <span
+              class="square-205 usa-icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon square-205"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21.25 10.5c-.41 0-.75.34-.75.75h-1.54a6.978 6.978 0 0 0-1.52-3.65l1.09-1.09.01.01c.29.29.77.29 1.06 0s.29-.77 0-1.06L18.54 4.4a.754.754 0 0 0-1.06 0c-.29.29-.29.76-.01 1.05l-1.09 1.09a7.015 7.015 0 0 0-3.64-1.51V3.5h.01c.41 0 .75-.34.75-.75S13.16 2 12.75 2h-1.5c-.41 0-.75.34-.75.75s.33.74.74.75v1.55c-1.37.14-2.62.69-3.64 1.51L6.51 5.47l.01-.01c.29-.29.29-.77 0-1.06a.754.754 0 0 0-1.06 0L4.4 5.46c-.29.29-.29.77 0 1.06.29.29.76.29 1.05.01l1.09 1.09a6.89 6.89 0 0 0-1.5 3.63H3.5c0-.41-.34-.75-.75-.75s-.75.34-.75.75v1.5c0 .41.34.75.75.75s.75-.34.75-.75h1.54c.15 1.37.69 2.61 1.5 3.63l-1.09 1.09a.742.742 0 0 0-1.05.01c-.29.29-.29.77 0 1.06l1.06 1.06c.29.29.77.29 1.06 0 .29-.29.29-.77 0-1.06l-.01-.01 1.09-1.09c1.02.82 2.26 1.36 3.63 1.51v1.55c-.41.01-.74.34-.74.75s.34.75.75.75h1.5c.41 0 .75-.34.75-.75s-.34-.75-.75-.75h-.01v-1.54c1.37-.14 2.62-.69 3.64-1.51l1.09 1.09c-.29.29-.28.76.01 1.05.29.29.77.29 1.06 0l1.06-1.06c.29-.29.29-.77 0-1.06a.754.754 0 0 0-1.06 0l-.01.01-1.09-1.09a7.025 7.025 0 0 0 1.52-3.65h1.54c0 .41.34.75.75.75s.75-.34.75-.75v-1.5c.01-.4-.33-.74-.74-.74zM13.75 8c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM12 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1.75-5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM8.5 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm1.75 3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3.5 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm.75-4c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"
+                />
+              </svg>
+            </span>
+            <span
+              class="text-ink"
+            >
+              Reportable Condition
+            </span>
+            <span
+              class="usa-tag padding-05 bg-base-darker radius-md"
+              data-testid="filter-tag"
+            >
+              2
+            </span>
+          </button>
+          <div
+            class="usa-combo-box top-full left-0"
+          >
+            <form>
+              <fieldset
+                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+              >
+                <legend
+                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-x-105 text-no-wrap"
+                >
+                  Filter by 
+                  Reportable Condition
+                </legend>
+                <div
+                  class="display-flex flex-column"
+                >
+                  <div
+                    class="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
+                  >
+                    <input
+                      checked=""
+                      class="usa-checkbox__input"
+                      id="condition-all"
+                      type="checkbox"
+                      value="all"
+                    />
+                    <label
+                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
+                      for="condition-all"
+                    >
+                      Deselect all
+                    </label>
+                  </div>
+                  <div
+                    class="border-top-1px border-base-lighter margin-x-105"
+                  />
+                  <div
+                    class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
+                  >
+                    <div
+                      class="checkbox-color usa-checkbox"
+                    >
+                      <input
+                        checked=""
+                        class="usa-checkbox__input"
+                        id="condition-Condition1"
+                        type="checkbox"
+                        value="Condition1"
+                      />
+                      <label
+                        class="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
+                        for="condition-Condition1"
+                      >
+                        Condition1
+                      </label>
+                    </div>
+                    <div
+                      class="checkbox-color usa-checkbox"
+                    >
+                      <input
+                        checked=""
+                        class="usa-checkbox__input"
+                        id="condition-Condition2"
+                        type="checkbox"
+                        value="Condition2"
+                      />
+                      <label
+                        class="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
+                        for="condition-Condition2"
+                      >
+                        Condition2
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="border-top-1px border-base-lighter margin-x-neg-105"
+                />
+                <div
+                  class="display-flex flex-column flex-stretch padding-x-105"
+                >
+                  <button
+                    aria-label="Apply Filter for Reportable Condition"
+                    class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
+                    data-testid="button"
+                    type="submit"
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <button
+        aria-label="Reset Filters to Defaults"
+        class="usa-button usa-button--unstyled gap-05"
+        data-testid="button"
+        type="button"
+      >
+        <span
+          class="square-205 usa-icon"
+        >
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-205"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 0 1 6 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
+            />
+          </svg>
+        </span>
+        Reset
+      </button>
+    </div>
+  </div>
+</div>
+`;

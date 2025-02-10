@@ -1,0 +1,341 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
+<div>
+  <div
+    aria-labelledby="summary-box-key-information"
+    class="usa-summary-box padding-3"
+  >
+    <div
+      class="usa-summary-box__body margin-bottom-05"
+    >
+      <h3
+        class="summary-box-key-information side-nav-ignore"
+        id="patient-summary"
+      >
+        Patient Summary
+      </h3>
+      <div
+        class="usa-summary-box__text"
+      >
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Patient Name
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              Han Solo
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              DOB
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              04/15/1900
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Sex
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              male
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Patient Address
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              1050 Millennium Falcon ST
+Space, CA
+00123, US
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Patient Contact
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              Home 555-555-55555
+HANSOLOFAKEEMAIL@EXAMPLE.COM
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="usa-summary-box__body"
+    >
+      <h3
+        class="summary-box-key-information side-nav-ignore"
+        id="encounter-summary"
+      >
+        Encounter Summary
+      </h3>
+      <div
+        class="usa-summary-box__text"
+      >
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Facility Name
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              Millennium Falcon Med Bay
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Facility Contact
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              555-555-5555
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Encounter Date/Time
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              Start: 05/13/2000 7:25 AM UTC
+End: 05/13/2000 9:57 AM UTC
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Encounter Type
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              Emergency
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="usa-summary-box__body"
+    >
+      <h3
+        class="summary-box-key-information side-nav-ignore header-with-tag"
+        id="condition-summary"
+      >
+        <div>
+          Condition Summary
+        </div>
+        <div>
+          <span
+            class="usa-tag tag-info"
+            data-testid="tag"
+          >
+            1 CONDITION FOUND
+          </span>
+        </div>
+      </h3>
+      <div
+        class="usa-summary-box__text condition-details-accordion"
+      >
+        <div
+          class="usa-accordion"
+          data-testid="accordion"
+        >
+          <h3
+            class="usa-accordion__heading side-nav-ignore border-1px border-accent-cool-darker"
+          >
+            <button
+              aria-controls="influenza-caused-by-influenza-a-virus-subtype-h5n1-disorder"
+              aria-expanded="true"
+              class="usa-accordion__button"
+              data-testid="accordionButton_influenza-caused-by-influenza-a-virus-subtype-h5n1-disorder"
+              type="button"
+            >
+              Influenza caused by Influenza A virus subtype H5N1 (disorder)
+            </button>
+          </h3>
+          <div
+            class="usa-accordion__content usa-prose side-nav-ignore border-1px border-accent-cool-darker"
+            data-testid="accordionItem_influenza-caused-by-influenza-a-virus-subtype-h5n1-disorder"
+            id="influenza-caused-by-influenza-a-virus-subtype-h5n1-disorder"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  RCKMS Rule Summary
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  covid summary
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="margin-top-0"
+            >
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="grid-col-auto width-full text-pre-line"
+                >
+                  table would be here
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="text-bold margin-top-0 margin-bottom-1"
+              id="relevant-clinical"
+            >
+              Clinical Sections Relevant to Reportable Condition
+            </div>
+            <div
+              class="margin-top-0"
+            >
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="grid-col-auto width-full text-pre-line"
+                >
+                  covid clinical
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="text-bold margin-0 margin-bottom-1"
+              id="relevant-labs"
+            >
+              Lab Results Relevant to Reportable Condition
+            </div>
+            <div
+              class="margin-top-0"
+            >
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="grid-col-auto width-full text-pre-line"
+                >
+                  covid lab
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

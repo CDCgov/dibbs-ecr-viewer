@@ -10,7 +10,10 @@ You can run the Orchestration service using Docker, any other OCI container runt
 
 ### Running Orchestration tests
 
-Before running the orchestration tests, make sure you have all the services running.
+Before running the orchestration unit tests, make sure you have all the services running. For the integration tests, the services will be spun up automatically.
+
+> [!IMPORTANT]
+> Before you spin up the services using the `docker-compose.yaml` make sure you have a `.env` file. If you do not have a `.env` file then please copy the `.env.sample` as `.env` in order to stand up the services.
 
 #### Running Unit Tests
 

@@ -7,7 +7,6 @@ from fastapi import Request
 from fastapi import Response
 from fastapi import status
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import FileResponse
 
 from app.base_service import BaseService
 from app.config import get_settings
@@ -74,30 +73,6 @@ async def health_check():
     running properly.
     """
     return {"status": "OK"}
-
-
-@app.get(
-    "/example-collection",
-    summary="User Acceptance Testing (UAT) Collection",
-)
-async def get_uat_collection() -> FileResponse:
-    """
-    This endpoint fetches a Postman collection of sample requests
-    designed for UAT. The collection is a JSON-exported file consisting of five
-    GET and POST requests to endpoints of the publicly available
-    dibbs.cloud server. The requests showcase the functionality of various
-    aspects of the Trigger Code Reference and the Message Refiner.
-    """
-    uat_collection_path = (
-        Path(__file__).parent.parent
-        / "assets"
-        / "Message_Refiner_UAT.postman_collection.json"
-    )
-    return FileResponse(
-        path=uat_collection_path,
-        media_type="application/json",
-        filename="Message_Refiner_Postman_Samples.json",
-    )
 
 
 @app.post(

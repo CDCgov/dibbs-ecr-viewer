@@ -1,0 +1,43 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:bb410dc7-007f-c649-1bed-2c00e676edfb",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "bb410dc7-007f-c649-1bed-2c00e676edfb",
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-item-list",
+                "display": "Problem List Item",
+                "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "55607006",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        },
+        "onsetDateTime": "1823-01-02T13:56:36-08:00",
+        "subject": {
+          "reference": "Patient/6ef568db-8f22-47b8-a831-52f3611298f0"
+        },
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/bb410dc7-007f-c649-1bed-2c00e676edfb"
+      }
+    }
+  ]
+}
