@@ -3,7 +3,7 @@ import { ToolTipElement } from "@/app/view-data/components/ToolTipElement";
 import { Address, ContactPoint, HumanName } from "fhir/r4";
 import sanitizeHtml from "sanitize-html";
 import { RenderableNode, safeParse } from "../view-data/utils/utils";
-import { parse } from 'node-html-parser';
+import { parse } from "node-html-parser";
 
 interface Metadata {
   [key: string]: string;
@@ -510,7 +510,7 @@ function processTable(table: Element): TableRow[] {
 
       const metadata: Metadata = {};
       const attributes = cell.attributes || [];
-      console.log({cell, attributes})
+      console.log({ cell, attributes });
       for (const [attrName, attrValue] of Object.entries(attributes)) {
         if (attrName && attrValue) {
           metadata[attrName] = attrValue.toString();

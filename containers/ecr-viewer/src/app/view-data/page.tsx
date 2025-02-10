@@ -12,7 +12,6 @@ import { Grid, GridContainer } from "@trussworks/react-uswds";
 
 import { EcrSummaryOuter } from "./components/EcrSummary";
 import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
-import { ForceClient } from "./components/ForceClient";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -68,55 +67,55 @@ const ECRViewerPage = async ({
     );
   } else if (fhirBundle && mappings) {
     return (
-        <ECRViewerLayout bundle={fhirBundle} mappings={mappings}>
-          <SideNav />
-          <div className={"ecr-viewer-container"}>
-            <div className="margin-bottom-3">
-              <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
-                eCR Summary
-              </h2>
-              <div className="text-base-darker line-height-sans-5">
-                Provides key info upfront to help you understand the eCR at a
-                glance
-              </div>
-            </div>
-            <EcrSummaryOuter
-              fhirBundle={fhirBundle}
-              mappings={mappings}
-              snomedCode={snomedCode}
-            />
-            <div className="margin-top-10">
-              <GridContainer className={"padding-0 margin-bottom-3 maxw-none"}>
-                <Grid row className="margin-bottom-05">
-                  <Grid>
-                    <h2 className="margin-bottom-0" id="ecr-document">
-                      eCR Document
-                    </h2>
-                  </Grid>
-                  <Grid className={"flex-align-self-center margin-left-auto"}>
-                    <ExpandCollapseButtons
-                      id={"main"}
-                      buttonSelector={"h3 > .usa-accordion__button"}
-                      accordionSelector={
-                        ".info-container > .usa-accordion__content"
-                      }
-                      expandButtonText={"Expand all sections"}
-                      collapseButtonText={"Collapse all sections"}
-                    />
-                  </Grid>
-                </Grid>
-                <div className="text-base-darker line-height-sans-5">
-                  Displays entire eICR and RR documents to help you dig further
-                  into eCR data
-                </div>
-              </GridContainer>
-              <AccordionContent
-                fhirPathMappings={mappings}
-                fhirBundle={fhirBundle}
-              />
+      <ECRViewerLayout bundle={fhirBundle} mappings={mappings}>
+        <SideNav />
+        <div className={"ecr-viewer-container"}>
+          <div className="margin-bottom-3">
+            <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
+              eCR Summary
+            </h2>
+            <div className="text-base-darker line-height-sans-5">
+              Provides key info upfront to help you understand the eCR at a
+              glance
             </div>
           </div>
-        </ECRViewerLayout>
+          <EcrSummaryOuter
+            fhirBundle={fhirBundle}
+            mappings={mappings}
+            snomedCode={snomedCode}
+          />
+          <div className="margin-top-10">
+            <GridContainer className={"padding-0 margin-bottom-3 maxw-none"}>
+              <Grid row className="margin-bottom-05">
+                <Grid>
+                  <h2 className="margin-bottom-0" id="ecr-document">
+                    eCR Document
+                  </h2>
+                </Grid>
+                <Grid className={"flex-align-self-center margin-left-auto"}>
+                  <ExpandCollapseButtons
+                    id={"main"}
+                    buttonSelector={"h3 > .usa-accordion__button"}
+                    accordionSelector={
+                      ".info-container > .usa-accordion__content"
+                    }
+                    expandButtonText={"Expand all sections"}
+                    collapseButtonText={"Collapse all sections"}
+                  />
+                </Grid>
+              </Grid>
+              <div className="text-base-darker line-height-sans-5">
+                Displays entire eICR and RR documents to help you dig further
+                into eCR data
+              </div>
+            </GridContainer>
+            <AccordionContent
+              fhirPathMappings={mappings}
+              fhirBundle={fhirBundle}
+            />
+          </div>
+        </div>
+      </ECRViewerLayout>
     );
   } else {
     return <EcrLoadingSkeleton />;
