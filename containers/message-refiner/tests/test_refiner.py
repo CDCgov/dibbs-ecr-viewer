@@ -1,4 +1,3 @@
-import json
 import pathlib
 from unittest.mock import AsyncMock
 from unittest.mock import Mock
@@ -71,19 +70,6 @@ def test_health_check():
     actual_response = client.get("/")
     assert actual_response.status_code == 200
     assert actual_response.json() == {"status": "OK"}
-
-
-def test_get_uat_collection():
-    uat_collection = json.load(
-        open(
-            pathlib.Path(__file__).parent.parent
-            / "assets"
-            / "Message_Refiner_UAT.postman_collection.json"
-        )
-    )
-    actual_response = client.get("example-collection")
-    assert actual_response.status_code == 200
-    assert actual_response.json() == uat_collection
 
 
 def test_openapi():

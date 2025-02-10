@@ -1,0 +1,1005 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:2468",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "2468",
+        "section": [
+          {
+            "id": "A87B29AA-3F70-11ED-9549-C301D81100B2",
+            "title": "Results",
+            "text": {
+              "status": "generated",
+              "div": "<ul> <li data-id='Result.1.2.3.4.5'> <caption data-id='Result.1.2.3.4.5.Procedure'>Stool Pathogens, NAAT, 12 to 25 Targets</caption> <table> <thead> <tr> <th>Component</th> <th>Value</th> <th>Ref Range</th> <th>Test Method</th> <th>Analysis Time</th> <th>Performed At</th> <th>Pathologist Signature</th> </tr> </thead> <tbody> <tr data-id='Result.1.2.3.4.5.Comp1'> <td data-id='Result.1.2.3.4.5.Comp1Name'>Campylobacter, NAAT</td> <td>Not Detected</td> <td>Not Detected</td> <td> <paragraph data-id='Result.1.2.3.4.5.Comp1TestMethodName1'>LAB DEVICE: BIOFIRE\u00ae FILMARRAY\u00ae 2.0 SYSTEM</paragraph> </td> <td><p><span><i>09/28/2000 1:59:00 PM PDT</i></span></p></td> <td>Gungan City Hospital</td> <td data-id='Result.1.2.3.4.5.Comp1Signature'></td> </tr> <tr data-id='Result.1.2.3.4.5.Comp2'> <td data-id='Result.1.2.3.4.5.Comp2Name'>Plesiomonas shigelloides, NAAT</td> <td>Not Detected</td> <td>Not Detected</td> <td> <paragraph data-id='Result.1.2.3.4.5.Comp2TestMethodName1'>LAB DEVICE: BIOFIRE\u00ae FILMARRAY\u00ae 2.0 SYSTEM</paragraph> </td> <td><p><span>09/28/2000 1:59:00 PM PDT</span></p></td> <td>Gungan City Hospital</td> <td data-id='Result.1.2.3.4.5.Comp2Signature'></td> </tr> </tbody> </table> <table> <thead> <tr> <th>Specimen (Source)</th> <th>Anatomical Location / Laterality</th> <th>Collection Method / Volume</th> <th>Collection Time</th> <th>Received Time</th> </tr> </thead> <tbody> <tr> <td data-id='Result.1.2.3.4.5.Specimen'>Stool</td> <td>STOOL SPECIMEN / Unknown</td> <td></td> <td>09/28/2000 1:51 PM PDT</td> <td>09/28/2000 1:51 PM PDT</td> </tr> </tbody> </table> <table> <thead> <tr> <th>Authorizing Provider</th> <th>Result Type</th> </tr> </thead> <tbody> <tr> <td>Darth Test MD</td> <td>MICROBIOLOGY - GENERAL ORDERABLES</td> </tr> </tbody> </table> <table> <thead> <tr> <th>Performing Organization</th> <th>Address</th> <th>City/State/ZIP Code</th> <th>Phone Number</th> </tr> </thead> <tbody> <tr> <td data-id='Result.1.2.3.4.5.PerformingLab'> <paragraph>Gungan City Hospital</paragraph> </td> <td> <paragraph>500000 S. Jar Jar Binks Street</paragraph> </td> <td> <paragraph>Gungan City, CA 00123</paragraph> </td> <td> <paragraph>555-555-5555</paragraph> </td> </tr> </tbody> </table> </li> <li data-id='Result.1.2.3.4.6'> <caption data-id='Result.1.2.3.4.6.Procedure'>(ABNORMAL) Stool Pathogens, NAAT, 12 to 25 Targets</caption> <table> <thead> <tr> <th>Component</th> <th>Value</th> <th>Ref Range</th> <th>Test Method</th> <th>Analysis Time</th> <th>Performed At</th> <th>Pathologist Signature</th> </tr> </thead> <tbody> <tr data-id='Result.1.2.3.4.6.Comp1'> <td data-id='Result.1.2.3.4.6.Comp1Name'>Campylobacter, NAAT</td> <td>Not Detected</td> <td>Not Detected</td> <td> <paragraph data-id='Result.1.2.3.4.6.Comp1TestMethodName1'>LAB DEVICE: BIOFIRE\u00ae FILMARRAY\u00ae 2.0 SYSTEM</paragraph> </td> <td>09/28/2000 2:00 PM PDT</td> <td>Gungan City Hospital</td> <td data-id='Result.1.2.3.4.6.Comp1Signature'></td> </tr> <tr data-id='Result.1.2.3.4.6.Comp2'> <td data-id='Result.1.2.3.4.6.Comp2Name'>Plesiomonas shigelloides, NAAT</td> <td>Not Detected</td> <td>Not Detected</td> <td> <paragraph data-id='Result.1.2.3.4.6.Comp2TestMethodName1'>LAB DEVICE: BIOFIRE\u00ae FILMARRAY\u00ae 2.0 SYSTEM</paragraph> </td> <td>09/28/2000 2:00 PM PDT</td> <td>Gungan City Hospital</td> <td data-id='Result.1.2.3.4.6.Comp2Signature'></td> </tr> </tbody> </table> <table> <thead> <tr> <th>Specimen (Source)</th> <th>Anatomical Location / Laterality</th> <th>Collection Method / Volume</th> <th>Collection Time</th> <th>Received Time</th> </tr> </thead> <tbody> <tr> <td data-id='Result.1.2.3.4.6.Specimen'>Stool</td> <td>STOOL SPECIMEN / Unknown</td> <td></td> <td>09/28/2000 1:51 PM PDT</td> <td>09/28/2000 1:51 PM PDT</td> </tr> </tbody> </table> <table> <thead> <tr> <th>Authorizing Provider</th> <th>Result Type</th> </tr> </thead> <tbody> <tr> <td>Darth Test MD</td> <td>MICROBIOLOGY - GENERAL ORDERABLES</td> </tr> </tbody> </table> </li> <li data-id='Result.1.2.3.4.7'> <table> <thead> <tr> <th>Specimen (Source)</th> <th>Anatomical Location / Laterality</th> <th>Collection Method / Volume</th> <th>Collection Time</th> <th>Received Time</th> </tr> </thead> <tbody> <tr> <td data-id='Result.1.2.3.4.7.Specimen'>Blood</td> <td></td> <td>Collection / Unknown</td> <td>04/04/1497 11:55 AM CDT</td> <td>04/18/1497 2:46 PM CDT</td> </tr> </tbody> </table> <table> <thead> <tr> <th>Narrative</th> </tr> </thead> <tbody> <tr> <td> <paragraph>Gungan Swamp Lab - 04/18/1497 2:57 PM CDT</paragraph> <paragraph data-id='Result.1.2.3.4.7.Narrative'> MICROARRAY REPORT NARRATIVE</paragraph> </td> </tr> </tbody> </table> <table> <thead> <tr> <th>Resulting Agency Comment</th> </tr> </thead> <tbody> <tr> <td> <paragraph data-id='Result.1.2.3.4.7.ResultingAgencyComment'>testing comment</paragraph> </td> </tr> </tbody> </table> <table> <thead> <tr> <th>Authorizing Provider</th> <th>Result Type</th> </tr> </thead> <tbody> <tr> <td>Jar Jar Bink MD</td> <td>LAB GENETIC TESTING</td> </tr> </tbody> </table>  </li></ul> documented in this encounter"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "30954-2",
+                  "display": "Relevant diagnostic tests/laboratory data Narrative",
+                  "system": "http://loinc.org"
+                }
+              ]
+            },
+            "mode": "snapshot",
+            "entry": [
+              {
+                "display": "Campylobacter, NAAT",
+                "reference": "Observation/1c0f3367-0588-c90e-fed0-0d8c15c5ac1b"
+              },
+              {
+                "display": "Plesiomonas shigelloides, NAAT",
+                "reference": "Observation/ab1ecbd4-6de0-4f78-cea6-a880a15e88bb"
+              },
+              {
+                "display": "Campylobacter, NAAT",
+                "reference": "Observation/6643fc2a-cbf7-28e9-1331-66a180a09c14"
+              },
+              {
+                "display": "Plesiomonas shigelloides, NAAT",
+                "reference": "Observation/75bf8f82-8b28-b1bd-e366-cf55b2de0ad9"
+              },
+              {
+                "display": "Sodium",
+                "reference": "Observation/0510c78e-f565-4b00-be1a-717abc91e914"
+              },
+              {
+                "display": "Organism ID",
+                "reference": "Observation/2a4f8fb5-f957-3c30-1353-a30aa441a12b"
+              },
+              {
+                "reference": "Observation/e9c8e4b3-3fec-4f29-a5c5-e45f96680a4c",
+                "display": "Lab Interpretation"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Composition/2468"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:68477c03-5689-f9e5-c267-a3c7bdff6fe0",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "68477c03-5689-f9e5-c267-a3c7bdff6fe0",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "1670844"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "LAB10082",
+              "display": "STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS",
+              "system": "http://www.ama-assn.org/go/cpt"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "2000-02-04T20:51:00Z",
+          "end": "2000-02-04T20:51:00Z"
+        },
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "performer": [
+          {
+            "reference": "Organization/14394818-a1e9-4882-ca8b-FAKE793bb5cc"
+          }
+        ],
+        "result": [
+          {
+            "reference": "Observation/1c0f3367-0588-c90e-fed0-0d8c15c5ac1b"
+          },
+          {
+            "reference": "Observation/e9c8e4b3-3fec-4f29-a5c5-e45f96680a4c"
+          },
+          {
+            "reference": "Observation/ab1ecbd4-6de0-4f78-cea6-a880a15e88bb"
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "DiagnosticReport/68477c03-5689-f9e5-c267-a3c7bdff6fe0"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c090d379-9aea-f26e-4ddc-378223841e3b",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "c090d379-9aea-f26e-4ddc-378223841e3b",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "1670845"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "somelocalcode",
+              "system": "some.thing"
+            },
+            {
+              "code": "LAB10082",
+              "display": "STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS",
+              "system": "http://www.ama-assn.org/go/cpt"
+            },
+            {
+              "code": "a loinc code",
+              "display": "Stool Pathogens 12 To 25 Targets",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "2000-02-04T20:51:00Z",
+          "end": "2000-02-04T20:51:00Z"
+        },
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "performer": [
+          {
+            "reference": "Organization/14394818-a1e9-4882-ca8b-FAKE793bb5cc"
+          }
+        ],
+        "result": [
+          {
+            "reference": "Observation/6643fc2a-cbf7-28e9-1331-66a180a09c14"
+          },
+          {
+            "reference": "Observation/75bf8f82-8b28-b1bd-e366-cf55b2de0ad9"
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "DiagnosticReport/c090d379-9aea-f26e-4ddc-378223841e3b"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b0f590a6-4bf5-7add-9716-2bd3ba6defb2",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "b0f590a6-4bf5-7add-9716-2bd3ba6defb2",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "2061347"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "118330",
+              "display": "Cytogenomic SNP microarray",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "1824-05-05T16:55:00Z",
+          "end": "1824-05-05T16:55:00Z"
+        },
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "performer": [
+          {
+            "reference": "Organization/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
+          }
+        ],
+        "result": [
+          {
+            "reference": "Observation/2a4f8fb5-f957-3c30-1353-a30aa441a12b"
+          },
+          {
+            "reference": "Observation/0510c78e-f565-4b00-be1a-717abc91e914"
+          },
+          {
+            "reference": "Observation/e2c3a705-9129-e79b-a79f-61281fa74db6"
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "DiagnosticReport/b0f590a6-4bf5-7add-9716-2bd3ba6defb2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e9c8e4b3-3fec-4f29-a5c5-e45f96680a4c",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "e9c8e4b3-3fec-4f29-a5c5-e45f96680a4c",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "476858944"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "56850-1",
+              "system": "http://loinc.org",
+              "display": "Lab Interpretation"
+            }
+          ]
+        },
+        "effectiveDateTime": "1824-10-31T21:13:00Z",
+        "valueString": "Abnormal",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Stool"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "2000-02-04T20:51:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "2000-02-04T20:51:36Z"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/e9c8e4b3-3fec-4f29-a5c5-e45f96680a4c"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1c0f3367-0588-c90e-fed0-0d8c15c5ac1b",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "1c0f3367-0588-c90e-fed0-0d8c15c5ac1b",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "1670844.1"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "somelocalcode",
+              "system": "1.2.3"
+            },
+            {
+              "code": "82196-7",
+              "display": "Campylobacter, NAAT",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectiveDateTime": "2000-02-04T21:00:53Z",
+        "valueString": "Abnormal",
+        "referenceRange": [
+          {
+            "text": "Not Detected"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "code": "A",
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "display": "Abnormal"
+              }
+            ]
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Stool"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "2000-02-04T20:51:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "2000-02-04T20:51:36Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.6.Comp1"
+              }
+            ]
+          },
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "test-snomed",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "device": {
+          "reference": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
+        },
+        "performer": [
+          {
+            "display": "Hoth Labs",
+            "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/1c0f3367-0588-c90e-fed0-0d8c15c5ac1b"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:ab1ecbd4-6de0-4f78-cea6-a880a15e88bb",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "ab1ecbd4-6de0-4f78-cea6-a880a15e88bb",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "1670844.2"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "82198-3",
+              "display": "Plesiomonas shigelloides, NAAT",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectiveDateTime": "2000-02-04T21:00:53Z",
+        "valueString": "Not Detected",
+        "referenceRange": [
+          {
+            "text": "Not Detected"
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Stool"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "2000-02-04T20:51:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "2000-02-04T20:51:36Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.6.Comp2"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "device": {
+          "reference": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
+        },
+        "performer": [
+          {
+            "display": "Hoth Labs",
+            "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/ab1ecbd4-6de0-4f78-cea6-a880a15e88bb"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6643fc2a-cbf7-28e9-1331-66a180a09c14",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "6643fc2a-cbf7-28e9-1331-66a180a09c14",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "1670845.1"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "82196-7",
+              "display": "Campylobacter, NAAT",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectiveDateTime": "2000-02-04T20:59:43Z",
+        "valueString": "Not Detected",
+        "referenceRange": [
+          {
+            "text": "Not Detected"
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Stool"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "2000-02-04T20:51:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "2000-02-04T20:51:36Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.5.Comp1"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "device": {
+          "reference": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
+        },
+        "performer": [
+          {
+            "display": "Hoth Labs",
+            "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/6643fc2a-cbf7-28e9-1331-66a180a09c14"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:75bf8f82-8b28-b1bd-e366-cf55b2de0ad9",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "75bf8f82-8b28-b1bd-e366-cf55b2de0ad9",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "1670845.2"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "82198-3",
+              "display": "Plesiomonas shigelloides, NAAT",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectiveDateTime": "2000-02-04T20:59:43Z",
+        "valueString": "Not Detected",
+        "referenceRange": [
+          {
+            "text": "Not Detected"
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Stool"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "2000-02-04T20:51:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "2000-02-04T20:51:36Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.5.Comp2"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "device": {
+          "reference": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
+        },
+        "performer": [
+          {
+            "display": "Hoth Labs",
+            "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/75bf8f82-8b28-b1bd-e366-cf55b2de0ad9"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2a4f8fb5-f957-3c30-1353-a30aa441a12b",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "2a4f8fb5-f957-3c30-1353-a30aa441a12b",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "2061347"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "NAR",
+              "display": "Organism ID",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+            }
+          ]
+        },
+        "valueString": "Acinetobacter baumannii",
+        "note": [
+          {
+            "text": "<paragraph>Lab comment</paragraph>"
+          }
+        ],
+        "effectiveDateTime": "2000-02-03T19:57:02Z",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Blood"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "1824-05-05T16:55:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "2000-02-03T19:46:00Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.7.Narrative"
+              }
+            ]
+          },
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "test-snomed",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "performer": [
+          {
+            "display": "Hoth Labs",
+            "reference": "Organization/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/2a4f8fb5-f957-3c30-1353-a30aa441a12b"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:0510c78e-f565-4b00-be1a-717abc91e914",
+      "request": {
+        "url": "Observation/0510c78e-f565-4b00-be1a-717abc91e914",
+        "method": "PUT"
+      },
+      "resource": {
+        "id": "0510c78e-f565-4b00-be1a-717abc91e914",
+        "code": {
+          "coding": [
+            {
+              "code": "2951-2",
+              "system": "http://loinc.org",
+              "display": "Sodium"
+            }
+          ]
+        },
+        "meta": {
+          "source": "ecr",
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ]
+        },
+        "status": "final",
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category"
+              }
+            ]
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/R4/specimen.html",
+            "extension": [
+              {
+                "url": "specimen source",
+                "valueString": "Blood"
+              },
+              {
+                "url": "specimen collection time",
+                "valueDateTime": "1824-05-05T16:55:00Z"
+              },
+              {
+                "url": "specimen receive time",
+                "valueDateTime": "2000-02-03T19:46:00Z"
+              },
+              {
+                "url": "observation entry reference value",
+                "valueString": "#Result.1.2.3.4.7.Comp2"
+              }
+            ]
+          }
+        ],
+        "performer": [
+          {
+            "display": "Hoth Labs",
+            "reference": "Organization/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
+          }
+        ],
+        "identifier": [
+          {
+            "value": "197645952.1",
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+          }
+        ],
+        "resourceType": "Observation",
+        "valueQuantity": {
+          "unit": "mmol/L",
+          "value": 139
+        },
+        "referenceRange": [
+          {
+            "low": {
+              "unit": "mmol/L",
+              "value": 138
+            },
+            "high": {
+              "unit": "mmol/L",
+              "value": 145
+            },
+            "text": "138 mmol/L - 145 mmol/L"
+          }
+        ],
+        "effectiveDateTime": "2000-01-20T02:42:28Z"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e2c3a705-9129-e79b-a79f-61281fa74db6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "e2c3a705-9129-e79b-a79f-61281fa74db6",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": ["ecr"]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "91288006",
+              "display": "Acinetobacter baumannii",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "12-5",
+                  "display": "Amikacin",
+                  "system": "http://loinc.org"
+                }
+              ]
+            },
+            "valueString": "0.25: Susceptible",
+            "extension": [
+              {
+                "url": "methodCode originalText",
+                "valueString": "MIC"
+              }
+            ]
+          },
+          {
+            "code": {
+              "coding": [
+                {
+                  "display": "Avycaz (Ceftazidime/Avibactam)"
+                }
+              ]
+            },
+            "valueString": "0.05: Intermediate",
+            "extension": [
+              {
+                "url": "methodCode originalText",
+                "valueString": "MIC"
+              }
+            ]
+          },
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "20396-8",
+                  "display": "Levofloxacin",
+                  "system": "http://loinc.org"
+                }
+              ]
+            },
+            "valueString": "0.75: Resistant",
+            "extension": [
+              {
+                "url": "methodCode originalText",
+                "valueString": "MIC"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "device": {
+          "reference": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/e2c3a705-9129-e79b-a79f-61281fa74db6"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:5e841917-fd80-47ab-88c3-95d7b9a7c47f",
+      "resource": {
+        "resourceType": "Device",
+        "id": "5e841917-fd80-47ab-88c3-95d7b9a7c47f",
+        "deviceName": [
+          {
+            "name": "LAB DEVICE: BIOFIRE\u00ae FILMARRAY\u00ae 2.0 SYSTEM"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:14394818-a1e9-4882-ca8b-FAKE793bb5cc",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "14394818-a1e9-4882-ca8b-FAKE793bb5cc",
+        "name": "Tatooine Hospital",
+        "address": [
+          {
+            "use": "work",
+            "line": ["501 S. Sand Street"],
+            "city": "Mos Eisley",
+            "state": "CO",
+            "postalCode": "00055"
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/14394818-a1e9-4882-ca8b-FAKE793bb5cc"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
+        "name": "Coruscant Medical",
+        "address": [
+          {
+            "use": "work",
+            "line": ["Apt 37", "555 Medical Drive"],
+            "city": "Coruscant",
+            "state": "MA",
+            "country": "USA",
+            "postalCode": "00010",
+            "district": "Empire"
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
+      }
+    }
+  ]
+}

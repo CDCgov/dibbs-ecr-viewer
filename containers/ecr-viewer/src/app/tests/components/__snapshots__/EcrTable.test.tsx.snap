@@ -1,0 +1,2117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EcrTable Snapshot test for EcrTableLoading should match snapshot 1`] = `
+<div>
+  <div
+    class="ecr-library-wrapper width-full overflow-auto"
+  >
+    <table
+      class="usa-table usa-table--borderless width-full _fixed_1khz6_1 usa-table--striped table-ecr-library margin-0"
+      data-testid="table"
+    >
+      <thead
+        class="position-sticky top-0"
+      >
+        <tr>
+          <th
+            class="library-patient-column"
+            data-sortable="true"
+            id="patient-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Patient
+              <button
+                aria-label="Sort by patient"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="patient-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-received-date-column"
+            data-sortable="true"
+            id="date_created-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Received Date
+              <button
+                aria-label="Sort by date_created"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="date_created-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-encounter-date-column"
+            data-sortable="true"
+            id="report_date-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Encounter Date
+              <button
+                aria-label="Sort by report_date"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="report_date-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-condition-column"
+            data-sortable="false"
+            id="reportable_condition-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Reportable Condition
+            </div>
+          </th>
+          <th
+            class="library-rule-column"
+            data-sortable="false"
+            id="rule_summary-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              RCKMS Rule Summary
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+            <br />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="grid-row"
+            >
+              <div
+                class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+              >
+                 
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`EcrTable should match snapshot 1`] = `
+<div>
+  <div
+    class="ecr-library-wrapper width-full overflow-auto"
+  >
+    <table
+      class="usa-table usa-table--borderless width-full _fixed_1khz6_1 usa-table--striped table-ecr-library margin-0"
+      data-testid="table"
+    >
+      <thead
+        class="position-sticky top-0"
+      >
+        <tr>
+          <th
+            class="library-patient-column"
+            data-sortable="true"
+            id="patient-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Patient
+              <button
+                aria-label="Sort by patient"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="patient-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            aria-sort="descending"
+            class="library-received-date-column"
+            data-sortable="true"
+            id="date_created-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="sort-div"
+            >
+              Received Date
+              <button
+                aria-label="Sort by date_created"
+                class="usa-button sort-button usa-button sortable-desc-column"
+                data-testid="button"
+                id="date_created-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-encounter-date-column"
+            data-sortable="true"
+            id="report_date-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Encounter Date
+              <button
+                aria-label="Sort by report_date"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="report_date-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-condition-column"
+            data-sortable="false"
+            id="reportable_condition-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Reportable Condition
+            </div>
+          </th>
+          <th
+            class="library-rule-column"
+            data-sortable="false"
+            id="rule_summary-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              RCKMS Rule Summary
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-1"
+            >
+              First-1
+               
+              Last-1
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-01
+            </div>
+          </td>
+          <td>
+            2021-01-01
+          </td>
+          <td>
+            <span
+              class="no-data text-italic text-base"
+            >
+              No data
+            </span>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-1
+              </li>
+              <li>
+                second-condition-1
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-1
+              </li>
+              <li>
+                second-summary-1
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-2"
+            >
+              First-2
+               
+              Last-2
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-02
+            </div>
+          </td>
+          <td>
+            2021-01-02
+          </td>
+          <td>
+            2021-01-02
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-2
+              </li>
+              <li>
+                second-condition-2
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-2
+              </li>
+              <li>
+                second-summary-2
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-3"
+            >
+              First-3
+               
+              Last-3
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-03
+            </div>
+          </td>
+          <td>
+            2021-01-03
+          </td>
+          <td>
+            2021-01-03
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-3
+              </li>
+              <li>
+                second-condition-3
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-3
+              </li>
+              <li>
+                second-summary-3
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-4"
+            >
+              First-4
+               
+              Last-4
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-04
+            </div>
+          </td>
+          <td>
+            2021-01-04
+          </td>
+          <td>
+            2021-01-04
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-4
+              </li>
+              <li>
+                second-condition-4
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-4
+              </li>
+              <li>
+                second-summary-4
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-5"
+            >
+              First-5
+               
+              Last-5
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-05
+            </div>
+          </td>
+          <td>
+            2021-01-05
+          </td>
+          <td>
+            2021-01-05
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-5
+              </li>
+              <li>
+                second-condition-5
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-5
+              </li>
+              <li>
+                second-summary-5
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-6"
+            >
+              First-6
+               
+              Last-6
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-06
+            </div>
+          </td>
+          <td>
+            2021-01-06
+          </td>
+          <td>
+            2021-01-06
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-6
+              </li>
+              <li>
+                second-condition-6
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-6
+              </li>
+              <li>
+                second-summary-6
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-7"
+            >
+              First-7
+               
+              Last-7
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-07
+            </div>
+          </td>
+          <td>
+            2021-01-07
+          </td>
+          <td>
+            2021-01-07
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-7
+              </li>
+              <li>
+                second-condition-7
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-7
+              </li>
+              <li>
+                second-summary-7
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-8"
+            >
+              First-8
+               
+              Last-8
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-08
+            </div>
+          </td>
+          <td>
+            2021-01-08
+          </td>
+          <td>
+            2021-01-08
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-8
+              </li>
+              <li>
+                second-condition-8
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-8
+              </li>
+              <li>
+                second-summary-8
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-9"
+            >
+              First-9
+               
+              Last-9
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-09
+            </div>
+          </td>
+          <td>
+            2021-01-09
+          </td>
+          <td>
+            2021-01-09
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-9
+              </li>
+              <li>
+                second-condition-9
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-9
+              </li>
+              <li>
+                second-summary-9
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-10"
+            >
+              First-10
+               
+              Last-10
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-01
+            </div>
+          </td>
+          <td>
+            2021-01-01
+          </td>
+          <td>
+            2021-01-01
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-10
+              </li>
+              <li>
+                second-condition-10
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-10
+              </li>
+              <li>
+                second-summary-10
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-11"
+            >
+              First-11
+               
+              Last-11
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-02
+            </div>
+          </td>
+          <td>
+            2021-01-02
+          </td>
+          <td>
+            2021-01-02
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-11
+              </li>
+              <li>
+                second-condition-11
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-11
+              </li>
+              <li>
+                second-summary-11
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-12"
+            >
+              First-12
+               
+              Last-12
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-03
+            </div>
+          </td>
+          <td>
+            2021-01-03
+          </td>
+          <td>
+            2021-01-03
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-12
+              </li>
+              <li>
+                second-condition-12
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-12
+              </li>
+              <li>
+                second-summary-12
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-13"
+            >
+              First-13
+               
+              Last-13
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-04
+            </div>
+          </td>
+          <td>
+            2021-01-04
+          </td>
+          <td>
+            2021-01-04
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-13
+              </li>
+              <li>
+                second-condition-13
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-13
+              </li>
+              <li>
+                second-summary-13
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-14"
+            >
+              First-14
+               
+              Last-14
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-05
+            </div>
+          </td>
+          <td>
+            2021-01-05
+          </td>
+          <td>
+            2021-01-05
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-14
+              </li>
+              <li>
+                second-condition-14
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-14
+              </li>
+              <li>
+                second-summary-14
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-15"
+            >
+              First-15
+               
+              Last-15
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-06
+            </div>
+          </td>
+          <td>
+            2021-01-06
+          </td>
+          <td>
+            2021-01-06
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-15
+              </li>
+              <li>
+                second-condition-15
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-15
+              </li>
+              <li>
+                second-summary-15
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-16"
+            >
+              First-16
+               
+              Last-16
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-07
+            </div>
+          </td>
+          <td>
+            2021-01-07
+          </td>
+          <td>
+            2021-01-07
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-16
+              </li>
+              <li>
+                second-condition-16
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-16
+              </li>
+              <li>
+                second-summary-16
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-17"
+            >
+              First-17
+               
+              Last-17
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-08
+            </div>
+          </td>
+          <td>
+            2021-01-08
+          </td>
+          <td>
+            2021-01-08
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-17
+              </li>
+              <li>
+                second-condition-17
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-17
+              </li>
+              <li>
+                second-summary-17
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-18"
+            >
+              First-18
+               
+              Last-18
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-09
+            </div>
+          </td>
+          <td>
+            2021-01-09
+          </td>
+          <td>
+            2021-01-09
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-18
+              </li>
+              <li>
+                second-condition-18
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-18
+              </li>
+              <li>
+                second-summary-18
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-19"
+            >
+              First-19
+               
+              Last-19
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-01
+            </div>
+          </td>
+          <td>
+            2021-01-01
+          </td>
+          <td>
+            2021-01-01
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-19
+              </li>
+              <li>
+                second-condition-19
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-19
+              </li>
+              <li>
+                second-summary-19
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-20"
+            >
+              First-20
+               
+              Last-20
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-02
+            </div>
+          </td>
+          <td>
+            2021-01-02
+          </td>
+          <td>
+            2021-01-02
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-20
+              </li>
+              <li>
+                second-condition-20
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-20
+              </li>
+              <li>
+                second-summary-20
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-21"
+            >
+              First-21
+               
+              Last-21
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-03
+            </div>
+          </td>
+          <td>
+            2021-01-03
+          </td>
+          <td>
+            2021-01-03
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-21
+              </li>
+              <li>
+                second-condition-21
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-21
+              </li>
+              <li>
+                second-summary-21
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-22"
+            >
+              First-22
+               
+              Last-22
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-04
+            </div>
+          </td>
+          <td>
+            2021-01-04
+          </td>
+          <td>
+            2021-01-04
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-22
+              </li>
+              <li>
+                second-condition-22
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-22
+              </li>
+              <li>
+                second-summary-22
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-23"
+            >
+              First-23
+               
+              Last-23
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-05
+            </div>
+          </td>
+          <td>
+            2021-01-05
+          </td>
+          <td>
+            2021-01-05
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-23
+              </li>
+              <li>
+                second-condition-23
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-23
+              </li>
+              <li>
+                second-summary-23
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-24"
+            >
+              First-24
+               
+              Last-24
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-06
+            </div>
+          </td>
+          <td>
+            2021-01-06
+          </td>
+          <td>
+            2021-01-06
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-24
+              </li>
+              <li>
+                second-condition-24
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-24
+              </li>
+              <li>
+                second-summary-24
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/view-data?id=id-25"
+            >
+              First-25
+               
+              Last-25
+            </a>
+            <br />
+            <div>
+              DOB: 2000-01-07
+            </div>
+          </td>
+          <td>
+            2021-01-07
+          </td>
+          <td>
+            2021-01-07
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                reportable-condition-25
+              </li>
+              <li>
+                second-condition-25
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul
+              class="ecr-table-list"
+            >
+              <li>
+                rule-summary-25
+              </li>
+              <li>
+                second-summary-25
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;

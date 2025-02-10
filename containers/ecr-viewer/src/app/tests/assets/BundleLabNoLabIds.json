@@ -1,0 +1,72 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:00194802-85e5-4b5a-9da5-ef8bf5735a67",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "00194802-85e5-4b5a-9da5-ef8bf5735a67",
+        "section": [
+          {
+            "id": "52b7b85b-1fa8-3e9b-d7bf-ddf69a80812d",
+            "title": "RESULTS",
+            "text": {
+              "status": "generated",
+              "div": "<table border=\"1\" width=\"100%\" xmlns=\"urn:hl7-org:v3\"><thead><tr><th>Lab Test Name</th><th>Lab Test Result Value</th><th>Lab Test Result Date</th></tr></thead><tbody><tr><td><content ID=\"labTestName1\">SARS-CoV-2, NAA CL</content></td><td><content ID=\"labTestResultValue1\">POS</content></td><td><content ID=\"labTestResultValueDate1\">2000-02-04T21:02:00.000Z</content></td></tr><tr><td><content ID=\"labTestName2\">Symptomatic as defined by CDC?</content></td><td><content ID=\"labTestResultValue2\">YES</content></td><td><content ID=\"labTestResultValueDate2\">2000-02-04T21:02:00.000Z</content></td></tr></tbody></table>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "30954-2",
+                  "system": "http://loinc.org",
+                  "display": "RESULTS"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Composition/00194802-85e5-4b5a-9da5-ef8bf5735a67"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:97d3b36a-f833-2f3c-b456-abeb1fd342e4",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "97d3b36a-f833-2f3c-b456-abeb1fd342e4",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:14c15bf7-615a-429d-8917-ccdd830219dd"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "94500-6",
+              "system": "http://loinc.org",
+              "display": "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory system specimen by NAA with probe detection"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "840539006",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "DiagnosticReport/97d3b36a-f833-2f3c-b456-abeb1fd342e4"
+      }
+    }
+  ]
+}
