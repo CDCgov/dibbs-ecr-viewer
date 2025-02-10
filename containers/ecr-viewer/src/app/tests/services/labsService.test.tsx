@@ -33,17 +33,15 @@ const pathLabReportNormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'c090d379-9aea-f26e-4ddc-378223841e3b')";
 const labReportNormal = evaluate(BundleLab, pathLabReportNormal)[0];
 const labReportNormalJsonObject = {
-  resultId: "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845",
-  resultName:
-    "Stool Pathogens, NAAT, 12 to 25 Targets (09/28/2000 1:51 PM PDT)",
+  resultId: "Result.1.2.3.4.5",
+  resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
   tables: [
     [
       {
         Component: {
           value: "Campylobacter, NAAT",
           metadata: {
-            "data-id":
-              "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845.Comp1Name",
+            "data-id": "Result.1.2.3.4.5.Comp1Name",
           },
         },
         Value: { value: "Not Detected", metadata: {} },
@@ -69,8 +67,7 @@ const labReportNormalJsonObject = {
         "Pathologist Signature": {
           value: "",
           metadata: {
-            "data-id":
-              "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845.Comp1Signature",
+            "data-id": "Result.1.2.3.4.5.Comp1Signature",
           },
         },
       },
@@ -78,8 +75,7 @@ const labReportNormalJsonObject = {
         Component: {
           value: "Plesiomonas shigelloides, NAAT",
           metadata: {
-            "data-id":
-              "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845.Comp2Name",
+            "data-id": "Result.1.2.3.4.5.Comp2Name",
           },
         },
         Value: { value: "Not Detected", metadata: {} },
@@ -103,8 +99,7 @@ const labReportNormalJsonObject = {
         "Pathologist Signature": {
           value: "",
           metadata: {
-            "data-id":
-              "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845.Comp2Signature",
+            "data-id": "Result.1.2.3.4.5.Comp2Signature",
           },
         },
       },
@@ -114,8 +109,7 @@ const labReportNormalJsonObject = {
         "Specimen (Source)": {
           value: "Stool",
           metadata: {
-            "data-id":
-              "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845.Specimen",
+            "data-id": "Result.1.2.3.4.5.Specimen",
           },
         },
         "Anatomical Location / Laterality": {
@@ -147,8 +141,7 @@ const labReportNormalJsonObject = {
         "Performing Organization": {
           value: <p>Gungan City Hospital</p>,
           metadata: {
-            "data-id":
-              "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845.PerformingLab",
+            "data-id": "Result.1.2.3.4.5.PerformingLab",
           },
         },
         Address: { value: <p>500000 S. Jar Jar Binks Street</p>, metadata: {} },
@@ -356,9 +349,8 @@ describe("LabsService tests", () => {
 
         const result = returnAnalysisTime(
           {
-            resultId: "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845",
-            resultName:
-              "Stool Pathogens, NAAT, 12 to 25 Targets (09/28/2000 1:51 PM PDT)",
+            resultId: "Result.1.2.3.4.5",
+            resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
             tables: [
               [
                 {
@@ -392,9 +384,8 @@ describe("LabsService tests", () => {
 
         const result = returnAnalysisTime(
           {
-            resultId: "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845",
-            resultName:
-              "Stool Pathogens, NAAT, 12 to 25 Targets (09/28/2000 1:51 PM PDT)",
+            resultId: "Result.1.2.3.4.5",
+            resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
             tables: [
               [
                 {
@@ -426,9 +417,8 @@ describe("LabsService tests", () => {
 
         const result = returnAnalysisTime(
           {
-            resultId: "Result.1.2.840.114350.1.13.297.3.7.2.798268.1670845",
-            resultName:
-              "Stool Pathogens, NAAT, 12 to 25 Targets (09/28/2000 1:51 PM PDT)",
+            resultId: "Result.1.2.3.4.5",
+            resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
             tables: [
               [
                 {
@@ -753,7 +743,8 @@ describe("LabsService tests", () => {
             country: "USA",
             district: "Central",
             postalCode: "00123",
-          }],
+          },
+        ],
         telecom: [
           {
             value: "+1-615-875-5227",

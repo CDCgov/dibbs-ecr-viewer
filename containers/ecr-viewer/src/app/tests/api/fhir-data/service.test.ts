@@ -4,13 +4,11 @@
 import {
   get_azure,
   get_fhir_data,
-  get_postgres,
   get_s3,
 } from "@/app/api/fhir-data/fhir-data-service";
-import { getDB } from "@/app/api/services/postgres_db";
 
 import { s3Client } from "@/app/api/services/s3Client";
-import { AZURE_SOURCE, POSTGRES_SOURCE, S3_SOURCE } from "@/app/api/utils";
+import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
 import { BlobServiceClient } from "@azure/storage-blob";
 
 jest.mock("../../../api/services/postgres_db", () => ({
@@ -43,7 +41,7 @@ const simpleResponse = {
 
 describe("get_fhir_data", () => {
   afterEach(() => {
-    process.env.SOURCE = POSTGRES_SOURCE;
+    process.env.SOURCE = S3_SOURCE;
     jest.resetAllMocks();
   });
 
@@ -60,89 +58,9 @@ describe("get_fhir_data", () => {
   });
 });
 
-describe("get_postgres", () => {
-  const mockDatabase = {
-    one: jest.fn(),
-  };
-
-  beforeEach(() => {
-    // Mock getDB to return the mock database
-    (getDB as jest.Mock).mockReturnValue({
-      database: mockDatabase,
-      pgPromise: {
-        ParameterizedQuery: jest
-          .fn()
-          .mockImplementation(({ text, values }: any) => ({
-            text,
-            values,
-          })),
-      },
-    });
-  });
-
-  afterEach(() => {
-    process.env.SOURCE = POSTGRES_SOURCE;
-    jest.resetAllMocks();
-  });
-
-  it("should return ecr when database query succeeds", async () => {
-    const mockECR = {
-      data: defaultFhirBundle,
-    };
-    mockDatabase.one.mockReturnValue(mockECR);
-    const response = await get_postgres("123");
-
-    expect(response.status).toEqual(200);
-    expect(response.payload).toEqual({
-      fhirBundle: defaultFhirBundle,
-    });
-    expect(mockDatabase.one).toHaveBeenCalledTimes(1);
-  });
-
-  it("should be called by get_fhir_data when source is postgres", async () => {
-    process.env.SOURCE = POSTGRES_SOURCE;
-    const mockECR = {
-      data: defaultFhirBundle,
-    };
-    mockDatabase.one.mockReturnValue(mockECR);
-
-    const response = await get_fhir_data("123");
-
-    expect(response.status).toEqual(200);
-    expect(await response.json()).toEqual(simpleResponse);
-    expect(mockDatabase.one).toHaveBeenCalledTimes(1);
-  });
-
-  it("should return an 404 error response when id unknown", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
-
-    const errorMessage = "No data returned from the query.";
-    mockDatabase.one.mockImplementation(async () => {
-      throw new Error(errorMessage);
-    });
-    const response = await get_postgres("123");
-    expect(response.status).toEqual(404);
-    expect(response.payload).toEqual({ message: "eCR ID not found" });
-    expect(mockDatabase.one).toHaveBeenCalledTimes(1);
-  });
-
-  it("should return an 500 error response when database query fails", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
-
-    const errorMessage = "Oh no!";
-    mockDatabase.one.mockImplementation(async () => {
-      throw new Error(errorMessage);
-    });
-    const response = await get_postgres("123");
-    expect(response.status).toEqual(500);
-    expect(response.payload).toEqual({ message: "Oh no!" });
-    expect(mockDatabase.one).toHaveBeenCalledTimes(1);
-  });
-});
-
 describe("get_s3", () => {
   afterEach(() => {
-    process.env.SOURCE = POSTGRES_SOURCE;
+    process.env.SOURCE = S3_SOURCE;
     jest.resetAllMocks();
   });
 
@@ -212,7 +130,7 @@ describe("get_azure", () => {
   });
 
   afterEach(() => {
-    process.env.SOURCE = POSTGRES_SOURCE;
+    process.env.SOURCE = S3_SOURCE;
     jest.resetAllMocks();
   });
 
