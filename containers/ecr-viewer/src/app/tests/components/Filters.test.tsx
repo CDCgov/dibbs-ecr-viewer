@@ -9,6 +9,12 @@ jest.mock("next/navigation", () => ({
   useSearchParams: jest.fn(),
 }));
 
+const MOCK_CONDITIONS = ["Condition1", "Condition2"];
+
+function renderFilters() {
+  return render(<Filters conditions={MOCK_CONDITIONS} />);
+}
+
 describe("Filter by Reportable Conditions Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -37,13 +43,8 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("renders correctly after opening conditions filter box", async () => {
-    const { container } = render(<Filters />);
+    const { container } = renderFilters();
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${process.env.BASE_PATH}/api/conditions`,
-      );
-    });
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -53,7 +54,7 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("Toggles filter by conditions combo box visibility", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleButton = await screen.findByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -77,16 +78,9 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("Fetches conditions on Filters component mount", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
-    });
-
-    // Should have called conditions endpoint
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${process.env.BASE_PATH}/api/conditions`,
-      );
     });
 
     fireEvent.click(toggleButton);
@@ -105,7 +99,7 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("updates filterConditions state when a checkbox is checked and unchecked", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -151,7 +145,7 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("updates tag displaying number of conditions to filter on", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -174,7 +168,7 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -204,7 +198,7 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("If a condition is checked but button is closed without applying filter, filters should reset", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -233,7 +227,7 @@ describe("Filter by Reportable Conditions Component", () => {
   });
 
   it("Query should persist over a reload", async () => {
-    const { rerender } = render(<Filters />);
+    const { rerender } = renderFilters();
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -247,7 +241,7 @@ describe("Filter by Reportable Conditions Component", () => {
     const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
     fireEvent.click(applyButton);
 
-    rerender(<Filters />);
+    rerender(<Filters conditions={MOCK_CONDITIONS} />);
     fireEvent.click(toggleFilterButton);
 
     await waitFor(() => screen.getByText("Condition1"));
@@ -259,7 +253,7 @@ describe("Filter by Reportable Conditions Component", () => {
     const mockPush = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
 
-    render(<Filters />);
+    renderFilters();
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by reportable condition/i,
     });
@@ -309,7 +303,7 @@ describe("Filter by Date Component", () => {
   });
 
   it("Renders correctly after opening Filter by Date box", async () => {
-    const { container } = render(<Filters />);
+    const { container } = renderFilters();
 
     const toggleFilterButton = await screen.findByRole("button", {
       name: /Filter by Received Date/i,
@@ -319,7 +313,7 @@ describe("Filter by Date Component", () => {
     expect(container).toMatchSnapshot();
   });
   it("Toggles Filter by Date combo box visibility", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleButton = await screen.findByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -341,7 +335,7 @@ describe("Filter by Date Component", () => {
     expect(screen.queryByText(/Filter by Received Date/)).toBeNull();
   });
   it("Updates filter date range when selection is made", async () => {
-    const { rerender } = render(<Filters />);
+    const { rerender } = renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -386,7 +380,7 @@ describe("Filter by Date Component", () => {
     ).toHaveTextContent("Last 7 days");
 
     // Query should persist over a reload
-    rerender(<Filters />);
+    rerender(<Filters conditions={MOCK_CONDITIONS} />);
     expect(
       screen.getByRole("button", {
         name: /Filter by Received Date/i,
@@ -397,7 +391,7 @@ describe("Filter by Date Component", () => {
     const mockPush = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
 
-    render(<Filters />);
+    renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -425,7 +419,7 @@ describe("Filter by Date Component", () => {
     );
   });
   it("If a date range is checked but button is closed without applying filter, filters should reset", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -466,7 +460,7 @@ describe("Filter by Date Component - custom dates", () => {
       .spyOn(global, "Date")
       .mockImplementation(() => mockDate as unknown as Date);
 
-    const { container } = render(<Filters />);
+    const { container } = renderFilters();
 
     const toggleFilterButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
@@ -488,7 +482,7 @@ describe("Filter by Date Component - custom dates", () => {
   it("Display start and end date fields when 'Custom date range' is selected", async () => {
     (useRouter as jest.Mock).mockReturnValue({ push: jest.fn() });
 
-    render(<Filters />);
+    renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -511,7 +505,7 @@ describe("Filter by Date Component - custom dates", () => {
     const mockPush = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
 
-    render(<Filters />);
+    renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -563,7 +557,7 @@ describe("Filter by Date Component - custom dates", () => {
     const mockPush = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
 
-    render(<Filters />);
+    renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -623,7 +617,7 @@ describe("Filter Opening/Closing Controls", () => {
   });
 
   it("If a date range is checked but escape is hit without applying filter, filters should reset", async () => {
-    render(<Filters />);
+    renderFilters();
     const toggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -662,7 +656,7 @@ describe("Filter Opening/Closing Controls", () => {
   it("If a date range is checked but outside click is hit without applying filter, filters should reset", async () => {
     render(
       <div data-testid="outside">
-        <Filters />
+        <Filters conditions={MOCK_CONDITIONS} />
       </div>,
     );
     const toggleButton = screen.getByRole("button", {
@@ -699,7 +693,7 @@ describe("Filter Opening/Closing Controls", () => {
   });
 
   it("If a date range is checked but condition button is hit, date should reset and close", async () => {
-    render(<Filters />);
+    renderFilters();
     const dateToggleButton = screen.getByRole("button", {
       name: /Filter by Received Date/i,
     });
@@ -790,7 +784,7 @@ describe("Reset button", () => {
     };
     render(
       <SearchParamWrapper>
-        <Filters />
+        <Filters conditions={MOCK_CONDITIONS} />
       </SearchParamWrapper>,
     );
 
