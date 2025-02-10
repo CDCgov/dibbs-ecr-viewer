@@ -6,20 +6,20 @@ on:
     inputs:
       dibbs_service:
         type: choice
-        description: 'The service to build'
+        description: "The service to build"
         required: true
         options:
           - dibbs-ecr-viewer
       dibbs_version:
         type: string
-        description: 'The version of dibbs-ecr-viewer to build'
+        description: "The version of dibbs-ecr-viewer to build"
         required: true
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger dibbs-vm 
+      - name: Trigger dibbs-vm
         run: |
           repo_owner="CDCgov" 
           repo_name="dibbs-vm"  
