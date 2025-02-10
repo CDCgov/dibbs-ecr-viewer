@@ -68,7 +68,6 @@ const ECRViewerPage = async ({
     );
   } else if (fhirBundle && mappings) {
     return (
-      <ForceClient loading={<EcrLoadingSkeleton />}>
         <ECRViewerLayout bundle={fhirBundle} mappings={mappings}>
           <SideNav />
           <div className={"ecr-viewer-container"}>
@@ -118,7 +117,6 @@ const ECRViewerPage = async ({
             </div>
           </div>
         </ECRViewerLayout>
-      </ForceClient>
     );
   } else {
     return <EcrLoadingSkeleton />;
