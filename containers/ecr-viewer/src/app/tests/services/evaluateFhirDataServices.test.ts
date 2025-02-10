@@ -557,7 +557,7 @@ describe("evaluateFhirDataServices tests", () => {
       };
     }
 
-    it("should return an empty string as when no `deceasedBoolean` is present", () => {
+    it("should return an empty string when no `deceasedBoolean` value is present", () => {
       const actual = evaluatePatientVitalStatus(
         BundlePatient as unknown as Bundle,
         mappings,
