@@ -14,6 +14,7 @@ import {
   evaluateEncounterCareTeamTable,
   evaluateAlcoholUse,
   evaluatePatientLanguage,
+  evaluatePatientVitalStatus,
 } from "@/app/services/evaluateFhirDataService";
 import { Bundle, Patient } from "fhir/r4";
 import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
@@ -538,6 +539,46 @@ describe("evaluateFhirDataServices tests", () => {
         mappings,
       );
       expect(actual).toEqual("");
+    });
+  });
+
+  describe("Evaluate Patient Vital Status", () => {
+    function getPatientBundle(deceased: boolean) {
+      return {
+        resourceType: "Bundle",
+        entry: [
+          {
+            resource: {
+              resourceType: "Patient",
+              deceasedBoolean: deceased,
+            },
+          },
+        ],
+      };
+    }
+
+    it("should return an empty string when no `deceasedBoolean` value is present", () => {
+      const actual = evaluatePatientVitalStatus(
+        BundlePatient as unknown as Bundle,
+        mappings,
+      );
+      expect(actual).toEqual("");
+    });
+
+    it("should return `Alive` when `deceasedBoolean` is `false`", () => {
+      const actual = evaluatePatientVitalStatus(
+        getPatientBundle(false) as unknown as Bundle,
+        mappings,
+      );
+      expect(actual).toEqual("Alive");
+    });
+
+    it("should return `Deceased` when `deceasedBoolean` is `true`", () => {
+      const actual = evaluatePatientVitalStatus(
+        getPatientBundle(true) as unknown as Bundle,
+        mappings,
+      );
+      expect(actual).toEqual("Deceased");
     });
   });
 
