@@ -321,6 +321,16 @@ describe("listEcrDataService", () => {
             conditions: "Condition1,Condition2",
             rule_summaries: "Rule1,Rule2",
           },
+          {
+            eICR_ID: "124",
+            first_name: "Jane",
+            last_name: "Doe",
+            birth_date: new Date("1990-01-02"),
+            encounter_start_date: new Date("2023-01-02T07:30:00Z"),
+            date_created: new Date("2023-01-01T07:45:00Z"),
+            conditions: "Condition1,Condition2",
+            rule_summaries: "Rule1,Rule2",
+          },
         ];
 
         const mockQuery = jest
@@ -341,7 +351,7 @@ describe("listEcrDataService", () => {
         const result = await listEcrData(
           0,
           10,
-          "date_created",
+          "report_date",
           "DESC",
           testDateRange,
         );
@@ -357,6 +367,16 @@ describe("listEcrDataService", () => {
             rule_summaries: ["Rule1", "Rule2"],
             date_created: "01/02/2023 2:45\u00A0AM\u00A0EST",
             patient_report_date: "01/01/2023 2:30\u00A0AM\u00A0EST",
+          },
+          {
+            ecrId: "124",
+            patient_first_name: "Jane",
+            patient_last_name: "Doe",
+            patient_date_of_birth: "01/02/1990",
+            patient_report_date: "01/02/2023 2:30\u00A0AM\u00A0EST",
+            date_created: "01/01/2023 2:45\u00A0AM\u00A0EST",
+            reportable_conditions: ["Condition1", "Condition2"],
+            rule_summaries: ["Rule1", "Rule2"],
           },
         ]);
 
