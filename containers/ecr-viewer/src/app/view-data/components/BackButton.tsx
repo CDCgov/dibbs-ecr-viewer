@@ -36,16 +36,16 @@ const ClientBackButton = ({ className, iconClassName }: BackButtonProps) => {
 };
 
 // Fallback state for server and while loading the client code
-const LoadingBackButton = ({ iconClassName }: BackButtonProps) => {
+const LoadingBackButton = ({ iconClassName, className }: BackButtonProps) => {
   return (
-    <>
+    <div className={classNames("display-inline-block", className)}>
       <Icon.ArrowBack
         aria-label={"Back Arrow"}
         size={3}
         className={classNames("text-middle margin-right-1", iconClassName)}
       />
       Back to eCR Library
-    </>
+    </div>
   );
 };
 

@@ -5,6 +5,8 @@ import { toKebabCase } from "@/app/services/formatService";
 import classNames from "classnames";
 import { BackButton } from "./BackButton";
 import { env } from "next-runtime-env";
+import { ForceClient } from "./ForceClient";
+import { SideNavLoadingSkeleton } from "./LoadingComponent";
 
 export class SectionConfig {
   title: string;
@@ -123,11 +125,7 @@ export const sortHeadings = (headings: HeadingObject[]): SectionConfig[] => {
   return result;
 };
 
-/**
- * Functional component for the side navigation.
- * @returns The JSX element representing the side navigation.
- */
-const SideNav: React.FC = () => {
+const SideNavClient: React.FC = () => {
   const [sectionConfigs, setSectionConfigs] = useState<SectionConfig[]>([]);
   const [activeSection, setActiveSection] = useState<string>("");
   const isNonIntegratedViewer =
@@ -229,6 +227,18 @@ const SideNav: React.FC = () => {
       <BackButton className="margin-bottom-3" iconClassName="text-base" />
       <UswdsSideNav items={sideNavItems} />
     </nav>
+  );
+};
+
+/**
+ * Functional component for the side navigation.
+ * @returns The JSX element representing the side navigation.
+ */
+const SideNav = () => {
+  return (
+    <ForceClient loading={<SideNavLoadingSkeleton />}>
+      <SideNavClient />
+    </ForceClient>
   );
 };
 
