@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-const MessageTypeEnum = z.enum(["ecr", "elr", "vxu", "fhir"]);
-const DataTypeEnum = z.enum([`ecr`, `zip`, `fhir`, `hl7`]);
-const ConfigFileEnum = z.enum([""]);
 
 const schema = z.object({
-  message_type: MessageTypeEnum, // Do we still need this one, should we just support ecr?
-  data_type: DataTypeEnum, // Should we  just allow zip?
-  config_file_name: ConfigFileEnum,
   upload_file: z
     .instanceof(File)
     .refine((file) => file.type === "application/zip", {

@@ -21,9 +21,6 @@ describe("POST Process Zip", () => {
 
   it("should return a 200 response when valid zip file is provided", async () => {
     const formData = new FormData();
-    formData.append("message_type", "ecr");
-    formData.append("data_type", "zip");
-    formData.append("config_file_name", "");
     formData.append("upload_file", mockFile);
 
     const request = createRequest(formData);
@@ -39,9 +36,6 @@ describe("POST Process Zip", () => {
       type: "text/plain",
     });
     const formData = new FormData();
-    formData.append("message_type", "ecr");
-    formData.append("data_type", "zip");
-    formData.append("config_file_name", "");
     formData.append("upload_file", invalidFile);
 
     const request = createRequest(formData);
@@ -62,7 +56,6 @@ describe("POST Process Zip", () => {
 
   it("should return a 400 response when required fields are missing", async () => {
     const formData = new FormData();
-    formData.append("upload_file", mockFile);
 
     const request = createRequest(formData);
 
