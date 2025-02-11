@@ -1,0 +1,376 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:99999999-4p89-4b96-b6ab-c46406839cea",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "99999999-4p89-4b96-b6ab-c46406839cea",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "1234567890"
+          },
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:2.16.840.1.114222.4.3.4.52.2"
+          }
+        ],
+        "name": [
+          {
+            "family": "Solo",
+            "given": ["Han"]
+          }
+        ],
+        "birthDate": "1877-05-25",
+        "gender": "female",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+            "extension": [
+              {
+                "url": "ombCategory",
+                "valueCoding": {
+                  "code": "2054-5",
+                  "display": "Black or African American"
+                }
+              },
+              {
+                "url": "detailed",
+                "valueCoding": {
+                  "code": "2076-8",
+                  "display": "African"
+                }
+              },
+              {
+                "url": "text",
+                "valueString": "Black or African American"
+              }
+            ]
+          },
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
+            "extension": [
+              {
+                "url": "ombCategory",
+                "valueCoding": {
+                  "code": "2135-2",
+                  "display": "Hispanic or Latino"
+                }
+              },
+              {
+                "url": "detailed",
+                "valueCoding": {
+                  "code": "2106-3",
+                  "display": "White"
+                }
+              },
+              {
+                "url": "text",
+                "valueString": "Hispanic or Latino"
+              }
+            ]
+          },
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+            "extension": [
+              {
+                "url": "value",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "code": "M",
+                      "display": "Male",
+                      "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/patient-religion",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "Baptist",
+                  "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+                }
+              ]
+            }
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension",
+            "extension": [
+              {
+                "url": "TribeName",
+                "valueCoding": {
+                  "code": "91",
+                  "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+                  "display": "Fort Mojave Indian Tribe of Arizona, California"
+                }
+              },
+              {
+                "url": "EnrolledTribeMember",
+                "valueBoolean": true
+              }
+            ]
+          }
+        ],
+        "address": [
+          {
+            "line": ["1 Main St"],
+            "city": "Cloud City",
+            "state": "CA",
+            "country": "US",
+            "postalCode": "00000"
+          }
+        ],
+        "maritalStatus": {
+          "coding": [
+            {
+              "code": "M",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+              "display": "Married"
+            }
+          ]
+        },
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+15555555555",
+            "use": "home"
+          },
+          {
+            "system": "email",
+            "value": "fakefakenotreal@example.com"
+          }
+        ],
+        "communication": [
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:ietf:bcp:47",
+                  "code": "es",
+                  "display": "Spanish"
+                }
+              ]
+            }
+          },
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:ietf:bcp:47",
+                  "code": "en",
+                  "display": "English"
+                }
+              ]
+            },
+            "preferred": true,
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/patient-proficiency",
+                "extension": [
+                  {
+                    "url": "type",
+                    "valueCoding": {
+                      "system": "http://terminology.hl7.org/CodeSystem/v3-LanguageAbilityMode",
+                      "code": "ESP",
+                      "display": "Expressed spoken"
+                    }
+                  },
+                  {
+                    "url": "level",
+                    "valueCoding": {
+                      "system": "http://terminology.hl7.org/CodeSystem/v3-LanguageAbilityProficiency",
+                      "code": "G",
+                      "display": "Good"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:88888888-b0a0-1a27-79ec-aaa9c8ea795a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "88888888-b0a0-1a27-79ec-aaa9c8ea795a",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "Z1234567890"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "X-SDOH-19222",
+              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+              "display": "Alcohol Comment"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-02-04",
+        "valueString": "1-2 DRINKS 2 TO 4 TIMES A MONTH",
+        "subject": {
+          "reference": "Patient/11111111-2222-461d-9523-8d9ee26eab84"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/88888888-b0a0-1a27-79ec-aaa9c8ea795a"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:11111111-9da2-9999-bc49-a60c634860d1",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "11111111-9da2-9999-bc49-a60c634860d1",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "Z13909121^54660.98^897148007"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "897148007",
+              "system": "http://snomed.info/sct",
+              "display": "Alcoholic beverage intake"
+            },
+            {
+              "code": "74013-4",
+              "system": "http://loinc.org",
+              "display": "Alcoholic drinks per day"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-02-04",
+        "valueQuantity": {
+          "value": ".29",
+          "unit": "/d"
+        },
+        "subject": {
+          "reference": "Patient/11111111-2222-461d-9523-8d9ee26eab84"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/11111111-9da2-9999-bc49-a60c634860d1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b467f663-f4f5-78af-a677-05b5545d8716",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b467f663-f4f5-78af-a677-05b5545d8716",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "Z13909121^54660.98^897148007"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "897148007",
+              "system": "http://snomed.info/sct",
+              "display": "Alcoholic beverage intake"
+            },
+            {
+              "code": "11331-6",
+              "system": "http://loinc.org",
+              "display": "History of Alcohol Use"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-02-04",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "219006",
+              "system": "http://snomed.info/sct",
+              "display": "Current drinker of alcohol (finding)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/11111111-2222-461d-9523-8d9ee26eab84"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/b467f663-f4f5-78af-a677-05b5545d8716"
+      }
+    }
+  ]
+}
