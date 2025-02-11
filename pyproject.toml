@@ -94,7 +94,6 @@ select = [
   "D106", # Pydocstyle undocumented-public-nested-class
   "I",    # isort
   "UP",   # pyupgrade
-  "FAST", # FastAPI
   "FURB", # refrub
 ]
 
