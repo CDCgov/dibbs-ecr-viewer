@@ -1,6 +1,6 @@
 import React from "react";
 import Filters from "@/app/components/Filters";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import userEvent from "@testing-library/user-event";
 
@@ -94,12 +94,8 @@ describe("Filter by Reportable Conditions Component", () => {
     expect(checkboxes).toHaveLength(3); // 2 conditions + select all
 
     // Conditions should be listed
-    await waitFor(() =>
-      expect(screen.getByLabelText("Condition1")).toBeInTheDocument(),
-    );
-    await waitFor(() =>
-      expect(screen.getByLabelText("Condition2")).toBeInTheDocument(),
-    );
+    expect(await screen.findByLabelText("Condition1")).toBeInTheDocument();
+    expect(await screen.findByLabelText("Condition2")).toBeInTheDocument();
   });
 
   it("updates filterConditions state when a checkbox is checked and unchecked", async () => {
@@ -113,7 +109,6 @@ describe("Filter by Reportable Conditions Component", () => {
 
     //--------- UNCHECKING BUTTON
     // Checkbox should initialize as checked
-    await waitFor(() => screen.getByText("Condition1"));
     const checkbox = screen.getByLabelText("Condition1");
     expect(checkbox).toBeChecked();
 
@@ -121,11 +116,6 @@ describe("Filter by Reportable Conditions Component", () => {
     expect(checkbox).not.toBeChecked();
 
     // Applying filter and re-opening filter box should still filter out Condition1
-    await waitFor(() =>
-      screen.getByRole("button", {
-        name: /Apply Filter/i,
-      }),
-    );
     const toggleApplyButton = screen.getByRole("button", {
       name: /Apply Filter/i,
     });
@@ -139,11 +129,6 @@ describe("Filter by Reportable Conditions Component", () => {
     expect(checkbox).toBeChecked();
 
     // Applying filter and re-opening filter box should include Condition1 back to filter
-    await waitFor(() =>
-      screen.getByRole("button", {
-        name: /Apply Filter/i,
-      }),
-    );
     await user.click(toggleApplyButton);
     await user.click(toggleFilterButton);
     expect(checkbox).toBeChecked();
@@ -157,13 +142,11 @@ describe("Filter by Reportable Conditions Component", () => {
     });
     await user.click(toggleFilterButton);
 
-    await waitFor(() => screen.getByText("Condition1"));
     const checkbox = screen.getByLabelText("Condition1");
     await user.click(checkbox);
     expect(checkbox).not.toBeChecked();
 
     // Tag should change to show "1" condition
-    await waitFor(() => screen.getByTestId("filter-tag"));
     const tag = screen.getByTestId("filter-tag");
     expect(tag.textContent).toContain("1");
 
@@ -182,20 +165,16 @@ describe("Filter by Reportable Conditions Component", () => {
     await user.click(toggleFilterButton);
 
     // Click deselect all
-    await waitFor(() => screen.getByText("Deselect all"));
     const deselectAll = await screen.findByLabelText("Deselect all");
     await user.click(deselectAll);
 
     // Both checkboxes should be unchecked after "Deselect all" is clicked
-    await waitFor(() => screen.getByText("Condition1"));
-    await waitFor(() => screen.getByText("Condition2"));
     const condition1Checkbox = screen.getByLabelText("Condition1");
     const condition2Checkbox = screen.getByLabelText("Condition2");
     expect(condition1Checkbox).not.toBeChecked();
     expect(condition2Checkbox).not.toBeChecked();
 
     // Click select all
-    await waitFor(() => screen.getByText("Select all"));
     const selectAll = await screen.findByLabelText("Select all");
     await user.click(selectAll);
 
@@ -214,12 +193,10 @@ describe("Filter by Reportable Conditions Component", () => {
     await user.click(toggleFilterButton);
 
     // Uncheck condition1 (tag becomes "1"), but user closes button before applying filter
-    await waitFor(() => screen.getByText("Condition1"));
     const checkbox = screen.getByLabelText("Condition1");
     await user.click(checkbox);
     expect(checkbox).not.toBeChecked();
 
-    await waitFor(() => screen.getByTestId("filter-tag"));
     const tag = screen.getByTestId("filter-tag");
     expect(tag.textContent).toContain("1");
 
@@ -243,7 +220,6 @@ describe("Filter by Reportable Conditions Component", () => {
 
     await user.click(toggleFilterButton);
 
-    await waitFor(() => screen.getByText("Condition1"));
     const checkbox = screen.getByLabelText("Condition1");
     await user.click(checkbox);
     expect(checkbox).not.toBeChecked();
@@ -254,7 +230,6 @@ describe("Filter by Reportable Conditions Component", () => {
     rerender(<Filters conditions={MOCK_CONDITIONS} />);
     await user.click(toggleFilterButton);
 
-    await waitFor(() => screen.getByText("Condition1"));
     const checkboxAfterReload = screen.getByLabelText("Condition1");
     expect(checkboxAfterReload).not.toBeChecked();
   });
@@ -270,7 +245,6 @@ describe("Filter by Reportable Conditions Component", () => {
     });
     await user.click(toggleFilterButton);
 
-    await waitFor(() => screen.getByText("Condition1"));
     const checkbox = screen.getByLabelText("Condition1");
     await user.click(checkbox);
     expect(checkbox).not.toBeChecked();
@@ -356,7 +330,6 @@ describe("Filter by Date Component", () => {
     await user.click(toggleButton);
 
     // Check default state is "Last year" (local dev default)
-    await waitFor(() => screen.getByRole("radio", { name: "Last year" }));
     const defaultRadio = screen.getByRole("radio", {
       name: "Last year",
     });
@@ -376,11 +349,7 @@ describe("Filter by Date Component", () => {
     // Only one radio button can be checked at a time.
     await user.click(toggleButton);
     expect(radioLast7Days).toBeChecked();
-    await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Last year",
-      }),
-    );
+
     const defaultRadioAfter = screen.getByRole("radio", {
       name: "Last year",
     });
@@ -412,11 +381,6 @@ describe("Filter by Date Component", () => {
     });
     await user.click(toggleButton);
 
-    await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Last 7 days",
-      }),
-    );
     const radio = screen.getByRole("radio", {
       name: "Last 7 days",
     });
@@ -443,11 +407,6 @@ describe("Filter by Date Component", () => {
     await user.click(toggleButton);
 
     // Click different date option, but user closes button before applying filter
-    await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Last 7 days",
-      }),
-    );
     const radio = screen.getByRole("radio", {
       name: "Last 7 days",
     });
@@ -485,11 +444,6 @@ describe("Filter by Date Component - custom dates", () => {
     });
     await user.click(toggleFilterButton);
 
-    await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Custom date range",
-      }),
-    );
     const radio = screen.getByRole("radio", {
       name: "Custom date range",
     });
@@ -507,11 +461,6 @@ describe("Filter by Date Component - custom dates", () => {
     });
     await user.click(toggleButton);
 
-    await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Custom date range",
-      }),
-    );
     const radio = screen.getByRole("radio", {
       name: "Custom date range",
     });
@@ -531,11 +480,6 @@ describe("Filter by Date Component - custom dates", () => {
     });
     await user.click(toggleButton);
 
-    await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Custom date range",
-      }),
-    );
     const radio = screen.getByRole("radio", {
       name: "Custom date range",
     });
@@ -584,11 +528,6 @@ describe("Filter by Date Component - custom dates", () => {
     });
     await user.click(toggleButton);
 
-    await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Custom date range",
-      }),
-    );
     const radio = screen.getByRole("radio", {
       name: "Custom date range",
     });
@@ -646,11 +585,9 @@ describe("Filter Opening/Closing Controls", () => {
     await user.click(toggleButton);
 
     // Click different date option, but user closes button before applying filter
-    const radio = await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Last 7 days",
-      }),
-    );
+    const radio = await screen.findByRole("radio", {
+      name: "Last 7 days",
+    });
     await user.click(radio);
     expect(radio).toBeChecked();
 
@@ -667,12 +604,11 @@ describe("Filter Opening/Closing Controls", () => {
 
     // open and check reset
     await user.click(toggleButton);
-    const radioAfterReset = await waitFor(() =>
+    expect(
       screen.getByRole("radio", {
         name: "Last 7 days",
       }),
-    );
-    expect(radioAfterReset).not.toBeChecked();
+    ).not.toBeChecked();
   });
 
   it("If a date range is checked but outside click is hit without applying filter, filters should reset", async () => {
@@ -689,11 +625,9 @@ describe("Filter Opening/Closing Controls", () => {
     await user.click(toggleButton);
 
     // Click different date option, but user closes button before applying filter
-    const radio = await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Last 7 days",
-      }),
-    );
+    const radio = await screen.findByRole("radio", {
+      name: "Last 7 days",
+    });
     await user.click(radio);
     expect(radio).toBeChecked();
 
@@ -708,12 +642,12 @@ describe("Filter Opening/Closing Controls", () => {
 
     // open and check reset
     await user.click(toggleButton);
-    const radioAfterReset = await waitFor(() =>
+
+    expect(
       screen.getByRole("radio", {
         name: "Last 7 days",
       }),
-    );
-    expect(radioAfterReset).not.toBeChecked();
+    ).not.toBeChecked();
   });
 
   it("If a date range is checked but condition button is hit, date should reset and close", async () => {
@@ -725,11 +659,9 @@ describe("Filter Opening/Closing Controls", () => {
     await user.click(dateToggleButton);
 
     // Click different date option, but user closes button before applying filter
-    const radio = await waitFor(() =>
-      screen.getByRole("radio", {
-        name: "Last 7 days",
-      }),
-    );
+    const radio = await screen.findByRole("radio", {
+      name: "Last 7 days",
+    });
     await user.click(radio);
     expect(radio).toBeChecked();
 
@@ -752,12 +684,11 @@ describe("Filter Opening/Closing Controls", () => {
 
     // open date and check reset
     await user.click(dateToggleButton);
-    const radioAfterReset = await waitFor(() =>
+    expect(
       screen.getByRole("radio", {
         name: "Last 7 days",
       }),
-    );
-    expect(radioAfterReset).not.toBeChecked();
+    ).not.toBeChecked();
 
     // condtion should be closed
     expect(screen.queryByText("Select all")).not.toBeInTheDocument();
@@ -834,8 +765,6 @@ describe("Reset button", () => {
     const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
     await user.click(applyButton);
 
-    await waitFor(() => screen.findByText("Last 7 days"));
-
     // should be closed
     expect(screen.queryByRole("radio")).not.toBeInTheDocument();
 
@@ -859,7 +788,6 @@ describe("Reset button", () => {
     });
     await user.click(conditionToggleButton);
 
-    await waitFor(() => screen.getByText("Condition1"));
     const checkbox = screen.getByLabelText("Condition1");
     await user.click(checkbox);
     expect(checkbox).not.toBeChecked();
@@ -887,7 +815,6 @@ describe("Reset button", () => {
       expect.anything(),
     );
     // default title
-    await waitFor(() => screen.findByText("Last year"));
     expect(screen.getByText("Last year")).toBeInTheDocument();
     // not active
     expect(conditionToggleButton).toHaveClass("filter-button");
