@@ -30,47 +30,47 @@
     "nullable": true,
     "secondary_schema": {
       "use": {
-        "fhir_path": "Patient.address.use",
+        "fhir_path": "use",
         "data_type": "string",
         "nullable": true
       },
       "line": {
-        "fhir_path": "Patient.address.line",
+        "fhir_path": "line",
         "data_type": "array",
         "nullable": true
       },
       "city": {
-        "fhir_path": "Patient.address.city",
+        "fhir_path": "city",
         "data_type": "string",
         "nullable": true
       },
       "district": {
-        "fhir_path": "Patient.address.district",
+        "fhir_path": "district",
         "data_type": "string",
         "nullable": true
       },
       "state": {
-        "fhir_path": "Patient.address.state",
+        "fhir_path": "state",
         "data_type": "string",
         "nullable": true
       },
       "postal_code": {
-        "fhir_path": "Patient.address.postalCode",
+        "fhir_path": "postalCode",
         "data_type": "string",
         "nullable": true
       },
       "country": {
-        "fhir_path": "Patient.address.country",
+        "fhir_path": "country",
         "data_type": "string",
         "nullable": true
       },
       "period_start": {
-        "fhir_path": "Patient.address.period.start",
+        "fhir_path": "period.start",
         "data_type": "datetime",
         "nullable": true
       },
       "period_end": {
-        "fhir_path": "Patient.address.period.end",
+        "fhir_path": "period.end",
         "data_type": "datetime",
         "nullable": true
       }
