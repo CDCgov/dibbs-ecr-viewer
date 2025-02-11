@@ -1,18 +1,19 @@
 import time
 import warnings
-from typing import Union
 
 import pandas as pd
 
 from phdi.harmonization import double_metaphone_string
-from phdi.linkage import compile_match_lists
-from phdi.linkage import eval_log_odds_cutoff
-from phdi.linkage import eval_perfect_match
-from phdi.linkage import feature_match_fuzzy_string
-from phdi.linkage import feature_match_log_odds_fuzzy_compare
-from phdi.linkage import load_json_probs
-from phdi.linkage import perform_linkage_pass
-from phdi.linkage import score_linkage_vs_truth
+from phdi.linkage import (
+    compile_match_lists,
+    eval_log_odds_cutoff,
+    eval_perfect_match,
+    feature_match_fuzzy_string,
+    feature_match_log_odds_fuzzy_compare,
+    load_json_probs,
+    perform_linkage_pass,
+    score_linkage_vs_truth,
+)
 
 DATA_SIZE = 50000
 
@@ -27,7 +28,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 def lac_validation_linkage(
-    data: pd.DataFrame, cluster_ratio: Union[float, None] = None, **kwargs
+    data: pd.DataFrame, cluster_ratio: float | None = None, **kwargs
 ) -> dict:
     """
     Perform a simplified run of the linkage algorithm currently used by LAC.
@@ -114,7 +115,7 @@ def lac_validation_linkage(
 
 def phdi_linkage_algorithm(
     data: pd.DataFrame,
-    cluster_ratio: Union[float, None] = None,
+    cluster_ratio: float | None = None,
     use_log_odds_enhancement: bool = True,
     **kwargs,
 ) -> dict:
@@ -256,8 +257,8 @@ def add_split_birth_fields(data: pd.DataFrame):
 
 
 def identify_missed_matches(
-    found_matches: dict[Union[int, str], set],
-    true_matches: dict[Union[int, str], set],
+    found_matches: dict[int | str, set],
+    true_matches: dict[int | str, set],
 ):
     """
     Identifies true matches not found by the matching algorithm.

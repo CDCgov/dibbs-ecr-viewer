@@ -1,23 +1,15 @@
 import copy
 from pathlib import Path
 from typing import Annotated
-from typing import Optional
 
-from fastapi import Body
-from fastapi import Response
-from fastapi import status
-from pydantic import BaseModel
-from pydantic import Field
+from fastapi import Body, Response, status
+from pydantic import BaseModel, Field
 
 from app.base_service import BaseService
-from app.linkage.algorithms import DIBBS_BASIC
-from app.linkage.algorithms import DIBBS_ENHANCED
-from app.linkage.link import add_person_resource
-from app.linkage.link import link_record_against_mpi
+from app.linkage.algorithms import DIBBS_BASIC, DIBBS_ENHANCED
+from app.linkage.link import add_person_resource, link_record_against_mpi
 from app.linkage.mpi import DIBBsMPIConnectorClient
-from app.utils import get_settings
-from app.utils import read_json_from_assets
-from app.utils import run_migrations
+from app.utils import get_settings, read_json_from_assets, run_migrations
 
 # Ensure MPI is configured as expected.
 run_migrations()
@@ -46,7 +38,7 @@ class LinkRecordInput(BaseModel):
         description="A FHIR bundle containing a patient resource to be checked "
         "for links to existing patient records"
     )
-    use_enhanced: Optional[bool] = Field(
+    use_enhanced: bool | None = Field(
         description="Optionally, a boolean flag indicating whether to use the "
         "DIBBs enhanced algorithm (with statistical correction) for record linkage. "
         "If `False` and no optional `algo_config` is provided, the service will use "
@@ -55,14 +47,14 @@ class LinkRecordInput(BaseModel):
         "`algo_config`.",
         default=False,
     )
-    algo_config: Optional[dict] = Field(
+    algo_config: dict | None = Field(
         description="A JSON dictionary containing the specification for a "
         "linkage algorithm, as defined in the SDK functions `read_algo_config` "
         "and `write_algo_config`. Default value uses the DIBBS in-house basic "
         "algorithm.",
         default={},
     )
-    external_person_id: Optional[str] = Field(
+    external_person_id: str | None = Field(
         description="The External Identifier, provided by the client,"
         " for a unique patient/person that is linked to patient(s)",
         default=None,
@@ -84,7 +76,7 @@ class LinkRecordResponse(BaseModel):
         "returns the FHIR bundle with a reference to a newly created "
         "Person resource."
     )
-    message: Optional[str] = Field(
+    message: str | None = Field(
         description="An optional message in the case that the linkage endpoint did "
         "not run successfully containing a description of the error that happened.",
         default="",

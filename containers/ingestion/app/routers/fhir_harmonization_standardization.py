@@ -1,17 +1,14 @@
 from typing import Literal
-from typing import Optional
 
 from fastapi import APIRouter
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import validator
+from pydantic import BaseModel, Field, validator
 
-from app.fhir.harmonization.standardization import standardize_dob
-from app.fhir.harmonization.standardization import standardize_names
-from app.fhir.harmonization.standardization import standardize_phones
-from app.utils import check_for_fhir
-from app.utils import read_json_from_assets
-from app.utils import StandardResponse
+from app.fhir.harmonization.standardization import (
+    standardize_dob,
+    standardize_names,
+    standardize_phones,
+)
+from app.utils import StandardResponse, check_for_fhir, read_json_from_assets
 
 router = APIRouter(
     prefix="/fhir/harmonization/standardization",
@@ -35,18 +32,18 @@ class StandardizeNamesInput(BaseModel):
         description="A FHIR resource or bundle in JSON format.",
         example=sample_name_request_data,
     )
-    trim: Optional[bool] = Field(
+    trim: bool | None = Field(
         description="When true, leading and trailing spaces are removed.", default=True
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "is modified and returned.",
         default=True,
     )
-    case: Optional[Literal["upper", "lower", "title"]] = Field(
+    case: Literal["upper", "lower", "title"] | None = Field(
         descripton="The type of casing that should be used.", default="upper"
     )
-    remove_numbers: Optional[bool] = Field(
+    remove_numbers: bool | None = Field(
         description="If true, delete numeric characters; if false leave numbers in "
         "place.",
         default=True,
@@ -86,7 +83,7 @@ class StandardizePhonesInput(BaseModel):
         description="A FHIR resource or bundle in JSON format.",
         example=sample_phone_request_data,
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "is modified and returned.",
         default=True,
@@ -132,12 +129,12 @@ class StandardizeBirthDateInput(BaseModel):
         description="A FHIR resource or bundle in JSON format.",
         example=sample_date_of_birth_request_data,
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "is modified and returned.",
         default=True,
     )
-    format: Optional[str] = Field(
+    format: str | None = Field(
         descripton="The date format that the input DOB is supplied in.",
         default="%Y-%m-%d",
         example="%m/%d/%Y",

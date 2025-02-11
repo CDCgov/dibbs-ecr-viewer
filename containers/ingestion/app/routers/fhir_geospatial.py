@@ -1,22 +1,16 @@
-from typing import Annotated
-from typing import Literal
-from typing import Optional
+from typing import Annotated, Literal
 
-from fastapi import APIRouter
-from fastapi import Body
-from fastapi import Response
-from fastapi import status
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import validator
+from fastapi import APIRouter, Body, Response, status
+from pydantic import BaseModel, Field, validator
 
 from app.config import get_settings
-from app.fhir.geospatial import CensusFhirGeocodeClient
-from app.fhir.geospatial import SmartyFhirGeocodeClient
-from app.utils import check_for_fhir_bundle
-from app.utils import read_json_from_assets
-from app.utils import search_for_required_values
-from app.utils import StandardResponse
+from app.fhir.geospatial import CensusFhirGeocodeClient, SmartyFhirGeocodeClient
+from app.utils import (
+    StandardResponse,
+    check_for_fhir_bundle,
+    read_json_from_assets,
+    search_for_required_values,
+)
 
 router = APIRouter(
     prefix="/fhir/geospatial/geocode",
@@ -45,28 +39,28 @@ class GeocodeAddressInBundleInput(BaseModel):
     geocode_method: Literal["smarty", "census"] = Field(
         description="The geocoding service to be used."
     )
-    smarty_auth_id: Optional[str] = Field(
+    smarty_auth_id: str | None = Field(
         description="Authentication ID for the geocoding service. Must be provided in "
         "the request body or set as an environment variable of the "
         "service if "
         "`geocode_method` is `smarty`.",
         default="",
     )
-    smarty_auth_token: Optional[str] = Field(
+    smarty_auth_token: str | None = Field(
         description="Authentication Token for the geocoding service. Must be provided "
         "in the request body or set as an environment variable of the "
         "service if "
         "`geocode_method` is `smarty`.",
         default="",
     )
-    license_type: Optional[license_types] = Field(
+    license_type: license_types | None = Field(
         description="License type for the geocoding service. Must be provided "
         "in the request body or set as an environment variable of the "
         "service if "
         "`geocode_method` is `smarty`.",
         default="us-rooftop-geocoding-enterprise-cloud",
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "modified and returned.",
         default=True,

@@ -1,14 +1,14 @@
 import copy
-from typing import List
 from typing import Literal
-from typing import Union
 
-from phdi.harmonization import double_metaphone_string
-from phdi.harmonization import DoubleMetaphone
-from phdi.harmonization import standardize_birth_date
-from phdi.harmonization import standardize_country_code
-from phdi.harmonization import standardize_name
-from phdi.harmonization import standardize_phone
+from phdi.harmonization import (
+    DoubleMetaphone,
+    double_metaphone_string,
+    standardize_birth_date,
+    standardize_country_code,
+    standardize_name,
+    standardize_phone,
+)
 
 
 def double_metaphone_bundle(bundle: dict, overwrite=True) -> dict:
@@ -215,9 +215,7 @@ def _standardize_names_in_resource(
     return resource
 
 
-def _standardize_phones_in_resource(
-    resource: dict, overwrite=True
-) -> Union[dict, None]:
+def _standardize_phones_in_resource(resource: dict, overwrite=True) -> dict | None:
     if not overwrite:
         resource = copy.deepcopy(resource)
 
@@ -234,7 +232,7 @@ def _standardize_phones_in_resource(
 
 def _extract_countries_from_resource(
     resource: dict, code_type: Literal["alpha_2", "alpha_3", "numeric"] = "alpha_2"
-) -> List[str]:
+) -> list[str]:
     """
     Builds a list containing all of the countries, standardized by code_type, in the
     addresses of a given FHIR resource as interpreted by the ISO 3611: standardized
@@ -262,7 +260,7 @@ def _extract_countries_from_resource(
 
 def _standardize_dob_in_resource(
     resource: dict, format: str = "%Y-%m-%d", overwrite=True
-) -> Union[dict, None]:
+) -> dict | None:
     if not overwrite:
         resource = copy.deepcopy(resource)
 

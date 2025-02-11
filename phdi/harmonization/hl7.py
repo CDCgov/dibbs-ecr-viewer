@@ -1,6 +1,5 @@
 import logging
 import re
-from typing import List
 
 import hl7
 
@@ -81,7 +80,7 @@ def standardize_hl7_datetimes(message: str) -> str:
 
 def convert_hl7_batch_messages_to_list(
     content: str, delimiter: str = "\n"
-) -> List[str]:
+) -> list[str]:
     """
     Converts a batch file of messages into a list of strings
     representing parts of the message. This function is based

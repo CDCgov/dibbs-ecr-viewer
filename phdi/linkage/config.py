@@ -12,7 +12,7 @@ class DBSettings(BaseSettings):
     mpi_port: str
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> dict:
     """
     Load the values specified in the Settings class from the environment and return a

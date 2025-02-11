@@ -12,7 +12,7 @@ def read_file_from_test_assets():
         Reads a file from the test assets directory.
         """
         with open(
-            (Path(__file__).parent.parent / "assets" / filename), "r", encoding="utf-8"
+            (Path(__file__).parent.parent / "assets" / filename), encoding="utf-8"
         ) as file:
             return file.read()
 

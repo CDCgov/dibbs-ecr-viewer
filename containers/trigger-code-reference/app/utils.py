@@ -1,13 +1,11 @@
 import json
 import sqlite3
 from pathlib import Path
-from typing import List
-from typing import Union
 
 import fhirpathpy
 
 
-def convert_inputs_to_list(value: Union[list, str, int, float]) -> list:
+def convert_inputs_to_list(value: list | str | int | float) -> list:
     """
     Small helper function that checks the type of the input.
     Our code wants items to be in a list and will transform int/float to list
@@ -17,7 +15,7 @@ def convert_inputs_to_list(value: Union[list, str, int, float]) -> list:
     :param value: string, int, float, list to check
     :return: A list free of excess whitespace
     """
-    if isinstance(value, (int, float)):
+    if isinstance(value, int | float):
         return [str(value)]
     elif isinstance(value, str):
         common_delimiters = [",", "|", ";"]
@@ -31,7 +29,7 @@ def convert_inputs_to_list(value: Union[list, str, int, float]) -> list:
         raise ValueError("Unsupported input type for sanitation.")
 
 
-def get_clean_snomed_code(snomed_code: Union[list, str, int, float]) -> list:
+def get_clean_snomed_code(snomed_code: list | str | int | float) -> list:
     """
     This is a small helper function that takes a SNOMED code, sanitizes it,
     then checks to confirm only one SNOMED code has been provided.
@@ -48,7 +46,7 @@ def get_clean_snomed_code(snomed_code: Union[list, str, int, float]) -> list:
     return clean_snomed_code
 
 
-def format_icd9_crosswalks(db_list: List[tuple]) -> List[tuple]:
+def format_icd9_crosswalks(db_list: list[tuple]) -> list[tuple]:
     """
     Utility function to transform the returned tuple rows from the DB into a
     list of properly formatted three-part tuples. This function handles ICD-9
@@ -72,7 +70,7 @@ def format_icd9_crosswalks(db_list: List[tuple]) -> List[tuple]:
     return formatted_list
 
 
-def get_concepts_list(snomed_code: list) -> List[tuple]:
+def get_concepts_list(snomed_code: list) -> list[tuple]:
     """
     Given a SNOMED code, this function runs a SQL query that joins
     conditions to value sets, then uses the value set ids to get the
@@ -103,8 +101,8 @@ def get_concepts_list(snomed_code: list) -> List[tuple]:
         valueset_to_concept vc ON vs.id = vc.valueset_id
     LEFT JOIN
         concepts cs ON vc.concept_id = cs.id
-    LEFT JOIN 
-        (SELECT icd10_code, GROUP_CONCAT(icd9_code, '|') AS icd9_conversions from icd_crosswalk GROUP BY icd10_code) ON gem_formatted_code = icd10_code 
+    LEFT JOIN
+        (SELECT icd10_code, GROUP_CONCAT(icd9_code, '|') AS icd9_conversions from icd_crosswalk GROUP BY icd10_code) ON gem_formatted_code = icd10_code
     WHERE
         c.id = ?
     GROUP BY
@@ -132,8 +130,8 @@ def get_concepts_list(snomed_code: list) -> List[tuple]:
 
 
 def get_concepts_dict(
-    concept_list: List[tuple],
-    filter_concept_list: Union[str, list] = None,
+    concept_list: list[tuple],
+    filter_concept_list: str | list = None,
 ) -> dict:
     """
     This function parses a list of tuples containing data on clinical codes
@@ -172,7 +170,7 @@ def get_concepts_dict(
     return concept_dict
 
 
-def _find_codes_by_resource_type(resource: dict) -> List[str]:
+def _find_codes_by_resource_type(resource: dict) -> list[str]:
     """
     For a given resource, extracts the chief clinical codes within the
     resource body. The FHIRpath location of this resource depends on the
@@ -261,7 +259,7 @@ def read_json_from_assets(filename: str) -> dict:
     :param filename: The name of the file to read.
     :return: A dictionary containing the contents of the file.
     """
-    return json.load(open((Path(__file__).parent.parent / "assets" / filename)))
+    return json.load(open(Path(__file__).parent.parent / "assets" / filename))
 
 
 def find_conditions(bundle: dict) -> set[str]:

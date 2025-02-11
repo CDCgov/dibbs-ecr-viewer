@@ -371,7 +371,7 @@ def format_to_LAC_MPI_parquet_schema(df):
 
 # Get nicknames
 names_to_nicknames = {}
-with open("./phdi/harmonization/phdi_nicknames.csv", "r") as fp:
+with open("./phdi/harmonization/phdi_nicknames.csv") as fp:
     for line in fp:
         if line.strip() != "":
             name, nicks = line.strip().split(":", 1)

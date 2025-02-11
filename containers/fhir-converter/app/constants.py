@@ -1,10 +1,8 @@
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 # Requests and responses for the service are defined in this file.
 # Examples of both are also stored here.
@@ -118,7 +116,7 @@ class FhirConverterInput(BaseModel):
     root_template: RootTemplate = Field(
         description="Name of the liquid template within to be used for conversion.",
     )
-    rr_data: Optional[str] = Field(
+    rr_data: str | None = Field(
         description="If an eICR message, the accompanying Reportability Response data.",
         default=None,
     )

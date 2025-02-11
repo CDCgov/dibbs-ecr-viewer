@@ -3,9 +3,7 @@ import random
 import shutil
 import subprocess
 
-from locust import between
-from locust import HttpUser
-from locust import task
+from locust import HttpUser, between, task
 
 
 class EcrViewer(HttpUser):

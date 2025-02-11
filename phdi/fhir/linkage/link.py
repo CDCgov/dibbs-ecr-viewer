@@ -1,8 +1,10 @@
 import copy
 
-from phdi.fhir.utils import find_entries_by_resource_type
-from phdi.fhir.utils import get_field
-from phdi.fhir.utils import get_one_line_address
+from phdi.fhir.utils import (
+    find_entries_by_resource_type,
+    get_field,
+    get_one_line_address,
+)
 from phdi.linkage.link import generate_hash_str
 
 
@@ -70,7 +72,7 @@ def add_patient_identifier(
     # TODO Determine if minimum quality criteria should be included, such as min
     # number of characters in last name, valid birth date, or address line
     # Generate and store unique hash code
-    link_str = f'{name_str}-{patient_resource["birthDate"]}-{address_line}'
+    link_str = f"{name_str}-{patient_resource['birthDate']}-{address_line}"
     hashcode = generate_hash_str(link_str, salt_str)
 
     if "identifier" not in patient_resource:

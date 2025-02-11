@@ -1,18 +1,15 @@
 from typing import Literal
-from typing import Optional
 
-from fastapi import APIRouter
-from fastapi import Response
-from fastapi import status
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import validator
+from fastapi import APIRouter, Response, status
+from pydantic import BaseModel, Field, validator
 
 from app.fhir.transport import upload_bundle_to_fhir_server
-from app.utils import check_for_fhir_bundle
-from app.utils import get_cred_manager
-from app.utils import search_for_required_values
-from app.utils import StandardResponse
+from app.utils import (
+    StandardResponse,
+    check_for_fhir_bundle,
+    get_cred_manager,
+    search_for_required_values,
+)
 
 router = APIRouter(
     prefix="/fhir/transport/http",
@@ -27,12 +24,10 @@ class UploadBundleToFhirServerInput(BaseModel):
         "The FHIR API provides additional details on creating [FHIR-conformant "
         "batch/transaction](https://hl7.org/fhir/http.html#transaction) bundles."
     )
-    cred_manager: Optional[Literal["azure", "gcp"]] = Field(
+    cred_manager: Literal["azure", "gcp"] | None = Field(
         description="The credential manager used to authenticate to the FHIR server."
     )
-    fhir_url: Optional[str] = Field(
-        description="The url of the FHIR server to upload to."
-    )
+    fhir_url: str | None = Field(description="The url of the FHIR server to upload to.")
 
     _check_for_fhir_bundle = validator("bundle", allow_reuse=True)(
         check_for_fhir_bundle

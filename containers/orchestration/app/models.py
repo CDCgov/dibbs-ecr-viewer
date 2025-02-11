@@ -1,11 +1,6 @@
-from typing import List
 from typing import Literal
-from typing import Optional
-from typing import Union
 
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import root_validator
+from pydantic import BaseModel, Field, root_validator
 
 
 # Request and response models
@@ -31,8 +26,8 @@ class OrchestrationRequest(BaseModel):
             " passed data."
         )
     )
-    message: Union[dict, str] = Field(description="The message to be validated.")
-    rr_data: Optional[str] = Field(
+    message: dict | str = Field(description="The message to be validated.")
+    rr_data: str | None = Field(
         description="If an eICR message, the accompanying Reportability Response data.",
         default=None,
     )
@@ -98,11 +93,11 @@ class OrchestrationResponse(BaseModel):
     The config for responses from the /extract endpoint.
     """
 
-    message: Optional[str] = Field(
+    message: str | None = Field(
         description="A message describing the result of a request to "
         "the /process-message endpoint."
     )
-    processed_values: Union[dict, str] = Field(
+    processed_values: dict | str = Field(
         description="A set of key:value pairs or XML-formatted string containing the "
         "values extracted from the message."
     )
@@ -113,10 +108,10 @@ class ListConfigsResponse(BaseModel):
     The config for responses from the /configs endpoint.
     """
 
-    default_configs: List[str] = Field(
+    default_configs: list[str] = Field(
         description="The configs that ship with with this service by default."
     )
-    custom_configs: List[str] = Field(
+    custom_configs: list[str] = Field(
         description="Additional configs that users have uploaded to this service beyond"
         " the ones come by default."
     )
@@ -125,16 +120,16 @@ class ListConfigsResponse(BaseModel):
 class WorkflowServiceStepModel(BaseModel):
     service: str
     endpoint: str
-    params: Optional[dict]
+    params: dict | None
 
 
 class ProcessingConfigModel(BaseModel):
-    workflow: dict[str, List[WorkflowServiceStepModel]] = Field(
+    workflow: dict[str, list[WorkflowServiceStepModel]] = Field(
         description="A JSON-formatted config dict containing a single key `workflow` "
         "that maps to a list of `WorkflowServiceStep` objects, each defining one step "
         "in the orchestration configuration to upload."
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="When `true` if a config already exists for the provided name it "
         "will be replaced. When `false` no action will be taken and the response will "
         "indicate that a config for the given name already exists. To proceed submit a "

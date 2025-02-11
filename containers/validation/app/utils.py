@@ -3,8 +3,7 @@ import pathlib
 import re
 
 import yaml
-from fastapi import HTTPException
-from fastapi import status
+from fastapi import HTTPException, status
 from lxml.etree import XMLSyntaxError
 
 from app.fhir.conversion import add_rr_data_to_eicr
@@ -47,7 +46,7 @@ def load_ecr_config(file_path: pathlib.Path = None) -> dict:
             path = file_path
 
     try:
-        with open(path, "r") as file:
+        with open(path) as file:
             if path.suffix == ".yaml":
                 config = yaml.safe_load(file)
                 if not validate_config(config):
@@ -151,4 +150,4 @@ def read_json_from_assets(filename: str):
     :raises FileNotFoundError: If the file is not in the assets directory.
     :raises JSONDecodeError: If the file content is not valid JSON.
     """
-    return json.load(open((pathlib.Path(__file__).parent.parent / "assets" / filename)))
+    return json.load(open(pathlib.Path(__file__).parent.parent / "assets" / filename))

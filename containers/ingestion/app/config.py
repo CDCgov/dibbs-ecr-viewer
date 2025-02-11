@@ -1,23 +1,22 @@
 from functools import lru_cache
 from typing import Literal
-from typing import Optional
 
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    cred_manager: Optional[Literal["azure", "gcp"]]
-    salt_str: Optional[str]
-    fhir_url: Optional[str]
-    smarty_auth_id: Optional[str]
-    smarty_auth_token: Optional[str]
-    license_type: Optional[str]
-    cloud_provider: Optional[Literal["azure", "gcp"]]
-    bucket_name: Optional[str]
-    storage_account_url: Optional[str]
+    cred_manager: Literal["azure", "gcp"] | None
+    salt_str: str | None
+    fhir_url: str | None
+    smarty_auth_id: str | None
+    smarty_auth_token: str | None
+    license_type: str | None
+    cloud_provider: Literal["azure", "gcp"] | None
+    bucket_name: str | None
+    storage_account_url: str | None
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> dict:
     """
     Load the values specified in the Settings class from the environment and return a

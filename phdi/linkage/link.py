@@ -4,12 +4,10 @@ import hashlib
 import json
 import logging
 import pathlib
+from collections.abc import Callable
 from itertools import combinations
 from math import log
 from random import sample
-from typing import Callable
-from typing import List
-from typing import Union
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -17,8 +15,7 @@ from pydantic import Field
 
 from phdi.fhir.utils import extract_value_with_resource_path
 from phdi.harmonization.utils import compare_strings
-from phdi.linkage.mpi import BaseMPIConnectorClient
-from phdi.linkage.mpi import DIBBsMPIConnectorClient
+from phdi.linkage.mpi import BaseMPIConnectorClient, DIBBsMPIConnectorClient
 from phdi.linkage.utils import datetime_to_str
 
 LINKING_FIELDS_TO_FHIRPATHS = {
@@ -34,7 +31,7 @@ LINKING_FIELDS_TO_FHIRPATHS = {
 }
 
 
-def block_data(data: pd.DataFrame, blocks: List) -> dict:
+def block_data(data: pd.DataFrame, blocks: list) -> dict:
     """
     Generates dictionary of blocked data where each key is a block
     and each value is a distinct list of lists containing the data
@@ -59,7 +56,7 @@ def block_data(data: pd.DataFrame, blocks: List) -> dict:
 def calculate_log_odds(
     m_probs: dict,
     u_probs: dict,
-    file_to_write: Union[pathlib.Path, None] = None,
+    file_to_write: pathlib.Path | None = None,
 ):
     """
     Calculate the per-field log odds ratio score that two records will
@@ -92,8 +89,8 @@ def calculate_log_odds(
 def calculate_m_probs(
     data: pd.DataFrame,
     true_matches: dict,
-    cols: Union[List[str], None] = None,
-    file_to_write: Union[pathlib.Path, None] = None,
+    cols: list[str] | None = None,
+    file_to_write: pathlib.Path | None = None,
 ):
     """
     For a given set of patient records, calculate the per-field
@@ -140,9 +137,9 @@ def calculate_m_probs(
 def calculate_u_probs(
     data: pd.DataFrame,
     true_matches: dict,
-    n_samples: Union[int, None] = None,
-    cols: Union[List, None] = None,
-    file_to_write: Union[pathlib.Path, None] = None,
+    n_samples: int | None = None,
+    cols: list | None = None,
+    file_to_write: pathlib.Path | None = None,
 ):
     """
     For a given set of patient records, calculate the per-field
@@ -203,7 +200,7 @@ def calculate_u_probs(
     return u_probs
 
 
-def compile_match_lists(match_lists: List[dict], cluster_mode: bool = False):
+def compile_match_lists(match_lists: list[dict], cluster_mode: bool = False):
     """
     Turns a list of matches of either clusters or candidate pairs found
     during linkage into a single unified structure holding all found matches
@@ -241,7 +238,7 @@ def compile_match_lists(match_lists: List[dict], cluster_mode: bool = False):
     return matches
 
 
-def eval_perfect_match(feature_comparisons: List, **kwargs) -> bool:
+def eval_perfect_match(feature_comparisons: list, **kwargs) -> bool:
     """
     Determines whether a given set of feature comparisons represent a
     'perfect' match (i.e. whether all features that were compared match
@@ -254,7 +251,7 @@ def eval_perfect_match(feature_comparisons: List, **kwargs) -> bool:
     return sum(feature_comparisons) == len(feature_comparisons)
 
 
-def eval_log_odds_cutoff(feature_comparisons: List, **kwargs) -> bool:
+def eval_log_odds_cutoff(feature_comparisons: list, **kwargs) -> bool:
     """
     Determines whether a given set of feature comparisons matches enough
     to be the result of a true patient link instead of just random chance.
@@ -271,7 +268,7 @@ def eval_log_odds_cutoff(feature_comparisons: List, **kwargs) -> bool:
 
 
 def extract_blocking_values_from_record(
-    record: dict, blocking_fields: List[dict]
+    record: dict, blocking_fields: list[dict]
 ) -> dict:
     """
     Extracts values from a given patient record for eventual use in database
@@ -361,8 +358,8 @@ def extract_blocking_values_from_record(
 
 
 def feature_match_exact(
-    record_i: List,
-    record_j: List,
+    record_i: list,
+    record_j: list,
     feature_col: str,
     col_to_idx: dict[str, int],
     **kwargs: dict,
@@ -383,8 +380,8 @@ def feature_match_exact(
 
 
 def feature_match_four_char(
-    record_i: List,
-    record_j: List,
+    record_i: list,
+    record_j: list,
     feature_col: str,
     col_to_idx: dict[str, int],
     **kwargs: dict,
@@ -407,8 +404,8 @@ def feature_match_four_char(
 
 
 def feature_match_fuzzy_string(
-    record_i: List,
-    record_j: List,
+    record_i: list,
+    record_j: list,
     feature_col: str,
     col_to_idx: dict[str, int],
     **kwargs: dict,
@@ -455,8 +452,8 @@ def feature_match_fuzzy_string(
 
 
 def feature_match_log_odds_exact(
-    record_i: List,
-    record_j: List,
+    record_i: list,
+    record_j: list,
     feature_col: str,
     col_to_idx: dict[str, int],
     **kwargs: dict,
@@ -485,8 +482,8 @@ def feature_match_log_odds_exact(
 
 
 def feature_match_log_odds_fuzzy_compare(
-    record_i: List,
-    record_j: List,
+    record_i: list,
+    record_j: list,
     feature_col: str,
     col_to_idx: dict[str, int],
     **kwargs: dict,
@@ -544,7 +541,7 @@ def generate_hash_str(linking_identifier: str, salt_str: str) -> str:
 
 def link_record_against_mpi(
     record: dict,
-    algo_config: List[dict],
+    algo_config: list[dict],
     external_person_id: str = None,
     mpi_client: BaseMPIConnectorClient = None,
 ) -> tuple[bool, str]:
@@ -723,7 +720,7 @@ def load_json_probs(path: pathlib.Path):
     :raises JSONDecodeError: If the file cannot be read as valid JSON.
     """
     try:
-        with open(path, "r") as file:
+        with open(path) as file:
             prob_dict = json.load(file)
         return prob_dict
     except FileNotFoundError:
@@ -735,12 +732,12 @@ def load_json_probs(path: pathlib.Path):
 
 
 def match_within_block(
-    block: List[List],
+    block: list[list],
     feature_funcs: dict[str, Callable],
     col_to_idx: dict[str, int],
     match_eval: Callable,
     **kwargs,
-) -> List[tuple]:
+) -> list[tuple]:
     """
     Performs matching on all candidate pairs of records within a given block
     of data. Actual partitioning of the data should be done outside this
@@ -802,10 +799,10 @@ def match_within_block(
 # primary data type to use here.
 def perform_linkage_pass(
     data: pd.DataFrame,
-    blocks: List,
+    blocks: list,
     feature_funcs: dict[str, Callable],
     matching_rule: Callable,
-    cluster_ratio: Union[float, None] = None,
+    cluster_ratio: float | None = None,
     **kwargs,
 ) -> dict:
     """
@@ -862,8 +859,8 @@ def profile_log_odds(
     data: pd.DataFrame,
     true_matches: dict,
     log_odds: dict,
-    exact_cols: List,
-    fuzzy_cols: List,
+    exact_cols: list,
+    fuzzy_cols: list,
     idx_to_col: dict,
     neg_samples: int = 50000,
 ) -> None:  # pragma: no cover
@@ -957,7 +954,7 @@ def profile_log_odds(
     plt.show()
 
 
-def read_linkage_config(config_file: pathlib.Path) -> List[dict]:
+def read_linkage_config(config_file: pathlib.Path) -> list[dict]:
     """
     Reads and generates a record linkage algorithm configuration list from
     the provided filepath, which should point to a JSON file. A record
@@ -992,8 +989,8 @@ def read_linkage_config(config_file: pathlib.Path) -> List[dict]:
 
 
 def score_linkage_vs_truth(
-    found_matches: dict[Union[int, str], set],
-    true_matches: dict[Union[int, str], set],
+    found_matches: dict[int | str, set],
+    true_matches: dict[int | str, set],
     records_in_dataset: int,
     expand_clusters_pairwise: bool = False,
 ) -> tuple:
@@ -1072,7 +1069,7 @@ def score_linkage_vs_truth(
     return (sensitivity, specificity, ppv, f1)
 
 
-def write_linkage_config(linkage_algo: List[dict], file_to_write: pathlib.Path) -> None:
+def write_linkage_config(linkage_algo: list[dict], file_to_write: pathlib.Path) -> None:
     """
     Save a provided algorithm description as a JSON dictionary at the provided
     filepath location. Algorithm descriptions are lists of dictionaries, one
@@ -1136,7 +1133,7 @@ def write_linkage_config(linkage_algo: List[dict], file_to_write: pathlib.Path) 
         out.write(json.dumps(linkage_json))
 
 
-def _bind_func_names_to_invocations(algo_config: List[dict]):
+def _bind_func_names_to_invocations(algo_config: list[dict]):
     """
     Helper method that re-maps the string names of functions to their
     callable invocations as defined within the `link.py` module.
@@ -1152,7 +1149,7 @@ def _bind_func_names_to_invocations(algo_config: List[dict]):
 
 
 def _eval_record_in_cluster(
-    block: List[List],
+    block: list[list],
     i: int,
     cluster: set,
     cluster_ratio: float,
@@ -1186,8 +1183,8 @@ def _eval_record_in_cluster(
 
 
 def _compare_records(
-    record: List,
-    mpi_patient: List,
+    record: list,
+    mpi_patient: list,
     feature_funcs: dict,
     col_to_idx: dict[str, int],
     matching_rule: callable,
@@ -1216,8 +1213,8 @@ def _compare_records(
 
 
 def _compare_records_field_helper(
-    record: List,
-    mpi_patient: List,
+    record: list,
+    mpi_patient: list,
     feature_col: str,
     col_to_idx: dict[str, int],
     feature_funcs: dict,
@@ -1238,8 +1235,8 @@ def _compare_records_field_helper(
 
 
 def _compare_address_elements(
-    record: List,
-    mpi_patient: List,
+    record: list,
+    mpi_patient: list,
     feature_funcs: dict,
     feature_col: str,
     col_to_idx: dict[str, int],
@@ -1262,8 +1259,8 @@ def _compare_address_elements(
 
 
 def _compare_name_elements(
-    record: List,
-    mpi_patient: List,
+    record: list,
+    mpi_patient: list,
     feature_funcs: dict,
     feature_col: str,
     col_to_idx: dict[str, int],
@@ -1285,7 +1282,7 @@ def _compare_name_elements(
     return feature_comp
 
 
-def _condense_extract_address_from_resource(resource: dict, field: str) -> List[str]:
+def _condense_extract_address_from_resource(resource: dict, field: str) -> list[str]:
     """
     Formatting function to account for patient resources that have multiple
     associated addresses. Each address is a self-contained object, replete
@@ -1336,7 +1333,7 @@ def _find_strongest_link(linkage_scores: dict) -> str:
     return best_person
 
 
-def _flatten_patient_resource(resource: dict, col_to_idx: dict) -> List:
+def _flatten_patient_resource(resource: dict, col_to_idx: dict) -> list:
     """
     Helper method that flattens an incoming patient resource into a list whose
     elements are the keys of the FHIR dictionary, reformatted and ordered
@@ -1378,7 +1375,7 @@ def _flatten_patient_field_helper(resource: dict, field: str) -> any:
         return val if val is not None else ""
 
 
-def _group_patient_block_by_person(data_block: List[list]) -> dict[str, List]:
+def _group_patient_block_by_person(data_block: list[list]) -> dict[str, list]:
     """
     Helper method that partitions the block of patient data returned from the MPI
     into clusters of records according to their linked Person ID.
@@ -1393,8 +1390,8 @@ def _group_patient_block_by_person(data_block: List[list]) -> dict[str, List]:
 
 
 def _map_matches_to_record_ids(
-    match_list: Union[List[tuple], List[set]], data_block, cluster_mode: bool = False
-) -> List[tuple]:
+    match_list: list[tuple] | list[set], data_block, cluster_mode: bool = False
+) -> list[tuple]:
     """
     Helper function to turn a list of tuples of row indices in a block
     of data into a list of tuples of the IDs of the records within
@@ -1418,13 +1415,13 @@ def _map_matches_to_record_ids(
 
 
 def _match_within_block_cluster_ratio(
-    block: List[List],
+    block: list[list],
     cluster_ratio: float,
     feature_funcs: dict[str, Callable],
     col_to_idx: dict[str, int],
     match_eval: Callable,
     **kwargs,
-) -> List[set]:
+) -> list[set]:
     """
     A matching function for statistically testing the impact of membership
     ratio to the quality of clusters formed. This function behaves similarly
@@ -1505,7 +1502,7 @@ def _is_empty_extraction_field(block_vals: dict, field: str):
     return False
 
 
-def _write_prob_file(prob_dict: dict, file_to_write: Union[pathlib.Path, None]):
+def _write_prob_file(prob_dict: dict, file_to_write: pathlib.Path | None):
     """
     Helper method to write a probability dictionary to a JSON file, if
     a valid path is supplied.

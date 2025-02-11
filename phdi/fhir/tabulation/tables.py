@@ -2,23 +2,17 @@ import json
 import pathlib
 import urllib.parse
 import warnings
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
-from urllib.parse import parse_qs
-from urllib.parse import urlencode
+from urllib.parse import parse_qs, urlencode
 
 import requests
 
 from phdi.cloud.core import BaseCredentialManager
 from phdi.fhir.transport import http_request_with_reauth
 from phdi.fhir.utils import extract_value_with_resource_path
-from phdi.tabulation.tables import load_schema
-from phdi.tabulation.tables import write_data
+from phdi.tabulation.tables import load_schema, write_data
 
 
-def drop_invalid(data: List[list], schema: Dict, table_name: str) -> List[list]:
+def drop_invalid(data: list[list], schema: dict, table_name: str) -> list[list]:
     """
     Removes resources from tabulated data if the resource contains an invalid value, as
     specified in the invalid_values field in a user-defined schema. Users may provide
@@ -67,7 +61,7 @@ def drop_invalid(data: List[list], schema: Dict, table_name: str) -> List[list]:
 
 def extract_data_from_fhir_search(
     search_url: str, cred_manager: BaseCredentialManager = None
-) -> List[dict]:
+) -> list[dict]:
     """
     Performs a FHIR search, continuously using the "next" url to perform
     search continuations until no additional search results are available.
@@ -99,7 +93,7 @@ def extract_data_from_fhir_search(
 
 def extract_data_from_fhir_search_incremental(
     search_url: str, cred_manager: BaseCredentialManager = None
-) -> Tuple[List[dict], str]:
+) -> tuple[list[dict], str]:
     """
     Performs a FHIR search for a single page of data and returns a dictionary containing
     the data and a next URL. If there is no next URL (this is the last page of data),
@@ -155,7 +149,7 @@ def extract_data_from_fhir_search_incremental(
 
 def extract_data_from_schema(
     schema: dict, fhir_url: str, cred_manager: BaseCredentialManager = None
-) -> Dict[str, List[dict]]:
+) -> dict[str, list[dict]]:
     """
     Performs a full FHIR search for each table in the specified `schema`,
     and returns a dictionary mapping the table name to corresponding search results.
@@ -179,7 +173,7 @@ def extract_data_from_schema(
     return results
 
 
-def tabulate_data(data: List[dict], schema: dict, table_name: str) -> List[list]:
+def tabulate_data(data: list[dict], schema: dict, table_name: str) -> list[list]:
     """
     Transforms a list of FHIR bundle resource entries into a tabular
     format (given by a list of lists) using a user-defined schema.
@@ -288,7 +282,7 @@ def tabulate_data(data: List[dict], schema: dict, table_name: str) -> List[list]
     return tabulated_data
 
 
-def _build_reference_dicts(data: List[dict], directions_by_table: dict) -> dict:
+def _build_reference_dicts(data: list[dict], directions_by_table: dict) -> dict:
     """
     Groups resources previously determined to reference each other into
     dictionaries accessed using resource IDs. For each table, a dictionary
@@ -373,7 +367,7 @@ def _dereference_included_resource(
     column_params: dict,
     ref_dicts: dict,
     table_name: str,
-) -> Union[dict, None]:
+) -> dict | None:
     anchor_id = anchor_resource.get("id", "")
     [direction, ref_path] = column_params["reference_location"].split(":", 1)
     referenced_type = path_to_use.split(".")[0]

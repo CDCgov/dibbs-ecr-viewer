@@ -2,23 +2,21 @@ import json
 import os
 
 import requests
-from fastapi import HTTPException
-from fastapi import Response
-from fastapi import WebSocket
+from fastapi import HTTPException, Response, WebSocket
 from opentelemetry import trace
 from opentelemetry.trace.status import StatusCode
 
 from app.handlers.request_builders.ecr_viewer import build_save_fhir_data_body
 from app.handlers.request_builders.fhir_converter import build_fhir_converter_request
-from app.handlers.request_builders.ingestion import build_geocoding_request
-from app.handlers.request_builders.ingestion import build_ingestion_dob_request
-from app.handlers.request_builders.ingestion import build_ingestion_name_request
-from app.handlers.request_builders.ingestion import build_ingestion_phone_request
-from app.handlers.request_builders.ingestion import build_validation_request
-from app.handlers.request_builders.message_parser import (
-    build_message_parser_message_request,
+from app.handlers.request_builders.ingestion import (
+    build_geocoding_request,
+    build_ingestion_dob_request,
+    build_ingestion_name_request,
+    build_ingestion_phone_request,
+    build_validation_request,
 )
 from app.handlers.request_builders.message_parser import (
+    build_message_parser_message_request,
     build_message_parser_phdc_request,
 )
 from app.handlers.request_builders.trigger_code_reference import (
@@ -26,10 +24,14 @@ from app.handlers.request_builders.trigger_code_reference import (
 )
 from app.handlers.response_builders.ecr_viewer import unpack_save_fhir_data_response
 from app.handlers.response_builders.fhir_converter import unpack_fhir_converter_response
-from app.handlers.response_builders.ingestion import unpack_ingestion_standardization
-from app.handlers.response_builders.ingestion import unpack_validation_response
-from app.handlers.response_builders.message_parser import unpack_fhir_to_phdc_response
-from app.handlers.response_builders.message_parser import unpack_parsed_message_response
+from app.handlers.response_builders.ingestion import (
+    unpack_ingestion_standardization,
+    unpack_validation_response,
+)
+from app.handlers.response_builders.message_parser import (
+    unpack_fhir_to_phdc_response,
+    unpack_parsed_message_response,
+)
 from app.handlers.response_builders.trigger_code_reference import (
     unpack_stamp_condition_extensions_response,
 )

@@ -3,9 +3,7 @@ from pathlib import Path
 import toml
 from fastapi.testclient import TestClient
 
-from phdi.containers.base_service import BaseService
-from phdi.containers.base_service import DIBBS_CONTACT
-from phdi.containers.base_service import LICENSES
+from phdi.containers.base_service import DIBBS_CONTACT, LICENSES, BaseService
 
 with open(Path(__file__).parent.parent / "pyproject.toml") as project_config_file:
     project_config = toml.load(project_config_file)

@@ -1,14 +1,13 @@
 from functools import lru_cache
-from typing import Optional
 
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    fhir_converter_url: Optional[str]
+    fhir_converter_url: str | None
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> dict:
     """
     Load the values specified in the Settings class from the environment and return a

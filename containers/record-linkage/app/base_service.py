@@ -1,9 +1,7 @@
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI
-from fastapi import Request
-from fastapi import Response
+from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel
 
 # create a class with the DIBBs default Creative Commons Zero v1.0 and

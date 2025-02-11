@@ -1,11 +1,8 @@
 import json
 import random
+from collections.abc import Callable
 from functools import cache
-from typing import Any
-from typing import Callable
-from typing import List
-from typing import Literal
-from typing import Union
+from typing import Any, Literal
 
 import fhirpathpy
 
@@ -13,9 +10,9 @@ selection_criteria_types = Literal["first", "last", "random", "all"]
 
 
 def apply_selection_criteria(
-    value: List[Any],
+    value: list[Any],
     selection_criteria: selection_criteria_types,
-) -> str | List:
+) -> str | list:
     """
     Returns value(s), according to the selection criteria, from a given list of values
     parsed from a FHIR resource. A single string value is returned - if the selected
@@ -55,7 +52,7 @@ def extract_value_with_resource_path(
     resource: dict,
     path: str,
     selection_criteria: Literal["first", "last", "random", "all"] = "first",
-) -> Union[Any, None]:
+) -> Any | None:
     """
     Yields a single value from a resource based on a provided `fhir_path`.
     If the path doesn't map to an extant value in the first, returns
@@ -76,7 +73,7 @@ def extract_value_with_resource_path(
         return value
 
 
-def find_entries_by_resource_type(bundle: dict, resource_type: str) -> List[dict]:
+def find_entries_by_resource_type(bundle: dict, resource_type: str) -> list[dict]:
     """
     Collect all entries of a specific type in a bundle of FHIR data and
     return references to them in a list.
