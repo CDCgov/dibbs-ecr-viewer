@@ -31,7 +31,7 @@ describe("POST Process Zip", () => {
     const response = await POST(request);
 
     expect(response.status).toEqual(200);
-    expect(await response.json()).toEqual({ detail: "ok" });
+    expect(await response.json()).toEqual({ message: "ok" });
   });
 
   it("should return a 400 response when file is not a zip", async () => {
@@ -50,7 +50,7 @@ describe("POST Process Zip", () => {
 
     expect(response.status).toEqual(400);
     const jsonResponse = await response.json();
-    expect(jsonResponse.detail).toEqual("Validation error");
+    expect(jsonResponse.message).toEqual("Validation error");
     expect(jsonResponse.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -70,7 +70,7 @@ describe("POST Process Zip", () => {
 
     expect(response.status).toEqual(400);
     const jsonResponse = await response.json();
-    expect(jsonResponse.detail).toEqual("Validation error");
+    expect(jsonResponse.message).toEqual("Validation error");
     expect(jsonResponse.errors).toBeDefined();
   });
 
@@ -78,6 +78,6 @@ describe("POST Process Zip", () => {
     const response = await POST(undefined as unknown as NextRequest);
 
     expect(response.status).toEqual(500);
-    expect(await response.json()).toEqual({ detail: "Server error" });
+    expect(await response.json()).toEqual({ message: "Server error" });
   });
 });
