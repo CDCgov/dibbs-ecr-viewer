@@ -7,6 +7,7 @@ import {
 import { returnParamDates } from "@/app/view-data/utils/date-utils";
 
 jest.mock("../services/listEcrDataService");
+jest.mock("../data/conditions");
 jest.mock("../components/EcrPaginationWrapper");
 jest.mock("../components/Filters");
 jest.mock("../components/LibrarySearch");

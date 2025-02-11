@@ -7,13 +7,13 @@ import { getDB } from "../../api/services/postgres_db";
  */
 export const getAllConditions = async (): Promise<string[]> => {
   const databaseType = process.env.METADATA_DATABASE_TYPE;
-  switch (databaseType) {
-    case "postgres":
-      return get_conditions_postgres();
-    case "sqlserver":
-      return get_conditions_sqlserver();
-    default:
-      return [];
+
+  if (databaseType === "postgres") {
+    return get_conditions_postgres();
+  } else if (databaseType === "sqlserver") {
+    return get_conditions_sqlserver();
+  } else {
+    throw new Error("Database type is undefined.");
   }
 };
 

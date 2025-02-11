@@ -23,6 +23,13 @@ describe("Conditions service", () => {
     jest.resetAllMocks();
   });
 
+  it("Should throw an error if the database type is undefined", async () => {
+    process.env.METADATA_DATABASE_TYPE = undefined;
+    await expect(getAllConditions()).rejects.toThrow(
+      "Database type is undefined.",
+    );
+  });
+
   it("Should retrieve all unique conditions with PostgreSQL", async () => {
     process.env.METADATA_DATABASE_TYPE = "postgres";
 
@@ -63,10 +70,5 @@ describe("Conditions service", () => {
     expect(mockRequest.query).toHaveBeenCalledWith(
       "SELECT DISTINCT condition FROM ecr_rr_conditions ORDER BY condition",
     );
-  });
-
-  it("Should return an empty array if database type is not specified", async () => {
-    process.env.METADATA_DATABASE_TYPE = undefined;
-    expect(await getAllConditions()).toEqual([]);
   });
 });
