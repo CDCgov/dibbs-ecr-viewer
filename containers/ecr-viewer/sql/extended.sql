@@ -46,25 +46,19 @@ CREATE TABLE ECR_DATA
 CREATE TABLE patient_address
 (
     UUID VARCHAR(200) PRIMARY KEY,
-    "use"  VARCHAR(7), -- The valid values are: "home" | "work" | "temp" | "old" | "billing"
+    [use]  VARCHAR(7), -- The valid values are: "home" | "work" | "temp" | "old" | "billing"
     type VARCHAR(8), -- The valid values are: "postal" | "physical" | "both"
     text VARCHAR(MAX),
+    line VARCHAR(255),
     city VARCHAR(255),
     district VARCHAR(255),
     state VARCHAR(255),
-    postalCode VARCHAR(20),
+    postal_code VARCHAR(20),
     country VARCHAR(255),
     period_start DATETIMEOFFSET,
     period_end DATETIMEOFFSET,
     eICR_ID VARCHAR(200) REFERENCES ECR_DATA (eICR_ID)
 )
-
-CREATE TABLE patient_address_line
-(
-    UUID VARCHAR(200) PRIMARY KEY,
-    line VARCHAR(255),
-    patient_address_id VARCHAR(200) REFERENCES patient_address (UUID)
-);
 
 CREATE TABLE ecr_rr_conditions
 (
