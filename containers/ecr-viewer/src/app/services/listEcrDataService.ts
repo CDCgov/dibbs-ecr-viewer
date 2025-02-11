@@ -496,13 +496,15 @@ const generateSqlServerSortStatement = (
   direction: string,
 ) => {
   // Valid columns and directions
-  const validColumns = ["patient", "date_created", "encounter_start_date"];
+  const validColumns = {
+    patient: "patient",
+    date_created: "date_created",
+    report_date: "encounter_start_date",
+  };
   const validDirections = ["ASC", "DESC"];
 
-  // Validation check
-  if (!validColumns.includes(columnName)) {
-    columnName = "date_created";
-  }
+  // Validation checks
+  columnName = (validColumns as any)[columnName] ?? "date_created";
   if (!validDirections.includes(direction)) {
     direction = "DESC";
   }

@@ -9,7 +9,7 @@ import Filters from "@/app/components/Filters";
 import { EcrTableLoading } from "./components/EcrTableClient";
 import { returnParamDates } from "@/app/view-data/utils/date-utils";
 import { env } from "next-runtime-env";
-import { getAllConditions } from "./data/conditions/service";
+import { getAllConditions } from "./data/conditions";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
@@ -25,6 +25,10 @@ const HomePage = async ({
   const isNonIntegratedViewer =
     env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
 
+  if (!isNonIntegratedViewer) {
+    return <NotFound />;
+  }
+
   const currentPage = Number(searchParams?.page) || 1;
   const itemsPerPage = Number(searchParams?.itemsPerPage) || 25;
   const sortColumn = (searchParams?.columnId as string) || "date_created";
@@ -34,18 +38,15 @@ const HomePage = async ({
   const filterConditionsArr = filterConditions?.split("|");
   const filterDates = returnParamDates(searchParams);
 
-  let totalCount: number = 0;
-  if (isNonIntegratedViewer) {
-    totalCount = await getTotalEcrCount(
-      filterDates,
-      searchTerm,
-      filterConditionsArr,
-    );
-  }
+  const totalCount = await getTotalEcrCount(
+    filterDates,
+    searchTerm,
+    filterConditionsArr,
+  );
 
-  const totalConditions = await getAllConditions();
+  const allConditions = await getAllConditions();
 
-  return isNonIntegratedViewer ? (
+  return (
     <div className="display-flex flex-column height-viewport">
       <Header />
       <main className="overflow-auto height-full">
@@ -56,7 +57,7 @@ const HomePage = async ({
             textBoxClassName="width-21-9375"
           />
         </div>
-        <Filters conditions={totalConditions} />
+        <Filters conditions={allConditions} />
         <EcrPaginationWrapper totalCount={totalCount}>
           <Suspense fallback={<EcrTableLoading />}>
             <EcrTable
@@ -72,8 +73,6 @@ const HomePage = async ({
         </EcrPaginationWrapper>
       </main>
     </div>
-  ) : (
-    <NotFound />
   );
 };
 
