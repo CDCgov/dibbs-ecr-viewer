@@ -1,8 +1,8 @@
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import { Bundle } from "fhir/r4";
-import BundleWithEcrMetadata from "../assets/BundleEcrMetadata.json";
-import BundleMultipleAuthors from "../assets/BundleMultipleAuthor.json";
-import BundleLab from "../assets/BundleLab.json";
+import BundleWithEcrMetadata from "../../../../../../test-data/BundleEcrMetadata.json";
+import BundleMultipleAuthors from "../../../../../../test-data/BundleMultipleAuthor.json";
+import BundleLab from "../../../../../../test-data/BundleLab.json";
 import { loadYamlConfig } from "@/app/api/utils";
 
 describe("Evaluate Ecr Metadata", () => {

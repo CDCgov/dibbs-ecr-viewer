@@ -2,8 +2,8 @@ import { render, screen } from "@testing-library/react";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import BundleLab from "@/app/tests/assets/BundleLab.json";
-import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
+import BundleLab from "../../../../../../test-data/BundleLab.json";
+import BundleLabNoLabIds from "../../../../../../test-data/BundleLabNoLabIds.json";
 import { loadYamlConfig } from "@/app/api/utils";
 import { Bundle } from "fhir/r4";
 import {

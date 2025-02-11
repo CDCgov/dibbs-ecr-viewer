@@ -4,7 +4,7 @@ import {
   returnHtmlTableContent,
   returnTableFromJson,
 } from "@/app/view-data/components/common";
-import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
+import BundleLabNoLabIds from "../../../../../../test-data/BundleLabNoLabIds.json";
 import { Bundle } from "fhir/r4";
 import { render, screen } from "@testing-library/react";
 import { TableJson } from "@/app/services/formatService";
