@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { getAllConditions } from "@/app/data/conditions/service";
+import { getAllConditions } from "@/app/data/conditions";
 import { getDB } from "@/app/api/services/postgres_db";
 import { get_pool } from "@/app/api/services/sqlserver_db";
 
