@@ -94,7 +94,7 @@ select = [
   "I",    # isort
   "UP",   # pyupgrade
   "FAST", # FastAPI
-  "FURB", # All checks passed!
+  "FURB", # refrub
 ]
 
 [tool.ruff.lint.per-file-ignores]
