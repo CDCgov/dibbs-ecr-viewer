@@ -1,21 +1,21 @@
 import logging
 import uuid
 from datetime import datetime
-from typing import List
-from typing import Literal
-from typing import Optional
+from typing import Literal, Optional
 
 from lxml import etree as ET
 
 from app import utils
-from app.phdc.models import Address
-from app.phdc.models import CodedElement
-from app.phdc.models import Name
-from app.phdc.models import Observation
-from app.phdc.models import Organization
-from app.phdc.models import Patient
-from app.phdc.models import PHDCInputData
-from app.phdc.models import Telecom
+from app.phdc.models import (
+    Address,
+    CodedElement,
+    Name,
+    Observation,
+    Organization,
+    Patient,
+    PHDCInputData,
+    Telecom,
+)
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -741,7 +741,7 @@ class PHDCBuilder:
 
         return name_data
 
-    def _build_custodian(self, organizations: List[Organization]) -> ET.Element:
+    def _build_custodian(self, organizations: list[Organization]) -> ET.Element:
         """
         Builds a `custodian` XML element for custodian data, which refers to the
         organization from which the PHDC originates and that is in charge of
@@ -930,8 +930,8 @@ class PHDCBuilder:
         id: str,
         root: str = None,
         assigningAuthorityName: str = None,
-        telecom_data: Optional[List[Telecom]] = None,
-        address_data: Optional[List[Address]] = None,
+        telecom_data: Optional[list[Telecom]] = None,
+        address_data: Optional[list[Address]] = None,
         patient_data: Optional[Patient] = None,
     ) -> ET.Element:
         """

@@ -6,14 +6,16 @@ from unittest.mock import patch
 import pytest
 from app import utils
 from app.phdc.builder import PHDCBuilder
-from app.phdc.models import Address
-from app.phdc.models import CodedElement
-from app.phdc.models import Name
-from app.phdc.models import Observation
-from app.phdc.models import Organization
-from app.phdc.models import Patient
-from app.phdc.models import PHDCInputData
-from app.phdc.models import Telecom
+from app.phdc.models import (
+    Address,
+    CodedElement,
+    Name,
+    Observation,
+    Organization,
+    Patient,
+    PHDCInputData,
+    Telecom,
+)
 from lxml import etree as ET
 
 
@@ -25,7 +27,7 @@ def parse_file_from_test_assets(filename: str) -> ET.ElementTree:
     :return: An ElementTree containing the contents of the file.
     """
     with open(
-        (pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename), "r"
+        pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename
     ) as file:
         parser = ET.XMLParser(remove_blank_text=True)
         tree = ET.parse(

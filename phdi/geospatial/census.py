@@ -1,10 +1,8 @@
-from typing import Literal
-from typing import Union
+from typing import Literal, Union
 
 import requests
 
-from phdi.geospatial.core import BaseGeocodeClient
-from phdi.geospatial.core import GeocodeResult
+from phdi.geospatial.core import BaseGeocodeClient, GeocodeResult
 from phdi.transport import http_request_with_retry
 
 

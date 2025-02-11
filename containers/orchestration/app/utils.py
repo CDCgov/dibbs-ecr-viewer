@@ -4,13 +4,11 @@ import os
 import pathlib
 from functools import cache
 from pathlib import Path
-from typing import Dict
 from typing import Optional
 from zipfile import ZipFile
 
 from dotenv import load_dotenv
-from fastapi import Response
-from fastapi import UploadFile
+from fastapi import Response, UploadFile
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
@@ -36,14 +34,14 @@ def load_processing_config(config_name: str) -> dict:
     """
     custom_config_path = Path(__file__).parent / "custom_configs" / config_name
     try:
-        with open(custom_config_path, "r") as file:
+        with open(custom_config_path) as file:
             processing_config = json.load(file)
     except FileNotFoundError:
         try:
             default_config_path = (
                 Path(__file__).parent / "default_configs" / config_name
             )
-            with open(default_config_path, "r") as file:
+            with open(default_config_path) as file:
                 processing_config = json.load(file)
         except FileNotFoundError:
             raise FileNotFoundError(
@@ -68,17 +66,17 @@ def replace_env_var_placeholders(config: dict) -> None:
             settings["url"] = os.path.expandvars(settings["url"])
 
 
-def read_json_from_assets(filename: str) -> Dict:
+def read_json_from_assets(filename: str) -> dict:
     """
     Loads a JSON file from the 'assets' directory.
 
     :param filename: Name of the JSON file to load.
     :return: Parsed JSON content as a dictionary.
     """
-    return json.load(open((pathlib.Path(__file__).parent.parent / "assets" / filename)))
+    return json.load(open(pathlib.Path(__file__).parent.parent / "assets" / filename))
 
 
-def unzip_ws(file_bytes) -> Dict:
+def unzip_ws(file_bytes) -> dict:
     """
     Extracts and processes data from a zip file's bytes.
 
@@ -92,7 +90,7 @@ def unzip_ws(file_bytes) -> Dict:
         raise FileNotFoundError("This is not a valid .zip file.")
 
 
-def unzip_http(upload_file: UploadFile) -> Dict:
+def unzip_http(upload_file: UploadFile) -> dict:
     """
     Extracts and processes ECR data from an uploaded zip file.
 
@@ -103,14 +101,14 @@ def unzip_http(upload_file: UploadFile) -> Dict:
     return search_for_ecr_data(zipped_file)
 
 
-def load_json_from_binary(upload_file: UploadFile) -> Dict:
+def load_json_from_binary(upload_file: UploadFile) -> dict:
     """
     Helper method to transform a buffered IO of bytes into a json dictionary.
     """
     return json.load(io.BytesIO(upload_file.file.read()))
 
 
-def search_for_ecr_data(valid_zipfile: ZipFile) -> Dict:
+def search_for_ecr_data(valid_zipfile: ZipFile) -> dict:
     """
     Searches for and extracts eICR and optional RR data from a valid zip file.
 
@@ -152,7 +150,7 @@ def search_for_file_in_zip(filename: str, zipfile: ZipFile) -> Optional[str]:
         return None
 
 
-def load_config_assets(upload_config_response_examples, PutConfigResponse) -> Dict:
+def load_config_assets(upload_config_response_examples, PutConfigResponse) -> dict:
     """
     Loads JSON config assets, updating the input dict in place.
 
@@ -172,7 +170,7 @@ class CustomJSONResponse(JSONResponse):
         self._content = content
         self.url = url
 
-    def json(self) -> Dict:
+    def json(self) -> dict:
         """
         Returns the JSON content as a dictionary.
 

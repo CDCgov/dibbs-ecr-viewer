@@ -1,9 +1,11 @@
 import pathlib
 
 import pyarrow.parquet as pq
-from app.linkage.seed import adjust_birthdate
-from app.linkage.seed import convert_to_patient_fhir_resources
-from app.linkage.seed import extract_given_name
+from app.linkage.seed import (
+    adjust_birthdate,
+    convert_to_patient_fhir_resources,
+    extract_given_name,
+)
 
 mpi_test_file_path = (
     pathlib.Path(__file__).parent.parent.parent.parent

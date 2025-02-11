@@ -37,7 +37,7 @@ Because the abstract base classes define these methods, all vendor-specific Geoc
 A `GeocodeResult` has the following attributes:
 
 ```
-line: List[str]
+line: list[str]
 city: str
 state: str
 postal_code: str

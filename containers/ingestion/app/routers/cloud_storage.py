@@ -1,15 +1,13 @@
-from typing import Literal
-from typing import Optional
+from typing import Literal, Optional
 
-from fastapi import APIRouter
-from fastapi import Response
-from fastapi import status
-from pydantic import BaseModel
-from pydantic import Field
+from fastapi import APIRouter, Response, status
+from pydantic import BaseModel, Field
 
-from app.utils import get_cloud_provider_storage_connection
-from app.utils import search_for_required_values
-from app.utils import StandardResponse
+from app.utils import (
+    StandardResponse,
+    get_cloud_provider_storage_connection,
+    search_for_required_values,
+)
 
 router = APIRouter(
     prefix="/cloud/storage",

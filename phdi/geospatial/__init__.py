@@ -1,6 +1,5 @@
 from phdi.geospatial.census import CensusGeocodeClient
-from phdi.geospatial.core import BaseGeocodeClient
-from phdi.geospatial.core import GeocodeResult
+from phdi.geospatial.core import BaseGeocodeClient, GeocodeResult
 from phdi.geospatial.smarty import SmartyGeocodeClient
 
 __all__ = (

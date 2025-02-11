@@ -1,9 +1,11 @@
 from app.harmonization.double_metaphone import DoubleMetaphone
-from app.harmonization.standardization import double_metaphone_string
-from app.harmonization.standardization import standardize_birth_date
-from app.harmonization.standardization import standardize_country_code
-from app.harmonization.standardization import standardize_name
-from app.harmonization.standardization import standardize_phone
+from app.harmonization.standardization import (
+    double_metaphone_string,
+    standardize_birth_date,
+    standardize_country_code,
+    standardize_name,
+    standardize_phone,
+)
 from app.harmonization.utils import compare_strings
 
 # from app.harmonization.hl7 import convert_hl7_batch_messages_to_list
