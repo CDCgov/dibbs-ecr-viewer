@@ -18,7 +18,7 @@ export const FieldValue: React.FC<{
   const cutLength = 300;
 
   const valueLength = getReactNodeLength(children);
-  if (valueLength < maxLength) {
+  if (valueLength <= maxLength) {
     return children;
   }
 
