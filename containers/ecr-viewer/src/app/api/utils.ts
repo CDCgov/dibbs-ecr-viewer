@@ -4,7 +4,6 @@ import yaml from "js-yaml";
 import { PathMappings } from "@/app/view-data/utils/utils";
 
 export const S3_SOURCE = "s3";
-export const POSTGRES_SOURCE = "postgres";
 export const AZURE_SOURCE = "azure";
 
 /**

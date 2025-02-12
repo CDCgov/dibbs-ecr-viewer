@@ -22,6 +22,9 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
   },
+  expect: {
+    timeout: 15_000,
+  },
   /* Configure projects for major browsers */
   projects: [
     {

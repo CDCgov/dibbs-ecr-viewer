@@ -15,6 +15,9 @@ export const get_pool = async () => {
     options: {
       trustServerCertificate: true,
       connectTimeout: 30000,
+      cryptoCredentialsDetails: {
+        ciphers: process.env.DB_CIPHER,
+      },
     },
   });
 };

@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Table } from "@trussworks/react-uswds";
 import { SortButton } from "@/app/components/SortButton";
 import { EcrDisplay } from "@/app/services/listEcrDataService";
 import { toSentenceCase } from "@/app/services/formatService";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useQueryParam } from "@/app/hooks/useQueryParam";
 import { noData, range } from "../view-data/utils/utils";
 import classNames from "classnames";
 import Link from "next/link";
@@ -31,16 +31,6 @@ type Column = {
 };
 
 type SortHandlerFn = (columnId: string, direction: string) => void;
-
-interface SortPreferences {
-  columnId: string;
-  direction: string;
-}
-
-const defaultPreferences = {
-  columnId: "date_created",
-  direction: "DESC",
-};
 
 const initialHeaders = [
   {
@@ -93,86 +83,36 @@ export const EcrTableClient: React.FC<EcrTableClientProps> = ({
   sortColumn,
   sortDirection,
 }) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
 
-  const [sortPreferences, setSortPreferences] =
-    useState<SortPreferences>(defaultPreferences);
-  const [sortedData, setSortedData] = useState<EcrDisplay[]>(data);
-
-  const [headers, setHeaders] = useState(initialHeaders);
-
-  /**
-   * Updates the URL with the current sort preferences.
-   */
-  useEffect(() => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    current.set("columnId", sortPreferences.columnId.toString());
-    current.set("direction", sortPreferences.direction.toString());
-    const search = current.toString();
-    const query = search ? `?${search}` : "";
-    router.push(`${pathname}${query}`);
-  }, [sortPreferences]);
-
-  /**
-   * Updates the sort config from the server.
-   */
-  useEffect(() => {
-    if (sortColumn) {
-      setHeaders((prevHeaders) =>
-        prevHeaders.map((header) => {
-          if (header.id === sortColumn) {
-            // Toggle sortDirection for the matched column
-            return {
-              ...header,
-              sortDirection:
-                sortDirection ||
-                (header.sortDirection === "ASC" ? "DESC" : "ASC"),
-            };
-          } else {
-            return {
-              ...header,
-              sortDirection: "",
-            };
-          }
-        }),
-      );
-    }
-  }, [sortColumn, sortDirection]);
-
-  /**
-   * Updates the sorted data from the server.
-   */
-  useEffect(() => {
-    setSortedData(data);
-  }, [data]);
-
-  /**
-   * Handles sorting the table data by a given column.
-   * @param columnId - The ID of the column to sort by.
-   * @param direction - The direction to sort by.
-   */
-  const handleSort = (columnId: string, direction: string) => {
-    direction = direction === "ASC" ? "DESC" : "ASC";
-
-    const updatedSortPreferences: SortPreferences = {
-      ...sortPreferences,
-      columnId: columnId,
-      direction: direction,
+  const headers = initialHeaders.map((header) => {
+    return {
+      ...header,
+      sortDirection: header.id === sortColumn ? sortDirection : "",
     };
-    setSortPreferences(updatedSortPreferences);
-    localStorage.setItem(
-      "sortPreferences",
-      JSON.stringify(updatedSortPreferences),
-    );
+  });
+
+  /**
+   * Handles sorting the table data by a given column. We update the search params,
+   * which triggers a re-render of this component with the updated props when the
+   * page gets the new search params.
+   * @param columnId - The ID of the column to sort by.
+   * @param curDirection - The current direction of sort.
+   */
+  const handleSort = (columnId: string, curDirection: string) => {
+    // Flip the sort from the current direction, ASC is default
+    const direction = curDirection === "ASC" ? "DESC" : "ASC";
+
+    updateQueryParam("columnId", columnId);
+    updateQueryParam("direction", direction);
+    pushQueryUpdate();
   };
 
   return (
     <EcrTableStyled headers={headers} handleSort={handleSort}>
-      {sortedData.map((item, index) => {
-        return <DataRow key={index} item={item} />;
-      })}
+      {data.map((item, index) => (
+        <DataRow key={index} item={item} />
+      ))}
     </EcrTableStyled>
   );
 };
@@ -278,7 +218,7 @@ const DataRow = ({ item }: { item: EcrDisplay }) => {
   const patient_first_name = toSentenceCase(item.patient_first_name);
   const patient_last_name = toSentenceCase(item.patient_last_name);
 
-  const searchParams = useSearchParams();
+  const { searchParams } = useQueryParam();
 
   const conditionsList = (
     <ul className="ecr-table-list">

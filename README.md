@@ -1,9 +1,8 @@
 # PRIME Public Health Data Infrastructure (PHDI)
 
-[![codecov](https://codecov.io/gh/CDCgov/phdi/branch/main/graph/badge.svg)](https://codecov.io/gh/CDCgov/phdi)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![codecov](https://codecov.io/gh/CDCgov/dibbs-ecr-viewer/graph/badge.svg?token=J62Y1IH9U6)](https://codecov.io/gh/CDCgov/dibbs-ecr-viewer)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/CDCgov/dibbs-ecr-viewer/main.svg)](https://results.pre-commit.ci/latest/github/CDCgov/dibbs-ecr-viewer/main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Test github badge](https://github.com/CDCgov/phdi/actions/workflows/test.yaml/badge.svg)](https://github.com/CDCgov/phdi/actions/workflows/test.yaml)
 
 - [PRIME Public Health Data Infrastructure (PHDI)](#prime-public-health-data-infrastructure-phdi)
   - [Overview](#overview)
