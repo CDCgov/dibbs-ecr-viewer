@@ -7,13 +7,6 @@ import {
 import { Accordion, Tag } from "@trussworks/react-uswds";
 import { AccordionItemProps } from "@/app/components/AccordionContainer";
 import { toKebabCase } from "../../services/formatService";
-import {
-  evaluateEcrSummaryConditionSummary,
-  evaluateEcrSummaryEncounterDetails,
-  evaluateEcrSummaryPatientDetails,
-} from "../../services/ecrSummaryService";
-import { Bundle } from "fhir/r4";
-import { PathMappings } from "../utils/utils";
 
 interface EcrSummaryProps {
   patientDetails: DisplayDataProps[];
@@ -30,41 +23,6 @@ export interface ConditionSummary {
   labDetails: DisplayDataProps[];
   immunizationDetails: DisplayDataProps[];
 }
-
-/**
- * outer ECR summary to hide evaluation
- * @param params react params
- * @param params.fhirBundle fhir bundle content
- * @param params.mappings fhir paths
- * @param params.snomedCode snomed code
- * @returns ecr summary
- */
-export const EcrSummaryOuter = ({
-  fhirBundle,
-  mappings,
-  snomedCode,
-}: {
-  fhirBundle: Bundle;
-  mappings: PathMappings;
-  snomedCode: string;
-}) => {
-  return (
-    <EcrSummary
-      patientDetails={
-        evaluateEcrSummaryPatientDetails(fhirBundle, mappings).availableData
-      }
-      encounterDetails={
-        evaluateEcrSummaryEncounterDetails(fhirBundle, mappings).availableData
-      }
-      conditionSummary={evaluateEcrSummaryConditionSummary(
-        fhirBundle,
-        mappings,
-        snomedCode,
-      )}
-      snomed={snomedCode}
-    />
-  );
-};
 
 /**
  * Generates a JSX element to display eCR viewer summary

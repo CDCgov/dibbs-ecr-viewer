@@ -10,8 +10,13 @@ import { ECRViewerLayout } from "./components/ECRViewerLayout";
 
 import { Grid, GridContainer } from "@trussworks/react-uswds";
 
-import { EcrSummaryOuter } from "./components/EcrSummary";
+import EcrSummary from "./components/EcrSummary";
 import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
+import {
+  evaluateEcrSummaryConditionSummary,
+  evaluateEcrSummaryEncounterDetails,
+  evaluateEcrSummaryPatientDetails,
+} from "../services/ecrSummaryService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -79,10 +84,21 @@ const ECRViewerPage = async ({
               glance
             </div>
           </div>
-          <EcrSummaryOuter
-            fhirBundle={fhirBundle}
-            mappings={mappings}
-            snomedCode={snomedCode}
+          <EcrSummary
+            patientDetails={
+              evaluateEcrSummaryPatientDetails(fhirBundle, mappings)
+                .availableData
+            }
+            encounterDetails={
+              evaluateEcrSummaryEncounterDetails(fhirBundle, mappings)
+                .availableData
+            }
+            conditionSummary={evaluateEcrSummaryConditionSummary(
+              fhirBundle,
+              mappings,
+              snomedCode,
+            )}
+            snomed={snomedCode}
           />
           <div className="margin-top-10">
             <GridContainer className={"padding-0 margin-bottom-3 maxw-none"}>
