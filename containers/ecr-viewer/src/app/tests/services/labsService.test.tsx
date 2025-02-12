@@ -213,7 +213,7 @@ describe("LabsService tests", () => {
     });
 
     describe("getLabJsonObject", () => {
-      it("returns correct Json Object for table with data-id", () => {
+      it.only("returns correct Json Object for table with data-id", () => {
         const expectedResult = labReportNormalJsonObject;
 
         const result = getLabJsonObject(

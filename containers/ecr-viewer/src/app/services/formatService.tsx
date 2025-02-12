@@ -3,7 +3,7 @@ import { ToolTipElement } from "@/app/view-data/components/ToolTipElement";
 import { Address, ContactPoint, HumanName } from "fhir/r4";
 import sanitizeHtml from "sanitize-html";
 import { RenderableNode, safeParse } from "../view-data/utils/utils";
-import { parse } from "node-html-parser";
+import { parse, HTMLElement, Node, NodeType } from "node-html-parser";
 
 interface Metadata {
   [key: string]: string;
@@ -370,14 +370,14 @@ export const toKebabCase = (input: string): string => {
  * @param li - The HTML element to search for the first non-comment child node.
  * @returns - The first non-comment child node, or `null` if none is found.
  */
-export function getFirstNonCommentChild(
-  li: HTMLElement | Element,
-): ChildNode | null {
+export function getFirstNonCommentChild(li: HTMLElement): Node | null {
   for (let i = 0; i < li.childNodes.length; i++) {
     const node = li.childNodes[i];
-    if (node.nodeType !== Node.COMMENT_NODE) {
-      return node; // Return the first non-comment node
-    }
+    if (node.nodeType === NodeType.COMMENT_NODE) continue;
+    if (node.nodeType === NodeType.TEXT_NODE && node.textContent.trim() === "")
+      continue;
+
+    return node; // Return the first non-comment node
   }
   return null; // Return null if no non-comment node is found
 }
@@ -387,7 +387,7 @@ export function getFirstNonCommentChild(
  * @param elem - The element to search for the `data-id`.
  * @returns  - The extracted `data-id` value if found, otherwise `null`.
  */
-export function getDataId(elem: HTMLLIElement | HTMLTableElement | Element) {
+export function getDataId(elem: HTMLElement | HTMLTableElement | Element) {
   if (elem.getAttribute("data-id")) {
     return elem.getAttribute("data-id");
   } else if (elem.id) {
@@ -410,6 +410,7 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
   // looking for specific patterns. The data is sanitized as it's pulled out.
   const doc = parse(htmlString);
   const jsonArray: any[] = [];
+  console.log({ htmlString, doc });
 
   // <li>{name}<table/></li> OR <list><item>{name}<table /></item></list>
   const liArray = doc.querySelectorAll("li, list > item");
@@ -419,6 +420,7 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
       const resultId = getDataId(li);
       const firstChildNode = getFirstNonCommentChild(li);
       const resultName = firstChildNode ? getElementText(firstChildNode) : "";
+      console.log({ li, resultId, firstChildNode, resultName });
       li.querySelectorAll("table").forEach((table) => {
         tables.push(processTable(table));
       });
@@ -429,11 +431,12 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
   }
 
   // <table><caption>{name}</caption></table>
-  const tableWithCaptionArray: NodeListOf<HTMLTableElement> =
+  const tableWithCaptionArray: HTMLElement[] =
     doc.querySelectorAll("table:has(caption)");
   if (tableWithCaptionArray.length > 0) {
     tableWithCaptionArray.forEach((table) => {
-      const resultName = getElementText(table.caption as Element);
+      const caption = table.childNodes.find((n) => n.rawTagName === "caption");
+      const resultName = getElementText(caption as HTMLElement);
       const resultId = getDataId(table) ?? undefined;
       jsonArray.push({ resultId, resultName, tables: [processTable(table)] });
     });
@@ -486,7 +489,7 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
  * @param table - The HTML table element to be processed.
  * @returns - An array of JSON objects representing the rows and cells of the table.
  */
-function processTable(table: Element): TableRow[] {
+function processTable(table: HTMLElement): TableRow[] {
   const jsonArray: any[] = [];
   const rows = table.querySelectorAll("tr");
   const keys: string[] = [];
@@ -510,10 +513,9 @@ function processTable(table: Element): TableRow[] {
 
       const metadata: Metadata = {};
       const attributes = cell.attributes || [];
-      console.log({ cell, attributes });
       for (const [attrName, attrValue] of Object.entries(attributes)) {
         if (attrName && attrValue) {
-          metadata[attrName] = attrValue.toString();
+          metadata[attrName.toLowerCase()] = attrValue.toString();
         }
       }
       let value = getElementContent(cell);
@@ -539,8 +541,8 @@ function processTable(table: Element): TableRow[] {
  * @example @param el - <paragraph><!-- comment -->Values <content>here</content></paragraph>
  * @example @returns - <p>Values <span>here</span></p>
  */
-function getElementContent(el: Element | Node): RenderableNode {
-  const rawValue = (el as Element)?.innerHTML ?? el.textContent;
+function getElementContent(el: Node): RenderableNode {
+  const rawValue = (el as HTMLElement)?.innerHTML ?? el.textContent;
   const value = rawValue?.trim() ?? "";
   if (value === "") return value;
   let res = safeParse(value);
@@ -554,7 +556,7 @@ function getElementContent(el: Element | Node): RenderableNode {
  * @example @param el - <paragraph><!-- comment -->Values <content>here</content></paragraph>
  * @example @returns - 'Values here'
  */
-function getElementText(el: Element | Node): string {
+function getElementText(el: Node): string {
   return el.textContent?.trim() ?? "";
 }
 
