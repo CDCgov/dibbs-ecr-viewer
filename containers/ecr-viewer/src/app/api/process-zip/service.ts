@@ -52,7 +52,7 @@ const getOrchestrationResponse = async (file: File): Promise<BundleInfo> => {
   formData.append("data_type", "zip");
   formData.append("upload_file", file);
 
-  const response = await fetch("http://localhost:8080/process-zip", {
+  const response = await fetch(`${process.env.ORCHESTRATION_URL}/process-zip`, {
     method: "post",
     body: formData,
   });
