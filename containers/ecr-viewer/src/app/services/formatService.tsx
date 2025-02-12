@@ -410,7 +410,6 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
   // looking for specific patterns. The data is sanitized as it's pulled out.
   const doc = parse(htmlString);
   const jsonArray: any[] = [];
-  console.log({ htmlString, doc });
 
   // <li>{name}<table/></li> OR <list><item>{name}<table /></item></list>
   const liArray = doc.querySelectorAll("li, list > item");
@@ -420,7 +419,6 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
       const resultId = getDataId(li);
       const firstChildNode = getFirstNonCommentChild(li);
       const resultName = firstChildNode ? getElementText(firstChildNode) : "";
-      console.log({ li, resultId, firstChildNode, resultName });
       li.querySelectorAll("table").forEach((table) => {
         tables.push(processTable(table));
       });
