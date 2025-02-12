@@ -991,9 +991,8 @@ exports[`EcrTable should match snapshot 1`] = `
               Last-1
             </a>
             <br />
-            <div>
-              DOB: 2000-01-01
-            </div>
+            DOB: 
+            2000-01-01
           </td>
           <td>
             2021-01-01
@@ -1039,10 +1038,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-2
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              1
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-02
-            </div>
+            DOB: 
+            2000-01-02
           </td>
           <td>
             2021-01-02
@@ -1084,10 +1088,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-3
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              2
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-03
-            </div>
+            DOB: 
+            2000-01-03
           </td>
           <td>
             2021-01-03
@@ -1129,10 +1138,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-4
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              3
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-04
-            </div>
+            DOB: 
+            2000-01-04
           </td>
           <td>
             2021-01-04
@@ -1174,10 +1188,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-5
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              4
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-05
-            </div>
+            DOB: 
+            2000-01-05
           </td>
           <td>
             2021-01-05
@@ -1219,10 +1238,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-6
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              5
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-06
-            </div>
+            DOB: 
+            2000-01-06
           </td>
           <td>
             2021-01-06
@@ -1264,10 +1288,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-7
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              6
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-07
-            </div>
+            DOB: 
+            2000-01-07
           </td>
           <td>
             2021-01-07
@@ -1309,10 +1338,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-8
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              7
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-08
-            </div>
+            DOB: 
+            2000-01-08
           </td>
           <td>
             2021-01-08
@@ -1354,10 +1388,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-9
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              8
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-09
-            </div>
+            DOB: 
+            2000-01-09
           </td>
           <td>
             2021-01-09
@@ -1399,10 +1438,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-10
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              9
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-01
-            </div>
+            DOB: 
+            2000-01-01
           </td>
           <td>
             2021-01-01
@@ -1444,10 +1488,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-11
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              10
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-02
-            </div>
+            DOB: 
+            2000-01-02
           </td>
           <td>
             2021-01-02
@@ -1489,10 +1538,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-12
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              11
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-03
-            </div>
+            DOB: 
+            2000-01-03
           </td>
           <td>
             2021-01-03
@@ -1534,10 +1588,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-13
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              12
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-04
-            </div>
+            DOB: 
+            2000-01-04
           </td>
           <td>
             2021-01-04
@@ -1579,10 +1638,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-14
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              13
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-05
-            </div>
+            DOB: 
+            2000-01-05
           </td>
           <td>
             2021-01-05
@@ -1624,10 +1688,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-15
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              14
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-06
-            </div>
+            DOB: 
+            2000-01-06
           </td>
           <td>
             2021-01-06
@@ -1669,10 +1738,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-16
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              15
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-07
-            </div>
+            DOB: 
+            2000-01-07
           </td>
           <td>
             2021-01-07
@@ -1714,10 +1788,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-17
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              16
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-08
-            </div>
+            DOB: 
+            2000-01-08
           </td>
           <td>
             2021-01-08
@@ -1759,10 +1838,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-18
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              17
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-09
-            </div>
+            DOB: 
+            2000-01-09
           </td>
           <td>
             2021-01-09
@@ -1804,10 +1888,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-19
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              18
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-01
-            </div>
+            DOB: 
+            2000-01-01
           </td>
           <td>
             2021-01-01
@@ -1849,10 +1938,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-20
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              19
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-02
-            </div>
+            DOB: 
+            2000-01-02
           </td>
           <td>
             2021-01-02
@@ -1894,10 +1988,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-21
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              20
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-03
-            </div>
+            DOB: 
+            2000-01-03
           </td>
           <td>
             2021-01-03
@@ -1939,10 +2038,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-22
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              21
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-04
-            </div>
+            DOB: 
+            2000-01-04
           </td>
           <td>
             2021-01-04
@@ -1984,10 +2088,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-23
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              22
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-05
-            </div>
+            DOB: 
+            2000-01-05
           </td>
           <td>
             2021-01-05
@@ -2029,10 +2138,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-24
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              23
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-06
-            </div>
+            DOB: 
+            2000-01-06
           </td>
           <td>
             2021-01-06
@@ -2074,10 +2188,15 @@ exports[`EcrTable should match snapshot 1`] = `
                
               Last-25
             </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              24
+            </span>
             <br />
-            <div>
-              DOB: 2000-01-07
-            </div>
+            DOB: 
+            2000-01-07
           </td>
           <td>
             2021-01-07

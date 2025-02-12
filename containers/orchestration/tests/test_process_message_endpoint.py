@@ -17,10 +17,10 @@ test_config_path = (
 
 fhir_bundle_path = Path(__file__).parent / "assets" / "patient_bundle.json"
 
-with open(fhir_bundle_path, "r") as file:
+with open(fhir_bundle_path) as file:
     fhir_bundle = json.load(file)
 
-with open(test_config_path, "r") as file:
+with open(test_config_path) as file:
     test_config = json.load(file)
 
 

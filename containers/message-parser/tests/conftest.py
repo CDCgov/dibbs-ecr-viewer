@@ -15,7 +15,7 @@ def read_json_from_test_assets():
         """
         Reads a JSON file from the test assets directory.
         """
-        with open((Path(__file__).parent / "assets" / filename), "r") as file:
+        with open(Path(__file__).parent / "assets" / filename) as file:
             return json.load(file)
 
     return _read_json
@@ -35,7 +35,6 @@ def read_json_from_phdi_test_assets():
                 / "general"
                 / filename
             ),
-            "r",
         ) as file:
             return json.load(file)
 
@@ -48,7 +47,7 @@ def read_file_from_test_assets():
         """
         Reads a file from the test assets directory.
         """
-        with open((Path(__file__).parent / "assets" / filename), "r") as file:
+        with open(Path(__file__).parent / "assets" / filename) as file:
             return file.read()
 
     return _read_file
@@ -60,7 +59,7 @@ def parse_file_from_test_assets():
         """
         Parses a file from the assets directory into an ElementTree.
         """
-        with open((Path(__file__).parent / "assets" / filename), "r") as file:
+        with open(Path(__file__).parent / "assets" / filename) as file:
             parser = (
                 ET.XMLParser()
             )  # Adjust as necessary; removed `remove_blank_text=True` for compatibility
@@ -77,7 +76,7 @@ def read_schema_from_default_schemas():
         Reads a JSON schema from the default schemas directory.
         """
         with open(
-            (Path(__file__).parent.parent / "app" / "default_schemas" / filename), "r"
+            Path(__file__).parent.parent / "app" / "default_schemas" / filename
         ) as file:
             return json.load(file)
 

@@ -6,9 +6,7 @@ import re
 import uuid
 
 import pytest
-from sqlalchemy import Select
-from sqlalchemy import select
-from sqlalchemy import text
+from sqlalchemy import Select, select, text
 
 from phdi.linkage.dal import DataAccessLayer
 from phdi.linkage.mpi import DIBBsMPIConnectorClient

@@ -1,10 +1,12 @@
 import pathlib
 
-from app.main import app
-from app.main import validate_ecr_msg
-from app.main import validate_elr_msg
-from app.main import validate_fhir_bundle
-from app.main import validate_vxu_msg
+from app.main import (
+    app,
+    validate_ecr_msg,
+    validate_elr_msg,
+    validate_fhir_bundle,
+    validate_vxu_msg,
+)
 from fastapi.testclient import TestClient
 
 client = TestClient(app)

@@ -1,18 +1,13 @@
 import json
-from datetime import datetime
-from datetime import timezone
-from typing import List
-from typing import Literal
-from typing import Union
+from datetime import datetime, timezone
+from typing import Literal, Union
 
 from azure.core.credentials import AccessToken
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-from azure.storage.blob import BlobServiceClient
-from azure.storage.blob import ContainerClient
+from azure.storage.blob import BlobServiceClient, ContainerClient
 
-from phdi.cloud.core import BaseCloudStorageConnection
-from phdi.cloud.core import BaseCredentialManager
+from phdi.cloud.core import BaseCloudStorageConnection, BaseCredentialManager
 
 
 class AzureCredentialManager(BaseCredentialManager):
@@ -192,7 +187,7 @@ class AzureCloudContainerConnection(BaseCloudStorageConnection):
         elif isinstance(message, dict):
             blob_client.upload_blob(json.dumps(message).encode("utf-8"), overwrite=True)
 
-    def list_containers(self) -> List[str]:
+    def list_containers(self) -> list[str]:
         """
         Lists names for this CloudContainerConnection's containers.
 
@@ -210,7 +205,7 @@ class AzureCloudContainerConnection(BaseCloudStorageConnection):
 
         return container_name_list
 
-    def list_objects(self, container_name: str, prefix: str = "") -> List[str]:
+    def list_objects(self, container_name: str, prefix: str = "") -> list[str]:
         """
         Lists names for objects within a container.
 

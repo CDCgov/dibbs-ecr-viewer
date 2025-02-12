@@ -1,7 +1,6 @@
 from functools import lru_cache
 
-from pydantic import BaseSettings
-from pydantic import Field
+from pydantic import BaseSettings, Field
 
 
 class Settings(BaseSettings):
@@ -16,7 +15,7 @@ class Settings(BaseSettings):
     )
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     """
     Load the values specified in the Settings class from the environment and return a

@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     trigger_code_reference_url: str
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> dict:
     """
     Load the values specified in the Settings class from the environment and return a

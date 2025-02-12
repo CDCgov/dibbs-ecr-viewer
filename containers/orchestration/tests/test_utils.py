@@ -5,10 +5,12 @@ from unittest.mock import Mock
 from zipfile import ZipFile
 
 import pytest
-from app.utils import _combine_response_bundles
-from app.utils import load_processing_config
-from app.utils import replace_env_var_placeholders
-from app.utils import search_for_ecr_data
+from app.utils import (
+    _combine_response_bundles,
+    load_processing_config,
+    replace_env_var_placeholders,
+    search_for_ecr_data,
+)
 from fastapi import Response
 
 
@@ -16,7 +18,7 @@ def test_load_processing_config_success():
     test_config_path = (
         Path(__file__).parent.parent / "app" / "default_configs" / "test_config.json"
     )
-    with open(test_config_path, "r") as file:
+    with open(test_config_path) as file:
         test_config = json.load(file)
 
     config = load_processing_config("test_config.json")

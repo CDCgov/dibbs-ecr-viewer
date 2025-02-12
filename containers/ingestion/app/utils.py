@@ -1,17 +1,12 @@
 import json
 import pathlib
-from typing import Optional
-from typing import Union
+from typing import Optional, Union
 
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import root_validator
+from pydantic import BaseModel, Field, root_validator
 
-from app.cloud.azure import AzureCloudContainerConnection
-from app.cloud.azure import AzureCredentialManager
+from app.cloud.azure import AzureCloudContainerConnection, AzureCredentialManager
 from app.cloud.core import BaseCredentialManager
-from app.cloud.gcp import GcpCloudStorageConnection
-from app.cloud.gcp import GcpCredentialManager
+from app.cloud.gcp import GcpCloudStorageConnection, GcpCredentialManager
 from app.config import get_settings
 
 
@@ -75,9 +70,9 @@ def check_for_fhir_bundle(value: dict) -> dict:
     :return: The dictionary originally passed in as 'value'
     """
 
-    assert (
-        value.get("resourceType") == "Bundle"
-    ), "Must provide a FHIR resource or bundle"  # noqa
+    assert value.get("resourceType") == "Bundle", (
+        "Must provide a FHIR resource or bundle"
+    )  # noqa
     return value
 
 
@@ -176,4 +171,4 @@ def read_json_from_assets(filename: str):
     :param filename: The name of the JSON file to be loaded.
     :return: The content of the JSON file as a dictionary.
     """
-    return json.load(open((pathlib.Path(__file__).parent.parent / "assets" / filename)))
+    return json.load(open(pathlib.Path(__file__).parent.parent / "assets" / filename))
