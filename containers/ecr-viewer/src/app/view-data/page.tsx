@@ -1,22 +1,21 @@
-import AccordionContent from "@/app/view-data/components/AccordionContent";
 import React from "react";
 import { Bundle } from "fhir/r4";
-import { PathMappings } from "./utils/utils";
-import SideNav from "./components/SideNav";
-import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
-import { EcrLoadingSkeleton } from "./components/LoadingComponent";
-import RetrievalFailed from "./retrieval-failed";
-import { ECRViewerLayout } from "./components/ECRViewerLayout";
-
 import { Grid, GridContainer } from "@trussworks/react-uswds";
 
-import EcrSummary from "./components/EcrSummary";
 import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
 } from "../services/ecrSummaryService";
+import { PathMappings } from "./utils/utils";
+import AccordionContent from "@/app/view-data/components/AccordionContent";
+import { EcrLoadingSkeleton } from "./components/LoadingComponent";
+import { ECRViewerLayout } from "./components/ECRViewerLayout";
+import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
+import EcrSummary from "./components/EcrSummary";
+import RetrievalFailed from "./retrieval-failed";
+import SideNav from "./components/SideNav";
 
 /**
  * Functional component for rendering the eCR Viewer page.
