@@ -82,4 +82,58 @@ describe("processZip", () => {
       status: 500,
     });
   });
+
+  describe("orchestrationConfig", () => {
+    let appendMock: jest.SpyInstance;
+
+    beforeEach(() => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [
+              { stamped_ecr: { extended_bundle: mockEcr } },
+              { metadata_values: mockMetadata },
+            ],
+          },
+        }),
+      });
+      appendMock = jest.spyOn(FormData.prototype, "append");
+      process.env.NON_INTEGRATED_VIEWER = "false";
+      process.env.METADATA_DATABASE_SCHEMA = undefined;
+    });
+    it("should use bundle-only.json when non_integrated_viewer is false ", async () => {
+      process.env.NON_INTEGRATED_VIEWER = "false";
+      process.env.METADATA_DATABASE_SCHEMA = undefined;
+
+      await processZip(mockFile);
+
+      expect(appendMock).toHaveBeenCalledWith(
+        "config_file_name",
+        "bundle-only.json",
+      );
+    });
+    it("should use bundle-metadata-extended.json when non_integrated_viewer is true and metadata is extended ", async () => {
+      process.env.NON_INTEGRATED_VIEWER = "true";
+      process.env.METADATA_DATABASE_SCHEMA = "extended";
+
+      await processZip(mockFile);
+
+      expect(appendMock).toHaveBeenCalledWith(
+        "config_file_name",
+        "bundle-metadata-extended.json",
+      );
+    });
+    it("should use bundle-metadata-core.json when non_integrated_viewer is true and metadata is core ", async () => {
+      process.env.NON_INTEGRATED_VIEWER = "true";
+      process.env.METADATA_DATABASE_SCHEMA = "core";
+
+      await processZip(mockFile);
+
+      expect(appendMock).toHaveBeenCalledWith(
+        "config_file_name",
+        "bundle-metadata-core.json",
+      );
+    });
+  });
 });
