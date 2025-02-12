@@ -41,6 +41,7 @@ export const FieldValue: React.FC<{
     </>
   );
 };
+
 /**
  * Recursively determine the character length of a ReactNode
  * @param value - react node to be measured
@@ -58,6 +59,7 @@ const getReactNodeLength = (value: React.ReactNode): number => {
   }
   return 0;
 };
+
 /**
  * Create an element with `remainingLength` length followed by a view more button
  * @param value - the value that will be cut
