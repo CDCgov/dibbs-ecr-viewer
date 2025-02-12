@@ -10,12 +10,12 @@ import React, {
 import { Button } from "@trussworks/react-uswds";
 import { Autorenew, Coronavirus, Event } from "@/app/components/Icon";
 import {
-  useQueryParam,
   Filter,
   RadioDateOption,
   RadioDateOptions,
   CustomDateInput,
 } from "@/app/components/BaseFilter";
+import { useQueryParam } from "@/app/hooks/useQueryParam";
 import {
   CustomDateRangeOption,
   DEFAULT_DATE_RANGE,

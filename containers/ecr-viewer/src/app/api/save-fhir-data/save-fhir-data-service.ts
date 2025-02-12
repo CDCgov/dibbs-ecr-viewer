@@ -2,7 +2,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 import { getDB } from "../services/postgres_db";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
-import { S3_SOURCE, AZURE_SOURCE, POSTGRES_SOURCE } from "@/app/api/utils";
+import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import sql from "mssql";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
@@ -13,45 +13,6 @@ interface SaveResponse {
   message: string;
   status: number;
 }
-
-/**
- * Saves a FHIR bundle to a postgres database.
- * @async
- * @function saveToPostgres
- * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @returns An object containing the status and message.
- */
-export const saveToPostgres = async (
-  fhirBundle: Bundle,
-  ecrId: string,
-): Promise<SaveResponse> => {
-  const { database, pgPromise } = getDB();
-  const { ParameterizedQuery: PQ } = pgPromise;
-  const addFhir = new PQ({
-    text: "INSERT INTO fhir VALUES ($1, $2)",
-    values: [ecrId, fhirBundle],
-  });
-
-  try {
-    await database.none(addFhir);
-
-    return {
-      message: "Success. Saved FHIR bundle.",
-      status: 200,
-    };
-  } catch (error: any) {
-    console.error({
-      message: `Failed to save FHIR bundle to postgres.`,
-      error,
-      ecrId,
-    });
-    return {
-      message: "Failed to save FHIR bundle.",
-      status: 500,
-    };
-  }
-};
 
 /**
  * Saves a FHIR bundle to an AWS S3 bucket.
@@ -156,7 +117,7 @@ export const saveToAzure = async (
  * @function saveFhirData
  * @param fhirBundle - The FHIR bundle to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @param saveSource - The location to save the FHIR bundle. Valid values are "postgres", "s3", or "azure".
+ * @param saveSource - The location to save the FHIR bundle.
  * @returns An object containing the status and message.
  */
 export const saveFhirData = async (
@@ -168,12 +129,10 @@ export const saveFhirData = async (
     return await saveToS3(fhirBundle, ecrId);
   } else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(fhirBundle, ecrId);
-  } else if (saveSource === POSTGRES_SOURCE) {
-    return await saveToPostgres(fhirBundle, ecrId);
   } else {
     return {
       message:
-        'Invalid save source. Please provide a valid value for \'saveSource\' ("postgres", "s3", or "azure").',
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", or "azure").',
       status: 400,
     };
   }
@@ -250,10 +209,6 @@ export const saveMetadataToSqlServer = async (
         .input("gender_identity", sql.VarChar(50), metadata.gender_identity)
         .input("race", sql.VarChar(255), metadata.race)
         .input("ethnicity", sql.VarChar(255), metadata.ethnicity)
-        .input("street_address1", sql.VarChar(255), metadata.street_address1)
-        .input("street_address2", sql.VarChar(255), metadata.street_address2)
-        .input("state", sql.VarChar(50), metadata.state)
-        .input("zip_code", sql.VarChar(20), metadata.zip)
         .input("latitude", sql.Float, metadata.latitude)
         .input("longitude", sql.Float, metadata.longitude)
         .input(
@@ -324,8 +279,33 @@ export const saveMetadataToSqlServer = async (
           metadata.active_problems,
         )
         .query(
-          "INSERT INTO dbo.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, street_address_1, street_address_2, state, zip_code, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @street_address1, @street_address2, @state, @zip_code, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
+          "INSERT INTO dbo.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
         );
+
+      if (metadata.patient_addresses) {
+        for (const address of metadata.patient_addresses) {
+          console.log(address);
+          const patient_address_uuid = randomUUID();
+          const addressInsertRequest = new sql.Request(transaction);
+          await addressInsertRequest
+            .input("UUID", sql.VarChar(200), patient_address_uuid)
+            .input("use", sql.VarChar(7), address.use)
+            .input("type", sql.VarChar(8), address.type)
+            .input("text", sql.VarChar(sql.MAX), address.text)
+            .input("line", sql.VarChar(sql.MAX), address.line)
+            .input("city", sql.VarChar(255), address.city)
+            .input("district", sql.VarChar(255), address.district)
+            .input("state", sql.VarChar(255), address.state)
+            .input("postal_code", sql.VarChar(20), address.postal_code)
+            .input("country", sql.VarChar(255), address.country)
+            .input("period_start", sql.DateTime, address.period_start)
+            .input("period_end", sql.DateTime, address.period_end)
+            .input("eICR_ID", sql.VarChar(200), ecrId)
+            .query(
+              "INSERT INTO dbo.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
+            );
+        }
+      }
 
       if (metadata.labs) {
         for (const lab of metadata.labs) {
@@ -557,7 +537,7 @@ export const saveMetadataToPostgres = async (
  * @function saveWithMetadata
  * @param fhirBundle - The FHIR bundle to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @param saveSource - The location to save the FHIR bundle. Valid values are "postgres", "s3", or "azure".
+ * @param saveSource - The location to save the FHIR bundle.
  * @param metadata - The metadata to be saved with the FHIR bundle.
  * @returns An object containing the status and message.
  */

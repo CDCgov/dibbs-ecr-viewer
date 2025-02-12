@@ -11,10 +11,6 @@ CREATE TABLE ECR_DATA
     gender_identity          VARCHAR(50),
     race                     VARCHAR(255),
     ethnicity                VARCHAR(255),
-    street_address_1         VARCHAR(255),
-    street_address_2         VARCHAR(255),
-    state                    VARCHAR(50),
-    zip_code                 VARCHAR(20),
     latitude                 FLOAT,
     longitude                FLOAT,
     homelessness_status      VARCHAR(255),
@@ -42,6 +38,23 @@ CREATE TABLE ECR_DATA
     active_problems          VARCHAR(MAX),
     date_created DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
 );
+
+CREATE TABLE patient_address
+(
+    UUID VARCHAR(200) PRIMARY KEY,
+    [use]  VARCHAR(7), -- The valid values are: "home" | "work" | "temp" | "old" | "billing"
+    type VARCHAR(8), -- The valid values are: "postal" | "physical" | "both"
+    text VARCHAR(MAX),
+    line VARCHAR(255),
+    city VARCHAR(255),
+    district VARCHAR(255),
+    state VARCHAR(255),
+    postal_code VARCHAR(20),
+    country VARCHAR(255),
+    period_start DATETIMEOFFSET,
+    period_end DATETIMEOFFSET,
+    eICR_ID VARCHAR(200) REFERENCES ECR_DATA (eICR_ID)
+)
 
 CREATE TABLE ecr_rr_conditions
 (

@@ -53,7 +53,7 @@
             "title": "Encounters",
             "text": {
               "status": "generated",
-              "div": "<table><thead><tr><th>Encounter<\/th><th>Date(s)<\/th><th>Location<\/th><\/tr><\/thead><tbody><tr><!-- data-id: id_fd7ee2ec-4d8e-4169-aeb6-836731cc7201_ref --><td>Office outpatient visit 15 minutes<\/td><td>05/13/2020<\/td><td>Houston Urgent Care Clinic<\/td><\/tr><tr><td><ul><li><table><thead><tr><\/tr><\/thead><tbody><tr><\/tr><\/tbody><\/table><\/li><\/ul><\/td><\/tr><\/tbody><\/table>"
+              "div": "<table><thead><tr><th>Encounter</th><th>Date(s)</th><th>Location</th></tr></thead><tbody><tr><!-- data-id: id_fd7ee2ec-4d8e-4169-aeb6-836731cc7201_ref --><td>Office outpatient visit 15 minutes</td><td>05/13/2020</td><td>Houston Urgent Care Clinic</td></tr><tr><td><ul><li><table><thead><tr></tr></thead><tbody><tr></tr></tbody></table></li></ul></td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -142,7 +142,7 @@
             "title": "Results",
             "text": {
               "status": "generated",
-              "div": "<table><thead><tr><th>Results Panel<\/th><th>Date(s)<\/th><\/tr><\/thead><tbody><tr><!-- data-id: id_2047cca3-559f-45da-8775-406538fa4815_ref --><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection<\/td><td><\/td><\/tr><tr><td><ul><li><paragraph>*** In the table below, row entries with values under RCTC columns triggered this Electronic Initial Case Report (eICR)<\/paragraph><table><thead><tr><th>Test<\/th><th>Lab Test RCTC OID ***<\/th><th>Lab Test RCTC Version ***<\/th><th>Outcome<\/th><th>Date(s)<\/th><th>Lab Result RCTC OID ***<\/th><th>Lab Result RCTC Version ***<\/th><\/tr><\/thead><tbody><tr><!-- data-id: id_9890e2c3-019a-4168-8403-a0a069994440_ref --><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection<\/td><td>2.16.840.1.114222.4.11.7508<\/td><td>20200429<\/td><td>Detected (qualifier value)<\/td><td>05/13/2020<\/td><td><\/td><td><\/td><\/tr><\/tbody><\/table><\/li><\/ul><\/td><\/tr><\/tbody><\/table>"
+              "div": "<table><thead><tr><th>Results Panel</th><th>Date(s)</th></tr></thead><tbody><tr><!-- data-id: id_2047cca3-559f-45da-8775-406538fa4815_ref --><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection</td><td></td></tr><tr><td><ul><li><paragraph>*** In the table below, row entries with values under RCTC columns triggered this Electronic Initial Case Report (eICR)</paragraph><table><thead><tr><th>Test</th><th>Lab Test RCTC OID ***</th><th>Lab Test RCTC Version ***</th><th>Outcome</th><th>Date(s)</th><th>Lab Result RCTC OID ***</th><th>Lab Result RCTC Version ***</th></tr></thead><tbody><tr><!-- data-id: id_9890e2c3-019a-4168-8403-a0a069994440_ref --><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection</td><td>2.16.840.1.114222.4.11.7508</td><td>20200429</td><td>Detected (qualifier value)</td><td>05/13/2020</td><td></td><td></td></tr></tbody></table></li></ul></td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -165,7 +165,7 @@
             "title": "Plan of Treatment",
             "text": {
               "status": "generated",
-              "div": "<paragraph>*** In the table below, row entries with values under RCTC columns triggered this Electronic Initial Case Report (eICR)<\/paragraph><table><thead><tr><th>Lab Test Order<\/th><th>Code<\/th><th>CodeSystem<\/th><th>RCTC OID ***<\/th><th>RCTC Version ***<\/th><th>Ordered Date<\/th><\/tr><\/thead><tbody><tr><!-- data-id: id_35e51f68-1d48-43e8-bcfd-769b007104e8_ref --><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection<\/td><td>94310-0<\/td><td>LOINC<\/td><td><\/td><td><\/td><td>05/13/2020<\/td><\/tr><\/tbody><\/table>"
+              "div": "<paragraph>*** In the table below, row entries with values under RCTC columns triggered this Electronic Initial Case Report (eICR)</paragraph><table><thead><tr><th>Lab Test Order</th><th>Code</th><th>CodeSystem</th><th>RCTC OID ***</th><th>RCTC Version ***</th><th>Ordered Date</th></tr></thead><tbody><tr><!-- data-id: id_35e51f68-1d48-43e8-bcfd-769b007104e8_ref --><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection</td><td>94310-0</td><td>LOINC</td><td></td><td></td><td>05/13/2020</td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -183,7 +183,7 @@
             "title": "Social History",
             "text": {
               "status": "generated",
-              "div": "<table><thead><tr><th>Birth Sex<\/th><th>Value<\/th><th>Date<\/th><\/tr><\/thead><tbody><tr><td>Sex Assigned At Birth<\/td><td>Female<\/td><td>10/02/1990<\/td><\/tr><\/tbody><\/table><table><thead><tr><th>Social History Observation Type<\/th><th>Value<\/th><th>Dates(s)<\/th><\/tr><\/thead><tbody><tr><!-- data-id: id_799478b3-a3af-4bfe-8501-fb832a3a4645_ref --><td>Occupation / Employment details<\/td><td>Postsecondary teachers<\/td><td><\/td><\/tr><tr><td>Pregnancy Status<\/td><td>No<\/td><td><\/td><\/tr><\/tbody><\/table>"
+              "div": "<table><thead><tr><th>Birth Sex</th><th>Value</th><th>Date</th></tr></thead><tbody><tr><td>Sex Assigned At Birth</td><td>Female</td><td>10/02/1990</td></tr></tbody></table><table><thead><tr><th>Social History Observation Type</th><th>Value</th><th>Dates(s)</th></tr></thead><tbody><tr><!-- data-id: id_799478b3-a3af-4bfe-8501-fb832a3a4645_ref --><td>Occupation / Employment details</td><td>Postsecondary teachers</td><td></td></tr><tr><td>Pregnancy Status</td><td>No</td><td></td></tr></tbody></table>"
             },
             "code": {
               "coding": [
@@ -201,7 +201,7 @@
             "title": "Reportability Response Information Section",
             "text": {
               "status": "generated",
-              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Reportability Response Information Section<\/div>"
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Reportability Response Information Section</div>"
             },
             "extension": [
               {
