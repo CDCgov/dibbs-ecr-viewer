@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
+import { processZip } from "./service";
 
 const schema = z.object({
   upload_file: z
@@ -17,8 +17,9 @@ const schema = z.object({
  */
 export async function POST(request: NextRequest) {
   try {
-    const _body = schema.parse(Object.fromEntries(await request.formData()));
-    return NextResponse.json({ message: "ok" }, { status: 200 });
+    const body = schema.parse(Object.fromEntries(await request.formData()));
+    const { message, status } = await processZip(body.upload_file);
+    return NextResponse.json({ message }, { status });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -26,6 +27,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+    console.error(error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

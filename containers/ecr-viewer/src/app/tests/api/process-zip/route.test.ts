@@ -2,7 +2,10 @@
  * @jest-environment node
  */
 import { POST } from "@/app/api/process-zip/route";
+import { processZip } from "@/app/api/process-zip/service";
 import { NextRequest } from "next/server";
+
+jest.mock("../../../api/process-zip/service");
 
 describe("POST Process Zip", () => {
   const mockFile = new File(["content"], "test.zip", {
@@ -22,8 +25,8 @@ describe("POST Process Zip", () => {
   it("should return a 200 response when valid zip file is provided", async () => {
     const formData = new FormData();
     formData.append("upload_file", mockFile);
-
     const request = createRequest(formData);
+    (processZip as jest.Mock).mockReturnValue({ message: "ok", status: 200 });
 
     const response = await POST(request);
 
@@ -37,7 +40,6 @@ describe("POST Process Zip", () => {
     });
     const formData = new FormData();
     formData.append("upload_file", invalidFile);
-
     const request = createRequest(formData);
 
     const response = await POST(request);
@@ -56,7 +58,6 @@ describe("POST Process Zip", () => {
 
   it("should return a 400 response when required fields are missing", async () => {
     const formData = new FormData();
-
     const request = createRequest(formData);
 
     const response = await POST(request);
@@ -68,6 +69,7 @@ describe("POST Process Zip", () => {
   });
 
   it("should return a 500 response when an unexpected error occurs", async () => {
+    jest.spyOn(console, "error").mockImplementation();
     const response = await POST(undefined as unknown as NextRequest);
 
     expect(response.status).toEqual(500);
