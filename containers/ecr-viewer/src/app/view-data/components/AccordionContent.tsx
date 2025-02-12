@@ -1,4 +1,3 @@
-"use client";
 import { PathMappings } from "../utils/utils";
 import Demographics from "./Demographics";
 import SocialHistory from "./SocialHistory";

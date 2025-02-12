@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "@trussworks/react-uswds";
+import { ArrowBack } from "@/app/components/Icon";
 import Link from "next/link";
 import classNames from "classnames";
 import { env } from "next-runtime-env";
@@ -24,7 +24,7 @@ const ClientBackButton = ({ className, iconClassName }: BackButtonProps) => {
         href={savedUrlParams ? `/?${savedUrlParams}` : "/"}
         className={classNames("display-inline-block", className)}
       >
-        <Icon.ArrowBack
+        <ArrowBack
           aria-label={"Back Arrow"}
           size={3}
           className={classNames("text-middle margin-right-1", iconClassName)}
@@ -39,7 +39,7 @@ const ClientBackButton = ({ className, iconClassName }: BackButtonProps) => {
 const LoadingBackButton = ({ iconClassName, className }: BackButtonProps) => {
   return (
     <div className={classNames("display-inline-block", className)}>
-      <Icon.ArrowBack
+      <ArrowBack
         aria-label={"Back Arrow"}
         size={3}
         className={classNames("text-middle margin-right-1", iconClassName)}
