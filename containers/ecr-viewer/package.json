@@ -12,6 +12,7 @@
     "local-docker:silent": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up -d'",
     "setup-local-env": "../../setup-env.sh .env.local",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write '**/*.{js,json,md,ts,tsx,scss,yaml,yml}'",
@@ -26,6 +27,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.682.0",
     "@azure/storage-blob": "^12.24.0",
+    "@next/bundle-analyzer": "^15.1.7",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.52.0",
     "@opentelemetry/exporter-jaeger": "^1.27.0",
@@ -65,7 +67,8 @@
     "pg-promise": "^11.6.0",
     "react": "^18",
     "react-dom": "^18",
-    "sanitize-html": "^2.13.1"
+    "sanitize-html": "^2.13.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",

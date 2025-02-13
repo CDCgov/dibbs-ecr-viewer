@@ -4,7 +4,7 @@ import { ArrowBack } from "@/app/components/Icon";
 import Link from "next/link";
 import classNames from "classnames";
 import { env } from "next-runtime-env";
-import { retrieveFromSessionStorage } from "../../components/utils";
+import { retrieveFromSessionStorage } from "../../utils/storage-utils";
 
 interface BackButtonProps {
   className?: string;

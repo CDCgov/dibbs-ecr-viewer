@@ -6,7 +6,7 @@ import { axe } from "jest-axe";
 import ClinicalInfo from "../../view-data/components/ClinicalInfo";
 import { loadYamlConfig } from "@/app/api/utils";
 import { Procedure } from "fhir/r4";
-import { PathMappings } from "@/app/view-data/utils/utils";
+import { PathMappings } from "@/app/utils/data-utils";
 import {
   evaluateClinicalData,
   returnProceduresTable,

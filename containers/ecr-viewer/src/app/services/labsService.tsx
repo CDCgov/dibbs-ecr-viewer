@@ -6,17 +6,10 @@ import {
   arrayToElement,
   noData,
   safeParse,
-} from "@/app/view-data/utils/utils";
-import { evaluate } from "@/app/view-data/utils/evaluate";
+} from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
 import { AccordionLabResults } from "@/app/view-data/components/AccordionLabResults";
-import {
-  formatDateTime,
-  formatTablesToJSON,
-  extractNumbersAndPeriods,
-  formatAddress,
-  formatPhoneNumber,
-  TableJson,
-} from "@/app/services/formatService";
+import { formatAddress, formatPhoneNumber } from "@/app/services/formatService";
 import { Coding, ObservationComponent } from "fhir/r4b";
 import EvaluateTable, {
   ColumnInfoInput,
@@ -27,7 +20,10 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import { HeadingLevel } from "@trussworks/react-uswds";
-import { returnHtmlTableContent } from "../view-data/components/common";
+import { returnHtmlTableContent } from "@/app/view-data/components/common";
+import { extractNumbersAndPeriods } from "@/app/utils/format-utils";
+import { TableJson, formatTablesToJSON } from "./htmlTableService";
+import { formatDateTime } from "./formatDateService";
 
 export interface LabReport {
   result: Array<Reference>;

@@ -2,24 +2,22 @@ import React from "react";
 import Header from "@/app/Header";
 import PatientBanner from "./PatientBanner";
 import { env } from "next-runtime-env";
-import { Bundle } from "fhir/r4";
-import { PathMappings } from "../utils/utils";
 
 /**
  * Layout component for the ecr viewer page.
  * @param props react props
- * @param props.bundle FHIR bundle to display
- * @param props.mappings FHIR Path mappings
+ * @param props.patientName name to display in banner
+ * @param props.patientDOB date of birth to display in banner
  * @param props.children Content inside the layout
  * @returns laid out ecr viewer
  */
 export const ECRViewerLayout = ({
-  bundle,
-  mappings,
+  patientName,
+  patientDOB,
   children,
 }: {
-  bundle?: Bundle;
-  mappings?: PathMappings;
+  patientName?: string;
+  patientDOB?: string;
   children: React.ReactNode;
 }) => {
   const isNonIntegratedViewer =
@@ -29,7 +27,7 @@ export const ECRViewerLayout = ({
     <main className={"width-full minw-main"}>
       <Header />
       {isNonIntegratedViewer && (
-        <PatientBanner bundle={bundle} mappings={mappings} />
+        <PatientBanner name={patientName} dob={patientDOB} />
       )}
       <div className="main-container">
         <div className={"width-main padding-main"}>

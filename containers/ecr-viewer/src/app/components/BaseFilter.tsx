@@ -13,7 +13,7 @@ import {
   FILTER_SUBMITTED,
   FilterOpenContext,
 } from "@/app/components/Filters";
-import { toKebabCase } from "@/app/services/formatService";
+import { toKebabCase } from "@/app/utils/format-utils";
 
 /**
  * A reusable Filter component for eCR Library. It displays a button

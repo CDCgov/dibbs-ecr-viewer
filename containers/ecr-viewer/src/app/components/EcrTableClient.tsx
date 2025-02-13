@@ -3,12 +3,12 @@ import React from "react";
 import { Table } from "@trussworks/react-uswds";
 import { SortButton } from "@/app/components/SortButton";
 import { EcrDisplay } from "@/app/services/listEcrDataService";
-import { toSentenceCase } from "@/app/services/formatService";
+import { toSentenceCase } from "@/app/utils/format-utils";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
-import { noData, range } from "../view-data/utils/utils";
+import { noData, range } from "../utils/data-utils";
 import classNames from "classnames";
 import Link from "next/link";
-import { saveToSessionStorage } from "./utils";
+import { saveToSessionStorage } from "../utils/storage-utils";
 
 type EcrTableClientProps = {
   data: EcrDisplay[];

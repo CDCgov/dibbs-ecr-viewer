@@ -1,7 +1,7 @@
 import { Accordion, HeadingLevel, Tag } from "@trussworks/react-uswds";
 import classNames from "classnames";
 import React from "react";
-import { toKebabCase } from "@/app/services/formatService";
+import { toKebabCase } from "@/app/utils/format-utils";
 
 interface AccordionLabResultsProps {
   title: string;
