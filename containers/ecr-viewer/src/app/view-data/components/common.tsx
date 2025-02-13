@@ -291,7 +291,7 @@ export const JsonTable = ({
   const flattenedTable = tables?.flat() ?? [];
   const columns = useConstructColumnData(flattenedTable);
 
-  if (!flattenedTable.length || !columns) {
+  if (!columns) {
     return null;
   }
 
