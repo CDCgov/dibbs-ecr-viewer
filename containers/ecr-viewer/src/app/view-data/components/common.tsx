@@ -247,65 +247,85 @@ export const returnHtmlTableContent = (
   title: string,
   outerBorder = true,
   className = "",
-) => {
+): JSX.Element | undefined => {
   const bundle = evaluateValue(fhirBundle, mapping);
-  const rawTables = formatTablesToJSON(bundle);
-  const tables = rawTables
-    .map((rawTable) => returnTableFromJson(rawTable, outerBorder, className))
-    .filter((t) => !!t);
+  const tableJson = formatTablesToJSON(bundle);
 
-  if (tables.length > 0) {
-    return (
-      <Fragment key={`${Math.random()}`}>
-        {!!title && <div className={"data-title margin-bottom-1"}>{title}</div>}
-        {tables}
-      </Fragment>
-    );
-  }
+  const tables = tableJson.filter((t) => !!t);
+  if (tables.length === 0) return undefined;
+
+  return (
+    <Fragment key={`${Math.random()}`}>
+      {!!title && <div className="data-title margin-bottom-1">{title}</div>}
+      {tableJson.map((rt) => (
+        <JsonTable
+          key={`${title}-table`}
+          rawTable={rt}
+          outerBorder={outerBorder}
+          className={className}
+        />
+      ))}
+    </Fragment>
+  );
 };
 
+interface JsonTableProps {
+  rawTable: TableJson;
+  outerBorder?: boolean;
+  className?: string;
+}
 /**
  * Returns a table built from JSON representation of the XHTML in the FHIR data.
- * @param rawTable - A table found in the fhir data.
- * @param outerBorder - Determines whether to include an outer border for the table. Default is true.
- * @param className - Classnames to be applied to table.
- * @returns The JSX element representing the table, or undefined if no matching results are found.
+ * @param props - props passed to the React component
+ * @param props.rawTable - A table found in the fhir data.
+ * @param props.outerBorder - Determines whether to include an outer border for the table. Default is true.
+ * @param props.className - Classnames to be applied to table.
+ * @returns A table or null, depending on whether or not there are tables to display.
  */
-export const returnTableFromJson = (
-  rawTable: TableJson,
+export const JsonTable = ({
+  rawTable,
   outerBorder = true,
   className = "",
-) => {
+}: JsonTableProps): JSX.Element | null => {
   const { resultName, tables } = rawTable;
-  const flatTables = tables?.flatMap((a) => a) ?? [];
-  if (flatTables.length > 0) {
-    const columns = Object.keys(flatTables[0]).map((columnName) => {
-      return { columnName, className: "bg-gray-5 minw-10" };
-    });
+  const flattenedTable = tables?.flat() ?? [];
+  const columns = useConstructColumnData(flattenedTable);
 
-    return (
-      <BaseTable
-        key={resultName || `${Math.random()}`}
-        columns={columns}
-        caption={resultName}
-        className={classNames(
-          "caption-normal-weight margin-bottom-2",
-          className,
-        )}
-        fixed={false}
-        outerBorder={outerBorder}
-      >
-        {flatTables.map((entry: TableRow, index: number) => (
-          <tr key={`table-row-${index}`}>
-            {Object.values(entry).map((v, i) => (
-              <td key={`table-col-${i}`}>{v?.value ?? noData}</td>
-            ))}
-          </tr>
-        ))}
-      </BaseTable>
-    );
+  if (!flattenedTable.length || !columns) {
+    return null;
   }
+
+  return (
+    <BaseTable
+      columns={columns}
+      caption={resultName}
+      className={classNames("caption-normal-weight margin-bottom-2", className)}
+      fixed={false}
+      outerBorder={outerBorder}
+    >
+      {flattenedTable.map((row, i) => (
+        <tr key={`table-row-${i}`}>
+          {Object.values(row).map(({ value }, j) => (
+            <td key={`table-col-${j}`}>{value ?? noData}</td>
+          ))}
+        </tr>
+      ))}
+    </BaseTable>
+  );
 };
+
+function useConstructColumnData(
+  flattenedTable: TableRow[],
+): ColumnInfoInput[] | null {
+  if (flattenedTable.length > 0) {
+    return Object.keys(flattenedTable[0]).map((columnName) => ({
+      columnName,
+      className: "bg-gray-5 minw-10",
+    }));
+  }
+
+  return null;
+}
 
 /**
  * Generates a formatted table representing the list of procedures based on the provided array of procedures and mappings.

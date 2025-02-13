@@ -375,7 +375,7 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
   // We purposefully don't sanitize here to remain close to the original format while
   // looking for specific patterns. The data is sanitized as it's pulled out.
   const doc = parser.parseFromString(htmlString, "text/html");
-  const jsonArray: any[] = [];
+  const jsonArray: TableJson[] = [];
 
   // <li>{name}<table/></li> OR <list><item>{name}<table /></item></list>
   const liArray = doc.querySelectorAll("li, list > item");
@@ -388,7 +388,7 @@ export function formatTablesToJSON(htmlString: string): TableJson[] {
       li.querySelectorAll("table").forEach((table) => {
         tables.push(processTable(table));
       });
-      jsonArray.push({ resultId, resultName, tables });
+      jsonArray.push({ resultId: resultId ?? undefined, resultName, tables });
     });
 
     return jsonArray;

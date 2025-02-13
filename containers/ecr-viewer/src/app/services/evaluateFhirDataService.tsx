@@ -34,7 +34,7 @@ import { Element } from "fhir/r4";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateTravelHistoryTable } from "./socialHistoryService";
 import { Path } from "fhirpath";
-import { returnTableFromJson } from "../view-data/components/common";
+import { JsonTable } from "../view-data/components/common";
 import { toSentenceCase } from "./formatService";
 
 /**
@@ -599,10 +599,14 @@ export const evaluateEncounterCareTeamTable = (
     } as TableRow;
   });
 
-  return returnTableFromJson(
-    { resultName: "Encounter Care Team", tables: [tables] },
-    true,
-    "caption-data-title margin-y-0",
+  if (!tables.flat().length) return undefined;
+
+  return (
+    <JsonTable
+      rawTable={{ resultName: "Encounter Care Team", tables: [tables] }}
+      outerBorder
+      className="caption-data-title margin-y-0"
+    />
   );
 };
 

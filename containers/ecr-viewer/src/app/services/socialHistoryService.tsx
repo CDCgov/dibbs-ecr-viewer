@@ -3,7 +3,7 @@ import { PathMappings, noData } from "../view-data/utils/utils";
 
 import { evaluate } from "../view-data/utils/evaluate";
 import { evaluateValue } from "./evaluateFhirDataService";
-import { returnTableFromJson } from "../view-data/components/common";
+import { JsonTable } from "../view-data/components/common";
 import { TableRow, formatDate } from "./formatService";
 
 /**
@@ -59,9 +59,13 @@ export const evaluateTravelHistoryTable = (
       Object.values(row).some((v) => (v.value as any) !== noData),
     );
 
-  return returnTableFromJson(
-    { tables, resultName: "Travel History" },
-    true,
-    "caption-data-title margin-y-0",
+  if (!tables.flat().length) return undefined;
+
+  return (
+    <JsonTable
+      rawTable={{ tables, resultName: "Travel History" }}
+      outerBorder
+      className="caption-data-title margin-y-0"
+    />
   );
 };
