@@ -183,7 +183,8 @@ const Header = ({
         {column.value}
         {(column.sortDirection || column.dataSortable) && (
           <SortButton
-            columnName={column.id}
+            columnId={column.id}
+            columnName={column.value}
             className={classNames({
               "sortable-asc-column": column.sortDirection === "ASC",
               "sortable-desc-column": column.sortDirection === "DESC",
