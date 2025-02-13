@@ -13,7 +13,7 @@ import {
   generateFilterDateStatementPostgres,
 } from "../services/listEcrDataService";
 import { getDB } from "../api/services/postgres_db";
-import { formatDate, formatDateTime } from "../services/formatService";
+import { formatDate, formatDateTime } from "../services/formatDateService";
 import { get_pool } from "../api/services/sqlserver_db";
 
 jest.mock("../api/services/sqlserver_db", () => ({

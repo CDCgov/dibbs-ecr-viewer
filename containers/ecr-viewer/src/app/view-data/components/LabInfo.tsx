@@ -10,7 +10,7 @@ import {
   LabReportElementData,
 } from "@/app/services/labsService";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
-import { toKebabCase } from "@/app/services/formatService";
+import { toKebabCase } from "@/app/utils/format-utils";
 
 interface LabInfoProps {
   labResults: DisplayDataProps[] | LabReportElementData[];

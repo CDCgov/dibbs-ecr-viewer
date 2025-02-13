@@ -26,6 +26,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.682.0",
     "@azure/storage-blob": "^12.24.0",
+    "@next/bundle-analyzer": "^15.1.7",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.52.0",
     "@opentelemetry/exporter-jaeger": "^1.27.0",

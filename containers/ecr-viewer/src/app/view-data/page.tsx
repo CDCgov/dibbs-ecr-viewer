@@ -8,7 +8,7 @@ import {
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
 } from "../services/ecrSummaryService";
-import { PathMappings } from "./utils/utils";
+import { PathMappings } from "../utils/data-utils";
 import AccordionContent from "@/app/view-data/components/AccordionContent";
 import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import { ECRViewerLayout } from "./components/ECRViewerLayout";
@@ -16,6 +16,10 @@ import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapse
 import EcrSummary from "./components/EcrSummary";
 import RetrievalFailed from "./retrieval-failed";
 import SideNav from "./components/SideNav";
+import {
+  evaluatePatientDOB,
+  evaluatePatientName,
+} from "../services/evaluateFhirDataService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -70,8 +74,10 @@ const ECRViewerPage = async ({
       </div>
     );
   } else if (fhirBundle && mappings) {
+    const patientName = evaluatePatientName(fhirBundle, mappings, true);
+    const patientDOB = evaluatePatientDOB(fhirBundle, mappings);
     return (
-      <ECRViewerLayout bundle={fhirBundle} mappings={mappings}>
+      <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
         <SideNav />
         <div className={"ecr-viewer-container"}>
           <div className="margin-bottom-3">

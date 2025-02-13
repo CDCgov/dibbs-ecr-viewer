@@ -5,16 +5,13 @@ import {
   DiagnosticReport,
   Observation,
 } from "fhir/r4";
-import { evaluateData, PathMappings } from "@/app/view-data/utils/utils";
+import { evaluateData, PathMappings } from "@/app/utils/data-utils";
 import {
   formatAddress,
   formatContactPoint,
-  formatDate,
   formatPhoneNumber,
-  formatStartEndDateTime,
-  toTitleCase,
 } from "@/app/services/formatService";
-import { evaluate } from "@/app/view-data/utils/evaluate";
+import { evaluate } from "@/app/utils/evaluate";
 import {
   evaluatePatientName,
   evaluateEncounterDiagnosis,
@@ -27,6 +24,8 @@ import {
 import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
 import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
 import React from "react";
+import { toTitleCase } from "../utils/format-utils";
+import { formatDate, formatStartEndDateTime } from "./formatDateService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.

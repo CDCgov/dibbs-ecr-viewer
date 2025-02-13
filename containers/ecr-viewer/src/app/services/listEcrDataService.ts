@@ -1,7 +1,7 @@
-import { formatDate, formatDateTime } from "@/app/services/formatService";
+import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import { get_pool } from "../api/services/sqlserver_db";
 import { getDB } from "../api/services/postgres_db";
-import { DateRangePeriod } from "@/app/view-data/utils/date-utils";
+import { DateRangePeriod } from "@/app/utils/date-utils";
 
 export interface CoreMetadataModel {
   eicr_id: string;

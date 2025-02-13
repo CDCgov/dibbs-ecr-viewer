@@ -1,4 +1,4 @@
-import { isDataAvailable, safeParse } from "@/app/view-data/utils/utils";
+import { isDataAvailable, safeParse } from "@/app/utils/data-utils";
 import { loadYamlConfig } from "@/app/api/utils";
 import { Bundle } from "fhir/r4";
 import BundleWithTravelHistory from "./assets/BundleTravelHistory.json";
@@ -14,7 +14,7 @@ import BundleCareTeam from "./assets/BundleCareTeam.json";
 import React from "react";
 import { render, screen, cleanup } from "@testing-library/react";
 import { CarePlanActivity } from "fhir/r4b";
-import { evaluate } from "@/app/view-data/utils/evaluate";
+import { evaluate } from "@/app/utils/evaluate";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import {

@@ -2,7 +2,7 @@ import {
   DateRangeOptions,
   buildCustomDateRange,
   convertDateOptionToDateRange,
-} from "@/app/view-data/utils/date-utils";
+} from "@/app/utils/date-utils";
 
 describe("convertDateOptionToDateRange", () => {
   const today = new Date("2024-04-02T12:34:01.009");

@@ -14,7 +14,6 @@ const stream = sdkStreamMixin(
   fs.createReadStream("src/app/tests/assets/BundleTravelHistory.json"),
 );
 
-const mockYamlConfig = {}; // Adjust this to match what loadYamlConfig() would return
 const mockData = {
   resourceType: "Bundle",
   type: "batch",
@@ -29,10 +28,6 @@ const mockData = {
   ],
 };
 
-jest.mock("../view-data/utils/utils", () => ({
-  loadYamlConfig: jest.fn().mockReturnValue(mockYamlConfig),
-  streamToJson: jest.fn().mockResolvedValue(mockData),
-}));
 jest.mock("@azure/storage-blob", () => ({
   BlobServiceClient: {
     fromConnectionString: jest.fn(() => mockBlobServiceClient),

@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import { removeHtmlElements } from "@/app/services/formatService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import sanitizeHtml from "sanitize-html";
 import parse from "html-react-parser";
@@ -80,6 +79,18 @@ export const safeParse = (val: string): RenderableNode => {
   );
 
   return Array.isArray(parsed) ? arrayToElement(parsed) : parsed;
+};
+
+/**
+ * Removes HTML tags from a given string.
+ * @param element - The input string containing HTML elements.
+ * @returns - A string with all HTML tags removed.
+ */
+export const removeHtmlElements = (element: string): string => {
+  return sanitizeHtml(element, {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
 };
 
 /**

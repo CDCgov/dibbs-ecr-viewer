@@ -25,7 +25,7 @@ import {
 } from "@/app/services/labsService";
 import { AccordionLabResults } from "@/app/view-data/components/AccordionLabResults";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import { noData } from "@/app/view-data/utils/utils";
+import { noData } from "@/app/utils/data-utils";
 
 const mappings = loadYamlConfig();
 
