@@ -1,0 +1,99 @@
+services:
+  postgres:
+    extends:
+      file: ./docker-compose.yaml
+      service: postgres
+    profiles: ["", "azure", "aws"]
+  sqlserver:
+    extends:
+      file: ./docker-compose.yaml
+      service: sqlserver
+    profiles: ["sqlserver"]
+  aws-storage:
+    extends:
+      file: ./docker-compose.yaml
+      service: aws-storage
+    profiles: ["aws"]
+  azure-storage:
+    extends:
+      file: ./docker-compose.yaml
+      service: azure-storage
+    profiles: ["", "azure"]
+  ecr-viewer:
+    extends:
+      file: ./docker-compose.yaml
+      service: ecr-viewer
+    profiles: ["", "azure", "aws", "sqlserver"]
+    environment:
+      - CONFIG_NAME=AZURE_PG_NON_INTEGRATED
+      - ORCHESTRATION_URL=http://orchestration-service:8080
+  orchestration-service:
+    platform: linux/amd64
+    build:
+      context: ../orchestration
+    depends_on:
+      [
+        validation-service,
+        fhir-converter-service,
+        ingestion-service,
+        trigger-code-reference-service,
+        message-parser-service,
+        ecr-viewer,
+      ]
+    ports:
+      - "${ORCHESTRATION_PORT_NUMBER}:8080"
+    logging:
+      driver: "json-file"
+    env_file:
+      - ../orchestration/.env
+    environment:
+      - OTEL_TRACES_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none
+  validation-service:
+    platform: linux/amd64
+    build:
+      context: ../validation
+    ports:
+      - "${VALIDATION_PORT_NUMBER}:8080"
+    logging:
+      driver: "json-file"
+  fhir-converter-service:
+    platform: linux/amd64
+    build:
+      context: ../fhir-converter
+    ports:
+      - "${FHIR_CONVERTER_PORT_NUMBER}:8080"
+    logging:
+      driver: "json-file"
+  ingestion-service:
+    platform: linux/amd64
+    build:
+      context: ../ingestion
+    ports:
+      - "${INGESTION_PORT_NUMBER}:8080"
+    logging:
+      driver: "json-file"
+    environment:
+      SMARTY_AUTH_ID: ${SMARTY_AUTH_ID}
+      SMARTY_AUTH_TOKEN: ${SMARTY_AUTH_TOKEN}
+  message-parser-service:
+    platform: linux/amd64
+    build:
+      context: ../message-parser
+    ports:
+      - "${MESSAGE_PARSER_PORT_NUMBER}:8080"
+    logging:
+      driver: "json-file"
+  trigger-code-reference-service:
+    platform: linux/amd64
+    build:
+      context: ../trigger-code-reference
+    ports:
+      - "${TRIGGER_CODE_REFERENCE_PORT_NUMBER}:8080"
+    logging:
+      driver: "json-file"
+
+volumes:
+  db:
+  azure-data:
+  aws-data:
