@@ -9,7 +9,7 @@ from app.models import InsertConditionInput
 from app.utils import (
     _find_codes_by_resource_type,
     add_human_readable_reportable_condition_name,
-    add_reportable_condition_extension
+    add_reportable_condition_extension,
     find_conditions,
     get_clean_snomed_code,
     get_concepts_dict,
