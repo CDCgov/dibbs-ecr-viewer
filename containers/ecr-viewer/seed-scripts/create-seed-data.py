@@ -90,13 +90,13 @@ def _process_files(args):
                 rr_data = None
                 if os.path.exists(os.path.join(folder_path, "CDA_RR.xml")):
                     with (
-                        open(os.path.join(folder_path, "CDA_RR.xml"), "r") as rr_file,
+                        open(os.path.join(folder_path, "CDA_RR.xml")) as rr_file,
                     ):
                         rr_data = rr_file.read()
 
                 # Open the necessary files in the folder
                 with (
-                    open(os.path.join(folder_path, "CDA_eICR.xml"), "r") as eicr_file,
+                    open(os.path.join(folder_path, "CDA_eICR.xml")) as eicr_file,
                 ):
                     payload = {
                         "message_type": "ecr",

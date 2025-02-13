@@ -3,41 +3,40 @@ import json
 import os
 import pathlib
 import uuid
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 from json.decoder import JSONDecodeError
 
 import pytest
-from app.linkage.algorithms import DIBBS_BASIC
-from app.linkage.algorithms import DIBBS_ENHANCED
+from app.linkage.algorithms import DIBBS_BASIC, DIBBS_ENHANCED
 from app.linkage.dal import DataAccessLayer
-from app.linkage.link import _compare_address_elements
-from app.linkage.link import _compare_name_elements
-from app.linkage.link import _condense_extract_address_from_resource
-from app.linkage.link import _convert_given_name_to_first_name
-from app.linkage.link import _flatten_patient_resource
-from app.linkage.link import _get_fuzzy_params
-from app.linkage.link import _match_within_block_cluster_ratio
-from app.linkage.link import add_person_resource
-from app.linkage.link import eval_log_odds_cutoff
-from app.linkage.link import eval_perfect_match
-from app.linkage.link import extract_blocking_values_from_record
-from app.linkage.link import feature_match_exact
-from app.linkage.link import feature_match_four_char
-from app.linkage.link import feature_match_fuzzy_string
-from app.linkage.link import feature_match_log_odds_exact
-from app.linkage.link import feature_match_log_odds_fuzzy_compare
-from app.linkage.link import generate_hash_str
-from app.linkage.link import link_record_against_mpi
-from app.linkage.link import load_json_probs
-from app.linkage.link import match_within_block
-from app.linkage.link import read_linkage_config
-from app.linkage.link import score_linkage_vs_truth
-from app.linkage.link import write_linkage_config
+from app.linkage.link import (
+    _compare_address_elements,
+    _compare_name_elements,
+    _condense_extract_address_from_resource,
+    _convert_given_name_to_first_name,
+    _flatten_patient_resource,
+    _get_fuzzy_params,
+    _match_within_block_cluster_ratio,
+    add_person_resource,
+    eval_log_odds_cutoff,
+    eval_perfect_match,
+    extract_blocking_values_from_record,
+    feature_match_exact,
+    feature_match_four_char,
+    feature_match_fuzzy_string,
+    feature_match_log_odds_exact,
+    feature_match_log_odds_fuzzy_compare,
+    generate_hash_str,
+    link_record_against_mpi,
+    load_json_probs,
+    match_within_block,
+    read_linkage_config,
+    score_linkage_vs_truth,
+    write_linkage_config,
+)
 from app.linkage.mpi import DIBBsMPIConnectorClient
 from app.utils import _clean_up
-from sqlalchemy import select
-from sqlalchemy import text
+from sqlalchemy import select, text
 
 
 def _init_db() -> DataAccessLayer:
@@ -1117,14 +1116,14 @@ def test_multi_element_blocking():
 
 
 def test_convert_given_name_to_first_name():
-    assert (
-        _convert_given_name_to_first_name([]) == []
-    ), "Empty data should return empty data"
+    assert _convert_given_name_to_first_name([]) == [], (
+        "Empty data should return empty data"
+    )
 
     data = [["last_name"], ["LENNON"], ["MCCARTNEY"], ["HARRISON"], ["STARKLEY"]]
-    assert (
-        _convert_given_name_to_first_name(data) == data
-    ), "Data without given names should return the same data"
+    assert _convert_given_name_to_first_name(data) == data, (
+        "Data without given names should return the same data"
+    )
 
     data = [
         [

@@ -1,67 +1,62 @@
-"use client";
-import AccordionContent from "@/app/view-data/components/AccordionContent";
-import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Bundle } from "fhir/r4";
-import { PathMappings } from "./utils/utils";
-import SideNav from "./components/SideNav";
 import { Grid, GridContainer } from "@trussworks/react-uswds";
+
+import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
+import {
+  evaluateEcrSummaryConditionSummary,
+  evaluateEcrSummaryEncounterDetails,
+  evaluateEcrSummaryPatientDetails,
+} from "../services/ecrSummaryService";
+import { PathMappings } from "./utils/utils";
+import AccordionContent from "@/app/view-data/components/AccordionContent";
+import { EcrLoadingSkeleton } from "./components/LoadingComponent";
+import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 import EcrSummary from "./components/EcrSummary";
-import {
-  evaluateEcrSummaryPatientDetails,
-  evaluateEcrSummaryEncounterDetails,
-  evaluateEcrSummaryConditionSummary,
-} from "../services/ecrSummaryService";
-import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import RetrievalFailed from "./retrieval-failed";
-import { ECRViewerLayout } from "./components/ECRViewerLayout";
-
-interface FetchError {
-  status: number;
-  message: string;
-}
+import SideNav from "./components/SideNav";
 
 /**
  * Functional component for rendering the eCR Viewer page.
+ * @param params react params
+ * @param params.searchParams searchParams for page
+ * @param params.searchParams.id ecr ID
  * @returns The main eCR Viewer JSX component.
  */
-const ECRViewerPage: React.FC = () => {
-  const [fhirBundle, setFhirBundle] = useState<Bundle>();
-  const [mappings, setMappings] = useState<PathMappings>({});
-  const [errors, setErrors] = useState<FetchError>();
-  const searchParams = useSearchParams();
-  const fhirId = searchParams ? searchParams.get("id") ?? "" : "";
-  const snomedCode = searchParams ? searchParams.get("snomed-code") ?? "" : "";
+const ECRViewerPage = async ({
+  searchParams,
+}: {
+  searchParams: { id?: string; "snomed-code"?: string };
+}) => {
+  const fhirId = searchParams.id ?? "";
+  const snomedCode = searchParams["snomed-code"] ?? "";
 
   type ApiResponse = {
     fhirBundle: Bundle;
     fhirPathMappings: PathMappings;
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`api/fhir-data?id=${fhirId}`);
-        if (!response.ok) {
-          setErrors({
-            status: response.status,
-            message: response.statusText || "Internal Server Error",
-          });
-        } else {
-          const bundle: ApiResponse = await response.json();
-          setFhirBundle(bundle.fhirBundle);
-          setMappings(bundle.fhirPathMappings);
-        }
-      } catch (error: any) {
-        setErrors({
-          status: 500,
-          message: error,
-        });
-      }
+  let fhirBundle;
+  let mappings;
+  let errors;
+  try {
+    const response = await get_fhir_data(fhirId);
+    if (!response.ok) {
+      errors = {
+        status: response.status,
+        message: response.statusText || "Internal Server Error",
+      };
+    } else {
+      const bundle: ApiResponse = await response.json();
+      fhirBundle = bundle.fhirBundle;
+      mappings = bundle.fhirPathMappings;
+    }
+  } catch (error: any) {
+    errors = {
+      status: 500,
+      message: error,
     };
-    fetchData();
-  }, []);
+  }
 
   if (errors) {
     if (errors.status === 404) {

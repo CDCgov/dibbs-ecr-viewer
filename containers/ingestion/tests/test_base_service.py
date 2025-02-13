@@ -1,9 +1,7 @@
 from pathlib import Path
 
 import toml
-from app.base_service import BaseService
-from app.base_service import DIBBS_CONTACT
-from app.base_service import LICENSES
+from app.base_service import DIBBS_CONTACT, LICENSES, BaseService
 from fastapi.testclient import TestClient
 
 with open(

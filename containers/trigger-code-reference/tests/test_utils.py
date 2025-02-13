@@ -4,13 +4,16 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from app.utils import _find_codes_by_resource_type
-from app.utils import add_human_readable_reportable_condition_name
-from app.utils import add_reportable_condition_extension
-from app.utils import convert_inputs_to_list
-from app.utils import get_clean_snomed_code
-from app.utils import get_concepts_dict
-from app.utils import get_concepts_list
+
+from app.utils import (
+    _find_codes_by_resource_type,
+    add_human_readable_reportable_condition_name,
+    add_reportable_condition_extension
+    convert_inputs_to_list,
+    get_clean_snomed_code,
+    get_concepts_dict,
+    get_concepts_list,
+)
 
 
 @pytest.fixture

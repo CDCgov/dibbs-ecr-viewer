@@ -1,18 +1,12 @@
 import datetime
 import logging
 from contextlib import contextmanager
-from typing import List
 
-from sqlalchemy import create_engine
-from sqlalchemy import MetaData
-from sqlalchemy import select
-from sqlalchemy import Table
-from sqlalchemy import text
-from sqlalchemy.orm import scoped_session
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import MetaData, Table, create_engine, select, text
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 
-class DataAccessLayer(object):
+class DataAccessLayer:
     """
     Base class for Database API objects - manages transactions,
     sessions and holds a reference to the engine.
@@ -169,7 +163,7 @@ class DataAccessLayer(object):
                         logging.info(
                             f"""Starting statement execution getting
                               new_primary_key for record #{n_records}at:
-                                {datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                                {datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                         )
                         new_primary_key = session.execute(statement)
                         # TODO: I don't like this, but seems to
@@ -178,7 +172,7 @@ class DataAccessLayer(object):
                         # PK defined in the table and that doesn't work
                         logging.info(
                             f""" Done with statement execution getting new_primary_key
-                              for record #{n_records} at: {datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                              for record #{n_records} at: {datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                         )
                         new_primary_keys.append(new_primary_key.first()[0])
                     else:
@@ -190,7 +184,7 @@ class DataAccessLayer(object):
                         session.execute(statement)
                         logging.info(
                             f"""Done with statement execution
-                              for record #{n_records} at: {datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                              for record #{n_records} at: {datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                         )
         return new_primary_keys
 
@@ -247,7 +241,7 @@ class DataAccessLayer(object):
                                 logging.info(
                                     f"""Starting statement execution getting
                                     new_primary_key for record #{n_records}at:
-                                        {datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                                        {datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                                 )
                                 new_primary_key = session.execute(statement)
                                 # TODO: I don't like this, but seems to
@@ -256,14 +250,14 @@ class DataAccessLayer(object):
                                 # PK defined in the table and that doesn't work
                                 logging.info(
                                     f""" Done with statement execution getting new_primary_key
-                                    for record #{n_records} at: {datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                                    for record #{n_records} at: {datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                                 )
                                 new_primary_keys.append(new_primary_key.first()[0])
                             else:
                                 logging.info("Did not return primary keys")
                                 logging.info(
                                     f"""Starting statement creation for record #{n_records} at:
-                                        {datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                                        {datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                                 )
 
                                 if "dob" in record:
@@ -285,7 +279,7 @@ class DataAccessLayer(object):
                                 statements.append(statement)
                                 logging.info(
                                     f"""Done with statement creation for record #{n_records} at:
-                                        {datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                                        {datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                                 )
 
                     return_results[table.name] = {"primary_keys": new_primary_keys}
@@ -306,7 +300,7 @@ class DataAccessLayer(object):
         select_statement: select,
         include_col_header: bool = True,
         query_params: dict = None,
-    ) -> List[list]:
+    ) -> list[list]:
         """
         Perform a select query and add the results to a
         list of lists.  Then add the column header as the

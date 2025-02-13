@@ -1,9 +1,6 @@
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List
-from typing import Optional
-from typing import Union
+from typing import Optional, Union
 
 
 @dataclass
@@ -14,7 +11,7 @@ class GeocodeResult:
     https://www.hl7.org/fhir/datatypes.html#Address.
     """
 
-    line: List[str]
+    line: list[str]
     city: str
     state: str
     postal_code: str

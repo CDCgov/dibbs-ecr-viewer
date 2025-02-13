@@ -1,9 +1,7 @@
 import pathlib
 
 import yaml
-from app.utils import load_ecr_config
-from app.utils import validate_config
-from app.utils import validate_error_types
+from app.utils import load_ecr_config, validate_config, validate_error_types
 
 config_path = pathlib.Path(__file__).parent.parent / "config" / "sample_ecr_config.yaml"
 
@@ -44,7 +42,6 @@ def test_validate_error_types():
 def test_validate_config_bad():
     with open(
         pathlib.Path(__file__).parent / "assets" / "sample_ecr_config_bad.yaml",
-        "r",
     ) as file:
         config_bad = yaml.safe_load(file)
         result = validate_config(config_bad)
@@ -54,7 +51,6 @@ def test_validate_config_bad():
 def test_validate_config_good():
     with open(
         pathlib.Path(__file__).parent / "assets" / "sample_ecr_config.yaml",
-        "r",
     ) as file:
         config = yaml.safe_load(file)
         result = validate_config(config)

@@ -45,7 +45,6 @@ with open(
     / "assets"
     / "validation"
     / "sample_ecr_config_custom_messages.yaml",
-    "r",
 ) as file2:
     config_with_custom_errors = yaml.safe_load(file2)
 
@@ -55,7 +54,6 @@ with open(
     / "assets"
     / "validation"
     / "sample_ecr_config.yaml",
-    "r",
 ) as file:
     config = yaml.safe_load(file)
 
@@ -65,7 +63,6 @@ with open(
     / "assets"
     / "validation"
     / "sample_ecr_config_with_rr.yaml",
-    "r",
 ) as file:
     config_rr = yaml.safe_load(file)
 

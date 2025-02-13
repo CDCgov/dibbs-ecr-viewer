@@ -1,17 +1,14 @@
-from typing import Literal
-from typing import Optional
+from typing import Literal, Optional
 
 from fastapi import APIRouter
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import validator
+from pydantic import BaseModel, Field, validator
 
-from app.fhir.harmonization.standardization import standardize_dob
-from app.fhir.harmonization.standardization import standardize_names
-from app.fhir.harmonization.standardization import standardize_phones
-from app.utils import check_for_fhir
-from app.utils import read_json_from_assets
-from app.utils import StandardResponse
+from app.fhir.harmonization.standardization import (
+    standardize_dob,
+    standardize_names,
+    standardize_phones,
+)
+from app.utils import StandardResponse, check_for_fhir, read_json_from_assets
 
 router = APIRouter(
     prefix="/fhir/harmonization/standardization",

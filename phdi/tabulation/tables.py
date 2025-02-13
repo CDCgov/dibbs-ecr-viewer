@@ -4,9 +4,7 @@ import json
 import os
 import pathlib
 import sqlite3 as sql
-from typing import List
-from typing import Literal
-from typing import Union
+from typing import Literal, Union
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -27,7 +25,7 @@ def load_schema(path: pathlib.Path) -> dict:
     :return: A dict representing a schema read from the given path.
     """
     try:
-        with open(path, "r") as file:
+        with open(path) as file:
             if path.suffix == ".yaml":
                 schema = yaml.safe_load(file)
             elif path.suffix == ".json":
@@ -67,7 +65,7 @@ def validate_schema(schema: dict):
 
 
 def write_data(
-    tabulated_data: List[List],
+    tabulated_data: list[list],
     directory: str,
     output_type: Literal["csv", "parquet", "sql"],
     filename: str = None,
@@ -176,9 +174,7 @@ def write_data(
         # Have to do a format string this way to avoid an empty f-string error
         print(tuple_data)
         cursor.executemany(
-            "INSERT INTO {} {} VALUES {};".format(
-                db_tablename, headers, hdr_placeholder
-            ),
+            f"INSERT INTO {db_tablename} {headers} VALUES {hdr_placeholder};",
             tuple_data,
         )
 
@@ -205,7 +201,7 @@ def _convert_list_to_string(val: list) -> str:
 
 
 def _create_pa_schema_from_table_schema(
-    schema: dict, col_names: List, table_name: str
+    schema: dict, col_names: list, table_name: str
 ) -> pa.Schema:
     """
     Returns a parquet schema based on the schema definition file provided to the
@@ -244,7 +240,7 @@ def _create_pa_schema_from_table_schema(
     return pa_schema
 
 
-def _create_from_arrays_data(row_data: List) -> List:
+def _create_from_arrays_data(row_data: list) -> list:
     """
     Returns a list that is one array per column. Accepts list that is one
       array per row.
@@ -262,7 +258,7 @@ def _create_from_arrays_data(row_data: List) -> List:
     return col_data
 
 
-def _create_parquet_data(data: List[List], pq_schema: pa.Schema) -> List[List]:
+def _create_parquet_data(data: list[list], pq_schema: pa.Schema) -> list[list]:
     """
     Returns a list with the data being modified to the data types specified by the
       pyarrow schema.

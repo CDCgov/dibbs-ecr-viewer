@@ -3,8 +3,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 # Requests and responses for the service are defined in this file.
 # Examples of both are also stored here.

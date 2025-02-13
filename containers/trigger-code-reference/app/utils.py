@@ -1,7 +1,6 @@
 import json
 import sqlite3
 from pathlib import Path
-from typing import List
 from typing import Union
 
 import fhirpathpy
@@ -48,7 +47,7 @@ def get_clean_snomed_code(snomed_code: Union[list, str, int, float]) -> list:
     return clean_snomed_code
 
 
-def format_icd9_crosswalks(db_list: List[tuple]) -> List[tuple]:
+def format_icd9_crosswalks(db_list: list[tuple]) -> list[tuple]:
     """
     Utility function to transform the returned tuple rows from the DB into a
     list of properly formatted three-part tuples. This function handles ICD-9
@@ -72,7 +71,7 @@ def format_icd9_crosswalks(db_list: List[tuple]) -> List[tuple]:
     return formatted_list
 
 
-def get_concepts_list(snomed_code: list) -> List[tuple]:
+def get_concepts_list(snomed_code: list) -> list[tuple]:
     """
     Given a SNOMED code, this function runs a SQL query that joins
     conditions to value sets, then uses the value set ids to get the
@@ -132,7 +131,7 @@ def get_concepts_list(snomed_code: list) -> List[tuple]:
 
 
 def get_concepts_dict(
-    concept_list: List[tuple],
+    concept_list: list[tuple],
     filter_concept_list: Union[str, list] = None,
 ) -> dict:
     """
@@ -172,7 +171,7 @@ def get_concepts_dict(
     return concept_dict
 
 
-def _find_codes_by_resource_type(resource: dict) -> List[str]:
+def _find_codes_by_resource_type(resource: dict) -> list[str]:
     """
     For a given resource, extracts the chief clinical codes within the
     resource body. The FHIRpath location of this resource depends on the
