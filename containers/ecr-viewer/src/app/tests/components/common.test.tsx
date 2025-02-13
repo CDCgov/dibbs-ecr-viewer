@@ -90,6 +90,11 @@ describe("common tests", () => {
       expect(screen.getByText("val1")).toBeInTheDocument();
       expect(screen.getByText("val2")).toBeInTheDocument();
     });
+
+    it("returns nothing if required table data is not available", () => {
+      const { container } = render(<JsonTable rawTable={{}} />);
+      expect(container).toBeEmptyDOMElement();
+    });
   });
 
   describe("returnHtmlTableContent", () => {
