@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@trussworks/react-uswds";
 
 type SortButtonProps = {
+  columnId: string;
   columnName: string;
   className: string;
   handleSort: (columnName: string, direction: string) => void;
@@ -12,20 +13,22 @@ type SortButtonProps = {
 /**
  * Functional component for a sort button.
  * @param props - Props containing button configurations.
- * @param props.columnName - The name of the column to sort
+ * @param props.columnId - The ID of the column to sort
+ * @param props.columnName - The display name of the column to sort
  * @param props.className   - The class name of the button
  * @param props.handleSort - The function to handle the click event
  * @param props.direction - The direction to sort by
  * @returns The JSX element representing the sort button.
  */
 export const SortButton: React.FC<SortButtonProps> = ({
+  columnId,
   columnName,
   className,
   handleSort,
   direction,
 }) => {
-  const buttonSelector = `${columnName}-sort-button`;
-  const headerSelectorToSort = `${columnName}-header`;
+  const buttonSelector = `${columnId}-sort-button`;
+  const headerSelectorToSort = `${columnId}-header`;
 
   function resetArrowDirections() {
     const arrowsToReset = document.querySelectorAll(
@@ -74,12 +77,12 @@ export const SortButton: React.FC<SortButtonProps> = ({
 
   return (
     <Button
-      id={`${columnName}-sort-button`}
+      id={`${columnId}-sort-button`}
       aria-label={`Sort by ${columnName}`}
       className={`sort-button usa-button ${className}`}
       type="button"
       onClick={() => {
-        handleSort(columnName, direction);
+        handleSort(columnId, direction);
         resetArrowDirections();
         changeArrowDirection();
         resetHeaderMarker();
