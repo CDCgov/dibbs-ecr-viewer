@@ -1,10 +1,10 @@
-"use client";
 import { Element } from "fhir/r4";
-import { PathMappings, noData } from "@/app/view-data/utils/utils";
-import { Button, Table } from "@trussworks/react-uswds";
+import { PathMappings } from "@/app/utils/data-utils";
+import { Table } from "@trussworks/react-uswds";
 import classNames from "classnames";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { evaluateValue } from "../../services/evaluateFhirDataService";
+import EvaluateTableRow from "./EvaluateTableRow";
 
 export interface ColumnInfoInput {
   columnName: string;
@@ -15,11 +15,6 @@ export interface ColumnInfoInput {
   applyToValue?: (value: any) => any;
 }
 
-interface EvaluateTableRowProps {
-  mappings: PathMappings;
-  columns: ColumnInfoInput[];
-  entry: Element;
-}
 interface TableProps {
   resources: Element[];
   mappings: PathMappings;
@@ -61,9 +56,8 @@ const EvaluateTable = ({
       {resources.map((entry, index) => (
         <EvaluateTableRow
           key={index}
-          columns={columns}
-          mappings={mappings}
-          entry={entry}
+          tableRowData={evaluateTableRowData(columns, mappings, entry)}
+          numCols={columns.length}
         />
       ))}
     </BaseTable>
@@ -143,83 +137,49 @@ const BaseTableHeaders = ({
 
 /**
  * Builds a row for a table based on provided columns, mappings, and entry data.
- * @param props - The properties object containing columns, mappings, and entry data.
- * @param props.columns - An array of column objects defining the structure of the row.
- * @param props.mappings - An object containing mappings for column data.
- * @param props.entry - The data entry object for the row.
- * @returns - The JSX element representing the constructed row.
+ * @param columns - An array of column objects defining the structure of the row.
+ * @param mappings - An object containing mappings for column data.
+ * @param entry - The data entry object for the row.
+ * @returns - A TableRowData object for use with EvaluateTableRow.
  */
-const EvaluateTableRow: React.FC<EvaluateTableRowProps> = ({
-  columns,
-  mappings,
-  entry,
-}: EvaluateTableRowProps) => {
-  const [hiddenComment, setHiddenComment] = useState(true);
-
-  let hiddenRows: React.JSX.Element[] = [];
-  let rowCellsData = columns.map((column, index) => {
-    let rowCellData: ReactNode;
+const evaluateTableRowData = (
+  columns: ColumnInfoInput[],
+  mappings: PathMappings,
+  entry: Element,
+) => {
+  let hiddenRow: ReactNode = null;
+  let rowCellsData = columns.map((column) => {
+    let data: ReactNode;
+    let hidden = false;
     if (column?.value) {
-      rowCellData = column.value;
+      data = column.value;
     }
 
     if (!column?.value && column?.infoPath) {
-      rowCellData = splitStringWith(
+      data = splitStringWith(
         evaluateValue(entry, mappings[column.infoPath]),
         "<br/>",
       );
     }
 
-    if (rowCellData && column.applyToValue) {
-      rowCellData = column.applyToValue(rowCellData);
+    if (data && column.applyToValue) {
+      data = column.applyToValue(data);
     }
 
-    if (rowCellData && column.hiddenBaseText) {
-      hiddenRows.push(
-        <tr hidden={hiddenComment} id={`hidden-comment-${index}`}>
-          <td colSpan={columns.length} className={"hideableData p-list"}>
-            {rowCellData}
-          </td>
-        </tr>,
-      );
-      rowCellData = (
-        <Button
-          unstyled={true}
-          type={"button"}
-          onClick={() => setHiddenComment(!hiddenComment)}
-          aria-controls={`hidden-comment-${index}`}
-          aria-expanded={!hiddenComment}
-          data-test-id="comment-button"
-        >
-          {hiddenComment ? "View" : "Hide"} {column.hiddenBaseText}
-        </Button>
-      );
+    if (data && column.hiddenBaseText) {
+      hiddenRow = data;
+      hidden = true;
+      data = column.hiddenBaseText;
     }
 
-    return rowCellData;
+    return { data, hidden };
   });
 
   // This row is entirely empty, skip it
-  if (rowCellsData.every((d) => !d)) return <></>;
+  if (rowCellsData.every(({ data }) => !data))
+    return { rowCellsData: [], hiddenRow };
 
-  const rowCells = rowCellsData.map((rowCellData, index) => {
-    return (
-      <td key={`row-data-${index}`} className="text-top">
-        {rowCellData ? rowCellData : noData}
-      </td>
-    );
-  });
-
-  if (hiddenRows) {
-    return (
-      <React.Fragment>
-        <tr>{rowCells}</tr>
-        {...hiddenRows}
-      </React.Fragment>
-    );
-  } else {
-    return <tr>{rowCells}</tr>;
-  }
+  return { rowCellsData, hiddenRow };
 };
 
 const splitStringWith = (

@@ -1,19 +1,19 @@
 import {
   formatAddress,
   formatContactPoint,
-  formatDateTime,
   formatName,
 } from "@/app/services/formatService";
 import {
   CompleteData,
   evaluateData,
   PathMappings,
-} from "@/app/view-data/utils/utils";
+} from "@/app/utils/data-utils";
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
-import { evaluate } from "@/app/view-data/utils/evaluate";
+import { evaluate } from "@/app/utils/evaluate";
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateReference } from "@/app/services/evaluateFhirDataService";
+import { formatDateTime } from "./formatDateService";
 
 export interface ReportableConditions {
   [condition: string]: {

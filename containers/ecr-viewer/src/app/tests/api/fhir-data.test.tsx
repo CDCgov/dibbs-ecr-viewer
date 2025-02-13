@@ -4,7 +4,7 @@
 import fs from "fs";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
-import { GET } from "../api/fhir-data/route"; // Adjust the import path to your actual file path
+import { GET } from "../../api/fhir-data/route"; // Adjust the import path to your actual file path
 import { sdkStreamMixin } from "@smithy/util-stream";
 import { NextRequest } from "next/server";
 import { Readable } from "stream";
@@ -14,7 +14,6 @@ const stream = sdkStreamMixin(
   fs.createReadStream("src/app/tests/assets/BundleTravelHistory.json"),
 );
 
-const mockYamlConfig = {}; // Adjust this to match what loadYamlConfig() would return
 const mockData = {
   resourceType: "Bundle",
   type: "batch",
@@ -29,10 +28,6 @@ const mockData = {
   ],
 };
 
-jest.mock("../view-data/utils/utils", () => ({
-  loadYamlConfig: jest.fn().mockReturnValue(mockYamlConfig),
-  streamToJson: jest.fn().mockResolvedValue(mockData),
-}));
 jest.mock("@azure/storage-blob", () => ({
   BlobServiceClient: {
     fromConnectionString: jest.fn(() => mockBlobServiceClient),

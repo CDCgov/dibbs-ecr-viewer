@@ -1,4 +1,3 @@
-import { isDataAvailable, safeParse } from "@/app/view-data/utils/utils";
 import { loadYamlConfig } from "@/app/api/utils";
 import { Bundle } from "fhir/r4";
 import BundleWithTravelHistory from "./assets/BundleTravelHistory.json";
@@ -12,9 +11,9 @@ import BundleWithScheduledOrdersOnly from "./assets/BundleScheduledOrdersOnly.js
 import BundleNoActiveProblems from "./assets/BundleNoActiveProblems.json";
 import BundleCareTeam from "./assets/BundleCareTeam.json";
 import React from "react";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { CarePlanActivity } from "fhir/r4b";
-import { evaluate } from "@/app/view-data/utils/evaluate";
+import { evaluate } from "@/app/utils/evaluate";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import {
@@ -30,10 +29,7 @@ import {
   returnPlannedProceduresTable,
   returnProblemsTable,
 } from "../view-data/components/common";
-import {
-  DataDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
+import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   TooltipDiv,
   ToolTipElement,
@@ -326,35 +322,6 @@ describe("Utils", () => {
     });
   });
 
-  describe("isDataAvailable", () => {
-    it("given an item with no value, it should return false", () => {
-      const input: DisplayDataProps = {};
-      const result = isDataAvailable(input);
-      expect(result).toEqual(false);
-    });
-    it("given an item with no length in its value array, it should return false", () => {
-      const input: DisplayDataProps = {
-        value: [],
-      };
-      const result = isDataAvailable(input);
-      expect(result).toEqual(false);
-    });
-    it("given an item whose value matches one of the unavailable terms, it should return false", () => {
-      const input: DisplayDataProps = {
-        value: "Not on file documented in this encounter",
-      };
-      const result = isDataAvailable(input);
-      expect(result).toEqual(false);
-    });
-    it("given an item with available info, it should return true", () => {
-      const input: DisplayDataProps = {
-        value: "01/01/1970",
-      };
-      const result = isDataAvailable(input);
-      expect(result).toEqual(true);
-    });
-  });
-
   describe("DataDisplay", () => {
     describe("string value", () => {
       it("should display text up to 500 characters", () => {
@@ -580,45 +547,6 @@ describe("Utils", () => {
       render(<ToolTipElement toolTip={toolTip}>Item Title</ToolTipElement>);
       const tip = screen.getByTestId("triggerElement");
       expect(tip.className).not.toInclude("short-tooltip");
-    });
-  });
-
-  describe("safeParse", () => {
-    it("should leave a string safe HTML", () => {
-      const str = "hi there";
-      const actual = safeParse(str);
-      expect(actual).toBe(str);
-    });
-
-    it("should leave alone nice safe HTML", () => {
-      const str = "<p>hi there</p>";
-      const jsx = <p>hi there</p>;
-      const actual = safeParse(str);
-      expect(actual).toStrictEqual(jsx);
-    });
-
-    it("should remove empty nodes", () => {
-      const str = `<p></p><br/><span>hiya</span>`;
-      const parsed = safeParse(str);
-      const { asFragment } = render(parsed);
-      expect(asFragment()).toMatchSnapshot();
-      cleanup();
-    });
-
-    it("should map xml-y HTML", () => {
-      const str = `<paragraph>hi there</paragraph><content ID="abc">I'm content</content><list><item>one</item><item>two</item></list>`;
-      const parsed = safeParse(str);
-      const { asFragment } = render(parsed);
-      expect(asFragment()).toMatchSnapshot();
-      cleanup();
-    });
-
-    it("should remove comments", () => {
-      const str = `<!-- Data ID: 123 --><paragraph>hi there</paragraph>I'm content<list><item>one</item><item>two</item></list>`;
-      const parsed = safeParse(str);
-      const { asFragment } = render(parsed);
-      expect(asFragment()).toMatchSnapshot();
-      cleanup();
     });
   });
 });

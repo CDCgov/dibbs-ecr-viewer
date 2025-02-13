@@ -4,14 +4,14 @@ import {
   getTotalEcrCount,
   listEcrData,
 } from "@/app/services/listEcrDataService";
-import { returnParamDates } from "@/app/view-data/utils/date-utils";
+import { returnParamDates } from "@/app/utils/date-utils";
 
 jest.mock("../services/listEcrDataService");
 jest.mock("../data/conditions");
 jest.mock("../components/EcrPaginationWrapper");
 jest.mock("../components/Filters");
 jest.mock("../components/LibrarySearch");
-jest.mock("../view-data/utils/date-utils.ts");
+jest.mock("../utils/date-utils.ts");
 
 describe("Home Page", () => {
   afterEach(() => {

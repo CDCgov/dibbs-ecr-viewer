@@ -1,7 +1,7 @@
 import React from "react";
 import { Accordion, HeadingLevel } from "@trussworks/react-uswds";
-import { toKebabCase } from "@/app/services/formatService";
-import { RenderableNode } from "../view-data/utils/utils";
+import { toKebabCase } from "@/app/utils/format-utils";
+import { RenderableNode } from "@/app/utils/data-utils";
 
 export interface AccordionItemProps {
   title: RenderableNode;

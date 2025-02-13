@@ -1,5 +1,5 @@
-import { noData } from "@/app/view-data/utils/utils";
-import { formatDateTime } from "@/app/services/formatService";
+import { noData } from "@/app/utils/data-utils";
+import { formatDateTime } from "@/app/services/formatDateService";
 import { BaseTable } from "@/app/view-data/components/EvaluateTable";
 import React from "react";
 

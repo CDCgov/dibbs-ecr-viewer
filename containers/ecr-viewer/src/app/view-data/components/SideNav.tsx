@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
-import { toKebabCase } from "@/app/services/formatService";
+import { toKebabCase } from "@/app/utils/format-utils";
 import classNames from "classnames";
 import { BackButton } from "./BackButton";
 import { env } from "next-runtime-env";

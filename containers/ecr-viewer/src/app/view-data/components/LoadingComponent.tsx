@@ -9,7 +9,7 @@ import { AccordionSection, AccordionSubSection } from "../component-utils";
 import classNames from "classnames";
 import { BackButton } from "./BackButton";
 import React from "react";
-import { range } from "../utils/utils";
+import { range } from "../../utils/data-utils";
 import { env } from "next-runtime-env";
 import { ECRViewerLayout } from "./ECRViewerLayout";
 

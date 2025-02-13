@@ -7,7 +7,7 @@ import LibrarySearch from "./components/LibrarySearch";
 import NotFound from "./not-found";
 import Filters from "@/app/components/Filters";
 import { EcrTableLoading } from "./components/EcrTableClient";
-import { returnParamDates } from "@/app/view-data/utils/date-utils";
+import { returnParamDates } from "@/app/utils/date-utils";
 import { env } from "next-runtime-env";
 import { getAllConditions } from "./data/conditions";
 

@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
-import { toKebabCase } from "../services/formatService";
+import { toKebabCase } from "@/app/utils/format-utils";
 import { ToolTipElement } from "./components/ToolTipElement";
 
 type AccordionSectionProps = {

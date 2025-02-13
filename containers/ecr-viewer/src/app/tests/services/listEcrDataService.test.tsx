@@ -11,12 +11,12 @@ import {
   processCoreMetadata,
   listEcrData,
   generateFilterDateStatementPostgres,
-} from "../services/listEcrDataService";
-import { getDB } from "../api/services/postgres_db";
-import { formatDate, formatDateTime } from "../services/formatService";
-import { get_pool } from "../api/services/sqlserver_db";
+} from "../../services/listEcrDataService";
+import { getDB } from "../../api/services/postgres_db";
+import { formatDate, formatDateTime } from "../../services/formatDateService";
+import { get_pool } from "../../api/services/sqlserver_db";
 
-jest.mock("../api/services/sqlserver_db", () => ({
+jest.mock("../../api/services/sqlserver_db", () => ({
   get_pool: jest.fn(),
 }));
 

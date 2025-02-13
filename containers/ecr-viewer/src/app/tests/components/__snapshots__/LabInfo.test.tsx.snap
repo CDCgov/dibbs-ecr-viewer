@@ -1084,7 +1084,7 @@ Coruscant, MA
                         class="text-top"
                       >
                         <button
-                          aria-controls="hidden-comment-4"
+                          aria-controls="hidden-comment-r:id"
                           aria-expanded="false"
                           class="usa-button usa-button--unstyled"
                           data-test-id="comment-button"
@@ -1099,7 +1099,7 @@ Coruscant, MA
                     </tr>
                     <tr
                       hidden=""
-                      id="hidden-comment-4"
+                      id="hidden-comment-r:id"
                     >
                       <td
                         class="hideableData p-list"
