@@ -1,3 +1,4 @@
+"use client";
 import { Element } from "fhir/r4";
 import { PathMappings, noData } from "@/app/view-data/utils/utils";
 import { Button, Table } from "@trussworks/react-uswds";

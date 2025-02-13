@@ -1,4 +1,3 @@
-"use client";
 import {
   Accordion,
   Grid,
@@ -70,11 +69,14 @@ const SideNavLoadingItems = () => {
   );
 };
 
-const SideNavLoadingSkeleton = ({
-  isNonIntegratedViewer,
-}: {
-  isNonIntegratedViewer: boolean;
-}) => {
+/**
+ * Side nav loading blobs
+ * @returns Loading blobs for the sid nave
+ */
+export const SideNavLoadingSkeleton = () => {
+  const isNonIntegratedViewer =
+    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+
   const sideNavLoadingItems = [
     <a>eCR Summary</a>,
     <a>eCR Document</a>,
@@ -94,17 +96,15 @@ const SideNavLoadingSkeleton = ({
   ];
 
   return (
-    <div className="nav-wrapper">
+    <nav
+      className={classNames("nav-wrapper", {
+        "top-0": !isNonIntegratedViewer,
+        "top-550": isNonIntegratedViewer,
+      })}
+    >
       <BackButton className="margin-bottom-3" iconClassName="text-base" />
-      <nav
-        className={classNames("sticky-nav", {
-          "top-0": !isNonIntegratedViewer,
-          "top-550": isNonIntegratedViewer,
-        })}
-      >
-        <SideNav items={sideNavLoadingItems} />
-      </nav>
-    </div>
+      <SideNav items={sideNavLoadingItems} />
+    </nav>
   );
 };
 /**
@@ -233,14 +233,10 @@ const AccordionLoadingSkeleton = () => {
  * @returns ECR page loading skeleton
  */
 export const EcrLoadingSkeleton = () => {
-  const _isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
   return (
     <ECRViewerLayout>
       <div>
-        <SideNavLoadingSkeleton
-          isNonIntegratedViewer={_isNonIntegratedViewer ? true : false}
-        />
+        <SideNavLoadingSkeleton />
       </div>
       <div className={"ecr-viewer-container"}>
         <div className="margin-bottom-3">

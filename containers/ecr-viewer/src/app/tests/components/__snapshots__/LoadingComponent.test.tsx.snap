@@ -48,8 +48,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
           class="content-wrapper"
         >
           <div>
-            <div
-              class="nav-wrapper"
+            <nav
+              class="nav-wrapper top-550"
             >
               <a
                 class="display-inline-block margin-bottom-3"
@@ -71,194 +71,190 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </svg>
                 Back to eCR Library
               </a>
-              <nav
-                class="sticky-nav top-550"
+              <ul
+                class="usa-sidenav"
+                data-testid="sidenav"
               >
-                <ul
-                  class="usa-sidenav"
-                  data-testid="sidenav"
+                <li
+                  class="usa-sidenav__item"
                 >
-                  <li
-                    class="usa-sidenav__item"
+                  <a>
+                    eCR Summary
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a>
+                    eCR Document
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <ul
+                    class="usa-sidenav__sublist"
+                    data-testid="sidenav"
                   >
-                    <a>
-                      eCR Summary
-                    </a>
-                  </li>
-                  <li
-                    class="usa-sidenav__item"
-                  >
-                    <a>
-                      eCR Document
-                    </a>
-                  </li>
-                  <li
-                    class="usa-sidenav__item"
-                  >
-                    <ul
-                      class="usa-sidenav__sublist"
-                      data-testid="sidenav"
+                    <li
+                      class="usa-sidenav__item"
                     >
-                      <li
-                        class="usa-sidenav__item"
+                      <a>
+                        Patient Info
+                      </a>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <ul
+                        class="usa-sidenav__sublist"
+                        data-testid="sidenav"
                       >
-                        <a>
-                          Patient Info
-                        </a>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
-                      >
-                        <ul
-                          class="usa-sidenav__sublist"
-                          data-testid="sidenav"
+                        <li
+                          class="usa-sidenav__item"
                         >
-                          <li
-                            class="usa-sidenav__item"
-                          >
-                            <a>
+                          <a>
+                            <div
+                              class="grid-row"
+                            >
                               <div
-                                class="grid-row"
+                                class="loading-blob grid-col-8 loading-blob-gray width-full"
                               >
-                                <div
-                                  class="loading-blob grid-col-8 loading-blob-gray width-full"
-                                >
-                                   
-                                </div>
+                                 
                               </div>
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <a>
+                        Clinical Info
+                      </a>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <ul
+                        class="usa-sidenav__sublist"
+                        data-testid="sidenav"
                       >
-                        <a>
-                          Clinical Info
-                        </a>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
-                      >
-                        <ul
-                          class="usa-sidenav__sublist"
-                          data-testid="sidenav"
+                        <li
+                          class="usa-sidenav__item"
                         >
-                          <li
-                            class="usa-sidenav__item"
-                          >
-                            <a>
+                          <a>
+                            <div
+                              class="grid-row"
+                            >
                               <div
-                                class="grid-row"
+                                class="loading-blob grid-col-8 loading-blob-gray width-full"
                               >
-                                <div
-                                  class="loading-blob grid-col-8 loading-blob-gray width-full"
-                                >
-                                   
-                                </div>
+                                 
                               </div>
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <a>
+                        Lab Info
+                      </a>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <ul
+                        class="usa-sidenav__sublist"
+                        data-testid="sidenav"
                       >
-                        <a>
-                          Lab Info
-                        </a>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
-                      >
-                        <ul
-                          class="usa-sidenav__sublist"
-                          data-testid="sidenav"
+                        <li
+                          class="usa-sidenav__item"
                         >
-                          <li
-                            class="usa-sidenav__item"
-                          >
-                            <a>
+                          <a>
+                            <div
+                              class="grid-row"
+                            >
                               <div
-                                class="grid-row"
+                                class="loading-blob grid-col-8 loading-blob-gray width-full"
                               >
-                                <div
-                                  class="loading-blob grid-col-8 loading-blob-gray width-full"
-                                >
-                                   
-                                </div>
+                                 
                               </div>
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <a>
+                        eCR Metadata
+                      </a>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <ul
+                        class="usa-sidenav__sublist"
+                        data-testid="sidenav"
                       >
-                        <a>
-                          eCR Metadata
-                        </a>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
-                      >
-                        <ul
-                          class="usa-sidenav__sublist"
-                          data-testid="sidenav"
+                        <li
+                          class="usa-sidenav__item"
                         >
-                          <li
-                            class="usa-sidenav__item"
-                          >
-                            <a>
+                          <a>
+                            <div
+                              class="grid-row"
+                            >
                               <div
-                                class="grid-row"
+                                class="loading-blob grid-col-8 loading-blob-gray width-full"
                               >
-                                <div
-                                  class="loading-blob grid-col-8 loading-blob-gray width-full"
-                                >
-                                   
-                                </div>
+                                 
                               </div>
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <a>
+                        Unavailable Info
+                      </a>
+                    </li>
+                    <li
+                      class="usa-sidenav__item"
+                    >
+                      <ul
+                        class="usa-sidenav__sublist"
+                        data-testid="sidenav"
                       >
-                        <a>
-                          Unavailable Info
-                        </a>
-                      </li>
-                      <li
-                        class="usa-sidenav__item"
-                      >
-                        <ul
-                          class="usa-sidenav__sublist"
-                          data-testid="sidenav"
+                        <li
+                          class="usa-sidenav__item"
                         >
-                          <li
-                            class="usa-sidenav__item"
-                          >
-                            <a>
+                          <a>
+                            <div
+                              class="grid-row"
+                            >
                               <div
-                                class="grid-row"
+                                class="loading-blob grid-col-8 loading-blob-gray width-full"
                               >
-                                <div
-                                  class="loading-blob grid-col-8 loading-blob-gray width-full"
-                                >
-                                   
-                                </div>
+                                 
                               </div>
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
           </div>
           <div
             class="ecr-viewer-container"
