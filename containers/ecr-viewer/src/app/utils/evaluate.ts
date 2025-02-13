@@ -1,3 +1,5 @@
+import "server-only"; // fhirpath should only be used on the server
+
 import {
   Context,
   evaluate as fhirPathEvaluate,

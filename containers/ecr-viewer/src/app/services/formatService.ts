@@ -1,3 +1,5 @@
+import "server-only"; // FHIR evaluation/formatting should be done server side
+
 import { Address, ContactPoint, HumanName } from "fhir/r4";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import { formatDate } from "./formatDateService";

@@ -1,3 +1,5 @@
+import "server-only"; // FHIR evaluation should be done server side
+
 import {
   Address,
   Bundle,

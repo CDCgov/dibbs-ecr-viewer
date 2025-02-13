@@ -66,7 +66,8 @@
     "pg-promise": "^11.6.0",
     "react": "^18",
     "react-dom": "^18",
-    "sanitize-html": "^2.13.1"
+    "sanitize-html": "^2.13.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
