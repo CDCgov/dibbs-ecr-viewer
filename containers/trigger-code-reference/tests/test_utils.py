@@ -4,9 +4,11 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+
 from app.utils import (
     _find_codes_by_resource_type,
-    add_code_extension_and_human_readable_name,
+    add_human_readable_reportable_condition_name,
+    add_reportable_condition_extension
     convert_inputs_to_list,
     get_clean_snomed_code,
     get_concepts_dict,
@@ -174,7 +176,7 @@ def test_find_codes_by_resource_type():
 
 
 @patch("app.utils._get_condition_name_from_snomed_code")
-def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
+def test_add_reportable_condition_extension(mock_get_condition_name):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
     # get the Observation resource with the LOINC for SARS-like Coronavirus
@@ -201,7 +203,7 @@ def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
 
     # using SNOMED code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
     # * this code is used below as well
-    stamped_obs = add_code_extension_and_human_readable_name(
+    stamped_obs = add_reportable_condition_extension(
         observation_resource,
         "840539006",
     )
@@ -218,7 +220,7 @@ def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
             break
     assert found_stamp
 
-    stamped_condition = add_code_extension_and_human_readable_name(
+    stamped_condition = add_reportable_condition_extension(
         condition_resource, "840539006"
     )
     found_stamp = False
@@ -233,3 +235,20 @@ def test_add_code_extension_and_human_readable_name(mock_get_condition_name):
             found_stamp = True
             break
     assert found_stamp
+
+
+@patch("app.utils._get_condition_name_from_snomed_code")
+def test_add_human_readable_reportable_condition_name(mock_get_condition_name):
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
+    observation_resource = [
+        e.get("resource")
+        for e in message.get("entry", [])
+        if e.get("resource").get("resourceType") == "Observation"
+    ][0]
+
+    expected_condition_name = "Cyclosporiasis"
+    mock_get_condition_name.return_value = expected_condition_name
+
+    result = add_human_readable_reportable_condition_name(observation_resource)
+
+    assert result["valueCodeableConcept"]["text"] == expected_condition_name

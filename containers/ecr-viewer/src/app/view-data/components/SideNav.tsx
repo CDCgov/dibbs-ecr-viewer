@@ -1,9 +1,11 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
 import { toKebabCase } from "@/app/services/formatService";
 import classNames from "classnames";
 import { BackButton } from "./BackButton";
 import { env } from "next-runtime-env";
+import { SideNavLoadingSkeleton } from "./LoadingComponent";
 
 export class SectionConfig {
   title: string;
@@ -218,7 +220,10 @@ const SideNav: React.FC = () => {
 
   let sideNavItems = buildSideNav(sectionConfigs);
 
-  return (
+  // Add a separate loading state here as the side nav is much slower than the main content
+  return sectionConfigs.length === 0 ? (
+    <SideNavLoadingSkeleton />
+  ) : (
     <nav
       className={classNames("nav-wrapper", {
         "top-0": !isNonIntegratedViewer,

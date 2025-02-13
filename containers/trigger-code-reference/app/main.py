@@ -8,7 +8,8 @@ from app.base_service import BaseService
 from app.models import InsertConditionInput
 from app.utils import (
     _find_codes_by_resource_type,
-    add_code_extension_and_human_readable_name,
+    add_human_readable_reportable_condition_name,
+    add_reportable_condition_extension
     find_conditions,
     get_clean_snomed_code,
     get_concepts_dict,
@@ -76,16 +77,17 @@ async def stamp_condition_extensions(
     # Collate all clinical services for each of the found conditions to extend,
     # collected by service type
     stamp_codes_to_service_codes = {}
-    conditions = find_conditions(input.bundle)
+    condition_codes = find_conditions(input.bundle)
 
-    for cond in conditions:
-        cond_list = get_concepts_list([cond])
+    for condition_code in condition_codes:
+        cond_list = get_concepts_list([condition_code])
         cond_dict = get_concepts_dict(cond_list)
-        stamp_codes_to_service_codes[cond] = cond_dict
+        stamp_codes_to_service_codes[condition_code] = cond_dict
 
     bundle_entries = input.bundle.get("entry", [])
     for entry in bundle_entries:
         resource = entry.get("resource", {})
+        resource = add_human_readable_reportable_condition_name(resource)
         rtype = resource.get("resourceType")
         if rtype in RESOURCE_TO_SERVICE_TYPES:
             # Some resources might be coded in one or more schemes, so we'll
@@ -95,11 +97,11 @@ async def stamp_condition_extensions(
                 continue
 
             # Want to check each queried condition for extension codes
-            for cond in conditions:
+            for condition_code in condition_codes:
                 # Only need a single instance of service type lookup to contain
                 # the resource's code
                 should_stamp = False
-                stamp_checks = stamp_codes_to_service_codes[cond]
+                stamp_checks = stamp_codes_to_service_codes[condition_code]
 
                 # Use only the service types allowed by the current
                 # resource
@@ -126,8 +128,8 @@ async def stamp_condition_extensions(
                         break
 
                 if should_stamp:
-                    entry["resource"] = add_code_extension_and_human_readable_name(
-                        resource, cond
+                    resource = add_reportable_condition_extension(
+                        resource, condition_code
                     )
 
     return {"extended_bundle": input.bundle}

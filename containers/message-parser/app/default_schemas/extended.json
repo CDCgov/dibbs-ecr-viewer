@@ -381,7 +381,7 @@
         }
       },
       "condition": {
-        "fhir_path": "Observation.valueCodeableConcept.coding.display",
+        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.text, Observation.valueCodeableConcept.coding.display)",
         "data_type": "string",
         "nullable": true,
         "metadata": {

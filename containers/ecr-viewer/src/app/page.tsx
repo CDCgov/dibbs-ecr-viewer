@@ -9,6 +9,7 @@ import Filters from "@/app/components/Filters";
 import { EcrTableLoading } from "./components/EcrTableClient";
 import { returnParamDates } from "@/app/view-data/utils/date-utils";
 import { env } from "next-runtime-env";
+import { getAllConditions } from "./data/conditions";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
@@ -43,6 +44,8 @@ const HomePage = async ({
     filterConditionsArr,
   );
 
+  const allConditions = await getAllConditions();
+
   return (
     <div className="display-flex flex-column height-viewport">
       <Header />
@@ -54,7 +57,7 @@ const HomePage = async ({
             textBoxClassName="width-21-9375"
           />
         </div>
-        <Filters />
+        <Filters conditions={allConditions} />
         <EcrPaginationWrapper totalCount={totalCount}>
           <Suspense fallback={<EcrTableLoading />}>
             <EcrTable

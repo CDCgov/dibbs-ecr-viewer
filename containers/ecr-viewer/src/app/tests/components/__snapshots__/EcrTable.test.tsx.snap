@@ -25,7 +25,7 @@ exports[`EcrTable Snapshot test for EcrTableLoading should match snapshot 1`] = 
             >
               Patient
               <button
-                aria-label="Sort by patient"
+                aria-label="Sort by Patient"
                 class="usa-button sort-button usa-button sortable-column"
                 data-testid="button"
                 id="patient-sort-button"
@@ -45,7 +45,7 @@ exports[`EcrTable Snapshot test for EcrTableLoading should match snapshot 1`] = 
             >
               Received Date
               <button
-                aria-label="Sort by date_created"
+                aria-label="Sort by Received Date"
                 class="usa-button sort-button usa-button sortable-column"
                 data-testid="button"
                 id="date_created-sort-button"
@@ -56,7 +56,7 @@ exports[`EcrTable Snapshot test for EcrTableLoading should match snapshot 1`] = 
           <th
             class="library-encounter-date-column"
             data-sortable="true"
-            id="report_date-header"
+            id="encounter_date-header"
             role="columnheader"
             scope="col"
           >
@@ -65,10 +65,10 @@ exports[`EcrTable Snapshot test for EcrTableLoading should match snapshot 1`] = 
             >
               Encounter Date
               <button
-                aria-label="Sort by report_date"
+                aria-label="Sort by Encounter Date"
                 class="usa-button sort-button usa-button sortable-column"
                 data-testid="button"
-                id="report_date-sort-button"
+                id="encounter_date-sort-button"
                 type="button"
               />
             </div>
@@ -903,7 +903,7 @@ exports[`EcrTable should match snapshot 1`] = `
             >
               Patient
               <button
-                aria-label="Sort by patient"
+                aria-label="Sort by Patient"
                 class="usa-button sort-button usa-button sortable-column"
                 data-testid="button"
                 id="patient-sort-button"
@@ -924,7 +924,7 @@ exports[`EcrTable should match snapshot 1`] = `
             >
               Received Date
               <button
-                aria-label="Sort by date_created"
+                aria-label="Sort by Received Date"
                 class="usa-button sort-button usa-button sortable-desc-column"
                 data-testid="button"
                 id="date_created-sort-button"
@@ -935,7 +935,7 @@ exports[`EcrTable should match snapshot 1`] = `
           <th
             class="library-encounter-date-column"
             data-sortable="true"
-            id="report_date-header"
+            id="encounter_date-header"
             role="columnheader"
             scope="col"
           >
@@ -944,10 +944,10 @@ exports[`EcrTable should match snapshot 1`] = `
             >
               Encounter Date
               <button
-                aria-label="Sort by report_date"
+                aria-label="Sort by Encounter Date"
                 class="usa-button sort-button usa-button sortable-column"
                 data-testid="button"
-                id="report_date-sort-button"
+                id="encounter_date-sort-button"
                 type="button"
               />
             </div>

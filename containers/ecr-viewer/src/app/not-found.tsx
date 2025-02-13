@@ -1,5 +1,4 @@
-"use client";
-import { Icon } from "@trussworks/react-uswds";
+import { Error } from "@/app/components/Icon";
 import Header from "./Header";
 import { BackButton } from "./view-data/components/BackButton";
 
@@ -13,7 +12,7 @@ const NotFound = () => (
     <main className="display-flex flex-justify-center height-full">
       <div className="display-inline-block margin-y-auto">
         <h2 className="font-family-serif font-serif-xl margin-bottom-0">
-          <Icon.Error
+          <Error
             size={5}
             className="margin-right-105 text-middle"
             aria-hidden
