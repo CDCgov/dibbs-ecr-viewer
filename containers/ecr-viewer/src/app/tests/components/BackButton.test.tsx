@@ -33,6 +33,8 @@ describe("Back button", () => {
 
     render(<BackButton iconClassName="some-icon-class" />);
 
-    expect(screen.getByRole("img").classList).toContain("some-icon-class");
+    expect(screen.getByRole("link").children[0].classList).toContain(
+      "some-icon-class",
+    );
   });
 });
