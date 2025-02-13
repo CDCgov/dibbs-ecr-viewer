@@ -1,19 +1,12 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import Body
-from fastapi import FastAPI
-from fastapi import HTTPException
-from fastapi import Response
-from fastapi import status
+from fastapi import Body, FastAPI, HTTPException, Response, status
 from lxml import etree
 from lxml.etree import XMLSyntaxError
 
-from app.constants import FhirConverterInput
-from app.constants import sample_request
-from app.constants import sample_response
-from app.service import convert_to_fhir
-from app.service import resolve_references
+from app.constants import FhirConverterInput, sample_request, sample_response
+from app.service import convert_to_fhir, resolve_references
 
 description = (Path(__file__).parent.parent / "README.md").read_text(encoding="utf-8")
 

@@ -51,6 +51,8 @@ describe("listEcrDataService", () => {
           rule_summaries: ["Longer"],
           data_source: "DB",
           data_link: "",
+          set_id: "123",
+          eicr_version_number: "1",
         },
         {
           eicr_id: "ecr2",
@@ -63,6 +65,8 @@ describe("listEcrDataService", () => {
           rule_summaries: ["Other stuff", "Even more stuff"],
           data_source: "DB",
           data_link: "",
+          set_id: "124",
+          eicr_version_number: "1",
         },
       ];
 
@@ -76,6 +80,8 @@ describe("listEcrDataService", () => {
           patient_report_date: formatDateTime(date3.toISOString()),
           reportable_conditions: expect.arrayContaining(["Long"]),
           rule_summaries: expect.arrayContaining(["Longer"]),
+          eicr_set_id: "123",
+          eicr_version_number: "1",
         },
         {
           ecrId: "ecr2",
@@ -89,6 +95,8 @@ describe("listEcrDataService", () => {
             "Other stuff",
             "Even more stuff",
           ]),
+          eicr_set_id: "124",
+          eicr_version_number: "1",
         },
       ];
       const result = processCoreMetadata(responseBody);
@@ -120,7 +128,7 @@ describe("listEcrDataService", () => {
       );
       expect(database.manyOrNone).toHaveBeenCalledOnce();
       expect(database.manyOrNone).toHaveBeenCalledWith(
-        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
+        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
         {
           whereClause: expect.any(Object),
           startIndex,
@@ -145,6 +153,8 @@ describe("listEcrDataService", () => {
             rule_summaries: ["watch out for super ebola"],
             data_link: "",
             data_source: "DB",
+            set_id: "123",
+            eicr_version_number: "1",
           },
         ]),
       );
@@ -163,7 +173,7 @@ describe("listEcrDataService", () => {
 
       expect(database.manyOrNone).toHaveBeenCalledOnce();
       expect(database.manyOrNone).toHaveBeenCalledWith(
-        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
+        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
         {
           whereClause: expect.any(Object),
           startIndex,
@@ -181,6 +191,8 @@ describe("listEcrDataService", () => {
           patient_report_date: "06/21/2024 8:00\u00A0AM\u00A0EDT",
           reportable_conditions: ["super ebola", "double ebola"],
           rule_summaries: ["watch out for super ebola"],
+          eicr_set_id: "123",
+          eicr_version_number: "1",
         },
       ]);
     });
@@ -199,6 +211,8 @@ describe("listEcrDataService", () => {
             rule_summaries: ["stuff", "disease discovered"],
             data_link: "",
             data_source: "DB",
+            set_id: "123",
+            eicr_version_number: "1",
           },
         ]),
       );
@@ -216,7 +230,7 @@ describe("listEcrDataService", () => {
       );
       expect(database.manyOrNone).toHaveBeenCalledOnce();
       expect(database.manyOrNone).toHaveBeenCalledWith(
-        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
+        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
         {
           whereClause: expect.any(Object),
           startIndex,
@@ -234,6 +248,8 @@ describe("listEcrDataService", () => {
           patient_report_date: "06/20/2024 12:00\u00A0AM\u00A0EDT",
           reportable_conditions: ["sick", "tired"],
           rule_summaries: ["stuff", "disease discovered"],
+          eicr_set_id: "123",
+          eicr_version_number: "1",
         },
       ]);
     });
@@ -256,7 +272,7 @@ describe("listEcrDataService", () => {
       );
       expect(database.manyOrNone).toHaveBeenCalledOnce();
       expect(database.manyOrNone).toHaveBeenCalledWith(
-        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
+        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
         {
           whereClause: expect.any(Object),
           startIndex,
@@ -284,7 +300,7 @@ describe("listEcrDataService", () => {
       );
       expect(database.manyOrNone).toHaveBeenCalledOnce();
       expect(database.manyOrNone).toHaveBeenCalledWith(
-        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
+        "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
         {
           whereClause: expect.any(Object),
           startIndex,
@@ -320,6 +336,8 @@ describe("listEcrDataService", () => {
             date_created: new Date("2023-01-02T07:45:00Z"),
             conditions: "Condition1,Condition2",
             rule_summaries: "Rule1,Rule2",
+            set_id: "123",
+            eicr_version_number: "1",
           },
           {
             eICR_ID: "124",
@@ -367,6 +385,8 @@ describe("listEcrDataService", () => {
             rule_summaries: ["Rule1", "Rule2"],
             date_created: "01/02/2023 2:45\u00A0AM\u00A0EST",
             patient_report_date: "01/01/2023 2:30\u00A0AM\u00A0EST",
+            eicr_set_id: "123",
+            eicr_version_number: "1",
           },
           {
             ecrId: "124",

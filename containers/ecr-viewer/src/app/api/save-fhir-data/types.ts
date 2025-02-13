@@ -1,3 +1,17 @@
+interface Address {
+  use: "home" | "work" | "temp" | "old" | "billing" | undefined;
+  type: "postal" | "physical" | "both" | undefined;
+  text: string | undefined;
+  line: string[] | undefined;
+  city: string | undefined;
+  district: string | undefined;
+  state: string | undefined;
+  postal_code: string | undefined;
+  country: string | undefined;
+  period_start: Date | undefined;
+  period_end: Date | undefined;
+}
+
 interface Lab {
   uuid: string | undefined;
   test_type: string | undefined;
@@ -36,10 +50,7 @@ export interface BundleExtendedMetadata {
   gender: string | undefined;
   race: string | undefined;
   ethnicity: string | undefined;
-  street_address1: string | undefined;
-  street_address2: string | undefined;
-  state: string | undefined;
-  zip: string | undefined;
+  patient_addresses: Address[] | undefined;
   latitude: number | undefined;
   longitude: number | undefined;
   rr_id: string | undefined;

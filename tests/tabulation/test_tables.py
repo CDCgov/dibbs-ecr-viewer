@@ -13,13 +13,13 @@ import pytest
 import yaml
 
 from phdi.fhir.tabulation import tabulate_data
-from phdi.tabulation import load_schema
-from phdi.tabulation import validate_schema
-from phdi.tabulation import write_data
-from phdi.tabulation.tables import _convert_list_to_string
-from phdi.tabulation.tables import _create_from_arrays_data
-from phdi.tabulation.tables import _create_pa_schema_from_table_schema
-from phdi.tabulation.tables import _create_parquet_data
+from phdi.tabulation import load_schema, validate_schema, write_data
+from phdi.tabulation.tables import (
+    _convert_list_to_string,
+    _create_from_arrays_data,
+    _create_pa_schema_from_table_schema,
+    _create_parquet_data,
+)
 
 
 def test_load_schema():
@@ -106,7 +106,7 @@ def test_write_data_csv():
     # Batch 1 tests writing and creating brand new file
     # Only one row actually written in first batch
     write_data(batch_1, file_location, file_format, filename=output_file_name)
-    with open(file_location + output_file_name, "r") as csv_file:
+    with open(file_location + output_file_name) as csv_file:
         reader = csv.reader(csv_file, dialect="excel")
         line = 0
         for row in reader:
@@ -118,7 +118,7 @@ def test_write_data_csv():
     # Batch 2 tests appending to existing csv
     # Two more rows written here, make sure no duplicate header row
     write_data(batch_2, file_location, file_format, filename=output_file_name)
-    with open(file_location + output_file_name, "r") as csv_file:
+    with open(file_location + output_file_name) as csv_file:
         reader = csv.reader(csv_file, dialect="excel")
         line = 0
         for row in reader:

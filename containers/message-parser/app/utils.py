@@ -6,8 +6,7 @@ import re
 import uuid
 from functools import cache
 from pathlib import Path
-from typing import Literal
-from typing import Union
+from typing import Literal, Union
 
 import fhirpathpy
 import requests
@@ -20,13 +19,15 @@ from app.cloud.core import BaseCredentialManager
 from app.cloud.gcp import GcpCredentialManager
 from app.config import get_settings
 from app.fhir.transport import http_request_with_reauth
-from app.phdc.models import Address
-from app.phdc.models import Name
-from app.phdc.models import Observation
-from app.phdc.models import Organization
-from app.phdc.models import Patient
-from app.phdc.models import PHDCInputData
-from app.phdc.models import Telecom
+from app.phdc.models import (
+    Address,
+    Name,
+    Observation,
+    Organization,
+    Patient,
+    PHDCInputData,
+    Telecom,
+)
 from app.transport.http import http_request_with_retry
 
 DIBBS_REFERENCE_SIGNIFIER = "#REF#"
@@ -44,14 +45,14 @@ def load_parsing_schema(schema_name: str) -> dict:
     """
     custom_schema_path = Path(__file__).parent / "custom_schemas" / schema_name
     try:
-        with open(custom_schema_path, "r") as file:
+        with open(custom_schema_path) as file:
             parsing_schema = json.load(file)
     except FileNotFoundError:
         try:
             default_schema_path = (
                 Path(__file__).parent / "default_schemas" / schema_name
             )
-            with open(default_schema_path, "r") as file:
+            with open(default_schema_path) as file:
                 parsing_schema = json.load(file)
         except FileNotFoundError:
             raise FileNotFoundError(
@@ -336,7 +337,7 @@ def read_json_from_assets(filename: str) -> dict:
     :param filename: The name of the file to read.
     :return: A dictionary containing the contents of the file.
     """
-    return json.load(open((pathlib.Path(__file__).parent.parent / "assets" / filename)))
+    return json.load(open(pathlib.Path(__file__).parent.parent / "assets" / filename))
 
 
 def read_file_from_assets(filename: str) -> str:
@@ -346,9 +347,7 @@ def read_file_from_assets(filename: str) -> str:
     :param filename: The name of the file to read.
     :return: A string containing the contents of the file.
     """
-    with open(
-        (pathlib.Path(__file__).parent.parent / "assets" / filename), "r"
-    ) as file:
+    with open(pathlib.Path(__file__).parent.parent / "assets" / filename) as file:
         return file.read()
 
 

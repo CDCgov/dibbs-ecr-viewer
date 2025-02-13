@@ -2,16 +2,10 @@ import datetime
 import logging
 import uuid
 from functools import cache
-from typing import Dict
-from typing import List
 from typing import Literal
 
-from sqlalchemy import and_
-from sqlalchemy import Select
-from sqlalchemy import select
-from sqlalchemy import text
-from sqlalchemy.dialects.postgresql import aggregate_order_by
-from sqlalchemy.dialects.postgresql import array_agg
+from sqlalchemy import Select, and_, select, text
+from sqlalchemy.dialects.postgresql import aggregate_order_by, array_agg
 
 from phdi.fhir.utils import extract_value_with_resource_path
 from phdi.linkage.core import BaseMPIConnectorClient
@@ -116,7 +110,7 @@ class DIBBsMPIConnectorClient(BaseMPIConnectorClient):
             },
         }
 
-    def get_block_data(self, block_criteria: Dict) -> List[list]:
+    def get_block_data(self, block_criteria: dict) -> list[list]:
         """
         Returns a list of lists containing records from the MPI database that
         match on the incoming record's block criteria and values. If blocking
@@ -184,7 +178,7 @@ class DIBBsMPIConnectorClient(BaseMPIConnectorClient):
 
     def insert_matched_patient(
         self,
-        patient_resource: Dict,
+        patient_resource: dict,
         person_id=None,
         external_person_id=None,
     ) -> str:
@@ -236,12 +230,12 @@ class DIBBsMPIConnectorClient(BaseMPIConnectorClient):
             if external_person_id is not None:
                 logging.info(
                     f"""external_person_id was not None;
-                      starting _insert_external_person_id at:{datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                      starting _insert_external_person_id at:{datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                 )
                 self._insert_external_person_id(person_id, external_person_id)
                 logging.info(
                     f"""external_person_id was not None;
-                      done with _insert_external_person_id at:{datetime.datetime.now().strftime('%m-%d-%yT%H:%M:%S.%f')}"""  # noqa
+                      done with _insert_external_person_id at:{datetime.datetime.now().strftime("%m-%d-%yT%H:%M:%S.%f")}"""  # noqa
                 )
         except Exception as error:  # pragma: no cover
             raise ValueError(f"{error}")
@@ -662,8 +656,8 @@ class DIBBsMPIConnectorClient(BaseMPIConnectorClient):
         return external_source_id
 
     def _generate_dict_record_from_results(
-        self, results_list: List[list]
-    ) -> List[dict]:
+        self, results_list: list[list]
+    ) -> list[dict]:
         """
         Converts a list of list of records into a
         dictionary using the column name header, in the

@@ -1,7 +1,5 @@
 import json
 import pathlib
-from typing import Dict
-from typing import List
 
 
 def read_json_from_assets(filename: str) -> dict:
@@ -11,7 +9,7 @@ def read_json_from_assets(filename: str) -> dict:
     :param filename: The name of the file to read.
     :return: A dictionary containing the contents of the file.
     """
-    return json.load(open((pathlib.Path(__file__).parent.parent / "assets" / filename)))
+    return json.load(open(pathlib.Path(__file__).parent.parent / "assets" / filename))
 
 
 def load_section_loincs(loinc_json: dict) -> tuple[list, dict]:
@@ -40,8 +38,8 @@ def load_section_loincs(loinc_json: dict) -> tuple[list, dict]:
 
 
 def create_clinical_services_dict(
-    clinical_services_list: List[Dict],
-) -> Dict[str, List[str]]:
+    clinical_services_list: list[dict],
+) -> dict[str, list[str]]:
     """
     Transform the original Trigger Code Reference API response to have keys as systems
     and values as lists of codes, while ensuring the systems are recognized and using their

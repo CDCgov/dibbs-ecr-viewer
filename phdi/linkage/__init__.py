@@ -1,29 +1,30 @@
-from phdi.linkage.algorithms import DIBBS_BASIC
-from phdi.linkage.algorithms import DIBBS_ENHANCED
+from phdi.linkage.algorithms import DIBBS_BASIC, DIBBS_ENHANCED
 from phdi.linkage.core import BaseMPIConnectorClient
-from phdi.linkage.link import add_person_resource
-from phdi.linkage.link import block_data
-from phdi.linkage.link import calculate_log_odds
-from phdi.linkage.link import calculate_m_probs
-from phdi.linkage.link import calculate_u_probs
-from phdi.linkage.link import compile_match_lists
-from phdi.linkage.link import eval_log_odds_cutoff
-from phdi.linkage.link import eval_perfect_match
-from phdi.linkage.link import extract_blocking_values_from_record
-from phdi.linkage.link import feature_match_exact
-from phdi.linkage.link import feature_match_four_char
-from phdi.linkage.link import feature_match_fuzzy_string
-from phdi.linkage.link import feature_match_log_odds_exact
-from phdi.linkage.link import feature_match_log_odds_fuzzy_compare
-from phdi.linkage.link import generate_hash_str
-from phdi.linkage.link import link_record_against_mpi
-from phdi.linkage.link import load_json_probs
-from phdi.linkage.link import match_within_block
-from phdi.linkage.link import perform_linkage_pass
-from phdi.linkage.link import profile_log_odds
-from phdi.linkage.link import read_linkage_config
-from phdi.linkage.link import score_linkage_vs_truth
-from phdi.linkage.link import write_linkage_config
+from phdi.linkage.link import (
+    add_person_resource,
+    block_data,
+    calculate_log_odds,
+    calculate_m_probs,
+    calculate_u_probs,
+    compile_match_lists,
+    eval_log_odds_cutoff,
+    eval_perfect_match,
+    extract_blocking_values_from_record,
+    feature_match_exact,
+    feature_match_four_char,
+    feature_match_fuzzy_string,
+    feature_match_log_odds_exact,
+    feature_match_log_odds_fuzzy_compare,
+    generate_hash_str,
+    link_record_against_mpi,
+    load_json_probs,
+    match_within_block,
+    perform_linkage_pass,
+    profile_log_odds,
+    read_linkage_config,
+    score_linkage_vs_truth,
+    write_linkage_config,
+)
 from phdi.linkage.mpi import DIBBsMPIConnectorClient
 from phdi.linkage.seed import convert_to_patient_fhir_resources
 from phdi.linkage.utils import datetime_to_str
