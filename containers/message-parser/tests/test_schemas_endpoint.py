@@ -24,7 +24,7 @@ def test_get_specific_schema():
     test_schema_path = (
         Path(__file__).parent.parent / "app" / "default_schemas" / "test_schema.json"
     )
-    with open(test_schema_path, "r") as file:
+    with open(test_schema_path) as file:
         test_schema = json.load(file)
 
     response = client.get("/schemas/test_schema.json")

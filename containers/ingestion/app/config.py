@@ -1,6 +1,5 @@
 from functools import lru_cache
-from typing import Literal
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseSettings
 
@@ -17,7 +16,7 @@ class Settings(BaseSettings):
     storage_account_url: Optional[str]
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> dict:
     """
     Load the values specified in the Settings class from the environment and return a

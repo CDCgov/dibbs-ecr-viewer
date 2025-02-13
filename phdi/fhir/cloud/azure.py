@@ -1,7 +1,6 @@
 import io
-from typing import Iterator
+from collections.abc import Iterator
 from typing import TextIO
-from typing import Tuple
 
 from azure.storage.blob import download_blob_from_url
 
@@ -11,7 +10,7 @@ from phdi.cloud.azure import AzureCredentialManager
 def download_from_fhir_export_response(
     export_response: dict,
     cred_manager: AzureCredentialManager,
-) -> Iterator[Tuple[str, TextIO]]:
+) -> Iterator[tuple[str, TextIO]]:
     """
     Accepts the export response content as specified here:
     https://hl7.org/fhir/uv/bulkdata/export/index.html#response---complete-status

@@ -1,4 +1,3 @@
-from typing import List
 from typing import Literal
 
 import requests
@@ -12,7 +11,7 @@ def http_request_with_reauth(
     url: str,
     retry_count: int,
     request_type: Literal["GET", "POST"],
-    allowed_methods: List[str],
+    allowed_methods: list[str],
     headers: dict,
     data: dict = None,
 ) -> requests.Response:

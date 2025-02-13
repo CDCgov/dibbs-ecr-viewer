@@ -1,11 +1,13 @@
 from lxml import etree
 
-from app.validation.xml_utils import ECR_NAMESPACES
-from app.validation.xml_utils import get_ecr_message_ids
-from app.validation.xml_utils import get_xml_element_details
-from app.validation.xml_utils import validate_xml_attributes
-from app.validation.xml_utils import validate_xml_elements
-from app.validation.xml_utils import validate_xml_value
+from app.validation.xml_utils import (
+    ECR_NAMESPACES,
+    get_ecr_message_ids,
+    get_xml_element_details,
+    validate_xml_attributes,
+    validate_xml_elements,
+    validate_xml_value,
+)
 
 ERROR_MESSAGES = {
     "fatal": [],

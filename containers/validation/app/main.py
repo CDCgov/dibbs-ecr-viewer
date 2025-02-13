@@ -4,12 +4,13 @@ from typing import Annotated
 from fastapi import Body
 
 from app.base_service import BaseService
-from app.constants import ValidateInput
-from app.constants import ValidateResponse
-from app.utils import check_for_and_extract_rr_data
-from app.utils import load_ecr_config
-from app.utils import read_json_from_assets
-from app.utils import validate_error_types
+from app.constants import ValidateInput, ValidateResponse
+from app.utils import (
+    check_for_and_extract_rr_data,
+    load_ecr_config,
+    read_json_from_assets,
+    validate_error_types,
+)
 from app.validation.validation import validate_ecr
 
 # TODO: Remove hard coded location for config path

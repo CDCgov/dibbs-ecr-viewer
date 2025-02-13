@@ -18,7 +18,7 @@ def read_file_from_test_assets():
         """
         Reads a file from the test assets directory.
         """
-        with open((Path(__file__).parent / "assets" / filename), "r") as file:
+        with open(Path(__file__).parent / "assets" / filename) as file:
             return file.read()
 
     return _read_file
@@ -30,7 +30,7 @@ def parse_file_from_test_assets():
         """
         Parses a file from the assets directory into an ElementTree.
         """
-        with open((Path(__file__).parent / "assets" / filename), "r") as file:
+        with open(Path(__file__).parent / "assets" / filename) as file:
             parser = ET.XMLParser()
             tree = ET.parse(file, parser)
             return tree

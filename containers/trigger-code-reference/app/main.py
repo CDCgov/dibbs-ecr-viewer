@@ -2,19 +2,19 @@ import string
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import Body
-from fastapi import Query
-from fastapi import Response
+from fastapi import Body, Query, Response
 
 from app.base_service import BaseService
 from app.models import InsertConditionInput
-from app.utils import _find_codes_by_resource_type
-from app.utils import add_code_extension_and_human_readable_name
-from app.utils import find_conditions
-from app.utils import get_clean_snomed_code
-from app.utils import get_concepts_dict
-from app.utils import get_concepts_list
-from app.utils import read_json_from_assets
+from app.utils import (
+    _find_codes_by_resource_type,
+    add_code_extension_and_human_readable_name,
+    find_conditions,
+    get_clean_snomed_code,
+    get_concepts_dict,
+    get_concepts_list,
+    read_json_from_assets,
+)
 
 RESOURCE_TO_SERVICE_TYPES = {
     "Observation": ["dxtc", "ostc", "lotc", "lrtc", "mrtc", "sdtc"],
