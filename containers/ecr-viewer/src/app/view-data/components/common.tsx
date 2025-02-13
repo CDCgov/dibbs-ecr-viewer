@@ -251,8 +251,7 @@ export const returnHtmlTableContent = (
   const bundle = evaluateValue(fhirBundle, mapping);
   const tableJson = formatTablesToJSON(bundle);
 
-  const tables = tableJson.filter((t) => !!t);
-  if (tables.length === 0) return undefined;
+  if (tableJson.length === 0) return undefined;
 
   return (
     <Fragment key={`${Math.random()}`}>

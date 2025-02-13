@@ -113,5 +113,16 @@ describe("common tests", () => {
       ).toBeInTheDocument();
       expect(screen.getAllByText("2000-02-04T21:02:00.000Z")).toHaveLength(2);
     });
+
+    it("returns nothing if required table data is not available", () => {
+      const result = returnHtmlTableContent(
+        undefined as any,
+        mappings["labResultDiv"],
+        "test-title",
+      );
+
+      const { container } = render(result);
+      expect(container).toBeEmptyDOMElement();
+    });
   });
 });
