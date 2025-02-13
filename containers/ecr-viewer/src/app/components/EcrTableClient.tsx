@@ -48,7 +48,7 @@ const initialHeaders = [
     sortDirection: "",
   },
   {
-    id: "report_date",
+    id: "encounter_date",
     value: "Encounter Date",
     className: "library-encounter-date-column",
     dataSortable: true,
