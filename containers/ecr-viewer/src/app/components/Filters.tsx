@@ -1,5 +1,4 @@
 "use client";
-
 import React, {
   createContext,
   useCallback,
@@ -49,12 +48,18 @@ export const FilterOpenContext = createContext<FilterOpenContextValue>({
   lastOpenButtonRef: { current: null },
 });
 
+interface FilterProps {
+  conditions: string[];
+}
+
 /**
  * Functional component that renders Filters section in eCR Library.
  * Includes Filter component for reportable conditions.
+ * @param props - props to pass to Filters
+ * @param props.conditions - List of conditions avilable to filter on
  * @returns The rendered Filters component.
  */
-const Filters = () => {
+const Filters = ({ conditions }: FilterProps) => {
   const [filterBoxOpen, setFilterBoxOpen] = useState<string>(FILTER_CLOSED);
   const lastOpenButtonRef = useRef<HTMLElement | null>(null);
   const { searchParams, deleteQueryParam, pushQueryUpdate } = useQueryParam();
@@ -107,7 +112,7 @@ const Filters = () => {
         <span className="line-height-sans-6">FILTERS:</span>
         <FilterOpenContext.Provider value={filterOpenContextValue}>
           <FilterByDate />
-          <FilterReportableConditions />
+          <FilterReportableConditions conditions={conditions} />
         </FilterOpenContext.Provider>
 
         {paramKeys.some((k) => searchParams.get(k) !== null) && (
@@ -131,32 +136,20 @@ const Filters = () => {
 
 /**
  * Functional component for filtering eCRs in the Library based on reportable conditions.
+ * @param props - props to pass to FilterReportableConditions
+ * @param props.conditions - Conditions to filter on
  * @returns The rendered FilterReportableConditions component.
- * - Fetches conditions from the `/api/conditions` endpoint.
  * - Users can select specific conditions or select all conditions.
  * - Updates the browser's query string when the filter is applied.
  */
-const FilterReportableConditions = () => {
+const FilterReportableConditions = ({ conditions }: FilterProps) => {
   const { searchParams, updateQueryParam, pushQueryUpdate } = useQueryParam();
   const [filterConditions, setFilterConditions] = useState<{
     [key: string]: boolean;
   }>({});
 
   useEffect(() => {
-    const fetchConditions = async () => {
-      try {
-        const response = await fetch(`${process.env.BASE_PATH}/api/conditions`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch conditions");
-        }
-        const allConditions = await response.json();
-        resetFilterConditions(allConditions);
-      } catch (error) {
-        console.error("Error fetching conditions:", error);
-      }
-    };
-
-    fetchConditions();
+    resetFilterConditions(conditions);
   }, []);
 
   // Build list of conditions to filter on
@@ -233,7 +226,7 @@ const FilterReportableConditions = () => {
       <div className="display-flex flex-column">
         <div
           className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
-          key={"all"}
+          key="all"
         >
           <input
             id="condition-all"
