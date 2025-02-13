@@ -209,10 +209,6 @@ export const saveMetadataToSqlServer = async (
         .input("gender_identity", sql.VarChar(50), metadata.gender_identity)
         .input("race", sql.VarChar(255), metadata.race)
         .input("ethnicity", sql.VarChar(255), metadata.ethnicity)
-        .input("street_address1", sql.VarChar(255), metadata.street_address1)
-        .input("street_address2", sql.VarChar(255), metadata.street_address2)
-        .input("state", sql.VarChar(50), metadata.state)
-        .input("zip_code", sql.VarChar(20), metadata.zip)
         .input("latitude", sql.Float, metadata.latitude)
         .input("longitude", sql.Float, metadata.longitude)
         .input(
@@ -283,8 +279,33 @@ export const saveMetadataToSqlServer = async (
           metadata.active_problems,
         )
         .query(
-          "INSERT INTO dbo.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, street_address_1, street_address_2, state, zip_code, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @street_address1, @street_address2, @state, @zip_code, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
+          "INSERT INTO dbo.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
         );
+
+      if (metadata.patient_addresses) {
+        for (const address of metadata.patient_addresses) {
+          console.log(address);
+          const patient_address_uuid = randomUUID();
+          const addressInsertRequest = new sql.Request(transaction);
+          await addressInsertRequest
+            .input("UUID", sql.VarChar(200), patient_address_uuid)
+            .input("use", sql.VarChar(7), address.use)
+            .input("type", sql.VarChar(8), address.type)
+            .input("text", sql.VarChar(sql.MAX), address.text)
+            .input("line", sql.VarChar(sql.MAX), address.line)
+            .input("city", sql.VarChar(255), address.city)
+            .input("district", sql.VarChar(255), address.district)
+            .input("state", sql.VarChar(255), address.state)
+            .input("postal_code", sql.VarChar(20), address.postal_code)
+            .input("country", sql.VarChar(255), address.country)
+            .input("period_start", sql.DateTime, address.period_start)
+            .input("period_end", sql.DateTime, address.period_end)
+            .input("eICR_ID", sql.VarChar(200), ecrId)
+            .query(
+              "INSERT INTO dbo.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
+            );
+        }
+      }
 
       if (metadata.labs) {
         for (const lab of metadata.labs) {

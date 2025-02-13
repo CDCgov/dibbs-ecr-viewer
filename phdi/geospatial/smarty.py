@@ -1,12 +1,9 @@
 from typing import Union
 
-from smartystreets_python_sdk import ClientBuilder
-from smartystreets_python_sdk import StaticCredentials
-from smartystreets_python_sdk import us_street
+from smartystreets_python_sdk import ClientBuilder, StaticCredentials, us_street
 from smartystreets_python_sdk.us_street.lookup import Lookup
 
-from phdi.geospatial.core import BaseGeocodeClient
-from phdi.geospatial.core import GeocodeResult
+from phdi.geospatial.core import BaseGeocodeClient, GeocodeResult
 
 
 class SmartyGeocodeClient(BaseGeocodeClient):

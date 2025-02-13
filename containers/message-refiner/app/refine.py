@@ -1,8 +1,5 @@
 import logging
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Union
+from typing import Optional, Union
 
 from lxml import etree
 
@@ -72,8 +69,8 @@ def validate_sections_to_include(sections_to_include: str | None) -> tuple[list,
 
 def refine(
     validated_message: etree.Element,
-    sections_to_include: Optional[List[str]] = None,
-    clinical_services: Optional[Dict[str, List[str]]] = None,
+    sections_to_include: Optional[list[str]] = None,
+    clinical_services: Optional[dict[str, list[str]]] = None,
 ) -> str:
     """
     Refines an eICR XML document by processing its sections based on the provided parameters.
@@ -208,8 +205,8 @@ def _process_section(
     section: etree.Element,
     combined_xpaths: str,
     namespaces: dict,
-    template_ids: List[str],
-    clinical_services_codes: Optional[List[str]] = None,
+    template_ids: list[str],
+    clinical_services_codes: Optional[list[str]] = None,
 ) -> None:
     """
     Processes a section by checking for elements, finding observations,
@@ -243,7 +240,7 @@ def _process_section(
 
 
 def _generate_combined_xpath(
-    template_ids: List[str], clinical_services_dict: Dict[str, List[str]]
+    template_ids: list[str], clinical_services_dict: dict[str, list[str]]
 ) -> str:
     """
     Generate a combined XPath expression for templateIds and all codes across all systems, ensuring they are within 'observation' elements.
@@ -291,7 +288,7 @@ def _get_observations(
     section: etree.Element,
     combined_xpath: str,
     namespaces: dict = {"hl7": "urn:hl7-org:v3"},
-) -> List[etree.Element]:
+) -> list[etree.Element]:
     """
     Get matching observations from a section or a callable returning a section based on combined XPath query.
 
@@ -327,7 +324,7 @@ def _get_observations(
 def _are_elements_present(
     section: etree.Element,
     search_type: str,
-    search_values: List[str],
+    search_values: list[str],
     namespaces: dict = {"hl7": "urn:hl7-org:v3"},
 ) -> bool:
     """
@@ -350,7 +347,7 @@ def _are_elements_present(
     return bool(section.xpath(combined_xpath, namespaces=namespaces))
 
 
-def _find_path_to_entry(element: etree.Element) -> List[etree.Element]:
+def _find_path_to_entry(element: etree.Element) -> list[etree.Element]:
     """
     Helper function to find the path from a given element to the parent <entry> element.
     """
@@ -367,7 +364,7 @@ def _find_path_to_entry(element: etree.Element) -> List[etree.Element]:
 
 
 def _prune_unwanted_siblings(
-    paths: List[List[etree.Element]], desired_elements: List[etree.Element]
+    paths: list[list[etree.Element]], desired_elements: list[etree.Element]
 ):
     """
     Prunes unwanted siblings based on the desired elements.
@@ -392,7 +389,7 @@ def _prune_unwanted_siblings(
 
 def _extract_observation_data(
     observation: etree.Element,
-) -> Dict[str, Union[str, bool]]:
+) -> dict[str, Union[str, bool]]:
     """
     Extracts relevant data from an observation element, including checking for trigger code template ID.
 
@@ -425,7 +422,7 @@ def _extract_observation_data(
     return data
 
 
-def _create_or_update_text_element(observations: List[etree.Element]) -> etree.Element:
+def _create_or_update_text_element(observations: list[etree.Element]) -> etree.Element:
     """
     Creates or updates a <text> element with a table containing information from the given observations.
 
@@ -461,7 +458,7 @@ def _create_or_update_text_element(observations: List[etree.Element]) -> etree.E
 
 
 def _update_text_element(
-    section: etree.Element, observations: List[etree.Element]
+    section: etree.Element, observations: list[etree.Element]
 ) -> None:
     """
     Updates the <text> element of a section to include information from observations.

@@ -21,7 +21,7 @@ def test_get_specific_config():
     test_config_path = (
         Path(__file__).parent.parent / "app" / "default_configs" / "test_config.json"
     )
-    with open(test_config_path, "r") as file:
+    with open(test_config_path) as file:
         test_config = json.load(file)
 
     response = client.get("/configs/test_config.json")

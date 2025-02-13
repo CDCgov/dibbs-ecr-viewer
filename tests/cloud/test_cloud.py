@@ -1,17 +1,14 @@
 import io
 import json
 import pathlib
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timezone
 from unittest import mock
 
 import pytest
 from azure.storage.blob import ContainerClient
 
-from phdi.cloud.azure import AzureCloudContainerConnection
-from phdi.cloud.azure import AzureCredentialManager
-from phdi.cloud.gcp import GcpCloudStorageConnection
-from phdi.cloud.gcp import GcpCredentialManager
+from phdi.cloud.azure import AzureCloudContainerConnection, AzureCredentialManager
+from phdi.cloud.gcp import GcpCloudStorageConnection, GcpCredentialManager
 
 
 @mock.patch("phdi.cloud.azure.DefaultAzureCredential")

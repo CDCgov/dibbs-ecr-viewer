@@ -1,23 +1,15 @@
 import copy
 from pathlib import Path
-from typing import Annotated
-from typing import Optional
+from typing import Annotated, Optional
 
-from fastapi import Body
-from fastapi import Response
-from fastapi import status
-from pydantic import BaseModel
-from pydantic import Field
+from fastapi import Body, Response, status
+from pydantic import BaseModel, Field
 
 from app.base_service import BaseService
-from app.linkage.algorithms import DIBBS_BASIC
-from app.linkage.algorithms import DIBBS_ENHANCED
-from app.linkage.link import add_person_resource
-from app.linkage.link import link_record_against_mpi
+from app.linkage.algorithms import DIBBS_BASIC, DIBBS_ENHANCED
+from app.linkage.link import add_person_resource, link_record_against_mpi
 from app.linkage.mpi import DIBBsMPIConnectorClient
-from app.utils import get_settings
-from app.utils import read_json_from_assets
-from app.utils import run_migrations
+from app.utils import get_settings, read_json_from_assets, run_migrations
 
 # Ensure MPI is configured as expected.
 run_migrations()

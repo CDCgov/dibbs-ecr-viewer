@@ -14,6 +14,8 @@ export interface CoreMetadataModel {
   rule_summaries: string[];
   report_date: Date;
   date_created: Date;
+  set_id: string | undefined;
+  eicr_version_number: string | undefined;
 }
 
 export interface ExtendedMetadataModel {
@@ -27,6 +29,8 @@ export interface ExtendedMetadataModel {
   rule_summaries: string;
   encounter_start_date: Date;
   date_created: Date;
+  set_id: string | undefined;
+  eicr_version_number: string | undefined;
 }
 
 export interface EcrDisplay {
@@ -38,6 +42,8 @@ export interface EcrDisplay {
   rule_summaries: string[];
   patient_report_date: string;
   date_created: string;
+  eicr_set_id: string | undefined;
+  eicr_version_number: string | undefined;
 }
 
 /**
@@ -98,7 +104,7 @@ async function listEcrDataPostgres(
 ): Promise<EcrDisplay[]> {
   const { database } = getDB();
   const list = await database.manyOrNone<CoreMetadataModel>(
-    "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
+    "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
     {
       whereClause: generateWhereStatementPostgres(
         filterDates,
@@ -139,7 +145,7 @@ async function listEcrDataSqlserver(
       searchTerm,
       filterConditions,
     );
-    const query = `SELECT ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, (${conditionsSubQuery}) AS conditions, (${ruleSummariesSubQuery}) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereStatement} GROUP BY ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created ${sortStatement} OFFSET ${startIndex} ROWS FETCH NEXT ${itemsPerPage} ROWS ONLY`;
+    const query = `SELECT ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number, (${conditionsSubQuery}) AS conditions, (${ruleSummariesSubQuery}) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereStatement} GROUP BY ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number ${sortStatement} OFFSET ${startIndex} ROWS FETCH NEXT ${itemsPerPage} ROWS ONLY`;
     const list = await pool.request().query<ExtendedMetadataModel[]>(query);
 
     return processExtendedMetadata(list.recordset);
@@ -173,6 +179,8 @@ export const processCoreMetadata = (
       patient_report_date: object.report_date
         ? formatDateTime(object.report_date.toISOString())
         : "",
+      eicr_set_id: object.set_id,
+      eicr_version_number: object.eicr_version_number,
     };
   });
 };
@@ -201,6 +209,8 @@ const processExtendedMetadata = (
       patient_report_date: object.encounter_start_date
         ? formatDateTime(object.encounter_start_date.toISOString())
         : "",
+      eicr_set_id: object.set_id,
+      eicr_version_number: object.eicr_version_number,
     };
 
     return result;

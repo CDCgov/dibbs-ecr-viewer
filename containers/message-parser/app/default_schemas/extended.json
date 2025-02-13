@@ -24,25 +24,57 @@
     "data_type": "string",
     "nullable": true
   },
-  "street_address1": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.line[0]",
-    "data_type": "string",
-    "nullable": true
-  },
-  "street_address2": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.line[1]",
-    "data_type": "string",
-    "nullable": true
-  },
-  "state": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.state",
-    "data_type": "string",
-    "nullable": true
-  },
-  "zip": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.postalCode",
-    "data_type": "string",
-    "nullable": true
+  "patient_addresses": {
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address",
+    "data_type": "array",
+    "nullable": true,
+    "secondary_schema": {
+      "use": {
+        "fhir_path": "use",
+        "data_type": "string",
+        "nullable": true
+      },
+      "line": {
+        "fhir_path": "line",
+        "data_type": "array",
+        "nullable": true
+      },
+      "city": {
+        "fhir_path": "city",
+        "data_type": "string",
+        "nullable": true
+      },
+      "district": {
+        "fhir_path": "district",
+        "data_type": "string",
+        "nullable": true
+      },
+      "state": {
+        "fhir_path": "state",
+        "data_type": "string",
+        "nullable": true
+      },
+      "postal_code": {
+        "fhir_path": "postalCode",
+        "data_type": "string",
+        "nullable": true
+      },
+      "country": {
+        "fhir_path": "country",
+        "data_type": "string",
+        "nullable": true
+      },
+      "period_start": {
+        "fhir_path": "period.start",
+        "data_type": "datetime",
+        "nullable": true
+      },
+      "period_end": {
+        "fhir_path": "period.end",
+        "data_type": "datetime",
+        "nullable": true
+      }
+    }
   },
   "latitude": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.extension.where(url='http://hl7.org/fhir/StructureDefinition/geolocation').extension.where(url='latitude').valueDecimal",

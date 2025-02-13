@@ -1,14 +1,14 @@
 import copy
-from typing import List
-from typing import Literal
-from typing import Union
+from typing import Literal, Union
 
-from app.harmonization import double_metaphone_string
-from app.harmonization import DoubleMetaphone
-from app.harmonization import standardize_birth_date
-from app.harmonization import standardize_country_code
-from app.harmonization import standardize_name
-from app.harmonization import standardize_phone
+from app.harmonization import (
+    DoubleMetaphone,
+    double_metaphone_string,
+    standardize_birth_date,
+    standardize_country_code,
+    standardize_name,
+    standardize_phone,
+)
 
 
 def double_metaphone_bundle(bundle: dict, overwrite=True) -> dict:
@@ -234,7 +234,7 @@ def _standardize_phones_in_resource(
 
 def _extract_countries_from_resource(
     resource: dict, code_type: Literal["alpha_2", "alpha_3", "numeric"] = "alpha_2"
-) -> List[str]:
+) -> list[str]:
     """
     Builds a list containing all of the countries, standardized by code_type, in the
     addresses of a given FHIR resource as interpreted by the ISO 3611: standardized

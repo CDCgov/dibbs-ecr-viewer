@@ -1,6 +1,4 @@
-from abc import ABC
-from abc import abstractmethod
-from typing import List
+from abc import ABC, abstractmethod
 from typing import Union
 
 
@@ -63,7 +61,7 @@ class BaseCloudStorageConnection(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def list_containers(self) -> List[str]:
+    def list_containers(self) -> list[str]:
         """
         Lists names for this CloudContainerConnection's containers.
 
@@ -72,7 +70,7 @@ class BaseCloudStorageConnection(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def list_objects(self, container_name: str, prefix: str) -> List[str]:
+    def list_objects(self, container_name: str, prefix: str) -> list[str]:
         """
         Lists names for objects within a container.
 

@@ -2,20 +2,14 @@ from pathlib import Path
 from typing import Annotated
 
 import httpx
-from fastapi import Query
-from fastapi import Request
-from fastapi import Response
-from fastapi import status
+from fastapi import Query, Request, Response, status
 from fastapi.openapi.utils import get_openapi
 
 from app.base_service import BaseService
 from app.config import get_settings
 from app.models import RefineECRResponse
-from app.refine import refine
-from app.refine import validate_message
-from app.refine import validate_sections_to_include
-from app.utils import create_clinical_services_dict
-from app.utils import read_json_from_assets
+from app.refine import refine, validate_message, validate_sections_to_include
+from app.utils import create_clinical_services_dict, read_json_from_assets
 
 settings = get_settings()
 TCR_ENDPOINT = f"{settings['tcr_url']}/get-value-sets?condition_code="

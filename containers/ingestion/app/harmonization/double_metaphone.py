@@ -19,7 +19,7 @@ VOWELS = ["A", "E", "I", "O", "U", "Y"]
 SILENT_STARTERS = ["GN", "KN", "PN", "WR", "PS"]
 
 
-class DoubleMetaphone(object):
+class DoubleMetaphone:
     """
     A Double Metaphone parsing object capable of performing the double
     coding algorithm on a given input string.
@@ -849,7 +849,7 @@ class DoubleMetaphone(object):
         return [self.primary_phone, self.secondary_phone]
 
 
-class Word(object):
+class Word:
     """
     Helper class used for representing a single word for token
     parsing.
@@ -866,11 +866,9 @@ class Word(object):
         self.decoded = self.decoded.replace("\xc7", "s")
         self.decoded = self.decoded.replace("\xe7", "s")
         self.normalized = "".join(
-            (
-                c
-                for c in unicodedata.normalize("NFD", self.decoded)
-                if unicodedata.category(c) != "Mn"
-            )
+            c
+            for c in unicodedata.normalize("NFD", self.decoded)
+            if unicodedata.category(c) != "Mn"
         )
         self.upper = self.normalized.upper()
         self.length = len(self.upper)

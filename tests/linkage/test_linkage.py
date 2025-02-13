@@ -3,47 +3,49 @@ import json
 import os
 import pathlib
 import uuid
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 from json.decoder import JSONDecodeError
 from math import log
 from random import seed
 
 import pandas as pd
 import pytest
-from sqlalchemy import select
-from sqlalchemy import text
+from sqlalchemy import select, text
 
-from phdi.linkage import add_person_resource
-from phdi.linkage import calculate_log_odds
-from phdi.linkage import calculate_m_probs
-from phdi.linkage import calculate_u_probs
-from phdi.linkage import compile_match_lists
-from phdi.linkage import DIBBS_BASIC
-from phdi.linkage import DIBBS_ENHANCED
-from phdi.linkage import eval_log_odds_cutoff
-from phdi.linkage import eval_perfect_match
-from phdi.linkage import extract_blocking_values_from_record
-from phdi.linkage import feature_match_exact
-from phdi.linkage import feature_match_four_char
-from phdi.linkage import feature_match_fuzzy_string
-from phdi.linkage import feature_match_log_odds_exact
-from phdi.linkage import feature_match_log_odds_fuzzy_compare
-from phdi.linkage import generate_hash_str
-from phdi.linkage import link_record_against_mpi
-from phdi.linkage import load_json_probs
-from phdi.linkage import match_within_block
-from phdi.linkage import perform_linkage_pass
-from phdi.linkage import read_linkage_config
-from phdi.linkage import score_linkage_vs_truth
-from phdi.linkage import write_linkage_config
+from phdi.linkage import (
+    DIBBS_BASIC,
+    DIBBS_ENHANCED,
+    add_person_resource,
+    calculate_log_odds,
+    calculate_m_probs,
+    calculate_u_probs,
+    compile_match_lists,
+    eval_log_odds_cutoff,
+    eval_perfect_match,
+    extract_blocking_values_from_record,
+    feature_match_exact,
+    feature_match_four_char,
+    feature_match_fuzzy_string,
+    feature_match_log_odds_exact,
+    feature_match_log_odds_fuzzy_compare,
+    generate_hash_str,
+    link_record_against_mpi,
+    load_json_probs,
+    match_within_block,
+    perform_linkage_pass,
+    read_linkage_config,
+    score_linkage_vs_truth,
+    write_linkage_config,
+)
 from phdi.linkage.dal import DataAccessLayer
-from phdi.linkage.link import _compare_address_elements
-from phdi.linkage.link import _compare_name_elements
-from phdi.linkage.link import _condense_extract_address_from_resource
-from phdi.linkage.link import _convert_given_name_to_first_name
-from phdi.linkage.link import _flatten_patient_resource
-from phdi.linkage.link import _match_within_block_cluster_ratio
+from phdi.linkage.link import (
+    _compare_address_elements,
+    _compare_name_elements,
+    _condense_extract_address_from_resource,
+    _convert_given_name_to_first_name,
+    _flatten_patient_resource,
+    _match_within_block_cluster_ratio,
+)
 from phdi.linkage.mpi import DIBBsMPIConnectorClient
 from tests.test_data_generator import generate_list_patients_contact
 
@@ -1355,14 +1357,14 @@ def test_link_match_missing_address_record():
 
 
 def test_convert_given_name_to_first_name():
-    assert (
-        _convert_given_name_to_first_name([]) == []
-    ), "Empty data should return empty data"
+    assert _convert_given_name_to_first_name([]) == [], (
+        "Empty data should return empty data"
+    )
 
     data = [["last_name"], ["LENNON"], ["MCCARTNEY"], ["HARRISON"], ["STARKLEY"]]
-    assert (
-        _convert_given_name_to_first_name(data) == data
-    ), "Data without given names should return the same data"
+    assert _convert_given_name_to_first_name(data) == data, (
+        "Data without given names should return the same data"
+    )
 
     data = [
         [
