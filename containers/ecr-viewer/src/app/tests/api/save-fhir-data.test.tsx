@@ -8,7 +8,7 @@ import {
   PutObjectCommandOutput,
 } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
-import { POST } from "../api/save-fhir-data/route";
+import { POST } from "../../api/save-fhir-data/route";
 import { NextRequest } from "next/server";
 
 const s3Mock = mockClient(S3Client);
