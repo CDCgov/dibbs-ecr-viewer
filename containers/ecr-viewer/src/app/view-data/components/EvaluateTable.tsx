@@ -1,4 +1,3 @@
-"use client";
 import { Element } from "fhir/r4";
 import { PathMappings } from "@/app/utils/data-utils";
 import { Table } from "@trussworks/react-uswds";
@@ -16,11 +15,6 @@ export interface ColumnInfoInput {
   applyToValue?: (value: any) => any;
 }
 
-interface EvaluateTableRowProps {
-  mappings: PathMappings;
-  columns: ColumnInfoInput[];
-  entry: Element;
-}
 interface TableProps {
   resources: Element[];
   mappings: PathMappings;
