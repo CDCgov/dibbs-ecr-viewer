@@ -1,11 +1,6 @@
-from typing import List
-from typing import Literal
-from typing import Optional
-from typing import Union
+from typing import Literal, Optional, Union
 
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import root_validator
+from pydantic import BaseModel, Field, root_validator
 
 
 # Request and response models
@@ -113,10 +108,10 @@ class ListConfigsResponse(BaseModel):
     The config for responses from the /configs endpoint.
     """
 
-    default_configs: List[str] = Field(
+    default_configs: list[str] = Field(
         description="The configs that ship with with this service by default."
     )
-    custom_configs: List[str] = Field(
+    custom_configs: list[str] = Field(
         description="Additional configs that users have uploaded to this service beyond"
         " the ones come by default."
     )
@@ -129,7 +124,7 @@ class WorkflowServiceStepModel(BaseModel):
 
 
 class ProcessingConfigModel(BaseModel):
-    workflow: dict[str, List[WorkflowServiceStepModel]] = Field(
+    workflow: dict[str, list[WorkflowServiceStepModel]] = Field(
         description="A JSON-formatted config dict containing a single key `workflow` "
         "that maps to a list of `WorkflowServiceStep` objects, each defining one step "
         "in the orchestration configuration to upload."

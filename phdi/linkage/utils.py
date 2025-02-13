@@ -1,5 +1,4 @@
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 from typing import Union
 
 from phdi.linkage.config import get_settings

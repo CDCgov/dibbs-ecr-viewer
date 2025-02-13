@@ -1,15 +1,12 @@
 import io
 import json
 import pathlib
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timezone
 from unittest import mock
 
 import pytest
-from app.cloud.azure import AzureCloudContainerConnection
-from app.cloud.azure import AzureCredentialManager
-from app.cloud.gcp import GcpCloudStorageConnection
-from app.cloud.gcp import GcpCredentialManager
+from app.cloud.azure import AzureCloudContainerConnection, AzureCredentialManager
+from app.cloud.gcp import GcpCloudStorageConnection, GcpCredentialManager
 from azure.storage.blob import ContainerClient
 
 

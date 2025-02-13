@@ -245,8 +245,13 @@ const DataRow = ({ item }: { item: EcrDisplay }) => {
         <Link onClick={saveUrl} href={`/view-data?id=${item.ecrId}`}>
           {patient_first_name} {patient_last_name}
         </Link>
+        {item.eicr_version_number && (
+          <span className="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark">
+            V{item.eicr_version_number}
+          </span>
+        )}
         <br />
-        <div>{"DOB: " + item.patient_date_of_birth || ""}</div>
+        DOB: {item.patient_date_of_birth}
       </td>
       <td>{item.date_created}</td>
       <td>{item.patient_report_date || noData}</td>

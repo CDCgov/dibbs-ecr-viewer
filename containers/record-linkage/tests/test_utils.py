@@ -4,8 +4,7 @@ from typing import Literal
 from unittest import mock
 
 import pytest
-from app.utils import run_migrations
-from app.utils import run_pyway
+from app.utils import run_migrations, run_pyway
 
 MOCK_SETTINGS = {
     "mpi_db_type": "postgres",

@@ -5,15 +5,17 @@ from unittest import mock
 
 import pytest
 from app.config import get_settings
-from app.utils import convert_to_fhir
-from app.utils import field_metadata
-from app.utils import freeze_parsing_schema
-from app.utils import freeze_parsing_schema_helper
-from app.utils import get_credential_manager
-from app.utils import get_metadata
-from app.utils import get_parsers
-from app.utils import load_parsing_schema
-from app.utils import search_for_required_values
+from app.utils import (
+    convert_to_fhir,
+    field_metadata,
+    freeze_parsing_schema,
+    freeze_parsing_schema_helper,
+    get_credential_manager,
+    get_metadata,
+    get_parsers,
+    load_parsing_schema,
+    search_for_required_values,
+)
 from frozendict import frozendict
 
 
@@ -21,7 +23,7 @@ def test_load_parsing_schema_success():
     test_schema_path = (
         Path(__file__).parent.parent / "app" / "default_schemas" / "test_schema.json"
     )
-    with open(test_schema_path, "r") as file:
+    with open(test_schema_path) as file:
         test_schema = json.load(file)
 
     schema = load_parsing_schema("test_schema.json")
@@ -164,7 +166,7 @@ def test_freeze_parsing_schema():
     test_schema_path = (
         Path(__file__).parent.parent / "app" / "default_schemas" / "test_schema.json"
     )
-    with open(test_schema_path, "r") as file:
+    with open(test_schema_path) as file:
         test_schema = json.load(file)
 
     frozen_schema = freeze_parsing_schema(test_schema)

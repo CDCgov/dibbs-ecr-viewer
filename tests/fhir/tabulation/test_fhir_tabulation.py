@@ -9,18 +9,20 @@ import pytest
 import yaml
 from requests.models import Response
 
-from phdi.fhir.tabulation.tables import _build_reference_dicts
-from phdi.fhir.tabulation.tables import _dereference_included_resource
-from phdi.fhir.tabulation.tables import _generate_search_url
-from phdi.fhir.tabulation.tables import _generate_search_urls
-from phdi.fhir.tabulation.tables import _get_reference_directions
-from phdi.fhir.tabulation.tables import _merge_include_query_params_for_location
-from phdi.fhir.tabulation.tables import drop_invalid
-from phdi.fhir.tabulation.tables import extract_data_from_fhir_search
-from phdi.fhir.tabulation.tables import extract_data_from_fhir_search_incremental
-from phdi.fhir.tabulation.tables import extract_data_from_schema
-from phdi.fhir.tabulation.tables import generate_tables
-from phdi.fhir.tabulation.tables import tabulate_data
+from phdi.fhir.tabulation.tables import (
+    _build_reference_dicts,
+    _dereference_included_resource,
+    _generate_search_url,
+    _generate_search_urls,
+    _get_reference_directions,
+    _merge_include_query_params_for_location,
+    drop_invalid,
+    extract_data_from_fhir_search,
+    extract_data_from_fhir_search_incremental,
+    extract_data_from_schema,
+    generate_tables,
+    tabulate_data,
+)
 
 
 def test_tabulate_data_invalid_table_name():
@@ -832,12 +834,11 @@ def test_generate_tables(patch_search_incremental):
             / "tabulation"
             / "tabulated_patients.csv"
         ),
-        "r",
     ) as e:
         csvreader = csv.reader(e)
         expected_content = [row for row in csvreader]
 
-    with open(patients_path, "r") as csv_file:
+    with open(patients_path) as csv_file:
         reader = csv.reader(csv_file, dialect="excel")
         line = 0
         for row in reader:
@@ -865,12 +866,11 @@ def test_generate_tables(patch_search_incremental):
             / "tabulation"
             / "tabulated_physical_exam.csv"
         ),
-        "r",
     ) as e:
         csvreader = csv.reader(e)
         expected_content = [row for row in csvreader]
 
-    with open(physical_exams_path, "r") as csv_file:
+    with open(physical_exams_path) as csv_file:
         reader = csv.reader(csv_file, dialect="excel")
         line = 0
         for row in reader:

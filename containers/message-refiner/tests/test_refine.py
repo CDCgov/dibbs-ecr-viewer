@@ -1,21 +1,22 @@
 import pathlib
-from typing import List
 
 import pytest
-from app.refine import _are_elements_present
-from app.refine import _create_minimal_section
-from app.refine import _create_or_update_text_element
-from app.refine import _extract_observation_data
-from app.refine import _find_path_to_entry
-from app.refine import _generate_combined_xpath
-from app.refine import _get_observations
-from app.refine import _get_section_by_code
-from app.refine import _process_section
-from app.refine import _prune_unwanted_siblings
-from app.refine import _update_text_element
-from app.refine import refine
-from app.refine import validate_message
-from app.refine import validate_sections_to_include
+from app.refine import (
+    _are_elements_present,
+    _create_minimal_section,
+    _create_or_update_text_element,
+    _extract_observation_data,
+    _find_path_to_entry,
+    _generate_combined_xpath,
+    _get_observations,
+    _get_section_by_code,
+    _process_section,
+    _prune_unwanted_siblings,
+    _update_text_element,
+    refine,
+    validate_message,
+    validate_sections_to_include,
+)
 from lxml import etree
 
 TRIGGER_CODE_TEMPLATE_IDS = [
@@ -36,7 +37,7 @@ def parse_file_from_test_assets(filename: str) -> etree.ElementTree:
     :return: An ElementTree containing the contents of the file.
     """
     with open(
-        (pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename), "r"
+        pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename
     ) as file:
         parser = etree.XMLParser(remove_blank_text=True)
         tree = etree.parse(file, parser)
@@ -52,7 +53,6 @@ def read_file_from_test_assets(filename: str) -> str:
     """
     with open(
         (pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename),
-        "r",
     ) as file:
         return file.read()
 
@@ -60,7 +60,7 @@ def read_file_from_test_assets(filename: str) -> str:
 def _get_entries_for_section(
     section: etree.Element,
     namespaces: dict = {"hl7": "urn:hl7-org:v3"},
-) -> List[etree.Element]:
+) -> list[etree.Element]:
     """
     Gets the entries of a section of an eICR and returns a list of <entry> elements.
 
