@@ -1,6 +1,7 @@
 import React from "react";
 import classnames from "classnames";
-import { Button, Icon } from "@trussworks/react-uswds";
+import { Button } from "@trussworks/react-uswds";
+import { NavigateBefore, NavigateNext } from "@/app/components/Icon";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -198,7 +199,7 @@ export const Pagination = ({
               onClick={onClickPrevious}
               hidden={!prevPage}
             >
-              <Icon.NavigateBefore aria-hidden={true} className={"text-ink"} />
+              <NavigateBefore aria-hidden={true} className={"text-ink"} />
               <span className="usa-pagination__link-text">Previous</span>
             </Button>
           ) : (
@@ -211,7 +212,7 @@ export const Pagination = ({
               hidden={!prevPage}
               aria-label="Previous page"
             >
-              <Icon.NavigateBefore aria-hidden={true} className={"text-ink"} />
+              <NavigateBefore aria-hidden={true} className={"text-ink"} />
               <span className="usa-pagination__link-text">Previous</span>
             </Link>
           )}
@@ -247,7 +248,7 @@ export const Pagination = ({
               onClick={onClickNext}
             >
               <span className="usa-pagination__link-text">Next</span>
-              <Icon.NavigateNext aria-hidden={true} className={"text-ink"} />
+              <NavigateNext aria-hidden={true} className={"text-ink"} />
             </Button>
           ) : (
             <Link
@@ -260,7 +261,7 @@ export const Pagination = ({
               aria-label="Next page"
             >
               <span className="usa-pagination__link-text">Next</span>
-              <Icon.NavigateNext aria-hidden={true} className={"text-ink"} />
+              <NavigateNext aria-hidden={true} className={"text-ink"} />
             </Link>
           )}
         </li>

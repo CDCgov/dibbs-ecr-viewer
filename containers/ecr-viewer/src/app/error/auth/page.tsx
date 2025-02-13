@@ -1,6 +1,5 @@
-"use client";
 import React from "react";
-import { Icon } from "@trussworks/react-uswds";
+import { Error } from "@/app/components/Icon";
 import Header from "../../Header";
 
 /**
@@ -12,7 +11,7 @@ const ErrorAuthPage = () => (
     <main className="display-flex flex-justify-center height-full">
       <div className="display-inline-block margin-y-auto">
         <h2 className="font-family-serif font-serif-xl margin-bottom-0">
-          <Icon.Error
+          <Error
             size={5}
             className="margin-right-105 text-middle"
             aria-hidden

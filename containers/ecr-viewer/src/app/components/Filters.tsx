@@ -6,7 +6,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, Icon } from "@trussworks/react-uswds";
+import { Button } from "@trussworks/react-uswds";
+import { Autorenew, Coronavirus, Event } from "@/app/components/Icon";
 import {
   Filter,
   RadioDateOption,
@@ -124,7 +125,7 @@ const Filters = ({ conditions }: FilterProps) => {
             className="gap-05"
           >
             <span className="square-205 usa-icon">
-              <Icon.Autorenew aria-hidden className="square-205" />
+              <Autorenew aria-hidden className="square-205" />
             </span>
             Reset
           </Button>
@@ -211,7 +212,7 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
       type="Reportable Condition"
       isActive={!isAllSelected}
       resetHandler={() => resetFilterConditions(Object.keys(filterConditions))}
-      icon={Icon.Coronavirus}
+      icon={Coronavirus}
       tag={
         Object.keys(filterConditions).filter(
           (key) => filterConditions[key] === true,
@@ -337,7 +338,7 @@ const FilterByDate = () => {
       type="Received Date"
       isActive={true}
       resetHandler={resetFilterDate}
-      icon={Icon.Event}
+      icon={Event}
       title={
         filterDateOption === CustomDateRangeOption
           ? startDate &&

@@ -1,3 +1,4 @@
+import React from "react";
 import { evaluatePatientName } from "@/app/services/evaluateFhirDataService";
 import { formatDate } from "@/app/services/formatService";
 import { PathMappings } from "@/app/view-data/utils/utils";

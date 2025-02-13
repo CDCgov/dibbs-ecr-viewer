@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
 import { Tooltip } from "@trussworks/react-uswds";
+import { ForceClient } from "./ForceClient";
 
 type CustomDivProps = React.PropsWithChildren<{
   className?: string;
@@ -47,13 +49,15 @@ export const ToolTipElement = ({
   children,
 }: ToolTipProps): React.JSX.Element => {
   return toolTip ? (
-    <Tooltip
-      label={toolTip}
-      asCustom={TooltipDiv}
-      className={`usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
-    >
-      {children}
-    </Tooltip>
+    <ForceClient loading={children}>
+      <Tooltip
+        label={toolTip}
+        asCustom={TooltipDiv}
+        className={`usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
+      >
+        {children}
+      </Tooltip>
+    </ForceClient>
   ) : (
     <>{children}</>
   );
