@@ -12,6 +12,7 @@
     "local-docker:silent": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up -d'",
     "setup-local-env": "../../setup-env.sh .env.local",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write '**/*.{js,json,md,ts,tsx,scss,yaml,yml}'",
