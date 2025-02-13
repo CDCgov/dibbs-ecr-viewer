@@ -616,7 +616,7 @@ export const evaluateEncounterCareTeamTable = (
     } as TableRow;
   });
 
-  if (!tables.flat().length) return undefined;
+  if (!tables.length) return undefined;
 
   return (
     <JsonTable
