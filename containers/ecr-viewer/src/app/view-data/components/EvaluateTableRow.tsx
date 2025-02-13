@@ -30,7 +30,7 @@ export const EvaluateTableRow = ({
 
   const { rowCellsData, hiddenRow } = tableRowData;
 
-  if (rowCellsData.length === 0) return <></>;
+  if (rowCellsData.length === 0) return null;
 
   return (
     <>
