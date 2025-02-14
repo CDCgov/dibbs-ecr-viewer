@@ -3,8 +3,7 @@
 exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <JsonTable
   className="caption-data-title margin-y-0"
-  outerBorder={true}
-  rawTable={
+  jsonTableData={
     {
       "resultName": "Encounter Care Team",
       "tables": [
@@ -32,5 +31,6 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
       ],
     }
   }
+  outerBorder={true}
 />
 `;
