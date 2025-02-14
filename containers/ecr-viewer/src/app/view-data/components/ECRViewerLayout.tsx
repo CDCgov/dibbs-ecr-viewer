@@ -29,7 +29,7 @@ export const ECRViewerLayout = ({
       {isNonIntegratedViewer && (
         <PatientBanner name={patientName} dob={patientDOB} />
       )}
-      <div className="main-container">
+      <div className="main-container" id="header-intersection-target">
         <div className={"width-main padding-main"}>
           <div className="content-wrapper">{children}</div>
         </div>
