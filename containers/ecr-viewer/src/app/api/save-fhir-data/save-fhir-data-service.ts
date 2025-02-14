@@ -284,7 +284,6 @@ export const saveMetadataToSqlServer = async (
 
       if (metadata.patient_addresses) {
         for (const address of metadata.patient_addresses) {
-          console.log(address);
           const patient_address_uuid = randomUUID();
           const addressInsertRequest = new sql.Request(transaction);
           await addressInsertRequest
