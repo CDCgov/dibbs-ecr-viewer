@@ -3,7 +3,7 @@ import BundleLab from "../assets/BundleLab.json";
 import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
 import BundleLabInvalidResultsDiv from "../assets/BundleLabInvalidResultsDiv.json";
 import { Bundle, Observation, Organization } from "fhir/r4";
-import { evaluate } from "fhirpath";
+import { evaluate } from "@/app/utils/evaluate";
 import { render, screen } from "@testing-library/react";
 import {
   getLabJsonObject,
@@ -25,7 +25,7 @@ import {
 } from "@/app/services/labsService";
 import { AccordionLabResults } from "@/app/view-data/components/AccordionLabResults";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import { noData } from "@/app/view-data/utils/utils";
+import { noData } from "@/app/utils/data-utils";
 
 const mappings = loadYamlConfig();
 

@@ -4,7 +4,7 @@ import { ArrowBack } from "@/app/components/Icon";
 import Link from "next/link";
 import classNames from "classnames";
 import { env } from "next-runtime-env";
-import { retrieveFromSessionStorage } from "../../components/utils";
+import { retrieveFromSessionStorage } from "../../utils/storage-utils";
 
 interface BackButtonProps {
   className?: string;
@@ -34,7 +34,7 @@ export const BackButton = ({ className, iconClassName }: BackButtonProps) => {
         className={classNames("display-inline-block", className)}
       >
         <ArrowBack
-          aria-label={"Back Arrow"}
+          aria-hidden
           size={3}
           className={classNames("text-middle margin-right-1", iconClassName)}
         />

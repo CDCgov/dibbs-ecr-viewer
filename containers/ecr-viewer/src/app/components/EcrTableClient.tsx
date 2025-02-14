@@ -3,12 +3,12 @@ import React from "react";
 import { Table } from "@trussworks/react-uswds";
 import { SortButton } from "@/app/components/SortButton";
 import { EcrDisplay } from "@/app/services/listEcrDataService";
-import { toSentenceCase } from "@/app/services/formatService";
+import { toSentenceCase } from "@/app/utils/format-utils";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
-import { noData, range } from "../view-data/utils/utils";
+import { noData, range } from "../utils/data-utils";
 import classNames from "classnames";
 import Link from "next/link";
-import { saveToSessionStorage } from "./utils";
+import { saveToSessionStorage } from "../utils/storage-utils";
 
 type EcrTableClientProps = {
   data: EcrDisplay[];
@@ -48,7 +48,7 @@ const initialHeaders = [
     sortDirection: "",
   },
   {
-    id: "report_date",
+    id: "encounter_date",
     value: "Encounter Date",
     className: "library-encounter-date-column",
     dataSortable: true,
@@ -183,7 +183,8 @@ const Header = ({
         {column.value}
         {(column.sortDirection || column.dataSortable) && (
           <SortButton
-            columnName={column.id}
+            columnId={column.id}
+            columnName={column.value}
             className={classNames({
               "sortable-asc-column": column.sortDirection === "ASC",
               "sortable-desc-column": column.sortDirection === "DESC",

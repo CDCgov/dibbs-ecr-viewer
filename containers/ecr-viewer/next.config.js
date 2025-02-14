@@ -2,6 +2,10 @@
 const path = require("path");
 const basePath = "/ecr-viewer";
 
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
 const nextConfig = {
   sassOptions: {
     includePaths: [
@@ -19,4 +23,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

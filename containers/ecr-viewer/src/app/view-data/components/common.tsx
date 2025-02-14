@@ -7,23 +7,13 @@ import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
-import {
-  TableRow,
-  TableJson,
-  formatName,
-  formatTablesToJSON,
-  formatVitals,
-  toSentenceCase,
-  formatDate,
-  formatDateTime,
-  formatStartEndDate,
-} from "@/app/services/formatService";
+import { formatName, formatVitals } from "@/app/services/formatService";
 import {
   PathMappings,
   evaluateData,
   noData,
   safeParse,
-} from "@/app/view-data/utils/utils";
+} from "@/app/utils/data-utils";
 import {
   Bundle,
   CarePlanActivity,
@@ -39,7 +29,7 @@ import {
   Practitioner,
   Procedure,
 } from "fhir/r4";
-import { evaluate } from "@/app/view-data/utils/evaluate";
+import { evaluate } from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import {
   AdministeredMedication,
@@ -48,6 +38,17 @@ import {
 import { Path } from "fhirpath";
 import classNames from "classnames";
 import { Fragment } from "react";
+import {
+  formatTablesToJSON,
+  TableJson,
+  TableRow,
+} from "@/app/services/htmlTableService";
+import { toSentenceCase } from "@/app/utils/format-utils";
+import {
+  formatDate,
+  formatDateTime,
+  formatStartEndDate,
+} from "@/app/services/formatDateService";
 
 /**
  * Returns a table displaying care team information.

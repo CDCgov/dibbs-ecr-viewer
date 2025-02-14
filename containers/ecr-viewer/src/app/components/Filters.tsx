@@ -21,8 +21,8 @@ import {
   DateRangeOptions,
   dateRangeLabels,
   isValidParamDates,
-} from "@/app/view-data/utils/date-utils";
-import { formatDateTime } from "@/app/services/formatService";
+} from "@/app/utils/date-utils";
+import { formatDateTime } from "@/app/services/formatDateService";
 
 enum ParamName {
   Condition = "condition",

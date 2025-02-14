@@ -10,7 +10,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
       href="/"
     >
       <svg
-        aria-label="Back Arrow"
+        aria-hidden="true"
         class="usa-icon usa-icon--size-3 text-middle margin-right-1 text-base"
         focusable="false"
         height="1em"

@@ -1,7 +1,7 @@
 import { AccordionSection, AccordionSubSection } from "../component-utils";
 import React from "react";
 import classNames from "classnames";
-import { addCaptionToTable } from "@/app/services/formatService";
+import { addCaptionToTable } from "@/app/services/htmlTableService";
 import {
   DataDisplay,
   DataTableDisplay,
