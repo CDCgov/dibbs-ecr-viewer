@@ -3,7 +3,7 @@ import { PathMappings, noData } from "../utils/data-utils";
 
 import { evaluate } from "../utils/evaluate";
 import { evaluateValue } from "./evaluateFhirDataService";
-import { JsonTable } from "../view-data/components/common";
+import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
 import { TableRow } from "./htmlTableService";
 
@@ -64,7 +64,7 @@ export const evaluateTravelHistoryTable = (
 
   return (
     <JsonTable
-      rawTable={{ tables, resultName: "Travel History" }}
+      jsonTableData={{ tables, resultName: "Travel History" }}
       outerBorder
       className="caption-data-title margin-y-0"
     />

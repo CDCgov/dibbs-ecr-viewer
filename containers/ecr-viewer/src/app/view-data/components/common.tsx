@@ -38,17 +38,14 @@ import {
 import { Path } from "fhirpath";
 import classNames from "classnames";
 import { Fragment } from "react";
-import {
-  formatTablesToJSON,
-  TableJson,
-  TableRow,
-} from "@/app/services/htmlTableService";
+import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   formatDate,
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
+import { JsonTable } from "./JsonTable";
 
 /**
  * Returns a table displaying care team information.
@@ -260,7 +257,7 @@ export const returnHtmlTableContent = (
       {tableJson.map((rt) => (
         <JsonTable
           key={`${title}-table`}
-          rawTable={rt}
+          jsonTableData={rt}
           outerBorder={outerBorder}
           className={className}
         />
@@ -268,64 +265,6 @@ export const returnHtmlTableContent = (
     </Fragment>
   );
 };
-
-interface JsonTableProps {
-  rawTable: TableJson;
-  outerBorder?: boolean;
-  className?: string;
-}
-/**
- * Returns a table built from JSON representation of the XHTML in the FHIR data.
- * @param props - props passed to the React component
- * @param props.rawTable - A table found in the fhir data.
- * @param props.outerBorder - Determines whether to include an outer border for the table. Default is true.
- * @param props.className - Classnames to be applied to table.
- * @returns A table or null, depending on whether or not there are tables to display.
- */
-export const JsonTable = ({
-  rawTable,
-  outerBorder = true,
-  className = "",
-}: JsonTableProps): JSX.Element | null => {
-  const { resultName, tables } = rawTable;
-  const flattenedTable = tables?.flat() ?? [];
-  const columns = useConstructColumnData(flattenedTable);
-
-  if (!columns) {
-    return null;
-  }
-
-  return (
-    <BaseTable
-      columns={columns}
-      caption={resultName}
-      className={classNames("caption-normal-weight margin-bottom-2", className)}
-      fixed={false}
-      outerBorder={outerBorder}
-    >
-      {flattenedTable.map((row, i) => (
-        <tr key={`table-row-${i}`}>
-          {Object.values(row).map(({ value }, j) => (
-            <td key={`table-col-${j}`}>{value ?? noData}</td>
-          ))}
-        </tr>
-      ))}
-    </BaseTable>
-  );
-};
-
-function useConstructColumnData(
-  flattenedTable: TableRow[],
-): ColumnInfoInput[] | null {
-  if (flattenedTable.length > 0) {
-    return Object.keys(flattenedTable[0]).map((columnName) => ({
-      columnName,
-      className: "bg-gray-5 minw-10",
-    }));
-  }
-
-  return null;
-}
 
 /**
  * Generates a formatted table representing the list of procedures based on the provided array of procedures and mappings.

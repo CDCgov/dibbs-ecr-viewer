@@ -2,7 +2,6 @@ import { loadYamlConfig } from "@/app/api/utils";
 import {
   getMedicationDisplayName,
   returnHtmlTableContent,
-  JsonTable,
 } from "@/app/view-data/components/common";
 import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
 import { Bundle } from "fhir/r4";
@@ -66,34 +65,6 @@ describe("common tests", () => {
           ],
         }),
       ).toBe("Unknown medication name - ABC code 123");
-    });
-  });
-
-  describe("returnTableFromJson", () => {
-    it("returns an HTML representation of the table", () => {
-      const tableJson = {
-        resultName: "test-name",
-        tables: [
-          [
-            {
-              col1: { value: "val1", metadata: {} },
-              col2: { value: "val2", metadata: {} },
-            },
-          ],
-        ],
-      };
-
-      render(<JsonTable rawTable={tableJson} />);
-      expect(screen.getByText("test-name")).toBeInTheDocument();
-      expect(screen.getByText("col1")).toBeInTheDocument();
-      expect(screen.getByText("col2")).toBeInTheDocument();
-      expect(screen.getByText("val1")).toBeInTheDocument();
-      expect(screen.getByText("val2")).toBeInTheDocument();
-    });
-
-    it("returns nothing if required table data is not available", () => {
-      const { container } = render(<JsonTable rawTable={{}} />);
-      expect(container).toBeEmptyDOMElement();
     });
   });
 

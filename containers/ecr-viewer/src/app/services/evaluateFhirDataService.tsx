@@ -31,7 +31,7 @@ import { Element } from "fhir/r4";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateTravelHistoryTable } from "./socialHistoryService";
 import { Path } from "fhirpath";
-import { JsonTable } from "@/app/view-data/components/common";
+import { JsonTable } from "../view-data/components/JsonTable";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import { TableRow } from "./htmlTableService";
 import {
@@ -620,7 +620,7 @@ export const evaluateEncounterCareTeamTable = (
 
   return (
     <JsonTable
-      rawTable={{ resultName: "Encounter Care Team", tables: [tables] }}
+      jsonTableData={{ resultName: "Encounter Care Team", tables: [tables] }}
       outerBorder
       className="caption-data-title margin-y-0"
     />
