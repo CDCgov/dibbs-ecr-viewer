@@ -47,3 +47,5 @@ flag_management:
     - name: "validation"
       paths:
         - "containers/validation"
+ignore:
+  - "**/tests"
