@@ -40,6 +40,7 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
     </div>
     <div
       class="main-container"
+      id="header-intersection-target"
     >
       <div
         class="width-main padding-main"
@@ -49,7 +50,7 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
         >
           <div>
             <nav
-              class="nav-wrapper top-550"
+              class="nav-wrapper"
             >
               <a
                 class="display-inline-block margin-bottom-3"
