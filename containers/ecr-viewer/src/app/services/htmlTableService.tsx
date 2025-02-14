@@ -15,7 +15,7 @@ export interface TableRow {
   };
 }
 
-export interface TableJson {
+export interface HtmlTableJson {
   resultId?: string;
   resultName?: string;
   tables?: TableRow[][];
@@ -63,11 +63,11 @@ export function getDataId(elem: HTMLElement | HTMLTableElement | Element) {
  * @returns - An array of JSON objects representing the list items and their tables from the HTML string.
  * @example @returns [{resultId: 'Result.123', resultName: 'foo', tables: [{}, {},...]}, ...]
  */
-export function formatTablesToJSON(htmlString: string): TableJson[] {
+export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
   // We purposefully don't sanitize here to remain close to the original format while
   // looking for specific patterns. The data is sanitized as it's pulled out.
   const doc = parse(htmlString);
-  const jsonArray: TableJson[] = [];
+  const jsonArray: HtmlTableJson[] = [];
 
   // <li>{name}<table/></li> OR <list><item>{name}<table /></item></list>
   const liArray = doc.querySelectorAll("li, list > item");

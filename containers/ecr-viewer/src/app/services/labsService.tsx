@@ -22,7 +22,7 @@ import {
 import { HeadingLevel } from "@trussworks/react-uswds";
 import { returnHtmlTableContent } from "@/app/view-data/components/common";
 import { extractNumbersAndPeriods } from "@/app/utils/format-utils";
-import { TableJson, formatTablesToJSON } from "./htmlTableService";
+import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
 
 export interface LabReport {
@@ -95,7 +95,7 @@ export const getLabJsonObject = (
   report: LabReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
-): TableJson => {
+): HtmlTableJson => {
   // Get reference value (result ID) from Observations
   const observations = getObservations(report, fhirBundle, mappings);
   const observationRefValsArray = observations.flatMap((observation) => {
@@ -121,7 +121,7 @@ export const getLabJsonObject = (
     return labsJson[0];
   }
 
-  return {} as TableJson;
+  return {} as HtmlTableJson;
 };
 
 /**
@@ -129,7 +129,7 @@ export const getLabJsonObject = (
  * @param labReportJson - A JSON object representing the lab report HTML string
  * @returns True if the result name includes "abnormal" (case insensitive), otherwise false. Will also return false if lab does not have JSON object.
  */
-export const checkAbnormalTag = (labReportJson: TableJson): boolean => {
+export const checkAbnormalTag = (labReportJson: HtmlTableJson): boolean => {
   if (!labReportJson) {
     return false;
   }
@@ -252,7 +252,7 @@ const returnReceivedTime = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 export const returnFieldValueFromLabHtmlString = (
-  labReportJson: TableJson,
+  labReportJson: HtmlTableJson,
   fieldName: string,
 ): RenderableNode => {
   if (!labReportJson) {
@@ -275,7 +275,7 @@ export const returnFieldValueFromLabHtmlString = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 export const returnAnalysisTime = (
-  labReportJson: TableJson,
+  labReportJson: HtmlTableJson,
   fieldName: string,
 ): RenderableNode => {
   const fieldVal = returnFieldValueFromLabHtmlString(labReportJson, fieldName);
@@ -638,7 +638,7 @@ function getFormattedLabsContent(
   report: any,
   fhirBundle: Bundle,
   mappings: PathMappings,
-  labReportJson: TableJson,
+  labReportJson: HtmlTableJson,
 ) {
   const labTableDiagnostic = evaluateDiagnosticReportData(
     report,

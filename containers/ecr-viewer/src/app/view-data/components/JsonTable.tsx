@@ -1,10 +1,10 @@
-import { TableJson, TableRow } from "@/app/services/htmlTableService";
+import { HtmlTableJson, TableRow } from "@/app/services/htmlTableService";
 import { noData } from "@/app/utils/data-utils";
 import classNames from "classnames";
 import { BaseTable, ColumnInfoInput } from "./EvaluateTable";
 
 interface JsonTableProps {
-  jsonTableData: TableJson;
+  jsonTableData: HtmlTableJson;
   outerBorder?: boolean;
   className?: string;
 }
