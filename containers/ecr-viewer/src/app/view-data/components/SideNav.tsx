@@ -2,9 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
 import { toKebabCase } from "@/app/utils/format-utils";
-import classNames from "classnames";
 import { BackButton } from "./BackButton";
-import { env } from "next-runtime-env";
 import { SideNavLoadingSkeleton } from "./LoadingComponent";
 
 export class SectionConfig {
@@ -131,8 +129,6 @@ export const sortHeadings = (headings: HeadingObject[]): SectionConfig[] => {
 const SideNav: React.FC = () => {
   const [sectionConfigs, setSectionConfigs] = useState<SectionConfig[]>([]);
   const [activeSection, setActiveSection] = useState<string>("");
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
 
   useEffect(() => {
     // Select all heading tags on the page
@@ -166,14 +162,16 @@ const SideNav: React.FC = () => {
     };
 
     let observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      // get the top/first thing that intersected
+      for (const entry of entries) {
         if (entry.isIntersecting) {
           let id = entry.target.getAttribute("data-sectionid") || null;
           if (id) {
             setActiveSection(id);
+            break;
           }
         }
-      });
+      }
     }, options);
     headingElements.forEach((element) => observer.observe(element));
   }, []);
@@ -193,11 +191,6 @@ const SideNav: React.FC = () => {
     for (let section of sectionConfigs) {
       let sideNavItem = (
         <a
-          onClick={() => {
-            setTimeout(() => {
-              setActiveSection(section.id);
-            }, 500);
-          }}
           key={section.id}
           href={"#" + section.id}
           className={activeSection === section.id ? "usa-current" : ""}
@@ -224,12 +217,7 @@ const SideNav: React.FC = () => {
   return sectionConfigs.length === 0 ? (
     <SideNavLoadingSkeleton />
   ) : (
-    <nav
-      className={classNames("nav-wrapper", {
-        "top-0": !isNonIntegratedViewer,
-        "top-550": isNonIntegratedViewer,
-      })}
-    >
+    <nav className="nav-wrapper">
       <BackButton className="margin-bottom-3" iconClassName="text-base" />
       <UswdsSideNav items={sideNavItems} />
     </nav>

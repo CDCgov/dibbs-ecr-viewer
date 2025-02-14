@@ -1,5 +1,5 @@
 import "../styles/styles.scss";
-import { PublicEnvScript } from "next-runtime-env";
+import { PublicEnvScript, env } from "next-runtime-env";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
@@ -19,8 +19,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const isNonIntegratedViewer =
+    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      style={{ "--patient-banner-buffer": isNonIntegratedViewer ? "3rem" : 0 }}
+    >
       <head>
         <PublicEnvScript nonce={{ headerKey: "x-nonce" }} />
       </head>

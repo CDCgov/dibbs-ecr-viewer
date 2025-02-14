@@ -8,6 +8,15 @@ $main-container-padding: 1rem;
 $main-min-width: $ecr-viewer-container-min-width + $ecr-viewer-gap +
   $nav-wrapper-width + $main-container-padding * 2;
 
+html {
+  --patient-banner-buffer: 0rem;
+}
+
+// Make sure items we link to don't get stuck behind patient banner
+.ecr-viewer-container *[id] {
+  scroll-margin-top: calc(var(--patient-banner-buffer) + 1.5rem);
+}
+
 .ecr-table-list {
   @include unstyled-list;
   li:not(:first-child) {
@@ -476,12 +485,12 @@ td {
 }
 
 .nav-wrapper {
-  margin-top: 1.5rem;
-  padding-top: 0.63rem;
+  padding-top: 2rem;
   width: $nav-wrapper-width;
   min-width: $nav-wrapper-width;
   position: sticky;
   height: 100vh;
+  top: var(--patient-banner-buffer);
 }
 
 .ecr-viewer-container {
