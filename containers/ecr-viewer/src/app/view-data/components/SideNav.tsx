@@ -168,7 +168,7 @@ const SideNav: React.FC = () => {
     const oneRem = parseFloat(
       getComputedStyle(document.documentElement).fontSize,
     );
-    const topOffset = (isNonIntegratedViewer ? 3 * oneRem : 0) + oneRem;
+    const topOffset = (isNonIntegratedViewer ? 3 * oneRem : 0) + 2 * oneRem;
 
     let options = {
       root: null,
@@ -190,11 +190,12 @@ const SideNav: React.FC = () => {
     }, options);
 
     // initialize active section to closest element
-    let closestElement = headingElements[1];
+    let closestElement = headingElements[0];
     let dist = closestElement.getBoundingClientRect().top;
 
     headingElements.forEach((element) => {
       observer.observe(element);
+
       let elementDist = closestElement.getBoundingClientRect().top;
       if (elementDist > 0 && elementDist < dist) {
         closestElement = element;
