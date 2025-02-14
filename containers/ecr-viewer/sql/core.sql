@@ -1,6 +1,8 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE ecr_data (
+CREATE SCHEMA ecr_viewer;
+
+CREATE TABLE ecr_viewer.ecr_data (
   eICR_ID VARCHAR(200) PRIMARY KEY,
   set_id VARCHAR(255),
   eicr_version_number VARCHAR(50),
@@ -13,14 +15,14 @@ CREATE TABLE ecr_data (
   report_date DATE
 );
 
-CREATE TABLE ecr_rr_conditions (
+CREATE TABLE ecr_viewer.ecr_rr_conditions (
     uuid VARCHAR(200) PRIMARY KEY,
-    eICR_ID VARCHAR(200) NOT NULL REFERENCES ecr_data(eICR_ID),
+    eICR_ID VARCHAR(200) NOT NULL REFERENCES ecr_viewer.ecr_data(eICR_ID),
     condition VARCHAR
 );
 
-CREATE TABLE ecr_rr_rule_summaries (
+CREATE TABLE ecr_viewer.ecr_rr_rule_summaries (
     uuid VARCHAR(200) PRIMARY KEY,
-    ecr_rr_conditions_id VARCHAR(200) REFERENCES ecr_rr_conditions(uuid),
+    ecr_rr_conditions_id VARCHAR(200) REFERENCES ecr_viewer.ecr_rr_conditions(uuid),
     rule_summary VARCHAR
 );

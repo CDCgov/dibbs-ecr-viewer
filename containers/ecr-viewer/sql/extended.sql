@@ -1,4 +1,6 @@
-CREATE TABLE ECR_DATA
+CREATE SCHEMA ecr_viewer;
+
+CREATE TABLE ecr_viewer.ECR_DATA
 (
     eICR_ID                  VARCHAR(200) PRIMARY KEY,
     set_id                   VARCHAR(255),
@@ -39,7 +41,7 @@ CREATE TABLE ECR_DATA
     date_created DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
 );
 
-CREATE TABLE patient_address
+CREATE TABLE ecr_viewer.patient_address
 (
     UUID VARCHAR(200) PRIMARY KEY,
     [use]  VARCHAR(7), -- The valid values are: "home" | "work" | "temp" | "old" | "billing"
@@ -53,28 +55,28 @@ CREATE TABLE patient_address
     country VARCHAR(255),
     period_start DATETIMEOFFSET,
     period_end DATETIMEOFFSET,
-    eICR_ID VARCHAR(200) REFERENCES ECR_DATA (eICR_ID)
+    eICR_ID VARCHAR(200) REFERENCES ecr_viewer.ECR_DATA (eICR_ID)
 )
 
-CREATE TABLE ecr_rr_conditions
+CREATE TABLE ecr_viewer.ecr_rr_conditions
 (
     UUID      VARCHAR(200) PRIMARY KEY,
-    eICR_ID   VARCHAR(200) NOT NULL REFERENCES ECR_DATA (eICR_ID),
+    eICR_ID   VARCHAR(200) NOT NULL REFERENCES ecr_viewer.ECR_DATA (eICR_ID),
     condition VARCHAR(MAX)
 );
 
-CREATE TABLE ecr_rr_rule_summaries
+CREATE TABLE ecr_viewer.ecr_rr_rule_summaries
 (
     UUID                 VARCHAR(200) PRIMARY KEY,
-    ECR_RR_CONDITIONS_ID VARCHAR(200) REFERENCES ecr_rr_conditions (UUID),
+    ECR_RR_CONDITIONS_ID VARCHAR(200) REFERENCES ecr_viewer.ecr_rr_conditions (UUID),
     rule_summary         VARCHAR(MAX)
 );
 
 
-CREATE TABLE ecr_labs
+CREATE TABLE ecr_viewer.ecr_labs
 (
     UUID                                   VARCHAR(200),
-    eICR_ID                                VARCHAR(200) REFERENCES ECR_DATA (eICR_ID),
+    eICR_ID                                VARCHAR(200) REFERENCES ecr_viewer.ECR_DATA (eICR_ID),
     test_type                              VARCHAR(255),
     test_type_code                         VARCHAR(50),
     test_type_system                       VARCHAR(255),
