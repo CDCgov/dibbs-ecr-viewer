@@ -191,7 +191,7 @@ const SideNav: React.FC = () => {
 
     // initialize active section to closest element
     let closestElement = headingElements[0];
-    let dist = closestElement.getBoundingClientRect().top;
+    let dist = closestElement?.getBoundingClientRect().top;
 
     headingElements.forEach((element) => {
       observer.observe(element);
@@ -205,7 +205,7 @@ const SideNav: React.FC = () => {
 
     // HACK: get dependency on renderAgain, but always set it to true
     setRenderAgain(renderAgain ? true : true);
-    setActiveSection(closestElement.getAttribute("data-sectionid") || "");
+    setActiveSection(closestElement?.getAttribute("data-sectionid") || "");
 
     return () => observer.disconnect();
   }, [renderAgain]);
