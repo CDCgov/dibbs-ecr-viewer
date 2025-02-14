@@ -91,7 +91,7 @@ export const SideNavLoadingSkeleton = () => {
   ];
 
   return (
-    <nav className={"nav-wrapper"}>
+    <nav className="nav-wrapper">
       <BackButton className="margin-bottom-3" iconClassName="text-base" />
       <SideNav items={sideNavLoadingItems} />
     </nav>

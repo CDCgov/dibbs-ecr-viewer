@@ -131,7 +131,7 @@ const SideNav: React.FC = () => {
   const [sectionConfigs, setSectionConfigs] = useState<SectionConfig[]>([]);
   const [activeSection, setActiveSection] = useState<string>("");
 
-  // HACK: Once the tooltips render, we need to re-check all out headings
+  // HACK: Once the tooltips render, we need to re-check all the headings
   // as this breaks references. This is fundamentally a problem with uswds's
   // Tooltip as it assigns an SSR-unfriendly random id. If this is fixed,
   // then we can remove this.
