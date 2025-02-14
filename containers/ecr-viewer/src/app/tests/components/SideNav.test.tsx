@@ -115,6 +115,7 @@ describe("SectionConfig", () => {
     expect(container.innerHTML).toContain(
       '<a href="#section-1" class="usa-current">',
     );
+    expect(container.innerHTML).toContain('<a href="#section-2" class="">');
   });
 });
 
