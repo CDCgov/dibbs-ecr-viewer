@@ -24,7 +24,7 @@ concurrency:
 
 env:
   CONTAINER: ecr-viewer
-  NODE_VERSION: 18 # Adjust the Node.js version as needed
+  NODE_VERSION: 20 # Adjust the Node.js version as needed
 
 jobs:
   javascript-linting:
