@@ -1,4 +1,4 @@
-import { PathMappings } from "../../utils/data-utils";
+import { PathMappings, RenderableNode } from "../../utils/data-utils";
 import Demographics from "./Demographics";
 import SocialHistory from "./SocialHistory";
 import UnavailableInfo from "./UnavailableInfo";
@@ -6,7 +6,7 @@ import EcrMetadata from "./EcrMetadata";
 import EncounterDetails from "./Encounter";
 import ClinicalInfo from "./ClinicalInfo";
 import { Bundle } from "fhir/r4";
-import React, { ReactNode } from "react";
+import React from "react";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import { evaluateEcrMetadata } from "../../services/ecrMetadataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
@@ -18,13 +18,20 @@ import {
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateClinicalData } from "./common";
-import AccordionContainer from "@/app/components/AccordionContainer";
+import { Accordion } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
+import { toKebabCase } from "@/app/utils/format-utils";
 
 type AccordionContainerProps = {
-  children?: ReactNode;
   fhirBundle: Bundle;
   fhirPathMappings: PathMappings;
+};
+
+export type AccordionItemProps = Omit<
+  React.ComponentProps<typeof Accordion>["items"][0],
+  "title"
+> & {
+  title: RenderableNode;
 };
 
 /**
@@ -75,8 +82,9 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
     );
   };
 
-  const accordionItems: any[] = [
+  const accordionItems: AccordionItemProps[] = [
     {
+      id: "patient-info",
       title: "Patient Info",
       content: (
         <>
@@ -99,6 +107,7 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
       headingLevel: "h3",
     },
     {
+      id: "encounter-info",
       title: "Encounter Info",
       content: (
         <>
@@ -121,6 +130,7 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
       headingLevel: "h3",
     },
     {
+      id: "clinical-info",
       title: "Clinical Info",
       content: Object.values(clinicalData).some(
         (section) => section.availableData.length > 0,
@@ -146,6 +156,7 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
       headingLevel: "h3",
     },
     {
+      id: "lab-info",
       title: "Lab Info",
       content:
         labInfoData.length > 0 ? (
@@ -159,6 +170,7 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
       headingLevel: "h3",
     },
     {
+      id: "ecr-metadata",
       title: "eCR Metadata",
       content: (
         <>
@@ -191,6 +203,7 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
       headingLevel: "h3",
     },
     {
+      id: "unavailable-info",
       title: "Unavailable Info",
       content: (
         <div>
@@ -234,6 +247,36 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
     },
   ];
 
-  return <AccordionContainer accordionItems={accordionItems} />;
+  const updatedAccordionItems = accordionItems.map(updateAccordionItemIds);
+
+  return (
+    <Accordion
+      className="info-container"
+      items={updatedAccordionItems}
+      multiselectable={true}
+    />
+  );
 };
+
+/**
+ * Takes an `AccordionItemProps` and its index in the array and returns a copy of the object
+ * with an updated `id` based off the `title` (if the title is a `string`). It also wraps the object's
+ * `title` in a `<span>`
+ * @param item the current `AccordionItemProps` in the array
+ * @param index the index of the current `AccordionItemProps` in the array
+ * @returns an `AccordionItemProps` with an updated `id` and a `title` wrapped in a `span` tag
+ */
+const updateAccordionItemIds = (
+  item: AccordionItemProps,
+  index: number,
+): AccordionItemProps => {
+  return {
+    ...item,
+    id: `${
+      typeof item.title === "string" ? toKebabCase(item.title) : item.id
+    }_${index + 1}`,
+    title: <span>{item.title}</span>,
+  };
+};
+
 export default AccordionContent;
