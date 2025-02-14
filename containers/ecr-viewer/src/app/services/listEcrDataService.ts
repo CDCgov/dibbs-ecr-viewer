@@ -104,7 +104,7 @@ async function listEcrDataPostgres(
 ): Promise<EcrDisplay[]> {
   const { database } = getDB();
   const list = await database.manyOrNone<CoreMetadataModel>(
-    "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
+    "SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr-viewer.ecr_data ed LEFT JOIN ecr-viewer.ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr-viewer.ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE $[whereClause] GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number $[sortStatement] OFFSET $[startIndex] ROWS FETCH NEXT $[itemsPerPage] ROWS ONLY",
     {
       whereClause: generateWhereStatementPostgres(
         filterDates,
@@ -133,9 +133,9 @@ async function listEcrDataSqlserver(
 
   try {
     const conditionsSubQuery =
-      "SELECT STRING_AGG([condition], ',') FROM (SELECT DISTINCT erc.[condition] FROM ecr_rr_conditions AS erc WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_conditions";
+      "SELECT STRING_AGG([condition], ',') FROM (SELECT DISTINCT erc.[condition] FROM ecr-viewer.ecr_rr_conditions AS erc WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_conditions";
     const ruleSummariesSubQuery =
-      "SELECT STRING_AGG(rule_summary, ',') FROM (SELECT DISTINCT ers.rule_summary FROM ecr_rr_rule_summaries AS ers LEFT JOIN ecr_rr_conditions as erc ON ers.ecr_rr_conditions_id = erc.uuid WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_rule_summaries";
+      "SELECT STRING_AGG(rule_summary, ',') FROM (SELECT DISTINCT ers.rule_summary FROM ecr-viewer.ecr_rr_rule_summaries AS ers LEFT JOIN ecr_rr_conditions as erc ON ers.ecr_rr_conditions_id = erc.uuid WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_rule_summaries";
     const sortStatement = generateSqlServerSortStatement(
       sortColumn,
       sortDirection,
@@ -145,7 +145,7 @@ async function listEcrDataSqlserver(
       searchTerm,
       filterConditions,
     );
-    const query = `SELECT ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number, (${conditionsSubQuery}) AS conditions, (${ruleSummariesSubQuery}) AS rule_summaries FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereStatement} GROUP BY ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number ${sortStatement} OFFSET ${startIndex} ROWS FETCH NEXT ${itemsPerPage} ROWS ONLY`;
+    const query = `SELECT ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number, (${conditionsSubQuery}) AS conditions, (${ruleSummariesSubQuery}) AS rule_summaries FROM ecr-viewer.ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereStatement} GROUP BY ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number ${sortStatement} OFFSET ${startIndex} ROWS FETCH NEXT ${itemsPerPage} ROWS ONLY`;
     const list = await pool.request().query<ExtendedMetadataModel[]>(query);
 
     return processExtendedMetadata(list.recordset);
@@ -256,7 +256,7 @@ const getTotalEcrCountPostgres = async (
 ): Promise<number> => {
   const { database } = getDB();
   let number = await database.one(
-    "SELECT count(DISTINCT ed.eICR_ID) FROM ecr_data as ed LEFT JOIN ecr_rr_conditions erc on ed.eICR_ID = erc.eICR_ID WHERE $[whereClause]",
+    "SELECT count(DISTINCT ed.eICR_ID) FROM ecr-viewer.ecr_data as ed LEFT JOIN ecr_rr_conditions erc on ed.eICR_ID = erc.eICR_ID WHERE $[whereClause]",
     {
       whereClause: generateWhereStatementPostgres(
         filterDates,
@@ -282,7 +282,7 @@ const getTotalEcrCountSqlServer = async (
       filterConditions,
     );
 
-    let query = `SELECT COUNT(DISTINCT ed.eICR_ID) as count FROM ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID WHERE ${whereStatement}`;
+    let query = `SELECT COUNT(DISTINCT ed.eICR_ID) as count FROM ecr-viewer.ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID WHERE ${whereStatement}`;
 
     const count = await pool.request().query<{ count: number }>(query);
 
@@ -390,7 +390,7 @@ export const generateFilterConditionsStatement = (
       Array.isArray(filterConditions) &&
       filterConditions.every((item) => item === "")
     ) {
-      const subQuery = `SELECT DISTINCT erc_sub.eICR_ID FROM ecr_rr_conditions erc_sub WHERE erc_sub.condition IS NOT NULL`;
+      const subQuery = `SELECT DISTINCT erc_sub.eICR_ID FROM ecr-viewer.ecr_rr_conditions erc_sub WHERE erc_sub.condition IS NOT NULL`;
       return `ed.eICR_ID NOT IN (${subQuery})`;
     }
 
@@ -401,7 +401,7 @@ export const generateFilterConditionsStatement = (
         });
       })
       .join(" OR ");
-    const subQuery = `SELECT DISTINCT ed_sub.eICR_ID FROM ecr_data ed_sub LEFT JOIN ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (${whereStatement})`;
+    const subQuery = `SELECT DISTINCT ed_sub.eICR_ID FROM ecr-viewer.ecr_data ed_sub LEFT JOIN ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (${whereStatement})`;
     return `ed.eICR_ID IN (${subQuery})`;
   },
 });
@@ -413,7 +413,7 @@ const generateFilterConditionsStatementSqlServer = (
     Array.isArray(filterConditions) &&
     filterConditions.every((item) => item === "")
   ) {
-    const subQuery = `SELECT DISTINCT erc_sub.eICR_ID FROM ecr_rr_conditions erc_sub WHERE erc_sub.condition IS NOT NULL`;
+    const subQuery = `SELECT DISTINCT erc_sub.eICR_ID FROM ecr-viewer.ecr_rr_conditions erc_sub WHERE erc_sub.condition IS NOT NULL`;
     return `ed.eICR_ID NOT IN (${subQuery})`;
   }
 
@@ -422,7 +422,7 @@ const generateFilterConditionsStatementSqlServer = (
       return `erc_sub.condition LIKE '${condition}'`;
     })
     .join(" OR ");
-  const subQuery = `SELECT DISTINCT ed_sub.eICR_ID FROM ecr_data ed_sub LEFT JOIN ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (${whereStatement})`;
+  const subQuery = `SELECT DISTINCT ed_sub.eICR_ID FROM ecr-viewer.ecr_data ed_sub LEFT JOIN ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (${whereStatement})`;
   return `ed.eICR_ID IN (${subQuery})`;
 };
 
