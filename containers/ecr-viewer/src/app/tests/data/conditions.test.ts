@@ -52,7 +52,7 @@ describe("Conditions service", () => {
 
     expect(conditions).toEqual(["condition1", "condition2"]);
     expect(mockDatabase.any).toHaveBeenCalledWith({
-      text: 'SELECT DISTINCT "condition" FROM ecr_rr_conditions ORDER BY "condition"',
+      text: 'SELECT DISTINCT "condition" FROM ecr-viewer.ecr_rr_conditions ORDER BY "condition"',
     });
   });
 
@@ -68,7 +68,7 @@ describe("Conditions service", () => {
 
     expect(conditions).toEqual(["condition1", "condition2"]);
     expect(mockRequest.query).toHaveBeenCalledWith(
-      "SELECT DISTINCT condition FROM ecr_rr_conditions ORDER BY condition",
+      "SELECT DISTINCT condition FROM ecr-viewer.ecr_rr_conditions ORDER BY condition",
     );
   });
 });
