@@ -9,7 +9,7 @@ interface JsonTableProps {
   className?: string;
 }
 /**
- * Returns a table built from JSON representation of the XHTML in the FHIR data.
+ * Returns a table built from a JSON representation of the XHTML in the FHIR data.
  * @param props - props passed to the React component
  * @param props.jsonTableData - A table represented as JSON
  * @param props.outerBorder - Determines whether to include an outer border for the table. Default is true.
