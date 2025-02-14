@@ -23,7 +23,7 @@ export const JsonTable = ({
 }: JsonTableProps): JSX.Element | null => {
   const { resultName, tables } = jsonTableData;
   const flattenedTable = tables?.flat() ?? [];
-  const columns = useContructColumns(flattenedTable);
+  const columns = useConstructColumns(flattenedTable);
 
   if (!columns) {
     return null;
@@ -47,7 +47,7 @@ export const JsonTable = ({
     </BaseTable>
   );
 };
-function useContructColumns(
+function useConstructColumns(
   flattenedTable: TableRow[],
 ): ColumnInfoInput[] | null {
   if (flattenedTable.length > 0) {
