@@ -41,7 +41,7 @@ const HtmlLabResult = ({ labResult }: { labResult: DisplayDataProps }) => {
   return (
     <AccordionSubSection title="Lab Results">
       <div data-testid="lab-results">
-        <DataTableDisplay item={labResult} key="lab-results-table" />
+        <DataTableDisplay item={labResult} />
       </div>
     </AccordionSubSection>
   );
