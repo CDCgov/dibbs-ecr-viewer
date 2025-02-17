@@ -12,6 +12,7 @@ import {
   streamToJson,
 } from "../utils";
 import { s3Client } from "../services/s3Client";
+import { findEcrById } from "../services/database_repo";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
@@ -53,6 +54,52 @@ export async function get_fhir_data(ecr_id: string | null) {
     { status },
   );
 }
+
+// Replaces get_postgres
+/**
+ * Retrieves FHIR data from PostgreSQL database based on eCR ID.
+ * @param ecr_id - The id of the ecr to fetch.
+ * @returns A promise resolving to the data and status.
+ */
+export const get_db = async (
+  ecr_id: string | null,
+): Promise<FhirDataResponse> => {
+  const findFhir = await findEcrById(ecr_id);
+  try {
+    const entry = findFhir;
+    return { payload: { fhirBundle: entry }, status: 200 };
+  } catch (error: any) {
+    console.error("Error fetching data:", error);
+    if (error.message == "No data returned from the query.") {
+      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+    } else {
+      return { payload: { message: error.message }, status: 500 };
+    }
+  }
+};
+
+// DEP
+/**
+ * Retrieves FHIR data from PostgreSQL database based on eCR ID.
+ * @param ecr_id - The id of the ecr to fetch.
+ * @returns A promise resolving to the data and status.
+ */
+export const get_postgres = async (
+  ecr_id: string | null,
+): Promise<FhirDataResponse> => {
+  const findFhir = await findEcrById(ecr_id);
+  try {
+    const entry = findFhir;
+    return { payload: { fhirBundle: entry }, status: 200 };
+  } catch (error: any) {
+    console.error("Error fetching data:", error);
+    if (error.message == "No data returned from the query.") {
+      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+    } else {
+      return { payload: { message: error.message }, status: 500 };
+    }
+  }
+};
 
 /**
  * Retrieves FHIR data from S3 based on eCR ID.
