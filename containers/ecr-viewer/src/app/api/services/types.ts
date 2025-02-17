@@ -6,10 +6,6 @@ import {
    Updateable,
 } from 'kysely'
 
-const db_type = process.env.METADATA_DATABASE_TYPE
-
-// This interface describes the `ecr_data` table to Kysely.
-
 export interface ecr_data {
    eICR_ID: Generated<string>
    set_id: string
@@ -36,7 +32,7 @@ export interface ecr_rr_rule_summaries {
    ecr_rr_conditions_id: string
    rule_summary: string
 }
-
+ 
 export type ECR = Selectable<ecr_data>
 export type NewECR = Insertable<ecr_data>
 export type ECRUpdate = Updateable<ecr_data>
@@ -49,8 +45,8 @@ export type ECRRuleSummaries = Selectable<ecr_rr_rule_summaries>
 export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>
 export type ECRRuleSummariesUpdate = Updateable<ecr_rr_rule_summaries>
 
-export interface Database {
-    ecr_data: ecr_data
-    ecr_rr_conditions: ecr_rr_conditions
-    ecr_rr_rule_summaries: ecr_rr_rule_summaries
+export interface Core {
+   ecr_data: ecr_data
+   ecr_rr_conditions: ecr_rr_conditions
+   ecr_rr_rule_summaries: ecr_rr_rule_summaries
 }

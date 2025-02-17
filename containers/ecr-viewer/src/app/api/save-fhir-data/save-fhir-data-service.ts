@@ -141,6 +141,13 @@ export const saveFhirData = async (
   }
 };
 
+/*
+if data = extendedMetaData:
+  saveExtendedMetaData(data)
+if data = MetaData:
+  saveMetaData(data)
+*/
+
 /**
  * @async
  * @function saveFhirMetadata

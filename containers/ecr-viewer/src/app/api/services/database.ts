@@ -1,13 +1,7 @@
-// Kysely ORM connection client
+// Kysely ORM Connection Client
 
-// look at ENV variable to determine which type of DB connection is needed
-// establish connection and return connection pool for querying
-
-// assumption: Any given deployment will only have one RDBMS
-
-// CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-import { Database } from './types' // this is the Database interface we defined earlier
+import { Core } from './types'
+import { ExtendedDatabase } from './extended_types'
 import { Pool } from 'pg'
 import { Kysely, PostgresDialect, MssqlDialect } from 'kysely'
 import * as tedious from 'tedious'
@@ -52,23 +46,26 @@ const ms_dialect = new MssqlDialect({
     },
   })
 
+// Dialect to communicate with the database, interface to define its structure.
 
-/**
-Determines the ORM dialect based the METADATA_DATABASE_TYPE environment variable.
-*/
-const determineDialect = () => {
-    switch (process.env.METADATA_DATABASE_TYPE) {
-        case 'postgres':
-            return pg_dialect
-        case 'sqlserver':
-            return ms_dialect
-        default:
-            // throw new Error("Invalid database type")
-            return pg_dialect
-    }
+let db: Kysely<Core> | Kysely<ExtendedDatabase>;
+
+if (process.env.METADATA_DATABASE_TYPE === 'sqlserver') {
+  db = new Kysely<ExtendedDatabase>({
+    dialect: ms_dialect,
+  })
+} else if (process.env.METADATA_DATABASE_TYPE === 'postgres') {
+  db = new Kysely<Core>({
+    dialect: pg_dialect,
+  })
+} else {
+  db = new Kysely<Core>({
+    dialect: pg_dialect,
+  })
 }
 
-// Dialect to communicate with the database, interface to define its structure.
-export const db = new Kysely<Database>({
-    dialect: determineDialect(),
-})
+// export const db = new Kysely<Core>({
+//   dialect: pg_dialect,
+// })
+
+export { db };

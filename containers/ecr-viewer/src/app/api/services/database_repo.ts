@@ -1,0 +1,311 @@
+import { db } from './database'
+import { 
+    ECRConditions, NewECRConditions, ECRConditionsUpdate, 
+    ECRRuleSummaries, NewECRRuleSummaries, ECRRuleSummariesUpdate, 
+    ECR, NewECR, ECRUpdate,
+} from './types'
+
+
+// ECR_DATA
+
+/**
+ * Finds an eICR by its ID
+ * @async
+ * @function findEcrById
+ * @param id
+ * @returns an eICR object
+ */
+export async function findEcrById(id: string | null) {
+  if (!id) {
+    return console.error('eICR ID is required.')
+  }
+  try {
+    return await db.selectFrom('ecr_data')
+    .where('eICR_ID', '=', id)
+    .selectAll()
+    .executeTakeFirst()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+/**
+ * Finds an eICR by its criteria
+ * @async
+ * @function findEcr
+ * @param criteria
+ * @returns an eICR object
+ */
+export async function findEcr(criteria: Partial<ECR> | null) {
+  let query = db.selectFrom('ecr_data')
+
+  if (!criteria || criteria == null) {
+    return console.error('eICR Criteria is required.')
+  }
+
+  if (criteria.eICR_ID) {
+    query = query.where('eICR_ID', '=', criteria.eICR_ID)
+  }
+
+  if (criteria.set_id) {
+    query = query.where('set_id', '=', criteria.set_id)
+  }
+
+  if (criteria.data_source) {
+    query = query.where('data_source', '=', criteria.data_source)
+  }
+
+  if (criteria.fhir_reference_link) {
+    query = query.where('fhir_reference_link', '=', criteria.fhir_reference_link)
+  }
+
+  if (criteria.patient_name_last !== undefined) {
+    query = query.where(
+      'patient_name_last',
+      criteria.patient_name_last === null ? 'is' : '=',
+      criteria.patient_name_last
+    )
+  }
+
+  if (criteria.patient_birth_date) {
+    query = query.where('patient_birth_date', '=', criteria.patient_birth_date)
+  }
+
+  if (criteria.date_created) {
+    query = query.where('date_created', '=', criteria.date_created)
+  }
+
+  return await query.selectAll().execute()
+}
+
+/**
+ * Creates an eICR object
+ * @async
+ * @function createEcr
+ * @param ecr
+ * @returns the created eICR object
+ */
+export async function createEcr(ecr: NewECR | null) {
+  if (!ecr || ecr == null) {
+    return console.error('eICR Data is required.')
+  }
+  try {
+    return await db.insertInto('ecr_data')
+    .values(ecr)
+    .returningAll()
+    .executeTakeFirstOrThrow()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+/**
+ * Updates an eICR object
+ * @async
+ * @function updateEcr
+ * @param eICR_ID
+ * @param updateWith
+ * @returns the updated eICR object
+ */
+export async function updateEcr(eICR_ID: string | null, updateWith: ECRUpdate) {
+    await db.updateTable('ecr_data').set(updateWith).where('eICR_ID', '=', eICR_ID).execute()
+}
+
+/**
+ * Deletes an eICR object
+ * @async
+ * @function deleteEcr
+ * @param eICR_ID
+ * @returns the deleted eICR object
+ */
+export async function deleteEcr(eICR_ID: string | null) {
+  const ecr = await findEcrById(eICR_ID)
+
+  if (ecr) {
+    await db.deleteFrom('ecr_data').where('eICR_ID', '=', eICR_ID).execute()
+  }
+
+  return ecr
+}
+
+// ECR_RR_CONDITIONS
+
+/**
+ * Finds an eCR condition by its ID
+ * @async
+ * @function findEcrConditionById
+ * @param id
+ * @returns an eCR condition object
+ */
+export async function findEcrConditionById(id: string) {
+  return await db.selectFrom('ecr_rr_conditions')
+    .where('uuid', '=', id)
+    .selectAll()
+    .executeTakeFirst()
+}
+
+/**
+ * Finds an eCR condition by its criteria
+ * @async
+ * @function findEcrCondition
+ * @param criteria
+ * @returns an eCR condition object
+ */
+export async function findEcrCondition(criteria: Partial<ECRConditions>) {
+  let query = db.selectFrom('ecr_rr_conditions')
+
+  if (criteria.uuid) {
+    query = query.where('uuid', '=', criteria.uuid)
+  }
+
+  if (criteria.eICR_ID) {
+    query = query.where('eICR_ID', '=', criteria.eICR_ID)
+  }
+
+  if (criteria.condition) {
+    query = query.where('condition', '=', criteria.condition)
+  }
+
+  return await query.selectAll().execute()
+}
+
+/**
+ * Creates an eCR condition object
+ * @async
+ * @function createEcrCondition
+ * @param ecr
+ * @returns the created eCR condition object
+ */
+export async function createEcrCondition(condition: NewECRConditions | null) {
+    if (!condition || condition == null) {
+      return console.error('eICR Data is required.')
+    }
+    try {
+      return await db.insertInto('ecr_rr_conditions')
+      .values(condition)
+      .returningAll()
+      .executeTakeFirstOrThrow()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+/**
+ * Updates an eCR condition object
+ * @async
+ * @function updateEcrCondition
+ * @param uuid
+ * @param updateWith
+ * @returns the updated eCR condition object
+ */
+export async function updateEcrCondition(uuid: string, updateWith: ECRConditionsUpdate) {
+    await db.updateTable('ecr_rr_conditions').set(updateWith).where('uuid', '=', uuid).execute()
+}
+
+/**
+ * Deletes an eCR condition object
+ * @async
+ * @function deleteEcrCondition
+ * @param uuid
+ * @returns the deleted eCR condition object
+ */
+export async function deleteEcrCondition(uuid: string) {
+  const ecr = await findEcrConditionById(uuid)
+
+  if (ecr) {
+    await db.deleteFrom('ecr_rr_conditions').where('uuid', '=', uuid).execute()
+  }
+
+  return ecr
+}
+
+// ECR_RR_RULE_SUMMARIES
+
+/**
+ * Finds an eCR rule summary by its ID
+ * @async
+ * @function findEcrRuleById
+ * @param id
+ * @returns an eCR rule object
+ */
+export async function findEcrRuleById(id: string) {
+  return await db.selectFrom('ecr_rr_rule_summaries')
+    .where('uuid', '=', id)
+    .selectAll()
+    .executeTakeFirst()
+}
+
+/**
+ * Finds an eCR rule summary by its criteria
+ * @async
+ * @function findEcrRule
+ * @param criteria
+ * @returns an eCR rule object
+ */
+export async function findEcrRule(criteria: Partial<ECRRuleSummaries>) {
+  let query = db.selectFrom('ecr_rr_rule_summaries')
+
+  if (criteria.uuid) {
+    query = query.where('uuid', '=', criteria.uuid)
+  }
+
+  if (criteria.ecr_rr_conditions_id) {
+    query = query.where('ecr_rr_conditions_id', '=', criteria.ecr_rr_conditions_id)
+  }
+
+  if (criteria.rule_summary) {
+    query = query.where('rule_summary', '=', criteria.rule_summary)
+  }
+
+  return await query.selectAll().execute()
+}
+
+/**
+ * Creates an eCR rule summary object
+ * @async
+ * @function createEcrRule
+ * @param ecr
+ * @returns the created eCR rule object
+ */
+export async function createEcrRule(rule_summary: NewECRRuleSummaries) {
+    if (!rule_summary || rule_summary == null) {
+        return console.error('eICR Data is required.')
+    }
+    try {
+        return await db.insertInto('ecr_rr_rule_summaries')
+            .values(rule_summary)
+            .returningAll()
+            .executeTakeFirstOrThrow()
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+/**
+ * Updates an eCR rule summary object
+ * @async
+ * @function updateEcrRule
+ * @param uuid
+ * @param updateWith
+ * @returns the updated eCR rule object
+ */
+export async function updateEcrRule(uuid: string, updateWith: ECRRuleSummariesUpdate) {
+    await db.updateTable('ecr_rr_rule_summaries').set(updateWith).where('uuid', '=', uuid).execute()
+}
+
+/**
+ * Deletes an eCR rule summary object
+ * @async
+ * @function deleteEcrRule
+ * @param uuid
+ * @returns the deleted eCR rule object
+ */
+export async function deleteEcrRule(uuid: string) {
+  const rule_summary = await findEcrRuleById(uuid)
+
+  if (rule_summary) {
+    await db.deleteFrom('ecr_rr_rule_summaries').where('uuid', '=', uuid).execute()
+  }
+
+   return rule_summary
+}
