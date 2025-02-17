@@ -1,11 +1,10 @@
-import { db } from './database'
+import { db } from "./database";
 import {
-    ExtendedECR, NewExtendedECR, ExtendedECRUpdate,
-    PatientAddress, NewPatientAddress, PatientAddressUpdate,
-    ECRConditions, NewECRConditions, ECRConditionsUpdate,
-    ECRRuleSummaries, NewECRRuleSummaries, ECRRuleSummariesUpdate,
-    EcrLabs, NewEcrLabs, EcrLabsUpdate
-} from './extended_types'
+  ExtendedECR,
+  PatientAddress,
+  NewPatientAddress,
+  PatientAddressUpdate,
+} from "./extended_types";
 
 /**
  * Finds an eICR by its ID
@@ -16,15 +15,16 @@ import {
  */
 export async function findExtendedEcrById(id: string | null) {
   if (!id) {
-    return console.error('eICR ID is required.')
+    return console.error("eICR ID is required.");
   }
   try {
-    return await db.selectFrom('ecr_data')
-    .where('eICR_ID', '=', id)
-    .selectAll()
-    .executeTakeFirst()
+    return await db
+      .selectFrom("ecr_data")
+      .where("eICR_ID", "=", id)
+      .selectAll()
+      .executeTakeFirst();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
@@ -36,57 +36,61 @@ export async function findExtendedEcrById(id: string | null) {
  * @returns an eICR object
  */
 export async function findExtendedEcr(criteria: Partial<ExtendedECR> | null) {
-  let query = db.selectFrom('ecr_data')
+  let query = db.selectFrom("ecr_data");
 
   if (!criteria || criteria == null) {
-    return console.error('eICR Criteria is required.')
+    return console.error("eICR Criteria is required.");
   }
 
   if (criteria.eICR_ID) {
-    query = query.where('eICR_ID', '=', criteria.eICR_ID)
+    query = query.where("eICR_ID", "=", criteria.eICR_ID);
   }
 
   if (criteria.set_id) {
-    query = query.where('set_id', '=', criteria.set_id)
+    query = query.where("set_id", "=", criteria.set_id);
   }
 
   if (criteria.fhir_reference_link) {
-    query = query.where('set_id', '=', criteria.fhir_reference_link)
+    query = query.where("set_id", "=", criteria.fhir_reference_link);
   }
 
   if (criteria.last_name !== undefined) {
     query = query.where(
-      'last_name',
-      criteria.last_name === null ? 'is' : '=',
-      criteria.last_name
-    )
+      "last_name",
+      criteria.last_name === null ? "is" : "=",
+      criteria.last_name,
+    );
   }
 
   if (criteria.first_name !== undefined) {
-    query = query.where('first_name', '=', criteria.first_name)
+    query = query.where("first_name", "=", criteria.first_name);
   }
 
   if (criteria.fhir_reference_link) {
-    query = query.where('fhir_reference_link', '=', criteria.fhir_reference_link)
+    query = query.where(
+      "fhir_reference_link",
+      "=",
+      criteria.fhir_reference_link,
+    );
   }
 
   if (criteria.patient_name_last !== undefined) {
     query = query.where(
-      'patient_name_last',
-      criteria.patient_name_last === null ? 'is' : '=',
-      criteria.patient_name_last
-    )
+      "patient_name_last",
+      criteria.patient_name_last === null ? "is" : "=",
+      criteria.patient_name_last,
+    );
   }
 
   if (criteria.patient_birth_date) {
-    query = query.where('patient_birth_date', '=', criteria.patient_birth_date)
+    query = query.where("patient_birth_date", "=", criteria.patient_birth_date);
   }
 
   if (criteria.date_created) {
-    query = query.where('date_created', '=', criteria.date_created)
+    query = query.where("date_created", "=", criteria.date_created);
   }
 
-  return await query.selectAll().execute()
+  return await query.selectAll().execute();
 }
 
 /**
@@ -98,15 +102,16 @@ export async function findExtendedEcr(criteria: Partial<ExtendedECR> | null) {
  */
 export async function createExtendedEcr(ecr: NewECR | null) {
   if (!ecr || ecr == null) {
-    return console.error('eICR Data is required.')
+    return console.error("eICR Data is required.");
   }
   try {
-    return await db.insertInto('ecr_data')
-    .values(ecr)
-    .returningAll()
-    .executeTakeFirstOrThrow()
+    return await db
+      .insertInto("ecr_data")
+      .values(ecr)
+      .returningAll()
+      .executeTakeFirstOrThrow();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
@@ -118,8 +123,15 @@ export async function createExtendedEcr(ecr: NewECR | null) {
  * @param updateWith
  * @returns the updated eICR object
  */
-export async function updateExtendedEcr(eICR_ID: string | null, updateWith: ECRUpdate) {
-    await db.updateTable('ecr_data').set(updateWith).where('eICR_ID', '=', eICR_ID).execute()
+export async function updateExtendedEcr(
+  eICR_ID: string | null,
+  updateWith: ECRUpdate,
+) {
+  await db
+    .updateTable("ecr_data")
+    .set(updateWith)
+    .where("eICR_ID", "=", eICR_ID)
+    .execute();
 }
 
 /**
@@ -130,13 +142,13 @@ export async function updateExtendedEcr(eICR_ID: string | null, updateWith: ECRU
  * @returns the deleted eICR object
  */
 export async function deleteExtendedEcr(eICR_ID: string | null) {
-  const ecr = await findExtendedEcrById(eICR_ID)
+  const ecr = await findExtendedEcrById(eICR_ID);
 
   if (ecr) {
-    await db.deleteFrom('ecr_data').where('eICR_ID', '=', eICR_ID).execute()
+    await db.deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
   }
 
-  return ecr
+  return ecr;
 }
 
 // PATIENT_ADDRESS
@@ -149,10 +161,11 @@ export async function deleteExtendedEcr(eICR_ID: string | null) {
  * @returns a patient_address object
  */
 export async function findAddressById(id: string) {
-  return await db.selectFrom('patient_address')
-    .where('uuid', '=', id)
+  return await db
+    .selectFrom("patient_address")
+    .where("uuid", "=", id)
     .selectAll()
-    .executeTakeFirst()
+    .executeTakeFirst();
 }
 
 /**
@@ -163,38 +176,40 @@ export async function findAddressById(id: string) {
  * @returns a patient_address object
  */
 export async function findAddress(criteria: Partial<PatientAddress>) {
-  let query = db.selectFrom('patient_address')
+  let query = db.selectFrom("patient_address");
 
   if (criteria.uuid) {
-    query = query.where('uuid', '=', criteria.uuid)
+    query = query.where("uuid", "=", criteria.uuid);
   }
 
   if (criteria.eICR_ID) {
-    query = query.where('eICR_ID', '=', criteria.eICR_ID)
+    query = query.where("eICR_ID", "=", criteria.eICR_ID);
   }
 
-  return await query.selectAll().execute()
+  return await query.selectAll().execute();
 }
 
 /**
  * Creates a patient_address object
  * @async
+ * @param patient_address
  * @function createAddress
  * @param address
  * @returns the created patient_address object
  */
 export async function createAddress(patient_address: NewPatientAddress) {
-    if (!patient_address || patient_address == null) {
-        return console.error('eICR Data is required.')
-    }
-    try {
-        return await db.insertInto('patient_address')
-            .values(patient_address)
-            .returningAll()
-            .executeTakeFirstOrThrow()
-    } catch (error) {
-        console.error(error)
-    }
+  if (!patient_address || patient_address == null) {
+    return console.error("eICR Data is required.");
+  }
+  try {
+    return await db
+      .insertInto("patient_address")
+      .values(patient_address)
+      .returningAll()
+      .executeTakeFirstOrThrow();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
@@ -205,8 +220,15 @@ export async function createAddress(patient_address: NewPatientAddress) {
  * @param updateWith
  * @returns the updated patient_address object
  */
-export async function updateAddress(uuid: string, updateWith: PatientAddressUpdate) {
-    await db.updateTable('patient_address').set(updateWith).where('uuid', '=', uuid).execute()
+export async function updateAddress(
+  uuid: string,
+  updateWith: PatientAddressUpdate,
+) {
+  await db
+    .updateTable("patient_address")
+    .set(updateWith)
+    .where("uuid", "=", uuid)
+    .execute();
 }
 
 /**
@@ -217,11 +239,11 @@ export async function updateAddress(uuid: string, updateWith: PatientAddressUpda
  * @returns the deleted patient_address object
  */
 export async function deleteAddress(uuid: string) {
-  const address = await findAddressById(uuid)
+  const address = await findAddressById(uuid);
 
   if (address) {
-    await db.deleteFrom('patient_address').where('uuid', '=', uuid).execute()
+    await db.deleteFrom("patient_address").where("uuid", "=", uuid).execute();
   }
 
-   return address
+  return address;
 }
