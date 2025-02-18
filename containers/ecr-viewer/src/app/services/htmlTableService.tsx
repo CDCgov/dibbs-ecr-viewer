@@ -73,14 +73,14 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
   const liArray = doc.querySelectorAll("li, list > item");
   if (liArray.length > 0) {
     liArray.forEach((li) => {
-      const tables: any[] = [];
-      const resultId = getDataId(li);
+      const tables: TableRow[][] = [];
+      const resultId = getDataId(li) ?? undefined;
       const firstChildNode = getFirstNonCommentChild(li);
       const resultName = firstChildNode ? getElementText(firstChildNode) : "";
       li.querySelectorAll("table").forEach((table) => {
         tables.push(processTable(table));
       });
-      jsonArray.push({ resultId: resultId ?? undefined, resultName, tables });
+      jsonArray.push({ resultId, resultName, tables });
     });
 
     return jsonArray;
