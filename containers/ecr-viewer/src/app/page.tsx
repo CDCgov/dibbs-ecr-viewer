@@ -9,7 +9,7 @@ import { EcrTableLoading } from "./components/EcrTableClient";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { env } from "next-runtime-env";
 import { getAllConditions } from "./data/conditions";
-import { notFound } from "next/navigation";
+import NotFound from "./not-found";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
@@ -26,8 +26,7 @@ const HomePage = async ({
     env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
 
   if (!isNonIntegratedViewer) {
-    // Bail out to a 404
-    notFound();
+    return <NotFound />;
   }
 
   const currentPage = Number(searchParams?.page) || 1;
