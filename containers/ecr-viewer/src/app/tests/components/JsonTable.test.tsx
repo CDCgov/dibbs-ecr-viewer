@@ -23,6 +23,15 @@ describe("returnTableFromJson", () => {
     expect(screen.getByText("val2")).toBeInTheDocument();
   });
 
+  it("returns nothing when provided a name but no table data", () => {
+    const tableJson = {
+      resultName: "test-name",
+      tables: [[]],
+    };
+    const { container } = render(<JsonTable jsonTableData={tableJson} />);
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it("returns nothing if required table data is not available", () => {
     const { container } = render(<JsonTable jsonTableData={{}} />);
     expect(container).toBeEmptyDOMElement();

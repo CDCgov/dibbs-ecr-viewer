@@ -85,6 +85,17 @@ describe("common tests", () => {
       expect(screen.getAllByText("2000-02-04T21:02:00.000Z")).toHaveLength(2);
     });
 
+    it("returns nothing if table data can't be located from the provided mapping", () => {
+      const result = returnHtmlTableContent(
+        BundleLabNoLabIds as Bundle,
+        "thisMappingDoesNotExist",
+        "test-title",
+      );
+
+      const { container } = render(result);
+      expect(container).toBeEmptyDOMElement();
+    });
+
     it("returns nothing if required table data is not available", () => {
       const result = returnHtmlTableContent(
         undefined as any,
