@@ -3,11 +3,20 @@ import { getDB } from "../services/postgres_db";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
-import sql from "mssql";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 import { s3Client } from "../services/s3Client";
 import { get_pool } from "../services/sqlserver_db";
+import {
+  Date as SqlDate,
+  NVarChar,
+  Request as SqlRequest,
+  Transaction,
+  VarChar,
+  Float,
+  DateTime,
+  MAX,
+} from "mssql";
 
 interface SaveResponse {
   message: string;
@@ -193,91 +202,59 @@ export const saveMetadataToSqlServer = async (
   }
 
   if (process.env.METADATA_DATABASE_SCHEMA == "extended") {
-    const transaction = new sql.Transaction(pool);
+    const transaction = new Transaction(pool);
     await transaction.begin();
     try {
-      const ecrDataInsertRequest = new sql.Request(transaction);
+      const ecrDataInsertRequest = new SqlRequest(transaction);
       await ecrDataInsertRequest
-        .input("eICR_ID", sql.VarChar(200), ecrId)
-        .input("eicr_set_id", sql.VarChar(255), metadata.eicr_set_id)
-        .input("fhir_reference_link", sql.VarChar(255), null) // Not implemented
-        .input("last_name", sql.VarChar(255), metadata.last_name)
-        .input("first_name", sql.VarChar(255), metadata.first_name)
-        .input("birth_date", sql.Date, metadata.birth_date)
-        .input("gender", sql.VarChar(50), metadata.gender)
-        .input("birth_sex", sql.VarChar(50), metadata.birth_sex)
-        .input("gender_identity", sql.VarChar(50), metadata.gender_identity)
-        .input("race", sql.VarChar(255), metadata.race)
-        .input("ethnicity", sql.VarChar(255), metadata.ethnicity)
-        .input("latitude", sql.Float, metadata.latitude)
-        .input("longitude", sql.Float, metadata.longitude)
+        .input("eICR_ID", VarChar(200), ecrId)
+        .input("eicr_set_id", VarChar(255), metadata.eicr_set_id)
+        .input("fhir_reference_link", VarChar(255), null) // Not implemented
+        .input("last_name", NVarChar(255), metadata.last_name)
+        .input("first_name", NVarChar(255), metadata.first_name)
+        .input("birth_date", SqlDate, metadata.birth_date)
+        .input("gender", VarChar(50), metadata.gender)
+        .input("birth_sex", VarChar(50), metadata.birth_sex)
+        .input("gender_identity", VarChar(50), metadata.gender_identity)
+        .input("race", VarChar(255), metadata.race)
+        .input("ethnicity", VarChar(255), metadata.ethnicity)
+        .input("latitude", Float, metadata.latitude)
+        .input("longitude", Float, metadata.longitude)
         .input(
           "homelessness_status",
-          sql.VarChar(255),
+          VarChar(255),
           metadata.homelessness_status,
         )
-        .input("disabilities", sql.VarChar(255), metadata.disabilities)
-        .input(
-          "tribal_affiliation",
-          sql.VarChar(255),
-          metadata.tribal_affiliation,
-        )
+        .input("disabilities", VarChar(255), metadata.disabilities)
+        .input("tribal_affiliation", VarChar(255), metadata.tribal_affiliation)
         .input(
           "tribal_enrollment_status",
-          sql.VarChar(255),
+          VarChar(255),
           metadata.tribal_enrollment_status,
         )
-        .input(
-          "current_job_title",
-          sql.VarChar(255),
-          metadata.current_job_title,
-        )
+        .input("current_job_title", NVarChar(255), metadata.current_job_title)
         .input(
           "current_job_industry",
-          sql.VarChar(255),
+          VarChar(255),
           metadata.current_job_industry,
         )
-        .input("usual_occupation", sql.VarChar(255), metadata.usual_occupation)
-        .input("usual_industry", sql.VarChar(255), metadata.usual_industry)
-        .input(
-          "preferred_language",
-          sql.VarChar(255),
-          metadata.preferred_language,
-        )
-        .input("pregnancy_status", sql.VarChar(255), metadata.pregnancy_status)
-        .input("rr_id", sql.VarChar(255), metadata.rr_id)
-        .input(
-          "processing_status",
-          sql.VarChar(255),
-          metadata.processing_status,
-        )
-        .input(
-          "eicr_version_number",
-          sql.VarChar(50),
-          metadata.eicr_version_number,
-        )
-        .input("authoring_date", sql.DateTime, metadata.authoring_datetime)
-        .input("authoring_provider", sql.VarChar(255), metadata.provider_id)
-        .input("provider_id", sql.VarChar(255), metadata.provider_id)
-        .input("facility_id", sql.VarChar(255), metadata.facility_id_number)
-        .input("facility_name", sql.VarChar(255), metadata.facility_name)
-        .input("encounter_type", sql.VarChar(255), metadata.encounter_type)
-        .input(
-          "encounter_start_date",
-          sql.DateTime,
-          metadata.encounter_start_date,
-        )
-        .input("encounter_end_date", sql.DateTime, metadata.encounter_end_date)
-        .input(
-          "reason_for_visit",
-          sql.VarChar(sql.MAX),
-          metadata.reason_for_visit,
-        )
-        .input(
-          "active_problems",
-          sql.VarChar(sql.MAX),
-          metadata.active_problems,
-        )
+        .input("usual_occupation", VarChar(255), metadata.usual_occupation)
+        .input("usual_industry", VarChar(255), metadata.usual_industry)
+        .input("preferred_language", VarChar(255), metadata.preferred_language)
+        .input("pregnancy_status", VarChar(255), metadata.pregnancy_status)
+        .input("rr_id", VarChar(255), metadata.rr_id)
+        .input("processing_status", VarChar(255), metadata.processing_status)
+        .input("eicr_version_number", VarChar(50), metadata.eicr_version_number)
+        .input("authoring_date", DateTime, metadata.authoring_datetime)
+        .input("authoring_provider", NVarChar(255), metadata.provider_id)
+        .input("provider_id", VarChar(255), metadata.provider_id)
+        .input("facility_id", VarChar(255), metadata.facility_id_number)
+        .input("facility_name", NVarChar(255), metadata.facility_name)
+        .input("encounter_type", VarChar(255), metadata.encounter_type)
+        .input("encounter_start_date", DateTime, metadata.encounter_start_date)
+        .input("encounter_end_date", DateTime, metadata.encounter_end_date)
+        .input("reason_for_visit", VarChar(MAX), metadata.reason_for_visit)
+        .input("active_problems", VarChar(MAX), metadata.active_problems)
         .query(
           "INSERT INTO dbo.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
         );
@@ -285,21 +262,21 @@ export const saveMetadataToSqlServer = async (
       if (metadata.patient_addresses) {
         for (const address of metadata.patient_addresses) {
           const patient_address_uuid = randomUUID();
-          const addressInsertRequest = new sql.Request(transaction);
+          const addressInsertRequest = new SqlRequest(transaction);
           await addressInsertRequest
-            .input("UUID", sql.VarChar(200), patient_address_uuid)
-            .input("use", sql.VarChar(7), address.use)
-            .input("type", sql.VarChar(8), address.type)
-            .input("text", sql.VarChar(sql.MAX), address.text)
-            .input("line", sql.VarChar(sql.MAX), address.line)
-            .input("city", sql.VarChar(255), address.city)
-            .input("district", sql.VarChar(255), address.district)
-            .input("state", sql.VarChar(255), address.state)
-            .input("postal_code", sql.VarChar(20), address.postal_code)
-            .input("country", sql.VarChar(255), address.country)
-            .input("period_start", sql.DateTime, address.period_start)
-            .input("period_end", sql.DateTime, address.period_end)
-            .input("eICR_ID", sql.VarChar(200), ecrId)
+            .input("UUID", VarChar(200), patient_address_uuid)
+            .input("use", VarChar(7), address.use)
+            .input("type", VarChar(8), address.type)
+            .input("text", NVarChar(MAX), address.text)
+            .input("line", NVarChar(MAX), address.line)
+            .input("city", NVarChar(255), address.city)
+            .input("district", NVarChar(255), address.district)
+            .input("state", NVarChar(255), address.state)
+            .input("postal_code", VarChar(20), address.postal_code)
+            .input("country", NVarChar(255), address.country)
+            .input("period_start", DateTime, address.period_start)
+            .input("period_end", DateTime, address.period_end)
+            .input("eICR_ID", VarChar(200), ecrId)
             .query(
               "INSERT INTO dbo.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
             );
@@ -308,77 +285,77 @@ export const saveMetadataToSqlServer = async (
 
       if (metadata.labs) {
         for (const lab of metadata.labs) {
-          const labInsertRequest = new sql.Request(transaction);
+          const labInsertRequest = new SqlRequest(transaction);
           await labInsertRequest
-            .input("UUID", sql.VarChar(200), lab.uuid)
-            .input("eICR_ID", sql.VarChar(200), ecrId)
-            .input("test_type", sql.VarChar(200), lab.test_type)
-            .input("test_type_code", sql.VarChar(50), lab.test_type_code)
-            .input("test_type_system", sql.VarChar(255), lab.test_type_system)
+            .input("UUID", VarChar(200), lab.uuid)
+            .input("eICR_ID", VarChar(200), ecrId)
+            .input("test_type", VarChar(200), lab.test_type)
+            .input("test_type_code", VarChar(50), lab.test_type_code)
+            .input("test_type_system", VarChar(255), lab.test_type_system)
             .input(
               "test_result_qualitative",
-              sql.VarChar(sql.MAX),
+              NVarChar(MAX),
               lab.test_result_qualitative,
             )
             .input(
               "test_result_quantitative",
-              sql.Float,
+              Float,
               lab.test_result_quantitative,
             )
-            .input("test_result_units", sql.VarChar(50), lab.test_result_units)
-            .input("test_result_code", sql.VarChar(50), lab.test_result_code)
+            .input("test_result_units", NVarChar(50), lab.test_result_units)
+            .input("test_result_code", VarChar(50), lab.test_result_code)
             .input(
               "test_result_code_display",
-              sql.VarChar(255),
+              NVarChar(255),
               lab.test_result_code_display,
             )
             .input(
               "test_result_code_system",
-              sql.VarChar(50),
+              VarChar(50),
               lab.test_result_code_system,
             )
             .input(
               "test_result_interpretation",
-              sql.VarChar(255),
+              NVarChar(255),
               lab.test_result_interpretation,
             )
             .input(
               "test_result_interpretation_code",
-              sql.VarChar(50),
+              VarChar(50),
               lab.test_result_interpretation_code,
             )
             .input(
               "test_result_interpretation_system",
-              sql.VarChar(255),
+              VarChar(255),
               lab.test_result_interpretation_system,
             )
             .input(
               "test_result_ref_range_low_value",
-              sql.Float,
+              Float,
               lab.test_result_ref_range_low,
             )
             .input(
               "test_result_ref_range_low_units",
-              sql.VarChar(50),
+              NVarChar(50),
               lab.test_result_ref_range_low_units,
             )
             .input(
               "test_result_ref_range_high_value",
-              sql.Float,
+              Float,
               lab.test_result_ref_range_high,
             )
             .input(
               "test_result_ref_range_high_units",
-              sql.VarChar(50),
+              NVarChar(50),
               lab.test_result_ref_range_high_units,
             )
-            .input("specimen_type", sql.VarChar(255), lab.specimen_type)
+            .input("specimen_type", VarChar(255), lab.specimen_type)
             .input(
               "specimen_collection_date",
-              sql.DateTime,
+              DateTime,
               lab.specimen_collection_date,
             )
-            .input("performing_lab", sql.VarChar(255), lab.performing_lab)
+            .input("performing_lab", NVarChar(255), lab.performing_lab)
             .query(
               "INSERT INTO dbo.ecr_labs VALUES (@UUID, @eICR_ID, @test_type, @test_type_code, @test_type_system, @test_result_qualitative, @test_result_quantitative, @test_result_units, @test_result_code, @test_result_code_display, @test_result_code_system, @test_result_interpretation, @test_result_interpretation_code, @test_result_interpretation_system, @test_result_ref_range_low_value, @test_result_ref_range_low_units, @test_result_ref_range_high_value, @test_result_ref_range_high_units, @specimen_type, @specimen_collection_date, @performing_lab)",
             );
@@ -389,13 +366,13 @@ export const saveMetadataToSqlServer = async (
         // Loop through each condition/rule object in rr array
         for (const rrItem of metadata.rr) {
           const rr_conditions_uuid = randomUUID();
-          const rrConditionsInsertRequest = new sql.Request(transaction);
+          const rrConditionsInsertRequest = new SqlRequest(transaction);
 
           // Insert condition into ecr_rr_conditions
           await rrConditionsInsertRequest
-            .input("UUID", sql.VarChar(200), rr_conditions_uuid)
-            .input("eICR_ID", sql.VarChar(200), ecrId)
-            .input("condition", sql.VarChar(sql.MAX), rrItem.condition)
+            .input("UUID", VarChar(200), rr_conditions_uuid)
+            .input("eICR_ID", VarChar(200), ecrId)
+            .input("condition", VarChar(MAX), rrItem.condition)
             .query(
               "INSERT INTO dbo.ecr_rr_conditions VALUES (@UUID, @eICR_ID, @condition)",
             );
@@ -403,17 +380,13 @@ export const saveMetadataToSqlServer = async (
           // Loop through the rule summaries array
           if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
             for (const summary of rrItem.rule_summaries) {
-              const ruleSummaryInsertRequest = new sql.Request(transaction);
+              const ruleSummaryInsertRequest = new SqlRequest(transaction);
 
               // Insert each rule summary with reference to the condition
               await ruleSummaryInsertRequest
-                .input("UUID", sql.VarChar(200), randomUUID())
-                .input(
-                  "ECR_RR_CONDITIONS_ID",
-                  sql.VarChar(200),
-                  rr_conditions_uuid,
-                )
-                .input("rule_summary", sql.VarChar(sql.MAX), summary.summary)
+                .input("UUID", VarChar(200), randomUUID())
+                .input("ECR_RR_CONDITIONS_ID", VarChar(200), rr_conditions_uuid)
+                .input("rule_summary", VarChar(MAX), summary.summary)
                 .query(
                   "INSERT INTO dbo.ecr_rr_rule_summaries VALUES (@UUID, @ECR_RR_CONDITIONS_ID, @rule_summary)",
                 );
