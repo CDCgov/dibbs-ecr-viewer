@@ -47,6 +47,7 @@ export const JsonTable = ({
     </BaseTable>
   );
 };
+
 function useConstructColumns(
   flattenedTable: TableRow[],
 ): ColumnInfoInput[] | null {
