@@ -51,7 +51,9 @@ const HomePage = async ({
       <Header />
       <main className="overflow-auto height-full">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
-          <span className="text-bold font-sans-xl">eCR Library</span>{" "}
+          <h2 className="margin-bottom-0 text-bold font-sans-xl">
+            eCR Library
+          </h2>
           <LibrarySearch
             className="margin-left-auto"
             textBoxClassName="width-21-9375"
