@@ -621,7 +621,6 @@ export const evaluateEncounterCareTeamTable = (
   return (
     <JsonTable
       jsonTableData={{ resultName: "Encounter Care Team", tables: [tables] }}
-      outerBorder
       className="caption-data-title margin-y-0"
     />
   );
