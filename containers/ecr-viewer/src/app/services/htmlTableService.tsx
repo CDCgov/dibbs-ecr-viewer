@@ -8,17 +8,17 @@ interface Metadata {
   [key: string]: string;
 }
 
-export interface HtmlTableJsonRow {
+export interface TableRow {
   [key: string]: {
     value: any;
     metadata?: Metadata;
   };
 }
 
-export interface HtmlTableJson {
+export interface TableJson {
   resultId?: string;
   resultName?: string;
-  tables?: HtmlTableJsonRow[][];
+  tables?: TableRow[][];
 }
 
 /**
@@ -63,18 +63,18 @@ export function getDataId(elem: HTMLElement | HTMLTableElement | Element) {
  * @returns - An array of JSON objects representing the list items and their tables from the HTML string.
  * @example @returns [{resultId: 'Result.123', resultName: 'foo', tables: [{}, {},...]}, ...]
  */
-export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
+export function formatTablesToJSON(htmlString: string): TableJson[] {
   // We purposefully don't sanitize here to remain close to the original format while
   // looking for specific patterns. The data is sanitized as it's pulled out.
   const doc = parse(htmlString);
-  const jsonArray: HtmlTableJson[] = [];
+  const jsonArray: any[] = [];
 
   // <li>{name}<table/></li> OR <list><item>{name}<table /></item></list>
   const liArray = doc.querySelectorAll("li, list > item");
   if (liArray.length > 0) {
     liArray.forEach((li) => {
-      const tables: HtmlTableJsonRow[][] = [];
-      const resultId = getDataId(li) ?? undefined;
+      const tables: any[] = [];
+      const resultId = getDataId(li);
       const firstChildNode = getFirstNonCommentChild(li);
       const resultName = firstChildNode ? getElementText(firstChildNode) : "";
       li.querySelectorAll("table").forEach((table) => {
@@ -145,7 +145,7 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
  * @param table - The HTML table element to be processed.
  * @returns - An array of JSON objects representing the rows and cells of the table.
  */
-function processTable(table: HTMLElement): HtmlTableJsonRow[] {
+function processTable(table: HTMLElement): TableRow[] {
   const jsonArray: any[] = [];
   const rows = table.querySelectorAll("tr");
   const keys: string[] = [];
@@ -163,7 +163,7 @@ function processTable(table: HTMLElement): HtmlTableJsonRow[] {
     // Skip the first row as it contains headers
     if (hasHeaders && rowIndex === 0) return;
 
-    const obj: HtmlTableJsonRow = {};
+    const obj: TableRow = {};
     row.querySelectorAll("td").forEach((cell, cellIndex) => {
       const key = hasHeaders ? keys[cellIndex] : "Unknown Header";
 
@@ -230,7 +230,7 @@ export const addCaptionToTable = (
 ) => {
   if (React.isValidElement(element) && element.type === "table") {
     return React.cloneElement(element, {}, [
-      <caption key="caption">
+      <caption>
         <ToolTipElement toolTip={toolTip}>
           <div className="data-title">{caption}</div>
         </ToolTipElement>
