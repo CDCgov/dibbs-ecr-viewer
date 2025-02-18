@@ -1,6 +1,7 @@
 "use client"; // Error components must be Client Components
 
 import { useEffect } from "react";
+import ErrorPage from "@/app/components/ErrorPage";
 
 /**
  * Renders an Error component to display when an error occurs.
@@ -19,8 +20,8 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-    </div>
+    <ErrorPage title="Something went wrong!">
+      If the problem persists, please reach out to your eCR coordinator.
+    </ErrorPage>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Error } from "@/app/components/Icon";
-import Header from "../../Header";
+import Header from "../../components/Header";
 
 /**
  * @returns The error auth page JSX component.

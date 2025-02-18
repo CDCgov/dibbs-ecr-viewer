@@ -14,7 +14,7 @@ import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 import EcrSummary from "./components/EcrSummary";
-import RetrievalFailed from "./retrieval-failed";
+import RetrievalFailed from "@/app/components/ErrorPage";
 import SideNav from "./components/SideNav";
 import {
   evaluatePatientDOB,

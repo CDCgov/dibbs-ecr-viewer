@@ -1,15 +1,15 @@
 import React, { Suspense } from "react";
-import Header from "./Header";
+import Header from "./components/Header";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
 import EcrTable from "@/app/components/EcrTable";
 import LibrarySearch from "./components/LibrarySearch";
-import NotFound from "./not-found";
 import Filters from "@/app/components/Filters";
 import { EcrTableLoading } from "./components/EcrTableClient";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { env } from "next-runtime-env";
 import { getAllConditions } from "./data/conditions";
+import { notFound } from "next/navigation";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
@@ -26,7 +26,8 @@ const HomePage = async ({
     env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
 
   if (!isNonIntegratedViewer) {
-    return <NotFound />;
+    // Bail out to a 404
+    notFound();
   }
 
   const currentPage = Number(searchParams?.page) || 1;

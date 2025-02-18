@@ -7,7 +7,7 @@ import {
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
 import { AccordionSection, AccordionSubSection } from "../component-utils";
 import classNames from "classnames";
-import { BackButton } from "./BackButton";
+import { BackButton } from "../../components/BackButton";
 import React from "react";
 import { range } from "../../utils/data-utils";
 import { env } from "next-runtime-env";
