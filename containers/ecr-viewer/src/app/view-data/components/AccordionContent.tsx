@@ -22,16 +22,16 @@ import { Accordion } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
 
-type AccordionContainerProps = {
-  fhirBundle: Bundle;
-  fhirPathMappings: PathMappings;
-};
-
 export type AccordionItemProps = Omit<
   React.ComponentProps<typeof Accordion>["items"][0],
   "title"
 > & {
   title: RenderableNode;
+};
+
+type AccordionContentProps = {
+  fhirBundle: Bundle;
+  fhirPathMappings: PathMappings;
 };
 
 /**
@@ -41,7 +41,7 @@ export type AccordionItemProps = Omit<
  * @param props.fhirPathMappings - The path mappings used to extract information from the FHIR bundle.
  * @returns The JSX element representing the accordion container.
  */
-const AccordionContent: React.FC<AccordionContainerProps> = ({
+const AccordionContent: React.FC<AccordionContentProps> = ({
   fhirBundle,
   fhirPathMappings,
 }) => {
