@@ -51,12 +51,11 @@ export const RetrievalFailed = () => (
     title="eCR retrieval failed"
     subTitle="The eCR Viewer couldn't retrieve the associated eCR file"
   >
-    This is likely because the DIBBs pipeline hasn't processed this eCR.
-    <p />
-    <div className="margin-0">
+    <p>This is likely because the DIBBs pipeline hasn't processed this eCR.</p>
+    <p>
       <b>Contact support:</b> If the problem persists, please reach out to your
       eCR coordinator to troubleshoot the issue with the DIBBs team.
-    </div>
+    </p>
   </ErrorPage>
 );
 
