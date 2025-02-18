@@ -31,6 +31,5 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
       ],
     }
   }
-  outerBorder={true}
 />
 `;
