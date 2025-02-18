@@ -1,4 +1,4 @@
-import { PathMappings, RenderableNode } from "../../utils/data-utils";
+import { PathMappings } from "../../utils/data-utils";
 import Demographics from "./Demographics";
 import SocialHistory from "./SocialHistory";
 import UnavailableInfo from "./UnavailableInfo";
@@ -22,12 +22,9 @@ import { Accordion } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
 
-export type AccordionItemProps = Omit<
-  React.ComponentProps<typeof Accordion>["items"][0],
-  "title"
-> & {
-  title: RenderableNode;
-};
+export type AccordionItemProps = React.ComponentProps<
+  typeof Accordion
+>["items"][0];
 
 type AccordionContentProps = {
   fhirBundle: Bundle;
