@@ -22,9 +22,14 @@ import { Accordion } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
 
-export type AccordionItemProps = React.ComponentProps<
-  typeof Accordion
->["items"][0];
+export type AccordionItemProps = Omit<
+  React.ComponentProps<typeof Accordion>["items"][0],
+  "title"
+> & {
+  title: string;
+};
+
+type AccordionItemWithoutId = Omit<AccordionItemProps, "id">;
 
 type AccordionContentProps = {
   fhirBundle: Bundle;
@@ -79,9 +84,11 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
     );
   };
 
-  const accordionItems: AccordionItemProps[] = [
+  const expanded = true;
+  const headingLevel = "h3";
+
+  const accordionItems: AccordionItemWithoutId[] = [
     {
-      id: "patient-info",
       title: "Patient Info",
       content: (
         <>
@@ -100,11 +107,10 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </>
       ),
-      expanded: true,
-      headingLevel: "h3",
+      expanded,
+      headingLevel,
     },
     {
-      id: "encounter-info",
       title: "Encounter Info",
       content: (
         <>
@@ -123,11 +129,10 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </>
       ),
-      expanded: true,
-      headingLevel: "h3",
+      expanded,
+      headingLevel,
     },
     {
-      id: "clinical-info",
       title: "Clinical Info",
       content: Object.values(clinicalData).some(
         (section) => section.availableData.length > 0,
@@ -149,11 +154,10 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           No clinical information was found in this eCR.
         </p>
       ),
-      expanded: true,
-      headingLevel: "h3",
+      expanded,
+      headingLevel,
     },
     {
-      id: "lab-info",
       title: "Lab Info",
       content:
         labInfoData.length > 0 ? (
@@ -163,11 +167,10 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
             No lab information was found in this eCR.
           </p>
         ),
-      expanded: true,
-      headingLevel: "h3",
+      expanded,
+      headingLevel,
     },
     {
-      id: "ecr-metadata",
       title: "eCR Metadata",
       content: (
         <>
@@ -196,11 +199,10 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </>
       ),
-      expanded: true,
-      headingLevel: "h3",
+      expanded,
+      headingLevel,
     },
     {
-      id: "unavailable-info",
       title: "Unavailable Info",
       content: (
         <div>
@@ -239,41 +241,23 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </div>
       ),
-      expanded: true,
-      headingLevel: "h3",
+      expanded,
+      headingLevel,
     },
   ];
 
-  const updatedAccordionItems = accordionItems.map(updateAccordionItemIds);
+  const accordionItemsWithIds = accordionItems.map((item) => ({
+    ...item,
+    id: toKebabCase(item.title),
+  }));
 
   return (
     <Accordion
       className="info-container"
-      items={updatedAccordionItems}
+      items={accordionItemsWithIds}
       multiselectable={true}
     />
   );
-};
-
-/**
- * Takes an `AccordionItemProps` and its index in the array and returns a copy of the object
- * with an updated `id` based off the `title` (if the title is a `string`). It also wraps the object's
- * `title` in a `<span>`
- * @param item the current `AccordionItemProps` in the array
- * @param index the index of the current `AccordionItemProps` in the array
- * @returns an `AccordionItemProps` with an updated `id` and a `title` wrapped in a `span` tag
- */
-const updateAccordionItemIds = (
-  item: AccordionItemProps,
-  index: number,
-): AccordionItemProps => {
-  return {
-    ...item,
-    id: `${
-      typeof item.title === "string" ? toKebabCase(item.title) : item.id
-    }_${index + 1}`,
-    title: <span>{item.title}</span>,
-  };
 };
 
 export default AccordionContent;
