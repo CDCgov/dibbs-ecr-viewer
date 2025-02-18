@@ -29,8 +29,6 @@ export type AccordionItemProps = Omit<
   title: string;
 };
 
-type AccordionItemWithoutId = Omit<AccordionItemProps, "id">;
-
 type AccordionContentProps = {
   fhirBundle: Bundle;
   fhirPathMappings: PathMappings;
@@ -84,10 +82,7 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
     );
   };
 
-  const expanded = true;
-  const headingLevel = "h3";
-
-  const accordionItems: AccordionItemWithoutId[] = [
+  const accordionItems: AccordionItemProps[] = [
     {
       title: "Patient Info",
       content: (
@@ -107,8 +102,6 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </>
       ),
-      expanded,
-      headingLevel,
     },
     {
       title: "Encounter Info",
@@ -129,8 +122,6 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </>
       ),
-      expanded,
-      headingLevel,
     },
     {
       title: "Clinical Info",
@@ -154,8 +145,6 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           No clinical information was found in this eCR.
         </p>
       ),
-      expanded,
-      headingLevel,
     },
     {
       title: "Lab Info",
@@ -167,8 +156,6 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
             No lab information was found in this eCR.
           </p>
         ),
-      expanded,
-      headingLevel,
     },
     {
       title: "eCR Metadata",
@@ -199,8 +186,6 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </>
       ),
-      expanded,
-      headingLevel,
     },
     {
       title: "Unavailable Info",
@@ -241,20 +226,18 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
           )}
         </div>
       ),
-      expanded,
-      headingLevel,
     },
-  ];
-
-  const accordionItemsWithIds = accordionItems.map((item) => ({
+  ].map((item) => ({
     ...item,
+    expanded: true,
+    headingLevel: "h3",
     id: toKebabCase(item.title),
   }));
 
   return (
     <Accordion
       className="info-container"
-      items={accordionItemsWithIds}
+      items={accordionItems}
       multiselectable={true}
     />
   );
