@@ -18,7 +18,7 @@ interface JsonTableProps {
  * Returns a table built from a JSON representation of the XHTML in the FHIR data.
  * @param props - props passed to the React component
  * @param props.jsonTableData - A table represented as JSON
- * @param props.captionToolTip - A table represented as JSON
+ * @param props.captionToolTip - A tooltip string to add to the table's caption (resultName)
  * @param props.captionIsTitle - The caption should be styled as a title for the table
  * @param props.outerBorder - Determines whether to include an outer border for the table. Default is true.
  * @param props.className - Classnames to be applied to table.
@@ -39,7 +39,7 @@ export const JsonTable = ({
     return null;
   }
 
-  let caption = resultName;
+  let caption: string | React.ReactNode = resultName;
   if (captionIsTitle) {
     caption = <div className="data-title">{caption}</div>;
   }
