@@ -1,7 +1,7 @@
 "use client"; // Error components must be Client Components
 
 import { useEffect } from "react";
-import ErrorPage from "@/app/components/ErrorPage";
+import { GenericError } from "@/app/components/ErrorPage";
 
 /**
  * Renders an Error component to display when an error occurs.
@@ -19,10 +19,5 @@ export default function Error({
     console.error(error);
   }, [error]);
 
-  return (
-    <ErrorPage title="Something went wrong!">
-      If the problem persists, please reach out to your eCR coordinator to
-      troubleshoot the issue with the DIBBs team.
-    </ErrorPage>
-  );
+  return <GenericError />;
 }

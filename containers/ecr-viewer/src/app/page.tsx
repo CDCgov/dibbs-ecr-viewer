@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import Header from "./components/Header";
+import Header from "@/app/components/Header";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
 import EcrTable from "@/app/components/EcrTable";
@@ -9,7 +9,7 @@ import { EcrTableLoading } from "./components/EcrTableClient";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { env } from "next-runtime-env";
 import { getAllConditions } from "./data/conditions";
-import NotFound from "./not-found";
+import NotFound from "@/app/not-found";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
