@@ -1,4 +1,7 @@
-import { HtmlTableJson, TableRow } from "@/app/services/htmlTableService";
+import {
+  HtmlTableJson,
+  HtmlTableJsonRow,
+} from "@/app/services/htmlTableService";
 import { noData } from "@/app/utils/data-utils";
 import classNames from "classnames";
 import { BaseTable, ColumnInfoInput } from "./EvaluateTable";
@@ -49,7 +52,7 @@ export const JsonTable = ({
 };
 
 function useConstructColumns(
-  flattenedTable: TableRow[],
+  flattenedTable: HtmlTableJsonRow[],
 ): ColumnInfoInput[] | null {
   if (flattenedTable.length > 0) {
     return Object.keys(flattenedTable[0]).map((columnName) => ({

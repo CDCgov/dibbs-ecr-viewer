@@ -5,7 +5,7 @@ import { evaluate } from "../utils/evaluate";
 import { evaluateValue } from "./evaluateFhirDataService";
 import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
-import { TableRow } from "./htmlTableService";
+import { HtmlTableJsonRow } from "./htmlTableService";
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -53,7 +53,7 @@ export const evaluateTravelHistoryTable = (
           }
           return { ...row, [columnName]: { value: val || noData } };
         },
-        {} as TableRow[],
+        {} as HtmlTableJsonRow[],
       );
     })
     .filter((row) =>

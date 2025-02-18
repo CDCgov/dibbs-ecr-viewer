@@ -33,7 +33,7 @@ import { evaluateTravelHistoryTable } from "./socialHistoryService";
 import { Path } from "fhirpath";
 import { JsonTable } from "../view-data/components/JsonTable";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
-import { TableRow } from "./htmlTableService";
+import { HtmlTableJsonRow } from "./htmlTableService";
 import {
   formatDate,
   formatStartEndDate,
@@ -613,7 +613,7 @@ export const evaluateEncounterCareTeamTable = (
       Dates: {
         value: formatStartEndDate(start, end) || noData,
       },
-    } as TableRow;
+    } as HtmlTableJsonRow;
   });
 
   if (!tables.length) return undefined;

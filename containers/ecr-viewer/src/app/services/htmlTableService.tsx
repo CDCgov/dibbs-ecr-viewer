@@ -8,7 +8,7 @@ interface Metadata {
   [key: string]: string;
 }
 
-export interface TableRow {
+export interface HtmlTableJsonRow {
   [key: string]: {
     value: any;
     metadata?: Metadata;
@@ -18,7 +18,7 @@ export interface TableRow {
 export interface HtmlTableJson {
   resultId?: string;
   resultName?: string;
-  tables?: TableRow[][];
+  tables?: HtmlTableJsonRow[][];
 }
 
 /**
@@ -73,7 +73,7 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
   const liArray = doc.querySelectorAll("li, list > item");
   if (liArray.length > 0) {
     liArray.forEach((li) => {
-      const tables: TableRow[][] = [];
+      const tables: HtmlTableJsonRow[][] = [];
       const resultId = getDataId(li) ?? undefined;
       const firstChildNode = getFirstNonCommentChild(li);
       const resultName = firstChildNode ? getElementText(firstChildNode) : "";
@@ -145,7 +145,7 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
  * @param table - The HTML table element to be processed.
  * @returns - An array of JSON objects representing the rows and cells of the table.
  */
-function processTable(table: HTMLElement): TableRow[] {
+function processTable(table: HTMLElement): HtmlTableJsonRow[] {
   const jsonArray: any[] = [];
   const rows = table.querySelectorAll("tr");
   const keys: string[] = [];
@@ -163,7 +163,7 @@ function processTable(table: HTMLElement): TableRow[] {
     // Skip the first row as it contains headers
     if (hasHeaders && rowIndex === 0) return;
 
-    const obj: TableRow = {};
+    const obj: HtmlTableJsonRow = {};
     row.querySelectorAll("td").forEach((cell, cellIndex) => {
       const key = hasHeaders ? keys[cellIndex] : "Unknown Header";
 
