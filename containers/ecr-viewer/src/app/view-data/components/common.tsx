@@ -38,17 +38,14 @@ import {
 import { Path } from "fhirpath";
 import classNames from "classnames";
 import { Fragment } from "react";
-import {
-  formatTablesToJSON,
-  TableJson,
-  TableRow,
-} from "@/app/services/htmlTableService";
+import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   formatDate,
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
+import { JsonTable } from "./JsonTable";
 
 /**
  * Returns a table displaying care team information.
@@ -248,64 +245,25 @@ export const returnHtmlTableContent = (
   title: string,
   outerBorder = true,
   className = "",
-) => {
+): JSX.Element | undefined => {
   const bundle = evaluateValue(fhirBundle, mapping);
-  const rawTables = formatTablesToJSON(bundle);
-  const tables = rawTables
-    .map((rawTable) => returnTableFromJson(rawTable, outerBorder, className))
-    .filter((t) => !!t);
+  const tableJson = formatTablesToJSON(bundle);
 
-  if (tables.length > 0) {
-    return (
-      <Fragment key={`${Math.random()}`}>
-        {!!title && <div className={"data-title margin-bottom-1"}>{title}</div>}
-        {tables}
-      </Fragment>
-    );
-  }
-};
+  if (tableJson.length === 0) return undefined;
 
-/**
- * Returns a table built from JSON representation of the XHTML in the FHIR data.
- * @param rawTable - A table found in the fhir data.
- * @param outerBorder - Determines whether to include an outer border for the table. Default is true.
- * @param className - Classnames to be applied to table.
- * @returns The JSX element representing the table, or undefined if no matching results are found.
- */
-export const returnTableFromJson = (
-  rawTable: TableJson,
-  outerBorder = true,
-  className = "",
-) => {
-  const { resultName, tables } = rawTable;
-  const flatTables = tables?.flatMap((a) => a) ?? [];
-  if (flatTables.length > 0) {
-    const columns = Object.keys(flatTables[0]).map((columnName) => {
-      return { columnName, className: "bg-gray-5 minw-10" };
-    });
-
-    return (
-      <BaseTable
-        key={resultName || `${Math.random()}`}
-        columns={columns}
-        caption={resultName}
-        className={classNames(
-          "caption-normal-weight margin-bottom-2",
-          className,
-        )}
-        fixed={false}
-        outerBorder={outerBorder}
-      >
-        {flatTables.map((entry: TableRow, index: number) => (
-          <tr key={`table-row-${index}`}>
-            {Object.values(entry).map((v, i) => (
-              <td key={`table-col-${i}`}>{v?.value ?? noData}</td>
-            ))}
-          </tr>
-        ))}
-      </BaseTable>
-    );
-  }
+  return (
+    <Fragment key={`${Math.random()}`}>
+      {!!title && <div className="data-title margin-bottom-1">{title}</div>}
+      {tableJson.map((rt) => (
+        <JsonTable
+          key={`${title}-table`}
+          jsonTableData={rt}
+          outerBorder={outerBorder}
+          className={className}
+        />
+      ))}
+    </Fragment>
+  );
 };
 
 /**

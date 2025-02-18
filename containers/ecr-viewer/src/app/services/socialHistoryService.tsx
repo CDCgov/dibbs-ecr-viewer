@@ -3,9 +3,9 @@ import { PathMappings, noData } from "../utils/data-utils";
 
 import { evaluate } from "../utils/evaluate";
 import { evaluateValue } from "./evaluateFhirDataService";
-import { returnTableFromJson } from "../view-data/components/common";
+import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
-import { TableRow } from "./htmlTableService";
+import { HtmlTableJsonRow } from "./htmlTableService";
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -53,16 +53,19 @@ export const evaluateTravelHistoryTable = (
           }
           return { ...row, [columnName]: { value: val || noData } };
         },
-        {} as TableRow[],
+        {} as HtmlTableJsonRow[],
       );
     })
     .filter((row) =>
       Object.values(row).some((v) => (v.value as any) !== noData),
     );
 
-  return returnTableFromJson(
-    { tables, resultName: "Travel History" },
-    true,
-    "caption-data-title margin-y-0",
+  if (!tables.flat().length) return undefined;
+
+  return (
+    <JsonTable
+      jsonTableData={{ tables, resultName: "Travel History" }}
+      className="caption-data-title margin-y-0"
+    />
   );
 };
