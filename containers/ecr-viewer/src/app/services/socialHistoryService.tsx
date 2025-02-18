@@ -65,7 +65,6 @@ export const evaluateTravelHistoryTable = (
   return (
     <JsonTable
       jsonTableData={{ tables, resultName: "Travel History" }}
-      outerBorder
       className="caption-data-title margin-y-0"
     />
   );
