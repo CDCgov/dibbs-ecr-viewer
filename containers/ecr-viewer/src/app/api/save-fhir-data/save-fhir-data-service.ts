@@ -372,7 +372,7 @@ export const saveMetadataToSqlServer = async (
           await rrConditionsInsertRequest
             .input("UUID", VarChar(200), rr_conditions_uuid)
             .input("eICR_ID", VarChar(200), ecrId)
-            .input("condition", VarChar(MAX), rrItem.condition)
+            .input("condition", NVarChar(MAX), rrItem.condition)
             .query(
               "INSERT INTO dbo.ecr_rr_conditions VALUES (@UUID, @eICR_ID, @condition)",
             );
@@ -386,7 +386,7 @@ export const saveMetadataToSqlServer = async (
               await ruleSummaryInsertRequest
                 .input("UUID", VarChar(200), randomUUID())
                 .input("ECR_RR_CONDITIONS_ID", VarChar(200), rr_conditions_uuid)
-                .input("rule_summary", VarChar(MAX), summary.summary)
+                .input("rule_summary", NVarChar(MAX), summary.summary)
                 .query(
                   "INSERT INTO dbo.ecr_rr_rule_summaries VALUES (@UUID, @ECR_RR_CONDITIONS_ID, @rule_summary)",
                 );
