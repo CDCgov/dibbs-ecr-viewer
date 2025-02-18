@@ -21,7 +21,8 @@ export default function Error({
 
   return (
     <ErrorPage title="Something went wrong!">
-      If the problem persists, please reach out to your eCR coordinator.
+      If the problem persists, please reach out to your eCR coordinator to
+      troubleshoot the issue with the DIBBs team.
     </ErrorPage>
   );
 }

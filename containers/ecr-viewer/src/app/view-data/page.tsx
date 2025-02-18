@@ -14,7 +14,7 @@ import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 import EcrSummary from "./components/EcrSummary";
-import { RetrievalFailed } from "@/app/components/ErrorPage";
+import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import SideNav from "./components/SideNav";
 import {
   evaluatePatientDOB,
@@ -67,11 +67,11 @@ const ECRViewerPage = async ({
       return <RetrievalFailed />;
     }
     return (
-      <div>
+      <GenericError>
         <pre>
           <code>{`${errors.status}: ${errors.message}`}</code>
         </pre>
-      </div>
+      </GenericError>
     );
   } else if (fhirBundle && mappings) {
     const patientName = evaluatePatientName(fhirBundle, mappings, true);

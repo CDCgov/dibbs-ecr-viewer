@@ -60,4 +60,20 @@ export const RetrievalFailed = () => (
   </ErrorPage>
 );
 
+/**
+ * @param props The react props
+ * @param props.children Content to display to the user with more details on the error
+ * @returns The ecr retrieval error page JSX component.
+ */
+export const GenericError = ({ children }: { children?: React.ReactNode }) => (
+  <ErrorPage title="Something went wrong!">
+    {children}
+
+    <p>
+      If the problem persists, please reach out to your eCR coordinator to
+      troubleshoot the issue with the DIBBs team.
+    </p>
+  </ErrorPage>
+);
+
 export default ErrorPage;
