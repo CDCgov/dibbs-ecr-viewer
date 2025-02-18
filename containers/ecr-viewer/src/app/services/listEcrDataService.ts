@@ -256,7 +256,7 @@ const getTotalEcrCountPostgres = async (
 ): Promise<number> => {
   const { database } = getDB();
   let number = await database.one(
-    "SELECT count(DISTINCT ed.eICR_ID) FROM ecr_viewer.ecr_data as ed LEFT JOIN ecr_rr_conditions erc on ed.eICR_ID = erc.eICR_ID WHERE $[whereClause]",
+    "SELECT count(DISTINCT ed.eICR_ID) FROM ecr_viewer.ecr_data as ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc on ed.eICR_ID = erc.eICR_ID WHERE $[whereClause]",
     {
       whereClause: generateWhereStatementPostgres(
         filterDates,
@@ -282,7 +282,7 @@ const getTotalEcrCountSqlServer = async (
       filterConditions,
     );
 
-    let query = `SELECT COUNT(DISTINCT ed.eICR_ID) as count FROM ecr_viewer.ecr_data ed LEFT JOIN ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID WHERE ${whereStatement}`;
+    let query = `SELECT COUNT(DISTINCT ed.eICR_ID) as count FROM ecr_viewer.ecr_data ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID WHERE ${whereStatement}`;
 
     const count = await pool.request().query<{ count: number }>(query);
 
