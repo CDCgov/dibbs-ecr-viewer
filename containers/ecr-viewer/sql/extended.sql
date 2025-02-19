@@ -5,8 +5,8 @@ CREATE SCHEMA ecr_viewer
         eICR_ID                  VARCHAR(200) PRIMARY KEY,
         set_id                   VARCHAR(255),
         fhir_reference_link      VARCHAR(255),
-        last_name                VARCHAR(255),
-        first_name               VARCHAR(255),
+        last_name                NVARCHAR(255),
+        first_name               NVARCHAR(255),
         birth_date               DATE,
         gender                   VARCHAR(50),
         birth_sex                VARCHAR(50),
@@ -19,7 +19,7 @@ CREATE SCHEMA ecr_viewer
         disabilities             VARCHAR(255),
         tribal_affiliation       VARCHAR(255),
         tribal_enrollment_status VARCHAR(255),
-        current_job_title        VARCHAR(255),
+        current_job_title        NVARCHAR(255),
         current_job_industry     VARCHAR(255),
         usual_occupation         VARCHAR(255),
         usual_industry           VARCHAR(255),
@@ -29,10 +29,10 @@ CREATE SCHEMA ecr_viewer
         processing_status        VARCHAR(255),
         eicr_version_number      VARCHAR(50),
         authoring_date           DATETIME,
-        authoring_provider       VARCHAR(255),
+        authoring_provider       NVARCHAR(255),
         provider_id              VARCHAR(255),
         facility_id              VARCHAR(255),
-        facility_name            VARCHAR(255),
+        facility_name            NVARCHAR(255),
         encounter_type           VARCHAR(255),
         encounter_start_date     DATETIME,
         encounter_end_date       DATETIME,
@@ -46,13 +46,13 @@ CREATE SCHEMA ecr_viewer
         UUID VARCHAR(200) PRIMARY KEY,
         [use]  VARCHAR(7), -- The valid values are: "home" | "work" | "temp" | "old" | "billing"
         type VARCHAR(8), -- The valid values are: "postal" | "physical" | "both"
-        text VARCHAR(MAX),
-        line VARCHAR(255),
-        city VARCHAR(255),
-        district VARCHAR(255),
-        state VARCHAR(255),
+        text NVARCHAR(MAX),
+        line NVARCHAR(255),
+        city NVARCHAR(255),
+        district NVARCHAR(255),
+        state NVARCHAR(255),
         postal_code VARCHAR(20),
-        country VARCHAR(255),
+        country NVARCHAR(255),
         period_start DATETIMEOFFSET,
         period_end DATETIMEOFFSET,
         eICR_ID VARCHAR(200) REFERENCES ecr_viewer.ECR_DATA (eICR_ID)
@@ -62,16 +62,15 @@ CREATE SCHEMA ecr_viewer
     (
         UUID      VARCHAR(200) PRIMARY KEY,
         eICR_ID   VARCHAR(200) NOT NULL REFERENCES ecr_viewer.ECR_DATA (eICR_ID),
-        condition VARCHAR(MAX)
+        condition NVARCHAR(MAX)
     )
 
     CREATE TABLE ecr_viewer.ecr_rr_rule_summaries
     (
         UUID                 VARCHAR(200) PRIMARY KEY,
         ECR_RR_CONDITIONS_ID VARCHAR(200) REFERENCES ecr_viewer.ecr_rr_conditions (UUID),
-        rule_summary         VARCHAR(MAX)
+        rule_summary         NVARCHAR(MAX)
     )
-
 
     CREATE TABLE ecr_viewer.ecr_labs
     (
@@ -80,21 +79,21 @@ CREATE SCHEMA ecr_viewer
         test_type                              VARCHAR(255),
         test_type_code                         VARCHAR(50),
         test_type_system                       VARCHAR(255),
-        test_result_qualitative                VARCHAR(MAX),
+        test_result_qualitative                NVARCHAR(MAX),
         test_result_quantitative               FLOAT,
-        test_result_units                      VARCHAR(50),
+        test_result_units                      NVARCHAR(50),
         test_result_code                       VARCHAR(50),
-        test_result_code_display               VARCHAR(255),
-        test_result_code_system                VARCHAR(50),
+        test_result_code_display               NVARCHAR(255),
+        test_result_code_system                NVARCHAR(50),
         test_result_interpretation             VARCHAR(255),
         test_result_interpretation_code        VARCHAR(50),
         test_result_interpretation_system      VARCHAR(255),
         test_result_reference_range_low_value  FLOAT,
-        test_result_reference_range_low_units  VARCHAR(50),
+        test_result_reference_range_low_units  NVARCHAR(50),
         test_result_reference_range_high_value FLOAT,
-        test_result_reference_range_high_units VARCHAR(50),
+        test_result_reference_range_high_units NVARCHAR(50),
         specimen_type                          VARCHAR(255),
         specimen_collection_date               DATE,
-        performing_lab                         VARCHAR(255),
+        performing_lab                         NVARCHAR(255),
         PRIMARY KEY (UUID, eICR_ID)
     );
