@@ -36,7 +36,7 @@ export const INITIAL_HEADERS = [
     sortDirection: "",
   },
   {
-    id: "report_date",
+    id: "encounter_date",
     value: "Encounter Date",
     className: "library-encounter-date-column",
     dataSortable: true,
@@ -132,7 +132,7 @@ const Header = ({
         {(column.sortDirection || column.dataSortable) && (
           <SortButton
             columnId={column.id}
-            columnName={column.id}
+            columnName={column.value}
             className={classNames({
               "sortable-asc-column": column.sortDirection === "ASC",
               "sortable-desc-column": column.sortDirection === "DESC",
