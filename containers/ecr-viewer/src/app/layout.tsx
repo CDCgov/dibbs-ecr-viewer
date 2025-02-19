@@ -6,7 +6,7 @@ export const metadata = {
   description: "View your eCR data in an easy-to-understand format.",
 };
 
-const PATIENT_BANNER_BUFFER = "3rem";
+const PATIENT_BANNER_BUFFER = "2.75rem";
 
 declare module "react" {
   interface CSSProperties {
