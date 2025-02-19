@@ -76,6 +76,28 @@ export const EcrTableLoading = () => {
 };
 
 /**
+ * The Ecr Library table, but with a no data message instead of rows.
+ * @returns - The JSX element representing the eCR table.
+ */
+export const EcrTableNoData = () => {
+  return (
+    <EcrTableStyled headers={INITIAL_HEADERS} handleSort={() => {}}>
+      <tr>
+        <td
+          colSpan={INITIAL_HEADERS.length}
+          className="text-middle text-center height-card"
+        >
+          <span className="text-bold font-body-lg">
+            No eCRs found. We couldn't find any eCRs matching your filter or
+            search critera.
+          </span>
+        </td>
+      </tr>
+    </EcrTableStyled>
+  );
+};
+
+/**
  * The Ecr Library table layout.
  * @param props - react props
  * @param props.headers - header descriptions

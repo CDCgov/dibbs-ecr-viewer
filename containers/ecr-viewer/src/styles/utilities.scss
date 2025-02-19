@@ -1,10 +1,40 @@
-.top-550 {
-  top: 2.75rem;
+// This file contains helper utilities for setting (typically) one style property
+// Please keep this sorted alphabetically by util type, then smallest to largest
+// within utility.
+//
+// These typically expand the builtin set provided by uswds, so use
+// those first, then if needed add one following their naming conventions.
+
+// ==== gap ==== //
+
+.gap-05 {
+  gap: 0.25rem;
 }
+
+.gap-1 {
+  gap: 0.5rem;
+}
+
+.gap-105 {
+  gap: 0.75rem;
+}
+
+// ==== gutter ==== //
+
+.gutter-3:nth-child(1) {
+  margin-top: inherit;
+}
+.gutter-3 {
+  margin-top: 1.5rem;
+}
+
+// ==== margin ==== //
 
 .margin-right-1025 {
   margin-right: 0.625rem;
 }
+
+// ==== max[h/w] ==== //
 
 .maxh-38 {
   max-height: 19rem;
@@ -13,6 +43,12 @@
 .maxh-6205 {
   max-height: 31.25rem;
 }
+
+.maxw7 {
+  max-width: 68%;
+}
+
+// ==== min[h/w] ==== //
 
 .minw-1605 {
   min-width: 8.25rem;
@@ -42,6 +78,20 @@
   min-width: 20rem;
 }
 
+// ==== padding ==== //
+
+.padding-top-1-25 {
+  padding-top: 0.625rem;
+}
+
+// ==== top ==== //
+
+.top-550 {
+  top: 2.75rem;
+}
+
+// ==== width ==== //
+
 .width-11075 {
   width: 5.875rem;
 }
@@ -66,6 +116,10 @@
   width: 21.75rem;
 }
 
+.width-21-9375 {
+  width: 21.9375rem;
+}
+
 .width-62 {
   width: 31rem;
 }
@@ -74,29 +128,8 @@
   width: 25%;
 }
 
-.padding-top-1-25 {
-  padding-top: 0.625rem;
-}
+// ==== visibility-hidden ==== //
 
 .visibility-hidden {
   visibility: hidden;
-}
-
-.gutter-3:nth-child(1) {
-  margin-top: inherit;
-}
-.gutter-3 {
-  margin-top: 1.5rem;
-}
-
-.gap-05 {
-  gap: 0.25rem;
-}
-
-.gap-1 {
-  gap: 0.5rem;
-}
-
-.gap-105 {
-  gap: 0.75rem;
 }

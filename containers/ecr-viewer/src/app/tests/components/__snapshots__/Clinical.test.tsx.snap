@@ -117,13 +117,13 @@ exports[`Snapshot test for Clinical Notes should match snapshot for table notes 
                     <thead>
                       <tr>
                         <th
-                          class="tableHeader bg-gray-5 minw-10"
+                          class="table-header bg-gray-5 minw-10"
                           scope="col"
                         >
                           Active Problems
                         </th>
                         <th
-                          class="tableHeader bg-gray-5 minw-10"
+                          class="table-header bg-gray-5 minw-10"
                           scope="col"
                         >
                           Noted Date
@@ -205,19 +205,19 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                     <thead>
                       <tr>
                         <th
-                          class="tableHeader"
+                          class="table-header"
                           scope="col"
                         >
                           Name
                         </th>
                         <th
-                          class="tableHeader"
+                          class="table-header"
                           scope="col"
                         >
                           Date/Time Performed
                         </th>
                         <th
-                          class="tableHeader"
+                          class="table-header"
                           scope="col"
                         >
                           Reason
