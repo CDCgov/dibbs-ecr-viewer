@@ -279,7 +279,7 @@ export const saveMetadataToSqlServer = async (
           metadata.active_problems,
         )
         .query(
-          "INSERT INTO ecr-viewer.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
+          "INSERT INTO ecr_viewer.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
         );
 
       if (metadata.patient_addresses) {
@@ -301,7 +301,7 @@ export const saveMetadataToSqlServer = async (
             .input("period_end", sql.DateTime, address.period_end)
             .input("eICR_ID", sql.VarChar(200), ecrId)
             .query(
-              "INSERT INTO ecr-viewer.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
+              "INSERT INTO ecr_viewer.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
             );
         }
       }
