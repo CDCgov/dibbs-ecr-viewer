@@ -143,9 +143,12 @@ export const EcrTableNoData = () => {
       <tr>
         <td
           colSpan={initialHeaders.length}
-          className="text-middle text-center height-mobile text-italic text-base font-body-lg"
+          className="text-middle text-center height-card"
         >
-          No eCRs found
+          <span className="text-bold font-body-lg">
+            No eCRs found. We couldn't find any eCRs matching your filter or
+            search critera.
+          </span>
         </td>
       </tr>
     </EcrTableStyled>
