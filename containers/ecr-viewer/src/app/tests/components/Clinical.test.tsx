@@ -9,6 +9,7 @@ import { Procedure } from "fhir/r4";
 import { PathMappings } from "@/app/utils/data-utils";
 import {
   evaluateClinicalData,
+  evaluateMiscNotes,
   returnProceduresTable,
 } from "@/app/view-data/components/common";
 
@@ -166,30 +167,38 @@ describe("Snapshot test for Clinical Notes", () => {
         childMethod: mockChildMethod,
       },
     });
+    const testData = `<table>
+          <thead>
+            <tr>
+              <th>Active Problems</th>
+              <th>Noted Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Parkinson's syndrome</td>
+              <td>7/25/22</td>
+            </tr>
+            <tr>
+              <td>Essential hypertension</td>
+              <td>7/21/22</td>
+            </tr>
+          </tbody>
+        </table>`;
     const clinicalNotes = [
-      {
-        title: "Miscellaneous Notes",
-        value: (
-          <table>
-            <thead>
-              <tr>
-                <th>Active Problems</th>
-                <th>Noted Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Parkinson's syndrome</td>
-                <td>7/25/22</td>
-              </tr>
-              <tr>
-                <td>Essential hypertension</td>
-                <td>7/21/22</td>
-              </tr>
-            </tbody>
-          </table>
-        ),
-      },
+      evaluateMiscNotes(
+        {
+          resourceType: "Bundle",
+          type: "batch",
+          entry: [
+            {
+              id: testData,
+            },
+          ],
+        },
+
+        { historyOfPresentIllness: "Bundle.entry.id" },
+      ),
     ];
     let { container } = render(
       <ClinicalInfo

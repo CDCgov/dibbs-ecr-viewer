@@ -31,9 +31,9 @@ import { Element } from "fhir/r4";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateTravelHistoryTable } from "./socialHistoryService";
 import { Path } from "fhirpath";
-import { returnTableFromJson } from "@/app/view-data/components/common";
+import { JsonTable } from "../view-data/components/JsonTable";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
-import { TableRow } from "./htmlTableService";
+import { HtmlTableJsonRow } from "./htmlTableService";
 import {
   formatDate,
   formatStartEndDate,
@@ -613,13 +613,16 @@ export const evaluateEncounterCareTeamTable = (
       Dates: {
         value: formatStartEndDate(start, end) || noData,
       },
-    } as TableRow;
+    } as HtmlTableJsonRow;
   });
 
-  return returnTableFromJson(
-    { resultName: "Encounter Care Team", tables: [tables] },
-    true,
-    "caption-data-title margin-y-0",
+  if (!tables.length) return undefined;
+
+  return (
+    <JsonTable
+      jsonTableData={{ resultName: "Encounter Care Team", tables: [tables] }}
+      className="caption-data-title margin-y-0"
+    />
   );
 };
 

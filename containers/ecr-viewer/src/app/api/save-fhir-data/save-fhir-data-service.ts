@@ -256,7 +256,7 @@ export const saveMetadataToSqlServer = async (
         .input("reason_for_visit", VarChar(MAX), metadata.reason_for_visit)
         .input("active_problems", VarChar(MAX), metadata.active_problems)
         .query(
-          "INSERT INTO dbo.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
+          "INSERT INTO ecr_viewer.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
         );
 
       if (metadata.patient_addresses) {
@@ -278,7 +278,7 @@ export const saveMetadataToSqlServer = async (
             .input("period_end", DateTime, address.period_end)
             .input("eICR_ID", VarChar(200), ecrId)
             .query(
-              "INSERT INTO dbo.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
+              "INSERT INTO ecr_viewer.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
             );
         }
       }
@@ -357,7 +357,7 @@ export const saveMetadataToSqlServer = async (
             )
             .input("performing_lab", NVarChar(255), lab.performing_lab)
             .query(
-              "INSERT INTO dbo.ecr_labs VALUES (@UUID, @eICR_ID, @test_type, @test_type_code, @test_type_system, @test_result_qualitative, @test_result_quantitative, @test_result_units, @test_result_code, @test_result_code_display, @test_result_code_system, @test_result_interpretation, @test_result_interpretation_code, @test_result_interpretation_system, @test_result_ref_range_low_value, @test_result_ref_range_low_units, @test_result_ref_range_high_value, @test_result_ref_range_high_units, @specimen_type, @specimen_collection_date, @performing_lab)",
+              "INSERT INTO ecr_viewer.ecr_labs VALUES (@UUID, @eICR_ID, @test_type, @test_type_code, @test_type_system, @test_result_qualitative, @test_result_quantitative, @test_result_units, @test_result_code, @test_result_code_display, @test_result_code_system, @test_result_interpretation, @test_result_interpretation_code, @test_result_interpretation_system, @test_result_ref_range_low_value, @test_result_ref_range_low_units, @test_result_ref_range_high_value, @test_result_ref_range_high_units, @specimen_type, @specimen_collection_date, @performing_lab)",
             );
         }
       }
@@ -374,7 +374,7 @@ export const saveMetadataToSqlServer = async (
             .input("eICR_ID", VarChar(200), ecrId)
             .input("condition", NVarChar(MAX), rrItem.condition)
             .query(
-              "INSERT INTO dbo.ecr_rr_conditions VALUES (@UUID, @eICR_ID, @condition)",
+              "INSERT INTO ecr_viewer.ecr_rr_conditions VALUES (@UUID, @eICR_ID, @condition)",
             );
 
           // Loop through the rule summaries array
@@ -388,7 +388,7 @@ export const saveMetadataToSqlServer = async (
                 .input("ECR_RR_CONDITIONS_ID", VarChar(200), rr_conditions_uuid)
                 .input("rule_summary", NVarChar(MAX), summary.summary)
                 .query(
-                  "INSERT INTO dbo.ecr_rr_rule_summaries VALUES (@UUID, @ECR_RR_CONDITIONS_ID, @rule_summary)",
+                  "INSERT INTO ecr_viewer.ecr_rr_rule_summaries VALUES (@UUID, @ECR_RR_CONDITIONS_ID, @rule_summary)",
                 );
             }
           }
@@ -444,7 +444,7 @@ export const saveMetadataToPostgres = async (
     await database.tx(async (t) => {
       // Insert main ECR metadata
       const saveToEcrData = new PQ({
-        text: "INSERT INTO ecr_data (eICR_ID, patient_name_last, patient_name_first, patient_birth_date, data_source, report_date, set_id, eicr_version_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+        text: "INSERT INTO ecr_viewer.ecr_data (eICR_ID, patient_name_last, patient_name_first, patient_birth_date, data_source, report_date, set_id, eicr_version_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
         values: [
           ecrId,
           metadata.last_name,
@@ -464,7 +464,7 @@ export const saveMetadataToPostgres = async (
         for (const rrItem of metadata.rr) {
           // Insert condition into ecr_rr_conditions
           const saveRRConditions = new PQ({
-            text: "INSERT INTO ecr_rr_conditions (uuid, eICR_ID, condition) VALUES (uuid_generate_v4(), $1, $2) RETURNING uuid",
+            text: "INSERT INTO ecr_viewer.ecr_rr_conditions (uuid, eICR_ID, condition) VALUES (uuid_generate_v4(), $1, $2) RETURNING uuid",
             values: [ecrId, rrItem.condition],
           });
 
@@ -475,7 +475,7 @@ export const saveMetadataToPostgres = async (
             for (const summaryObj of rrItem.rule_summaries) {
               // Insert each associated summary into ecr_rr_rule_summaries
               const saveRRSummary = new PQ({
-                text: "INSERT INTO ecr_rr_rule_summaries (uuid, ecr_rr_conditions_id, rule_summary) VALUES (uuid_generate_v4(), $1, $2)",
+                text: "INSERT INTO ecr_viewer.ecr_rr_rule_summaries (uuid, ecr_rr_conditions_id, rule_summary) VALUES (uuid_generate_v4(), $1, $2)",
                 values: [savedRRCondition.uuid, summaryObj.summary],
               });
 
