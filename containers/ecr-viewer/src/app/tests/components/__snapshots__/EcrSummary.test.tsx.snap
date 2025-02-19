@@ -235,7 +235,7 @@ End: 05/13/2000 9:57 AM UTC
           class="usa-accordion"
           data-testid="accordion"
         >
-          <h3
+          <h4
             class="usa-accordion__heading side-nav-ignore border-1px border-accent-cool-darker"
           >
             <button
@@ -247,7 +247,7 @@ End: 05/13/2000 9:57 AM UTC
             >
               Influenza caused by Influenza A virus subtype H5N1 (disorder)
             </button>
-          </h3>
+          </h4>
           <div
             class="usa-accordion__content usa-prose side-nav-ignore border-1px border-accent-cool-darker"
             data-testid="accordionItem_influenza-caused-by-influenza-a-virus-subtype-h5n1-disorder"
@@ -272,6 +272,12 @@ End: 05/13/2000 9:57 AM UTC
                 class="section__line_gray"
               />
             </div>
+            <h5
+              class="text-bold margin-top-0 margin-bottom-1"
+              id="relevant-clinical"
+            >
+              Clinical Sections Relevant to Reportable Condition
+            </h5>
             <div
               class="margin-top-0"
             >
@@ -287,12 +293,6 @@ End: 05/13/2000 9:57 AM UTC
               <div
                 class="section__line_gray"
               />
-            </div>
-            <div
-              class="text-bold margin-top-0 margin-bottom-1"
-              id="relevant-clinical"
-            >
-              Clinical Sections Relevant to Reportable Condition
             </div>
             <div
               class="margin-top-0"
