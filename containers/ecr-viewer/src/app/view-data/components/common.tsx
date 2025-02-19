@@ -35,9 +35,7 @@ import {
   AdministeredMedication,
   AdministeredMedicationTableData,
 } from "@/app/view-data/components/AdministeredMedication";
-import { Path } from "fhirpath";
 import classNames from "classnames";
-import { Fragment } from "react";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
@@ -227,42 +225,6 @@ export const returnProblemsTable = (
       className={"margin-y-0"}
       fixed={false}
     />
-  );
-};
-
-/**
- * Returns a header and tables from XHTML in the FHIR data.
- * @param fhirBundle - The FHIR bundle.
- * @param mapping - The fhir path.
- * @param title - The table header title
- * @param outerBorder - Determines whether to include an outer border for the table. Default is true.
- * @param className - Classnames to be applied to table.
- * @returns The JSX element representing the table, or undefined if no pending results are found.
- */
-export const returnHtmlTableContent = (
-  fhirBundle: Bundle,
-  mapping: string | Path,
-  title: string,
-  outerBorder = true,
-  className = "",
-): JSX.Element | undefined => {
-  const bundle = evaluateValue(fhirBundle, mapping);
-  const tableJson = formatTablesToJSON(bundle);
-
-  if (tableJson.length === 0) return undefined;
-
-  return (
-    <Fragment key={`${Math.random()}`}>
-      {!!title && <div className="data-title margin-bottom-1">{title}</div>}
-      {tableJson.map((rt) => (
-        <JsonTable
-          key={`${title}-table`}
-          jsonTableData={rt}
-          outerBorder={outerBorder}
-          className={className}
-        />
-      ))}
-    </Fragment>
   );
 };
 
@@ -480,6 +442,36 @@ export const evaluateMiscNotes = (
   };
 };
 
+const evaluatePlanOfTreatment = (
+  fhirBundle: Bundle,
+  mappings: PathMappings,
+  title: string,
+): DisplayDataProps => {
+  const content = evaluateValue(fhirBundle, mappings["planOfTreatment"]);
+  const tables = formatTablesToJSON(content);
+
+  if (tables.length === 0)
+    return {
+      title,
+      value: undefined,
+    };
+
+  return {
+    title,
+    value: (
+      <>
+        <div className="data-title margin-bottom-1">{title}</div>
+        {tables.map((table, index) => (
+          <JsonTable
+            key={`plan-of-treatment-table_${index}`}
+            jsonTableData={table}
+          />
+        ))}
+      </>
+    ),
+  };
+};
+
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing clinical data.
@@ -538,14 +530,7 @@ export const evaluateClinicalData = (
         mappings,
       ),
     },
-    {
-      title: "Plan of Treatment",
-      value: returnHtmlTableContent(
-        fhirBundle,
-        mappings["planOfTreatment"],
-        "Plan of Treatment",
-      ),
-    },
+    evaluatePlanOfTreatment(fhirBundle, mappings, "Plan of Treatment"),
     {
       title: "Administered Medications",
       value: administeredMedication?.length && (
