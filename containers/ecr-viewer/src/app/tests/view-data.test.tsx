@@ -60,6 +60,7 @@ describe("ECRViewerPage", () => {
     const component = await ECRViewerPage({ searchParams: { id: "123" } });
     render(component);
 
+    expect(await screen.findByText("Something went wrong!"));
     expect(await screen.findByText("500: uh oh something went wrong"));
   });
 

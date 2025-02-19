@@ -6,11 +6,9 @@ import {
 } from "@trussworks/react-uswds";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
 import { AccordionSection, AccordionSubSection } from "../component-utils";
-import classNames from "classnames";
-import { BackButton } from "./BackButton";
+import { BackButton } from "@/app/components/BackButton";
 import React from "react";
 import { range } from "../../utils/data-utils";
-import { env } from "next-runtime-env";
 import { ECRViewerLayout } from "./ECRViewerLayout";
 
 /**
@@ -74,9 +72,6 @@ const SideNavLoadingItems = () => {
  * @returns Loading blobs for the sid nave
  */
 export const SideNavLoadingSkeleton = () => {
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
-
   const sideNavLoadingItems = [
     <a>eCR Summary</a>,
     <a>eCR Document</a>,
@@ -96,12 +91,7 @@ export const SideNavLoadingSkeleton = () => {
   ];
 
   return (
-    <nav
-      className={classNames("nav-wrapper", {
-        "top-0": !isNonIntegratedViewer,
-        "top-550": isNonIntegratedViewer,
-      })}
-    >
+    <nav className="nav-wrapper">
       <BackButton className="margin-bottom-3" iconClassName="text-base" />
       <SideNav items={sideNavLoadingItems} />
     </nav>

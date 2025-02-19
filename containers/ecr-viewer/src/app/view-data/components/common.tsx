@@ -437,6 +437,50 @@ export const returnVitalsTable = (
 };
 
 /**
+ * Helper to evaluate the misc notes which can be either a string or a table.
+ * @param fhirBundle - The FHIR bundle containing clinical data.
+ * @param mappings - The object containing the fhir paths.
+ * @returns data display props with the appropriate values
+ */
+export const evaluateMiscNotes = (
+  fhirBundle: Bundle,
+  mappings: PathMappings,
+): DisplayDataProps => {
+  const title = "Miscellaneous Notes";
+  const toolTip =
+    "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
+
+  const content =
+    evaluateValue(fhirBundle, mappings["historyOfPresentIllness"]) ?? "";
+
+  const tables = formatTablesToJSON(content);
+
+  // Not a table, safe parse the string content
+  if (tables.length === 0) {
+    return {
+      title,
+      value: safeParse(content),
+      toolTip,
+    };
+  }
+
+  return {
+    title,
+    value: (
+      <JsonTable
+        jsonTableData={{
+          resultName: title,
+          tables: tables[0].tables,
+        }}
+        captionToolTip={toolTip}
+        captionIsTitle={true}
+      />
+    ),
+    table: true,
+  };
+};
+
+/**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing clinical data.
  * @param mappings - The object containing the fhir paths.
@@ -453,14 +497,7 @@ export const evaluateClinicalData = (
   mappings: PathMappings,
 ) => {
   const clinicalNotes: DisplayDataProps[] = [
-    {
-      title: "Miscellaneous Notes",
-      value: safeParse(
-        evaluateValue(fhirBundle, mappings["historyOfPresentIllness"]) ?? "",
-      ),
-      toolTip:
-        "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.",
-    },
+    evaluateMiscNotes(fhirBundle, mappings),
   ];
 
   const reasonForVisitData: DisplayDataProps[] = [
