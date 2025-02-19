@@ -11,18 +11,20 @@ exports[`Snapshot test for Accordion Content Given no data, info message for emp
       class="usa-accordion__heading"
     >
       <button
-        aria-controls="patient-info"
+        aria-controls="patient-info_1"
         aria-expanded="true"
         class="usa-accordion__button"
-        data-testid="accordionButton_patient-info"
+        data-testid="accordionButton_patient-info_1"
         type="button"
       >
-        Patient Info
+        <span>
+          Patient Info
+        </span>
       </button>
     </h3>
     <div
       class="usa-accordion__content usa-prose"
-      data-testid="accordionItem_patient-info"
+      data-testid="accordionItem_patient-info_1"
     >
       <p
         class="text-italic padding-bottom-05"
@@ -34,18 +36,20 @@ exports[`Snapshot test for Accordion Content Given no data, info message for emp
       class="usa-accordion__heading"
     >
       <button
-        aria-controls="encounter-info"
+        aria-controls="encounter-info_2"
         aria-expanded="true"
         class="usa-accordion__button"
-        data-testid="accordionButton_encounter-info"
+        data-testid="accordionButton_encounter-info_2"
         type="button"
       >
-        Encounter Info
+        <span>
+          Encounter Info
+        </span>
       </button>
     </h3>
     <div
       class="usa-accordion__content usa-prose"
-      data-testid="accordionItem_encounter-info"
+      data-testid="accordionItem_encounter-info_2"
     >
       <p
         class="text-italic padding-bottom-05"
@@ -57,18 +61,20 @@ exports[`Snapshot test for Accordion Content Given no data, info message for emp
       class="usa-accordion__heading"
     >
       <button
-        aria-controls="clinical-info"
+        aria-controls="clinical-info_3"
         aria-expanded="true"
         class="usa-accordion__button"
-        data-testid="accordionButton_clinical-info"
+        data-testid="accordionButton_clinical-info_3"
         type="button"
       >
-        Clinical Info
+        <span>
+          Clinical Info
+        </span>
       </button>
     </h3>
     <div
       class="usa-accordion__content usa-prose"
-      data-testid="accordionItem_clinical-info"
+      data-testid="accordionItem_clinical-info_3"
     >
       <p
         class="text-italic padding-bottom-05"
@@ -80,18 +86,20 @@ exports[`Snapshot test for Accordion Content Given no data, info message for emp
       class="usa-accordion__heading"
     >
       <button
-        aria-controls="lab-info"
+        aria-controls="lab-info_4"
         aria-expanded="true"
         class="usa-accordion__button"
-        data-testid="accordionButton_lab-info"
+        data-testid="accordionButton_lab-info_4"
         type="button"
       >
-        Lab Info
+        <span>
+          Lab Info
+        </span>
       </button>
     </h3>
     <div
       class="usa-accordion__content usa-prose"
-      data-testid="accordionItem_lab-info"
+      data-testid="accordionItem_lab-info_4"
     >
       <p
         class="text-italic padding-bottom-05"
@@ -103,18 +111,20 @@ exports[`Snapshot test for Accordion Content Given no data, info message for emp
       class="usa-accordion__heading"
     >
       <button
-        aria-controls="ecr-metadata"
+        aria-controls="ecr-metadata_5"
         aria-expanded="true"
         class="usa-accordion__button"
-        data-testid="accordionButton_ecr-metadata"
+        data-testid="accordionButton_ecr-metadata_5"
         type="button"
       >
-        eCR Metadata
+        <span>
+          eCR Metadata
+        </span>
       </button>
     </h3>
     <div
       class="usa-accordion__content usa-prose"
-      data-testid="accordionItem_ecr-metadata"
+      data-testid="accordionItem_ecr-metadata_5"
     >
       <p
         class="text-italic padding-bottom-05"
@@ -126,18 +136,20 @@ exports[`Snapshot test for Accordion Content Given no data, info message for emp
       class="usa-accordion__heading"
     >
       <button
-        aria-controls="unavailable-info"
+        aria-controls="unavailable-info_6"
         aria-expanded="true"
         class="usa-accordion__button"
-        data-testid="accordionButton_unavailable-info"
+        data-testid="accordionButton_unavailable-info_6"
         type="button"
       >
-        Unavailable Info
+        <span>
+          Unavailable Info
+        </span>
       </button>
     </h3>
     <div
       class="usa-accordion__content usa-prose"
-      data-testid="accordionItem_unavailable-info"
+      data-testid="accordionItem_unavailable-info_6"
     >
       <div>
         <div

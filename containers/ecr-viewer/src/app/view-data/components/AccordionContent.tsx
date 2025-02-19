@@ -22,12 +22,9 @@ import { Accordion } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
 
-export type AccordionItemProps = Omit<
-  React.ComponentProps<typeof Accordion>["items"][0],
-  "title"
-> & {
-  title: string;
-};
+export type AccordionItemProps = React.ComponentProps<
+  typeof Accordion
+>["items"][0];
 
 type AccordionContentProps = {
   fhirBundle: Bundle;
@@ -227,18 +224,22 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
         </div>
       ),
     },
-  ].map((item) => ({
-    ...item,
-    expanded: true,
-    headingLevel: "h3",
-    id: toKebabCase(item.title),
-  }));
+  ].map((item, index) => {
+    const kebabCaseTitle = toKebabCase(item.title);
+    return {
+      ...item,
+      id: `${kebabCaseTitle}_${index + 1}`, // this is the id of the accordion item's inner div
+      title: <span id={kebabCaseTitle}>{item.title}</span>, // the side nav links to this ID
+      expanded: true,
+      headingLevel: "h3",
+    };
+  });
 
   return (
     <Accordion
       className="info-container"
       items={accordionItems}
-      multiselectable={true}
+      multiselectable
     />
   );
 };

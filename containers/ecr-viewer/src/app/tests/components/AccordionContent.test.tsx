@@ -26,12 +26,12 @@ describe("Snapshot test for Accordion Content", () => {
     });
 
     // This is an arbitrarily chosen test ID we expect one of the rendered accordion items to have.
-    // There is nothing significant about "encounter-info" in particular.
+    // There is nothing significant about "encounter-info_2" in particular.
     expect(
-      screen.getByTestId("accordionButton_encounter-info"),
+      screen.getByTestId("accordionButton_encounter-info_2"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("accordionItem_encounter-info"),
+      screen.getByTestId("accordionItem_encounter-info_2"),
     ).toBeInTheDocument();
 
     expect(container).toMatchSnapshot();
