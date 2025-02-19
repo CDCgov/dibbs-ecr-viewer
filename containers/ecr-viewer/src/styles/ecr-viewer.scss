@@ -2,6 +2,8 @@
 
 @use "uswds-core" as *;
 
+// ===== Variables ===== //
+
 $ecr-viewer-container-max-width: 80rem;
 $ecr-viewer-container-min-width: 40rem;
 $ecr-viewer-gap: 3rem;
@@ -14,10 +16,42 @@ html {
   --patient-banner-buffer: 0;
 }
 
-// Make sure items we link to don't get stuck behind patient banner
-.ecr-viewer-container *[id] {
-  scroll-margin-top: calc(var(--patient-banner-buffer) + 0.75em);
+// ===== Page styling ===== //
+
+.ecr-viewer-container {
+  width: 100%;
+  max-width: $ecr-viewer-container-max-width;
+  min-width: $ecr-viewer-container-min-width;
+
+  // Make sure items we link to don't get stuck behind patient banner
+  *[id] {
+    scroll-margin-top: calc(var(--patient-banner-buffer) + 0.75em);
+  }
 }
+
+.content-wrapper {
+  display: flex;
+  gap: $ecr-viewer-gap;
+  overflow: visible;
+}
+
+.minw-main {
+  min-width: $main-min-width;
+}
+
+.width-main {
+  max-width: $main-min-width + $ecr-viewer-container-max-width -
+    $ecr-viewer-container-min-width;
+  min-width: $main-min-width;
+  width: 100%;
+}
+
+.padding-main {
+  padding-left: $main-container-padding;
+  padding-right: $main-container-padding;
+}
+
+// ===== Line styling helpers ===== //
 
 .vertical-line {
   border-left: 1px solid #005ea2;
@@ -37,11 +71,80 @@ html {
   margin-bottom: 0.5rem;
 }
 
+// ===== Element styling ===== //
+
 .data-title {
   flex: 0 1 auto;
   width: 190px;
   font-weight: bold;
 }
+.table-header {
+  background-color: #f0f0f0 !important;
+}
+
+.fixed-table {
+  table-layout: fixed;
+}
+
+.table-caption-margin {
+  caption {
+    margin-bottom: 8px;
+  }
+}
+
+.caption-normal-weight {
+  caption {
+    font-weight: normal;
+  }
+}
+
+.caption-data-title {
+  caption {
+    flex: 0 1 auto;
+    width: 190px;
+    font-weight: bold;
+    font-size: 1rem; // from .usa-prose
+  }
+}
+
+.caption-width-full {
+  caption {
+    width: 100%;
+  }
+}
+
+.p-list {
+  p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.header-with-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tag-info {
+  display: flex;
+  padding: 0.25rem 0.5rem;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 0.125rem;
+  background-color: #99deea;
+  font-weight: normal;
+  font-size: 0.875rem;
+  line-height: 100%;
+  color: #111111;
+}
+
+// ===== Section styling ===== //
 
 .ecr-summary-title-long {
   font-weight: bold;
@@ -113,12 +216,6 @@ html {
   }
 }
 
-.caption-normal-weight {
-  caption {
-    font-weight: normal;
-  }
-}
-
 .table-clinical-problems {
   tbody td:nth-child(2) {
     min-width: 130px;
@@ -129,62 +226,51 @@ html {
   }
 }
 
-.table-header {
-  background-color: #f0f0f0 !important;
-}
-
-.fixed-table {
-  table-layout: fixed;
-}
-
-.table-caption-margin {
-  caption {
-    margin-bottom: 8px;
-  }
-}
-
-.caption-data-title {
-  caption {
-    flex: 0 1 auto;
-    width: 190px;
-    font-weight: bold;
-    font-size: 1rem; // from .usa-prose
-  }
-}
-
-.caption-width-full {
-  caption {
+.clinical_info_container {
+  table {
+    @include usa-table;
+    @include usa-table--borderless;
     width: 100%;
+    border: 1px solid;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    thead tr th {
+      background-color: #f0f0f0;
+      min-width: 120px;
+    }
   }
 }
 
-.minw-main {
-  min-width: $main-min-width;
+.immunization_table {
+  tr {
+    td:nth-child(1) {
+      word-break: break-word;
+    }
+  }
 }
 
-.width-main {
-  max-width: $main-min-width + $ecr-viewer-container-max-width -
-    $ecr-viewer-container-min-width;
-  min-width: $main-min-width;
-  width: 100%;
+.condition-details-accordion {
+  .usa-accordion__heading.border-accent-cool-darker {
+    &:not(:first-child) {
+      margin-top: 1.12rem;
+    }
+  }
+
+  .usa-accordion__content.border-accent-cool-darker {
+    padding: 0.5rem 0.75rem 0 0.75rem;
+  }
+
+  .usa-accordion.accordion-rr {
+    margin: 0.5rem 0 0.75rem 0;
+  }
+
+  .usa-accordion__button {
+    padding: 0.88rem 0.75rem;
+  }
 }
 
-.padding-main {
-  padding-left: $main-container-padding;
-  padding-right: $main-container-padding;
-}
-
-.content-wrapper {
-  display: flex;
-  gap: $ecr-viewer-gap;
-  overflow: visible;
-}
-
-.ecr-viewer-container {
-  width: 100%;
-  max-width: $ecr-viewer-container-max-width;
-  min-width: $ecr-viewer-container-min-width;
-}
+// ===== SideNav styling ===== //
 
 .nav-wrapper {
   padding-top: 2rem;
@@ -236,60 +322,7 @@ html {
   }
 }
 
-.clinical_info_container {
-  table {
-    @include usa-table;
-    @include usa-table--borderless;
-    width: 100%;
-    border: 1px solid;
-    margin-top: 0;
-    margin-bottom: 0;
-
-    thead tr th {
-      background-color: #f0f0f0;
-      min-width: 120px;
-    }
-  }
-}
-
-.immunization_table {
-  tr {
-    td:nth-child(1) {
-      word-break: break-word;
-    }
-  }
-}
-
-.p-list {
-  p {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-  }
-
-  p:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.header-with-tag {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.tag-info {
-  display: flex;
-  padding: 0.25rem 0.5rem;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 0.125rem;
-  background-color: #99deea;
-  font-weight: normal;
-  font-size: 0.875rem;
-  line-height: 100%;
-  color: #111111;
-}
+// ===== PatientBanner styling ===== //
 
 .patient-banner {
   display: flex;
@@ -318,24 +351,4 @@ html {
 
 .patient-banner-dob {
   font-weight: normal;
-}
-
-.condition-details-accordion {
-  .usa-accordion__heading.border-accent-cool-darker {
-    &:not(:first-child) {
-      margin-top: 1.12rem;
-    }
-  }
-
-  .usa-accordion__content.border-accent-cool-darker {
-    padding: 0.5rem 0.75rem 0 0.75rem;
-  }
-
-  .usa-accordion.accordion-rr {
-    margin: 0.5rem 0 0.75rem 0;
-  }
-
-  .usa-accordion__button {
-    padding: 0.88rem 0.75rem;
-  }
 }

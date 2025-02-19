@@ -1,6 +1,35 @@
 // This file contains declarations which are used in high level components or which style
 // elements without a modifier to scope them to a specific component
 
+// ==== Base element styles ===== //
+
+h2 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 1.375rem;
+}
+
+h4 {
+  font-size: 16px;
+  margin: 0;
+}
+
+td {
+  vertical-align: top;
+}
+
+// ==== Common component classes ===== //
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+}
+
 @keyframes shimmer {
   to {
     background-position-x: 0%;
@@ -40,29 +69,4 @@
       #dfe1e2 60%
     );
   }
-}
-
-h2 {
-  font-size: 2.5rem;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-h3 {
-  font-size: 1.375rem;
-}
-
-h4 {
-  font-size: 16px;
-  margin: 0;
-}
-
-td {
-  vertical-align: top;
-}
-
-.main-container {
-  display: flex;
-  justify-content: center;
-  overflow: visible;
 }

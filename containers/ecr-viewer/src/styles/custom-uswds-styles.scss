@@ -1,36 +1,8 @@
 // This file contains customizations of USWDS classes without a modifier
 // which scopes it to a specific component.
 
-.usa-table {
-  overflow-wrap: break-word;
-
-  thead th {
-    background-color: #f0f0f0;
-    vertical-align: top;
-  }
-
-  th,
-  td {
-    padding: 0.75rem;
-  }
-}
-
 .usa-accordion__content {
   overflow: visible;
-}
-
-.usa-tooltip__body {
-  max-width: 700px;
-  min-width: min(450px, 0.25 * (100vw - 16rem));
-  white-space: normal;
-  text-align: left;
-  font-weight: normal;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.short-tooltip + .usa-tooltip__body {
-  min-width: min(350px, 0.25 * (100vw - 16rem));
 }
 
 .usa-header {
@@ -83,4 +55,32 @@
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
   }
+}
+
+.usa-table {
+  overflow-wrap: break-word;
+
+  thead th {
+    background-color: #f0f0f0;
+    vertical-align: top;
+  }
+
+  th,
+  td {
+    padding: 0.75rem;
+  }
+}
+
+.usa-tooltip__body {
+  max-width: 700px;
+  min-width: min(450px, 0.25 * (100vw - 16rem));
+  white-space: normal;
+  text-align: left;
+  font-weight: normal;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.short-tooltip + .usa-tooltip__body {
+  min-width: min(350px, 0.25 * (100vw - 16rem));
 }
