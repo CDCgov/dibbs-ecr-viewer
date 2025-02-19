@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import ECRViewerPage from "../view-data/page";
+import ECRViewerPage from "../view-data/[id]/page";
 import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
 
 jest.mock("../view-data/component-utils", () => ({
@@ -43,7 +43,7 @@ describe("ECRViewerPage", () => {
   it("should handle 404 error", async () => {
     mockFetch(get_fhir_data as jest.Mock, {}, 404);
 
-    const component = await ECRViewerPage({ searchParams: { id: "123" } });
+    const component = await ECRViewerPage({ params: { id: "123" } });
     render(component);
 
     expect(await screen.findByText("eCR retrieval failed"));
@@ -57,7 +57,7 @@ describe("ECRViewerPage", () => {
       "uh oh something went wrong",
     );
 
-    const component = await ECRViewerPage({ searchParams: { id: "123" } });
+    const component = await ECRViewerPage({ params: { id: "123" } });
     render(component);
 
     expect(await screen.findByText("Something went wrong!"));
@@ -67,7 +67,7 @@ describe("ECRViewerPage", () => {
   it("should handle invalid response", async () => {
     mockFetch(get_fhir_data as jest.Mock, null, 200);
 
-    const component = await ECRViewerPage({ searchParams: { id: "123" } });
+    const component = await ECRViewerPage({ params: { id: "123" } });
     render(component);
 
     expect(

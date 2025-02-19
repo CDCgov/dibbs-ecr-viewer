@@ -60,8 +60,8 @@ def check_ecr(self, file, response):
     if "eicr_id" in response["processed_values"]["parsed_values"]:
         print(response["processed_values"]["parsed_values"]["eicr_id"])
         eicr_id = response["processed_values"]["parsed_values"]["eicr_id"]
-        print(f"/ecr-viewer/view-data?id={eicr_id}")
-        response = self.client.get(f"/ecr-viewer/view-data?id={eicr_id}")
+        print(f"/ecr-viewer/view-data/{eicr_id}")
+        response = self.client.get(f"/ecr-viewer/view-data/{eicr_id}")
         print(response)
     else:
         print("No eicr_id found in response")

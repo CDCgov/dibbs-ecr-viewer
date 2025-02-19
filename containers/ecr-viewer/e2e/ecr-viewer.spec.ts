@@ -8,7 +8,7 @@ test.skip("should not have any automatically detectable accessibility issues", a
   test.setTimeout(120_000);
 
   await page.goto(
-    "/ecr-viewer/view-data?id=1.2.840.114350.1.13.297.3.7.8.688883.567479",
+    "/ecr-viewer/view-data/1.2.840.114350.1.13.297.3.7.8.688883.567479",
   );
   await page.getByText("Patient Name").first().waitFor();
 
@@ -21,7 +21,7 @@ test.skip("fully expanded should not have any automatically detectable accessibi
   page,
 }) => {
   await page.goto(
-    "/ecr-viewer/view-data?id=1.2.840.114350.1.13.297.3.7.8.688883.567479",
+    "/ecr-viewer/view-data/1.2.840.114350.1.13.297.3.7.8.688883.567479",
   );
   await page.getByRole("button", { name: "Expand all labs" }).click();
 

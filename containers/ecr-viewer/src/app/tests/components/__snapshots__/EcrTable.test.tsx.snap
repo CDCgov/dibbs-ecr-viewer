@@ -984,7 +984,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-1"
+              href="/view-data/id-1"
             >
               First-1
                
@@ -1032,7 +1032,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-2"
+              href="/view-data/id-2"
             >
               First-2
                
@@ -1082,7 +1082,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-3"
+              href="/view-data/id-3"
             >
               First-3
                
@@ -1132,7 +1132,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-4"
+              href="/view-data/id-4"
             >
               First-4
                
@@ -1182,7 +1182,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-5"
+              href="/view-data/id-5"
             >
               First-5
                
@@ -1232,7 +1232,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-6"
+              href="/view-data/id-6"
             >
               First-6
                
@@ -1282,7 +1282,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-7"
+              href="/view-data/id-7"
             >
               First-7
                
@@ -1332,7 +1332,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-8"
+              href="/view-data/id-8"
             >
               First-8
                
@@ -1382,7 +1382,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-9"
+              href="/view-data/id-9"
             >
               First-9
                
@@ -1432,7 +1432,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-10"
+              href="/view-data/id-10"
             >
               First-10
                
@@ -1482,7 +1482,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-11"
+              href="/view-data/id-11"
             >
               First-11
                
@@ -1532,7 +1532,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-12"
+              href="/view-data/id-12"
             >
               First-12
                
@@ -1582,7 +1582,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-13"
+              href="/view-data/id-13"
             >
               First-13
                
@@ -1632,7 +1632,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-14"
+              href="/view-data/id-14"
             >
               First-14
                
@@ -1682,7 +1682,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-15"
+              href="/view-data/id-15"
             >
               First-15
                
@@ -1732,7 +1732,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-16"
+              href="/view-data/id-16"
             >
               First-16
                
@@ -1782,7 +1782,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-17"
+              href="/view-data/id-17"
             >
               First-17
                
@@ -1832,7 +1832,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-18"
+              href="/view-data/id-18"
             >
               First-18
                
@@ -1882,7 +1882,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-19"
+              href="/view-data/id-19"
             >
               First-19
                
@@ -1932,7 +1932,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-20"
+              href="/view-data/id-20"
             >
               First-20
                
@@ -1982,7 +1982,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-21"
+              href="/view-data/id-21"
             >
               First-21
                
@@ -2032,7 +2032,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-22"
+              href="/view-data/id-22"
             >
               First-22
                
@@ -2082,7 +2082,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-23"
+              href="/view-data/id-23"
             >
               First-23
                
@@ -2132,7 +2132,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-24"
+              href="/view-data/id-24"
             >
               First-24
                
@@ -2182,7 +2182,7 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
         <tr>
           <td>
             <a
-              href="/view-data?id=id-25"
+              href="/view-data/id-25"
             >
               First-25
                

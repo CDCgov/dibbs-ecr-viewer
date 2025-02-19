@@ -95,7 +95,7 @@ const DataRow = ({ item }: { item: EcrDisplay }) => {
   return (
     <tr>
       <td>
-        <Link onClick={saveUrl} href={`/view-data?id=${item.ecrId}`}>
+        <Link onClick={saveUrl} href={`/view-data/${item.ecrId}`}>
           {patient_first_name} {patient_last_name}
         </Link>
         {item.eicr_version_number && (

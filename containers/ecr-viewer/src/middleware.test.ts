@@ -91,7 +91,7 @@ describe("Middleware", () => {
 
   it("should not authorize non api endpoints ", async () => {
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/view-data?id=1234",
+      "https://www.example.com/ecr-viewer/view-data/1234",
     );
     const resp = await middleware(req);
     expect(resp.headers.get("x-middleware-rewrite")).toBe(

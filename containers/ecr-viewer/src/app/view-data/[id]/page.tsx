@@ -2,38 +2,41 @@ import React from "react";
 import { Bundle } from "fhir/r4";
 import { Grid, GridContainer } from "@trussworks/react-uswds";
 
-import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
+import { get_fhir_data } from "../../api/fhir-data/fhir-data-service";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
-} from "../services/ecrSummaryService";
-import { PathMappings } from "../utils/data-utils";
+} from "../../services/ecrSummaryService";
+import { PathMappings } from "../../utils/data-utils";
 import AccordionContent from "@/app/view-data/components/AccordionContent";
-import { EcrLoadingSkeleton } from "./components/LoadingComponent";
-import { ECRViewerLayout } from "./components/ECRViewerLayout";
+import { EcrLoadingSkeleton } from "../components/LoadingComponent";
+import { ECRViewerLayout } from "../components/ECRViewerLayout";
 import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
-import EcrSummary from "./components/EcrSummary";
+import EcrSummary from "../components/EcrSummary";
 import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
-import SideNav from "./components/SideNav";
+import SideNav from "../components/SideNav";
 import {
   evaluatePatientDOB,
   evaluatePatientName,
-} from "../services/evaluateFhirDataService";
+} from "../../services/evaluateFhirDataService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
- * @param params react params
- * @param params.searchParams searchParams for page
- * @param params.searchParams.id ecr ID
+ * @param root0 - The props passed to the component.
+ * @param root0.params - The URL path parameters.
+ * @param root0.params.id - The FHIR ID of the eCR.
+ * @param root0.searchParams - The search parameters.
  * @returns The main eCR Viewer JSX component.
  */
-const ECRViewerPage = async ({
-  searchParams,
+export default async function Page({
+  params,
+  searchParams = {},
 }: {
-  searchParams: { id?: string; "snomed-code"?: string };
-}) => {
-  const fhirId = searchParams.id ?? "";
+  params: { id: string };
+  searchParams?: { "snomed-code"?: string };
+}) {
+  const fhirId = params.id;
   const snomedCode = searchParams["snomed-code"] ?? "";
 
   type ApiResponse = {
@@ -141,6 +144,4 @@ const ECRViewerPage = async ({
   } else {
     return <EcrLoadingSkeleton />;
   }
-};
-
-export default ECRViewerPage;
+}
