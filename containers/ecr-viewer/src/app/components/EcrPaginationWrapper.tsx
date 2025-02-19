@@ -68,7 +68,7 @@ const EcrPaginationWrapper = ({
   );
 
   return (
-    <div className="main-container height-ecrLibrary flex-column flex-align-center">
+    <div className="main-container height-ecr-library flex-column flex-align-center">
       {children}
       <div className="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center">
         <div className={"flex-1"}>
