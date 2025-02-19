@@ -3,7 +3,7 @@ import { axe } from "jest-axe";
 import fs from "fs";
 import YAML from "js-yaml";
 import { Bundle, Condition } from "fhir/r4";
-import BundleWithPatient from "../../../../../../test-data/BundlePatient.json";
+import BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import { returnProblemsTable } from "@/app/view-data/components/common";
 import { PathMappings } from "@/app/view-data/utils/utils";
 

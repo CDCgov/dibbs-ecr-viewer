@@ -16,11 +16,11 @@ import {
   evaluatePatientLanguage,
 } from "@/app/services/evaluateFhirDataService";
 import { Bundle, Patient } from "fhir/r4";
-import BundleMiscNotes from "../../../../../../test-data/BundleMiscNotes.json";
-import BundlePatient from "../../../../../../test-data/BundlePatient.json";
-import BundleEcrMetadata from "../../../../../../test-data/BundleEcrMetadata.json";
-import BundlePractitionerRole from "../../../../../../test-data/BundlePractitionerRole.json";
-import BundlePatientMultiple from "../../../../../../test-data/BundlePatientMultiple.json";
+import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
+import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
+import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
 
 const mappings = loadYamlConfig();
 

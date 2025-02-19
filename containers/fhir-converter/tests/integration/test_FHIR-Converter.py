@@ -37,7 +37,7 @@ def test_openapi():
 @pytest.mark.integration
 def test_vxu_conversion(setup, snapshot):
     input_data = open(
-        Path(__file__).parent.parent.parent / "assets" / "sample_request.hl7"
+        Path(__file__).parent.parent.parent.parent.parent / "test-data" / "hl7" / "sample_request.hl7"
     ).read()
     request = {
         "input_data": input_data,
@@ -56,9 +56,7 @@ def test_vxu_conversion(setup, snapshot):
 def test_ecr_conversion(setup, snapshot):
     input_data = open(
         Path(__file__).parent.parent.parent.parent.parent
-        / "tests"
-        / "assets"
-        / "fhir-converter"
+        / "test-data"
         / "ccda"
         / "ccda_sample.xml"
     ).read()

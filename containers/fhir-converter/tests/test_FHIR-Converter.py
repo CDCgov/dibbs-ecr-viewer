@@ -361,10 +361,10 @@ def test_resolve_references_invalid_input():
 
 
 def test_add_rr_to_ecr():
-    with open("./tests/test_files/CDA_RR.xml") as fp:
+    with open("../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_RR.xml") as fp:
         rr = fp.read()
 
-    with open("./tests/test_files/CDA_eICR.xml") as fp:
+    with open("../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml") as fp:
         ecr = fp.read()
 
     # extract rr fields, insert to ecr
@@ -409,11 +409,11 @@ def test_add_rr_to_ecr():
 
 
 def test_add_rr_to_ecr_rr_already_present(capfd):
-    with open("./tests/test_files/CDA_RR.xml") as fp:
+    with open("../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_RR.xml") as fp:
         rr = fp.read()
 
     # This eICR has already been merged with an RR
-    with open("./tests/test_files/merged_eICR.xml") as fp:
+    with open("../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/merged_eICR.xml") as fp:
         ecr = fp.read()
 
     merged_ecr = add_rr_data_to_eicr(rr, ecr)
@@ -424,10 +424,10 @@ def test_add_rr_to_ecr_rr_already_present(capfd):
 
 
 def test_standardize_hl7_datetimes():
-    message_long_date = open("./tests/test_files/FileSingleMessageLongDate.hl7").read()
-    massage_timezone = open("./tests/test_files/FileSingleMessageLongTZ.hl7").read()
+    message_long_date = open("../../../test-data/hl7/FileSingleMessageLongDate.hl7").read()
+    massage_timezone = open("../../../test-data/hl7/FileSingleMessageLongTZ.hl7").read()
     massage_invalid_segments = open(
-        "./tests/test_files/FileSingleMessageInvalidSegments.hl7"
+        "../../../test-data/hl7/FileSingleMessageInvalidSegments.hl7"
     ).read()
 
     assert (
@@ -467,7 +467,7 @@ def test_standardize_hl7_datetimes():
 
 def test_normalize_hl7_datetime_segment():
     message_long_date = (
-        open("./tests/test_files/FileSingleMessageLongDate.hl7")
+        open("../../../test-data/hl7/FileSingleMessageLongDate.hl7")
         .read()
         .replace("\n", "\r")
     )

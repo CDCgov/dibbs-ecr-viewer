@@ -8,12 +8,11 @@ import { GET } from "../api/fhir-data/route"; // Adjust the import path to your 
 import { sdkStreamMixin } from "@smithy/util-stream";
 import { NextRequest } from "next/server";
 import { Readable } from "stream";
-//import BundleWithTravelHistory from "./../../../../../test-data/BundleTravelHistory.json";
 
 const s3Mock = mockClient(S3Client);
 const path = require('path');
 const stream = sdkStreamMixin(
-fs.createReadStream(path.resolve(__dirname, '../../../../../test-data/BundleTravelHistory.json')),
+fs.createReadStream(path.resolve(__dirname, '../../../../../test-data/fhir/BundleTravelHistory.json')),
 );
 
 const mockYamlConfig = {}; // Adjust this to match what loadYamlConfig() would return

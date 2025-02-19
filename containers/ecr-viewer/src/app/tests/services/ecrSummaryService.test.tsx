@@ -3,11 +3,11 @@ import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryRelevantClinicalDetails,
 } from "@/app/services/ecrSummaryService";
-import BundleWithClinicalInfo from "../../../../../../test-data/BundleClinicalInfo.json";
+import BundleWithClinicalInfo from "../../../../../../test-data/fhir/BundleClinicalInfo.json";
 import { evaluateEcrSummaryRelevantLabResults } from "@/app/services/ecrSummaryService";
-import BundleLab from "../../../../../../test-data/BundleLab.json";
-import BundleLabNoLabIds from "../../../../../../test-data/BundleLabNoLabIds.json";
-import BundleEcrSummary from "../../../../../../test-data/BundleEcrSummary.json";
+import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import BundleEcrSummary from "../../../../../../test-data/fhir/BundleEcrSummary.json";
 import { Bundle } from "fhir/r4";
 import { render, screen } from "@testing-library/react";
 import React from "react";

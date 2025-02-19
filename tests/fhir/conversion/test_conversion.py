@@ -47,9 +47,8 @@ def test_get_fhir_conversion_settings():
     # CCDA case (using an example found at https://github.com/HL7/C-CDA-Examples)
     message = ""
     with open(
-        pathlib.Path(__file__).parent.parent.parent
-        / "assets"
-        / "fhir-converter"
+        pathlib.Path(__file__).parent.parent.parent.parent
+        / "test-data"
         / "ccda"
         / "ccda_sample.xml"
     ) as fp:
@@ -64,9 +63,8 @@ def test_get_fhir_conversion_settings():
     # https://github.com/HL7/C-CDA-Examples)
     message = ""
     with open(
-        pathlib.Path(__file__).parent.parent.parent
-        / "assets"
-        / "fhir-converter"
+        pathlib.Path(__file__).parent.parent.parent.parent
+        / "test-data"
         / "ccda"
         / "ccda_sample_unknowntype.xml"
     ) as fp:
