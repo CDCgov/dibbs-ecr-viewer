@@ -29,11 +29,11 @@ describe("saveMetadataToPostgres", () => {
   };
 
   const saveEcrDataQuery =
-    "INSERT INTO ecr_data (eICR_ID, patient_name_last, patient_name_first, patient_birth_date, data_source, report_date, set_id, eicr_version_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
+    "INSERT INTO ecr_viewer.ecr_data (eICR_ID, patient_name_last, patient_name_first, patient_birth_date, data_source, report_date, set_id, eicr_version_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
   const saveRRConditionsQuery =
-    "INSERT INTO ecr_rr_conditions (uuid, eICR_ID, condition) VALUES (uuid_generate_v4(), $1, $2) RETURNING uuid";
+    "INSERT INTO ecr_viewer.ecr_rr_conditions (uuid, eICR_ID, condition) VALUES (uuid_generate_v4(), $1, $2) RETURNING uuid";
   const saveRRSummaryQuery =
-    "INSERT INTO ecr_rr_rule_summaries (uuid, ecr_rr_conditions_id, rule_summary) VALUES (uuid_generate_v4(), $1, $2)";
+    "INSERT INTO ecr_viewer.ecr_rr_rule_summaries (uuid, ecr_rr_conditions_id, rule_summary) VALUES (uuid_generate_v4(), $1, $2)";
   beforeEach(() => {
     const mockDatabase = {
       tx: jest.fn(),
