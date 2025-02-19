@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { saveFhirData, saveWithMetadata } from "./save-fhir-data-service";
-import { S3_SOURCE, AZURE_SOURCE, POSTGRES_SOURCE } from "@/app/api/utils";
+import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 
 /**
  * Handles POST requests and saves the FHIR Bundle to the database.
- * @param request - The incoming request object. Expected to have a JSON body in the format `{"fhirBundle":{}, "saveSource": "postgres|s3|azure""}`. FHIR bundle must include the ecr ID under entry[0].resource.id.
+ * @param request - The incoming request object. Expected to have a JSON body in the format `{"fhirBundle":{}, "saveSource": "s3|azure""}`. FHIR bundle must include the ecr ID under entry[0].resource.id.
  * @returns A `NextResponse` object with a JSON payload indicating the success message. The response content type is set to `application/json`.
  */
 export async function POST(request: NextRequest) {
@@ -36,9 +36,7 @@ export async function POST(request: NextRequest) {
 
   const saveSource = requestBody.saveSource || process.env.SOURCE;
 
-  if (
-    [S3_SOURCE, AZURE_SOURCE, POSTGRES_SOURCE].includes(saveSource) == false
-  ) {
+  if ([S3_SOURCE, AZURE_SOURCE].includes(saveSource) == false) {
     return NextResponse.json({ message: "Invalid source" }, { status: 500 });
   }
 

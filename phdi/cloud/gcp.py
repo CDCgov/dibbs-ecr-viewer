@@ -1,13 +1,11 @@
 import json
-from typing import List
 from typing import Union
 
 import google.auth.transport.requests
 from google.auth.credentials import Credentials
 from google.cloud import storage
 
-from .core import BaseCloudStorageConnection
-from .core import BaseCredentialManager
+from .core import BaseCloudStorageConnection, BaseCredentialManager
 
 
 class GcpCredentialManager(BaseCredentialManager):
@@ -161,7 +159,7 @@ class GcpCloudStorageConnection(BaseCloudStorageConnection):
 
         blob.upload_from_string(data=message, content_type=content_type)
 
-    def list_containers(self) -> List[str]:
+    def list_containers(self) -> list[str]:
         """
         Lists bucket names in storage.
 
@@ -174,7 +172,7 @@ class GcpCloudStorageConnection(BaseCloudStorageConnection):
             bucket_name_list.append(bucket)
         return bucket_name_list
 
-    def list_objects(self, container_name: str, prefix: str = "") -> List[str]:
+    def list_objects(self, container_name: str, prefix: str = "") -> list[str]:
         """
         Lists names for objects within a bucket.
 

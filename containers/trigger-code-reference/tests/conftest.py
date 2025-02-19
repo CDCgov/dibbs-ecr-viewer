@@ -12,7 +12,7 @@ def read_json_from_test_assets():
         """
         Reads a JSON file from the test assets directory.
         """
-        with open((Path(__file__).parent / "assets" / filename), "r") as file:
+        with open(Path(__file__).parent / "assets" / filename) as file:
             return json.load(file)
 
     return _read_json

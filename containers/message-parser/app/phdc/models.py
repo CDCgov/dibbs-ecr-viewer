@@ -1,10 +1,5 @@
-from dataclasses import dataclass
-from dataclasses import field
-from typing import Dict
-from typing import List
-from typing import Literal
-from typing import Optional
-from typing import Union
+from dataclasses import dataclass, field
+from typing import Literal, Optional, Union
 
 
 @dataclass
@@ -59,9 +54,9 @@ class Patient:
     A class containing all of the data elements for a patient element.
     """
 
-    name: List[Name] = None
-    address: List[Address] = None
-    telecom: List[Telecom] = None
+    name: list[Name] = None
+    address: list[Address] = None
+    telecom: list[Telecom] = None
     administrative_gender_code: Optional[str] = None
     race_code: Optional[str] = None
     ethnic_group_code: Optional[str] = None
@@ -94,7 +89,7 @@ class CodedElement:
     value: Optional[str] = None
     text: Optional[Union[str, int]] = None
 
-    def to_attributes(self) -> Dict[str, str]:
+    def to_attributes(self) -> dict[str, str]:
         """
         Given a standard CodedElements return a dictionary that can be iterated over to
         produce the corresponding XML element.
@@ -163,7 +158,7 @@ class PHDCInputData:
         "case_report"
     )
     patient: Patient = None
-    organization: List[Organization] = None
-    clinical_info: List[List[Observation]] = field(default_factory=list)
-    social_history_info: List[List[Observation]] = field(default_factory=list)
-    repeating_questions: List[List[Observation]] = field(default_factory=list)
+    organization: list[Organization] = None
+    clinical_info: list[list[Observation]] = field(default_factory=list)
+    social_history_info: list[list[Observation]] = field(default_factory=list)
+    repeating_questions: list[list[Observation]] = field(default_factory=list)

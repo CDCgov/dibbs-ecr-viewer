@@ -3,7 +3,7 @@
  */
 import { GET } from "@/app/api/fhir-data/route";
 import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
-import { POSTGRES_SOURCE } from "@/app/api/utils";
+import { S3_SOURCE } from "@/app/api/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 jest.mock("../../../api/fhir-data/fhir-data-service", () => ({
@@ -14,7 +14,7 @@ const emptyResponse = { fhirBundle: [], fhirPathMappings: [] };
 
 describe("GET fhir-data", () => {
   afterEach(() => {
-    process.env.SOURCE = POSTGRES_SOURCE;
+    process.env.SOURCE = S3_SOURCE;
     jest.resetAllMocks();
   });
 

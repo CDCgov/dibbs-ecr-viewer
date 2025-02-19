@@ -1,11 +1,9 @@
 # This script converts patient data from parquet to patient FHIR resources.
 import uuid
 from datetime import datetime
-from typing import Dict
-from typing import Tuple
 
 
-def extract_given_name(data: Dict):
+def extract_given_name(data: dict):
     """
     Extracts given names from `data`.
 
@@ -28,7 +26,7 @@ def extract_given_name(data: Dict):
         return None
 
 
-def adjust_birthdate(data: Dict):
+def adjust_birthdate(data: dict):
     """
     Converts birthdate format in `data` to 'YYYY-MM-DD'.
 
@@ -45,7 +43,7 @@ def adjust_birthdate(data: Dict):
     return dob
 
 
-def convert_to_patient_fhir_resources(data: Dict) -> Tuple:
+def convert_to_patient_fhir_resources(data: dict) -> tuple:
     """
     Converts and returns a row of patient data into patient resource in a FHIR-formatted
     patient resouce with a newly generated patient id as well as the

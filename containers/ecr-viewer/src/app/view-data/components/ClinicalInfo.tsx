@@ -1,7 +1,6 @@
 import { AccordionSection, AccordionSubSection } from "../component-utils";
 import React from "react";
 import classNames from "classnames";
-import { addCaptionToTable } from "@/app/services/formatService";
 import {
   DataDisplay,
   DataTableDisplay,
@@ -46,16 +45,8 @@ const ClinicalNotes = ({ details }: { details: DisplayDataProps[] }) => {
         className="clinical_info_container"
       >
         {details.map((item, index) => {
-          if (React.isValidElement(item.value) && item.value.type == "table") {
-            const modItem = {
-              ...item,
-              value: addCaptionToTable(
-                item.value,
-                "Miscellaneous Notes",
-                "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.",
-              ),
-            };
-            return <TableDetails key={index} details={[modItem]} />;
+          if (item.table) {
+            return <TableDetails key={index} details={[item]} />;
           }
           return <DataDisplay item={item} key={index} />;
         })}

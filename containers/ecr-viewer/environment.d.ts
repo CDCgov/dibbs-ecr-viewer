@@ -17,6 +17,7 @@ namespace NodeJS {
       | "AZURE_SQLSERVER_NON_INTEGRATED";
     DATABASE_TYPE: string;
     DATABASE_URL: string;
+    DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
     GITHUB_ID: string;
     GITHUB_SECRET: string;
@@ -28,7 +29,8 @@ namespace NodeJS {
     NEXT_RUNTIME: string;
     NEXTAUTH_SECRET: string;
     NON_INTEGRATED_VIEWER: "true" | "false";
-    SOURCE: "s3" | "azure" | "postgres";
+    ORCHESTRATION_URL: string;
+    SOURCE: "s3" | "azure";
     SQL_SERVER_HOST: string;
     SQL_SERVER_PASSWORD: string;
     SQL_SERVER_USER: string;

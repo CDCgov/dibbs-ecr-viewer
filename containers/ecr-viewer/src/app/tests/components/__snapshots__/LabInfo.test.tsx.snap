@@ -62,19 +62,19 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                         <thead>
                           <tr>
                             <th
-                              class="tableHeader bg-gray-5 minw-10"
+                              class="table-header bg-gray-5 minw-10"
                               scope="col"
                             >
                               Lab Test Name
                             </th>
                             <th
-                              class="tableHeader bg-gray-5 minw-10"
+                              class="table-header bg-gray-5 minw-10"
                               scope="col"
                             >
                               Lab Test Result Value
                             </th>
                             <th
-                              class="tableHeader bg-gray-5 minw-10"
+                              class="table-header bg-gray-5 minw-10"
                               scope="col"
                             >
                               Lab Test Result Date
@@ -258,31 +258,31 @@ Mos Eisley, CO
                   <thead>
                     <tr>
                       <th
-                        class="tableHeader minw-10 width-40"
+                        class="table-header minw-10 width-40"
                         scope="col"
                       >
                         Component
                       </th>
                       <th
-                        class="tableHeader minw-10 width-40"
+                        class="table-header minw-10 width-40"
                         scope="col"
                       >
                         Value
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Ref Range
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Test Method
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Lab Comment
@@ -588,31 +588,31 @@ Mos Eisley, CO
                   <thead>
                     <tr>
                       <th
-                        class="tableHeader minw-10 width-40"
+                        class="table-header minw-10 width-40"
                         scope="col"
                       >
                         Component
                       </th>
                       <th
-                        class="tableHeader minw-10 width-40"
+                        class="table-header minw-10 width-40"
                         scope="col"
                       >
                         Value
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Ref Range
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Test Method
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Lab Comment
@@ -1019,31 +1019,31 @@ Coruscant, MA
                   <thead>
                     <tr>
                       <th
-                        class="tableHeader minw-10 width-40"
+                        class="table-header minw-10 width-40"
                         scope="col"
                       >
                         Component
                       </th>
                       <th
-                        class="tableHeader minw-10 width-40"
+                        class="table-header minw-10 width-40"
                         scope="col"
                       >
                         Value
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Ref Range
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Test Method
                       </th>
                       <th
-                        class="tableHeader minw-10 width-20"
+                        class="table-header minw-10 width-20"
                         scope="col"
                       >
                         Lab Comment
@@ -1084,7 +1084,7 @@ Coruscant, MA
                         class="text-top"
                       >
                         <button
-                          aria-controls="hidden-comment-4"
+                          aria-controls="hidden-comment-r:id"
                           aria-expanded="false"
                           class="usa-button usa-button--unstyled"
                           data-test-id="comment-button"
@@ -1099,7 +1099,7 @@ Coruscant, MA
                     </tr>
                     <tr
                       hidden=""
-                      id="hidden-comment-4"
+                      id="hidden-comment-r:id"
                     >
                       <td
                         class="hideableData p-list"
@@ -1154,25 +1154,25 @@ Coruscant, MA
                   <thead>
                     <tr>
                       <th
-                        class="tableHeader"
+                        class="table-header"
                         scope="col"
                       >
                         Organism
                       </th>
                       <th
-                        class="tableHeader"
+                        class="table-header"
                         scope="col"
                       >
                         Antibiotic
                       </th>
                       <th
-                        class="tableHeader"
+                        class="table-header"
                         scope="col"
                       >
                         Method
                       </th>
                       <th
-                        class="tableHeader"
+                        class="table-header"
                         scope="col"
                       >
                         Susceptibility
@@ -1403,7 +1403,7 @@ Coruscant, MA
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      Carda Testprovqa MD
+                      Jar Jar Bink MD
                     </div>
                   </div>
                   <div

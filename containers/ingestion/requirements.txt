@@ -5,7 +5,7 @@ anyio>=4.4.0
 azure-identity
 azure-keyvault-secrets
 azure-storage-blob
-cryptography==43.0.1
+cryptography==44.0.1
 detect_delimiter
 fhirpathpy
 google-auth

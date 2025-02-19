@@ -1,21 +1,23 @@
 import pathlib
 
-from app.validation.xml_utils import _check_xml_names_and_attribs_exist
-from app.validation.xml_utils import _get_ecr_custom_message
-from app.validation.xml_utils import _get_xml_attributes
-from app.validation.xml_utils import _get_xml_message_id
-from app.validation.xml_utils import _get_xml_relative_iterator
-from app.validation.xml_utils import _get_xml_relatives_details
-from app.validation.xml_utils import _validate_xml_related_element
-from app.validation.xml_utils import _validate_xml_relatives
-from app.validation.xml_utils import ECR_NAMESPACES
-from app.validation.xml_utils import EICR_MSG_ID_XPATH
-from app.validation.xml_utils import get_ecr_message_ids
-from app.validation.xml_utils import get_xml_element_details
-from app.validation.xml_utils import RR_MSG_ID_XPATH
-from app.validation.xml_utils import validate_xml_attributes
-from app.validation.xml_utils import validate_xml_elements
-from app.validation.xml_utils import validate_xml_value
+from app.validation.xml_utils import (
+    ECR_NAMESPACES,
+    EICR_MSG_ID_XPATH,
+    RR_MSG_ID_XPATH,
+    _check_xml_names_and_attribs_exist,
+    _get_ecr_custom_message,
+    _get_xml_attributes,
+    _get_xml_message_id,
+    _get_xml_relative_iterator,
+    _get_xml_relatives_details,
+    _validate_xml_related_element,
+    _validate_xml_relatives,
+    get_ecr_message_ids,
+    get_xml_element_details,
+    validate_xml_attributes,
+    validate_xml_elements,
+    validate_xml_value,
+)
 from lxml import etree
 
 test_include_errors = ["fatal", "errors", "warnings", "information"]

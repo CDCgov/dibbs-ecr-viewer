@@ -1,7 +1,6 @@
 import json
 import sqlite3
 from pathlib import Path
-from typing import List
 from typing import Union
 
 import fhirpathpy
@@ -48,7 +47,7 @@ def get_clean_snomed_code(snomed_code: Union[list, str, int, float]) -> list:
     return clean_snomed_code
 
 
-def format_icd9_crosswalks(db_list: List[tuple]) -> List[tuple]:
+def format_icd9_crosswalks(db_list: list[tuple]) -> list[tuple]:
     """
     Utility function to transform the returned tuple rows from the DB into a
     list of properly formatted three-part tuples. This function handles ICD-9
@@ -72,7 +71,7 @@ def format_icd9_crosswalks(db_list: List[tuple]) -> List[tuple]:
     return formatted_list
 
 
-def get_concepts_list(snomed_code: list) -> List[tuple]:
+def get_concepts_list(snomed_code: list) -> list[tuple]:
     """
     Given a SNOMED code, this function runs a SQL query that joins
     conditions to value sets, then uses the value set ids to get the
@@ -103,8 +102,8 @@ def get_concepts_list(snomed_code: list) -> List[tuple]:
         valueset_to_concept vc ON vs.id = vc.valueset_id
     LEFT JOIN
         concepts cs ON vc.concept_id = cs.id
-    LEFT JOIN 
-        (SELECT icd10_code, GROUP_CONCAT(icd9_code, '|') AS icd9_conversions from icd_crosswalk GROUP BY icd10_code) ON gem_formatted_code = icd10_code 
+    LEFT JOIN
+        (SELECT icd10_code, GROUP_CONCAT(icd9_code, '|') AS icd9_conversions from icd_crosswalk GROUP BY icd10_code) ON gem_formatted_code = icd10_code
     WHERE
         c.id = ?
     GROUP BY
@@ -132,7 +131,7 @@ def get_concepts_list(snomed_code: list) -> List[tuple]:
 
 
 def get_concepts_dict(
-    concept_list: List[tuple],
+    concept_list: list[tuple],
     filter_concept_list: Union[str, list] = None,
 ) -> dict:
     """
@@ -172,7 +171,7 @@ def get_concepts_dict(
     return concept_dict
 
 
-def _find_codes_by_resource_type(resource: dict) -> List[str]:
+def _find_codes_by_resource_type(resource: dict) -> list[str]:
     """
     For a given resource, extracts the chief clinical codes within the
     resource body. The FHIRpath location of this resource depends on the
@@ -205,53 +204,89 @@ def _find_codes_by_resource_type(resource: dict) -> List[str]:
     return [x for x in codes if x != ""]
 
 
-def add_code_extension_and_human_readable_name(resource: dict, code: str) -> dict:
+def add_reportable_condition_extension(
+    resource: dict, related_reportable_condition_code: str
+):
     """
-    Stamps a provided resource with an extension containing a passed-in
-    SNOMED code. The stamping procedure adds an extension to the resource
-    body without altering any other existing data. In addition, if the
-    resource is a Condition, the function will also add a human-readable
-    name to the resources valueCodeableConcept.text field.
-
-    :param resource: The resource to stamp.
-    :param code: The SNOMED code to insert an extension for.
-    :return: The resource with new extension added.
+    Append a reportable condition extension to a resource
     """
-    if "extension" not in resource:
-        resource["extension"] = []
-    resource["extension"].append(
+    resource.setdefault("extension", []).append(
         {
             "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
-            "valueCoding": {"code": code, "system": "http://snomed.info/sct"},
+            "valueCoding": {
+                "code": related_reportable_condition_code,
+                "system": "http://snomed.info/sct",
+            },
         }
     )
 
-    # If the resource is a Condition, add a human-readable name to the
-    # valueCodeableConcept.text field. If there is no code, assume it was not a
-    # condition/observation
-    if resource.get("code"):
-        if [
+    return resource
+
+
+def add_human_readable_reportable_condition_name(resource: dict) -> dict:
+    """
+    Add a human readable name to the valueCodeableConcept.text field of a condition resource.
+
+    If the resource is a Condition, get the SNOMED code to look up the human-readable name
+    If we we do not have a human-readable name, we will use the display of the SNOMED code
+    If we do not have a SNOMED code in the valueCodeableConcept, we will use the display of the
+    first coding, if any.
+    None of these fallbacks should be used, however in the situation where data is missing in our
+    database and in the FHIR bundle, we still need to be able to handle valid FHIR bundles.
+    """
+    if not resource.get("code"):
+        return resource
+
+    # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]
+    has_condition = any(
+        x.get("system") == "http://snomed.info/sct" and x.get("code") == "64572001"
+        for x in resource["code"]["coding"]
+    )
+    if not has_condition:
+        return resource
+
+    # Get the first SNOMED coding from resource["valueCodeableConcept"]["coding"], if any
+    condition_code = next(
+        (
             x
-            for x in resource["code"]["coding"]
+            for x in resource["valueCodeableConcept"]["coding"]
             if x["system"] == "http://snomed.info/sct"
-            and x["code"] == "64572001"  # Condition
-        ]:
-            condition_name = _get_condition_name_from_snomed_code(code)
-            if condition_name:
-                resource["valueCodeableConcept"]["text"] = condition_name
+        ),
+        None,
+    )
+
+    if condition_code:
+        human_readable_condition_name = _get_condition_name_from_snomed_code(
+            condition_code["code"]
+        )
+
+        if human_readable_condition_name:
+            resource["valueCodeableConcept"]["text"] = human_readable_condition_name
+        elif "display" in condition_code:
+            resource["valueCodeableConcept"]["text"] = condition_code["display"]
+    else:
+        # Fallback to the first available display text if condition_code is absent
+        fallback_display = next(
+            (
+                x["display"]
+                for x in resource["valueCodeableConcept"]["coding"]
+                if "display" in x
+            ),
+            None,
+        )
+        if fallback_display:
+            resource["valueCodeableConcept"]["text"] = fallback_display
 
     return resource
 
 
 def _get_condition_name_from_snomed_code(snomed_code: str) -> str:
-    # Connect to the SQLite database, execute sql query, then close
-    with sqlite3.connect("seed-scripts/rckms.db") as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT name FROM conditions WHERE id = ?", (snomed_code,))
+    with sqlite3.connect("./seed-scripts/rckms.db") as conn:
+        row = conn.execute(
+            "SELECT name FROM conditions WHERE id = ?", (snomed_code,)
+        ).fetchone()
 
-        condition_name = cursor.fetchone()[0]
-
-    return condition_name
+    return row[0] if row else None
 
 
 def read_json_from_assets(filename: str) -> dict:
@@ -261,7 +296,7 @@ def read_json_from_assets(filename: str) -> dict:
     :param filename: The name of the file to read.
     :return: A dictionary containing the contents of the file.
     """
-    return json.load(open((Path(__file__).parent.parent / "assets" / filename)))
+    return json.load(open(Path(__file__).parent.parent / "assets" / filename))
 
 
 def find_conditions(bundle: dict) -> set[str]:

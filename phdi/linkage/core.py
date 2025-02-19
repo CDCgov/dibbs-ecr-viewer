@@ -1,6 +1,4 @@
-from abc import ABC
-from abc import abstractmethod
-from typing import List
+from abc import ABC, abstractmethod
 
 from sqlalchemy import Select
 
@@ -14,7 +12,7 @@ class BaseMPIConnectorClient(ABC):
     """
 
     @abstractmethod
-    def get_block_data() -> List[list]:
+    def get_block_data() -> list[list]:
         """
         Returns a list of lists containing records from the MPI database that
         match on the incoming record's block criteria and values. If blocking

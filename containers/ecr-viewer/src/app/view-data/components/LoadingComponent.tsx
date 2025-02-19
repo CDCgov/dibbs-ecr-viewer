@@ -1,4 +1,3 @@
-"use client";
 import {
   Accordion,
   Grid,
@@ -7,11 +6,9 @@ import {
 } from "@trussworks/react-uswds";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
 import { AccordionSection, AccordionSubSection } from "../component-utils";
-import classNames from "classnames";
-import { BackButton } from "./BackButton";
+import { BackButton } from "@/app/components/BackButton";
 import React from "react";
-import { range } from "../utils/utils";
-import { env } from "next-runtime-env";
+import { range } from "../../utils/data-utils";
 import { ECRViewerLayout } from "./ECRViewerLayout";
 
 /**
@@ -70,11 +67,11 @@ const SideNavLoadingItems = () => {
   );
 };
 
-const SideNavLoadingSkeleton = ({
-  isNonIntegratedViewer,
-}: {
-  isNonIntegratedViewer: boolean;
-}) => {
+/**
+ * Side nav loading blobs
+ * @returns Loading blobs for the sid nave
+ */
+export const SideNavLoadingSkeleton = () => {
   const sideNavLoadingItems = [
     <a>eCR Summary</a>,
     <a>eCR Document</a>,
@@ -94,17 +91,10 @@ const SideNavLoadingSkeleton = ({
   ];
 
   return (
-    <div className="nav-wrapper">
+    <nav className="nav-wrapper">
       <BackButton className="margin-bottom-3" iconClassName="text-base" />
-      <nav
-        className={classNames("sticky-nav", {
-          "top-0": !isNonIntegratedViewer,
-          "top-550": isNonIntegratedViewer,
-        })}
-      >
-        <SideNav items={sideNavLoadingItems} />
-      </nav>
-    </div>
+      <SideNav items={sideNavLoadingItems} />
+    </nav>
   );
 };
 /**
@@ -233,14 +223,10 @@ const AccordionLoadingSkeleton = () => {
  * @returns ECR page loading skeleton
  */
 export const EcrLoadingSkeleton = () => {
-  const _isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
   return (
     <ECRViewerLayout>
       <div>
-        <SideNavLoadingSkeleton
-          isNonIntegratedViewer={_isNonIntegratedViewer ? true : false}
-        />
+        <SideNavLoadingSkeleton />
       </div>
       <div className={"ecr-viewer-container"}>
         <div className="margin-bottom-3">

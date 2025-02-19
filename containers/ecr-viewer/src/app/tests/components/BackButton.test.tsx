@@ -1,4 +1,4 @@
-import { BackButton } from "@/app/view-data/components/BackButton";
+import { BackButton } from "@/app/components/BackButton";
 import { render, screen } from "@testing-library/react";
 
 describe("Back button", () => {
@@ -33,6 +33,8 @@ describe("Back button", () => {
 
     render(<BackButton iconClassName="some-icon-class" />);
 
-    expect(screen.getByRole("img").classList).toContain("some-icon-class");
+    expect(screen.getByRole("link").children[0].classList).toContain(
+      "some-icon-class",
+    );
   });
 });

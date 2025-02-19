@@ -3,7 +3,7 @@ import { act, render } from "@testing-library/react";
 import EcrTable from "@/app/components/EcrTable";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
 import router from "next-router-mock";
-import { EcrTableLoading } from "@/app/components/EcrTableClient";
+import { EcrTableLoading } from "@/app/components/EcrTableClientBase";
 
 jest.mock("../../services/listEcrDataService");
 
@@ -28,6 +28,8 @@ describe("EcrTable", () => {
     rule_summaries: [`rule-summary-${i + 1}`, `second-summary-${i + 1}`],
     patient_report_date: i == 0 ? "" : `2021-01-0${(i % 9) + 1}`,
     date_created: `2021-01-0${(i % 9) + 1}`,
+    eicr_set_id: `123${i}`,
+    eicr_version_number: i == 0 ? undefined : `${i}`,
   }));
   const mockDateRange = {
     startDate: new Date("12-01-2024"),
@@ -41,33 +43,67 @@ describe("EcrTable", () => {
     );
   });
 
-  it("should match snapshot", async () => {
-    mockedListEcrData.mockResolvedValue(mockData);
-    const { container } = render(
-      await EcrTable({
-        currentPage: 1,
-        itemsPerPage: 25,
-        sortColumn: "date_created",
-        sortDirection: "DESC",
-        filterDates: mockDateRange,
-      }),
-    );
-    expect(container).toMatchSnapshot();
+  describe("load with an eCR", () => {
+    it("should match snapshot with", async () => {
+      mockedListEcrData.mockResolvedValue(mockData);
+      const { container } = render(
+        await EcrTable({
+          currentPage: 1,
+          itemsPerPage: 25,
+          sortColumn: "date_created",
+          sortDirection: "DESC",
+          filterDates: mockDateRange,
+        }),
+      );
+      expect(container).toMatchSnapshot();
+    });
+
+    it("should pass accessibility", async () => {
+      mockedListEcrData.mockResolvedValue(mockData);
+      const { container } = render(
+        await EcrTable({
+          currentPage: 1,
+          itemsPerPage: 25,
+          sortColumn: "date_created",
+          sortDirection: "DESC",
+          filterDates: mockDateRange,
+        }),
+      );
+      await act(async () => {
+        expect(await axe(container)).toHaveNoViolations();
+      });
+    });
   });
 
-  it("should pass accessibility", async () => {
-    mockedListEcrData.mockResolvedValue(mockData);
-    const { container } = render(
-      await EcrTable({
-        currentPage: 1,
-        itemsPerPage: 25,
-        sortColumn: "date_created",
-        sortDirection: "DESC",
-        filterDates: mockDateRange,
-      }),
-    );
-    await act(async () => {
-      expect(await axe(container)).toHaveNoViolations();
+  describe("load without an eCR", () => {
+    it("should match snapshot with", async () => {
+      mockedListEcrData.mockResolvedValue([]);
+      const { container } = render(
+        await EcrTable({
+          currentPage: 1,
+          itemsPerPage: 25,
+          sortColumn: "date_created",
+          sortDirection: "DESC",
+          filterDates: mockDateRange,
+        }),
+      );
+      expect(container).toMatchSnapshot();
+    });
+
+    it("should pass accessibility", async () => {
+      mockedListEcrData.mockResolvedValue([]);
+      const { container } = render(
+        await EcrTable({
+          currentPage: 1,
+          itemsPerPage: 25,
+          sortColumn: "date_created",
+          sortDirection: "DESC",
+          filterDates: mockDateRange,
+        }),
+      );
+      await act(async () => {
+        expect(await axe(container)).toHaveNoViolations();
+      });
     });
   });
 

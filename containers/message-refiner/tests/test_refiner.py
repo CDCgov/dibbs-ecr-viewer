@@ -1,12 +1,8 @@
-import json
 import pathlib
-from unittest.mock import AsyncMock
-from unittest.mock import Mock
-from unittest.mock import patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
-from app.main import app
-from app.main import get_clinical_services
+from app.main import app, get_clinical_services
 from fastapi.testclient import TestClient
 from lxml import etree
 
@@ -21,7 +17,7 @@ def parse_file_from_test_assets(filename: str) -> etree.ElementTree:
     :return: An ElementTree containing the contents of the file.
     """
     with open(
-        (pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename), "r"
+        pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename
     ) as file:
         parser = etree.XMLParser(remove_blank_text=True)
         tree = etree.parse(file, parser)
@@ -37,7 +33,6 @@ def read_file_from_test_assets(filename: str) -> str:
     """
     with open(
         (pathlib.Path(__file__).parent.parent / "tests" / "assets" / filename),
-        "r",
     ) as file:
         return file.read()
 
@@ -71,19 +66,6 @@ def test_health_check():
     actual_response = client.get("/")
     assert actual_response.status_code == 200
     assert actual_response.json() == {"status": "OK"}
-
-
-def test_get_uat_collection():
-    uat_collection = json.load(
-        open(
-            pathlib.Path(__file__).parent.parent
-            / "assets"
-            / "Message_Refiner_UAT.postman_collection.json"
-        )
-    )
-    actual_response = client.get("example-collection")
-    assert actual_response.status_code == 200
-    assert actual_response.json() == uat_collection
 
 
 def test_openapi():

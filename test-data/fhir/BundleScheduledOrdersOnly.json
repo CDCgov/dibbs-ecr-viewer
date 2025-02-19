@@ -24,17 +24,7 @@
                   "system": "http://loinc.org"
                 }
               ]
-            },
-            "value": "d5acda80-91c4-4600-ad80-93bab47fb25c",
-            "assigner": {
-              "display": "EPC"
             }
-          }
-        ],
-        "extension": [
-          {
-            "url": "http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber",
-            "valueString": "28"
           }
         ],
         "status": "final",
@@ -49,32 +39,13 @@
         },
         "date": "1892-09-04T12:01:43-07:00",
         "title": "Initial Public Health Case Report",
-        "confidentiality": "N",
         "section": [
-          {
-            "id": "7dfb261e-4d95-b4c2-9906-efe4979bc1aa",
-            "title": "Miscellaneous Notes",
-            "text": {
-              "status": "generated",
-              "div": "<table><thead><tr><th>Active Problems</th><th>Noted Date</th></tr></thead><tbody><tr><td>Bakuran fever bump</td><td>9/04/1892</td></tr><tr><td>Idolian fever</td><td>09/04/1892</td></tr></tbody></table>"
-            },
-            "code": {
-              "coding": [
-                {
-                  "code": "10164-2",
-                  "display": "HISTORY OF PRESENT ILLNESS",
-                  "system": "http://loinc.org"
-                }
-              ]
-            },
-            "mode": "snapshot"
-          },
           {
             "id": "eb08daad-1e00-4280-4846-4276acb00888",
             "title": "Plan of Treatment",
             "text": {
               "status": "generated",
-              "div": "<table><caption>Scheduled Orders</caption> <thead><tr><th>Name</th><th>Type</th><th>Priority</th><th>Associated Diagnoses</th><th>Date/Time</th></tr></thead><tbody><tr><!-- data-id: procedure11 --><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure12'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure13'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure14'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure15'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure16'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure17'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure18'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure19'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure20'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure21'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure22'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure23'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr></tbody></table>documented as of this encounter"
+              "div": "<table><caption>Scheduled Orders</caption> <thead><tr><th>Name</th><th>Type</th><th>Priority</th><th>Associated Diagnoses</th><th>Date/Time</th></tr></thead><tbody><tr><!-- data-id: procedure11 --><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure12'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr></tbody></table>documented as of this encounter"
             },
             "code": {
               "coding": [

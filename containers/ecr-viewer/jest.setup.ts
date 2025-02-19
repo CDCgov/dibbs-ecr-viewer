@@ -4,7 +4,7 @@ import failOnConsole from "jest-fail-on-console";
 import * as matchers from "jest-extended";
 import { TextEncoder } from "util";
 import router from "next-router-mock";
-import { clearEvaluateCache } from "@/app/view-data/utils/evaluate";
+import { clearEvaluateCache } from "@/app/utils/evaluate";
 
 global.TextEncoder = TextEncoder;
 
@@ -24,6 +24,12 @@ jest.mock("next/navigation", () => ({
       toString: () => params.toString(),
     };
   },
+}));
+
+// Make sure the auto-generated IDs are stable for snapshot testing
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  useId: () => "r:id",
 }));
 
 beforeEach(() => {

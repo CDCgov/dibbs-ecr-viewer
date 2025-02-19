@@ -4,39 +4,46 @@ import os
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import Body
-from fastapi import File
-from fastapi import Form
-from fastapi import HTTPException
-from fastapi import Response
-from fastapi import status
-from fastapi import UploadFile
-from fastapi import WebSocket
-from fastapi import WebSocketDisconnect
-from opentelemetry import metrics
-from opentelemetry import trace
+from fastapi import (
+    Body,
+    File,
+    Form,
+    HTTPException,
+    Response,
+    UploadFile,
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+)
+from opentelemetry import metrics, trace
 from opentelemetry.trace.status import StatusCode
 
 from app.base_service import BaseService
 from app.config import get_settings
-from app.constants import process_message_response_examples
-from app.constants import sample_get_config_response
-from app.constants import sample_list_configs_response
-from app.constants import upload_config_response_examples
-from app.models import GetConfigResponse
-from app.models import ListConfigsResponse
-from app.models import OrchestrationRequest
-from app.models import OrchestrationResponse
-from app.models import ProcessingConfigModel
-from app.models import PutConfigResponse
+from app.constants import (
+    process_message_response_examples,
+    sample_get_config_response,
+    sample_list_configs_response,
+    upload_config_response_examples,
+)
+from app.models import (
+    GetConfigResponse,
+    ListConfigsResponse,
+    OrchestrationRequest,
+    OrchestrationResponse,
+    ProcessingConfigModel,
+    PutConfigResponse,
+)
 from app.services import call_apis
-from app.utils import _combine_response_bundles
-from app.utils import _socket_response_is_valid
-from app.utils import load_config_assets
-from app.utils import load_json_from_binary
-from app.utils import load_processing_config
-from app.utils import unzip_http
-from app.utils import unzip_ws
+from app.utils import (
+    _combine_response_bundles,
+    _socket_response_is_valid,
+    load_config_assets,
+    load_json_from_binary,
+    load_processing_config,
+    unzip_http,
+    unzip_ws,
+)
 
 # Integrate main app tracer with automatic instrumentation context
 tracer = trace.get_tracer("orchestration_main_tracer")

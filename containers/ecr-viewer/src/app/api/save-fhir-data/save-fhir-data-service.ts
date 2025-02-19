@@ -2,7 +2,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 import { getDB } from "../services/postgres_db";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
-import { S3_SOURCE, AZURE_SOURCE, POSTGRES_SOURCE } from "@/app/api/utils";
+import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import sql from "mssql";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
@@ -13,45 +13,6 @@ interface SaveResponse {
   message: string;
   status: number;
 }
-
-/**
- * Saves a FHIR bundle to a postgres database.
- * @async
- * @function saveToPostgres
- * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @returns An object containing the status and message.
- */
-export const saveToPostgres = async (
-  fhirBundle: Bundle,
-  ecrId: string,
-): Promise<SaveResponse> => {
-  const { database, pgPromise } = getDB();
-  const { ParameterizedQuery: PQ } = pgPromise;
-  const addFhir = new PQ({
-    text: "INSERT INTO fhir VALUES ($1, $2)",
-    values: [ecrId, fhirBundle],
-  });
-
-  try {
-    await database.none(addFhir);
-
-    return {
-      message: "Success. Saved FHIR bundle.",
-      status: 200,
-    };
-  } catch (error: any) {
-    console.error({
-      message: `Failed to save FHIR bundle to postgres.`,
-      error,
-      ecrId,
-    });
-    return {
-      message: "Failed to save FHIR bundle.",
-      status: 500,
-    };
-  }
-};
 
 /**
  * Saves a FHIR bundle to an AWS S3 bucket.
@@ -156,7 +117,7 @@ export const saveToAzure = async (
  * @function saveFhirData
  * @param fhirBundle - The FHIR bundle to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @param saveSource - The location to save the FHIR bundle. Valid values are "postgres", "s3", or "azure".
+ * @param saveSource - The location to save the FHIR bundle.
  * @returns An object containing the status and message.
  */
 export const saveFhirData = async (
@@ -168,12 +129,10 @@ export const saveFhirData = async (
     return await saveToS3(fhirBundle, ecrId);
   } else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(fhirBundle, ecrId);
-  } else if (saveSource === POSTGRES_SOURCE) {
-    return await saveToPostgres(fhirBundle, ecrId);
   } else {
     return {
       message:
-        'Invalid save source. Please provide a valid value for \'saveSource\' ("postgres", "s3", or "azure").',
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", or "azure").',
       status: 400,
     };
   }
@@ -250,10 +209,6 @@ export const saveMetadataToSqlServer = async (
         .input("gender_identity", sql.VarChar(50), metadata.gender_identity)
         .input("race", sql.VarChar(255), metadata.race)
         .input("ethnicity", sql.VarChar(255), metadata.ethnicity)
-        .input("street_address1", sql.VarChar(255), metadata.street_address1)
-        .input("street_address2", sql.VarChar(255), metadata.street_address2)
-        .input("state", sql.VarChar(50), metadata.state)
-        .input("zip_code", sql.VarChar(20), metadata.zip)
         .input("latitude", sql.Float, metadata.latitude)
         .input("longitude", sql.Float, metadata.longitude)
         .input(
@@ -324,8 +279,32 @@ export const saveMetadataToSqlServer = async (
           metadata.active_problems,
         )
         .query(
-          "INSERT INTO dbo.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, street_address_1, street_address_2, state, zip_code, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @street_address1, @street_address2, @state, @zip_code, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
+          "INSERT INTO ecr_viewer.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
         );
+
+      if (metadata.patient_addresses) {
+        for (const address of metadata.patient_addresses) {
+          const patient_address_uuid = randomUUID();
+          const addressInsertRequest = new sql.Request(transaction);
+          await addressInsertRequest
+            .input("UUID", sql.VarChar(200), patient_address_uuid)
+            .input("use", sql.VarChar(7), address.use)
+            .input("type", sql.VarChar(8), address.type)
+            .input("text", sql.VarChar(sql.MAX), address.text)
+            .input("line", sql.VarChar(sql.MAX), address.line)
+            .input("city", sql.VarChar(255), address.city)
+            .input("district", sql.VarChar(255), address.district)
+            .input("state", sql.VarChar(255), address.state)
+            .input("postal_code", sql.VarChar(20), address.postal_code)
+            .input("country", sql.VarChar(255), address.country)
+            .input("period_start", sql.DateTime, address.period_start)
+            .input("period_end", sql.DateTime, address.period_end)
+            .input("eICR_ID", sql.VarChar(200), ecrId)
+            .query(
+              "INSERT INTO ecr_viewer.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
+            );
+        }
+      }
 
       if (metadata.labs) {
         for (const lab of metadata.labs) {
@@ -401,7 +380,7 @@ export const saveMetadataToSqlServer = async (
             )
             .input("performing_lab", sql.VarChar(255), lab.performing_lab)
             .query(
-              "INSERT INTO dbo.ecr_labs VALUES (@UUID, @eICR_ID, @test_type, @test_type_code, @test_type_system, @test_result_qualitative, @test_result_quantitative, @test_result_units, @test_result_code, @test_result_code_display, @test_result_code_system, @test_result_interpretation, @test_result_interpretation_code, @test_result_interpretation_system, @test_result_ref_range_low_value, @test_result_ref_range_low_units, @test_result_ref_range_high_value, @test_result_ref_range_high_units, @specimen_type, @specimen_collection_date, @performing_lab)",
+              "INSERT INTO ecr_viewer.ecr_labs VALUES (@UUID, @eICR_ID, @test_type, @test_type_code, @test_type_system, @test_result_qualitative, @test_result_quantitative, @test_result_units, @test_result_code, @test_result_code_display, @test_result_code_system, @test_result_interpretation, @test_result_interpretation_code, @test_result_interpretation_system, @test_result_ref_range_low_value, @test_result_ref_range_low_units, @test_result_ref_range_high_value, @test_result_ref_range_high_units, @specimen_type, @specimen_collection_date, @performing_lab)",
             );
         }
       }
@@ -418,7 +397,7 @@ export const saveMetadataToSqlServer = async (
             .input("eICR_ID", sql.VarChar(200), ecrId)
             .input("condition", sql.VarChar(sql.MAX), rrItem.condition)
             .query(
-              "INSERT INTO dbo.ecr_rr_conditions VALUES (@UUID, @eICR_ID, @condition)",
+              "INSERT INTO ecr_viewer.ecr_rr_conditions VALUES (@UUID, @eICR_ID, @condition)",
             );
 
           // Loop through the rule summaries array
@@ -436,7 +415,7 @@ export const saveMetadataToSqlServer = async (
                 )
                 .input("rule_summary", sql.VarChar(sql.MAX), summary.summary)
                 .query(
-                  "INSERT INTO dbo.ecr_rr_rule_summaries VALUES (@UUID, @ECR_RR_CONDITIONS_ID, @rule_summary)",
+                  "INSERT INTO ecr_viewer.ecr_rr_rule_summaries VALUES (@UUID, @ECR_RR_CONDITIONS_ID, @rule_summary)",
                 );
             }
           }
@@ -492,7 +471,7 @@ export const saveMetadataToPostgres = async (
     await database.tx(async (t) => {
       // Insert main ECR metadata
       const saveToEcrData = new PQ({
-        text: "INSERT INTO ecr_data (eICR_ID, patient_name_last, patient_name_first, patient_birth_date, data_source, report_date, set_id, eicr_version_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+        text: "INSERT INTO ecr_viewer.ecr_data (eICR_ID, patient_name_last, patient_name_first, patient_birth_date, data_source, report_date, set_id, eicr_version_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
         values: [
           ecrId,
           metadata.last_name,
@@ -512,7 +491,7 @@ export const saveMetadataToPostgres = async (
         for (const rrItem of metadata.rr) {
           // Insert condition into ecr_rr_conditions
           const saveRRConditions = new PQ({
-            text: "INSERT INTO ecr_rr_conditions (uuid, eICR_ID, condition) VALUES (uuid_generate_v4(), $1, $2) RETURNING uuid",
+            text: "INSERT INTO ecr_viewer.ecr_rr_conditions (uuid, eICR_ID, condition) VALUES (uuid_generate_v4(), $1, $2) RETURNING uuid",
             values: [ecrId, rrItem.condition],
           });
 
@@ -523,7 +502,7 @@ export const saveMetadataToPostgres = async (
             for (const summaryObj of rrItem.rule_summaries) {
               // Insert each associated summary into ecr_rr_rule_summaries
               const saveRRSummary = new PQ({
-                text: "INSERT INTO ecr_rr_rule_summaries (uuid, ecr_rr_conditions_id, rule_summary) VALUES (uuid_generate_v4(), $1, $2)",
+                text: "INSERT INTO ecr_viewer.ecr_rr_rule_summaries (uuid, ecr_rr_conditions_id, rule_summary) VALUES (uuid_generate_v4(), $1, $2)",
                 values: [savedRRCondition.uuid, summaryObj.summary],
               });
 
@@ -557,7 +536,7 @@ export const saveMetadataToPostgres = async (
  * @function saveWithMetadata
  * @param fhirBundle - The FHIR bundle to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @param saveSource - The location to save the FHIR bundle. Valid values are "postgres", "s3", or "azure".
+ * @param saveSource - The location to save the FHIR bundle.
  * @param metadata - The metadata to be saved with the FHIR bundle.
  * @returns An object containing the status and message.
  */

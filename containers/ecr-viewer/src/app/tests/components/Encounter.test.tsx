@@ -52,13 +52,11 @@ describe("Encounter", () => {
       },
       {
         title: "Facility Address",
-        value:
-          "50 Snowy Drive\nEcho Base, MA 00123",
+        value: "50 Snowy Drive\nEcho Base, MA 00123",
       },
       {
         title: "Facility Contact Address",
-        value:
-          "50 Snowy Drive\nEcho Base, MA 00123",
+        value: "50 Snowy Drive\nEcho Base, MA 00123",
       },
       {
         title: "Facility Type",

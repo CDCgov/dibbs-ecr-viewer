@@ -10,7 +10,7 @@ import {
   LabReportElementData,
 } from "@/app/services/labsService";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
-import { toKebabCase } from "@/app/services/formatService";
+import { toKebabCase } from "@/app/utils/format-utils";
 
 interface LabInfoProps {
   labResults: DisplayDataProps[] | LabReportElementData[];
@@ -41,7 +41,7 @@ const HtmlLabResult = ({ labResult }: { labResult: DisplayDataProps }) => {
   return (
     <AccordionSubSection title="Lab Results">
       <div data-testid="lab-results">
-        <DataTableDisplay item={labResult} key="lab-results-table" />
+        <DataTableDisplay item={labResult} />
       </div>
     </AccordionSubSection>
   );

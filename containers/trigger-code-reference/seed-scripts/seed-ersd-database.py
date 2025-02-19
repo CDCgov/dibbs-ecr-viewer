@@ -5,13 +5,10 @@ import sqlite3
 import string
 import time
 from pathlib import Path
-from typing import List
-from typing import Tuple
 
 import docker
 import requests
-from docker.errors import APIError
-from docker.errors import BuildError
+from docker.errors import APIError, BuildError
 from docker.models.containers import Container
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
@@ -88,7 +85,7 @@ def load_ersd_schema(ports: dict):
     Loads the ersd.json to the message-parser endpoint to use to parse eRSD
     :param ports: port for the message-parser endpoint URL
     """
-    with open("seed-scripts/config/ersd.json", "r") as json_file:
+    with open("seed-scripts/config/ersd.json") as json_file:
         ersd_schema = json.load(json_file)
     # Create payload to upload the schema to message-parser
     url = f"http://localhost:{list(ports.values())[0]}/schemas/ersd.json"
@@ -167,7 +164,7 @@ def build_valuesets_dict(data: dict) -> dict:
     return valuesets_dict
 
 
-def check_id_uniqueness(list_of_lists: List[List[str]]) -> bool:
+def check_id_uniqueness(list_of_lists: list[list[str]]) -> bool:
     """This is a helper function that confirms that the first item
     in each list of the lists of lists is unique. This is needed to
     confirm that the assumptions we have about tables with a unique primary
@@ -185,7 +182,7 @@ def check_id_uniqueness(list_of_lists: List[List[str]]) -> bool:
 def build_valuesets_table(
     data: dict,
     valuesets_dict: dict,
-) -> Tuple[List[List[str]], List[List[str]]]:
+) -> tuple[list[list[str]], list[list[str]]]:
     """
     Look through eRSD json to create valuesets table, where the primary key
     is the valueset_id that contains the name and codes for each service.
@@ -237,7 +234,7 @@ def build_valuesets_table(
         return [], []
 
 
-def build_conditions_table(data: dict) -> List[List[str]]:
+def build_conditions_table(data: dict) -> list[list[str]]:
     """
     Look through eRSD json to create conditions table, where the primary key
     is a SNOMED condition code and has the name and system for each condition.
@@ -280,7 +277,7 @@ def build_conditions_table(data: dict) -> List[List[str]]:
 def build_concepts_table(
     data: dict,
     valuesets_dict: dict,
-) -> Tuple[List[List[str]], List[List[str]], dict]:
+) -> tuple[list[list[str]], list[list[str]], dict]:
     """
     This builds the table for concepts, which has a unique row for
     each unique valueset_id-concept code combination.
@@ -333,7 +330,7 @@ def build_crosswalk_table():
     """
     table_rows = []
     row_id = 1
-    with open("seed-scripts/diagnosis_gems_2018/2018_I10gem.txt", "r") as gem:
+    with open("seed-scripts/diagnosis_gems_2018/2018_I10gem.txt") as gem:
         for row in gem:
             line = row.strip()
             if line != "":
@@ -355,7 +352,7 @@ def apply_migration(connection: sqlite3.Connection, migration_file: str):
     :param connection: sqlite3 connection
     :param migration_file: location of the .sql file to execute
     """
-    with open(migration_file, "r") as file:
+    with open(migration_file) as file:
         sql_script = file.read()
     cursor = connection.cursor()
     try:
@@ -384,7 +381,7 @@ def delete_table(connection: sqlite3.Connection, table_name: str):
 def load_table(
     connection: sqlite3.Connection,
     table_name: str,
-    insert_rows: List[List[str]],
+    insert_rows: list[list[str]],
     auto_increment_id: bool = False,
 ):
     """

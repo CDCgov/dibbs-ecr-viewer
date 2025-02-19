@@ -91,10 +91,20 @@ def test_stamp_conditions_no_resources_to_stamp(patched_get_services_list):
     ]
 
     patched_get_services_list.return_value = [
+        # dxtc = diagnostic trigger code
+        # A36.3 = ICD-10-CM code for "Diphtheritic laryngitis"
+        # A36 = ICD-10-CM code for "Diphtheria" (parent code)
         ("dxtc", "A36.3|A36", "http://hl7.org/fhir/sid/icd-10-cm"),
+        # sdtc = snomed trigger code
+        # 772150003 = SNOMED CT code for "Diphtheria caused by Corynebacterium diphtheriae (disorder)"
         ("sdtc", "772150003", "http://snomed.info/sct"),
     ]
-    input = {"bundle": message, "conditions": ["276197005"]}
+    input = {
+        "bundle": message,
+        # 276197005 = SNOMED CT code for "Diphtheria contact (finding)"
+        # This code represents exposure to or contact with someone who has Diphtheria
+        "conditions": ["276197005"],
+    }
     response = client.post("/stamp-condition-extensions", json=input)
     assert response.status_code == 200
     stamped_message = response.json()["extended_bundle"]
@@ -104,53 +114,56 @@ def test_stamp_conditions_no_resources_to_stamp(patched_get_services_list):
     assert not found_matching_extension
 
 
-@patch("app.utils._get_condition_name_from_snomed_code")
 @patch("app.main.get_concepts_list")
-def test_stamp_condition_extensions(
-    patched_get_services_list, patched_get_condition_name
-):
-    # We'll just try stamping one of each resource type, no need
-    # to see 47 observations
+def test_stamp_condition_extensions(patched_get_services_list):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
-    composition = [
-        e
-        for e in message["entry"]
-        if e.get("resource").get("resourceType") == "Composition"
-    ][0]
-    obs_e = [
-        e
-        for e in message["entry"]
-        if e.get("resource").get("resourceType") == "Observation"
-    ][0]
-    cond_e = [
-        e
-        for e in message["entry"]
-        if e.get("resource").get("resourceType") == "Condition"
-    ][0]
-    imm_e = [
-        e
-        for e in message["entry"]
-        if e.get("resource").get("resourceType") == "Immunization"
-    ][3]
-    message["entry"] = [composition, obs_e, cond_e, imm_e]
 
-    # Note: obviously not real conditions, we're just simulating stamping different
-    # resource types according to different condition criteria
+    # mock the services list to match codes in our bundle
     patched_get_services_list.return_value = [
-        ("dxtc", "1234567|9999999999|64572001", "code-sys-1"),
-        ("dxtc", "8971234987123", "code-sys-2"),
-        ("lotc", "72391283|8916394-2|24", "code-sys-1"),
+        # dxtc = diagnostic trigger code
+        # 94310-0 = LOINC code for "SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection"
+        ("dxtc", "94310-0", "http://loinc.org"),
+        # sdtc = snomed trigger code
+        # 840539006 = SNOMED CT code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+        ("sdtc", "840539006", "http://snomed.info/sct"),
     ]
 
-    patched_get_condition_name.return_value = "Test Condition"
+    # The covid-19 SNOMED code
+    input = {
+        "bundle": message,
+        "conditions": ["840539006"],
+    }
 
-    input = {"bundle": message}
     response = client.post("/stamp-condition-extensions", json=input)
     assert response.status_code == 200
     stamped_message = response.json()["extended_bundle"]
 
-    # Check observation: diagnostic code value came back successful
     found_matching_extension = _check_for_stamped_resource_in_bundle(
         stamped_message, "840539006", "Observation"
     )
     assert found_matching_extension
+
+
+@patch("app.main.get_concepts_list")
+def test_stamp_condition_extensions_with_no_conditions(patched_get_services_list):
+    """Test that when no conditions are provided, no stamping occurs"""
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
+
+    patched_get_services_list.return_value = [
+        ("dxtc", "94310-0", "http://loinc.org"),
+        ("sdtc", "840539006", "http://snomed.info/sct"),
+    ]
+
+    input = {"bundle": message}
+
+    response = client.post("/stamp-condition-extensions", json=input)
+    assert response.status_code == 200
+    stamped_message = response.json()["extended_bundle"]
+
+    # Check for a different SNOMED code that isn't in the bundle
+    found_matching_extension = _check_for_stamped_resource_in_bundle(
+        stamped_message,
+        "276197005",
+        "Observation",  # Different SNOMED code
+    )
+    assert not found_matching_extension

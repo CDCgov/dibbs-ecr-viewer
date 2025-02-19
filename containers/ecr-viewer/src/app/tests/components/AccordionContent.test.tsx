@@ -24,11 +24,21 @@ describe("Snapshot test for Accordion Content", () => {
       el.removeAttribute("id");
       el.removeAttribute("aria-describedby");
     });
+
+    // This is an arbitrarily chosen test ID we expect one of the rendered accordion items to have.
+    // There is nothing significant about "encounter-info_2" in particular.
+    expect(
+      screen.getByTestId("accordionButton_encounter-info_2"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("accordionItem_encounter-info_2"),
+    ).toBeInTheDocument();
+
     expect(container).toMatchSnapshot();
 
-    // expect(
-    //   screen.getByText("No patient information was found in this eCR."),
-    // ).toBeInTheDocument();
+    expect(
+      screen.getByText("No patient information was found in this eCR."),
+    ).toBeInTheDocument();
     expect(
       screen.getByText("No encounter information was found in this eCR."),
     ).toBeInTheDocument();

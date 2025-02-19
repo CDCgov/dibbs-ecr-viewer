@@ -3,13 +3,14 @@ from unittest import mock
 
 import hl7
 import pytest
-from app.main import add_rr_data_to_eicr
-from app.main import app
-from app.service import add_data_source_to_bundle
-from app.service import normalize_hl7_datetime
-from app.service import normalize_hl7_datetime_segment
-from app.service import resolve_references
-from app.service import standardize_hl7_datetimes
+from app.main import add_rr_data_to_eicr, app
+from app.service import (
+    add_data_source_to_bundle,
+    normalize_hl7_datetime,
+    normalize_hl7_datetime_segment,
+    resolve_references,
+    standardize_hl7_datetimes,
+)
 from fastapi.testclient import TestClient
 from lxml import etree
 

@@ -7,36 +7,6 @@
       "resource": {
         "resourceType": "Composition",
         "id": "1bfc4252-663e-4163-88cf-8340c65b76ed",
-        "meta": {
-          "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
-          ],
-          "source": ["ecr"]
-        },
-        "identifier": [
-          {
-            "use": "official",
-            "type": {
-              "coding": [
-                {
-                  "code": "55751-2",
-                  "display": "Initial Public Health Case Report",
-                  "system": "http://loinc.org"
-                }
-              ]
-            },
-            "value": "1bfc4252-663e-4163-88cf-8340c65b76ed",
-            "assigner": {
-              "display": "EPC"
-            }
-          }
-        ],
-        "extension": [
-          {
-            "url": "http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber",
-            "valueString": "28"
-          }
-        ],
         "status": "final",
         "type": {
           "coding": [
@@ -49,7 +19,6 @@
         },
         "date": "2022-10-04T17:01:48-07:00",
         "title": "Initial Public Health Case Report",
-        "confidentiality": "N",
         "section": [
           {
             "id": "7dfb261e-4d95-b4c2-9906-efe4979bc1aa",
@@ -66,8 +35,7 @@
                   "system": "http://loinc.org"
                 }
               ]
-            },
-            "mode": "snapshot"
+            }
           }
         ]
       }

@@ -13,12 +13,6 @@
           ],
           "source": ["ecr"]
         },
-        "identifier": [
-          {
-            "system": "urn:oid:2.16.840.1.113883.19.6",
-            "value": "1234567890"
-          }
-        ],
         "name": [
           {
             "family": "Clovis",
@@ -28,105 +22,7 @@
         "birthDate": "1814-04-01",
         "deceasedBoolean": true,
         "deceasedDate": "1819-01-27",
-        "gender": "male",
-        "extension": [
-          {
-            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
-            "extension": [
-              {
-                "url": "ombCategory",
-                "valueCoding": {
-                  "code": "2054-5",
-                  "display": "Black or African American"
-                }
-              },
-              {
-                "url": "detailed",
-                "valueCoding": {
-                  "code": "2076-8",
-                  "display": "African"
-                }
-              },
-              {
-                "url": "text",
-                "valueString": "Black or African American"
-              }
-            ]
-          },
-          {
-            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
-            "extension": [
-              {
-                "url": "ombCategory",
-                "valueCoding": {
-                  "code": "2135-2",
-                  "display": "Hispanic or Latino"
-                }
-              },
-              {
-                "url": "detailed",
-                "valueCoding": {
-                  "code": "2106-3",
-                  "display": "White"
-                }
-              },
-              {
-                "url": "text",
-                "valueString": "Hispanic or Latino"
-              }
-            ]
-          },
-          {
-            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
-            "extension": [
-              {
-                "url": "value",
-                "valueCodeableConcept": {
-                  "coding": [
-                    {
-                      "code": "M",
-                      "display": "Male",
-                      "system": "urn:oid:2.16.840.1.113883.5.1"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ],
-        "address": [
-          {
-            "line": ["1 Embassy Row"],
-            "city": "Hanna City",
-            "state": "AZ",
-            "country": "US",
-            "postalCode": "00041-0028"
-          }
-        ],
-        "telecom": [
-          {
-            "system": "phone",
-            "value": "+15556781234",
-            "use": "home"
-          },
-          {
-            "system": "email",
-            "value": "rush.clovis@EXAMPLE.COM"
-          }
-        ],
-        "communication": [
-          {
-            "language": {
-              "coding": [
-                {
-                  "system": "urn:ietf:bcp:47",
-                  "code": "en",
-                  "display": "English"
-                }
-              ]
-            }
-          }
-        ]
+        "gender": "male"
       },
       "request": {
         "method": "PUT",

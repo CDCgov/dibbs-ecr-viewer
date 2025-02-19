@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
 import { Tooltip } from "@trussworks/react-uswds";
+import { ForceClient } from "./ForceClient";
 
 type CustomDivProps = React.PropsWithChildren<{
   className?: string;
@@ -46,14 +48,20 @@ export const ToolTipElement = ({
   toolTip,
   children,
 }: ToolTipProps): React.JSX.Element => {
+  // HACK: ForceClient is needed to prevent hydration mismatches. This is
+  // fundamentally a problem with uswds's Tooltip as it assigns an
+  // SSR-unfriendly random id. If this is fixed (PR open that has been sitting for a while...),
+  // then we can remove this.
   return toolTip ? (
-    <Tooltip
-      label={toolTip}
-      asCustom={TooltipDiv}
-      className={`usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
-    >
-      {children}
-    </Tooltip>
+    <ForceClient loading={children}>
+      <Tooltip
+        label={toolTip}
+        asCustom={TooltipDiv}
+        className={`usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
+      >
+        {children}
+      </Tooltip>
+    </ForceClient>
   ) : (
     <>{children}</>
   );

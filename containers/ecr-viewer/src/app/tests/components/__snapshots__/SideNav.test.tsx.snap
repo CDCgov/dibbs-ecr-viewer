@@ -3,14 +3,14 @@
 exports[`SectionConfig should match the snapshot 1`] = `
 <DocumentFragment>
   <nav
-    class="nav-wrapper top-550"
+    class="nav-wrapper"
   >
     <a
       class="display-inline-block margin-bottom-3"
       href="/"
     >
       <svg
-        aria-label="Back Arrow"
+        aria-hidden="true"
         class="usa-icon usa-icon--size-3 text-middle margin-right-1 text-base"
         focusable="false"
         height="1em"
@@ -33,7 +33,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
         class="usa-sidenav__item"
       >
         <a
-          class=""
+          class="usa-current"
           href="#section-1"
         >
           Section 1

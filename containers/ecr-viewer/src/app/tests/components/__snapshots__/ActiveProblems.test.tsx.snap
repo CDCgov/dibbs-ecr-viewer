@@ -12,25 +12,25 @@ exports[`Active Problems Table should match snapshot 1`] = `
     <thead>
       <tr>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Active Problem
         </th>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Onset Date/Time
         </th>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Onset Age
         </th>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Comments
@@ -58,7 +58,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top"
         >
           <button
-            aria-controls="hidden-comment-3"
+            aria-controls="hidden-comment-r:id"
             aria-expanded="false"
             class="usa-button usa-button--unstyled"
             data-test-id="comment-button"
@@ -73,7 +73,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
       </tr>
       <tr
         hidden=""
-        id="hidden-comment-3"
+        id="hidden-comment-r:id"
       >
         <td
           class="hideableData p-list"

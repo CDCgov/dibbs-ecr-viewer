@@ -10,7 +10,7 @@ import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/services/labsService";
-import { evaluate } from "@/app/view-data/utils/evaluate";
+import { evaluate } from "@/app/utils/evaluate";
 
 const mappings = loadYamlConfig();
 

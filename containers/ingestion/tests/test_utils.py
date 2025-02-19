@@ -2,11 +2,13 @@ import os
 
 import pytest
 from app.config import get_settings
-from app.utils import check_for_fhir
-from app.utils import check_for_fhir_bundle
-from app.utils import get_cloud_provider_storage_connection
-from app.utils import get_cred_manager
-from app.utils import search_for_required_values
+from app.utils import (
+    check_for_fhir,
+    check_for_fhir_bundle,
+    get_cloud_provider_storage_connection,
+    get_cred_manager,
+    search_for_required_values,
+)
 
 
 def test_search_for_required_values_success():
