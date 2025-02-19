@@ -37,7 +37,10 @@ def test_openapi():
 @pytest.mark.integration
 def test_vxu_conversion(setup, snapshot):
     input_data = open(
-        Path(__file__).parent.parent.parent.parent.parent / "test-data" / "hl7" / "sample_request.hl7"
+        Path(__file__).parent.parent.parent.parent.parent
+        / "test-data"
+        / "hl7"
+        / "sample_request.hl7"
     ).read()
     request = {
         "input_data": input_data,
