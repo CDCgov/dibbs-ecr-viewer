@@ -133,6 +133,25 @@ export const EcrTableLoading = () => {
   );
 };
 
+/**
+ * The Ecr Library table, but with a no data message instead of rows.
+ * @returns - The JSX element representing the eCR table.
+ */
+export const EcrTableNoData = () => {
+  return (
+    <EcrTableStyled headers={initialHeaders} handleSort={() => {}}>
+      <tr>
+        <td
+          colSpan={initialHeaders.length}
+          className="text-middle text-center height-mobile text-italic text-base"
+        >
+          No eCRs found
+        </td>
+      </tr>
+    </EcrTableStyled>
+  );
+};
+
 // EcrTable without any logic or state.
 const EcrTableStyled: React.FC<EcrTableStyledProps> = ({
   headers,

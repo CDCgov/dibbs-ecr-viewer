@@ -1,6 +1,9 @@
 import React from "react";
 import { listEcrData } from "@/app/services/listEcrDataService";
-import { EcrTableClient } from "@/app/components/EcrTableClient";
+import {
+  EcrTableClient,
+  EcrTableNoData,
+} from "@/app/components/EcrTableClient";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 /**
@@ -43,6 +46,10 @@ const EcrTable = async ({
     searchTerm,
     filterConditions,
   );
+
+  if (data.length === 0) {
+    return <EcrTableNoData />;
+  }
 
   return (
     <EcrTableClient
