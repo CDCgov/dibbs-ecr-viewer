@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "@/app/Header";
+import Header from "@/app/components/Header";
 import PatientBanner from "./PatientBanner";
 import { env } from "next-runtime-env";
 
