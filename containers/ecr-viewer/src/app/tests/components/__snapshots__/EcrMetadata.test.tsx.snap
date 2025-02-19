@@ -28,7 +28,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
               data-testid="table"
             >
               <caption>
-                Reportibility Summary
+                Reportability Summary
               </caption>
               <thead>
                 <tr>
