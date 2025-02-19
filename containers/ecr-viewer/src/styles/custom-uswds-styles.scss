@@ -84,3 +84,10 @@
 .short-tooltip + .usa-tooltip__body {
   min-width: min(350px, 0.25 * (100vw - 16rem));
 }
+
+.usa-prose > h5 {
+  font-family: "Source Sans Pro Web";
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
