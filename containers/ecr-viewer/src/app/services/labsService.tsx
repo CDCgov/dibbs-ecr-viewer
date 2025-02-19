@@ -765,7 +765,7 @@ function getUnformattedLabsContent(
           abnormalTag={false}
           content={tableJson.map((table, index) => (
             <JsonTable
-              key={`label-result-table_${index}`}
+              key={`lab-result-table_${index}`}
               jsonTableData={table}
               outerBorder={false}
               className="lab-results-table-from-div"
