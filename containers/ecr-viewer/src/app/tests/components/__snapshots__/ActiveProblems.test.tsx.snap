@@ -12,25 +12,25 @@ exports[`Active Problems Table should match snapshot 1`] = `
     <thead>
       <tr>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Active Problem
         </th>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Onset Date/Time
         </th>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Onset Age
         </th>
         <th
-          class="tableHeader"
+          class="table-header"
           scope="col"
         >
           Comments

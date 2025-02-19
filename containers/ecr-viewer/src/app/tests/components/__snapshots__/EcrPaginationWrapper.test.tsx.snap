@@ -3,7 +3,7 @@
 exports[`EcrPaginationWrapper should match snapshot 1`] = `
 <div>
   <div
-    class="main-container height-ecrLibrary flex-column flex-align-center"
+    class="main-container height-ecr-library flex-column flex-align-center"
   >
     <br />
     <div

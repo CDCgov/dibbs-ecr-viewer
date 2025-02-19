@@ -1,0 +1,354 @@
+// This file contains declarations used in the styling of the ecr-viewer page
+
+@use "uswds-core" as *;
+
+// ===== Variables ===== //
+
+$ecr-viewer-container-max-width: 80rem;
+$ecr-viewer-container-min-width: 40rem;
+$ecr-viewer-gap: 3rem;
+$nav-wrapper-width: 15.625rem;
+$main-container-padding: 1rem;
+$main-min-width: $ecr-viewer-container-min-width + $ecr-viewer-gap +
+  $nav-wrapper-width + $main-container-padding * 2;
+
+html {
+  --patient-banner-buffer: 0;
+}
+
+// ===== Page styling ===== //
+
+.ecr-viewer-container {
+  width: 100%;
+  max-width: $ecr-viewer-container-max-width;
+  min-width: $ecr-viewer-container-min-width;
+
+  // Make sure items we link to don't get stuck behind patient banner
+  *[id] {
+    scroll-margin-top: calc(var(--patient-banner-buffer) + 0.75em);
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  gap: $ecr-viewer-gap;
+  overflow: visible;
+}
+
+.minw-main {
+  min-width: $main-min-width;
+}
+
+.width-main {
+  max-width: $main-min-width + $ecr-viewer-container-max-width -
+    $ecr-viewer-container-min-width;
+  min-width: $main-min-width;
+  width: 100%;
+}
+
+.padding-main {
+  padding-left: $main-container-padding;
+  padding-right: $main-container-padding;
+}
+
+// ===== Line styling helpers ===== //
+
+.vertical-line {
+  border-left: 1px solid #005ea2;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.section__line_gray {
+  border-top: 1px solid #dfe1e2;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.section__line_blue {
+  border-top: 1px solid #99deea;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+// ===== Element styling ===== //
+
+.data-title {
+  flex: 0 1 auto;
+  width: 190px;
+  font-weight: bold;
+}
+.table-header {
+  background-color: #f0f0f0 !important;
+}
+
+.fixed-table {
+  table-layout: fixed;
+}
+
+.table-caption-margin {
+  caption {
+    margin-bottom: 8px;
+  }
+}
+
+.caption-normal-weight {
+  caption {
+    font-weight: normal;
+  }
+}
+
+.caption-data-title {
+  caption {
+    flex: 0 1 auto;
+    width: 190px;
+    font-weight: bold;
+    font-size: 1rem; // from .usa-prose
+  }
+}
+
+.caption-width-full {
+  caption {
+    width: 100%;
+  }
+}
+
+.p-list {
+  p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.header-with-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tag-info {
+  display: flex;
+  padding: 0.25rem 0.5rem;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 0.125rem;
+  background-color: #99deea;
+  font-weight: normal;
+  font-size: 0.875rem;
+  line-height: 100%;
+  color: #111111;
+}
+
+// ===== Section styling ===== //
+
+.ecr-summary-title-long {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.info-container > .usa-accordion__heading > .usa-accordion__button {
+  font-size: 2rem;
+  background-size: 2.25rem;
+
+  &[aria-expanded="false"] {
+    margin-bottom: 2.5rem;
+  }
+}
+
+.accordion-rr {
+  border: #111111 1px solid;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-top: 1rem;
+
+  &:focus-within {
+    border: #2491ff 0.25rem solid;
+  }
+
+  .usa-accordion__button {
+    @include u-text("ink");
+    font-size: 1.125rem;
+    font-weight: normal;
+    background-color: color("white");
+    @include add-background-svg("usa-icons/remove");
+    border-bottom: #111111 1px solid;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &[aria-expanded="false"] {
+      border-bottom: 0;
+      @include add-background-svg("usa-icons/add");
+    }
+  }
+
+  .usa-prose > table {
+    overflow-wrap: break-word;
+    width: calc(100% + 2.5rem);
+    margin-right: -1.25rem;
+    margin-left: -1.25rem;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    border-bottom: #1b1b1b 1px solid;
+
+    &.lab-results-table-from-div {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    thead th {
+      background-color: #f0f0f0;
+    }
+
+    tr td {
+      border-bottom: 0;
+    }
+
+    .hideableData {
+      border-top: color("base-lighter") 1px solid;
+    }
+  }
+}
+
+.table-clinical-problems {
+  tbody td:nth-child(2) {
+    min-width: 130px;
+  }
+
+  tbody td:nth-child(3) {
+    min-width: 100px;
+  }
+}
+
+.clinical_info_container {
+  table {
+    @include usa-table;
+    @include usa-table--borderless;
+    width: 100%;
+    border: 1px solid;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    thead tr th {
+      background-color: #f0f0f0;
+      min-width: 120px;
+    }
+  }
+}
+
+.immunization_table {
+  tr {
+    td:nth-child(1) {
+      word-break: break-word;
+    }
+  }
+}
+
+.condition-details-accordion {
+  .usa-accordion__heading.border-accent-cool-darker {
+    &:not(:first-child) {
+      margin-top: 1.12rem;
+    }
+  }
+
+  .usa-accordion__content.border-accent-cool-darker {
+    padding: 0.5rem 0.75rem 0 0.75rem;
+  }
+
+  .usa-accordion.accordion-rr {
+    margin: 0.5rem 0 0.75rem 0;
+  }
+
+  .usa-accordion__button {
+    padding: 0.88rem 0.75rem;
+  }
+}
+
+// ===== SideNav styling ===== //
+
+.nav-wrapper {
+  padding-top: 2rem;
+  width: $nav-wrapper-width;
+  min-width: $nav-wrapper-width;
+  position: sticky;
+  height: 100vh;
+  top: var(--patient-banner-buffer);
+
+  .usa-sidenav__item a:not(.usa-sidenav__sublist a) {
+    font-weight: bold;
+  }
+
+  ul.usa-sidenav
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > a {
+    font-weight: bold;
+  }
+
+  ul.usa-sidenav
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > a.usa-current,
+  ul.usa-sidenav
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > a.usa-current {
+    &::after {
+      background-color: rgb(0, 94, 162);
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0.25rem;
+      top: 0.25rem;
+      width: 0.25rem;
+      left: 0rem;
+      border-radius: 99rem;
+    }
+  }
+
+  .usa-sidenav__sublist li.usa-sidenav__item:first-child {
+    border-top: none !important;
+  }
+}
+
+// ===== PatientBanner styling ===== //
+
+.patient-banner {
+  display: flex;
+  padding: 0.5rem 1.5rem;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  min-height: 44px;
+
+  background: var(--Info-info-darker, #2e6276);
+
+  color: var(--White, #fff);
+
+  font-size: 1.375rem;
+  font-style: normal;
+  line-height: normal;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.patient-banner-name {
+  font-weight: bold;
+}
+
+.patient-banner-dob {
+  font-weight: normal;
+}
