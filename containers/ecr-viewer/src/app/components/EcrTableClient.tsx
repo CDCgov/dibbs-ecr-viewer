@@ -143,7 +143,7 @@ export const EcrTableNoData = () => {
       <tr>
         <td
           colSpan={initialHeaders.length}
-          className="text-middle text-center height-mobile text-italic text-base"
+          className="text-middle text-center height-mobile text-italic text-base font-body-lg"
         >
           No eCRs found
         </td>
