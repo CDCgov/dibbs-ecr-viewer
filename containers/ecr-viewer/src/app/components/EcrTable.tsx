@@ -1,9 +1,7 @@
 import React from "react";
 import { listEcrData } from "@/app/services/listEcrDataService";
-import {
-  EcrTableClient,
-  EcrTableNoData,
-} from "@/app/components/EcrTableClient";
+import { EcrTableClient } from "@/app/components/EcrTableClient";
+import { EcrTableNoData } from "@/app/components/EcrTableClientBase";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 /**

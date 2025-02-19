@@ -5,7 +5,7 @@ import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
 import EcrTable from "@/app/components/EcrTable";
 import LibrarySearch from "./components/LibrarySearch";
 import Filters from "@/app/components/Filters";
-import { EcrTableLoading } from "./components/EcrTableClient";
+import { EcrTableLoading } from "./components/EcrTableClientBase";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { env } from "next-runtime-env";
 import { getAllConditions } from "./data/conditions";
