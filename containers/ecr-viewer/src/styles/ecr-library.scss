@@ -1,0 +1,220 @@
+@use "uswds-core" as *;
+
+.ecr-table-list {
+  @include unstyled-list;
+  li:not(:first-child) {
+    margin-top: 1rem;
+  }
+}
+
+.library-patient-column {
+  min-width: 16.3rem;
+  width: 18%;
+}
+
+.library-received-date-column {
+  width: 8.3rem;
+  min-width: 8.3rem;
+}
+
+.library-encounter-date-column {
+  width: 10%;
+  min-width: 8.3rem;
+}
+
+.library-condition-column {
+  min-width: 23rem;
+  width: 25%;
+}
+
+.library-rule-column {
+  min-width: 35.5rem;
+  width: auto;
+}
+
+.filter-button {
+  background-color: color("base-lightest");
+  box-shadow: inset 0 0 0 2px color("base-light");
+  font-weight: normal;
+
+  span svg {
+    fill: color("base-light");
+  }
+
+  &:hover {
+    background-color: color("base-lighter");
+    box-shadow: inset 0 0 0 2px color("base");
+
+    span svg {
+      fill: color("base");
+    }
+  }
+
+  &:active {
+    background-color: color("base-lightest");
+    box-shadow: inset 0 0 0 2px color("base-light");
+
+    span svg {
+      fill: color("base-light");
+    }
+  }
+}
+
+.filters-applied {
+  box-shadow: inset 0 0 0 2px color("primary");
+  background-color: color("primary-lighter");
+  font-weight: bold;
+
+  span svg {
+    fill: color("primary");
+  }
+
+  &:hover {
+    box-shadow: inset 0 0 0 2px color("primary-dark");
+    background-color: color("primary-light");
+
+    span svg {
+      fill: color("primary-dark");
+    }
+  }
+
+  &:active {
+    box-shadow: inset 0 0 0 2px color("primary");
+    background-color: color("primary-lighter");
+
+    span svg {
+      fill: color("primary");
+    }
+  }
+}
+
+.sort-button {
+  border: none;
+  transition: none;
+  margin-left: auto;
+  background-color: transparent;
+  &:hover {
+    background-color: transparent; /* Removes the hover background */
+    color: inherit; /* Keeps the text color unchanged */
+  }
+  &:active {
+    background-color: transparent; /* Keeps the original background color */
+    color: inherit; /* Keeps the text color unchanged */
+  }
+  &:focus {
+    background-color: transparent; /* Removes fill after click */
+    color: inherit; /* Keeps the text color unchanged */
+  }
+}
+
+.sortable-column,
+.sortable-desc-column,
+.sortable-asc-column {
+  &.usa-button {
+    margin-left: auto;
+    justify-content: flex-end;
+    padding: 12px;
+  }
+}
+
+.sortable-column {
+  @include add-background-svg("usa-icons/sort_arrow");
+}
+
+.sortable-desc-column {
+  @include add-background-svg("usa-icons/arrow_downward");
+}
+
+.sortable-asc-column {
+  @include add-background-svg("usa-icons/arrow_upward");
+}
+
+.sort-div {
+  width: 100%;
+  display: flex;
+}
+
+.ecr-library-wrapper {
+  height: calc(100% - 4rem);
+}
+
+.table-ecr-library {
+  font-size: 1rem;
+  border-collapse: separate;
+  font-family: "Source Sans Pro Web";
+
+  // Hide highlight color by matching th color on sorted column - per design
+  &.usa-table th {
+    &[aria-sort="descending"] {
+      background-color: #dfe1e2;
+    }
+    &[aria-sort="ascending"] {
+      background-color: #dfe1e2;
+    }
+  }
+
+  a {
+    color: var(--Primary-primary, #005ea2);
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  a,
+  u {
+    text-decoration: none;
+  }
+
+  tbody tr td div {
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  &.usa-table--striped tbody tr:nth-child(odd) td {
+    background-color: white;
+  }
+
+  &.usa-table--striped tbody tr:nth-child(even) td {
+    background-color: color("base-lightest");
+  }
+
+  thead {
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+
+    th {
+      background-color: color("base-lighter");
+      border-bottom: 1px solid var(--Base-base, #71767a);
+    }
+  }
+
+  thead tr th:first-child,
+  tbody tr td:first-child {
+    padding-left: 1.5rem;
+  }
+
+  tbody td {
+    border-top: 0;
+    border-bottom: 1px solid var(--ink, #111);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.pagination-bar {
+  .usa-pagination {
+    margin: 0;
+  }
+
+  box-shadow: 0 -0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-color .usa-checkbox__label::before {
+  box-shadow: 0 0 0 0.125rem color("base");
+}
+
+.height-ecr-library {
+  height: calc(100% - 2.45rem - 1.5rem - 4.45rem);
+}
