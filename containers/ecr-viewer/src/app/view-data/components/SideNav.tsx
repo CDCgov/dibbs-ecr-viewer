@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
 import { toKebabCase } from "@/app/utils/format-utils";
-import { BackButton } from "./BackButton";
+import { BackButton } from "@/app/components/BackButton";
 import { SideNavLoadingSkeleton } from "./LoadingComponent";
 import { env } from "next-runtime-env";
 

@@ -6,7 +6,7 @@ import {
 } from "@trussworks/react-uswds";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
 import { AccordionSection, AccordionSubSection } from "../component-utils";
-import { BackButton } from "./BackButton";
+import { BackButton } from "@/app/components/BackButton";
 import React from "react";
 import { range } from "../../utils/data-utils";
 import { ECRViewerLayout } from "./ECRViewerLayout";

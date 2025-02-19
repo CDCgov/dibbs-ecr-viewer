@@ -1,15 +1,15 @@
 import React, { Suspense } from "react";
-import Header from "./Header";
+import Header from "@/app/components/Header";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
 import EcrTable from "@/app/components/EcrTable";
 import LibrarySearch from "./components/LibrarySearch";
-import NotFound from "./not-found";
 import Filters from "@/app/components/Filters";
 import { EcrTableLoading } from "./components/EcrTableClient";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { env } from "next-runtime-env";
 import { getAllConditions } from "./data/conditions";
+import NotFound from "@/app/not-found";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
@@ -51,7 +51,9 @@ const HomePage = async ({
       <Header />
       <main className="overflow-auto height-full">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
-          <span className="text-bold font-sans-xl">eCR Library</span>{" "}
+          <h2 className="margin-bottom-0 text-bold font-sans-xl">
+            eCR Library
+          </h2>
           <LibrarySearch
             className="margin-left-auto"
             textBoxClassName="width-21-9375"
