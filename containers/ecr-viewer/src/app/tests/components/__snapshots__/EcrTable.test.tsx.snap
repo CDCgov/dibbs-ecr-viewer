@@ -878,7 +878,7 @@ exports[`EcrTable Snapshot test for EcrTableLoading should match snapshot 1`] = 
 </div>
 `;
 
-exports[`EcrTable should match snapshot 1`] = `
+exports[`EcrTable load with an eCR should match snapshot with 1`] = `
 <div>
   <div
     class="ecr-library-wrapper width-full overflow-auto"
@@ -2227,6 +2227,126 @@ exports[`EcrTable should match snapshot 1`] = `
                 second-summary-25
               </li>
             </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`EcrTable load without an eCR should match snapshot with 1`] = `
+<div>
+  <div
+    class="ecr-library-wrapper width-full overflow-auto"
+  >
+    <table
+      class="usa-table usa-table--borderless width-full _fixed_1khz6_1 usa-table--striped table-ecr-library margin-0"
+      data-testid="table"
+    >
+      <thead
+        class="position-sticky top-0"
+      >
+        <tr>
+          <th
+            class="library-patient-column"
+            data-sortable="true"
+            id="patient-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Patient
+              <button
+                aria-label="Sort by Patient"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="patient-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-received-date-column"
+            data-sortable="true"
+            id="date_created-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Received Date
+              <button
+                aria-label="Sort by Received Date"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="date_created-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-encounter-date-column"
+            data-sortable="true"
+            id="encounter_date-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Encounter Date
+              <button
+                aria-label="Sort by Encounter Date"
+                class="usa-button sort-button usa-button sortable-column"
+                data-testid="button"
+                id="encounter_date-sort-button"
+                type="button"
+              />
+            </div>
+          </th>
+          <th
+            class="library-condition-column"
+            data-sortable="false"
+            id="reportable_condition-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              Reportable Condition
+            </div>
+          </th>
+          <th
+            class="library-rule-column"
+            data-sortable="false"
+            id="rule_summary-header"
+            role="columnheader"
+            scope="col"
+          >
+            <div
+              class="display-flex"
+            >
+              RCKMS Rule Summary
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="text-middle text-center height-card"
+            colspan="5"
+          >
+            <span
+              class="text-bold font-body-lg"
+            >
+              No eCRs found. We couldn't find any eCRs matching your filter or search critera.
+            </span>
           </td>
         </tr>
       </tbody>
