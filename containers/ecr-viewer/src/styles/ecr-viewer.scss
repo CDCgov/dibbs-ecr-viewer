@@ -1,3 +1,5 @@
+// This file contains declarations used in the styling of the ecr-viewer page
+
 @use "uswds-core" as *;
 
 $ecr-viewer-container-max-width: 80rem;
@@ -33,31 +35,6 @@ html {
   border-top: 1px solid #99deea;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-}
-
-.card__line {
-  border-top: 8px solid #edeff0;
-}
-
-h2 {
-  font-size: 2.5rem;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-h4 {
-  font-size: 16px;
-  margin: 0;
-}
-
-.page-title {
-  font-size: 32px;
-  color: white;
-  background-color: #162e51;
-  padding-top: 28px;
-  padding-bottom: 28px;
-  padding-left: 32px;
-  margin-top: 0px;
 }
 
 .data-title {
@@ -142,20 +119,6 @@ h4 {
   }
 }
 
-.usa-table {
-  overflow-wrap: break-word;
-
-  thead th {
-    background-color: #f0f0f0;
-    vertical-align: top;
-  }
-
-  th,
-  td {
-    padding: 0.75rem;
-  }
-}
-
 .table-clinical-problems {
   tbody td:nth-child(2) {
     min-width: 130px;
@@ -166,54 +129,12 @@ h4 {
   }
 }
 
-.minimize-container {
-  position: absolute;
-  right: 12px;
-}
-
-.list-style-none {
-  list-style: none;
-}
-
-.tableHeader {
+.table-header {
   background-color: #f0f0f0 !important;
-}
-
-.ecrTable {
-  table-layout: fixed;
-  margin-bottom: 0;
-  width: 100%;
-
-  td:first-child,
-  th:first-child {
-    padding-left: 24px;
-  }
-
-  td:last-child,
-  th:last-child {
-    padding-right: 24px;
-  }
-
-  td {
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-
-  thead th {
-    border-bottom-color: #a9aeb1;
-  }
-
-  tr td {
-    border-bottom: none;
-  }
 }
 
 .fixed-table {
   table-layout: fixed;
-}
-
-td {
-  vertical-align: top;
 }
 
 .table-caption-margin {
@@ -235,16 +156,6 @@ td {
   caption {
     width: 100%;
   }
-}
-
-.usa-sidenav__item a:not(.usa-sidenav__sublist a) {
-  font-weight: bold;
-}
-
-.main-container {
-  display: flex;
-  justify-content: center;
-  overflow: visible;
 }
 
 .minw-main {
@@ -269,6 +180,12 @@ td {
   overflow: visible;
 }
 
+.ecr-viewer-container {
+  width: 100%;
+  max-width: $ecr-viewer-container-max-width;
+  min-width: $ecr-viewer-container-min-width;
+}
+
 .nav-wrapper {
   padding-top: 2rem;
   width: $nav-wrapper-width;
@@ -276,67 +193,63 @@ td {
   position: sticky;
   height: 100vh;
   top: var(--patient-banner-buffer);
-}
 
-.ecr-viewer-container {
-  width: 100%;
-  max-width: $ecr-viewer-container-max-width;
-  min-width: $ecr-viewer-container-min-width;
-}
+  .usa-sidenav__item a:not(.usa-sidenav__sublist a) {
+    font-weight: bold;
+  }
 
-.lh-18 {
-  line-height: 18px;
-}
+  ul.usa-sidenav
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > a {
+    font-weight: bold;
+  }
 
-ul.usa-sidenav
-  > li.usa-sidenav__item
-  > ul.usa-sidenav__sublist
-  > li.usa-sidenav__item
-  > a {
-  font-weight: bold;
-}
+  ul.usa-sidenav
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > a.usa-current,
+  ul.usa-sidenav
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > ul.usa-sidenav__sublist
+    > li.usa-sidenav__item
+    > a.usa-current {
+    &::after {
+      background-color: rgb(0, 94, 162);
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0.25rem;
+      top: 0.25rem;
+      width: 0.25rem;
+      left: 0rem;
+      border-radius: 99rem;
+    }
+  }
 
-ul.usa-sidenav
-  > li.usa-sidenav__item
-  > ul.usa-sidenav__sublist
-  > li.usa-sidenav__item
-  > a.usa-current,
-ul.usa-sidenav
-  > li.usa-sidenav__item
-  > ul.usa-sidenav__sublist
-  > li.usa-sidenav__item
-  > ul.usa-sidenav__sublist
-  > li.usa-sidenav__item
-  > a.usa-current {
-  &::after {
-    background-color: rgb(0, 94, 162);
-    content: "";
-    display: block;
-    position: absolute;
-    bottom: 0.25rem;
-    top: 0.25rem;
-    width: 0.25rem;
-    left: 0rem;
-    border-radius: 99rem;
+  .usa-sidenav__sublist li.usa-sidenav__item:first-child {
+    border-top: none !important;
   }
 }
 
-.usa-sidenav__sublist li.usa-sidenav__item:first-child {
-  border-top: none !important;
-}
+.clinical_info_container {
+  table {
+    @include usa-table;
+    @include usa-table--borderless;
+    width: 100%;
+    border: 1px solid;
+    margin-top: 0;
+    margin-bottom: 0;
 
-.clinical_info_container table {
-  @include usa-table;
-  @include usa-table--borderless;
-  width: 100%;
-  border: 1px solid;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.clinical_info_container table thead tr th {
-  background-color: #f0f0f0;
-  min-width: 120px;
+    thead tr th {
+      background-color: #f0f0f0;
+      min-width: 120px;
+    }
+  }
 }
 
 .immunization_table {
@@ -344,107 +257,6 @@ ul.usa-sidenav
     td:nth-child(1) {
       word-break: break-word;
     }
-  }
-}
-
-.usa-accordion__content {
-  overflow: visible;
-}
-
-.usa-tooltip__body {
-  max-width: 700px;
-  min-width: min(450px, 0.25 * (100vw - $nav-wrapper-width));
-  white-space: normal;
-  text-align: left;
-  font-weight: normal;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.short-tooltip + .usa-tooltip__body {
-  min-width: min(350px, 0.25 * (100vw - $nav-wrapper-width));
-}
-
-@keyframes shimmer {
-  to {
-    background-position-x: 0%;
-  }
-}
-
-.loading-blob {
-  border-radius: 8px;
-  animation: shimmer 0.75s infinite linear;
-
-  background-size: 300%;
-  background-position-x: 100%;
-
-  &-blue {
-    background-image: linear-gradient(
-      -90deg,
-      #99deea 40%,
-      #71d5e6 50%,
-      #99deea 60%
-    );
-  }
-
-  &-gray {
-    background-image: linear-gradient(
-      -90deg,
-      #f0f0f0 40%,
-      #e4e4e4 50%,
-      #f0f0f0 60%
-    );
-  }
-
-  &-dark-gray {
-    background-image: linear-gradient(
-      -90deg,
-      #dfe1e2 40%,
-      #cfcfcf 50%,
-      #dfe1e2 60%
-    );
-  }
-}
-
-.usa-header {
-  background-color: #172e51;
-  color: white;
-
-  .usa-logo {
-    margin-left: 0px;
-
-    a {
-      color: white;
-    }
-  }
-
-  .usa-navbar {
-    border-bottom: none;
-  }
-
-  @media (min-width: 64em) {
-    .usa-logo {
-      margin-bottom: 1.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .usa-nav-container {
-      max-width: 65rem;
-      margin-left: 0px;
-      padding: 0.5rem 1.5rem;
-    }
-  }
-
-  .usa-nav-container {
-    max-width: 65rem;
-    margin-left: 0px;
-    padding: 0.5rem 1.5rem;
-  }
-
-  h1 {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 2rem;
   }
 }
 
@@ -506,20 +318,6 @@ ul.usa-sidenav
 
 .patient-banner-dob {
   font-weight: normal;
-}
-
-h3 {
-  font-size: 1.375rem;
-}
-
-.usa-summary-box {
-  padding: 0.75rem 1.5rem 1.5rem 1.5rem;
-
-  h3:not(.usa-accordion__heading) {
-    margin: 0px;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
 }
 
 .condition-details-accordion {

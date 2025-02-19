@@ -1,0 +1,68 @@
+// This file contains declarations which are used in high level components or which style
+// elements without a modifier to scope them to a specific component
+
+@keyframes shimmer {
+  to {
+    background-position-x: 0%;
+  }
+}
+
+.loading-blob {
+  border-radius: 8px;
+  animation: shimmer 0.75s infinite linear;
+
+  background-size: 300%;
+  background-position-x: 100%;
+
+  &-blue {
+    background-image: linear-gradient(
+      -90deg,
+      #99deea 40%,
+      #71d5e6 50%,
+      #99deea 60%
+    );
+  }
+
+  &-gray {
+    background-image: linear-gradient(
+      -90deg,
+      #f0f0f0 40%,
+      #e4e4e4 50%,
+      #f0f0f0 60%
+    );
+  }
+
+  &-dark-gray {
+    background-image: linear-gradient(
+      -90deg,
+      #dfe1e2 40%,
+      #cfcfcf 50%,
+      #dfe1e2 60%
+    );
+  }
+}
+
+h2 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 1.375rem;
+}
+
+h4 {
+  font-size: 16px;
+  margin: 0;
+}
+
+td {
+  vertical-align: top;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+}

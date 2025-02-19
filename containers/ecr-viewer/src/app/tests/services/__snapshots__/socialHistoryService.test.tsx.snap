@@ -12,25 +12,25 @@ exports[`Travel History should display a table  1`] = `
     <thead>
       <tr>
         <th
-          class="tableHeader bg-gray-5 minw-10"
+          class="table-header bg-gray-5 minw-10"
           scope="col"
         >
           Location
         </th>
         <th
-          class="tableHeader bg-gray-5 minw-10"
+          class="table-header bg-gray-5 minw-10"
           scope="col"
         >
           Start Date
         </th>
         <th
-          class="tableHeader bg-gray-5 minw-10"
+          class="table-header bg-gray-5 minw-10"
           scope="col"
         >
           End Date
         </th>
         <th
-          class="tableHeader bg-gray-5 minw-10"
+          class="table-header bg-gray-5 minw-10"
           scope="col"
         >
           Purpose
