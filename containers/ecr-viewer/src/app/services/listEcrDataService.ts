@@ -46,7 +46,7 @@ export interface EcrDisplay {
   eicr_version_number: string | undefined;
 }
 
-function sleep(time) {
+function sleep(time: number) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 

@@ -4,7 +4,7 @@ import EcrTable from "@/app/components/EcrTable";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
 import router from "next-router-mock";
 import { EcrTableLoading } from "@/app/components/EcrTableClientBase";
-import { INITIAL_HEADERS } from "@/app/page";
+import { INITIAL_HEADERS } from "@/app/constants";
 
 jest.mock("../../services/listEcrDataService");
 
