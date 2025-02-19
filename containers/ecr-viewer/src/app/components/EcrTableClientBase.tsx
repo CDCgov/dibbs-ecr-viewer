@@ -139,7 +139,7 @@ const Header = ({
               "sortable-column": column.sortDirection === "",
             })}
             direction={column.sortDirection}
-            handleSort={handleSort}
+            handleSort={() => handleSort(column.id, column.sortDirection)}
           ></SortButton>
         )}
       </div>
