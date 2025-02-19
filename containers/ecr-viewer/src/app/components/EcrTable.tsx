@@ -1,7 +1,10 @@
 import React from "react";
 import { listEcrData } from "@/app/services/listEcrDataService";
 import { EcrTableClient } from "@/app/components/EcrTableClient";
-import { EcrTableNoData } from "@/app/components/EcrTableClientBase";
+import {
+  EcrTableNoData,
+  TableHeader,
+} from "@/app/components/EcrTableClientBase";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 /**
@@ -14,6 +17,7 @@ import { DateRangePeriod } from "@/app/utils/date-utils";
  * @param props.filterDates - The date range used to filter data
  * @param props.searchTerm - The search term used to list data
  * @param props.filterConditions - (Optional) The reportable condition(s) used to filter the data
+ * @param props.headers - Table headers descriptions
  * @returns - eCR Table element
  */
 const EcrTable = async ({
@@ -24,6 +28,7 @@ const EcrTable = async ({
   searchTerm,
   filterConditions,
   filterDates,
+  headers,
 }: {
   currentPage: number;
   itemsPerPage: number;
@@ -32,6 +37,7 @@ const EcrTable = async ({
   filterDates: DateRangePeriod;
   searchTerm?: string;
   filterConditions?: string[];
+  headers: TableHeader[];
 }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
 
@@ -46,16 +52,10 @@ const EcrTable = async ({
   );
 
   if (data.length === 0) {
-    return <EcrTableNoData />;
+    return <EcrTableNoData headers={headers} />;
   }
 
-  return (
-    <EcrTableClient
-      data={data}
-      sortColumn={sortColumn}
-      sortDirection={sortDirection}
-    />
-  );
+  return <EcrTableClient headers={headers} data={data} />;
 };
 
 export default EcrTable;

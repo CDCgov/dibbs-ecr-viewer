@@ -6,35 +6,25 @@ import { useQueryParam } from "@/app/hooks/useQueryParam";
 import { noData } from "../utils/data-utils";
 import Link from "next/link";
 import { saveToSessionStorage } from "../utils/storage-utils";
-import { EcrTableStyled, INITIAL_HEADERS } from "./EcrTableClientBase";
+import { EcrTableStyled, TableHeader } from "./EcrTableClientBase";
 
 type EcrTableClientProps = {
   data: EcrDisplay[];
-  sortColumn: string;
-  sortDirection: string;
+  headers: TableHeader[];
 };
 
 /**
  *
  * @param props - The properties passed to the component.
  * @param props.data  - The data to be displayed in the table.
- * @param props.sortColumn - The column to sort by.
- * @param props.sortDirection - The direction to sort by.
+ * @param props.headers - header descriptions
  * @returns - The JSX element representing the eCR table.
  */
 export const EcrTableClient: React.FC<EcrTableClientProps> = ({
   data,
-  sortColumn,
-  sortDirection,
+  headers,
 }) => {
   const { updateQueryParam, pushQueryUpdate } = useQueryParam();
-
-  const headers = INITIAL_HEADERS.map((header) => {
-    return {
-      ...header,
-      sortDirection: header.id === sortColumn ? sortDirection : "",
-    };
-  });
 
   /**
    * Handles sorting the table data by a given column. We update the search params,

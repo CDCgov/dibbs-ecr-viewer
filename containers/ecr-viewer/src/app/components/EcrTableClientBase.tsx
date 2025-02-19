@@ -6,12 +6,12 @@ import { range } from "../utils/data-utils";
 import classNames from "classnames";
 
 type EcrTableStyledProps = {
-  headers: Column[];
+  headers: TableHeader[];
   handleSort: SortHandlerFn;
   children: React.ReactNode;
 };
 
-type Column = {
+export type TableHeader = {
   id: string;
   value: string;
   className: string;
@@ -21,51 +21,15 @@ type Column = {
 
 type SortHandlerFn = (columnId: string, direction: string) => void;
 
-export const INITIAL_HEADERS = [
-  {
-    id: "patient",
-    value: "Patient",
-    className: "library-patient-column",
-    dataSortable: true,
-    sortDirection: "",
-  },
-  {
-    id: "date_created",
-    value: "Received Date",
-    className: "library-received-date-column",
-    dataSortable: true,
-    sortDirection: "",
-  },
-  {
-    id: "encounter_date",
-    value: "Encounter Date",
-    className: "library-encounter-date-column",
-    dataSortable: true,
-    sortDirection: "",
-  },
-  {
-    id: "reportable_condition",
-    value: "Reportable Condition",
-    className: "library-condition-column",
-    dataSortable: false,
-    sortDirection: "",
-  },
-  {
-    id: "rule_summary",
-    value: "RCKMS Rule Summary",
-    className: "library-rule-column",
-    dataSortable: false,
-    sortDirection: "",
-  },
-];
-
 /**
  * The Ecr Library table, but with blobs instead of data.
+ * @param props - react props
+ * @param props.headers - header descriptions
  * @returns - The JSX element representing the eCR table.
  */
-export const EcrTableLoading = () => {
+export const EcrTableLoading = ({ headers }: { headers: TableHeader[] }) => {
   return (
-    <EcrTableStyled headers={INITIAL_HEADERS} handleSort={() => {}}>
+    <EcrTableStyled headers={headers} handleSort={() => {}}>
       {range(10).map((i) => {
         return (
           <BlobRow key={i} themeColor={i % 2 == 0 ? "gray" : "dark-gray"} />
@@ -77,14 +41,16 @@ export const EcrTableLoading = () => {
 
 /**
  * The Ecr Library table, but with a no data message instead of rows.
+ * @param props - react props
+ * @param props.headers - header descriptions
  * @returns - The JSX element representing the eCR table.
  */
-export const EcrTableNoData = () => {
+export const EcrTableNoData = ({ headers }: { headers: TableHeader[] }) => {
   return (
-    <EcrTableStyled headers={INITIAL_HEADERS} handleSort={() => {}}>
+    <EcrTableStyled headers={headers} handleSort={() => {}}>
       <tr>
         <td
-          colSpan={INITIAL_HEADERS.length}
+          colSpan={headers.length}
           className="text-middle text-center height-card"
         >
           <span className="text-bold font-body-lg">
@@ -137,7 +103,7 @@ const Header = ({
   column,
   handleSort,
 }: {
-  column: Column;
+  column: TableHeader;
   handleSort: SortHandlerFn;
 }) => {
   return (

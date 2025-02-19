@@ -11,6 +11,44 @@ import { env } from "next-runtime-env";
 import { getAllConditions } from "./data/conditions";
 import NotFound from "@/app/not-found";
 
+export const INITIAL_HEADERS = [
+  {
+    id: "patient",
+    value: "Patient",
+    className: "library-patient-column",
+    dataSortable: true,
+    sortDirection: "",
+  },
+  {
+    id: "date_created",
+    value: "Received Date",
+    className: "library-received-date-column",
+    dataSortable: true,
+    sortDirection: "",
+  },
+  {
+    id: "encounter_date",
+    value: "Encounter Date",
+    className: "library-encounter-date-column",
+    dataSortable: true,
+    sortDirection: "",
+  },
+  {
+    id: "reportable_condition",
+    value: "Reportable Condition",
+    className: "library-condition-column",
+    dataSortable: false,
+    sortDirection: "",
+  },
+  {
+    id: "rule_summary",
+    value: "RCKMS Rule Summary",
+    className: "library-rule-column",
+    dataSortable: false,
+    sortDirection: "",
+  },
+];
+
 /**
  * Functional component for rendering the home page that lists all eCRs.
  * @param props - parameters from the HomePage
@@ -38,6 +76,13 @@ const HomePage = async ({
   const filterConditionsArr = filterConditions?.split("|");
   const filterDates = returnParamDates(searchParams);
 
+  const tableHeaders = INITIAL_HEADERS.map((header) => {
+    return {
+      ...header,
+      sortDirection: header.id === sortColumn ? sortDirection : "",
+    };
+  });
+
   const totalCount = await getTotalEcrCount(
     filterDates,
     searchTerm,
@@ -61,7 +106,11 @@ const HomePage = async ({
         </div>
         <Filters conditions={allConditions} />
         <EcrPaginationWrapper totalCount={totalCount}>
-          <Suspense fallback={<EcrTableLoading />}>
+          {/* key needed to force fallback state to retrigger on params change */}
+          <Suspense
+            key={JSON.stringify(searchParams)}
+            fallback={<EcrTableLoading headers={tableHeaders} />}
+          >
             <EcrTable
               currentPage={currentPage}
               itemsPerPage={itemsPerPage}
@@ -70,6 +119,7 @@ const HomePage = async ({
               searchTerm={searchTerm}
               filterConditions={filterConditionsArr}
               filterDates={filterDates}
+              headers={tableHeaders}
             />
           </Suspense>
         </EcrPaginationWrapper>

@@ -46,6 +46,10 @@ export interface EcrDisplay {
   eicr_version_number: string | undefined;
 }
 
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 /**
  * @param startIndex - The index of the first item to fetch
  * @param itemsPerPage - The number of items to fetch
@@ -66,6 +70,8 @@ export async function listEcrData(
   filterConditions?: string[],
 ): Promise<EcrDisplay[]> {
   const DATABASE_TYPE = process.env.METADATA_DATABASE_TYPE;
+
+  await sleep(1000);
 
   switch (DATABASE_TYPE) {
     case "postgres":
