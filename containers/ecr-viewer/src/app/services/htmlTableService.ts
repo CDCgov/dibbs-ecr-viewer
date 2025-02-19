@@ -1,5 +1,3 @@
-import React from "react";
-import { ToolTipElement } from "@/app/view-data/components/ToolTipElement";
 import { RenderableNode, safeParse } from "@/app/utils/data-utils";
 import { parse, HTMLElement, Node, NodeType } from "node-html-parser";
 import { formatDateTime } from "./formatDateService";
@@ -215,29 +213,3 @@ function getElementContent(el: Node): RenderableNode {
 function getElementText(el: Node): string {
   return el.textContent?.trim() ?? "";
 }
-
-/**
- * Adds a caption to a table element.
- * @param element - The React element representing the table.
- * @param caption - The caption text to be added.
- * @param toolTip - Tooltip for caption
- * @returns A React element with the caption added as the first child of the table.
- */
-export const addCaptionToTable = (
-  element: React.ReactNode,
-  caption: string,
-  toolTip?: string,
-) => {
-  if (React.isValidElement(element) && element.type === "table") {
-    return React.cloneElement(element, {}, [
-      <caption key="caption">
-        <ToolTipElement toolTip={toolTip}>
-          <div className="data-title">{caption}</div>
-        </ToolTipElement>
-      </caption>,
-      ...React.Children.toArray(element.props.children),
-    ]);
-  }
-
-  return element;
-};

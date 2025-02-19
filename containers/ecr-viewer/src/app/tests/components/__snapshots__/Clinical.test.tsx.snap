@@ -80,7 +80,10 @@ exports[`Snapshot test for Clinical Notes should match snapshot for table notes 
                 <div
                   class="grid-col-auto text-pre-line"
                 >
-                  <table>
+                  <table
+                    class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 border-top border-left border-right"
+                    data-testid="table"
+                  >
                     <caption>
                       <span
                         class="usa-tooltip"
@@ -113,10 +116,16 @@ exports[`Snapshot test for Clinical Notes should match snapshot for table notes 
                     </caption>
                     <thead>
                       <tr>
-                        <th>
+                        <th
+                          class="tableHeader bg-gray-5 minw-10"
+                          scope="col"
+                        >
                           Active Problems
                         </th>
-                        <th>
+                        <th
+                          class="tableHeader bg-gray-5 minw-10"
+                          scope="col"
+                        >
                           Noted Date
                         </th>
                       </tr>
@@ -127,7 +136,7 @@ exports[`Snapshot test for Clinical Notes should match snapshot for table notes 
                           Parkinson's syndrome
                         </td>
                         <td>
-                          7/25/22
+                          07/25/2022
                         </td>
                       </tr>
                       <tr>
@@ -135,7 +144,7 @@ exports[`Snapshot test for Clinical Notes should match snapshot for table notes 
                           Essential hypertension
                         </td>
                         <td>
-                          7/21/22
+                          07/21/2022
                         </td>
                       </tr>
                     </tbody>

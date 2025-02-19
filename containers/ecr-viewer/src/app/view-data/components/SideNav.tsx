@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
 import { toKebabCase } from "@/app/utils/format-utils";
-import classNames from "classnames";
 import { BackButton } from "@/app/components/BackButton";
-import { env } from "next-runtime-env";
 import { SideNavLoadingSkeleton } from "./LoadingComponent";
+import { env } from "next-runtime-env";
 
 export class SectionConfig {
   title: string;
@@ -131,8 +130,12 @@ export const sortHeadings = (headings: HeadingObject[]): SectionConfig[] => {
 const SideNav: React.FC = () => {
   const [sectionConfigs, setSectionConfigs] = useState<SectionConfig[]>([]);
   const [activeSection, setActiveSection] = useState<string>("");
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+
+  // HACK: Once the tooltips render, we need to re-check all the headings
+  // as this breaks references. This is fundamentally a problem with uswds's
+  // Tooltip as it assigns an SSR-unfriendly random id. If this is fixed,
+  // then we can remove this.
+  const [renderAgain, setRenderAgain] = useState(false);
 
   useEffect(() => {
     // Select all heading tags on the page
@@ -159,24 +162,53 @@ const SideNav: React.FC = () => {
     let sortedHeadings: SectionConfig[] = sortHeadings(headings);
     setSectionConfigs(sortedHeadings);
 
+    const isNonIntegratedViewer =
+      env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+
+    const oneRem = parseFloat(
+      getComputedStyle(document.documentElement).fontSize,
+    );
+    const topOffset = (isNonIntegratedViewer ? 3 * oneRem : 0) + 2 * oneRem;
+
     let options = {
       root: null,
-      rootMargin: "0px 0px -85% 0px",
-      threshold: 0.9,
+      rootMargin: `-${topOffset}px 0px -100% 0px`,
+      threshold: 0,
     };
 
     let observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      // get the top/first thing that intersected
+      for (const entry of entries) {
         if (entry.isIntersecting) {
           let id = entry.target.getAttribute("data-sectionid") || null;
           if (id) {
             setActiveSection(id);
+            break;
           }
         }
-      });
+      }
     }, options);
-    headingElements.forEach((element) => observer.observe(element));
-  }, []);
+
+    // initialize active section to closest element
+    let closestElement = headingElements[0];
+    let dist = closestElement?.getBoundingClientRect().top;
+
+    headingElements.forEach((element) => {
+      observer.observe(element);
+
+      let elementDist = closestElement.getBoundingClientRect().top;
+      if (elementDist > 0 && elementDist < dist) {
+        closestElement = element;
+        dist = elementDist;
+      }
+    });
+
+    // HACK: get dependency on renderAgain, but always set it to true
+    setRenderAgain(renderAgain ? true : true);
+    setActiveSection(closestElement?.getAttribute("data-sectionid") || "");
+
+    return () => observer.disconnect();
+  }, [renderAgain]);
 
   /**
    * Constructs a side navigation menu as an array of React nodes based on the provided section configurations.
@@ -193,11 +225,6 @@ const SideNav: React.FC = () => {
     for (let section of sectionConfigs) {
       let sideNavItem = (
         <a
-          onClick={() => {
-            setTimeout(() => {
-              setActiveSection(section.id);
-            }, 500);
-          }}
           key={section.id}
           href={"#" + section.id}
           className={activeSection === section.id ? "usa-current" : ""}
@@ -224,12 +251,7 @@ const SideNav: React.FC = () => {
   return sectionConfigs.length === 0 ? (
     <SideNavLoadingSkeleton />
   ) : (
-    <nav
-      className={classNames("nav-wrapper", {
-        "top-0": !isNonIntegratedViewer,
-        "top-550": isNonIntegratedViewer,
-      })}
-    >
+    <nav className="nav-wrapper">
       <BackButton className="margin-bottom-3" iconClassName="text-base" />
       <UswdsSideNav items={sideNavItems} />
     </nav>
