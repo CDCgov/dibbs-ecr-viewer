@@ -143,7 +143,6 @@ const Header = ({
   return (
     <th
       id={`${column.id}-header`}
-      key={`${column.value}`}
       scope="col"
       role="columnheader"
       className={column.className}
