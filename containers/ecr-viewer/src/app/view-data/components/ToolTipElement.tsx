@@ -48,6 +48,10 @@ export const ToolTipElement = ({
   toolTip,
   children,
 }: ToolTipProps): React.JSX.Element => {
+  // HACK: ForceClient is needed to prevent hydration mismatches. This is
+  // fundamentally a problem with uswds's Tooltip as it assigns an
+  // SSR-unfriendly random id. If this is fixed (PR open that has been sitting for a while...),
+  // then we can remove this.
   return toolTip ? (
     <ForceClient loading={children}>
       <Tooltip

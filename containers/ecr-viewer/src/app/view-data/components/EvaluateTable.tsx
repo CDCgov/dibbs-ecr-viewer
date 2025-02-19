@@ -84,7 +84,7 @@ export const BaseTable = ({
   children,
 }: {
   columns: ColumnInfoInput[];
-  caption?: string;
+  caption?: React.ReactNode;
   className?: string;
   fixed?: boolean;
   outerBorder?: boolean;

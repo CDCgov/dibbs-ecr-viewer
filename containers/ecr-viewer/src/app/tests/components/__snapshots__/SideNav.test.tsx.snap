@@ -3,7 +3,7 @@
 exports[`SectionConfig should match the snapshot 1`] = `
 <DocumentFragment>
   <nav
-    class="nav-wrapper top-550"
+    class="nav-wrapper"
   >
     <a
       class="display-inline-block margin-bottom-3"
@@ -33,7 +33,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
         class="usa-sidenav__item"
       >
         <a
-          class=""
+          class="usa-current"
           href="#section-1"
         >
           Section 1
