@@ -4,6 +4,7 @@ import EcrTable from "@/app/components/EcrTable";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
 import router from "next-router-mock";
 import { EcrTableLoading } from "@/app/components/EcrTableClientBase";
+import { INITIAL_HEADERS } from "@/app/page";
 
 jest.mock("../../services/listEcrDataService");
 
@@ -48,6 +49,7 @@ describe("EcrTable", () => {
       mockedListEcrData.mockResolvedValue(mockData);
       const { container } = render(
         await EcrTable({
+          headers: INITIAL_HEADERS,
           currentPage: 1,
           itemsPerPage: 25,
           sortColumn: "date_created",
@@ -62,6 +64,7 @@ describe("EcrTable", () => {
       mockedListEcrData.mockResolvedValue(mockData);
       const { container } = render(
         await EcrTable({
+          headers: INITIAL_HEADERS,
           currentPage: 1,
           itemsPerPage: 25,
           sortColumn: "date_created",
@@ -80,6 +83,7 @@ describe("EcrTable", () => {
       mockedListEcrData.mockResolvedValue([]);
       const { container } = render(
         await EcrTable({
+          headers: INITIAL_HEADERS,
           currentPage: 1,
           itemsPerPage: 25,
           sortColumn: "date_created",
@@ -94,6 +98,7 @@ describe("EcrTable", () => {
       mockedListEcrData.mockResolvedValue([]);
       const { container } = render(
         await EcrTable({
+          headers: INITIAL_HEADERS,
           currentPage: 1,
           itemsPerPage: 25,
           sortColumn: "date_created",
@@ -112,6 +117,7 @@ describe("EcrTable", () => {
 
     render(
       await EcrTable({
+        headers: INITIAL_HEADERS,
         currentPage: 1,
         itemsPerPage: 25,
         sortColumn: "date_created",
@@ -146,7 +152,9 @@ describe("EcrTable", () => {
       });
       window.IntersectionObserver = mockIntersectionObserver;
 
-      container = render(<EcrTableLoading />).container;
+      container = render(
+        <EcrTableLoading headers={INITIAL_HEADERS} />,
+      ).container;
     });
     it("should match snapshot", () => {
       expect(container).toMatchSnapshot();

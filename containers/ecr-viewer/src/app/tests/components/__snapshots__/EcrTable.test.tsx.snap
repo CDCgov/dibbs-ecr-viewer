@@ -912,7 +912,6 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
             </div>
           </th>
           <th
-            aria-sort="descending"
             class="library-received-date-column"
             data-sortable="true"
             id="date_created-header"
@@ -920,12 +919,12 @@ exports[`EcrTable load with an eCR should match snapshot with 1`] = `
             scope="col"
           >
             <div
-              class="sort-div"
+              class="display-flex"
             >
               Received Date
               <button
                 aria-label="Sort by Received Date"
-                class="usa-button sort-button usa-button sortable-desc-column"
+                class="usa-button sort-button usa-button sortable-column"
                 data-testid="button"
                 id="date_created-sort-button"
                 type="button"
