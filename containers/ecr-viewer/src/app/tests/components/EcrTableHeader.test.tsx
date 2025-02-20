@@ -18,7 +18,7 @@ describe("EcrTableHeader", () => {
     );
   });
 
-  describe("load with an eCR", () => {
+  describe("enabled", () => {
     it("should match snapshot", async () => {
       const table = document.createElement("table");
       const { container } = render(
@@ -34,6 +34,32 @@ describe("EcrTableHeader", () => {
       const table = document.createElement("table");
       const { container } = render(
         <EcrTableHeader headers={INITIAL_HEADERS} disabled={false} />,
+        {
+          container: document.body.appendChild(table),
+        },
+      );
+      await act(async () => {
+        expect(await axe(container)).toHaveNoViolations();
+      });
+    });
+  });
+
+  describe("disabled", () => {
+    it("should match snapshot", async () => {
+      const table = document.createElement("table");
+      const { container } = render(
+        <EcrTableHeader headers={INITIAL_HEADERS} disabled={true} />,
+        {
+          container: document.body.appendChild(table),
+        },
+      );
+      expect(container).toMatchSnapshot();
+    });
+
+    it("should pass accessibility", async () => {
+      const table = document.createElement("table");
+      const { container } = render(
+        <EcrTableHeader headers={INITIAL_HEADERS} disabled={true} />,
         {
           container: document.body.appendChild(table),
         },

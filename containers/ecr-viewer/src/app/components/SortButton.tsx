@@ -45,7 +45,7 @@ export const SortButton: React.FC<SortButtonProps> = ({
       onClick={handleSort}
       unstyled={true}
     >
-      {columnName}
+      <span className="text-ink">{columnName}</span>
       <IconTag aria-hidden={true} className="square-3" />
     </Button>
   );

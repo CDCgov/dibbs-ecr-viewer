@@ -212,7 +212,6 @@
   }
   &:disabled {
     background-color: transparent; /* Removes fill after click */
-    color: inherit; /* Keeps the text color unchanged */
     text-decoration: inherit;
   }
   &:disabled:hover {
