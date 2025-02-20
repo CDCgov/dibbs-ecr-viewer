@@ -142,7 +142,6 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
 
   e2e-tests:
-    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -173,7 +172,7 @@ jobs:
         env:
           SEED_DATA_DIRECTORIES: e2e
 
-      - name: Run Playwright tests
+      - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e
 
@@ -184,6 +183,15 @@ jobs:
           name: playwright-report
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 30
+
+      - name: Set CONFIG_NAME to AWS_INTEGRATED
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          sed -i '' 's/AWS_SQLSERVER_NON_INTEGRATED/AWS_INTEGRATED/' .env.local
+
+      - name: Run Playwright tests - Integrated
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:e2e:integrated
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
@@ -199,4 +207,12 @@ jobs:
         with:
           name: logs
           path: ./containers/${{env.CONTAINER}}/e2e/e2e-run.log
+          retention-days: 30
+
+      - name: Upload playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 30
