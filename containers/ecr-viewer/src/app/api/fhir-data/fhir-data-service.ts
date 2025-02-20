@@ -58,29 +58,6 @@ export const get_db = async (
   }
 };
 
-// DEP
-/**
- * Retrieves FHIR data from PostgreSQL database based on eCR ID.
- * @param ecr_id - The id of the ecr to fetch.
- * @returns A promise resolving to the data and status.
- */
-export const get_postgres = async (
-  ecr_id: string | null,
-): Promise<FhirDataResponse> => {
-  const findFhir = await findEcrById(ecr_id);
-  try {
-    const entry = findFhir;
-    return { payload: { fhirBundle: entry }, status: 200 };
-  } catch (error: any) {
-    console.error("Error fetching data:", error);
-    if (error.message == "No data returned from the query.") {
-      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-    } else {
-      return { payload: { message: error.message }, status: 500 };
-    }
-  }
-};
-
 /**
  * Retrieves FHIR data from S3 based on eCR ID.
  * @param ecr_id - The id of the ecr to fetch.

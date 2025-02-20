@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+import { BlobServiceClient } from "@azure/storage-blob";
+import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
+import { Bundle } from "fhir/r4";
+import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
+>>>>>>> 600af32 (FHIR Implementation Testing)
 import { randomUUID } from "crypto";
 
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
@@ -11,6 +18,11 @@ import { getDB } from "@/app/data/db/postgres_db";
 import { get_pool } from "@/app/data/db/sqlserver_db";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
+<<<<<<< HEAD
+=======
+import { s3Client } from "../services/s3Client";
+import { db } from '../services/database'
+>>>>>>> 600af32 (FHIR Implementation Testing)
 
 interface SaveResponse {
   message: string;
@@ -141,13 +153,6 @@ export const saveFhirData = async (
   }
 };
 
-/*
-if data = extendedMetaData:
-  saveExtendedMetaData(data)
-if data = MetaData:
-  saveMetaData(data)
-*/
-
 /**
  * @async
  * @function saveFhirMetadata
@@ -158,20 +163,20 @@ if data = MetaData:
  */
 const saveFhirMetadata = async (
   ecrId: string,
-  metadataSaveLocation: "postgres" | "sqlserver" | undefined,
+  metadataType: "core" | "extended" | undefined,
   metadata: BundleMetadata | BundleExtendedMetadata,
 ): Promise<SaveResponse> => {
   try {
-    if (metadataSaveLocation === "postgres") {
-      return await saveMetadataToPostgres(metadata as BundleMetadata, ecrId);
-    } else if (metadataSaveLocation === "sqlserver") {
-      return await saveMetadataToSqlServer(
+    if (metadataType == "core") {
+      return await saveCoreMetadata(metadata as BundleMetadata, ecrId);
+    } else if (metadataType == "extended") {
+      return await saveExtendedMetadata(
         metadata as BundleExtendedMetadata,
         ecrId,
       );
     } else {
       return {
-        message: "Unknown metadataSaveLocation: " + metadataSaveLocation,
+        message: "Unknown metadataType: " + metadataType,
         status: 400,
       };
     }
@@ -184,18 +189,26 @@ const saveFhirMetadata = async (
     };
   }
 };
+/*
+TODO
+- write saveCoreMetadata
+- write saveExtendedMetadata (both of these can be collapsed from their old selves since Kysely does most of the work now)
+- change their references
+- search for any other instances of pg pool and mssql pool and change them to kysely
+*/
 
 /**
  * @async
- * @function saveMetadataToSqlServer
+ * @function saveExtendedMetaData
  * @param metadata - The FHIR bundle metadata to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
-export const saveMetadataToSqlServer = async (
+export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
+<<<<<<< HEAD
   const pool = await get_pool();
 
   if (!pool) {
@@ -205,231 +218,126 @@ export const saveMetadataToSqlServer = async (
   if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
     const transaction = new sql.Transaction(pool);
     await transaction.begin();
+=======
+
+  if (process.env.METADATA_DATABASE_SCHEMA == "extended") {
+>>>>>>> 600af32 (FHIR Implementation Testing)
     try {
-      const ecrDataInsertRequest = new sql.Request(transaction);
-      await ecrDataInsertRequest
-        .input("eICR_ID", sql.VarChar(200), ecrId)
-        .input("eicr_set_id", sql.VarChar(255), metadata.eicr_set_id)
-        .input("fhir_reference_link", sql.VarChar(255), null) // Not implemented
-        .input("last_name", sql.VarChar(255), metadata.last_name)
-        .input("first_name", sql.VarChar(255), metadata.first_name)
-        .input("birth_date", sql.Date, metadata.birth_date)
-        .input("gender", sql.VarChar(50), metadata.gender)
-        .input("birth_sex", sql.VarChar(50), metadata.birth_sex)
-        .input("gender_identity", sql.VarChar(50), metadata.gender_identity)
-        .input("race", sql.VarChar(255), metadata.race)
-        .input("ethnicity", sql.VarChar(255), metadata.ethnicity)
-        .input("latitude", sql.Float, metadata.latitude)
-        .input("longitude", sql.Float, metadata.longitude)
-        .input(
-          "homelessness_status",
-          sql.VarChar(255),
-          metadata.homelessness_status,
-        )
-        .input("disabilities", sql.VarChar(255), metadata.disabilities)
-        .input(
-          "tribal_affiliation",
-          sql.VarChar(255),
-          metadata.tribal_affiliation,
-        )
-        .input(
-          "tribal_enrollment_status",
-          sql.VarChar(255),
-          metadata.tribal_enrollment_status,
-        )
-        .input(
-          "current_job_title",
-          sql.VarChar(255),
-          metadata.current_job_title,
-        )
-        .input(
-          "current_job_industry",
-          sql.VarChar(255),
-          metadata.current_job_industry,
-        )
-        .input("usual_occupation", sql.VarChar(255), metadata.usual_occupation)
-        .input("usual_industry", sql.VarChar(255), metadata.usual_industry)
-        .input(
-          "preferred_language",
-          sql.VarChar(255),
-          metadata.preferred_language,
-        )
-        .input("pregnancy_status", sql.VarChar(255), metadata.pregnancy_status)
-        .input("rr_id", sql.VarChar(255), metadata.rr_id)
-        .input(
-          "processing_status",
-          sql.VarChar(255),
-          metadata.processing_status,
-        )
-        .input(
-          "eicr_version_number",
-          sql.VarChar(50),
-          metadata.eicr_version_number,
-        )
-        .input("authoring_date", sql.DateTime, metadata.authoring_datetime)
-        .input("authoring_provider", sql.VarChar(255), metadata.provider_id)
-        .input("provider_id", sql.VarChar(255), metadata.provider_id)
-        .input("facility_id", sql.VarChar(255), metadata.facility_id_number)
-        .input("facility_name", sql.VarChar(255), metadata.facility_name)
-        .input("encounter_type", sql.VarChar(255), metadata.encounter_type)
-        .input(
-          "encounter_start_date",
-          sql.DateTime,
-          metadata.encounter_start_date,
-        )
-        .input("encounter_end_date", sql.DateTime, metadata.encounter_end_date)
-        .input(
-          "reason_for_visit",
-          sql.VarChar(sql.MAX),
-          metadata.reason_for_visit,
-        )
-        .input(
-          "active_problems",
-          sql.VarChar(sql.MAX),
-          metadata.active_problems,
-        )
-        .query(
-          "INSERT INTO ecr_viewer.ECR_DATA (eICR_ID, set_id, fhir_reference_link, last_name, first_name, birth_date, gender, birth_sex, gender_identity, race, ethnicity, latitude, longitude, homelessness_status, disabilities, tribal_affiliation, tribal_enrollment_status, current_job_title, current_job_industry, usual_occupation, usual_industry, preferred_language, pregnancy_status, rr_id, processing_status, eicr_version_number, authoring_date, authoring_provider, provider_id, facility_id, facility_name, encounter_type, encounter_start_date, encounter_end_date, reason_for_visit, active_problems) VALUES (@eICR_ID, @eicr_set_id, @fhir_reference_link, @last_name, @first_name, @birth_date, @gender, @birth_sex, @gender_identity, @race, @ethnicity, @latitude, @longitude, @homelessness_status, @disabilities, @tribal_affiliation, @tribal_enrollment_status, @current_job_title, @current_job_industry, @usual_occupation, @usual_industry, @preferred_language, @pregnancy_status, @rr_id, @processing_status, @eicr_version_number, @authoring_date, @authoring_provider, @provider_id, @facility_id, @facility_name, @encounter_type, @encounter_start_date, @encounter_end_date, @reason_for_visit, @active_problems)",
-        );
-
-      if (metadata.patient_addresses) {
-        for (const address of metadata.patient_addresses) {
-          const patient_address_uuid = randomUUID();
-          const addressInsertRequest = new sql.Request(transaction);
-          await addressInsertRequest
-            .input("UUID", sql.VarChar(200), patient_address_uuid)
-            .input("use", sql.VarChar(7), address.use)
-            .input("type", sql.VarChar(8), address.type)
-            .input("text", sql.VarChar(sql.MAX), address.text)
-            .input("line", sql.VarChar(sql.MAX), address.line)
-            .input("city", sql.VarChar(255), address.city)
-            .input("district", sql.VarChar(255), address.district)
-            .input("state", sql.VarChar(255), address.state)
-            .input("postal_code", sql.VarChar(20), address.postal_code)
-            .input("country", sql.VarChar(255), address.country)
-            .input("period_start", sql.DateTime, address.period_start)
-            .input("period_end", sql.DateTime, address.period_end)
-            .input("eICR_ID", sql.VarChar(200), ecrId)
-            .query(
-              "INSERT INTO ecr_viewer.patient_address (UUID, [use], type, text, line, city, district, state, postal_code, country, period_start, period_end, eICR_ID) VALUES (@UUID, @use, @type, @text, @line, @city, @district, @state, @postal_code, @country, @period_start, @period_end, @eICR_ID)",
-            );
+      await db.transaction().execute(async (trx) => {
+        await trx.insertInto("ecr_data").values({
+          eICR_ID: ecrId,
+          set_id: metadata.eicr_set_id,
+          fhir_reference_link: null, // Not implemented yet
+          last_name: metadata.last_name,
+          first_name: metadata.first_name,
+          birth_date: metadata.birth_date,
+          gender: metadata.gender,
+          birth_sex: metadata.birth_sex,
+          gender_identity: metadata.gender_identity,
+          race: metadata.race,
+          ethnicity: metadata.ethnicity,
+          latitude: metadata.latitude,
+          longitude: metadata.longitude,
+          homelessness_status: metadata.homelessness_status,
+          disabilities: metadata.disabilities,
+          tribal_affiliation: metadata.tribal_affiliation,
+          tribal_enrollment_status: metadata.tribal_enrollment_status,
+          current_job_title: metadata.current_job_title,
+          current_job_industry: metadata.current_job_industry,
+          usual_occupation: metadata.usual_occupation,
+          usual_industry: metadata.usual_industry,
+          preferred_language: metadata.preferred_language,
+          pregnancy_status: metadata.pregnancy_status,
+          rr_id: metadata.rr_id,
+          processing_status: metadata.processing_status,
+          eicr_version_number: metadata.eicr_version_number,
+          authoring_date: metadata.authoring_datetime,
+          authoring_provider: metadata.provider_id,
+          provider_id: metadata.provider_id,
+          facility_id: metadata.facility_id_number,
+          facility_name: metadata.facility_name,
+          encounter_type: metadata.encounter_type,
+          encounter_start_date: metadata.encounter_start_date,
+          encounter_end_date: metadata.encounter_end_date,
+          reason_for_visit: metadata.reason_for_visit,
+          active_problems: metadata.active_problems,
+        })
+        
+        if (metadata.patient_addresses) {
+          for (const address of metadata.patient_addresses) {
+            const patient_address_uuid = randomUUID();
+            await trx.insertInto("patient_address").values({
+              uuid: patient_address_uuid,
+              use: address.use,
+              type: address.type,
+              text: address.text,
+              line: address.line,
+              city: address.city,
+              district: address.district,
+              state: address.state,
+              postal_code: address.postal_code,
+              country: address.country,
+              period_start: address.period_start,
+              period_end: address.period_end,
+              eICR_ID: ecrId
+          })
+        }}
+      
+        if (metadata.labs) {
+          for (const lab of metadata.labs) {
+            await trx.insertInto("ecr_labs").values({
+              uuid: lab.uuid,
+              eICR_ID: ecrId,
+              test_type: lab.test_type,
+              test_type_code: lab.test_type_code,
+              test_type_system: lab.test_type_system,
+              test_result_qualitative: lab.test_result_qualitative,
+              test_result_quantitative: lab.test_result_quantitative,
+              test_result_units: lab.test_result_units,
+              test_result_code: lab.test_result_code,
+              test_result_code_display: lab.test_result_code_display,
+              test_result_code_system: lab.test_result_code_system,
+              test_result_interpretation: lab.test_result_interpretation,
+              test_result_interpretation_code: lab.test_result_interpretation_code,
+              test_result_interpretation_system: lab.test_result_interpretation_system,
+              test_result_reference_range_low_value: lab.test_result_ref_range_low,
+              test_result_reference_range_low_units: lab.test_result_ref_range_low_units,
+              test_result_reference_range_high_value: lab.test_result_ref_range_high,
+              test_result_reference_range_high_units: lab.test_result_ref_range_high_units,
+              specimen_type: lab.specimen_type,
+              specimen_collection_date: lab.specimen_collection_date,
+              performing_lab: lab.performing_lab
+            })
+          }
         }
-      }
 
-      if (metadata.labs) {
-        for (const lab of metadata.labs) {
-          const labInsertRequest = new sql.Request(transaction);
-          await labInsertRequest
-            .input("UUID", sql.VarChar(200), lab.uuid)
-            .input("eICR_ID", sql.VarChar(200), ecrId)
-            .input("test_type", sql.VarChar(200), lab.test_type)
-            .input("test_type_code", sql.VarChar(50), lab.test_type_code)
-            .input("test_type_system", sql.VarChar(255), lab.test_type_system)
-            .input(
-              "test_result_qualitative",
-              sql.VarChar(sql.MAX),
-              lab.test_result_qualitative,
-            )
-            .input(
-              "test_result_quantitative",
-              sql.Float,
-              lab.test_result_quantitative,
-            )
-            .input("test_result_units", sql.VarChar(50), lab.test_result_units)
-            .input("test_result_code", sql.VarChar(50), lab.test_result_code)
-            .input(
-              "test_result_code_display",
-              sql.VarChar(255),
-              lab.test_result_code_display,
-            )
-            .input(
-              "test_result_code_system",
-              sql.VarChar(50),
-              lab.test_result_code_system,
-            )
-            .input(
-              "test_result_interpretation",
-              sql.VarChar(255),
-              lab.test_result_interpretation,
-            )
-            .input(
-              "test_result_interpretation_code",
-              sql.VarChar(50),
-              lab.test_result_interpretation_code,
-            )
-            .input(
-              "test_result_interpretation_system",
-              sql.VarChar(255),
-              lab.test_result_interpretation_system,
-            )
-            .input(
-              "test_result_ref_range_low_value",
-              sql.Float,
-              lab.test_result_ref_range_low,
-            )
-            .input(
-              "test_result_ref_range_low_units",
-              sql.VarChar(50),
-              lab.test_result_ref_range_low_units,
-            )
-            .input(
-              "test_result_ref_range_high_value",
-              sql.Float,
-              lab.test_result_ref_range_high,
-            )
-            .input(
-              "test_result_ref_range_high_units",
-              sql.VarChar(50),
-              lab.test_result_ref_range_high_units,
-            )
-            .input("specimen_type", sql.VarChar(255), lab.specimen_type)
-            .input(
-              "specimen_collection_date",
-              sql.DateTime,
-              lab.specimen_collection_date,
-            )
-            .input("performing_lab", sql.VarChar(255), lab.performing_lab)
-            .query(
-              "INSERT INTO ecr_viewer.ecr_labs VALUES (@UUID, @eICR_ID, @test_type, @test_type_code, @test_type_system, @test_result_qualitative, @test_result_quantitative, @test_result_units, @test_result_code, @test_result_code_display, @test_result_code_system, @test_result_interpretation, @test_result_interpretation_code, @test_result_interpretation_system, @test_result_ref_range_low_value, @test_result_ref_range_low_units, @test_result_ref_range_high_value, @test_result_ref_range_high_units, @specimen_type, @specimen_collection_date, @performing_lab)",
-            );
-        }
-      }
-
-      if (metadata.rr) {
-        // Loop through each condition/rule object in rr array
-        for (const rrItem of metadata.rr) {
-          const rr_conditions_uuid = randomUUID();
-          const rrConditionsInsertRequest = new sql.Request(transaction);
-
-          // Insert condition into ecr_rr_conditions
-          await rrConditionsInsertRequest
-            .input("UUID", sql.VarChar(200), rr_conditions_uuid)
-            .input("eICR_ID", sql.VarChar(200), ecrId)
-            .input("condition", sql.VarChar(sql.MAX), rrItem.condition)
-            .query(
-              "INSERT INTO ecr_viewer.ecr_rr_conditions VALUES (@UUID, @eICR_ID, @condition)",
-            );
-
-          // Loop through the rule summaries array
-          if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
-            for (const summary of rrItem.rule_summaries) {
-              const ruleSummaryInsertRequest = new sql.Request(transaction);
-
-              // Insert each rule summary with reference to the condition
-              await ruleSummaryInsertRequest
-                .input("UUID", sql.VarChar(200), randomUUID())
-                .input(
-                  "ECR_RR_CONDITIONS_ID",
-                  sql.VarChar(200),
-                  rr_conditions_uuid,
-                )
-                .input("rule_summary", sql.VarChar(sql.MAX), summary.summary)
-                .query(
-                  "INSERT INTO ecr_viewer.ecr_rr_rule_summaries VALUES (@UUID, @ECR_RR_CONDITIONS_ID, @rule_summary)",
-                );
+        if (metadata.rr) {
+          // Loop through each condition/rule object in rr array
+          for (const rrItem of metadata.rr) {
+            const rr_conditions_uuid = randomUUID();
+  
+            // Insert condition into ecr_rr_conditions
+            await trx.insertInto("ecr_rr_conditions").values({
+              uuid: rr_conditions_uuid,
+              eICR_ID: ecrId,
+              condition: rrItem.condition
+            })
+  
+            // Loop through the rule summaries array
+            if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
+              for (const summary of rrItem.rule_summaries) {
+  
+                // Insert each rule summary with reference to the condition
+                await trx.insertInto("ecr_rr_rule_summaries").values({
+                  uuid: randomUUID(),
+                  ecr_rr_conditions_id: rr_conditions_uuid,
+                  rule_summary: summary.summary
+                })
+              }
             }
           }
         }
+<<<<<<< HEAD
       }
 
       await transaction.commit();
@@ -439,13 +347,19 @@ export const saveMetadataToSqlServer = async (
         status: 200,
       };
     } catch (error: unknown) {
+=======
+        })
+        return {
+          message: "Success. Saved metadata to database.",
+          status: 200,
+        };
+    } catch (error: any) {
+>>>>>>> 600af32 (FHIR Implementation Testing)
       console.error({
         message: "Failed to insert metadata to sqlserver.",
         error,
         ecrId,
       });
-      // Rollback the transaction if any error occurs
-      await transaction.rollback();
 
       return {
         message: "Failed to insert metadata to database.",
@@ -469,57 +383,66 @@ export const saveMetadataToSqlServer = async (
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
-export const saveMetadataToPostgres = async (
+export const saveCoreMetadata = async (
   metadata: BundleMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  const { database, pgPromise } = getDB();
-  const { ParameterizedQuery: PQ } = pgPromise;
-
   try {
+    if (!metadata) {
+      console.error("eICR Data is required.");
+      return {
+        message: "Failed: eICR Data is required.",
+        status: 400,
+      };
+    }
+
     // Start transaction
-    await database.tx(async (t) => {
-      // Insert main ECR metadata
-      const saveToEcrData = new PQ({
-        text: "INSERT INTO ecr_viewer.ecr_data (eICR_ID, patient_name_last, patient_name_first, patient_birth_date, data_source, report_date, set_id, eicr_version_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-        values: [
-          ecrId,
-          metadata.last_name,
-          metadata.first_name,
-          metadata.birth_date,
-          "DB",
-          metadata.report_date,
-          metadata.eicr_set_id,
-          metadata.eicr_version_number,
-        ],
-      });
+    await db.transaction().execute(async (trx) => {
+      try {
+        // Insert main ECR metadata  
+        await trx.insertInto("ecr_data").values({
+          eICR_ID: ecrId,
+          set_id: metadata.eicr_set_id,
+          patient_name_last: metadata.last_name,
+          patient_name_first: metadata.first_name,
+          patient_birth_date: metadata.birth_date,
+          data_source: "DB",
+          report_date: metadata.report_date,
+          eicr_version_number: metadata.eicr_version_number,
+        })
+        .returningAll()
+        .executeTakeFirstOrThrow();
 
-      await t.none(saveToEcrData);
+        // Loop through each condition/rule object in rr array
+        if (metadata.rr && metadata.rr.length > 0) {
+          for (const rrItem of metadata.rr) {
+            // Insert condition into ecr_rr_conditions
+            const saveRRConditions = await trx.insertInto("ecr_rr_conditions").values({
+              uuid: randomUUID(),
+              eICR_ID: ecrId,
+              condition: rrItem.condition
+            })
+            .returning("uuid")
+            .executeTakeFirstOrThrow();
 
-      // Loop through each condition/rule object in rr array
-      if (metadata.rr && metadata.rr.length > 0) {
-        for (const rrItem of metadata.rr) {
-          // Insert condition into ecr_rr_conditions
-          const saveRRConditions = new PQ({
-            text: "INSERT INTO ecr_viewer.ecr_rr_conditions (uuid, eICR_ID, condition) VALUES (uuid_generate_v4(), $1, $2) RETURNING uuid",
-            values: [ecrId, rrItem.condition],
-          });
-
-          const savedRRCondition = await t.one(saveRRConditions);
-
-          // Loop through the rule summaries array
-          if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
-            for (const summaryObj of rrItem.rule_summaries) {
-              // Insert each associated summary into ecr_rr_rule_summaries
-              const saveRRSummary = new PQ({
-                text: "INSERT INTO ecr_viewer.ecr_rr_rule_summaries (uuid, ecr_rr_conditions_id, rule_summary) VALUES (uuid_generate_v4(), $1, $2)",
-                values: [savedRRCondition.uuid, summaryObj.summary],
-              });
-
-              await t.none(saveRRSummary);
+            // Loop through the rule summaries array
+            if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
+              for (const summaryObj of rrItem.rule_summaries) {
+                // Insert each associated summary into ecr_rr_rule_summaries
+                await trx.insertInto("ecr_rr_rule_summaries").values({
+                  uuid: randomUUID(),
+                  ecr_rr_conditions_id: saveRRConditions.uuid,
+                  rule_summary: summaryObj.summary
+                })
+                .returningAll()
+                .executeTakeFirstOrThrow();
+              }
             }
           }
         }
+      } catch (error) {
+        console.error("Transaction failed:", error);
+        throw new Error("Transaction failed"); // Ensure transaction failure is handled
       }
     });
 
@@ -541,6 +464,7 @@ export const saveMetadataToPostgres = async (
   }
 };
 
+
 /**
  * @async
  * @function saveWithMetadata
@@ -558,12 +482,12 @@ export const saveWithMetadata = async (
 ): Promise<SaveResponse> => {
   let fhirDataResult;
   let metadataResult;
-  const metadataSaveLocation = process.env.METADATA_DATABASE_TYPE;
-
+  const metadataType = process.env.METADATA_DATABASE_SCHEMA;
+  
   try {
     [fhirDataResult, metadataResult] = await Promise.all([
       saveFhirData(fhirBundle, ecrId, saveSource),
-      saveFhirMetadata(ecrId, metadataSaveLocation, metadata as BundleMetadata),
+      saveFhirMetadata(ecrId, metadataType, metadata as BundleMetadata),
     ]);
   } catch (error: unknown) {
     const message = "Failed to save FHIR data with metadata.";
