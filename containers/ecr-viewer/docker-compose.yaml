@@ -126,7 +126,7 @@ services:
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
-      - 8080:8080
+      - 8070:8080
 
 volumes:
   db:
