@@ -1,11 +1,7 @@
 import React from "react";
 import { listEcrData } from "@/app/services/listEcrDataService";
-import { EcrTableClient } from "@/app/components/EcrTableClient";
-import {
-  EcrTableNoData,
-  TableHeader,
-} from "@/app/components/EcrTableClientBase";
 import { DateRangePeriod } from "@/app/utils/date-utils";
+import { EcrTableData } from "./EcrTableData";
 
 /**
  * eCR Table
@@ -17,10 +13,9 @@ import { DateRangePeriod } from "@/app/utils/date-utils";
  * @param props.filterDates - The date range used to filter data
  * @param props.searchTerm - The search term used to list data
  * @param props.filterConditions - (Optional) The reportable condition(s) used to filter the data
- * @param props.headers - Table headers descriptions
  * @returns - eCR Table element
  */
-const EcrTable = async ({
+const EcrTableContent = async ({
   currentPage,
   itemsPerPage,
   sortColumn,
@@ -28,7 +23,6 @@ const EcrTable = async ({
   searchTerm,
   filterConditions,
   filterDates,
-  headers,
 }: {
   currentPage: number;
   itemsPerPage: number;
@@ -37,7 +31,6 @@ const EcrTable = async ({
   filterDates: DateRangePeriod;
   searchTerm?: string;
   filterConditions?: string[];
-  headers: TableHeader[];
 }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
 
@@ -51,11 +44,22 @@ const EcrTable = async ({
     filterConditions,
   );
 
-  if (data.length === 0) {
-    return <EcrTableNoData headers={headers} />;
-  }
-
-  return <EcrTableClient headers={headers} data={data} />;
+  return (
+    <tbody>
+      {data.length === 0 ? <NoDataRow /> : <EcrTableData data={data} />}
+    </tbody>
+  );
 };
 
-export default EcrTable;
+const NoDataRow = () => (
+  <tr>
+    <td colSpan={999} className="text-middle text-center height-card">
+      <span className="text-bold font-body-lg">
+        No eCRs found. We couldn't find any eCRs matching your filter or search
+        critera.
+      </span>
+    </td>
+  </tr>
+);
+
+export default EcrTableContent;

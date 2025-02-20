@@ -1,54 +1,20 @@
 "use client";
 import React from "react";
-import { EcrDisplay } from "@/app/services/listEcrDataService";
-import { toSentenceCase } from "@/app/utils/format-utils";
-import { useQueryParam } from "@/app/hooks/useQueryParam";
-import { noData } from "../utils/data-utils";
 import Link from "next/link";
+import { toSentenceCase } from "../utils/format-utils";
 import { saveToSessionStorage } from "../utils/storage-utils";
-import { EcrTableStyled, TableHeader } from "./EcrTableClientBase";
-
-type EcrTableClientProps = {
-  data: EcrDisplay[];
-  headers: TableHeader[];
-};
+import { noData } from "../utils/data-utils";
+import { useQueryParam } from "../hooks/useQueryParam";
+import { EcrDisplay } from "../services/listEcrDataService";
 
 /**
- *
- * @param props - The properties passed to the component.
- * @param props.data  - The data to be displayed in the table.
- * @param props.headers - header descriptions
- * @returns - The JSX element representing the eCR table.
+ * Data rows for the ECR library table
+ * @param params react params
+ * @param params.data Data to display
+ * @returns Rows of data
  */
-export const EcrTableClient: React.FC<EcrTableClientProps> = ({
-  data,
-  headers,
-}) => {
-  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
-
-  /**
-   * Handles sorting the table data by a given column. We update the search params,
-   * which triggers a re-render of this component with the updated props when the
-   * page gets the new search params.
-   * @param columnId - The ID of the column to sort by.
-   * @param curDirection - The current direction of sort.
-   */
-  const handleSort = (columnId: string, curDirection: string) => {
-    // Flip the sort from the current direction, ASC is default
-    const direction = curDirection === "ASC" ? "DESC" : "ASC";
-
-    updateQueryParam("columnId", columnId);
-    updateQueryParam("direction", direction);
-    pushQueryUpdate();
-  };
-
-  return (
-    <EcrTableStyled headers={headers} handleSort={handleSort}>
-      {data.map((item, index) => (
-        <DataRow key={index} item={item} />
-      ))}
-    </EcrTableStyled>
-  );
+export const EcrTableData = ({ data }: { data: EcrDisplay[] }) => {
+  return data.map((item, index) => <DataRow key={index} item={item} />);
 };
 
 /**

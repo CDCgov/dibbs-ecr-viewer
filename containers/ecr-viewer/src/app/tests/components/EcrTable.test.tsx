@@ -1,6 +1,6 @@
 import { axe } from "jest-axe";
 import { act, render } from "@testing-library/react";
-import EcrTable from "@/app/components/EcrTable";
+import EcrTable from "@/app/components/EcrTableContent";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
 import router from "next-router-mock";
 import { EcrTableLoading } from "@/app/components/EcrTableClientBase";
