@@ -213,10 +213,12 @@
   &:disabled {
     background-color: transparent; /* Removes fill after click */
     text-decoration: inherit;
+    color: color("disabled-light");
   }
   &:disabled:hover {
     background-color: transparent; /* Removes fill after click */
     text-decoration: inherit;
+    color: color("disabled-light");
   }
 }
 
