@@ -46,20 +46,9 @@ const EcrTableContent = async ({
 
   return (
     <tbody>
-      {data.length === 0 ? <NoDataRow /> : <EcrTableData data={data} />}
+      <EcrTableData data={data} />
     </tbody>
   );
 };
-
-const NoDataRow = () => (
-  <tr>
-    <td colSpan={999} className="text-middle text-center height-card">
-      <span className="text-bold font-body-lg">
-        No eCRs found. We couldn't find any eCRs matching your filter or search
-        critera.
-      </span>
-    </td>
-  </tr>
-);
 
 export default EcrTableContent;

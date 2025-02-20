@@ -78,21 +78,25 @@ const HomePage = async ({
               headers={tableHeaders}
               disabled={totalCount === 0}
             />
-            {/* key needed to force fallback state to retrigger on params change */}
-            <Suspense
-              key={JSON.stringify(searchParams)}
-              fallback={<EcrTableLoading />}
-            >
-              <EcrTableContent
-                currentPage={currentPage}
-                itemsPerPage={itemsPerPage}
-                sortColumn={sortColumn}
-                sortDirection={sortDirection}
-                searchTerm={searchTerm}
-                filterConditions={filterConditionsArr}
-                filterDates={filterDates}
-              />
-            </Suspense>
+            {totalCount === 0 ? (
+              <EcrTableNoData />
+            ) : (
+              <Suspense
+                // key needed to force fallback state to retrigger on params change
+                key={JSON.stringify(searchParams)}
+                fallback={<EcrTableLoading />}
+              >
+                <EcrTableContent
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                  sortColumn={sortColumn}
+                  sortDirection={sortDirection}
+                  searchTerm={searchTerm}
+                  filterConditions={filterConditionsArr}
+                  filterDates={filterDates}
+                />
+              </Suspense>
+            )}
           </EcrTableWrapper>
         </EcrPaginationWrapper>
       </main>
@@ -123,5 +127,18 @@ const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
+const EcrTableNoData = () => (
+  <tbody>
+    <tr>
+      <td colSpan={999} className="text-middle text-center height-card">
+        <span className="text-bold font-body-lg">
+          No eCRs found. We couldn't find any eCRs matching your filter or
+          search critera.
+        </span>
+      </td>
+    </tr>
+  </tbody>
+);
 
 export default HomePage;
