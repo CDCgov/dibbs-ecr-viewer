@@ -78,7 +78,7 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <Table
           bordered
-          caption="Reportibility Summary"
+          caption="Reportability Summary"
           className="rrTable"
           fixed={true}
           fullWidth={true}
