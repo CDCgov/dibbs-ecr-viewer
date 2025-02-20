@@ -7,6 +7,7 @@ type SortButtonProps = {
   columnId: string;
   columnName: string;
   direction: string;
+  disabled?: boolean;
   handleSort: () => void;
 };
 
@@ -15,7 +16,8 @@ type SortButtonProps = {
  * @param props - Props containing button configurations.
  * @param props.columnId - The ID of the column to sort
  * @param props.columnName - The display name of the column to sort
- * @param props.direction   - The direction of the sort
+ * @param props.direction - The direction of the sort
+ * @param props.disabled - Whether to disable the button (default false)
  * @param props.handleSort - The function to handle the click event
  * @returns The JSX element representing the sort button.
  */
@@ -23,6 +25,7 @@ export const SortButton: React.FC<SortButtonProps> = ({
   columnId,
   columnName,
   direction,
+  disabled = false,
   handleSort,
 }) => {
   const IconTag =
@@ -38,6 +41,7 @@ export const SortButton: React.FC<SortButtonProps> = ({
       aria-label={`Sort by ${columnName}`}
       className={`sort-button usa-button`}
       type="button"
+      disabled={disabled}
       onClick={handleSort}
       unstyled={true}
     >

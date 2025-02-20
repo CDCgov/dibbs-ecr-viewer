@@ -74,7 +74,10 @@ const HomePage = async ({
         <Filters conditions={allConditions} />
         <EcrPaginationWrapper totalCount={totalCount}>
           <EcrTableWrapper>
-            <EcrTableHeader headers={tableHeaders} />
+            <EcrTableHeader
+              headers={tableHeaders}
+              disabled={totalCount === 0}
+            />
             {/* key needed to force fallback state to retrigger on params change */}
             <Suspense
               key={JSON.stringify(searchParams)}

@@ -15,9 +15,16 @@ export type TableHeader = {
  * Interactive header for the ecr library table
  * @param params react params
  * @param params.headers header descriptions
+ * @param params.disabled whether to disable the sort functionality
  * @returns Interactive header row
  */
-export const EcrTableHeader = ({ headers }: { headers: TableHeader[] }) => {
+export const EcrTableHeader = ({
+  headers,
+  disabled,
+}: {
+  headers: TableHeader[];
+  disabled: boolean;
+}) => {
   const { updateQueryParam, pushQueryUpdate } = useQueryParam();
 
   /**
@@ -40,7 +47,12 @@ export const EcrTableHeader = ({ headers }: { headers: TableHeader[] }) => {
     <thead>
       <tr>
         {headers.map((column) => (
-          <Header key={column.id} column={column} handleSort={handleSort} />
+          <Header
+            key={column.id}
+            column={column}
+            handleSort={handleSort}
+            disabled={disabled}
+          />
         ))}
       </tr>
     </thead>
@@ -51,9 +63,11 @@ type SortHandlerFn = (columnId: string, direction: string) => void;
 
 const Header = ({
   column,
+  disabled,
   handleSort,
 }: {
   column: TableHeader;
+  disabled: boolean;
   handleSort: SortHandlerFn;
 }) => {
   return (
@@ -70,6 +84,7 @@ const Header = ({
           columnId={column.id}
           columnName={column.value}
           direction={column.sortDirection}
+          disabled={disabled}
           handleSort={() => handleSort(column.id, column.sortDirection)}
         />
       ) : (
