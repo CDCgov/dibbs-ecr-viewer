@@ -16,6 +16,14 @@ type PaginationProps = {
     event: React.MouseEvent<HTMLButtonElement>,
     page: number,
   ) => void;
+} & React.JSX.IntrinsicElements["nav"];
+
+type PaginationPageProps = Pick<
+  PaginationProps,
+  "pathname" | "onClickPageNumber"
+> & {
+  page: number;
+  isCurrent?: boolean;
 };
 
 const PaginationPage = ({
@@ -23,15 +31,7 @@ const PaginationPage = ({
   page,
   isCurrent,
   onClickPageNumber,
-}: {
-  pathname: string;
-  page: number;
-  isCurrent?: boolean;
-  onClickPageNumber?: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    page: number,
-  ) => void;
-}) => {
+}: PaginationPageProps) => {
   const linkClasses = classnames("usa-pagination__button text-bold", {
     "usa-current": isCurrent,
   });
@@ -98,8 +98,7 @@ export const Pagination = ({
   onClickNext,
   onClickPageNumber,
   ...props
-}: PaginationProps &
-  React.JSX.IntrinsicElements["nav"]): React.ReactElement => {
+}: PaginationProps): React.ReactElement => {
   const navClasses = classnames("usa-pagination", className);
 
   const isOnFirstPage = currentPage === 1;
@@ -273,7 +272,10 @@ export const Pagination = ({
  * @param pageNumber - number to append to url params
  * @returns - string of path and search params
  */
-const createPageURL = (pathname: string, pageNumber: number | string) => {
+const createPageURL = (
+  pathname: string,
+  pageNumber: number | string,
+): string => {
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
   params.set("page", pageNumber.toString());
