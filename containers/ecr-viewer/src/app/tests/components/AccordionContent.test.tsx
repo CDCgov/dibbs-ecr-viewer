@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { Bundle } from "fhir/r4";
 import { loadYamlConfig } from "@/app/api/utils";
-import AccordionContent from "@/app/view-data/components/AccordionContent";
+import AccordionContent from "@/app/services/accordionItemService";
 
 const mappings = loadYamlConfig();
 

@@ -1,14 +1,14 @@
-import { PathMappings } from "../../utils/data-utils";
-import Demographics from "./Demographics";
-import SocialHistory from "./SocialHistory";
-import UnavailableInfo from "./UnavailableInfo";
-import EcrMetadata from "./EcrMetadata";
-import EncounterDetails from "./Encounter";
-import ClinicalInfo from "./ClinicalInfo";
+import { PathMappings } from "../utils/data-utils";
+import Demographics from "../view-data/components/Demographics";
+import SocialHistory from "../view-data/components/SocialHistory";
+import UnavailableInfo from "../view-data/components/UnavailableInfo";
+import EcrMetadata from "../view-data/components/EcrMetadata";
+import EncounterDetails from "../view-data/components/Encounter";
+import ClinicalInfo from "../view-data/components/ClinicalInfo";
 import { Bundle } from "fhir/r4";
 import React from "react";
 import LabInfo from "@/app/view-data/components/LabInfo";
-import { evaluateEcrMetadata } from "../../services/ecrMetadataService";
+import { evaluateEcrMetadata } from "./ecrMetadataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
 import {
   evaluateDemographicsData,
@@ -17,31 +17,24 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
-import { evaluateClinicalData } from "./common";
-import { Accordion } from "@trussworks/react-uswds";
+import { evaluateClinicalData } from "../view-data/components/common";
+import { Accordion, HeadingLevel, Tag } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
+import classNames from "classnames";
 
-export type AccordionItemProps = React.ComponentProps<
-  typeof Accordion
->["items"][0];
-
-type AccordionContentProps = {
-  fhirBundle: Bundle;
-  fhirPathMappings: PathMappings;
-};
+export type AccordionItem = React.ComponentProps<typeof Accordion>["items"][0];
 
 /**
  * Functional component for an accordion container displaying various sections of eCR information.
- * @param props - Props containing FHIR bundle and path mappings.
- * @param props.fhirBundle - The FHIR bundle containing patient information.
- * @param props.fhirPathMappings - The path mappings used to extract information from the FHIR bundle.
+ * @param fhirBundle - The FHIR bundle containing patient information.
+ * @param fhirPathMappings - The path mappings used to extract information from the FHIR bundle.
  * @returns The JSX element representing the accordion container.
  */
-const AccordionContent: React.FC<AccordionContentProps> = ({
-  fhirBundle,
-  fhirPathMappings,
-}) => {
+export const getEcrDocumentAccordionItems = (
+  fhirBundle: Bundle,
+  fhirPathMappings: PathMappings,
+): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(
     fhirBundle,
     fhirPathMappings,
@@ -79,7 +72,7 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
     );
   };
 
-  const accordionItems: AccordionItemProps[] = [
+  const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
       content: (
@@ -235,13 +228,50 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
     };
   });
 
-  return (
-    <Accordion
-      className="info-container"
-      items={accordionItems}
-      multiselectable
-    />
-  );
+  return accordionItems;
 };
 
-export default AccordionContent;
+/**
+ * Accordion component for displaying lab results.
+ * @param props - The props object.
+ * @param props.title - The title of the lab result.
+ * @param props.abnormalTag - Boolean value if the lab result is abnormal.
+ * @param props.content - The content within the accordian.
+ * @param props.collapsedByDefault - Whether or not to collapse by default for the accordion
+ * @param props.headingLevel - Heading level for the Accordion menu title.
+ * @param props.className - Classnames to be applied to accordion.
+ * @returns React element representing the AccordionLabResults component.
+ */
+export const getLabResultAccordionItem = ({
+  title,
+  abnormalTag,
+  content,
+  collapsedByDefault = false,
+  headingLevel = "h5",
+  className = "",
+}: {
+  title: string;
+  abnormalTag: boolean;
+  content: React.JSX.Element[];
+  collapsedByDefault?: boolean;
+  headingLevel?: HeadingLevel;
+  className?: string;
+}): AccordionItem => {
+  return {
+    title: (
+      <>
+        {title}
+        {abnormalTag && (
+          <Tag background={"#B50909"} className={"margin-left-105"}>
+            Abnormal
+          </Tag>
+        )}
+      </>
+    ),
+    content: content,
+    expanded: collapsedByDefault,
+    id: toKebabCase(title),
+    headingLevel,
+    className: classNames("side-nav-ignore", className),
+  };
+};

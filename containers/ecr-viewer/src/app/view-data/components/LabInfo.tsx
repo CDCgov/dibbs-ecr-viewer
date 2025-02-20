@@ -1,5 +1,5 @@
 import { AccordionSection, AccordionSubSection } from "../component-utils";
-import React from "react";
+import React, { useState } from "react";
 import {
   DataDisplay,
   DataTableDisplay,
@@ -10,7 +10,7 @@ import {
   LabReportElementData,
 } from "@/app/services/labsService";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
-import { toKebabCase } from "@/app/utils/format-utils";
+import { LabAccordion } from "./LabAccordion";
 
 interface LabInfoProps {
   labResults: DisplayDataProps[] | LabReportElementData[];
@@ -52,16 +52,10 @@ const LabResultDetail = ({
 }: {
   labResult: LabReportElementData;
 }) => {
-  // This is to build the selector based off if orgId exists
-  // Sometimes it doesn't, so we default to the base class
-  // the orgId makes it so that when you have multiple, it can distinguish
-  // which org it is modifying
-  const accordionSelectorClass = labResult.organizationId
-    ? `.accordion_${labResult.organizationId}`
-    : ".accordion-rr";
-  const buttonSelectorClass = labResult.organizationId
-    ? `.acc_item_${labResult.organizationId}`
-    : "h5";
+  const [accordionItems, setAccordionItems] = useState(
+    labResult.diagnosticReportDataItems,
+  );
+
   const labName = `Lab Results from ${
     labResult?.organizationDisplayDataProps?.[0]?.value ||
     "Unknown Organization"
@@ -76,15 +70,21 @@ const LabResultDetail = ({
       <div className="display-flex">
         <div className="margin-left-auto padding-top-1">
           <ExpandCollapseButtons
-            id={`lab-info-${toKebabCase(labName)}`}
-            buttonSelector={`${buttonSelectorClass} > .usa-accordion__button`}
-            accordionSelector={`${accordionSelectorClass} > .usa-accordion__content`}
-            expandButtonText="Expand all labs"
-            collapseButtonText="Collapse all labs"
+            expandHandler={() =>
+              setAccordionItems(
+                accordionItems.map((item) => ({ ...item, expanded: true })),
+              )
+            }
+            collapseHandler={() =>
+              setAccordionItems(
+                accordionItems.map((item) => ({ ...item, expanded: false })),
+              )
+            }
+            descriptor="labs"
           />
         </div>
       </div>
-      {labResult.diagnosticReportDataElements}
+      <LabAccordion items={accordionItems} />
     </AccordionSubSection>
   );
 };

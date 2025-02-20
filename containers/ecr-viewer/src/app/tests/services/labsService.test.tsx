@@ -625,7 +625,7 @@ describe("LabsService tests", () => {
         evaluate(BundleLab, mappings["diagnosticReports"]),
         mappings,
       );
-      expect(result[0]).toHaveProperty("diagnosticReportDataElements");
+      expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
     });
 
@@ -810,7 +810,7 @@ describe("LabsService tests", () => {
     it("returns true when the input is a list of LabReportElementData", () => {
       const actual = isLabReportElementDataList([
         {
-          diagnosticReportDataElements: [
+          diagnosticReportDataItems: [
             { type: "test-type", props: "test-props", key: "test-key" },
           ],
           organizationId: "test-id",

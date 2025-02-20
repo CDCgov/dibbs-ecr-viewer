@@ -368,7 +368,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
 
   if (isLabReportElementDataList(relevantLabElements)) {
     resultsArray = relevantLabElements.flatMap((element) =>
-      element.diagnosticReportDataElements.map((reportElement) => ({
+      element.diagnosticReportDataItems.map((reportElement) => ({
         value: reportElement,
         dividerLine: false,
       })),
