@@ -103,3 +103,5 @@ const getAriaSortValue = (sortDirection: string): AriaSortType | undefined => {
     return "descending";
   }
 };
+
+export default EcrTableHeader;
