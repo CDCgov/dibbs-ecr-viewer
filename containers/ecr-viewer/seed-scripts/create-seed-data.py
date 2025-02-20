@@ -12,7 +12,7 @@ def _get_args():
     parser = argparse.ArgumentParser(
         prog="Create Seed Data",
         description="Convert eICR and RR files to FHIR bundles and insert them into the database.",
-        epilog="For each directory in baseECR/LA the script will look for a `CDA_eICR.xml` and `CDA_RR.xml` file. If they are found, it will convert them into a FHIR bundle (saved as `bundle.json`) and insert that into the database using the Orchestration service.",
+        epilog="For each directory in baseECR the script will look for a `CDA_eICR.xml` and `CDA_RR.xml` file. If they are found, it will convert them into a FHIR bundle (saved as `bundle.json`) and insert that into the database using the Orchestration service.",
     )
     parser.add_argument(
         "-s",
