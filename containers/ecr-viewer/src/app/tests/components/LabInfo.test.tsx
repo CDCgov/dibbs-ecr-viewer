@@ -109,7 +109,6 @@ describe("LabInfo", () => {
       );
 
       render(<LabInfo labResults={labinfo} />);
-
       screen
         .getAllByTestId("accordionButton", { exact: false })
         .forEach((button) => {
@@ -122,7 +121,7 @@ describe("LabInfo", () => {
         });
     });
 
-    it("should return not render any results if no table data is present", () => {
+    it("should not render any results if no table data is present", () => {
       render(<LabInfo labResults={[{}]} />);
       expect(screen.getByText("Lab Results")).toBeInTheDocument();
       expect(
