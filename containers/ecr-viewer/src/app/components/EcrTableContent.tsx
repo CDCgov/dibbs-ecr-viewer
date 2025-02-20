@@ -1,7 +1,7 @@
 import React from "react";
 import { listEcrData } from "@/app/services/listEcrDataService";
 import { DateRangePeriod } from "@/app/utils/date-utils";
-import { EcrTableData } from "./EcrTableData";
+import { EcrTableDataRow } from "./EcrTableDataRow";
 
 /**
  * eCR Table
@@ -46,7 +46,9 @@ const EcrTableContent = async ({
 
   return (
     <tbody>
-      <EcrTableData data={data} />
+      {data.map((item, index) => (
+        <EcrTableDataRow key={index} item={item} />
+      ))}
     </tbody>
   );
 };

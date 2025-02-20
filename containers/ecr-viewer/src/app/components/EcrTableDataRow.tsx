@@ -8,22 +8,12 @@ import { useQueryParam } from "../hooks/useQueryParam";
 import { EcrDisplay } from "../services/listEcrDataService";
 
 /**
- * Data rows for the ECR library table
- * @param params react params
- * @param params.data Data to display
- * @returns Rows of data
- */
-export const EcrTableData = ({ data }: { data: EcrDisplay[] }) => {
-  return data.map((item, index) => <DataRow key={index} item={item} />);
-};
-
-/**
  * Formats a single row of the eCR table.
  * @param props - The properties passed to the component.
  * @param props.item - The eCR data to be formatted.
  * @returns A JSX table row element representing the eCR data.
  */
-const DataRow = ({ item }: { item: EcrDisplay }) => {
+export const EcrTableDataRow = ({ item }: { item: EcrDisplay }) => {
   const patient_first_name = toSentenceCase(item.patient_first_name);
   const patient_last_name = toSentenceCase(item.patient_last_name);
 
