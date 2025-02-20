@@ -634,7 +634,7 @@
           "type": "password",
           "userLabel": "My password",
           "createdDate": 1732143832208,
-          "value": "Password"
+          "value": "pw"
         }
       ],
       "disableableCredentialTypes": [],
