@@ -20,7 +20,6 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import { HeadingLevel } from "@trussworks/react-uswds";
-import { returnHtmlTableContent } from "@/app/view-data/components/common";
 import { extractNumbersAndPeriods } from "@/app/utils/format-utils";
 import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
@@ -29,6 +28,7 @@ import {
   getLabResultAccordionItem,
 } from "./accordionItemService";
 import { LabAccordion } from "../view-data/components/LabAccordion";
+import { JsonTable } from "../view-data/components/JsonTable";
 
 export interface LabReport {
   result: Array<Reference>;
@@ -731,34 +731,38 @@ function getUnformattedLabsContent(
   mappings: PathMappings,
   accordionHeadingLevel: HeadingLevel = "h5",
 ): DisplayDataProps[] {
-  const accordionContent = returnHtmlTableContent(
-    fhirBundle,
-    mappings["labResultDiv"],
-    "",
-    false,
-    "lab-results-table-from-div",
-  );
+  const bundle = evaluateValue(fhirBundle, mappings["labResultDiv"]);
+  const tableJson = formatTablesToJSON(bundle);
 
-  return accordionContent
-    ? [
-        {
-          title: "Lab Results",
-          value: (
-            <LabAccordion
-              items={[
-                {
-                  title: "All Lab Results",
-                  content: accordionContent,
-                  expanded: false,
-                  id: "all-lab-results",
-                  headingLevel: accordionHeadingLevel,
-                  className: "padding-bottom-0",
-                },
-              ]}
-            />
-          ),
-          dividerLine: false,
-        } as DisplayDataProps,
-      ]
-    : [];
+  if (tableJson.length === 0) {
+    return [];
+  }
+
+  return [
+    {
+      title: "Lab Results",
+      value: (
+        <LabAccordion
+          items={[
+            {
+              title: "All Lab Results",
+              content: tableJson.map((table, index) => (
+                <JsonTable
+                  key={`lab-result-table_${index}`}
+                  jsonTableData={table}
+                  outerBorder={false}
+                  className="lab-results-table-from-div"
+                />
+              )),
+              headingLevel: accordionHeadingLevel,
+              className: "padding-bottom-0",
+              id: "all-lab-results",
+              expanded: false,
+            },
+          ]}
+        />
+      ),
+      dividerLine: false,
+    } as DisplayDataProps,
+  ];
 }
