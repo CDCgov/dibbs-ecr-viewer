@@ -3,7 +3,6 @@ import React from "react";
 import { Table } from "@trussworks/react-uswds";
 import { SortButton } from "@/app/components/SortButton";
 import { range } from "../utils/data-utils";
-import classNames from "classnames";
 
 type EcrTableStyledProps = {
   headers: TableHeader[];
@@ -116,22 +115,16 @@ const Header = ({
       data-sortable={column.dataSortable}
       aria-sort={getAriaSortValue(column.sortDirection)}
     >
-      <div className={column.sortDirection ? "sort-div" : "display-flex"}>
-        {column.value}
-        {(column.sortDirection || column.dataSortable) && (
-          <SortButton
-            columnId={column.id}
-            columnName={column.value}
-            className={classNames({
-              "sortable-asc-column": column.sortDirection === "ASC",
-              "sortable-desc-column": column.sortDirection === "DESC",
-              "sortable-column": column.sortDirection === "",
-            })}
-            direction={column.sortDirection}
-            handleSort={() => handleSort(column.id, column.sortDirection)}
-          ></SortButton>
-        )}
-      </div>
+      {column.sortDirection || column.dataSortable ? (
+        <SortButton
+          columnId={column.id}
+          columnName={column.value}
+          direction={column.sortDirection}
+          handleSort={() => handleSort(column.id, column.sortDirection)}
+        />
+      ) : (
+        <div className="display-flex">{column.value}</div>
+      )}
     </th>
   );
 };
