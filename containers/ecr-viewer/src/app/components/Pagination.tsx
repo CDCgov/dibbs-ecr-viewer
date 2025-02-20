@@ -19,9 +19,9 @@ type PaginationProps = {
 };
 
 const PaginationPage = ({
+  pathname,
   page,
   isCurrent,
-  pathname,
   onClickPageNumber,
 }: {
   pathname: string;
@@ -37,10 +37,7 @@ const PaginationPage = ({
   });
 
   return (
-    <li
-      key={`pagination_page_${page}`}
-      className="usa-pagination__item usa-pagination__page-no"
-    >
+    <li className="usa-pagination__item usa-pagination__page-no">
       {onClickPageNumber ? (
         <Button
           type="button"
