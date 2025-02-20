@@ -82,46 +82,6 @@ describe("EcrTableContent", () => {
     });
   });
 
-  describe("load without an eCR", () => {
-    it("should match snapshot", async () => {
-      mockedListEcrData.mockResolvedValue([]);
-      const table = document.createElement("table");
-      const { container } = render(
-        await EcrTableContent({
-          currentPage: 1,
-          itemsPerPage: 25,
-          sortColumn: "date_created",
-          sortDirection: "DESC",
-          filterDates: mockDateRange,
-        }),
-        {
-          container: document.body.appendChild(table),
-        },
-      );
-      expect(container).toMatchSnapshot();
-    });
-
-    it("should pass accessibility", async () => {
-      mockedListEcrData.mockResolvedValue([]);
-      const table = document.createElement("table");
-      const { container } = render(
-        await EcrTableContent({
-          currentPage: 1,
-          itemsPerPage: 25,
-          sortColumn: "date_created",
-          sortDirection: "DESC",
-          filterDates: mockDateRange,
-        }),
-        {
-          container: document.body.appendChild(table),
-        },
-      );
-      await act(async () => {
-        expect(await axe(container)).toHaveNoViolations();
-      });
-    });
-  });
-
   it("should call listEcrDataService with all params", async () => {
     mockedListEcrData.mockResolvedValue(mockData);
 

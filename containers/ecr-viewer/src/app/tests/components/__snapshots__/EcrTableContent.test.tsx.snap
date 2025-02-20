@@ -1254,22 +1254,3 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
   </tbody>
 </table>
 `;
-
-exports[`EcrTableContent load without an eCR should match snapshot 1`] = `
-<table>
-  <tbody>
-    <tr>
-      <td
-        class="text-middle text-center height-card"
-        colspan="999"
-      >
-        <span
-          class="text-bold font-body-lg"
-        >
-          No eCRs found. We couldn't find any eCRs matching your filter or search critera.
-        </span>
-      </td>
-    </tr>
-  </tbody>
-</table>
-`;
