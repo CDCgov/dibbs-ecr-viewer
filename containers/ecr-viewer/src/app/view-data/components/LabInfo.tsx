@@ -1,16 +1,15 @@
-import { AccordionSection, AccordionSubSection } from "../component-utils";
+"use client";
 import React, { useState } from "react";
+import { AccordionSection, AccordionSubSection } from "../component-utils";
 import {
   DataDisplay,
   DataTableDisplay,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
-import {
-  isLabReportElementDataList,
-  LabReportElementData,
-} from "@/app/services/labsService";
+import { LabReportElementData } from "@/app/services/labsService";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
 import { LabAccordion } from "./LabAccordion";
+import { isLabReportElementDataList } from "@/app/utils/lab-utils";
 
 interface LabInfoProps {
   labResults: DisplayDataProps[] | LabReportElementData[];

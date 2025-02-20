@@ -21,11 +21,13 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
+import { evaluateLabInfoData } from "./labsService";
 import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
 import React from "react";
 import { toTitleCase } from "../utils/format-utils";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
+import { LabAccordion } from "../view-data/components/LabAccordion";
+import { isLabReportElementDataList } from "../utils/lab-utils";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -368,8 +370,8 @@ export const evaluateEcrSummaryRelevantLabResults = (
 
   if (isLabReportElementDataList(relevantLabElements)) {
     resultsArray = relevantLabElements.flatMap((element) =>
-      element.diagnosticReportDataItems.map((reportElement) => ({
-        value: reportElement,
+      element.diagnosticReportDataItems.map((reportItem) => ({
+        value: <LabAccordion items={[reportItem]} />,
         dividerLine: false,
       })),
     );

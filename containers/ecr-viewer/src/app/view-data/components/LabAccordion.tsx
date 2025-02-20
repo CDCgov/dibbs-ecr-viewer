@@ -14,6 +14,8 @@ export const LabAccordion = ({
 }): React.JSX.Element => {
   return (
     <Accordion
+      // HACK: get this to re-render when items change
+      key={crypto.randomUUID()}
       items={items}
       className="accordion-rr margin-bottom-3"
       multiselectable

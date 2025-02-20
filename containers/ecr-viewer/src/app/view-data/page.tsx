@@ -8,7 +8,7 @@ import {
   evaluateEcrSummaryPatientDetails,
 } from "../services/ecrSummaryService";
 import { PathMappings } from "../utils/data-utils";
-import { getAccordionItems } from "@/app/services/accordionItemService";
+import { getEcrDocumentAccordionItems } from "@/app/services/accordionItemService";
 import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import EcrSummary from "./components/EcrSummary";
@@ -76,7 +76,7 @@ const ECRViewerPage = async ({
     const patientName = evaluatePatientName(fhirBundle, mappings, true);
     const patientDOB = evaluatePatientDOB(fhirBundle, mappings);
 
-    const accordionItems = getAccordionItems(fhirBundle, mappings);
+    const accordionItems = getEcrDocumentAccordionItems(fhirBundle, mappings);
     return (
       <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
         <SideNav />

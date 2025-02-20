@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { Accordion, Grid, GridContainer } from "@trussworks/react-uswds";
 import { AccordionItem } from "@/app/services/accordionItemService";
@@ -46,6 +47,8 @@ export const EcrDocument = ({
         </div>
       </GridContainer>
       <Accordion
+        // HACK: get this to re-render when items change
+        key={crypto.randomUUID()}
         className="info-container"
         items={accordionItems}
         multiselectable
