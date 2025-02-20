@@ -3,7 +3,7 @@ import {
   getMedicationDisplayName,
   returnHtmlTableContent,
 } from "@/app/view-data/components/common";
-import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import { Bundle } from "fhir/r4";
 import { render, screen } from "@testing-library/react";
 

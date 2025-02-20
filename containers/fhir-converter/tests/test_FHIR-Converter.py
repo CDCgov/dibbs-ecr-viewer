@@ -365,7 +365,7 @@ def test_add_rr_to_ecr():
     with open("./tests/test_files/CDA_RR.xml") as fp:
         rr = fp.read()
 
-    with open("./tests/test_files/CDA_eICR.xml") as fp:
+    with open("./tests/test_files//CDA_eICR.xml") as fp:
         ecr = fp.read()
 
     # extract rr fields, insert to ecr
