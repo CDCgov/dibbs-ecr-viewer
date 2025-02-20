@@ -20,10 +20,10 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import { HeadingLevel } from "@trussworks/react-uswds";
-import { returnHtmlTableContent } from "@/app/view-data/components/common";
 import { extractNumbersAndPeriods } from "@/app/utils/format-utils";
 import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
+import { JsonTable } from "../view-data/components/JsonTable";
 
 export interface LabReport {
   result: Array<Reference>;
@@ -749,30 +749,34 @@ function getUnformattedLabsContent(
   mappings: PathMappings,
   accordionHeadingLevel: HeadingLevel | undefined,
 ): DisplayDataProps[] {
-  const accordionContent = returnHtmlTableContent(
-    fhirBundle,
-    mappings["labResultDiv"],
-    "",
-    false,
-    "lab-results-table-from-div",
-  );
+  const bundle = evaluateValue(fhirBundle, mappings["labResultDiv"]);
+  const tableJson = formatTablesToJSON(bundle);
 
-  return accordionContent
-    ? [
-        {
-          title: "Lab Results",
-          value: (
-            <AccordionLabResults
-              title="All Lab Results"
-              abnormalTag={false}
-              content={[accordionContent]}
-              organizationId="0"
-              headingLevel={accordionHeadingLevel}
-              className={"padding-bottom-0"}
+  if (tableJson.length === 0) {
+    return [];
+  }
+
+  return [
+    {
+      title: "Lab Results",
+      value: (
+        <AccordionLabResults
+          title="All Lab Results"
+          abnormalTag={false}
+          content={tableJson.map((table, index) => (
+            <JsonTable
+              key={`lab-result-table_${index}`}
+              jsonTableData={table}
+              outerBorder={false}
+              className="lab-results-table-from-div"
             />
-          ),
-          dividerLine: false,
-        } as DisplayDataProps,
-      ]
-    : [];
+          ))}
+          organizationId="0"
+          headingLevel={accordionHeadingLevel}
+          className={"padding-bottom-0"}
+        />
+      ),
+      dividerLine: false,
+    } as DisplayDataProps,
+  ];
 }

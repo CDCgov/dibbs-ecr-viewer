@@ -49,7 +49,7 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
         >
           <div>
             <nav
-              class="nav-wrapper top-550"
+              class="nav-wrapper"
             >
               <a
                 class="display-inline-block margin-bottom-3"

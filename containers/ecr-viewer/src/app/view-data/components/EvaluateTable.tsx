@@ -84,7 +84,7 @@ export const BaseTable = ({
   children,
 }: {
   columns: ColumnInfoInput[];
-  caption?: string;
+  caption?: React.ReactNode;
   className?: string;
   fixed?: boolean;
   outerBorder?: boolean;
@@ -126,7 +126,7 @@ const BaseTableHeaders = ({
         <th
           key={`${column.columnName}${index}`}
           scope="col"
-          className={classNames("tableHeader", column.className)}
+          className={classNames("table-header", column.className)}
         >
           {column.columnName}
         </th>

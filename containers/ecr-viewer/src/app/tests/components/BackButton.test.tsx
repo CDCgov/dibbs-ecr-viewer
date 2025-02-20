@@ -1,4 +1,4 @@
-import { BackButton } from "@/app/view-data/components/BackButton";
+import { BackButton } from "@/app/components/BackButton";
 import { render, screen } from "@testing-library/react";
 
 describe("Back button", () => {

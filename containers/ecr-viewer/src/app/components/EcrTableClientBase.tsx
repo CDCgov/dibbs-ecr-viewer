@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Table } from "@trussworks/react-uswds";
 import { SortButton } from "@/app/components/SortButton";
@@ -36,7 +37,7 @@ export const INITIAL_HEADERS = [
     sortDirection: "",
   },
   {
-    id: "report_date",
+    id: "encounter_date",
     value: "Encounter Date",
     className: "library-encounter-date-column",
     dataSortable: true,
@@ -70,6 +71,28 @@ export const EcrTableLoading = () => {
           <BlobRow key={i} themeColor={i % 2 == 0 ? "gray" : "dark-gray"} />
         );
       })}
+    </EcrTableStyled>
+  );
+};
+
+/**
+ * The Ecr Library table, but with a no data message instead of rows.
+ * @returns - The JSX element representing the eCR table.
+ */
+export const EcrTableNoData = () => {
+  return (
+    <EcrTableStyled headers={INITIAL_HEADERS} handleSort={() => {}}>
+      <tr>
+        <td
+          colSpan={INITIAL_HEADERS.length}
+          className="text-middle text-center height-card"
+        >
+          <span className="text-bold font-body-lg">
+            No eCRs found. We couldn't find any eCRs matching your filter or
+            search critera.
+          </span>
+        </td>
+      </tr>
     </EcrTableStyled>
   );
 };
@@ -120,7 +143,6 @@ const Header = ({
   return (
     <th
       id={`${column.id}-header`}
-      key={`${column.value}`}
       scope="col"
       role="columnheader"
       className={column.className}
@@ -132,7 +154,7 @@ const Header = ({
         {(column.sortDirection || column.dataSortable) && (
           <SortButton
             columnId={column.id}
-            columnName={column.id}
+            columnName={column.value}
             className={classNames({
               "sortable-asc-column": column.sortDirection === "ASC",
               "sortable-desc-column": column.sortDirection === "DESC",
