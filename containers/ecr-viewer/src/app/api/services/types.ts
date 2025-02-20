@@ -8,10 +8,10 @@ import {
 
 export interface ecr_data {
   eICR_ID: Generated<string>;
-  set_id: string;
-  data_source: string;
-  fhir_reference_link: string;
-  eicr_version_number: string;
+  set_id: string | undefined;
+  data_source: string | undefined;
+  fhir_reference_link: string | undefined;
+  eicr_version_number: string | undefined;
 
   patient_name_first: string;
   patient_name_last: string;
