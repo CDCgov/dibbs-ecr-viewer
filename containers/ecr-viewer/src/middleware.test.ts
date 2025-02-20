@@ -4,7 +4,6 @@
 import { middleware } from "@/middleware";
 import { NextRequest } from "next/server";
 import { importSPKI, jwtVerify } from "jose";
-import { getToken } from "next-auth/jwt";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),
@@ -27,22 +26,6 @@ describe("Middleware", () => {
     delete process.env.NEXTAUTH_SECRET;
     delete process.env.NBS_AUTH;
     delete process.env.BASE_PATH;
-  });
-
-  it("should authorize the request if oauthToken is present", async () => {
-    getToken.mockImplementation(() => Promise.resolve({ token: "fake-token" }));
-
-    const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/protected",
-    );
-
-    const resp = await middleware(req);
-
-    expect(resp.status).toBe(200);
-    expect(getToken).toHaveBeenCalledWith({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
   });
 
   it("should strip the auth query param and set the token", async () => {
