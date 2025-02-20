@@ -755,7 +755,7 @@ function getUnformattedLabsContent(
                 />
               )),
               headingLevel: accordionHeadingLevel,
-              className: "padding-bottom-0",
+              className: "padding-bottom-0 side-nav-ignore",
               id: "all-lab-results",
               expanded: false,
             },

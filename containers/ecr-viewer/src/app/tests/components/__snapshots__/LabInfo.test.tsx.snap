@@ -33,11 +33,12 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                   class="grid-col-auto width-full text-pre-line"
                 >
                   <div
-                    class="usa-accordion accordion-rr accordion_0 margin-bottom-3"
+                    class="usa-accordion accordion-rr margin-bottom-3"
+                    data-allow-multiple="true"
                     data-testid="accordion"
                   >
                     <h5
-                      class="usa-accordion__heading acc_item_0 side-nav-ignore padding-bottom-0"
+                      class="usa-accordion__heading padding-bottom-0 side-nav-ignore"
                     >
                       <button
                         aria-controls="all-lab-results"
@@ -50,7 +51,7 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                       </button>
                     </h5>
                     <div
-                      class="usa-accordion__content usa-prose acc_item_0 side-nav-ignore padding-bottom-0"
+                      class="usa-accordion__content usa-prose padding-bottom-0 side-nav-ignore"
                       data-testid="accordionItem_all-lab-results"
                       hidden=""
                       id="all-lab-results"
@@ -203,10 +204,10 @@ Mos Eisley, CO
                 <button
                   class="usa-button usa-button--unstyled"
                   data-testid="button"
-                  id="lab-info-lab-results-from-unknown-organization-expand-button"
                   type="button"
                 >
-                  Expand all labs
+                  Expand all 
+                  labs
                 </button>
                 <span
                   class="vertical-line"
@@ -214,19 +215,20 @@ Mos Eisley, CO
                 <button
                   class="usa-button usa-button--unstyled"
                   data-testid="button"
-                  id="lab-info-lab-results-from-unknown-organization-collapse-button"
                   type="button"
                 >
-                  Collapse all labs
+                  Collapse all 
+                  labs
                 </button>
               </div>
             </div>
             <div
-              class="usa-accordion accordion-rr accordion_14394818-a1e9-4882-ca8b-FAKE793bb5cc margin-bottom-3"
+              class="usa-accordion accordion-rr margin-bottom-3"
+              data-allow-multiple="true"
               data-testid="accordion"
             >
               <h5
-                class="usa-accordion__heading acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+                class="usa-accordion__heading side-nav-ignore"
               >
                 <button
                   aria-controls="stool-pathogens-naat-12-to-25-targets"
@@ -246,7 +248,7 @@ Mos Eisley, CO
                 </button>
               </h5>
               <div
-                class="usa-accordion__content usa-prose acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+                class="usa-accordion__content usa-prose side-nav-ignore"
                 data-testid="accordionItem_stool-pathogens-naat-12-to-25-targets"
                 hidden=""
                 id="stool-pathogens-naat-12-to-25-targets"
@@ -557,13 +559,8 @@ Mos Eisley, CO
                   />
                 </div>
               </div>
-            </div>
-            <div
-              class="usa-accordion accordion-rr accordion_14394818-a1e9-4882-ca8b-FAKE793bb5cc margin-bottom-3"
-              data-testid="accordion"
-            >
               <h5
-                class="usa-accordion__heading acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+                class="usa-accordion__heading side-nav-ignore"
               >
                 <button
                   aria-controls="stool-pathogens-naat-12-to-25-targets"
@@ -576,7 +573,7 @@ Mos Eisley, CO
                 </button>
               </h5>
               <div
-                class="usa-accordion__content usa-prose acc_item_14394818-a1e9-4882-ca8b-FAKE793bb5cc side-nav-ignore"
+                class="usa-accordion__content usa-prose side-nav-ignore"
                 data-testid="accordionItem_stool-pathogens-naat-12-to-25-targets"
                 hidden=""
                 id="stool-pathogens-naat-12-to-25-targets"
@@ -971,10 +968,10 @@ Coruscant, MA
                 <button
                   class="usa-button usa-button--unstyled"
                   data-testid="button"
-                  id="lab-info-lab-results-from-coruscant-medical-expand-button"
                   type="button"
                 >
-                  Expand all labs
+                  Expand all 
+                  labs
                 </button>
                 <span
                   class="vertical-line"
@@ -982,19 +979,20 @@ Coruscant, MA
                 <button
                   class="usa-button usa-button--unstyled"
                   data-testid="button"
-                  id="lab-info-lab-results-from-coruscant-medical-collapse-button"
                   type="button"
                 >
-                  Collapse all labs
+                  Collapse all 
+                  labs
                 </button>
               </div>
             </div>
             <div
-              class="usa-accordion accordion-rr accordion_3a1cb409-6f94-0231-86d6-FAKE1ecc5fda margin-bottom-3"
+              class="usa-accordion accordion-rr margin-bottom-3"
+              data-allow-multiple="true"
               data-testid="accordion"
             >
               <h5
-                class="usa-accordion__heading acc_item_3a1cb409-6f94-0231-86d6-FAKE1ecc5fda side-nav-ignore"
+                class="usa-accordion__heading side-nav-ignore"
               >
                 <button
                   aria-controls="cytogenomic-snp-microarray"
@@ -1007,7 +1005,7 @@ Coruscant, MA
                 </button>
               </h5>
               <div
-                class="usa-accordion__content usa-prose acc_item_3a1cb409-6f94-0231-86d6-FAKE1ecc5fda side-nav-ignore"
+                class="usa-accordion__content usa-prose side-nav-ignore"
                 data-testid="accordionItem_cytogenomic-snp-microarray"
                 hidden=""
                 id="cytogenomic-snp-microarray"

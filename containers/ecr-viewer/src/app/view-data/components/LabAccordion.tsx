@@ -15,7 +15,7 @@ export const LabAccordion = ({
   return (
     <Accordion
       // HACK: get this to re-render when items change
-      key={crypto.randomUUID()}
+      key={Math.random()}
       items={items}
       className="accordion-rr margin-bottom-3"
       multiselectable

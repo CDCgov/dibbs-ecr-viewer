@@ -48,7 +48,7 @@ export const EcrDocument = ({
       </GridContainer>
       <Accordion
         // HACK: get this to re-render when items change
-        key={crypto.randomUUID()}
+        key={Math.random()}
         className="info-container"
         items={accordionItems}
         multiselectable

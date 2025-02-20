@@ -20,12 +20,13 @@ import {
   combineOrgAndReportData,
   evaluateLabInfoData,
   findIdenticalOrg,
-  isLabReportElementDataList,
   returnAnalysisTime,
+  LabReportElementData,
 } from "@/app/services/labsService";
-import { AccordionLabResults } from "@/app/view-data/components/AccordionLabResults";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { noData } from "@/app/utils/data-utils";
+import { AccordionItem } from "@/app/services/accordionItemService";
+import { isLabReportElementDataList } from "@/app/utils/lab-utils";
 
 const mappings = loadYamlConfig();
 
@@ -505,18 +506,8 @@ describe("LabsService tests", () => {
         BundleLab as unknown as Bundle,
         mappings,
       );
-      const actualDisplay = (
-        <AccordionLabResults
-          title={report.code.coding?.[0].display ?? "\u{200B}"}
-          abnormalTag={false}
-          content={[<>{actual}</>]}
-          organizationId="test"
-        />
-      );
 
-      expect(actualDisplay.props.title).toContain(
-        "STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS",
-      );
+      expect(actual).toContain("STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS");
     });
     it("should evaluate diagnostic report results", () => {
       const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
@@ -525,16 +516,8 @@ describe("LabsService tests", () => {
         BundleLab as unknown as Bundle,
         mappings,
       );
-      const actualDisplay = (
-        <AccordionLabResults
-          title={report.code.coding?.[0].display ?? "\u{200B}"}
-          abnormalTag={false}
-          content={[<div key={"1"}>{actual}</div>]}
-          organizationId="test"
-        />
-      );
 
-      render(actualDisplay.props.content);
+      render(actual);
 
       expect(screen.getByText("Campylobacter, NAAT")).toBeInTheDocument();
       expect(screen.getAllByText("Not Detected")).not.toBeEmpty();
@@ -567,16 +550,8 @@ describe("LabsService tests", () => {
         BundleLab as unknown as Bundle,
         mappings,
       );
-      const actualDisplay = (
-        <AccordionLabResults
-          title={report.code.coding?.[0].display ?? "\u{200B}"}
-          abnormalTag={false}
-          content={[<div key={"1"}>{actual}</div>]}
-          organizationId="test"
-        />
-      );
 
-      render(actualDisplay.props.content);
+      render(actual);
 
       expect(
         screen.getAllByText("LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM"),
@@ -607,7 +582,9 @@ describe("LabsService tests", () => {
     });
     it("should combine the data into new format", () => {
       const testResultObject: ResultObject = {
-        "Organization/22c6cdd0-bde1-e220-9ba4-2c2802f795ad": [<div></div>],
+        "Organization/22c6cdd0-bde1-e220-9ba4-2c2802f795ad": [
+          {} as AccordionItem,
+        ],
       };
       const result = combineOrgAndReportData(
         testResultObject,
@@ -645,10 +622,11 @@ describe("LabsService tests", () => {
         evaluate(BundleLab, mappings["diagnosticReports"]),
         mappings,
       );
-      expect(result[0].organizationDisplayDataProps[3].title).toEqual(
-        "Number of Results",
-      );
-      expect(result[0].organizationDisplayDataProps[3].value).toEqual(2);
+      expect(isLabReportElementDataList(result)).toBeTrue();
+      const props = (result[0] as LabReportElementData)
+        .organizationDisplayDataProps;
+      expect(props[3].title).toEqual("Number of Results");
+      expect(props[3].value).toEqual(2);
     });
   });
 
@@ -810,9 +788,7 @@ describe("LabsService tests", () => {
     it("returns true when the input is a list of LabReportElementData", () => {
       const actual = isLabReportElementDataList([
         {
-          diagnosticReportDataItems: [
-            { type: "test-type", props: "test-props", key: "test-key" },
-          ],
+          diagnosticReportDataItems: [{} as AccordionItem],
           organizationId: "test-id",
           organizationDisplayDataProps: [{} as DisplayDataProps],
         },

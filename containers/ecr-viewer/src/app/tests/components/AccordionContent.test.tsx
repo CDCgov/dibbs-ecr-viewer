@@ -3,7 +3,8 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { Bundle } from "fhir/r4";
 import { loadYamlConfig } from "@/app/api/utils";
-import AccordionContent from "@/app/services/accordionItemService";
+import { getEcrDocumentAccordionItems } from "@/app/services/accordionItemService";
+import { EcrDocument } from "@/app/view-data/components/EcrDocument";
 
 const mappings = loadYamlConfig();
 
@@ -15,9 +16,9 @@ describe("Snapshot test for Accordion Content", () => {
       entry: [],
     };
 
-    let { container } = render(
-      <AccordionContent fhirBundle={bundleEmpty} fhirPathMappings={mappings} />,
-    );
+    let items = getEcrDocumentAccordionItems(bundleEmpty, mappings);
+
+    let { container } = render(<EcrDocument initialAccordionItems={items} />);
 
     expect(await axe(container)).toHaveNoViolations();
     container.querySelectorAll("[id], [aria-describedby]").forEach((el) => {
