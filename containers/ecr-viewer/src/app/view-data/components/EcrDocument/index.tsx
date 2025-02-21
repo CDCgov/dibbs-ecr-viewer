@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Accordion, Grid, GridContainer } from "@trussworks/react-uswds";
-import { AccordionItem } from "@/app/services/accordionItemService";
-import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
+import { AccordionItem } from "@/app/view-data/types";
+import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 
 /**
  * The body of the eCR document
@@ -56,3 +56,5 @@ export const EcrDocument = ({
     </div>
   );
 };
+
+export default EcrDocument;

@@ -19,16 +19,16 @@ import {
   DataDisplay,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
-import { HeadingLevel } from "@trussworks/react-uswds";
-import { extractNumbersAndPeriods } from "@/app/utils/format-utils";
+import { HeadingLevel, Tag } from "@trussworks/react-uswds";
+import {
+  extractNumbersAndPeriods,
+  toKebabCase,
+} from "@/app/utils/format-utils";
 import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
-import {
-  AccordionItem,
-  getLabResultAccordionItem,
-} from "./accordionItemService";
 import { LabAccordion } from "../view-data/components/LabAccordion";
 import { JsonTable } from "../view-data/components/JsonTable";
+import { AccordionItem } from "../view-data/types";
 
 export interface LabReport {
   result: Array<Reference>;
@@ -470,12 +470,25 @@ export const evaluateLabInfoData = (
       "Organization/",
       "",
     );
-    const item = getLabResultAccordionItem({
-      title: report.code.coding.find((c: Coding) => c.display).display,
-      abnormalTag: checkAbnormalTag(labReportJson),
+    const title = report.code.coding.find((c: Coding) => c.display).display;
+    const item = {
+      title: (
+        <>
+          {title}
+          {checkAbnormalTag(labReportJson) && (
+            <Tag background={"#B50909"} className={"margin-left-105"}>
+              Abnormal
+            </Tag>
+          )}
+        </>
+      ),
       content,
+      expanded: false,
+      id: toKebabCase(title),
       headingLevel: accordionHeadingLevel,
-    });
+      className: "side-nav-ignore",
+    };
+
     organizationItems = groupItemByOrgId(
       organizationItems,
       organizationId,

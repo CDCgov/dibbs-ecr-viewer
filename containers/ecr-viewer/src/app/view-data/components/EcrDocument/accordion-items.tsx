@@ -1,14 +1,14 @@
-import { PathMappings } from "../utils/data-utils";
-import Demographics from "../view-data/components/Demographics";
-import SocialHistory from "../view-data/components/SocialHistory";
-import UnavailableInfo from "../view-data/components/UnavailableInfo";
-import EcrMetadata from "../view-data/components/EcrMetadata";
-import EncounterDetails from "../view-data/components/Encounter";
-import ClinicalInfo from "../view-data/components/ClinicalInfo";
+import { PathMappings } from "@/app/utils/data-utils";
+import Demographics from "@/app/view-data/components/Demographics";
+import SocialHistory from "@/app/view-data/components/SocialHistory";
+import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
+import EcrMetadata from "@/app/view-data/components/EcrMetadata";
+import EncounterDetails from "@/app/view-data/components/Encounter";
+import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import { Bundle } from "fhir/r4";
 import React from "react";
 import LabInfo from "@/app/view-data/components/LabInfo";
-import { evaluateEcrMetadata } from "./ecrMetadataService";
+import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
 import {
   evaluateDemographicsData,
@@ -17,12 +17,10 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
-import { evaluateClinicalData } from "../view-data/components/common";
-import { Accordion, HeadingLevel, Tag } from "@trussworks/react-uswds";
+import { evaluateClinicalData } from "@/app/view-data/components/common";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
-
-export type AccordionItem = React.ComponentProps<typeof Accordion>["items"][0];
+import { AccordionItem } from "@/app/view-data/types";
 
 /**
  * Functional component for an accordion container displaying various sections of eCR information.
@@ -228,43 +226,4 @@ export const getEcrDocumentAccordionItems = (
   });
 
   return accordionItems;
-};
-
-/**
- * Accordion component for displaying lab results.
- * @param props - The props object.
- * @param props.title - The title of the lab result.
- * @param props.abnormalTag - Boolean value if the lab result is abnormal.
- * @param props.content - The content within the accordian.
- * @param props.headingLevel - Heading level for the Accordion menu title.
- * @returns React element representing the AccordionLabResults component.
- */
-export const getLabResultAccordionItem = ({
-  title,
-  abnormalTag,
-  content,
-  headingLevel = "h5",
-}: {
-  title: string;
-  abnormalTag: boolean;
-  content: React.JSX.Element[];
-  headingLevel?: HeadingLevel;
-}): AccordionItem => {
-  return {
-    title: (
-      <>
-        {title}
-        {abnormalTag && (
-          <Tag background={"#B50909"} className={"margin-left-105"}>
-            Abnormal
-          </Tag>
-        )}
-      </>
-    ),
-    content,
-    expanded: false,
-    id: toKebabCase(title),
-    headingLevel,
-    className: "side-nav-ignore",
-  };
 };
