@@ -1,14 +1,19 @@
 import React, { Suspense } from "react";
-import Header from "@/app/components/Header";
-import { getTotalEcrCount } from "@/app/services/listEcrDataService";
-import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
-import EcrTable from "@/app/components/EcrTable";
-import LibrarySearch from "./components/LibrarySearch";
-import Filters from "@/app/components/Filters";
-import { EcrTableLoading } from "./components/EcrTableClientBase";
-import { returnParamDates } from "@/app/utils/date-utils";
 import { env } from "next-runtime-env";
+import { Table } from "@trussworks/react-uswds";
+
+import { getTotalEcrCount } from "@/app/services/listEcrDataService";
+import { returnParamDates } from "@/app/utils/date-utils";
 import { getAllConditions } from "./data/conditions";
+import { INITIAL_HEADERS } from "./constants";
+
+import { EcrTableHeader } from "./components/EcrTableHeader";
+import { EcrTableLoading } from "./components/EcrTableLoading";
+import EcrTableContent from "@/app/components/EcrTableContent";
+import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
+import Filters from "@/app/components/Filters";
+import Header from "@/app/components/Header";
+import LibrarySearch from "./components/LibrarySearch";
 import NotFound from "@/app/not-found";
 
 /**
@@ -38,6 +43,13 @@ const HomePage = async ({
   const filterConditionsArr = filterConditions?.split("|");
   const filterDates = returnParamDates(searchParams);
 
+  const tableHeaders = INITIAL_HEADERS.map((header) => {
+    return {
+      ...header,
+      sortDirection: header.id === sortColumn ? sortDirection : "",
+    };
+  });
+
   const totalCount = await getTotalEcrCount(
     filterDates,
     searchTerm,
@@ -61,21 +73,72 @@ const HomePage = async ({
         </div>
         <Filters conditions={allConditions} />
         <EcrPaginationWrapper totalCount={totalCount}>
-          <Suspense fallback={<EcrTableLoading />}>
-            <EcrTable
-              currentPage={currentPage}
-              itemsPerPage={itemsPerPage}
-              sortColumn={sortColumn}
-              sortDirection={sortDirection}
-              searchTerm={searchTerm}
-              filterConditions={filterConditionsArr}
-              filterDates={filterDates}
+          <EcrTableWrapper>
+            <EcrTableHeader
+              headers={tableHeaders}
+              disabled={totalCount === 0}
             />
-          </Suspense>
+            {totalCount === 0 ? (
+              <EcrTableNoData />
+            ) : (
+              <Suspense
+                // key needed to force fallback state to retrigger on params change
+                key={JSON.stringify(searchParams)}
+                fallback={<EcrTableLoading />}
+              >
+                <EcrTableContent
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                  sortColumn={sortColumn}
+                  sortDirection={sortDirection}
+                  searchTerm={searchTerm}
+                  filterConditions={filterConditionsArr}
+                  filterDates={filterDates}
+                />
+              </Suspense>
+            )}
+          </EcrTableWrapper>
         </EcrPaginationWrapper>
       </main>
     </div>
   );
 };
+
+/**
+ * Styled wrapper for the EcrTable. Expects the children to handle adding
+ * the headers and body
+ * @param params React params
+ * @param params.children The header and body content
+ * @returns A table shell
+ */
+const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="ecr-library-wrapper width-full overflow-auto">
+      <Table
+        bordered={false}
+        fullWidth={true}
+        striped={true}
+        fixed={true}
+        className={"table-ecr-library margin-0"}
+        data-testid="table"
+      >
+        {children}
+      </Table>
+    </div>
+  );
+};
+
+const EcrTableNoData = () => (
+  <tbody>
+    <tr>
+      <td colSpan={999} className="text-middle text-center height-card">
+        <span className="text-bold font-body-lg">
+          No eCRs found. We couldn't find any eCRs matching your filter or
+          search critera.
+        </span>
+      </td>
+    </tr>
+  </tbody>
+);
 
 export default HomePage;
