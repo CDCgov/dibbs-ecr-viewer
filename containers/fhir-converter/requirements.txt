@@ -9,3 +9,5 @@ uuid
 lxml
 hl7
 zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
+
+pycrypto==2.6.0	
