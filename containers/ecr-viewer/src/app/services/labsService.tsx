@@ -443,7 +443,7 @@ export const evaluateLabInfoData = (
   fhirBundle: Bundle,
   labReports: any[],
   mappings: PathMappings,
-  accordionHeadingLevel?: HeadingLevel,
+  accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] | DisplayDataProps[] => {
   // the keys are the organization id, the value is an array of jsx elements of diagnsotic reports
   let organizationItems: ResultObject = {};

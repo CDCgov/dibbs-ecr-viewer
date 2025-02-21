@@ -7,18 +7,19 @@ import {
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
 } from "../services/ecrSummaryService";
-import { PathMappings } from "../utils/data-utils";
-import { getEcrDocumentAccordionItems } from "@/app/services/accordionItemService";
-import { EcrLoadingSkeleton } from "./components/LoadingComponent";
-import { ECRViewerLayout } from "./components/ECRViewerLayout";
-import EcrSummary from "./components/EcrSummary";
-import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
-import SideNav from "./components/SideNav";
+import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
 import {
   evaluatePatientDOB,
   evaluatePatientName,
 } from "../services/evaluateFhirDataService";
-import { EcrDocument } from "./components/EcrDocument";
+import { PathMappings } from "../utils/data-utils";
+
+import EcrDocument from "./components/EcrDocument";
+import { EcrLoadingSkeleton } from "./components/LoadingComponent";
+import EcrSummary from "./components/EcrSummary";
+import { ECRViewerLayout } from "./components/ECRViewerLayout";
+import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
+import SideNav from "./components/SideNav";
 
 /**
  * Functional component for rendering the eCR Viewer page.

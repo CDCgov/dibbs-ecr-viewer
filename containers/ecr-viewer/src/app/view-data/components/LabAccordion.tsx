@@ -1,4 +1,4 @@
-import { AccordionItem } from "@/app/services/accordionItemService";
+import { AccordionItem } from "@/app/view-data/types";
 import { Accordion } from "@trussworks/react-uswds";
 
 /**
