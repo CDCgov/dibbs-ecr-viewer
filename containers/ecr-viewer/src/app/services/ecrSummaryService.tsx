@@ -6,7 +6,11 @@ import {
   DomainResource,
   Observation,
 } from "fhir/r4";
-import { evaluateData, PathMappings } from "@/app/utils/data-utils";
+import {
+  evaluateData,
+  getCodeableConceptDisplay,
+  PathMappings,
+} from "@/app/utils/data-utils";
 import {
   formatAddress,
   formatContactPoint,
@@ -167,7 +171,8 @@ export const evaluateEcrSummaryConditionSummary = (
         conditionsList[snomed] = {
           ruleSummaries: new Set(),
           snomedDisplay:
-            observation?.valueCodeableConcept?.text || coding.display!,
+            getCodeableConceptDisplay(observation?.valueCodeableConcept) ??
+            "Unknown Condition",
         };
       }
 
@@ -226,10 +231,10 @@ export const evaluateEcrSummaryConditionSummary = (
   return conditionSummaries;
 };
 
-const getRelevantResources = <T extends DomainResource[]>(
-  resource: T,
+const getRelevantResources = <T extends DomainResource>(
+  resource: T[],
   snomedCode: string,
-) => {
+): T[] => {
   return resource.filter(
     (entry) =>
       entry.extension?.some(

@@ -1,9 +1,17 @@
 import React from "react";
-import { Bundle, Device, Observation, Organization, Reference } from "fhir/r4";
+import {
+  Bundle,
+  Device,
+  DiagnosticReport,
+  Observation,
+  Organization,
+  Reference,
+} from "fhir/r4";
 import {
   PathMappings,
   RenderableNode,
   arrayToElement,
+  getCodeableConceptDisplay,
   noData,
   safeParse,
 } from "@/app/utils/data-utils";
@@ -24,10 +32,6 @@ import { extractNumbersAndPeriods } from "@/app/utils/format-utils";
 import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
 import { JsonTable } from "../view-data/components/JsonTable";
-
-export interface LabReport {
-  result: Array<Reference>;
-}
 
 export interface ResultObject {
   [key: string]: React.JSX.Element[];
@@ -68,7 +72,7 @@ export const isLabReportElementDataList = (
  * is returned.
  */
 export const getObservations = (
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): Array<Observation> => {
@@ -92,7 +96,7 @@ export const getObservations = (
  * @returns The JSON representation of the lab report.
  */
 export const getLabJsonObject = (
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): HtmlTableJson => {
@@ -181,7 +185,7 @@ export function searchResultRecord(
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 const returnSpecimenSource = (
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): RenderableNode => {
@@ -203,7 +207,7 @@ const returnSpecimenSource = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 const returnCollectionTime = (
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): RenderableNode => {
@@ -228,7 +232,7 @@ const returnCollectionTime = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 const returnReceivedTime = (
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): RenderableNode => {
@@ -312,7 +316,7 @@ export const returnAnalysisTime = (
  * @returns The JSX representation of the evaluated observation table, or undefined if there are no observations.
  */
 export function evaluateObservationTable(
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
   columnInfo: ColumnInfoInput[],
@@ -354,7 +358,7 @@ export function evaluateObservationTable(
  * @returns - An array of React elements representing the lab observations.
  */
 export const evaluateDiagnosticReportData = (
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): React.JSX.Element | undefined => {
@@ -402,7 +406,7 @@ export const evaluateDiagnosticReportData = (
  * @returns - An array of React elements representing the lab organisms table.
  */
 export const evaluateOrganismsReportData = (
-  report: LabReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): React.JSX.Element | undefined => {
@@ -457,7 +461,7 @@ export const evaluateOrganismsReportData = (
  */
 export const evaluateLabInfoData = (
   fhirBundle: Bundle,
-  labReports: any[],
+  labReports: DiagnosticReport[],
   mappings: PathMappings,
   accordionHeadingLevel?: HeadingLevel,
 ): LabReportElementData[] | DisplayDataProps[] => {
@@ -489,7 +493,8 @@ export const evaluateLabInfoData = (
     const element = (
       <AccordionLabResults
         key={report.id}
-        title={report.code.coding.find((c: Coding) => c.display).display}
+        title={getCodeableConceptDisplay(report.code) ?? "Unknown"}
+        // title={report.code.coding?.find((c: Coding) => c.display)?.display}
         abnormalTag={checkAbnormalTag(labReportJson)}
         content={content}
         organizationId={organizationId}
@@ -548,7 +553,10 @@ export const evaluateLabOrganizationData = (
   mappings: PathMappings,
   labReportCount: number,
 ) => {
-  const orgMappings = evaluate(fhirBundle, mappings["organizations"]);
+  const orgMappings: Organization[] = evaluate(
+    fhirBundle,
+    mappings["organizations"],
+  );
   let matchingOrg: Organization = orgMappings.filter(
     (organization) => organization.id === id,
   )[0];
@@ -578,7 +586,7 @@ export const evaluateLabOrganizationData = (
  * @returns the matchedOrg with the telecom assigned if applicable
  */
 export const findIdenticalOrg = (
-  orgMappings: any[],
+  orgMappings: Organization[],
   matchedOrg: Organization,
 ): Organization => {
   orgMappings.forEach((organization) => {

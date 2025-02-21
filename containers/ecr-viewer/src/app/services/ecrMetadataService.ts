@@ -6,9 +6,10 @@ import {
 import {
   CompleteData,
   evaluateData,
+  getCodeableConceptDisplay,
   PathMappings,
 } from "@/app/utils/data-utils";
-import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
+import { Bundle, Observation, Organization, Reference } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -38,18 +39,6 @@ export interface ERSDWarning {
 }
 
 /**
- *  Gets the first display value from a coding array.
- * @param coding - The coding array to get the display from.
- * @returns The display value from the coding array.
- */
-export const getCodingDisplay = (coding: Coding[] | undefined) => {
-  if (!coding) {
-    return;
-  }
-  return coding.find((c) => c.display)?.display;
-};
-
-/**
  * Evaluates eCR metadata from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing eCR metadata.
  * @param mappings - The object containing the fhir paths.
@@ -65,8 +54,7 @@ export const evaluateEcrMetadata = (
 
   for (const condition of rrDetails) {
     const name =
-      condition.valueCodeableConcept?.text ||
-      getCodingDisplay(condition.valueCodeableConcept?.coding) ||
+      getCodeableConceptDisplay(condition.valueCodeableConcept) ||
       "Unknown Condition"; // Default to "Unknown Condition" if no name is found, this should almost never happen, but it would still be a valid eCR.
     const triggers = evaluateRuleSummaries(condition);
 

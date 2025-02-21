@@ -19,7 +19,12 @@ import {
 } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import * as dateFns from "date-fns";
-import { PathMappings, evaluateData, noData } from "@/app/utils/data-utils";
+import {
+  PathMappings,
+  evaluateData,
+  getCodeableConceptDisplay,
+  noData,
+} from "@/app/utils/data-utils";
 import {
   formatAddress,
   formatContactPoint,
@@ -644,7 +649,7 @@ export const evaluateEmergencyContact = (
   return contacts
     .map((contact) => {
       const relationship = toSentenceCase(
-        contact.relationship?.[0].coding?.[0]?.display,
+        getCodeableConceptDisplay(contact.relationship?.[0]) ?? "Unknown",
       );
 
       const contactName = contact.name ? formatName(contact.name) : "";
@@ -792,7 +797,7 @@ export const evaluateEncounterDiagnosis = (
   );
 
   return conditions
-    .map((condition) => condition.code?.coding?.[0].display)
+    .map((condition) => getCodeableConceptDisplay(condition.code))
     .join(", ");
 };
 
