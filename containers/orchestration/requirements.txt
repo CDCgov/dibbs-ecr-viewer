@@ -12,7 +12,7 @@ python-dotenv
 python-multipart
 pytest-env
 pytest-asyncio
-testcontainers[compose]==4.1.1
+testcontainers[compose]==4.9.1
 websockets
 asyncio
 sqlalchemy
