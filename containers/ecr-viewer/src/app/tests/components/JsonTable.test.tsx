@@ -1,7 +1,7 @@
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { render, screen } from "@testing-library/react";
 
-describe("returnTableFromJson", () => {
+describe("JsonTable", () => {
   it("returns an HTML representation of the table", () => {
     const tableJson = {
       resultName: "test-name",
