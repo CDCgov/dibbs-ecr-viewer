@@ -1,3 +1,4 @@
+import React, { useId } from "react";
 import { AccordionItem } from "@/app/view-data/types";
 import { Accordion } from "@trussworks/react-uswds";
 
@@ -12,9 +13,17 @@ export const LabAccordion = ({
 }: {
   items: AccordionItem[];
 }): React.JSX.Element => {
+  const id = useId();
+
+  // Make sure each accordion's items actually have unique IDs across the app
+  const uniqueIdItems = items.map((item) => ({
+    ...item,
+    id: `${item.id}-${id}`,
+  }));
+
   return (
     <Accordion
-      items={items}
+      items={uniqueIdItems}
       className="accordion-rr margin-bottom-3"
       multiselectable
     />
