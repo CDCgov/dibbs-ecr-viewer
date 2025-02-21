@@ -117,6 +117,17 @@ services:
       - AZURE_PG_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
 
+  # Keycloak for authentication
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.2
+    command:
+      - "start-dev"
+      - "--import-realm"
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    ports:
+      - 8070:8080
+
 volumes:
   db:
   azure-data:

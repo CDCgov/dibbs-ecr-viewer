@@ -1,6 +1,12 @@
 /* eslint-disable unused-imports/no-unused-vars */
 namespace NodeJS {
   interface ProcessEnv {
+    AUTH_KEYCLOAK_ID?: string;
+    AUTH_KEYCLOAK_SECRET?: string;
+    AUTH_KEYCLOAK_ISSUER?: string;
+    AUTH_AZURE_AD_ID?: string;
+    AUTH_AZURE_AD_SECRET?: string;
+    AUTH_AZURE_AD_TENANT_ID?: string;
     AWS_ACCESS_KEY_ID: string;
     AWS_CUSTOM_ENDPOINT: string;
     AWS_REGION: string;

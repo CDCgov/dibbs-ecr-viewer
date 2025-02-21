@@ -54,9 +54,9 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
             ))}
             <h5
               className="text-bold margin-top-0 margin-bottom-1"
-              id={"relevant-clinical"}
+              id="relevant-clinical"
             >
-              {"Clinical Sections Relevant to Reportable Condition"}
+              Clinical Sections Relevant to Reportable Condition
             </h5>
             {condition.immunizationDetails.length > 0 && (
               <div className={"margin-top-0"}>
@@ -72,11 +72,11 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
             </div>
             <h5
               className="text-bold margin-0 margin-bottom-1"
-              id={"relevant-labs"}
+              id="relevant-labs"
             >
-              {"Lab Results Relevant to Reportable Condition"}
+              Lab Results Relevant to Reportable Condition
             </h5>
-            <div className={"margin-top-0"}>
+            <div className="margin-top-0">
               {condition.labDetails.map((item, index) => (
                 <DataTableDisplay item={item} key={`${item.title}-${index}`} />
               ))}
