@@ -310,12 +310,12 @@ End: 05/13/2000 9:57 AM UTC
                 class="section__line_gray"
               />
             </div>
-            <div
+            <h5
               class="text-bold margin-0 margin-bottom-1"
               id="relevant-labs"
             >
               Lab Results Relevant to Reportable Condition
-            </div>
+            </h5>
             <div
               class="margin-top-0"
             >
