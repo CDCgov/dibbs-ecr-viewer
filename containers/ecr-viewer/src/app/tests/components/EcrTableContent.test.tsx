@@ -1,9 +1,8 @@
 import { axe } from "jest-axe";
 import { act, render } from "@testing-library/react";
-import EcrTable from "@/app/components/EcrTable";
+import EcrTableContent from "@/app/components/EcrTableContent";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
 import router from "next-router-mock";
-import { EcrTableLoading } from "@/app/components/EcrTableClient";
 
 jest.mock("../../services/listEcrDataService");
 
@@ -13,7 +12,7 @@ jest.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(router.asPath.split("?")[1] || ""),
 }));
 
-describe("EcrTable", () => {
+describe("EcrTableContent", () => {
   const mockedListEcrData = jest.mocked(listEcrData);
   const mockData: EcrDisplay[] = Array.from({ length: 25 }, (_, i) => ({
     ecrId: `id-${i + 1}`,
@@ -44,62 +43,38 @@ describe("EcrTable", () => {
   });
 
   describe("load with an eCR", () => {
-    it("should match snapshot with", async () => {
+    it("should match snapshot", async () => {
       mockedListEcrData.mockResolvedValue(mockData);
+      const table = document.createElement("table");
       const { container } = render(
-        await EcrTable({
+        await EcrTableContent({
           currentPage: 1,
           itemsPerPage: 25,
           sortColumn: "date_created",
           sortDirection: "DESC",
           filterDates: mockDateRange,
         }),
+        {
+          container: document.body.appendChild(table),
+        },
       );
       expect(container).toMatchSnapshot();
     });
 
     it("should pass accessibility", async () => {
       mockedListEcrData.mockResolvedValue(mockData);
+      const table = document.createElement("table");
       const { container } = render(
-        await EcrTable({
+        await EcrTableContent({
           currentPage: 1,
           itemsPerPage: 25,
           sortColumn: "date_created",
           sortDirection: "DESC",
           filterDates: mockDateRange,
         }),
-      );
-      await act(async () => {
-        expect(await axe(container)).toHaveNoViolations();
-      });
-    });
-  });
-
-  describe("load without an eCR", () => {
-    it("should match snapshot with", async () => {
-      mockedListEcrData.mockResolvedValue([]);
-      const { container } = render(
-        await EcrTable({
-          currentPage: 1,
-          itemsPerPage: 25,
-          sortColumn: "date_created",
-          sortDirection: "DESC",
-          filterDates: mockDateRange,
-        }),
-      );
-      expect(container).toMatchSnapshot();
-    });
-
-    it("should pass accessibility", async () => {
-      mockedListEcrData.mockResolvedValue([]);
-      const { container } = render(
-        await EcrTable({
-          currentPage: 1,
-          itemsPerPage: 25,
-          sortColumn: "date_created",
-          sortDirection: "DESC",
-          filterDates: mockDateRange,
-        }),
+        {
+          container: document.body.appendChild(table),
+        },
       );
       await act(async () => {
         expect(await axe(container)).toHaveNoViolations();
@@ -110,8 +85,9 @@ describe("EcrTable", () => {
   it("should call listEcrDataService with all params", async () => {
     mockedListEcrData.mockResolvedValue(mockData);
 
+    const table = document.createElement("table");
     render(
-      await EcrTable({
+      await EcrTableContent({
         currentPage: 1,
         itemsPerPage: 25,
         sortColumn: "date_created",
@@ -120,6 +96,9 @@ describe("EcrTable", () => {
         searchTerm: "blah",
         filterConditions: ["Anthrax (disorder)"],
       }),
+      {
+        container: document.body.appendChild(table),
+      },
     );
 
     expect(mockedListEcrData).toHaveBeenCalledTimes(1);
@@ -132,27 +111,5 @@ describe("EcrTable", () => {
       "blah",
       ["Anthrax (disorder)"],
     );
-  });
-
-  describe("Snapshot test for EcrTableLoading", () => {
-    let container: HTMLElement;
-
-    beforeAll(() => {
-      const mockIntersectionObserver = jest.fn();
-      mockIntersectionObserver.mockReturnValue({
-        observe: () => null,
-        unobserve: () => null,
-        disconnect: () => null,
-      });
-      window.IntersectionObserver = mockIntersectionObserver;
-
-      container = render(<EcrTableLoading />).container;
-    });
-    it("should match snapshot", () => {
-      expect(container).toMatchSnapshot();
-    });
-    it("should pass accessibility test", async () => {
-      expect(await axe(container)).toHaveNoViolations();
-    });
   });
 });
