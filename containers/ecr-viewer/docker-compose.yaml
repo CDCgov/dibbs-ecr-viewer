@@ -27,8 +27,6 @@ services:
       - SQL_SERVER_HOST=${SQL_SERVER_HOST:-sqlserver}
       # Orchestration
       - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
-    depends_on:
-      - keycloak
     profiles:
       - ecr-viewer
 
