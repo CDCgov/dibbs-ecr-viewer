@@ -495,7 +495,7 @@ export const evaluateLabInfoData = (
         <>
           {title}
           {checkAbnormalTag(labReportJson) && (
-            <Tag background={"#B50909"} className={"margin-left-105"}>
+            <Tag background="#B50909" className="margin-left-105">
               Abnormal
             </Tag>
           )}

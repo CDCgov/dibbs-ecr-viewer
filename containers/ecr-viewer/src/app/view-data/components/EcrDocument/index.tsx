@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Accordion, Grid, GridContainer } from "@trussworks/react-uswds";
+import { Grid, GridContainer } from "@trussworks/react-uswds";
+import Accordion from "@/app/view-data/components/AccordionControlled";
 import { AccordionItem } from "@/app/view-data/types";
 import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 
@@ -16,6 +17,18 @@ export const EcrDocument = ({
   initialAccordionItems: AccordionItem[];
 }) => {
   const [accordionItems, setAccordionItems] = useState(initialAccordionItems);
+
+  const handleToggle = (id: string) => {
+    const nextItems = accordionItems.map((item) => {
+      if (item.id === id) {
+        return { ...item, expanded: !item.expanded };
+      }
+      return item;
+    });
+
+    setAccordionItems(nextItems);
+  };
+
   return (
     <div className="margin-top-10">
       <GridContainer className={"padding-0 margin-bottom-3 maxw-none"}>
@@ -47,11 +60,9 @@ export const EcrDocument = ({
         </div>
       </GridContainer>
       <Accordion
-        // HACK: get this to re-render when items change
-        key={Math.random()}
         className="info-container"
         items={accordionItems}
-        multiselectable
+        toggleItem={handleToggle}
       />
     </div>
   );

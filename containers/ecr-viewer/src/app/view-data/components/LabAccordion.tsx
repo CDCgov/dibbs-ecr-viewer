@@ -1,6 +1,7 @@
-import React, { useId } from "react";
+"use client";
+import React, { useId, useState } from "react";
 import { AccordionItem } from "@/app/view-data/types";
-import { Accordion } from "@trussworks/react-uswds";
+import Accordion from "@/app/view-data/components/AccordionControlled";
 import classNames from "classnames";
 
 /**
@@ -23,11 +24,24 @@ export const LabAccordion = ({
     className: classNames("side-nav-ignore", item.className),
   }));
 
+  const [accordionItems, setAccordionItems] = useState(uniqueIdItems);
+
+  const handleToggle = (id: string) => {
+    const nextItems = accordionItems.map((item) => {
+      if (item.id === id) {
+        return { ...item, expanded: !item.expanded };
+      }
+      return item;
+    });
+
+    setAccordionItems(nextItems);
+  };
+
   return (
     <Accordion
-      items={uniqueIdItems}
       className="accordion-rr margin-bottom-3"
-      multiselectable
+      items={accordionItems}
+      toggleItem={handleToggle}
     />
   );
 };

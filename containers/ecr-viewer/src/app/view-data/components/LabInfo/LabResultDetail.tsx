@@ -49,11 +49,7 @@ const LabResultDetail = ({
           />
         </div>
       </div>
-      <LabAccordion
-        // HACK: get this to re-render when items change
-        key={Math.random()}
-        items={accordionItems}
-      />
+      <LabAccordion items={accordionItems} />
     </AccordionSubSection>
   );
 };
