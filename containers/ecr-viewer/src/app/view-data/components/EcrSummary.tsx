@@ -70,12 +70,12 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
                 <DataTableDisplay item={item} key={`${item.title}-${index}`} />
               ))}
             </div>
-            <div
+            <h5
               className="text-bold margin-0 margin-bottom-1"
               id={"relevant-labs"}
             >
               {"Lab Results Relevant to Reportable Condition"}
-            </div>
+            </h5>
             <div className={"margin-top-0"}>
               {condition.labDetails.map((item, index) => (
                 <DataTableDisplay item={item} key={`${item.title}-${index}`} />
