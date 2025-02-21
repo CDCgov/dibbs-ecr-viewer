@@ -71,7 +71,7 @@ jobs:
         run: |
           python -m pytest --cov-report xml --cov=. -m "not integration" tests/
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ env.CONTAINER }}
