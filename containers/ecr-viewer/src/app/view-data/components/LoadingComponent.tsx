@@ -245,7 +245,7 @@ export const EcrLoadingSkeleton = () => {
                   eCR Document
                 </h2>
               </Grid>
-              <Grid className={"flex-align-self-center margin-left-auto"}>
+              <Grid className="flex-align-self-center margin-left-auto">
                 <div className="width-card-lg loading-blob-gray margin-right-1 loading-blob">
                   &nbsp;
                 </div>
