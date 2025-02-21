@@ -9,7 +9,7 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
-import { evaluateClinicalData } from "@/app/view-data/components/common";
+import { evaluateClinicalData } from "./clinical-data";
 import { evaluate } from "@/app/utils/evaluate";
 import { PathMappings } from "@/app/utils/data-utils";
 import { toKebabCase } from "@/app/utils/format-utils";

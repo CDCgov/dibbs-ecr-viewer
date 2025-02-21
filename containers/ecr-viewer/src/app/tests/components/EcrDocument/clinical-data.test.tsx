@@ -1,4 +1,4 @@
-import { getMedicationDisplayName } from "@/app/view-data/components/common";
+import { getMedicationDisplayName } from "@/app/view-data/components/EcrDocument/clinical-data";
 describe("common tests", () => {
   describe("getMedicationDisplayName", () => {
     it("handles undefined case", () => {

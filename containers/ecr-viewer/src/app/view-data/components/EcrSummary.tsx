@@ -5,7 +5,7 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import { Accordion, Tag } from "@trussworks/react-uswds";
-import { AccordionItem } from "../../services/accordionItemService";
+import { AccordionItem } from "@/app/view-data/types";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 interface EcrSummaryProps {

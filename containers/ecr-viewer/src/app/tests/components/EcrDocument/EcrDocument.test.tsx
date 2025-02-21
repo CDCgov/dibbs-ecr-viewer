@@ -8,7 +8,7 @@ import { EcrDocument } from "@/app/view-data/components/EcrDocument";
 
 const mappings = loadYamlConfig();
 
-describe("Snapshot test for Accordion Content", () => {
+describe("Snapshot test for ECR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {
     const bundleEmpty: Bundle = {
       resourceType: "Bundle",
