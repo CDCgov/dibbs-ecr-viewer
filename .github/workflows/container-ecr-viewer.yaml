@@ -120,7 +120,6 @@ jobs:
           cache-to: type=gha,mode=max
 
   convert-data:
-    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -168,6 +167,7 @@ jobs:
           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
+        if: false
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run convert-seed-data
         env:
