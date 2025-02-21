@@ -21,7 +21,6 @@ import { evaluateClinicalData } from "../view-data/components/common";
 import { Accordion, HeadingLevel, Tag } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
-import classNames from "classnames";
 
 export type AccordionItem = React.ComponentProps<typeof Accordion>["items"][0];
 
@@ -237,25 +236,19 @@ export const getEcrDocumentAccordionItems = (
  * @param props.title - The title of the lab result.
  * @param props.abnormalTag - Boolean value if the lab result is abnormal.
  * @param props.content - The content within the accordian.
- * @param props.collapsedByDefault - Whether or not to collapse by default for the accordion
  * @param props.headingLevel - Heading level for the Accordion menu title.
- * @param props.className - Classnames to be applied to accordion.
  * @returns React element representing the AccordionLabResults component.
  */
 export const getLabResultAccordionItem = ({
   title,
   abnormalTag,
   content,
-  collapsedByDefault = false,
   headingLevel = "h5",
-  className = "",
 }: {
   title: string;
   abnormalTag: boolean;
   content: React.JSX.Element[];
-  collapsedByDefault?: boolean;
   headingLevel?: HeadingLevel;
-  className?: string;
 }): AccordionItem => {
   return {
     title: (
@@ -268,10 +261,10 @@ export const getLabResultAccordionItem = ({
         )}
       </>
     ),
-    content: content,
-    expanded: collapsedByDefault,
+    content,
+    expanded: false,
     id: toKebabCase(title),
     headingLevel,
-    className: classNames("side-nav-ignore", className),
+    className: "side-nav-ignore",
   };
 };

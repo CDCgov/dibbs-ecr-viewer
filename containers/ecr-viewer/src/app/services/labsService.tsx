@@ -317,7 +317,6 @@ export function evaluateObservationTable(
       ),
   );
 
-  let obsTable;
   if (observations?.length > 0) {
     return (
       <EvaluateTable
@@ -329,7 +328,6 @@ export function evaluateObservationTable(
       />
     );
   }
-  return obsTable;
 }
 
 /**
