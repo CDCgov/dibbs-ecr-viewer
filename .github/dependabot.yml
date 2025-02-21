@@ -1,0 +1,33 @@
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      # Check for updates to GitHub Actions every week
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/containers/ecr-viewer"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/containers/ecr-viewer"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/containers/orchestration"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/containers/orchestration"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/containers/fhir-converter"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/containers/fhir-converter"
+    schedule:
+      interval: "weekly"
