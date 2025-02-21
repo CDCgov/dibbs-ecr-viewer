@@ -44,7 +44,7 @@ const PaginationPage = ({
       {onClickPageNumber ? (
         <Button
           type="button"
-          unstyled
+          unstyled={true}
           data-testid="pagination-page-number"
           className={linkClasses}
           aria-label={`Page ${page}`}
@@ -189,7 +189,7 @@ export const Pagination = ({
           {onClickPrevious ? (
             <Button
               type="button"
-              unstyled
+              unstyled={true}
               className={classnames(
                 "usa-pagination__link usa-pagination__previous-page text-bold",
                 { "visibility-hidden": !prevPage },
@@ -237,7 +237,7 @@ export const Pagination = ({
           {onClickNext ? (
             <Button
               type="button"
-              unstyled
+              unstyled={true}
               className={classnames(
                 "usa-pagination__link usa-pagination__next-page text-bold",
                 { "visibility-hidden": !nextPage },
