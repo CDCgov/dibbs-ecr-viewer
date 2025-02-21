@@ -40,7 +40,7 @@
     "@opentelemetry/propagator-aws-xray": "^1.26.0",
     "@opentelemetry/redis-common": "^0.36.2",
     "@opentelemetry/resource-detector-aws": "^1.7.0",
-    "@opentelemetry/resource-detector-azure": "^0.2.12",
+    "@opentelemetry/resource-detector-azure": "^0.6.1",
     "@opentelemetry/resource-detector-container": "^0.5.0",
     "@opentelemetry/resource-detector-gcp": "^0.29.13",
     "@opentelemetry/resources": "^1.27.0",
