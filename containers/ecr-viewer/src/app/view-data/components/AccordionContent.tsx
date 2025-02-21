@@ -6,7 +6,7 @@ import EcrMetadata from "./EcrMetadata";
 import EncounterDetails from "./Encounter";
 import ClinicalInfo from "./ClinicalInfo";
 import { Bundle } from "fhir/r4";
-import React, { ReactNode } from "react";
+import React from "react";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import { evaluateEcrMetadata } from "../../services/ecrMetadataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
@@ -18,11 +18,15 @@ import {
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateClinicalData } from "./common";
-import AccordionContainer from "@/app/components/AccordionContainer";
+import { Accordion } from "@trussworks/react-uswds";
 import { evaluate } from "@/app/utils/evaluate";
+import { toKebabCase } from "@/app/utils/format-utils";
 
-type AccordionContainerProps = {
-  children?: ReactNode;
+export type AccordionItemProps = React.ComponentProps<
+  typeof Accordion
+>["items"][0];
+
+type AccordionContentProps = {
   fhirBundle: Bundle;
   fhirPathMappings: PathMappings;
 };
@@ -34,7 +38,7 @@ type AccordionContainerProps = {
  * @param props.fhirPathMappings - The path mappings used to extract information from the FHIR bundle.
  * @returns The JSX element representing the accordion container.
  */
-const AccordionContent: React.FC<AccordionContainerProps> = ({
+const AccordionContent: React.FC<AccordionContentProps> = ({
   fhirBundle,
   fhirPathMappings,
 }) => {
@@ -75,7 +79,7 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
     );
   };
 
-  const accordionItems: any[] = [
+  const accordionItems: AccordionItemProps[] = [
     {
       title: "Patient Info",
       content: (
@@ -95,8 +99,6 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
           )}
         </>
       ),
-      expanded: true,
-      headingLevel: "h3",
     },
     {
       title: "Encounter Info",
@@ -117,8 +119,6 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
           )}
         </>
       ),
-      expanded: true,
-      headingLevel: "h3",
     },
     {
       title: "Clinical Info",
@@ -142,8 +142,6 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
           No clinical information was found in this eCR.
         </p>
       ),
-      expanded: true,
-      headingLevel: "h3",
     },
     {
       title: "Lab Info",
@@ -155,8 +153,6 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
             No lab information was found in this eCR.
           </p>
         ),
-      expanded: true,
-      headingLevel: "h3",
     },
     {
       title: "eCR Metadata",
@@ -187,8 +183,6 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
           )}
         </>
       ),
-      expanded: true,
-      headingLevel: "h3",
     },
     {
       title: "Unavailable Info",
@@ -229,11 +223,25 @@ const AccordionContent: React.FC<AccordionContainerProps> = ({
           )}
         </div>
       ),
+    },
+  ].map((item, index) => {
+    const kebabCaseTitle = toKebabCase(item.title);
+    return {
+      ...item,
+      id: `${kebabCaseTitle}_${index + 1}`, // this is the id of the accordion item's inner div
+      title: <span id={kebabCaseTitle}>{item.title}</span>, // the side nav links to this ID
       expanded: true,
       headingLevel: "h3",
-    },
-  ];
+    };
+  });
 
-  return <AccordionContainer accordionItems={accordionItems} />;
+  return (
+    <Accordion
+      className="info-container"
+      items={accordionItems}
+      multiselectable
+    />
+  );
 };
+
 export default AccordionContent;

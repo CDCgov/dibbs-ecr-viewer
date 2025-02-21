@@ -1,6 +1,7 @@
 "use client"; // Error components must be Client Components
 
 import { useEffect } from "react";
+import { GenericError } from "@/app/components/ErrorPage";
 
 /**
  * Renders an Error component to display when an error occurs.
@@ -18,9 +19,5 @@ export default function Error({
     console.error(error);
   }, [error]);
 
-  return (
-    <div>
-      <h2>Something went wrong!</h2>
-    </div>
-  );
+  return <GenericError />;
 }

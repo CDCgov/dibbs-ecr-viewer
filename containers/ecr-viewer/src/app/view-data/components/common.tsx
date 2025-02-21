@@ -35,9 +35,7 @@ import {
   AdministeredMedication,
   AdministeredMedicationTableData,
 } from "@/app/view-data/components/AdministeredMedication";
-import { Path } from "fhirpath";
 import classNames from "classnames";
-import { Fragment } from "react";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
@@ -231,42 +229,6 @@ export const returnProblemsTable = (
 };
 
 /**
- * Returns a header and tables from XHTML in the FHIR data.
- * @param fhirBundle - The FHIR bundle.
- * @param mapping - The fhir path.
- * @param title - The table header title
- * @param outerBorder - Determines whether to include an outer border for the table. Default is true.
- * @param className - Classnames to be applied to table.
- * @returns The JSX element representing the table, or undefined if no pending results are found.
- */
-export const returnHtmlTableContent = (
-  fhirBundle: Bundle,
-  mapping: string | Path,
-  title: string,
-  outerBorder = true,
-  className = "",
-): JSX.Element | undefined => {
-  const bundle = evaluateValue(fhirBundle, mapping);
-  const tableJson = formatTablesToJSON(bundle);
-
-  if (tableJson.length === 0) return undefined;
-
-  return (
-    <Fragment key={`${Math.random()}`}>
-      {!!title && <div className="data-title margin-bottom-1">{title}</div>}
-      {tableJson.map((rt) => (
-        <JsonTable
-          key={`${title}-table`}
-          jsonTableData={rt}
-          outerBorder={outerBorder}
-          className={className}
-        />
-      ))}
-    </Fragment>
-  );
-};
-
-/**
  * Generates a formatted table representing the list of procedures based on the provided array of procedures and mappings.
  * @param proceduresArray - An array containing the list of procedures.
  * @param mappings - An object containing FHIR path mappings for procedure attributes.
@@ -437,6 +399,80 @@ export const returnVitalsTable = (
 };
 
 /**
+ * Helper to evaluate the misc notes which can be either a string or a table.
+ * @param fhirBundle - The FHIR bundle containing clinical data.
+ * @param mappings - The object containing the fhir paths.
+ * @returns data display props with the appropriate values
+ */
+export const evaluateMiscNotes = (
+  fhirBundle: Bundle,
+  mappings: PathMappings,
+): DisplayDataProps => {
+  const title = "Miscellaneous Notes";
+  const toolTip =
+    "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
+
+  const content =
+    evaluateValue(fhirBundle, mappings["historyOfPresentIllness"]) ?? "";
+
+  const tables = formatTablesToJSON(content);
+
+  // Not a table, safe parse the string content
+  if (tables.length === 0) {
+    return {
+      title,
+      value: safeParse(content),
+      toolTip,
+    };
+  }
+
+  return {
+    title,
+    value: (
+      <JsonTable
+        jsonTableData={{
+          resultName: title,
+          tables: tables[0].tables,
+        }}
+        captionToolTip={toolTip}
+        captionIsTitle={true}
+      />
+    ),
+    table: true,
+  };
+};
+
+const evaluatePlanOfTreatment = (
+  fhirBundle: Bundle,
+  mappings: PathMappings,
+  title: string,
+): DisplayDataProps => {
+  const content = evaluateValue(fhirBundle, mappings["planOfTreatment"]);
+  const tables = formatTablesToJSON(content);
+
+  if (tables.length === 0)
+    return {
+      title,
+      value: undefined,
+    };
+
+  return {
+    title,
+    value: (
+      <>
+        <div className="data-title margin-bottom-1">{title}</div>
+        {tables.map((table, index) => (
+          <JsonTable
+            key={`plan-of-treatment-table_${index}`}
+            jsonTableData={table}
+          />
+        ))}
+      </>
+    ),
+  };
+};
+
+/**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing clinical data.
  * @param mappings - The object containing the fhir paths.
@@ -453,14 +489,7 @@ export const evaluateClinicalData = (
   mappings: PathMappings,
 ) => {
   const clinicalNotes: DisplayDataProps[] = [
-    {
-      title: "Miscellaneous Notes",
-      value: safeParse(
-        evaluateValue(fhirBundle, mappings["historyOfPresentIllness"]) ?? "",
-      ),
-      toolTip:
-        "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.",
-    },
+    evaluateMiscNotes(fhirBundle, mappings),
   ];
 
   const reasonForVisitData: DisplayDataProps[] = [
@@ -501,14 +530,7 @@ export const evaluateClinicalData = (
         mappings,
       ),
     },
-    {
-      title: "Plan of Treatment",
-      value: returnHtmlTableContent(
-        fhirBundle,
-        mappings["planOfTreatment"],
-        "Plan of Treatment",
-      ),
-    },
+    evaluatePlanOfTreatment(fhirBundle, mappings, "Plan of Treatment"),
     {
       title: "Administered Medications",
       value: administeredMedication?.length && (
