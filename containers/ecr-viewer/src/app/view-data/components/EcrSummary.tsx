@@ -54,7 +54,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
             ))}
             <h5
               className="text-bold margin-top-0 margin-bottom-1"
-              id={"relevant-clinical"}
+              id="relevant-clinical"
             >
               Clinical Sections Relevant to Reportable Condition
             </h5>
