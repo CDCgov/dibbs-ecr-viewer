@@ -74,7 +74,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
               className="text-bold margin-0 margin-bottom-1"
               id={"relevant-labs"}
             >
-              {"Lab Results Relevant to Reportable Condition"}
+              Lab Results Relevant to Reportable Condition
             </h5>
             <div className={"margin-top-0"}>
               {condition.labDetails.map((item, index) => (
