@@ -1,12 +1,13 @@
 import React, { useId } from "react";
 import { AccordionItem } from "@/app/view-data/types";
 import { Accordion } from "@trussworks/react-uswds";
+import classNames from "classnames";
 
 /**
  * Accordion component for displaying lab results.
  * @param props - The props object.
- * @param props.items - The title of the lab result.
- * @returns React element representing the AccordionLabResults component.
+ * @param props.items - The accordion items to display.
+ * @returns React element representing the LabAccordion component.
  */
 export const LabAccordion = ({
   items,
@@ -19,6 +20,7 @@ export const LabAccordion = ({
   const uniqueIdItems = items.map((item) => ({
     ...item,
     id: `${item.id}-${id}`,
+    className: classNames("side-nav-ignore", item.className),
   }));
 
   return (

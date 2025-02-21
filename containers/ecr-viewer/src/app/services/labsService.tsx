@@ -505,7 +505,6 @@ export const evaluateLabInfoData = (
       expanded: false,
       id: toKebabCase(title),
       headingLevel: accordionHeadingLevel,
-      className: "side-nav-ignore",
     };
 
     organizationItems = groupItemByOrgId(
@@ -785,7 +784,7 @@ function getUnformattedLabsContent(
                 />
               )),
               headingLevel: accordionHeadingLevel,
-              className: "padding-bottom-0 side-nav-ignore",
+              className: "padding-bottom-0",
               id: "all-lab-results",
               expanded: false,
             },

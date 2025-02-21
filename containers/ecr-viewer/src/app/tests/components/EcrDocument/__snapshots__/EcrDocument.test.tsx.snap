@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Snapshot test for Accordion Content Given no data, info message for empty sections should appear 1`] = `
+exports[`Snapshot test for ECR Document Given no data, info message for empty sections should appear 1`] = `
 <div>
   <div
     class="margin-top-10"
