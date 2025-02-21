@@ -20,5 +20,5 @@ requests-mock
 psycopg2-binary==2.9.10
 pytest-mock
 opentelemetry-distro==0.48b0
-opentelemetry-exporter-otlp==1.27.0
+opentelemetry-exporter-otlp==1.30.0
 opentelemetry-exporter-prometheus==0.48b0
