@@ -26,6 +26,7 @@ import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
 import React from "react";
 import { toTitleCase } from "../utils/format-utils";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
+import { evaluateRuleSummaries } from "./reportabilityService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -134,25 +135,6 @@ export const evaluateEcrSummaryEncounterDetails = (
       ),
     },
   ]);
-};
-
-/**
- * Finds all unique RCKMS rule summaries in an observation
- * @param observation - FHIR Observation
- * @returns Set of rule summaries
- */
-const evaluateRuleSummaries = (observation: Observation): Set<string> => {
-  const ruleSummaries = new Set<string>();
-  observation.extension?.forEach((extension) => {
-    if (
-      extension.url ===
-        "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension" &&
-      extension?.valueString?.trim()
-    ) {
-      ruleSummaries.add(extension.valueString.trim());
-    }
-  });
-  return ruleSummaries;
 };
 
 /**

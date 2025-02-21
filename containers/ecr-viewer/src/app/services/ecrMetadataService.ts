@@ -14,6 +14,7 @@ import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateReference } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
+import { evaluateRuleSummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
   [condition: string]: {
@@ -67,21 +68,13 @@ export const evaluateEcrMetadata = (
       condition.valueCodeableConcept?.text ||
       getCodingDisplay(condition.valueCodeableConcept?.coding) ||
       "Unknown Condition"; // Default to "Unknown Condition" if no name is found, this should almost never happen, but it would still be a valid eCR.
-    const triggers = condition.extension
-      ?.filter(
-        (x) =>
-          x.url ===
-          "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
-      )
-      .map((x) => x.valueString);
+    const triggers = evaluateRuleSummaries(condition);
+
     if (!reportableConditionsList[name]) {
       reportableConditionsList[name] = {};
     }
 
-    if (
-      !Array.isArray(triggers) ||
-      !triggers.every((item) => typeof item === "string")
-    ) {
+    if (!triggers.size) {
       throw new Error("No triggers found for reportable condition");
     }
 
