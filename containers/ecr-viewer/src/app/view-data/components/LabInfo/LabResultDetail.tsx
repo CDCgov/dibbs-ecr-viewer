@@ -1,51 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { AccordionSection, AccordionSubSection } from "../component-utils";
-import {
-  DataDisplay,
-  DataTableDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
 import { LabReportElementData } from "@/app/services/labsService";
-import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
-import { LabAccordion } from "./LabAccordion";
-import { isLabReportElementDataList } from "@/app/utils/lab-utils";
-
-interface LabInfoProps {
-  labResults: DisplayDataProps[] | LabReportElementData[];
-}
+import { AccordionSubSection } from "../../component-utils";
+import { DataDisplay, DisplayDataProps } from "../DataDisplay";
+import { ExpandCollapseButtons } from "../ExpandCollapseButtons";
+import { LabAccordion } from "../LabAccordion";
 
 /**
- * Functional component for displaying clinical information.
- * @param props - Props containing clinical information.
- * @param props.labResults - some props
- * @returns The JSX element representing the clinical information.
+ * Helper component for building lab result accordions
+ * @param props React props
+ * @param props.labResult Lab report data
+ * @returns Lab result details component
  */
-export const LabInfo = ({ labResults }: LabInfoProps) => {
-  return (
-    <AccordionSection>
-      {labResults &&
-        (isLabReportElementDataList(labResults) ? (
-          (labResults as LabReportElementData[]).map((res, i) => (
-            <LabResultDetail key={i} labResult={res} />
-          ))
-        ) : (
-          <HtmlLabResult labResult={labResults[0] as DisplayDataProps} />
-        ))}
-    </AccordionSection>
-  );
-};
-
-const HtmlLabResult = ({ labResult }: { labResult: DisplayDataProps }) => {
-  return (
-    <AccordionSubSection title="Lab Results">
-      <div data-testid="lab-results">
-        <DataTableDisplay item={labResult} />
-      </div>
-    </AccordionSubSection>
-  );
-};
-
 const LabResultDetail = ({
   labResult,
 }: {
@@ -92,4 +58,4 @@ const LabResultDetail = ({
   );
 };
 
-export default LabInfo;
+export default LabResultDetail;

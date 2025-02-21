@@ -14,8 +14,9 @@ import {
   evaluateOrganismsReportData,
   evaluateDiagnosticReportData,
   evaluateObservationTable,
-  LabReport,
+  isLabReportElementDataList,
   evaluateLabOrganizationData,
+  LabReport,
   ResultObject,
   combineOrgAndReportData,
   evaluateLabInfoData,
@@ -26,7 +27,6 @@ import {
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { noData } from "@/app/utils/data-utils";
 import { AccordionItem } from "@/app/view-data/types";
-import { isLabReportElementDataList } from "@/app/utils/lab-utils";
 
 const mappings = loadYamlConfig();
 
