@@ -31,7 +31,7 @@ export const EcrDocument = ({
 
   return (
     <div className="margin-top-10">
-      <GridContainer className={"padding-0 margin-bottom-3 maxw-none"}>
+      <GridContainer className="padding-0 margin-bottom-3 maxw-none">
         <Grid row className="margin-bottom-05">
           <Grid>
             <h2 className="margin-bottom-0" id="ecr-document">

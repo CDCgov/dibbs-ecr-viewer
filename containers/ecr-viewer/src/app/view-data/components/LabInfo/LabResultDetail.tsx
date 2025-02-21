@@ -44,6 +44,7 @@ const LabResultDetail = ({
     labResult?.organizationDisplayDataProps?.[0]?.value ||
     "Unknown Organization"
   }`;
+
   return (
     <AccordionSubSection title={labName}>
       {labResult?.organizationDisplayDataProps?.map(

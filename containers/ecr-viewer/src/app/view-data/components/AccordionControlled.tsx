@@ -83,7 +83,6 @@ export const AccordionControlled = ({
         <AccordionItem
           key={`accordionItem_${item.id}`}
           {...item}
-          expanded={item.expanded}
           handleToggle={(): void => {
             toggleItem(item.id);
           }}
