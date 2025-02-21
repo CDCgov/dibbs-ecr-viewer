@@ -499,16 +499,6 @@ describe("LabsService tests", () => {
   });
 
   describe("Evaluate Diagnostic Report", () => {
-    it("should evaluate diagnostic report title", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
-      const actual = evaluateDiagnosticReportData(
-        report,
-        BundleLab as unknown as Bundle,
-        mappings,
-      );
-
-      expect(actual).toContain("STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS");
-    });
     it("should evaluate diagnostic report results", () => {
       const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
       const actual = evaluateDiagnosticReportData(

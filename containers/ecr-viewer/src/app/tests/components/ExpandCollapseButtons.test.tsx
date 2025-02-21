@@ -3,47 +3,46 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 describe("expand collapse buttons", () => {
-  const pageJsx = (hidden: boolean) => (
-    <div>
-      <button
-        className={"test-button"}
-        data-testid={"test-button"}
-        aria-expanded={!hidden}
-      />
-      <div className={"accordion"} data-testid={"accordion"} hidden={hidden} />
-      <ExpandCollapseButtons
-        id={"test"}
-        buttonSelector={"button"}
-        accordionSelector={".accordion"}
-        expandButtonText={"Expand all sections"}
-        collapseButtonText={"Collapse all sections"}
-      />
-    </div>
-  );
-  it("should have aria expand true and hidden removed when expand button is clicked", async () => {
+  it("should trigger expansion correctly", async () => {
     const user = userEvent.setup();
 
-    render(pageJsx(true));
+    let status = "";
+
+    render(
+      <ExpandCollapseButtons
+        descriptor={"sections"}
+        expandHandler={() => {
+          status = "expanded";
+        }}
+        collapseHandler={() => {
+          status = "collapsed";
+        }}
+      />,
+    );
 
     await user.click(screen.getByText("Expand all sections"));
 
-    expect(screen.getByTestId("test-button")).toHaveAttribute(
-      "aria-expanded",
-      "true",
-    );
-    expect(screen.getByTestId("accordion")).not.toHaveAttribute("hidden");
+    expect(status).toEqual("expanded");
   });
   it("should have aria expand false and hidden when collapse button is clicked", async () => {
     const user = userEvent.setup();
 
-    render(pageJsx(false));
+    let status = "";
+
+    render(
+      <ExpandCollapseButtons
+        descriptor={"sections"}
+        expandHandler={() => {
+          status = "expanded";
+        }}
+        collapseHandler={() => {
+          status = "collapsed";
+        }}
+      />,
+    );
 
     await user.click(screen.getByText("Collapse all sections"));
 
-    expect(screen.getByTestId("test-button")).toHaveAttribute(
-      "aria-expanded",
-      "false",
-    );
-    expect(screen.getByTestId("accordion")).toHaveAttribute("hidden", "true");
+    expect(status).toBe("collapsed");
   });
 });

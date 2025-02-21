@@ -1,8 +1,7 @@
-"use client";
-import React, { useId, useState } from "react";
+import React, { useId } from "react";
 import { AccordionItem } from "@/app/view-data/types";
-import Accordion from "@/app/view-data/components/AccordionControlled";
 import classNames from "classnames";
+import { Accordion } from "@trussworks/react-uswds";
 
 /**
  * Accordion component for displaying lab results.
@@ -18,30 +17,17 @@ export const LabAccordion = ({
   const id = useId();
 
   // Make sure each accordion's items actually have unique IDs across the app
-  const uniqueIdItems = items.map((item) => ({
+  const uniqueIdItems = items.map((item, i) => ({
     ...item,
-    id: `${item.id}-${id}`,
+    id: `${item.id}-${id}-${i}`,
     className: classNames("side-nav-ignore", item.className),
   }));
-
-  const [accordionItems, setAccordionItems] = useState(uniqueIdItems);
-
-  const handleToggle = (id: string) => {
-    const nextItems = accordionItems.map((item) => {
-      if (item.id === id) {
-        return { ...item, expanded: !item.expanded };
-      }
-      return item;
-    });
-
-    setAccordionItems(nextItems);
-  };
 
   return (
     <Accordion
       className="accordion-rr margin-bottom-3"
-      items={accordionItems}
-      toggleItem={handleToggle}
+      items={uniqueIdItems}
+      multiselectable={true}
     />
   );
 };

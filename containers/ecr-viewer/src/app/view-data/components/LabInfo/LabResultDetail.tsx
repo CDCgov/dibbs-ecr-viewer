@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { LabReportElementData } from "@/app/services/labsService";
 import { AccordionSubSection } from "../../component-utils";
 import { DataDisplay, DisplayDataProps } from "../DataDisplay";
 import { ExpandCollapseButtons } from "../ExpandCollapseButtons";
-import { LabAccordion } from "../LabAccordion";
+import Accordion from "../AccordionControlled";
+import classNames from "classnames";
 
 /**
  * Helper component for building lab result accordions
@@ -17,9 +18,27 @@ const LabResultDetail = ({
 }: {
   labResult: LabReportElementData;
 }) => {
-  const [accordionItems, setAccordionItems] = useState(
-    labResult.diagnosticReportDataItems,
-  );
+  const id = useId();
+
+  // Make sure each accordion's items actually have unique IDs across the app
+  const uniqueIdItems = labResult.diagnosticReportDataItems.map((item, i) => ({
+    ...item,
+    id: `${item.id}-${id}-${i}`,
+    className: classNames("side-nav-ignore", item.className),
+  }));
+
+  const [accordionItems, setAccordionItems] = useState(uniqueIdItems);
+
+  const handleToggle = (id: string) => {
+    const nextItems = accordionItems.map((item) => {
+      if (item.id === id) {
+        return { ...item, expanded: !item.expanded };
+      }
+      return item;
+    });
+
+    setAccordionItems(nextItems);
+  };
 
   const labName = `Lab Results from ${
     labResult?.organizationDisplayDataProps?.[0]?.value ||
@@ -49,7 +68,11 @@ const LabResultDetail = ({
           />
         </div>
       </div>
-      <LabAccordion items={accordionItems} />
+      <Accordion
+        className="accordion-rr margin-bottom-3"
+        items={accordionItems}
+        toggleItem={handleToggle}
+      />
     </AccordionSubSection>
   );
 };
