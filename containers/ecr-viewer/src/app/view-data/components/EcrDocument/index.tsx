@@ -38,7 +38,7 @@ export const EcrDocument = ({
               eCR Document
             </h2>
           </Grid>
-          <Grid className={"flex-align-self-center margin-left-auto"}>
+          <Grid className="flex-align-self-center margin-left-auto">
             <ExpandCollapseButtons
               expandHandler={() =>
                 setAccordionItems(
