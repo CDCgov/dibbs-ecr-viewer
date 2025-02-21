@@ -16,7 +16,7 @@ describe("Evaluate table", () => {
         resources={[]}
         mappings={mappings}
         columns={[]}
-        caption={"Table Caption"}
+        caption="Table Caption"
       />,
     );
 

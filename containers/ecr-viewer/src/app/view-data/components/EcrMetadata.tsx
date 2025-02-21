@@ -86,29 +86,17 @@ const EcrMetadata = ({
           <thead>
             <tr>
               <th className="width-25p">
-                <ToolTipElement
-                  toolTip={
-                    "List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR."
-                  }
-                >
+                <ToolTipElement toolTip="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.">
                   Reportable Condition
                 </ToolTipElement>
               </th>
               <th>
-                <ToolTipElement
-                  toolTip={
-                    "Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System)."
-                  }
-                >
+                <ToolTipElement toolTip="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).">
                   RCKMS Rule Summary
                 </ToolTipElement>
               </th>
               <th className="width-25p">
-                <ToolTipElement
-                  toolTip={
-                    "List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR."
-                  }
-                >
+                <ToolTipElement toolTip="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR.">
                   Jurisdiction Sent eCR
                 </ToolTipElement>
               </th>

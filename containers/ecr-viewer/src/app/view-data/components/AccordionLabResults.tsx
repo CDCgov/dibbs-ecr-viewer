@@ -42,7 +42,7 @@ export const AccordionLabResults: React.FC<AccordionLabResultsProps> = ({
             <>
               {title}
               {abnormalTag && (
-                <Tag background={"#B50909"} className={"margin-left-105"}>
+                <Tag background="#B50909" className="margin-left-105">
                   Abnormal
                 </Tag>
               )}

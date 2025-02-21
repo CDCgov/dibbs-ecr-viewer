@@ -30,7 +30,7 @@ const TableDetails = ({
           <div className={classNames("grid-col-auto text-pre-line", className)}>
             {item.value}
           </div>
-          <div className={"section__line_gray"} />
+          <div className="section__line_gray" />
         </div>
       ))}
     </div>

@@ -31,7 +31,7 @@ export const ExpandCollapseButtons: React.FC<ExpandCollapseButtonsProps> = ({
     <>
       <Button
         id={`${id}-expand-button`}
-        type={"button"}
+        type="button"
         unstyled={true}
         onClick={() => {
           const buttons = document.querySelectorAll(buttonSelector);
@@ -46,10 +46,10 @@ export const ExpandCollapseButtons: React.FC<ExpandCollapseButtonsProps> = ({
       >
         {expandButtonText}
       </Button>
-      <span className={"vertical-line"}></span>
+      <span className="vertical-line"></span>
       <Button
         id={`${id}-collapse-button`}
-        type={"button"}
+        type="button"
         unstyled={true}
         onClick={() => {
           const buttons = document.querySelectorAll(buttonSelector);
