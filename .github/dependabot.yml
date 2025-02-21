@@ -23,3 +23,11 @@ updates:
     directory: "/containers/orchestration"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/containers/fhir-converter"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/containers/fhir-converter"
+    schedule:
+      interval: "weekly"
