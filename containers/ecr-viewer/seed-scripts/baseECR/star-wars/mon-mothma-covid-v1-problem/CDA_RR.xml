@@ -417,7 +417,8 @@
                         <templateId extension="2017-04-01"
                           root="2.16.840.1.113883.10.20.15.2.4.3" />
                         <participantRole>
-                          <id extension="ut" root="2.16.840.1.113883.4.6" />
+                          <!-- made up senate district authoring agency id -->
+                          <id extension="SDDH-GC-500" root="2.16.840.1.113883.4.6" />
                           <code code="RR12"
                             codeSystem="2.16.840.1.114222.4.5.232"
                             codeSystemName="PHIN Questions"
