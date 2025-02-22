@@ -16,7 +16,7 @@
   <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
     displayName="Public Health Case Report" />
   <title>Initial Public Health Case Report</title>
-  <effectiveTime value="20200505150045-0400" />
+  <effectiveTime value="20250217150045-0400" />
   <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
   <languageCode code="en-US" />
   <setId extension="8d86218e-0fea-11eb-8216-a80388425cfb" root="1.2.840.114350.1.13.380.3.7.1.1" />
@@ -367,7 +367,7 @@
                               <td>186747009</td>
                               <td>SNOMED-CT</td>
                               <td>2.16.840.1.114222.4.11.7508</td>
-                              <td>20250213</td>
+                              <td>20250216</td>
                             </tr>
                           </tbody>
                         </table>
@@ -550,6 +550,22 @@
                 </tr>
               </tbody>
             </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>Travel History: Date(s)</th>
+                  <th>Notes</th>
+                  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>02/08/2025 - 02/14/2025</td>
+                  <td>Recent travel to Chandrila</td>
+                  <td />
+                </tr>
+              </tbody>
+            </table>
           </text>
           <entry typeCode="DRIV">
             <observation classCode="OBS" moodCode="EVN">
@@ -578,7 +594,7 @@
                 displayName="Occupation" />
               <statusCode code="completed" />
               <effectiveTime>
-                <low value="20250219" />
+                <low value="20250216" />
               </effectiveTime>
               <value code="11000"
                 codeSystem="2.16.840.1.113883.6.243"
@@ -595,7 +611,7 @@
                 displayName="Pregnancy status" />
               <statusCode code="completed" />
               <effectiveTime>
-                <low value="20250219" />
+                <low value="20250216" />
               </effectiveTime>
               <value xsi:type="CD"
                 code="60001007"
@@ -603,6 +619,22 @@
                 codeSystemName="SNOMED CT"
                 displayName="Not pregnant" />
             </observation>
+          </entry>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <!-- [eICR R2 STU1.1] Travel History -->
+              <templateId root="2.16.840.1.113883.10.20.15.2.3.1" />
+              <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.1" />
+              <id root="79565142-eae0-4213-a3b3-b73cdf474682" />
+              <code code="420008001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT"
+                displayName="Travel" />
+              <text>Recent travel to Chandrila</text>
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="20250208" />
+                <high value="20250214" />
+              </effectiveTime>
+            </act>
           </entry>
         </section>
       </component>

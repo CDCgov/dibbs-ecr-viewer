@@ -11,16 +11,17 @@
   <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.1.1" />
   <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2" />
   <!-- Globally unique document ID (extension) is scoped by vendor/software-->
-  <id root="9408ddce-4dcb-416c-a153-82cce01839e2" />
-  <!-- Document Code-->
+  <id root="10c13861-86a8-4a9a-aec6-b615921178df" />
+  <!-- Documen Code-->
   <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
     displayName="Public Health Case Report" />
   <title>Initial Public Health Case Report</title>
-  <effectiveTime value="20250218150045-0400" />
+  <effectiveTime value="20250222150045-0400" />
   <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
   <languageCode code="en-US" />
-  <setId extension="8d86218e-0fea-11eb-8216-a80388425cfb" root="1.2.840.114350.1.13.380.3.7.1.1" />
-  <versionNumber value="2" />
+  <setId extension="8d86218e-0fea-11eb-8216-a80388425cfb"
+    root="1.2.840.114350.1.13.380.3.7.1.1" />
+  <versionNumber value="3" />
   <!-- recordTarget: The patient -->
   <recordTarget>
     <!-- Patient demographics -->
@@ -65,7 +66,7 @@
   <!-- Author/authenticator may be software or may be a provider such as "infection control
   professional"-->
   <author>
-    <time value="20250217150045-0400" />
+    <time value="20250227150045-0400" />
     <assignedAuthor>
       <id root="2.16.840.1.113883.3.72.5.20" />
       <addr use="WP">
@@ -132,14 +133,15 @@
   <!-- componentOf: contains the encompassingEncouter and the provider and facility infomation for
   the case -->
   <componentOf>
-    <!-- encounter ID-->
     <encompassingEncounter>
-      <id extension="9937013" root="2.16.840.1.113883.19" />
+      <!-- encounter ID-->
+      <id extension="9937015" root="2.16.840.1.113883.19" />
       <code code="AMB" codeSystem="2.16.840.1.113883.5.4"
-        codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory" />
+        codeSystemName="HL7 ActEncounterCode"
+        displayName="Ambulatory" />
       <effectiveTime>
-        <low value="20250217" />
-        <high value="20250217" />
+        <low value="20200513" />
+        <high value="20200513" />
       </effectiveTime>
       <responsibleParty>
         <assignedEntity>
@@ -230,12 +232,15 @@
           <!-- [C-CDA R2.1] Encounters Section (entries optional) (V3) -->
           <templateId extension="2015-08-01"
             root="2.16.840.1.113883.10.20.22.2.22" />
-          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
-          <!-- [C-CDA R2.1] Encounters Section (entries required) (V3)-->
+          <templateId
+            root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <!-- [C-CDA R2.1] Encounters Section (entries required) (V3) -->
           <templateId extension="2015-08-01"
             root="2.16.840.1.113883.10.20.22.2.22.1" />
-          <code code="46240-8" codeSystem="2.16.840.1.113883.6.1"
-            codeSystemName="LOINC" displayName="History of encounters" />
+          <code code="46240-8"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC"
+            displayName="History of encounters" />
           <title>Encounters</title>
           <text>
             <table>
@@ -262,11 +267,12 @@
               <!-- [C-CDA R2.1] Encounter Activities (V3) -->
               <templateId extension="2015-08-01"
                 root="2.16.840.1.113883.10.20.22.4.49" />
-              <id root="8c69827d-fc6e-4580-a1af-17f03078bbf0" />
-              <code code="99213" codeSystem="2.16.840.1.113883.6.12"
+              <id root="fd7ee2ec-4d8e-4169-aeb6-836731cc7201" />
+              <code code="99213"
+                codeSystem="2.16.840.1.113883.6.12"
                 codeSystemName="CPT-4"
                 displayName="Office outpatient visit 15 minutes" />
-              <effectiveTime value="20200513" />
+              <effectiveTime value="20250216" />
             </encounter>
           </entry>
         </section>
@@ -274,15 +280,14 @@
 
       <!-- History of Present Illness Section -->
       <component>
-        <section>
+        <section nullFlavor="NI">
           <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.4" />
-          <code code="10164-2" codeSystem="2.16.840.1.113883.6.1"
-            codeSystemName="LOINC" displayName="History of Present Illness" />
+          <code code="10164-2"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC"
+            displayName="History of Present Illness" />
           <title>History of Present Illness</title>
-          <text mediaType="text/x-hl7-text+xml">
-            <paragraph>fever, cough, exposure to COVID-19 hot zone;
-            </paragraph>
-          </text>
+          <text>No history of present illness</text>
         </section>
       </component>
 
@@ -294,8 +299,10 @@
           <!-- [C-CDA R2.0] Medications Administered Section (V2) -->
           <templateId extension="2014-06-09"
             root="2.16.840.1.113883.10.20.22.2.38" />
-          <code code="29549-3" codeSystem="2.16.840.1.113883.6.1"
-            codeSystemName="LOINC" displayName="Medications Administered" />
+          <code code="29549-3"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC"
+            displayName="Medications Administered" />
           <title>Medications Administered</title>
           <text>No medications administered</text>
         </section>
@@ -440,22 +447,123 @@
 
       <!-- Results Section -->
       <component>
-        <section nullFlavor="NI">
+        <section>
           <!-- [C-CDA R1.1] Results Section (entries optional) -->
           <templateId root="2.16.840.1.113883.10.20.22.2.3" />
           <!-- [C-CDA R2.1] Results Section (entries optional) (V3) -->
           <templateId extension="2015-08-01"
             root="2.16.840.1.113883.10.20.22.2.3" />
           <!-- [C-CDA R1.1] Results Section (entries required) -->
-          <templateId root="2.16.840.1.113883.10.20.22.2.3.1" />
+          <templateId
+            root="2.16.840.1.113883.10.20.22.2.3.1" />
           <!-- [C-CDA R2.1] Results Section (entries required) (V3) -->
           <templateId extension="2015-08-01"
             root="2.16.840.1.113883.10.20.22.2.3.1" />
-          <code code="30954-2" codeSystem="2.16.840.1.113883.6.1"
+          <code code="30954-2"
+            codeSystem="2.16.840.1.113883.6.1"
             codeSystemName="LOINC"
             displayName="Relevant diagnostic tests and/or laboratory data" />
           <title>Results</title>
-          <text>No Lab Results</text>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Results Panel</th>
+                  <th>Date(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SARS-like Coronavirus N gene [Presence] in
+                    Unspecified specimen by NAA with probe
+                    detection</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>
+                    <list>
+                      <item>
+                        <paragraph>*** In the table below, row entries
+                          with values under RCTC columns triggered this
+                          Electronic Initial Case Report (eICR)</paragraph>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Test</th>
+                              <th>Lab Test RCTC OID ***</th>
+                              <th>Lab Test RCTC Version ***</th>
+                              <th>Outcome</th>
+                              <th>Date(s)</th>
+                              <th>Lab Result RCTC OID ***</th>
+                              <th>Lab Result RCTC Version ***</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>SARS-like Coronavirus N gene [Presence] in
+                                Unspecified specimen by NAA with probe
+                                detection</td>
+                              <td>2.16.840.1.114222.4.11.7508</td>
+                              <td>20250221</td>
+                              <td>Detected (qualifier value)</td>
+                              <td>02/21/2025</td>
+                              <td />
+                              <td />
+                            </tr>
+                          </tbody>
+                        </table>
+                      </item>
+                    </list>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <organizer classCode="BATTERY" moodCode="EVN">
+              <!-- [C-CDA R1.1] Result Organizer -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
+              <!-- [C-CDA R2.1] Result Organizer (V3) -->
+              <templateId extension="2015-08-01"
+                root="2.16.840.1.113883.10.20.22.4.1" />
+              <id root="2047cca3-559f-45da-8775-406538fa4815" />
+              <code code="94310-0 "
+                codeSystem="2.16.840.1.113883.6.1"
+                codeSystemName="LOINC"
+                displayName="SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection" />
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="20250221" />
+                <high value="20250221" />
+              </effectiveTime>
+              <component>
+                <observation classCode="OBS" moodCode="EVN">
+                  <!-- [C-CDA R1.1] Result Observation -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
+                  <!-- [C-CDA R2.1] Result Observation (V3) -->
+                  <templateId extension="2015-08-01"
+                    root="2.16.840.1.113883.10.20.22.4.2" />
+                  <templateId extension="2016-12-01"
+                    root="2.16.840.1.113883.10.20.15.2.3.2" />
+                  <!-- [eICR R2 STU1.1] Initial Case Report Trigger Code Result Observation -->
+                  <id root="9890e2c3-019a-4168-8403-a0a069994440" />
+                  <code code="94310-0 "
+                    codeSystem="2.16.840.1.113883.6.1"
+                    codeSystemName="LOINC"
+                    displayName="SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection"
+                    sdtc:valueSet="2.16.840.1.114222.4.11.7508"
+                    sdtc:valueSetVersion="20200429" xsi:type="CD" />
+                  <statusCode code="completed" />
+                  <effectiveTime value="20200513" />
+                  <value code="260373001"
+                    codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT"
+                    displayName="Detected (qualifier value)"
+                    xsi:type="CD" />
+                </observation>
+              </component>
+            </organizer>
+          </entry>
         </section>
       </component>
 
