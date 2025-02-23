@@ -2,7 +2,7 @@ fastapi>=0.109.1
 httpx==0.28.1
 pydantic==1.10.13
 pytest==7.1.2
-syrupy==4.6.1
+syrupy==4.8.2
 testcontainers==4.8.1
 uvicorn>=0.18.0
 uuid
