@@ -110,12 +110,12 @@ export const formatPhoneNumber = (
  * @returns The formatted vital signs information.
  */
 export const formatVitals = (
-  heightAmount: string,
-  heightUnit: string,
-  weightAmount: string,
-  weightUnit: string,
-  bmiAmount: string,
-  bmiUnit: string,
+  heightAmount: string | undefined,
+  heightUnit: string | undefined,
+  weightAmount: string | undefined,
+  weightUnit: string | undefined,
+  bmiAmount: string | undefined,
+  bmiUnit: string | undefined,
 ) => {
   let heightString = "";
   let weightString = "";

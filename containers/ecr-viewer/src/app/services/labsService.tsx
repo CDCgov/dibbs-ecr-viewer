@@ -103,7 +103,8 @@ export const getLabJsonObject = (
   // Get reference value (result ID) from Observations
   const observations = getObservations(report, fhirBundle, mappings);
   const observationRefValsArray = observations.flatMap((observation) => {
-    const refVal = evaluate(observation, mappings["observationReferenceValue"]);
+    const refVal: string[] =
+      evaluate(observation, mappings["observationReferenceValue"]) ?? [];
     return extractNumbersAndPeriods(refVal);
   });
   const observationRefVal = [...new Set(observationRefValsArray)].join(", "); // should only be 1
@@ -213,7 +214,10 @@ const returnCollectionTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle, mappings);
   const collectionTime = observations.flatMap((observation) => {
-    const rawTime = evaluate(observation, mappings["specimenCollectionTime"]);
+    const rawTime: string[] = evaluate(
+      observation,
+      mappings["specimenCollectionTime"],
+    );
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 
@@ -238,7 +242,10 @@ const returnReceivedTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle, mappings);
   const receivedTime = observations.flatMap((observation) => {
-    const rawTime = evaluate(observation, mappings["specimenReceivedTime"]);
+    const rawTime: string[] = evaluate(
+      observation,
+      mappings["specimenReceivedTime"],
+    );
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 

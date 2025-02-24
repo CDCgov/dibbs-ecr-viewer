@@ -324,21 +324,42 @@ export const returnVitalsTable = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
-  const heightAmount = evaluate(fhirBundle, mappings["patientHeight"])[0];
-  const heightUnit = evaluate(
+  const heightAmount: string | undefined = evaluate(
+    fhirBundle,
+    mappings["patientHeight"],
+  )[0];
+  const heightUnit: string | undefined = evaluate(
     fhirBundle,
     mappings["patientHeightMeasurement"],
   )[0];
-  const heightDate = evaluate(fhirBundle, mappings["patientHeightDate"])[0];
-  const weightAmount = evaluate(fhirBundle, mappings["patientWeight"])[0];
-  const weightUnit = evaluate(
+  const heightDate: string | undefined = evaluate(
+    fhirBundle,
+    mappings["patientHeightDate"],
+  )[0];
+  const weightAmount: string | undefined = evaluate(
+    fhirBundle,
+    mappings["patientWeight"],
+  )[0];
+  const weightUnit: string | undefined = evaluate(
     fhirBundle,
     mappings["patientWeightMeasurement"],
   )[0];
-  const weightDate = evaluate(fhirBundle, mappings["patientWeightDate"])[0];
-  const bmiAmount = evaluate(fhirBundle, mappings["patientBmi"])[0];
-  const bmiUnit = evaluate(fhirBundle, mappings["patientBmiMeasurement"])[0];
-  const bmiDate = evaluate(fhirBundle, mappings["patientBmiDate"])[0];
+  const weightDate: string | undefined = evaluate(
+    fhirBundle,
+    mappings["patientWeightDate"],
+  )[0];
+  const bmiAmount: string | undefined = evaluate(
+    fhirBundle,
+    mappings["patientBmi"],
+  )[0];
+  const bmiUnit: string | undefined = evaluate(
+    fhirBundle,
+    mappings["patientBmiMeasurement"],
+  )[0];
+  const bmiDate: string | undefined = evaluate(
+    fhirBundle,
+    mappings["patientBmiDate"],
+  )[0];
 
   const formattedVitals = formatVitals(
     heightAmount,

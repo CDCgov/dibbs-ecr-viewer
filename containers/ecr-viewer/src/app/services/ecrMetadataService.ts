@@ -9,7 +9,7 @@ import {
   getCodeableConceptDisplay,
   PathMappings,
 } from "@/app/utils/data-utils";
-import { Bundle, Observation, Organization, Reference } from "fhir/r4";
+import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -77,7 +77,8 @@ export const evaluateEcrMetadata = (
     });
   }
 
-  const custodianRef = evaluate(fhirBundle, mappings.eicrCustodianRef)[0] ?? "";
+  const custodianRef: string =
+    evaluate(fhirBundle, mappings.eicrCustodianRef)[0] ?? "";
   const custodian: Organization = evaluateReference(
     fhirBundle,
     mappings,
@@ -85,7 +86,10 @@ export const evaluateEcrMetadata = (
   );
 
   const eicrReleaseVersion = (fhirBundle: any, mappings: any) => {
-    const releaseVersion = evaluate(fhirBundle, mappings.eicrReleaseVersion)[0];
+    const releaseVersion: string = evaluate(
+      fhirBundle,
+      mappings.eicrReleaseVersion,
+    )[0];
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
     } else if (releaseVersion === "2021-01-01") {
@@ -95,7 +99,10 @@ export const evaluateEcrMetadata = (
     }
   };
 
-  const fhirERSDWarnings = evaluate(fhirBundle, mappings.eRSDwarnings);
+  const fhirERSDWarnings: Coding[] = evaluate(
+    fhirBundle,
+    mappings.eRSDwarnings,
+  );
   let eRSDTextList: ERSDWarning[] = [];
 
   for (const warning of fhirERSDWarnings) {

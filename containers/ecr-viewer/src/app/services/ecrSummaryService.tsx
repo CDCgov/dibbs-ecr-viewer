@@ -4,6 +4,7 @@ import {
   Condition,
   DiagnosticReport,
   DomainResource,
+  Immunization,
   Observation,
 } from "fhir/r4";
 import {
@@ -383,9 +384,13 @@ const evaluateEcrSummaryRelevantImmunizations = (
   mappings: PathMappings,
   snomedCode: string,
 ): DisplayDataProps[] => {
-  const immunizations = evaluate(fhirBundle, mappings.stampedImmunizations, {
-    snomedCode,
-  });
+  const immunizations: Immunization[] = evaluate(
+    fhirBundle,
+    mappings.stampedImmunizations,
+    {
+      snomedCode,
+    },
+  );
   const immunizationTable = returnImmunizations(
     fhirBundle,
     immunizations,

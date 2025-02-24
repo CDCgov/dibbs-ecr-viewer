@@ -2,7 +2,7 @@ import { loadYamlConfig } from "@/app/api/utils";
 import BundleLab from "../assets/BundleLab.json";
 import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
 import BundleLabInvalidResultsDiv from "../assets/BundleLabInvalidResultsDiv.json";
-import { Bundle, Observation, Organization } from "fhir/r4";
+import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import { render, screen } from "@testing-library/react";
 import {
@@ -14,7 +14,6 @@ import {
   evaluateOrganismsReportData,
   evaluateDiagnosticReportData,
   evaluateObservationTable,
-  LabReport,
   evaluateLabOrganizationData,
   ResultObject,
   combineOrgAndReportData,
@@ -22,6 +21,7 @@ import {
   findIdenticalOrg,
   isLabReportElementDataList,
   returnAnalysisTime,
+  LabReportElementData,
 } from "@/app/services/labsService";
 import { AccordionLabResults } from "@/app/view-data/components/AccordionLabResults";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -182,6 +182,9 @@ describe("LabsService tests", () => {
                 reference: "Observation/1c0f3367-0588-c90e-fed0-0d8c15c5ac1b",
               },
             ],
+            resourceType: "DiagnosticReport",
+            code: {},
+            status: "entered-in-error",
           },
           BundleLab as unknown as Bundle,
           mappings,
@@ -204,6 +207,9 @@ describe("LabsService tests", () => {
                 reference: "Observation/invalid-observation-id",
               },
             ],
+            resourceType: "DiagnosticReport",
+            code: {},
+            status: "final",
           },
           BundleLab as unknown as Bundle,
           mappings,
@@ -226,11 +232,9 @@ describe("LabsService tests", () => {
       });
 
       it("returns correct Json Object for table without data-id", () => {
-        const labReportWithoutIds = (
-          evaluate(
-            BundleLabNoLabIds,
-            "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
-          ) as LabReport[]
+        const labReportWithoutIds: DiagnosticReport = evaluate(
+          BundleLabNoLabIds,
+          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
         )[0];
         const labReportJsonObjectWithoutId = {
           resultId: undefined,
@@ -540,20 +544,19 @@ describe("LabsService tests", () => {
       expect(screen.getAllByText("Not Detected")).not.toBeEmpty();
     });
     it("the table should not appear when there are no results", () => {
-      const diagnosticReport = {
-        resource: {
-          resourceType: "DiagnosticReport",
-          code: {
-            coding: [
-              {
-                display: "Drugs Of Abuse Comprehensive Screen, Ur",
-              },
-            ],
-          },
+      const diagnosticReport: DiagnosticReport = {
+        resourceType: "DiagnosticReport",
+        code: {
+          coding: [
+            {
+              display: "Drugs Of Abuse Comprehensive Screen, Ur",
+            },
+          ],
         },
+        status: "final",
       };
       const actual = evaluateObservationTable(
-        diagnosticReport as unknown as LabReport,
+        diagnosticReport,
         null as unknown as Bundle,
         mappings,
         [],
@@ -641,10 +644,10 @@ describe("LabsService tests", () => {
 
     it("should properly count the number of labs", () => {
       const result = evaluateLabInfoData(
-        BundleLab as unknown as Bundle,
+        BundleLab as Bundle,
         evaluate(BundleLab, mappings["diagnosticReports"]),
         mappings,
-      );
+      ) as LabReportElementData[];
       expect(result[0].organizationDisplayDataProps[3].title).toEqual(
         "Number of Results",
       );
@@ -653,7 +656,7 @@ describe("LabsService tests", () => {
   });
 
   describe("Find Identical Org", () => {
-    const orgMappings = [
+    const orgMappings: Organization[] = [
       {
         id: "d6930155-009b-92a0-d2b9-007761c45ad2",
         name: "Coruscant Department of Public Health",
