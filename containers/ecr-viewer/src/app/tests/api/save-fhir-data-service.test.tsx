@@ -4,8 +4,8 @@
 
 import { saveCoreMetadata } from "../../api/save-fhir-data/save-fhir-data-service";
 import { BundleMetadata } from "../../api/save-fhir-data/types";
-import { db } from '../../api/services/database'
-import { sql } from 'kysely'
+import { db } from "../../api/services/database";
+import { sql } from "kysely";
 
 // jest.mock("../../api/services/postgres_db", () => ({
 //   getDB: jest.fn(),
@@ -56,43 +56,48 @@ describe("saveCoreMetadata", () => {
   //     },
   //   });
   // });
-  
+
   beforeAll(async () => {
-    await db.schema.createTable('ecr_data')
-      .addColumn('eICR_ID', 'varchar(200)', (cb) => cb.primaryKey())
-      .addColumn('set_id', 'varchar(255)')
-      .addColumn('eicr_version_number', 'varchar(50)')
-      .addColumn('data_source', 'varchar(2)') // S3 or DB
-      .addColumn('fhir_reference_link', 'varchar(500)')
-      .addColumn('patient_name_first', 'varchar(100)')
-      .addColumn('patient_name_last', 'varchar(100)')
-      .addColumn('patient_birth_date', 'date')
-      .addColumn('date_created', 'timestamptz', (cb) => cb.notNull().defaultTo(sql`NOW()`))
-      .addColumn('report_date', 'date')
-      .execute()
-    await db.schema.createTable('ecr_rr_conditions')
-      .addColumn('uuid', 'varchar(200)', (cb) => cb.primaryKey())
-      .addColumn('eICR_ID', 'varchar(255)', (cb) => cb.notNull())
-      .addColumn('condition', 'varchar')
-      .execute()
-    await db.schema.createTable('ecr_rr_rule_summaries')
-      .addColumn('uuid', 'varchar(200)', (cb) => cb.primaryKey())
-      .addColumn('ecr_rr_conditions_id', 'varchar(200)')
-      .addColumn('rule_summary', 'varchar')
-      .execute()
-  })
+    await db.schema
+      .createTable("ecr_data")
+      .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
+      .addColumn("set_id", "varchar(255)")
+      .addColumn("eicr_version_number", "varchar(50)")
+      .addColumn("data_source", "varchar(2)") // S3 or DB
+      .addColumn("fhir_reference_link", "varchar(500)")
+      .addColumn("patient_name_first", "varchar(100)")
+      .addColumn("patient_name_last", "varchar(100)")
+      .addColumn("patient_birth_date", "date")
+      .addColumn("date_created", "timestamptz", (cb) =>
+        cb.notNull().defaultTo(sql`NOW()`),
+      )
+      .addColumn("report_date", "date")
+      .execute();
+    await db.schema
+      .createTable("ecr_rr_conditions")
+      .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
+      .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("condition", "varchar")
+      .execute();
+    await db.schema
+      .createTable("ecr_rr_rule_summaries")
+      .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
+      .addColumn("ecr_rr_conditions_id", "varchar(200)")
+      .addColumn("rule_summary", "varchar")
+      .execute();
+  });
 
   afterAll(async () => {
-    await db.schema.dropTable('ecr_data').execute()
-    await db.schema.dropTable('ecr_rr_conditions').execute()
-    await db.schema.dropTable('ecr_rr_rule_summaries').execute()
-  })
+    await db.schema.dropTable("ecr_data").execute();
+    await db.schema.dropTable("ecr_rr_conditions").execute();
+    await db.schema.dropTable("ecr_rr_rule_summaries").execute();
+  });
 
   afterEach(async () => {
-    await db.deleteFrom('ecr_data').execute()
-    await db.deleteFrom('ecr_rr_conditions').execute()
-    await db.deleteFrom('ecr_rr_rule_summaries').execute()
-  })
+    await db.deleteFrom("ecr_data").execute();
+    await db.deleteFrom("ecr_rr_conditions").execute();
+    await db.deleteFrom("ecr_rr_rule_summaries").execute();
+  });
 
   // afterEach(() => {
   //   jest.resetAllMocks();
