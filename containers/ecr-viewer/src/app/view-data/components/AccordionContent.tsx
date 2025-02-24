@@ -239,7 +239,7 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
     <Accordion
       className="info-container"
       items={accordionItems}
-      multiselectable
+      multiselectable={true}
     />
   );
 };

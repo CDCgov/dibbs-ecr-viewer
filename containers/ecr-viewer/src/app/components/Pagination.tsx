@@ -118,7 +118,7 @@ export const Pagination = ({
           {onClickPrevious ? (
             <Button
               type="button"
-              unstyled
+              unstyled={true}
               className={classnames(
                 "usa-pagination__link usa-pagination__previous-page text-bold",
                 { "visibility-hidden": !prevPage },
@@ -128,7 +128,7 @@ export const Pagination = ({
               onClick={onClickPrevious}
               hidden={!prevPage}
             >
-              <NavigateBefore aria-hidden={true} className={"text-ink"} />
+              <NavigateBefore aria-hidden={true} className="text-ink" />
               <span className="usa-pagination__link-text">Previous</span>
             </Button>
           ) : (
@@ -141,7 +141,7 @@ export const Pagination = ({
               hidden={!prevPage}
               aria-label="Previous page"
             >
-              <NavigateBefore aria-hidden={true} className={"text-ink"} />
+              <NavigateBefore aria-hidden={true} className="text-ink" />
               <span className="usa-pagination__link-text">Previous</span>
             </Link>
           )}
@@ -166,7 +166,7 @@ export const Pagination = ({
           {onClickNext ? (
             <Button
               type="button"
-              unstyled
+              unstyled={true}
               className={classnames(
                 "usa-pagination__link usa-pagination__next-page text-bold",
                 { "visibility-hidden": !nextPage },
@@ -177,7 +177,7 @@ export const Pagination = ({
               onClick={onClickNext}
             >
               <span className="usa-pagination__link-text">Next</span>
-              <NavigateNext aria-hidden={true} className={"text-ink"} />
+              <NavigateNext aria-hidden={true} className="text-ink" />
             </Button>
           ) : (
             <Link
@@ -190,7 +190,7 @@ export const Pagination = ({
               aria-label="Next page"
             >
               <span className="usa-pagination__link-text">Next</span>
-              <NavigateNext aria-hidden={true} className={"text-ink"} />
+              <NavigateNext aria-hidden={true} className="text-ink" />
             </Link>
           )}
         </li>
@@ -222,7 +222,7 @@ const PaginationPage = ({
       {onClickPageNumber ? (
         <Button
           type="button"
-          unstyled
+          unstyled={true}
           data-testid="pagination-page-number"
           className={linkClasses}
           aria-label={`Page ${page}`}

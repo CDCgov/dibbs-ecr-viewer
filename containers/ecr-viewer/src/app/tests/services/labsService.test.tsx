@@ -529,7 +529,7 @@ describe("LabsService tests", () => {
         <AccordionLabResults
           title={report.code.coding?.[0].display ?? "\u{200B}"}
           abnormalTag={false}
-          content={[<div key={"1"}>{actual}</div>]}
+          content={[<div key="1">{actual}</div>]}
           organizationId="test"
         />
       );
@@ -571,7 +571,7 @@ describe("LabsService tests", () => {
         <AccordionLabResults
           title={report.code.coding?.[0].display ?? "\u{200B}"}
           abnormalTag={false}
-          content={[<div key={"1"}>{actual}</div>]}
+          content={[<div key="1">{actual}</div>]}
           organizationId="test"
         />
       );

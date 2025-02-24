@@ -6,17 +6,17 @@ describe("expand collapse buttons", () => {
   const pageJsx = (hidden: boolean) => (
     <div>
       <button
-        className={"test-button"}
-        data-testid={"test-button"}
+        className="test-button"
+        data-testid="test-button"
         aria-expanded={!hidden}
       />
-      <div className={"accordion"} data-testid={"accordion"} hidden={hidden} />
+      <div className="accordion" data-testid="accordion" hidden={hidden} />
       <ExpandCollapseButtons
-        id={"test"}
-        buttonSelector={"button"}
-        accordionSelector={".accordion"}
-        expandButtonText={"Expand all sections"}
-        collapseButtonText={"Collapse all sections"}
+        id="test"
+        buttonSelector="button"
+        accordionSelector=".accordion"
+        expandButtonText="Expand all sections"
+        collapseButtonText="Collapse all sections"
       />
     </div>
   );
