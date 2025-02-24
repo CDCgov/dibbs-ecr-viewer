@@ -12,12 +12,10 @@ interface EcrPaginationWrapperProps {
 
 interface UserPreferences {
   itemsPerPage: number;
-  page: number;
 }
 
 const defaultPreferences = {
   itemsPerPage: 25,
-  page: 1,
 };
 
 /**
@@ -50,7 +48,6 @@ const EcrPaginationWrapper = ({
   useEffect(() => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.set("itemsPerPage", userPreferences.itemsPerPage.toString());
-    current.set("page", userPreferences.page.toString());
     const search = current.toString();
     const query = search ? `?${search}` : "";
     router.push(`${pathname}${query}`);
@@ -80,17 +77,6 @@ const EcrPaginationWrapper = ({
           maxSlots={6}
           pathname=""
           className="flex-1"
-          onClickPageNumber={(e, page) => {
-            const updatedUserPreferences: UserPreferences = {
-              ...userPreferences,
-              page,
-            };
-            setUserPreferences(updatedUserPreferences);
-            localStorage.setItem(
-              "userPreferences",
-              JSON.stringify(updatedUserPreferences),
-            );
-          }}
         />
         <div className="display-flex flex-align-center flex-1 flex-justify-end">
           <Label
