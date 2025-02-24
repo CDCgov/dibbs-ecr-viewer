@@ -127,8 +127,8 @@ export const returnProblemsTable = (
       resources={problemsArray}
       mappings={mappings}
       columns={columnInfo}
-      caption={"Problems List"}
-      className={"margin-y-0"}
+      caption="Problems List"
+      className="margin-y-0"
       fixed={false}
     />
   );

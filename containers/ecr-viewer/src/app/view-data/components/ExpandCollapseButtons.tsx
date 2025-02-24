@@ -24,7 +24,7 @@ export const ExpandCollapseButtons = ({
       <Button type="button" unstyled={true} onClick={expandHandler}>
         Expand all {descriptor}
       </Button>
-      <span className={"vertical-line"}></span>
+      <span className="vertical-line"></span>
       <Button type="button" unstyled={true} onClick={collapseHandler}>
         Collapse all {descriptor}
       </Button>

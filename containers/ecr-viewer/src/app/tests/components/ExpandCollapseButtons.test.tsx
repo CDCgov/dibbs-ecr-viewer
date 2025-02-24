@@ -10,7 +10,7 @@ describe("expand collapse buttons", () => {
 
     render(
       <ExpandCollapseButtons
-        descriptor={"sections"}
+        descriptor="sections"
         expandHandler={() => {
           status = "expanded";
         }}
@@ -31,7 +31,7 @@ describe("expand collapse buttons", () => {
 
     render(
       <ExpandCollapseButtons
-        descriptor={"sections"}
+        descriptor="sections"
         expandHandler={() => {
           status = "expanded";
         }}

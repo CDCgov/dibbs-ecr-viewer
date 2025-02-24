@@ -59,13 +59,13 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
               Clinical Sections Relevant to Reportable Condition
             </h5>
             {condition.immunizationDetails.length > 0 && (
-              <div className={"margin-top-0"}>
+              <div className="margin-top-0">
                 {condition.immunizationDetails.map((item, index) => (
                   <DataTableDisplay item={item} key={index} />
                 ))}
               </div>
             )}
-            <div className={"margin-top-0"}>
+            <div className="margin-top-0">
               {condition.clinicalDetails.map((item, index) => (
                 <DataTableDisplay item={item} key={`${item.title}-${index}`} />
               ))}
@@ -94,7 +94,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
       <div className="usa-summary-box__body margin-bottom-05">
         <h3
           className="summary-box-key-information side-nav-ignore"
-          id={"patient-summary"}
+          id="patient-summary"
         >
           Patient Summary
         </h3>
@@ -119,10 +119,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
       </div>
       <div className="usa-summary-box__body">
         <h3
-          className={
-            "summary-box-key-information side-nav-ignore header-with-tag"
-          }
-          id={"condition-summary"}
+          className="summary-box-key-information side-nav-ignore header-with-tag"
+          id="condition-summary"
         >
           <div>Condition Summary</div>
           <div>

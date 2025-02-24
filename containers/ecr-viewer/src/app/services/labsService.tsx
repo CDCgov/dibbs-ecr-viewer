@@ -342,7 +342,7 @@ export function evaluateObservationTable(
         resources={observations}
         mappings={mappings}
         columns={columnInfo}
-        className={"margin-y-0"}
+        className="margin-y-0"
         outerBorder={false}
       />
     );
@@ -444,7 +444,7 @@ export const evaluateOrganismsReportData = (
       resources={components}
       mappings={mappings}
       columns={columnInfo}
-      className={"margin-y-0"}
+      className="margin-y-0"
       outerBorder={false}
     />
   );
@@ -728,13 +728,13 @@ function getFormattedLabsContent(
   const content: Array<React.JSX.Element> = [];
   if (labTableDiagnostic)
     content.push(
-      <React.Fragment key={"lab-table-diagnostic"}>
+      <React.Fragment key="lab-table-diagnostic">
         {labTableDiagnostic}
       </React.Fragment>,
     );
   if (labTableOrganisms) {
     content.push(
-      <React.Fragment key={"lab-table-oragnisms"}>
+      <React.Fragment key="lab-table-oragnisms">
         {labTableOrganisms}
       </React.Fragment>,
     );

@@ -81,7 +81,7 @@ const ECRViewerPage = async ({
     return (
       <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
         <SideNav />
-        <div className={"ecr-viewer-container"}>
+        <div className="ecr-viewer-container">
           <div className="margin-bottom-3">
             <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
               eCR Summary

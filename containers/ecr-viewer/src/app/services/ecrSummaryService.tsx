@@ -206,7 +206,7 @@ export const evaluateEcrSummaryConditionSummary = (
           toolTip:
             "Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).",
           value: (
-            <div className={"p-list"}>
+            <div className="p-list">
               {[...conditionsList[conditionsListKey].ruleSummaries].map(
                 (summary) => (
                   <p key={summary}>{summary}</p>

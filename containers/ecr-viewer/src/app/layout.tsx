@@ -42,7 +42,7 @@ export default function RootLayout({
       <head>
         <PublicEnvScript nonce={{ headerKey: "x-nonce" }} />
       </head>
-      <body className={"overflow-x-auto"}>{children}</body>
+      <body className="overflow-x-auto">{children}</body>
     </html>
   );
 }

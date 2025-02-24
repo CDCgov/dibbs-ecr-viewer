@@ -102,7 +102,7 @@ export const SideNavLoadingSkeleton = () => {
  */
 const EcrSummaryLoadingSkeleton = () => {
   return (
-    <div className={"info-container"}>
+    <div className="info-container">
       <div
         className="usa-summary-box padding-x-3 padding-y-0"
         aria-labelledby="summary-box-key-information"
@@ -227,7 +227,7 @@ export const EcrLoadingSkeleton = () => {
       <div>
         <SideNavLoadingSkeleton />
       </div>
-      <div className={"ecr-viewer-container"}>
+      <div className="ecr-viewer-container">
         <div className="margin-bottom-3">
           <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
             eCR Summary
@@ -238,8 +238,8 @@ export const EcrLoadingSkeleton = () => {
         </div>
         <EcrSummaryLoadingSkeleton />
         <div className="margin-top-10">
-          <GridContainer className={"padding-0 margin-bottom-3 maxw-none"}>
-            <Grid row className="margin-bottom-05">
+          <GridContainer className="padding-0 margin-bottom-3 maxw-none">
+            <Grid row={true} className="margin-bottom-05">
               <Grid>
                 <h2 className="margin-bottom-0" id="ecr-document">
                   eCR Document
