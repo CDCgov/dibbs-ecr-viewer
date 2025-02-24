@@ -194,7 +194,7 @@ const evaluateEcrAuthorDetails = (
 ): DisplayDataProps[][] => {
   const authorRefs: Reference[] = evaluate(
     fhirBundle,
-    mappings["compositionAuthorRefs"],
+    mappings.compositionAuthorRefs,
   );
 
   const authorDetails: DisplayDataProps[][] = [];

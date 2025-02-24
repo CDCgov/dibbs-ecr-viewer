@@ -503,7 +503,7 @@ describe("LabsService tests", () => {
 
   describe("Evaluate Diagnostic Report", () => {
     it("should evaluate diagnostic report title", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
+      const report = evaluate(BundleLab, mappings.diagnosticReports)[0];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -523,7 +523,7 @@ describe("LabsService tests", () => {
       );
     });
     it("should evaluate diagnostic report results", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
+      const report = evaluate(BundleLab, mappings.diagnosticReports)[0];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -564,7 +564,7 @@ describe("LabsService tests", () => {
       expect(actual).toBeUndefined();
     });
     it("should evaluate test method results", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
+      const report = evaluate(BundleLab, mappings.diagnosticReports)[0];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -586,7 +586,7 @@ describe("LabsService tests", () => {
       ).not.toBeEmpty();
     });
     it("should display comment", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[2];
+      const report = evaluate(BundleLab, mappings.diagnosticReports)[2];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -625,7 +625,7 @@ describe("LabsService tests", () => {
     it("should return a list of LabReportElementData if the lab results in the HTML table have ID's", () => {
       const result = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
-        evaluate(BundleLab, mappings["diagnosticReports"]),
+        evaluate(BundleLab, mappings.diagnosticReports),
         mappings,
       );
       expect(result[0]).toHaveProperty("diagnosticReportDataElements");
@@ -635,7 +635,7 @@ describe("LabsService tests", () => {
     it("should return a list of DisplayDataProps if the lab results in the HTML table do not have ID's", () => {
       const result = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
+        evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
         mappings,
       );
       expect(result[0]).toHaveProperty("title");
@@ -645,7 +645,7 @@ describe("LabsService tests", () => {
     it("should properly count the number of labs", () => {
       const result = evaluateLabInfoData(
         BundleLab as Bundle,
-        evaluate(BundleLab, mappings["diagnosticReports"]),
+        evaluate(BundleLab, mappings.diagnosticReports),
         mappings,
       ) as LabReportElementData[];
       expect(result[0].organizationDisplayDataProps[3].title).toEqual(

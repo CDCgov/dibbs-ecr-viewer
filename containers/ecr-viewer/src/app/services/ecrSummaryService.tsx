@@ -266,7 +266,7 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
 
   const problemsList: Condition[] = evaluate(
     fhirBundle,
-    fhirPathMappings["activeProblems"],
+    fhirPathMappings.activeProblems,
   );
   const problemsListFiltered = getRelevantResources(problemsList, snomedCode);
 
@@ -306,13 +306,13 @@ export const evaluateEcrSummaryRelevantLabResults = (
 
   const labReports: DiagnosticReport[] = evaluate(
     fhirBundle,
-    fhirPathMappings["diagnosticReports"],
+    fhirPathMappings.diagnosticReports,
   );
   const labsWithCode = getRelevantResources(labReports, snomedCode);
 
   const observationsList: Observation[] = evaluate(
     fhirBundle,
-    fhirPathMappings["observations"],
+    fhirPathMappings.observations,
   );
   const obsIdsWithCode: (string | undefined)[] = getRelevantResources(
     observationsList,

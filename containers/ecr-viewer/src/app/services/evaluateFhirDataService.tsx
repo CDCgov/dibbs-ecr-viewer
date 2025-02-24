@@ -314,7 +314,7 @@ export const evaluateSocialData = (
   const socialData: DisplayDataProps[] = [
     {
       title: "Tobacco Use",
-      value: evaluateValue(fhirBundle, mappings["patientTobaccoUse"]),
+      value: evaluateValue(fhirBundle, mappings.patientTobaccoUse),
     },
     {
       title: "Travel History",
@@ -323,11 +323,11 @@ export const evaluateSocialData = (
     },
     {
       title: "Homeless Status",
-      value: evaluateValue(fhirBundle, mappings["patientHomelessStatus"]),
+      value: evaluateValue(fhirBundle, mappings.patientHomelessStatus),
     },
     {
       title: "Pregnancy Status",
-      value: evaluateValue(fhirBundle, mappings["patientPregnancyStatus"]),
+      value: evaluateValue(fhirBundle, mappings.patientPregnancyStatus),
     },
     {
       title: "Alcohol Use",
@@ -335,19 +335,19 @@ export const evaluateSocialData = (
     },
     {
       title: "Sexual Orientation",
-      value: evaluateValue(fhirBundle, mappings["patientSexualOrientation"]),
+      value: evaluateValue(fhirBundle, mappings.patientSexualOrientation),
     },
     {
       title: "Occupation",
-      value: evaluateValue(fhirBundle, mappings["patientCurrentJobTitle"]),
+      value: evaluateValue(fhirBundle, mappings.patientCurrentJobTitle),
     },
     {
       title: "Religious Affiliation",
-      value: evaluateValue(fhirBundle, mappings["patientReligion"]),
+      value: evaluateValue(fhirBundle, mappings.patientReligion),
     },
     {
       title: "Marital Status",
-      value: evaluateValue(fhirBundle, mappings["patientMaritalStatus"]),
+      value: evaluateValue(fhirBundle, mappings.patientMaritalStatus),
     },
   ];
   return evaluateData(socialData);
@@ -458,13 +458,13 @@ export const evaluateEncounterData = (
     {
       title: "Encounter Date/Time",
       value: formatStartEndDateTime(
-        evaluate(fhirBundle, mappings["encounterStartDate"])[0],
-        evaluate(fhirBundle, mappings["encounterEndDate"])[0],
+        evaluate(fhirBundle, mappings.encounterStartDate)[0],
+        evaluate(fhirBundle, mappings.encounterEndDate)[0],
       ),
     },
     {
       title: "Encounter Type",
-      value: evaluate(fhirBundle, mappings["encounterType"])[0],
+      value: evaluate(fhirBundle, mappings.encounterType)[0],
     },
     {
       title: "Encounter ID",
@@ -495,7 +495,7 @@ export const evaluateFacilityData = (
 ) => {
   const facilityContactAddressRef: Reference[] = evaluate(
     fhirBundle,
-    mappings["facilityContactAddress"],
+    mappings.facilityContactAddress,
   );
   let referenceString;
 
@@ -510,13 +510,11 @@ export const evaluateFacilityData = (
   const facilityData = [
     {
       title: "Facility Name",
-      value: evaluate(fhirBundle, mappings["facilityName"])[0],
+      value: evaluate(fhirBundle, mappings.facilityName)[0],
     },
     {
       title: "Facility Address",
-      value: formatAddress(
-        evaluate(fhirBundle, mappings["facilityAddress"])[0],
-      ),
+      value: formatAddress(evaluate(fhirBundle, mappings.facilityAddress)[0]),
     },
     {
       title: "Facility Contact Address",
@@ -525,12 +523,12 @@ export const evaluateFacilityData = (
     {
       title: "Facility Contact",
       value: formatPhoneNumber(
-        evaluate(fhirBundle, mappings["facilityContact"])[0],
+        evaluate(fhirBundle, mappings.facilityContact)[0],
       ),
     },
     {
       title: "Facility Type",
-      value: evaluate(fhirBundle, mappings["facilityType"])[0],
+      value: evaluate(fhirBundle, mappings.facilityType)[0],
     },
     {
       title: "Facility ID",
@@ -551,7 +549,7 @@ export const evaluateProviderData = (
 ) => {
   const encounterRef: string | undefined = evaluate(
     fhirBundle,
-    mappings["compositionEncounterRef"],
+    mappings.compositionEncounterRef,
   )[0];
   const encounter: Encounter = evaluateReference(
     fhirBundle,
@@ -560,7 +558,7 @@ export const evaluateProviderData = (
   );
   const encounterParticipantRef: string | undefined = evaluate(
     encounter,
-    mappings["encounterIndividualRef"],
+    mappings.encounterIndividualRef,
   )[0];
   const { practitioner, organization } = evaluatePractitionerRoleReference(
     fhirBundle,
@@ -610,7 +608,7 @@ export const evaluateEncounterCareTeamTable = (
 ) => {
   const encounterRef: string | undefined = evaluate(
     fhirBundle,
-    mappings["compositionEncounterRef"],
+    mappings.compositionEncounterRef,
   )[0];
   const encounter: Encounter = evaluateReference(
     fhirBundle,
@@ -619,7 +617,7 @@ export const evaluateEncounterCareTeamTable = (
   );
   const participants: EncounterParticipant[] = evaluate(
     encounter,
-    mappings["encounterParticipants"],
+    mappings.encounterParticipants,
   );
 
   const tables = participants.map((participant) => {
