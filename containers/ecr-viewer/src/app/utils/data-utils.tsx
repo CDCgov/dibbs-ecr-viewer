@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import sanitizeHtml from "sanitize-html";
 import parse from "html-react-parser";
+import { CodeableConcept } from "fhir/r4";
 
 export interface PathMappings {
   [key: string]: string;
@@ -165,4 +166,48 @@ export const range = (start: number, end?: number, step: number = 1) => {
   }
 
   return output;
+};
+
+/**
+ * Returns the display value of a CodeableConcept.
+ * @param codeableConcept - The CodeableConcept to get the display value from.
+ * @param system - The system to search for in the CodeableConcept's coding array.
+ * @returns - The display value of the CodeableConcept.
+ */
+export const getCodeableConceptDisplay = (
+  codeableConcept: CodeableConcept | undefined,
+  system?: string,
+) => {
+  if (!codeableConcept) {
+    return undefined;
+  }
+
+  const { coding, text } = codeableConcept;
+
+  // 1) If a system is specified, search for a matching coding.
+  if (system) {
+    const matchingCoding = coding?.find((c) => c.system === system);
+    if (matchingCoding?.display) {
+      return matchingCoding.display;
+    }
+  }
+
+  // 2) Fallback to the CodeableConcept's text
+  if (text) {
+    return text;
+  }
+
+  // 3) If no text, try the first coding's display
+  const firstCodingWithDisplay = coding?.find((c) => c.display);
+  if (firstCodingWithDisplay?.display) {
+    return firstCodingWithDisplay.display;
+  }
+
+  // 4) If no coding, return the first coding's code
+  if (coding?.[0]?.code) {
+    return coding[0].code;
+  }
+
+  // 5) Nothing found, return fallback
+  return undefined;
 };

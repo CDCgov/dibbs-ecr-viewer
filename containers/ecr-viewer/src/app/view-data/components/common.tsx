@@ -57,7 +57,7 @@ export const returnCareTeamTable = (
 ): React.JSX.Element | undefined => {
   const careTeamParticipants: CareTeamParticipant[] = evaluate(
     bundle,
-    mappings["careTeamParticipants"],
+    mappings.careTeamParticipants,
   );
   if (careTeamParticipants.length === 0) {
     return undefined;
@@ -324,21 +324,42 @@ export const returnVitalsTable = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
-  const heightAmount = evaluate(fhirBundle, mappings["patientHeight"])[0];
-  const heightUnit = evaluate(
+  const heightAmount: string | undefined = evaluate(
     fhirBundle,
-    mappings["patientHeightMeasurement"],
+    mappings.patientHeight,
   )[0];
-  const heightDate = evaluate(fhirBundle, mappings["patientHeightDate"])[0];
-  const weightAmount = evaluate(fhirBundle, mappings["patientWeight"])[0];
-  const weightUnit = evaluate(
+  const heightUnit: string | undefined = evaluate(
     fhirBundle,
-    mappings["patientWeightMeasurement"],
+    mappings.patientHeightMeasurement,
   )[0];
-  const weightDate = evaluate(fhirBundle, mappings["patientWeightDate"])[0];
-  const bmiAmount = evaluate(fhirBundle, mappings["patientBmi"])[0];
-  const bmiUnit = evaluate(fhirBundle, mappings["patientBmiMeasurement"])[0];
-  const bmiDate = evaluate(fhirBundle, mappings["patientBmiDate"])[0];
+  const heightDate: string | undefined = evaluate(
+    fhirBundle,
+    mappings.patientHeightDate,
+  )[0];
+  const weightAmount: string | undefined = evaluate(
+    fhirBundle,
+    mappings.patientWeight,
+  )[0];
+  const weightUnit: string | undefined = evaluate(
+    fhirBundle,
+    mappings.patientWeightMeasurement,
+  )[0];
+  const weightDate: string | undefined = evaluate(
+    fhirBundle,
+    mappings.patientWeightDate,
+  )[0];
+  const bmiAmount: string | undefined = evaluate(
+    fhirBundle,
+    mappings.patientBmi,
+  )[0];
+  const bmiUnit: string | undefined = evaluate(
+    fhirBundle,
+    mappings.patientBmiMeasurement,
+  )[0];
+  const bmiDate: string | undefined = evaluate(
+    fhirBundle,
+    mappings.patientBmiDate,
+  )[0];
 
   const formattedVitals = formatVitals(
     heightAmount,
@@ -413,7 +434,7 @@ export const evaluateMiscNotes = (
     "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
 
   const content =
-    evaluateValue(fhirBundle, mappings["historyOfPresentIllness"]) ?? "";
+    evaluateValue(fhirBundle, mappings.historyOfPresentIllness) ?? "";
 
   const tables = formatTablesToJSON(content);
 
@@ -447,7 +468,7 @@ const evaluatePlanOfTreatment = (
   mappings: PathMappings,
   title: string,
 ): DisplayDataProps => {
-  const content = evaluateValue(fhirBundle, mappings["planOfTreatment"]);
+  const content = evaluateValue(fhirBundle, mappings.planOfTreatment);
   const tables = formatTablesToJSON(content);
 
   if (tables.length === 0)
@@ -495,7 +516,7 @@ export const evaluateClinicalData = (
   const reasonForVisitData: DisplayDataProps[] = [
     {
       title: "Reason for Visit",
-      value: evaluate(fhirBundle, mappings["clinicalReasonForVisit"])[0],
+      value: evaluate(fhirBundle, mappings.clinicalReasonForVisit)[0],
     },
   ];
 
@@ -504,7 +525,7 @@ export const evaluateClinicalData = (
       title: "Problems List",
       value: returnProblemsTable(
         fhirBundle,
-        evaluate(fhirBundle, mappings["activeProblems"]),
+        evaluate(fhirBundle, mappings.activeProblems),
         mappings,
       ),
     },
@@ -519,14 +540,14 @@ export const evaluateClinicalData = (
     {
       title: "Procedures",
       value: returnProceduresTable(
-        evaluate(fhirBundle, mappings["procedures"]),
+        evaluate(fhirBundle, mappings.procedures),
         mappings,
       ),
     },
     {
       title: "Planned Procedures",
       value: returnPlannedProceduresTable(
-        evaluate(fhirBundle, mappings["plannedProcedures"]),
+        evaluate(fhirBundle, mappings.plannedProcedures),
         mappings,
       ),
     },
@@ -555,7 +576,7 @@ export const evaluateClinicalData = (
       title: "Immunization History",
       value: returnImmunizations(
         fhirBundle,
-        evaluate(fhirBundle, mappings["immunizations"]),
+        evaluate(fhirBundle, mappings.immunizations),
         mappings,
         "Immunization History",
       ),
@@ -583,7 +604,7 @@ const evaluateAdministeredMedication = (
 ): AdministeredMedicationTableData[] => {
   const administeredMedicationReferences: string[] | undefined = evaluate(
     fhirBundle,
-    mappings["adminMedicationsRefs"],
+    mappings.adminMedicationsRefs,
   );
   if (!administeredMedicationReferences?.length) {
     return [];
