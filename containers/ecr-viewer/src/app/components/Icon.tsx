@@ -8,3 +8,4 @@ export const Event = UswdsIcon.Event;
 export const Coronavirus = UswdsIcon.Coronavirus;
 export const NavigateBefore = UswdsIcon.NavigateBefore;
 export const NavigateNext = UswdsIcon.NavigateNext;
+export const ArrowForward = UswdsIcon.ArrowForward;
