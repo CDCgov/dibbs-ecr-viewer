@@ -9,11 +9,11 @@ import * as tarn from "tarn"
 
 const pg_dialect = new PostgresDialect({
   pool: new Pool({
-    database: "ecr_viewer_db",
-    host: "localhost",
-    user: "postgres",
-    port: 5432,
-    max: 10,
+    database: process.env.POSTGRES_DATABASE,
+    host: process.env.POSTGRES_HOST,
+    user: process.env.POSTGRES_USER,
+    port: process.env.POSTGRES_PORT,
+    max: process.env.POSTGRES_MAX_THREADPOOL || 10,
   }),
 });
 
