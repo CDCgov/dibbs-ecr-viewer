@@ -46,7 +46,7 @@ def test_health_check(setup):
         "FHIR_CONVERTER_PORT_NUMBER",
         "INGESTION_PORT_NUMBER",
         "MESSAGE_PARSER_PORT_NUMBER",
-        "ECR_VIEWER_PORT_NUMBER",
+        "ECR_VIEWER_HEALTH_CHECK",
         "TRIGGER_CODE_REFERENCE_PORT_NUMBER",
     ]
 
