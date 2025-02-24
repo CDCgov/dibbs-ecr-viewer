@@ -18,9 +18,9 @@ test.describe("keycloak", () => {
     expect(page.getByText("eCR Library"));
   });
   test("should require a login on view-data page", async ({ page }) => {
-    await page.goto("/ecr-viewer/view-data");
+    await page.goto("/ecr-viewer/view-data?id=1234");
     await page.waitForURL(
-      "ecr-viewer/api/auth/signin?callbackUrl=%2Fecr-viewer%2Fview-data",
+      "ecr-viewer/api/auth/signin?callbackUrl=%2Fecr-viewer%2Fview-data%3Fid%3D1234",
     );
 
     await page.getByRole("button").click();
@@ -35,6 +35,9 @@ test.describe("keycloak", () => {
       page.getByText(
         "The eCR Viewer couldn't retrieve the associated eCR file",
       ),
+    );
+    expect(page).toHaveURL(
+      "http://localhost:3000/ecr-viewer/view-data?id=1234",
     );
   });
 });
