@@ -225,10 +225,7 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
     >
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <div
-          className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
-          key="all"
-        >
+        <div className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105">
           <input
             id="condition-all"
             className="usa-checkbox__input"

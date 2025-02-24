@@ -4,79 +4,9 @@ import { Button } from "@trussworks/react-uswds";
 import { NavigateBefore, NavigateNext } from "@/app/components/Icon";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Pagination as USWDSPagination } from "@trussworks/react-uswds";
 
-type PaginationProps = {
-  pathname: string; // pathname of results page
-  totalPages?: number; // total items divided by items per page
-  currentPage: number; // current page number (starting at 1)
-  maxSlots?: number; // number of pagination "slots"
-  onClickNext?: () => void;
-  onClickPrevious?: () => void;
-  onClickPageNumber?: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    page: number,
-  ) => void;
-};
-
-const PaginationPage = ({
-  page,
-  isCurrent,
-  pathname,
-  onClickPageNumber,
-}: {
-  pathname: string;
-  page: number;
-  isCurrent?: boolean;
-  onClickPageNumber?: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    page: number,
-  ) => void;
-}) => {
-  const linkClasses = classnames("usa-pagination__button text-bold", {
-    "usa-current": isCurrent,
-  });
-
-  return (
-    <li
-      key={`pagination_page_${page}`}
-      className="usa-pagination__item usa-pagination__page-no"
-    >
-      {onClickPageNumber ? (
-        <Button
-          type="button"
-          unstyled={true}
-          data-testid="pagination-page-number"
-          className={linkClasses}
-          aria-label={`Page ${page}`}
-          aria-current={isCurrent ? "page" : undefined}
-          onClick={(event) => {
-            onClickPageNumber(event, page);
-          }}
-        >
-          {page}
-        </Button>
-      ) : (
-        <Link
-          href={createPageURL(pathname, page)}
-          className={linkClasses}
-          aria-label={`Page ${page}`}
-          aria-current={isCurrent ? "page" : undefined}
-        >
-          {page}
-        </Link>
-      )}
-    </li>
-  );
-};
-
-const PaginationOverflow = () => (
-  <li
-    className="usa-pagination__item usa-pagination__overflow"
-    aria-label="ellipsis indicating non-visible pages"
-  >
-    <span>…</span>
-  </li>
-);
+type PaginationProps = React.ComponentProps<typeof USWDSPagination>;
 
 /**
  * A copy of the Trussworks USWDS Pagination that will make the previous and forward buttons invisible
@@ -101,8 +31,7 @@ export const Pagination = ({
   onClickNext,
   onClickPageNumber,
   ...props
-}: PaginationProps &
-  React.JSX.IntrinsicElements["nav"]): React.ReactElement => {
+}: PaginationProps): React.ReactElement => {
   const navClasses = classnames("usa-pagination", className);
 
   const isOnFirstPage = currentPage === 1;
@@ -270,13 +199,73 @@ export const Pagination = ({
   );
 };
 
+type PaginationPageProps = Pick<
+  PaginationProps,
+  "pathname" | "onClickPageNumber"
+> & {
+  page: number;
+  isCurrent?: boolean;
+};
+
+const PaginationPage = ({
+  pathname,
+  page,
+  isCurrent,
+  onClickPageNumber,
+}: PaginationPageProps) => {
+  const linkClasses = classnames("usa-pagination__button text-bold", {
+    "usa-current": isCurrent,
+  });
+
+  return (
+    <li className="usa-pagination__item usa-pagination__page-no">
+      {onClickPageNumber ? (
+        <Button
+          type="button"
+          unstyled
+          data-testid="pagination-page-number"
+          className={linkClasses}
+          aria-label={`Page ${page}`}
+          aria-current={isCurrent ? "page" : undefined}
+          onClick={(event) => {
+            onClickPageNumber(event, page);
+          }}
+        >
+          {page}
+        </Button>
+      ) : (
+        <Link
+          href={createPageURL(pathname, page)}
+          className={linkClasses}
+          aria-label={`Page ${page}`}
+          aria-current={isCurrent ? "page" : undefined}
+        >
+          {page}
+        </Link>
+      )}
+    </li>
+  );
+};
+
+const PaginationOverflow = () => (
+  <li
+    className="usa-pagination__item usa-pagination__overflow"
+    aria-label="ellipsis indicating non-visible pages"
+  >
+    <span>…</span>
+  </li>
+);
+
 /**
  * Custom function used to create a new path with existing search parameters
  * @param pathname - pathname of the string
  * @param pageNumber - number to append to url params
  * @returns - string of path and search params
  */
-const createPageURL = (pathname: string, pageNumber: number | string) => {
+const createPageURL = (
+  pathname: string,
+  pageNumber: number | string,
+): string => {
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
   params.set("page", pageNumber.toString());
