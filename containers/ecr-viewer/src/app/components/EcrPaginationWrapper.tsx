@@ -3,7 +3,7 @@
 import { Label, Select } from "@trussworks/react-uswds";
 import React, { ReactNode, useEffect, useState } from "react";
 import { Pagination } from "@/app/components/Pagination";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useQueryParam } from "../hooks/useQueryParam";
 
 interface EcrPaginationWrapperProps {
   totalCount: number;
@@ -14,8 +14,11 @@ interface UserPreferences {
   itemsPerPage: number;
 }
 
+const PAGE_SIZES = [25, 50, 75, 100];
+const DEFAULT_ITEMS_PER_PAGE = PAGE_SIZES[1];
+
 const defaultPreferences = {
-  itemsPerPage: 25,
+  itemsPerPage: DEFAULT_ITEMS_PER_PAGE,
 };
 
 /**
@@ -29,9 +32,7 @@ const EcrPaginationWrapper = ({
   totalCount,
   children,
 }: EcrPaginationWrapperProps) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { searchParams, updateQueryParam, pushQueryUpdate } = useQueryParam([]);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const [userPreferences, setUserPreferences] =
@@ -46,11 +47,8 @@ const EcrPaginationWrapper = ({
   }, []);
 
   useEffect(() => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    current.set("itemsPerPage", userPreferences.itemsPerPage.toString());
-    const search = current.toString();
-    const query = search ? `?${search}` : "";
-    router.push(`${pathname}${query}`);
+    updateQueryParam("itemsPerPage", userPreferences.itemsPerPage.toString());
+    pushQueryUpdate();
   }, [userPreferences]);
 
   const totalPages =
@@ -102,12 +100,9 @@ const EcrPaginationWrapper = ({
               );
             }}
           >
-            <React.Fragment>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="75">75</option>
-              <option value="100">100</option>
-            </React.Fragment>
+            {PAGE_SIZES.map((size) => (
+              <option value={size}>{size}</option>
+            ))}
           </Select>
         </div>
       </div>
