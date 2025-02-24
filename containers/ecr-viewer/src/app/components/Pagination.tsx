@@ -222,7 +222,7 @@ const PaginationPage = ({
       {onClickPageNumber ? (
         <Button
           type="button"
-          unstyled
+          unstyled={true}
           data-testid="pagination-page-number"
           className={linkClasses}
           aria-label={`Page ${page}`}
