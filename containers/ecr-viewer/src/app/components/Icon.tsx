@@ -1,6 +1,7 @@
 "use client"; // Icon needs to be included in clent side bundle
 import { Icon as UswdsIcon } from "@trussworks/react-uswds";
 
+export const ArrowForward = UswdsIcon.ArrowForward;
 export const ArrowBack = UswdsIcon.ArrowBack;
 export const ArrowDownward = UswdsIcon.ArrowDownward;
 export const ArrowUpward = UswdsIcon.ArrowUpward;
