@@ -261,8 +261,8 @@ export const returnCareTeamTable = (
       resources={careTeamParticipants as FhirResource[]}
       mappings={mappings}
       columns={columnInfo}
-      caption={"Care Team"}
-      className={"margin-y-0"}
+      caption="Care Team"
+      className="margin-y-0"
       fixed={false}
     />
   );
@@ -349,8 +349,8 @@ export const returnPlannedProceduresTable = (
       resources={carePlanActivities}
       mappings={mappings}
       columns={columnInfo}
-      caption={"Planned Procedures"}
-      className={"margin-y-0"}
+      caption="Planned Procedures"
+      className="margin-y-0"
     />
   );
 };
@@ -422,8 +422,8 @@ export const returnProceduresTable = (
       resources={proceduresArray}
       mappings={mappings}
       columns={columnInfo}
-      caption={"Procedures"}
-      className={"margin-y-0"}
+      caption="Procedures"
+      className="margin-y-0"
     />
   );
 };
@@ -498,7 +498,7 @@ export const returnVitalsTable = (
     <BaseTable
       columns={columns}
       caption="Vital Signs"
-      className={"margin-y-0"}
+      className="margin-y-0"
       fixed={false}
     >
       {vitalsData.map((entry, index: number) => (
