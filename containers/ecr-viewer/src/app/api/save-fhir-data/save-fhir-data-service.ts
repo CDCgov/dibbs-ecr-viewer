@@ -157,7 +157,7 @@ export const saveFhirData = async (
  * @async
  * @function saveFhirMetadata
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @param metadataSaveLocation - the location to save the metadata
+ * @param metadataType - Whether metadata is persisted using the "core" or "extended" schema
  * @param metadata - The metadata to be saved.
  * @returns An object containing the status and message.
  */

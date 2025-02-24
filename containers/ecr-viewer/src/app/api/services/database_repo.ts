@@ -17,7 +17,7 @@ import {
  * Finds an eICR by its ID
  * @async
  * @function findEcrById
- * @param id
+ * @param id - thd ID of the eCR to be looked up
  * @returns an eICR object
  */
 export async function findEcrById(id: string | null) {
@@ -39,7 +39,7 @@ export async function findEcrById(id: string | null) {
  * Finds an eICR by its criteria
  * @async
  * @function findEcr
- * @param criteria
+ * @param criteria - the Partial<ECR> used to filter against
  * @returns an eICR object
  */
 export async function findEcr(criteria: Partial<ECR> | null) {
@@ -92,7 +92,7 @@ export async function findEcr(criteria: Partial<ECR> | null) {
  * Creates an eICR object
  * @async
  * @function createEcr
- * @param ecr
+ * @param ecr - the NewECR to be persisted
  * @returns the created eICR object
  */
 export async function createEcr(ecr: NewECR | null) {
@@ -114,8 +114,8 @@ export async function createEcr(ecr: NewECR | null) {
  * Updates an eICR object
  * @async
  * @function updateEcr
- * @param eICR_ID
- * @param updateWith
+ * @param eICR_ID - the eICR_ID of the eCR to be updated
+ * @param updateWith - the ECRUpdate to be applied to the existing record
  * @returns the updated eICR object
  */
 export async function updateEcr(eICR_ID: string | null, updateWith: ECRUpdate) {
@@ -130,7 +130,7 @@ export async function updateEcr(eICR_ID: string | null, updateWith: ECRUpdate) {
  * Deletes an eICR object
  * @async
  * @function deleteEcr
- * @param eICR_ID
+ * @param eICR_ID - the eICR_ID of the record to be deleted
  * @returns the deleted eICR object
  */
 export async function deleteEcr(eICR_ID: string | null) {
@@ -149,7 +149,7 @@ export async function deleteEcr(eICR_ID: string | null) {
  * Finds an eCR condition by its ID
  * @async
  * @function findEcrConditionById
- * @param id
+ * @param id - the UUID of the eCR condition being looked up
  * @returns an eCR condition object
  */
 export async function findEcrConditionById(id: string) {
@@ -164,7 +164,7 @@ export async function findEcrConditionById(id: string) {
  * Finds an eCR condition by its criteria
  * @async
  * @function findEcrCondition
- * @param criteria
+ * @param criteria - the Partial<ECRConditions> filtering criteria to be applied
  * @returns an eCR condition object
  */
 export async function findEcrCondition(criteria: Partial<ECRConditions>) {
@@ -188,9 +188,8 @@ export async function findEcrCondition(criteria: Partial<ECRConditions>) {
 /**
  * Creates an eCR condition object
  * @async
- * @param condition
  * @function createEcrCondition
- * @param ecr
+ * @param condition - the NewECRConditions to be created
  * @returns the created eCR condition object
  */
 export async function createEcrCondition(condition: NewECRConditions | null) {
@@ -212,8 +211,8 @@ export async function createEcrCondition(condition: NewECRConditions | null) {
  * Updates an eCR condition object
  * @async
  * @function updateEcrCondition
- * @param uuid
- * @param updateWith
+ * @param uuid - the UUID of the eCR Condition to be updated
+ * @param updateWith - the ECRConditionsUpdate to be applied
  * @returns the updated eCR condition object
  */
 export async function updateEcrCondition(
@@ -231,7 +230,7 @@ export async function updateEcrCondition(
  * Deletes an eCR condition object
  * @async
  * @function deleteEcrCondition
- * @param uuid
+ * @param uuid - thge UUID of the record to be deleted
  * @returns the deleted eCR condition object
  */
 export async function deleteEcrCondition(uuid: string) {
@@ -250,7 +249,7 @@ export async function deleteEcrCondition(uuid: string) {
  * Finds an eCR rule summary by its ID
  * @async
  * @function findEcrRuleById
- * @param id
+ * @param id - the ID of the eCR being looked up
  * @returns an eCR rule object
  */
 export async function findEcrRuleById(id: string) {
@@ -265,7 +264,7 @@ export async function findEcrRuleById(id: string) {
  * Finds an eCR rule summary by its criteria
  * @async
  * @function findEcrRule
- * @param criteria
+ * @param criteria - the Partial<ECRRuleSummaries> filtering criteria
  * @returns an eCR rule object
  */
 export async function findEcrRule(criteria: Partial<ECRRuleSummaries>) {
@@ -293,9 +292,8 @@ export async function findEcrRule(criteria: Partial<ECRRuleSummaries>) {
 /**
  * Creates an eCR rule summary object
  * @async
- * @param rule_summary
+ * @param rule_summary - the NewECRRuleSummaries record to be created
  * @function createEcrRule
- * @param ecr
  * @returns the created eCR rule object
  */
 export async function createEcrRule(rule_summary: NewECRRuleSummaries) {
@@ -317,8 +315,8 @@ export async function createEcrRule(rule_summary: NewECRRuleSummaries) {
  * Updates an eCR rule summary object
  * @async
  * @function updateEcrRule
- * @param uuid
- * @param updateWith
+ * @param uuid - the UUID of the eCR rule to be updated
+ * @param updateWith - the ECRRuleSummariesUpdate to be applied to the record
  * @returns the updated eCR rule object
  */
 export async function updateEcrRule(
@@ -336,7 +334,7 @@ export async function updateEcrRule(
  * Deletes an eCR rule summary object
  * @async
  * @function deleteEcrRule
- * @param uuid
+ * @param uuid - the UUID of the eCR rule to be deleted
  * @returns the deleted eCR rule object
  */
 export async function deleteEcrRule(uuid: string) {

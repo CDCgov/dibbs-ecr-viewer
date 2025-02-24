@@ -4,7 +4,6 @@
 
 import { saveCoreMetadata } from "../../api/save-fhir-data/save-fhir-data-service";
 import { BundleMetadata } from "../../api/save-fhir-data/types";
-import { getDB } from "../../api/services/postgres_db";
 import { db } from '../../api/services/database'
 import { sql } from 'kysely'
 
