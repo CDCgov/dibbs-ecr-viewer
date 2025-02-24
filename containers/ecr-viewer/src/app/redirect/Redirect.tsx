@@ -27,17 +27,17 @@ export const Redirect = () => {
         overflowX: "auto",
       }}
     >
-      <div className="width-tablet position-absolute top-3950 left-12 padding-bottom-6 padding-right-6">
-        <h1 className="font-serif-3xl text-bold margin-top-0 margin-bottom-5">
+      <div className="width-tablet position-absolute top-3950 left-12 padding-bottom-6 padding-right-6 grid-row gap-5">
+        <h1 className="font-serif-3xl text-bold margin-0">
           Looks like you're trying to access the eCR Viewer
         </h1>
-        <p className="font-sans-lg text-bold">
+        <p className="font-sans-lg text-bold margin-0">
           You need to log in to see the eCR Viewer
         </p>
-        <br />
+        <br/>
         <Button
           aria-label={`Log in via Azure AD`}
-          className={`redirect-button margin-top-5`}
+          className={`redirect-button`}
           type="button"
           onClick={() => {
             window.location.href = AZURE_LOGIN_URL;
