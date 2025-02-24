@@ -28,7 +28,7 @@ const get_conditions_postgres = async (): Promise<string[]> => {
 
   try {
     const getConditions = new PQ({
-      text: 'SELECT DISTINCT "condition" FROM ecr_rr_conditions ORDER BY "condition"',
+      text: 'SELECT DISTINCT "condition" FROM ecr_viewer.ecr_rr_conditions ORDER BY "condition"',
     });
     const conditions = await database.any<{ condition: string }>(getConditions);
 
@@ -52,7 +52,7 @@ const get_conditions_sqlserver = async () => {
     }
     const result = await pool.request().query<{
       condition: string;
-    }>("SELECT DISTINCT condition FROM ecr_rr_conditions ORDER BY condition");
+    }>("SELECT DISTINCT condition FROM ecr_viewer.ecr_rr_conditions ORDER BY condition");
     return result.recordset.map((row) => row.condition);
   } catch (error: any) {
     console.error("Error fetching data: ", error);

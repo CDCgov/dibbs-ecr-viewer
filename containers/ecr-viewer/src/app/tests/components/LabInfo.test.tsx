@@ -101,18 +101,14 @@ describe("LabInfo", () => {
   });
 
   describe("when labResults is DisplayDataProps[]", () => {
-    let labInfoJsx: React.ReactElement;
-    beforeAll(() => {
+    it("should be collapsed by default", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
         mappings,
       );
-      labInfoJsx = <LabInfo labResults={labinfo} />;
-    });
-    it("should be collapsed by default", () => {
-      render(labInfoJsx);
 
+      render(<LabInfo labResults={labinfo} />);
       screen
         .getAllByTestId("accordionButton", { exact: false })
         .forEach((button) => {
@@ -124,8 +120,24 @@ describe("LabInfo", () => {
           expect(accordion).not.toBeVisible();
         });
     });
+
+    it("should not render any results if no table data is present", () => {
+      render(<LabInfo labResults={[{}]} />);
+      expect(screen.getByText("Lab Results")).toBeInTheDocument();
+      expect(
+        screen.queryByTestId("accordionButton_all-lab-results"),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("table")).not.toBeInTheDocument();
+    });
+
     it("should match snapshot test", () => {
-      const { container } = render(labInfoJsx);
+      const labinfo = evaluateLabInfoData(
+        BundleLabNoLabIds as unknown as Bundle,
+        evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
+        mappings,
+      );
+
+      const { container } = render(<LabInfo labResults={labinfo} />);
       expect(container).toMatchSnapshot();
     });
   });

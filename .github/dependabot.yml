@@ -1,0 +1,46 @@
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    open-pull-requests-limit: 2
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+  - package-ecosystem: "npm"
+    directory: "/containers/ecr-viewer"
+    open-pull-requests-limit: 2
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+  - package-ecosystem: "docker"
+    directory: "/containers/ecr-viewer"
+    open-pull-requests-limit: 2
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+  - package-ecosystem: "pip"
+    directory: "/containers/orchestration"
+    open-pull-requests-limit: 2
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+  - package-ecosystem: "docker"
+    directory: "/containers/orchestration"
+    open-pull-requests-limit: 2
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+  - package-ecosystem: "pip"
+    directory: "/containers/fhir-converter"
+    open-pull-requests-limit: 2
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+  - package-ecosystem: "docker"
+    directory: "/containers/fhir-converter"
+    open-pull-requests-limit: 2
+    schedule:
+      interval: "weekly"
+      day: "sunday"

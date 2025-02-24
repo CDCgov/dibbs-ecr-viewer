@@ -39,9 +39,7 @@ To build the Docker image for the eCR Viewer from source instead of downloading 
 
 ## Non Integrated Viewer
 
-To enable the Non Integrated Viewer homepage, set the environment variable `NEXT_PUBLIC_NON_INTEGRATED_VIEWER` equal to `true`. This will enable the Non Integrated viewer homepage at `localhost:3000/ecr-viewer`.
-
-For local development, if `NEXT_PUBLIC_NON_INTEGRATED_VIEWER` is not set equal to `true` on `.env.local`, convert-seed-data will not seed the metadata.
+To enable the Non Integrated Viewer homepage, set the environment variable `CONFIG_NAME` equal to `AWS_PG_NON_INTEGRATED`, `AWS_SQLSERVER_NON_INTEGRATED`,`AZURE_PG_NON_INTEGRATED`, or `AZURE_SQLSERVER_NON_INTEGRATED` . This will enable the Non Integrated viewer homepage at `localhost:3000/ecr-viewer`.
 
 ## Potential Issues
 
@@ -65,6 +63,10 @@ To run the eCR Viewer locally:
 5. Setup your `.env.local` by running `npm run setup-local-env`.
 6. Create seed data with `npm run convert-seed-data` - this will take ~10 minutes. Note that this process will fail immediately if the Docker daemon isn't running.
 7. Run the eCR Viewer on `localhost:3000/ecr-viewer` with `npm run local-dev`.
+
+#### Logging in
+
+The default IDP is keycloak for local development. The default user is `ecr-viewer-admin` and password is `pw`.
 
 ### Windows Setup
 

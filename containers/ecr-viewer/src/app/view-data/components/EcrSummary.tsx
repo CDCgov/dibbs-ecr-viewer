@@ -5,7 +5,7 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import { Accordion, Tag } from "@trussworks/react-uswds";
-import { AccordionItemProps } from "@/app/components/AccordionContainer";
+import { AccordionItemProps } from "./AccordionContent";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 interface EcrSummaryProps {
@@ -44,7 +44,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
       return {
         title: condition.title,
         id: toKebabCase(condition.title),
-        headingLevel: "h3",
+        headingLevel: "h4",
         className: "side-nav-ignore border-1px border-accent-cool-darker",
         expanded: snomed === condition.snomed || conditionSummary.length === 1,
         content: (
@@ -52,6 +52,12 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
             {condition.conditionDetails.map((item) => (
               <DataDisplay item={item} key={item.title} />
             ))}
+            <h5
+              className="text-bold margin-top-0 margin-bottom-1"
+              id="relevant-clinical"
+            >
+              Clinical Sections Relevant to Reportable Condition
+            </h5>
             {condition.immunizationDetails.length > 0 && (
               <div className={"margin-top-0"}>
                 {condition.immunizationDetails.map((item, index) => (
@@ -59,24 +65,18 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
                 ))}
               </div>
             )}
-            <div
-              className="text-bold margin-top-0 margin-bottom-1"
-              id={"relevant-clinical"}
-            >
-              {"Clinical Sections Relevant to Reportable Condition"}
-            </div>
             <div className={"margin-top-0"}>
               {condition.clinicalDetails.map((item, index) => (
                 <DataTableDisplay item={item} key={`${item.title}-${index}`} />
               ))}
             </div>
-            <div
+            <h5
               className="text-bold margin-0 margin-bottom-1"
-              id={"relevant-labs"}
+              id="relevant-labs"
             >
-              {"Lab Results Relevant to Reportable Condition"}
-            </div>
-            <div className={"margin-top-0"}>
+              Lab Results Relevant to Reportable Condition
+            </h5>
+            <div className="margin-top-0">
               {condition.labDetails.map((item, index) => (
                 <DataTableDisplay item={item} key={`${item.title}-${index}`} />
               ))}
