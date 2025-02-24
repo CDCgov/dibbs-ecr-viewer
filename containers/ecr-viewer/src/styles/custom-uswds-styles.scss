@@ -5,6 +5,11 @@
   overflow: visible;
 }
 
+.usa-button.usa-pagination__button:hover {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
 .usa-header {
   background-color: #172e51;
   color: white;
