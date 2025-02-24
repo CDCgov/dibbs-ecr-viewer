@@ -119,7 +119,7 @@ const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
         fullWidth={true}
         striped={true}
         fixed={true}
-        className={"table-ecr-library margin-0"}
+        className="table-ecr-library margin-0"
         data-testid="table"
       >
         {children}

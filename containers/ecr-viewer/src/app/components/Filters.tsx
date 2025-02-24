@@ -236,7 +236,7 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
           />
           <label
             className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
-            htmlFor={"condition-all"}
+            htmlFor="condition-all"
           >
             {isAllSelected ? "Deselect all" : "Select all"}
           </label>

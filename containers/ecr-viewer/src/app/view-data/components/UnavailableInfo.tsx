@@ -115,7 +115,7 @@ const UnavailableSection = ({
         {data.map((item, index) => (
           <DataDisplay
             item={{ ...item, value: "No data" }}
-            className={"text-italic text-base"}
+            className="text-italic text-base"
             key={index}
           />
         ))}
