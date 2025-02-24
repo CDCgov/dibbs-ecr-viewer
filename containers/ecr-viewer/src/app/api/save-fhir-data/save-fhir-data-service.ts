@@ -5,7 +5,7 @@ import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 import { s3Client } from "../services/s3Client";
-import { db } from '../services/database'
+import { db } from "../services/database";
 
 interface SaveResponse {
   message: string;
@@ -191,7 +191,6 @@ export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-
   if (process.env.METADATA_DATABASE_SCHEMA == "extended") {
     try {
       await db.transaction().execute(async (trx) => {
@@ -232,8 +231,8 @@ export const saveExtendedMetadata = async (
           encounter_end_date: metadata.encounter_end_date,
           reason_for_visit: metadata.reason_for_visit,
           active_problems: metadata.active_problems,
-        })
-        
+        });
+
         if (metadata.patient_addresses) {
           for (const address of metadata.patient_addresses) {
             const patient_address_uuid = randomUUID();
@@ -250,10 +249,11 @@ export const saveExtendedMetadata = async (
               country: address.country,
               period_start: address.period_start,
               period_end: address.period_end,
-              eICR_ID: ecrId
-          })
-        }}
-      
+              eICR_ID: ecrId,
+            });
+          }
+        }
+
         if (metadata.labs) {
           for (const lab of metadata.labs) {
             await trx.insertInto("ecr_labs").values({
@@ -269,16 +269,22 @@ export const saveExtendedMetadata = async (
               test_result_code_display: lab.test_result_code_display,
               test_result_code_system: lab.test_result_code_system,
               test_result_interpretation: lab.test_result_interpretation,
-              test_result_interpretation_code: lab.test_result_interpretation_code,
-              test_result_interpretation_system: lab.test_result_interpretation_system,
-              test_result_reference_range_low_value: lab.test_result_ref_range_low,
-              test_result_reference_range_low_units: lab.test_result_ref_range_low_units,
-              test_result_reference_range_high_value: lab.test_result_ref_range_high,
-              test_result_reference_range_high_units: lab.test_result_ref_range_high_units,
+              test_result_interpretation_code:
+                lab.test_result_interpretation_code,
+              test_result_interpretation_system:
+                lab.test_result_interpretation_system,
+              test_result_reference_range_low_value:
+                lab.test_result_ref_range_low,
+              test_result_reference_range_low_units:
+                lab.test_result_ref_range_low_units,
+              test_result_reference_range_high_value:
+                lab.test_result_ref_range_high,
+              test_result_reference_range_high_units:
+                lab.test_result_ref_range_high_units,
               specimen_type: lab.specimen_type,
               specimen_collection_date: lab.specimen_collection_date,
-              performing_lab: lab.performing_lab
-            })
+              performing_lab: lab.performing_lab,
+            });
           }
         }
 
@@ -286,33 +292,32 @@ export const saveExtendedMetadata = async (
           // Loop through each condition/rule object in rr array
           for (const rrItem of metadata.rr) {
             const rr_conditions_uuid = randomUUID();
-  
+
             // Insert condition into ecr_rr_conditions
             await trx.insertInto("ecr_rr_conditions").values({
               uuid: rr_conditions_uuid,
               eICR_ID: ecrId,
-              condition: rrItem.condition
-            })
-  
+              condition: rrItem.condition,
+            });
+
             // Loop through the rule summaries array
             if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
               for (const summary of rrItem.rule_summaries) {
-  
                 // Insert each rule summary with reference to the condition
                 await trx.insertInto("ecr_rr_rule_summaries").values({
                   uuid: randomUUID(),
                   ecr_rr_conditions_id: rr_conditions_uuid,
-                  rule_summary: summary.summary
-                })
+                  rule_summary: summary.summary,
+                });
               }
             }
           }
         }
-        })
-        return {
-          message: "Success. Saved metadata to database.",
-          status: 200,
-        };
+      });
+      return {
+        message: "Success. Saved metadata to database.",
+        status: 200,
+      };
     } catch (error: any) {
       console.error({
         message: "Failed to insert metadata to sqlserver.",
@@ -358,43 +363,49 @@ export const saveCoreMetadata = async (
     // Start transaction
     await db.transaction().execute(async (trx) => {
       try {
-        // Insert main ECR metadata  
-        await trx.insertInto("ecr_data").values({
-          eICR_ID: ecrId,
-          set_id: metadata.eicr_set_id,
-          patient_name_last: metadata.last_name,
-          patient_name_first: metadata.first_name,
-          patient_birth_date: metadata.birth_date,
-          data_source: "DB",
-          report_date: metadata.report_date,
-          eicr_version_number: metadata.eicr_version_number,
-        })
-        .returningAll()
-        .executeTakeFirstOrThrow();
+        // Insert main ECR metadata
+        await trx
+          .insertInto("ecr_data")
+          .values({
+            eICR_ID: ecrId,
+            set_id: metadata.eicr_set_id,
+            patient_name_last: metadata.last_name,
+            patient_name_first: metadata.first_name,
+            patient_birth_date: metadata.birth_date,
+            data_source: "DB",
+            report_date: metadata.report_date,
+            eicr_version_number: metadata.eicr_version_number,
+          })
+          .returningAll()
+          .executeTakeFirstOrThrow();
 
         // Loop through each condition/rule object in rr array
         if (metadata.rr && metadata.rr.length > 0) {
           for (const rrItem of metadata.rr) {
             // Insert condition into ecr_rr_conditions
-            const saveRRConditions = await trx.insertInto("ecr_rr_conditions").values({
-              uuid: randomUUID(),
-              eICR_ID: ecrId,
-              condition: rrItem.condition
-            })
-            .returning("uuid")
-            .executeTakeFirstOrThrow();
+            const saveRRConditions = await trx
+              .insertInto("ecr_rr_conditions")
+              .values({
+                uuid: randomUUID(),
+                eICR_ID: ecrId,
+                condition: rrItem.condition,
+              })
+              .returning("uuid")
+              .executeTakeFirstOrThrow();
 
             // Loop through the rule summaries array
             if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
               for (const summaryObj of rrItem.rule_summaries) {
                 // Insert each associated summary into ecr_rr_rule_summaries
-                await trx.insertInto("ecr_rr_rule_summaries").values({
-                  uuid: randomUUID(),
-                  ecr_rr_conditions_id: saveRRConditions.uuid,
-                  rule_summary: summaryObj.summary
-                })
-                .returningAll()
-                .executeTakeFirstOrThrow();
+                await trx
+                  .insertInto("ecr_rr_rule_summaries")
+                  .values({
+                    uuid: randomUUID(),
+                    ecr_rr_conditions_id: saveRRConditions.uuid,
+                    rule_summary: summaryObj.summary,
+                  })
+                  .returningAll()
+                  .executeTakeFirstOrThrow();
               }
             }
           }
@@ -423,7 +434,6 @@ export const saveCoreMetadata = async (
   }
 };
 
-
 /**
  * @async
  * @function saveWithMetadata
@@ -442,7 +452,7 @@ export const saveWithMetadata = async (
   let fhirDataResult;
   let metadataResult;
   const metadataType = process.env.METADATA_DATABASE_SCHEMA;
-  
+
   try {
     [fhirDataResult, metadataResult] = await Promise.all([
       saveFhirData(fhirBundle, ecrId, saveSource),
