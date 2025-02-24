@@ -94,7 +94,7 @@ export const Filter = ({
           type="button"
         >
           <span ref={openBtnRef} className="square-205 usa-icon">
-            <IconTag aria-hidden className="square-205" />
+            <IconTag aria-hidden={true} className="square-205" />
           </span>
           <span className="text-ink">{title || type}</span>
           {tag && (
