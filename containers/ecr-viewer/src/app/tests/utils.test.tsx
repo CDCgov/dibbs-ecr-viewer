@@ -27,8 +27,8 @@ import {
   evaluateClinicalData,
   returnCareTeamTable,
   returnPlannedProceduresTable,
-  returnProblemsTable,
-} from "../view-data/components/common";
+} from "../view-data/components/EcrDocument/clinical-data";
+import { returnProblemsTable } from "../view-data/components/common";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   TooltipDiv,

@@ -1,3 +1,4 @@
+import "server-only";
 import React from "react";
 import { Bundle, Device, Observation, Organization, Reference } from "fhir/r4";
 import {
@@ -8,7 +9,6 @@ import {
   safeParse,
 } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
-import { AccordionLabResults } from "@/app/view-data/components/AccordionLabResults";
 import { formatAddress, formatPhoneNumber } from "@/app/services/formatService";
 import { Coding, ObservationComponent } from "fhir/r4b";
 import EvaluateTable, {
@@ -19,23 +19,28 @@ import {
   DataDisplay,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
-import { HeadingLevel } from "@trussworks/react-uswds";
-import { extractNumbersAndPeriods } from "@/app/utils/format-utils";
+import { HeadingLevel, Tag } from "@trussworks/react-uswds";
+import {
+  extractNumbersAndPeriods,
+  toKebabCase,
+} from "@/app/utils/format-utils";
 import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
+import { LabAccordion } from "../view-data/components/LabAccordion";
 import { JsonTable } from "../view-data/components/JsonTable";
+import { AccordionItem } from "../view-data/types";
 
 export interface LabReport {
   result: Array<Reference>;
 }
 
 export interface ResultObject {
-  [key: string]: React.JSX.Element[];
+  [key: string]: AccordionItem[];
 }
 
 export interface LabReportElementData {
   organizationId: string;
-  diagnosticReportDataElements: React.JSX.Element[];
+  diagnosticReportDataItems: AccordionItem[];
   organizationDisplayDataProps: DisplayDataProps[];
 }
 
@@ -52,7 +57,7 @@ export const isLabReportElementDataList = (
   return (
     asLabReportElementList &&
     asLabReportElementList.length > 0 &&
-    asLabReportElementList[0].diagnosticReportDataElements !== undefined &&
+    asLabReportElementList[0].diagnosticReportDataItems !== undefined &&
     asLabReportElementList[0].organizationId !== undefined &&
     asLabReportElementList[0].organizationDisplayDataProps !== undefined
   );
@@ -331,7 +336,6 @@ export function evaluateObservationTable(
       ),
   );
 
-  let obsTable;
   if (observations?.length > 0) {
     return (
       <EvaluateTable
@@ -343,7 +347,6 @@ export function evaluateObservationTable(
       />
     );
   }
-  return obsTable;
 }
 
 /**
@@ -459,10 +462,10 @@ export const evaluateLabInfoData = (
   fhirBundle: Bundle,
   labReports: any[],
   mappings: PathMappings,
-  accordionHeadingLevel?: HeadingLevel,
+  accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] | DisplayDataProps[] => {
   // the keys are the organization id, the value is an array of jsx elements of diagnsotic reports
-  let organizationElements: ResultObject = {};
+  let organizationItems: ResultObject = {};
 
   for (const report of labReports) {
     const labReportJson = getLabJsonObject(report, fhirBundle, mappings);
@@ -486,49 +489,57 @@ export const evaluateLabInfoData = (
       "Organization/",
       "",
     );
-    const element = (
-      <AccordionLabResults
-        key={report.id}
-        title={report.code.coding.find((c: Coding) => c.display).display}
-        abnormalTag={checkAbnormalTag(labReportJson)}
-        content={content}
-        organizationId={organizationId}
-        headingLevel={accordionHeadingLevel}
-      />
-    );
-    organizationElements = groupElementByOrgId(
-      organizationElements,
+    const title = report.code.coding.find((c: Coding) => c.display).display;
+    const item = {
+      title: (
+        <>
+          {title}
+          {checkAbnormalTag(labReportJson) && (
+            <Tag background="#B50909" className="margin-left-105">
+              Abnormal
+            </Tag>
+          )}
+        </>
+      ),
+      content,
+      expanded: false,
+      id: toKebabCase(title),
+      headingLevel: accordionHeadingLevel,
+    };
+
+    organizationItems = groupItemByOrgId(
+      organizationItems,
       organizationId,
-      element,
+      item,
     );
   }
 
-  return combineOrgAndReportData(organizationElements, fhirBundle, mappings);
+  return combineOrgAndReportData(organizationItems, fhirBundle, mappings);
 };
 
 /**
  * Combines the org display data with the diagnostic report elements
- * @param organizationElements - Object contianing the keys of org data, values of the diagnostic report elements
+ * @param organizationItems - Object contianing the keys of org data, values of the diagnostic report elements
  * @param fhirBundle - The FHIR bundle containing lab and RR data.
  * @param mappings - An object containing the FHIR path mappings.
  * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
 export const combineOrgAndReportData = (
-  organizationElements: ResultObject,
+  organizationItems: ResultObject,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): LabReportElementData[] => {
-  return Object.keys(organizationElements).map((key: string) => {
+  return Object.keys(organizationItems).map((key: string) => {
     const organizationId = key.replace("Organization/", "");
     const orgData = evaluateLabOrganizationData(
       organizationId,
       fhirBundle,
       mappings,
-      organizationElements[key].length,
+      organizationItems[key].length,
     );
     return {
       organizationId: organizationId,
-      diagnosticReportDataElements: organizationElements[key],
+      diagnosticReportDataItems: organizationItems[key],
       organizationDisplayDataProps: orgData,
     };
   });
@@ -610,18 +621,18 @@ export const findIdenticalOrg = (
  *   with that organization.
  * @param organizationId - The organization ID used to group the element. This ID determines the key
  *   under which the element is stored in the result object.
- * @param element - The JSX element to be grouped under the specified organization ID.
+ * @param item - The JSX element to be grouped under the specified organization ID.
  * @returns The updated result object with the element added to the appropriate group.
  */
-const groupElementByOrgId = (
+const groupItemByOrgId = (
   resultObject: ResultObject,
   organizationId: string,
-  element: React.JSX.Element,
+  item: AccordionItem,
 ) => {
   if (resultObject.hasOwnProperty(organizationId)) {
-    resultObject[organizationId].push(element);
+    resultObject[organizationId].push(item);
   } else {
-    resultObject[organizationId] = [element];
+    resultObject[organizationId] = [item];
   }
   return resultObject;
 };
@@ -747,7 +758,7 @@ function getFormattedLabsContent(
 function getUnformattedLabsContent(
   fhirBundle: Bundle,
   mappings: PathMappings,
-  accordionHeadingLevel: HeadingLevel | undefined,
+  accordionHeadingLevel: HeadingLevel = "h5",
 ): DisplayDataProps[] {
   const bundle = evaluateValue(fhirBundle, mappings["labResultDiv"]);
   const tableJson = formatTablesToJSON(bundle);
@@ -760,20 +771,24 @@ function getUnformattedLabsContent(
     {
       title: "Lab Results",
       value: (
-        <AccordionLabResults
-          title="All Lab Results"
-          abnormalTag={false}
-          content={tableJson.map((table, index) => (
-            <JsonTable
-              key={`lab-result-table_${index}`}
-              jsonTableData={table}
-              outerBorder={false}
-              className="lab-results-table-from-div"
-            />
-          ))}
-          organizationId="0"
-          headingLevel={accordionHeadingLevel}
-          className="padding-bottom-0"
+        <LabAccordion
+          items={[
+            {
+              title: "All Lab Results",
+              content: tableJson.map((table, index) => (
+                <JsonTable
+                  key={`lab-result-table_${index}`}
+                  jsonTableData={table}
+                  outerBorder={false}
+                  className="lab-results-table-from-div"
+                />
+              )),
+              headingLevel: accordionHeadingLevel,
+              className: "padding-bottom-0",
+              id: "all-lab-results",
+              expanded: false,
+            },
+          ]}
         />
       ),
       dividerLine: false,
