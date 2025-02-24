@@ -1,0 +1,595 @@
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:cda="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc"
+  xmlns:voc="http://www.lantanagroup.com/voc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:hl7-org:v3 ../../schema/infrastructure/cda/CDA_SDTC.xsd">
+  <realmCode code="US" />
+  <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3" />
+  <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.1.2" />
+  <id root="deb6d64f-a4ce-402d-ad4f-3d3d912ccdef" />
+  <code code="88085-6" codeSystem="2.16.840.1.113883.6.1"
+    displayName="Reportability response report Document Public health" />
+  <title>Reportability Response</title>
+  <effectiveTime value="20161212094421-0700" />
+  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
+  <languageCode code="en-US" />
+  <!-- recordTarget: The patient -->
+  <recordTarget>
+    <!-- Patient demographics -->
+    <patientRole>
+      <!-- Patient ID-->
+      <id extension="MRN-00884455" root="2.16.840.1.113883.19.5" />
+      <!--SSN-->
+      <id extension="000-65-4321" root="2.16.840.1.113883.4.1" />
+      <addr use="H">
+        <streetAddressLine>500 Republica, Suite 400</streetAddressLine>
+        <city>Senate District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-500</postalCode>
+        <county>Administrative Core</county>
+        <country>Coruscant</country>
+      </addr>
+      <telecom use="MC" value="tel:+1-555-555-9876" />
+      <telecom use="WP" value="mailto:mon.mothma@senate.gr.example.com" />
+      <patient>
+        <name use="L">
+          <prefix>Senator</prefix>
+          <given>Mon</given>
+          <family>Mothma</family>
+        </name>
+        <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1"
+          displayName="Female" />
+        <birthTime value="19750101" />
+        <sdtc:deceasedInd value="false" />
+        <raceCode code="2106-3" codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC" displayName="White" />
+        <ethnicGroupCode code="2186-5" codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC"
+          displayName="Not Hispanic or Latino" />
+        <languageCommunication>
+          <languageCode code="en" />
+          <preferenceInd value="true" />
+        </languageCommunication>
+      </patient>
+    </patientRole>
+  </recordTarget>
+
+  <!-- author for RRs is _always_ going to be AIMS -->
+  <author>
+    <time value="20210412132517+0000" />
+    <assignedAuthor>
+      <id root="2.16.840.1.114222.4.1.217446" />
+      <addr>
+        <streetAddressLine>8515 Georgia Avenue, Suite 700</streetAddressLine>
+        <city>Silver Spring</city>
+        <state>MD</state>
+        <postalCode>20910</postalCode>
+        <country>US</country>
+      </addr>
+      <telecom use="WP" value="tel:+1(844)836-8377" />
+      <assignedAuthoringDevice>
+        <manufacturerModelName displayName="APHL" />
+        <softwareName displayName="AIMS" />
+      </assignedAuthoringDevice>
+    </assignedAuthor>
+  </author>
+
+  <!-- custodian for RRs is _always_ going to be APHL -->
+  <custodian>
+    <assignedCustodian>
+      <representedCustodianOrganization>
+        <id root="2.16.840.1.114222.4.1.217446" />
+        <name>APHL | Association of Public Health Laboratories.</name>
+        <telecom use="WP" value="tel:+1(844)836-8377" />
+        <addr>
+          <streetAddressLine>8515 Georgia Avenue, Suite 700</streetAddressLine>
+          <city>Silver Spring</city>
+          <state>MD</state>
+          <postalCode>20910</postalCode>
+          <country>US</country>
+        </addr>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+
+  <!-- the assignedEntity from the eICR (the provider) -->
+  <informationRecipient typeCode="PRCP">
+    <intendedRecipient>
+      <!-- Provider ID (NPI) -->
+      <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+      <addr use="H">
+        <streetAddressLine>200 Corusca Street</streetAddressLine>
+        <city>Senate District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-500</postalCode>
+        <county>Administrative Core</county>
+        <country>Coruscant</country>
+      </addr>
+      <telecom use="WP" value="tel:+1-555-777-0123" />
+      <telecom use="WP" value="fax:+1-555-777-0987" />
+      <telecom use="WP" value="mailto:dr.hemlock@grmfc.gc.example.com" />
+      <informationRecipient>
+        <name>
+          <prefix>Dr</prefix>
+          <given>Royce</given>
+          <family>Hemlock</family>
+          <suffix>MD</suffix>
+        </name>
+      </informationRecipient>
+      <!-- representedOrganization in the eICR -->
+      <receivedOrganization>
+        <!-- NPI for the facility -->
+        <id extension="1234567893" root="2.16.840.1.113883.4.6" />
+
+        <!-- Provider Facility/Office Name-->
+        <name>Grand Republic Medical Facility Clinic</name>
+        <addr use="WP">
+          <streetAddressLine>500 Republica Medical Plaza, Suite 1000</streetAddressLine>
+          <city>Senate District</city>
+          <state>Galactic City</state>
+          <postalCode>GC-500</postalCode>
+          <county>Administrative Core</county>
+          <country>Coruscant</country>
+        </addr>
+      </receivedOrganization>
+    </intendedRecipient>
+  </informationRecipient>
+
+
+  <componentOf>
+    <encompassingEncounter>
+      <!-- encounter ID-->
+      <id extension="9937015" root="2.16.840.1.113883.19" />
+      <code code="AMB" codeSystem="2.16.840.1.113883.5.4"
+        codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory" />
+      <effectiveTime>
+        <low value="20250216" />
+        <high value="20250216" />
+      </effectiveTime>
+      <responsibleParty>
+        <assignedEntity>
+          <!-- Provider ID (NPI) -->
+          <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+          <addr use="H">
+            <streetAddressLine>200 Corusca Street</streetAddressLine>
+            <city>Senate District</city>
+            <state>Galactic City</state>
+            <postalCode>GC-500</postalCode>
+            <county>Administrative Core</county>
+            <country>Coruscant</country>
+          </addr>
+          <telecom use="WP" value="tel:+1-555-777-0123" />
+          <telecom use="WP" value="fax:+1-555-777-0987" />
+          <telecom use="WP" value="mailto:dr.hemlock@grmfc.gc.example.com" />
+          <assignedPerson>
+            <name>
+              <prefix>Dr</prefix>
+              <given>Royce</given>
+              <family>Hemlock</family>
+              <suffix>MD</suffix>
+            </name>
+          </assignedPerson>
+          <representedOrganization>
+            <!-- Represented Organization-->
+            <id extension="1234567893" root="2.16.840.1.113883.4.6" />
+            <!-- Provider Facility/Office Name-->
+            <name>Grand Republic Medical Facility Clinic</name>
+            <addr use="WP">
+              <streetAddressLine>500 Republica Medical Plaza, Suite 1000</streetAddressLine>
+              <city>Senate District</city>
+              <state>Galactic City</state>
+              <postalCode>GC-500</postalCode>
+              <county>Administrative Core</county>
+              <country>Coruscant</country>
+            </addr>
+          </representedOrganization>
+        </assignedEntity>
+      </responsibleParty>
+      <location>
+        <healthCareFacility>
+          <!-- Facility ID (NPI) -->
+          <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+          <!-- Facility location within larger healthcare organization e.g Kaiser Vacaville within
+          Kaiser North-->
+          <code code="OF" codeSystem="2.16.840.1.113883.5.111"
+            codeSystemName="HL7RoleCode" displayName="Outpatient Facility" />
+          <location>
+            <addr use="WP">
+              <streetAddressLine>500 Republica Medical Plaza, Suite 1000</streetAddressLine>
+              <city>Senate District</city>
+              <state>Galactic City</state>
+              <postalCode>GC-500</postalCode>
+              <county>Administrative Core</county>
+              <country>Coruscant</country>
+            </addr>
+          </location>
+          <serviceProviderOrganization>
+            <!-- Provider Facility/Office Name-->
+            <name>Grand Republic Medical Facility Clinic</name>
+            <telecom use="WP" value="tel:+1-888-000-9999" />
+            <telecom use="WP" value="fax:+1-888-000-1111" />
+            <addr use="WP">
+              <streetAddressLine>500 Republica Medical Plaza, Suite 1000</streetAddressLine>
+              <city>Senate District</city>
+              <state>Galactic City</state>
+              <postalCode>GC-500</postalCode>
+              <county>Administrative Core</county>
+              <country>Coruscant</country>
+            </addr>
+          </serviceProviderOrganization>
+        </healthCareFacility>
+      </location>
+    </encompassingEncounter>
+  </componentOf>
+
+  <!-- first component holds the structredBody -->
+  <component>
+    <!-- structredBody contains all of the clinical sections of the eICR -->
+    <structuredBody>
+
+      <!-- RR subject section -->
+      <component>
+        <section>
+          <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.2.1" />
+          <!-- reportable condition response information and summary Document (LOINC) -->
+          <code code="88084-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+          <title>.</title>
+          <text>
+            <br />
+            <content styleCode="Bold">Subject:</content>
+            <paragraph>Public Health Reporting Communication: one or more conditions are
+              reportable, or may be reportable, to public health. </paragraph>
+          </text>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="INT">
+              <templateId extension="2014-06-09"
+                root="2.16.840.1.113883.10.20.22.4.20" />
+              <templateId extension="2017-04-01"
+                root="2.16.840.1.113883.10.20.15.2.3.7" />
+              <id root="a0fd6898-c2e1-4350-bfff-3c6e51a802af" />
+              <code code="131195008" codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT" displayName="Subject of information" />
+              <text>Public Health Reporting Communication: one or more conditions are
+                reportable, or may be reportable, to public health.</text>
+              <statusCode code="completed" />
+            </act>
+          </entry>
+        </section>
+      </component>
+      <component>
+        <section>
+          <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.2.3" />
+          <code code="88082-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Initial case report processing information Document" />
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <templateId extension="2017-04-01"
+                root="2.16.840.1.113883.10.20.15.2.3.9" />
+              <id root="6bff7990-f218-4f9d-a5aa-eb7afa6e9a3c" />
+              <code code="RR5" codeSystem="2.16.840.1.114222.4.5.232"
+                codeSystemName="PHIN VS (CDC Local Coding System)"
+                displayName="Received eICR Information" />
+              <statusCode code="completed" />
+              <effectiveTime value="20210412132553+0000" />
+              <reference typeCode="REFR">
+                <externalDocument classCode="DOCCLIN" moodCode="EVN">
+                  <templateId extension="2014-06-09"
+                    root="2.16.840.1.113883.10.20.22.4.115" />
+                  <templateId extension="2017-04-01"
+                    root="2.16.840.1.113883.10.20.15.2.3.10" />
+                  <id root="10c13861-86a8-4a9a-aec6-b615921178df" />
+                  <code code="55751-2" codeSystem="2.16.840.1.113883.6.1"
+                    codeSystemName="LOINC"
+                    displayName="Public Health Case Report (eICR)" />
+                  <setId extension="8d86218e-0fea-11eb-8216-a80388425cfb"
+                    root="1.2.840.114350.1.13.380.3.7.1.1" />
+                  <versionNumber value="3" />
+                </externalDocument>
+              </reference>
+            </act>
+          </entry>
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <templateId extension="2017-04-01"
+                root="2.16.840.1.113883.10.20.15.2.3.29" />
+              <id root="39d966b9-8a3a-4024-93d8-138e97d5898a" />
+              <code code="RRVS19" codeSystem="2.16.840.1.114222.4.5.274"
+                codeSystemName="PHIN VS (CDC Local Coding System)"
+                displayName="eICR processed" />
+              <entryRelationship typeCode="SPRT">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId extension="2017-04-01"
+                    root="2.16.840.1.113883.10.20.15.2.3.33" />
+                  <id root="80f7b4ff-4d96-46ef-ae8f-af1f9c1f206e" />
+                  <code code="RR10" codeSystem="2.16.840.1.114222.4.5.232"
+                    codeSystemName="PHIN Questions"
+                    displayName="eICR Validation Output" />
+                  <value mediaType="text/xml" xsi:type="ED">
+                    <Report xmlns="urn:aims-org:val"> </Report>
+                  </value>
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+      <component>
+        <section>
+          <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.2.2" />
+          <code code="55112-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+          <title>.</title>
+          <text>
+            <content styleCode="Bold">Summary:</content>
+            <paragraph>Your organization electronically submitted an initial case report
+              to determine if reporting to public health is needed for a
+              patient.</paragraph>
+            <paragraph>"Coronavirus infection (disorder)" is reportable to "Senate District Health
+              Department". The initial case report was sent to "Senate District Health Department".
+              Additional information may be required for this report.<br /></paragraph>
+            <paragraph>
+              <content styleCode="Bold">"Coronavirus infection (disorder)" for
+                "Senate District Health Department" </content>
+            </paragraph>
+            <paragraph>Reporting is required immediately. Reporting to this Public Health Agency is
+              based on "Both patient home address and provider facility address"<br /></paragraph>
+            <paragraph>
+              <content>&gt; CDC COVID-19 webpage (<linkHtml
+                  href="https://www.cdc.gov/coronavirus/2019-ncov/index.html"
+                >Information only</linkHtml>
+                )<br /><br /></content>
+              <content>&gt; Senate District Health Department Epidemiology Web Page (<linkHtml
+                  href="http://www.health.senate-district.gr/epi/">Information
+                  only</linkHtml>)<br /><br /></content>
+            </paragraph>
+          </text>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="INT">
+              <templateId extension="2014-06-09"
+                root="2.16.840.1.113883.10.20.22.4.20" />
+              <templateId extension="2017-04-01"
+                root="2.16.840.1.113883.10.20.15.2.3.8" />
+              <id root="3350332c-7d7b-465f-aa7e-fd1da3184540" />
+              <code code="304561000" codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT"
+                displayName="Informing health care professional (procedure)" />
+              <text>Your organization electronically submitted an initial case report
+                to determine if reporting to public health is needed for a patient. </text>
+              <statusCode code="completed" />
+            </act>
+          </entry>
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId extension="2017-04-01"
+                root="2.16.840.1.113883.10.20.15.2.3.30" />
+              <code code="RR9" codeSystem="2.16.840.1.114222.4.5.232"
+                codeSystemName="PHIN Questions"
+                displayName="Reportability response priority" />
+              <value code="RRVS15" codeSystem="2.16.840.1.114222.4.5.274"
+                codeSystemName="PHIN VS (CDC Local Coding System)"
+                displayName="Information Only" xsi:type="CD" />
+            </observation>
+          </entry>
+          <entry typeCode="DRIV">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId extension="2017-04-01"
+                root="2.16.840.1.113883.10.20.15.2.3.34" />
+              <code code="RR11" codeSystem="2.16.840.1.114222.4.5.232"
+                codeSystemName="PHIN Questions"
+                displayName="Reportability Response Coded Information" />
+              <statusCode code="completed" />
+              <component>
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId extension="2017-04-01"
+                    root="2.16.840.1.113883.10.20.15.2.3.12" />
+                  <id root="17f6392f-9340-45d3-a1c8-bc0a30d09f53" />
+                  <code code="64572001" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED" displayName="Condition">
+                    <translation code="75323-6"
+                      codeSystem="2.16.840.1.113883.6.1"
+                      codeSystemName="LOINC" displayName="Condition" />
+                  </code>
+                  <value code="186747009" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED CT"
+                    displayName="Coronavirus infection (disorder)" xsi:type="CD" />
+                  <entryRelationship typeCode="COMP">
+                    <organizer classCode="CLUSTER" moodCode="EVN">
+                      <templateId extension="2017-04-01"
+                        root="2.16.840.1.113883.10.20.15.2.3.13" />
+                      <id root="64d30ae1-09f9-4f17-858f-79dec6581396" />
+                      <code code="RRVS7"
+                        codeSystem="2.16.840.1.114222.4.5.274"
+                        codeSystemName="Location Relevance"
+                        displayName="Both patient home address and provider facility address" />
+                      <statusCode code="completed" />
+                      <participant typeCode="LOC">
+                        <templateId extension="2017-04-01"
+                          root="2.16.840.1.113883.10.20.15.2.4.3" />
+                        <participantRole>
+                          <!-- made up senate district authoring agency id -->
+                          <id extension="SDDH-GC-500" root="2.16.840.1.113883.4.6" />
+                          <code code="RR12"
+                            codeSystem="2.16.840.1.114222.4.5.232"
+                            codeSystemName="PHIN Questions"
+                            displayName="Rules Authoring Agency" />
+                          <addr use="H">
+                            <streetAddressLine>200 Corusca Street</streetAddressLine>
+                            <city>Senate District</city>
+                            <state>Galactic City</state>
+                            <postalCode>GC-500</postalCode>
+                            <county>Administrative Core</county>
+                            <country>Coruscant</country>
+                          </addr>
+                          <telecom use="WP" value="tel:+1-555-777-0123" />
+                          <telecom use="WP" value="fax:+1-555-777-0987" />
+                          <playingEntity>
+                            <name>Senate District Health Department</name>
+                          </playingEntity>
+                        </participantRole>
+                      </participant>
+                      <participant typeCode="LOC">
+                        <templateId extension="2017-04-01"
+                          root="2.16.840.1.113883.10.20.15.2.4.1" />
+                        <participantRole>
+                          <id extension="ht" root="2.16.840.1.113883.4.6" />
+                          <code code="RR7"
+                            codeSystem="2.16.840.1.114222.4.5.232"
+                            codeSystemName="PHIN Questions"
+                            displayName="Routing Entity" />
+                          <addr use="H">
+                            <streetAddressLine>200 Corusca Street</streetAddressLine>
+                            <city>Senate District</city>
+                            <state>Galactic City</state>
+                            <postalCode>GC-500</postalCode>
+                            <county>Administrative Core</county>
+                            <country>Coruscant</country>
+                          </addr>
+                          <telecom use="WP" value="tel:+1-555-777-0123" />
+                          <telecom use="WP" value="fax:+1-555-777-0987" />
+                          <playingEntity>
+                            <name>Senate District Health Department</name>
+                          </playingEntity>
+                        </participantRole>
+                      </participant>
+                      <component typeCode="COMP">
+                        <observation classCode="OBS" moodCode="EVN">
+                          <templateId extension="2017-04-01"
+                            root="2.16.840.1.113883.10.20.15.2.3.19" />
+                          <id root="4b581cf3-2a6c-49f8-afcb-e437d0af7a9e" />
+                          <code code="RR1"
+                            codeSystem="2.16.840.1.114222.4.5.232"
+                            codeSystemName="PHIN Questions"
+                            displayName="Determination of reportability" />
+                          <value code="RRVS1"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)"
+                            displayName="Reportable" xsi:type="CD" />
+                          <entryRelationship typeCode="RSON">
+                            <observation classCode="OBS" moodCode="EVN">
+                              <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.27" />
+                              <id root="a8e67405-dca7-4de3-83c3-93fc177a52dc" />
+                              <code code="RR3"
+                                codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Determination of reportability rule" />
+                              <value xsi:type="ST">All results of tests for
+                                detection of SARS-CoV-2 nucleic acid in a clinical
+                                specimen by any method </value>
+                            </observation>
+                          </entryRelationship>
+                          <entryRelationship typeCode="RSON">
+                            <observation classCode="OBS" moodCode="EVN">
+                              <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.27" />
+                              <id root="17881052-4f87-49a4-b583-cd1dd72491a8" />
+                              <code code="RR3"
+                                codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Determination of reportability rule" />
+                              <value xsi:type="ST">Detection of SARS-CoV-2
+                                nucleic acid in a clinical specimen by any
+                                method</value>
+                            </observation>
+                          </entryRelationship>
+                          <entryRelationship typeCode="RSON">
+                            <observation classCode="OBS" moodCode="EVN">
+                              <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.27" />
+                              <id root="176f3b8c-c92f-44f1-93bd-c707231d6582" />
+                              <code code="RR3"
+                                codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Determination of reportability rule" />
+                              <value xsi:type="ST">Lab test ordered for
+                                detection of SARS-CoV-2 nucleic acid in a clinical
+                                specimen by any method</value>
+                            </observation>
+                          </entryRelationship>
+                        </observation>
+                      </component>
+                      <component typeCode="COMP">
+                        <act classCode="ACT" moodCode="EVN">
+                          <templateId extension="2017-04-01"
+                            root="2.16.840.1.113883.10.20.15.2.3.20" />
+                          <id root="6c22e63c-a7e7-4baa-84da-cc9ff165ec18" />
+                          <code code="RRVS13"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)"
+                            displayName="Outbreak- or Cluster related" />
+                          <priorityCode code="RRVS15"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)"
+                            displayName="Information only" />
+                          <reference typeCode="REFR">
+                            <externalDocument classCode="DOC" moodCode="EVN">
+                              <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                              <code nullFlavor="OTH">
+                                <originalText>CDC COVID-19 webpage</originalText>
+                              </code>
+                              <text mediaType="text/html">
+                                <reference
+                                  value="https://www.cdc.gov/coronavirus/2019-ncov/index.html"
+                                />
+                              </text>
+                            </externalDocument>
+                          </reference>
+                        </act>
+                      </component>
+                      <component typeCode="COMP">
+                        <act classCode="ACT" moodCode="EVN">
+                          <templateId extension="2017-04-01"
+                            root="2.16.840.1.113883.10.20.15.2.3.20" />
+                          <id root="cdc9447b-4301-4224-83a4-987c23e39081" />
+                          <code code="RRVS12"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)"
+                            displayName="PHA Contact Information" />
+                          <priorityCode code="RRVS15"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)"
+                            displayName="Information only" />
+                          <reference typeCode="REFR">
+                            <externalDocument classCode="DOC" moodCode="EVN">
+                              <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                              <code nullFlavor="OTH">
+                                <originalText>Senate District Health Department
+                                  Epidemiology Web Page</originalText>
+                              </code>
+                              <text mediaType="text/html">
+                                <reference
+                                  value="http://www.health.senate-district.gr/epi/"
+                                />
+                              </text>
+                            </externalDocument>
+                          </reference>
+                        </act>
+                      </component>
+                      <component typeCode="COMP">
+                        <observation classCode="OBS" moodCode="EVN">
+                          <templateId extension="2017-04-01"
+                            root="2.16.840.1.113883.10.20.15.2.3.14" />
+                          <id root="c9310968-6b8a-432c-91fb-beb0e78ef88e" />
+                          <code code="RR4"
+                            codeSystem="2.16.840.1.114222.4.5.232"
+                            codeSystemName="PHIN Questions"
+                            displayName="Timeframe to report (urgency)" />
+                          <value unit="min" value="0" xsi:type="PQ">
+                            <translation code="88694003"
+                              codeSystem="2.16.840.1.113883.6.96"
+                              codeSystemName="SNOMED CT"
+                              displayName="Immediate (qualifier value)" />
+                          </value>
+                        </observation>
+                      </component>
+                    </organizer>
+                  </entryRelationship>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>
