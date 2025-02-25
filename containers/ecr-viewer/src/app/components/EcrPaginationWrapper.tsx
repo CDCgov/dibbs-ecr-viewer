@@ -1,6 +1,6 @@
 "use client";
 import React, { ReactNode } from "react";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import { Label, Select } from "@trussworks/react-uswds";
 import { Pagination } from "@/app/components/Pagination";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
@@ -70,7 +70,7 @@ const EcrPaginationWrapper = ({
             onChange={(e) => {
               const value = e.target.value;
               // Write the cookie for future visits
-              Cookie.set("itemsPerPage", value, {
+              Cookies.set("itemsPerPage", value, {
                 expires: 1000,
               });
 

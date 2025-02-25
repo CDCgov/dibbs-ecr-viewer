@@ -40,7 +40,7 @@ describe("Library Search", () => {
     await user.type(searchBox, "Em");
     await user.click(searchButton);
 
-    expect(mockPush).toHaveBeenCalledExactlyOnceWith("?page=1&search=Em");
+    expect(mockPush).toHaveBeenCalledExactlyOnceWith("?search=Em");
   });
 
   it("should put set the page back to 1 after a new term is set", async () => {
@@ -54,7 +54,7 @@ describe("Library Search", () => {
     await user.type(searchBox, "Em");
     await user.click(searchButton);
 
-    expect(mockPush).toHaveBeenCalledExactlyOnceWith("?page=1&search=Em");
+    expect(mockPush).toHaveBeenCalledExactlyOnceWith("?search=Em");
   });
 
   it("should keep the page back if the same term is searched", async () => {

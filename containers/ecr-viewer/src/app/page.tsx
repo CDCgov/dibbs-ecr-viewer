@@ -37,19 +37,18 @@ const HomePage = async ({
 
   const cookieStore = cookies();
   const prefItemsPerPage = cookieStore.get("itemsPerPage")?.value;
+  const itemsPerPage =
+    Number(searchParams?.itemsPerPage) ||
+    Number(prefItemsPerPage) ||
+    DEFAULT_ITEMS_PER_PAGE;
 
-  const currentPage = Number(searchParams?.page || 1);
-  const itemsPerPage = Number(
-    searchParams?.itemsPerPage || prefItemsPerPage || DEFAULT_ITEMS_PER_PAGE,
-  );
+  const currentPage = Number(searchParams?.page) || 1;
   const sortColumn = (searchParams?.columnId as string) || "date_created";
   const sortDirection = (searchParams?.direction as string) || "DESC";
   const searchTerm = searchParams?.search as string | undefined;
   const filterConditions = searchParams?.condition as string | undefined;
   const filterConditionsArr = filterConditions?.split("|");
   const filterDates = returnParamDates(searchParams);
-
-  console.log({ prefItemsPerPage, itemsPerPage });
 
   const tableHeaders = INITIAL_HEADERS.map((header) => {
     return {

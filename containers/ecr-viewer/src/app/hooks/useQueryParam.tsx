@@ -45,8 +45,6 @@ export const useQueryParam = (resets: string[] = ["page"]) => {
     if (
       keys.some((key) => searchParams.get(key) !== curSearchParams.get(key))
     ) {
-      console.log("updating!");
-      console.log(curSearchParams.toString());
       router.push(pathname + "?" + curSearchParams.toString());
     }
   };
