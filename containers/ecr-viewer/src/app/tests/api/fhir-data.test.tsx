@@ -15,7 +15,7 @@ const stream = sdkStreamMixin(
   fs.createReadStream(
     path.resolve(
       __dirname,
-      "../../../../../test-data/fhir/BundleTravelHistory.json",
+      "../../../../../../test-data/fhir/BundleTravelHistory.json",
     ),
   ),
 );
