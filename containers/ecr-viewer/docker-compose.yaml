@@ -117,6 +117,28 @@ services:
       - AZURE_PG_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
 
+  # Keycloak for authentication
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.2
+    command:
+      - "start-dev"
+      - "--import-realm"
+      - "--health-enabled=true"
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    ports:
+      - 8070:8080
+      - 8071:9000
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "exec 3<>/dev/tcp/host.docker.internal/8071; echo -e 'GET /health/ready HTTP/1.1\r\nHost: localhost:8071\r\nConnection: close\r\n\r\n' >&3;cat <&3 | grep -q '\"status\": \"UP\"' && exit 0 || exit 1",
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 15
+
 volumes:
   db:
   azure-data:

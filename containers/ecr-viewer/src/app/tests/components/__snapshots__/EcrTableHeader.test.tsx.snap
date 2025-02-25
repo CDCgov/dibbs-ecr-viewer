@@ -1,0 +1,288 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EcrTableHeader disabled should match snapshot 1`] = `
+<table>
+  <thead
+    class="position-sticky top-0"
+  >
+    <tr>
+      <th
+        class="library-patient-column"
+        data-sortable="true"
+        id="patient-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-label="Sort by Patient"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          disabled=""
+          id="patient-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Patient
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        class="library-received-date-column"
+        data-sortable="true"
+        id="date_created-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-label="Sort by Received Date"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          disabled=""
+          id="date_created-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Received Date
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        class="library-encounter-date-column"
+        data-sortable="true"
+        id="encounter_date-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-label="Sort by Encounter Date"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          disabled=""
+          id="encounter_date-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Encounter Date
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        class="library-condition-column"
+        data-sortable="false"
+        id="reportable_condition-header"
+        role="columnheader"
+        scope="col"
+      >
+        <div
+          class="display-flex"
+        >
+          Reportable Condition
+        </div>
+      </th>
+      <th
+        class="library-rule-column"
+        data-sortable="false"
+        id="rule_summary-header"
+        role="columnheader"
+        scope="col"
+      >
+        <div
+          class="display-flex"
+        >
+          RCKMS Rule Summary
+        </div>
+      </th>
+    </tr>
+  </thead>
+</table>
+`;
+
+exports[`EcrTableHeader enabled should match snapshot 1`] = `
+<table>
+  <thead
+    class="position-sticky top-0"
+  >
+    <tr>
+      <th
+        class="library-patient-column"
+        data-sortable="true"
+        id="patient-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-label="Sort by Patient"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          id="patient-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Patient
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        class="library-received-date-column"
+        data-sortable="true"
+        id="date_created-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-label="Sort by Received Date"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          id="date_created-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Received Date
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        class="library-encounter-date-column"
+        data-sortable="true"
+        id="encounter_date-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-label="Sort by Encounter Date"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          id="encounter_date-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Encounter Date
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        class="library-condition-column"
+        data-sortable="false"
+        id="reportable_condition-header"
+        role="columnheader"
+        scope="col"
+      >
+        <div
+          class="display-flex"
+        >
+          Reportable Condition
+        </div>
+      </th>
+      <th
+        class="library-rule-column"
+        data-sortable="false"
+        id="rule_summary-header"
+        role="columnheader"
+        scope="col"
+      >
+        <div
+          class="display-flex"
+        >
+          RCKMS Rule Summary
+        </div>
+      </th>
+    </tr>
+  </thead>
+</table>
+`;

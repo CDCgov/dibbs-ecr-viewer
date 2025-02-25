@@ -148,7 +148,7 @@ jobs:
         run: |
           poetry run pdoc ./phdi -o ./docs/${{ needs.tag-release.outputs.version }}/sdk
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: phdi-docs
           path: ./docs/${{ needs.tag-release.outputs.version }}/sdk
@@ -207,7 +207,7 @@ jobs:
           python make_openapi_json.py
           redoc-cli build -o $GITHUB_WORKSPACE/docs/${{ needs.tag-release.outputs.version }}/containers/$CONTAINER.html openapi.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: container-docs
           path: ./docs/${{ needs.tag-release.outputs.version }}/containers
@@ -226,13 +226,13 @@ jobs:
           ref: docs
 
       - name: Download phdi docs from artifacts
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4.1.8
         with:
           name: phdi-docs
           path: ./docs/${{ needs.tag-release.outputs.version }}/sdk
 
       - name: Download container docs from artifacts
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4.1.8
         with:
           name: container-docs
           path: ./docs/${{ needs.tag-release.outputs.version }}/containers

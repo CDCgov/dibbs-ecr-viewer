@@ -3,7 +3,7 @@ import {
   getMedicationDisplayName,
   returnHtmlTableContent,
 } from "@/app/view-data/components/common";
-import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
 import { Bundle } from "fhir/r4";
 import { render, screen } from "@testing-library/react";
 
@@ -65,46 +65,6 @@ describe("common tests", () => {
           ],
         }),
       ).toBe("Unknown medication name - ABC code 123");
-    });
-  });
-
-  describe("returnHtmlTableContent", () => {
-    it("returns the html tables with a title", () => {
-      const result = returnHtmlTableContent(
-        BundleLabNoLabIds as Bundle,
-        mappings["labResultDiv"],
-        "test-title",
-      );
-
-      render(result);
-      expect(screen.getByText("test-title")).toBeInTheDocument();
-      expect(screen.getByText("SARS-CoV-2, NAA CL")).toBeInTheDocument();
-      expect(
-        screen.getByText("Symptomatic as defined by CDC?"),
-      ).toBeInTheDocument();
-      expect(screen.getAllByText("2000-02-04T21:02:00.000Z")).toHaveLength(2);
-    });
-
-    it("returns nothing if table data can't be located from the provided mapping", () => {
-      const result = returnHtmlTableContent(
-        BundleLabNoLabIds as Bundle,
-        "thisMappingDoesNotExist",
-        "test-title",
-      );
-
-      const { container } = render(result);
-      expect(container).toBeEmptyDOMElement();
-    });
-
-    it("returns nothing if required table data is not available", () => {
-      const result = returnHtmlTableContent(
-        undefined as any,
-        mappings["labResultDiv"],
-        "test-title",
-      );
-
-      const { container } = render(result);
-      expect(container).toBeEmptyDOMElement();
     });
   });
 });

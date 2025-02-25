@@ -119,13 +119,13 @@ const Filters = ({ conditions }: FilterProps) => {
         {paramKeys.some((k) => searchParams.get(k) !== null) && (
           <Button
             type="button"
-            unstyled
+            unstyled={true}
             onClick={resetToDefault}
             aria-label="Reset Filters to Defaults"
             className="gap-05"
           >
             <span className="square-205 usa-icon">
-              <Autorenew aria-hidden className="square-205" />
+              <Autorenew aria-hidden={true} className="square-205" />
             </span>
             Reset
           </Button>
@@ -225,10 +225,7 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
     >
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <div
-          className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
-          key="all"
-        >
+        <div className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105">
           <input
             id="condition-all"
             className="usa-checkbox__input"
@@ -239,7 +236,7 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
           />
           <label
             className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
-            htmlFor={"condition-all"}
+            htmlFor="condition-all"
           >
             {isAllSelected ? "Deselect all" : "Select all"}
           </label>

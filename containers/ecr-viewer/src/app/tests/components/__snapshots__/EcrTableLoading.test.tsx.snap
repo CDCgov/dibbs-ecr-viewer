@@ -1,0 +1,778 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EcrTableLoading Snapshot test should match snapshot 1`] = `
+<div>
+  <tbody>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</div>
+`;
