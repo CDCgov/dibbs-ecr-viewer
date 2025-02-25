@@ -143,9 +143,8 @@ export function isValidParamDates(
 ): boolean {
   if (dateRange === CustomDateRangeOption) {
     return !!datesParam && DATE_PARAM_REGEX.test(datesParam);
-  } else {
-    return (<any>Object).values(DateRangeOptions).includes(dateRange);
   }
+  return dateRange in DateRangeOptions;
 }
 
 /**
