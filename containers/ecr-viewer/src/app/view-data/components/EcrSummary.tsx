@@ -5,7 +5,7 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import { Accordion, Tag } from "@trussworks/react-uswds";
-import { AccordionItemProps } from "./AccordionContent";
+import { AccordionItem } from "@/app/view-data/types";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 interface EcrSummaryProps {
@@ -39,8 +39,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
   conditionSummary,
   snomed,
 }) => {
-  const conditionSummaryAccordionItems: AccordionItemProps[] =
-    conditionSummary.map((condition) => {
+  const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
+    (condition) => {
       return {
         title: condition.title,
         id: toKebabCase(condition.title),
@@ -84,7 +84,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           </>
         ),
       };
-    });
+    },
+  );
   return (
     <div
       className="usa-summary-box padding-3"

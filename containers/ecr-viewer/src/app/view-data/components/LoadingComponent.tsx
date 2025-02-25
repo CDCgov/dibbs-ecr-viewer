@@ -4,7 +4,6 @@ import {
   GridContainer,
   SideNav,
 } from "@trussworks/react-uswds";
-import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
 import { AccordionSection, AccordionSubSection } from "../component-utils";
 import { BackButton } from "@/app/components/BackButton";
 import React from "react";
@@ -240,20 +239,16 @@ export const EcrLoadingSkeleton = () => {
         <EcrSummaryLoadingSkeleton />
         <div className="margin-top-10">
           <GridContainer className="padding-0 margin-bottom-3 maxw-none">
-            <Grid row className="margin-bottom-05">
+            <Grid row={true} className="margin-bottom-05">
               <Grid>
                 <h2 className="margin-bottom-0" id="ecr-document">
                   eCR Document
                 </h2>
               </Grid>
               <Grid className="flex-align-self-center margin-left-auto">
-                <ExpandCollapseButtons
-                  id="main"
-                  buttonSelector="h3 > .usa-accordion__button"
-                  accordionSelector=".info-container > .usa-accordion__content"
-                  expandButtonText="Expand all sections"
-                  collapseButtonText="Collapse all sections"
-                />
+                <div className="width-card-lg loading-blob-gray margin-right-1 loading-blob">
+                  &nbsp;
+                </div>
               </Grid>
             </Grid>
             <div className="text-base-darker line-height-sans-5">

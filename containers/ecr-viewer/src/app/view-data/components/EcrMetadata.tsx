@@ -77,7 +77,7 @@ const EcrMetadata = ({
     <AccordionSection>
       <AccordionSubSection title="RR Details">
         <Table
-          bordered
+          bordered={true}
           caption="Reportability Summary"
           className="rrTable"
           fixed={true}
@@ -111,7 +111,7 @@ const EcrMetadata = ({
               bordered={false}
               className="ersd-table fixed-table border-top border-left border-right border-bottom"
               fixed={true}
-              fullWidth
+              fullWidth={true}
             >
               <caption>
                 <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">
