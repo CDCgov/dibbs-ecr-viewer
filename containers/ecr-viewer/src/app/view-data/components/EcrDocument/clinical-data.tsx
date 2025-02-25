@@ -1,6 +1,7 @@
 import {
   PathMappings,
   evaluateData,
+  getHumanReadableCodeableConcept,
   noData,
   safeParse,
 } from "@/app/utils/data-utils";
@@ -9,7 +10,6 @@ import {
   Bundle,
   CarePlanActivity,
   CareTeamParticipant,
-  CodeableConcept,
   FhirResource,
   Medication,
   MedicationAdministration,
@@ -173,41 +173,13 @@ const evaluateAdministeredMedication = (
         date:
           medicationAdministration.effectiveDateTime ??
           medicationAdministration.effectivePeriod?.start,
-        name: getMedicationDisplayName(medication?.code),
+        name: getHumanReadableCodeableConcept(medication?.code),
       });
       return data;
     },
     [],
   );
 };
-
-/**
- * Given a CodeableConcept, find an appropriate display name
- * @param code - The codable concept if available.
- * @returns - String with a name to display (can be "Unknown")
- */
-export function getMedicationDisplayName(
-  code: CodeableConcept | undefined,
-): string | undefined {
-  const codings = code?.coding ?? [];
-  let name;
-  // Pull out the first name we find,
-  for (const coding of codings) {
-    if (coding.display) {
-      name = coding.display;
-      break;
-    }
-  }
-
-  // There is a code, but no names, pull out the first code to give the user
-  // something to go off of
-  if (name === undefined && codings.length > 0) {
-    const { system, code } = codings[0];
-    name = `Unknown medication name - ${system} code ${code}`;
-  }
-
-  return name;
-}
 
 /**
  * Returns a table displaying care team information.
