@@ -1,8 +1,9 @@
 # Test Data Files
 
 ### FHIR Bundles
+
 | File Name                                                                    | Description                                                                                                                                                                                                          | Size (lines) |
-|------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | [BundleCareTeam](fhir/BundleCareTeam.json)                                   | This FHIR bundle contains a Care Team of 2 physicians (one of whom is the admitting physician)                                                                                                                       | 170          |
 | [BundleClinicalInfo](fhir/BundleClinicalInfo.json)                           | This FHIR bundle contains a composition, a number of observations (organization, 5 x immunizations, results related to height and weight), 2 x active conditions, procedure, care plan, and medications administered | 1100         |
 | [BundleEcrMetadata](fhir/BundleEcrMetadata.json)                             | This FHIR bundle contains a composition, practitioner, organization, conditions (COVID-19, SARS-CoV-2, Hepatitis C) and some encounter information                                                                   | 900          |
@@ -26,10 +27,10 @@
 | [patient_bundle_to_link_with_mpi](fhir/patient_bundle_to_link_with_mpi.json) | This FHIR bundle contains very contrived info for a patient, currently in use by Record Linkage                                                                                                                      | 500          |
 | [sample_ecr](fhir/sample_ecr.json)                                           | This FHIR bundle contains a composition, an encounter, medical team info, and some observations of conditions and labs                                                                                               | 1200         |
 
+### eCRs
 
-### eCRs 
 | File Name                                                                                                                                                                  | Description                                                                                                    | Size (lines) |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|--------------|
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------ |
 | [1dd10047-2207-4eac-a993-0f706c88be5d](ecr/1dd10047-2207-4eac-a993-0f706c88be5d/CDA_eICR.xml)                                                                              | This eCR contains a composition, an encounter, medical team info, and some observations of conditions and labs | 2000         |
 | [9408ddce-4dcb-416c-a153-82cce01839e2](ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml)                                                                              | Empty eICR, RR has contents                                                                                    | 600          |
 | [ecr_sample_input_bad](ecr/ecr_sample_input_bad/ecr_sample_input_bad.xml)                                                                                                  | This eCR contains a composition, an encounter, medical team info, and some observations of conditions and labs | 2000         |
@@ -44,9 +45,10 @@
 | [CDA_eICR.xml](ecr/validation/CDA_eICR.xml)                                                                                                                                | This eCR contains a composition, an encounter, medical team info, and some observations of conditions and labs | 2000         |
 
 ### ZIP Files
-| File Name                                                                           | Description                                                                                      | Size (mb) |
-|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|-----------|
-| [eICR_RR_combo.zip](zip/eICR_RR_combo.zip)[fhir-bundles.zip](fhir/fhir-bundles.zip) | A ZIP file containing all FHIR bundles listed above.                                             | 10000     |
-| [empty.zip](zip/empty.zip)                                                          | A ZIP file containing all FHIR bundles listed above.                                             | 10000     |
-| [no_eicr.zip](zip/no_eicr.zip)                                                      | A ZIP file containing all eCRs listed above.                                                     | 10000     |
-| [test_zip.zip](zip/test_zip.zip)                                                    | A ZIP file containing all eCRs listed above.                                                     | 10000     |
+
+| File Name                                                                           | Description                                          | Size (mb) |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------- | --------- |
+| [eICR_RR_combo.zip](zip/eICR_RR_combo.zip)[fhir-bundles.zip](fhir/fhir-bundles.zip) | A ZIP file containing all FHIR bundles listed above. | 10000     |
+| [empty.zip](zip/empty.zip)                                                          | A ZIP file containing all FHIR bundles listed above. | 10000     |
+| [no_eicr.zip](zip/no_eicr.zip)                                                      | A ZIP file containing all eCRs listed above.         | 10000     |
+| [test_zip.zip](zip/test_zip.zip)                                                    | A ZIP file containing all eCRs listed above.         | 10000     |
