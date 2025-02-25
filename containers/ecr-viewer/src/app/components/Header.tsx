@@ -14,7 +14,9 @@ const Header: React.FC = () => (
       <div className="usa-navbar">
         <div className="usa-logo">
           <h1>
-            <Link href="/">DIBBs eCR Viewer</Link>
+            <Link href="/" prefetch={false}>
+              DIBBs eCR Viewer
+            </Link>
           </h1>
         </div>
       </div>

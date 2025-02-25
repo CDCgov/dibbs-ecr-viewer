@@ -1,8 +1,23 @@
 // This file contains customizations of USWDS classes without a modifier
 // which scopes it to a specific component.
 
+@use "uswds-core" as *;
+
+.usa-accordion__button {
+  &:active {
+    background-color: color("blue-cool-60");
+    text-decoration: none;
+    color: white;
+  }
+}
+
 .usa-accordion__content {
   overflow: visible;
+}
+
+.usa-button.usa-pagination__button:hover {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 
 .usa-header {

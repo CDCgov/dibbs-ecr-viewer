@@ -144,7 +144,7 @@ describe("EcrSummary tests", () => {
           patientDetails={patientDetails}
           encounterDetails={encounterDetails}
           conditionSummary={[...covidConditionDetails, ...hepConditionDetails]}
-          snomed={"test-snomed-456"}
+          snomed="test-snomed-456"
         />,
       );
 

@@ -14,7 +14,7 @@ const ErrorAuthPage = () => (
           <Error
             size={5}
             className="margin-right-105 text-middle"
-            aria-hidden
+            aria-hidden={true}
           />
           Authentication Failed
         </h2>

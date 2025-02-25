@@ -26,6 +26,7 @@ import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
 import React from "react";
 import { toTitleCase } from "../utils/format-utils";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
+import { LabAccordion } from "../view-data/components/LabAccordion";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -205,7 +206,7 @@ export const evaluateEcrSummaryConditionSummary = (
           toolTip:
             "Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).",
           value: (
-            <div className={"p-list"}>
+            <div className="p-list">
               {[...conditionsList[conditionsListKey].ruleSummaries].map(
                 (summary) => (
                   <p key={summary}>{summary}</p>
@@ -368,8 +369,8 @@ export const evaluateEcrSummaryRelevantLabResults = (
 
   if (isLabReportElementDataList(relevantLabElements)) {
     resultsArray = relevantLabElements.flatMap((element) =>
-      element.diagnosticReportDataElements.map((reportElement) => ({
-        value: reportElement,
+      element.diagnosticReportDataItems.map((reportItem) => ({
+        value: <LabAccordion items={[reportItem]} />,
         dividerLine: false,
       })),
     );

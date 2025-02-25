@@ -3,11 +3,12 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { Bundle } from "fhir/r4";
 import { loadYamlConfig } from "@/app/api/utils";
-import AccordionContent from "@/app/view-data/components/AccordionContent";
+import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
+import { EcrDocument } from "@/app/view-data/components/EcrDocument";
 
 const mappings = loadYamlConfig();
 
-describe("Snapshot test for Accordion Content", () => {
+describe("Snapshot test for ECR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {
     const bundleEmpty: Bundle = {
       resourceType: "Bundle",
@@ -15,9 +16,9 @@ describe("Snapshot test for Accordion Content", () => {
       entry: [],
     };
 
-    let { container } = render(
-      <AccordionContent fhirBundle={bundleEmpty} fhirPathMappings={mappings} />,
-    );
+    let items = getEcrDocumentAccordionItems(bundleEmpty, mappings);
+
+    let { container } = render(<EcrDocument initialAccordionItems={items} />);
 
     expect(await axe(container)).toHaveNoViolations();
     container.querySelectorAll("[id], [aria-describedby]").forEach((el) => {

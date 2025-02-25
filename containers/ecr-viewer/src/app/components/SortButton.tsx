@@ -39,7 +39,7 @@ export const SortButton: React.FC<SortButtonProps> = ({
     <Button
       id={`${columnId}-sort-button`}
       aria-label={`Sort by ${columnName}`}
-      className={`sort-button usa-button`}
+      className="sort-button usa-button"
       type="button"
       disabled={disabled}
       onClick={handleSort}

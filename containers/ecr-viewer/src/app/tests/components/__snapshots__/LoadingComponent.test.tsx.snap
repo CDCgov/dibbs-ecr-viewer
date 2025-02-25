@@ -606,25 +606,11 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                     class="flex-align-self-center margin-left-auto"
                     data-testid="grid"
                   >
-                    <button
-                      class="usa-button usa-button--unstyled"
-                      data-testid="button"
-                      id="main-expand-button"
-                      type="button"
+                    <div
+                      class="width-card-lg loading-blob-gray margin-right-1 loading-blob"
                     >
-                      Expand all sections
-                    </button>
-                    <span
-                      class="vertical-line"
-                    />
-                    <button
-                      class="usa-button usa-button--unstyled"
-                      data-testid="button"
-                      id="main-collapse-button"
-                      type="button"
-                    >
-                      Collapse all sections
-                    </button>
+                       
+                    </div>
                   </div>
                 </div>
                 <div

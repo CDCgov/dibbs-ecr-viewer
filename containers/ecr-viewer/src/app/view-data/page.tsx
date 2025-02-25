@@ -1,6 +1,5 @@
 import React from "react";
 import { Bundle } from "fhir/r4";
-import { Grid, GridContainer } from "@trussworks/react-uswds";
 
 import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
 import {
@@ -8,18 +7,19 @@ import {
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
 } from "../services/ecrSummaryService";
-import { PathMappings } from "../utils/data-utils";
-import AccordionContent from "@/app/view-data/components/AccordionContent";
-import { EcrLoadingSkeleton } from "./components/LoadingComponent";
-import { ECRViewerLayout } from "./components/ECRViewerLayout";
-import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
-import EcrSummary from "./components/EcrSummary";
-import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
-import SideNav from "./components/SideNav";
+import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
 import {
   evaluatePatientDOB,
   evaluatePatientName,
 } from "../services/evaluateFhirDataService";
+import { PathMappings } from "../utils/data-utils";
+
+import EcrDocument from "./components/EcrDocument";
+import { EcrLoadingSkeleton } from "./components/LoadingComponent";
+import EcrSummary from "./components/EcrSummary";
+import { ECRViewerLayout } from "./components/ECRViewerLayout";
+import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
+import SideNav from "./components/SideNav";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -76,10 +76,12 @@ const ECRViewerPage = async ({
   } else if (fhirBundle && mappings) {
     const patientName = evaluatePatientName(fhirBundle, mappings, true);
     const patientDOB = evaluatePatientDOB(fhirBundle, mappings);
+
+    const accordionItems = getEcrDocumentAccordionItems(fhirBundle, mappings);
     return (
       <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
         <SideNav />
-        <div className={"ecr-viewer-container"}>
+        <div className="ecr-viewer-container">
           <div className="margin-bottom-3">
             <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
               eCR Summary
@@ -105,36 +107,7 @@ const ECRViewerPage = async ({
             )}
             snomed={snomedCode}
           />
-          <div className="margin-top-10">
-            <GridContainer className={"padding-0 margin-bottom-3 maxw-none"}>
-              <Grid row className="margin-bottom-05">
-                <Grid>
-                  <h2 className="margin-bottom-0" id="ecr-document">
-                    eCR Document
-                  </h2>
-                </Grid>
-                <Grid className={"flex-align-self-center margin-left-auto"}>
-                  <ExpandCollapseButtons
-                    id={"main"}
-                    buttonSelector={"h3 > .usa-accordion__button"}
-                    accordionSelector={
-                      ".info-container > .usa-accordion__content"
-                    }
-                    expandButtonText={"Expand all sections"}
-                    collapseButtonText={"Collapse all sections"}
-                  />
-                </Grid>
-              </Grid>
-              <div className="text-base-darker line-height-sans-5">
-                Displays entire eICR and RR documents to help you dig further
-                into eCR data
-              </div>
-            </GridContainer>
-            <AccordionContent
-              fhirPathMappings={mappings}
-              fhirBundle={fhirBundle}
-            />
-          </div>
+          <EcrDocument initialAccordionItems={accordionItems} />
         </div>
       </ECRViewerLayout>
     );

@@ -27,7 +27,7 @@ const ErrorPage = ({
           <Error
             size={5}
             className="margin-right-105 text-middle"
-            aria-hidden
+            aria-hidden={true}
           />
           {title}
         </h2>

@@ -11,7 +11,7 @@ import {
   evaluateClinicalData,
   evaluateMiscNotes,
   returnProceduresTable,
-} from "@/app/view-data/components/common";
+} from "@/app/view-data/components/EcrDocument/clinical-data";
 
 describe("Snapshot test for Procedures (Treatment Details)", () => {
   let container: HTMLElement;

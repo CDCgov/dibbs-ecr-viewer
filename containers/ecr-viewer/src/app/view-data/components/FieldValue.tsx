@@ -30,7 +30,7 @@ export const FieldValue: React.FC<{
     <>
       <span id={id}>{children}&nbsp;</span>
       <Button
-        type={"button"}
+        type="button"
         unstyled={true}
         onClick={() => setHidden(true)}
         aria-expanded="true"
@@ -84,10 +84,10 @@ const trimField = (
           <>
             <span id={id}>{cutString}...&nbsp;</span>
             <Button
-              type={"button"}
+              type="button"
               unstyled={true}
               onClick={() => setHidden(false)}
-              aria-expanded={"false"}
+              aria-expanded="false"
               aria-controls={id}
             >
               View more

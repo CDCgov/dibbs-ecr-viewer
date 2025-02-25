@@ -2,14 +2,14 @@
  * @jest-environment node
  */
 import { getAllConditions } from "@/app/data/conditions";
-import { getDB } from "@/app/api/services/postgres_db";
-import { get_pool } from "@/app/api/services/sqlserver_db";
+import { getDB } from "@/app/data/db/postgres_db";
+import { get_pool } from "@/app/data/db/sqlserver_db";
 
-jest.mock("../../api/services/postgres_db", () => ({
+jest.mock("../../data/db/postgres_db", () => ({
   getDB: jest.fn(),
 }));
 
-jest.mock("../../api/services/sqlserver_db", () => ({
+jest.mock("../../data/db/sqlserver_db", () => ({
   get_pool: jest.fn(),
 }));
 

@@ -77,7 +77,7 @@ const EcrMetadata = ({
     <AccordionSection>
       <AccordionSubSection title="RR Details">
         <Table
-          bordered
+          bordered={true}
           caption="Reportability Summary"
           className="rrTable"
           fixed={true}
@@ -86,29 +86,17 @@ const EcrMetadata = ({
           <thead>
             <tr>
               <th className="width-25p">
-                <ToolTipElement
-                  toolTip={
-                    "List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR."
-                  }
-                >
+                <ToolTipElement toolTip="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.">
                   Reportable Condition
                 </ToolTipElement>
               </th>
               <th>
-                <ToolTipElement
-                  toolTip={
-                    "Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System)."
-                  }
-                >
+                <ToolTipElement toolTip="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).">
                   RCKMS Rule Summary
                 </ToolTipElement>
               </th>
               <th className="width-25p">
-                <ToolTipElement
-                  toolTip={
-                    "List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR."
-                  }
-                >
+                <ToolTipElement toolTip="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR.">
                   Jurisdiction Sent eCR
                 </ToolTipElement>
               </th>
@@ -123,7 +111,7 @@ const EcrMetadata = ({
               bordered={false}
               className="ersd-table fixed-table border-top border-left border-right border-bottom"
               fixed={true}
-              fullWidth
+              fullWidth={true}
             >
               <caption>
                 <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">

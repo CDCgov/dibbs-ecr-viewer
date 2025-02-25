@@ -1,11 +1,12 @@
 import React, { Suspense } from "react";
+import { cookies } from "next/headers";
 import { env } from "next-runtime-env";
 import { Table } from "@trussworks/react-uswds";
 
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { getAllConditions } from "./data/conditions";
-import { INITIAL_HEADERS } from "./constants";
+import { DEFAULT_ITEMS_PER_PAGE, INITIAL_HEADERS } from "@/app/constants";
 
 import { EcrTableHeader } from "./components/EcrTableHeader";
 import { EcrTableLoading } from "./components/EcrTableLoading";
@@ -34,8 +35,14 @@ const HomePage = async ({
     return <NotFound />;
   }
 
+  const cookieStore = cookies();
+  const prefItemsPerPage = cookieStore.get("itemsPerPage")?.value;
+  const itemsPerPage =
+    Number(searchParams?.itemsPerPage) ||
+    Number(prefItemsPerPage) ||
+    DEFAULT_ITEMS_PER_PAGE;
+
   const currentPage = Number(searchParams?.page) || 1;
-  const itemsPerPage = Number(searchParams?.itemsPerPage) || 25;
   const sortColumn = (searchParams?.columnId as string) || "date_created";
   const sortDirection = (searchParams?.direction as string) || "DESC";
   const searchTerm = searchParams?.search as string | undefined;
@@ -72,7 +79,11 @@ const HomePage = async ({
           />
         </div>
         <Filters conditions={allConditions} />
-        <EcrPaginationWrapper totalCount={totalCount}>
+        <EcrPaginationWrapper
+          totalCount={totalCount}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+        >
           <EcrTableWrapper>
             <EcrTableHeader
               headers={tableHeaders}
@@ -83,7 +94,7 @@ const HomePage = async ({
             ) : (
               <Suspense
                 // key needed to force fallback state to retrigger on params change
-                key={JSON.stringify(searchParams)}
+                key={JSON.stringify({ ...searchParams, itemsPerPage })}
                 fallback={<EcrTableLoading />}
               >
                 <EcrTableContent
@@ -119,7 +130,7 @@ const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
         fullWidth={true}
         striped={true}
         fixed={true}
-        className={"table-ecr-library margin-0"}
+        className="table-ecr-library margin-0"
         data-testid="table"
       >
         {children}

@@ -34,7 +34,7 @@ export const BackButton = ({ className, iconClassName }: BackButtonProps) => {
         className={classNames("display-inline-block", className)}
       >
         <ArrowBack
-          aria-hidden
+          aria-hidden={true}
           size={3}
           className={classNames("text-middle margin-right-1", iconClassName)}
         />

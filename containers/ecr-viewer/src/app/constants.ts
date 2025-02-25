@@ -35,3 +35,6 @@ export const INITIAL_HEADERS = [
     sortDirection: "",
   },
 ];
+
+export const PAGE_SIZES = [25, 50, 75, 100];
+export const DEFAULT_ITEMS_PER_PAGE = PAGE_SIZES[0];

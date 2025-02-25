@@ -36,7 +36,7 @@ export const AdministeredMedication = ({
     <BaseTable
       columns={columns}
       caption="Administered Medications"
-      className={"margin-y-0"}
+      className="margin-y-0"
       fixed={false}
     >
       {medicationData.map((entry, index: number) => (

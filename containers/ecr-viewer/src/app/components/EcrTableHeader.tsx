@@ -44,7 +44,7 @@ export const EcrTableHeader = ({
   };
 
   return (
-    <thead>
+    <thead className="position-sticky top-0">
       <tr>
         {headers.map((column) => (
           <Header
