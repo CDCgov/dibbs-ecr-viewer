@@ -9,13 +9,14 @@ const copyParams = (params: URLSearchParams | ReadonlyURLSearchParams) =>
   new URLSearchParams(params.toString());
 
 /**
- * Custom hook to manage query parameters in the URL (set, delete, and update). Hook always resets page back to 1.
+ * Custom hook to manage query parameters in the URL (set, delete, and update). Hook by default, it resets page back to 1.
+ * @param resets - array of params that should always be reset when updating the query
  * @returns - An object containing
  *  - searchParams: Current search params from the URL
  *  - updateQueryParam: Function to update a specific query parameter.
  *    If an object is passed, its keys that are set to true are concatenated with a |. Otherwise, the value is set directly.
  */
-export const useQueryParam = () => {
+export const useQueryParam = (resets: string[] = ["page"]) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,7 +24,9 @@ export const useQueryParam = () => {
   // This is updated within render. If it isn't pushed by the end of the component's cycle,
   // then it resets.
   const curSearchParams = copyParams(searchParams);
-  curSearchParams.set("page", "1");
+  for (const key of resets) {
+    curSearchParams.delete(key);
+  }
 
   // Set a query param with a specific value
   const setQueryParam = (key: string, value: string) => {
@@ -37,7 +40,7 @@ export const useQueryParam = () => {
 
   const pushQueryUpdate = () => {
     const keys = [...searchParams.keys(), ...curSearchParams.keys()].filter(
-      (k) => k !== "page",
+      (k) => !resets.includes(k),
     );
     if (
       keys.some((key) => searchParams.get(key) !== curSearchParams.get(key))

@@ -1,8 +1,7 @@
 "use client";
 
 import { Search } from "@trussworks/react-uswds";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useQueryParam } from "../hooks/useQueryParam";
 
 interface LibrarySearchProps {
   className?: string;
@@ -17,19 +16,8 @@ interface LibrarySearchProps {
  * @returns - Search bar component for the eCR Library
  */
 const LibrarySearch = ({ className, textBoxClassName }: LibrarySearchProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { searchParams, updateQueryParam, pushQueryUpdate } = useQueryParam();
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("page", "1");
-      params.set(name, value);
-      return params.toString();
-    },
-    [searchParams],
-  );
   return (
     <Search
       placeholder="Search by patient"
@@ -38,9 +26,8 @@ const LibrarySearch = ({ className, textBoxClassName }: LibrarySearchProps) => {
         const searchTerm = (
           e.currentTarget.elements.namedItem("search-field") as HTMLInputElement
         )?.value;
-        if (searchParams.get("search") !== searchTerm) {
-          router.push(pathname + "?" + createQueryString("search", searchTerm));
-        }
+        updateQueryParam("search", searchTerm);
+        pushQueryUpdate();
       }}
       defaultValue={searchParams.get("search") ?? undefined}
       size="small"
