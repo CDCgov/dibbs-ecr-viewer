@@ -24,7 +24,11 @@ import {
   extractNumbersAndPeriods,
   toKebabCase,
 } from "@/app/utils/format-utils";
-import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
+import {
+  HtmlTableJson,
+  HtmlTableJsonRow,
+  formatTablesToJSON,
+} from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
 import { LabAccordion } from "../view-data/components/LabAccordion";
 import { JsonTable } from "../view-data/components/JsonTable";
@@ -152,9 +156,7 @@ export const checkAbnormalTag = (labReportJson: HtmlTableJson): boolean => {
  * @example searchKey - Ex. "Analysis Time" or the field that we are searching data for.
  */
 export function searchResultRecord(
-  // TODO: Revisit
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  result: any[],
+  result: HtmlTableJsonRow[] | HtmlTableJsonRow[][],
   searchKey: string,
 ): RenderableNode {
   let resultsArray: RenderableNode[] = [];
