@@ -216,7 +216,7 @@ describe("Snapshot test for Clinical Notes", () => {
 });
 
 describe("Check that Clinical Info components render given FHIR bundle", () => {
-  const fhirBundleClinicalInfo = require("../assets/BundleClinicalInfo.json");
+  const fhirBundleClinicalInfo = require("../../../../../../test-data/fhir/BundleClinicalInfo.json");
   const mappings = loadYamlConfig();
   const testClinicalData = evaluateClinicalData(
     fhirBundleClinicalInfo,

@@ -10,8 +10,14 @@ import { NextRequest } from "next/server";
 import { Readable } from "stream";
 
 const s3Mock = mockClient(S3Client);
+const path = require("path");
 const stream = sdkStreamMixin(
-  fs.createReadStream("src/app/tests/assets/BundleTravelHistory.json"),
+    fs.createReadStream(
+        path.resolve(
+            __dirname,
+            "../../../../../../test-data/fhir/BundleTravelHistory.json",
+        ),
+    ),
 );
 
 const mockData = {

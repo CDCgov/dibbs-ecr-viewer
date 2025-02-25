@@ -1,7 +1,7 @@
 import { loadYamlConfig } from "@/app/api/utils";
-import BundleLab from "../assets/BundleLab.json";
-import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
-import BundleLabInvalidResultsDiv from "../assets/BundleLabInvalidResultsDiv.json";
+import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import BundleLabInvalidResultsDiv from "../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
 import { Bundle, Observation, Organization } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import { render, screen } from "@testing-library/react";
