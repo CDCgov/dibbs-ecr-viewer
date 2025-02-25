@@ -36,6 +36,9 @@ const providerMap: ProviderDetails[] = providers.map((provider) => ({
 
 const handler = NextAuth({
   providers: providers,
+  pages: {
+    signIn: "../redirect",
+  },
 });
 
 export { providerMap, handler, type ProviderDetails };
