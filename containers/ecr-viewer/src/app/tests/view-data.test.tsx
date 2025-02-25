@@ -32,11 +32,12 @@ function mockFetch(
 }
 
 describe("ECRViewerPage", () => {
+  const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeAll(() => {
     process.env.BASE_PATH = "ecr-viewer";
   });
   afterAll(() => {
-    delete process.env.BASE_PATH;
+    process.env.BASE_PATH = ORIG_BASE_PATH;
     jest.resetAllMocks();
   });
 

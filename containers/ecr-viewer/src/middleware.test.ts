@@ -17,6 +17,9 @@ jest.mock("next-auth/jwt", () => ({
 }));
 
 describe("Middleware", () => {
+  let ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
+  let ORIG_NBS_AUTH = process.env.NBS_AUTH;
+  let ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeEach(() => {
     process.env.NEXTAUTH_SECRET = "test-secret";
     process.env.BASE_PATH = "ecr-viewer";
@@ -24,13 +27,15 @@ describe("Middleware", () => {
     jest.resetAllMocks(); // Reset mocks before each test
   });
   afterEach(() => {
-    delete process.env.NEXTAUTH_SECRET;
-    delete process.env.NBS_AUTH;
-    delete process.env.BASE_PATH;
+    process.env.NEXTAUTH_SECRET = ORIG_NEXTAUTH_SECRET;
+    process.env.NBS_AUTH = ORIG_NBS_AUTH;
+    process.env.BASE_PATH = ORIG_BASE_PATH;
   });
 
   it("should authorize the request if oauthToken is present", async () => {
-    getToken.mockImplementation(() => Promise.resolve({ token: "fake-token" }));
+    (getToken as jest.Mock).mockImplementation(() =>
+      Promise.resolve({ token: "fake-token" }),
+    );
 
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/protected",
