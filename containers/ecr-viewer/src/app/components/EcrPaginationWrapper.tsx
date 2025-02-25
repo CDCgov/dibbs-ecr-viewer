@@ -71,15 +71,15 @@ const EcrPaginationWrapper = ({
     <div className="main-container height-ecr-library flex-column flex-align-center">
       {children}
       <div className="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center">
-        <div className={"flex-1"}>
+        <div className="flex-1">
           Showing {startIndex}-{endIndex} of {totalCount} eCRs
         </div>
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           maxSlots={6}
-          pathname={""}
-          className={"flex-1"}
+          pathname=""
+          className="flex-1"
           onClickPageNumber={(e, page) => {
             const updatedUserPreferences: UserPreferences = {
               ...userPreferences,
@@ -92,12 +92,10 @@ const EcrPaginationWrapper = ({
             );
           }}
         />
-        <div
-          className={"display-flex flex-align-center flex-1 flex-justify-end"}
-        >
+        <div className="display-flex flex-align-center flex-1 flex-justify-end">
           <Label
             htmlFor="input-select"
-            className={"margin-top-0 margin-right-1025"}
+            className="margin-top-0 margin-right-1025"
           >
             eCRs per page
           </Label>
@@ -105,7 +103,7 @@ const EcrPaginationWrapper = ({
             id="input-select"
             name="input-select"
             value={userPreferences.itemsPerPage}
-            className={"styled width-11075 margin-top-0"}
+            className="styled width-11075 margin-top-0"
             onChange={(e) => {
               const updatedUserPreferences: UserPreferences = {
                 ...userPreferences,
