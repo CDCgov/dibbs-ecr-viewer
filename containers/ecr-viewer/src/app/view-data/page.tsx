@@ -55,7 +55,7 @@ const ECRViewerPage = async ({
       fhirBundle = bundle.fhirBundle;
       mappings = bundle.fhirPathMappings;
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors = {
       status: 500,
       message: error,
