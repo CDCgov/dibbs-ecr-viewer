@@ -21,6 +21,9 @@ import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import SideNav from "./components/SideNav";
 
+import fhirMappings from "./fhirPath";
+console.log({ fhirMappings });
+
 /**
  * Functional component for rendering the eCR Viewer page.
  * @param params react params
@@ -41,7 +44,7 @@ const ECRViewerPage = async ({
     fhirPathMappings: PathMappings;
   };
   let fhirBundle;
-  let mappings;
+  let mappings = fhirMappings;
   let errors;
   try {
     const response = await get_fhir_data(fhirId);
@@ -53,7 +56,7 @@ const ECRViewerPage = async ({
     } else {
       const bundle: ApiResponse = await response.json();
       fhirBundle = bundle.fhirBundle;
-      mappings = bundle.fhirPathMappings;
+      // mappings = bundle.fhirPathMappings;
     }
   } catch (error: any) {
     errors = {

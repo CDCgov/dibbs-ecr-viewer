@@ -11,7 +11,7 @@ export const AZURE_SOURCE = "azure";
  * @returns An object representing the path mappings defined in the YAML configuration file.
  */
 export function loadYamlConfig(): PathMappings {
-  const filePath = path.join(process.cwd(), "src/app/api/fhirPath.yaml");
+  const filePath = path.join(process.cwd(), "src/app/view-data/fhirPath.yaml");
   const fileContents = fs.readFileSync(filePath, "utf8");
   return <PathMappings>yaml.load(fileContents);
 }

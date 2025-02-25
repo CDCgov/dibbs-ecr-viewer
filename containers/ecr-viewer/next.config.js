@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const path = require("path");
 const basePath = "/ecr-viewer";
+const withYaml = require("next-plugin-yaml");
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
@@ -23,4 +24,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = withYaml(withBundleAnalyzer(nextConfig));
