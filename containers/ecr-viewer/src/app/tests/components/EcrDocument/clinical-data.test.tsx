@@ -1,11 +1,5 @@
 import { loadYamlConfig } from "@/app/api/utils";
-import {
-  getMedicationDisplayName,
-  returnHtmlTableContent,
-} from "@/app/view-data/components/common";
-import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
-import { Bundle } from "fhir/r4";
-import { render, screen } from "@testing-library/react";
+import { getMedicationDisplayName } from "@/app/view-data/components/common";
 
 const mappings = loadYamlConfig();
 describe("common tests", () => {
