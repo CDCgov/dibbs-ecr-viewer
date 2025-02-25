@@ -363,12 +363,12 @@ def test_resolve_references_invalid_input():
 
 def test_add_rr_to_ecr():
     with open(
-        "../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_RR.xml"
+        "~/test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_RR.xml"
     ) as fp:
         rr = fp.read()
 
     with open(
-        "../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml"
+        "~/test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml"
     ) as fp:
         ecr = fp.read()
 
@@ -415,13 +415,13 @@ def test_add_rr_to_ecr():
 
 def test_add_rr_to_ecr_rr_already_present(capfd):
     with open(
-        "../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_RR.xml"
+        "~/test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_RR.xml"
     ) as fp:
         rr = fp.read()
 
     # This eICR has already been merged with an RR
     with open(
-        "../../../test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/merged_eICR.xml"
+        "~/test-data/ecr/9408ddce-4dcb-416c-a153-82cce01839e2/merged_eICR.xml"
     ) as fp:
         ecr = fp.read()
 
