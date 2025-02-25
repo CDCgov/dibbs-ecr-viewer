@@ -11,7 +11,7 @@ import {
   PathMappings,
   RenderableNode,
   arrayToElement,
-  getCodeableConceptDisplay,
+  getHumanReadableCodeableConcept,
   noData,
   safeParse,
 } from "@/app/utils/data-utils";
@@ -500,8 +500,7 @@ export const evaluateLabInfoData = (
     const element = (
       <AccordionLabResults
         key={report.id}
-        title={getCodeableConceptDisplay(report.code) ?? "Unknown"}
-        // title={report.code.coding?.find((c: Coding) => c.display)?.display}
+        title={getHumanReadableCodeableConcept(report.code) ?? "Unknown"}
         abnormalTag={checkAbnormalTag(labReportJson)}
         content={content}
         organizationId={organizationId}

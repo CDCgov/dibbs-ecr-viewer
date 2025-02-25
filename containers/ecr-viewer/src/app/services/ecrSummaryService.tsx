@@ -9,7 +9,8 @@ import {
 } from "fhir/r4";
 import {
   evaluateData,
-  getCodeableConceptDisplay,
+  getHumanReadableCodeableConcept,
+  noData,
   PathMappings,
 } from "@/app/utils/data-utils";
 import {
@@ -55,14 +56,15 @@ export const evaluateEcrSummaryPatientDetails = (
     },
     {
       title: "DOB",
-      value:
-        formatDate(evaluate(fhirBundle, fhirPathMappings.patientDOB)[0]) || "",
+      value: formatDate(evaluate(fhirBundle, fhirPathMappings.patientDOB)[0]),
     },
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
       value:
-        patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
+        patientSex && ["Male", "Female"].includes(patientSex)
+          ? patientSex
+          : noData,
     },
     {
       title: "Patient Address",
@@ -172,8 +174,9 @@ export const evaluateEcrSummaryConditionSummary = (
         conditionsList[snomed] = {
           ruleSummaries: new Set(),
           snomedDisplay:
-            getCodeableConceptDisplay(observation?.valueCodeableConcept) ??
-            "Unknown Condition",
+            getHumanReadableCodeableConcept(
+              observation?.valueCodeableConcept,
+            ) ?? "Unknown Condition",
         };
       }
 

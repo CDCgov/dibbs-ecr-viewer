@@ -26,7 +26,7 @@ import * as dateFns from "date-fns";
 import {
   PathMappings,
   evaluateData,
-  getCodeableConceptDisplay,
+  getHumanReadableCodeableConcept,
   noData,
 } from "@/app/utils/data-utils";
 import {
@@ -537,6 +537,7 @@ export const evaluateFacilityData = (
   ];
   return evaluateData(facilityData);
 };
+
 /**
  * Evaluates provider data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing provider data.
@@ -669,7 +670,7 @@ export const evaluateEmergencyContact = (
   return contacts
     .map((contact) => {
       const relationship = toSentenceCase(
-        getCodeableConceptDisplay(contact.relationship?.[0]) ?? "Unknown",
+        getHumanReadableCodeableConcept(contact.relationship?.[0]) ?? "Unknown",
       );
 
       const contactName = contact.name ? formatName(contact.name) : "";
@@ -734,8 +735,7 @@ export const evaluateValue = (
     value = `${data.value ?? ""}${unit ?? ""}`;
   } else if (originalValuePath === "CodeableConcept") {
     const data: CodeableConcept = originalValue;
-    value =
-      data.coding?.[0].display || data.text || data.coding?.[0].code || "";
+    value = getHumanReadableCodeableConcept(data) ?? "";
   } else if (originalValuePath === "Coding") {
     const data: Coding = originalValue;
     value = data?.display || data?.code || "";
@@ -821,7 +821,8 @@ export const evaluateEncounterDiagnosis = (
   });
 
   return conditions
-    .map((condition) => getCodeableConceptDisplay(condition.code))
+    .map((condition) => getHumanReadableCodeableConcept(condition.code))
+    .filter(Boolean)
     .join(", ");
 };
 

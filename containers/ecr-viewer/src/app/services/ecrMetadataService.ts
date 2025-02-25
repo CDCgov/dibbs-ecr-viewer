@@ -6,7 +6,7 @@ import {
 import {
   CompleteData,
   evaluateData,
-  getCodeableConceptDisplay,
+  getHumanReadableCodeableConcept,
   PathMappings,
 } from "@/app/utils/data-utils";
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
@@ -54,8 +54,8 @@ export const evaluateEcrMetadata = (
 
   for (const condition of rrDetails) {
     const name =
-      getCodeableConceptDisplay(condition.valueCodeableConcept) ||
-      "Unknown Condition"; // Default to "Unknown Condition" if no name is found, this should almost never happen, but it would still be a valid eCR.
+      getHumanReadableCodeableConcept(condition.valueCodeableConcept) ??
+      "Unknown Condition";
     const triggers = evaluateRuleSummaries(condition);
 
     if (!reportableConditionsList[name]) {

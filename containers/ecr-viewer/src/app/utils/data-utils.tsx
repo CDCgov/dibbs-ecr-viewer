@@ -169,14 +169,18 @@ export const range = (start: number, end?: number, step: number = 1) => {
 };
 
 /**
- * Returns the display value of a CodeableConcept.
+ * Attempts to return a human-readable display value for a CodeableConcept. It will return the first
+ * available value in the following order:
+ * 1) `undefined` if the `CodeableConcept` is falsy
+ * 2) `CodeableConcept.text`
+ * 3) value of the first `coding` with a `display` value
+ * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
+ * 6) `undefined`
  * @param codeableConcept - The CodeableConcept to get the display value from.
- * @param system - The system to search for in the CodeableConcept's coding array.
- * @returns - The display value of the CodeableConcept.
+ * @returns - The human-readable display value of the CodeableConcept.
  */
-export const getCodeableConceptDisplay = (
+export const getHumanReadableCodeableConcept = (
   codeableConcept: CodeableConcept | undefined,
-  system?: string,
 ) => {
   if (!codeableConcept) {
     return undefined;
@@ -184,30 +188,19 @@ export const getCodeableConceptDisplay = (
 
   const { coding, text } = codeableConcept;
 
-  // 1) If a system is specified, search for a matching coding.
-  if (system) {
-    const matchingCoding = coding?.find((c) => c.system === system);
-    if (matchingCoding?.display) {
-      return matchingCoding.display;
-    }
-  }
-
-  // 2) Fallback to the CodeableConcept's text
   if (text) {
     return text;
   }
 
-  // 3) If no text, try the first coding's display
   const firstCodingWithDisplay = coding?.find((c) => c.display);
   if (firstCodingWithDisplay?.display) {
     return firstCodingWithDisplay.display;
   }
 
-  // 4) If no coding, return the first coding's code
-  if (coding?.[0]?.code) {
-    return coding[0].code;
+  const firstCodingWithCode = coding?.find((c) => c.code && c.system);
+  if (firstCodingWithCode?.code && firstCodingWithCode?.system) {
+    return `${firstCodingWithCode.code} (${firstCodingWithCode.system})`;
   }
 
-  // 5) Nothing found, return fallback
   return undefined;
 };
