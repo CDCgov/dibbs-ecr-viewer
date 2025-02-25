@@ -107,11 +107,14 @@ export const evaluatePatientEthnicity = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
-  const ethnicity: string = evaluate(fhirBundle, mappings.patientEthnicity)[0];
-  const ethnicityDetailed = evaluate(
+  const ethnicity: string = evaluateValue(
+    fhirBundle,
+    mappings.patientEthnicity,
+  );
+  const ethnicityDetailed = evaluateValue(
     fhirBundle,
     mappings.patientEthnicityDetailed,
-  )[0];
+  );
 
   return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
 };
