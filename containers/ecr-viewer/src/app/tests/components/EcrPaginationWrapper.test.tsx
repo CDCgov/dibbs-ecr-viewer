@@ -15,11 +15,16 @@ jest.mock("next/navigation", () => {
   };
 });
 
+const mockSetter = jest.fn();
+jest.mock("js-cookie", () => ({
+  set: (...a) => mockSetter(...a),
+}));
+
 describe("EcrPaginationWrapper", () => {
   let container: HTMLElement;
   beforeAll(() => {
     container = render(
-      <EcrPaginationWrapper totalCount={100}>
+      <EcrPaginationWrapper totalCount={100} itemsPerPage={25} currentPage={1}>
         <br />
       </EcrPaginationWrapper>,
     ).container;
@@ -43,7 +48,7 @@ describe("Pagination for EcrPaginationWrapper", () => {
 
   it("should have 4 pages when there are 100 and default page length is used", async () => {
     render(
-      <EcrPaginationWrapper totalCount={100}>
+      <EcrPaginationWrapper totalCount={100} itemsPerPage={25} currentPage={1}>
         <br />
       </EcrPaginationWrapper>,
     );
@@ -56,20 +61,9 @@ describe("Pagination for EcrPaginationWrapper", () => {
     expect(screen.getByText("Showing 1-25 of 100 eCRs"));
   });
 
-  it("should only update the route once on load", () => {
-    render(
-      <EcrPaginationWrapper totalCount={100}>
-        <br />
-      </EcrPaginationWrapper>,
-    );
-    expect(mockPush).toHaveBeenCalledExactlyOnceWith("?itemsPerPage=25&page=1");
-  });
-
   it("should display 50 per page when items per page is set to 50", async () => {
-    jest.spyOn(Storage.prototype, "setItem");
-
     render(
-      <EcrPaginationWrapper totalCount={100}>
+      <EcrPaginationWrapper totalCount={100} itemsPerPage={50} currentPage={1}>
         <br />
       </EcrPaginationWrapper>,
     );
@@ -78,59 +72,14 @@ describe("Pagination for EcrPaginationWrapper", () => {
     expect(screen.getByText("1"));
     expect(screen.getByText("2"));
     expect(screen.getByText("Showing 1-50 of 100 eCRs"));
-    expect(mockPush).toHaveBeenLastCalledWith("?itemsPerPage=50&page=1");
-  });
-
-  it("should update local storage when items per page is set to 50", async () => {
-    jest.spyOn(Storage.prototype, "setItem");
-    render(
-      <EcrPaginationWrapper totalCount={100}>
-        <br />
-      </EcrPaginationWrapper>,
-    );
-
-    await user.selectOptions(screen.getByTestId("Select"), ["50"]);
-
-    expect(localStorage.setItem).toHaveBeenCalledWith(
-      "userPreferences",
-      JSON.stringify({ itemsPerPage: 50, page: 1 }),
-    );
-  });
-
-  it("should load 50 items per page if 50 was previously set", () => {
-    const spyLocalStorage = jest.spyOn(Storage.prototype, "getItem");
-    spyLocalStorage.mockImplementationOnce(() =>
-      JSON.stringify({ itemsPerPage: 50, page: 1 }),
-    );
-    render(
-      <EcrPaginationWrapper totalCount={100}>
-        <br />
-      </EcrPaginationWrapper>,
-    );
-
-    expect(screen.getByText("Showing 1-50 of 100 eCRs")).toBeInTheDocument();
-    expect(mockPush).toHaveBeenLastCalledWith("?itemsPerPage=50&page=1");
-  });
-
-  it("should load 50 items per page if 50 was previously set and pages wasn't", () => {
-    const spyLocalStorage = jest.spyOn(Storage.prototype, "getItem");
-    spyLocalStorage.mockImplementationOnce(() =>
-      JSON.stringify({ itemsPerPage: 50 }),
-    );
-    render(
-      <EcrPaginationWrapper totalCount={100}>
-        <br />
-      </EcrPaginationWrapper>,
-    );
-
-    expect(screen.getByText("Showing 1-50 of 100 eCRs")).toBeInTheDocument();
-    expect(mockPush).toHaveBeenLastCalledWith("?itemsPerPage=50&page=1");
+    expect(mockSetter).toHaveBeenLastCalledWith("itemsPerPage", "50", {
+      expires: 1000,
+    });
   });
 
   it("should display 51-51 on third page", async () => {
-    mockSearchParams.set("page", "3");
     render(
-      <EcrPaginationWrapper totalCount={51}>
+      <EcrPaginationWrapper totalCount={51} itemsPerPage={25} currentPage={3}>
         <br />
       </EcrPaginationWrapper>,
     );
@@ -140,7 +89,7 @@ describe("Pagination for EcrPaginationWrapper", () => {
 
   it("should display 1 page when totalCount is 0", async () => {
     render(
-      <EcrPaginationWrapper totalCount={0}>
+      <EcrPaginationWrapper totalCount={0} itemsPerPage={25} currentPage={1}>
         <br />
       </EcrPaginationWrapper>,
     );
@@ -151,7 +100,7 @@ describe("Pagination for EcrPaginationWrapper", () => {
 
   it("should display 0-0 when totalCount is 0", async () => {
     render(
-      <EcrPaginationWrapper totalCount={0}>
+      <EcrPaginationWrapper totalCount={0} itemsPerPage={25} currentPage={1}>
         <br />
       </EcrPaginationWrapper>,
     );
@@ -161,7 +110,7 @@ describe("Pagination for EcrPaginationWrapper", () => {
 
   it("the dropdown should only have 25, 50, 75, and 100 as options", async () => {
     render(
-      <EcrPaginationWrapper totalCount={0}>
+      <EcrPaginationWrapper totalCount={0} itemsPerPage={25} currentPage={1}>
         <br />
       </EcrPaginationWrapper>,
     );
