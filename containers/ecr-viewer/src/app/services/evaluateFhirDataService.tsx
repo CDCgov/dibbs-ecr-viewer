@@ -88,15 +88,13 @@ export const evaluatePatientRace = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
-  const raceCat: string = evaluate(fhirBundle, mappings.patientRace)[0];
-  const raceDetailed: string =
-    evaluate(fhirBundle, mappings.patientRaceDetailed)[0] ?? "";
+  const raceCat: string = evaluateValue(fhirBundle, mappings.patientRace);
+  const raceDetailed: string = evaluateValue(
+    fhirBundle,
+    mappings.patientRaceDetailed,
+  );
 
-  if (raceDetailed) {
-    return raceCat + "\n" + raceDetailed;
-  } else {
-    return raceCat;
-  }
+  return [raceCat, raceDetailed].filter(Boolean).join("\n");
 };
 
 /**
@@ -528,7 +526,7 @@ export const evaluateFacilityData = (
     },
     {
       title: "Facility Type",
-      value: evaluate(fhirBundle, mappings.facilityType)[0],
+      value: evaluateValue(fhirBundle, mappings.facilityType),
     },
     {
       title: "Facility ID",

@@ -9,10 +9,10 @@ patientDOB: "Bundle.entry.resource.where(resourceType = 'Patient').birthDate"
 patientVitalStatus: "Bundle.entry.resource.where(resourceType = 'Patient').deceasedBoolean"
 patientDOD: "Bundle.entry.resource.where(resourceType = 'Patient').deceasedDate"
 patientGender: "Bundle.entry.resource.where(resourceType = 'Patient').gender"
-patientRace: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'ombCategory').valueCoding.display"
-patientRaceDetailed: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'detailed').valueCoding.display"
-patientEthnicity: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'ombCategory').valueCoding.display"
-patientEthnicityDetailed: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'detailed').valueCoding.display"
+patientRace: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'ombCategory').value"
+patientRaceDetailed: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'detailed').value"
+patientEthnicity: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'ombCategory').value"
+patientEthnicityDetailed: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'detailed').value"
 patientCommunication: "Bundle.entry.resource.where(resourceType = 'Patient').communication"
 patientTribalAffiliation: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url='TribeName').value"
 patientEmergencyContact: "Bundle.entry.resource.where(resourceType = 'Patient').contact"
@@ -51,7 +51,7 @@ facilityContactAddress: "Bundle.entry.resource.where(resourceType = 'Encounter')
 facilityLocation: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].location.reference"
 facilityName: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].location.display"
 facilityAddress: "Bundle.entry.resource.where(resourceType = 'Location')[0].address"
-facilityType: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').valueCodeableConcept.coding[0].display"
+facilityType: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').value"
 
 compositionEncounterRef: "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
 encounterIndividualRef: "Encounter.participant.where(type.coding.code = 'ATND').individual.reference"
@@ -60,7 +60,7 @@ encounterParticipants: "Encounter.participant"
 rrDetails: "Bundle.entry.resource.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')"
 
 # Clinical Data
-clinicalReasonForVisit: "Bundle.entry.resource.section.where(title.lower() = 'reason for visit')[0].extension[0].valueString"
+clinicalReasonForVisit: "Bundle.entry.resource.section.where(title.lower() = 'reason for visit')[0].extension[0].value"
 
 # Vitals
 patientHeight: "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.code='8302-2').first().valueQuantity.value"

@@ -516,7 +516,7 @@ export const evaluateClinicalData = (
   const reasonForVisitData: DisplayDataProps[] = [
     {
       title: "Reason for Visit",
-      value: evaluate(fhirBundle, mappings.clinicalReasonForVisit)[0],
+      value: evaluateValue(fhirBundle, mappings.clinicalReasonForVisit),
     },
   ];
 
