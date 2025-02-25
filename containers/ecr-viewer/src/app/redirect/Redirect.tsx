@@ -41,14 +41,14 @@ export const Redirect = ({ provider }: RedirectProps) => {
         </p>
         <br />
         <Button
-          className={`redirect-button`}
+          className="redirect-button"
           type="button"
           onClick={async () => {
             await signIn(provider.id);
           }}
         >
           Log in via {provider.name}
-          <ArrowForward aria-hidden size={3} />
+          <ArrowForward aria-hidden={true} size={3} />
         </Button>
       </div>
     </div>
