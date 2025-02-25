@@ -1,5 +1,5 @@
 import { BlobServiceClient } from "@azure/storage-blob";
-import { getDB } from "../services/postgres_db";
+import { getDB } from "../../data/db/postgres_db";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
@@ -7,7 +7,7 @@ import sql from "mssql";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 import { s3Client } from "../services/s3Client";
-import { get_pool } from "../services/sqlserver_db";
+import { get_pool } from "../../data/db/sqlserver_db";
 
 interface SaveResponse {
   message: string;

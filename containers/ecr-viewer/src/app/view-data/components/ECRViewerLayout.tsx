@@ -24,13 +24,13 @@ export const ECRViewerLayout = ({
     env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
 
   return (
-    <main className={"width-full minw-main"}>
+    <main className="width-full minw-main">
       <Header />
       {isNonIntegratedViewer && (
         <PatientBanner name={patientName} dob={patientDOB} />
       )}
       <div className="main-container">
-        <div className={"width-main padding-main"}>
+        <div className="width-main padding-main">
           <div className="content-wrapper">{children}</div>
         </div>
       </div>

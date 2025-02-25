@@ -1,14 +1,6 @@
-import { PathMappings } from "../../utils/data-utils";
-import Demographics from "./Demographics";
-import SocialHistory from "./SocialHistory";
-import UnavailableInfo from "./UnavailableInfo";
-import EcrMetadata from "./EcrMetadata";
-import EncounterDetails from "./Encounter";
-import ClinicalInfo from "./ClinicalInfo";
-import { Bundle } from "fhir/r4";
 import React from "react";
-import LabInfo from "@/app/view-data/components/LabInfo";
-import { evaluateEcrMetadata } from "../../services/ecrMetadataService";
+import { Bundle } from "fhir/r4";
+import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
 import {
   evaluateDemographicsData,
@@ -17,31 +9,30 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
-import { evaluateClinicalData } from "./common";
-import { Accordion } from "@trussworks/react-uswds";
+import { evaluateClinicalData } from "./clinical-data";
 import { evaluate } from "@/app/utils/evaluate";
+import { PathMappings } from "@/app/utils/data-utils";
 import { toKebabCase } from "@/app/utils/format-utils";
+import { AccordionItem } from "@/app/view-data/types";
 
-export type AccordionItemProps = React.ComponentProps<
-  typeof Accordion
->["items"][0];
-
-type AccordionContentProps = {
-  fhirBundle: Bundle;
-  fhirPathMappings: PathMappings;
-};
+import Demographics from "@/app/view-data/components/Demographics";
+import SocialHistory from "@/app/view-data/components/SocialHistory";
+import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
+import EcrMetadata from "@/app/view-data/components/EcrMetadata";
+import EncounterDetails from "@/app/view-data/components/Encounter";
+import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
+import LabInfo from "@/app/view-data/components/LabInfo";
 
 /**
  * Functional component for an accordion container displaying various sections of eCR information.
- * @param props - Props containing FHIR bundle and path mappings.
- * @param props.fhirBundle - The FHIR bundle containing patient information.
- * @param props.fhirPathMappings - The path mappings used to extract information from the FHIR bundle.
+ * @param fhirBundle - The FHIR bundle containing patient information.
+ * @param fhirPathMappings - The path mappings used to extract information from the FHIR bundle.
  * @returns The JSX element representing the accordion container.
  */
-const AccordionContent: React.FC<AccordionContentProps> = ({
-  fhirBundle,
-  fhirPathMappings,
-}) => {
+export const getEcrDocumentAccordionItems = (
+  fhirBundle: Bundle,
+  fhirPathMappings: PathMappings,
+): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(
     fhirBundle,
     fhirPathMappings,
@@ -79,7 +70,7 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
     );
   };
 
-  const accordionItems: AccordionItemProps[] = [
+  const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
       content: (
@@ -235,13 +226,5 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
     };
   });
 
-  return (
-    <Accordion
-      className="info-container"
-      items={accordionItems}
-      multiselectable
-    />
-  );
+  return accordionItems;
 };
-
-export default AccordionContent;

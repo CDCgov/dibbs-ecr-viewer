@@ -27,8 +27,8 @@ import {
   evaluateClinicalData,
   returnCareTeamTable,
   returnPlannedProceduresTable,
-  returnProblemsTable,
-} from "../view-data/components/common";
+} from "../view-data/components/EcrDocument/clinical-data";
+import { returnProblemsTable } from "../view-data/components/common";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   TooltipDiv,
@@ -403,7 +403,7 @@ describe("Utils", () => {
           "C35z0HsExV59WKHHsBgupEXcHnxyp4rtlfmhWA067Go52PJvzeNgoKU4h27JWobzjWAQ6U9WdEboVvFkkp2SpSkUzG0YR38Ijl3vYpfumtJMFBLvFkPrEkjEbo7UF",
         ];
         const FiveHundredOneChars = [
-          <ul key={"1234"}>
+          <ul key="1234">
             <li>{OneHundredTwentyFiveCharStrings[0]}</li>
             <li>{OneHundredTwentyFiveCharStrings[1]}</li>
             <li>{OneHundredTwentyFiveCharStrings[2]}</li>
@@ -449,7 +449,7 @@ describe("Utils", () => {
           "C35z0HsExV59WKHHsBgupEXcHnxyp4rtlfmhWA067Go52PJvzeNgoKU4h27JWobzjWAQ6U9WdEboVvFkkp2SpSkUzG0YR38Ijl3vYpfumtJMFBLvFkPrEkjEbo7UF",
         ];
         const LongReactNode = [
-          <ul key={"1234"}>
+          <ul key="1234">
             <li>{OneHundredTwentyFiveCharStrings[0]}</li>
             <li>{OneHundredTwentyFiveCharStrings[1]}</li>
             <li>{OneHundredTwentyFiveCharStrings[2]}</li>
@@ -479,7 +479,7 @@ describe("Utils", () => {
           "C35z0HsExV59WKHHsBgupEXcHnxyp4rtlfmhWA067Go52PJvzeNgoKU4h27JWobzjWAQ6U9WdEboVvFkkp2SpSkUzG0YR38Ijl3vYpfumtJMFBLvFkPrEkjEbo7UF",
         ];
         const FiveHundredOneChars = [
-          <ul key={"1234"}>
+          <ul key="1234">
             <li>{OneHundredTwentyFiveCharStrings[0]}</li>
             <li>{OneHundredTwentyFiveCharStrings[1]}</li>
             <li>{OneHundredTwentyFiveCharStrings[2]}</li>
@@ -523,11 +523,7 @@ describe("Utils", () => {
   describe("ToolTips", () => {
     it("should return the tool tip with the custom jsx", () => {
       render(
-        <Tooltip
-          label={"test label"}
-          asCustom={TooltipDiv}
-          className="testClass"
-        >
+        <Tooltip label="test label" asCustom={TooltipDiv} className="testClass">
           Test child
         </Tooltip>,
       );
@@ -536,7 +532,7 @@ describe("Utils", () => {
       expect(tip.textContent).toInclude("Test child");
     });
     it("should make a tooltip", () => {
-      render(<ToolTipElement toolTip={"Tooltip"}>Item Title</ToolTipElement>);
+      render(<ToolTipElement toolTip="Tooltip">Item Title</ToolTipElement>);
       const tip = screen.getByTestId("triggerElement");
       expect(tip.className).toInclude("short-tooltip");
       expect(tip.textContent).toInclude("Item Title");

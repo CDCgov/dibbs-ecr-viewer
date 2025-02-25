@@ -60,51 +60,47 @@ exports[`EcrPaginationWrapper should match snapshot 1`] = `
           <li
             class="usa-pagination__item usa-pagination__page-no"
           >
-            <button
+            <a
               aria-current="page"
               aria-label="Page 1"
-              class="usa-button usa-button--unstyled usa-pagination__button text-bold usa-current"
-              data-testid="pagination-page-number"
-              type="button"
+              class="usa-pagination__button text-bold usa-current"
+              href="?page=1"
             >
               1
-            </button>
+            </a>
           </li>
           <li
             class="usa-pagination__item usa-pagination__page-no"
           >
-            <button
+            <a
               aria-label="Page 2"
-              class="usa-button usa-button--unstyled usa-pagination__button text-bold"
-              data-testid="pagination-page-number"
-              type="button"
+              class="usa-pagination__button text-bold"
+              href="?page=2"
             >
               2
-            </button>
+            </a>
           </li>
           <li
             class="usa-pagination__item usa-pagination__page-no"
           >
-            <button
+            <a
               aria-label="Page 3"
-              class="usa-button usa-button--unstyled usa-pagination__button text-bold"
-              data-testid="pagination-page-number"
-              type="button"
+              class="usa-pagination__button text-bold"
+              href="?page=3"
             >
               3
-            </button>
+            </a>
           </li>
           <li
             class="usa-pagination__item usa-pagination__page-no"
           >
-            <button
+            <a
               aria-label="Page 4"
-              class="usa-button usa-button--unstyled usa-pagination__button text-bold"
-              data-testid="pagination-page-number"
-              type="button"
+              class="usa-pagination__button text-bold"
+              href="?page=4"
             >
               4
-            </button>
+            </a>
           </li>
           <li
             class="usa-pagination__item usa-pagination__arrow"
