@@ -18,7 +18,7 @@ interface RedirectProps {
  * @returns A styled div with prompt message and a login button that redirects users to Azure AD authentication.
  */
 export const Redirect = ({ provider }: RedirectProps) => {
-  console.log(provider)
+  console.log(provider);
   return (
     <div
       className="position-relative text-white"
