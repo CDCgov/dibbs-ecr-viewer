@@ -1,8 +1,9 @@
 # Test Data Files
 
 ### FHIR Bundles
+
 | File Name                                                                    | Description                                                                                                                                                                                                          | Size (lines) |
-|------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | [BundleCareTeam](fhir/BundleCareTeam.json)                                   | This FHIR bundle contains a Care Team of 2 physicians (one of whom is the admitting physician)                                                                                                                       | 170          |
 | [BundleClinicalInfo](fhir/BundleClinicalInfo.json)                           | This FHIR bundle contains a composition, a number of observations (organization, 5 x immunizations, results related to height and weight), 2 x active conditions, procedure, care plan, and medications administered | 1100         |
 | [BundleEcrMetadata](fhir/BundleEcrMetadata.json)                             | This FHIR bundle contains a composition, practitioner, organization, conditions (COVID-19, SARS-CoV-2, Hepatitis C) and some encounter information                                                                   | 900          |
@@ -26,10 +27,10 @@
 | [patient_bundle_to_link_with_mpi](fhir/patient_bundle_to_link_with_mpi.json) | This FHIR bundle contains very contrived info for a patient, currently in use by Record Linkage                                                                                                                      | 500          |
 | [sample_ecr](fhir/sample_ecr.json)                                           | This FHIR bundle contains a composition, an encounter, medical team info, and some observations of conditions and labs                                                                                               | 1200         |
 
+### eCRs
 
-### eCRs 
 | File Name                                                                                                                                                                  | Description                                                             | Size (lines) |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|--------------|
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------ |
 | [1dd10047-2207-4eac-a993-0f706c88be5d](ecr/1dd10047-2207-4eac-a993-0f706c88be5d/CDA_eICR.xml)                                                                              | eICR of Luke Skywalker contains lots of lab results                     | 2000         |
 | [9408ddce-4dcb-416c-a153-82cce01839e2](ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml)                                                                              | Empty eICR, RR has contents                                             | 600          |
 | [ecr_sample_input_bad](ecr/ecr_sample_input_bad/ecr_sample_input_bad.xml)                                                                                                  | eICR currently used in validation service, has some sort of bad input   | 2000         |
@@ -44,9 +45,10 @@
 | [CDA_eICR.xml](ecr/validation/CDA_eICR.xml)                                                                                                                                | empty eICR with RR                                                      | 2000         |
 
 ### ZIP Files
-| File Name                                    | Description                                                                                                  | Size   |
-|----------------------------------------------|--------------------------------------------------------------------------------------------------------------|--------|
-| [eICR_RR_combo.zip](zip/eICR_RR_combo.zip)   | A ZIP file of [9408ddce-4dcb-416c-a153-82cce01839e2](ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml)  | 11.7kb |
-| [empty.zip](zip/empty.zip)                   | A ZIP file containing no eICR or RR (contains a postman collection).                                         | 56.6kb |
-| [no_eicr.zip](zip/no_eicr.zip)               | A ZIP file containing no eICR or RR (contains a text file).                                                  | 208b   |
-| [test_zip.zip](zip/test_zip.zip)             | A ZIP file containing an eICR with ID c34356e3-e6e7-4905-b239-c26c6e493921                                   | 5.78kb |
+
+| File Name                                  | Description                                                                                                 | Size   |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- | ------ |
+| [eICR_RR_combo.zip](zip/eICR_RR_combo.zip) | A ZIP file of [9408ddce-4dcb-416c-a153-82cce01839e2](ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml) | 11.7kb |
+| [empty.zip](zip/empty.zip)                 | A ZIP file containing no eICR or RR (contains a postman collection).                                        | 56.6kb |
+| [no_eicr.zip](zip/no_eicr.zip)             | A ZIP file containing no eICR or RR (contains a text file).                                                 | 208b   |
+| [test_zip.zip](zip/test_zip.zip)           | A ZIP file containing an eICR with ID c34356e3-e6e7-4905-b239-c26c6e493921                                  | 5.78kb |
