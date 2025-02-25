@@ -1,14 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import HomePage from "@/app/page";
-import {
-  getTotalEcrCount,
-  listEcrData,
-} from "@/app/services/listEcrDataService";
+import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { cookies } from "next/headers";
 import { DEFAULT_ITEMS_PER_PAGE } from "../constants";
 
-jest.mock("../services/listEcrDataService");
+jest.mock("../services/listEcrDataService", () => {
+  return {
+    getTotalEcrCount: jest.fn().mockResolvedValue(0),
+  };
+});
 jest.mock("../data/conditions");
 jest.mock("../components/Filters");
 jest.mock("../components/LibrarySearch");
@@ -41,8 +42,6 @@ describe("Home Page", () => {
   });
   it("env true value, should show the homepage", async () => {
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
-    const mockData = [{ id: 1, name: "Test Ecr" }];
-    (listEcrData as jest.Mock).mockResolvedValue(mockData);
     render(await HomePage({ searchParams: {} }));
     expect(getTotalEcrCount).toHaveBeenCalledOnce();
     expect(screen.queryByText("Page not found")).not.toBeInTheDocument();
@@ -60,8 +59,6 @@ describe("Reading query params on home page", () => {
     };
 
     (returnParamDates as jest.Mock).mockReturnValue(mockReturnDates);
-    const mockData = [{ id: 1, name: "Test Ecr" }];
-    (listEcrData as jest.Mock).mockResolvedValue(mockData);
 
     render(await HomePage({ searchParams }));
 
@@ -75,8 +72,6 @@ describe("Reading query params on home page", () => {
 describe("Reading cookie for itemsPerPage", () => {
   it("should use default if no query param or cookie", async () => {
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
-    const mockData = [{ id: 1, name: "Test Ecr" }];
-    (listEcrData as jest.Mock).mockResolvedValue(mockData);
 
     render(await HomePage({ searchParams: {} }));
 
@@ -87,8 +82,6 @@ describe("Reading cookie for itemsPerPage", () => {
 
   it("should use cookie before default", async () => {
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
-    const mockData = [{ id: 1, name: "Test Ecr" }];
-    (listEcrData as jest.Mock).mockResolvedValue(mockData);
     (cookies as jest.Mock).mockReturnValue({
       get: jest.fn().mockReturnValue({ value: "2312" }),
     });
@@ -101,8 +94,6 @@ describe("Reading cookie for itemsPerPage", () => {
   it("should use query param if set", async () => {
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
     const itemsPerPage = "432190";
-    const mockData = [{ id: 1, name: "Test Ecr" }];
-    (listEcrData as jest.Mock).mockResolvedValue(mockData);
     (cookies as jest.Mock).mockReturnValue({
       get: jest.fn().mockReturnValue({ value: "2312" }),
     });
