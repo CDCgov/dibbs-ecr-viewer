@@ -322,11 +322,13 @@
             <paragraph>Your organization electronically submitted an initial case report
               to determine if reporting to public health is needed for a
               patient.</paragraph>
-            <paragraph>"Coronavirus infection (disorder)" is reportable to "Senate District Health
-              Department". The initial case report was sent to "Senate District Health Department".
-              Additional information may be required for this report.<br /></paragraph>
+            <paragraph>"Disease caused by severe acute respitory syndrome cornavirus 2" is
+              reportable to "Senate District Health Department". The initial case report was sent to
+              "Senate District Health Department". Additional information may be required for this
+              report.<br /></paragraph>
             <paragraph>
-              <content styleCode="Bold">"Coronavirus infection (disorder)" for
+              <content styleCode="Bold">"Disease caused by severe acute respitory syndrome
+                cornavirus 2" for
                 "Senate District Health Department" </content>
             </paragraph>
             <paragraph>Reporting is required immediately. Reporting to this Public Health Agency is
@@ -387,9 +389,10 @@
                       codeSystem="2.16.840.1.113883.6.1"
                       codeSystemName="LOINC" displayName="Condition" />
                   </code>
-                  <value code="186747009" codeSystem="2.16.840.1.113883.6.96"
+                  <value code="840539006" codeSystem="2.16.840.1.113883.6.96"
                     codeSystemName="SNOMED CT"
-                    displayName="Coronavirus infection (disorder)" xsi:type="CD" />
+                    displayName="Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+                    xsi:type="CD" />
                   <entryRelationship typeCode="COMP">
                     <organizer classCode="CLUSTER" moodCode="EVN">
                       <templateId extension="2017-04-01"

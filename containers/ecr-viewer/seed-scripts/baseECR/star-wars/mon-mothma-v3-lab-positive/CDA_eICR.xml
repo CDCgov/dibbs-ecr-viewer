@@ -370,9 +370,10 @@
                             </tr>
                             <tr>
                               <td>symptom</td>
-                              <td>Coronavirus infection (disorder)</td>
+                              <td>Disease caused by severe acute respiratory syndrome coronavirus 2
+                                (disorder)</td>
                               <td>02/16/2025</td>
-                              <td>186747009</td>
+                              <td>840539006</td>
                               <td>SNOMED-CT</td>
                               <td>2.16.840.1.114222.4.11.7508</td>
                               <td>20250216</td>

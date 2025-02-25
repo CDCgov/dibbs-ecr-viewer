@@ -16,7 +16,7 @@
   <!-- Document Code -->
   <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" displayName="Public Health Case Report" />
   <title>Initial Public Health Case Report</title>
-  <effectiveTime value="20161107094421-0500" />
+  <effectiveTime value="202502250132-0000" />
   <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
   <languageCode code="en-US" />
   <setId extension="71b065e4-6339-45cd-88fa-a6ab3fe4946d" root="2.16.840.1.113883.19.5.99999.19" />
@@ -260,7 +260,7 @@
                   <td>LOINC</td>
                   <td>2.16.840.1.114222.4.11.7508</td>
                   <td>19/05/2016</td>
-                  <td>NOV 7, 2016</td>
+                  <td>FEB 25, 2025</td>
                 </tr>
               </tbody>
             </table>
@@ -512,7 +512,7 @@
                 <tr>
                   <td>Zika virus envelope (E) gene [Presence] in Serum by Probe and target
                     amplification method</td>
-                  <td>NOV 7, 2016 to NOV 7, 2016</td>
+                  <td>FEB 25, 2025 to FEB 25, 2025</td>
                 </tr>
                 <tr>
                   <td>
@@ -542,7 +542,7 @@
                               <td>19/05/2016</td>
                               <td>Positive</td>
                               <td>High</td>
-                              <td>NOV 7, 2016</td>
+                              <td>FEB 25, 2025</td>
                               <td>Abnormal</td>
                             </tr>
                           </tbody>
@@ -565,8 +565,8 @@
                 displayName="Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method" />
               <statusCode code="completed" />
               <effectiveTime>
-                <low value="20161107" />
-                <high value="20161107" />
+                <low value="20250225" />
+                <high value="20250225" />
               </effectiveTime>
               <component>
                 <!-- This observation is a trigger code final result observation only the code is a
@@ -585,7 +585,7 @@
                     sdtc:valueSet="2.16.840.1.114222.4.11.7508"
                     sdtc:valueSetVersion="19/05/2016" />
                   <statusCode code="completed" />
-                  <effectiveTime value="20161107" />
+                  <effectiveTime value="20250207" />
                   <value xsi:type="CD" codeSystem="2.16.840.1.113883.6.96"
                     codeSystemName="SNOMED CT" code="10828004" displayName="Positive" />
                   <interpretationCode code="A" displayName="Abnormal"
