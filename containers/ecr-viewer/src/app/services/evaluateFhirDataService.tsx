@@ -670,13 +670,11 @@ export const evaluateEmergencyContact = (
   return contacts
     .map((contact) => {
       const relationship = toSentenceCase(
-        getHumanReadableCodeableConcept(contact.relationship?.[0]) ?? "Unknown",
+        getHumanReadableCodeableConcept(contact.relationship?.[0]),
       );
 
       const contactName = contact.name ? formatName(contact.name) : "";
-
       const address = contact.address ? formatAddress(contact.address) : "";
-
       const phoneNumbers = formatContactPoint(contact.telecom);
 
       return [relationship, contactName, address, phoneNumbers]
