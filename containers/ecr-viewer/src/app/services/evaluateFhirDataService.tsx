@@ -107,16 +107,13 @@ export const evaluatePatientEthnicity = (
   fhirBundle: Bundle,
   mappings: PathMappings,
 ) => {
-  const ethnicity: string =
-    evaluate(fhirBundle, mappings.patientEthnicity)[0] ?? "";
-  const ethnicityDetailed =
-    evaluate(fhirBundle, mappings.patientEthnicityDetailed)[0] ?? "";
+  const ethnicity: string = evaluate(fhirBundle, mappings.patientEthnicity)[0];
+  const ethnicityDetailed = evaluate(
+    fhirBundle,
+    mappings.patientEthnicityDetailed,
+  )[0];
 
-  if (ethnicityDetailed) {
-    return ethnicity + "\n" + ethnicityDetailed;
-  } else {
-    return ethnicity;
-  }
+  return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
 };
 
 /**
