@@ -103,7 +103,7 @@ export const evaluateEcrMetadata = (
     custodianRef,
   );
 
-  const eicrReleaseVersion = (fhirBundle: any, mappings: any) => {
+  const eicrReleaseVersion = (fhirBundle: Bundle, mappings: PathMappings) => {
     const releaseVersion = evaluate(fhirBundle, mappings.eicrReleaseVersion)[0];
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
