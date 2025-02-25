@@ -131,7 +131,7 @@ export const get_azure = async (
       "Failed to download the FHIR data from Azure Blob Storage:",
       error,
     );
-    if (error.statusCode === 404) {
+    if (error?.statusCode === 404) {
       return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
     } else {
       return { payload: { message: error.message }, status: 500 };
