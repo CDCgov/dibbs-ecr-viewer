@@ -8,7 +8,6 @@ import { BundleExtendedMetadata, BundleMetadata } from "./types";
 import { s3Client } from "../services/s3Client";
 import { db } from "../services/database";
 
-
 interface SaveResponse {
   message: string;
   status: number;
