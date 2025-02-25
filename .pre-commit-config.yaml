@@ -44,7 +44,7 @@ ci:
   autofix_prs: true
   autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: monthly
-  skip: []
+  skip: [tsc] # needs install, plus already covered by other ci
   submodules: false
 exclude: |
   (?x)^(
