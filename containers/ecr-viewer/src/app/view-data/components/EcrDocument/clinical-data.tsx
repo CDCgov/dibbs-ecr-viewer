@@ -241,6 +241,8 @@ export const returnCareTeamTable = (
   careTeamParticipants.forEach((entry) => {
     if (entry?.period) {
       const { start, end } = entry.period;
+      // TODO: Revisit
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (entry.period as any).text = formatStartEndDate(start, end);
     }
 
@@ -253,6 +255,8 @@ export const returnCareTeamTable = (
       (nameObject) => nameObject.family,
     );
     if (entry.member) {
+      // TODO: Revisit
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (entry.member as any).name = formatName(practitionerNameObj);
     }
   });

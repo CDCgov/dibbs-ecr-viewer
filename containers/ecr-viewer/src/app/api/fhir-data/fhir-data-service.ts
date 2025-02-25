@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import {
   BlobClient,
   BlobDownloadResponseParsed,
@@ -16,6 +16,8 @@ import { s3Client } from "../services/s3Client";
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
 type FhirDataResponse = {
+  // TODO: Revisit
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: { fhirBundle: any } | { message: string };
   status: number;
 };
@@ -75,13 +77,18 @@ export const get_s3 = async (
     const content = await streamToJson(Body);
 
     return { payload: { fhirBundle: content }, status: 200 };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("S3 GetObject error:", error);
-    if (error?.Code === "NoSuchKey") {
+
+    if (error instanceof S3ServiceException && error.name === "NoSuchKey") {
       return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-    } else {
+    }
+
+    if (error instanceof Error) {
       return { payload: { message: error.message }, status: 500 };
     }
+
+    return { payload: { message: "Internal Server Error." }, status: 500 };
   }
 };
 
@@ -116,12 +123,15 @@ export const get_azure = async (
       payload: { fhirBundle: content },
       status: 200,
     };
+
+    // The Azure SDK doesn't export its exception types
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error(
       "Failed to download the FHIR data from Azure Blob Storage:",
       error,
     );
-    if (error?.statusCode === 404) {
+    if (error.statusCode === 404) {
       return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
     } else {
       return { payload: { message: error.message }, status: 500 };

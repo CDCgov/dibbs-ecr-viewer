@@ -10,9 +10,13 @@ import pgp from "pg-promise";
  */
 const createSingleton = <T>(name: string, create: () => T): T => {
   const s = Symbol.for(name);
+  // TODO: Revisit
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let scope = (global as any)[s];
   if (!scope) {
     scope = { ...create() };
+    // TODO: Revisit
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any)[s] = scope;
   }
   return scope;
@@ -22,7 +26,7 @@ const pgPromise = pgp();
 const db_url = process.env.DATABASE_URL || "";
 
 interface IDatabaseScope {
-  database: pgp.IDatabase<any>;
+  database: pgp.IDatabase<unknown>;
   pgPromise: pgp.IMain;
 }
 

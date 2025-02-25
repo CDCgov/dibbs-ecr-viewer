@@ -50,6 +50,8 @@ export const returnImmunizations = (
       entry.manufacturer?.reference || "",
     );
     if (manufacturer) {
+      // TODO: Revisit
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (entry.manufacturer as any).name = manufacturer.name || "";
     }
   });

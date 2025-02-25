@@ -25,7 +25,9 @@ export function loadYamlConfig(): PathMappings {
  *  stream data. The specific structure of this object depends on the JSON
  *  content of the stream.
  */
-export async function streamToJson(stream: NodeJS.ReadableStream | undefined) {
+// TODO: Revisit
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function streamToJson(stream: any) {
   if (!stream) throw new Error("Stream is undefined");
 
   let rawData = "";

@@ -152,6 +152,8 @@ export const checkAbnormalTag = (labReportJson: HtmlTableJson): boolean => {
  * @example searchKey - Ex. "Analysis Time" or the field that we are searching data for.
  */
 export function searchResultRecord(
+  // TODO: Revisit
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result: any[],
   searchKey: string,
 ): RenderableNode {
@@ -460,6 +462,8 @@ export const evaluateOrganismsReportData = (
  */
 export const evaluateLabInfoData = (
   fhirBundle: Bundle,
+  // TODO: Revisit
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   labReports: any[],
   mappings: PathMappings,
   accordionHeadingLevel: HeadingLevel = "h5",
@@ -589,6 +593,8 @@ export const evaluateLabOrganizationData = (
  * @returns the matchedOrg with the telecom assigned if applicable
  */
 export const findIdenticalOrg = (
+  // TODO: Revisit
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   orgMappings: any[],
   matchedOrg: Organization,
 ): Organization => {
@@ -646,6 +652,8 @@ const groupItemByOrgId = (
  * @returns An array of JSX elements representing the lab report content.
  */
 function getFormattedLabsContent(
+  // TODO: Revisit
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   report: any,
   fhirBundle: Bundle,
   mappings: PathMappings,

@@ -57,6 +57,8 @@ export const evaluateTravelHistoryTable = (
       );
     })
     .filter((row) =>
+      // TODO: Revisit
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       Object.values(row).some((v) => (v.value as any) !== noData),
     );
 

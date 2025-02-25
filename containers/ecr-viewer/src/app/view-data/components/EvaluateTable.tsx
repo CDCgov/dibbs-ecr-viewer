@@ -12,6 +12,8 @@ export interface ColumnInfoInput {
   value?: string;
   className?: string;
   hiddenBaseText?: string;
+  // TODO: Revisit
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   applyToValue?: (value: any) => any;
 }
 
