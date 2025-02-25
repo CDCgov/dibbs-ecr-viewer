@@ -34,7 +34,7 @@ export const Redirect = () => {
         <p className="font-sans-lg text-bold margin-0">
           You need to log in to see the eCR Viewer
         </p>
-        <br/>
+        <br />
         <Button
           aria-label={`Log in via Azure AD`}
           className={`redirect-button`}
@@ -48,5 +48,5 @@ export const Redirect = () => {
         </Button>
       </div>
     </div>
-  )
+  );
 };
