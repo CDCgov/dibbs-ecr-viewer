@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { importSPKI, jwtVerify } from "jose";
-import { getToken } from "next-auth/jwt";
+import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
+import { NextMiddlewareResult } from "next/dist/server/web/types";
 
 /**
  * Acts as a middleware for handling authentication and authorization in a Next.js application.
@@ -9,27 +10,21 @@ import { getToken } from "next-auth/jwt";
  *     be a redirection, an error response, or a signal to proceed to the next middleware or page
  *     handler based on the authentication and authorization logic.
  */
-export async function middleware(req: NextRequest): Promise<NextResponse> {
+export async function middleware(
+  req: NextRequestWithAuth,
+): Promise<NextResponse | NextMiddlewareResult> {
   const isNbsAuthEnabled = process.env.NBS_AUTH === "true";
-  const oauthToken = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
   if (isNbsAuthEnabled) {
-    if (oauthToken) {
-      return NextResponse.next();
+    const nbsAuth = set_auth_cookie(req) ?? (await authorize_api(req));
+    if (nbsAuth) {
+      return nbsAuth;
     } else {
-      const nbsAuth = set_auth_cookie(req) ?? (await authorize_api(req));
-      if (nbsAuth) {
-        return nbsAuth;
-      } else {
-        return NextResponse.rewrite(
-          new URL(`${process.env.BASE_PATH}/error/auth`, req.nextUrl.origin),
-        );
-      }
+      return NextResponse.rewrite(
+        new URL(`${process.env.BASE_PATH}/error/auth`, req.nextUrl.origin),
+      );
     }
   } else {
-    return NextResponse.next();
+    return withAuth(req);
   }
 }
 
