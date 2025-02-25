@@ -201,7 +201,7 @@ const AccordionLoadingSkeleton = () => {
     },
   ].map((item) => ({
     ...item,
-    id: toKebabCase(item.title),
+    id: `${toKebabCase(item.title)}-loading`,
     headingLevel: "h3",
     expanded: true,
   }));
