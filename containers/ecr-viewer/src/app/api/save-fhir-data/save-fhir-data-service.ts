@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
 import { BlobServiceClient } from "@azure/storage-blob";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
->>>>>>> 600af32 (FHIR Implementation Testing)
 import { randomUUID } from "crypto";
 
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
@@ -18,16 +15,8 @@ import { getDB } from "@/app/data/db/postgres_db";
 import { get_pool } from "@/app/data/db/sqlserver_db";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
-<<<<<<< HEAD
-=======
 import { s3Client } from "../services/s3Client";
-<<<<<<< HEAD
 import { db } from '../services/database'
->>>>>>> 600af32 (FHIR Implementation Testing)
-=======
-import { db } from "../services/database";
->>>>>>> b107a3b ([pre-commit.ci] auto fixes from pre-commit hooks)
-
 interface SaveResponse {
   message: string;
   status: number;
