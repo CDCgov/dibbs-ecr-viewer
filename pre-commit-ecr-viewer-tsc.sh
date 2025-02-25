@@ -3,6 +3,6 @@
 
 ( 
     cd containers/ecr-viewer;
-    npm i;
+    npm ci;
     npm run lint:tsc 
 )
