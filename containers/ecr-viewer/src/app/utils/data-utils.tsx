@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import sanitizeHtml from "sanitize-html";
 import parse from "html-react-parser";
-import { CodeableConcept } from "fhir/r4";
 
 export interface PathMappings {
   [key: string]: string;
@@ -166,41 +165,4 @@ export const range = (start: number, end?: number, step: number = 1) => {
   }
 
   return output;
-};
-
-/**
- * Attempts to return a human-readable display value for a CodeableConcept. It will return the first
- * available value in the following order:
- * 1) `undefined` if the `CodeableConcept` is falsy
- * 2) `CodeableConcept.text`
- * 3) value of the first `coding` with a `display` value
- * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
- * 6) `undefined`
- * @param codeableConcept - The CodeableConcept to get the display value from.
- * @returns - The human-readable display value of the CodeableConcept.
- */
-export const getHumanReadableCodeableConcept = (
-  codeableConcept: CodeableConcept | undefined,
-) => {
-  if (!codeableConcept) {
-    return undefined;
-  }
-
-  const { coding, text } = codeableConcept;
-
-  if (text) {
-    return text;
-  }
-
-  const firstCodingWithDisplay = coding?.find((c) => c.display);
-  if (firstCodingWithDisplay?.display) {
-    return firstCodingWithDisplay.display;
-  }
-
-  const firstCodingWithCode = coding?.find((c) => c.code && c.system);
-  if (firstCodingWithCode?.code && firstCodingWithCode?.system) {
-    return `${firstCodingWithCode.code} (${firstCodingWithCode.system})`;
-  }
-
-  return undefined;
 };

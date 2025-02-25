@@ -2,11 +2,11 @@ import {
   formatAddress,
   formatContactPoint,
   formatName,
+  getHumanReadableCodeableConcept,
 } from "@/app/services/formatService";
 import {
   CompleteData,
   evaluateData,
-  getHumanReadableCodeableConcept,
   PathMappings,
 } from "@/app/utils/data-utils";
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";

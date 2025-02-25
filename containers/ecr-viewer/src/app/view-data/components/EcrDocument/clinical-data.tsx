@@ -1,7 +1,6 @@
 import {
   PathMappings,
   evaluateData,
-  getHumanReadableCodeableConcept,
   noData,
   safeParse,
 } from "@/app/utils/data-utils";
@@ -35,7 +34,11 @@ import {
   formatStartEndDate,
 } from "@/app/services/formatDateService";
 import { toSentenceCase } from "@/app/utils/format-utils";
-import { formatName, formatVitals } from "@/app/services/formatService";
+import {
+  formatName,
+  formatVitals,
+  getHumanReadableCodeableConcept,
+} from "@/app/services/formatService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
@@ -254,8 +257,7 @@ export const evaluateMiscNotes = (
   const toolTip =
     "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
 
-  const content =
-    evaluateValue(fhirBundle, mappings.historyOfPresentIllness) ?? "";
+  const content = evaluateValue(fhirBundle, mappings.historyOfPresentIllness);
 
   const tables = formatTablesToJSON(content);
 

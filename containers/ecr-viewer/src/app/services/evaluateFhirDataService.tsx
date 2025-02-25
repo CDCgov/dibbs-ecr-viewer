@@ -23,17 +23,13 @@ import {
 } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import * as dateFns from "date-fns";
-import {
-  PathMappings,
-  evaluateData,
-  getHumanReadableCodeableConcept,
-  noData,
-} from "@/app/utils/data-utils";
+import { PathMappings, evaluateData, noData } from "@/app/utils/data-utils";
 import {
   formatAddress,
   formatContactPoint,
   formatName,
   formatPhoneNumber,
+  getHumanReadableCodeableConcept,
 } from "./formatService";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 import { Element } from "fhir/r4";

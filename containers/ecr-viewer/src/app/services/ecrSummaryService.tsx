@@ -7,16 +7,12 @@ import {
   Immunization,
   Observation,
 } from "fhir/r4";
-import {
-  evaluateData,
-  getHumanReadableCodeableConcept,
-  noData,
-  PathMappings,
-} from "@/app/utils/data-utils";
+import { evaluateData, noData, PathMappings } from "@/app/utils/data-utils";
 import {
   formatAddress,
   formatContactPoint,
   formatPhoneNumber,
+  getHumanReadableCodeableConcept,
 } from "@/app/services/formatService";
 import { evaluate } from "@/app/utils/evaluate";
 import {

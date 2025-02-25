@@ -12,12 +12,15 @@ import {
   PathMappings,
   RenderableNode,
   arrayToElement,
-  getHumanReadableCodeableConcept,
   noData,
   safeParse,
 } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
-import { formatAddress, formatPhoneNumber } from "@/app/services/formatService";
+import {
+  formatAddress,
+  formatPhoneNumber,
+  getHumanReadableCodeableConcept,
+} from "@/app/services/formatService";
 import { Coding, ObservationComponent } from "fhir/r4b";
 import EvaluateTable, {
   ColumnInfoInput,
