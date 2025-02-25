@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 // all integrated tests should start with 'integrated -' in order to match succesfully in npm run test:e2e:integrated
-// test:e2e:integrated is only required since CONFIG_NAME needs to be changed. This can be removed when dual boot (nbs auth & idp auth) is supported  
+// test:e2e:integrated is only required since CONFIG_NAME needs to be changed. This can be removed when dual boot (nbs auth & idp auth) is supported
 test.describe("integrated - nbs auth", () => {
   test("should redirect to unauthorized page", async ({ page }) => {
     await page.goto("/ecr-viewer/view-data");
