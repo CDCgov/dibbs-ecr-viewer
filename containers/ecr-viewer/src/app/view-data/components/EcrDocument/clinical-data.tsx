@@ -10,7 +10,6 @@ import {
   CarePlanActivity,
   CareTeamParticipant,
   CodeableConcept,
-  FhirResource,
   Medication,
   MedicationAdministration,
   Period,
@@ -215,8 +214,8 @@ type ModifiedCareTeamParticipant = Omit<
   CareTeamParticipant,
   "period" | "member"
 > & {
-  period: Period & { text: string };
-  member: Reference & { name: string };
+  period?: Period & { text?: string };
+  member?: Reference & { name?: string };
 };
 
 /**
@@ -252,19 +251,14 @@ export const returnCareTeamTable = (
     careTeamParticipants.map((initialParticipant) => {
       const mctp: ModifiedCareTeamParticipant = {
         ...initialParticipant,
-        member: {
-          ...initialParticipant.member,
-          name: "",
-        },
-        period: {
-          ...initialParticipant.period,
-          text: "",
-        },
       };
 
       if (initialParticipant.period) {
         const { start, end } = initialParticipant.period;
-        mctp.period.text = formatStartEndDate(start, end);
+        mctp.period = {
+          ...initialParticipant.period,
+          text: formatStartEndDate(start, end),
+        };
       }
 
       const practitioner: Practitioner = evaluateReference(
@@ -278,7 +272,10 @@ export const returnCareTeamTable = (
       );
 
       if (initialParticipant.member) {
-        mctp.member.name = formatName(practitionerNameObj);
+        mctp.member = {
+          ...initialParticipant.member,
+          name: formatName(practitionerNameObj),
+        };
       }
 
       return mctp;
@@ -286,7 +283,7 @@ export const returnCareTeamTable = (
 
   return (
     <EvaluateTable
-      resources={modifiedCareTeamParticipants as unknown as FhirResource[]}
+      resources={modifiedCareTeamParticipants}
       mappings={mappings}
       columns={columnInfo}
       caption="Care Team"
