@@ -25,10 +25,10 @@ export function loadYamlConfig(): PathMappings {
  *  stream data. The specific structure of this object depends on the JSON
  *  content of the stream.
  */
-// TODO: Revisit
+// There's some difficulty with typing the overlap between the Azure and S3 stream data
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function streamToJson(stream: any) {
-  if (!stream) throw new Error("Stream is undefined");
+  if (!stream) throw new Error("Stream is undefined.");
 
   let rawData = "";
   for await (const chunk of stream) {
