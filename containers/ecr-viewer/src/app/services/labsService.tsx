@@ -41,10 +41,6 @@ import { LabAccordion } from "../view-data/components/LabAccordion";
 import { JsonTable } from "../view-data/components/JsonTable";
 import { AccordionItem } from "../view-data/types";
 
-export interface LabReport extends DiagnosticReport {
-  result: Array<Reference>;
-}
-
 export interface ResultObject {
   [key: string]: AccordionItem[];
 }
@@ -84,7 +80,7 @@ export const isLabReportElementDataList = (
  * is returned.
  */
 export const getObservations = (
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): Array<Observation> => {
@@ -108,7 +104,7 @@ export const getObservations = (
  * @returns The JSON representation of the lab report.
  */
 export const getLabJsonObject = (
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): HtmlTableJson => {
@@ -197,7 +193,7 @@ export function searchResultRecord(
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 const returnSpecimenSource = (
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): RenderableNode => {
@@ -219,7 +215,7 @@ const returnSpecimenSource = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 const returnCollectionTime = (
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): RenderableNode => {
@@ -244,7 +240,7 @@ const returnCollectionTime = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 const returnReceivedTime = (
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): RenderableNode => {
@@ -328,7 +324,7 @@ export const returnAnalysisTime = (
  * @returns The JSX representation of the evaluated observation table, or undefined if there are no observations.
  */
 export function evaluateObservationTable(
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
   columnInfo: ColumnInfoInput[],
@@ -368,7 +364,7 @@ export function evaluateObservationTable(
  * @returns - An array of React elements representing the lab observations.
  */
 export const evaluateDiagnosticReportData = (
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): React.JSX.Element | undefined => {
@@ -416,7 +412,7 @@ export const evaluateDiagnosticReportData = (
  * @returns - An array of React elements representing the lab organisms table.
  */
 export const evaluateOrganismsReportData = (
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
 ): React.JSX.Element | undefined => {
@@ -471,7 +467,7 @@ export const evaluateOrganismsReportData = (
  */
 export const evaluateLabInfoData = (
   fhirBundle: Bundle,
-  labReports: LabReport[] | DiagnosticReport[],
+  labReports: DiagnosticReport[],
   mappings: PathMappings,
   accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] | DisplayDataProps[] => {
@@ -662,7 +658,7 @@ const groupItemByOrgId = (
  * @returns An array of JSX elements representing the lab report content.
  */
 function getFormattedLabsContent(
-  report: LabReport | DiagnosticReport,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
   labReportJson: HtmlTableJson,
