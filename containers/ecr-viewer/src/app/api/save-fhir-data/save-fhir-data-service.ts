@@ -363,7 +363,6 @@ export const saveCoreMetadata = async (
 
     // Start transaction
     await db.transaction().execute(async (trx) => {
-      try {
         // Insert main ECR metadata
         await trx
           .insertInto("ecr_data")
@@ -405,24 +404,25 @@ export const saveCoreMetadata = async (
                     ecr_rr_conditions_id: saveRRConditions.uuid,
                     rule_summary: summaryObj.summary,
                   })
-                  .returningAll()
                   .executeTakeFirstOrThrow();
               }
             }
           }
         }
-      } catch (error) {
-        console.error("Transaction failed:", error);
-        throw new Error("Transaction failed"); // Ensure transaction failure is handled
-      }
+      console.log("Checkpoint 1");
+    }).catch((err)=>{
+      console.log("Checkpoint 2");
+      console.error(err)
+      throw new Error("Transaction failed"); // Ensure it throws an error
     });
-
     // On successful transaction, return response
+    console.log("Checkpoint 3");
     return {
       message: "Success. Saved metadata to database.",
       status: 200,
     };
   } catch (error: any) {
+    console.log("Checkpoint 4 error");
     console.error({
       message: `Error inserting metadata to postgres.`,
       error,

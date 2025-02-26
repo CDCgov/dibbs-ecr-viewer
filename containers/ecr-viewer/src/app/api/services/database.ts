@@ -9,11 +9,11 @@ import * as tarn from "tarn";
 
 const pg_dialect = new PostgresDialect({
   pool: new Pool({
-    database: process.env.POSTGRES_DATABASE,
+    database: process.env.POSTGRES_DATABASE || "ecr_viewer_db",
     host: process.env.POSTGRES_HOST,
     user: process.env.POSTGRES_USER,
-    port: process.env.POSTGRES_PORT,
-    max: process.env.POSTGRES_MAX_THREADPOOL || 10,
+    port: parseInt(process.env.POSTGRES_PORT || "5432"),
+    max: parseInt(process.env.POSTGRES_MAX_THREADPOOL || "10"),
   }),
 });
 
@@ -49,24 +49,24 @@ const ms_dialect = new MssqlDialect({
 
 // Dialect to communicate with the database, interface to define its structure.
 
-let db: Kysely<Core> | Kysely<Extended>;
+// let db: Kysely<Core> | Kysely<Extended>;
 
-if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-  db = new Kysely<Extended>({
-    dialect: ms_dialect,
-  });
-} else if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-  db = new Kysely<Core>({
-    dialect: pg_dialect,
-  });
-} else {
-  db = new Kysely<Core>({
-    dialect: pg_dialect,
-  });
-}
+// if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+//   db = new Kysely<Extended>({
+//     dialect: ms_dialect,
+//   });
+// } else if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+//   db = new Kysely<Core>({
+//     dialect: pg_dialect,
+//   });
+// } else {
+//   db = new Kysely<Extended>({
+//     dialect: pg_dialect,
+//   });
+// }
 
-// export const db = new Kysely<Core>({
-//   dialect: pg_dialect,
-// })
+export const db = new Kysely<Core>({
+  dialect: pg_dialect,
+})
 
-export { db };
+// export { db };
