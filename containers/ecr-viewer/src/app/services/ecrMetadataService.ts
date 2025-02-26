@@ -207,7 +207,7 @@ const evaluateEcrAuthorDetails = (
       const { practitioner, organization } = evaluatePractitionerRoleReference(
         fhirBundle,
         mappings,
-        practitionerRoleRef ?? "",
+        practitionerRoleRef,
       );
 
       authorDetails.push([

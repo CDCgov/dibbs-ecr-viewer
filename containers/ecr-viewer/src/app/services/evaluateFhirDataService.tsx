@@ -544,10 +544,11 @@ export const evaluateProviderData = (
     fhirBundle,
     mappings.compositionEncounterRef,
   )[0];
-  const encounter: Encounter = evaluateReference(
+
+  const encounter: Encounter | undefined = evaluateReference(
     fhirBundle,
     mappings,
-    encounterRef ?? "",
+    encounterRef,
   );
   const encounterParticipantRef: string | undefined = evaluate(
     encounter,
@@ -556,10 +557,10 @@ export const evaluateProviderData = (
   const { practitioner, organization } = evaluatePractitionerRoleReference(
     fhirBundle,
     mappings,
-    encounterParticipantRef ?? "",
+    encounterParticipantRef,
   );
 
-  const providerData = [
+  const providerData: DisplayDataProps[] = [
     {
       title: "Provider Name",
       value: formatName(practitioner?.name?.[0]),
@@ -603,10 +604,10 @@ export const evaluateEncounterCareTeamTable = (
     fhirBundle,
     mappings.compositionEncounterRef,
   )[0];
-  const encounter: Encounter = evaluateReference(
+  const encounter: Encounter | undefined = evaluateReference(
     fhirBundle,
     mappings,
-    encounterRef ?? "",
+    encounterRef,
   );
   const participants: EncounterParticipant[] = evaluate(
     encounter,
@@ -617,9 +618,12 @@ export const evaluateEncounterCareTeamTable = (
     const role = evaluateValue(participant, "type");
     const { start, end } = evaluate(participant, "period")?.[0] ?? {};
     const participantRef = participant.individual?.reference;
-    const { practitioner } = participantRef
-      ? evaluatePractitionerRoleReference(fhirBundle, mappings, participantRef)
-      : {};
+
+    const { practitioner } = evaluatePractitionerRoleReference(
+      fhirBundle,
+      mappings,
+      participantRef,
+    );
 
     return {
       Name: {
@@ -686,8 +690,9 @@ export const evaluateEmergencyContact = (
 export const evaluateReference = (
   fhirBundle: Bundle,
   mappings: PathMappings,
-  ref: string,
+  ref?: string,
 ) => {
+  if (!ref) return undefined;
   const [resourceType, id] = ref.split("/");
   return evaluate(fhirBundle, mappings.resolve, {
     resourceType,
@@ -767,8 +772,10 @@ export const evaluateFacilityId = (
 export const evaluatePractitionerRoleReference = (
   fhirBundle: Bundle,
   mappings: PathMappings,
-  practitionerRoleRef: string,
+  practitionerRoleRef?: string,
 ): { practitioner?: Practitioner; organization?: Organization } => {
+  if (!practitionerRoleRef) return {};
+
   const practitionerRole: PractitionerRole | undefined = evaluateReference(
     fhirBundle,
     mappings,
@@ -777,13 +784,14 @@ export const evaluatePractitionerRoleReference = (
   const practitioner: Practitioner | undefined = evaluateReference(
     fhirBundle,
     mappings,
-    practitionerRole?.practitioner?.reference ?? "",
+    practitionerRole?.practitioner?.reference,
   );
   const organization: Organization | undefined = evaluateReference(
     fhirBundle,
     mappings,
-    practitionerRole?.organization?.reference ?? "",
+    practitionerRole?.organization?.reference,
   );
+
   return { practitioner, organization };
 };
 
