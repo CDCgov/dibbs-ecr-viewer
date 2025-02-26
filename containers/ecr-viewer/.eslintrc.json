@@ -15,7 +15,9 @@
     "allowImportExportEverywhere": true
   },
   "rules": {
+    "eqeqeq": "error",
     "no-unused-vars": "off",
+    "object-shorthand": "error",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "warn",

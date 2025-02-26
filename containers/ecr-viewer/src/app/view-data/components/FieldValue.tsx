@@ -112,7 +112,7 @@ const trimField = (
         </React.Fragment>,
       );
     }
-    return { value: newValArr, remainingLength: remainingLength };
+    return { value: newValArr, remainingLength };
   } else if (React.isValidElement(value) && value.props.children) {
     let childrenCopy: ReactNode;
     if (Array.isArray(value.props.children)) {

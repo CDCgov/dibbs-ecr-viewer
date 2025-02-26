@@ -24,8 +24,8 @@ function mockFetch(
   return fn.mockImplementation(() =>
     Promise.resolve({
       ok: status === 200 ? true : false,
-      status: status,
-      statusText: statusText,
+      status,
+      statusText,
       json: () => data,
     }),
   );

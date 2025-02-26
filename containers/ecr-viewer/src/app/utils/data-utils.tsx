@@ -33,7 +33,7 @@ export const evaluateData = (data: DisplayDataProps[]): CompleteData => {
       availableData.push(item);
     }
   });
-  return { availableData: availableData, unavailableData: unavailableData };
+  return { availableData, unavailableData };
 };
 
 /**
