@@ -12,13 +12,12 @@ import {
   streamToJson,
 } from "../utils";
 import { s3Client } from "../services/s3Client";
+import { Bundle } from "fhir/r4";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
 type FhirDataResponse = {
-  // TODO: Revisit
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: { fhirBundle: any } | { message: string };
+  payload: { fhirBundle: Bundle } | { message: string };
   status: number;
 };
 
