@@ -1,4 +1,3 @@
-import { loadYamlConfig } from "@/app/api/utils";
 import { render, screen } from "@testing-library/react";
 import { PathMappings } from "@/app/utils/data-utils";
 import userEvent from "@testing-library/user-event";
@@ -6,8 +5,7 @@ import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
-
-const mappings = loadYamlConfig();
+import mappings from "@/app/view-data/fhirPath";
 
 describe("Evaluate table", () => {
   it("should create an empty table with a caption", () => {

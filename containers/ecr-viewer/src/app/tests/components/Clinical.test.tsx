@@ -1,12 +1,9 @@
 import React from "react";
-import fs from "fs";
-import YAML from "js-yaml";
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import ClinicalInfo from "../../view-data/components/ClinicalInfo";
-import { loadYamlConfig } from "@/app/api/utils";
 import { Procedure } from "fhir/r4";
-import { PathMappings } from "@/app/utils/data-utils";
+import mappings from "@/app/view-data/fhirPath";
 import {
   evaluateClinicalData,
   evaluateMiscNotes,
@@ -104,10 +101,6 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
       },
     ] as unknown as Procedure[];
 
-    const fhirPathFile = fs
-      .readFileSync("./src/app/api/fhirPath.yaml", "utf8")
-      .toString();
-    const mappings = YAML.load(fhirPathFile) as PathMappings;
     const treatmentData = [
       {
         title: "Procedures",
@@ -217,7 +210,6 @@ describe("Snapshot test for Clinical Notes", () => {
 
 describe("Check that Clinical Info components render given FHIR bundle", () => {
   const fhirBundleClinicalInfo = require("../assets/BundleClinicalInfo.json");
-  const mappings = loadYamlConfig();
   const testClinicalData = evaluateClinicalData(
     fhirBundleClinicalInfo,
     mappings,

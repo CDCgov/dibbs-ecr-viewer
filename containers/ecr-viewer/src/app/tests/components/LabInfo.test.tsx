@@ -4,15 +4,13 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import BundleLab from "@/app/tests/assets/BundleLab.json";
 import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
-import { loadYamlConfig } from "@/app/api/utils";
 import { Bundle } from "fhir/r4";
 import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/services/labsService";
 import { evaluate } from "@/app/utils/evaluate";
-
-const mappings = loadYamlConfig();
+import mappings from "@/app/view-data/fhirPath";
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {

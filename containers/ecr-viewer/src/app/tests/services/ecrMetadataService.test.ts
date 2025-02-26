@@ -3,10 +3,9 @@ import { Bundle } from "fhir/r4";
 import BundleWithEcrMetadata from "../assets/BundleEcrMetadata.json";
 import BundleMultipleAuthors from "../assets/BundleMultipleAuthor.json";
 import BundleLab from "../assets/BundleLab.json";
-import { loadYamlConfig } from "@/app/api/utils";
+import mappings from "@/app/view-data/fhirPath";
 
 describe("Evaluate Ecr Metadata", () => {
-  const mappings = loadYamlConfig();
   it("should have no available data where there is no data", () => {
     const actual = evaluateEcrMetadata(undefined as any, mappings);
 

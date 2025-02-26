@@ -1,4 +1,3 @@
-import { loadYamlConfig } from "@/app/api/utils";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -22,8 +21,7 @@ import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import BundleEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
 import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
 import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
-
-const mappings = loadYamlConfig();
+import mappings from "@/app/view-data/fhirPath";
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Reference", () => {

@@ -1,4 +1,3 @@
-import { loadYamlConfig } from "@/app/api/utils";
 import { Bundle } from "fhir/r4";
 import BundleWithTravelHistory from "./assets/BundleTravelHistory.json";
 import BundleWithTravelHistoryEmpty from "./assets/BundleTravelHistoryEmpty.json";
@@ -34,9 +33,9 @@ import {
   TooltipDiv,
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
+import mappings from "@/app/view-data/fhirPath";
 
 describe("Utils", () => {
-  const mappings = loadYamlConfig();
   describe("Evaluate Social Data", () => {
     it("should have no available data when there is no data", () => {
       const actual = evaluateSocialData(undefined as any, mappings);

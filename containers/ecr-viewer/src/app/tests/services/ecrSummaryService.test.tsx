@@ -1,4 +1,3 @@
-import { loadYamlConfig } from "@/app/api/utils";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryRelevantClinicalDetails,
@@ -11,8 +10,8 @@ import BundleEcrSummary from "@/app/tests/assets/BundleEcrSummary.json";
 import { Bundle } from "fhir/r4";
 import { render, screen } from "@testing-library/react";
 import React from "react";
+import mappings from "@/app/view-data/fhirPath";
 
-const mappings = loadYamlConfig();
 describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Clinical Details", () => {
     it("should return 'No Data' string when no SNOMED code is provided", () => {
