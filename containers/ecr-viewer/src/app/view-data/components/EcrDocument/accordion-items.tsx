@@ -45,7 +45,7 @@ export const getEcrDocumentAccordionItems = (
   const facilityData = evaluateFacilityData(fhirBundle, fhirPathMappings);
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
-    evaluate(fhirBundle, fhirPathMappings["diagnosticReports"]),
+    evaluate(fhirBundle, fhirPathMappings.diagnosticReports),
     fhirPathMappings,
   );
   const hasUnavailableData = () => {

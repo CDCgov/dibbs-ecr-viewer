@@ -96,8 +96,9 @@
             "valueCodeableConcept": {
               "coding": [
                 {
-                  "code": "Baptist",
-                  "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+                  "code": "1009",
+                  "system": "http://terminology.hl7.org/CodeSystem/v3-ReligiousAffiliation",
+                  "display": "Baptist"
                 }
               ]
             }
