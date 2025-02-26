@@ -15,7 +15,7 @@ app = FastAPI(
     version="0.0.1",
     contact={
         "name": "CDC Public Health Data Infrastructure",
-        "url": "https://cdcgov.github.io/phdi-site/",
+        "url": "https://cdcgov.github.io/dibbs-ecr-viewer-site/",
         "email": "dmibuildingblocks@cdc.gov",
     },
     license_info={

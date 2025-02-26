@@ -10,7 +10,7 @@ FHIR is a widely used standard designed for storing and interacting with health 
 
 ## Pre-requisites
 
-Currently, PHDI depends on a containerized [Azure FHIR Converter](https://github.com/microsoft/FHIR-Converter) to convert HL7 v2 or CCDA to FHIR. The docker container build artifacts are currently located [here](https://github.com/CDCgov/phdi-google-cloud/tree/main/cloud-run/fhir-converter).
+Currently, PHDI depends on a containerized [Azure FHIR Converter](https://github.com/microsoft/FHIR-Converter) to convert HL7 v2 or CCDA to FHIR. The docker container build artifacts are currently located [here](https://github.com/CDCgov/dibbs-ecr-viewer-google-cloud/tree/main/cloud-run/fhir-converter).
 
 [//]: # "TODO The cloud converter containerized solution and its documentation will move to the PHDI library, but this migration hasn't been completed yet. Once the container has been migrated, this will need to be updated to point to the correct location."
 

@@ -16,7 +16,7 @@ LICENSES = {
 
 DIBBS_CONTACT = {
     "name": "CDC Public Health Data Infrastructure",
-    "url": "https://cdcgov.github.io/phdi-site/",
+    "url": "https://cdcgov.github.io/dibbs-ecr-viewer-site/",
     "email": "dmibuildingblocks@cdc.gov",
 }
 
