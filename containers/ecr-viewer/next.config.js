@@ -16,7 +16,6 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true, // this needs to be here for opentelemetry
   },
-  transpilePackages: ["yaml"],
   output: "standalone",
   basePath: basePath,
   env: {
