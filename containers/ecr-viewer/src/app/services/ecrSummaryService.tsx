@@ -263,7 +263,7 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
 
   const problemsList: Condition[] = evaluate(
     fhirBundle,
-    fhirPathMappings["activeProblems"],
+    fhirPathMappings.activeProblems,
   );
   const problemsListFiltered = problemsList.filter(
     (entry) =>
@@ -311,7 +311,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
 
   const labReports: DiagnosticReport[] = evaluate(
     fhirBundle,
-    fhirPathMappings["diagnosticReports"],
+    fhirPathMappings.diagnosticReports,
   );
   const labsWithCode = labReports.filter(
     (entry) =>
@@ -324,7 +324,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
   );
 
   const obsIdsWithCode: (string | undefined)[] = (
-    evaluate(fhirBundle, fhirPathMappings["observations"]) as Observation[]
+    evaluate(fhirBundle, fhirPathMappings.observations) as Observation[]
   )
     .filter(
       (entry) =>
