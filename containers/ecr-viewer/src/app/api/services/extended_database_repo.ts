@@ -1,10 +1,20 @@
 import { db } from "./database";
 import {
-  ExtendedECR, NewExtendedECR, ExtendedECRUpdate,
-  PatientAddress, NewPatientAddress, PatientAddressUpdate,
-  ECRLabs, NewECRLabs, ECRLabsUpdate,
-  ECRConditions, NewECRConditions, ECRConditionsUpdate,
-  ECRRuleSummaries, NewECRRuleSummaries, ECRRuleSummariesUpdate,
+  ExtendedECR,
+  NewExtendedECR,
+  ExtendedECRUpdate,
+  PatientAddress,
+  NewPatientAddress,
+  PatientAddressUpdate,
+  ECRLabs,
+  NewECRLabs,
+  ECRLabsUpdate,
+  ECRConditions,
+  NewECRConditions,
+  ECRConditionsUpdate,
+  ECRRuleSummaries,
+  NewECRRuleSummaries,
+  ECRRuleSummariesUpdate,
 } from "./extended_types";
 
 /**
