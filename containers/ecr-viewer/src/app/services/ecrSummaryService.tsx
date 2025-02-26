@@ -90,7 +90,7 @@ export const findCurrentAddress = (addresses: Address[]) => {
 
   // then home address
   if (!address) {
-    address = addresses.find((a) => a.use == "home");
+    address = addresses.find((a) => a.use === "home");
   }
 
   // then first address
