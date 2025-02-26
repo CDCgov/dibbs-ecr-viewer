@@ -42,7 +42,7 @@ PHDI contains:
   - [User guide](https://cdcgov.github.io/dibbs-ecr-viewer/) (under Building Blocks)
 - Cloud Starter Kit — Repositories that implement a complete cloud-based pipeline composed of Building Blocks
   - [Azure](https://github.com/CDCgov/dibbs-ecr-viewer-azure)
-  - [Google Cloud Platform](https://github.com/CDCgov/dibbs-ecr-viewer-google-cloud)
+  - [Google Cloud Platform](https://github.com/CDCgov/phdi-google-cloud)
 
 ### Problem Scope
 
