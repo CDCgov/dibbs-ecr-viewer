@@ -9,12 +9,12 @@ import { PathMappings, safeParse } from "@/app/utils/data-utils";
 import { Bundle, Coding, Condition, Immunization, Organization } from "fhir/r4";
 import classNames from "classnames";
 import { formatDateTime } from "@/app/services/formatDateService";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 
 /**
  * Generates a formatted table representing the list of immunizations based on the provided array of immunizations and mappings.
  * @param fhirBundle - The FHIR bundle containing patient and immunizations information.
  * @param immunizationsArray - An array containing the list of immunizations.
- * @param mappings - An object containing the FHIR path mappings.
  * @param caption - The string to display above the table
  * @param className - Optional. The css class to be added to the table.
  * @returns - A formatted table React element representing the list of immunizations, or undefined if the immunizations array is empty.
@@ -22,7 +22,6 @@ import { formatDateTime } from "@/app/services/formatDateService";
 export const returnImmunizations = (
   fhirBundle: Bundle,
   immunizationsArray: Immunization[],
-  mappings: PathMappings,
   caption: string,
   className?: string,
 ): React.JSX.Element | undefined => {
@@ -46,7 +45,6 @@ export const returnImmunizations = (
 
     const manufacturer: Organization = evaluateReference(
       fhirBundle,
-      mappings,
       entry.manufacturer?.reference || "",
     );
     if (manufacturer) {
@@ -62,7 +60,7 @@ export const returnImmunizations = (
   return (
     <EvaluateTable
       resources={immunizationsArray}
-      mappings={mappings}
+      mappings={fhirPathMappings}
       columns={columnInfo}
       caption={caption}
       className={classNames("margin-y-0", className)}

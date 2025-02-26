@@ -22,7 +22,6 @@ import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import SideNav from "./components/SideNav";
 
 import fhirMappings from "./fhirPath";
-console.log({ fhirMappings });
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -76,7 +75,7 @@ const ECRViewerPage = async ({
         </pre>
       </GenericError>
     );
-  } else if (fhirBundle && mappings) {
+  } else if (fhirBundle) {
     const patientName = evaluatePatientName(fhirBundle, mappings, true);
     const patientDOB = evaluatePatientDOB(fhirBundle, mappings);
 
@@ -96,16 +95,13 @@ const ECRViewerPage = async ({
           </div>
           <EcrSummary
             patientDetails={
-              evaluateEcrSummaryPatientDetails(fhirBundle, mappings)
-                .availableData
+              evaluateEcrSummaryPatientDetails(fhirBundle).availableData
             }
             encounterDetails={
-              evaluateEcrSummaryEncounterDetails(fhirBundle, mappings)
-                .availableData
+              evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
             }
             conditionSummary={evaluateEcrSummaryConditionSummary(
               fhirBundle,
-              mappings,
               snomedCode,
             )}
             snomed={snomedCode}

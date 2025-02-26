@@ -1,6 +1,8 @@
+import "server-only";
+
 // @ts-expect-error
-import fhirPathImport from "./fhirPath.yaml";
+import fhirPathMappings from "./fhirPath.yaml";
 
 export type PathMappings = { [key: string]: string };
 
-export default fhirPathImport as PathMappings;
+export default fhirPathMappings as PathMappings;

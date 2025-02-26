@@ -39,20 +39,22 @@ import {
   formatStartEndDate,
   formatStartEndDateTime,
 } from "./formatDateService";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing patient contact info.
- * @param mappings - The object containing the fhir paths.
  * @param isPatientBanner - Whether to format the name for the Patient banner
  * @returns The formatted patient name
  */
 export const evaluatePatientName = (
   fhirBundle: Bundle,
-  mappings: PathMappings,
   isPatientBanner: boolean,
 ) => {
-  const nameList: HumanName[] = evaluate(fhirBundle, mappings.patientNameList);
+  const nameList: HumanName[] = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientNameList,
+  );
 
   // Return early if there's no name
   if (nameList.length === 0) {
@@ -72,16 +74,12 @@ export const evaluatePatientName = (
 /**
  * Evaluates the patient's race from the FHIR bundle and formats for display.
  * @param fhirBundle - The FHIR bundle containing patient contact info.
- * @param mappings - The object containing the fhir paths.
  * @returns - The patient's race information, including race OMB category and detailed extension (if available).
  */
-export const evaluatePatientRace = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
-  const raceCat = evaluate(fhirBundle, mappings.patientRace)[0];
+export const evaluatePatientRace = (fhirBundle: Bundle) => {
+  const raceCat = evaluate(fhirBundle, fhirPathMappings.patientRace)[0];
   const raceDetailed =
-    evaluate(fhirBundle, mappings.patientRaceDetailed)[0] ?? "";
+    evaluate(fhirBundle, fhirPathMappings.patientRaceDetailed)[0] ?? "";
 
   if (raceDetailed) {
     return raceCat + "\n" + raceDetailed;
@@ -93,16 +91,13 @@ export const evaluatePatientRace = (
 /**
  * Evaluates the patients ethnicity from the FHIR bundle and formats for display.
  * @param fhirBundle - The FHIR bundle containing patient contact info.
- * @param mappings - The object containing the fhir paths.
  * @returns - The patient's ethnicity information, including additional ethnicity extension (if available).
  */
-export const evaluatePatientEthnicity = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
-  const ethnicity = evaluate(fhirBundle, mappings.patientEthnicity)[0] ?? "";
+export const evaluatePatientEthnicity = (fhirBundle: Bundle) => {
+  const ethnicity =
+    evaluate(fhirBundle, fhirPathMappings.patientEthnicity)[0] ?? "";
   const ethnicityDetailed =
-    evaluate(fhirBundle, mappings.patientEthnicityDetailed)[0] ?? "";
+    evaluate(fhirBundle, fhirPathMappings.patientEthnicityDetailed)[0] ?? "";
 
   if (ethnicityDetailed) {
     return ethnicity + "\n" + ethnicityDetailed;
@@ -114,16 +109,12 @@ export const evaluatePatientEthnicity = (
 /**
  * Evaluates patient address from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing patient contact info.
- * @param mappings - The object containing the fhir paths.
  * @returns The formatted patient address
  */
-export const evaluatePatientAddress = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluatePatientAddress = (fhirBundle: Bundle) => {
   const addresses = evaluate(
     fhirBundle,
-    mappings.patientAddressList,
+    fhirPathMappings.patientAddressList,
   ) as Address[];
 
   if (addresses.length > 0) {
@@ -143,14 +134,10 @@ export const evaluatePatientAddress = (
 /**
  * Finds correct encounter ID
  * @param fhirBundle - The FHIR bundle containing encounter resources.
- * @param mappings - Path mappings for resolving references.
  * @returns Encounter ID or empty string if not available.
  */
-export const evaluateEncounterId = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
-  const encounterIDs = evaluate(fhirBundle, mappings.encounterID);
+export const evaluateEncounterId = (fhirBundle: Bundle) => {
+  const encounterIDs = evaluate(fhirBundle, fhirPathMappings.encounterID);
   const filteredIds = encounterIDs
     .filter((id) => /^\d+$/.test(id.value))
     .map((id) => id.value);
@@ -161,13 +148,9 @@ export const evaluateEncounterId = (
 /**
  * Gets the formatted patient Date of Birth.
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param fhirPathMappings - The mappings for retrieving patient date of birth.
  * @returns - The formatted patient DOB.
  */
-export const evaluatePatientDOB = (
-  fhirBundle: Bundle,
-  fhirPathMappings: PathMappings,
-) =>
+export const evaluatePatientDOB = (fhirBundle: Bundle) =>
   formatDate(
     (evaluate(fhirBundle, fhirPathMappings.patientDOB) as string[])[0],
   );
@@ -175,15 +158,10 @@ export const evaluatePatientDOB = (
 /**
  * Calculates the age of a patient to a given date or today, unless DOD exists.
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param fhirPathMappings - The mappings for retrieving patient date of birth.
  * @param [givenDate] - Optional. The target date to calculate the age. Defaults to the current date if not provided.
  * @returns - The age of the patient in years, or undefined if date of birth is not available or if date of death exists.
  */
-export const calculatePatientAge = (
-  fhirBundle: Bundle,
-  fhirPathMappings: PathMappings,
-  givenDate?: string,
-) => {
+export const calculatePatientAge = (fhirBundle: Bundle, givenDate?: string) => {
   const patientDOBString = evaluate(fhirBundle, fhirPathMappings.patientDOB)[0];
   const patientDODString = evaluate(fhirBundle, fhirPathMappings.patientDOD)[0];
   if (patientDOBString && !patientDODString && !givenDate) {
@@ -200,13 +178,9 @@ export const calculatePatientAge = (
 /**
  * Calculates Patient Age at Death if DOB and DOD exist, otherwise returns undefined
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param fhirPathMappings - The mappings for retrieving patient date of birth and date of death.
  * @returns - The age of the patient at death in years, or undefined if date of birth or date of death is not available.
  */
-export const calculatePatientAgeAtDeath = (
-  fhirBundle: Bundle,
-  fhirPathMappings: PathMappings,
-) => {
+export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
   const patientDOBString = evaluate(fhirBundle, fhirPathMappings.patientDOB)[0];
   const patientDODString = evaluate(fhirBundle, fhirPathMappings.patientDOD)[0];
 
@@ -222,13 +196,9 @@ export const calculatePatientAgeAtDeath = (
 /**
  * Evaluates patient's vital status from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle The FHIR bundle containing the patient's vital status
- * @param fhirPathMappings The mappings for retrieving patient vital status
  * @returns The vital status of the patient, either `Alive`, `Deceased`, or `""` (if not found)
  */
-export const evaluatePatientVitalStatus = (
-  fhirBundle: Bundle,
-  fhirPathMappings: PathMappings,
-) => {
+export const evaluatePatientVitalStatus = (fhirBundle: Bundle) => {
   const patientVitalStatus = evaluate(
     fhirBundle,
     fhirPathMappings.patientVitalStatus,
@@ -246,21 +216,20 @@ export const evaluatePatientVitalStatus = (
 /**
  * Evaluates alcohol use information from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing alcohol use data.
- * @param fhirMappings - The object containing the fhir paths.
  * @returns An array of evaluated and formatted alcohol use data.
  */
-export const evaluateAlcoholUse = (
-  fhirBundle: Bundle,
-  fhirMappings: PathMappings,
-) => {
-  const alcoholUse = evaluateValue(fhirBundle, fhirMappings.patientAlcoholUse);
+export const evaluateAlcoholUse = (fhirBundle: Bundle) => {
+  const alcoholUse = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientAlcoholUse,
+  );
   const alcoholIntake = evaluateValue(
     fhirBundle,
-    fhirMappings.patientAlcoholIntake,
+    fhirPathMappings.patientAlcoholIntake,
   );
   let alcoholComment: string | undefined = evaluateValue(
     fhirBundle,
-    fhirMappings.patientAlcoholComment,
+    fhirPathMappings.patientAlcoholComment,
   );
 
   if (alcoholComment) {
@@ -279,50 +248,61 @@ export const evaluateAlcoholUse = (
 /**
  * Evaluates social data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing social data.
- * @param mappings - The object containing the fhir paths.
  * @returns An array of evaluated and formatted social data.
  */
-export const evaluateSocialData = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateSocialData = (fhirBundle: Bundle) => {
   const socialData: DisplayDataProps[] = [
     {
       title: "Tobacco Use",
-      value: evaluateValue(fhirBundle, mappings["patientTobaccoUse"]),
+      value: evaluateValue(fhirBundle, fhirPathMappings["patientTobaccoUse"]),
     },
     {
       title: "Travel History",
-      value: evaluateTravelHistoryTable(fhirBundle, mappings),
+      value: evaluateTravelHistoryTable(fhirBundle, fhirPathMappings),
       table: true,
     },
     {
       title: "Homeless Status",
-      value: evaluateValue(fhirBundle, mappings["patientHomelessStatus"]),
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings["patientHomelessStatus"],
+      ),
     },
     {
       title: "Pregnancy Status",
-      value: evaluateValue(fhirBundle, mappings["patientPregnancyStatus"]),
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings["patientPregnancyStatus"],
+      ),
     },
     {
       title: "Alcohol Use",
-      value: evaluateAlcoholUse(fhirBundle, mappings),
+      value: evaluateAlcoholUse(fhirBundle),
     },
     {
       title: "Sexual Orientation",
-      value: evaluateValue(fhirBundle, mappings["patientSexualOrientation"]),
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings["patientSexualOrientation"],
+      ),
     },
     {
       title: "Occupation",
-      value: evaluateValue(fhirBundle, mappings["patientCurrentJobTitle"]),
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings["patientCurrentJobTitle"],
+      ),
     },
     {
       title: "Religious Affiliation",
-      value: evaluateValue(fhirBundle, mappings["patientReligion"]),
+      value: evaluateValue(fhirBundle, fhirPathMappings["patientReligion"]),
     },
     {
       title: "Marital Status",
-      value: evaluateValue(fhirBundle, mappings["patientMaritalStatus"]),
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings["patientMaritalStatus"],
+      ),
     },
   ];
   return evaluateData(socialData);
@@ -331,41 +311,37 @@ export const evaluateSocialData = (
 /**
  * Evaluates demographic data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing demographic data.
- * @param mappings - The object containing the fhir paths.
  * @returns An array of evaluated and formatted demographic data.
  */
-export const evaluateDemographicsData = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateDemographicsData = (fhirBundle: Bundle) => {
   const patientSex = toTitleCase(
-    evaluate(fhirBundle, mappings.patientGender)[0],
+    evaluate(fhirBundle, fhirPathMappings.patientGender)[0],
   );
 
   const demographicsData: DisplayDataProps[] = [
     {
       title: "Patient Name",
-      value: evaluatePatientName(fhirBundle, mappings, false),
+      value: evaluatePatientName(fhirBundle, false),
     },
     {
       title: "DOB",
-      value: evaluatePatientDOB(fhirBundle, mappings),
+      value: evaluatePatientDOB(fhirBundle),
     },
     {
       title: "Current Age",
-      value: calculatePatientAge(fhirBundle, mappings)?.toString(),
+      value: calculatePatientAge(fhirBundle)?.toString(),
     },
     {
       title: "Age at Death",
-      value: calculatePatientAgeAtDeath(fhirBundle, mappings),
+      value: calculatePatientAgeAtDeath(fhirBundle),
     },
     {
       title: "Vital Status",
-      value: evaluatePatientVitalStatus(fhirBundle, mappings),
+      value: evaluatePatientVitalStatus(fhirBundle),
     },
     {
       title: "Date of Death",
-      value: evaluate(fhirBundle, mappings.patientDOD)[0],
+      value: evaluate(fhirBundle, fhirPathMappings.patientDOD)[0],
     },
     {
       title: "Sex",
@@ -375,45 +351,50 @@ export const evaluateDemographicsData = (
     },
     {
       title: "Race",
-      value: evaluatePatientRace(fhirBundle, mappings),
+      value: evaluatePatientRace(fhirBundle),
     },
     {
       title: "Ethnicity",
-      value: evaluatePatientEthnicity(fhirBundle, mappings),
+      value: evaluatePatientEthnicity(fhirBundle),
     },
     {
       title: "Tribal Affiliation",
-      value: evaluateValue(fhirBundle, mappings.patientTribalAffiliation),
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings.patientTribalAffiliation,
+      ),
     },
     {
       title: "Preferred Language",
-      value: evaluatePatientLanguage(fhirBundle, mappings),
+      value: evaluatePatientLanguage(fhirBundle),
     },
     {
       title: "Patient Address",
-      value: evaluatePatientAddress(fhirBundle, mappings),
+      value: evaluatePatientAddress(fhirBundle),
     },
     {
       title: "County",
-      value: evaluate(fhirBundle, mappings.patientCounty)[0],
+      value: evaluate(fhirBundle, fhirPathMappings.patientCounty)[0],
     },
     {
       title: "Country",
-      value: evaluate(fhirBundle, mappings.patientCountry)[0],
+      value: evaluate(fhirBundle, fhirPathMappings.patientCountry)[0],
     },
     {
       title: "Contact",
-      value: formatContactPoint(evaluate(fhirBundle, mappings.patientTelecom)),
+      value: formatContactPoint(
+        evaluate(fhirBundle, fhirPathMappings.patientTelecom),
+      ),
     },
     {
       title: "Emergency Contact",
-      value: evaluateEmergencyContact(fhirBundle, mappings),
+      value: evaluateEmergencyContact(fhirBundle),
     },
     {
       title: "Patient IDs",
       toolTip:
         "Unique patient identifier(s) from their medical record. For example, a patient's social security number or medical record number.",
-      value: evaluateValue(fhirBundle, mappings.patientIds),
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientIds),
     },
   ];
   return evaluateData(demographicsData);
@@ -422,36 +403,32 @@ export const evaluateDemographicsData = (
 /**
  * Evaluates encounter data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing encounter data.
- * @param mappings - The object containing the fhir paths.
  * @returns An array of evaluated and formatted encounter data.
  */
-export const evaluateEncounterData = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateEncounterData = (fhirBundle: Bundle) => {
   const encounterData = [
     {
       title: "Encounter Date/Time",
       value: formatStartEndDateTime(
-        evaluate(fhirBundle, mappings["encounterStartDate"])[0],
-        evaluate(fhirBundle, mappings["encounterEndDate"])[0],
+        evaluate(fhirBundle, fhirPathMappings["encounterStartDate"])[0],
+        evaluate(fhirBundle, fhirPathMappings["encounterEndDate"])[0],
       ),
     },
     {
       title: "Encounter Type",
-      value: evaluate(fhirBundle, mappings["encounterType"])[0],
+      value: evaluate(fhirBundle, fhirPathMappings["encounterType"])[0],
     },
     {
       title: "Encounter ID",
-      value: evaluateEncounterId(fhirBundle, mappings),
+      value: evaluateEncounterId(fhirBundle),
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle, mappings),
+      value: evaluateEncounterDiagnosis(fhirBundle),
     },
     {
       title: "Encounter Care Team",
-      value: evaluateEncounterCareTeamTable(fhirBundle, mappings),
+      value: evaluateEncounterCareTeamTable(fhirBundle),
       table: true,
     },
   ];
@@ -461,16 +438,12 @@ export const evaluateEncounterData = (
 /**
  * Evaluates facility data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing facility data.
- * @param mappings - The object containing the fhir paths.
  * @returns An array of evaluated and formatted facility data.
  */
-export const evaluateFacilityData = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateFacilityData = (fhirBundle: Bundle) => {
   const facilityContactAddressRef = evaluate(
     fhirBundle,
-    mappings["facilityContactAddress"],
+    fhirPathMappings["facilityContactAddress"],
   );
   let referenceString;
 
@@ -478,19 +451,18 @@ export const evaluateFacilityData = (
     referenceString = facilityContactAddressRef[0].reference;
   }
   const facilityContactAddress = referenceString
-    ? (evaluateReference(fhirBundle, mappings, referenceString)
-        ?.address?.[0] as Address)
+    ? (evaluateReference(fhirBundle, referenceString)?.address?.[0] as Address)
     : undefined;
 
   const facilityData = [
     {
       title: "Facility Name",
-      value: evaluate(fhirBundle, mappings["facilityName"])[0],
+      value: evaluate(fhirBundle, fhirPathMappings["facilityName"])[0],
     },
     {
       title: "Facility Address",
       value: formatAddress(
-        evaluate(fhirBundle, mappings["facilityAddress"])[0],
+        evaluate(fhirBundle, fhirPathMappings["facilityAddress"])[0],
       ),
     },
     {
@@ -500,16 +472,16 @@ export const evaluateFacilityData = (
     {
       title: "Facility Contact",
       value: formatPhoneNumber(
-        evaluate(fhirBundle, mappings["facilityContact"])[0],
+        evaluate(fhirBundle, fhirPathMappings["facilityContact"])[0],
       ),
     },
     {
       title: "Facility Type",
-      value: evaluate(fhirBundle, mappings["facilityType"])[0],
+      value: evaluate(fhirBundle, fhirPathMappings["facilityType"])[0],
     },
     {
       title: "Facility ID",
-      value: evaluateFacilityId(fhirBundle, mappings),
+      value: evaluateFacilityId(fhirBundle),
     },
   ];
   return evaluateData(facilityData);
@@ -517,29 +489,23 @@ export const evaluateFacilityData = (
 /**
  * Evaluates provider data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing provider data.
- * @param mappings - The object containing the fhir paths.
  * @returns An array of evaluated and formatted provider data.
  */
-export const evaluateProviderData = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateProviderData = (fhirBundle: Bundle) => {
   const encounterRef: string | undefined = evaluate(
     fhirBundle,
-    mappings["compositionEncounterRef"],
+    fhirPathMappings["compositionEncounterRef"],
   )[0];
   const encounter: Encounter = evaluateReference(
     fhirBundle,
-    mappings,
     encounterRef ?? "",
   );
   const encounterParticipantRef: string | undefined = evaluate(
     encounter,
-    mappings["encounterIndividualRef"],
+    fhirPathMappings["encounterIndividualRef"],
   )[0];
   const { practitioner, organization } = evaluatePractitionerRoleReference(
     fhirBundle,
-    mappings,
     encounterParticipantRef ?? "",
   );
 
@@ -576,30 +542,27 @@ export const evaluateProviderData = (
 /**
  * Evaluates provider data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing provider data.
- * @param mappings - The object containing the fhir paths.
  * @returns An array of evaluated and formatted provider data.
  */
-export const evaluateEncounterCareTeamTable = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
   const encounterRef: string | undefined = evaluate(
     fhirBundle,
-    mappings["compositionEncounterRef"],
+    fhirPathMappings["compositionEncounterRef"],
   )[0];
   const encounter: Encounter = evaluateReference(
     fhirBundle,
-    mappings,
     encounterRef ?? "",
   );
-  const participants = evaluate(encounter, mappings["encounterParticipants"]);
+  const participants = evaluate(
+    encounter,
+    fhirPathMappings["encounterParticipants"],
+  );
 
   const tables = participants.map((participant) => {
     const role = evaluateValue(participant, "type");
     const { start, end } = evaluate(participant, "period")?.[0] ?? {};
     const { practitioner } = evaluatePractitionerRoleReference(
       fhirBundle,
-      mappings,
       participant.individual.reference,
     );
 
@@ -629,15 +592,11 @@ export const evaluateEncounterCareTeamTable = (
 /**
  * Evaluates emergency contact information from the FHIR bundle and formats it into a readable string.
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param mappings - The object containing the fhir paths.
  * @returns The formatted emergency contact information.
  */
-export const evaluateEmergencyContact = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateEmergencyContact = (fhirBundle: Bundle) => {
   const contacts: PatientContact[] =
-    evaluate(fhirBundle, mappings.patientEmergencyContact) ?? [];
+    evaluate(fhirBundle, fhirPathMappings.patientEmergencyContact) ?? [];
 
   if (contacts.length === 0) return undefined;
 
@@ -663,17 +622,12 @@ export const evaluateEmergencyContact = (
 /**
  * Evaluates a reference in a FHIR bundle.
  * @param fhirBundle - The FHIR bundle containing resources.
- * @param mappings - Path mappings for resolving references.
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
  */
-export const evaluateReference = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-  ref: string,
-) => {
+export const evaluateReference = (fhirBundle: Bundle, ref: string) => {
   const [resourceType, id] = ref.split("/");
-  return evaluate(fhirBundle, mappings.resolve, {
+  return evaluate(fhirBundle, fhirPathMappings.resolve, {
     resourceType,
     id,
   })[0];
@@ -735,7 +689,6 @@ export const evaluateFacilityId = (
     evaluate(fhirBundle, mappings.facilityLocation)?.[0] ?? "";
   const location: Location = evaluateReference(
     fhirBundle,
-    mappings,
     encounterLocationRef,
   );
 
@@ -745,28 +698,23 @@ export const evaluateFacilityId = (
 /**
  * Evaluate practitioner role reference
  * @param fhirBundle - The FHIR bundle containing resources.
- * @param mappings - Path mappings for resolving references.
  * @param practitionerRoleRef - practitioner role reference to be searched.
  * @returns practitioner and organization
  */
 export const evaluatePractitionerRoleReference = (
   fhirBundle: Bundle,
-  mappings: PathMappings,
   practitionerRoleRef: string,
 ): { practitioner?: Practitioner; organization?: Organization } => {
   const practitionerRole: PractitionerRole | undefined = evaluateReference(
     fhirBundle,
-    mappings,
     practitionerRoleRef,
   );
   const practitioner: Practitioner | undefined = evaluateReference(
     fhirBundle,
-    mappings,
     practitionerRole?.practitioner?.reference ?? "",
   );
   const organization: Organization | undefined = evaluateReference(
     fhirBundle,
-    mappings,
     practitionerRole?.organization?.reference ?? "",
   );
   return { practitioner, organization };
@@ -775,20 +723,16 @@ export const evaluatePractitionerRoleReference = (
 /**
  * Find encounter diagnoses
  * @param fhirBundle - The FHIR bundle containing resources.
- * @param mappings - Path mappings for resolving references.
  * @returns Comma delimited list of encounter diagnoses
  */
-export const evaluateEncounterDiagnosis = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
   const encounterDiagnosisRefs = evaluate(
     fhirBundle,
-    mappings.encounterDiagnosis,
+    fhirPathMappings.encounterDiagnosis,
   );
 
   const conditions: Condition[] = encounterDiagnosisRefs.map((diagnosis) =>
-    evaluateReference(fhirBundle, mappings, diagnosis.condition.reference),
+    evaluateReference(fhirBundle, diagnosis.condition.reference),
   );
 
   return conditions

@@ -28,7 +28,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return undefined if resource not found", () => {
       const actual = evaluateReference(
         BundleMiscNotes as unknown as Bundle,
-        mappings,
         "Observation/1234",
       );
 
@@ -37,7 +36,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return the resource if the resource is available", () => {
       const actual = evaluateReference(
         BundlePatient as unknown as Bundle,
-        mappings,
         "Patient/99999999-4p89-4b96-b6ab-c46406839cea",
       );
 
