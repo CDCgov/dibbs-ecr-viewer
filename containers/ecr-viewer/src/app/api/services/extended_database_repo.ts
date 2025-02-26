@@ -1,9 +1,10 @@
 import { db } from "./database";
 import {
-  ExtendedECR,
-  PatientAddress,
-  NewPatientAddress,
-  PatientAddressUpdate,
+  ExtendedECR, NewExtendedECR, ExtendedECRUpdate,
+  PatientAddress, NewPatientAddress, PatientAddressUpdate,
+  ECRLabs, NewECRLabs, ECRLabsUpdate,
+  ECRConditions, NewECRConditions, ECRConditionsUpdate,
+  ECRRuleSummaries, NewECRRuleSummaries, ECRRuleSummariesUpdate,
 } from "./extended_types";
 
 /**
@@ -74,16 +75,16 @@ export async function findExtendedEcr(criteria: Partial<ExtendedECR> | null) {
     );
   }
 
-  if (criteria.patient_name_last !== undefined) {
+  if (criteria.last_name !== undefined) {
     query = query.where(
-      "patient_name_last",
-      criteria.patient_name_last === null ? "is" : "=",
-      criteria.patient_name_last,
+      "last_name",
+      criteria.last_name === null ? "is" : "=",
+      criteria.last_name,
     );
   }
 
-  if (criteria.patient_birth_date) {
-    query = query.where("patient_birth_date", "=", criteria.patient_birth_date);
+  if (criteria.birth_date) {
+    query = query.where("birth_date", "=", criteria.birth_date);
   }
 
   if (criteria.date_created) {
@@ -125,7 +126,7 @@ export async function createExtendedEcr(ecr: NewExtendedECR | null) {
  */
 export async function updateExtendedEcr(
   eICR_ID: string | null,
-  updateWith: ECRUpdate,
+  updateWith: ExtendedECRUpdate,
 ) {
   await db
     .updateTable("ecr_data")

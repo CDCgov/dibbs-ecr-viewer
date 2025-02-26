@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { sql } from "kysely";
 import { db } from "../api/services/database";
 import * as database_repo from "../api/services/database_repo";
