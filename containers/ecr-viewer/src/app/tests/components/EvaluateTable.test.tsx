@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { PathMappings } from "@/app/utils/data-utils";
+import { PathMappings } from "@/app/view-data/fhirPath";
 import userEvent from "@testing-library/user-event";
 import EvaluateTable, {
   BaseTable,

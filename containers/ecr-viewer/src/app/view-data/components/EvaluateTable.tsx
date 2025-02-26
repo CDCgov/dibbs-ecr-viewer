@@ -1,11 +1,10 @@
 import { Element } from "fhir/r4";
-import { PathMappings } from "@/app/utils/data-utils";
 import { Table } from "@trussworks/react-uswds";
 import classNames from "classnames";
 import React, { ReactNode } from "react";
 import { evaluateValue } from "../../services/evaluateFhirDataService";
 import EvaluateTableRow from "./EvaluateTableRow";
-import fhirPathMappings from "@/app/view-data/fhirPath";
+import fhirPathMappings, { PathMappings } from "@/app/view-data/fhirPath";
 
 export interface ColumnInfoInput {
   columnName: string;
