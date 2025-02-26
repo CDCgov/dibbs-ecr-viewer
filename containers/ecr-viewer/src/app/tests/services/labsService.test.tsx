@@ -2,7 +2,7 @@ import { loadYamlConfig } from "@/app/api/utils";
 import BundleLab from "../assets/BundleLab.json";
 import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
 import BundleLabInvalidResultsDiv from "../assets/BundleLabInvalidResultsDiv.json";
-import { Bundle, Observation, Organization } from "fhir/r4";
+import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import { render, screen } from "@testing-library/react";
 import {
@@ -16,7 +16,6 @@ import {
   evaluateObservationTable,
   isLabReportElementDataList,
   evaluateLabOrganizationData,
-  LabReport,
   ResultObject,
   combineOrgAndReportData,
   evaluateLabInfoData,
@@ -183,7 +182,7 @@ describe("LabsService tests", () => {
                 reference: "Observation/1c0f3367-0588-c90e-fed0-0d8c15c5ac1b",
               },
             ],
-          },
+          } as DiagnosticReport,
           BundleLab as unknown as Bundle,
           mappings,
         );
@@ -205,7 +204,7 @@ describe("LabsService tests", () => {
                 reference: "Observation/invalid-observation-id",
               },
             ],
-          },
+          } as DiagnosticReport,
           BundleLab as unknown as Bundle,
           mappings,
         );
@@ -231,7 +230,7 @@ describe("LabsService tests", () => {
           evaluate(
             BundleLabNoLabIds,
             "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
-          ) as LabReport[]
+          ) as DiagnosticReport[]
         )[0];
         const labReportJsonObjectWithoutId = {
           resultId: undefined,
@@ -526,7 +525,7 @@ describe("LabsService tests", () => {
         },
       };
       const actual = evaluateObservationTable(
-        diagnosticReport as unknown as LabReport,
+        diagnosticReport as unknown as DiagnosticReport,
         null as unknown as Bundle,
         mappings,
         [],
@@ -726,7 +725,7 @@ describe("LabsService tests", () => {
         name: "Moderna US, Inc.",
         resourceType: "Organization",
       },
-    ];
+    ] as Organization[];
 
     const matchedOrg1: Organization = {
       id: "22c6cdd0-bde1-e220-9ba4-2c2802f795ad",

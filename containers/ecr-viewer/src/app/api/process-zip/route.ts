@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const body = schema.parse(Object.fromEntries(await request.formData()));
     const { message, status } = await processZip(body.upload_file);
     return NextResponse.json({ message }, { status });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { message: "Validation error", errors: error.errors },

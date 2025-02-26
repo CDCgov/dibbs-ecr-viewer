@@ -96,7 +96,7 @@ export const processZip = async (file: File) => {
   let orchestrationResp: BundleInfo;
   try {
     orchestrationResp = await getOrchestrationResponse(file);
-  } catch (error: any) {
+  } catch (error: unknown) {
     const message = "Failed to process orchestration response";
     console.error({ message, error });
     return {
