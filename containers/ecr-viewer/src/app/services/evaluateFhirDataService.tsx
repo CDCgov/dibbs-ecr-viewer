@@ -154,12 +154,9 @@ export const evaluateEncounterId = (
   mappings: PathMappings,
 ) => {
   const encounterIDs: Identifier[] = evaluate(fhirBundle, mappings.encounterID);
-  const filteredIds = encounterIDs.flatMap((id) => {
-    if (typeof id.value === "string" && /^\d+$/.test(id.value)) {
-      return [id.value];
-    }
-    return [];
-  });
+  const filteredIds = encounterIDs
+    .filter((id) => typeof id.value === "string" && /^\d+$/.test(id.value))
+    .map((id) => id.value);
 
   return filteredIds[0] ?? "";
 };
