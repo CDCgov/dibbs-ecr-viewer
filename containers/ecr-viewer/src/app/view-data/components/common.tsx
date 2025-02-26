@@ -44,7 +44,7 @@ export const returnImmunizations = (
   immunizationsArray.forEach((entry) => {
     entry.occurrenceDateTime = formatDateTime(entry.occurrenceDateTime ?? "");
 
-    const manufacturer: Organization = evaluateReference(
+    const manufacturer = evaluateReference<Organization>(
       fhirBundle,
       mappings,
       entry.manufacturer?.reference || "",

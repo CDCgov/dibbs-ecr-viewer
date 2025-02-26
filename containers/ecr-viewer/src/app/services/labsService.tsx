@@ -87,13 +87,10 @@ export const getObservations = (
   if (!report || !Array.isArray(report.result) || report.result.length === 0)
     return [];
   return report.result
-    .map((obsRef) => {
-      return (
-        obsRef.reference &&
-        evaluateReference(fhirBundle, mappings, obsRef.reference)
-      );
-    })
-    .filter((obs) => obs);
+    .map((obsRef) =>
+      evaluateReference<Observation>(fhirBundle, mappings, obsRef.reference),
+    )
+    .filter((obs): obs is Observation => obs !== undefined);
 };
 
 /**
@@ -336,19 +333,23 @@ export function evaluateObservationTable(
   mappings: PathMappings,
   columnInfo: ColumnInfoInput[],
 ): React.JSX.Element | undefined {
-  const observations: Observation[] = (
-    report.result?.map((obsRef: Reference) =>
-      evaluateReference(fhirBundle, mappings, obsRef.reference ?? ""),
-    ) ?? []
-  ).filter(
-    (observation) =>
-      !observation.component &&
-      // Make sure there is a component name, but it isn't "Lab Interpretation" as that's handled
-      // via the tab on the result's name
-      observation.code?.coding.some(
-        (c: Coding) => c?.display && c?.display !== "Lab Interpretation",
+  const observations = (
+    report.result?.map((obsRef) =>
+      evaluateReference<Observation>(
+        fhirBundle,
+        mappings,
+        obsRef.reference ?? "",
       ),
-  );
+    ) ?? []
+  ).filter((observation): observation is Observation => {
+    if (!observation) return false;
+    if (observation.component) return false;
+    const hasValidCoding = observation.code?.coding?.some(
+      (c: Coding) => c?.display && c.display !== "Lab Interpretation",
+    );
+    if (!hasValidCoding) return false;
+    return true;
+  });
 
   if (observations?.length > 0) {
     return (
@@ -395,8 +396,8 @@ export const evaluateDiagnosticReportData = (
       columnName: "Test Method",
       infoPath: "observationDeviceReference",
       applyToValue: (ref) => {
-        const device: Device = evaluateReference(fhirBundle, mappings, ref);
-        return safeParse(device.deviceName?.[0]?.name ?? "");
+        const device = evaluateReference<Device>(fhirBundle, mappings, ref);
+        return safeParse(device?.deviceName?.[0]?.name ?? "");
       },
       className: "minw-10 width-20",
     },
@@ -427,12 +428,12 @@ export const evaluateOrganismsReportData = (
   let observation: Observation | undefined;
 
   report.result?.find((obsRef: Reference) => {
-    const obs: Observation = evaluateReference(
+    const obs = evaluateReference<Observation>(
       fhirBundle,
       mappings,
       obsRef.reference ?? "",
     );
-    if (obs.component) {
+    if (obs?.component) {
       observation = obs;
       return true;
     }

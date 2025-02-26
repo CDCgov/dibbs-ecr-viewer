@@ -18,7 +18,7 @@ import {
   getHumanReadableCodeableConcept,
   censorGender,
 } from "@/app/services/evaluateFhirDataService";
-import { Bundle, CodeableConcept, Patient } from "fhir/r4";
+import { Bundle, CodeableConcept, Observation, Patient } from "fhir/r4";
 import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
 import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import BundleEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
@@ -30,7 +30,7 @@ const mappings = loadYamlConfig();
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Reference", () => {
     it("should return undefined if resource not found", () => {
-      const actual = evaluateReference(
+      const actual = evaluateReference<Observation>(
         BundleMiscNotes as unknown as Bundle,
         mappings,
         "Observation/1234",
@@ -39,14 +39,14 @@ describe("evaluateFhirDataServices tests", () => {
       expect(actual).toBeUndefined();
     });
     it("should return the resource if the resource is available", () => {
-      const actual = evaluateReference(
+      const actual = evaluateReference<Patient>(
         BundlePatient as unknown as Bundle,
         mappings,
         "Patient/99999999-4p89-4b96-b6ab-c46406839cea",
       );
 
-      expect(actual.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
-      expect(actual.resourceType).toEqual("Patient");
+      expect(actual?.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
+      expect(actual?.resourceType).toEqual("Patient");
     });
   });
 

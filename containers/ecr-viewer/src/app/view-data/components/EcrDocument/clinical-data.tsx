@@ -153,10 +153,9 @@ const evaluateAdministeredMedication = (
   if (!administeredMedicationReferences?.length) {
     return [];
   }
-  const administeredMedications: MedicationAdministration[] =
-    administeredMedicationReferences.map((ref) =>
-      evaluateReference(fhirBundle, mappings, ref),
-    );
+  const administeredMedications = administeredMedicationReferences.map((ref) =>
+    evaluateReference<MedicationAdministration>(fhirBundle, mappings, ref),
+  );
 
   return administeredMedications.reduce<AdministeredMedicationTableData[]>(
     (data, medicationAdministration) => {
@@ -171,8 +170,8 @@ const evaluateAdministeredMedication = (
 
       data.push({
         date:
-          medicationAdministration.effectiveDateTime ??
-          medicationAdministration.effectivePeriod?.start,
+          medicationAdministration?.effectiveDateTime ??
+          medicationAdministration?.effectivePeriod?.start,
         name: getHumanReadableCodeableConcept(medication?.code),
       });
       return data;
@@ -216,12 +215,12 @@ export const returnCareTeamTable = (
       (entry.period as any).text = formatStartEndDate(start, end);
     }
 
-    const practitioner: Practitioner = evaluateReference(
+    const practitioner = evaluateReference<Practitioner>(
       bundle,
       mappings,
       entry?.member?.reference || "",
     );
-    const practitionerNameObj = practitioner.name?.find(
+    const practitionerNameObj = practitioner?.name?.find(
       (nameObject) => nameObject.family,
     );
     if (entry.member) {

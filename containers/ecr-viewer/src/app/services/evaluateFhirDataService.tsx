@@ -20,6 +20,7 @@ import {
   PractitionerRole,
   Quantity,
   Reference,
+  Resource,
 } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import * as dateFns from "date-fns";
@@ -491,10 +492,9 @@ export const evaluateFacilityData = (
   if (facilityContactAddressRef[0]) {
     referenceString = facilityContactAddressRef[0].reference;
   }
-  const facilityContactAddress = referenceString
-    ? (evaluateReference(fhirBundle, mappings, referenceString)
-        ?.address?.[0] as Address)
-    : undefined;
+  const facilityContactAddress: Address | undefined =
+    evaluateReference<Organization>(fhirBundle, mappings, referenceString)
+      ?.address?.[0];
 
   const facilityData = [
     {
@@ -542,7 +542,7 @@ export const evaluateProviderData = (
     mappings.compositionEncounterRef,
   )[0];
 
-  const encounter: Encounter | undefined = evaluateReference(
+  const encounter = evaluateReference<Encounter>(
     fhirBundle,
     mappings,
     encounterRef,
@@ -601,7 +601,7 @@ export const evaluateEncounterCareTeamTable = (
     fhirBundle,
     mappings.compositionEncounterRef,
   )[0];
-  const encounter: Encounter | undefined = evaluateReference(
+  const encounter = evaluateReference<Encounter>(
     fhirBundle,
     mappings,
     encounterRef,
@@ -684,17 +684,27 @@ export const evaluateEmergencyContact = (
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
  */
-export const evaluateReference = (
+export const evaluateReference = <T extends Resource>(
   fhirBundle: Bundle,
   mappings: PathMappings,
   ref?: string,
-) => {
+): T | undefined => {
   if (!ref) return undefined;
   const [resourceType, id] = ref.split("/");
-  return evaluate(fhirBundle, mappings.resolve, {
+  const result: Resource | undefined = evaluate(fhirBundle, mappings.resolve, {
     resourceType,
     id,
   })[0];
+
+  if (!result) {
+    return undefined;
+  } else if (result?.resourceType !== resourceType) {
+    console.error(
+      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
+    );
+  }
+
+  return result as T;
 };
 
 /**
@@ -750,7 +760,7 @@ export const evaluateFacilityId = (
 ) => {
   const encounterLocationRef =
     evaluate(fhirBundle, mappings.facilityLocation)?.[0] ?? "";
-  const location: Location = evaluateReference(
+  const location = evaluateReference<Location>(
     fhirBundle,
     mappings,
     encounterLocationRef,
@@ -773,17 +783,17 @@ export const evaluatePractitionerRoleReference = (
 ): { practitioner?: Practitioner; organization?: Organization } => {
   if (!practitionerRoleRef) return {};
 
-  const practitionerRole: PractitionerRole | undefined = evaluateReference(
+  const practitionerRole = evaluateReference<PractitionerRole>(
     fhirBundle,
     mappings,
     practitionerRoleRef,
   );
-  const practitioner: Practitioner | undefined = evaluateReference(
+  const practitioner = evaluateReference<Practitioner>(
     fhirBundle,
     mappings,
     practitionerRole?.practitioner?.reference,
   );
-  const organization: Organization | undefined = evaluateReference(
+  const organization = evaluateReference<Organization>(
     fhirBundle,
     mappings,
     practitionerRole?.organization?.reference,
@@ -807,16 +817,16 @@ export const evaluateEncounterDiagnosis = (
     mappings.encounterDiagnosis,
   );
 
-  const conditions: Condition[] = diagnoses.flatMap((diagnosis) => {
-    const reference = diagnosis.condition?.reference;
-    if (reference) {
-      return evaluateReference(fhirBundle, mappings, reference) ?? [];
-    }
-    return [];
-  });
-
-  return conditions
-    .map((condition) => getHumanReadableCodeableConcept(condition.code))
+  return diagnoses
+    .map((diagnosis) => {
+      const reference = diagnosis.condition?.reference;
+      const condition = evaluateReference<Condition>(
+        fhirBundle,
+        mappings,
+        reference,
+      );
+      return getHumanReadableCodeableConcept(condition?.code);
+    })
     .filter(Boolean)
     .join(", ");
 };

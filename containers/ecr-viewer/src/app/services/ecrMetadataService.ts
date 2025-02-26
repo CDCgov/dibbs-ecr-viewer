@@ -82,7 +82,7 @@ export const evaluateEcrMetadata = (
 
   const custodianRef: string =
     evaluate(fhirBundle, mappings.eicrCustodianRef)[0] ?? "";
-  const custodian: Organization = evaluateReference(
+  const custodian = evaluateReference<Organization>(
     fhirBundle,
     mappings,
     custodianRef,
