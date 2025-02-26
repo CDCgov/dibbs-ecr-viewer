@@ -16,16 +16,16 @@ import {
   safeParse,
 } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
-import {
-  formatAddress,
-  formatPhoneNumber,
-  getHumanReadableCodeableConcept,
-} from "@/app/services/formatService";
+import { formatAddress, formatPhoneNumber } from "@/app/services/formatService";
 import { Coding, ObservationComponent } from "fhir/r4b";
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
-import { evaluateReference, evaluateValue } from "./evaluateFhirDataService";
+import {
+  evaluateReference,
+  evaluateValue,
+  getHumanReadableCodeableConcept,
+} from "./evaluateFhirDataService";
 import {
   DataDisplay,
   DisplayDataProps,

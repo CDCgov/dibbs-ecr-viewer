@@ -15,8 +15,9 @@ import {
   evaluateAlcoholUse,
   evaluatePatientLanguage,
   evaluatePatientVitalStatus,
+  getHumanReadableCodeableConcept,
 } from "@/app/services/evaluateFhirDataService";
-import { Bundle, Patient } from "fhir/r4";
+import { Bundle, CodeableConcept, Patient } from "fhir/r4";
 import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
 import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import BundleEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
@@ -690,6 +691,84 @@ describe("evaluateFhirDataServices tests", () => {
       );
 
       expect(actual).toEqual("Spanish\n\nEnglish");
+    });
+  });
+
+  describe("Get Human Readable CodeableConcept", () => {
+    it("should return undefined if no coding is available", () => {
+      const codeableConcept = undefined;
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+
+      expect(actual).toBeUndefined();
+    });
+
+    it("should return the text value if available", () => {
+      const textValue = "this is condition";
+      const codeableConcept: CodeableConcept = {
+        text: textValue,
+        coding: [
+          {
+            display: "Condition",
+            code: "64572001",
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(textValue);
+    });
+
+    it("should return the first display value if there is no text value", () => {
+      const correctDisplayValue = "Condition";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            display: "Condition",
+            code: "64572001",
+          },
+          {
+            display: "A Condition",
+            code: "AC",
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(correctDisplayValue);
+    });
+
+    it("should return the code and system of the first coding with both of them if there is no text or display value", () => {
+      const codeValue = "64572001";
+      const systemValue = "http://snomed.info/sct";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            code: "AC",
+          },
+          {
+            code: codeValue,
+            system: systemValue,
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(`${codeValue} (${systemValue})`);
+    });
+
+    it("should return the code of the first first coding with a code if there is no text, display, or a code/system pair", () => {
+      const codeValue = "64572001";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            code: codeValue,
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(codeValue);
     });
   });
 });

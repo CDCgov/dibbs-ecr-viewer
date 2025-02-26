@@ -24,6 +24,7 @@ import {
 import {
   evaluateReference,
   evaluateValue,
+  getHumanReadableCodeableConcept,
 } from "@/app/services/evaluateFhirDataService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { JsonTable } from "../JsonTable";
@@ -34,11 +35,7 @@ import {
   formatStartEndDate,
 } from "@/app/services/formatDateService";
 import { toSentenceCase } from "@/app/utils/format-utils";
-import {
-  formatName,
-  formatVitals,
-  getHumanReadableCodeableConcept,
-} from "@/app/services/formatService";
+import { formatName, formatVitals } from "@/app/services/formatService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.

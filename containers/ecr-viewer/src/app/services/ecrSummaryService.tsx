@@ -12,12 +12,12 @@ import {
   formatAddress,
   formatContactPoint,
   formatPhoneNumber,
-  getHumanReadableCodeableConcept,
 } from "@/app/services/formatService";
 import { evaluate } from "@/app/utils/evaluate";
 import {
   evaluatePatientName,
   evaluateEncounterDiagnosis,
+  getHumanReadableCodeableConcept,
 } from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import {

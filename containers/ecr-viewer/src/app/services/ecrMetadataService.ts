@@ -2,7 +2,6 @@ import {
   formatAddress,
   formatContactPoint,
   formatName,
-  getHumanReadableCodeableConcept,
 } from "@/app/services/formatService";
 import {
   CompleteData,
@@ -11,7 +10,10 @@ import {
 } from "@/app/utils/data-utils";
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
-import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
+import {
+  evaluatePractitionerRoleReference,
+  getHumanReadableCodeableConcept,
+} from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateReference } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";

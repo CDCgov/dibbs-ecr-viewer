@@ -29,7 +29,6 @@ import {
   formatContactPoint,
   formatName,
   formatPhoneNumber,
-  getHumanReadableCodeableConcept,
 } from "./formatService";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 import { Element } from "fhir/r4";
@@ -865,4 +864,47 @@ export const evaluatePatientLanguage = (
     })
     .filter(Boolean)
     .join("\n\n");
+};
+
+/**
+ * Attempts to return a human-readable display value for a CodeableConcept. It will return the first
+ * available value in the following order:
+ * 1) `undefined` if the `CodeableConcept` is falsy
+ * 2) `CodeableConcept.text`
+ * 3) value of the first `coding` with a `display` value
+ * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
+ * 5) `code` of the first `coding` with a `code` value
+ * 6) `undefined`
+ * @param codeableConcept - The CodeableConcept to get the display value from.
+ * @returns - The human-readable display value of the CodeableConcept.
+ */
+export const getHumanReadableCodeableConcept = (
+  codeableConcept: CodeableConcept | undefined,
+) => {
+  if (!codeableConcept) {
+    return undefined;
+  }
+
+  const { coding, text } = codeableConcept;
+
+  if (text) {
+    return text;
+  }
+
+  const firstCodingWithDisplay = coding?.find((c) => c.display);
+  if (firstCodingWithDisplay?.display) {
+    return firstCodingWithDisplay.display;
+  }
+
+  const firstCodingWithCodeSystem = coding?.find((c) => c.code && c.system);
+  if (firstCodingWithCodeSystem?.code && firstCodingWithCodeSystem?.system) {
+    return `${firstCodingWithCodeSystem.code} (${firstCodingWithCodeSystem.system})`;
+  }
+
+  const firstCodingWithCode = coding?.find((c) => c.code);
+  if (firstCodingWithCode?.code) {
+    return firstCodingWithCode.code;
+  }
+
+  return undefined;
 };
