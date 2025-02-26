@@ -135,9 +135,11 @@ export const returnProblemsTable = (
 
   problemsArray.forEach((entry) => {
     entry.onsetDateTime = formatDateTime(entry.onsetDateTime);
-    entry.onsetAge = {
-      value: calculatePatientAge(fhirBundle, mappings, entry.onsetDateTime),
-    };
+    entry.onsetAge ||= entry.onsetDateTime
+      ? {
+          value: calculatePatientAge(fhirBundle, mappings, entry.onsetDateTime),
+        }
+      : undefined;
   });
 
   if (problemsArray.length === 0) {
