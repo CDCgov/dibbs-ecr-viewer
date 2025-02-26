@@ -10,12 +10,13 @@ import pgp from "pg-promise";
  */
 const createSingleton = <T>(name: string, create: () => T): T => {
   const s = Symbol.for(name);
-  // TODO: Revisit
+
+  // This code isn't accessed by devs directly, should be fine to leave `any` here
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let scope = (global as any)[s];
   if (!scope) {
     scope = { ...create() };
-    // TODO: Revisit
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any)[s] = scope;
   }
