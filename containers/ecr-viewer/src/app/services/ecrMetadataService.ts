@@ -12,6 +12,7 @@ import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import {
   evaluatePractitionerRoleReference,
+  evaluateValue,
   getHumanReadableCodeableConcept,
 } from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -87,11 +88,11 @@ export const evaluateEcrMetadata = (
     custodianRef,
   );
 
-  const eicrReleaseVersion = (fhirBundle: any, mappings: any) => {
-    const releaseVersion: string = evaluate(
+  const eicrReleaseVersion = (fhirBundle: Bundle, mappings: PathMappings) => {
+    const releaseVersion: string = evaluateValue(
       fhirBundle,
       mappings.eicrReleaseVersion,
-    )[0];
+    );
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
     } else if (releaseVersion === "2021-01-01") {

@@ -32,7 +32,7 @@ patientMaritalStatus: "Bundle.entry.resource.where(resourceType = 'Patient').mar
 
 #eCR Metadata
 eicrIdentifier: "Bundle.entry.resource.where(resourceType= 'Composition').id"
-eicrReleaseVersion: "Bundle.entry.resource.where(resourceType='Composition').extension.where(url='https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').valueString"
+eicrReleaseVersion: "Bundle.entry.resource.where(resourceType='Composition').extension.where(url='https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').value"
 eicrCustodianRef: "Bundle.entry.resource.where(resourceType= 'Composition').custodian.reference"
 dateTimeEcrCreated: "Bundle.entry.resource.where(resourceType = 'Composition').date"
 ehrSoftware: "Bundle.entry.resource.where(resourceType = 'Device').where(property[0].type.coding.code='software').version.value"
