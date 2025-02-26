@@ -42,7 +42,7 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
   return evaluateData([
     {
       title: "Patient Name",
-      value: evaluatePatientName(fhirBundle, fhirPathMappings, false),
+      value: evaluatePatientName(fhirBundle, false),
     },
     {
       title: "DOB",
@@ -107,7 +107,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
   return evaluateData([
     {
       title: "Encounter Date/Time",
-      value: evaluateEncounterDate(fhirBundle, fhirPathMappings),
+      value: evaluateEncounterDate(fhirBundle),
     },
     {
       title: "Encounter Type",
@@ -115,7 +115,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle, fhirPathMappings),
+      value: evaluateEncounterDiagnosis(fhirBundle),
     },
     {
       title: "Facility Name",
@@ -268,7 +268,6 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
   const problemsElement = returnProblemsTable(
     fhirBundle,
     problemsListFiltered as Condition[],
-    fhirPathMappings,
   );
 
   return [{ value: problemsElement, dividerLine: true }];
@@ -347,7 +346,6 @@ export const evaluateEcrSummaryRelevantLabResults = (
   const relevantLabElements = evaluateLabInfoData(
     fhirBundle,
     relevantLabs,
-    fhirPathMappings,
     "h4",
   );
 
@@ -394,7 +392,6 @@ const evaluateEcrSummaryRelevantImmunizations = (
   const immunizationTable = returnImmunizations(
     fhirBundle,
     immunizations,
-    fhirPathMappings,
     "Immunizations Relevant to Reportable Condition",
     "caption-data-title caption-width-full",
   );

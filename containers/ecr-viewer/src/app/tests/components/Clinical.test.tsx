@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import ClinicalInfo from "../../view-data/components/ClinicalInfo";
 import { Procedure } from "fhir/r4";
-import mappings from "@/app/view-data/fhirPath";
 import {
   evaluateClinicalData,
   evaluateMiscNotes,
@@ -104,7 +103,7 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
     const treatmentData = [
       {
         title: "Procedures",
-        value: returnProceduresTable(proceduresArray, mappings),
+        value: returnProceduresTable(proceduresArray),
       },
     ];
 
@@ -179,19 +178,33 @@ describe("Snapshot test for Clinical Notes", () => {
           </tbody>
         </table>`;
     const clinicalNotes = [
-      evaluateMiscNotes(
-        {
-          resourceType: "Bundle",
-          type: "batch",
-          entry: [
-            {
-              id: testData,
+      evaluateMiscNotes({
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          {
+            // @ts-expect-error
+            resource: {
+              resourceType: "Composition",
+              section: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "10164-2",
+                      },
+                    ],
+                  },
+                  text: {
+                    status: "generated",
+                    div: testData,
+                  },
+                },
+              ],
             },
-          ],
-        },
-
-        { historyOfPresentIllness: "Bundle.entry.id" },
-      ),
+          },
+        ],
+      }),
     ];
     let { container } = render(
       <ClinicalInfo
@@ -210,10 +223,7 @@ describe("Snapshot test for Clinical Notes", () => {
 
 describe("Check that Clinical Info components render given FHIR bundle", () => {
   const fhirBundleClinicalInfo = require("../assets/BundleClinicalInfo.json");
-  const testClinicalData = evaluateClinicalData(
-    fhirBundleClinicalInfo,
-    mappings,
-  );
+  const testClinicalData = evaluateClinicalData(fhirBundleClinicalInfo);
 
   const testImmunizationsData =
     testClinicalData.immunizationsDetails.availableData;

@@ -19,7 +19,6 @@ describe("LabInfo", () => {
       const labinfoOrg = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
         evaluate(BundleLab, mappings["diagnosticReports"]),
-        mappings,
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
@@ -103,7 +102,6 @@ describe("LabInfo", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
-        mappings,
       );
 
       render(<LabInfo labResults={labinfo} />);
@@ -132,7 +130,6 @@ describe("LabInfo", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
-        mappings,
       );
 
       const { container } = render(<LabInfo labResults={labinfo} />);

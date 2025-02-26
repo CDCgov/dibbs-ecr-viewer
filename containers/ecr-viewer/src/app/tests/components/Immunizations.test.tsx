@@ -3,7 +3,6 @@ import { axe } from "jest-axe";
 import { Bundle, Immunization } from "fhir/r4";
 import BundleClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
 import { returnImmunizations } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 describe("Immunizations Table", () => {
   let container: HTMLElement;
@@ -157,7 +156,6 @@ describe("Immunizations Table", () => {
       returnImmunizations(
         BundleClinicalInfo as unknown as Bundle,
         immunizationsData,
-        fhirPathMappings,
         "Immunization History",
       )!,
     ).container;

@@ -19,7 +19,7 @@ import {
 } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import * as dateFns from "date-fns";
-import { PathMappings, evaluateData, noData } from "@/app/utils/data-utils";
+import { evaluateData, noData } from "@/app/utils/data-utils";
 import {
   formatAddress,
   formatContactPoint,
@@ -258,7 +258,7 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     },
     {
       title: "Travel History",
-      value: evaluateTravelHistoryTable(fhirBundle, fhirPathMappings),
+      value: evaluateTravelHistoryTable(fhirBundle),
       table: true,
     },
     {
@@ -678,15 +678,11 @@ export const evaluateValue = (
 /**
  * Find facility ID based on the first encounter's location
  * @param fhirBundle - The FHIR bundle containing resources.
- * @param mappings - Path mappings for resolving references.
  * @returns Facility id
  */
-export const evaluateFacilityId = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateFacilityId = (fhirBundle: Bundle) => {
   const encounterLocationRef =
-    evaluate(fhirBundle, mappings.facilityLocation)?.[0] ?? "";
+    evaluate(fhirBundle, fhirPathMappings.facilityLocation)?.[0] ?? "";
   const location: Location = evaluateReference(
     fhirBundle,
     encounterLocationRef,
@@ -743,16 +739,12 @@ export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
 /**
  * Evaluate patient's prefered language
  * @param fhirBundle - The FHIR bundle containing resources.
- * @param mappings - Path mappings for resolving references.
  * @returns String containing language, proficiency, and mode
  */
-export const evaluatePatientLanguage = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
   let patientCommunication: PatientCommunication[] = evaluate(
     fhirBundle,
-    mappings.patientCommunication,
+    fhirPathMappings.patientCommunication,
   );
   const preferedPatientCommunication = patientCommunication.filter(
     (communication) => communication.preferred,

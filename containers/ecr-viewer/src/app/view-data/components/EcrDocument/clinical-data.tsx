@@ -1,9 +1,4 @@
-import {
-  PathMappings,
-  evaluateData,
-  noData,
-  safeParse,
-} from "@/app/utils/data-utils";
+import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import {
   Bundle,
@@ -41,7 +36,6 @@ import fhirPathMappings from "@/app/view-data/fhirPath";
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing clinical data.
- * @param mappings - The object containing the fhir paths.
  * @returns An object containing evaluated and formatted clinical data.
  * @property {DisplayDataProps[]} clinicalNotes - Clinical notes data.
  * @property {DisplayDataProps[]} reasonForVisitDetails - Reason for visit details.
@@ -50,18 +44,16 @@ import fhirPathMappings from "@/app/view-data/fhirPath";
  * @property {DisplayDataProps[]} vitalData - Vital signs data.
  * @property {DisplayDataProps[]} immunizationsDetails - Immunization details.
  */
-export const evaluateClinicalData = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
-  const clinicalNotes: DisplayDataProps[] = [
-    evaluateMiscNotes(fhirBundle, mappings),
-  ];
+export const evaluateClinicalData = (fhirBundle: Bundle) => {
+  const clinicalNotes: DisplayDataProps[] = [evaluateMiscNotes(fhirBundle)];
 
   const reasonForVisitData: DisplayDataProps[] = [
     {
       title: "Reason for Visit",
-      value: evaluate(fhirBundle, mappings["clinicalReasonForVisit"])[0],
+      value: evaluate(
+        fhirBundle,
+        fhirPathMappings["clinicalReasonForVisit"],
+      )[0],
     },
   ];
 
@@ -70,33 +62,27 @@ export const evaluateClinicalData = (
       title: "Problems List",
       value: returnProblemsTable(
         fhirBundle,
-        evaluate(fhirBundle, mappings["activeProblems"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings["activeProblems"]),
       ),
     },
   ];
 
-  const administeredMedication = evaluateAdministeredMedication(
-    fhirBundle,
-    mappings,
-  );
+  const administeredMedication = evaluateAdministeredMedication(fhirBundle);
 
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
       value: returnProceduresTable(
-        evaluate(fhirBundle, mappings["procedures"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings["procedures"]),
       ),
     },
     {
       title: "Planned Procedures",
       value: returnPlannedProceduresTable(
-        evaluate(fhirBundle, mappings["plannedProcedures"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings["plannedProcedures"]),
       ),
     },
-    evaluatePlanOfTreatment(fhirBundle, mappings, "Plan of Treatment"),
+    evaluatePlanOfTreatment(fhirBundle, "Plan of Treatment"),
     {
       title: "Administered Medications",
       value: administeredMedication?.length && (
@@ -105,14 +91,14 @@ export const evaluateClinicalData = (
     },
     {
       title: "Care Team",
-      value: returnCareTeamTable(fhirBundle, mappings),
+      value: returnCareTeamTable(fhirBundle),
     },
   ];
 
   const vitalData = [
     {
       title: "Vital Signs",
-      value: returnVitalsTable(fhirBundle, mappings),
+      value: returnVitalsTable(fhirBundle),
     },
   ];
 
@@ -121,8 +107,7 @@ export const evaluateClinicalData = (
       title: "Immunization History",
       value: returnImmunizations(
         fhirBundle,
-        evaluate(fhirBundle, mappings["immunizations"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings["immunizations"]),
         "Immunization History",
       ),
     },

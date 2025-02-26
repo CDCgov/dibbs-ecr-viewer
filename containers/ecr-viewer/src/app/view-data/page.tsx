@@ -12,7 +12,6 @@ import {
   evaluatePatientDOB,
   evaluatePatientName,
 } from "../services/evaluateFhirDataService";
-import { PathMappings } from "../utils/data-utils";
 
 import EcrDocument from "./components/EcrDocument";
 import { EcrLoadingSkeleton } from "./components/LoadingComponent";
@@ -21,7 +20,9 @@ import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import SideNav from "./components/SideNav";
 
-import fhirMappings from "./fhirPath";
+type ApiResponse = {
+  fhirBundle: Bundle;
+};
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -38,12 +39,7 @@ const ECRViewerPage = async ({
   const fhirId = searchParams.id ?? "";
   const snomedCode = searchParams["snomed-code"] ?? "";
 
-  type ApiResponse = {
-    fhirBundle: Bundle;
-    fhirPathMappings: PathMappings;
-  };
   let fhirBundle;
-  let mappings = fhirMappings;
   let errors;
   try {
     const response = await get_fhir_data(fhirId);
@@ -55,7 +51,6 @@ const ECRViewerPage = async ({
     } else {
       const bundle: ApiResponse = await response.json();
       fhirBundle = bundle.fhirBundle;
-      // mappings = bundle.fhirPathMappings;
     }
   } catch (error: any) {
     errors = {
@@ -76,10 +71,10 @@ const ECRViewerPage = async ({
       </GenericError>
     );
   } else if (fhirBundle) {
-    const patientName = evaluatePatientName(fhirBundle, mappings, true);
-    const patientDOB = evaluatePatientDOB(fhirBundle, mappings);
+    const patientName = evaluatePatientName(fhirBundle, true);
+    const patientDOB = evaluatePatientDOB(fhirBundle);
 
-    const accordionItems = getEcrDocumentAccordionItems(fhirBundle, mappings);
+    const accordionItems = getEcrDocumentAccordionItems(fhirBundle);
     return (
       <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
         <SideNav />

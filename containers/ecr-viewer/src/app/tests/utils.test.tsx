@@ -38,7 +38,7 @@ import mappings from "@/app/view-data/fhirPath";
 describe("Utils", () => {
   describe("Evaluate Social Data", () => {
     it("should have no available data when there is no data", () => {
-      const actual = evaluateSocialData(undefined as any, mappings);
+      const actual = evaluateSocialData(undefined as any);
 
       expect(actual.availableData).toBeEmpty();
       expect(actual.unavailableData).not.toBeEmpty();
@@ -46,7 +46,6 @@ describe("Utils", () => {
     it("should have travel history when there is a travel history observation present", () => {
       const actual = evaluateSocialData(
         BundleWithTravelHistory as unknown as Bundle,
-        mappings,
       );
 
       render(actual.availableData[0].value);
@@ -55,7 +54,6 @@ describe("Utils", () => {
     it("should not have travel history when there is an empty travel history observation present", () => {
       const actual = evaluateSocialData(
         BundleWithTravelHistoryEmpty as unknown as Bundle,
-        mappings,
       );
 
       expect(actual.availableData).toBeEmpty();
@@ -63,16 +61,12 @@ describe("Utils", () => {
     it("should have patient sexual orientation when available", () => {
       const actual = evaluateSocialData(
         BundleWithSexualOrientation as unknown as Bundle,
-        mappings,
       );
 
       expect(actual.availableData[0].value).toEqual("Other");
     });
     it("should return religion if available", () => {
-      const actual = evaluateSocialData(
-        BundleWithPatient as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
       const ext = actual.availableData.filter(
         (d) => d.title === "Religious Affiliation",
       );
@@ -80,10 +74,7 @@ describe("Utils", () => {
       expect(ext[0].value).toEqual("Baptist");
     });
     it("should return marital status if available", () => {
-      const actual = evaluateSocialData(
-        BundleWithPatient as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
       const ext = actual.availableData.filter(
         (d) => d.title === "Marital Status",
       );
@@ -96,7 +87,6 @@ describe("Utils", () => {
     it("Should return notes", () => {
       const actual = evaluateClinicalData(
         BundleWithMiscNotes as unknown as Bundle,
-        mappings,
       );
       render(actual.clinicalNotes.availableData[0].value as React.JSX.Element);
       expect(actual.clinicalNotes.availableData[0].title).toEqual(
@@ -108,14 +98,12 @@ describe("Utils", () => {
     it("Should not include Treatment details if medications is not available", () => {
       const actual = evaluateClinicalData(
         BundleWithMiscNotes as unknown as Bundle,
-        mappings,
       );
       expect(actual.treatmentData.availableData).toBeEmpty();
     });
     it("Should return Plan of Treatment when only pending results", () => {
       const actual = evaluateClinicalData(
         BundleWithPendingResultsOnly as unknown as Bundle,
-        mappings,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
@@ -124,7 +112,6 @@ describe("Utils", () => {
     it("Should return Plan of Treatment when only scheduled orders", () => {
       const actual = evaluateClinicalData(
         BundleWithScheduledOrdersOnly as unknown as Bundle,
-        mappings,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
@@ -136,7 +123,6 @@ describe("Utils", () => {
     it("should evaluate care team table results", () => {
       const actual: React.JSX.Element = returnCareTeamTable(
         BundleCareTeam as unknown as Bundle,
-        mappings,
       ) as React.JSX.Element;
 
       render(actual);
@@ -151,7 +137,6 @@ describe("Utils", () => {
     it("the table should not appear when there are no results", () => {
       const actual = returnCareTeamTable(
         BundleWithPatient as unknown as Bundle,
-        mappings,
       );
       expect(actual).toBeUndefined();
     });
@@ -161,7 +146,6 @@ describe("Utils", () => {
     it("should return name", () => {
       const actual = evaluatePatientName(
         BundleWithPatient as unknown as Bundle,
-        mappings,
         false,
       );
       expect(actual).toEqual("Han Solo");
@@ -169,14 +153,13 @@ describe("Utils", () => {
   });
   describe("Extract Patient Address", () => {
     it("should return empty string if no address is available", () => {
-      const actual = evaluatePatientAddress(undefined as any, mappings);
+      const actual = evaluatePatientAddress(undefined as any);
 
       expect(actual).toBeEmpty();
     });
     it("should get patient address", () => {
       const actual = evaluatePatientAddress(
         BundleWithPatient as unknown as Bundle,
-        mappings,
       );
 
       expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
@@ -189,7 +172,6 @@ describe("Utils", () => {
 
       const patientAge = calculatePatientAge(
         BundleWithPatient as unknown as Bundle,
-        mappings,
       );
 
       expect(patientAge).toEqual(146);
@@ -198,7 +180,7 @@ describe("Utils", () => {
       jest.useRealTimers();
     });
     it("should return nothing when DOB is unavailable", () => {
-      const patientAge = calculatePatientAge(undefined as any, mappings);
+      const patientAge = calculatePatientAge(undefined as any);
 
       expect(patientAge).toEqual(undefined);
     });
@@ -208,7 +190,6 @@ describe("Utils", () => {
 
       const resultAge = calculatePatientAge(
         BundleWithPatient as unknown as Bundle,
-        mappings,
         givenDate,
       );
 
@@ -224,12 +205,10 @@ describe("Utils", () => {
 
     const patientAge = calculatePatientAge(
       BundleWithPatient as unknown as Bundle,
-      mappings,
     );
 
     const patientAgeAtDeath = calculatePatientAgeAtDeath(
       BundleWithPatient as unknown as Bundle,
-      mappings,
     );
 
     expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
@@ -242,7 +221,6 @@ describe("Utils", () => {
     it("should return age at death when DOD is given", () => {
       const patientAgeAtDeath = calculatePatientAgeAtDeath(
         BundleWithDeceasedPatient as unknown as Bundle,
-        mappings,
       );
 
       const expectedAgeAtDeath = 4;
@@ -257,12 +235,10 @@ describe("Utils", () => {
 
       const patientAge = calculatePatientAge(
         BundleWithDeceasedPatient as unknown as Bundle,
-        mappings,
       );
 
       const patientAgeAtDeath = calculatePatientAgeAtDeath(
         BundleWithDeceasedPatient as unknown as Bundle,
-        mappings,
       );
 
       expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
@@ -295,7 +271,7 @@ describe("Utils", () => {
           ],
         },
       ] as CarePlanActivity[];
-      const actual = returnPlannedProceduresTable(carePlanActivities, mappings);
+      const actual = returnPlannedProceduresTable(carePlanActivities);
       render(actual!);
 
       expect(screen.getByText("activity 1")).toBeInTheDocument();
@@ -303,7 +279,7 @@ describe("Utils", () => {
       expect(screen.getByText("02/01/2024")).toBeInTheDocument();
     });
     it("should not return table when data is provided", () => {
-      const actual = returnPlannedProceduresTable([], mappings);
+      const actual = returnPlannedProceduresTable([]);
 
       expect(actual).toBeUndefined();
     });
@@ -314,7 +290,6 @@ describe("Utils", () => {
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
         evaluate(BundleNoActiveProblems, mappings["activeProblems"]),
-        mappings,
       );
 
       expect(actual).toBeUndefined();
