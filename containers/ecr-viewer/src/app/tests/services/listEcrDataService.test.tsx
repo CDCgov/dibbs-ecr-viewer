@@ -140,6 +140,7 @@ describe("listEcrDataService", () => {
     });
 
     it("should return data when found", async () => {
+      // @ts-ignore TS2364
       database.manyOrNone<CoreMetadataModel> = jest.fn(() =>
         Promise.resolve<CoreMetadataModel[]>([
           {
@@ -198,6 +199,7 @@ describe("listEcrDataService", () => {
     });
 
     it("should get data from the fhir_metadata table", async () => {
+      // @ts-ignore TS2364
       database.manyOrNone<CoreMetadataModel> = jest.fn(() =>
         Promise.resolve<CoreMetadataModel[]>([
           {
@@ -437,6 +439,7 @@ describe("listEcrDataService", () => {
 
   describe("get total ecr count", () => {
     it("should call db to get all ecrs", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );
@@ -448,6 +451,7 @@ describe("listEcrDataService", () => {
       );
     });
     it("should use search term in count query", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );
@@ -461,6 +465,7 @@ describe("listEcrDataService", () => {
       );
     });
     it("should escape the search term in count query", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );
@@ -474,6 +479,7 @@ describe("listEcrDataService", () => {
       );
     });
     it("should use filter conditions in count query", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );

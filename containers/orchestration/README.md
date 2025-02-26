@@ -20,7 +20,7 @@ Before running the orchestration unit tests, make sure you have all the services
 1. `cd containers/orchestration`
 2. `eval "$(pyenv init -)"`
 3. `source .venv/bin/activate`
-4. `pip install -r requirements.txt`
+4. `pip install -r requirements.txt -r dev-requirements.txt`
 5. `python -m pytest --cov-report xml --cov=. -m "not integration" tests/`
 
 #### Running Integration Tests
@@ -28,7 +28,7 @@ Before running the orchestration unit tests, make sure you have all the services
 1. `cd containers/orchestration`
 2. `eval "$(pyenv init -)"`
 3. `source .venv/bin/activate`
-4. `pip install -r requirements.txt`
+4. `pip install -r requirements.txt -r dev-requirements.txt`
 5. `python -m pytest -m "integration"`
 
 #### Running with Docker (Recommended)
