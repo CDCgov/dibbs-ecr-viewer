@@ -13,8 +13,10 @@ import {
   FhirResource,
   Medication,
   MedicationAdministration,
+  Period,
   Practitioner,
   Procedure,
+  Reference,
 } from "fhir/r4";
 import { DisplayDataProps } from "../DataDisplay";
 import { returnImmunizations, returnProblemsTable } from "../common";
@@ -209,6 +211,14 @@ export function getMedicationDisplayName(
   return name;
 }
 
+type ModifiedCareTeamParticipant = Omit<
+  CareTeamParticipant,
+  "period" | "member"
+> & {
+  period: Period & { text: string };
+  member: Reference & { name: string };
+};
+
 /**
  * Returns a table displaying care team information.
  * @param bundle - The FHIR bundle containing care team data.
@@ -238,31 +248,45 @@ export const returnCareTeamTable = (
     { columnName: "Dates", infoPath: "careTeamParticipantPeriod" },
   ];
 
-  careTeamParticipants.forEach((entry) => {
-    if (entry?.period) {
-      const { start, end } = entry.period;
-      // TODO: Revisit
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entry.period as any).text = formatStartEndDate(start, end);
-    }
+  const modifiedCareTeamParticipants: ModifiedCareTeamParticipant[] =
+    careTeamParticipants.map((initialParticipant) => {
+      const mctp: ModifiedCareTeamParticipant = {
+        ...initialParticipant,
+        member: {
+          ...initialParticipant.member,
+          name: "",
+        },
+        period: {
+          ...initialParticipant.period,
+          text: "",
+        },
+      };
 
-    const practitioner: Practitioner = evaluateReference(
-      bundle,
-      mappings,
-      entry?.member?.reference || "",
-    );
-    const practitionerNameObj = practitioner.name?.find(
-      (nameObject) => nameObject.family,
-    );
-    if (entry.member) {
-      // TODO: Revisit
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entry.member as any).name = formatName(practitionerNameObj);
-    }
-  });
+      if (initialParticipant.period) {
+        const { start, end } = initialParticipant.period;
+        mctp.period.text = formatStartEndDate(start, end);
+      }
+
+      const practitioner: Practitioner = evaluateReference(
+        bundle,
+        mappings,
+        initialParticipant?.member?.reference || "",
+      );
+
+      const practitionerNameObj = practitioner.name?.find(
+        (nameObject) => nameObject.family,
+      );
+
+      if (initialParticipant.member) {
+        mctp.member.name = formatName(practitionerNameObj);
+      }
+
+      return mctp;
+    });
+
   return (
     <EvaluateTable
-      resources={careTeamParticipants as FhirResource[]}
+      resources={modifiedCareTeamParticipants as unknown as FhirResource[]}
       mappings={mappings}
       columns={columnInfo}
       caption="Care Team"
