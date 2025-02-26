@@ -1,4 +1,3 @@
-import { loadYamlConfig } from "@/app/api/utils";
 import BundleLab from "../assets/BundleLab.json";
 import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
 import BundleLabInvalidResultsDiv from "../assets/BundleLabInvalidResultsDiv.json";
@@ -27,8 +26,7 @@ import {
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { noData } from "@/app/utils/data-utils";
 import { AccordionItem } from "@/app/view-data/types";
-
-const mappings = loadYamlConfig();
+import mappings from "@/app/view-data/fhirPath";
 
 const pathLabReportNormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'c090d379-9aea-f26e-4ddc-378223841e3b')";

@@ -23,12 +23,10 @@ jest.mock("@azure/storage-blob", () => ({
   },
 }));
 
-const DEFAULT_MAPPINGS = { key: "value" };
 jest.mock("../../../api/utils", () => {
   const originalModule = jest.requireActual("../../../api/utils");
   return {
     ...originalModule,
-    loadYamlConfig: () => DEFAULT_MAPPINGS,
     streamToJson: (body: string) => body,
   };
 });
@@ -36,7 +34,6 @@ jest.mock("../../../api/utils", () => {
 const defaultFhirBundle = "hi";
 const simpleResponse = {
   fhirBundle: defaultFhirBundle,
-  fhirPathMappings: DEFAULT_MAPPINGS,
 };
 
 describe("get_fhir_data", () => {

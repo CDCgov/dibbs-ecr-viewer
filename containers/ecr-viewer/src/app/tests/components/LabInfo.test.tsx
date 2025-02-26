@@ -4,15 +4,13 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import BundleLab from "@/app/tests/assets/BundleLab.json";
 import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
-import { loadYamlConfig } from "@/app/api/utils";
 import { Bundle } from "fhir/r4";
 import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/services/labsService";
 import { evaluate } from "@/app/utils/evaluate";
-
-const mappings = loadYamlConfig();
+import mappings from "@/app/view-data/fhirPath";
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
@@ -21,7 +19,6 @@ describe("LabInfo", () => {
       const labinfoOrg = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
         evaluate(BundleLab, mappings["diagnosticReports"]),
-        mappings,
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
@@ -105,7 +102,6 @@ describe("LabInfo", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
-        mappings,
       );
 
       render(<LabInfo labResults={labinfo} />);
@@ -134,7 +130,6 @@ describe("LabInfo", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
-        mappings,
       );
 
       const { container } = render(<LabInfo labResults={labinfo} />);

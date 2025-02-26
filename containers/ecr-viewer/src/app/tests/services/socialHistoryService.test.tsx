@@ -1,9 +1,8 @@
-import { loadYamlConfig } from "@/app/api/utils";
 import { evaluateTravelHistoryTable } from "@/app/services/socialHistoryService";
 import BundleWithTravelHistory from "../assets/BundleTravelHistory.json";
 import { Bundle } from "fhir/r4";
 import { render } from "@testing-library/react";
-const mappings = loadYamlConfig();
+import mappings from "@/app/view-data/fhirPath";
 
 describe("Travel History", () => {
   it("should display a table ", () => {

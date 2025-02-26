@@ -1,20 +1,12 @@
 import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
-import fs from "fs";
-import YAML from "js-yaml";
 import { Bundle, Immunization } from "fhir/r4";
 import BundleClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
 import { returnImmunizations } from "@/app/view-data/components/common";
-import { PathMappings } from "@/app/utils/data-utils";
 
 describe("Immunizations Table", () => {
   let container: HTMLElement;
   beforeAll(() => {
-    const fhirPathFile = fs
-      .readFileSync("./src/app/api/fhirPath.yaml", "utf8")
-      .toString();
-    const fhirPathMappings = YAML.load(fhirPathFile) as PathMappings;
-
     const immunizationsData = [
       {
         id: "7a4b0e4b-ca8a-a39b-1b44-19efe2c9ee5c",
@@ -164,7 +156,6 @@ describe("Immunizations Table", () => {
       returnImmunizations(
         BundleClinicalInfo as unknown as Bundle,
         immunizationsData,
-        fhirPathMappings,
         "Immunization History",
       )!,
     ).container;
