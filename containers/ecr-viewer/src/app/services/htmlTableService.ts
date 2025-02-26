@@ -199,7 +199,7 @@ function getElementContent(el: Node): RenderableNode {
   const rawValue = (el as HTMLElement)?.innerHTML ?? el.textContent;
   const value = rawValue?.trim() ?? "";
   if (value === "") return value;
-  let res = safeParse(value);
+  const res = safeParse(value);
   return res;
 }
 

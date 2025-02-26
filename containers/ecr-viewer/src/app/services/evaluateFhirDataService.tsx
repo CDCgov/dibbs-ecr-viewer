@@ -689,7 +689,7 @@ export const evaluateValue = (
   entry: Element | Element[],
   path: string | Path,
 ): string => {
-  let originalValue = evaluate(entry, path, undefined, fhirpath_r4_model)[0];
+  const originalValue = evaluate(entry, path, undefined, fhirpath_r4_model)[0];
 
   let value = "";
   const originalValuePath = originalValue?.__path__?.path;

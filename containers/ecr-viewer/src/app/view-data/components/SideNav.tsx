@@ -159,7 +159,7 @@ const SideNav: React.FC = () => {
         };
       },
     );
-    let sortedHeadings: SectionConfig[] = sortHeadings(headings);
+    const sortedHeadings: SectionConfig[] = sortHeadings(headings);
     setSectionConfigs(sortedHeadings);
 
     const isNonIntegratedViewer =
@@ -170,17 +170,17 @@ const SideNav: React.FC = () => {
     );
     const topOffset = (isNonIntegratedViewer ? 3 * oneRem : 0) + 2 * oneRem;
 
-    let options = {
+    const options = {
       root: null,
       rootMargin: `-${topOffset}px 0px -100% 0px`,
       threshold: 0,
     };
 
-    let observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries) => {
       // get the top/first thing that intersected
       for (const entry of entries) {
         if (entry.isIntersecting) {
-          let id = entry.target.getAttribute("data-sectionid") || null;
+          const id = entry.target.getAttribute("data-sectionid") || null;
           if (id) {
             setActiveSection(id);
             break;
@@ -196,7 +196,7 @@ const SideNav: React.FC = () => {
     headingElements.forEach((element) => {
       observer.observe(element);
 
-      let elementDist = closestElement.getBoundingClientRect().top;
+      const elementDist = closestElement.getBoundingClientRect().top;
       if (elementDist > 0 && elementDist < dist) {
         closestElement = element;
         dist = elementDist;
@@ -221,9 +221,9 @@ const SideNav: React.FC = () => {
    *   component to display the side navigation.
    */
   function buildSideNav(sectionConfigs: SectionConfig[]) {
-    let sideNavItems: React.ReactNode[] = [];
-    for (let section of sectionConfigs) {
-      let sideNavItem = (
+    const sideNavItems: React.ReactNode[] = [];
+    for (const section of sectionConfigs) {
+      const sideNavItem = (
         <a
           key={section.id}
           href={"#" + section.id}
@@ -235,7 +235,7 @@ const SideNav: React.FC = () => {
       sideNavItems.push(sideNavItem);
 
       if (section.subNavItems) {
-        let subSideNavItems = buildSideNav(section.subNavItems);
+        const subSideNavItems = buildSideNav(section.subNavItems);
         sideNavItems.push(
           <UswdsSideNav isSubnav={true} items={subSideNavItems} />,
         );
@@ -245,7 +245,7 @@ const SideNav: React.FC = () => {
     return sideNavItems;
   }
 
-  let sideNavItems = buildSideNav(sectionConfigs);
+  const sideNavItems = buildSideNav(sectionConfigs);
 
   // Add a separate loading state here as the side nav is much slower than the main content
   return sectionConfigs.length === 0 ? (

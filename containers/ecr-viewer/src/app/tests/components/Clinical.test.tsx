@@ -147,7 +147,7 @@ describe("Snapshot test for Clinical Notes", () => {
         ),
       },
     ];
-    let { container } = render(
+    const { container } = render(
       <ClinicalInfo
         clinicalNotes={clinicalNotes}
         activeProblemsDetails={[]}
@@ -200,7 +200,7 @@ describe("Snapshot test for Clinical Notes", () => {
         { historyOfPresentIllness: "Bundle.entry.id" },
       ),
     ];
-    let { container } = render(
+    const { container } = render(
       <ClinicalInfo
         clinicalNotes={clinicalNotes}
         activeProblemsDetails={[]}
