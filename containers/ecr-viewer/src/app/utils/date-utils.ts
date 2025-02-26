@@ -144,9 +144,9 @@ export function isValidParamDates(
   if (dateRange === CustomDateRangeOption) {
     return !!datesParam && DATE_PARAM_REGEX.test(datesParam);
   } else {
-    // TODO: Revisit
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (<any>Object).values(DateRangeOptions).includes(dateRange);
+    return Object.values(DateRangeOptions).includes(
+      dateRange as DateRangeOptions,
+    );
   }
 }
 
