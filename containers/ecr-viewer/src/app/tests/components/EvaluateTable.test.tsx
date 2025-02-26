@@ -5,17 +5,11 @@ import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
-import mappings from "@/app/view-data/fhirPath";
 
 describe("Evaluate table", () => {
   it("should create an empty table with a caption", () => {
     render(
-      <EvaluateTable
-        resources={[]}
-        mappings={mappings}
-        columns={[]}
-        caption="Table Caption"
-      />,
+      <EvaluateTable resources={[]} columns={[]} caption="Table Caption" />,
     );
 
     expect(screen.getByText("Table Caption")).toBeInTheDocument();
@@ -25,7 +19,6 @@ describe("Evaluate table", () => {
     render(
       <EvaluateTable
         resources={[{}]}
-        mappings={mappings}
         columns={[{ columnName: "Col1", value: "Data1" }]}
       />,
     );

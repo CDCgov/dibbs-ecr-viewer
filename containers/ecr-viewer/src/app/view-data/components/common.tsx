@@ -9,7 +9,6 @@ import { safeParse } from "@/app/utils/data-utils";
 import { Bundle, Coding, Condition, Immunization, Organization } from "fhir/r4";
 import classNames from "classnames";
 import { formatDateTime } from "@/app/services/formatDateService";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 /**
  * Generates a formatted table representing the list of immunizations based on the provided array of immunizations and mappings.
@@ -60,7 +59,6 @@ export const returnImmunizations = (
   return (
     <EvaluateTable
       resources={immunizationsArray}
-      mappings={fhirPathMappings}
       columns={columnInfo}
       caption={caption}
       className={classNames("margin-y-0", className)}
@@ -121,7 +119,6 @@ export const returnProblemsTable = (
   return (
     <EvaluateTable
       resources={problemsArray}
-      mappings={fhirPathMappings}
       columns={columnInfo}
       caption="Problems List"
       className="margin-y-0"

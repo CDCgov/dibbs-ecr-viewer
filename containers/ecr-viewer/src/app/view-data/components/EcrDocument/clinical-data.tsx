@@ -239,7 +239,6 @@ export const returnCareTeamTable = (
   return (
     <EvaluateTable
       resources={careTeamParticipants as FhirResource[]}
-      mappings={fhirPathMappings}
       columns={columnInfo}
       caption="Care Team"
       className="margin-y-0"
@@ -322,7 +321,6 @@ export const returnPlannedProceduresTable = (
   return (
     <EvaluateTable
       resources={carePlanActivities}
-      mappings={fhirPathMappings}
       columns={columnInfo}
       caption="Planned Procedures"
       className="margin-y-0"
@@ -395,7 +393,6 @@ export const returnProceduresTable = (
   return (
     <EvaluateTable
       resources={proceduresArray}
-      mappings={fhirPathMappings}
       columns={columnInfo}
       caption="Procedures"
       className="margin-y-0"

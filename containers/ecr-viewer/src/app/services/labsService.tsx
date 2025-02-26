@@ -339,7 +339,6 @@ export function evaluateObservationTable(
     return (
       <EvaluateTable
         resources={observations}
-        mappings={fhirPathMappings}
         columns={columnInfo}
         className="margin-y-0"
         outerBorder={false}
@@ -439,7 +438,6 @@ export const evaluateOrganismsReportData = (
   return (
     <EvaluateTable
       resources={components}
-      mappings={fhirPathMappings}
       columns={columnInfo}
       className="margin-y-0"
       outerBorder={false}
