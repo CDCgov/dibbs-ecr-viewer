@@ -362,7 +362,9 @@ export const saveCoreMetadata = async (
     }
 
     // Start transaction
-    await db.transaction().execute(async (trx) => {
+    await db
+      .transaction()
+      .execute(async (trx) => {
         // Insert main ECR metadata
         await trx
           .insertInto("ecr_data")
@@ -409,12 +411,13 @@ export const saveCoreMetadata = async (
             }
           }
         }
-      console.log("Checkpoint 1");
-    }).catch((err)=>{
-      console.log("Checkpoint 2");
-      console.error(err)
-      throw new Error("Transaction failed"); // Ensure it throws an error
-    });
+        console.log("Checkpoint 1");
+      })
+      .catch((err) => {
+        console.log("Checkpoint 2");
+        console.error(err);
+        throw new Error("Transaction failed"); // Ensure it throws an error
+      });
     // On successful transaction, return response
     console.log("Checkpoint 3");
     return {

@@ -10,11 +10,12 @@ export const getAllConditions = async (): Promise<string[]> => {
       throw Error("Database type is undefined.");
     } else {
       const result = await db.transaction().execute(async (trx) => {
-        return await trx.selectFrom('ecr_rr_conditions')
-        .select('condition')
-        .distinct()
-        .orderBy('condition')
-        .execute()
+        return await trx
+          .selectFrom("ecr_rr_conditions")
+          .select("condition")
+          .distinct()
+          .orderBy("condition")
+          .execute();
       });
       return result.map((row) => row.condition);
     }

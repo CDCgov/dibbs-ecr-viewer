@@ -12,9 +12,7 @@ const MOCK_CONDITIONS = [
 describe("Conditions service", () => {
   it("Should throw an error if the database type is undefined", async () => {
     process.env.METADATA_DATABASE_TYPE = undefined;
-    expect(getAllConditions()).toThrow(
-      "Database type is undefined.",
-    );
+    expect(getAllConditions()).toThrow("Database type is undefined.");
   });
 
   it("Should retrieve all unique conditions", async () => {

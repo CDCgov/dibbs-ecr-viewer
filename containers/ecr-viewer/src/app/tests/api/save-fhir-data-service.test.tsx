@@ -2,8 +2,14 @@
  * @jest-environment node
  */
 
-import { saveCoreMetadata, saveExtendedMetadata } from "../../api/save-fhir-data/save-fhir-data-service";
-import { BundleMetadata, BundleExtendedMetadata } from "../../api/save-fhir-data/types";
+import {
+  saveCoreMetadata,
+  saveExtendedMetadata,
+} from "../../api/save-fhir-data/save-fhir-data-service";
+import {
+  BundleMetadata,
+  BundleExtendedMetadata,
+} from "../../api/save-fhir-data/types";
 import { db } from "../../api/services/database";
 import { sql } from "kysely";
 
@@ -47,7 +53,7 @@ describe("saveExtendedMetadata", () => {
   };
 
   beforeAll(async () => {
-    await db.schema
+    await db.schema;
     await db.schema
       .createTable("ecr_data")
       .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
@@ -174,7 +180,6 @@ describe("saveExtendedMetadata", () => {
     expect(resp.status).toEqual(500);
   });
 });
-
 
 describe("saveCoreMetadata", () => {
   const baseMetadata: BundleMetadata = {

@@ -1,7 +1,6 @@
 // Kysely ORM Connection Client
 
 import { Core } from "./types";
-import { Extended } from "./extended_types";
 import { Pool } from "pg";
 import { Kysely, PostgresDialect, MssqlDialect } from "kysely";
 import * as tedious from "tedious";
@@ -67,6 +66,6 @@ const ms_dialect = new MssqlDialect({
 
 export const db = new Kysely<Core>({
   dialect: pg_dialect,
-})
+});
 
 // export { db };
