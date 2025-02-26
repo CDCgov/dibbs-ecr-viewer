@@ -25,7 +25,7 @@
 
 ## Overview
 
-This repository is a part of the CDC/USDS [PHDI project](https://cdcgov.github.io/dibbs-ecr-viewer-site/) and has two components:
+This repository is a part of the CDC/USDS [PHDI project](https://cdcgov.github.io/dibbs-ecr-viewer/) and has two components:
 
 1. PHDI Python Package
 2. PHDI containerized Building Blocks
