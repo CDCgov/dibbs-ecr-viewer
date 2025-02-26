@@ -125,6 +125,18 @@ describe("UnavailableInfo", () => {
         value: "",
       },
     ];
+    const ecrAuthorDetails = [
+      [
+        {
+          title: "Name",
+          value: "",
+        },
+        {
+          title: "Phone",
+          value: "",
+        },
+      ],
+    ];
     container = render(
       <UnavailableInfo
         demographicsUnavailableData={demographicsUnavailability}
@@ -141,6 +153,7 @@ describe("UnavailableInfo", () => {
         treatmentData={treatmentUnavailableData}
         clinicalNotesData={clinicalNotesData}
         ecrMetadataUnavailableData={ecrMetadata}
+        eicrAuthorDetails={ecrAuthorDetails}
       />,
     ).container;
   });

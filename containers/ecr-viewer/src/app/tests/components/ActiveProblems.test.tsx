@@ -51,6 +51,7 @@ describe("Active Problems Table", () => {
         ],
         resourceType: "Condition",
         onsetDateTime: "12/14/2022",
+        onsetAge: { value: 123 },
         clinicalStatus: {
           coding: [
             {
@@ -95,7 +96,7 @@ describe("Active Problems Table", () => {
           },
         ],
         resourceType: "Condition",
-        onsetDateTime: "08/19/2021",
+        onsetAge: { value: 152 },
         clinicalStatus: {
           coding: [
             {
@@ -165,9 +166,9 @@ describe("Active Problems Table", () => {
   it("should pass accessibility test", async () => {
     expect(await axe(container)).toHaveNoViolations();
   });
-  it("should calculate onset age", () => {
-    expect(screen.getByText("145")).toBeInTheDocument();
-    expect(screen.getByText("144")).toBeInTheDocument();
+  it("should use or calculate onset age", () => {
+    expect(screen.getByText("123")).toBeInTheDocument();
+    expect(screen.getByText("152")).toBeInTheDocument();
     expect(screen.getByText("141")).toBeInTheDocument();
   });
 });
