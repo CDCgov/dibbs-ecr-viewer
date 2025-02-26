@@ -8,7 +8,7 @@ import {
   UserInvocationTable,
 } from "fhirpath";
 
-// TODO: Revisit
+// TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const evaluateCache: Map<string, any> = new Map();
 
@@ -25,7 +25,7 @@ const evaluateCache: Map<string, any> = new Map();
  * @returns - An array containing the result of the evaluation.
  */
 export const evaluate = (
-  // TODO: Revisit
+  // TODO: Follow up on FHIR/fhirpath typing
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fhirData: any,
   path: string | Path,
@@ -33,12 +33,12 @@ export const evaluate = (
   model?: Model,
   options?: {
     resolveInternalTypes?: boolean;
-    // TODO: Revisit
+    // TODO: Follow up on FHIR/fhirpath typing
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     traceFn?: (value: any, label: string) => void;
     userInvocationTable?: UserInvocationTable;
   },
-  // TODO: Revisit
+  // TODO: Follow up on FHIR/fhirpath typing
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any[] => {
   // Since the bundle does not have an ID, prefer to just use "bundle" instead
