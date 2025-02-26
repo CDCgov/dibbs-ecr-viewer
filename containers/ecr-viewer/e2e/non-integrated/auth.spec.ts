@@ -36,7 +36,7 @@ test.describe("keycloak", () => {
         "The eCR Viewer couldn't retrieve the associated eCR file",
       ),
     );
-    expect(page).toHaveURL(
+    await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=1234",
     );
   });
