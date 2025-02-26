@@ -388,8 +388,7 @@ export const evaluateDemographicsData = (
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value:
-        patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
+      value: censorGender(patientSex),
     },
     {
       title: "Race",
@@ -907,4 +906,13 @@ export const getHumanReadableCodeableConcept = (
   }
 
   return undefined;
+};
+
+/**
+ * Censors "Unknown" and "Other" gender options for the given string in compliance with Executive Order 14168
+ * @param gender - Gender string
+ * @returns - if  the string is "Male" or "Female" it returns the string, otherwise it returns an empty string
+ */
+export const censorGender = (gender: string | undefined) => {
+  return gender && ["Male", "Female"].includes(gender) ? gender : "";
 };

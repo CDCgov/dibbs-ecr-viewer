@@ -16,6 +16,7 @@ import {
   evaluatePatientLanguage,
   evaluatePatientVitalStatus,
   getHumanReadableCodeableConcept,
+  censorGender,
 } from "@/app/services/evaluateFhirDataService";
 import { Bundle, CodeableConcept, Patient } from "fhir/r4";
 import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
@@ -769,6 +770,20 @@ describe("evaluateFhirDataServices tests", () => {
 
       const actual = getHumanReadableCodeableConcept(codeableConcept);
       expect(actual).toEqual(codeValue);
+    });
+  });
+
+  describe("Censor Gender", () => {
+    it("should return the string if 'Male' or 'Female'", () => {
+      const expected = "Male";
+      const actual = censorGender(expected);
+      expect(actual).toEqual(expected);
+    });
+
+    it("should return an empty string if 'Other'", () => {
+      const expected = "Other";
+      const actual = censorGender(expected);
+      expect(actual).toEqual("");
     });
   });
 });

@@ -7,7 +7,7 @@ import {
   Immunization,
   Observation,
 } from "fhir/r4";
-import { evaluateData, noData, PathMappings } from "@/app/utils/data-utils";
+import { evaluateData, PathMappings } from "@/app/utils/data-utils";
 import {
   formatAddress,
   formatContactPoint,
@@ -18,6 +18,7 @@ import {
   evaluatePatientName,
   evaluateEncounterDiagnosis,
   getHumanReadableCodeableConcept,
+  censorGender,
 } from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import {
@@ -58,10 +59,7 @@ export const evaluateEcrSummaryPatientDetails = (
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value:
-        patientSex && ["Male", "Female"].includes(patientSex)
-          ? patientSex
-          : noData,
+      value: censorGender(patientSex),
     },
     {
       title: "Patient Address",
