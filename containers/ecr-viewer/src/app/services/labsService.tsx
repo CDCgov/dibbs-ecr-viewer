@@ -496,8 +496,9 @@ export const evaluateLabInfoData = (
       "Organization/",
       "",
     );
-    const title = report.code.coding?.find((c: Coding) => c.display)
-      ?.display as string;
+    const title =
+      report.code.coding?.find((c: Coding) => c.display)?.display ??
+      "Unknown data";
 
     const item = {
       title: (
