@@ -14,19 +14,19 @@ services:
     volumes:
       - ./locustfile.py:/home/locust/locustfile.py
       - ./requirements.txt:/home/locust/requirements.txt
-      - ./baseECR/LA:/home/locust/baseECR/LA
+      - ./baseECR/star-wars/:/home/locust/baseECR/star-wars
     command: -f /home/locust/locustfile.py --worker --master-host locust-brain
   locust-worker-2:
     image: locustio/locust
     volumes:
       - ./locustfile.py:/home/locust/locustfile.py
       - ./requirements.txt:/home/locust/requirements.txt
-      - ./baseECR/LA:/home/locust/baseECR/LA
+      - ./baseECR/star-wars/:/home/locust/baseECR/star-wars
     command: -f /home/locust/locustfile.py --worker --master-host locust-brain
   locust-worker-3:
     image: locustio/locust
     volumes:
       - ./locustfile.py:/home/locust/locustfile.py
       - ./requirements.txt:/home/locust/requirements.txt
-      - ./baseECR/LA:/home/locust/baseECR/LA
+      - ./baseECR/star-wars/:/home/locust/baseECR/star-wars
     command: -f /home/locust/locustfile.py --worker --master-host locust-brain
