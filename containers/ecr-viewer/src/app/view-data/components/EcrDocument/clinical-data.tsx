@@ -9,7 +9,6 @@ import {
   Bundle,
   CarePlanActivity,
   CareTeamParticipant,
-  CodeableConcept,
   Medication,
   MedicationAdministration,
   Period,
@@ -182,34 +181,6 @@ const evaluateAdministeredMedication = (
   );
 };
 
-/**
- * Given a CodeableConcept, find an appropriate display name
- * @param code - The codable concept if available.
- * @returns - String with a name to display (can be "Unknown")
- */
-export function getMedicationDisplayName(
-  code: CodeableConcept | undefined,
-): string | undefined {
-  const codings = code?.coding ?? [];
-  let name;
-  // Pull out the first name we find,
-  for (const coding of codings) {
-    if (coding.display) {
-      name = coding.display;
-      break;
-    }
-  }
-
-  // There is a code, but no names, pull out the first code to give the user
-  // something to go off of
-  if (name === undefined && codings.length > 0) {
-    const { system, code } = codings[0];
-    name = `Unknown medication name - ${system} code ${code}`;
-  }
-
-  return name;
-}
-
 type ModifiedCareTeamParticipant = Omit<
   CareTeamParticipant,
   "period" | "member"
@@ -264,7 +235,7 @@ export const returnCareTeamTable = (
       const practitioner = evaluateReference<Practitioner>(
         bundle,
         mappings,
-        initialParticipant?.member?.reference || "",
+        initialParticipant?.member?.reference,
       );
 
       const practitionerNameObj = practitioner?.name?.find(
