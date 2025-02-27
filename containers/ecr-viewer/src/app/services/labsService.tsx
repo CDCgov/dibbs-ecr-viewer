@@ -174,7 +174,7 @@ export function searchResultRecord(
       table.hasOwnProperty(searchKey) &&
       table[searchKey].hasOwnProperty("value")
     ) {
-      resultsArray.push(table[searchKey]["value"]);
+      resultsArray.push(table[searchKey].value);
     }
   }
 

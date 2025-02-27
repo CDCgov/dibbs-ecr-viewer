@@ -15,6 +15,7 @@
     "allowImportExportEverywhere": true
   },
   "rules": {
+    "dot-notation": "error",
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
