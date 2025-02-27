@@ -3,6 +3,7 @@ import {
   getDataId,
   getFirstNonCommentChild,
 } from "@/app/services/htmlTableService";
+import parse, { HTMLElement, NodeType } from "node-html-parser";
 
 describe("htmlTableService tests", () => {
   describe("formatTablesToJSON", () => {
@@ -431,51 +432,47 @@ describe("htmlTableService tests", () => {
 
   describe("getFirstNonCommentChild", () => {
     it("should return the first non-comment child node", () => {
-      const li = document.createElement("li");
-      const textNode = document.createTextNode("This is a text node");
-      li.appendChild(document.createComment("This is a comment"));
-      li.appendChild(textNode);
-      li.appendChild(document.createElement("span"));
+      const root = parse(
+        "<li><!-- this is a comment --> a text node <span/></li>",
+      );
+      const li = root.childNodes[0] as HTMLElement;
 
       const result = getFirstNonCommentChild(li);
-      expect(result).toBe(textNode); // The text node should be returned
+      expect(result?.nodeType).toBe(NodeType.TEXT_NODE); // The text node should be returned
     });
 
     it("should return null if all child nodes are comments", () => {
-      const li = document.createElement("li");
-      li.appendChild(document.createComment("This is a comment"));
-      li.appendChild(document.createComment("Another comment"));
+      const root = parse(
+        "<li><!-- this is a comment --><!-- another comment --></li>",
+      );
+      const li = root.childNodes[0] as HTMLElement;
 
       const result = getFirstNonCommentChild(li);
       expect(result).toBeNull(); // No non-comment node exists
     });
 
     it("should return the first element node if it is the first non-comment node", () => {
-      const li = document.createElement("li");
-      const span = document.createElement("span");
-      li.appendChild(document.createComment("This is a comment"));
-      li.appendChild(span);
+      const root = parse("<li><!-- this is a comment --><span/></li>");
+      const li = root.childNodes[0] as HTMLElement;
 
       const result = getFirstNonCommentChild(li);
-      expect(result).toBe(span); // The <span> element should be returned
+      expect(result?.rawTagName).toBe("span"); // The <span> element should be returned
     });
 
     it("should return null if there are no child nodes", () => {
-      const li = document.createElement("li");
+      const root = parse("<li/>");
+      const li = root.childNodes[0] as HTMLElement;
 
       const result = getFirstNonCommentChild(li);
       expect(result).toBeNull(); // No children present
     });
 
     it("should return the first non-comment node even if there are multiple child nodes", () => {
-      const li = document.createElement("li");
-      const div = document.createElement("div");
-      li.appendChild(document.createComment("This is a comment"));
-      li.appendChild(div);
-      li.appendChild(document.createElement("span"));
+      const root = parse("<li><!-- this is a comment --><div/><span/></li>");
+      const li = root.childNodes[0] as HTMLElement;
 
       const result = getFirstNonCommentChild(li);
-      expect(result).toBe(div); // The <div> should be returned, even with more children
+      expect(result?.rawTagName).toBe("div"); // The <div> should be returned, even with more children
     });
   });
 });

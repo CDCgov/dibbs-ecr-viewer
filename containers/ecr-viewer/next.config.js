@@ -17,7 +17,7 @@ const nextConfig = {
   },
   transpilePackages: ["yaml"],
   output: "standalone",
-  basePath: basePath,
+  basePath,
   env: {
     BASE_PATH: basePath,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,

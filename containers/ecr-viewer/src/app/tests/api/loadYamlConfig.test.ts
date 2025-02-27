@@ -5,7 +5,7 @@ describe("loadYamlConfig", () => {
   it("returns the yaml config", () => {
     const config = loadYamlConfig();
     expect(Object.keys(config).length).toBeGreaterThan(3);
-    expect(config["patientNameList"]).toBe(
+    expect(config.patientNameList).toBe(
       "Bundle.entry.resource.where(resourceType = 'Patient').name",
     );
   });
