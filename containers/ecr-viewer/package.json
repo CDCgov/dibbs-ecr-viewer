@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "local-dev": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} up -d && npm run dev'",
+    "local-build-start": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} up -d && npm run build && npm run start'",
     "local-docker": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up'",
     "local-docker:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --build'",
     "local-docker:silent": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up -d'",
