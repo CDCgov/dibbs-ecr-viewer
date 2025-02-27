@@ -34,7 +34,7 @@ export const evaluate = (
   },
 ): any[] => {
   // Since the bundle does not have an ID, prefer to just use "bundle" instead
-  let fhirDataIdentifier: string =
+  const fhirDataIdentifier: string =
     (fhirData?.resourceType === "Bundle"
       ? fhirData?.entry?.[0]?.fullUrl
       : fhirData?.id) ?? JSON.stringify(fhirData);

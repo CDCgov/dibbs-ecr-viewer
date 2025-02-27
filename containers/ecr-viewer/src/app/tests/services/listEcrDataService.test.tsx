@@ -113,10 +113,10 @@ describe("listEcrDataService", () => {
       delete process.env.METADATA_DATABASE_TYPE;
     });
     it("should return empty array when no data is found", async () => {
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
 
       database.manyOrNone = jest.fn(() => Promise.resolve([]));
       const actual = await listEcrData(
@@ -160,10 +160,10 @@ describe("listEcrDataService", () => {
         ]),
       );
 
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
       const actual: EcrDisplay[] = await listEcrData(
         startIndex,
         itemsPerPage,
@@ -219,10 +219,10 @@ describe("listEcrDataService", () => {
         ]),
       );
 
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
       const actual: EcrDisplay[] = await listEcrData(
         startIndex,
         itemsPerPage,
@@ -258,11 +258,11 @@ describe("listEcrDataService", () => {
 
     it("should filter base on search term", async () => {
       database.manyOrNone = jest.fn(() => Promise.resolve([]));
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
-      let searchTerm = "abc";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
+      const searchTerm = "abc";
 
       await listEcrData(
         startIndex,
@@ -286,11 +286,11 @@ describe("listEcrDataService", () => {
 
     it("should escape search term", async () => {
       database.manyOrNone = jest.fn(() => Promise.resolve([]));
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let searchTerm = "O'Riley";
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const searchTerm = "O'Riley";
+      const columnName = "date_created";
+      const direction = "DESC";
 
       await listEcrData(
         startIndex,
