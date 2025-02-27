@@ -1,7 +1,6 @@
 import { RenderableNode, safeParse } from "@/app/utils/data-utils";
 import { parse, HTMLElement, Node, NodeType } from "node-html-parser";
 import { formatDateTime } from "./formatDateService";
-import React from "react";
 
 interface Metadata {
   [key: string]: string;
@@ -9,7 +8,7 @@ interface Metadata {
 
 export interface HtmlTableJsonRow {
   [key: string]: {
-    value: string | React.JSX.Element;
+    value: RenderableNode;
     metadata?: Metadata;
   };
 }
