@@ -443,10 +443,10 @@ export const generateFilterDateStatementPostgres = ({
 
     return [
       pgPromise.as.format("ed.date_created >= $[startDate]", {
-        startDate: startDate,
+        startDate,
       }),
       pgPromise.as.format("ed.date_created <= $[endDate]", {
-        endDate: endDate,
+        endDate,
       }),
     ].join(" AND ");
   },

@@ -538,7 +538,7 @@ export const combineOrgAndReportData = (
       organizationItems[key].length,
     );
     return {
-      organizationId: organizationId,
+      organizationId,
       diagnosticReportDataItems: organizationItems[key],
       organizationDisplayDataProps: orgData,
     };
