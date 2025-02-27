@@ -1,4 +1,4 @@
-import { providerMap } from "../api/auth/auth";
+import { providerMap } from "../auth";
 import { Redirect } from "./Redirect";
 
 /**

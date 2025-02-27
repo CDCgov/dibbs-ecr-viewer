@@ -2,9 +2,9 @@
 
 import { Button } from "@trussworks/react-uswds";
 import { ArrowForward } from "@/app/components/Icon";
-import bgRedirect from "../../../assets/bg-redirect.png";
+import bgRedirect from "../../../../../assets/bg-redirect.png";
 import { signIn } from "next-auth/react";
-import { ProviderDetails } from "../api/auth/auth";
+import { ProviderDetails } from "../auth";
 
 interface RedirectProps {
   provider: ProviderDetails;
@@ -18,7 +18,6 @@ interface RedirectProps {
  * @returns A styled div with prompt message and a login button that redirects users to Azure AD authentication.
  */
 export const Redirect = ({ provider }: RedirectProps) => {
-  console.log(provider);
   return (
     <div
       className="position-relative text-white"
