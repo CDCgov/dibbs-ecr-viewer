@@ -728,7 +728,7 @@ describe("LabsService tests", () => {
         name: "Moderna US, Inc.",
         resourceType: "Organization",
       },
-    ] as Organization[];
+    ];
 
     const matchedOrg1: Organization = {
       id: "22c6cdd0-bde1-e220-9ba4-2c2802f795ad",
