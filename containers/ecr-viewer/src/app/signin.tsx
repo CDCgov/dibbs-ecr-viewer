@@ -2,9 +2,9 @@
 
 import { Button } from "@trussworks/react-uswds";
 import { ArrowForward } from "@/app/components/Icon";
-import bgRedirect from "../../../../../assets/bg-redirect.png";
+import bgRedirect from "../../assets/bg-redirect.png";
 import { signIn } from "next-auth/react";
-import { ProviderDetails } from "../auth";
+import { ProviderDetails } from "./api/auth/auth";
 
 interface RedirectProps {
   provider: ProviderDetails;
@@ -12,10 +12,10 @@ interface RedirectProps {
 /**
  * Redirect Component
  *
- * Returns a login page for users trying to access the eCR Viewer.
+ * Returns a sign-in page for users trying to access the eCR Viewer.
  * @param props - The props object.
  * @param props.provider - Information about the provider.
- * @returns A styled div with prompt message and a login button that redirects users to Azure AD authentication.
+ * @returns A styled div with prompt message and a login button that redirects users their authentication provider.
  */
 export const Redirect = ({ provider }: RedirectProps) => {
   return (
