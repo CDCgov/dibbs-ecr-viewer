@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Button } from "@trussworks/react-uswds";
-import { Pagination as USWDSPagination } from "@trussworks/react-uswds";
+import { Button, Pagination as USWDSPagination } from "@trussworks/react-uswds";
 import classnames from "classnames";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
