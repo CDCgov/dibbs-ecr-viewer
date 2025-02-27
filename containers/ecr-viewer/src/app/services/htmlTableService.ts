@@ -8,7 +8,7 @@ interface Metadata {
 
 export interface HtmlTableJsonRow {
   [key: string]: {
-    value: any;
+    value: RenderableNode;
     metadata?: Metadata;
   };
 }
@@ -103,7 +103,7 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
   if (contentArray.length > 0) {
     contentArray.forEach((content) => {
       const resultName = getElementText(content);
-      const tables: any[] = [];
+      const tables: HtmlTableJsonRow[][] = [];
       let sibling = content.nextElementSibling;
 
       while (sibling !== null && sibling.tagName.toLowerCase() !== "content") {
@@ -144,7 +144,7 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
  * @returns - An array of JSON objects representing the rows and cells of the table.
  */
 function processTable(table: HTMLElement): HtmlTableJsonRow[] {
-  const jsonArray: any[] = [];
+  const jsonArray: HtmlTableJsonRow[] = [];
   const rows = table.querySelectorAll("tr");
   const keys: string[] = [];
   let hasHeaders = false;

@@ -15,6 +15,7 @@
     "allowImportExportEverywhere": true
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
     "dot-notation": "error",
     "eqeqeq": "error",
     "no-unused-vars": "off",
@@ -47,6 +48,7 @@
     {
       "files": ["*.test*", "**/tests/**/*"],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
         "jsdoc/require-jsdoc": "off"
       }
     }
