@@ -22,6 +22,11 @@ import EcrSummary from "./components/EcrSummary";
 import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import SideNav from "./components/SideNav";
 
+type ApiResponse = {
+  fhirBundle: Bundle;
+  fhirPathMappings: PathMappings;
+};
+
 /**
  * Functional component for rendering the eCR Viewer page.
  * @param params react params
@@ -37,10 +42,6 @@ const ECRViewerPage = async ({
   const fhirId = searchParams.id ?? "";
   const snomedCode = searchParams["snomed-code"] ?? "";
 
-  type ApiResponse = {
-    fhirBundle: Bundle;
-    fhirPathMappings: PathMappings;
-  };
   let fhirBundle;
   let mappings;
   let errors;
@@ -56,7 +57,7 @@ const ECRViewerPage = async ({
       fhirBundle = bundle.fhirBundle;
       mappings = bundle.fhirPathMappings;
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors = {
       status: 500,
       message: error,

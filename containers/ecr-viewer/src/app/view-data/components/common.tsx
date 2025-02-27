@@ -1,5 +1,12 @@
 import classNames from "classnames";
-import { Bundle, Coding, Condition, Immunization, Organization } from "fhir/r4";
+import {
+  Bundle,
+  Coding,
+  Condition,
+  Immunization,
+  Organization,
+  Reference,
+} from "fhir/r4";
 
 import {
   calculatePatientAge,
@@ -7,8 +14,15 @@ import {
 } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { PathMappings, safeParse } from "@/app/utils/data-utils";
+import EvaluateTable, {
+  ColumnInfoInput,
+} from "@/app/view-data/components/EvaluateTable";
 
-import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
+type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
+  manufacturer?: Reference & {
+    name?: string;
+  };
+};
 
 /**
  * Generates a formatted table representing the list of immunizations based on the provided array of immunizations and mappings.
@@ -41,27 +55,42 @@ export const returnImmunizations = (
     { columnName: "Lot Number", infoPath: "immunizationsLotNumber" },
   ];
 
-  immunizationsArray.forEach((entry) => {
-    entry.occurrenceDateTime = formatDateTime(entry.occurrenceDateTime ?? "");
+  const modifiedImmunizations: ModifiedImmunization[] = immunizationsArray.map(
+    (initialImmunization) => {
+      const newImmunization: ModifiedImmunization = {
+        ...initialImmunization,
+      };
 
-    const manufacturer: Organization = evaluateReference(
-      fhirBundle,
-      mappings,
-      entry.manufacturer?.reference || "",
-    );
-    if (manufacturer) {
-      (entry.manufacturer as any).name = manufacturer.name || "";
-    }
-  });
+      newImmunization.occurrenceDateTime = formatDateTime(
+        initialImmunization.occurrenceDateTime,
+      );
 
-  immunizationsArray.sort(
+      const manufacturer = evaluateReference<Organization>(
+        fhirBundle,
+        mappings,
+        initialImmunization.manufacturer?.reference,
+      );
+
+      if (manufacturer) {
+        newImmunization.manufacturer = {
+          ...initialImmunization.manufacturer,
+          name: manufacturer.name || "",
+        };
+      }
+
+      return newImmunization;
+    },
+  );
+
+  modifiedImmunizations.sort(
     (a, b) =>
       new Date(b.occurrenceDateTime ?? "").getTime() -
       new Date(a.occurrenceDateTime ?? "").getTime(),
   );
+
   return (
     <EvaluateTable
-      resources={immunizationsArray}
+      resources={modifiedImmunizations}
       mappings={mappings}
       columns={columnInfo}
       caption={caption}

@@ -317,7 +317,7 @@ describe("Utils", () => {
     it("should return empty if active problem name is undefined", () => {
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
-        evaluate(BundleNoActiveProblems, mappings["activeProblems"]),
+        evaluate(BundleNoActiveProblems, mappings.activeProblems),
         mappings,
       );
 

@@ -26,10 +26,12 @@
       "error",
       {
         "alias": {
-          "@": "./src"
+          "@/": "./src/"
         }
       }
     ],
+    "@typescript-eslint/no-explicit-any": "error",
+    "dot-notation": "error",
     "eqeqeq": "error",
     "import/order": [
       "error",
@@ -85,6 +87,7 @@
     {
       "files": ["*.test*", "**/tests/**/*"],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
         "jsdoc/require-jsdoc": "off"
       }
     }

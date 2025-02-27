@@ -22,7 +22,7 @@ describe("LabInfo", () => {
     beforeAll(() => {
       const labinfoOrg = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
-        evaluate(BundleLab, mappings["diagnosticReports"]),
+        evaluate(BundleLab, mappings.diagnosticReports),
         mappings,
       ) as LabReportElementData[];
 
@@ -106,7 +106,7 @@ describe("LabInfo", () => {
     it("should be collapsed by default", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
+        evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
         mappings,
       );
 
@@ -135,7 +135,7 @@ describe("LabInfo", () => {
     it("should match snapshot test", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
+        evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
         mappings,
       );
 

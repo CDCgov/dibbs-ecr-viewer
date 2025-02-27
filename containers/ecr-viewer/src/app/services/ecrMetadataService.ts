@@ -8,10 +8,15 @@ import {
 import { evaluate } from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
-import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
-import { evaluateReference } from "./evaluateFhirDataService";
+import {
+  evaluatePractitionerRoleReference,
+  evaluateValue,
+  getHumanReadableCodeableConcept,
+  evaluateReference,
+} from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
 import { formatAddress, formatContactPoint, formatName } from "./formatService";
+import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
   [condition: string]: {
@@ -35,18 +40,6 @@ export interface ERSDWarning {
 }
 
 /**
- *  Gets the first display value from a coding array.
- * @param coding - The coding array to get the display from.
- * @returns The display value from the coding array.
- */
-export const getCodingDisplay = (coding: Coding[] | undefined) => {
-  if (!coding) {
-    return;
-  }
-  return coding.find((c) => c.display)?.display;
-};
-
-/**
  * Evaluates eCR metadata from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing eCR metadata.
  * @param mappings - The object containing the fhir paths.
@@ -62,24 +55,15 @@ export const evaluateEcrMetadata = (
 
   for (const condition of rrDetails) {
     const name =
-      condition.valueCodeableConcept?.text ||
-      getCodingDisplay(condition.valueCodeableConcept?.coding) ||
-      "Unknown Condition"; // Default to "Unknown Condition" if no name is found, this should almost never happen, but it would still be a valid eCR.
-    const triggers = condition.extension
-      ?.filter(
-        (x) =>
-          x.url ===
-          "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
-      )
-      .map((x) => x.valueString);
+      getHumanReadableCodeableConcept(condition.valueCodeableConcept) ??
+      "Unknown Condition";
+    const triggers = getReportabilitySummaries(condition);
+
     if (!reportableConditionsList[name]) {
       reportableConditionsList[name] = {};
     }
 
-    if (
-      !Array.isArray(triggers) ||
-      !triggers.every((item) => typeof item === "string")
-    ) {
+    if (!triggers.size) {
       throw new Error("No triggers found for reportable condition");
     }
 
@@ -94,15 +78,19 @@ export const evaluateEcrMetadata = (
     });
   }
 
-  const custodianRef = evaluate(fhirBundle, mappings.eicrCustodianRef)[0] ?? "";
-  const custodian: Organization = evaluateReference(
+  const custodianRef: string =
+    evaluate(fhirBundle, mappings.eicrCustodianRef)[0] ?? "";
+  const custodian = evaluateReference<Organization>(
     fhirBundle,
     mappings,
     custodianRef,
   );
 
-  const eicrReleaseVersion = (fhirBundle: any, mappings: any) => {
-    const releaseVersion = evaluate(fhirBundle, mappings.eicrReleaseVersion)[0];
+  const eicrReleaseVersion = (fhirBundle: Bundle, mappings: PathMappings) => {
+    const releaseVersion: string = evaluateValue(
+      fhirBundle,
+      mappings.eicrReleaseVersion,
+    );
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
     } else if (releaseVersion === "2021-01-01") {
@@ -112,7 +100,10 @@ export const evaluateEcrMetadata = (
     }
   };
 
-  const fhirERSDWarnings = evaluate(fhirBundle, mappings.eRSDwarnings);
+  const fhirERSDWarnings: Coding[] = evaluate(
+    fhirBundle,
+    mappings.eRSDwarnings,
+  );
   const eRSDTextList: ERSDWarning[] = [];
 
   for (const warning of fhirERSDWarnings) {
@@ -204,7 +195,7 @@ const evaluateEcrAuthorDetails = (
 ): DisplayDataProps[][] => {
   const authorRefs: Reference[] = evaluate(
     fhirBundle,
-    mappings["compositionAuthorRefs"],
+    mappings.compositionAuthorRefs,
   );
 
   const authorDetails: DisplayDataProps[][] = [];
@@ -214,7 +205,7 @@ const evaluateEcrAuthorDetails = (
       const { practitioner, organization } = evaluatePractitionerRoleReference(
         fhirBundle,
         mappings,
-        practitionerRoleRef ?? "",
+        practitionerRoleRef,
       );
 
       authorDetails.push([

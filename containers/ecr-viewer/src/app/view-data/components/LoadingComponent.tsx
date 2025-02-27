@@ -9,10 +9,12 @@ import {
 
 import { BackButton } from "@/app/components/BackButton";
 import { range } from "@/app/utils/data-utils";
+import { toKebabCase } from "@/app/utils/format-utils";
 import {
   AccordionSection,
   AccordionSubSection,
 } from "@/app/view-data/component-utils";
+import { AccordionItem } from "@/app/view-data/types";
 
 import { ECRViewerLayout } from "./ECRViewerLayout";
 
@@ -151,32 +153,27 @@ const EcrDocumentFiller = ({
  * @returns A JSX component with rows of blobs.
  */
 const AccordionLoadingSkeleton = () => {
-  const accordionItems: any[] = [
+  const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
-      expanded: true,
       content: (
         <>
           <EcrDocumentFiller title="Demographics" numberOfRows={10} />
           <EcrDocumentFiller title="Social History" numberOfRows={3} />
         </>
       ),
-      headingLevel: "h3",
     },
     {
       title: "Encounter Info",
-      expanded: true,
       content: (
         <>
           <EcrDocumentFiller title="Encounter Details" numberOfRows={7} />
           <EcrDocumentFiller title="Provider Details" numberOfRows={2} />
         </>
       ),
-      headingLevel: "h3",
     },
     {
       title: "Clinical Info",
-      expanded: true,
       content: (
         <>
           <EcrDocumentFiller title="Symptoms and Problems" numberOfRows={3} />
@@ -188,17 +185,13 @@ const AccordionLoadingSkeleton = () => {
           />
         </>
       ),
-      headingLevel: "h3",
     },
     {
       title: "Lab Info",
-      expanded: true,
       content: <EcrDocumentFiller title="Lab Results from" numberOfRows={4} />,
-      headingLevel: "h3",
     },
     {
       title: "eCR Metadata",
-      expanded: true,
       content: (
         <>
           <EcrDocumentFiller title="RR Details" numberOfRows={1} />
@@ -206,14 +199,19 @@ const AccordionLoadingSkeleton = () => {
           <EcrDocumentFiller title="eICR Custodian Details" numberOfRows={4} />
         </>
       ),
-      headingLevel: "h3",
     },
     {
       title: "Unavailable Info",
+      content: null,
       expanded: true,
-      headingLevel: "h3",
     },
-  ];
+  ].map((item) => ({
+    ...item,
+    id: `${toKebabCase(item.title)}-loading`,
+    headingLevel: "h3",
+    expanded: true,
+  }));
+
   return (
     <Accordion
       className="info-container"

@@ -18,10 +18,18 @@ export async function POST(request: NextRequest) {
     requestBody = await request.json();
     fhirBundle = requestBody.fhirBundle;
     ecrId = requestBody.fhirBundle.entry[0].resource.id;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error reading request body:", error);
+
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Error reading request body. " + error.message },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
-      { message: "Error reading request body. " + error.message },
+      { message: "Error reading request body." },
       { status: 400 },
     );
   }
