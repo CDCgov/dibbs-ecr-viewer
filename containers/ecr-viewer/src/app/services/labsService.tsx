@@ -335,11 +335,7 @@ export function evaluateObservationTable(
 ): React.JSX.Element | undefined {
   const observations = (
     report.result?.map((obsRef) =>
-      evaluateReference<Observation>(
-        fhirBundle,
-        mappings,
-        obsRef.reference ?? "",
-      ),
+      evaluateReference<Observation>(fhirBundle, mappings, obsRef.reference),
     ) ?? []
   ).filter((observation): observation is Observation => {
     if (!observation) return false;
