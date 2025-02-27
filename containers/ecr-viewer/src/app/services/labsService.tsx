@@ -343,11 +343,10 @@ export function evaluateObservationTable(
     const hasValidCoding = observation.code?.coding?.some(
       (c: Coding) => c?.display && c.display !== "Lab Interpretation",
     );
-    if (!hasValidCoding) return false;
-    return true;
+    return !!hasValidCoding;
   });
 
-  if (observations?.length > 0) {
+  if (observations.length > 0) {
     return (
       <EvaluateTable
         resources={observations}
