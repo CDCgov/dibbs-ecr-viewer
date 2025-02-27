@@ -43,7 +43,7 @@ export const Redirect = ({ provider }: RedirectProps) => {
           className="redirect-button"
           type="button"
           onClick={async () => {
-            await signIn(provider.id);
+            await signIn(provider.id, { callbackUrl: process.env.BASE_PATH });
           }}
         >
           Log in via {provider.name}
