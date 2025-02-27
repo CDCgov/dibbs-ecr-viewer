@@ -160,7 +160,7 @@ export function searchResultRecord(
   result: any[],
   searchKey: string,
 ): RenderableNode {
-  let resultsArray: RenderableNode[] = [];
+  const resultsArray: RenderableNode[] = [];
 
   // Loop through each table
   for (const table of result) {
@@ -548,7 +548,7 @@ export const combineOrgAndReportData = (
       organizationItems[key].length,
     );
     return {
-      organizationId: organizationId,
+      organizationId,
       diagnosticReportDataItems: organizationItems[key],
       organizationDisplayDataProps: orgData,
     };

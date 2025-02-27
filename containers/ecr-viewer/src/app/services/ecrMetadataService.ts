@@ -53,7 +53,7 @@ export const evaluateEcrMetadata = (
 ): EcrMetadata => {
   const rrDetails: Observation[] = evaluate(fhirBundle, mappings.rrDetails);
 
-  let reportableConditionsList: ReportableConditions = {};
+  const reportableConditionsList: ReportableConditions = {};
 
   for (const condition of rrDetails) {
     const name =
@@ -106,7 +106,7 @@ export const evaluateEcrMetadata = (
     fhirBundle,
     mappings.eRSDwarnings,
   );
-  let eRSDTextList: ERSDWarning[] = [];
+  const eRSDTextList: ERSDWarning[] = [];
 
   for (const warning of fhirERSDWarnings) {
     if (warning.code === "RRVS34") {

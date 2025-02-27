@@ -17,9 +17,9 @@ jest.mock("next-auth/jwt", () => ({
 }));
 
 describe("Middleware", () => {
-  let ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
-  let ORIG_NBS_AUTH = process.env.NBS_AUTH;
-  let ORIG_BASE_PATH = process.env.BASE_PATH;
+  const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
+  const ORIG_NBS_AUTH = process.env.NBS_AUTH;
+  const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeEach(() => {
     process.env.NEXTAUTH_SECRET = "test-secret";
     process.env.BASE_PATH = "ecr-viewer";

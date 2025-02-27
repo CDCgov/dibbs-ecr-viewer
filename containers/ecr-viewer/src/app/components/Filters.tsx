@@ -195,7 +195,7 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
     const prevFilterConditions = conditions.reduce(
       (dict: { [key: string]: boolean }, condition: string) => {
         dict[condition] = conditionValue(condition);
-        if (dict[condition] != filterConditions[condition]) {
+        if (dict[condition] !== filterConditions[condition]) {
           changed = true;
         }
         return dict;

@@ -102,9 +102,9 @@ const trimField = (
       remainingLength: remainingLength - cutString.length,
     };
   } else if (Array.isArray(value)) {
-    let newValArr = [];
+    const newValArr = [];
     for (let i = 0; i < value.length; i++) {
-      let splitVal = trimField(value[i], remainingLength, setHidden);
+      const splitVal = trimField(value[i], remainingLength, setHidden);
       remainingLength = splitVal.remainingLength;
       newValArr.push(
         <React.Fragment key={`arr-${i}-${splitVal.value}`}>
@@ -112,7 +112,7 @@ const trimField = (
         </React.Fragment>,
       );
     }
-    return { value: newValArr, remainingLength: remainingLength };
+    return { value: newValArr, remainingLength };
   } else if (React.isValidElement(value) && value.props.children) {
     let childrenCopy: ReactNode;
     if (Array.isArray(value.props.children)) {
@@ -120,7 +120,7 @@ const trimField = (
     } else {
       childrenCopy = value.props.children;
     }
-    let split = trimField(childrenCopy, remainingLength, setHidden);
+    const split = trimField(childrenCopy, remainingLength, setHidden);
     const newElement = React.cloneElement(
       value,
       { ...value.props },

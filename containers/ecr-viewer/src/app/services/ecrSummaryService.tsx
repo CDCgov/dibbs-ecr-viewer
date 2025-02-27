@@ -93,7 +93,7 @@ export const findCurrentAddress = (addresses: Address[]) => {
 
   // then home address
   if (!address) {
-    address = addresses.find((a) => a.use == "home");
+    address = addresses.find((a) => a.use === "home");
   }
 
   // then first address
@@ -182,7 +182,7 @@ export const evaluateEcrSummaryConditionSummary = (
   }
 
   const conditionSummaries: ConditionSummary[] = [];
-  for (let conditionsListKey in conditionsList) {
+  for (const conditionsListKey in conditionsList) {
     const conditionSummary: ConditionSummary = {
       title: conditionsList[conditionsListKey].snomedDisplay,
       snomed: conditionsListKey,

@@ -14,7 +14,7 @@ To run the Message Refiner with Docker, follow these steps.
 
 1. Confirm that you have Docker installed by running `docker -v`. If you don't see a response similar to what's shown below, follow [these instructions](https://docs.docker.com/get-docker/) to install Docker.
 
-2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/phdi/message-refiner:latest`
+2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/message-refiner:latest`
 
 3. Run the service with `docker run -p 8080:8080 message-refiner:latest`.
 
@@ -25,8 +25,8 @@ Congratulations, the Message Refiner should now be running on `localhost:8080`!
 We recommend running the Message Refiner from a container, but if that isn't feasible for a given use -case, you can also run the service directly from Python using the steps below.
 
 1. Ensure that both Git and Python 3.10 or higher are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/message-refiner/`.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/message-refiner/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.
 5. Activate the virtual environment with `source .venv/bin/activate` (MacOS and Linux), `venv\Scripts\activate` (Windows Command Prompt), or `.venv\Scripts\Activate.ps1` (Windows Power Shell).
 6. Install all of the Python dependencies for the Message Refiner with `pip install -r requirements.txt` into your virtual environment.
@@ -37,8 +37,8 @@ We recommend running the Message Refiner from a container, but if that isn't fea
 To build the Docker image for the Message Refiner from source instead of downloading it from the PHDI repository follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/message-refiner/`.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/message-refiner/`.
 4. Run `docker build -t message-refiner .`.
 
 ### The API
