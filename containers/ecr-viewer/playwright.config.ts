@@ -45,7 +45,7 @@ export default defineConfig({
   webServer: {
     command: "npm run local-build-start",
     url: "http://localhost:3000/ecr-viewer",
-    timeout: 240 * 1000,
+    timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",
   },
