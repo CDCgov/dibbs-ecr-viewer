@@ -14,9 +14,8 @@ import {
 } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { PathMappings, safeParse } from "@/app/utils/data-utils";
-import EvaluateTable, {
-  ColumnInfoInput,
-} from "@/app/view-data/components/EvaluateTable";
+
+import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 
 type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
   manufacturer?: Reference & {

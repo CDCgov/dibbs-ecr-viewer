@@ -12,7 +12,6 @@ import {
 } from "fhir/r4";
 import { Coding, ObservationComponent } from "fhir/r4b";
 
-import { formatAddress, formatPhoneNumber } from "@/app/services/formatService";
 import {
   PathMappings,
   RenderableNode,
@@ -42,6 +41,7 @@ import {
   getHumanReadableCodeableConcept,
 } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
+import { formatAddress, formatPhoneNumber } from "./formatService";
 import {
   HtmlTableJson,
   HtmlTableJsonRow,
