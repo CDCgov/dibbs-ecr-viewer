@@ -6,12 +6,12 @@ import { evaluateValue } from "./evaluateFhirDataService";
 import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
+import { ColumnInfoInput } from "../view-data/components/EvaluateTable";
 
-interface TravelHistoryColumn {
-  columnName: string;
-  infoPath: string;
-  applyToValue?: (dateTime?: string) => string | undefined;
-}
+type TravelHistoryColumn = Required<
+  Pick<ColumnInfoInput, "infoPath" | "columnName">
+> &
+  Pick<ColumnInfoInput, "applyToValue">;
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
