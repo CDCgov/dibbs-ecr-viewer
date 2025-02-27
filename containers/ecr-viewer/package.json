@@ -82,6 +82,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
     "@dotenvx/dotenvx": "^1.25.1",
+    "@dword-design/eslint-plugin-import-alias": "^5.1.1",
     "@next/eslint-plugin-next": "^14.2.5",
     "@playwright/test": "^1.50.0",
     "@smithy/util-stream": "^4.1.1",
