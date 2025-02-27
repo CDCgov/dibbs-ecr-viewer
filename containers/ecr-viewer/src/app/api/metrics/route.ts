@@ -19,9 +19,9 @@ export async function POST(request: NextRequest) {
     unit: "ms",
   });
   timeOnPageHistrogram.record(endTime - startTime, {
-    startTime: startTime,
-    endTime: endTime,
-    fhirId: fhirId,
+    startTime,
+    endTime,
+    fhirId,
   });
   return NextResponse.json({ message: "ok" }, { status: 200 });
 }

@@ -152,9 +152,9 @@ const saveFhirMetadata = async (
   metadata: BundleMetadata | BundleExtendedMetadata,
 ): Promise<SaveResponse> => {
   try {
-    if (metadataSaveLocation == "postgres") {
+    if (metadataSaveLocation === "postgres") {
       return await saveMetadataToPostgres(metadata as BundleMetadata, ecrId);
-    } else if (metadataSaveLocation == "sqlserver") {
+    } else if (metadataSaveLocation === "sqlserver") {
       return await saveMetadataToSqlServer(
         metadata as BundleExtendedMetadata,
         ecrId,
@@ -192,7 +192,7 @@ export const saveMetadataToSqlServer = async (
     return { message: "Failed to connect to SQL Server.", status: 500 };
   }
 
-  if (process.env.METADATA_DATABASE_SCHEMA == "extended") {
+  if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
     const transaction = new sql.Transaction(pool);
     await transaction.begin();
     try {

@@ -105,7 +105,7 @@ export const sortHeadings = (headings: HeadingObject[]): SectionConfig[] => {
       headingIndex += nestedLength + 1;
     } else if (
       nextHeadings.length > 0 &&
-      nextHeadings[0].priority == currentHeading.priority
+      nextHeadings[0].priority === currentHeading.priority
     ) {
       result.push(new SectionConfig(currentHeading.text));
       headingIndex++;
@@ -154,7 +154,7 @@ const SideNav: React.FC = () => {
           text: heading.textContent || "",
           level: heading.tagName.toLowerCase(),
           priority: headingLevels.findIndex(
-            (level) => heading.tagName.toLowerCase() == level,
+            (level) => heading.tagName.toLowerCase() === level,
           ),
         };
       },

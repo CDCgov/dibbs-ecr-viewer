@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
   const saveSource = requestBody.saveSource || process.env.SOURCE;
 
-  if ([S3_SOURCE, AZURE_SOURCE].includes(saveSource) == false) {
+  if ([S3_SOURCE, AZURE_SOURCE].includes(saveSource) === false) {
     return NextResponse.json({ message: "Invalid source" }, { status: 500 });
   }
 

@@ -126,7 +126,7 @@ export function buildCustomDateRange(datesString: string) {
   });
   startDate.setHours(0, 0, 0, 0);
   endDate.setHours(23, 59, 59, 999);
-  return { startDate: startDate, endDate: endDate };
+  return { startDate, endDate };
 }
 
 const DATE_PARAM_REGEX = /^\d{4}-\d{2}-\d{2}\|\d{4}-\d{2}-\d{2}$/;
