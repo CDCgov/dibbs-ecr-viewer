@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
-import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
 import userEvent, { UserEvent } from "@testing-library/user-event";
+import { axe } from "jest-axe";
+
+import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
 
 const mockPush = jest.fn();
 const mockSearchParams = new URLSearchParams();

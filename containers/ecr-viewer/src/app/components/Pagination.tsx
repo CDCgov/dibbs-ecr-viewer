@@ -1,10 +1,12 @@
 import React from "react";
-import classnames from "classnames";
+
 import { Button } from "@trussworks/react-uswds";
-import { NavigateBefore, NavigateNext } from "@/app/components/Icon";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { Pagination as USWDSPagination } from "@trussworks/react-uswds";
+import classnames from "classnames";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+import { NavigateBefore, NavigateNext } from "./Icon";
 
 type PaginationProps = React.ComponentProps<typeof USWDSPagination>;
 

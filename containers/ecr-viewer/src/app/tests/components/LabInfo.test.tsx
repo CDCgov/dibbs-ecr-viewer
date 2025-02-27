@@ -1,16 +1,18 @@
-import { render, screen } from "@testing-library/react";
-import LabInfo from "@/app/view-data/components/LabInfo";
-import userEvent from "@testing-library/user-event";
 import React from "react";
-import BundleLab from "@/app/tests/assets/BundleLab.json";
-import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
-import { loadYamlConfig } from "@/app/api/utils";
+
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Bundle } from "fhir/r4";
+
+import { loadYamlConfig } from "@/app/api/utils";
 import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/services/labsService";
+import BundleLab from "@/app/tests/assets/BundleLab.json";
+import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { evaluate } from "@/app/utils/evaluate";
+import LabInfo from "@/app/view-data/components/LabInfo";
 
 const mappings = loadYamlConfig();
 

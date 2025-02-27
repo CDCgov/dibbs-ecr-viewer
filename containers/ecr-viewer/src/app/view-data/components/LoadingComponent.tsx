@@ -1,13 +1,19 @@
+import React from "react";
+
 import {
   Accordion,
   Grid,
   GridContainer,
   SideNav,
 } from "@trussworks/react-uswds";
-import { AccordionSection, AccordionSubSection } from "../component-utils";
+
 import { BackButton } from "@/app/components/BackButton";
-import React from "react";
-import { range } from "../../utils/data-utils";
+import { range } from "@/app/utils/data-utils";
+import {
+  AccordionSection,
+  AccordionSubSection,
+} from "@/app/view-data/component-utils";
+
 import { ECRViewerLayout } from "./ECRViewerLayout";
 
 /**

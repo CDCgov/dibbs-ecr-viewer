@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Address,
   Bundle,
@@ -5,28 +7,29 @@ import {
   DiagnosticReport,
   Observation,
 } from "fhir/r4";
+
 import { evaluateData, PathMappings } from "@/app/utils/data-utils";
-import {
-  formatAddress,
-  formatContactPoint,
-  formatPhoneNumber,
-} from "@/app/services/formatService";
 import { evaluate } from "@/app/utils/evaluate";
-import {
-  evaluatePatientName,
-  evaluateEncounterDiagnosis,
-} from "./evaluateFhirDataService";
+import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
+import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
-import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
-import React from "react";
-import { toTitleCase } from "../utils/format-utils";
+
+import {
+  evaluatePatientName,
+  evaluateEncounterDiagnosis,
+} from "./evaluateFhirDataService";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
-import { LabAccordion } from "../view-data/components/LabAccordion";
+import {
+  formatAddress,
+  formatContactPoint,
+  formatPhoneNumber,
+} from "./formatService";
+import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.

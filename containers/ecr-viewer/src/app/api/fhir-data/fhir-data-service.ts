@@ -1,17 +1,18 @@
-import { NextResponse } from "next/server";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import {
   BlobClient,
   BlobDownloadResponseParsed,
   BlobServiceClient,
 } from "@azure/storage-blob";
+import { NextResponse } from "next/server";
+
+import { s3Client } from "@/app/api/services/s3Client";
 import {
   AZURE_SOURCE,
   S3_SOURCE,
   loadYamlConfig,
   streamToJson,
-} from "../utils";
-import { s3Client } from "../services/s3Client";
+} from "@/app/api/utils";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 

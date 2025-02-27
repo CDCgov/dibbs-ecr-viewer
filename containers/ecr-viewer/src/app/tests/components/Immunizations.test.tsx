@@ -1,11 +1,13 @@
-import { render } from "@testing-library/react";
-import { axe } from "jest-axe";
 import fs from "fs";
-import YAML from "js-yaml";
+
+import { render } from "@testing-library/react";
 import { Bundle, Immunization } from "fhir/r4";
+import { axe } from "jest-axe";
+import YAML from "js-yaml";
+
 import BundleClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
-import { returnImmunizations } from "@/app/view-data/components/common";
 import { PathMappings } from "@/app/utils/data-utils";
+import { returnImmunizations } from "@/app/view-data/components/common";
 
 describe("Immunizations Table", () => {
   let container: HTMLElement;

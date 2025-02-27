@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+
 import { get_fhir_data } from "./fhir-data-service";
 
 /**

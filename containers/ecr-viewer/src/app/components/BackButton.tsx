@@ -1,10 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ArrowBack } from "@/app/components/Icon";
-import Link from "next/link";
+
 import classNames from "classnames";
+import Link from "next/link";
 import { env } from "next-runtime-env";
-import { retrieveFromSessionStorage } from "../utils/storage-utils";
+
+import { retrieveFromSessionStorage } from "@/app/utils/storage-utils";
+
+import { ArrowBack } from "./Icon";
 
 interface BackButtonProps {
   className?: string;

@@ -1,14 +1,14 @@
+import classNames from "classnames";
+import { Bundle, Coding, Condition, Immunization, Organization } from "fhir/r4";
+
 import {
   calculatePatientAge,
   evaluateReference,
 } from "@/app/services/evaluateFhirDataService";
-import EvaluateTable, {
-  ColumnInfoInput,
-} from "@/app/view-data/components/EvaluateTable";
-import { PathMappings, safeParse } from "@/app/utils/data-utils";
-import { Bundle, Coding, Condition, Immunization, Organization } from "fhir/r4";
-import classNames from "classnames";
 import { formatDateTime } from "@/app/services/formatDateService";
+import { PathMappings, safeParse } from "@/app/utils/data-utils";
+
+import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 
 /**
  * Generates a formatted table representing the list of immunizations based on the provided array of immunizations and mappings.

@@ -1,10 +1,12 @@
 import React from "react";
+
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { Bundle } from "fhir/r4";
+import { axe } from "jest-axe";
+
 import { loadYamlConfig } from "@/app/api/utils";
-import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
 import { EcrDocument } from "@/app/view-data/components/EcrDocument";
+import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
 
 const mappings = loadYamlConfig();
 

@@ -8,8 +8,9 @@ import {
   PutObjectCommandOutput,
 } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
-import { POST } from "../../api/save-fhir-data/route";
 import { NextRequest } from "next/server";
+
+import { POST } from "@/app/api/save-fhir-data/route";
 
 const s3Mock = mockClient(S3Client);
 jest.mock("@azure/storage-blob", () => {

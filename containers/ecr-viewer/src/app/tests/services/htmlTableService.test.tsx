@@ -1,9 +1,10 @@
+import parse, { HTMLElement, NodeType } from "node-html-parser";
+
 import {
   formatTablesToJSON,
   getDataId,
   getFirstNonCommentChild,
 } from "@/app/services/htmlTableService";
-import parse, { HTMLElement, NodeType } from "node-html-parser";
 
 describe("htmlTableService tests", () => {
   describe("formatTablesToJSON", () => {

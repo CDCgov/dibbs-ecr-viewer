@@ -1,4 +1,4 @@
-import { toSentenceCase } from "@/app/utils/format-utils";
+import { toSentenceCase } from "./format-utils";
 
 export interface DateRangePeriod {
   startDate: Date;

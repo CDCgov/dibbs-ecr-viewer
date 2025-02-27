@@ -2,22 +2,22 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
+import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
+import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
-} from "../services/ecrSummaryService";
+} from "@/app/services/ecrSummaryService";
 import {
   evaluatePatientDOB,
   evaluatePatientName,
-} from "../services/evaluateFhirDataService";
-import { PathMappings } from "../utils/data-utils";
-import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
-import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
+} from "@/app/services/evaluateFhirDataService";
+import { PathMappings } from "@/app/utils/data-utils";
 
 import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import EcrDocument from "./components/EcrDocument";
+import { getEcrDocumentAccordionItems } from "./components/EcrDocument/accordion-items";
 import EcrSummary from "./components/EcrSummary";
 import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import SideNav from "./components/SideNav";

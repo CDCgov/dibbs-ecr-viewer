@@ -1,11 +1,4 @@
 import {
-  PathMappings,
-  evaluateData,
-  noData,
-  safeParse,
-} from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
-import {
   Bundle,
   CarePlanActivity,
   CareTeamParticipant,
@@ -16,26 +9,40 @@ import {
   Practitioner,
   Procedure,
 } from "fhir/r4";
-import { DisplayDataProps } from "../DataDisplay";
-import { returnImmunizations, returnProblemsTable } from "../common";
-import {
-  AdministeredMedication,
-  AdministeredMedicationTableData,
-} from "../AdministeredMedication";
+
 import {
   evaluateReference,
   evaluateValue,
 } from "@/app/services/evaluateFhirDataService";
-import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { JsonTable } from "../JsonTable";
-import EvaluateTable, { BaseTable, ColumnInfoInput } from "../EvaluateTable";
 import {
   formatDate,
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
-import { toSentenceCase } from "@/app/utils/format-utils";
 import { formatName, formatVitals } from "@/app/services/formatService";
+import { formatTablesToJSON } from "@/app/services/htmlTableService";
+import {
+  PathMappings,
+  evaluateData,
+  noData,
+  safeParse,
+} from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
+import { toSentenceCase } from "@/app/utils/format-utils";
+import {
+  AdministeredMedication,
+  AdministeredMedicationTableData,
+} from "@/app/view-data/components/AdministeredMedication";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import EvaluateTable, {
+  BaseTable,
+  ColumnInfoInput,
+} from "@/app/view-data/components/EvaluateTable";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
+import {
+  returnImmunizations,
+  returnProblemsTable,
+} from "@/app/view-data/components/common";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.

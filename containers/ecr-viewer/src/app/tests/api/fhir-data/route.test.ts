@@ -1,10 +1,11 @@
 /**
  * @jest-environment node
  */
-import { GET } from "@/app/api/fhir-data/route";
-import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
-import { S3_SOURCE } from "@/app/api/utils";
 import { NextRequest, NextResponse } from "next/server";
+
+import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
+import { GET } from "@/app/api/fhir-data/route";
+import { S3_SOURCE } from "@/app/api/utils";
 
 jest.mock("../../../api/fhir-data/fhir-data-service", () => ({
   get_fhir_data: jest.fn(),

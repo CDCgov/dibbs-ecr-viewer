@@ -1,16 +1,18 @@
+import React from "react";
+
+import { render, screen } from "@testing-library/react";
+import { Bundle } from "fhir/r4";
+
 import { loadYamlConfig } from "@/app/api/utils";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryRelevantClinicalDetails,
 } from "@/app/services/ecrSummaryService";
-import BundleWithClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
 import { evaluateEcrSummaryRelevantLabResults } from "@/app/services/ecrSummaryService";
+import BundleWithClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
+import BundleEcrSummary from "@/app/tests/assets/BundleEcrSummary.json";
 import BundleLab from "@/app/tests/assets/BundleLab.json";
 import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
-import BundleEcrSummary from "@/app/tests/assets/BundleEcrSummary.json";
-import { Bundle } from "fhir/r4";
-import { render, screen } from "@testing-library/react";
-import React from "react";
 
 const mappings = loadYamlConfig();
 describe("ecrSummaryService Tests", () => {

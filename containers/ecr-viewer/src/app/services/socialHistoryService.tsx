@@ -1,9 +1,10 @@
 import { Bundle, Observation } from "fhir/r4";
-import { PathMappings, noData } from "../utils/data-utils";
 
-import { evaluate } from "../utils/evaluate";
+import { PathMappings, noData } from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
+
 import { evaluateValue } from "./evaluateFhirDataService";
-import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 

@@ -1,10 +1,11 @@
+import { act, render } from "@testing-library/react";
+import { axe } from "jest-axe";
+
 import SideNav, {
   SectionConfig,
   sortHeadings,
   countObjects,
 } from "@/app/view-data/components/SideNav";
-import { act, render } from "@testing-library/react";
-import { axe } from "jest-axe";
 
 describe("SectionConfig", () => {
   beforeEach(() => {
