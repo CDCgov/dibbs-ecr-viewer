@@ -2,7 +2,7 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
+import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
 import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import {
   evaluateEcrSummaryConditionSummary,
