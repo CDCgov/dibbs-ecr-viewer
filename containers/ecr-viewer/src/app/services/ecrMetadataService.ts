@@ -66,7 +66,7 @@ export const evaluateEcrMetadata = (
     }
 
     if (!triggers.size) {
-      throw new Error("No triggers found for reportable condition");
+      console.error("No triggers found for reportable condition");
     }
 
     triggers.forEach((trigger) => {
