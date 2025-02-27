@@ -503,6 +503,32 @@
                           <value xsi:type="CD" code="RRVS1" displayName="Reportable"
                             codeSystem="2.16.840.1.114222.4.5.274"
                             codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <!-- Determination of Reportability Reason -->
+                          <entryRelationship typeCode="RSON">
+                            <observation classCode="OBS" moodCode="EVN">
+                              <!-- [RR R1S1] Determination of Reportability Reason -->
+                              <templateId root="2.16.840.1.113883.10.20.15.2.3.26"
+                                extension="2017-04-01" />
+                              <id root="8709a342-56ad-425a-b7b1-76a16c2dd2d5" />
+                              <code code="RR2" codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Determination of reportability reason" />
+                              <value xsi:type="ST">Reason for determination of reportability</value>
+                            </observation>
+                          </entryRelationship>
+                          <!-- Determination of Reportability Rule -->
+                          <entryRelationship typeCode="RSON">
+                            <observation classCode="OBS" moodCode="EVN">
+                              <!-- [RR R1S1] Determination of Reportability Rule -->
+                              <templateId root="2.16.840.1.113883.10.20.15.2.3.27"
+                                extension="2017-04-01" />
+                              <id root="f2dfdffb-bccb-4ee4-9b6c-0ae82b15ada6" />
+                              <code code="RR3" codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Determination of reportability rule" />
+                              <value xsi:type="ST">Rule used in reportability determination</value>
+                            </observation>
+                          </entryRelationship>
                         </observation>
                       </component>
                     </organizer>
