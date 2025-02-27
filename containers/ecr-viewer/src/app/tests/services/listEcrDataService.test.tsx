@@ -113,10 +113,10 @@ describe("listEcrDataService", () => {
       delete process.env.METADATA_DATABASE_TYPE;
     });
     it("should return empty array when no data is found", async () => {
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
 
       database.manyOrNone = jest.fn(() => Promise.resolve([]));
       const actual = await listEcrData(
@@ -140,6 +140,7 @@ describe("listEcrDataService", () => {
     });
 
     it("should return data when found", async () => {
+      // @ts-ignore TS2364
       database.manyOrNone<CoreMetadataModel> = jest.fn(() =>
         Promise.resolve<CoreMetadataModel[]>([
           {
@@ -159,10 +160,10 @@ describe("listEcrDataService", () => {
         ]),
       );
 
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
       const actual: EcrDisplay[] = await listEcrData(
         startIndex,
         itemsPerPage,
@@ -198,6 +199,7 @@ describe("listEcrDataService", () => {
     });
 
     it("should get data from the fhir_metadata table", async () => {
+      // @ts-ignore TS2364
       database.manyOrNone<CoreMetadataModel> = jest.fn(() =>
         Promise.resolve<CoreMetadataModel[]>([
           {
@@ -217,10 +219,10 @@ describe("listEcrDataService", () => {
         ]),
       );
 
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
       const actual: EcrDisplay[] = await listEcrData(
         startIndex,
         itemsPerPage,
@@ -256,11 +258,11 @@ describe("listEcrDataService", () => {
 
     it("should filter base on search term", async () => {
       database.manyOrNone = jest.fn(() => Promise.resolve([]));
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let columnName = "date_created";
-      let direction = "DESC";
-      let searchTerm = "abc";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const columnName = "date_created";
+      const direction = "DESC";
+      const searchTerm = "abc";
 
       await listEcrData(
         startIndex,
@@ -284,11 +286,11 @@ describe("listEcrDataService", () => {
 
     it("should escape search term", async () => {
       database.manyOrNone = jest.fn(() => Promise.resolve([]));
-      let startIndex = 0;
-      let itemsPerPage = 25;
-      let searchTerm = "O'Riley";
-      let columnName = "date_created";
-      let direction = "DESC";
+      const startIndex = 0;
+      const itemsPerPage = 25;
+      const searchTerm = "O'Riley";
+      const columnName = "date_created";
+      const direction = "DESC";
 
       await listEcrData(
         startIndex,
@@ -437,6 +439,7 @@ describe("listEcrDataService", () => {
 
   describe("get total ecr count", () => {
     it("should call db to get all ecrs", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );
@@ -448,6 +451,7 @@ describe("listEcrDataService", () => {
       );
     });
     it("should use search term in count query", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );
@@ -461,6 +465,7 @@ describe("listEcrDataService", () => {
       );
     });
     it("should escape the search term in count query", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );
@@ -474,6 +479,7 @@ describe("listEcrDataService", () => {
       );
     });
     it("should use filter conditions in count query", async () => {
+      // @ts-ignore TS2364
       database.one<{ count: number }> = jest.fn(() =>
         Promise.resolve({ count: 0 }),
       );

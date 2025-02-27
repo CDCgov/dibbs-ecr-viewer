@@ -15,7 +15,11 @@
     "allowImportExportEverywhere": true
   },
   "rules": {
+    "dot-notation": "error",
+    "eqeqeq": "error",
     "no-unused-vars": "off",
+    "object-shorthand": "error",
+    "prefer-const": "error",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "warn",

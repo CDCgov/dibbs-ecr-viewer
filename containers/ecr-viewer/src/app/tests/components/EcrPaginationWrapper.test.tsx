@@ -17,7 +17,7 @@ jest.mock("next/navigation", () => {
 
 const mockSetter = jest.fn();
 jest.mock("js-cookie", () => ({
-  set: (...a) => mockSetter(...a),
+  set: (...a: any[]) => mockSetter(...a),
 }));
 
 describe("EcrPaginationWrapper", () => {

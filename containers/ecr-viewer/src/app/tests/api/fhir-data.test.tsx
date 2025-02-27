@@ -87,6 +87,7 @@ describe("GET API Route", () => {
 
   it("Throws an error when an invalid source is provided", async () => {
     const fakeId = "test-id";
+    // @ts-expect-error
     process.env.SOURCE = "bad-source";
     const request = new NextRequest(`http://localhost?id=${fakeId}`);
 
