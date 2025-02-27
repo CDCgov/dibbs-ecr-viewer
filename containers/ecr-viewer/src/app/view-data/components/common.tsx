@@ -61,13 +61,13 @@ export const returnImmunizations = (
       };
 
       newImmunization.occurrenceDateTime = formatDateTime(
-        initialImmunization.occurrenceDateTime ?? "",
+        initialImmunization.occurrenceDateTime,
       );
 
       const manufacturer = evaluateReference<Organization>(
         fhirBundle,
         mappings,
-        initialImmunization.manufacturer?.reference || "",
+        initialImmunization.manufacturer?.reference,
       );
 
       if (manufacturer) {
