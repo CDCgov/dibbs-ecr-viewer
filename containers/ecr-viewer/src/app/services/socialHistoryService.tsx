@@ -87,10 +87,7 @@ const createTravelHistoryTables = (
     })
     .filter((row) => {
       // Filter out rows with only noData values
-      return Object.values(row).some((column) => {
-        const columnValue = column.value;
-        return columnValue !== noData;
-      });
+      return Object.values(row).some(({ value }) => value !== noData);
     });
 
   return tables;
