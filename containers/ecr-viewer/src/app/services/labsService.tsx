@@ -35,7 +35,11 @@ import {
   extractNumbersAndPeriods,
   toKebabCase,
 } from "@/app/utils/format-utils";
-import { HtmlTableJson, formatTablesToJSON } from "./htmlTableService";
+import {
+  HtmlTableJson,
+  HtmlTableJsonRow,
+  formatTablesToJSON,
+} from "./htmlTableService";
 import { formatDateTime } from "./formatDateService";
 import { LabAccordion } from "../view-data/components/LabAccordion";
 import { JsonTable } from "../view-data/components/JsonTable";
@@ -157,7 +161,7 @@ export const checkAbnormalTag = (labReportJson: HtmlTableJson): boolean => {
  * @example searchKey - Ex. "Analysis Time" or the field that we are searching data for.
  */
 export function searchResultRecord(
-  result: any[],
+  result: HtmlTableJsonRow[] | HtmlTableJsonRow[][],
   searchKey: string,
 ): RenderableNode {
   const resultsArray: RenderableNode[] = [];
@@ -597,7 +601,7 @@ export const evaluateLabOrganizationData = (
  * Finds an identical organization based on address and assigns the telecom to the matched organization
  * Checks if id is not the same to avoid comparing to itself as well as address line 0, address line 1,
  * city, state, and postal code are the same, if so it assigns the telecom to the matchedOrg
- * @param orgMappings all the organizations found in the fhir bundle
+ * @param orgMappings a list of all the organizations found in the fhir bundle
  * @param matchedOrg the org that matches the id of the lab
  * @returns the matchedOrg with the telecom assigned if applicable
  */
@@ -659,7 +663,7 @@ const groupItemByOrgId = (
  * @returns An array of JSX elements representing the lab report content.
  */
 function getFormattedLabsContent(
-  report: any,
+  report: DiagnosticReport,
   fhirBundle: Bundle,
   mappings: PathMappings,
   labReportJson: HtmlTableJson,
