@@ -46,7 +46,7 @@ const get_conditions_postgres = async (): Promise<string[]> => {
  */
 const get_conditions_sqlserver = async () => {
   try {
-    let pool = await get_pool();
+    const pool = await get_pool();
     if (!pool) {
       throw Error("Failed to connnect to pool");
     }

@@ -162,7 +162,7 @@ export function searchResultRecord(
   result: HtmlTableJsonRow[] | HtmlTableJsonRow[][],
   searchKey: string,
 ): RenderableNode {
-  let resultsArray: RenderableNode[] = [];
+  const resultsArray: RenderableNode[] = [];
 
   // Loop through each table
   for (const table of result) {

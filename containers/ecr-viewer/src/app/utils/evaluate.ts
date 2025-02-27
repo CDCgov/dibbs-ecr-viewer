@@ -42,7 +42,7 @@ export const evaluate = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any[] => {
   // Since the bundle does not have an ID, prefer to just use "bundle" instead
-  let fhirDataIdentifier: string =
+  const fhirDataIdentifier: string =
     (fhirData?.resourceType === "Bundle"
       ? fhirData?.entry?.[0]?.fullUrl
       : fhirData?.id) ?? JSON.stringify(fhirData);

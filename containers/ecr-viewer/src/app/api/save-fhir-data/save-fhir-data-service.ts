@@ -186,7 +186,7 @@ export const saveMetadataToSqlServer = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  let pool = await get_pool();
+  const pool = await get_pool();
 
   if (!pool) {
     return { message: "Failed to connect to SQL Server.", status: 500 };

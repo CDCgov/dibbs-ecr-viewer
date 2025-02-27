@@ -151,7 +151,7 @@ const evaluateTableRowData = (
   entry: Element,
 ) => {
   let hiddenRow: ReactNode = null;
-  let rowCellsData = columns.map((column) => {
+  const rowCellsData = columns.map((column) => {
     let data: ReactNode;
     let hidden = false;
     if (column?.value) {

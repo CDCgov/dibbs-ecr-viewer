@@ -16,9 +16,9 @@ describe("Snapshot test for ECR Document", () => {
       entry: [],
     };
 
-    let items = getEcrDocumentAccordionItems(bundleEmpty, mappings);
+    const items = getEcrDocumentAccordionItems(bundleEmpty, mappings);
 
-    let { container } = render(<EcrDocument initialAccordionItems={items} />);
+    const { container } = render(<EcrDocument initialAccordionItems={items} />);
 
     expect(await axe(container)).toHaveNoViolations();
     container.querySelectorAll("[id], [aria-describedby]").forEach((el) => {

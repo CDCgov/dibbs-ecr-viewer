@@ -196,7 +196,7 @@ export const evaluateEcrSummaryConditionSummary = (
   }
 
   const conditionSummaries: ConditionSummary[] = [];
-  for (let conditionsListKey in conditionsList) {
+  for (const conditionsListKey in conditionsList) {
     const conditionSummary: ConditionSummary = {
       title: conditionsList[conditionsListKey].snomedDisplay,
       snomed: conditionsListKey,
