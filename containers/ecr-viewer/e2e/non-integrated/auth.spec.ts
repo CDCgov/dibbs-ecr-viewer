@@ -11,7 +11,7 @@ test.describe("keycloak", () => {
         );
         if (response.status() === 200) {
           console.log(`Keycloak is ready`);
-          return;
+          break;
         }
       } catch (error) {
         console.log(`Waiting for Keycloak...`);
