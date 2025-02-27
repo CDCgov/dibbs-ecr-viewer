@@ -45,9 +45,8 @@ describe("Sign-in Page", () => {
     });
     fireEvent.click(button);
 
-    expect(signIn).toHaveBeenCalledWith(
-      MOCK_PROVIDER.id,
-      {callbackUrl: "ecr-viewer",}
-    );
+    expect(signIn).toHaveBeenCalledWith(MOCK_PROVIDER.id, {
+      callbackUrl: "ecr-viewer",
+    });
   });
 });
