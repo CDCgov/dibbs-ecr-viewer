@@ -655,13 +655,14 @@
                   <td>Visited swamp regions</td>
                   <td>
                     <list>
-                      <item>Dagobah</item>
+                      <item>Brazil</item>
                     </list>
                   </td>
                 </tr>
               </tbody>
             </table>
           </text>
+          <!-- sex assigned at birth -->
           <entry typeCode="DRIV">
             <observation classCode="OBS" moodCode="EVN">
               <!-- [C-CDA R2.1 Companion Guide] Birth Sex Observation -->
@@ -675,6 +676,7 @@
                 codeSystemName="AdministrativeGender" code="M" displayName="Male" />
             </observation>
           </entry>
+          <!-- occupation -->
           <entry typeCode="DRIV">
             <!-- Occupation -->
             <observation classCode="OBS" moodCode="EVN">
@@ -696,39 +698,29 @@
                 City, Coruscant</value>
             </observation>
           </entry>
+          <!-- travel history -->
           <entry typeCode="DRIV">
             <act classCode="ACT" moodCode="EVN">
+              <!-- [eICR R2 STU1.1] Travel History -->
               <templateId root="2.16.840.1.113883.10.20.15.2.3.1" extension="2016-12-01" />
               <id root="030df1dc-1d31-4e5d-abdd-5edd0b74c5c3" />
-              <code code="420008001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT"
+              <code code="420008001"
+                codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT"
                 displayName="Travel" />
               <statusCode code="completed" />
               <effectiveTime>
-                <width value="3" unit="weeks" />
+                <low value="20250115" />
                 <high value="20250205" />
               </effectiveTime>
               <participant typeCode="LOC">
                 <participantRole classCode="TERR">
-                  <code code="DGB" displayName="Dagobah" codeSystem="2.16.840.1.113883.6.96"
-                    codeSystemName="SNOMED CT" />
+                  <code code="BRA"
+                    displayName="Brazil"
+                    codeSystem="1.0.3166.1"
+                    codeSystemName="Country (ISO 3166-1)" />
                 </participantRole>
               </participant>
-              <entryRelationship typeCode="SUBJ">
-                <observation classCode="OBS" moodCode="EVN">
-                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
-                  <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
-                  <id root="030df1dc-1d31-4e5d-abdd-5edd0b74c5c3" />
-                  <code code="404684003" codeSystem="2.16.840.1.113883.6.96"
-                    displayName="Clinical finding" />
-                  <statusCode code="completed" />
-                  <effectiveTime>
-                    <low value="20250205" />
-                  </effectiveTime>
-                  <value xsi:type="CD" code="420008001"
-                    codeSystem="2.16.840.1.113883.6.96"
-                    displayName="Travel to Dagobah" />
-                </observation>
-              </entryRelationship>
             </act>
           </entry>
         </section>
