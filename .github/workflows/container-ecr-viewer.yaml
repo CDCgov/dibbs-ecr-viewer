@@ -173,6 +173,10 @@ jobs:
         env:
           SEED_DATA_DIRECTORIES: e2e
 
+      - name: Build eCR Viewer
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run build
+
       - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e
