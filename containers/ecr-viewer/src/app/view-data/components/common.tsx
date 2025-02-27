@@ -64,7 +64,7 @@ export const returnImmunizations = (
         initialImmunization.occurrenceDateTime ?? "",
       );
 
-      const manufacturer: Organization = evaluateReference(
+      const manufacturer = evaluateReference<Organization>(
         fhirBundle,
         mappings,
         initialImmunization.manufacturer?.reference || "",

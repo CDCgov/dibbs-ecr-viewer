@@ -182,7 +182,10 @@ describe("LabsService tests", () => {
                 reference: "Observation/1c0f3367-0588-c90e-fed0-0d8c15c5ac1b",
               },
             ],
-          } as DiagnosticReport,
+            resourceType: "DiagnosticReport",
+            code: {},
+            status: "entered-in-error",
+          },
           BundleLab as unknown as Bundle,
           mappings,
         );
@@ -204,7 +207,10 @@ describe("LabsService tests", () => {
                 reference: "Observation/invalid-observation-id",
               },
             ],
-          } as DiagnosticReport,
+            resourceType: "DiagnosticReport",
+            code: {},
+            status: "final",
+          },
           BundleLab as unknown as Bundle,
           mappings,
         );
@@ -226,11 +232,9 @@ describe("LabsService tests", () => {
       });
 
       it("returns correct Json Object for table without data-id", () => {
-        const labReportWithoutIds = (
-          evaluate(
-            BundleLabNoLabIds,
-            "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
-          ) as DiagnosticReport[]
+        const labReportWithoutIds: DiagnosticReport = evaluate(
+          BundleLabNoLabIds,
+          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
         )[0];
         const labReportJsonObjectWithoutId = {
           resultId: undefined,
@@ -499,7 +503,7 @@ describe("LabsService tests", () => {
 
   describe("Evaluate Diagnostic Report", () => {
     it("should evaluate diagnostic report results", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
+      const report = evaluate(BundleLab, mappings.diagnosticReports)[0];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -512,20 +516,19 @@ describe("LabsService tests", () => {
       expect(screen.getAllByText("Not Detected")).not.toBeEmpty();
     });
     it("the table should not appear when there are no results", () => {
-      const diagnosticReport = {
-        resource: {
-          resourceType: "DiagnosticReport",
-          code: {
-            coding: [
-              {
-                display: "Drugs Of Abuse Comprehensive Screen, Ur",
-              },
-            ],
-          },
+      const diagnosticReport: DiagnosticReport = {
+        resourceType: "DiagnosticReport",
+        code: {
+          coding: [
+            {
+              display: "Drugs Of Abuse Comprehensive Screen, Ur",
+            },
+          ],
         },
+        status: "final",
       };
       const actual = evaluateObservationTable(
-        diagnosticReport as unknown as DiagnosticReport,
+        diagnosticReport,
         null as unknown as Bundle,
         mappings,
         [],
@@ -533,7 +536,7 @@ describe("LabsService tests", () => {
       expect(actual).toBeUndefined();
     });
     it("should evaluate test method results", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[0];
+      const report = evaluate(BundleLab, mappings.diagnosticReports)[0];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -547,7 +550,7 @@ describe("LabsService tests", () => {
       ).not.toBeEmpty();
     });
     it("should display comment", () => {
-      const report = evaluate(BundleLab, mappings["diagnosticReports"])[2];
+      const report = evaluate(BundleLab, mappings.diagnosticReports)[2];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -588,7 +591,7 @@ describe("LabsService tests", () => {
     it("should return a list of LabReportElementData if the lab results in the HTML table have ID's", () => {
       const result = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
-        evaluate(BundleLab, mappings["diagnosticReports"]),
+        evaluate(BundleLab, mappings.diagnosticReports),
         mappings,
       );
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
@@ -598,7 +601,7 @@ describe("LabsService tests", () => {
     it("should return a list of DisplayDataProps if the lab results in the HTML table do not have ID's", () => {
       const result = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
+        evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
         mappings,
       );
       expect(result[0]).toHaveProperty("title");
@@ -607,8 +610,8 @@ describe("LabsService tests", () => {
 
     it("should properly count the number of labs", () => {
       const result = evaluateLabInfoData(
-        BundleLab as unknown as Bundle,
-        evaluate(BundleLab, mappings["diagnosticReports"]),
+        BundleLab as Bundle,
+        evaluate(BundleLab, mappings.diagnosticReports),
         mappings,
       );
       expect(isLabReportElementDataList(result)).toBeTrue();
@@ -620,7 +623,7 @@ describe("LabsService tests", () => {
   });
 
   describe("Find Identical Org", () => {
-    const orgMappings = [
+    const orgMappings: Organization[] = [
       {
         id: "d6930155-009b-92a0-d2b9-007761c45ad2",
         name: "Coruscant Department of Public Health",

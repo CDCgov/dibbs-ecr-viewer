@@ -16,6 +16,7 @@
   },
   "rules": {
     "@typescript-eslint/no-explicit-any": "error",
+    "dot-notation": "error",
     "eqeqeq": "error",
     "no-unused-vars": "off",
     "object-shorthand": "error",

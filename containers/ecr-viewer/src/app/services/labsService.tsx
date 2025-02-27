@@ -21,7 +21,11 @@ import { Coding, ObservationComponent } from "fhir/r4b";
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
-import { evaluateReference, evaluateValue } from "./evaluateFhirDataService";
+import {
+  evaluateReference,
+  evaluateValue,
+  getHumanReadableCodeableConcept,
+} from "./evaluateFhirDataService";
 import {
   DataDisplay,
   DisplayDataProps,
@@ -87,13 +91,10 @@ export const getObservations = (
   if (!report || !Array.isArray(report.result) || report.result.length === 0)
     return [];
   return report.result
-    .map((obsRef) => {
-      return (
-        obsRef.reference &&
-        evaluateReference(fhirBundle, mappings, obsRef.reference)
-      );
-    })
-    .filter((obs) => obs);
+    .map((obsRef) =>
+      evaluateReference<Observation>(fhirBundle, mappings, obsRef.reference),
+    )
+    .filter((obs): obs is Observation => obs !== undefined);
 };
 
 /**
@@ -111,13 +112,14 @@ export const getLabJsonObject = (
   // Get reference value (result ID) from Observations
   const observations = getObservations(report, fhirBundle, mappings);
   const observationRefValsArray = observations.flatMap((observation) => {
-    const refVal = evaluate(observation, mappings["observationReferenceValue"]);
+    const refVal: string[] =
+      evaluate(observation, mappings.observationReferenceValue) ?? [];
     return extractNumbersAndPeriods(refVal);
   });
   const observationRefVal = [...new Set(observationRefValsArray)].join(", "); // should only be 1
 
   // Get lab reports HTML String (for all lab reports) & convert to JSON
-  const labsString = evaluateValue(fhirBundle, mappings["labResultDiv"]);
+  const labsString = evaluateValue(fhirBundle, mappings.labResultDiv);
   const labsJson = formatTablesToJSON(labsString);
 
   // Get specified lab report (by reference value)
@@ -176,7 +178,7 @@ export function searchResultRecord(
       table.hasOwnProperty(searchKey) &&
       table[searchKey].hasOwnProperty("value")
     ) {
-      resultsArray.push(table[searchKey]["value"]);
+      resultsArray.push(table[searchKey].value);
     }
   }
 
@@ -199,7 +201,7 @@ const returnSpecimenSource = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle, mappings);
   const specimenSource = observations.flatMap((observation) => {
-    return evaluate(observation, mappings["specimenSource"]);
+    return evaluate(observation, mappings.specimenSource);
   });
   if (!specimenSource || specimenSource.length === 0) {
     return noData;
@@ -221,7 +223,10 @@ const returnCollectionTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle, mappings);
   const collectionTime = observations.flatMap((observation) => {
-    const rawTime = evaluate(observation, mappings["specimenCollectionTime"]);
+    const rawTime: string[] = evaluate(
+      observation,
+      mappings.specimenCollectionTime,
+    );
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 
@@ -246,7 +251,10 @@ const returnReceivedTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle, mappings);
   const receivedTime = observations.flatMap((observation) => {
-    const rawTime = evaluate(observation, mappings["specimenReceivedTime"]);
+    const rawTime: string[] = evaluate(
+      observation,
+      mappings.specimenReceivedTime,
+    );
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 
@@ -329,21 +337,20 @@ export function evaluateObservationTable(
   mappings: PathMappings,
   columnInfo: ColumnInfoInput[],
 ): React.JSX.Element | undefined {
-  const observations: Observation[] = (
-    report.result?.map((obsRef: Reference) =>
-      evaluateReference(fhirBundle, mappings, obsRef.reference ?? ""),
+  const observations = (
+    report.result?.map((obsRef) =>
+      evaluateReference<Observation>(fhirBundle, mappings, obsRef.reference),
     ) ?? []
-  ).filter(
-    (observation) =>
-      !observation.component &&
-      // Make sure there is a component name, but it isn't "Lab Interpretation" as that's handled
-      // via the tab on the result's name
-      observation.code?.coding.some(
-        (c: Coding) => c?.display && c?.display !== "Lab Interpretation",
-      ),
-  );
+  ).filter((observation): observation is Observation => {
+    if (!observation) return false;
+    if (observation.component) return false;
+    const hasValidCoding = observation.code?.coding?.some(
+      (c: Coding) => c?.display && c.display !== "Lab Interpretation",
+    );
+    return !!hasValidCoding;
+  });
 
-  if (observations?.length > 0) {
+  if (observations.length > 0) {
     return (
       <EvaluateTable
         resources={observations}
@@ -388,8 +395,8 @@ export const evaluateDiagnosticReportData = (
       columnName: "Test Method",
       infoPath: "observationDeviceReference",
       applyToValue: (ref) => {
-        const device: Device = evaluateReference(fhirBundle, mappings, ref);
-        return safeParse(device.deviceName?.[0]?.name ?? "");
+        const device = evaluateReference<Device>(fhirBundle, mappings, ref);
+        return safeParse(device?.deviceName?.[0]?.name ?? "");
       },
       className: "minw-10 width-20",
     },
@@ -420,12 +427,12 @@ export const evaluateOrganismsReportData = (
   let observation: Observation | undefined;
 
   report.result?.find((obsRef: Reference) => {
-    const obs: Observation = evaluateReference(
+    const obs = evaluateReference<Observation>(
       fhirBundle,
       mappings,
       obsRef.reference ?? "",
     );
-    if (obs.component) {
+    if (obs?.component) {
       observation = obs;
       return true;
     }
@@ -439,7 +446,7 @@ export const evaluateOrganismsReportData = (
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "Organism",
-      value: evaluateValue(observation, mappings["observationOrganism"]),
+      value: evaluateValue(observation, mappings.observationOrganism),
     },
     { columnName: "Antibiotic", infoPath: "observationAntibiotic" },
     { columnName: "Method", infoPath: "observationOrganismMethod" },
@@ -496,10 +503,7 @@ export const evaluateLabInfoData = (
       "Organization/",
       "",
     );
-    const title =
-      report.code.coding?.find((c: Coding) => c.display)?.display ??
-      "Unknown data";
-
+    const title = getHumanReadableCodeableConcept(report.code) ?? "Unknown";
     const item = {
       title: (
         <>
@@ -571,7 +575,7 @@ export const evaluateLabOrganizationData = (
 ) => {
   const orgMappings: Organization[] = evaluate(
     fhirBundle,
-    mappings["organizations"],
+    mappings.organizations,
   );
   let matchingOrg: Organization = orgMappings.filter(
     (organization) => organization.id === id,
@@ -773,7 +777,7 @@ function getUnformattedLabsContent(
   mappings: PathMappings,
   accordionHeadingLevel: HeadingLevel = "h5",
 ): DisplayDataProps[] {
-  const bundle = evaluateValue(fhirBundle, mappings["labResultDiv"]);
+  const bundle = evaluateValue(fhirBundle, mappings.labResultDiv);
   const tableJson = formatTablesToJSON(bundle);
 
   if (tableJson.length === 0) {
