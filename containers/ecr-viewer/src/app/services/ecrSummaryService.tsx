@@ -30,7 +30,7 @@ import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
 import React from "react";
 import { toTitleCase } from "../utils/format-utils";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
-import { evaluateRuleSummaries } from "./reportabilityService";
+import { getReportabilitySummaries } from "./reportabilityService";
 import { LabAccordion } from "../view-data/components/LabAccordion";
 
 /**
@@ -175,7 +175,7 @@ export const evaluateEcrSummaryConditionSummary = (
         };
       }
 
-      evaluateRuleSummaries(observation).forEach((ruleSummary) =>
+      getReportabilitySummaries(observation).forEach((ruleSummary) =>
         conditionsList[snomed].ruleSummaries.add(ruleSummary),
       );
     }

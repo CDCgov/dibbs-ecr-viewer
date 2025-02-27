@@ -18,7 +18,7 @@ import {
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateReference } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
-import { evaluateRuleSummaries } from "./reportabilityService";
+import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
   [condition: string]: {
@@ -59,7 +59,7 @@ export const evaluateEcrMetadata = (
     const name =
       getHumanReadableCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
-    const triggers = evaluateRuleSummaries(condition);
+    const triggers = getReportabilitySummaries(condition);
 
     if (!reportableConditionsList[name]) {
       reportableConditionsList[name] = {};

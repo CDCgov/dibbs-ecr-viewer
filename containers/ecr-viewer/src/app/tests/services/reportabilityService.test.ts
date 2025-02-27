@@ -1,4 +1,4 @@
-import { evaluateRuleSummaries } from "@/app/services/reportabilityService";
+import { getReportabilitySummaries } from "@/app/services/reportabilityService";
 import { Observation } from "fhir/r4";
 
 describe("ReportabilityService", () => {
@@ -24,7 +24,7 @@ describe("ReportabilityService", () => {
         code: {},
         status: "unknown",
       };
-      const result = evaluateRuleSummaries(observation);
+      const result = getReportabilitySummaries(observation);
 
       expect(Array.from(result)).toEqual(expected);
     });

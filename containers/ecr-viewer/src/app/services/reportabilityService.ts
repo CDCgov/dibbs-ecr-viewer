@@ -5,7 +5,7 @@ import { Observation } from "fhir/r4";
  * @param observation - FHIR Observation
  * @returns Set of rule summaries
  */
-export const evaluateRuleSummaries = (
+export const getReportabilitySummaries = (
   observation: Observation,
 ): Set<string> => {
   const ruleSummaries = new Set<string>();
