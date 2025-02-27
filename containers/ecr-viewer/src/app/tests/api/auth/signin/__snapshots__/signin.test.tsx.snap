@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Redirect Page should match snapshot 1`] = `
+exports[`Sign-in Page should match snapshot 1`] = `
 <div>
   <div
     class="position-relative text-white"
