@@ -3,10 +3,10 @@
   "plugins": [
     "@dword-design/import-alias",
     "@typescript-eslint",
-    "unused-imports",
+    "import",
     "jsdoc",
     "react",
-    "import"
+    "unused-imports"
   ],
   "extends": [
     "plugin:@next/next/recommended",
