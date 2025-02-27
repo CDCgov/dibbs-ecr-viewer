@@ -1,9 +1,16 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "unused-imports", "jsdoc", "react"],
+  "plugins": [
+    "@typescript-eslint",
+    "unused-imports",
+    "jsdoc",
+    "react",
+    "import"
+  ],
   "extends": [
     "plugin:@next/next/recommended",
     "plugin:jsdoc/recommended-typescript-error",
+    "plugin:@dword-design/import-alias/recommended",
     "prettier"
   ],
   "env": {
@@ -15,7 +22,41 @@
     "allowImportExportEverywhere": true
   },
   "rules": {
+    "@dword-design/import-alias/prefer-alias": [
+      "error",
+      {
+        "alias": {
+          "@": "./src"
+        },
+        "aliasForSubpaths": true
+      }
+    ],
     "eqeqeq": "error",
+    "import/no-relative-packages": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "parent", "sibling"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "@/**",
+            "group": "parent"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": false
+        },
+        "distinctGroup": false
+      }
+    ],
     "no-unused-vars": "off",
     "object-shorthand": "error",
     "prefer-const": "error",
