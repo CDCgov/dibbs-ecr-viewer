@@ -17,7 +17,7 @@ help:
 
 run-docker:
 	@echo "Running Orchestration using Docker on localhost:8080..."
-	docker pull ghcr.io/cdcgov/phdi/orchestration:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/orchestration:latest
 	docker run -p 8080:8080 orchestration:latest
 
 run-python:

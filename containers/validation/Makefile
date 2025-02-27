@@ -19,7 +19,7 @@ help:
 
 run-docker:
 	@echo "Running Validation service using Docker on localhost:$(VALIDATION_PORT)..."
-	docker pull ghcr.io/cdcgov/phdi/validation:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/validation:latest
 	docker run -p $(VALIDATION_PORT):8080 validation:latest
 
 run-python:
