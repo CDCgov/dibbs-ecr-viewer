@@ -11,11 +11,7 @@ import {
 } from "fhir/r4";
 
 import fhirPathMappings from "@/app/data/fhirPath";
-import {
-  evaluateReference,
-  evaluateValue,
-  getHumanReadableCodeableConcept,
-} from "@/app/services/evaluateFhirDataService";
+import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 import {
   formatDate,
   formatDateTime,
@@ -24,7 +20,11 @@ import {
 import { formatName, formatVitals } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import {
+  evaluate,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   AdministeredMedication,

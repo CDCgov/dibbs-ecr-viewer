@@ -2,14 +2,16 @@ import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 
 import fhirPathMappings from "@/app/data/fhirPath";
 import { CompleteData, evaluateData } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import {
+  evaluate,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import {
   evaluatePractitionerRoleReference,
-  evaluateValue,
   getHumanReadableCodeableConcept,
-  evaluateReference,
 } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
 import { formatAddress, formatContactPoint, formatName } from "./formatService";

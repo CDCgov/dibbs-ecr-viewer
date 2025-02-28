@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { Element } from "fhir/r4";
 
 import fhirPathMappings from "@/app/data/fhirPath";
-import { evaluateValue } from "@/app/services/evaluateFhirDataService";
+import { evaluateValue } from "@/app/utils/evaluate";
 
 import EvaluateTableRow from "./EvaluateTableRow";
 

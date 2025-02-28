@@ -5,9 +5,7 @@ import {
   Address,
   Bundle,
   CodeableConcept,
-  Coding,
   Condition,
-  Element,
   Encounter,
   EncounterDiagnosis,
   EncounterParticipant,
@@ -20,16 +18,16 @@ import {
   PatientContact,
   Practitioner,
   PractitionerRole,
-  Quantity,
   Reference,
-  Resource,
 } from "fhir/r4";
-import { Path } from "fhirpath";
-import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateData, noData } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import {
+  evaluate,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
@@ -622,79 +620,6 @@ export const evaluateEmergencyContact = (fhirBundle: Bundle) => {
         .join("\n");
     })
     .join("\n\n");
-};
-
-/**
- * Evaluates a reference in a FHIR bundle.
- * @param fhirBundle - The FHIR bundle containing resources.
- * @param ref - The reference string (e.g., "Patient/123").
- * @returns The FHIR Resource or undefined if not found.
- */
-export const evaluateReference = <T extends Resource>(
-  fhirBundle: Bundle,
-  ref?: string,
-): T | undefined => {
-  if (!ref) return undefined;
-  const [resourceType, id] = ref.split("/");
-  const result: Resource | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.resolve,
-    {
-      resourceType,
-      id,
-    },
-  )[0];
-
-  if (!result) {
-    return undefined;
-  } else if (result?.resourceType !== resourceType) {
-    console.error(
-      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
-    );
-  }
-
-  return result as T;
-};
-
-/**
- * Evaluates the FHIR path and returns the appropriate string value. Supports choice elements (e.g. using `.value` in path to get valueString or valueCoding)
- * @param entry - The FHIR resource to evaluate.
- * @param path - The path within the resource to extract the value from.
- * @returns - The evaluated value as a string.
- */
-export const evaluateValue = (
-  entry: Element | Element[],
-  path: string | Path,
-): string => {
-  const originalValue = evaluate(entry, path, undefined, fhirpath_r4_model)[0];
-
-  let value = "";
-  const originalValuePath = originalValue?.__path__?.path;
-  if (
-    typeof originalValue === "string" ||
-    typeof originalValue === "number" ||
-    typeof originalValue === "boolean"
-  ) {
-    value = originalValue.toString();
-  } else if (originalValuePath === "Quantity") {
-    const data: Quantity = originalValue;
-    let unit = data.unit;
-    const firstLetterRegex = /^[a-z]/i;
-    if (unit?.match(firstLetterRegex)) {
-      unit = " " + unit;
-    }
-    value = `${data.value ?? ""}${unit ?? ""}`;
-  } else if (originalValuePath === "CodeableConcept") {
-    const data: CodeableConcept = originalValue;
-    value = getHumanReadableCodeableConcept(data) ?? "";
-  } else if (originalValuePath === "Coding") {
-    const data: Coding = originalValue;
-    value = data?.display || data?.code || "";
-  } else if (typeof originalValue === "object") {
-    console.log(`Not implemented for ${originalValue.__path__}`);
-  }
-
-  return value.trim();
 };
 
 /**

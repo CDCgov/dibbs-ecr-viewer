@@ -7,8 +7,6 @@ import {
   evaluatePatientRace,
   evaluatePatientEthnicity,
   evaluatePractitionerRoleReference,
-  evaluateReference,
-  evaluateValue,
   evaluateEmergencyContact,
   evaluatePatientAddress,
   evaluatePatientName,
@@ -25,8 +23,10 @@ import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
 import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
 import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
+import { evaluateReference, evaluateValue } from "@/app/utils/evaluate";
 
 describe("evaluateFhirDataServices tests", () => {
+  // TODO PR: move these tests
   describe("Evaluate Reference", () => {
     it("should return undefined if resource not found", () => {
       const actual = evaluateReference<Observation>(

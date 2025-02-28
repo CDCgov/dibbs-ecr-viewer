@@ -19,7 +19,11 @@ import {
   noData,
   safeParse,
 } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import {
+  evaluate,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import {
   extractNumbersAndPeriods,
   toKebabCase,
@@ -35,11 +39,7 @@ import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
-import {
-  evaluateReference,
-  evaluateValue,
-  getHumanReadableCodeableConcept,
-} from "./evaluateFhirDataService";
+import { getHumanReadableCodeableConcept } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
 import { formatAddress, formatPhoneNumber } from "./formatService";
 import {
