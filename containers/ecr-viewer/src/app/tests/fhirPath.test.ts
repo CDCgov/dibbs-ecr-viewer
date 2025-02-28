@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import fhirPathMappings from "@/app/view-data/fhirPath";
+import fhirPathMappings from "@/app/data/fhirPath";
 
 describe("fhirPath", () => {
   it("returns the yaml config", () => {

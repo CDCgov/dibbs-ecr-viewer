@@ -10,11 +10,8 @@ import {
   Reference,
 } from "fhir/r4";
 
-import {
-  evaluateReference,
-  evaluateValue,
-  getHumanReadableCodeableConcept,
-} from "@/app/services/evaluateFhirDataService";
+import fhirPathMappings from "@/app/data/fhirPath";
+import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 import {
   formatDate,
   formatDateTime,
@@ -23,7 +20,11 @@ import {
 import { formatName, formatVitals } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import {
+  evaluate,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   AdministeredMedication,
@@ -39,7 +40,6 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.

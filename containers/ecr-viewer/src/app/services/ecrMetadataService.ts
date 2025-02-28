@@ -1,15 +1,17 @@
-import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
+import { Bundle, Coding, Organization, Reference } from "fhir/r4";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import { CompleteData, evaluateData } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import {
+  evaluate,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import {
   evaluatePractitionerRoleReference,
-  evaluateValue,
   getHumanReadableCodeableConcept,
-  evaluateReference,
 } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
 import { formatAddress, formatContactPoint, formatName } from "./formatService";
@@ -42,10 +44,7 @@ export interface ERSDWarning {
  * @returns An object containing evaluated and formatted eCR metadata.
  */
 export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
-  const rrDetails: Observation[] = evaluate(
-    fhirBundle,
-    fhirPathMappings.rrDetails,
-  );
+  const rrDetails = evaluate(fhirBundle, "rrDetails");
 
   const reportableConditionsList: ReportableConditions = {};
 

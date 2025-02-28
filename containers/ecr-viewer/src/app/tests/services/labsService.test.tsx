@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 
+import mappings from "@/app/data/fhirPath";
 import {
   getLabJsonObject,
   getObservations,
@@ -25,7 +26,6 @@ import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { noData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import mappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
 
 const pathLabReportNormal =

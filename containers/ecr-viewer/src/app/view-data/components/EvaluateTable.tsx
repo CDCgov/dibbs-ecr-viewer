@@ -4,8 +4,8 @@ import { Table } from "@trussworks/react-uswds";
 import classNames from "classnames";
 import { Element } from "fhir/r4";
 
-import { evaluateValue } from "@/app/services/evaluateFhirDataService";
-import fhirPathMappings, { PathMappings } from "@/app/view-data/fhirPath";
+import fhirPathMappings from "@/app/data/fhirPath";
+import { Mapping, evaluateValue } from "@/app/utils/evaluate";
 
 import EvaluateTableRow from "./EvaluateTableRow";
 
@@ -23,7 +23,7 @@ export interface ColumnInfoInput {
 
 interface TableProps {
   resources: Element[];
-  mappings?: PathMappings;
+  mappings?: Mapping;
   columns: ColumnInfoInput[];
   caption?: string;
   className?: string;
@@ -150,7 +150,7 @@ const BaseTableHeaders = ({
  */
 const evaluateTableRowData = (
   columns: ColumnInfoInput[],
-  mappings: PathMappings,
+  mappings: Mapping,
   entry: Element,
 ) => {
   let hiddenRow: ReactNode = null;
