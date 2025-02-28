@@ -4,7 +4,6 @@ import { axe } from "jest-axe";
 import { Bundle } from "fhir/r4";
 import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
 import { EcrDocument } from "@/app/view-data/components/EcrDocument";
-import mappings from "@/app/view-data/fhirPath";
 
 describe("Snapshot test for ECR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {
@@ -14,9 +13,9 @@ describe("Snapshot test for ECR Document", () => {
       entry: [],
     };
 
-    let items = getEcrDocumentAccordionItems(bundleEmpty, mappings);
+    const items = getEcrDocumentAccordionItems(bundleEmpty);
 
-    let { container } = render(<EcrDocument initialAccordionItems={items} />);
+    const { container } = render(<EcrDocument initialAccordionItems={items} />);
 
     expect(await axe(container)).toHaveNoViolations();
     container.querySelectorAll("[id], [aria-describedby]").forEach((el) => {

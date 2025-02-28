@@ -6,11 +6,16 @@ import {
 import { CompleteData, evaluateData } from "@/app/utils/data-utils";
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
-import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
+import {
+  evaluatePractitionerRoleReference,
+  evaluateValue,
+  getHumanReadableCodeableConcept,
+} from "./evaluateFhirDataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluateReference } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
 import fhirPathMappings from "@/app/view-data/fhirPath";
+import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
   [condition: string]: {
@@ -34,18 +39,6 @@ export interface ERSDWarning {
 }
 
 /**
- *  Gets the first display value from a coding array.
- * @param coding - The coding array to get the display from.
- * @returns The display value from the coding array.
- */
-export const getCodingDisplay = (coding: Coding[] | undefined) => {
-  if (!coding) {
-    return;
-  }
-  return coding.find((c) => c.display)?.display;
-};
-
-/**
  * Evaluates eCR metadata from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing eCR metadata.
  * @returns An object containing evaluated and formatted eCR metadata.
@@ -56,28 +49,19 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     fhirPathMappings.rrDetails,
   );
 
-  let reportableConditionsList: ReportableConditions = {};
+  const reportableConditionsList: ReportableConditions = {};
 
   for (const condition of rrDetails) {
     const name =
-      condition.valueCodeableConcept?.text ||
-      getCodingDisplay(condition.valueCodeableConcept?.coding) ||
-      "Unknown Condition"; // Default to "Unknown Condition" if no name is found, this should almost never happen, but it would still be a valid eCR.
-    const triggers = condition.extension
-      ?.filter(
-        (x) =>
-          x.url ===
-          "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
-      )
-      .map((x) => x.valueString);
+      getHumanReadableCodeableConcept(condition.valueCodeableConcept) ??
+      "Unknown Condition";
+    const triggers = getReportabilitySummaries(condition);
+
     if (!reportableConditionsList[name]) {
       reportableConditionsList[name] = {};
     }
 
-    if (
-      !Array.isArray(triggers) ||
-      !triggers.every((item) => typeof item === "string")
-    ) {
+    if (!triggers.size) {
       throw new Error("No triggers found for reportable condition");
     }
 
@@ -92,15 +76,15 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     });
   }
 
-  const custodianRef =
+  const custodianRef: string =
     evaluate(fhirBundle, fhirPathMappings.eicrCustodianRef)[0] ?? "";
-  const custodian: Organization = evaluateReference(fhirBundle, custodianRef);
+  const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
-  const eicrReleaseVersion = (fhirBundle: any) => {
-    const releaseVersion = evaluate(
+  const eicrReleaseVersion = (fhirBundle: Bundle) => {
+    const releaseVersion: string = evaluateValue(
       fhirBundle,
       fhirPathMappings.eicrReleaseVersion,
-    )[0];
+    );
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
     } else if (releaseVersion === "2021-01-01") {
@@ -110,8 +94,11 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     }
   };
 
-  const fhirERSDWarnings = evaluate(fhirBundle, fhirPathMappings.eRSDwarnings);
-  let eRSDTextList: ERSDWarning[] = [];
+  const fhirERSDWarnings: Coding[] = evaluate(
+    fhirBundle,
+    fhirPathMappings.eRSDwarnings,
+  );
+  const eRSDTextList: ERSDWarning[] = [];
 
   for (const warning of fhirERSDWarnings) {
     if (warning.code === "RRVS34") {
@@ -199,7 +186,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
   const authorRefs: Reference[] = evaluate(
     fhirBundle,
-    fhirPathMappings["compositionAuthorRefs"],
+    fhirPathMappings.compositionAuthorRefs,
   );
 
   const authorDetails: DisplayDataProps[][] = [];
@@ -208,7 +195,7 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
       const practitionerRoleRef = ref?.reference;
       const { practitioner, organization } = evaluatePractitionerRoleReference(
         fhirBundle,
-        practitionerRoleRef ?? "",
+        practitionerRoleRef,
       );
 
       authorDetails.push([

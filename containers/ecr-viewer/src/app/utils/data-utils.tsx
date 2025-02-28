@@ -20,8 +20,8 @@ export const noData = (
  * @returns - An object containing arrays of available and unavailable display data items.
  */
 export const evaluateData = (data: DisplayDataProps[]): CompleteData => {
-  let availableData: DisplayDataProps[] = [];
-  let unavailableData: DisplayDataProps[] = [];
+  const availableData: DisplayDataProps[] = [];
+  const unavailableData: DisplayDataProps[] = [];
   data.forEach((item) => {
     if (!isDataAvailable(item)) {
       unavailableData.push(item);
@@ -29,7 +29,7 @@ export const evaluateData = (data: DisplayDataProps[]): CompleteData => {
       availableData.push(item);
     }
   });
-  return { availableData: availableData, unavailableData: unavailableData };
+  return { availableData, unavailableData };
 };
 
 /**
@@ -149,7 +149,7 @@ const trimEmptyElements = (val: RenderableNode) => {
  * @returns - An iterator of indexes.
  */
 export const range = (start: number, end?: number, step: number = 1) => {
-  let output = [];
+  const output = [];
 
   if (typeof end === "undefined") {
     end = start;

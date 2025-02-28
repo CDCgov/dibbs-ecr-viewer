@@ -7,8 +7,11 @@ import {
   Coding,
   Condition,
   Encounter,
+  EncounterDiagnosis,
+  EncounterParticipant,
   Extension,
   HumanName,
+  Identifier,
   Location,
   Organization,
   PatientCommunication,
@@ -16,6 +19,8 @@ import {
   Practitioner,
   PractitionerRole,
   Quantity,
+  Reference,
+  Resource,
 } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
 import * as dateFns from "date-fns";
@@ -77,15 +82,16 @@ export const evaluatePatientName = (
  * @returns - The patient's race information, including race OMB category and detailed extension (if available).
  */
 export const evaluatePatientRace = (fhirBundle: Bundle) => {
-  const raceCat = evaluate(fhirBundle, fhirPathMappings.patientRace)[0];
-  const raceDetailed =
-    evaluate(fhirBundle, fhirPathMappings.patientRaceDetailed)[0] ?? "";
+  const raceCat: string = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientRace,
+  );
+  const raceDetailed: string = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientRaceDetailed,
+  );
 
-  if (raceDetailed) {
-    return raceCat + "\n" + raceDetailed;
-  } else {
-    return raceCat;
-  }
+  return [raceCat, raceDetailed].filter(Boolean).join("\n");
 };
 
 /**
@@ -94,16 +100,16 @@ export const evaluatePatientRace = (fhirBundle: Bundle) => {
  * @returns - The patient's ethnicity information, including additional ethnicity extension (if available).
  */
 export const evaluatePatientEthnicity = (fhirBundle: Bundle) => {
-  const ethnicity =
-    evaluate(fhirBundle, fhirPathMappings.patientEthnicity)[0] ?? "";
-  const ethnicityDetailed =
-    evaluate(fhirBundle, fhirPathMappings.patientEthnicityDetailed)[0] ?? "";
+  const ethnicity: string = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientEthnicity,
+  );
+  const ethnicityDetailed = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientEthnicityDetailed,
+  );
 
-  if (ethnicityDetailed) {
-    return ethnicity + "\n" + ethnicityDetailed;
-  } else {
-    return ethnicity;
-  }
+  return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
 };
 
 /**
@@ -112,10 +118,10 @@ export const evaluatePatientEthnicity = (fhirBundle: Bundle) => {
  * @returns The formatted patient address
  */
 export const evaluatePatientAddress = (fhirBundle: Bundle) => {
-  const addresses = evaluate(
+  const addresses: Address[] = evaluate(
     fhirBundle,
     fhirPathMappings.patientAddressList,
-  ) as Address[];
+  );
 
   if (addresses.length > 0) {
     return addresses
@@ -137,9 +143,12 @@ export const evaluatePatientAddress = (fhirBundle: Bundle) => {
  * @returns Encounter ID or empty string if not available.
  */
 export const evaluateEncounterId = (fhirBundle: Bundle) => {
-  const encounterIDs = evaluate(fhirBundle, fhirPathMappings.encounterID);
+  const encounterIDs: Identifier[] = evaluate(
+    fhirBundle,
+    fhirPathMappings.encounterID,
+  );
   const filteredIds = encounterIDs
-    .filter((id) => /^\d+$/.test(id.value))
+    .filter((id) => typeof id.value === "string" && /^\d+$/.test(id.value))
     .map((id) => id.value);
 
   return filteredIds[0] ?? "";
@@ -162,8 +171,14 @@ export const evaluatePatientDOB = (fhirBundle: Bundle) =>
  * @returns - The age of the patient in years, or undefined if date of birth is not available or if date of death exists.
  */
 export const calculatePatientAge = (fhirBundle: Bundle, givenDate?: string) => {
-  const patientDOBString = evaluate(fhirBundle, fhirPathMappings.patientDOB)[0];
-  const patientDODString = evaluate(fhirBundle, fhirPathMappings.patientDOD)[0];
+  const patientDOBString: string = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientDOB,
+  )[0];
+  const patientDODString: string = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientDOD,
+  )[0];
   if (patientDOBString && !patientDODString && !givenDate) {
     const patientDOB = new Date(patientDOBString);
     return dateFns.differenceInYears(new Date(), patientDOB);
@@ -181,8 +196,14 @@ export const calculatePatientAge = (fhirBundle: Bundle, givenDate?: string) => {
  * @returns - The age of the patient at death in years, or undefined if date of birth or date of death is not available.
  */
 export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
-  const patientDOBString = evaluate(fhirBundle, fhirPathMappings.patientDOB)[0];
-  const patientDODString = evaluate(fhirBundle, fhirPathMappings.patientDOD)[0];
+  const patientDOBString: string = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientDOB,
+  )[0];
+  const patientDODString: string = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientDOD,
+  )[0];
 
   if (patientDOBString && patientDODString) {
     const patientDOB = new Date(patientDOBString);
@@ -199,7 +220,7 @@ export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
  * @returns The vital status of the patient, either `Alive`, `Deceased`, or `""` (if not found)
  */
 export const evaluatePatientVitalStatus = (fhirBundle: Bundle) => {
-  const patientVitalStatus = evaluate(
+  const patientVitalStatus: boolean[] = evaluate(
     fhirBundle,
     fhirPathMappings.patientVitalStatus,
   );
@@ -254,7 +275,7 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
   const socialData: DisplayDataProps[] = [
     {
       title: "Tobacco Use",
-      value: evaluateValue(fhirBundle, fhirPathMappings["patientTobaccoUse"]),
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientTobaccoUse),
     },
     {
       title: "Travel History",
@@ -263,17 +284,11 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     },
     {
       title: "Homeless Status",
-      value: evaluateValue(
-        fhirBundle,
-        fhirPathMappings["patientHomelessStatus"],
-      ),
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientHomelessStatus),
     },
     {
       title: "Pregnancy Status",
-      value: evaluateValue(
-        fhirBundle,
-        fhirPathMappings["patientPregnancyStatus"],
-      ),
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
     },
     {
       title: "Alcohol Use",
@@ -283,26 +298,20 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
       title: "Sexual Orientation",
       value: evaluateValue(
         fhirBundle,
-        fhirPathMappings["patientSexualOrientation"],
+        fhirPathMappings.patientSexualOrientation,
       ),
     },
     {
       title: "Occupation",
-      value: evaluateValue(
-        fhirBundle,
-        fhirPathMappings["patientCurrentJobTitle"],
-      ),
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientCurrentJobTitle),
     },
     {
       title: "Religious Affiliation",
-      value: evaluateValue(fhirBundle, fhirPathMappings["patientReligion"]),
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientReligion),
     },
     {
       title: "Marital Status",
-      value: evaluateValue(
-        fhirBundle,
-        fhirPathMappings["patientMaritalStatus"],
-      ),
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientMaritalStatus),
     },
   ];
   return evaluateData(socialData);
@@ -346,8 +355,7 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value:
-        patientSex && ["Male", "Female"].includes(patientSex) ? patientSex : "",
+      value: censorGender(patientSex),
     },
     {
       title: "Race",
@@ -410,13 +418,13 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
     {
       title: "Encounter Date/Time",
       value: formatStartEndDateTime(
-        evaluate(fhirBundle, fhirPathMappings["encounterStartDate"])[0],
-        evaluate(fhirBundle, fhirPathMappings["encounterEndDate"])[0],
+        evaluate(fhirBundle, fhirPathMappings.encounterStartDate)[0],
+        evaluate(fhirBundle, fhirPathMappings.encounterEndDate)[0],
       ),
     },
     {
       title: "Encounter Type",
-      value: evaluate(fhirBundle, fhirPathMappings["encounterType"])[0],
+      value: evaluate(fhirBundle, fhirPathMappings.encounterType)[0],
     },
     {
       title: "Encounter ID",
@@ -441,28 +449,27 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
  * @returns An array of evaluated and formatted facility data.
  */
 export const evaluateFacilityData = (fhirBundle: Bundle) => {
-  const facilityContactAddressRef = evaluate(
+  const facilityContactAddressRef: Reference[] = evaluate(
     fhirBundle,
-    fhirPathMappings["facilityContactAddress"],
+    fhirPathMappings.facilityContactAddress,
   );
   let referenceString;
 
   if (facilityContactAddressRef[0]) {
     referenceString = facilityContactAddressRef[0].reference;
   }
-  const facilityContactAddress = referenceString
-    ? (evaluateReference(fhirBundle, referenceString)?.address?.[0] as Address)
-    : undefined;
+  const facilityContactAddress: Address | undefined =
+    evaluateReference<Organization>(fhirBundle, referenceString)?.address?.[0];
 
   const facilityData = [
     {
       title: "Facility Name",
-      value: evaluate(fhirBundle, fhirPathMappings["facilityName"])[0],
+      value: evaluate(fhirBundle, fhirPathMappings.facilityName)[0],
     },
     {
       title: "Facility Address",
       value: formatAddress(
-        evaluate(fhirBundle, fhirPathMappings["facilityAddress"])[0],
+        evaluate(fhirBundle, fhirPathMappings.facilityAddress)[0],
       ),
     },
     {
@@ -472,12 +479,12 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
     {
       title: "Facility Contact",
       value: formatPhoneNumber(
-        evaluate(fhirBundle, fhirPathMappings["facilityContact"])[0],
+        evaluate(fhirBundle, fhirPathMappings.facilityContact)[0],
       ),
     },
     {
       title: "Facility Type",
-      value: evaluate(fhirBundle, fhirPathMappings["facilityType"])[0],
+      value: evaluateValue(fhirBundle, fhirPathMappings.facilityType),
     },
     {
       title: "Facility ID",
@@ -486,6 +493,7 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
   ];
   return evaluateData(facilityData);
 };
+
 /**
  * Evaluates provider data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing provider data.
@@ -494,22 +502,20 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
 export const evaluateProviderData = (fhirBundle: Bundle) => {
   const encounterRef: string | undefined = evaluate(
     fhirBundle,
-    fhirPathMappings["compositionEncounterRef"],
+    fhirPathMappings.compositionEncounterRef,
   )[0];
-  const encounter: Encounter = evaluateReference(
-    fhirBundle,
-    encounterRef ?? "",
-  );
+
+  const encounter = evaluateReference<Encounter>(fhirBundle, encounterRef);
   const encounterParticipantRef: string | undefined = evaluate(
     encounter,
-    fhirPathMappings["encounterIndividualRef"],
+    fhirPathMappings.encounterIndividualRef,
   )[0];
   const { practitioner, organization } = evaluatePractitionerRoleReference(
     fhirBundle,
-    encounterParticipantRef ?? "",
+    encounterParticipantRef,
   );
 
-  const providerData = [
+  const providerData: DisplayDataProps[] = [
     {
       title: "Provider Name",
       value: formatName(practitioner?.name?.[0]),
@@ -547,23 +553,22 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
 export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
   const encounterRef: string | undefined = evaluate(
     fhirBundle,
-    fhirPathMappings["compositionEncounterRef"],
+    fhirPathMappings.compositionEncounterRef,
   )[0];
-  const encounter: Encounter = evaluateReference(
-    fhirBundle,
-    encounterRef ?? "",
-  );
-  const participants = evaluate(
+  const encounter = evaluateReference<Encounter>(fhirBundle, encounterRef);
+  const participants: EncounterParticipant[] = evaluate(
     encounter,
-    fhirPathMappings["encounterParticipants"],
+    fhirPathMappings.encounterParticipants,
   );
 
   const tables = participants.map((participant) => {
     const role = evaluateValue(participant, "type");
     const { start, end } = evaluate(participant, "period")?.[0] ?? {};
+    const participantRef = participant.individual?.reference;
+
     const { practitioner } = evaluatePractitionerRoleReference(
       fhirBundle,
-      participant.individual.reference,
+      participantRef,
     );
 
     return {
@@ -603,13 +608,11 @@ export const evaluateEmergencyContact = (fhirBundle: Bundle) => {
   return contacts
     .map((contact) => {
       const relationship = toSentenceCase(
-        contact.relationship?.[0].coding?.[0]?.display,
+        getHumanReadableCodeableConcept(contact.relationship?.[0]),
       );
 
       const contactName = contact.name ? formatName(contact.name) : "";
-
       const address = contact.address ? formatAddress(contact.address) : "";
-
       const phoneNumbers = formatContactPoint(contact.telecom);
 
       return [relationship, contactName, address, phoneNumbers]
@@ -625,12 +628,30 @@ export const evaluateEmergencyContact = (fhirBundle: Bundle) => {
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
  */
-export const evaluateReference = (fhirBundle: Bundle, ref: string) => {
+export const evaluateReference = <T extends Resource>(
+  fhirBundle: Bundle,
+  ref?: string,
+): T | undefined => {
+  if (!ref) return undefined;
   const [resourceType, id] = ref.split("/");
-  return evaluate(fhirBundle, fhirPathMappings.resolve, {
-    resourceType,
-    id,
-  })[0];
+  const result: Resource | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.resolve,
+    {
+      resourceType,
+      id,
+    },
+  )[0];
+
+  if (!result) {
+    return undefined;
+  } else if (result?.resourceType !== resourceType) {
+    console.error(
+      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
+    );
+  }
+
+  return result as T;
 };
 
 /**
@@ -643,7 +664,7 @@ export const evaluateValue = (
   entry: Element | Element[],
   path: string | Path,
 ): string => {
-  let originalValue = evaluate(entry, path, undefined, fhirpath_r4_model)[0];
+  const originalValue = evaluate(entry, path, undefined, fhirpath_r4_model)[0];
 
   let value = "";
   const originalValuePath = originalValue?.__path__?.path;
@@ -663,8 +684,7 @@ export const evaluateValue = (
     value = `${data.value ?? ""}${unit ?? ""}`;
   } else if (originalValuePath === "CodeableConcept") {
     const data: CodeableConcept = originalValue;
-    value =
-      data.coding?.[0].display || data.text || data.coding?.[0].code || "";
+    value = getHumanReadableCodeableConcept(data) ?? "";
   } else if (originalValuePath === "Coding") {
     const data: Coding = originalValue;
     value = data?.display || data?.code || "";
@@ -683,7 +703,7 @@ export const evaluateValue = (
 export const evaluateFacilityId = (fhirBundle: Bundle) => {
   const encounterLocationRef =
     evaluate(fhirBundle, fhirPathMappings.facilityLocation)?.[0] ?? "";
-  const location: Location = evaluateReference(
+  const location = evaluateReference<Location>(
     fhirBundle,
     encounterLocationRef,
   );
@@ -699,20 +719,23 @@ export const evaluateFacilityId = (fhirBundle: Bundle) => {
  */
 export const evaluatePractitionerRoleReference = (
   fhirBundle: Bundle,
-  practitionerRoleRef: string,
+  practitionerRoleRef?: string,
 ): { practitioner?: Practitioner; organization?: Organization } => {
-  const practitionerRole: PractitionerRole | undefined = evaluateReference(
+  if (!practitionerRoleRef) return {};
+
+  const practitionerRole = evaluateReference<PractitionerRole>(
     fhirBundle,
     practitionerRoleRef,
   );
-  const practitioner: Practitioner | undefined = evaluateReference(
+  const practitioner = evaluateReference<Practitioner>(
     fhirBundle,
-    practitionerRole?.practitioner?.reference ?? "",
+    practitionerRole?.practitioner?.reference,
   );
-  const organization: Organization | undefined = evaluateReference(
+  const organization = evaluateReference<Organization>(
     fhirBundle,
-    practitionerRole?.organization?.reference ?? "",
+    practitionerRole?.organization?.reference,
   );
+
   return { practitioner, organization };
 };
 
@@ -722,17 +745,18 @@ export const evaluatePractitionerRoleReference = (
  * @returns Comma delimited list of encounter diagnoses
  */
 export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
-  const encounterDiagnosisRefs = evaluate(
+  const diagnoses: EncounterDiagnosis[] = evaluate(
     fhirBundle,
     fhirPathMappings.encounterDiagnosis,
   );
 
-  const conditions: Condition[] = encounterDiagnosisRefs.map((diagnosis) =>
-    evaluateReference(fhirBundle, diagnosis.condition.reference),
-  );
-
-  return conditions
-    .map((condition) => condition.code?.coding?.[0].display)
+  return diagnoses
+    .map((diagnosis) => {
+      const reference = diagnosis.condition?.reference;
+      const condition = evaluateReference<Condition>(fhirBundle, reference);
+      return getHumanReadableCodeableConcept(condition?.code);
+    })
+    .filter(Boolean)
     .join(", ");
 };
 
@@ -779,4 +803,56 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
     })
     .filter(Boolean)
     .join("\n\n");
+};
+
+/**
+ * Attempts to return a human-readable display value for a CodeableConcept. It will return the first
+ * available value in the following order:
+ * 1) `undefined` if the `CodeableConcept` is falsy
+ * 2) `CodeableConcept.text`
+ * 3) value of the first `coding` with a `display` value
+ * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
+ * 5) `code` of the first `coding` with a `code` value
+ * 6) `undefined`
+ * @param codeableConcept - The CodeableConcept to get the display value from.
+ * @returns - The human-readable display value of the CodeableConcept.
+ */
+export const getHumanReadableCodeableConcept = (
+  codeableConcept: CodeableConcept | undefined,
+) => {
+  if (!codeableConcept) {
+    return undefined;
+  }
+
+  const { coding, text } = codeableConcept;
+
+  if (text) {
+    return text;
+  }
+
+  const firstCodingWithDisplay = coding?.find((c) => c.display);
+  if (firstCodingWithDisplay?.display) {
+    return firstCodingWithDisplay.display;
+  }
+
+  const firstCodingWithCodeSystem = coding?.find((c) => c.code && c.system);
+  if (firstCodingWithCodeSystem?.code && firstCodingWithCodeSystem?.system) {
+    return `${firstCodingWithCodeSystem.code} (${firstCodingWithCodeSystem.system})`;
+  }
+
+  const firstCodingWithCode = coding?.find((c) => c.code);
+  if (firstCodingWithCode?.code) {
+    return firstCodingWithCode.code;
+  }
+
+  return undefined;
+};
+
+/**
+ * Censors "Unknown" and "Other" gender options for the given string in compliance with Executive Order 14168
+ * @param gender - Gender string
+ * @returns - if  the string is "Male" or "Female" it returns the string, otherwise it returns an empty string
+ */
+export const censorGender = (gender: string | undefined) => {
+  return gender && ["Male", "Female"].includes(gender) ? gender : "";
 };

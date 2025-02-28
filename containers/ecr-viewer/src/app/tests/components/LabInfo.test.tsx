@@ -10,7 +10,7 @@ import {
   LabReportElementData,
 } from "@/app/services/labsService";
 import { evaluate } from "@/app/utils/evaluate";
-import mappings from "@/app/view-data/fhirPath";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
@@ -18,7 +18,7 @@ describe("LabInfo", () => {
     beforeAll(() => {
       const labinfoOrg = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
-        evaluate(BundleLab, mappings["diagnosticReports"]),
+        evaluate(BundleLab, fhirPathMappings.diagnosticReports),
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
@@ -101,7 +101,7 @@ describe("LabInfo", () => {
     it("should be collapsed by default", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
+        evaluate(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
       );
 
       render(<LabInfo labResults={labinfo} />);
@@ -129,7 +129,7 @@ describe("LabInfo", () => {
     it("should match snapshot test", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings["diagnosticReports"]),
+        evaluate(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
       );
 
       const { container } = render(<LabInfo labResults={labinfo} />);

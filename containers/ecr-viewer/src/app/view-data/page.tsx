@@ -52,7 +52,7 @@ const ECRViewerPage = async ({
       const bundle: ApiResponse = await response.json();
       fhirBundle = bundle.fhirBundle;
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors = {
       status: 500,
       message: error,

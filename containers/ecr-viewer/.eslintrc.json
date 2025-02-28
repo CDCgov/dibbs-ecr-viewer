@@ -15,7 +15,12 @@
     "allowImportExportEverywhere": true
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "dot-notation": "error",
+    "eqeqeq": "error",
     "no-unused-vars": "off",
+    "object-shorthand": "error",
+    "prefer-const": "error",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "warn",
@@ -43,6 +48,7 @@
     {
       "files": ["*.test*", "**/tests/**/*"],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
         "jsdoc/require-jsdoc": "off"
       }
     }

@@ -7,6 +7,12 @@ import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import fhirPathMappings from "../view-data/fhirPath";
+import { ColumnInfoInput } from "../view-data/components/EvaluateTable";
+
+type TravelHistoryColumn = Required<
+  Pick<ColumnInfoInput, "infoPath" | "columnName">
+> &
+  Pick<ColumnInfoInput, "applyToValue">;
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -19,7 +25,7 @@ export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
     fhirPathMappings.patientTravelHistory,
   );
 
-  const columnInfo = [
+  const columns: TravelHistoryColumn[] = [
     {
       columnName: "Location",
       infoPath: "travelHistoryLocation",
@@ -40,29 +46,45 @@ export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
     },
   ];
 
-  const tables = travelHistory
-    .map((act) => {
-      return columnInfo.reduce(
-        (row, { columnName, infoPath, applyToValue }) => {
-          let val = evaluateValue(act, fhirPathMappings[infoPath]);
-          if (applyToValue) {
-            val = applyToValue(val) ?? "";
-          }
-          return { ...row, [columnName]: { value: val || noData } };
-        },
-        {} as HtmlTableJsonRow[],
-      );
-    })
-    .filter((row) =>
-      Object.values(row).some((v) => (v.value as any) !== noData),
-    );
+  const tables = createTravelHistoryTables(travelHistory, columns);
 
-  if (!tables.flat().length) return undefined;
+  if (!tables.length) return undefined;
 
   return (
     <JsonTable
-      jsonTableData={{ tables, resultName: "Travel History" }}
+      jsonTableData={{ tables: [tables], resultName: "Travel History" }}
       className="caption-data-title margin-y-0"
     />
   );
+};
+
+const createTravelHistoryTables = (
+  history: Observation[],
+  columns: TravelHistoryColumn[],
+) => {
+  const tables = history
+    .map((activity) => {
+      const row: HtmlTableJsonRow = {};
+
+      // Populate the row by iterating over the columns
+      columns.forEach(({ columnName, infoPath, applyToValue }) => {
+        let value = evaluateValue(activity, fhirPathMappings[infoPath]);
+
+        // Apply transformation if needed
+        if (applyToValue) {
+          value = applyToValue(value) ?? "";
+        }
+
+        // Assign the value to the row
+        row[columnName] = { value: value || noData };
+      });
+
+      return row;
+    })
+    .filter((row) => {
+      // Filter out rows with only noData values
+      return Object.values(row).some(({ value }) => value !== noData);
+    });
+
+  return tables;
 };

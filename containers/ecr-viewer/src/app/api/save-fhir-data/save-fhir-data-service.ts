@@ -46,7 +46,7 @@ export const saveToS3 = async (fhirBundle: Bundle, ecrId: string) => {
       message: "Success. Saved FHIR bundle.",
       status: 200,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error({
       message: "Failed to save FHIR bundle to S3.",
       error,
@@ -99,7 +99,7 @@ export const saveToAzure = async (
       message: "Success. Saved FHIR bundle.",
       status: 200,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error({
       message: "Failed to save FHIR bundle to Azure Blob Storage.",
       error,
@@ -152,9 +152,9 @@ const saveFhirMetadata = async (
   metadata: BundleMetadata | BundleExtendedMetadata,
 ): Promise<SaveResponse> => {
   try {
-    if (metadataSaveLocation == "postgres") {
+    if (metadataSaveLocation === "postgres") {
       return await saveMetadataToPostgres(metadata as BundleMetadata, ecrId);
-    } else if (metadataSaveLocation == "sqlserver") {
+    } else if (metadataSaveLocation === "sqlserver") {
       return await saveMetadataToSqlServer(
         metadata as BundleExtendedMetadata,
         ecrId,
@@ -165,7 +165,7 @@ const saveFhirMetadata = async (
         status: 400,
       };
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     const message = "Failed to save FHIR metadata.";
     console.error({ message, error, ecrId });
     return {
@@ -186,13 +186,13 @@ export const saveMetadataToSqlServer = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  let pool = await get_pool();
+  const pool = await get_pool();
 
   if (!pool) {
     return { message: "Failed to connect to SQL Server.", status: 500 };
   }
 
-  if (process.env.METADATA_DATABASE_SCHEMA == "extended") {
+  if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
     const transaction = new sql.Transaction(pool);
     await transaction.begin();
     try {
@@ -428,7 +428,7 @@ export const saveMetadataToSqlServer = async (
         message: "Success. Saved metadata to database.",
         status: 200,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error({
         message: "Failed to insert metadata to sqlserver.",
         error,
@@ -518,7 +518,7 @@ export const saveMetadataToPostgres = async (
       message: "Success. Saved metadata to database.",
       status: 200,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error({
       message: `Error inserting metadata to postgres.`,
       error,
@@ -555,7 +555,7 @@ export const saveWithMetadata = async (
       saveFhirData(fhirBundle, ecrId, saveSource),
       saveFhirMetadata(ecrId, metadataSaveLocation, metadata as BundleMetadata),
     ]);
-  } catch (error: any) {
+  } catch (error: unknown) {
     const message = "Failed to save FHIR data with metadata.";
     console.error({ message, error, ecrId });
     return {

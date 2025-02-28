@@ -3,7 +3,6 @@ import { axe } from "jest-axe";
 import { Bundle, Condition } from "fhir/r4";
 import BundleWithPatient from "@/app/tests/assets/BundlePatient.json";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 describe("Active Problems Table", () => {
   let container: HTMLElement;
@@ -149,7 +148,6 @@ describe("Active Problems Table", () => {
       returnProblemsTable(
         BundleWithPatient as unknown as Bundle,
         activeProblemsData,
-        fhirPathMappings,
       )!,
     ).container;
   });

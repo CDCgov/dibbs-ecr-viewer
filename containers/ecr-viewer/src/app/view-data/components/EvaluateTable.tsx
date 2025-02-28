@@ -12,6 +12,9 @@ export interface ColumnInfoInput {
   value?: string;
   className?: string;
   hiddenBaseText?: string;
+  // Generics could be used here instead but we don't want to have to provide it
+  // when this property is optional. Using `any` avoids that issue.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   applyToValue?: (value: any) => any;
 }
 
@@ -148,7 +151,7 @@ const evaluateTableRowData = (
   entry: Element,
 ) => {
   let hiddenRow: ReactNode = null;
-  let rowCellsData = columns.map((column) => {
+  const rowCellsData = columns.map((column) => {
     let data: ReactNode;
     let hidden = false;
     if (column?.value) {

@@ -35,7 +35,7 @@ export const DataDisplay: React.FC<{
   themeColor?: string;
 }): React.JSX.Element => {
   item.dividerLine =
-    item.dividerLine == null || item.dividerLine == undefined
+    item.dividerLine === null || item.dividerLine === undefined
       ? true
       : item.dividerLine;
   return (

@@ -33,7 +33,7 @@ import {
   TooltipDiv,
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
-import mappings from "@/app/view-data/fhirPath";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 
 describe("Utils", () => {
   describe("Evaluate Social Data", () => {
@@ -289,7 +289,7 @@ describe("Utils", () => {
     it("should return empty if active problem name is undefined", () => {
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
-        evaluate(BundleNoActiveProblems, mappings["activeProblems"]),
+        evaluate(BundleNoActiveProblems, fhirPathMappings.activeProblems),
       );
 
       expect(actual).toBeUndefined();
