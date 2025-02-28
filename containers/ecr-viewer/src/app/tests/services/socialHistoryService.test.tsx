@@ -1,8 +1,9 @@
+import { render } from "@testing-library/react";
+import { Bundle } from "fhir/r4";
+
 import { loadYamlConfig } from "@/app/api/utils";
 import { evaluateTravelHistoryTable } from "@/app/services/socialHistoryService";
-import BundleWithTravelHistory from "../assets/BundleTravelHistory.json";
-import { Bundle } from "fhir/r4";
-import { render } from "@testing-library/react";
+import BundleWithTravelHistory from "@/app/tests/assets/BundleTravelHistory.json";
 const mappings = loadYamlConfig();
 
 describe("Travel History", () => {

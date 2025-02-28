@@ -1,5 +1,7 @@
 import "server-only";
 import React from "react";
+
+import { HeadingLevel, Tag } from "@trussworks/react-uswds";
 import {
   Bundle,
   Device,
@@ -8,6 +10,8 @@ import {
   Organization,
   Reference,
 } from "fhir/r4";
+import { Coding, ObservationComponent } from "fhir/r4b";
+
 import {
   PathMappings,
   RenderableNode,
@@ -16,34 +20,33 @@ import {
   safeParse,
 } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
-import { formatAddress, formatPhoneNumber } from "@/app/services/formatService";
-import { Coding, ObservationComponent } from "fhir/r4b";
-import EvaluateTable, {
-  ColumnInfoInput,
-} from "@/app/view-data/components/EvaluateTable";
-import {
-  evaluateReference,
-  evaluateValue,
-  getHumanReadableCodeableConcept,
-} from "./evaluateFhirDataService";
-import {
-  DataDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
-import { HeadingLevel, Tag } from "@trussworks/react-uswds";
 import {
   extractNumbersAndPeriods,
   toKebabCase,
 } from "@/app/utils/format-utils";
 import {
+  DataDisplay,
+  DisplayDataProps,
+} from "@/app/view-data/components/DataDisplay";
+import EvaluateTable, {
+  ColumnInfoInput,
+} from "@/app/view-data/components/EvaluateTable";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
+import { LabAccordion } from "@/app/view-data/components/LabAccordion";
+import { AccordionItem } from "@/app/view-data/types";
+
+import {
+  evaluateReference,
+  evaluateValue,
+  getHumanReadableCodeableConcept,
+} from "./evaluateFhirDataService";
+import { formatDateTime } from "./formatDateService";
+import { formatAddress, formatPhoneNumber } from "./formatService";
+import {
   HtmlTableJson,
   HtmlTableJsonRow,
   formatTablesToJSON,
 } from "./htmlTableService";
-import { formatDateTime } from "./formatDateService";
-import { LabAccordion } from "../view-data/components/LabAccordion";
-import { JsonTable } from "../view-data/components/JsonTable";
-import { AccordionItem } from "../view-data/types";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];

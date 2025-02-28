@@ -1,12 +1,14 @@
 import React from "react";
 import fs from "fs";
-import YAML from "js-yaml";
+
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
-import ClinicalInfo from "../../view-data/components/ClinicalInfo";
-import { loadYamlConfig } from "@/app/api/utils";
 import { Procedure } from "fhir/r4";
+import { axe } from "jest-axe";
+import YAML from "js-yaml";
+
+import { loadYamlConfig } from "@/app/api/utils";
 import { PathMappings } from "@/app/utils/data-utils";
+import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import {
   evaluateClinicalData,
   evaluateMiscNotes,

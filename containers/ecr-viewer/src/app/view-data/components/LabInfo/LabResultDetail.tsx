@@ -1,11 +1,13 @@
 "use client";
 import React, { useId, useState } from "react";
-import { LabReportElementData } from "@/app/services/labsService";
-import { AccordionSubSection } from "../../component-utils";
-import { DataDisplay } from "../DataDisplay";
-import { ExpandCollapseButtons } from "../ExpandCollapseButtons";
-import Accordion from "../AccordionControlled";
+
 import classNames from "classnames";
+
+import { LabReportElementData } from "@/app/services/labsService";
+import { AccordionSubSection } from "@/app/view-data/component-utils";
+import Accordion from "@/app/view-data/components/AccordionControlled";
+import { DataDisplay } from "@/app/view-data/components/DataDisplay";
+import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 
 /**
  * Helper component for building lab result accordions

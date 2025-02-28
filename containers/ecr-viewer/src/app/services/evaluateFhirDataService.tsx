@@ -1,5 +1,6 @@
 import "server-only"; // FHIR evaluation should be done server side
 
+import * as dateFns from "date-fns";
 import {
   Address,
   Bundle,
@@ -22,28 +23,29 @@ import {
   Reference,
   Resource,
 } from "fhir/r4";
-import { evaluate } from "@/app/utils/evaluate";
-import * as dateFns from "date-fns";
+import { Element } from "fhir/r4";
+import { Path } from "fhirpath";
+import fhirpath_r4_model from "fhirpath/fhir-context/r4";
+
 import { PathMappings, evaluateData, noData } from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
+import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
+
+import {
+  formatDate,
+  formatStartEndDate,
+  formatStartEndDateTime,
+} from "./formatDateService";
 import {
   formatAddress,
   formatContactPoint,
   formatName,
   formatPhoneNumber,
 } from "./formatService";
-import fhirpath_r4_model from "fhirpath/fhir-context/r4";
-import { Element } from "fhir/r4";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import { evaluateTravelHistoryTable } from "./socialHistoryService";
-import { Path } from "fhirpath";
-import { JsonTable } from "../view-data/components/JsonTable";
-import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import { HtmlTableJsonRow } from "./htmlTableService";
-import {
-  formatDate,
-  formatStartEndDate,
-  formatStartEndDateTime,
-} from "./formatDateService";
+import { evaluateTravelHistoryTable } from "./socialHistoryService";
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.

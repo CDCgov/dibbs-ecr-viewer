@@ -1,5 +1,5 @@
-import { get_pool } from "./db/sqlserver_db";
 import { getDB } from "./db/postgres_db";
+import { get_pool } from "./db/sqlserver_db";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.

@@ -1,5 +1,7 @@
-import { RenderableNode, safeParse } from "@/app/utils/data-utils";
 import { parse, HTMLElement, Node, NodeType } from "node-html-parser";
+
+import { RenderableNode, safeParse } from "@/app/utils/data-utils";
+
 import { formatDateTime } from "./formatDateService";
 
 interface Metadata {

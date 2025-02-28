@@ -1,39 +1,42 @@
-import { loadYamlConfig } from "@/app/api/utils";
-import { Bundle } from "fhir/r4";
-import BundleWithTravelHistory from "./assets/BundleTravelHistory.json";
-import BundleWithTravelHistoryEmpty from "./assets/BundleTravelHistoryEmpty.json";
-import BundleWithPatient from "./assets/BundlePatient.json";
-import BundleWithDeceasedPatient from "./assets/BundlePatientDeceased.json";
-import BundleWithSexualOrientation from "./assets/BundleSexualOrientation.json";
-import BundleWithMiscNotes from "./assets/BundleMiscNotes.json";
-import BundleWithPendingResultsOnly from "./assets/BundlePendingResultsOnly.json";
-import BundleWithScheduledOrdersOnly from "./assets/BundleScheduledOrdersOnly.json";
-import BundleNoActiveProblems from "./assets/BundleNoActiveProblems.json";
-import BundleCareTeam from "./assets/BundleCareTeam.json";
 import React from "react";
+
 import { render, screen } from "@testing-library/react";
-import { CarePlanActivity } from "fhir/r4b";
-import { evaluate } from "@/app/utils/evaluate";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
+import { Bundle } from "fhir/r4";
+import { CarePlanActivity } from "fhir/r4b";
+
+import { loadYamlConfig } from "@/app/api/utils";
 import {
   evaluateSocialData,
   evaluatePatientName,
   calculatePatientAge,
   evaluatePatientAddress,
   calculatePatientAgeAtDeath,
-} from "../services/evaluateFhirDataService";
+} from "@/app/services/evaluateFhirDataService";
+import { evaluate } from "@/app/utils/evaluate";
+import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   evaluateClinicalData,
   returnCareTeamTable,
   returnPlannedProceduresTable,
-} from "../view-data/components/EcrDocument/clinical-data";
-import { returnProblemsTable } from "../view-data/components/common";
-import { DataDisplay } from "@/app/view-data/components/DataDisplay";
+} from "@/app/view-data/components/EcrDocument/clinical-data";
 import {
   TooltipDiv,
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
+import { returnProblemsTable } from "@/app/view-data/components/common";
+
+import BundleCareTeam from "./assets/BundleCareTeam.json";
+import BundleWithMiscNotes from "./assets/BundleMiscNotes.json";
+import BundleNoActiveProblems from "./assets/BundleNoActiveProblems.json";
+import BundleWithPatient from "./assets/BundlePatient.json";
+import BundleWithDeceasedPatient from "./assets/BundlePatientDeceased.json";
+import BundleWithPendingResultsOnly from "./assets/BundlePendingResultsOnly.json";
+import BundleWithScheduledOrdersOnly from "./assets/BundleScheduledOrdersOnly.json";
+import BundleWithSexualOrientation from "./assets/BundleSexualOrientation.json";
+import BundleWithTravelHistory from "./assets/BundleTravelHistory.json";
+import BundleWithTravelHistoryEmpty from "./assets/BundleTravelHistoryEmpty.json";
 
 describe("Utils", () => {
   const mappings = loadYamlConfig();

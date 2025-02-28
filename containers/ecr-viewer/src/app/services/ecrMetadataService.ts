@@ -1,23 +1,21 @@
-import {
-  formatAddress,
-  formatContactPoint,
-  formatName,
-} from "@/app/services/formatService";
+import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
+
 import {
   CompleteData,
   evaluateData,
   PathMappings,
 } from "@/app/utils/data-utils";
-import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 import { evaluate } from "@/app/utils/evaluate";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+
 import {
   evaluatePractitionerRoleReference,
   evaluateValue,
   getHumanReadableCodeableConcept,
+  evaluateReference,
 } from "./evaluateFhirDataService";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import { evaluateReference } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
+import { formatAddress, formatContactPoint, formatName } from "./formatService";
 import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {

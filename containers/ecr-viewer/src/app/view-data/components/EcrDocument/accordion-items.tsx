@@ -1,7 +1,8 @@
 import React from "react";
+
 import { Bundle } from "fhir/r4";
+
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
-import { evaluateLabInfoData } from "@/app/services/labsService";
 import {
   evaluateDemographicsData,
   evaluateSocialData,
@@ -9,19 +10,20 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
-import { evaluateClinicalData } from "./clinical-data";
-import { evaluate } from "@/app/utils/evaluate";
+import { evaluateLabInfoData } from "@/app/services/labsService";
 import { PathMappings } from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
-import { AccordionItem } from "@/app/view-data/types";
-
+import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
-import SocialHistory from "@/app/view-data/components/SocialHistory";
-import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import EncounterDetails from "@/app/view-data/components/Encounter";
-import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import LabInfo from "@/app/view-data/components/LabInfo";
+import SocialHistory from "@/app/view-data/components/SocialHistory";
+import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
+import { AccordionItem } from "@/app/view-data/types";
+
+import { evaluateClinicalData } from "./clinical-data";
 
 /**
  * Functional component for an accordion container displaying various sections of eCR information.

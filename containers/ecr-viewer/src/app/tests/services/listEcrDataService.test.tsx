@@ -1,6 +1,9 @@
 /**
  * @jest-environment node
  */
+import { getDB } from "@/app/data/db/postgres_db";
+import { get_pool } from "@/app/data/db/sqlserver_db";
+import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   CoreMetadataModel,
   EcrDisplay,
@@ -11,10 +14,7 @@ import {
   processCoreMetadata,
   listEcrData,
   generateFilterDateStatementPostgres,
-} from "../../services/listEcrDataService";
-import { getDB } from "../../data/db/postgres_db";
-import { formatDate, formatDateTime } from "../../services/formatDateService";
-import { get_pool } from "../../data/db/sqlserver_db";
+} from "@/app/services/listEcrDataService";
 
 jest.mock("../../data/db/sqlserver_db", () => ({
   get_pool: jest.fn(),

@@ -1,11 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import fs from "fs";
-import YAML from "js-yaml";
+
+import { render, screen } from "@testing-library/react";
 import { Bundle, Condition } from "fhir/r4";
+import { axe } from "jest-axe";
+import YAML from "js-yaml";
+
 import BundleWithPatient from "@/app/tests/assets/BundlePatient.json";
-import { returnProblemsTable } from "@/app/view-data/components/common";
 import { PathMappings } from "@/app/utils/data-utils";
+import { returnProblemsTable } from "@/app/view-data/components/common";
 
 describe("Active Problems Table", () => {
   let container: HTMLElement;
