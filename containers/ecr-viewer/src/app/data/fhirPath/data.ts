@@ -1,4 +1,6 @@
-const data = {
+import { PathTypes } from ".";
+
+const data: { [K in keyof PathTypes]: string } = {
   patientNameList: "Bundle.entry.resource.where(resourceType = 'Patient').name",
   patientAddressList:
     "Bundle.entry.resource.where(resourceType = 'Patient').address",

@@ -5,14 +5,16 @@ import {
   Coding,
   Communication,
   Condition,
-  ContactDetail,
   DiagnosticReport,
+  EncounterDiagnosis,
   EncounterParticipant,
   HumanName,
   Identifier,
   Immunization,
   Observation,
   Organization,
+  PatientCommunication,
+  PatientContact,
   Procedure,
   Quantity,
   Reference,
@@ -22,7 +24,13 @@ import fhirPathMappings from "./data";
 
 export type PathMappings = typeof fhirPathMappings;
 
-type ValueX = string | CodeableConcept | Coding | number | boolean | Quantity;
+export type ValueX =
+  | string
+  | CodeableConcept
+  | Coding
+  | number
+  | boolean
+  | Quantity;
 
 export type PathTypes = {
   patientNameList: HumanName;
@@ -39,9 +47,9 @@ export type PathTypes = {
   patientRaceDetailed: ValueX;
   patientEthnicity: ValueX;
   patientEthnicityDetailed: ValueX;
-  patientCommunication: Communication;
+  patientCommunication: PatientCommunication;
   patientTribalAffiliation: ValueX;
-  patientEmergencyContact: ContactDetail;
+  patientEmergencyContact: PatientContact;
   patientCurrentJobTitle: ValueX;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
@@ -63,19 +71,19 @@ export type PathTypes = {
   compositionAuthorRefs: unknown;
   encounterEndDate: string;
   encounterStartDate: string;
-  encounterDiagnosis: unknown;
+  encounterDiagnosis: EncounterDiagnosis;
   encounterType: string;
   encounterID: Identifier;
   facilityContact: string;
-  facilityContactAddress: Address;
-  facilityLocation: Reference;
+  facilityContactAddress: Reference;
+  facilityLocation: string;
   facilityName: string;
   facilityAddress: Address;
   facilityType: ValueX;
-  compositionEncounterRef: Reference;
-  encounterIndividualRef: Reference;
+  compositionEncounterRef: string;
+  encounterIndividualRef: string;
   encounterParticipants: EncounterParticipant;
-  rrDetails: unknown;
+  rrDetails: Observation;
   clinicalReasonForVisit: ValueX;
   patientHeight: ValueX;
   patientHeightMeasurement: string;
@@ -138,5 +146,21 @@ export type PathTypes = {
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
 };
+
+type ValueOf<T> = T[keyof T];
+
+type ReverseMap<T extends Record<keyof T, keyof any>> = {
+  [K in keyof T as T[K]]: K;
+};
+
+type ReversedPathMappings = ReverseMap<PathMappings>;
+
+export type MappingTypes = {
+  [V in PathMappings[K]]: PathTypes[K];
+};
+
+// {
+//     [Property in ValueOf<PathMappings>]: PathTypes[Property]
+// }
 
 export default fhirPathMappings;

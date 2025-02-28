@@ -17,29 +17,28 @@ import {
 } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
+import fhirPathMappings, {
+  PathMappings,
+  PathTypes,
+  ValueX,
+} from "@/app/data/fhirPath";
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const evaluateCache: Map<string, any> = new Map();
 
-/**
- * Evaluates a FHIRPath expression on the provided FHIR data.
- * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
- * @param path - The FHIRPath expression to evaluate.
- * @param [context] - Optional context object to provide additional data for evaluation.
- * @param [model] - Optional model object to provide additional data for evaluation.
- * @param [options] - Optional options object for additional configuration.
- * @param [options.resolveInternalTypes] - Whether to resolve internal types in the evaluation.
- * @param [options.traceFn] - Optional trace function for logging evaluation traces.
- * @param [options.userInvocationTable] - Optional table for tracking user invocations.
- * @returns - An array containing the result of the evaluation.
- */
-export const evaluate = (
+const isBundle = (e: Element | Element[] | Resource): e is Bundle => {
+  if ("resourceType" in e) {
+    return e?.resourceType === "Bundle";
+  }
+
+  return false;
+};
+
+const evaluateRaw = (
   // TODO: Follow up on FHIR/fhirpath typing
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fhirData: any,
+  fhirData: Element | Resource | undefined,
   path: string | Path,
   context?: Context,
   model?: Model,
@@ -53,11 +52,11 @@ export const evaluate = (
   // TODO: Follow up on FHIR/fhirpath typing
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any[] => {
+  if (!fhirData) return [];
   // Since the bundle does not have an ID, prefer to just use "bundle" instead
   const fhirDataIdentifier: string =
-    (fhirData?.resourceType === "Bundle"
-      ? fhirData?.entry?.[0]?.fullUrl
-      : fhirData?.id) ?? JSON.stringify(fhirData);
+    (isBundle(fhirData) ? fhirData?.entry?.[0]?.fullUrl : fhirData?.id) ??
+    JSON.stringify(fhirData);
   const key =
     fhirDataIdentifier + JSON.stringify(context) + JSON.stringify(path);
   if (!evaluateCache.has(key)) {
@@ -67,6 +66,77 @@ export const evaluate = (
     );
   }
   return evaluateCache.get(key);
+};
+
+interface TypeMapping {
+  [key: string]: Element | Resource | ValueX | unknown;
+}
+export interface Mapping {
+  [key: string]: string;
+}
+
+/**
+ * Evaluates a FHIRPath expression on the provided FHIR data.
+ * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
+ * @param pathKey - The FHIRPath expression to evaluate.
+ * @param mappings
+ * @param [context] - Optional context object to provide additional data for evaluation.
+ * @param [model] - Optional model object to provide additional data for evaluation.
+ * @param [options] - Optional options object for additional configuration.
+ * @param [options.resolveInternalTypes] - Whether to resolve internal types in the evaluation.
+ * @param [options.traceFn] - Optional trace function for logging evaluation traces.
+ * @param [options.userInvocationTable] - Optional table for tracking user invocations.
+ * @returns - An array containing the result of the evaluation.
+ */
+export const _evaluate = <
+  T extends TypeMapping,
+  M extends Mapping,
+  P extends keyof M & keyof T,
+>(
+  fhirData: Element | Resource | undefined,
+  pathKey: P,
+  mappings: M,
+  context?: Context,
+): T[P][] => {
+  return evaluateRaw(
+    fhirData,
+    mappings[pathKey],
+    context,
+    fhirpath_r4_model,
+  ) as T[P][];
+};
+
+/**
+ *
+ * @param fhirData
+ * @param pathKey
+ * @param context
+ */
+export const evaluate = <K extends keyof PathTypes>(
+  fhirData: Element | Resource | undefined,
+  pathKey: K,
+  context?: Context,
+) => {
+  return _evaluate<PathTypes, PathMappings, K>(
+    fhirData,
+    pathKey,
+    fhirPathMappings,
+    context,
+  );
+};
+
+/**
+ *
+ * @param fhirData
+ * @param path
+ * @param context
+ */
+export const evaluateFor = <Result>(
+  fhirData: Element | Resource | undefined,
+  path: string,
+  context?: Context,
+): Result[] => {
+  return evaluateRaw(fhirData, path, context) as Result[];
 };
 
 /**
@@ -83,20 +153,25 @@ export const clearEvaluateCache = () => {
  * @returns - The evaluated value as a string.
  */
 export const evaluateValue = (
-  entry: Element | Element[],
-  path: string | Path,
+  entry: Element | Resource | undefined,
+  path: string,
 ): string => {
-  const originalValue = evaluate(entry, path, undefined, fhirpath_r4_model)[0];
+  const originalValue = evaluateFor<ValueX>(entry, path)[0];
 
-  let value = "";
-  const originalValuePath = originalValue?.__path__?.path;
   if (
     typeof originalValue === "string" ||
     typeof originalValue === "number" ||
     typeof originalValue === "boolean"
   ) {
-    value = originalValue.toString();
-  } else if (originalValuePath === "Quantity") {
+    return originalValue.toString();
+  }
+
+  let value = "";
+  // fhirpath injects some internal metadata we leverage here for the switch
+  const originalValuePath = (originalValue as { __path__: { path: string } })
+    ?.__path__?.path;
+
+  if (originalValuePath === "Quantity") {
     const data: Quantity = originalValue;
     let unit = data.unit;
     const firstLetterRegex = /^[a-z]/i;
@@ -111,7 +186,7 @@ export const evaluateValue = (
     const data: Coding = originalValue;
     value = data?.display || data?.code || "";
   } else if (typeof originalValue === "object") {
-    console.log(`Not implemented for ${originalValue.__path__}`);
+    console.log(`Not implemented for ${originalValuePath}`);
   }
 
   return value.trim();
@@ -129,7 +204,7 @@ export const evaluateReference = <T extends Resource>(
 ): T | undefined => {
   if (!ref) return undefined;
   const [resourceType, id] = ref.split("/");
-  const result: Resource | undefined = evaluate(
+  const result: Resource | undefined = evaluateFor<Resource>(
     fhirBundle,
     fhirPathMappings.resolve,
     {

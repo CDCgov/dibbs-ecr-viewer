@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { Element } from "fhir/r4";
 
 import fhirPathMappings from "@/app/data/fhirPath";
-import { evaluateValue } from "@/app/utils/evaluate";
+import { Mapping, evaluateValue } from "@/app/utils/evaluate";
 
 import EvaluateTableRow from "./EvaluateTableRow";
 
@@ -21,13 +21,9 @@ export interface ColumnInfoInput {
   applyToValue?: (value: any) => any;
 }
 
-export interface Mappings {
-  [key: string]: string;
-}
-
 interface TableProps {
   resources: Element[];
-  mappings?: Mappings;
+  mappings?: Mapping;
   columns: ColumnInfoInput[];
   caption?: string;
   className?: string;
@@ -154,7 +150,7 @@ const BaseTableHeaders = ({
  */
 const evaluateTableRowData = (
   columns: ColumnInfoInput[],
-  mappings: Mappings,
+  mappings: Mapping,
   entry: Element,
 ) => {
   let hiddenRow: ReactNode = null;
