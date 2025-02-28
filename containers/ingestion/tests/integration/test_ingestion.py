@@ -28,7 +28,7 @@ def test_openapi():
 @pytest.mark.integration
 def test_standardize_names(setup, fhir_bundle):
     expected_reference_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": {
             "resourceType": "Bundle",
@@ -71,7 +71,7 @@ def test_standardize_names(setup, fhir_bundle):
 @pytest.mark.integration
 def test_standardize_phone(setup, fhir_bundle):
     expected_reference_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": {
             "resourceType": "Bundle",
@@ -114,7 +114,7 @@ def test_standardize_phone(setup, fhir_bundle):
 @pytest.mark.integration
 def test_standardize_dob(setup, fhir_bundle):
     expected_reference_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": {
             "resourceType": "Bundle",

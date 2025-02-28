@@ -1,6 +1,7 @@
 from functools import lru_cache
 
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -25,4 +26,4 @@ def get_settings() -> Settings:
     :return: the specified Settings. The value of each key is read from the
     corresponding environment variable.
     """
-    return Settings().dict()
+    return Settings().model_dump()
