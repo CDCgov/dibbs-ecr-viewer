@@ -14,13 +14,14 @@ class StandardResponse(BaseModel):
     """The standard schema for the body of responses returned by the DIBBs Ingestion
     Service."""
 
-    status_code: str = Field(description="The HTTP status code of the response.")
+    status_code: int = Field(description="The HTTP status code of the response.")
     message: Optional[Union[str, dict]] = Field(
+        default=None,
         description="A message from the service, used to provide details on an error "
         "that was encounted while attempting the process a request, or the response "
-        "a FHIR server."
+        "a FHIR server.",
     )
-    bundle: Optional[dict] = Field(description="A FHIR bundle")
+    bundle: Optional[dict] = Field(default=None, description="A FHIR bundle")
 
     @model_validator(mode="before")
     def any_of(cls, values):
