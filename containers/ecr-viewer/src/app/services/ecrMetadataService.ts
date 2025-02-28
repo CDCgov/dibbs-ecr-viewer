@@ -1,12 +1,9 @@
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 
-import {
-  CompleteData,
-  evaluateData,
-  PathMappings,
-} from "@/app/utils/data-utils";
+import { CompleteData, evaluateData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import {
   evaluatePractitionerRoleReference,
@@ -42,14 +39,13 @@ export interface ERSDWarning {
 /**
  * Evaluates eCR metadata from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing eCR metadata.
- * @param mappings - The object containing the fhir paths.
  * @returns An object containing evaluated and formatted eCR metadata.
  */
-export const evaluateEcrMetadata = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-): EcrMetadata => {
-  const rrDetails: Observation[] = evaluate(fhirBundle, mappings.rrDetails);
+export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
+  const rrDetails: Observation[] = evaluate(
+    fhirBundle,
+    fhirPathMappings.rrDetails,
+  );
 
   const reportableConditionsList: ReportableConditions = {};
 
@@ -79,17 +75,13 @@ export const evaluateEcrMetadata = (
   }
 
   const custodianRef: string =
-    evaluate(fhirBundle, mappings.eicrCustodianRef)[0] ?? "";
-  const custodian = evaluateReference<Organization>(
-    fhirBundle,
-    mappings,
-    custodianRef,
-  );
+    evaluate(fhirBundle, fhirPathMappings.eicrCustodianRef)[0] ?? "";
+  const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
-  const eicrReleaseVersion = (fhirBundle: Bundle, mappings: PathMappings) => {
+  const eicrReleaseVersion = (fhirBundle: Bundle) => {
     const releaseVersion: string = evaluateValue(
       fhirBundle,
-      mappings.eicrReleaseVersion,
+      fhirPathMappings.eicrReleaseVersion,
     );
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
@@ -102,7 +94,7 @@ export const evaluateEcrMetadata = (
 
   const fhirERSDWarnings: Coding[] = evaluate(
     fhirBundle,
-    mappings.eRSDwarnings,
+    fhirPathMappings.eRSDwarnings,
   );
   const eRSDTextList: ERSDWarning[] = [];
 
@@ -135,25 +127,25 @@ export const evaluateEcrMetadata = (
       title: "eICR ID",
       toolTip:
         "Unique document ID for the eICR that originates from the medical record. Different from the Document ID that NBS creates for all incoming records.",
-      value: evaluate(fhirBundle, mappings.eicrIdentifier)[0],
+      value: evaluate(fhirBundle, fhirPathMappings.eicrIdentifier)[0],
     },
     {
       title: "Date/Time eCR Created",
       value: formatDateTime(
-        evaluate(fhirBundle, mappings.dateTimeEcrCreated)[0],
+        evaluate(fhirBundle, fhirPathMappings.dateTimeEcrCreated)[0],
       ),
     },
     {
       title: "eICR Release Version",
-      value: eicrReleaseVersion(fhirBundle, mappings),
+      value: eicrReleaseVersion(fhirBundle),
     },
     {
       title: "EHR Manufacturer Model Name",
-      value: evaluate(fhirBundle, mappings.ehrManufacturerModel)[0],
+      value: evaluate(fhirBundle, fhirPathMappings.ehrManufacturerModel)[0],
     },
     {
       title: "EHR Software Name",
-      value: evaluate(fhirBundle, mappings.ehrSoftware)[0],
+      value: evaluate(fhirBundle, fhirPathMappings.ehrSoftware)[0],
     },
   ];
 
@@ -176,7 +168,7 @@ export const evaluateEcrMetadata = (
     },
   ];
 
-  const eicrAuthorDetails = evaluateEcrAuthorDetails(fhirBundle, mappings);
+  const eicrAuthorDetails = evaluateEcrAuthorDetails(fhirBundle);
 
   return {
     eicrDetails: evaluateData(eicrDetails),
@@ -189,13 +181,10 @@ export const evaluateEcrMetadata = (
   };
 };
 
-const evaluateEcrAuthorDetails = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-): DisplayDataProps[][] => {
+const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
   const authorRefs: Reference[] = evaluate(
     fhirBundle,
-    mappings.compositionAuthorRefs,
+    fhirPathMappings.compositionAuthorRefs,
   );
 
   const authorDetails: DisplayDataProps[][] = [];
@@ -204,7 +193,6 @@ const evaluateEcrAuthorDetails = (
       const practitionerRoleRef = ref?.reference;
       const { practitioner, organization } = evaluatePractitionerRoleReference(
         fhirBundle,
-        mappings,
         practitionerRoleRef,
       );
 

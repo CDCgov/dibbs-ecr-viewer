@@ -5,10 +5,6 @@ import sanitizeHtml from "sanitize-html";
 
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
-export interface PathMappings {
-  [key: string]: string;
-}
-
 export interface CompleteData {
   availableData: DisplayDataProps[];
   unavailableData: DisplayDataProps[];

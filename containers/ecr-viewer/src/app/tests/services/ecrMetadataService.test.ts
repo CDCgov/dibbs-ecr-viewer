@@ -1,15 +1,13 @@
 import { Bundle } from "fhir/r4";
 
-import { loadYamlConfig } from "@/app/api/utils";
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import BundleWithEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
 import BundleLab from "@/app/tests/assets/BundleLab.json";
 import BundleMultipleAuthors from "@/app/tests/assets/BundleMultipleAuthor.json";
 
 describe("Evaluate Ecr Metadata", () => {
-  const mappings = loadYamlConfig();
   it("should have no available data where there is no data", () => {
-    const actual = evaluateEcrMetadata(undefined as any, mappings);
+    const actual = evaluateEcrMetadata(undefined as any);
 
     expect(actual.eicrDetails.availableData).toBeEmpty();
     expect(actual.eicrDetails.unavailableData).not.toBeEmpty();
@@ -19,7 +17,6 @@ describe("Evaluate Ecr Metadata", () => {
   it("should have eicrDetails", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
-      mappings,
     );
 
     expect(actual.eicrDetails.availableData).toEqual([
@@ -45,7 +42,6 @@ describe("Evaluate Ecr Metadata", () => {
   it("should have eicr Custodian Details", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
-      mappings,
     );
 
     expect(actual.ecrCustodianDetails.availableData).toEqual([
@@ -71,7 +67,6 @@ describe("Evaluate Ecr Metadata", () => {
   it("should have rrDetails, and correctly handle human-readable condition name", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
-      mappings,
     );
 
     expect(actual.rrDetails).toEqual({
@@ -92,7 +87,6 @@ describe("Evaluate Ecr Metadata", () => {
   it("should have eRSDwarnings", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
-      mappings,
     );
 
     expect(actual.eRSDWarnings).toEqual([
@@ -110,7 +104,6 @@ describe("Evaluate Ecr Metadata", () => {
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
-      mappings,
     );
     expect(actual.eicrAuthorDetails).toHaveLength(1);
     expect(actual.eicrAuthorDetails[0].availableData).toEqual([
@@ -145,7 +138,6 @@ describe("Evaluate Ecr Metadata", () => {
   it("should have two authors", () => {
     const actual = evaluateEcrMetadata(
       BundleMultipleAuthors as unknown as Bundle,
-      mappings,
     );
     expect(actual.eicrAuthorDetails).toHaveLength(2);
     expect(actual.eicrAuthorDetails[0].availableData).toEqual([
@@ -205,10 +197,7 @@ describe("Evaluate Ecr Metadata", () => {
     expect(actual.eicrAuthorDetails[1].unavailableData).toBeEmpty();
   });
   it("should have zero authors", () => {
-    const actual = evaluateEcrMetadata(
-      BundleLab as unknown as Bundle,
-      mappings,
-    );
+    const actual = evaluateEcrMetadata(BundleLab as unknown as Bundle);
     expect(actual.eicrAuthorDetails).toHaveLength(1);
     expect(actual.eicrAuthorDetails[0].availableData).toBeEmpty();
     expect(actual.eicrAuthorDetails[0].unavailableData).toEqual([

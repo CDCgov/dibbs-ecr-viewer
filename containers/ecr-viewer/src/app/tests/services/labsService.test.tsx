@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 
-import { loadYamlConfig } from "@/app/api/utils";
 import {
   getLabJsonObject,
   getObservations,
@@ -26,9 +25,8 @@ import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { noData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import mappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
-
-const mappings = loadYamlConfig();
 
 const pathLabReportNormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'c090d379-9aea-f26e-4ddc-378223841e3b')";
@@ -162,7 +160,6 @@ const labReportAbnormal = evaluate(BundleLab, pathLabReportAbnormal)[0];
 const labReportAbnormalJsonObject = getLabJsonObject(
   labReportAbnormal,
   BundleLab as unknown as Bundle,
-  mappings,
 );
 
 const pathLabOrganismsTableAndNarr =
@@ -188,7 +185,6 @@ describe("LabsService tests", () => {
             status: "entered-in-error",
           },
           BundleLab as unknown as Bundle,
-          mappings,
         );
 
         const expectedObservationPath =
@@ -213,7 +209,6 @@ describe("LabsService tests", () => {
             status: "final",
           },
           BundleLab as unknown as Bundle,
-          mappings,
         );
         expect(result).toStrictEqual([]);
       });
@@ -226,7 +221,6 @@ describe("LabsService tests", () => {
         const result = getLabJsonObject(
           labReportNormal,
           BundleLab as unknown as Bundle,
-          mappings,
         );
 
         expect(result).toEqual(expectedResult);
@@ -277,7 +271,6 @@ describe("LabsService tests", () => {
         const result = getLabJsonObject(
           labReportWithoutIds,
           BundleLabNoLabIds as Bundle,
-          mappings,
         );
 
         expect(result).toStrictEqual(labReportJsonObjectWithoutId);
@@ -287,7 +280,6 @@ describe("LabsService tests", () => {
         const result = getLabJsonObject(
           labReportNormal,
           BundleLabInvalidResultsDiv as unknown as Bundle,
-          mappings,
         );
 
         expect(result).toStrictEqual({});
@@ -480,7 +472,6 @@ describe("LabsService tests", () => {
         const result = evaluateOrganismsReportData(
           labOrganismsTableAndNarr,
           BundleLab as unknown as Bundle,
-          mappings,
         )!;
         render(result);
 
@@ -494,7 +485,6 @@ describe("LabsService tests", () => {
         const result = evaluateOrganismsReportData(
           labReportNormal,
           BundleLab as unknown as Bundle,
-          mappings,
         );
 
         expect(result).toBeUndefined();
@@ -508,7 +498,6 @@ describe("LabsService tests", () => {
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
-        mappings,
       );
 
       render(actual);
@@ -531,7 +520,6 @@ describe("LabsService tests", () => {
       const actual = evaluateObservationTable(
         diagnosticReport,
         null as unknown as Bundle,
-        mappings,
         [],
       );
       expect(actual).toBeUndefined();
@@ -541,7 +529,6 @@ describe("LabsService tests", () => {
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
-        mappings,
       );
 
       render(actual);
@@ -555,7 +542,6 @@ describe("LabsService tests", () => {
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
-        mappings,
       );
       render(actual!);
 
@@ -568,7 +554,6 @@ describe("LabsService tests", () => {
       const result = evaluateLabOrganizationData(
         "14394818-a1e9-4882-ca8b-FAKE793bb5cc",
         BundleLab as unknown as Bundle,
-        mappings,
         0,
       );
       expect(result[0].value).toEqual("Tatooine Hospital");
@@ -582,7 +567,6 @@ describe("LabsService tests", () => {
       const result = combineOrgAndReportData(
         testResultObject,
         BundleLab as unknown as Bundle,
-        mappings,
       );
       expect(result[0].organizationDisplayDataProps).toBeArray();
     });
@@ -593,7 +577,6 @@ describe("LabsService tests", () => {
       const result = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
         evaluate(BundleLab, mappings.diagnosticReports),
-        mappings,
       );
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
@@ -603,7 +586,6 @@ describe("LabsService tests", () => {
       const result = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
-        mappings,
       );
       expect(result[0]).toHaveProperty("title");
       expect(result[0]).toHaveProperty("value");
@@ -613,7 +595,6 @@ describe("LabsService tests", () => {
       const result = evaluateLabInfoData(
         BundleLab as Bundle,
         evaluate(BundleLab, mappings.diagnosticReports),
-        mappings,
       );
       expect(isLabReportElementDataList(result)).toBeTrue();
       const props = (result[0] as LabReportElementData)

@@ -13,7 +13,7 @@ import {
   evaluateReference,
 } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
-import { PathMappings, safeParse } from "@/app/utils/data-utils";
+import { safeParse } from "@/app/utils/data-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 
@@ -27,7 +27,6 @@ type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
  * Generates a formatted table representing the list of immunizations based on the provided array of immunizations and mappings.
  * @param fhirBundle - The FHIR bundle containing patient and immunizations information.
  * @param immunizationsArray - An array containing the list of immunizations.
- * @param mappings - An object containing the FHIR path mappings.
  * @param caption - The string to display above the table
  * @param className - Optional. The css class to be added to the table.
  * @returns - A formatted table React element representing the list of immunizations, or undefined if the immunizations array is empty.
@@ -35,7 +34,6 @@ type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
 export const returnImmunizations = (
   fhirBundle: Bundle,
   immunizationsArray: Immunization[],
-  mappings: PathMappings,
   caption: string,
   className?: string,
 ): React.JSX.Element | undefined => {
@@ -66,7 +64,6 @@ export const returnImmunizations = (
 
       const manufacturer = evaluateReference<Organization>(
         fhirBundle,
-        mappings,
         initialImmunization.manufacturer?.reference,
       );
 
@@ -90,7 +87,6 @@ export const returnImmunizations = (
   return (
     <EvaluateTable
       resources={modifiedImmunizations}
-      mappings={mappings}
       columns={columnInfo}
       caption={caption}
       className={classNames("margin-y-0", className)}
@@ -102,13 +98,11 @@ export const returnImmunizations = (
  * Generates a formatted table representing the list of problems based on the provided array of problems and mappings.
  * @param fhirBundle - The FHIR bundle containing patient information.
  * @param problemsArray - An array containing the list of Conditions.
- * @param mappings - An object containing the FHIR path mappings.
  * @returns - A formatted table React element representing the list of problems, or undefined if the problems array is empty.
  */
 export const returnProblemsTable = (
   fhirBundle: Bundle,
   problemsArray: Condition[],
-  mappings: PathMappings,
 ): React.JSX.Element | undefined => {
   problemsArray = problemsArray.filter(
     (entry) => entry.code?.coding?.some((c: Coding) => c?.display),
@@ -137,7 +131,7 @@ export const returnProblemsTable = (
     entry.onsetDateTime = formatDateTime(entry.onsetDateTime);
     entry.onsetAge ||= entry.onsetDateTime
       ? {
-          value: calculatePatientAge(fhirBundle, mappings, entry.onsetDateTime),
+          value: calculatePatientAge(fhirBundle, entry.onsetDateTime),
         }
       : undefined;
   });
@@ -155,7 +149,6 @@ export const returnProblemsTable = (
   return (
     <EvaluateTable
       resources={problemsArray}
-      mappings={mappings}
       columns={columnInfo}
       caption="Problems List"
       className="margin-y-0"

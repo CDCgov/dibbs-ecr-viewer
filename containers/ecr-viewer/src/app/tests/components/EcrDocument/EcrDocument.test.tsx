@@ -4,11 +4,8 @@ import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 import { axe } from "jest-axe";
 
-import { loadYamlConfig } from "@/app/api/utils";
 import { EcrDocument } from "@/app/view-data/components/EcrDocument";
 import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
-
-const mappings = loadYamlConfig();
 
 describe("Snapshot test for ECR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {
@@ -18,7 +15,7 @@ describe("Snapshot test for ECR Document", () => {
       entry: [],
     };
 
-    const items = getEcrDocumentAccordionItems(bundleEmpty, mappings);
+    const items = getEcrDocumentAccordionItems(bundleEmpty);
 
     const { container } = render(<EcrDocument initialAccordionItems={items} />);
 

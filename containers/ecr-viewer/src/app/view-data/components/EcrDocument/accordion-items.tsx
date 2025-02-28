@@ -11,7 +11,6 @@ import {
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
-import { PathMappings } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
@@ -21,6 +20,7 @@ import EncounterDetails from "@/app/view-data/components/Encounter";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
 
 import { evaluateClinicalData } from "./clinical-data";
@@ -28,27 +28,21 @@ import { evaluateClinicalData } from "./clinical-data";
 /**
  * Functional component for an accordion container displaying various sections of eCR information.
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param fhirPathMappings - The path mappings used to extract information from the FHIR bundle.
  * @returns The JSX element representing the accordion container.
  */
 export const getEcrDocumentAccordionItems = (
   fhirBundle: Bundle,
-  fhirPathMappings: PathMappings,
 ): AccordionItem[] => {
-  const demographicsData = evaluateDemographicsData(
-    fhirBundle,
-    fhirPathMappings,
-  );
-  const socialData = evaluateSocialData(fhirBundle, fhirPathMappings);
-  const encounterData = evaluateEncounterData(fhirBundle, fhirPathMappings);
-  const providerData = evaluateProviderData(fhirBundle, fhirPathMappings);
-  const clinicalData = evaluateClinicalData(fhirBundle, fhirPathMappings);
-  const ecrMetadata = evaluateEcrMetadata(fhirBundle, fhirPathMappings);
-  const facilityData = evaluateFacilityData(fhirBundle, fhirPathMappings);
+  const demographicsData = evaluateDemographicsData(fhirBundle);
+  const socialData = evaluateSocialData(fhirBundle);
+  const encounterData = evaluateEncounterData(fhirBundle);
+  const providerData = evaluateProviderData(fhirBundle);
+  const clinicalData = evaluateClinicalData(fhirBundle);
+  const ecrMetadata = evaluateEcrMetadata(fhirBundle);
+  const facilityData = evaluateFacilityData(fhirBundle);
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
     evaluate(fhirBundle, fhirPathMappings.diagnosticReports),
-    fhirPathMappings,
   );
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
