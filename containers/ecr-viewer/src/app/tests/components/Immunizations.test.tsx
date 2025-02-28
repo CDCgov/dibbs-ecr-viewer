@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { Bundle, Immunization } from "fhir/r4";
+import { axe } from "jest-axe";
+
 import BundleClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
 import { returnImmunizations } from "@/app/view-data/components/common";
 

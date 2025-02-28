@@ -1,8 +1,10 @@
 import React from "react";
+
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
-import ClinicalInfo from "../../view-data/components/ClinicalInfo";
 import { Procedure } from "fhir/r4";
+import { axe } from "jest-axe";
+
+import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import {
   evaluateClinicalData,
   evaluateMiscNotes,

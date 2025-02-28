@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
-import Demographics from "../../view-data/components/Demographics";
+
+import Demographics from "@/app/view-data/components/Demographics";
 
 describe("Demographics", () => {
   let container: HTMLElement;

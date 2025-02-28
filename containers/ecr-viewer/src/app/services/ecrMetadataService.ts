@@ -1,20 +1,18 @@
-import {
-  formatAddress,
-  formatContactPoint,
-  formatName,
-} from "@/app/services/formatService";
-import { CompleteData, evaluateData } from "@/app/utils/data-utils";
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
+
+import { CompleteData, evaluateData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import fhirPathMappings from "@/app/view-data/fhirPath";
+
 import {
   evaluatePractitionerRoleReference,
   evaluateValue,
   getHumanReadableCodeableConcept,
+  evaluateReference,
 } from "./evaluateFhirDataService";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import { evaluateReference } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
-import fhirPathMappings from "@/app/view-data/fhirPath";
+import { formatAddress, formatContactPoint, formatName } from "./formatService";
 import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
@@ -62,7 +60,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     }
 
     if (!triggers.size) {
-      throw new Error("No triggers found for reportable condition");
+      console.error("No triggers found for reportable condition");
     }
 
     triggers.forEach((trigger) => {

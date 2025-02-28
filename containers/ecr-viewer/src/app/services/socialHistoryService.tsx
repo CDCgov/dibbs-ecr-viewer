@@ -1,13 +1,14 @@
 import { Bundle, Observation } from "fhir/r4";
-import { noData } from "../utils/data-utils";
 
-import { evaluate } from "../utils/evaluate";
+import { noData } from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
+import { ColumnInfoInput } from "@/app/view-data/components/EvaluateTable";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
+import fhirPathMappings from "@/app/view-data/fhirPath";
+
 import { evaluateValue } from "./evaluateFhirDataService";
-import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
-import fhirPathMappings from "../view-data/fhirPath";
-import { ColumnInfoInput } from "../view-data/components/EvaluateTable";
 
 type TravelHistoryColumn = Required<
   Pick<ColumnInfoInput, "infoPath" | "columnName">

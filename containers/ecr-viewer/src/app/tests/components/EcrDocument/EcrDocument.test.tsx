@@ -1,9 +1,11 @@
 import React from "react";
+
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { Bundle } from "fhir/r4";
-import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
+import { axe } from "jest-axe";
+
 import { EcrDocument } from "@/app/view-data/components/EcrDocument";
+import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
 
 describe("Snapshot test for ECR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {

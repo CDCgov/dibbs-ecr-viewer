@@ -1,11 +1,4 @@
-import {
-  calculatePatientAge,
-  evaluateReference,
-} from "@/app/services/evaluateFhirDataService";
-import EvaluateTable, {
-  ColumnInfoInput,
-} from "@/app/view-data/components/EvaluateTable";
-import { safeParse } from "@/app/utils/data-utils";
+import classNames from "classnames";
 import {
   Bundle,
   Coding,
@@ -14,8 +7,15 @@ import {
   Organization,
   Reference,
 } from "fhir/r4";
+
+import {
+  calculatePatientAge,
+  evaluateReference,
+} from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
-import classNames from "classnames";
+import { safeParse } from "@/app/utils/data-utils";
+
+import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 
 type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
   manufacturer?: Reference & {

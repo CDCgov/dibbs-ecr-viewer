@@ -1,9 +1,6 @@
-import BundleLab from "../assets/BundleLab.json";
-import BundleLabNoLabIds from "../assets/BundleLabNoLabIds.json";
-import BundleLabInvalidResultsDiv from "../assets/BundleLabInvalidResultsDiv.json";
-import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
-import { evaluate } from "@/app/utils/evaluate";
 import { render, screen } from "@testing-library/react";
+import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
+
 import {
   getLabJsonObject,
   getObservations,
@@ -22,10 +19,14 @@ import {
   returnAnalysisTime,
   LabReportElementData,
 } from "@/app/services/labsService";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import BundleLab from "@/app/tests/assets/BundleLab.json";
+import BundleLabInvalidResultsDiv from "@/app/tests/assets/BundleLabInvalidResultsDiv.json";
+import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { noData } from "@/app/utils/data-utils";
-import { AccordionItem } from "@/app/view-data/types";
+import { evaluate } from "@/app/utils/evaluate";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import mappings from "@/app/view-data/fhirPath";
+import { AccordionItem } from "@/app/view-data/types";
 
 const pathLabReportNormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'c090d379-9aea-f26e-4ddc-378223841e3b')";

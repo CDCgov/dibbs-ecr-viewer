@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { Bundle, Condition } from "fhir/r4";
+import { axe } from "jest-axe";
+
 import BundleWithPatient from "@/app/tests/assets/BundlePatient.json";
 import { returnProblemsTable } from "@/app/view-data/components/common";
 
