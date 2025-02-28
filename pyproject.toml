@@ -30,7 +30,7 @@ require-python = ">=3.13"
 [tool.poetry.dependencies]
 python = "^3.13"
 smartystreets-python-sdk = "^4.10.6"
-pydantic = "^1.10.9"
+pydantic = "^2"
 fastapi = ">=0.109.1,<0.110"
 httpx = "^0.24.0"
 hl7 = "^0.4.5"
