@@ -26,4 +26,4 @@ def get_settings() -> Settings:
     :return: the specified Settings. The value of each key is read from the
     corresponding environment variable.
     """
-    return Settings().dict()
+    return Settings().model_dump()
