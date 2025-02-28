@@ -32,7 +32,7 @@ class OrchestrationRequest(BaseModel):
         default=None,
     )
 
-    @model_validator()
+    @model_validator(mode="before")
     def validate_rr_with_ecr(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that RR data is supplied if and only if the uploaded data
@@ -51,7 +51,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @model_validator()
+    @model_validator(mode="before")
     def validate_types_agree(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that the stream type of a message matches the encoded data
@@ -72,7 +72,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @model_validator()
+    @model_validator(mode="before")
     def validate_fhir_message_is_dict(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that requests specifying a FHIR data type are formatted as

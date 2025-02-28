@@ -92,7 +92,7 @@ class ParseMessageInput(BaseModel):
     )
     message: Union[str, dict] = Field(description="The message to be parsed.")
 
-    @model_validator()
+    @model_validator(mode="before")
     def require_message_type_when_not_fhir(cls, values):
         """
         Function that checks when non-fhir-formatted data is given whether a
@@ -136,7 +136,7 @@ class ParseMessageInput(BaseModel):
             )
         return values
 
-    @model_validator()
+    @model_validator(mode="before")
     def require_schema_or_schema_name(cls, values):
         """
         Function that checks whether the user has provided
@@ -162,7 +162,7 @@ class ParseMessageInput(BaseModel):
     # TODO: As part of future work, move validation of the schema more fully
     # into pydanatic, rather than duplicate schema validation on each model
     # and the schema upload
-    @model_validator()
+    @model_validator(mode="before")
     def require_reference_fields_to_have_lookups(cls, values):
         """
         Ensures that reference fields in a model have corresponding lookups.

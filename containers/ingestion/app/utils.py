@@ -22,7 +22,7 @@ class StandardResponse(BaseModel):
     )
     bundle: Optional[dict] = Field(description="A FHIR bundle")
 
-    @model_validator()
+    @model_validator(mode="before")
     def any_of(cls, values):
         """
         Validates that at least one of the specified fields is present.
