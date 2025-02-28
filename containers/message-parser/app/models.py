@@ -36,7 +36,7 @@ def validate_secondary_reference_fields(values):
                 and "reference_lookup" not in secondary_field_definition
             ):
                 raise ValueError(
-                    "Secondary fields in the parsing schema that reference other "
+                    "secondary fields in the parsing schema that reference other "
                     "resources must include a `reference_lookup` field that "
                     "identifies where the reference ID can be found."
                 )
@@ -45,7 +45,7 @@ def validate_secondary_reference_fields(values):
                 and not secondary_field_definition.get("fhir_path").startswith("Bundle")
             ):
                 raise ValueError(
-                    "Secondary fields in the parsing schema that provide "
+                    "secondary fields in the parsing schema that provide "
                     "`reference_lookup` locations must have a `fhir_path` that "
                     "begins with `Bundle` and identifies the type of resource "
                     "being referenced."
@@ -62,24 +62,25 @@ class ParseMessageInput(BaseModel):
         description="The format of the message."
     )
     message_type: Optional[Literal["ecr", "elr", "vxu"]] = Field(
+        default=None,
         description="The type of message that values will be extracted from. Required "
-        "when 'message_format is not FHIR."
+        "when 'message_format is not FHIR.",
     )
     parsing_schema: Optional[dict] = Field(
         description="A schema describing which fields to extract from the message. This"
         " must be a JSON object with key:value pairs of the form "
         "<my-field>:<FHIR-to-my-field>.",
-        default={},
+        default=None,
     )
     parsing_schema_name: Optional[str] = Field(
         description="The name of a schema that was previously"
         " loaded in the service to use to extract fields from the message.",
-        default="",
+        default=None,
     )
     fhir_converter_url: Optional[str] = Field(
         description="The URL of an instance of the PHDI FHIR converter. Required when "
         "the message is not already in FHIR format.",
-        default="",
+        default=None,
     )
     credential_manager: Optional[Literal["azure", "gcp"]] = Field(
         description="The type of credential manager to use for authentication with a "
@@ -109,11 +110,12 @@ class ParseMessageInput(BaseModel):
             and values.get("message_type") is None
         ):
             raise ValueError(
-                "When the message format is not FHIR then the message type must be "
+                "when the message format is not FHIR then the message type must be "
                 "included."
             )
         return values
 
+    @model_validator(mode="before")
     def prohibit_schema_and_schema_name(cls, values):
         """
         Function that checks whether the user has provided
@@ -126,12 +128,9 @@ class ParseMessageInput(BaseModel):
           parsing_schema_name are provided in API call.
         :return values: the parsing_schema and parsing_schema_name provided by the user
         """
-        if (
-            values.get("parsing_schema") != {}
-            and values.get("parsing_schema_name") != ""
-        ):
+        if values.get("parsing_schema") and values.get("parsing_schema_name"):
             raise ValueError(
-                "Values for both 'parsing_schema' and 'parsing_schema_name' have been "
+                "values for both 'parsing_schema' and 'parsing_schema_name' have been "
                 "provided. Only one of these values is permited."
             )
         return values
@@ -149,12 +148,9 @@ class ParseMessageInput(BaseModel):
           are missing from API call.
         :return values: the parsing_schema and parsing_schema_name provided by the user
         """
-        if (
-            values.get("parsing_schema") == {}
-            and values.get("parsing_schema_name") == ""
-        ):
+        if not values.get("parsing_schema") and not values.get("parsing_schema_name"):
             raise ValueError(
-                "Values for 'parsing_schema' and 'parsing_schema_name' have not been "
+                "values for 'parsing_schema' and 'parsing_schema_name' have not been "
                 "provided. One, but not both, of these values is required."
             )
         return values
@@ -258,14 +254,14 @@ class ParsingSchemaSecondaryFieldModel(BaseModel):
     fhir_path: str
     data_type: PARSING_SCHEMA_DATA_TYPES
     nullable: bool
-    secondary_schema: Optional[dict[str, ParsingSchemaTertiaryFieldModel]]
+    secondary_schema: Optional[dict[str, ParsingSchemaTertiaryFieldModel]] = None
 
 
 class ParsingSchemaFieldModel(BaseModel):
     fhir_path: str
     data_type: PARSING_SCHEMA_DATA_TYPES
     nullable: bool
-    secondary_schema: Optional[dict[str, ParsingSchemaSecondaryFieldModel]]
+    secondary_schema: Optional[dict[str, ParsingSchemaSecondaryFieldModel]] = None
 
 
 class ParsingSchemaModel(BaseModel):

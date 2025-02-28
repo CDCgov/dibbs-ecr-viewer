@@ -72,7 +72,7 @@ async def parse_message_endpoint(
     provide a parsing schema or the name of a previously loaded parsing schema.
     """
     # 1. Load schema.
-    if input.parsing_schema != {}:
+    if input.parsing_schema:
         parsing_schema = freeze_parsing_schema(input.parsing_schema)
     else:
         try:
@@ -257,3 +257,15 @@ async def upload_schema(
     else:
         response.status_code = status.HTTP_201_CREATED
         return {"message": "Schema uploaded successfully!"}
+
+
+# This block is only executed if the script is run directly, for local development and debugging.
+if "__main__" == __name__:
+    import uvicorn
+
+    uvicorn.run(
+        app="app.main:app",
+        host="0.0.0.0",
+        port=8080,
+        reload=True,
+    )
