@@ -36,4 +36,7 @@ export const providerMap: ProviderDetails[] = providers.map((provider) => ({
 
 export const handler = NextAuth({
   providers,
+  pages: {
+    signIn: `${process.env.BASE_PATH}/signin`,
+  },
 });

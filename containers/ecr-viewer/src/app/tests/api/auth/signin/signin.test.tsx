@@ -2,7 +2,7 @@ import React from "react";
 import { signIn } from "next-auth/react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { Redirect } from "@/app/signin";
+import { Redirect } from "@/app/signin/signin";
 
 jest.mock("next-auth/react", () => ({
   signIn: jest.fn(),

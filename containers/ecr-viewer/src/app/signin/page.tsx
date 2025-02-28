@@ -1,5 +1,5 @@
-import { providerMap } from "../auth";
-import { Redirect } from "../../../signin";
+import { providerMap } from "../api/auth/auth";
+import { Redirect } from "./signin";
 
 /**
  * @returns a sign-in (redirect) page
