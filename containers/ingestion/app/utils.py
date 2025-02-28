@@ -2,7 +2,7 @@ import json
 import pathlib
 from typing import Optional, Union
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 from app.cloud.azure import AzureCloudContainerConnection, AzureCredentialManager
 from app.cloud.core import BaseCredentialManager
@@ -22,7 +22,7 @@ class StandardResponse(BaseModel):
     )
     bundle: Optional[dict] = Field(description="A FHIR bundle")
 
-    @root_validator
+    @model_validator
     def any_of(cls, values):
         """
         Validates that at least one of the specified fields is present.

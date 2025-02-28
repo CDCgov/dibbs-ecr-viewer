@@ -1,6 +1,6 @@
 from typing import Literal, Optional, Union
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 # Request and response models
@@ -32,7 +32,7 @@ class OrchestrationRequest(BaseModel):
         default=None,
     )
 
-    @root_validator()
+    @model_validator
     def validate_rr_with_ecr(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that RR data is supplied if and only if the uploaded data
@@ -51,7 +51,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @root_validator()
+    @model_validator
     def validate_types_agree(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that the stream type of a message matches the encoded data
@@ -72,7 +72,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @root_validator()
+    @model_validator
     def validate_fhir_message_is_dict(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that requests specifying a FHIR data type are formatted as

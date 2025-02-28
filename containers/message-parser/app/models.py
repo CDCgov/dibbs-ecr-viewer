@@ -1,6 +1,6 @@
 from typing import Literal, Optional, Union
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 PARSING_SCHEMA_DATA_TYPES = Literal[
     "string", "integer", "float", "boolean", "date", "datetime", "array", "struct"
@@ -92,7 +92,7 @@ class ParseMessageInput(BaseModel):
     )
     message: Union[str, dict] = Field(description="The message to be parsed.")
 
-    @root_validator
+    @model_validator
     def require_message_type_when_not_fhir(cls, values):
         """
         Function that checks when non-fhir-formatted data is given whether a
@@ -114,7 +114,6 @@ class ParseMessageInput(BaseModel):
             )
         return values
 
-    @root_validator
     def prohibit_schema_and_schema_name(cls, values):
         """
         Function that checks whether the user has provided
@@ -137,7 +136,7 @@ class ParseMessageInput(BaseModel):
             )
         return values
 
-    @root_validator
+    @model_validator
     def require_schema_or_schema_name(cls, values):
         """
         Function that checks whether the user has provided
@@ -163,7 +162,7 @@ class ParseMessageInput(BaseModel):
     # TODO: As part of future work, move validation of the schema more fully
     # into pydanatic, rather than duplicate schema validation on each model
     # and the schema upload
-    @root_validator
+    @model_validator
     def require_reference_fields_to_have_lookups(cls, values):
         """
         Ensures that reference fields in a model have corresponding lookups.
