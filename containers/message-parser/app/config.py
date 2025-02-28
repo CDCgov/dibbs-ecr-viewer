@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    fhir_converter_url: Optional[str]
+    fhir_converter_url: Optional[str] = None
 
 
 @lru_cache
