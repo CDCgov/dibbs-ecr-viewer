@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import AzureAdProvider from "next-auth/providers/azure-ad";
 
-interface ProviderDetails {
+export interface ProviderDetails {
   id: string;
   name: string;
 }
@@ -29,13 +29,11 @@ const azure = () => {
 };
 const providers = [keycloak(), azure()].filter((p) => p !== undefined);
 
-const providerMap: ProviderDetails[] = providers.map((provider) => ({
+export const providerMap: ProviderDetails[] = providers.map((provider) => ({
   id: provider.id,
   name: provider.name,
 }));
 
-const handler = NextAuth({
+export const handler = NextAuth({
   providers,
 });
-
-export { providerMap, handler, type ProviderDetails };
