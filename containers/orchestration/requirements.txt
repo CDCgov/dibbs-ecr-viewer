@@ -1,4 +1,4 @@
-pydantic==1.10.13
+pydantic>=2.0.0
 fastapi==0.112.2
 python-multipart # required by fastapi
 uvicorn[standard]
