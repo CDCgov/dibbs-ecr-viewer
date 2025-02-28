@@ -5,10 +5,10 @@ import { db } from "../api/services/database";
  * @returns Array of conditions
  */
 export const getAllConditions = async (): Promise<string[]> => {
-  try {
-    if (process.env.METADATA_DATABASE_TYPE === undefined) {
-      throw Error("Database type is undefined.");
-    } else {
+  if (process.env.METADATA_DATABASE_TYPE === undefined) {
+    throw Error("Database type is undefined.");
+  } else {
+    try {
       const result = await db.transaction().execute(async (trx) => {
         return await trx
           .selectFrom("ecr_rr_conditions")
@@ -17,10 +17,10 @@ export const getAllConditions = async (): Promise<string[]> => {
           .orderBy("condition")
           .execute();
       });
-      return result.map((row) => row.condition);
+      return result.map((row: { condition: string }) => row.condition);
+    } catch (error: any) {
+      console.error("Error fetching data: ", error);
+      throw new Error("Error fetching data");
     }
-  } catch (error: any) {
-    console.error("Error fetching data: ", error);
-    throw Error("Error fetching data");
   }
 };

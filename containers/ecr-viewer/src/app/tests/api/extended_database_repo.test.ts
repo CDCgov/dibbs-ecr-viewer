@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 
-import { db } from "../api/services/database";
+import { db } from "../../api/services/database";
 import { sql } from "kysely";
-import * as extended_database_repo from "../api/services/extended_database_repo";
+import * as extended_database_repo from "../../api/services/extended_database_repo";
 
 // ecr_data
 describe("ecr_data", () => {

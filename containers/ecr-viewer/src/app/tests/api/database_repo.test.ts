@@ -3,8 +3,8 @@
  */
 
 import { sql } from "kysely";
-import { db } from "../api/services/database";
-import * as database_repo from "../api/services/database_repo";
+import { db } from "../../api/services/database";
+import * as database_repo from "../../api/services/database_repo";
 
 // ecr_data
 describe("ecr_data", () => {

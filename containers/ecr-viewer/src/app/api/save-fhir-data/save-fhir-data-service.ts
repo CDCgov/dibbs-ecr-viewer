@@ -241,7 +241,8 @@ export const saveExtendedMetadata = async (
           encounter_end_date: metadata.encounter_end_date,
           reason_for_visit: metadata.reason_for_visit,
           active_problems: metadata.active_problems,
-        });
+        })
+        .executeTakeFirstOrThrow();
 
         if (metadata.patient_addresses) {
           for (const address of metadata.patient_addresses) {
@@ -260,7 +261,8 @@ export const saveExtendedMetadata = async (
               period_start: address.period_start,
               period_end: address.period_end,
               eICR_ID: ecrId,
-            });
+            })
+            .executeTakeFirstOrThrow();
           }
         }
 
@@ -294,7 +296,8 @@ export const saveExtendedMetadata = async (
               specimen_type: lab.specimen_type,
               specimen_collection_date: lab.specimen_collection_date,
               performing_lab: lab.performing_lab,
-            });
+            })
+            .executeTakeFirstOrThrow();
           }
         }
 
@@ -308,7 +311,8 @@ export const saveExtendedMetadata = async (
               uuid: rr_conditions_uuid,
               eICR_ID: ecrId,
               condition: rrItem.condition,
-            });
+            })
+            .executeTakeFirstOrThrow();
 
             // Loop through the rule summaries array
             if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
@@ -318,7 +322,8 @@ export const saveExtendedMetadata = async (
                   uuid: randomUUID(),
                   ecr_rr_conditions_id: rr_conditions_uuid,
                   rule_summary: summary.summary,
-                });
+                })
+                .executeTakeFirstOrThrow();
               }
             }
           }
@@ -329,11 +334,11 @@ export const saveExtendedMetadata = async (
         status: 200,
       };
     } catch (error: any) {
-      console.error({
-        message: "Failed to insert metadata to sqlserver.",
-        error,
-        ecrId,
-      });
+      // console.error({
+      //   message: "Failed to insert metadata to sqlserver.",
+      //   error,
+      //   ecrId,
+      // });
 
       return {
         message: "Failed to insert metadata to database.",
@@ -352,7 +357,7 @@ export const saveExtendedMetadata = async (
 /**
  * Saves a FHIR bundle metadata to a postgres database.
  * @async
- * @function saveMetadataToPostgres
+ * @function saveCoreMetadata
  * @param metadata - The FHIR bundle metadata to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
@@ -388,7 +393,7 @@ export const saveCoreMetadata = async (
             eicr_version_number: metadata.eicr_version_number,
           })
           .returningAll()
-          .executeTakeFirstOrThrow();
+          .executeTakeFirst();
 
         // Loop through each condition/rule object in rr array
         if (metadata.rr && metadata.rr.length > 0) {
@@ -402,7 +407,7 @@ export const saveCoreMetadata = async (
                 condition: rrItem.condition,
               })
               .returning("uuid")
-              .executeTakeFirstOrThrow();
+              .executeTakeFirst();
 
             // Loop through the rule summaries array
             if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
@@ -415,30 +420,19 @@ export const saveCoreMetadata = async (
                     ecr_rr_conditions_id: saveRRConditions.uuid,
                     rule_summary: summaryObj.summary,
                   })
-                  .executeTakeFirstOrThrow();
+                  .executeTakeFirst();
               }
             }
           }
         }
-        console.log("Checkpoint 1");
-      })
-      .catch((err) => {
-        console.log("Checkpoint 2");
-        console.error(err);
-        throw new Error("Transaction failed"); // Ensure it throws an error
-      });
-    // On successful transaction, return response
-    console.log("Checkpoint 3");
+    }).catch((err)=>{
+      throw new Error("Transaction failed");
+    });
     return {
       message: "Success. Saved metadata to database.",
       status: 200,
     };
-  } catch (error: unknown) {
-    console.error({
-      message: `Error inserting metadata to postgres.`,
-      error,
-      ecrId,
-    });
+  } catch (error: any) {
     return {
       message: "Failed to insert metadata to database.",
       status: 500,
