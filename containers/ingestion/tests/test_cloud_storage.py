@@ -44,7 +44,7 @@ def test_cloud_storage_params_success(patched_blob_write, patched_get_provider):
         "in test_bucket container with the name test_file_name."
     )
     expected_response = {
-        "status_code": "201",
+        "status_code": 201,
         "message": expected_message,
         "bundle": None,
     }
