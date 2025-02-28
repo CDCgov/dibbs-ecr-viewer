@@ -27,12 +27,12 @@ import {
 import { Path } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateData, noData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import {
   formatDate,

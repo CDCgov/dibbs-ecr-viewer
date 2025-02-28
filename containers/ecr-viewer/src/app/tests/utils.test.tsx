@@ -6,6 +6,7 @@ import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
 import { CarePlanActivity } from "fhir/r4b";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import {
   evaluateSocialData,
   evaluatePatientName,
@@ -25,7 +26,6 @@ import {
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import BundleCareTeam from "./assets/BundleCareTeam.json";
 import BundleWithMiscNotes from "./assets/BundleMiscNotes.json";

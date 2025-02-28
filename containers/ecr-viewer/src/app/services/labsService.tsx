@@ -12,6 +12,7 @@ import {
 } from "fhir/r4";
 import { Coding, ObservationComponent } from "fhir/r4b";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import {
   RenderableNode,
   arrayToElement,
@@ -32,7 +33,6 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { LabAccordion } from "@/app/view-data/components/LabAccordion";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
 
 import {

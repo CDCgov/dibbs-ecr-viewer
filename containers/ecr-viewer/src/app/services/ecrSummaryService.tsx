@@ -10,6 +10,7 @@ import {
   Observation,
 } from "fhir/r4";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { toTitleCase } from "@/app/utils/format-utils";
@@ -20,7 +21,6 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import {
   evaluatePatientName,

@@ -2,6 +2,7 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import {
   evaluateDemographicsData,
@@ -20,7 +21,6 @@ import EncounterDetails from "@/app/view-data/components/Encounter";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
 
 import { evaluateClinicalData } from "./clinical-data";

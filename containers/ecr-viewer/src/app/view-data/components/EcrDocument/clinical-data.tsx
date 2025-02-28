@@ -10,6 +10,7 @@ import {
   Reference,
 } from "fhir/r4";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import {
   evaluateReference,
   evaluateValue,
@@ -39,7 +40,6 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.

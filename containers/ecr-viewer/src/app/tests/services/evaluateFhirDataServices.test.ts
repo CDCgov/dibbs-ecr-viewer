@@ -1,5 +1,6 @@
 import { Bundle, CodeableConcept, Observation, Patient } from "fhir/r4";
 
+import mappings from "@/app/data/fhirPath";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -24,7 +25,6 @@ import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
 import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
 import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
-import mappings from "@/app/view-data/fhirPath";
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Reference", () => {

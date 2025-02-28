@@ -1,9 +1,9 @@
 import { Bundle, Coding, Observation, Organization, Reference } from "fhir/r4";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import { CompleteData, evaluateData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import {
   evaluatePractitionerRoleReference,

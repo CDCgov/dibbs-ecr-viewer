@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Bundle } from "fhir/r4";
 
+import fhirPathMappings from "@/app/data/fhirPath";
 import {
   evaluateLabInfoData,
   LabReportElementData,
@@ -12,7 +13,6 @@ import BundleLab from "@/app/tests/assets/BundleLab.json";
 import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { evaluate } from "@/app/utils/evaluate";
 import LabInfo from "@/app/view-data/components/LabInfo";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
