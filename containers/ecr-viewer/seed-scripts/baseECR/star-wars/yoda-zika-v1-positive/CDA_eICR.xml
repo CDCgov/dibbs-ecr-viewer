@@ -1,0 +1,730 @@
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:hl7-org:v3 ../../../cda-core-2.0/schema/extensions/SDTC/infrastructure/cda/CDA_SDTC.xsd"
+  xmlns="urn:hl7-org:v3" xmlns:cda="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc"
+  xmlns:voc="http://www.lantanagroup.com/voc">
+  <!-- US Realm Header template -->
+  <realmCode code="US" />
+  <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3" />
+  <!-- [C-CDA R1.1] US Realm Header -->
+  <templateId root="2.16.840.1.113883.10.20.22.1.1" />
+  <!-- [C-CDA R2.1] US Realm Header (V3) -->
+  <templateId root="2.16.840.1.113883.10.20.22.1.1" extension="2015-08-01" />
+  <!-- [eICR R2 STU1.1] Initial Public Health Case Report Document (eICR) (V2) -->
+  <templateId root="2.16.840.1.113883.10.20.15.2" extension="2016-12-01" />
+  <!-- Globally unique document ID (extension) is scoped by vendor/software -->
+  <id root="db734647-fc99-424c-a864-7e3cda82e703" />
+  <!-- Document Code -->
+  <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" displayName="Public Health Case Report" />
+  <title>Initial Public Health Case Report</title>
+  <effectiveTime value="202502250132-0000" />
+  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
+  <languageCode code="en-US" />
+  <setId extension="71b065e4-6339-45cd-88fa-a6ab3fe4946d" root="2.16.840.1.113883.19.5.99999.19" />
+  <versionNumber value="1" />
+  <recordTarget>
+    <!-- Patient demographic information -->
+    <patientRole>
+      <!-- Patient ID-->
+      <id extension="MRN-00884411" root="2.16.840.1.113883.19.5" />
+      <!--SSN-->
+      <id extension="000-65-8466" root="2.16.840.1.113883.4.1" />
+      <addr use="H WP">
+        <streetAddressLine>Jedi Temple, Temple Spire</streetAddressLine>
+        <city>Temple District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-101</postalCode>
+        <county>Administrative Core</county>
+        <country>Coruscant</country>
+      </addr>
+      <telecom use="MC WP" value="tel:+1-555-555-0001" />
+      <telecom use="WP" value="mailto:master.yoda@jediorder.gc.example.com" />
+      <patient>
+        <name use="L">
+          <prefix>Master</prefix>
+          <!-- yoda doesn't have a canonical given name but the person that came up with yoda's name
+          use this as his first name -->
+          <given>Minch</given>
+          <family>Yoda</family>
+        </name>
+        <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1"
+          displayName="Male" />
+        <!-- yoda is 900 years old -->
+        <birthTime value="11250101" />
+        <!-- If sdtc:deceasedInd is true then sdtc:deceasedTime must be present -->
+        <sdtc:deceasedInd value="false" />
+        <!-- yoda's race is unknown -->
+        <raceCode code="UNK" displayName="Unknown"
+          codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC" />
+        <!-- but we do know that he is not hispanic or latino since he's an alien species -->
+        <ethnicGroupCode code="2186-5" codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC"
+          displayName="Not Hispanic or Latino" />
+        <languageCommunication>
+          <languageCode code="en" />
+          <!-- a decent grasp of the english language i have, but make mistakes and speak in my own
+          way i will -->
+          <modeCode code="ESP" codeSystem="2.16.840.1.113883.5.60"
+            codeSystemName="LanguageAbilityMode"
+            displayName="Expressed spoken" />
+          <proficiencyLevelCode code="G"
+            codeSystem="2.16.840.1.113883.5.61"
+            codeSystemName="LanguageAbilityProficiency"
+            displayName="Good" />
+          <preferenceInd value="true" />
+        </languageCommunication>
+      </patient>
+    </patientRole>
+  </recordTarget>
+
+  <!-- Author/authenticator may be software or may be a provider such as "infection control
+  professional"-->
+  <author>
+    <time value="20250225013242-0000" />
+    <assignedAuthor>
+      <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+      <addr use="H">
+        <streetAddressLine>200 Corusca Street</streetAddressLine>
+        <city>Senate District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-500</postalCode>
+        <county>Administrative Core</county>
+        <country>Coruscant</country>
+      </addr>
+      <telecom use="WP" value="tel:+1-555-777-0123" />
+      <telecom use="WP" value="fax:+1-555-777-0987" />
+      <telecom use="WP" value="mailto:dr.hemlock@grmfc.gc.example.com" />
+      <assignedPerson>
+        <name>
+          <prefix>Dr</prefix>
+          <given>Royce</given>
+          <family>Hemlock</family>
+          <suffix>MD</suffix>
+        </name>
+      </assignedPerson>
+      <representedOrganization>
+        <!-- NPI -->
+        <id extension="1234567893" root="2.16.840.1.113883.4.6" />
+        <name>Grand Republic Medical Facility Clinic</name>
+        <telecom use="WP" value="tel:+1-888-000-9999" />
+        <addr use="WP">
+          <streetAddressLine>500 Republica Medical Plaza, Suite 1000</streetAddressLine>
+          <city>Senate District</city>
+          <state>Galactic City</state>
+          <postalCode>GC-500</postalCode>
+          <county>Administrative Core</county>
+          <country>Coruscant</country>
+        </addr>
+      </representedOrganization>
+    </assignedAuthor>
+  </author>
+
+  <!-- Custodian: organization or entity that is responsible for maintaining and safeguarding the
+  document -->
+  <custodian>
+    <assignedCustodian>
+      <representedCustodianOrganization>
+        <!-- Custodian ID (NPI) -->
+        <id extension="1234567893" root="2.16.840.1.113883.4.6" />
+        <name>Grand Republic Medical Facility Clinic</name>
+        <telecom use="WP" value="tel:+1-888-000-9999" />
+        <addr use="WP">
+          <streetAddressLine>500 Republica Medical Plaza, Suite 1000</streetAddressLine>
+          <city>Senate District</city>
+          <state>Galactic City</state>
+          <postalCode>GC-500</postalCode>
+          <county>Administrative Core</county>
+          <country>Coruscant</country>
+        </addr>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+
+
+  <!-- componentOf: contains the encompassingEncouter and the provider and facility infomation for
+  the case. In the case of an "External Encounter" most required fields use nullFlavor="NA" See notes
+  below for details/exceptions -->
+  <componentOf>
+    <encompassingEncounter>
+      <!-- encounter ID-->
+      <id nullFlavor="NA" />
+      <!-- Use code for "External Encounter" -->
+      <code code="PHC2237" codeSystem="2.16.840.1.114222.4.5.274"
+        codeSystemName="PHIN VS (CDC Local Coding System)" displayName="External Encounter" />
+      <!-- nullFlavor allowed on effectiveTime/low if code="PHC2237": Schematron has been updated to
+      allow nullFlaovr in this case -->
+      <effectiveTime>
+        <low nullFlavor="NA" />
+      </effectiveTime>
+      <!-- provider in charge of care when case reported -->
+      <responsibleParty>
+        <assignedEntity>
+          <!-- Provider ID -->
+          <!-- The root must be present - use NPI root and nullFlavor  -->
+          <id nullFlavor="NA" root="2.16.840.1.113883.4.6" />
+          <!-- Provider Address -->
+          <addr>
+            <streetAddressLine nullFlavor="NA" />
+            <city nullFlavor="NA" />
+            <state nullFlavor="NA" />
+            <postalCode nullFlavor="NA" />
+          </addr>
+          <!-- Provider Telecom -->
+          <telecom nullFlavor="NA" />
+          <assignedPerson>
+            <!-- Provider Name -->
+            <name>
+              <given nullFlavor="NA" />
+              <family nullFlavor="NA" />
+            </name>
+          </assignedPerson>
+          <representedOrganization>
+            <!-- Provider Facility/Office Name -->
+            <name nullFlavor="NA" />
+            <!-- Provider Address -->
+            <addr>
+              <streetAddressLine nullFlavor="NA" />
+              <city nullFlavor="NA" />
+              <state nullFlavor="NA" />
+              <postalCode nullFlavor="NA" />
+            </addr>
+          </representedOrganization>
+        </assignedEntity>
+      </responsibleParty>
+      <location>
+        <healthCareFacility>
+          <!-- The root must be present - use NPI root and nullFlavor  -->
+          <id nullFlavor="NA" root="2.16.840.1.113883.4.6" />
+          <!-- Facility Type -->
+          <!-- nullFlavor allowed on code if code="PHC2237": Schematron has been updated to allow
+          nullFlaovr in this case -->
+          <code nullFlavor="NA" />
+          <location>
+            <!-- Facility Address -->
+            <addr>
+              <streetAddressLine nullFlavor="NA" />
+              <city nullFlavor="NA" />
+              <state nullFlavor="NA" />
+              <postalCode nullFlavor="NA" />
+            </addr>
+          </location>
+          <!-- Facility Name -->
+          <serviceProviderOrganization>
+            <name nullFlavor="NA" />
+            <!-- Facility Telecome -->
+            <telecom nullFlavor="NA" />
+            <addr>
+              <streetAddressLine nullFlavor="NA" />
+              <city nullFlavor="NA" />
+              <state nullFlavor="NA" />
+              <postalCode nullFlavor="NA" />
+            </addr>
+          </serviceProviderOrganization>
+        </healthCareFacility>
+      </location>
+    </encompassingEncounter>
+  </componentOf>
+
+  <!-- first component holds the structredBody -->
+  <component>
+    <!-- structredBody contains all of the clinical sections of the eICR -->
+    <structuredBody>
+
+      <!-- Plan of Treatment Section (V2) -->
+      <component>
+        <section>
+          <!-- [C-CDA R1.1] Plan of Care Section -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <!-- [C-CDA R2.0] Plan of Treatment Section (V2) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" extension="2014-06-09" />
+          <code code="18776-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Plan of Treatment" />
+          <title>Plan of Treatment</title>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Initial Case Report Trigger Code Lab Test Order</th>
+                  <th>Trigger Code</th>
+                  <th>Trigger Code codeSystem</th>
+                  <th>RCTC OID</th>
+                  <th>RCTC Version</th>
+                  <th>Ordered Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Zika virus envelope (E) gene [Presence] in Serum by Probe and target
+                    amplification method</td>
+                  <td>80825-3</td>
+                  <td>LOINC</td>
+                  <td>2.16.840.1.114222.4.11.7508</td>
+                  <td>19/05/2016</td>
+                  <td>FEB 25, 2025</td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <!-- This is a request for a test to be performed (a lab test order) -->
+            <observation classCode="OBS" moodCode="RQO">
+              <!-- [C-CDA R1.1] Plan of Care Activity Observation -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.44" />
+              <!-- [C-CDA R2.0] Planned Observation (V2) -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.44" extension="2014-06-09" />
+              <!-- [eICR R2 STU1.1] Initial Case Report Trigger Code Lab Test Order -->
+              <templateId root="2.16.840.1.113883.10.20.15.2.3.4" extension="2016-12-01" />
+              <id root="b52bee94-c34b-4e2c-8c15-5ad9d6def205" />
+              <!-- This code is from the trigger codes for laboratory test order 
+                   value set (2.16.840.1.113762.1.4.1146.166) -->
+              <code code="80825-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                displayName="Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method"
+                sdtc:valueSet="2.16.840.1.114222.4.11.7508"
+                sdtc:valueSetVersion="19/05/2016">
+                <translation code="80825-3" codeSystem="2.16.840.1.113883.6.1"
+                  codeSystemName="LOINC"
+                  displayName="Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method"
+                  sdtc:valueSet="2.16.840.1.114222.4.11.7508"
+                  sdtc:valueSetVersion="19/05/2016"> </translation>
+              </code>
+              <statusCode code="active" />
+              <!-- Date on which the lab test should take place -->
+              <effectiveTime value="20250207" />
+            </observation>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Encounters Section (entries required) (V3) -->
+      <component>
+        <section nullFlavor="NI">
+          <!-- [C-CDA R1.1] Encounters Section (entries optional) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.22" />
+          <!-- [C-CDA R2.1] Encounters Section (entries optional) (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.22" extension="2015-08-01" />
+          <!-- [C-CDA R1.1] Encounters Section (entries required) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <!-- [C-CDA R2.1] Encounters Section (entries required) (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" extension="2015-08-01" />
+          <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="History of encounters" />
+          <title>Encounters</title>
+          <text>No information</text>
+        </section>
+      </component>
+
+      <!-- History of Present Illness Section -->
+      <component>
+        <section>
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.4" />
+          <code code="10164-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="HISTORY OF PRESENT ILLNESS" />
+          <title>History of Present Illness</title>
+          <text>No information</text>
+        </section>
+      </component>
+
+      <!-- Medications Administered Section (V2) -->
+      <component>
+        <section>
+          <!-- [C-CDA R1.1] Medications Administered Section -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.38" />
+          <!-- [C-CDA R2.0] Medications Administered Section (V2) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.38" extension="2014-06-09" />
+          <code code="29549-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Medications Administered" />
+          <title>Medications Administered</title>
+          <text>No medications administered</text>
+        </section>
+      </component>
+
+      <!-- Problem Section (entries required) (V3) -->
+      <component>
+        <section>
+          <!-- [C-CDA R1.1] Problem Section (entries optional) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.5" />
+          <!-- [C-CDA R2.1] Problem Section (entries optional) (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.5" extension="2015-08-01" />
+          <!-- [C-CDA R1.1] Problem Section (entries required) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.5.1" />
+          <!-- [C-CDA R2.1] Problem Section (entries required) (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.5.1" extension="2015-08-01" />
+          <code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Problem List" />
+          <title>Problems</title>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Concern</th>
+                  <th>Concern Status</th>
+                  <th>Date(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Problem</td>
+                  <td>active</td>
+                  <td>FEB 5, 2025</td>
+                </tr>
+                <tr>
+                  <td>
+                    <list>
+                      <item>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Problem Type</th>
+                              <th>Problem</th>
+                              <th>Date(s)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Sympton</td>
+                              <td>Fever</td>
+                              <td>FEB 5, 2025</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </item>
+                    </list>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <!-- [C-CDA 1.1] Problem Concern Act -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" />
+              <!-- [C-CDA 2.1] Problem Concern Act (V3) -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" extension="2015-08-01" />
+              <id root="ec8a6ff8-ed4b-4f7e-82c3-e98e58b45de7" />
+              <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
+              <!-- The statusCode represents the need to continue tracking the problem -->
+              <!-- This is of ongoing concern to the provider -->
+              <statusCode code="active" />
+              <effectiveTime>
+                <!-- The low value represents when the problem was first recorded in the patient's
+                chart -->
+                <low value="20250205" />
+              </effectiveTime>
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN">
+                  <!-- [C-CDA R1.1] Problem Observation -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <!-- [C-CDA R2.1] Problem Observation (V3) -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                  <id root="ab1791b0-5c71-11db-b0de-0800200c9a67" />
+                  <code code="75325-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="Symptom">
+                    <translation code="418799008" codeSystem="2.16.840.1.113883.6.96"
+                      codeSystemName="SNOMED CT" displayName="Symptom" />
+                  </code>
+                  <!-- The statusCode reflects the status of the observation itself -->
+                  <statusCode code="completed" />
+                  <effectiveTime>
+                    <!-- The low value reflects the date of onset -->
+                    <low value="20250205" />
+                  </effectiveTime>
+                  <value xsi:type="CD" code="386661006" codeSystem="2.16.840.1.113883.6.96"
+                    displayName="Fever (finding)" />
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <!-- [C-CDA 1.1] Problem Concern Act -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" />
+              <!-- [C-CDA 2.1] Problem Concern Act (V3) -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" extension="2015-08-01" />
+              <id root="ec8a6ff8-ed4b-4f7e-82c3-e98e58b45de8" />
+              <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
+              <!-- The statusCode represents the need to continue tracking the problem -->
+              <!-- This is of ongoing concern to the provider -->
+              <statusCode code="active" />
+              <effectiveTime>
+                <!-- The low value represents when the problem was first recorded in the patient's
+                chart -->
+                <low value="20250205" />
+              </effectiveTime>
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN">
+                  <!-- [C-CDA R1.1] Problem Observation -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <!-- [C-CDA R2.1] Problem Observation (V3) -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                  <id root="ab1791b0-5c71-11db-b0de-0800200c9a68" />
+                  <code code="75325-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="Symptom">
+                    <translation code="418799008" codeSystem="2.16.840.1.113883.6.96"
+                      codeSystemName="SNOMED CT" displayName="Symptom" />
+                  </code>
+                  <statusCode code="completed" />
+                  <effectiveTime>
+                    <low value="20250205" />
+                  </effectiveTime>
+                  <value xsi:type="CD" code="386661006" codeSystem="2.16.840.1.113883.6.96"
+                    displayName="Fever (finding)" />
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Reason for Visit Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.12" />
+          <code code="29299-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Reason for visit" />
+          <title>Reason for Visit</title>
+          <text>No information</text>
+        </section>
+      </component>
+
+      <!-- Results Section (entries required) (V3) -->
+      <component>
+        <section>
+          <!-- [C-CDA R1.1] Results Section (entries optional) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.3" />
+          <!-- [C-CDA R2.1] Results Section (entries optional) (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.3" extension="2015-08-01" />
+          <!-- [C-CDA R1.1] Results Section (entries required) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.3.1" />
+          <!-- [C-CDA R2.1] Results Section (entries required) (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.3.1" extension="2015-08-01" />
+          <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Relevant diagnostic tests and/or laboratory data" />
+          <title>Results</title>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Results Panel</th>
+                  <th>Date(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Zika virus envelope (E) gene [Presence] in Serum by Probe and target
+                    amplification method</td>
+                  <td>FEB 25, 2025 to FEB 25, 2025</td>
+                </tr>
+                <tr>
+                  <td>
+                    <list>
+                      <item>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Initial Case Report Trigger Code Result Observation </th>
+                              <th>Trigger Code</th>
+                              <th>Trigger Code codeSystem</th>
+                              <th>RCTC OID</th>
+                              <th>RCTC Version</th>
+                              <th>Outcome</th>
+                              <th>Interpretation</th>
+                              <th>Date(s)</th>
+                              <th>Interpretation</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Zika virus envelope (E) gene [Presence] in Serum by Probe and
+                                target amplification method</td>
+                              <td>80825-3</td>
+                              <td>LOINC</td>
+                              <td>2.16.840.1.114222.4.11.7508</td>
+                              <td>19/05/2016</td>
+                              <td>Positive</td>
+                              <td>High</td>
+                              <td>FEB 25, 2025</td>
+                              <td>Abnormal</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </item>
+                    </list>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <organizer classCode="BATTERY" moodCode="EVN">
+              <!-- [C-CDA R1.1] Result Organizer -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
+              <!-- [C-CDA R2.1] Result Organizer (V3) -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2015-08-01" />
+              <id root="a4307cb2-b3b4-4f42-be03-1d9077376f4a" />
+              <code code="80825-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                displayName="Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method" />
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="20250225" />
+                <high value="20250225" />
+              </effectiveTime>
+              <component>
+                <!-- This observation is a trigger code final result observation only the code is a
+                trigger code and thus only the code must contain @sdtc:valueSet and
+                @sdtc:valueSetVersion. Final result is indicated by statusCode="final"  -->
+                <observation classCode="OBS" moodCode="EVN">
+                  <!-- [C-CDA R1.1] Result Observation -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
+                  <!-- [C-CDA R2.1] Result Observation (V3) -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.2" extension="2015-08-01" />
+                  <!-- [eICR R2 STU1.1] Initial Case Report Trigger Code Result Observation -->
+                  <templateId root="2.16.840.1.113883.10.20.15.2.3.2" extension="2016-12-01" />
+                  <id root="bf9c0a26-4524-4395-b3ce-100450b9c9ad" />
+                  <code code="80825-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method"
+                    sdtc:valueSet="2.16.840.1.114222.4.11.7508"
+                    sdtc:valueSetVersion="19/05/2016" />
+                  <statusCode code="completed" />
+                  <effectiveTime value="20250207" />
+                  <value xsi:type="CD" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED CT" code="10828004" displayName="Positive" />
+                  <interpretationCode code="A" displayName="Abnormal"
+                    codeSystem="2.16.840.1.113883.5.83" codeSystemName="ObservationInterpretation" />
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Social History Section (V3) -->
+      <component>
+        <section>
+          <!-- [C-CDA 1.1] Social History Section -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.17" />
+          <!-- [C-CDA 2.1] Social History Section (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.17" extension="2015-08-01" />
+          <code code="29762-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Social History" />
+          <title>Social History</title>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Birth Sex</th>
+                  <th>Value</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sex Assigned At Birth</td>
+                  <td>Male</td>
+                  <td>1125</td>
+                </tr>
+              </tbody>
+            </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>Social History Observation Type</th>
+                  <th>Value</th>
+                  <th>Date(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Employment detail</td>
+                  <td>Jedi High Council Member, Jedi Temple, Temple District, Galactic City,
+                    Coruscant</td>
+                  <td>1275</td>
+                </tr>
+              </tbody>
+            </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>Travel History: Date(s)</th>
+                  <th>Notes</th>
+                  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>In the 3 weeks before FEB 5, 2025</td>
+                  <td>Visited swamp regions</td>
+                  <td>
+                    <list>
+                      <item>Brazil</item>
+                    </list>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <!-- sex assigned at birth -->
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <!-- [C-CDA R2.1 Companion Guide] Birth Sex Observation -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.200" extension="2016-06-01" />
+              <code code="76689-9" codeSystem="2.16.840.1.113883.6.1"
+                displayName="Sex Assigned At Birth" />
+              <statusCode code="completed" />
+              <!-- effectiveTime if present should match birthTime -->
+              <effectiveTime value="11250000" />
+              <value xsi:type="CD" codeSystem="2.16.840.1.113883.5.1"
+                codeSystemName="AdministrativeGender" code="M" displayName="Male" />
+            </observation>
+          </entry>
+          <!-- occupation -->
+          <entry typeCode="DRIV">
+            <!-- Occupation -->
+            <observation classCode="OBS" moodCode="EVN">
+              <!-- [C-CDA R1.1] Social History Observation -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" />
+              <!-- [C-CDA R2.1] Social History Observation (V3) -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
+              <id root="6049baec-80df-4dea-82b2-345f6546cda3" />
+              <code code="364703007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT"
+                displayName="Employment detail">
+                <translation code="11295-3" codeSystem="2.16.840.1.113883.6.1"
+                  codeSystemName="LOINC" displayName="Current employment - Reported" />
+              </code>
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="12750101" />
+              </effectiveTime>
+              <value xsi:type="ST">Jedi High Council Member, Jedi Temple, Temple District, Galactic
+                City, Coruscant</value>
+            </observation>
+          </entry>
+          <!-- travel history -->
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <!-- [eICR R2 STU1.1] Travel History -->
+              <templateId root="2.16.840.1.113883.10.20.15.2.3.1" extension="2016-12-01" />
+              <id root="030df1dc-1d31-4e5d-abdd-5edd0b74c5c3" />
+              <code code="420008001"
+                codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT"
+                displayName="Travel" />
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="20250115" />
+                <high value="20250205" />
+              </effectiveTime>
+              <participant typeCode="LOC">
+                <participantRole classCode="TERR">
+                  <code code="BRA"
+                    displayName="Brazil"
+                    codeSystem="1.0.3166.1"
+                    codeSystemName="Country (ISO 3166-1)" />
+                </participantRole>
+              </participant>
+            </act>
+          </entry>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>
