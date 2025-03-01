@@ -1,18 +1,14 @@
-import { NextResponse } from "next/server";
 import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import {
   BlobClient,
   BlobDownloadResponseParsed,
   BlobServiceClient,
 } from "@azure/storage-blob";
-import {
-  AZURE_SOURCE,
-  S3_SOURCE,
-  loadYamlConfig,
-  streamToJson,
-} from "../utils";
-import { s3Client } from "../services/s3Client";
 import { Bundle } from "fhir/r4";
+import { NextResponse } from "next/server";
+
+import { s3Client } from "@/app/api/services/s3Client";
+import { AZURE_SOURCE, S3_SOURCE, streamToJson } from "@/app/api/utils";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
@@ -36,23 +32,7 @@ export async function get_fhir_data(ecr_id: string | null) {
     res = { payload: { message: "Invalid source" }, status: 500 };
   }
   const { status, payload } = res;
-  if (status !== 200) {
-    return NextResponse.json(payload, { status });
-  }
-
-  const mappings = loadYamlConfig();
-  if (!mappings) {
-    console.error("Unable to load FHIR mappings");
-    return NextResponse.json(
-      { message: "Internal system error" },
-      { status: 500 },
-    );
-  }
-
-  return NextResponse.json(
-    { ...payload, fhirPathMappings: mappings },
-    { status },
-  );
+  return NextResponse.json(payload, { status });
 }
 
 /**

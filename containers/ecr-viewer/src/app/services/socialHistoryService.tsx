@@ -1,12 +1,14 @@
 import { Bundle, Observation } from "fhir/r4";
-import { PathMappings, noData } from "../utils/data-utils";
 
-import { evaluate } from "../utils/evaluate";
+import { noData } from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
+import { ColumnInfoInput } from "@/app/view-data/components/EvaluateTable";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
+import fhirPathMappings from "@/app/view-data/fhirPath";
+
 import { evaluateValue } from "./evaluateFhirDataService";
-import { JsonTable } from "../view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
-import { ColumnInfoInput } from "../view-data/components/EvaluateTable";
 
 type TravelHistoryColumn = Required<
   Pick<ColumnInfoInput, "infoPath" | "columnName">
@@ -16,16 +18,12 @@ type TravelHistoryColumn = Required<
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
  * @param fhirBundle - The FHIR bundle containing patient travel history data.
- * @param mappings - An object containing the FHIR path mappings.
  * @returns - A formatted table representing the patient's travel history, or undefined if no relevant data is found.
  */
-export const evaluateTravelHistoryTable = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
+export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
   const travelHistory: Observation[] = evaluate(
     fhirBundle,
-    mappings.patientTravelHistory,
+    fhirPathMappings.patientTravelHistory,
   );
 
   const columns: TravelHistoryColumn[] = [
@@ -49,7 +47,7 @@ export const evaluateTravelHistoryTable = (
     },
   ];
 
-  const tables = createTravelHistoryTables(travelHistory, columns, mappings);
+  const tables = createTravelHistoryTables(travelHistory, columns);
 
   if (!tables.length) return undefined;
 
@@ -64,7 +62,6 @@ export const evaluateTravelHistoryTable = (
 const createTravelHistoryTables = (
   history: Observation[],
   columns: TravelHistoryColumn[],
-  mappings: PathMappings,
 ) => {
   const tables = history
     .map((activity) => {
@@ -72,7 +69,7 @@ const createTravelHistoryTables = (
 
       // Populate the row by iterating over the columns
       columns.forEach(({ columnName, infoPath, applyToValue }) => {
-        let value = evaluateValue(activity, mappings[infoPath]);
+        let value = evaluateValue(activity, fhirPathMappings[infoPath]);
 
         // Apply transformation if needed
         if (applyToValue) {

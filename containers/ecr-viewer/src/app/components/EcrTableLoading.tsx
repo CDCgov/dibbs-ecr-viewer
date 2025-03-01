@@ -1,4 +1,4 @@
-import { range } from "../utils/data-utils";
+import { range } from "@/app/utils/data-utils";
 
 /**
  * The Ecr Library table, but with blobs instead of data.

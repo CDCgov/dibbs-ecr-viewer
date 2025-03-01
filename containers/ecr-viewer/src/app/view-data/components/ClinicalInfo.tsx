@@ -1,11 +1,13 @@
-import { AccordionSection, AccordionSubSection } from "../component-utils";
 import React from "react";
+
 import classNames from "classnames";
+
 import {
-  DataDisplay,
-  DataTableDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
+  AccordionSection,
+  AccordionSubSection,
+} from "@/app/view-data/component-utils";
+
+import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface ClinicalProps {
   reasonForVisitDetails: DisplayDataProps[];

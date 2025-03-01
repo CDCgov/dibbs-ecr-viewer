@@ -1,10 +1,11 @@
 /**
  * @jest-environment node
  */
-import { middleware } from "@/middleware";
-import { NextRequest, NextResponse } from "next/server";
 import { importSPKI, jwtVerify } from "jose";
+import { NextRequest, NextResponse } from "next/server";
 import { NextRequestWithAuth } from "next-auth/middleware";
+
+import { middleware } from "./middleware";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),

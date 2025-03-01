@@ -1,10 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
+
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
-import { toKebabCase } from "@/app/utils/format-utils";
-import { BackButton } from "@/app/components/BackButton";
-import { SideNavLoadingSkeleton } from "./LoadingComponent";
 import { env } from "next-runtime-env";
+
+import { BackButton } from "@/app/components/BackButton";
+import { toKebabCase } from "@/app/utils/format-utils";
+
+import { SideNavLoadingSkeleton } from "./LoadingComponent";
 
 export class SectionConfig {
   title: string;

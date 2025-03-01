@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
+
 import { Button } from "@trussworks/react-uswds";
+
 import { ArrowDownward, ArrowUpward, SortArrow } from "./Icon";
 
 type SortButtonProps = {
