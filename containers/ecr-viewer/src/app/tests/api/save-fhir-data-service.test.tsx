@@ -32,7 +32,7 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
       country: "USA",
       period_start: new Date("2020-01-01"),
       period_end: new Date("2024-01-01"),
-    }
+    },
   ],
   latitude: 53040,
   longitude: -120.1234,
@@ -52,9 +52,7 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   encounter_start_date: new Date("2024-01-01"),
   encounter_end_date: new Date("2024-01-02"),
   reason_for_visit: "Routine checkup",
-  active_problems: [
-    "Diabetes", "Hypertension"
-  ],
+  active_problems: ["Diabetes", "Hypertension"],
   labs: [
     {
       uuid: "lab-12345",
@@ -69,7 +67,8 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
       test_result_code_system: "http://loinc.org",
       test_result_interpretation: "Normal",
       test_result_interpretation_code: "N",
-      test_result_interpretation_system: "http://hl7.org/fhir/v3/ObservationInterpretation",
+      test_result_interpretation_system:
+        "http://hl7.org/fhir/v3/ObservationInterpretation",
       test_result_ref_range_low: "70",
       test_result_ref_range_low_units: "mg/dL",
       test_result_ref_range_high: "140",

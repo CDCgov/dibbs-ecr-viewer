@@ -204,100 +204,106 @@ export const saveExtendedMetadata = async (
   if (process.env.METADATA_DATABASE_SCHEMA == "extended") {
     try {
       await db.transaction().execute(async (trx) => {
-        await trx.insertInto("ecr_data").values({
-          eICR_ID: ecrId,
-          set_id: metadata.eicr_set_id,
-          fhir_reference_link: null, // Not implemented yet
-          last_name: metadata.last_name,
-          first_name: metadata.first_name,
-          birth_date: metadata.birth_date,
-          gender: metadata.gender,
-          birth_sex: metadata.birth_sex,
-          gender_identity: metadata.gender_identity,
-          race: metadata.race,
-          ethnicity: metadata.ethnicity,
-          latitude: metadata.latitude,
-          longitude: metadata.longitude,
-          homelessness_status: metadata.homelessness_status,
-          disabilities: metadata.disabilities,
-          tribal_affiliation: metadata.tribal_affiliation,
-          tribal_enrollment_status: metadata.tribal_enrollment_status,
-          current_job_title: metadata.current_job_title,
-          current_job_industry: metadata.current_job_industry,
-          usual_occupation: metadata.usual_occupation,
-          usual_industry: metadata.usual_industry,
-          preferred_language: metadata.preferred_language,
-          pregnancy_status: metadata.pregnancy_status,
-          rr_id: metadata.rr_id,
-          processing_status: metadata.processing_status,
-          eicr_version_number: metadata.eicr_version_number,
-          authoring_date: metadata.authoring_datetime,
-          authoring_provider: metadata.provider_id,
-          provider_id: metadata.provider_id,
-          facility_id: metadata.facility_id_number,
-          facility_name: metadata.facility_name,
-          encounter_type: metadata.encounter_type,
-          encounter_start_date: metadata.encounter_start_date,
-          encounter_end_date: metadata.encounter_end_date,
-          reason_for_visit: metadata.reason_for_visit,
-          active_problems: metadata.active_problems,
-        })
-        .executeTakeFirstOrThrow();
+        await trx
+          .insertInto("ecr_data")
+          .values({
+            eICR_ID: ecrId,
+            set_id: metadata.eicr_set_id,
+            fhir_reference_link: null, // Not implemented yet
+            last_name: metadata.last_name,
+            first_name: metadata.first_name,
+            birth_date: metadata.birth_date,
+            gender: metadata.gender,
+            birth_sex: metadata.birth_sex,
+            gender_identity: metadata.gender_identity,
+            race: metadata.race,
+            ethnicity: metadata.ethnicity,
+            latitude: metadata.latitude,
+            longitude: metadata.longitude,
+            homelessness_status: metadata.homelessness_status,
+            disabilities: metadata.disabilities,
+            tribal_affiliation: metadata.tribal_affiliation,
+            tribal_enrollment_status: metadata.tribal_enrollment_status,
+            current_job_title: metadata.current_job_title,
+            current_job_industry: metadata.current_job_industry,
+            usual_occupation: metadata.usual_occupation,
+            usual_industry: metadata.usual_industry,
+            preferred_language: metadata.preferred_language,
+            pregnancy_status: metadata.pregnancy_status,
+            rr_id: metadata.rr_id,
+            processing_status: metadata.processing_status,
+            eicr_version_number: metadata.eicr_version_number,
+            authoring_date: metadata.authoring_datetime,
+            authoring_provider: metadata.provider_id,
+            provider_id: metadata.provider_id,
+            facility_id: metadata.facility_id_number,
+            facility_name: metadata.facility_name,
+            encounter_type: metadata.encounter_type,
+            encounter_start_date: metadata.encounter_start_date,
+            encounter_end_date: metadata.encounter_end_date,
+            reason_for_visit: metadata.reason_for_visit,
+            active_problems: metadata.active_problems,
+          })
+          .executeTakeFirstOrThrow();
 
         if (metadata.patient_addresses) {
           for (const address of metadata.patient_addresses) {
             const patient_address_uuid = randomUUID();
-            await trx.insertInto("patient_address").values({
-              uuid: patient_address_uuid,
-              use: address.use,
-              type: address.type,
-              text: address.text,
-              line: address.line,
-              city: address.city,
-              district: address.district,
-              state: address.state,
-              postal_code: address.postal_code,
-              country: address.country,
-              period_start: address.period_start,
-              period_end: address.period_end,
-              eICR_ID: ecrId,
-            })
-            .executeTakeFirstOrThrow();
+            await trx
+              .insertInto("patient_address")
+              .values({
+                uuid: patient_address_uuid,
+                use: address.use,
+                type: address.type,
+                text: address.text,
+                line: address.line,
+                city: address.city,
+                district: address.district,
+                state: address.state,
+                postal_code: address.postal_code,
+                country: address.country,
+                period_start: address.period_start,
+                period_end: address.period_end,
+                eICR_ID: ecrId,
+              })
+              .executeTakeFirstOrThrow();
           }
         }
 
         if (metadata.labs) {
           for (const lab of metadata.labs) {
-            await trx.insertInto("ecr_labs").values({
-              uuid: lab.uuid,
-              eICR_ID: ecrId,
-              test_type: lab.test_type,
-              test_type_code: lab.test_type_code,
-              test_type_system: lab.test_type_system,
-              test_result_qualitative: lab.test_result_qualitative,
-              test_result_quantitative: lab.test_result_quantitative,
-              test_result_units: lab.test_result_units,
-              test_result_code: lab.test_result_code,
-              test_result_code_display: lab.test_result_code_display,
-              test_result_code_system: lab.test_result_code_system,
-              test_result_interpretation: lab.test_result_interpretation,
-              test_result_interpretation_code:
-                lab.test_result_interpretation_code,
-              test_result_interpretation_system:
-                lab.test_result_interpretation_system,
-              test_result_reference_range_low_value:
-                lab.test_result_ref_range_low,
-              test_result_reference_range_low_units:
-                lab.test_result_ref_range_low_units,
-              test_result_reference_range_high_value:
-                lab.test_result_ref_range_high,
-              test_result_reference_range_high_units:
-                lab.test_result_ref_range_high_units,
-              specimen_type: lab.specimen_type,
-              specimen_collection_date: lab.specimen_collection_date,
-              performing_lab: lab.performing_lab,
-            })
-            .executeTakeFirstOrThrow();
+            await trx
+              .insertInto("ecr_labs")
+              .values({
+                uuid: lab.uuid,
+                eICR_ID: ecrId,
+                test_type: lab.test_type,
+                test_type_code: lab.test_type_code,
+                test_type_system: lab.test_type_system,
+                test_result_qualitative: lab.test_result_qualitative,
+                test_result_quantitative: lab.test_result_quantitative,
+                test_result_units: lab.test_result_units,
+                test_result_code: lab.test_result_code,
+                test_result_code_display: lab.test_result_code_display,
+                test_result_code_system: lab.test_result_code_system,
+                test_result_interpretation: lab.test_result_interpretation,
+                test_result_interpretation_code:
+                  lab.test_result_interpretation_code,
+                test_result_interpretation_system:
+                  lab.test_result_interpretation_system,
+                test_result_reference_range_low_value:
+                  lab.test_result_ref_range_low,
+                test_result_reference_range_low_units:
+                  lab.test_result_ref_range_low_units,
+                test_result_reference_range_high_value:
+                  lab.test_result_ref_range_high,
+                test_result_reference_range_high_units:
+                  lab.test_result_ref_range_high_units,
+                specimen_type: lab.specimen_type,
+                specimen_collection_date: lab.specimen_collection_date,
+                performing_lab: lab.performing_lab,
+              })
+              .executeTakeFirstOrThrow();
           }
         }
 
@@ -307,23 +313,27 @@ export const saveExtendedMetadata = async (
             const rr_conditions_uuid = randomUUID();
 
             // Insert condition into ecr_rr_conditions
-            await trx.insertInto("ecr_rr_conditions").values({
-              uuid: rr_conditions_uuid,
-              eICR_ID: ecrId,
-              condition: rrItem.condition,
-            })
-            .executeTakeFirstOrThrow();
+            await trx
+              .insertInto("ecr_rr_conditions")
+              .values({
+                uuid: rr_conditions_uuid,
+                eICR_ID: ecrId,
+                condition: rrItem.condition,
+              })
+              .executeTakeFirstOrThrow();
 
             // Loop through the rule summaries array
             if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
               for (const summary of rrItem.rule_summaries) {
                 // Insert each rule summary with reference to the condition
-                await trx.insertInto("ecr_rr_rule_summaries").values({
-                  uuid: randomUUID(),
-                  ecr_rr_conditions_id: rr_conditions_uuid,
-                  rule_summary: summary.summary,
-                })
-                .executeTakeFirstOrThrow();
+                await trx
+                  .insertInto("ecr_rr_rule_summaries")
+                  .values({
+                    uuid: randomUUID(),
+                    ecr_rr_conditions_id: rr_conditions_uuid,
+                    rule_summary: summary.summary,
+                  })
+                  .executeTakeFirstOrThrow();
               }
             }
           }
@@ -425,9 +435,10 @@ export const saveCoreMetadata = async (
             }
           }
         }
-    }).catch((err)=>{
-      throw new Error("Transaction failed");
-    });
+      })
+      .catch((err) => {
+        throw new Error("Transaction failed");
+      });
     return {
       message: "Success. Saved metadata to database.",
       status: 200,
