@@ -1,9 +1,6 @@
-anyio>=4.4.0
 pydantic>=2.0.0
 fastapi>=0.109.1
 uvicorn
 pathlib
-httpx
 requests
-python-multipart
 fhirpathpy
