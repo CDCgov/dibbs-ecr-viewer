@@ -122,7 +122,7 @@ type ReportabilitySummaryProps = Pick<EcrMetadataProps, "rrDetails">;
 const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   rrDetails,
 }) => {
-  const rows = useReportableConditionsRows(rrDetails);
+  const rows = useConvertDictionaryToRows(rrDetails);
 
   if (rows.length === 0) {
     return null;
@@ -155,41 +155,70 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
           </th>
         </tr>
       </thead>
-      <tbody>{rows}</tbody>
+      <tbody>
+        {rows.map(({ key, condition, trigger, location }) => (
+          <tr key={key}>
+            {condition ? (
+              <td rowSpan={condition.rowSpan}>{condition.value}</td>
+            ) : null}
+            {trigger ? (
+              <td rowSpan={trigger.rowSpan}>{trigger.value}</td>
+            ) : null}
+            <td>{location}</td>
+          </tr>
+        ))}
+      </tbody>
     </Table>
   );
 };
 
-const useReportableConditionsRows = (dictionary: ReportableConditions) => {
+interface ReportableConditionData {
+  value: string;
+  rowSpan: number;
+}
+
+interface ReportableConditionRow {
+  key: string;
+  condition: ReportableConditionData | null;
+  trigger: ReportableConditionData | null;
+  location: string;
+}
+
+const useConvertDictionaryToRows = (dictionary: ReportableConditions) => {
   if (!dictionary) return [];
-  const rows: React.JSX.Element[] = [];
+  const rows: ReportableConditionRow[] = [];
+
   Object.entries(dictionary).forEach(([condition, triggers], _) => {
     Object.entries(triggers).forEach(([trigger, locations], triggerIndex) => {
       const locationsArray = Array.from(locations);
       locationsArray.forEach((location, locationIndex) => {
         const isConditionRow = triggerIndex === 0 && locationIndex === 0;
         const isTriggerRow = locationIndex === 0;
-        const conditionCell = isConditionRow ? (
-          <td
-            rowSpan={Object.keys(triggers).reduce(
-              (acc, key) => acc + Array.from(triggers[key]).length,
-              0,
-            )}
-          >
-            {condition}
-          </td>
-        ) : null;
-        const triggerCell = isTriggerRow ? (
-          <td rowSpan={locationsArray.length}>{trigger}</td>
-        ) : null;
 
-        rows.push(
-          <tr key={`${condition}-${trigger}-${location}`}>
-            {conditionCell}
-            {triggerCell}
-            <td>{location}</td>
-          </tr>,
+        const conditionRowSpan = Object.keys(triggers).reduce(
+          (acc, key) => acc + Array.from(triggers[key]).length,
+          0,
         );
+        const triggerRowSpan = locationsArray.length;
+
+        const row: ReportableConditionRow = {
+          key: `${condition}-${trigger}-${location}`,
+          condition: isConditionRow
+            ? {
+                value: condition,
+                rowSpan: conditionRowSpan,
+              }
+            : null,
+          trigger: isTriggerRow
+            ? {
+                value: trigger,
+                rowSpan: triggerRowSpan,
+              }
+            : null,
+          location: location ?? "",
+        };
+
+        rows.push(row);
       });
     });
   });
