@@ -1,10 +1,12 @@
 import "@testing-library/jest-dom";
-import { toHaveNoViolations } from "jest-axe";
-import failOnConsole from "jest-fail-on-console";
-import * as matchers from "jest-extended";
 import { TextEncoder } from "util";
+
+import { toHaveNoViolations } from "jest-axe";
+import * as matchers from "jest-extended";
+import failOnConsole from "jest-fail-on-console";
 import router from "next-router-mock";
-import { clearEvaluateCache } from "@/app/utils/evaluate";
+
+import { clearEvaluateCache } from "./src/app/utils/evaluate";
 
 global.TextEncoder = TextEncoder;
 

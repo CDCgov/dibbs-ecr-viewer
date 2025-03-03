@@ -1,15 +1,18 @@
-import { AccordionSection, AccordionSubSection } from "../component-utils";
+import React from "react";
+
 import { Table } from "@trussworks/react-uswds";
-import { ToolTipElement } from "@/app/view-data/components/ToolTipElement";
+
 import {
   ERSDWarning,
   ReportableConditions,
-} from "../../services/ecrMetadataService";
+} from "@/app/services/ecrMetadataService";
 import {
-  DataDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
-import React from "react";
+  AccordionSection,
+  AccordionSubSection,
+} from "@/app/view-data/component-utils";
+
+import { DataDisplay, DisplayDataProps } from "./DataDisplay";
+import { ToolTipElement } from "./ToolTipElement";
 
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;

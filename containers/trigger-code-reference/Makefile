@@ -19,7 +19,7 @@ help:
 
 run-docker:
 	@echo "Running Trigger Code Reference service using Docker on localhost:$(TRIGGER_CODE_REFERENCE_PORT)..."
-	docker pull ghcr.io/cdcgov/phdi/trigger-code-reference:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/trigger-code-reference:latest
 	docker run -p $(TRIGGER_CODE_REFERENCE_PORT):8080 trigger-code-reference:latest
 
 run-python:

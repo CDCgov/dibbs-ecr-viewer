@@ -1,12 +1,14 @@
+import React from "react";
+
 import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
-import EcrMetadata from "../../view-data/components/EcrMetadata";
-import React from "react";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+
 import {
   ERSDWarning,
   ReportableConditions,
 } from "@/app/services/ecrMetadataService";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 
 describe("ECR Metadata", () => {
   let container: HTMLElement;

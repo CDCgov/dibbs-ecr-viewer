@@ -1,9 +1,11 @@
 "use client";
 import React, { useState } from "react";
+
 import { Grid, GridContainer } from "@trussworks/react-uswds";
+
 import Accordion from "@/app/view-data/components/AccordionControlled";
-import { AccordionItem } from "@/app/view-data/types";
 import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
+import { AccordionItem } from "@/app/view-data/types";
 
 /**
  * The body of the eCR document

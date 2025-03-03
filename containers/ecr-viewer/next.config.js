@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const path = require("path");
 const basePath = "/ecr-viewer";
+const withYaml = require("next-plugin-yaml");
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
@@ -15,12 +16,11 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true, // this needs to be here for opentelemetry
   },
-  transpilePackages: ["yaml"],
   output: "standalone",
-  basePath: basePath,
+  basePath,
   env: {
     BASE_PATH: basePath,
   },
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = withYaml(withBundleAnalyzer(nextConfig));

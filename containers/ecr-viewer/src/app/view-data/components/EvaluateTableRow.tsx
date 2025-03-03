@@ -1,7 +1,9 @@
 "use client";
-import { noData } from "@/app/utils/data-utils";
-import { Button } from "@trussworks/react-uswds";
 import React, { ReactNode, useId, useState } from "react";
+
+import { Button } from "@trussworks/react-uswds";
+
+import { noData } from "@/app/utils/data-utils";
 
 interface TableRowData {
   rowCellsData: {

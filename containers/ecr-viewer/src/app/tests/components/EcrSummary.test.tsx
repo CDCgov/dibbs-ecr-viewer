@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
+
+import { findCurrentAddress } from "@/app/services/ecrSummaryService";
 import EcrSummary, {
   ConditionSummary,
-} from "../../view-data/components/EcrSummary";
-import { findCurrentAddress } from "@/app/services/ecrSummaryService";
+} from "@/app/view-data/components/EcrSummary";
 
 describe("EcrSummary tests", () => {
   describe("EcrSummary", () => {

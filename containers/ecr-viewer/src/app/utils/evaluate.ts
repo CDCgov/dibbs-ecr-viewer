@@ -8,6 +8,8 @@ import {
   UserInvocationTable,
 } from "fhirpath";
 
+// TODO: Follow up on FHIR/fhirpath typing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const evaluateCache: Map<string, any> = new Map();
 
 /**
@@ -23,18 +25,24 @@ const evaluateCache: Map<string, any> = new Map();
  * @returns - An array containing the result of the evaluation.
  */
 export const evaluate = (
+  // TODO: Follow up on FHIR/fhirpath typing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fhirData: any,
   path: string | Path,
   context?: Context,
   model?: Model,
   options?: {
     resolveInternalTypes?: boolean;
+    // TODO: Follow up on FHIR/fhirpath typing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     traceFn?: (value: any, label: string) => void;
     userInvocationTable?: UserInvocationTable;
   },
+  // TODO: Follow up on FHIR/fhirpath typing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any[] => {
   // Since the bundle does not have an ID, prefer to just use "bundle" instead
-  let fhirDataIdentifier: string =
+  const fhirDataIdentifier: string =
     (fhirData?.resourceType === "Bundle"
       ? fhirData?.entry?.[0]?.fullUrl
       : fhirData?.id) ?? JSON.stringify(fhirData);

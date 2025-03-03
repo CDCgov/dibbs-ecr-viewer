@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
+
 import classNames from "classnames";
-import { ToolTipElement } from "@/app/view-data/components/ToolTipElement";
+
 import { FieldValue } from "./FieldValue";
+import { ToolTipElement } from "./ToolTipElement";
 
 export interface DisplayDataProps {
   title?: string;
@@ -35,7 +37,7 @@ export const DataDisplay: React.FC<{
   themeColor?: string;
 }): React.JSX.Element => {
   item.dividerLine =
-    item.dividerLine == null || item.dividerLine == undefined
+    item.dividerLine === null || item.dividerLine === undefined
       ? true
       : item.dividerLine;
   return (

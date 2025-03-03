@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
-import UnavailableInfo from "../../view-data/components/UnavailableInfo";
+
+import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 
 describe("UnavailableInfo", () => {
   let container: HTMLElement;
@@ -125,6 +126,18 @@ describe("UnavailableInfo", () => {
         value: "",
       },
     ];
+    const ecrAuthorDetails = [
+      [
+        {
+          title: "Name",
+          value: "",
+        },
+        {
+          title: "Phone",
+          value: "",
+        },
+      ],
+    ];
     container = render(
       <UnavailableInfo
         demographicsUnavailableData={demographicsUnavailability}
@@ -141,6 +154,7 @@ describe("UnavailableInfo", () => {
         treatmentData={treatmentUnavailableData}
         clinicalNotesData={clinicalNotesData}
         ecrMetadataUnavailableData={ecrMetadata}
+        eicrAuthorDetails={ecrAuthorDetails}
       />,
     ).container;
   });

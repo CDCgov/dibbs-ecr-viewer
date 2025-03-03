@@ -52,7 +52,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          145
+          123
         </td>
         <td
           class="text-top"
@@ -91,12 +91,16 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          08/19/2021
+          <span
+            class="no-data text-italic text-base"
+          >
+            No data
+          </span>
         </td>
         <td
           class="text-top"
         >
-          144
+          152
         </td>
         <td
           class="text-top"

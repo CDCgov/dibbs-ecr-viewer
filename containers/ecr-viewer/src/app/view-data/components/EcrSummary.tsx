@@ -1,12 +1,11 @@
 import React from "react";
-import {
-  DataDisplay,
-  DataTableDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
+
 import { Accordion, Tag } from "@trussworks/react-uswds";
-import { AccordionItem } from "@/app/view-data/types";
+
 import { toKebabCase } from "@/app/utils/format-utils";
+import { AccordionItem } from "@/app/view-data/types";
+
+import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface EcrSummaryProps {
   patientDetails: DisplayDataProps[];

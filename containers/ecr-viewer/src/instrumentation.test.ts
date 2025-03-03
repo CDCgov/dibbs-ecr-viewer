@@ -1,4 +1,5 @@
 import { makeEnvPublic } from "next-runtime-env";
+
 import { register } from "./instrumentation";
 
 jest.mock("next-runtime-env", () => ({
@@ -100,6 +101,7 @@ describe("register and and setupConfigurationVariables", () => {
   });
 
   it("should doe nothing if CONFIG_NAME is not set", async () => {
+    // @ts-expect-error
     delete process.env.CONFIG_NAME;
     await register();
 

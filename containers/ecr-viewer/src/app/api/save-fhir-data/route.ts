@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { saveFhirData, saveWithMetadata } from "./save-fhir-data-service";
+
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
+
+import { saveFhirData, saveWithMetadata } from "./save-fhir-data-service";
 
 /**
  * Handles POST requests and saves the FHIR Bundle to the database.
@@ -16,10 +18,18 @@ export async function POST(request: NextRequest) {
     requestBody = await request.json();
     fhirBundle = requestBody.fhirBundle;
     ecrId = requestBody.fhirBundle.entry[0].resource.id;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error reading request body:", error);
+
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Error reading request body. " + error.message },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
-      { message: "Error reading request body. " + error.message },
+      { message: "Error reading request body." },
       { status: 400 },
     );
   }
@@ -36,7 +46,7 @@ export async function POST(request: NextRequest) {
 
   const saveSource = requestBody.saveSource || process.env.SOURCE;
 
-  if ([S3_SOURCE, AZURE_SOURCE].includes(saveSource) == false) {
+  if ([S3_SOURCE, AZURE_SOURCE].includes(saveSource) === false) {
     return NextResponse.json({ message: "Invalid source" }, { status: 500 });
   }
 

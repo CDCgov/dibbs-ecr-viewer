@@ -1,5 +1,6 @@
 import React from "react";
-import { EcrLoadingSkeleton } from "@/app/view-data/components/LoadingComponent";
+
+import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 
 /**
  * Loading page

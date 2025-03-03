@@ -60,7 +60,7 @@ spec:
         app: validation
     spec:
       containers:
-      - image: ghcr.io/cdcgov/phdi/validation:v1.0.7
+      - image: ghcr.io/cdcgov/dibbs-ecr-viewer/validation:v1.0.7
         imagePullPolicy: Always
         name: validation
         ports:

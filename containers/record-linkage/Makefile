@@ -19,7 +19,7 @@ help:
 
 run-docker:
 	@echo "Running Record Linkage service using Docker on localhost:$(RECORD_LINKAGE_PORT)..."
-	docker pull ghcr.io/cdcgov/phdi/record-linkage:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/record-linkage:latest
 	docker run -p $(RECORD_LINKAGE_PORT):8080 record-linkage:latest
 
 run-python:

@@ -1,5 +1,6 @@
-import ErrorPage from "@/app/components/ErrorPage";
 import { env } from "next-runtime-env";
+
+import ErrorPage from "./components/ErrorPage";
 
 /**
  * 404 page

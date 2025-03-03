@@ -1,46 +1,49 @@
 import {
-  PathMappings,
-  evaluateData,
-  noData,
-  safeParse,
-} from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
-import {
   Bundle,
   CarePlanActivity,
   CareTeamParticipant,
-  CodeableConcept,
-  FhirResource,
   Medication,
   MedicationAdministration,
+  Period,
   Practitioner,
   Procedure,
+  Reference,
 } from "fhir/r4";
-import { DisplayDataProps } from "../DataDisplay";
-import { returnImmunizations, returnProblemsTable } from "../common";
-import {
-  AdministeredMedication,
-  AdministeredMedicationTableData,
-} from "../AdministeredMedication";
+
 import {
   evaluateReference,
   evaluateValue,
+  getHumanReadableCodeableConcept,
 } from "@/app/services/evaluateFhirDataService";
-import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { JsonTable } from "../JsonTable";
-import EvaluateTable, { BaseTable, ColumnInfoInput } from "../EvaluateTable";
 import {
   formatDate,
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
-import { toSentenceCase } from "@/app/utils/format-utils";
 import { formatName, formatVitals } from "@/app/services/formatService";
+import { formatTablesToJSON } from "@/app/services/htmlTableService";
+import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
+import { evaluate } from "@/app/utils/evaluate";
+import { toSentenceCase } from "@/app/utils/format-utils";
+import {
+  AdministeredMedication,
+  AdministeredMedicationTableData,
+} from "@/app/view-data/components/AdministeredMedication";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import EvaluateTable, {
+  BaseTable,
+  ColumnInfoInput,
+} from "@/app/view-data/components/EvaluateTable";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
+import {
+  returnImmunizations,
+  returnProblemsTable,
+} from "@/app/view-data/components/common";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing clinical data.
- * @param mappings - The object containing the fhir paths.
  * @returns An object containing evaluated and formatted clinical data.
  * @property {DisplayDataProps[]} clinicalNotes - Clinical notes data.
  * @property {DisplayDataProps[]} reasonForVisitDetails - Reason for visit details.
@@ -49,18 +52,13 @@ import { formatName, formatVitals } from "@/app/services/formatService";
  * @property {DisplayDataProps[]} vitalData - Vital signs data.
  * @property {DisplayDataProps[]} immunizationsDetails - Immunization details.
  */
-export const evaluateClinicalData = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
-  const clinicalNotes: DisplayDataProps[] = [
-    evaluateMiscNotes(fhirBundle, mappings),
-  ];
+export const evaluateClinicalData = (fhirBundle: Bundle) => {
+  const clinicalNotes: DisplayDataProps[] = [evaluateMiscNotes(fhirBundle)];
 
   const reasonForVisitData: DisplayDataProps[] = [
     {
       title: "Reason for Visit",
-      value: evaluate(fhirBundle, mappings["clinicalReasonForVisit"])[0],
+      value: evaluateValue(fhirBundle, fhirPathMappings.clinicalReasonForVisit),
     },
   ];
 
@@ -69,33 +67,27 @@ export const evaluateClinicalData = (
       title: "Problems List",
       value: returnProblemsTable(
         fhirBundle,
-        evaluate(fhirBundle, mappings["activeProblems"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings.activeProblems),
       ),
     },
   ];
 
-  const administeredMedication = evaluateAdministeredMedication(
-    fhirBundle,
-    mappings,
-  );
+  const administeredMedication = evaluateAdministeredMedication(fhirBundle);
 
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
       value: returnProceduresTable(
-        evaluate(fhirBundle, mappings["procedures"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings.procedures),
       ),
     },
     {
       title: "Planned Procedures",
       value: returnPlannedProceduresTable(
-        evaluate(fhirBundle, mappings["plannedProcedures"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings.plannedProcedures),
       ),
     },
-    evaluatePlanOfTreatment(fhirBundle, mappings, "Plan of Treatment"),
+    evaluatePlanOfTreatment(fhirBundle, "Plan of Treatment"),
     {
       title: "Administered Medications",
       value: administeredMedication?.length && (
@@ -104,14 +96,14 @@ export const evaluateClinicalData = (
     },
     {
       title: "Care Team",
-      value: returnCareTeamTable(fhirBundle, mappings),
+      value: returnCareTeamTable(fhirBundle),
     },
   ];
 
   const vitalData = [
     {
       title: "Vital Signs",
-      value: returnVitalsTable(fhirBundle, mappings),
+      value: returnVitalsTable(fhirBundle),
     },
   ];
 
@@ -120,8 +112,7 @@ export const evaluateClinicalData = (
       title: "Immunization History",
       value: returnImmunizations(
         fhirBundle,
-        evaluate(fhirBundle, mappings["immunizations"]),
-        mappings,
+        evaluate(fhirBundle, fhirPathMappings.immunizations),
         "Immunization History",
       ),
     },
@@ -139,24 +130,21 @@ export const evaluateClinicalData = (
 /**
  * Evaluate administered medications to create AdministeredMedicationTableData
  * @param fhirBundle - The FHIR bundle containing administered medication.
- * @param mappings - The object containing the fhir paths.
  * @returns - Administered data array
  */
 const evaluateAdministeredMedication = (
   fhirBundle: Bundle,
-  mappings: PathMappings,
 ): AdministeredMedicationTableData[] => {
   const administeredMedicationReferences: string[] | undefined = evaluate(
     fhirBundle,
-    mappings["adminMedicationsRefs"],
+    fhirPathMappings.adminMedicationsRefs,
   );
   if (!administeredMedicationReferences?.length) {
     return [];
   }
-  const administeredMedications: MedicationAdministration[] =
-    administeredMedicationReferences.map((ref) =>
-      evaluateReference(fhirBundle, mappings, ref),
-    );
+  const administeredMedications = administeredMedicationReferences.map((ref) =>
+    evaluateReference<MedicationAdministration>(fhirBundle, ref),
+  );
 
   return administeredMedications.reduce<AdministeredMedicationTableData[]>(
     (data, medicationAdministration) => {
@@ -164,16 +152,15 @@ const evaluateAdministeredMedication = (
       if (medicationAdministration?.medicationReference?.reference) {
         medication = evaluateReference(
           fhirBundle,
-          mappings,
           medicationAdministration.medicationReference.reference,
         );
       }
 
       data.push({
         date:
-          medicationAdministration.effectiveDateTime ??
-          medicationAdministration.effectivePeriod?.start,
-        name: getMedicationDisplayName(medication?.code),
+          medicationAdministration?.effectiveDateTime ??
+          medicationAdministration?.effectivePeriod?.start,
+        name: getHumanReadableCodeableConcept(medication?.code),
       });
       return data;
     },
@@ -181,47 +168,25 @@ const evaluateAdministeredMedication = (
   );
 };
 
-/**
- * Given a CodeableConcept, find an appropriate display name
- * @param code - The codable concept if available.
- * @returns - String with a name to display (can be "Unknown")
- */
-export function getMedicationDisplayName(
-  code: CodeableConcept | undefined,
-): string | undefined {
-  const codings = code?.coding ?? [];
-  let name;
-  // Pull out the first name we find,
-  for (const coding of codings) {
-    if (coding.display) {
-      name = coding.display;
-      break;
-    }
-  }
-
-  // There is a code, but no names, pull out the first code to give the user
-  // something to go off of
-  if (name === undefined && codings.length > 0) {
-    const { system, code } = codings[0];
-    name = `Unknown medication name - ${system} code ${code}`;
-  }
-
-  return name;
-}
+type ModifiedCareTeamParticipant = Omit<
+  CareTeamParticipant,
+  "period" | "member"
+> & {
+  period?: Period & { text?: string };
+  member?: Reference & { name?: string };
+};
 
 /**
  * Returns a table displaying care team information.
  * @param bundle - The FHIR bundle containing care team data.
- * @param mappings - The object containing the fhir paths.
  * @returns The JSX element representing the care team table, or undefined if no care team participants are found.
  */
 export const returnCareTeamTable = (
   bundle: Bundle,
-  mappings: PathMappings,
 ): React.JSX.Element | undefined => {
   const careTeamParticipants: CareTeamParticipant[] = evaluate(
     bundle,
-    mappings["careTeamParticipants"],
+    fhirPathMappings.careTeamParticipants,
   );
   if (careTeamParticipants.length === 0) {
     return undefined;
@@ -238,28 +203,42 @@ export const returnCareTeamTable = (
     { columnName: "Dates", infoPath: "careTeamParticipantPeriod" },
   ];
 
-  careTeamParticipants.forEach((entry) => {
-    if (entry?.period) {
-      const { start, end } = entry.period;
-      (entry.period as any).text = formatStartEndDate(start, end);
-    }
+  const modifiedCareTeamParticipants: ModifiedCareTeamParticipant[] =
+    careTeamParticipants.map((initialParticipant) => {
+      const mctp: ModifiedCareTeamParticipant = {
+        ...initialParticipant,
+      };
 
-    const practitioner: Practitioner = evaluateReference(
-      bundle,
-      mappings,
-      entry?.member?.reference || "",
-    );
-    const practitionerNameObj = practitioner.name?.find(
-      (nameObject) => nameObject.family,
-    );
-    if (entry.member) {
-      (entry.member as any).name = formatName(practitionerNameObj);
-    }
-  });
+      if (initialParticipant.period) {
+        const { start, end } = initialParticipant.period;
+        mctp.period = {
+          ...initialParticipant.period,
+          text: formatStartEndDate(start, end),
+        };
+      }
+
+      const practitioner = evaluateReference<Practitioner>(
+        bundle,
+        initialParticipant?.member?.reference,
+      );
+
+      const practitionerNameObj = practitioner?.name?.find(
+        (nameObject) => nameObject.family,
+      );
+
+      if (initialParticipant.member) {
+        mctp.member = {
+          ...initialParticipant.member,
+          name: formatName(practitionerNameObj),
+        };
+      }
+
+      return mctp;
+    });
+
   return (
     <EvaluateTable
-      resources={careTeamParticipants as FhirResource[]}
-      mappings={mappings}
+      resources={modifiedCareTeamParticipants}
       columns={columnInfo}
       caption="Care Team"
       className="margin-y-0"
@@ -271,19 +250,17 @@ export const returnCareTeamTable = (
 /**
  * Helper to evaluate the misc notes which can be either a string or a table.
  * @param fhirBundle - The FHIR bundle containing clinical data.
- * @param mappings - The object containing the fhir paths.
  * @returns data display props with the appropriate values
  */
-export const evaluateMiscNotes = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-): DisplayDataProps => {
+export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
   const title = "Miscellaneous Notes";
   const toolTip =
     "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
 
-  const content =
-    evaluateValue(fhirBundle, mappings["historyOfPresentIllness"]) ?? "";
+  const content = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.historyOfPresentIllness,
+  );
 
   const tables = formatTablesToJSON(content);
 
@@ -315,12 +292,10 @@ export const evaluateMiscNotes = (
 /**
  * Generates a formatted table representing the list of planned procedures
  * @param carePlanActivities - An array containing the list of procedures.
- * @param mappings - An object containing FHIR path mappings for procedure attributes.
  * @returns - A formatted table React element representing the list of planned procedures, or undefined if the procedures array is empty.
  */
 export const returnPlannedProceduresTable = (
   carePlanActivities: CarePlanActivity[],
-  mappings: PathMappings,
 ): React.JSX.Element | undefined => {
   carePlanActivities = carePlanActivities.filter(
     (entry) => entry.detail?.code?.coding?.[0]?.display,
@@ -347,7 +322,6 @@ export const returnPlannedProceduresTable = (
   return (
     <EvaluateTable
       resources={carePlanActivities}
-      mappings={mappings}
       columns={columnInfo}
       caption="Planned Procedures"
       className="margin-y-0"
@@ -357,10 +331,9 @@ export const returnPlannedProceduresTable = (
 
 const evaluatePlanOfTreatment = (
   fhirBundle: Bundle,
-  mappings: PathMappings,
   title: string,
 ): DisplayDataProps => {
-  const content = evaluateValue(fhirBundle, mappings["planOfTreatment"]);
+  const content = evaluateValue(fhirBundle, fhirPathMappings.planOfTreatment);
   const tables = formatTablesToJSON(content);
 
   if (tables.length === 0)
@@ -388,12 +361,10 @@ const evaluatePlanOfTreatment = (
 /**
  * Generates a formatted table representing the list of procedures based on the provided array of procedures and mappings.
  * @param proceduresArray - An array containing the list of procedures.
- * @param mappings - An object containing FHIR path mappings for procedure attributes.
  * @returns - A formatted table React element representing the list of procedures, or undefined if the procedures array is empty.
  */
 export const returnProceduresTable = (
   proceduresArray: Procedure[],
-  mappings: PathMappings,
 ): React.JSX.Element | undefined => {
   if (proceduresArray.length === 0) {
     return undefined;
@@ -420,7 +391,6 @@ export const returnProceduresTable = (
   return (
     <EvaluateTable
       resources={proceduresArray}
-      mappings={mappings}
       columns={columnInfo}
       caption="Procedures"
       className="margin-y-0"
@@ -431,28 +401,45 @@ export const returnProceduresTable = (
 /**
  * Returns a formatted table displaying vital signs information.
  * @param fhirBundle - The FHIR bundle containing vital signs information.
- * @param mappings - The object containing the FHIR paths.
  * @returns The JSX element representing the table, or undefined if no vital signs are found.
  */
-export const returnVitalsTable = (
-  fhirBundle: Bundle,
-  mappings: PathMappings,
-) => {
-  const heightAmount = evaluate(fhirBundle, mappings["patientHeight"])[0];
-  const heightUnit = evaluate(
+export const returnVitalsTable = (fhirBundle: Bundle) => {
+  const heightAmount: string | undefined = evaluate(
     fhirBundle,
-    mappings["patientHeightMeasurement"],
+    fhirPathMappings.patientHeight,
   )[0];
-  const heightDate = evaluate(fhirBundle, mappings["patientHeightDate"])[0];
-  const weightAmount = evaluate(fhirBundle, mappings["patientWeight"])[0];
-  const weightUnit = evaluate(
+  const heightUnit: string | undefined = evaluate(
     fhirBundle,
-    mappings["patientWeightMeasurement"],
+    fhirPathMappings.patientHeightMeasurement,
   )[0];
-  const weightDate = evaluate(fhirBundle, mappings["patientWeightDate"])[0];
-  const bmiAmount = evaluate(fhirBundle, mappings["patientBmi"])[0];
-  const bmiUnit = evaluate(fhirBundle, mappings["patientBmiMeasurement"])[0];
-  const bmiDate = evaluate(fhirBundle, mappings["patientBmiDate"])[0];
+  const heightDate: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientHeightDate,
+  )[0];
+  const weightAmount: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientWeight,
+  )[0];
+  const weightUnit: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientWeightMeasurement,
+  )[0];
+  const weightDate: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientWeightDate,
+  )[0];
+  const bmiAmount: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientBmi,
+  )[0];
+  const bmiUnit: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientBmiMeasurement,
+  )[0];
+  const bmiDate: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientBmiDate,
+  )[0];
 
   const formattedVitals = formatVitals(
     heightAmount,

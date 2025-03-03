@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
 import { importSPKI, jwtVerify } from "jose";
-import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 import { NextMiddlewareResult } from "next/dist/server/web/types";
+import { NextRequest, NextResponse } from "next/server";
+import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 
 /**
  * Acts as a middleware for handling authentication and authorization in a Next.js application.

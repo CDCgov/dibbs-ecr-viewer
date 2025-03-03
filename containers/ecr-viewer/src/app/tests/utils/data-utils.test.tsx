@@ -1,10 +1,12 @@
 import React from "react";
+
+import { render, cleanup } from "@testing-library/react";
+
 import {
   isDataAvailable,
   removeHtmlElements,
   safeParse,
 } from "@/app/utils/data-utils";
-import { render, cleanup } from "@testing-library/react";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 describe("Utils", () => {

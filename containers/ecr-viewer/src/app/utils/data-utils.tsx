@@ -1,11 +1,9 @@
 import React, { Fragment } from "react";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import sanitizeHtml from "sanitize-html";
-import parse from "html-react-parser";
 
-export interface PathMappings {
-  [key: string]: string;
-}
+import parse from "html-react-parser";
+import sanitizeHtml from "sanitize-html";
+
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 export interface CompleteData {
   availableData: DisplayDataProps[];
@@ -24,8 +22,8 @@ export const noData = (
  * @returns - An object containing arrays of available and unavailable display data items.
  */
 export const evaluateData = (data: DisplayDataProps[]): CompleteData => {
-  let availableData: DisplayDataProps[] = [];
-  let unavailableData: DisplayDataProps[] = [];
+  const availableData: DisplayDataProps[] = [];
+  const unavailableData: DisplayDataProps[] = [];
   data.forEach((item) => {
     if (!isDataAvailable(item)) {
       unavailableData.push(item);
@@ -33,7 +31,7 @@ export const evaluateData = (data: DisplayDataProps[]): CompleteData => {
       availableData.push(item);
     }
   });
-  return { availableData: availableData, unavailableData: unavailableData };
+  return { availableData, unavailableData };
 };
 
 /**
@@ -153,7 +151,7 @@ const trimEmptyElements = (val: RenderableNode) => {
  * @returns - An iterator of indexes.
  */
 export const range = (start: number, end?: number, step: number = 1) => {
-  let output = [];
+  const output = [];
 
   if (typeof end === "undefined") {
     end = start;

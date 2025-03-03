@@ -1,11 +1,13 @@
 import { BlobServiceClient } from "@azure/storage-blob";
+import { randomUUID } from "crypto";
 
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
+import { BlobServiceClient } from "@azure/storage-blob";
 import { Bundle } from "fhir/r4";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
-import { s3Client } from "../services/s3Client";
+import { s3Client } from "@/app/api/services/s3Client";
 import { db } from "../services/database";
 
 interface SaveResponse {
@@ -45,7 +47,7 @@ export const saveToS3 = async (fhirBundle: Bundle, ecrId: string) => {
       message: "Success. Saved FHIR bundle.",
       status: 200,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error({
       message: "Failed to save FHIR bundle to S3.",
       error,
@@ -98,7 +100,7 @@ export const saveToAzure = async (
       message: "Success. Saved FHIR bundle.",
       status: 200,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error({
       message: "Failed to save FHIR bundle to Azure Blob Storage.",
       error,
@@ -164,7 +166,7 @@ const saveFhirMetadata = async (
         status: 400,
       };
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     const message = "Failed to save FHIR metadata.";
     console.error({ message, error, ecrId });
     return {
@@ -325,12 +327,6 @@ export const saveExtendedMetadata = async (
         status: 200,
       };
     } catch (error: any) {
-      // console.error({
-      //   message: "Failed to insert metadata to sqlserver.",
-      //   error,
-      //   ecrId,
-      // });
-
       return {
         message: "Failed to insert metadata to database.",
         status: 500,
@@ -455,7 +451,7 @@ export const saveWithMetadata = async (
       saveFhirData(fhirBundle, ecrId, saveSource),
       saveFhirMetadata(ecrId, metadataType, metadata as BundleMetadata),
     ]);
-  } catch (error: any) {
+  } catch (error: unknown) {
     const message = "Failed to save FHIR data with metadata.";
     console.error({ message, error, ecrId });
     return {

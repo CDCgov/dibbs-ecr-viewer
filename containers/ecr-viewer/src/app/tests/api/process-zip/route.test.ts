@@ -1,9 +1,10 @@
 /**
  * @jest-environment node
  */
+import { NextRequest } from "next/server";
+
 import { POST } from "@/app/api/process-zip/route";
 import { processZip } from "@/app/api/process-zip/service";
-import { NextRequest } from "next/server";
 
 jest.mock("../../../api/process-zip/service");
 

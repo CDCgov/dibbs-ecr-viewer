@@ -1,6 +1,7 @@
-import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
+import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
 
 describe("expand collapse buttons", () => {
   it("should trigger expansion correctly", async () => {

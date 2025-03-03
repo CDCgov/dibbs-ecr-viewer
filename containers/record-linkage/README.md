@@ -34,7 +34,7 @@ To run the Record Linkage service with Docker follow these steps.
 Docker version 20.10.21, build baeda1f
 ```
 
-2. Download a copy of the Docker image from the DIBBs repository by running `docker pull ghcr.io/cdcgov/phdi/record-linkage:latest`.
+2. Download a copy of the Docker image from the DIBBs repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/record-linkage:latest`.
 3. Run the service with ` docker run -p 8080:8080 record-linkage:latest`.
 
 Congratulations, the Record Linkage service should now be running on `localhost:8080`!
@@ -44,8 +44,8 @@ Congratulations, the Record Linkage service should now be running on `localhost:
 We recommend running the Record Linkage service from a container, but if that isn't feasible for a given use case, you can also run the service directly from Python using the steps below.
 
 1. Ensure that both Git and Python 3.10 or higher are installed.
-2. Clone the DIBBs repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/record-linkage/`.
+2. Clone the DIBBs repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/record-linkage/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.
 5. Activate the virtual environment with `source .venv/bin/activate` (MacOS and Linux), `venv\Scripts\activate` (Windows Command Prompt), or `.venv\Scripts\Activate.ps1` (Windows PowerShell).
 6. Install all Python dependencies for the record linkage service with `pip install -r requirements.txt` into your virtual environment.
@@ -56,8 +56,8 @@ We recommend running the Record Linkage service from a container, but if that is
 To build the Docker image for the Record Linkage service from source code instead of downloading it from the DIBBs repository follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the DIBBs repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/record-linkage/`.
+2. Clone the DIBBs repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/record-linkage/`.
 4. Run `docker build -t record-linkage .`.
 
 ### The API

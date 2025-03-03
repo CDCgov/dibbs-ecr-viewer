@@ -1,8 +1,10 @@
 import React from "react";
-import Filters from "@/app/components/Filters";
+
 import { render, screen } from "@testing-library/react";
-import { useRouter, useSearchParams } from "next/navigation";
 import userEvent from "@testing-library/user-event";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import Filters from "@/app/components/Filters";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({ push: jest.fn() })),

@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import {
   BlobClient,
   BlobDownloadResponseParsed,
@@ -10,14 +9,17 @@ import {
   S3_SOURCE,
   loadYamlConfig,
   streamToJson,
-} from "../utils";
-import { s3Client } from "../services/s3Client";
-import { findEcrById } from "../services/database_repo";
+} from "@/app/api/utils";
+import { s3Client } from "@/app/api/services/s3Client";
+import { findEcrById } from "@/app/api/services/database_repo";
+import { Bundle } from "fhir/r4";
+import { NextResponse } from "next/server";
+
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
 type FhirDataResponse = {
-  payload: { fhirBundle: any } | { message: string };
+  payload: { fhirBundle: Bundle } | { message: string };
   status: number;
 };
 
@@ -36,23 +38,7 @@ export async function get_fhir_data(ecr_id: string | null) {
     res = { payload: { message: "Invalid source" }, status: 500 };
   }
   const { status, payload } = res;
-  if (status !== 200) {
-    return NextResponse.json(payload, { status });
-  }
-
-  const mappings = loadYamlConfig();
-  if (!mappings) {
-    console.error("Unable to load FHIR mappings");
-    return NextResponse.json(
-      { message: "Internal system error" },
-      { status: 500 },
-    );
-  }
-
-  return NextResponse.json(
-    { ...payload, fhirPathMappings: mappings },
-    { status },
-  );
+  return NextResponse.json(payload, { status });
 }
 
 // Replaces get_postgres
@@ -99,13 +85,18 @@ export const get_s3 = async (
     const content = await streamToJson(Body);
 
     return { payload: { fhirBundle: content }, status: 200 };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("S3 GetObject error:", error);
-    if (error?.Code === "NoSuchKey") {
+
+    if (error instanceof S3ServiceException && error.name === "NoSuchKey") {
       return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-    } else {
+    }
+
+    if (error instanceof Error) {
       return { payload: { message: error.message }, status: 500 };
     }
+
+    return { payload: { message: "Internal Server Error." }, status: 500 };
   }
 };
 
@@ -140,6 +131,9 @@ export const get_azure = async (
       payload: { fhirBundle: content },
       status: 200,
     };
+
+    // The Azure SDK doesn't export its exception types
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error(
       "Failed to download the FHIR data from Azure Blob Storage:",

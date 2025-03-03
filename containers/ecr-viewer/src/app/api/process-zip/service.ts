@@ -1,12 +1,13 @@
 import { Bundle } from "fhir/r4";
+
 import {
   saveFhirData,
   saveWithMetadata,
-} from "../save-fhir-data/save-fhir-data-service";
+} from "@/app/api/save-fhir-data/save-fhir-data-service";
 import {
   BundleExtendedMetadata,
   BundleMetadata,
-} from "../save-fhir-data/types";
+} from "@/app/api/save-fhir-data/types";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -96,7 +97,7 @@ export const processZip = async (file: File) => {
   let orchestrationResp: BundleInfo;
   try {
     orchestrationResp = await getOrchestrationResponse(file);
-  } catch (error: any) {
+  } catch (error: unknown) {
     const message = "Failed to process orchestration response";
     console.error({ message, error });
     return {

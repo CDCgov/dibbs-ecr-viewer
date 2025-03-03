@@ -20,7 +20,7 @@ help:
 
 run-docker:
 	@echo "Running FHIR Converter service using Docker on localhost:$(FHIR_CONVERTER_PORT)..."
-	docker pull ghcr.io/cdcgov/phdi/fhir-converter:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/fhir-converter:latest
 	docker run -p $(FHIR_CONVERTER_PORT):8080 fhir-converter:latest
 
 run-python:

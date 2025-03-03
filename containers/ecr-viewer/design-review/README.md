@@ -10,7 +10,7 @@ In order to use this script a copy must be downloaded onto your computer from Gi
 2. Copy and paste the following command into the Terminal prompt and press enter.
 
 ```
-curl https://raw.githubusercontent.com/CDCgov/phdi/main/containers/ecr-viewer/design-review/design-review.sh -O && chmod +x design-review.sh
+curl https://raw.githubusercontent.com/CDCgov/dibbs-ecr-viewer/main/containers/ecr-viewer/design-review/design-review.sh -O && chmod +x design-review.sh
 ```
 
 - The first command uses the wget program to download a copy the `design-review.sh` file from this directory to the root level of your user directory e.g. `Users/johndoe`.

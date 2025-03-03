@@ -1,7 +1,8 @@
 import React from "react";
-import { Error } from "@/app/components/Icon";
-import Header from "./Header";
+
 import { BackButton } from "./BackButton";
+import Header from "./Header";
+import { Error } from "./Icon";
 
 /**
  * @param props React props

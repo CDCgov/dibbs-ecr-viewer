@@ -69,8 +69,8 @@ while ! docker system info > /dev/null 2>&1; do
 done
 
 # Clone the repository if it doesn't exist, otherwise pull the latest changes
-REPO_URL="https://github.com/CDCgov/phdi.git"
-REPO_DIR="phdi"
+REPO_URL="https://github.com/CDCgov/dibbs-ecr-viewer.git"
+REPO_DIR="dibbs-ecr-viewer"
 
 if [ ! -d "$REPO_DIR" ]; then
     git clone $REPO_URL
