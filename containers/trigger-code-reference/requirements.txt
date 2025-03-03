@@ -1,6 +1,6 @@
-pydantic>=2.0.0
 fastapi>=0.109.1
-uvicorn
-pathlib
-requests
 fhirpathpy
+pathlib
+pydantic>=2.0.0
+requests
+uvicorn

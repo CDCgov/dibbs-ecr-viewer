@@ -1,7 +1,6 @@
-pytest
 httpx
-testcontainers[compose]
 lxml>=5.2.2
-tqdm
+pytest
 python-dotenv
-httpx
+testcontainers[compose]
+tqdm
