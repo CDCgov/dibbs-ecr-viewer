@@ -1,74 +1,46 @@
 /**
  * @jest-environment node
  */
+
+import { db } from "@/app/api/services/database";
+import { createEcrCondition } from "@/app/api/services/extended_database_repo";
 import { getAllConditions } from "@/app/data/conditions";
-import { getDB } from "@/app/data/db/postgres_db";
-import { get_pool } from "@/app/data/db/sqlserver_db";
-
-jest.mock("../../data/db/postgres_db", () => ({
-  getDB: jest.fn(),
-}));
-
-jest.mock("../../data/db/sqlserver_db", () => ({
-  get_pool: jest.fn(),
-}));
-
-const MOCK_CONDITIONS = [
-  { condition: "condition1" },
-  { condition: "condition2" },
-];
 
 describe("Conditions service", () => {
-  afterEach(() => {
-    jest.resetAllMocks();
+  beforeAll(async () => {
+    await db.schema
+      .createTable("ecr_rr_conditions")
+      .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
+      .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("condition", "varchar")
+      .execute();
+    await createEcrCondition({
+      eICR_ID: "12345",
+      uuid: "12345",
+      condition: "condition1",
+    });
+    await createEcrCondition({
+      eICR_ID: "54321",
+      uuid: "54321",
+      condition: "condition2",
+    });
+  });
+
+  afterAll(async () => {
+    await db.schema.dropTable("ecr_rr_conditions").execute();
   });
 
   it("Should throw an error if the database type is undefined", async () => {
-    process.env.METADATA_DATABASE_TYPE = undefined;
+    delete process.env.METADATA_DATABASE_TYPE;
+
     await expect(getAllConditions()).rejects.toThrow(
       "Database type is undefined.",
     );
   });
 
-  it("Should retrieve all unique conditions with PostgreSQL", async () => {
+  it("Should retrieve all unique conditions", async () => {
     process.env.METADATA_DATABASE_TYPE = "postgres";
-
-    const mockDatabase = {
-      any: jest.fn(),
-    };
-
-    // Mock getDB to return the mock database
-    (getDB as jest.Mock).mockReturnValue({
-      database: mockDatabase,
-      pgPromise: {
-        ParameterizedQuery: jest.fn().mockImplementation(({ text }: any) => ({
-          text,
-        })),
-      },
-    });
-
-    mockDatabase.any.mockReturnValue(MOCK_CONDITIONS);
     const conditions = await getAllConditions();
-
     expect(conditions).toEqual(["condition1", "condition2"]);
-    expect(mockDatabase.any).toHaveBeenCalledWith({
-      text: 'SELECT DISTINCT "condition" FROM ecr_viewer.ecr_rr_conditions ORDER BY "condition"',
-    });
-  });
-
-  it("Should retrieve all unique conditions with SQL Server", async () => {
-    process.env.METADATA_DATABASE_TYPE = "sqlserver";
-
-    const mockRequest = {
-      query: jest.fn().mockResolvedValue({ recordset: MOCK_CONDITIONS }),
-    };
-    (get_pool as jest.Mock).mockReturnValue({ request: () => mockRequest });
-
-    const conditions = await getAllConditions();
-
-    expect(conditions).toEqual(["condition1", "condition2"]);
-    expect(mockRequest.query).toHaveBeenCalledWith(
-      "SELECT DISTINCT condition FROM ecr_viewer.ecr_rr_conditions ORDER BY condition",
-    );
   });
 });
