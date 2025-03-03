@@ -158,7 +158,10 @@ export async function deleteExtendedEcr(eICR_ID: string | null) {
   const ecr = await findExtendedEcrById(eICR_ID);
 
   if (ecr) {
-    await (db as Kysely<Extended>).deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
+    await (db as Kysely<Extended>)
+      .deleteFrom("ecr_data")
+      .where("eICR_ID", "=", eICR_ID)
+      .execute();
   }
 
   return ecr;
@@ -254,7 +257,10 @@ export async function deleteAddress(uuid: string) {
   const address = await findAddressById(uuid);
 
   if (address) {
-    await (db as Kysely<Extended>).deleteFrom("patient_address").where("uuid", "=", uuid).execute();
+    await (db as Kysely<Extended>)
+      .deleteFrom("patient_address")
+      .where("uuid", "=", uuid)
+      .execute();
   }
 
   return address;
@@ -476,7 +482,10 @@ export async function deleteLab(uuid: string) {
   const ecr = await findLabById(uuid);
 
   if (ecr) {
-    await (db as Kysely<Extended>).deleteFrom("ecr_labs").where("uuid", "=", uuid).execute();
+    await (db as Kysely<Extended>)
+      .deleteFrom("ecr_labs")
+      .where("uuid", "=", uuid)
+      .execute();
   }
 
   return ecr;
@@ -576,7 +585,10 @@ export async function deleteEcrCondition(uuid: string) {
   const ecr = await findEcrConditionById(uuid);
 
   if (ecr) {
-    await (db as Kysely<Extended>).deleteFrom("ecr_rr_conditions").where("uuid", "=", uuid).execute();
+    await (db as Kysely<Extended>)
+      .deleteFrom("ecr_rr_conditions")
+      .where("uuid", "=", uuid)
+      .execute();
   }
 
   return ecr;

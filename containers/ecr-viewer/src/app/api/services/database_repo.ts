@@ -139,7 +139,10 @@ export async function deleteEcr(eICR_ID: string | null) {
   const ecr = await findEcrById(eICR_ID);
 
   if (ecr) {
-    await (db as Kysely<Core>).deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
+    await (db as Kysely<Core>)
+      .deleteFrom("ecr_data")
+      .where("eICR_ID", "=", eICR_ID)
+      .execute();
   }
 
   return ecr;
@@ -239,7 +242,10 @@ export async function deleteEcrCondition(uuid: string) {
   const ecr = await findEcrConditionById(uuid);
 
   if (ecr) {
-    await (db as Kysely<Core>).deleteFrom("ecr_rr_conditions").where("uuid", "=", uuid).execute();
+    await (db as Kysely<Core>)
+      .deleteFrom("ecr_rr_conditions")
+      .where("uuid", "=", uuid)
+      .execute();
   }
 
   return ecr;

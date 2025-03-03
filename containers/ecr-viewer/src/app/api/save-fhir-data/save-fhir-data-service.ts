@@ -418,7 +418,7 @@ export const saveCoreMetadata = async (
               })
               .returning("uuid")
               .executeTakeFirst();
-              
+
             // Loop through the rule summaries array
             if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
               for (const summaryObj of rrItem.rule_summaries) {
