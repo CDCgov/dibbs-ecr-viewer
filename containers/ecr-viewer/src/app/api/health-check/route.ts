@@ -1,8 +1,9 @@
+import { NextResponse } from "next/server";
+
+import { azureBlobStorageHealthCheck } from "@/app/data/blobStorage/azureClient";
+import { s3HealthCheck } from "@/app/data/blobStorage/s3Client";
 import { postgresHealthCheck } from "@/app/data/db/postgres_db";
 import { sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
-import { NextResponse } from "next/server";
-import { s3HealthCheck } from "@/app/data/blobStorage/s3Client";
-import { azureBlobStorageHealthCheck } from "@/app/data/blobStorage/azureClient";
 
 /**
  * Health check for ECR Viwer

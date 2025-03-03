@@ -4,11 +4,11 @@ import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import sql from "mssql";
 
-import { s3Client } from "@/app/data/blobStorage/s3Client";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
+import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
+import { s3Client } from "@/app/data/blobStorage/s3Client";
 import { getDB } from "@/app/data/db/postgres_db";
 import { get_pool } from "@/app/data/db/sqlserver_db";
-import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 

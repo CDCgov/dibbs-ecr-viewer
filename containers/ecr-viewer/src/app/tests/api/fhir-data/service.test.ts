@@ -9,8 +9,8 @@ import {
   get_fhir_data,
   get_s3,
 } from "@/app/api/fhir-data/fhir-data-service";
-import { s3Client } from "@/app/data/blobStorage/s3Client";
 import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
+import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 jest.mock("../../../data/db/postgres_db", () => ({
   getDB: jest.fn(),

@@ -1,8 +1,9 @@
 /**
  * @jest-environment node
  */
-import { sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
 import sql from "mssql";
+
+import { sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
 
 jest.mock("mssql", () => ({ connect: jest.fn() }));
 
