@@ -2,7 +2,9 @@ FROM python:3.13-slim
 
 RUN apt-get update && \
     apt-get upgrade -y \
-    libpq-dev
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
 
