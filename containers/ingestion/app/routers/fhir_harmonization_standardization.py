@@ -140,8 +140,8 @@ class StandardizeBirthDateInput(BaseModel):
     )
     format: Optional[str] = Field(
         default="%Y-%m-%d",
+        description="The date format that the input DOB is supplied in.",
         json_schema_extra={
-            "descripton": "The date format that the input DOB is supplied in.",
             "example": "%m/%d/%Y",
         },
     )
