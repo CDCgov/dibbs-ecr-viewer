@@ -13,6 +13,9 @@ import {
   BundleExtendedMetadata,
 } from "@/app/api/save-fhir-data/types";
 import { db } from "@/app/api/services/database";
+import { Extended } from "@/app/api/services/extended_types";
+import { Kysely } from "kysely";
+import { Core } from "@/app/api/services/types";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
   patient_id: "12345",
@@ -107,9 +110,9 @@ describe("saveExtendedMetadata", () => {
       .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
       .addColumn("set_id", "varchar(255)")
       .addColumn("fhir_reference_link", "varchar(255)")
-      .addColumn("last_name", "varchar(255)")
-      .addColumn("first_name", "varchar(255)")
-      .addColumn("birth_date", "date")
+      .addColumn("last_name", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("first_name", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("birth_date", "date", (cb) => cb.notNull())
       .addColumn("gender", "varchar(100)")
       .addColumn("birth_sex", "varchar(255)")
       .addColumn("gender_identity", "varchar(255)")
@@ -207,11 +210,11 @@ describe("saveExtendedMetadata", () => {
   });
 
   afterEach(async () => {
-    await db.deleteFrom("ecr_data").execute();
-    await db.deleteFrom("patient_address").execute();
-    await db.deleteFrom("ecr_labs").execute();
-    await db.deleteFrom("ecr_rr_conditions").execute();
-    await db.deleteFrom("ecr_rr_rule_summaries").execute();
+    await (db as Kysely<Extended>).deleteFrom("ecr_data").execute();
+    await (db as Kysely<Extended>).deleteFrom("patient_address").execute();
+    await (db as Kysely<Extended>).deleteFrom("ecr_labs").execute();
+    await (db as Kysely<Extended>).deleteFrom("ecr_rr_conditions").execute();
+    await (db as Kysely<Extended>).deleteFrom("ecr_rr_rule_summaries").execute();
   });
 
   it("should save without any rr", async () => {
@@ -256,16 +259,16 @@ describe("saveExtendedMetadata", () => {
   });
 
   it("should return an error when db save fails", async () => {
-    const badMetadata: BundleExtendedMetadata = {
+    const badMetadata = {
       last_name: null,
       first_name: null,
       birth_date: "01/01/2000",
       data_source: "s3",
       eicr_set_id: "1234",
       eicr_version_number: "1",
-      rr: 1,
-      report_date: "12/20/2024",
-    };
+      rr: [],
+      report_date: new Date("12/20/2024"),
+    } as unknown as BundleExtendedMetadata;
     const resp = await saveExtendedMetadata(badMetadata, "1-2-3-4");
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
@@ -322,9 +325,9 @@ describe("saveCoreMetadata", () => {
   });
 
   afterEach(async () => {
-    await db.deleteFrom("ecr_data").execute();
-    await db.deleteFrom("ecr_rr_conditions").execute();
-    await db.deleteFrom("ecr_rr_rule_summaries").execute();
+    await (db as Kysely<Core>).deleteFrom("ecr_data").execute();
+    await (db as Kysely<Core>).deleteFrom("ecr_rr_conditions").execute();
+    await (db as Kysely<Core>).deleteFrom("ecr_rr_rule_summaries").execute();
   });
 
   it("should save without any rr", async () => {
@@ -369,16 +372,16 @@ describe("saveCoreMetadata", () => {
   });
 
   it("should return an error when db save fails", async () => {
-    const badMetadata: BundleMetadata = {
+    const badMetadata = {
       last_name: null,
       first_name: null,
       birth_date: "01/01/2000",
       data_source: "s3",
       eicr_set_id: "1234",
       eicr_version_number: "1",
-      rr: 1,
-      report_date: "12/20/2024",
-    };
+      rr: [],
+      report_date: new Date("12/20/2024"),
+    } as unknown as BundleMetadata;
     const resp = await saveCoreMetadata(badMetadata, "1-2-3-4");
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");

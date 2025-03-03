@@ -79,7 +79,7 @@ describe("ecr_data", () => {
       fhir_reference_link: "http://example.com",
       last_name: "Kenobi",
       first_name: "Obi-Wan",
-      birth_date: "2025-01-01",
+      birth_date: new Date("2025-01-01"),
       gender: "Based",
       birth_sex: "Based",
       gender_identity: "Based",
@@ -100,17 +100,17 @@ describe("ecr_data", () => {
       rr_id: "12345",
       processing_status: "Processed",
       eicr_version_number: "1.0",
-      authoring_date: "2025-01-01",
+      authoring_date: new Date("2025-01-01"),
       authoring_provider: "Dr. Droid",
       provider_id: "12345",
       facility_id: "12345",
       facility_name: "Jedi Temple",
       encounter_type: "Checkup",
-      encounter_start_date: "2025-01-01",
-      encounter_end_date: "2025-01-01",
+      encounter_start_date: new Date("2025-01-01"),
+      encounter_end_date: new Date("2025-01-01"),
       reason_for_visit: "Checkup",
-      active_problems: "Dead",
-      date_created: "2025-01-01",
+      active_problems: ["Dead"],
+      date_created: new Date("2025-01-01"),
     });
   });
 
@@ -162,14 +162,14 @@ describe("patient_address", () => {
       use: "home",
       type: "postal",
       text: "1234 Main St",
-      line: "Apt 2",
+      line: ["Apt 2"],
       city: "Coruscant",
       district: "Galactic City",
       state: "Coruscant",
       postal_code: "12345",
       country: "Republic",
-      period_start: "2025-01-01",
-      period_end: "2025-02-07",
+      period_start: new Date("2025-01-01"),
+      period_end: new Date("2025-02-07"),
       eICR_ID: "12345",
     });
   });
@@ -247,7 +247,7 @@ describe("ecr_labs", () => {
       test_result_reference_range_high_value: 0,
       test_result_reference_range_high_units: "Magic",
       specimen_type: "Magic",
-      specimen_collection_date: "2025-01-01",
+      specimen_collection_date: new Date("2025-01-01"),
       performing_lab: "Magic",
     });
   });

@@ -1,4 +1,6 @@
 import { db } from "@/app/api/services/database";
+import { Kysely } from "kysely";
+import { Extended } from "@/app/api/services/extended_types";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.
@@ -9,7 +11,7 @@ export const getAllConditions = async (): Promise<string[]> => {
     throw Error("Database type is undefined.");
   } else {
     try {
-      const result = await db.transaction().execute(async (trx) => {
+      const result = await (db as Kysely<Extended>).transaction().execute(async (trx) => { // Possible fetch errors if using Core since this applies for both?
         return await trx
           .selectFrom("ecr_rr_conditions")
           .select("condition")

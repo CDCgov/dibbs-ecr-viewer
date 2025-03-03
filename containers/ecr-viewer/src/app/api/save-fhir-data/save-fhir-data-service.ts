@@ -3,17 +3,15 @@ import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import { randomUUID } from "crypto";
-import { randomUUID } from "crypto";
-
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { BlobServiceClient } from "@azure/storage-blob";
-import { BlobServiceClient } from "@azure/storage-blob";
 import { Bundle } from "fhir/r4";
-
 import { db } from "@/app/api/services/database";
 import { s3Client } from "@/app/api/services/s3Client";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
-
+import { Kysely } from "kysely";
+import { Core } from "../services/types";
+import { Extended } from "../services/extended_types";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
 import { s3Client } from "@/app/api/services/s3Client";
@@ -210,7 +208,7 @@ export const saveExtendedMetadata = async (
 ): Promise<SaveResponse> => {
   if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
     try {
-      await db.transaction().execute(async (trx) => {
+      await (db as Kysely<Extended>).transaction().execute(async (trx) => {
         await trx
           .insertInto("ecr_data")
           .values({
@@ -387,7 +385,7 @@ export const saveCoreMetadata = async (
     }
 
     // Start transaction
-    await db
+    await (db as Kysely<Core>)
       .transaction()
       .execute(async (trx) => {
         // Insert main ECR metadata
@@ -410,16 +408,17 @@ export const saveCoreMetadata = async (
         if (metadata.rr && metadata.rr.length > 0) {
           for (const rrItem of metadata.rr) {
             // Insert condition into ecr_rr_conditions
+            const tempId = randomUUID();
             const saveRRConditions = await trx
               .insertInto("ecr_rr_conditions")
               .values({
-                uuid: randomUUID(),
+                uuid: tempId,
                 eICR_ID: ecrId,
                 condition: rrItem.condition,
               })
               .returning("uuid")
               .executeTakeFirst();
-
+              
             // Loop through the rule summaries array
             if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
               for (const summaryObj of rrItem.rule_summaries) {
@@ -428,7 +427,7 @@ export const saveCoreMetadata = async (
                   .insertInto("ecr_rr_rule_summaries")
                   .values({
                     uuid: randomUUID(),
-                    ecr_rr_conditions_id: saveRRConditions.uuid,
+                    ecr_rr_conditions_id: tempId,
                     rule_summary: summaryObj.summary,
                   })
                   .executeTakeFirst();
