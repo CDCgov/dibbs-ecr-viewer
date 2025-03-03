@@ -1,11 +1,12 @@
 // Kysely ORM Connection Client
 
-import { Core } from "./types";
-import { Extended } from "./extended_types";
-import { Pool } from "pg";
 import { Kysely, PostgresDialect, MssqlDialect } from "kysely";
-import * as tedious from "tedious";
+import { Pool } from "pg";
 import * as tarn from "tarn";
+import * as tedious from "tedious";
+
+import { Extended } from "./extended_types";
+import { Core } from "./types";
 
 // Dialect to communicate with the database, interface to define its structure.
 

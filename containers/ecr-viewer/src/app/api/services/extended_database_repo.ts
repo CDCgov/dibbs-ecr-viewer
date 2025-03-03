@@ -49,7 +49,7 @@ export async function findExtendedEcrById(id: string | null) {
 export async function findExtendedEcr(criteria: Partial<ExtendedECR> | null) {
   let query = db.selectFrom("ecr_data");
 
-  if (!criteria || criteria == null) {
+  if (!criteria || criteria === null) {
     return console.error("eICR Criteria is required.");
   }
 
@@ -112,7 +112,7 @@ export async function findExtendedEcr(criteria: Partial<ExtendedECR> | null) {
  * @returns the created eICR object
  */
 export async function createExtendedEcr(ecr: NewExtendedECR | null) {
-  if (!ecr || ecr == null) {
+  if (!ecr || ecr === null) {
     return console.error("eICR Data is required.");
   }
   try {
@@ -208,7 +208,7 @@ export async function findAddress(criteria: Partial<PatientAddress>) {
  * @returns the created patient_address object
  */
 export async function createAddress(patient_address: NewPatientAddress) {
-  if (!patient_address || patient_address == null) {
+  if (!patient_address || patient_address === null) {
     return console.error("eICR Data is required.");
   }
   try {
@@ -433,7 +433,7 @@ export async function findLab(criteria: Partial<ECRLabs>) {
  * @returns the created eCR Lab object
  */
 export async function createLab(lab: NewECRLabs | null) {
-  if (!lab || lab == null) {
+  if (!lab || lab === null) {
     return console.error("eICR Lab Data is required.");
   }
   try {
@@ -530,7 +530,7 @@ export async function findEcrCondition(criteria: Partial<ECRConditions>) {
  * @returns the created eCR condition object
  */
 export async function createEcrCondition(condition: NewECRConditions | null) {
-  if (!condition || condition == null) {
+  if (!condition || condition === null) {
     return console.error("eICR Data is required.");
   }
   try {
@@ -634,7 +634,7 @@ export async function findEcrRule(criteria: Partial<ECRRuleSummaries>) {
  * @returns the created eCR rule object
  */
 export async function createEcrRule(rule_summary: NewECRRuleSummaries) {
-  if (!rule_summary || rule_summary == null) {
+  if (!rule_summary || rule_summary === null) {
     return console.error("eICR Data is required.");
   }
   try {

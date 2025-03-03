@@ -6,9 +6,14 @@ import {
 } from "@azure/storage-blob";
 import { Bundle } from "fhir/r4";
 import { NextResponse } from "next/server";
+
+import { findEcrById } from "@/app/api/services/database_repo";
 import { s3Client } from "@/app/api/services/s3Client";
-import { AZURE_SOURCE, S3_SOURCE, loadYamlConfig, streamToJson } from "@/app/api/utils";
-import { findEcrById } from "../services/database_repo";
+import {
+  AZURE_SOURCE,
+  S3_SOURCE,
+  streamToJson,
+} from "@/app/api/utils";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
@@ -48,14 +53,17 @@ export const get_db = async (
   try {
     const entry = findFhir;
     return { payload: { fhirBundle: entry }, status: 200 };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching data:", error);
-    if (error.message == "No data returned from the query.") {
-      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-    } else {
-      return { payload: { message: error.message }, status: 500 };
+    if (error instanceof Error) {
+      if (error.message === "No data returned from the query.") {
+          return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+      } else {
+          return { payload: { message: error.message }, status: 500 };
+      }
     }
   }
+  return { payload: { message: "An unknown error occurred." }, status: 500 };
 };
 
 /**

@@ -2,16 +2,17 @@
  * @jest-environment node
  */
 
+import { sql } from "kysely";
+
 import {
   saveCoreMetadata,
   saveExtendedMetadata,
-} from "../../api/save-fhir-data/save-fhir-data-service";
+} from "@/app/api/save-fhir-data/save-fhir-data-service";
 import {
   BundleMetadata,
   BundleExtendedMetadata,
-} from "../../api/save-fhir-data/types";
-import { db } from "../../api/services/database";
-import { sql } from "kysely";
+} from "@/app/api/save-fhir-data/types";
+import { db } from "@/app/api/services/database";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
   patient_id: "12345",

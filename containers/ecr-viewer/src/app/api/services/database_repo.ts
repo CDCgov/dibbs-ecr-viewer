@@ -45,7 +45,7 @@ export async function findEcrById(id: string | null) {
 export async function findEcr(criteria: Partial<ECR> | null) {
   let query = db.selectFrom("ecr_data");
 
-  if (!criteria || criteria == null) {
+  if (!criteria || criteria === null) {
     return console.error("eICR Criteria is required.");
   }
 
@@ -96,7 +96,7 @@ export async function findEcr(criteria: Partial<ECR> | null) {
  * @returns the created eICR object
  */
 export async function createEcr(ecr: NewECR | null) {
-  if (!ecr || ecr == null) {
+  if (!ecr || ecr === null) {
     return console.error("eICR Data is required.");
   }
   try {
@@ -193,7 +193,7 @@ export async function findEcrCondition(criteria: Partial<ECRConditions>) {
  * @returns the created eCR condition object
  */
 export async function createEcrCondition(condition: NewECRConditions | null) {
-  if (!condition || condition == null) {
+  if (!condition || condition === null) {
     return console.error("eICR Data is required.");
   }
   try {
@@ -297,7 +297,7 @@ export async function findEcrRule(criteria: Partial<ECRRuleSummaries>) {
  * @returns the created eCR rule object
  */
 export async function createEcrRule(rule_summary: NewECRRuleSummaries) {
-  if (!rule_summary || rule_summary == null) {
+  if (!rule_summary || rule_summary === null) {
     return console.error("eICR Data is required.");
   }
   try {
