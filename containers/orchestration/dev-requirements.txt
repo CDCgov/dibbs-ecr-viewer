@@ -5,5 +5,5 @@ pytest-mock
 pytest-env
 pytest-asyncio
 asyncio
-testcontainers[compose]==4.9.1
+testcontainers[compose]>=4.9.1
 httpx
