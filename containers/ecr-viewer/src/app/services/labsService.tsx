@@ -123,8 +123,8 @@ export const getLabJsonObject = (
 
   // Get specified lab report (by reference value)
   if (observationRefVal) {
-    return labsJson.filter(
-      (obj) => obj.resultId?.includes(observationRefVal),
+    return labsJson.filter((obj) =>
+      obj.resultId?.includes(observationRefVal),
     )[0];
   }
 
