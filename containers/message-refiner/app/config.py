@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     tcr_url: str = Field(
         description="The URL for the Trigger Code Reference service.",
-        env="TRIGGER_CODE_REFERENCE_URL",
+        json_schema_extra={"env": "TRIGGER_CODE_REFERENCE_URL"},
     )
 
 
