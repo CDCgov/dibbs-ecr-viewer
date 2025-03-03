@@ -8,7 +8,7 @@ export const s3Client = new S3Client({
 
 /**
  * Performs a health check on the AWS S3 connection.
- * @returns The status of the AWS S3 connection or undefined if missing necessary values.
+ * @returns The status of the AWS S3 connection or undefined if missing environment values.
  */
 export const s3HealthCheck = async () => {
   if (!process.env.ECR_BUCKET_NAME) {
