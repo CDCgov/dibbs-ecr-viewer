@@ -6,8 +6,6 @@ import {
 } from "@azure/storage-blob";
 import { Bundle } from "fhir/r4";
 import { NextResponse } from "next/server";
-
-import { findEcrById } from "@/app/api/services/database_repo";
 import { s3Client } from "@/app/api/services/s3Client";
 import { AZURE_SOURCE, S3_SOURCE, streamToJson } from "@/app/api/utils";
 
@@ -35,32 +33,6 @@ export async function get_fhir_data(ecr_id: string | null) {
   const { status, payload } = res;
   return NextResponse.json(payload, { status });
 }
-
-// Replaces get_postgres
-/**
- * Retrieves FHIR data from PostgreSQL database based on eCR ID.
- * @param ecr_id - The id of the ecr to fetch.
- * @returns A promise resolving to the data and status.
- */
-export const get_db = async (
-  ecr_id: string | null,
-): Promise<FhirDataResponse> => {
-  const findFhir = await findEcrById(ecr_id);
-  try {
-    const entry = findFhir;
-    return { payload: { fhirBundle: entry }, status: 200 };
-  } catch (error: unknown) {
-    console.error("Error fetching data:", error);
-    if (error instanceof Error) {
-      if (error.message === "No data returned from the query.") {
-        return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-      } else {
-        return { payload: { message: error.message }, status: 500 };
-      }
-    }
-  }
-  return { payload: { message: "An unknown error occurred." }, status: 500 };
-};
 
 /**
  * Retrieves FHIR data from S3 based on eCR ID.

@@ -1,5 +1,6 @@
 import { db } from "./database";
 import {
+  Extended,
   ExtendedECR,
   NewExtendedECR,
   ExtendedECRUpdate,
@@ -16,6 +17,7 @@ import {
   NewECRRuleSummaries,
   ECRRuleSummariesUpdate,
 } from "./extended_types";
+import { Kysely } from "kysely";
 
 /**
  * Finds an eICR by its ID
@@ -29,7 +31,7 @@ export async function findExtendedEcrById(id: string | null) {
     return console.error("eICR ID is required.");
   }
   try {
-    return await db
+    return await (db as Kysely<Extended>)
       .selectFrom("ecr_data")
       .where("eICR_ID", "=", id)
       .selectAll()
@@ -47,7 +49,7 @@ export async function findExtendedEcrById(id: string | null) {
  * @returns an eICR object
  */
 export async function findExtendedEcr(criteria: Partial<ExtendedECR> | null) {
-  let query = db.selectFrom("ecr_data");
+  let query = (db as Kysely<Extended>).selectFrom("ecr_data");
 
   if (!criteria || criteria === null) {
     return console.error("eICR Criteria is required.");
@@ -116,7 +118,7 @@ export async function createExtendedEcr(ecr: NewExtendedECR | null) {
     return console.error("eICR Data is required.");
   }
   try {
-    return await db
+    return await (db as Kysely<Extended>)
       .insertInto("ecr_data")
       .values(ecr)
       .returningAll()
@@ -138,7 +140,7 @@ export async function updateExtendedEcr(
   eICR_ID: string | null,
   updateWith: ExtendedECRUpdate,
 ) {
-  await db
+  await (db as Kysely<Extended>)
     .updateTable("ecr_data")
     .set(updateWith)
     .where("eICR_ID", "=", eICR_ID)
@@ -156,7 +158,7 @@ export async function deleteExtendedEcr(eICR_ID: string | null) {
   const ecr = await findExtendedEcrById(eICR_ID);
 
   if (ecr) {
-    await db.deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
+    await (db as Kysely<Extended>).deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
   }
 
   return ecr;
@@ -172,7 +174,7 @@ export async function deleteExtendedEcr(eICR_ID: string | null) {
  * @returns a patient_address object
  */
 export async function findAddressById(id: string) {
-  return await db
+  return await (db as Kysely<Extended>)
     .selectFrom("patient_address")
     .where("uuid", "=", id)
     .selectAll()
@@ -187,7 +189,7 @@ export async function findAddressById(id: string) {
  * @returns a patient_address object
  */
 export async function findAddress(criteria: Partial<PatientAddress>) {
-  let query = db.selectFrom("patient_address");
+  let query = (db as Kysely<Extended>).selectFrom("patient_address");
 
   if (criteria.uuid) {
     query = query.where("uuid", "=", criteria.uuid);
@@ -212,7 +214,7 @@ export async function createAddress(patient_address: NewPatientAddress) {
     return console.error("eICR Data is required.");
   }
   try {
-    return await db
+    return await (db as Kysely<Extended>)
       .insertInto("patient_address")
       .values(patient_address)
       .returningAll()
@@ -234,7 +236,7 @@ export async function updateAddress(
   uuid: string,
   updateWith: PatientAddressUpdate,
 ) {
-  await db
+  await (db as Kysely<Extended>)
     .updateTable("patient_address")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -252,7 +254,7 @@ export async function deleteAddress(uuid: string) {
   const address = await findAddressById(uuid);
 
   if (address) {
-    await db.deleteFrom("patient_address").where("uuid", "=", uuid).execute();
+    await (db as Kysely<Extended>).deleteFrom("patient_address").where("uuid", "=", uuid).execute();
   }
 
   return address;
@@ -268,7 +270,7 @@ export async function deleteAddress(uuid: string) {
  * @returns an eCR Lab object
  */
 export async function findLabById(id: string) {
-  return await db
+  return await (db as Kysely<Extended>)
     .selectFrom("ecr_labs")
     .where("uuid", "=", id)
     .selectAll()
@@ -283,7 +285,7 @@ export async function findLabById(id: string) {
  * @returns an eCR Lab object
  */
 export async function findLab(criteria: Partial<ECRLabs>) {
-  let query = db.selectFrom("ecr_labs");
+  let query = (db as Kysely<Extended>).selectFrom("ecr_labs");
 
   if (criteria.uuid) {
     query = query.where("uuid", "=", criteria.uuid);
@@ -437,7 +439,7 @@ export async function createLab(lab: NewECRLabs | null) {
     return console.error("eICR Lab Data is required.");
   }
   try {
-    return await db
+    return await (db as Kysely<Extended>)
       .insertInto("ecr_labs")
       .values(lab)
       .returningAll()
@@ -456,7 +458,7 @@ export async function createLab(lab: NewECRLabs | null) {
  * @returns the updated eCR Lab object
  */
 export async function updateLab(uuid: string, updateWith: ECRLabsUpdate) {
-  await db
+  await (db as Kysely<Extended>)
     .updateTable("ecr_labs")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -474,7 +476,7 @@ export async function deleteLab(uuid: string) {
   const ecr = await findLabById(uuid);
 
   if (ecr) {
-    await db.deleteFrom("ecr_labs").where("uuid", "=", uuid).execute();
+    await (db as Kysely<Extended>).deleteFrom("ecr_labs").where("uuid", "=", uuid).execute();
   }
 
   return ecr;
@@ -490,7 +492,7 @@ export async function deleteLab(uuid: string) {
  * @returns an eCR condition object
  */
 export async function findEcrConditionById(id: string) {
-  return await db
+  return await (db as Kysely<Extended>)
     .selectFrom("ecr_rr_conditions")
     .where("uuid", "=", id)
     .selectAll()
@@ -505,7 +507,7 @@ export async function findEcrConditionById(id: string) {
  * @returns an eCR condition object
  */
 export async function findEcrCondition(criteria: Partial<ECRConditions>) {
-  let query = db.selectFrom("ecr_rr_conditions");
+  let query = (db as Kysely<Extended>).selectFrom("ecr_rr_conditions");
 
   if (criteria.uuid) {
     query = query.where("uuid", "=", criteria.uuid);
@@ -534,7 +536,7 @@ export async function createEcrCondition(condition: NewECRConditions | null) {
     return console.error("eICR Data is required.");
   }
   try {
-    return await db
+    return await (db as Kysely<Extended>)
       .insertInto("ecr_rr_conditions")
       .values(condition)
       .returningAll()
@@ -556,7 +558,7 @@ export async function updateEcrCondition(
   uuid: string,
   updateWith: ECRConditionsUpdate,
 ) {
-  await db
+  await (db as Kysely<Extended>)
     .updateTable("ecr_rr_conditions")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -574,7 +576,7 @@ export async function deleteEcrCondition(uuid: string) {
   const ecr = await findEcrConditionById(uuid);
 
   if (ecr) {
-    await db.deleteFrom("ecr_rr_conditions").where("uuid", "=", uuid).execute();
+    await (db as Kysely<Extended>).deleteFrom("ecr_rr_conditions").where("uuid", "=", uuid).execute();
   }
 
   return ecr;
@@ -590,7 +592,7 @@ export async function deleteEcrCondition(uuid: string) {
  * @returns an eCR rule object
  */
 export async function findEcrRuleById(id: string) {
-  return await db
+  return await (db as Kysely<Extended>)
     .selectFrom("ecr_rr_rule_summaries")
     .where("uuid", "=", id)
     .selectAll()
@@ -605,7 +607,7 @@ export async function findEcrRuleById(id: string) {
  * @returns an eCR rule object
  */
 export async function findEcrRule(criteria: Partial<ECRRuleSummaries>) {
-  let query = db.selectFrom("ecr_rr_rule_summaries");
+  let query = (db as Kysely<Extended>).selectFrom("ecr_rr_rule_summaries");
 
   if (criteria.uuid) {
     query = query.where("uuid", "=", criteria.uuid);
@@ -638,7 +640,7 @@ export async function createEcrRule(rule_summary: NewECRRuleSummaries) {
     return console.error("eICR Data is required.");
   }
   try {
-    return await db
+    return await (db as Kysely<Extended>)
       .insertInto("ecr_rr_rule_summaries")
       .values(rule_summary)
       .returningAll()
@@ -660,7 +662,7 @@ export async function updateEcrRule(
   uuid: string,
   updateWith: ECRRuleSummariesUpdate,
 ) {
-  await db
+  await (db as Kysely<Extended>)
     .updateTable("ecr_rr_rule_summaries")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -678,7 +680,7 @@ export async function deleteEcrRule(uuid: string) {
   const rule_summary = await findEcrRuleById(uuid);
 
   if (rule_summary) {
-    await db
+    await (db as Kysely<Extended>)
       .deleteFrom("ecr_rr_rule_summaries")
       .where("uuid", "=", uuid)
       .execute();
