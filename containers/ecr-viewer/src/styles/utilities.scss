@@ -5,6 +5,12 @@
 // These typically expand the builtin set provided by uswds, so use
 // those first, then if needed add one following their naming conventions.
 
+// ==== font weight ==== //
+
+.font-weight-normal {
+  font-weight: normal !important;
+}
+
 // ==== gap ==== //
 
 .gap-05 {
