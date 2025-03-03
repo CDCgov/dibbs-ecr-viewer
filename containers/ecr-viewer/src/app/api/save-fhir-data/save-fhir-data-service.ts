@@ -436,9 +436,10 @@ export const saveCoreMetadata = async (
             }
           }
         }
-    }).catch((_)=>{
-      throw new Error("Transaction failed");
-    });
+      })
+      .catch((_) => {
+        throw new Error("Transaction failed");
+      });
     return {
       message: "Success. Saved metadata to database.",
       status: 200,
