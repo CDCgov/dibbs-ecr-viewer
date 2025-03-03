@@ -1,19 +1,19 @@
 from functools import lru_cache
 from typing import Literal, Optional
 
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    cred_manager: Optional[Literal["azure", "gcp"]]
-    salt_str: Optional[str]
-    fhir_url: Optional[str]
-    smarty_auth_id: Optional[str]
-    smarty_auth_token: Optional[str]
-    license_type: Optional[str]
-    cloud_provider: Optional[Literal["azure", "gcp"]]
-    bucket_name: Optional[str]
-    storage_account_url: Optional[str]
+    cred_manager: Optional[Literal["azure", "gcp"]] = None
+    salt_str: Optional[str] = None
+    fhir_url: Optional[str] = None
+    smarty_auth_id: Optional[str] = None
+    smarty_auth_token: Optional[str] = None
+    license_type: Optional[str] = None
+    cloud_provider: Optional[Literal["azure", "gcp"]] = None
+    bucket_name: Optional[str] = None
+    storage_account_url: Optional[str] = None
 
 
 @lru_cache
@@ -26,4 +26,4 @@ def get_settings() -> dict:
     :return: A dictionary with keys specified by the Settings. The value of each key is
     read from the corresponding environment variable.
     """
-    return Settings().dict()
+    return Settings().model_dump()

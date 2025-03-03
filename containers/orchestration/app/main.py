@@ -474,7 +474,7 @@ async def upload_config(
 
     # Convert Pydantic models to dicts so they can be serialized to JSON.
     for i in range(len(input.workflow["workflow"])):
-        input.workflow["workflow"][i] = input.workflow["workflow"][i].dict()
+        input.workflow["workflow"][i] = input.workflow["workflow"][i].model_dump()
 
     with open(file_path, "w") as file:
         json.dump(input.workflow, file, indent=4)
