@@ -1,14 +1,16 @@
-import { BlobServiceClient } from "@azure/storage-blob";
+import { randomUUID } from "crypto";
 import { randomUUID } from "crypto";
 
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { BlobServiceClient } from "@azure/storage-blob";
+import { BlobServiceClient } from "@azure/storage-blob";
 import { Bundle } from "fhir/r4";
-import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
-import { randomUUID } from "crypto";
-import { BundleExtendedMetadata, BundleMetadata } from "./types";
+
+import { db } from "@/app/api/services/database";
 import { s3Client } from "@/app/api/services/s3Client";
-import { db } from "../services/database";
+import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
+
+import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
 interface SaveResponse {
   message: string;
@@ -153,9 +155,9 @@ const saveFhirMetadata = async (
   metadata: BundleMetadata | BundleExtendedMetadata,
 ): Promise<SaveResponse> => {
   try {
-    if (metadataType == "core") {
+    if (metadataType === "core") {
       return await saveCoreMetadata(metadata as BundleMetadata, ecrId);
-    } else if (metadataType == "extended") {
+    } else if (metadataType === "extended") {
       return await saveExtendedMetadata(
         metadata as BundleExtendedMetadata,
         ecrId,
@@ -194,7 +196,7 @@ export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  if (process.env.METADATA_DATABASE_SCHEMA == "extended") {
+  if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
     try {
       await db.transaction().execute(async (trx) => {
         await trx
@@ -336,7 +338,7 @@ export const saveExtendedMetadata = async (
         message: "Success. Saved metadata to database.",
         status: 200,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         message: "Failed to insert metadata to database.",
         status: 500,
@@ -422,15 +424,14 @@ export const saveCoreMetadata = async (
             }
           }
         }
-      })
-      .catch((err) => {
-        throw new Error("Transaction failed");
-      });
+    }).catch((_)=>{
+      throw new Error("Transaction failed");
+    });
     return {
       message: "Success. Saved metadata to database.",
       status: 200,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       message: "Failed to insert metadata to database.",
       status: 500,

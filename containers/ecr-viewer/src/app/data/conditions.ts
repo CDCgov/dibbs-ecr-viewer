@@ -1,4 +1,4 @@
-import { db } from "../api/services/database";
+import { db } from "@/app/api/services/database";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.
@@ -18,7 +18,7 @@ export const getAllConditions = async (): Promise<string[]> => {
           .execute();
       });
       return result.map((row: { condition: string }) => row.condition);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching data: ", error);
       throw new Error("Error fetching data");
     }

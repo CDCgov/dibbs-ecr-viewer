@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 
-import { getAllConditions } from "@/app/data/conditions";
 import { db } from "@/app/api/services/database";
 import { createEcrCondition } from "@/app/api/services/extended_database_repo";
+import { getAllConditions } from "@/app/data/conditions";
 
 describe("Conditions service", () => {
   beforeAll(async () => {
