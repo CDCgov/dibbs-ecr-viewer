@@ -1,15 +1,15 @@
+pydantic>=2.0.0
+pydantic-settings
 fastapi>=0.109.1
-fhirpathpy
+uvicorn
 httpx
+pathlib
+pyway>=0.3.24
+psycopg2
+tabulate
+fhirpathpy
 mysql-connector-python>=9.1.0 # not directly required, pinned by Snyk to avoid a vulnerability
 pandas>2.0.0
-pathlib
-psycopg2
-pyarrow>=14.0.1
-pydantic-settings
-pydantic>=2.0.0
-pyway>=0.3.24
-rapidfuzz
 sqlalchemy
-tabulate
-uvicorn
+rapidfuzz
+pyarrow>=14.0.1
