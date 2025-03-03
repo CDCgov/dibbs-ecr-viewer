@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     These urls need to live in a .env file at the root level and should be set.
     """
 
-    tcr_url: str = Field(
+    TRIGGER_CODE_REFERENCE_URL: str = Field(
         description="The URL for the Trigger Code Reference service.",
         json_schema_extra={"env": "TRIGGER_CODE_REFERENCE_URL"},
     )
