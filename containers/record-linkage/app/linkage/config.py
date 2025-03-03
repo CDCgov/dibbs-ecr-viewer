@@ -22,4 +22,4 @@ def get_settings() -> dict:
     :return: A dictionary with keys specified by the Settings. The value of each key is
     read from the corresponding environment variable.
     """
-    return DBSettings().dict()
+    return DBSettings().model_dump()

@@ -246,7 +246,7 @@ async def upload_schema(
         }
 
     # Convert Pydantic models to dicts so they can be serialized to JSON.
-    schema_dict = input.dict()
+    schema_dict = input.model_dump()
     clean_schema(schema_dict["parsing_schema"])  # remove secondary_schemas
 
     with open(file_path, "w") as file:
