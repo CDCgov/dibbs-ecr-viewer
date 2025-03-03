@@ -1,5 +1,6 @@
-import { db } from "@/app/api/services/database";
 import { Kysely } from "kysely";
+
+import { db } from "@/app/api/services/database";
 import { Extended } from "@/app/api/services/extended_types";
 
 /**

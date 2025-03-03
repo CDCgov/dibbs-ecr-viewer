@@ -3,6 +3,7 @@
  */
 
 import { sql } from "kysely";
+import { Kysely } from "kysely";
 
 import {
   saveCoreMetadata,
@@ -14,7 +15,6 @@ import {
 } from "@/app/api/save-fhir-data/types";
 import { db } from "@/app/api/services/database";
 import { Extended } from "@/app/api/services/extended_types";
-import { Kysely } from "kysely";
 import { Core } from "@/app/api/services/types";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {

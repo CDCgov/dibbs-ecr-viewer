@@ -1,3 +1,5 @@
+import { Kysely } from "kysely";
+
 import { db } from "./database";
 import {
   ECRConditions,
@@ -10,7 +12,6 @@ import {
   NewECR,
   ECRUpdate,
 } from "./types";
-import { Kysely } from "kysely";
 import { Core } from "./types";
 
 // ECR_DATA

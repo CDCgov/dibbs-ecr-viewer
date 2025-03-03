@@ -3,15 +3,18 @@ import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import { randomUUID } from "crypto";
+
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { BlobServiceClient } from "@azure/storage-blob";
 import { Bundle } from "fhir/r4";
-import { db } from "@/app/api/services/database";
-import { s3Client } from "@/app/api/services/s3Client";
-import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import { Kysely } from "kysely";
-import { Core } from "../services/types";
-import { Extended } from "../services/extended_types";
+
+import { db } from "@/app/api/services/database";
+import { Extended } from "@/app/api/services/extended_types";
+import { s3Client } from "@/app/api/services/s3Client";
+import { Core } from "@/app/api/services/types";
+import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
+
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
 import { s3Client } from "@/app/api/services/s3Client";
@@ -409,7 +412,7 @@ export const saveCoreMetadata = async (
           for (const rrItem of metadata.rr) {
             // Insert condition into ecr_rr_conditions
             const tempId = randomUUID();
-            const saveRRConditions = await trx
+            await trx
               .insertInto("ecr_rr_conditions")
               .values({
                 uuid: tempId,
