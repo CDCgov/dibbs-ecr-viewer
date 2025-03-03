@@ -21,3 +21,24 @@ export const get_pool = async () => {
     },
   });
 };
+
+/**
+ * Performs a health check on the SQL Server database connection.
+ * @returns The status of the SQL Server connection or undefined if missing necessary values.
+ */
+export const sqlServerHealthCheck = async () => {
+  if (
+    !process.env.SQL_SERVER_HOST ||
+    !process.env.SQL_SERVER_USER ||
+    !process.env.SQL_SERVER_PASSWORD
+  ) {
+    return undefined;
+  }
+  try {
+    await get_pool();
+    return "UP";
+  } catch (error: unknown) {
+    console.error(error);
+    return "DOWN";
+  }
+};
