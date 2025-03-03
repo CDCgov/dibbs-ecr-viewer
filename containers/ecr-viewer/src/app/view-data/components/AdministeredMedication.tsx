@@ -1,7 +1,9 @@
-import { noData } from "@/app/utils/data-utils";
-import { formatDateTime } from "@/app/services/formatDateService";
-import { BaseTable } from "@/app/view-data/components/EvaluateTable";
 import React from "react";
+
+import { formatDateTime } from "@/app/services/formatDateService";
+import { noData } from "@/app/utils/data-utils";
+
+import { BaseTable } from "./EvaluateTable";
 
 type AdministeredMedicationProps = {
   medicationData: AdministeredMedicationTableData[];

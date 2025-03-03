@@ -1,7 +1,8 @@
 "use client";
 
 import { Search } from "@trussworks/react-uswds";
-import { useQueryParam } from "../hooks/useQueryParam";
+
+import { useQueryParam } from "@/app/hooks/useQueryParam";
 
 interface LibrarySearchProps {
   className?: string;

@@ -1,29 +1,28 @@
 import React from "react";
+
 import { Bundle } from "fhir/r4";
 
-import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
+import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
+import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
-} from "../services/ecrSummaryService";
-import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
+} from "@/app/services/ecrSummaryService";
 import {
   evaluatePatientDOB,
   evaluatePatientName,
-} from "../services/evaluateFhirDataService";
-import { PathMappings } from "../utils/data-utils";
+} from "@/app/services/evaluateFhirDataService";
 
-import EcrDocument from "./components/EcrDocument";
-import { EcrLoadingSkeleton } from "./components/LoadingComponent";
-import EcrSummary from "./components/EcrSummary";
 import { ECRViewerLayout } from "./components/ECRViewerLayout";
-import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
+import EcrDocument from "./components/EcrDocument";
+import { getEcrDocumentAccordionItems } from "./components/EcrDocument/accordion-items";
+import EcrSummary from "./components/EcrSummary";
+import { EcrLoadingSkeleton } from "./components/LoadingComponent";
 import SideNav from "./components/SideNav";
 
 type ApiResponse = {
   fhirBundle: Bundle;
-  fhirPathMappings: PathMappings;
 };
 
 /**
@@ -42,7 +41,6 @@ const ECRViewerPage = async ({
   const snomedCode = searchParams["snomed-code"] ?? "";
 
   let fhirBundle;
-  let mappings;
   let errors;
   try {
     const response = await get_fhir_data(fhirId);
@@ -54,7 +52,6 @@ const ECRViewerPage = async ({
     } else {
       const bundle: ApiResponse = await response.json();
       fhirBundle = bundle.fhirBundle;
-      mappings = bundle.fhirPathMappings;
     }
   } catch (error: unknown) {
     errors = {
@@ -74,11 +71,11 @@ const ECRViewerPage = async ({
         </pre>
       </GenericError>
     );
-  } else if (fhirBundle && mappings) {
-    const patientName = evaluatePatientName(fhirBundle, mappings, true);
-    const patientDOB = evaluatePatientDOB(fhirBundle, mappings);
+  } else if (fhirBundle) {
+    const patientName = evaluatePatientName(fhirBundle, true);
+    const patientDOB = evaluatePatientDOB(fhirBundle);
 
-    const accordionItems = getEcrDocumentAccordionItems(fhirBundle, mappings);
+    const accordionItems = getEcrDocumentAccordionItems(fhirBundle);
     return (
       <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
         <SideNav />
@@ -94,16 +91,13 @@ const ECRViewerPage = async ({
           </div>
           <EcrSummary
             patientDetails={
-              evaluateEcrSummaryPatientDetails(fhirBundle, mappings)
-                .availableData
+              evaluateEcrSummaryPatientDetails(fhirBundle).availableData
             }
             encounterDetails={
-              evaluateEcrSummaryEncounterDetails(fhirBundle, mappings)
-                .availableData
+              evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
             }
             conditionSummary={evaluateEcrSummaryConditionSummary(
               fhirBundle,
-              mappings,
               snomedCode,
             )}
             snomed={snomedCode}

@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
-import { useQueryParam } from "../hooks/useQueryParam";
+
+import { useQueryParam } from "@/app/hooks/useQueryParam";
+
 import { SortButton } from "./SortButton";
 
 export type TableHeader = {

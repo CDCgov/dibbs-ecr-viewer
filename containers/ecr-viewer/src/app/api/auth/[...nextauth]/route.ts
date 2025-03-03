@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
-import KeycloakProvider from "next-auth/providers/keycloak";
 import AzureAdProvider from "next-auth/providers/azure-ad";
+import KeycloakProvider from "next-auth/providers/keycloak";
 
 const keycloak = () => {
   if (

@@ -6,14 +6,13 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+
 import { Button, Label } from "@trussworks/react-uswds";
 import { useSearchParams } from "next/navigation";
-import {
-  FILTER_CLOSED,
-  FILTER_SUBMITTED,
-  FilterOpenContext,
-} from "@/app/components/Filters";
+
 import { toKebabCase } from "@/app/utils/format-utils";
+
+import { FILTER_CLOSED, FILTER_SUBMITTED, FilterOpenContext } from "./Filters";
 
 /**
  * A reusable Filter component for eCR Library. It displays a button

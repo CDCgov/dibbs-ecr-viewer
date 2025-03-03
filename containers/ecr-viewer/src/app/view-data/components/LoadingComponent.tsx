@@ -1,16 +1,22 @@
+import React from "react";
+
 import {
   Accordion,
   Grid,
   GridContainer,
   SideNav,
 } from "@trussworks/react-uswds";
-import { AccordionSection, AccordionSubSection } from "../component-utils";
+
 import { BackButton } from "@/app/components/BackButton";
-import React from "react";
-import { range } from "../../utils/data-utils";
-import { ECRViewerLayout } from "./ECRViewerLayout";
-import { AccordionItem } from "../types";
+import { range } from "@/app/utils/data-utils";
 import { toKebabCase } from "@/app/utils/format-utils";
+import {
+  AccordionSection,
+  AccordionSubSection,
+} from "@/app/view-data/component-utils";
+import { AccordionItem } from "@/app/view-data/types";
+
+import { ECRViewerLayout } from "./ECRViewerLayout";
 
 /**
  * Renders the loading blobs in gray or in blue

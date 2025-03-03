@@ -1,9 +1,12 @@
-import { Element } from "fhir/r4";
-import { PathMappings } from "@/app/utils/data-utils";
+import { ReactNode } from "react";
+
 import { Table } from "@trussworks/react-uswds";
 import classNames from "classnames";
-import React, { ReactNode } from "react";
-import { evaluateValue } from "../../services/evaluateFhirDataService";
+import { Element } from "fhir/r4";
+
+import { evaluateValue } from "@/app/services/evaluateFhirDataService";
+import fhirPathMappings, { PathMappings } from "@/app/view-data/fhirPath";
+
 import EvaluateTableRow from "./EvaluateTableRow";
 
 export interface ColumnInfoInput {
@@ -20,7 +23,7 @@ export interface ColumnInfoInput {
 
 interface TableProps {
   resources: Element[];
-  mappings: PathMappings;
+  mappings?: PathMappings;
   columns: ColumnInfoInput[];
   caption?: string;
   className?: string;
@@ -31,7 +34,7 @@ interface TableProps {
  * Formats a table based on the provided resources, mappings, columns, and caption.
  * @param props - The properties for configuring the table.
  * @param props.resources - An array of FHIR Resources representing the data entries. Data for each table row is collected from each resource.
- * @param props.mappings - An object containing the FHIR path mappings.
+ * @param props.mappings - An object containing the FHIR path mappings (default: `fhirPathMappings`)
  * @param props.columns - An array of objects representing column information. The order of columns in the array determines the order of appearance.
  * @param props.caption - The caption for the table.
  * @param props.className - (Optional) Classnames to be applied to table.
@@ -41,7 +44,7 @@ interface TableProps {
  */
 const EvaluateTable = ({
   resources,
-  mappings,
+  mappings = fhirPathMappings,
   columns,
   caption,
   className,
