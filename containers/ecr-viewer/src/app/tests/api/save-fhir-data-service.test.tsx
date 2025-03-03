@@ -214,7 +214,9 @@ describe("saveExtendedMetadata", () => {
     await (db as Kysely<Extended>).deleteFrom("patient_address").execute();
     await (db as Kysely<Extended>).deleteFrom("ecr_labs").execute();
     await (db as Kysely<Extended>).deleteFrom("ecr_rr_conditions").execute();
-    await (db as Kysely<Extended>).deleteFrom("ecr_rr_rule_summaries").execute();
+    await (db as Kysely<Extended>)
+      .deleteFrom("ecr_rr_rule_summaries")
+      .execute();
   });
 
   it("should save without any rr", async () => {
