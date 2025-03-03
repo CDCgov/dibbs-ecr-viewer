@@ -35,7 +35,10 @@ export const sqlServerHealthCheck = async () => {
     return undefined;
   }
   try {
-    await get_pool();
+    const pool = await get_pool();
+    if (!pool.connected) {
+      return "DOWN";
+    }
     return "UP";
   } catch (error: unknown) {
     console.error(error);

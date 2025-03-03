@@ -36,7 +36,21 @@ describe("sql server health check", () => {
     process.env.SQL_SERVER_HOST = "hostname";
     process.env.SQL_SERVER_USER = "user";
     process.env.SQL_SERVER_PASSWORD = "pw";
+    (sql.connect as jest.Mock).mockImplementationOnce(() => ({
+      connected: true,
+    }));
+
     expect(await sqlServerHealthCheck()).toEqual("UP");
+  });
+  it("should return DOWN when pool is not connected", async () => {
+    process.env.SQL_SERVER_HOST = "hostname";
+    process.env.SQL_SERVER_USER = "user";
+    process.env.SQL_SERVER_PASSWORD = "pw";
+    (sql.connect as jest.Mock).mockImplementationOnce(() => ({
+      connected: false,
+    }));
+
+    expect(await sqlServerHealthCheck()).toEqual("DOWN");
   });
   it("should return DOWN when pool throws an error", async () => {
     jest.spyOn(console, "error").mockImplementation();
