@@ -41,7 +41,7 @@ if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
             server: process.env.SQL_SERVER_HOST || "localhost",
           }),
       },
-    })
+    }),
   });
 } else {
   db = new Kysely<Core>({
@@ -53,8 +53,8 @@ if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         port: parseInt(process.env.POSTGRES_PORT || "5432"),
         max: parseInt(process.env.POSTGRES_MAX_THREADPOOL || "10"),
       }),
-    })
+    }),
   });
 }
 
-export { db }; 
+export { db };

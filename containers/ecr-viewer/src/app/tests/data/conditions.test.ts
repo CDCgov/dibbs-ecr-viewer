@@ -32,7 +32,7 @@ describe("Conditions service", () => {
 
   it("Should throw an error if the database type is undefined", async () => {
     delete process.env.METADATA_DATABASE_TYPE;
-    
+
     await expect(getAllConditions()).rejects.toThrow(
       "Database type is undefined.",
     );

@@ -15,7 +15,6 @@ import { findEcrById } from "@/app/api/services/database_repo";
 import { Bundle } from "fhir/r4";
 import { NextResponse } from "next/server";
 
-
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
 type FhirDataResponse = {
