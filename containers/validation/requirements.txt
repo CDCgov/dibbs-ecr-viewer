@@ -3,3 +3,4 @@ fastapi>=0.109.1
 uvicorn
 hl7
 lxml
+pyyaml
