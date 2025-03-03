@@ -1,4 +1,3 @@
-import { BlobServiceClient } from "@azure/storage-blob";
 import { getDB } from "../../data/db/postgres_db";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
@@ -6,8 +5,9 @@ import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import sql from "mssql";
 import { randomUUID } from "crypto";
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
-import { s3Client } from "../services/s3Client";
+import { s3Client } from "../../data/blobStorage/s3Client";
 import { get_pool } from "../../data/db/sqlserver_db";
+import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 
 interface SaveResponse {
   message: string;
@@ -71,20 +71,11 @@ export const saveToAzure = async (
   fhirBundle: Bundle,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  // TODO: Make this global after we get Azure access
-  const blobClient = BlobServiceClient.fromConnectionString(
-    process.env.AZURE_STORAGE_CONNECTION_STRING!,
-  );
-
-  if (!process.env.AZURE_CONTAINER_NAME)
-    throw Error("Azure container name not found");
-
-  const containerName = process.env.AZURE_CONTAINER_NAME;
+  const containerClient = azureBlobContainerClient();
   const blobName = `${ecrId}.json`;
   const body = JSON.stringify(fhirBundle);
 
   try {
-    const containerClient = blobClient.getContainerClient(containerName);
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
     const response = await blockBlobClient.upload(body, body.length, {
