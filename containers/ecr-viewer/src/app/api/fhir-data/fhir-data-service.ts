@@ -9,11 +9,7 @@ import { NextResponse } from "next/server";
 
 import { findEcrById } from "@/app/api/services/database_repo";
 import { s3Client } from "@/app/api/services/s3Client";
-import {
-  AZURE_SOURCE,
-  S3_SOURCE,
-  streamToJson,
-} from "@/app/api/utils";
+import { AZURE_SOURCE, S3_SOURCE, streamToJson } from "@/app/api/utils";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
@@ -57,9 +53,9 @@ export const get_db = async (
     console.error("Error fetching data:", error);
     if (error instanceof Error) {
       if (error.message === "No data returned from the query.") {
-          return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+        return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
       } else {
-          return { payload: { message: error.message }, status: 500 };
+        return { payload: { message: error.message }, status: 500 };
       }
     }
   }
