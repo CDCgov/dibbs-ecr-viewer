@@ -2,7 +2,7 @@
 
 import { Button } from "@trussworks/react-uswds";
 import { ArrowForward } from "@/app/components/Icon";
-import bgRedirect from "../../../assets/bg-redirect.png";
+import bgRedirect from "../../../assets/bg-redirect.svg";
 import { signIn } from "next-auth/react";
 import { ProviderDetails } from "../api/auth/auth";
 
