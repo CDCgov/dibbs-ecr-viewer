@@ -1,6 +1,7 @@
 fastapi>=0.109.1
 fhirpathpy
 httpx
+mysql-connector-python>=9.1.0 # not directly required, pinned by Snyk to avoid a vulnerability
 pandas>2.0.0
 pathlib
 psycopg2
