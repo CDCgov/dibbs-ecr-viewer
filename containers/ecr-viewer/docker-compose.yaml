@@ -12,6 +12,11 @@ services:
       - NBS_PUB_KEY=${NBS_PUB_KEY}
       # POSTGRES
       - DATABASE_URL=postgres://postgres:pw@postgres:5432/ecr_viewer_db
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-pw}
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE:-ecr_viewer_db}
       # AWS
       - AWS_CUSTOM_ENDPOINT=http://aws-storage:4566
       - AWS_REGION=${AWS_REGION:-us-east-1}
