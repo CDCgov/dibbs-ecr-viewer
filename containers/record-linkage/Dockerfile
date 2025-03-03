@@ -6,7 +6,7 @@ RUN apt-get update && \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip --break-system-packages
 
 WORKDIR /code
 
