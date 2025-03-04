@@ -25,7 +25,6 @@ import {
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import BundleCareTeam from "./assets/BundleCareTeam.json";
 import BundleWithMiscNotes from "./assets/BundleMiscNotes.json";
@@ -292,7 +291,7 @@ describe("Utils", () => {
     it("should return empty if active problem name is undefined", () => {
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
-        evaluate(BundleNoActiveProblems, fhirPathMappings.activeProblems),
+        evaluate(BundleNoActiveProblems as unknown as Bundle, "activeProblems"),
       );
 
       expect(actual).toBeUndefined();

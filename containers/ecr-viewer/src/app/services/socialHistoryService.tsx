@@ -1,19 +1,15 @@
 import { Bundle, Observation } from "fhir/r4";
 
+import fhirPathMappings, { PathMappings } from "@/app/data/fhirPath";
 import { noData } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import { evaluate, evaluateValue } from "@/app/utils/evaluate";
 import { ColumnInfoInput } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
-import { evaluateValue } from "./evaluateFhirDataService";
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 
-type TravelHistoryColumn = Required<
-  Pick<ColumnInfoInput, "infoPath" | "columnName">
-> &
-  Pick<ColumnInfoInput, "applyToValue">;
+type TravelHistoryColumn = ColumnInfoInput & { infoPath: keyof PathMappings };
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -21,10 +17,7 @@ type TravelHistoryColumn = Required<
  * @returns - A formatted table representing the patient's travel history, or undefined if no relevant data is found.
  */
 export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
-  const travelHistory: Observation[] = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientTravelHistory,
-  );
+  const travelHistory = evaluate(fhirBundle, "patientTravelHistory");
 
   const columns: TravelHistoryColumn[] = [
     {

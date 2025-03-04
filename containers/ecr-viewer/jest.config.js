@@ -16,10 +16,6 @@ const customJestConfig = {
   },
   testPathIgnorePatterns: ["<rootDir>/e2e"],
   collectCoverage: true,
-  transform: {
-    "\\.[jt]sx?$": "babel-jest",
-    "\\.yaml$": "yaml-jest-transform",
-  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

@@ -20,7 +20,6 @@ import EncounterDetails from "@/app/view-data/components/Encounter";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
 
 import { evaluateClinicalData } from "./clinical-data";
@@ -42,7 +41,7 @@ export const getEcrDocumentAccordionItems = (
   const facilityData = evaluateFacilityData(fhirBundle);
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
-    evaluate(fhirBundle, fhirPathMappings.diagnosticReports),
+    evaluate(fhirBundle, "diagnosticReports"),
   );
   const hasUnavailableData = () => {
     const unavailableDataArrays = [

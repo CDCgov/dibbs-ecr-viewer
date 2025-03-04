@@ -12,7 +12,6 @@ import BundleLab from "@/app/tests/assets/BundleLab.json";
 import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { evaluate } from "@/app/utils/evaluate";
 import LabInfo from "@/app/view-data/components/LabInfo";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
@@ -20,7 +19,7 @@ describe("LabInfo", () => {
     beforeAll(() => {
       const labinfoOrg = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
-        evaluate(BundleLab, fhirPathMappings.diagnosticReports),
+        evaluate(BundleLab as Bundle, "diagnosticReports"),
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
@@ -103,7 +102,7 @@ describe("LabInfo", () => {
     it("should be collapsed by default", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
+        evaluate(BundleLabNoLabIds as Bundle, "diagnosticReports"),
       );
 
       render(<LabInfo labResults={labinfo} />);
@@ -131,7 +130,7 @@ describe("LabInfo", () => {
     it("should match snapshot test", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
+        evaluate(BundleLabNoLabIds as Bundle, "diagnosticReports"),
       );
 
       const { container } = render(<LabInfo labResults={labinfo} />);
