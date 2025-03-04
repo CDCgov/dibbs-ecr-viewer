@@ -13,6 +13,7 @@ export async function GET() {
   return NextResponse.json(
     {
       status: "OK",
+      version: process.env.VERSION,
       dependencies: {
         sqlserver: await sqlServerHealthCheck(),
         postgres: await postgresHealthCheck(),

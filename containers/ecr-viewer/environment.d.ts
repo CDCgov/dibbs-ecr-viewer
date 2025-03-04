@@ -40,5 +40,6 @@ namespace NodeJS {
     SQL_SERVER_HOST: string;
     SQL_SERVER_PASSWORD: string;
     SQL_SERVER_USER: string;
+    VERSION: string;
   }
 }
