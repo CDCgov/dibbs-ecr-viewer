@@ -48,6 +48,7 @@ RUN pip install -r requirements.txt
 # Copy FastAPI app
 COPY app /code/app
 COPY assets /code/assets
+COPY test-data /test-data
 COPY README.md /code/README.md
 
 EXPOSE 8080
