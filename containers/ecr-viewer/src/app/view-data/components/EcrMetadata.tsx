@@ -181,15 +181,15 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   );
 };
 
-interface ReportableConditionData {
+interface TableCellData {
   value: string;
   rowSpan: number;
 }
 
 interface ReportableConditionRow {
   key: string;
-  condition: ReportableConditionData | null;
-  trigger: ReportableConditionData | null;
+  condition: TableCellData | null;
+  trigger: TableCellData | null;
   location: string;
 }
 
