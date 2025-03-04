@@ -3,6 +3,9 @@ from unittest import mock
 
 import hl7
 import pytest
+from fastapi.testclient import TestClient
+from lxml import etree
+
 from app.main import add_rr_data_to_eicr, app
 from app.service import (
     add_data_source_to_bundle,
@@ -11,8 +14,6 @@ from app.service import (
     resolve_references,
     standardize_hl7_datetimes,
 )
-from fastapi.testclient import TestClient
-from lxml import etree
 
 client = TestClient(app)
 

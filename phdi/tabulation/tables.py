@@ -4,7 +4,7 @@ import json
 import os
 import pathlib
 import sqlite3 as sql
-from typing import Literal, Union
+from typing import Literal
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -74,7 +74,7 @@ def write_data(
     pq_writer: pq.ParquetWriter = None,
     schema: dict = None,
     table_name: str = None,
-) -> Union[None, pq.ParquetWriter]:
+) -> None | pq.ParquetWriter:
     """
     Writes a set of tabulated data to a particular output format on disk
     (one of CSV, Parquet, or SQL). For CSV and Parquet writing, a filename

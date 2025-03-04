@@ -6,7 +6,7 @@ import re
 import uuid
 from functools import cache
 from pathlib import Path
-from typing import Literal, Union
+from typing import Literal
 
 import fhirpathpy
 import requests
@@ -607,7 +607,7 @@ def get_phdc_section(
         "header",
     ],
     tree: ET.ElementTree,
-) -> Union[ET.Element, ET.ElementTree]:
+) -> ET.Element | ET.ElementTree:
     """
     Returns the specified section of a PHDC from a file.
 
