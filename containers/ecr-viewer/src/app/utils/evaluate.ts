@@ -91,7 +91,7 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
 export const evaluateFor = <Result>(
   fhirData: FhirData,
   path: string,
-  expectedType?: string,
+  expectedType: string,
   context?: Context,
 ): Result[] => {
   if (!fhirData) return [];

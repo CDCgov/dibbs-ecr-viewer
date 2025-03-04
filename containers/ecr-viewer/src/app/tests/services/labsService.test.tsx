@@ -32,6 +32,7 @@ const pathLabReportNormal =
 const labReportNormal = evaluateFor<DiagnosticReport>(
   BundleLab as Bundle,
   pathLabReportNormal,
+  "DiagnosticReport",
 )[0];
 const labReportNormalJsonObject = {
   resultId: "Result.1.2.3.4.5",
@@ -161,6 +162,7 @@ const pathLabReportAbnormal =
 const labReportAbnormal = evaluateFor<DiagnosticReport>(
   BundleLab as Bundle,
   pathLabReportAbnormal,
+  "DiagnosticReport",
 )[0];
 const labReportAbnormalJsonObject = getLabJsonObject(
   labReportAbnormal,
@@ -172,6 +174,7 @@ const pathLabOrganismsTableAndNarr =
 const labOrganismsTableAndNarr = evaluateFor<DiagnosticReport>(
   BundleLab as Bundle,
   pathLabOrganismsTableAndNarr,
+  "DiagnosticReport",
 )[0];
 
 describe("LabsService tests", () => {
@@ -197,6 +200,7 @@ describe("LabsService tests", () => {
         const expectedResult = evaluateFor<Observation>(
           BundleLab as Bundle,
           expectedObservationPath,
+          "Observation",
         );
         expect(result.toString()).toBe(expectedResult.toString());
       });
@@ -235,6 +239,7 @@ describe("LabsService tests", () => {
         const labReportWithoutIds = evaluateFor<DiagnosticReport>(
           BundleLabNoLabIds as Bundle,
           "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
+          "DiagnosticReport",
         )[0];
         const labReportJsonObjectWithoutId = {
           resultId: undefined,

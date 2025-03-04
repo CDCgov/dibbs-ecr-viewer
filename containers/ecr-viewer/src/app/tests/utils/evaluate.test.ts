@@ -23,7 +23,7 @@ describe("evaluate", () => {
   });
 
   it("fhirpath should be called 1 time when 1 call is made ", () => {
-    evaluateFor<string>({ id: "1234" }, "id");
+    evaluateFor<string>({ id: "1234" }, "id", "string");
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
       { id: "1234" },
@@ -33,8 +33,8 @@ describe("evaluate", () => {
     );
   });
   it("should call fhirpath.evaluate 1 time when the same call is made 2 times", () => {
-    evaluateFor<string>({ id: "2345" }, "id");
-    evaluateFor<string>({ id: "2345" }, "id");
+    evaluateFor<string>({ id: "2345" }, "id", "string");
+    evaluateFor<string>({ id: "2345" }, "id", "string");
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
       { id: "2345" },
