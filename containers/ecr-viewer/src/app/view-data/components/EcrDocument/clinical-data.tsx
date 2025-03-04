@@ -415,7 +415,6 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
   const bmiDate: string | undefined = evaluate(fhirBundle, "patientBmiDate")[0];
 
   if (!height && !weight && !bmi) {
-    console.log("no data");
     return undefined;
   }
 

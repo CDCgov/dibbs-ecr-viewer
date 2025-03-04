@@ -30,7 +30,6 @@ describe("evaluate", () => {
       "id",
       undefined,
       fhirpath_r4_model,
-      undefined,
     );
   });
   it("should call fhirpath.evaluate 1 time when the same call is made 2 times", () => {
@@ -42,7 +41,6 @@ describe("evaluate", () => {
       "id",
       undefined,
       fhirpath_r4_model,
-      undefined,
     );
   });
   it("should call fhirpath.evaluate 2 time when the context is different", () => {
@@ -56,7 +54,6 @@ describe("evaluate", () => {
       "id",
       { id: 1 },
       fhirpath_r4_model,
-      undefined,
     );
     expect(fhirPathEvaluateSpy).toHaveBeenNthCalledWith(
       2,
@@ -64,7 +61,6 @@ describe("evaluate", () => {
       "id",
       { id: 2 },
       fhirpath_r4_model,
-      undefined,
     );
   });
 
@@ -96,7 +92,6 @@ describe("evaluate", () => {
       "period.text",
       undefined,
       fhirpath_r4_model,
-      undefined,
     );
   });
 
@@ -113,7 +108,6 @@ describe("evaluate", () => {
       "period.text",
       undefined,
       fhirpath_r4_model,
-      undefined,
     );
   });
 });
