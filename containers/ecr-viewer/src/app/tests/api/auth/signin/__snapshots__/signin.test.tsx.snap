@@ -10,7 +10,7 @@ exports[`Sign-in Page should match snapshot 1`] = `
       class="width-tablet position-absolute top-3950 left-12 padding-bottom-6 padding-right-6 grid-row gap-5"
     >
       <h1
-        class="font-serif-3xl font-weight-normal margin-0"
+        class="font-serif-3xl text-normal margin-0"
       >
         Looks like you're trying to access the eCR Viewer
       </h1>

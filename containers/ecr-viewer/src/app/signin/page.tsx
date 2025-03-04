@@ -20,7 +20,7 @@ const RedirectPage = () => {
       }}
     >
       <div className="width-tablet position-absolute top-3950 left-12 padding-bottom-6 padding-right-6 grid-row gap-5">
-        <h1 className="font-serif-3xl font-weight-normal margin-0">
+        <h1 className="font-serif-3xl text-normal margin-0">
           Looks like you're trying to access the eCR Viewer
         </h1>
         <p className="font-sans-lg text-normal margin-0">
