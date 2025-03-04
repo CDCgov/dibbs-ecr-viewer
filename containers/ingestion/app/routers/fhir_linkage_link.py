@@ -1,7 +1,7 @@
 from typing import Optional
 
 from fastapi import APIRouter, Response, status
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from app.fhir.linkage.link import add_patient_identifier_in_bundle
 from app.utils import (
@@ -29,9 +29,7 @@ class AddPatientIdentifierInBundleInput(BaseModel):
         default=True,
     )
 
-    _check_for_fhir_bundle = validator("bundle", allow_reuse=True)(
-        check_for_fhir_bundle
-    )
+    _check_for_fhir_bundle = field_validator("bundle")(check_for_fhir_bundle)
 
 
 @router.post("/add_patient_identifier_in_bundle", status_code=200)
@@ -56,6 +54,6 @@ async def add_patient_identifier_in_bundle_endpoint(
     search_result = search_for_required_values(input, required_values)
     if search_result != "All values were found.":
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"status_code": "400", "message": search_result}
+        return {"status_code": 400, "message": search_result}
 
-    return {"status_code": "200", "bundle": add_patient_identifier_in_bundle(**input)}
+    return {"status_code": 200, "bundle": add_patient_identifier_in_bundle(**input)}

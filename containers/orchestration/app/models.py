@@ -1,6 +1,6 @@
 from typing import Literal, Optional, Union
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 # Request and response models
@@ -32,7 +32,7 @@ class OrchestrationRequest(BaseModel):
         default=None,
     )
 
-    @root_validator()
+    @model_validator(mode="before")
     def validate_rr_with_ecr(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that RR data is supplied if and only if the uploaded data
@@ -51,7 +51,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @root_validator()
+    @model_validator(mode="before")
     def validate_types_agree(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that the stream type of a message matches the encoded data
@@ -63,7 +63,7 @@ class OrchestrationRequest(BaseModel):
         data_type = values.get("data_type")
         if message_type == "ecr" and (data_type != "ecr" and data_type != "zip"):
             raise ValueError(
-                "For an eCR message, `data_type` must be either `ecr` or `zip`."
+                "for an eCR message, `data_type` must be either `ecr` or `zip`."
             )
         if message_type == "fhir" and data_type != "fhir":
             raise ValueError(
@@ -72,7 +72,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @root_validator()
+    @model_validator(mode="before")
     def validate_fhir_message_is_dict(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that requests specifying a FHIR data type are formatted as
@@ -82,7 +82,7 @@ class OrchestrationRequest(BaseModel):
         data_type = values.get("data_type")
         if data_type == "fhir" and not isinstance(message, dict):
             raise ValueError(
-                "A `data_type` of FHIR requires the input message "
+                "a `data_type` of FHIR requires the input message "
                 "to be a valid dictionary."
             )
         return values
@@ -120,7 +120,7 @@ class ListConfigsResponse(BaseModel):
 class WorkflowServiceStepModel(BaseModel):
     service: str
     endpoint: str
-    params: Optional[dict]
+    params: Optional[dict] = None
 
 
 class ProcessingConfigModel(BaseModel):

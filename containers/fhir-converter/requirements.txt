@@ -1,11 +1,8 @@
 fastapi>=0.109.1
-httpx==0.28.1
-pydantic==1.10.13
-pytest==8.3.4
-syrupy==4.8.2
-testcontainers==4.8.1
-uvicorn>=0.18.0
-uuid
-lxml
 hl7
-zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
+httpx>=0.28.1
+lxml
+pydantic>=2.0.0
+syrupy>=4.8.2
+uuid
+uvicorn>=0.18.0
