@@ -225,13 +225,14 @@ const getRelevantResources = <T extends DomainResource>(
   resource: T[],
   snomedCode: string,
 ): T[] => {
-  return resource.filter((entry) =>
-    entry.extension?.some(
-      (ext) =>
-        ext.url ===
-          "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code" &&
-        ext.valueCoding?.code === snomedCode,
-    ),
+  return resource.filter(
+    (entry) =>
+      entry.extension?.some(
+        (ext) =>
+          ext.url ===
+            "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code" &&
+          ext.valueCoding?.code === snomedCode,
+      ),
   );
 };
 
