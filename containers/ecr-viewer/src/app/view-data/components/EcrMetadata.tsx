@@ -127,9 +127,7 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   if (rows.length === 0) {
     return (
       <div>
-        <h5 className="margin-0 text-bold" style={{ fontSize: "1rem" }}>
-          Reportability Summary
-        </h5>
+        <h5 className="header-data-title">Reportability Summary</h5>
         <p className="no-data text-italic text-base padding-bottom-0">
           No reportable condition found
         </p>
