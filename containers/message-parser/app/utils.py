@@ -6,7 +6,7 @@ import re
 import uuid
 from functools import cache
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Union
 
 import fhirpathpy
 import requests
@@ -607,7 +607,7 @@ def get_phdc_section(
         "header",
     ],
     tree: ET.ElementTree,
-) -> ET.Element | ET.ElementTree:
+) -> Union[ET.Element, ET.ElementTree]:  # noqa: UP007 Cython does not support Union
     """
     Returns the specified section of a PHDC from a file.
 
