@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { Mapping } from "@/app/utils/evaluate";
 import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
+  Mapping,
 } from "@/app/view-data/components/EvaluateTable";
 
 describe("Evaluate table", () => {

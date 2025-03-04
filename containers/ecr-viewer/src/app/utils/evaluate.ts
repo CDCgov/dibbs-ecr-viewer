@@ -122,10 +122,6 @@ export const clearEvaluateCache = () => {
   evaluateCache.clear();
 };
 
-export interface Mapping {
-  [key: string]: string;
-}
-
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
