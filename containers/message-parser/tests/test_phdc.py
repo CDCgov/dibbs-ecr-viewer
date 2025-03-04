@@ -4,6 +4,8 @@ from datetime import date
 from unittest.mock import patch
 
 import pytest
+from lxml import etree as ET
+
 from app import utils
 from app.phdc.builder import PHDCBuilder
 from app.phdc.models import (
@@ -16,7 +18,6 @@ from app.phdc.models import (
     PHDCInputData,
     Telecom,
 )
-from lxml import etree as ET
 
 
 def parse_file_from_test_assets(filename: str) -> ET.ElementTree:

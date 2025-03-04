@@ -3,9 +3,10 @@ from datetime import date
 from unittest.mock import patch
 
 import pytest
+from fastapi.testclient import TestClient
+
 from app import utils
 from app.main import app
-from fastapi.testclient import TestClient
 
 client = TestClient(app)
 

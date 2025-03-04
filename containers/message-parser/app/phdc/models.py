@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Literal, Optional, Union
+from typing import Literal
 
 
 @dataclass
@@ -8,10 +8,10 @@ class Telecom:
     A class containing all of the data elements for a telecom element.
     """
 
-    value: Optional[str] = None
-    type: Optional[str] = None
-    useable_period_low: Optional[str] = None
-    useable_period_high: Optional[str] = None
+    value: str | None = None
+    type: str | None = None
+    useable_period_low: str | None = None
+    useable_period_high: str | None = None
 
 
 @dataclass
@@ -20,16 +20,16 @@ class Address:
     A class containing all of the data elements for an address element.
     """
 
-    street_address_line_1: Optional[str] = None
-    street_address_line_2: Optional[str] = None
-    city: Optional[str] = None
-    state: Optional[str] = None
-    postal_code: Optional[str] = None
-    county: Optional[str] = None
-    country: Optional[str] = None
-    type: Optional[str] = None
-    useable_period_low: Optional[str] = None
-    useable_period_high: Optional[str] = None
+    street_address_line_1: str | None = None
+    street_address_line_2: str | None = None
+    city: str | None = None
+    state: str | None = None
+    postal_code: str | None = None
+    county: str | None = None
+    country: str | None = None
+    type: str | None = None
+    useable_period_low: str | None = None
+    useable_period_high: str | None = None
 
 
 @dataclass
@@ -38,14 +38,14 @@ class Name:
     A class containing all of the data elements for a name element.
     """
 
-    prefix: Optional[str] = None
-    first: Optional[str] = None
-    middle: Optional[str] = None
-    family: Optional[str] = None
-    suffix: Optional[str] = None
-    type: Optional[str] = None
-    valid_time_low: Optional[str] = None
-    valid_time_high: Optional[str] = None
+    prefix: str | None = None
+    first: str | None = None
+    middle: str | None = None
+    family: str | None = None
+    suffix: str | None = None
+    type: str | None = None
+    valid_time_low: str | None = None
+    valid_time_high: str | None = None
 
 
 @dataclass
@@ -57,10 +57,10 @@ class Patient:
     name: list[Name] = None
     address: list[Address] = None
     telecom: list[Telecom] = None
-    administrative_gender_code: Optional[str] = None
-    race_code: Optional[str] = None
-    ethnic_group_code: Optional[str] = None
-    birth_time: Optional[str] = None
+    administrative_gender_code: str | None = None
+    race_code: str | None = None
+    ethnic_group_code: str | None = None
+    birth_time: str | None = None
 
 
 @dataclass
@@ -81,13 +81,13 @@ class CodedElement:
     A class containing all of the data elements for a coded element.
     """
 
-    xsi_type: Optional[str] = None
-    code: Optional[str] = None
-    code_system: Optional[str] = None
-    code_system_name: Optional[str] = None
-    display_name: Optional[str] = None
-    value: Optional[str] = None
-    text: Optional[Union[str, int]] = None
+    xsi_type: str | None = None
+    code: str | None = None
+    code_system: str | None = None
+    code_system_name: str | None = None
+    display_name: str | None = None
+    value: str | None = None
+    text: str | int | None = None
 
     def to_attributes(self) -> dict[str, str]:
         """
@@ -116,35 +116,35 @@ class Observation:
     """
 
     obs_type: str = "laboratory"
-    type_code: Optional[str] = None
-    class_code: Optional[str] = None
-    code_display: Optional[str] = None
-    code_system: Optional[str] = None
-    code_system_name: Optional[str] = None
-    quantitative_value: Optional[float] = None
-    quantitative_system: Optional[str] = None
-    quantitative_code: Optional[str] = None
-    qualitative_value: Optional[str] = None
-    qualitative_system: Optional[str] = None
-    qualitative_code: Optional[str] = None
-    mood_code: Optional[str] = None
-    code_code: Optional[str] = None
-    code_code_system: Optional[str] = None
-    code_code_system_name: Optional[str] = None
-    code_code_display: Optional[str] = None
-    value_quantitative_code: Optional[str] = None
-    value_quant_code_system: Optional[str] = None
-    value_quant_code_system_name: Optional[str] = None
-    value_quantitative_value: Optional[float] = None
-    value_qualitative_code: Optional[str] = None
-    value_qualitative_code_system: Optional[str] = None
-    value_qualitative_code_system_name: Optional[str] = None
-    value_qualitative_value: Optional[str] = None
-    components: Optional[list] = None
-    code: Optional[CodedElement] = None
-    value: Optional[CodedElement] = None
-    translation: Optional[CodedElement] = None
-    text: Optional[str] = None
+    type_code: str | None = None
+    class_code: str | None = None
+    code_display: str | None = None
+    code_system: str | None = None
+    code_system_name: str | None = None
+    quantitative_value: float | None = None
+    quantitative_system: str | None = None
+    quantitative_code: str | None = None
+    qualitative_value: str | None = None
+    qualitative_system: str | None = None
+    qualitative_code: str | None = None
+    mood_code: str | None = None
+    code_code: str | None = None
+    code_code_system: str | None = None
+    code_code_system_name: str | None = None
+    code_code_display: str | None = None
+    value_quantitative_code: str | None = None
+    value_quant_code_system: str | None = None
+    value_quant_code_system_name: str | None = None
+    value_quantitative_value: float | None = None
+    value_qualitative_code: str | None = None
+    value_qualitative_code_system: str | None = None
+    value_qualitative_code_system_name: str | None = None
+    value_qualitative_value: str | None = None
+    components: list | None = None
+    code: CodedElement | None = None
+    value: CodedElement | None = None
+    translation: CodedElement | None = None
+    text: str | None = None
 
 
 @dataclass

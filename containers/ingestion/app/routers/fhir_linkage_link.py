@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter, Response, status
 from pydantic import BaseModel, Field, field_validator
 
@@ -18,12 +16,12 @@ router = APIRouter(
 
 class AddPatientIdentifierInBundleInput(BaseModel):
     bundle: dict = Field(description="A FHIR bundle")
-    salt_str: Optional[str] = Field(
+    salt_str: str | None = Field(
         description="The salt to use with the hash. This is intended to prevent reverse"
         " engineering of the PII used to create the hash.",
         default="",
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "modified and returned.",
         default=True,

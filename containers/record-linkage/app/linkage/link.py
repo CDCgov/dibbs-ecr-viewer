@@ -4,7 +4,7 @@ import hashlib
 import json
 import logging
 import pathlib
-from typing import Callable, Union
+from collections.abc import Callable
 
 from pydantic import Field
 
@@ -643,8 +643,8 @@ def read_linkage_config(config_file: pathlib.Path) -> list[dict]:
 
 
 def score_linkage_vs_truth(
-    found_matches: dict[Union[int, str], set],
-    true_matches: dict[Union[int, str], set],
+    found_matches: dict[int | str, set],
+    true_matches: dict[int | str, set],
     records_in_dataset: int,
     expand_clusters_pairwise: bool = False,
 ) -> tuple:
@@ -1041,7 +1041,7 @@ def _group_patient_block_by_person(data_block: list[list]) -> dict[str, list]:
 
 
 def _map_matches_to_record_ids(
-    match_list: Union[list[tuple], list[set]], data_block, cluster_mode: bool = False
+    match_list: list[tuple] | list[set], data_block, cluster_mode: bool = False
 ) -> list[tuple]:
     """
     Helper function to turn a list of tuples of row indices in a block
@@ -1153,7 +1153,7 @@ def _is_empty_extraction_field(block_vals: dict, field: str):
     return False
 
 
-def _write_prob_file(prob_dict: dict, file_to_write: Union[pathlib.Path, None]):
+def _write_prob_file(prob_dict: dict, file_to_write: pathlib.Path | None):
     """
     Helper method to write a probability dictionary to a JSON file, if
     a valid path is supplied.

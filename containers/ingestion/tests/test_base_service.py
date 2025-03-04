@@ -1,8 +1,9 @@
 from pathlib import Path
 
 import toml
-from app.base_service import DIBBS_CONTACT, LICENSES, BaseService
 from fastapi.testclient import TestClient
+
+from app.base_service import DIBBS_CONTACT, LICENSES, BaseService
 
 with open(
     Path(__file__).parent.parent.parent.parent / "pyproject.toml"

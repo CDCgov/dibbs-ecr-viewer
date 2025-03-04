@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+
 from app.utils import (
     _find_codes_by_resource_type,
     add_human_readable_reportable_condition_name,

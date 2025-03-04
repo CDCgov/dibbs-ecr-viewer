@@ -5,13 +5,14 @@ from unittest.mock import Mock
 from zipfile import ZipFile
 
 import pytest
+from fastapi import Response
+
 from app.utils import (
     _combine_response_bundles,
     load_processing_config,
     replace_env_var_placeholders,
     search_for_ecr_data,
 )
-from fastapi import Response
 
 
 def test_load_processing_config_success():
