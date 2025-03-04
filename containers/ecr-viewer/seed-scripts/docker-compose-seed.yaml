@@ -76,4 +76,4 @@ services:
       - ./baseECR:/code/baseECR
     environment:
       - CONFIG_NAME=${CONFIG_NAME}
-      - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-LA}
+      - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
