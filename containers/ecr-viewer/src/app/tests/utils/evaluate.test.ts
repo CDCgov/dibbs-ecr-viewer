@@ -46,8 +46,8 @@ describe("evaluate", () => {
     );
   });
   it("should call fhirpath.evaluate 2 time when the context is different", () => {
-    evaluateFor<string>({ id: "%id" }, "id", { id: 1 });
-    evaluateFor<string>({ id: "%id" }, "id", { id: 2 });
+    evaluateFor<string>({ id: "%id" }, "id", "string", { id: 1 });
+    evaluateFor<string>({ id: "%id" }, "id", "string", { id: 2 });
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledTimes(2);
     expect(fhirPathEvaluateSpy).toHaveBeenNthCalledWith(

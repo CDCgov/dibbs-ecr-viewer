@@ -9,10 +9,14 @@ import {
   Quantity,
   Resource,
 } from "fhir/r4";
-import { Context, evaluate as fhirPathEvaluate, Path } from "fhirpath";
+import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import fhirPathMappings, { PathTypes, ValueX } from "@/app/data/fhirPath";
+import fhirPathMappings, {
+  PathTypeNames,
+  PathTypes,
+  ValueX,
+} from "@/app/data/fhirPath";
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 
 // TODO: Follow up on FHIR/fhirpath typing
@@ -29,17 +33,60 @@ const isBundle = (e: Element | Element[] | FhirResource): e is Bundle => {
 
 type FhirData = Element | Element[] | FhirResource | undefined;
 
+interface NodeInfo {
+  path: string;
+  fhirNodeDataType: string;
+}
+
+const checkResult = <R>(results: R[], expectedType: string | undefined) => {
+  // Nothing we know to check here
+  if (expectedType === "unknown" || !expectedType) return;
+
+  const result = results[0];
+  const actualType = typeof result;
+  if (actualType === "undefined") return;
+
+  let valid = true;
+  const extras: { path?: NodeInfo } = {};
+  if (actualType === "object") {
+    const nodeInfo = (result as { __path__: NodeInfo })?.__path__;
+    if (expectedType === "ValueX") {
+      valid = ["CodeableConcept", "Coding", "Quantity"].includes(
+        nodeInfo.fhirNodeDataType,
+      );
+    } else {
+      valid =
+        expectedType.toLowerCase() ===
+        nodeInfo.path.toLowerCase().replace(".", "");
+    }
+    extras.path = nodeInfo;
+  } else if (actualType !== expectedType && expectedType !== "ValueX") {
+    valid = false;
+  }
+  if (!valid) {
+    console.error({
+      message: "Expected type did not match actual result type",
+      result,
+      expectedType,
+      actualType,
+      ...extras,
+    });
+  }
+};
+
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
  * escape hatch when not using a `fhirPathmapping`. See `evaluate` for the common usage.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param path - The FHIRPath expression to evaluate.
+ * @param expectedType - Optionally, the type of the expected result as a string.
  * @param [context] - Optional context object to provide additional data for evaluation.
  * @returns - An array containing the result of the evaluation.
  */
 export const evaluateFor = <Result>(
   fhirData: FhirData,
-  path: string | Path,
+  path: string,
+  expectedType?: string,
   context?: Context,
 ): Result[] => {
   if (!fhirData) return [];
@@ -51,10 +98,14 @@ export const evaluateFor = <Result>(
   const key =
     fhirDataIdentifier + JSON.stringify(context) + JSON.stringify(path);
   if (!evaluateCache.has(key)) {
-    evaluateCache.set(
-      key,
-      fhirPathEvaluate(fhirData, path, context, fhirpath_r4_model),
-    );
+    const result = fhirPathEvaluate(
+      fhirData,
+      path,
+      context,
+      fhirpath_r4_model,
+    ) as Result[];
+    checkResult(result, expectedType);
+    evaluateCache.set(key, result);
   }
   return evaluateCache.get(key);
 };
@@ -85,6 +136,7 @@ export const evaluate = <K extends keyof PathTypes>(
   return evaluateFor<PathTypes[K]>(
     fhirData,
     fhirPathMappings[pathKey],
+    PathTypeNames[pathKey],
     context,
   );
 };
@@ -102,7 +154,7 @@ const UNIT_MAP = new Map([
  * @returns - The evaluated value as a string.
  */
 export const evaluateValue = (entry: FhirData, path: string): string => {
-  const originalValue = evaluateFor<ValueX>(entry, path)[0];
+  const originalValue = evaluateFor<ValueX>(entry, path, "ValueX")[0];
 
   if (
     typeof originalValue === "string" ||
@@ -114,8 +166,8 @@ export const evaluateValue = (entry: FhirData, path: string): string => {
 
   let value = "";
   // fhirpath injects some internal metadata we leverage here for the switch
-  const originalValuePath = (originalValue as { __path__: { path: string } })
-    ?.__path__?.path;
+  const originalValuePath = (originalValue as { __path__: NodeInfo })?.__path__
+    ?.path;
 
   if (originalValuePath === "Quantity") {
     const data: Quantity = originalValue;
@@ -154,6 +206,7 @@ export const evaluateReference = <T extends Resource>(
   const result: Resource | undefined = evaluateFor<Resource>(
     fhirBundle,
     fhirPathMappings.resolve,
+    resourceType,
     {
       resourceType,
       id,

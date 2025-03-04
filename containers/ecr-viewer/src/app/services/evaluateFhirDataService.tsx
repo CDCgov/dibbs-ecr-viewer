@@ -518,7 +518,8 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
 
   const tables = participants.map((participant) => {
     const role = evaluateValue(participant, "type");
-    const { start, end } = evaluateFor<Period>(participant, "period")[0] ?? {};
+    const { start, end } =
+      evaluateFor<Period>(participant, "period", "Period")[0] ?? {};
     const participantRef = participant.individual?.reference;
 
     const { practitioner } = evaluatePractitionerRoleReference(
@@ -660,6 +661,7 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
       const patientProficiencyExtension = evaluateFor<Extension>(
         communication,
         "extension.where(url = 'http://hl7.org/fhir/StructureDefinition/patient-proficiency')",
+        "Extension",
       );
       const languageProficency = evaluateValue(
         patientProficiencyExtension,
