@@ -28,7 +28,7 @@ Congratulations, the TCR should now be running on `localhost:8080`!
 
 We recommend running the TCR from a container, but if that isn't feasible for a given use case, you can also run the service directly from Python using the steps below.
 
-1. Ensure that both Git and Python 3.10 or higher are installed.
+1. Ensure that both Git and Python 3.13 or higher are installed.
 2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/trigger-code-reference/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.

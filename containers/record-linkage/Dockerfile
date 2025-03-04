@@ -1,9 +1,12 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 RUN apt-get update && \
-    apt-get upgrade -y
+    apt-get upgrade -y \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip --break-system-packages
 
 WORKDIR /code
 
