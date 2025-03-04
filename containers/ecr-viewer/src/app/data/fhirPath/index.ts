@@ -33,6 +33,9 @@ export type ValueX =
   | Coding
   | Quantity;
 
+/**
+ * Mapping from the FHIR path key to the expected type upon valuation.
+ */
 export type PathTypes = {
   patientNameList: HumanName;
   patientAddressList: Address;
@@ -145,7 +148,13 @@ export type PathTypes = {
   stampedImmunizations: Immunization;
 };
 
-export const PathTypeNames = {
+/**
+ * Mapping from the FHIR path key a string of the type upon valuation. In practice,
+ * this should be a copy past of `PathTypes` but with the types wrapped in quotes.
+ *
+ * Due to type erasure in type script, this is kludgily repeated data.
+ */
+export const PathTypeNames: { [K in keyof PathTypes]: string } = {
   patientNameList: "HumanName",
   patientAddressList: "Address",
   patientTelecom: "ContactPoint",
