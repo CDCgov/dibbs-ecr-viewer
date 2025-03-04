@@ -6,7 +6,7 @@
         "smarty": {
           "summary": "Smarty Geocode Response",
           "value": {
-            "status_code": "200",
+            "status_code": 200,
             "message": null,
             "bundle": {
               "resourceType": "Bundle",
@@ -53,7 +53,7 @@
         "census": {
           "summary": "Census Geocode Response",
           "value": {
-            "status_code": "200",
+            "status_code": 200,
             "message": null,
             "bundle": {
               "resourceType": "Bundle",

@@ -1,4 +1,4 @@
+httpx
 pytest
 pytest-asyncio
-httpx
-testcontainers[compose]==3.7.1
+testcontainers[compose]>=3.7.1

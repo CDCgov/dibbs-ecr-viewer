@@ -4,12 +4,12 @@ ARG TRIGGER_CODE_REFERENCE_URL
 ARG SMARTY_AUTH_ID
 ARG SMARTY_AUTH_TOKEN
 
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 RUN apt-get update && \
     apt-get upgrade -y
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip --break-system-packages
 
 WORKDIR /code
 
