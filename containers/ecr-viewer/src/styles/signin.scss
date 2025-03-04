@@ -1,0 +1,21 @@
+// This file contains declarations used in the styling of the sign-in (redirect) page
+
+@use "uswds-core" as *;
+
+// ==== Button styling ===== //
+
+.redirect-button {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px color("white");
+  font-weight: bold;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 2px color("base-lightest");
+  }
+
+  &:active {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px color("white");
+  }
+}

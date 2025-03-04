@@ -19,6 +19,10 @@
   gap: 0.75rem;
 }
 
+.gap-5 {
+  gap: 2.5rem;
+}
+
 // ==== gutter ==== //
 
 .gutter-3:nth-child(1) {
@@ -26,6 +30,12 @@
 }
 .gutter-3 {
   margin-top: 1.5rem;
+}
+
+// ==== left ==== //
+
+.left-12 {
+  left: 6rem;
 }
 
 // ==== margin ==== //
@@ -88,6 +98,10 @@
 
 .top-550 {
   top: 2.75rem;
+}
+
+.top-3950 {
+  top: 19.75rem;
 }
 
 // ==== width ==== //
