@@ -1,6 +1,13 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "unused-imports", "jsdoc", "react"],
+  "plugins": [
+    "@dword-design/import-alias",
+    "@typescript-eslint",
+    "import",
+    "jsdoc",
+    "react",
+    "unused-imports"
+  ],
   "extends": [
     "plugin:@next/next/recommended",
     "plugin:jsdoc/recommended-typescript-error",
@@ -15,8 +22,41 @@
     "allowImportExportEverywhere": true
   },
   "rules": {
+    "@dword-design/import-alias/prefer-alias": [
+      "error",
+      {
+        "alias": {
+          "@": "./src"
+        }
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "error",
     "dot-notation": "error",
     "eqeqeq": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "parent", "sibling"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "@/**",
+            "group": "parent"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": false
+        },
+        "distinctGroup": false
+      }
+    ],
     "no-unused-vars": "off",
     "object-shorthand": "error",
     "prefer-const": "error",
@@ -47,6 +87,7 @@
     {
       "files": ["*.test*", "**/tests/**/*"],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
         "jsdoc/require-jsdoc": "off"
       }
     }

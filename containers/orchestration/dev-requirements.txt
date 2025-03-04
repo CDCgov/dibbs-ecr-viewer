@@ -1,9 +1,9 @@
-requests-mock
-psycopg2-binary==2.9.10
-pytest
-pytest-mock
-pytest-env
-pytest-asyncio
 asyncio
-testcontainers[compose]==4.9.1
 httpx
+psycopg2-binary>=2.9.10
+pytest
+pytest-asyncio
+pytest-env
+pytest-mock
+requests-mock
+testcontainers[compose]>=4.9.1

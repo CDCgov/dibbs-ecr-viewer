@@ -1,11 +1,9 @@
 import React, { Fragment } from "react";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import sanitizeHtml from "sanitize-html";
-import parse from "html-react-parser";
 
-export interface PathMappings {
-  [key: string]: string;
-}
+import parse from "html-react-parser";
+import sanitizeHtml from "sanitize-html";
+
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 export interface CompleteData {
   availableData: DisplayDataProps[];

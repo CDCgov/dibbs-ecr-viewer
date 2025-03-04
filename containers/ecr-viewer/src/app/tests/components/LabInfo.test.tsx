@@ -1,18 +1,18 @@
-import { render, screen } from "@testing-library/react";
-import LabInfo from "@/app/view-data/components/LabInfo";
-import userEvent from "@testing-library/user-event";
 import React from "react";
-import BundleLab from "@/app/tests/assets/BundleLab.json";
-import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
-import { loadYamlConfig } from "@/app/api/utils";
+
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Bundle } from "fhir/r4";
+
 import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/services/labsService";
+import BundleLab from "@/app/tests/assets/BundleLab.json";
+import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { evaluate } from "@/app/utils/evaluate";
-
-const mappings = loadYamlConfig();
+import LabInfo from "@/app/view-data/components/LabInfo";
+import fhirPathMappings from "@/app/view-data/fhirPath";
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
@@ -20,8 +20,7 @@ describe("LabInfo", () => {
     beforeAll(() => {
       const labinfoOrg = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
-        evaluate(BundleLab, mappings.diagnosticReports),
-        mappings,
+        evaluate(BundleLab, fhirPathMappings.diagnosticReports),
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
@@ -104,8 +103,7 @@ describe("LabInfo", () => {
     it("should be collapsed by default", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
-        mappings,
+        evaluate(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
       );
 
       render(<LabInfo labResults={labinfo} />);
@@ -133,8 +131,7 @@ describe("LabInfo", () => {
     it("should match snapshot test", () => {
       const labinfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
-        mappings,
+        evaluate(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
       );
 
       const { container } = render(<LabInfo labResults={labinfo} />);

@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { test, expect } from "@playwright/test";
 
 test.skip("should not have any automatically detectable accessibility issues", async ({
   page,

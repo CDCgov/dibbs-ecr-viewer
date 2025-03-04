@@ -27,6 +27,7 @@ describe("Sign-in Page", () => {
   });
   afterAll(() => {
     process.env.BASE_PATH = ORIG_BASE_PATH;
+    process.env.BASE_PATH = ORIG_BASE_PATH;
   });
 
   it("should match snapshot", () => {

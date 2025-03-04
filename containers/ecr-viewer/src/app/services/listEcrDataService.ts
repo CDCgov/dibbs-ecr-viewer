@@ -1,7 +1,8 @@
-import { formatDate, formatDateTime } from "@/app/services/formatDateService";
-import { get_pool } from "../data/db/sqlserver_db";
-import { getDB } from "../data/db/postgres_db";
+import { getDB } from "@/app/data/db/postgres_db";
+import { get_pool } from "@/app/data/db/sqlserver_db";
 import { DateRangePeriod } from "@/app/utils/date-utils";
+
+import { formatDate, formatDateTime } from "./formatDateService";
 
 export interface CoreMetadataModel {
   eicr_id: string;
@@ -149,7 +150,7 @@ async function listEcrDataSqlserver(
     const list = await pool.request().query<ExtendedMetadataModel[]>(query);
 
     return processExtendedMetadata(list.recordset);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
     return Promise.reject(error);
   }
@@ -287,7 +288,7 @@ const getTotalEcrCountSqlServer = async (
     const count = await pool.request().query<{ count: number }>(query);
 
     return count.recordset[0].count;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
     return Promise.reject(error);
   }
@@ -506,7 +507,7 @@ const generateSqlServerSortStatement = (
   direction: string,
 ) => {
   // Valid columns and directions
-  const validColumns = {
+  const validColumns: { [key: string]: string } = {
     patient: "patient",
     date_created: "date_created",
     report_date: "encounter_start_date",
@@ -514,7 +515,7 @@ const generateSqlServerSortStatement = (
   const validDirections = ["ASC", "DESC"];
 
   // Validation checks
-  columnName = (validColumns as any)[columnName] ?? "date_created";
+  columnName = validColumns[columnName] ?? "date_created";
   if (!validDirections.includes(direction)) {
     direction = "DESC";
   }
