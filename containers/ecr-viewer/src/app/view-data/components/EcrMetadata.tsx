@@ -43,9 +43,9 @@ const EcrMetadata = ({
     <AccordionSection>
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
+        <div className="section__line_gray" />
         {eRSDWarnings?.length > 0 && (
           <div>
-            <div className="section__line_gray"></div>
             <Table
               bordered={false}
               className="ersd-table fixed-table border-top border-left border-right border-bottom"
@@ -125,7 +125,16 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   const rows = useConvertDictionaryToRows(rrDetails);
 
   if (rows.length === 0) {
-    return null;
+    return (
+      <div>
+        <h5 className="margin-0 text-bold" style={{ fontSize: "1rem" }}>
+          Reportability Summary
+        </h5>
+        <p className="no-data text-italic text-base padding-bottom-0">
+          No reportable condition found
+        </p>
+      </div>
+    );
   }
 
   return (
