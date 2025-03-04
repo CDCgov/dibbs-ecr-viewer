@@ -1,9 +1,8 @@
 import os
 
 import pytest
-from pydantic import ValidationError
-
 from app.config import get_settings
+from pydantic import ValidationError
 
 
 def test_get_settings_success():

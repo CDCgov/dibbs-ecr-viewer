@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Optional, Union
 
 
 @dataclass
@@ -17,13 +18,13 @@ class GeocodeResult:
     county_fips: str
     lat: float
     lng: float
-    district: str | None = None
-    country: str | None = None
-    county_name: str | None = None
-    precision: str | None = None
-    geoid: str | None = None
-    census_tract: str | None = None
-    census_block: str | None = None
+    district: Optional[str] = None
+    country: Optional[str] = None
+    county_name: Optional[str] = None
+    precision: Optional[str] = None
+    geoid: Optional[str] = None
+    census_tract: Optional[str] = None
+    census_block: Optional[str] = None
 
 
 class BaseGeocodeClient(ABC):
@@ -35,7 +36,7 @@ class BaseGeocodeClient(ABC):
     """
 
     @abstractmethod
-    def geocode_from_str(self, address: str) -> GeocodeResult | None:
+    def geocode_from_str(self, address: str) -> Union[GeocodeResult, None]:
         """
         Geocodes the provided address, which is formatted as a string.
 
@@ -47,7 +48,7 @@ class BaseGeocodeClient(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def geocode_from_dict(self, address: dict) -> GeocodeResult | None:
+    def geocode_from_dict(self, address: dict) -> Union[GeocodeResult, None]:
         """
         Geocodes the provided address, which is formatted as a dictionary.
 

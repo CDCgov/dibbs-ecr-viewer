@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Union
 
 
 class BaseCredentialManager(ABC):
@@ -44,7 +45,7 @@ class BaseCloudStorageConnection(ABC):
     @abstractmethod
     def upload_object(
         self,
-        message: str | dict,
+        message: Union[str, dict],
         container_name: str,
         filename: str,
     ) -> None:

@@ -1,6 +1,6 @@
 import json
-from datetime import UTC, datetime
-from typing import Literal
+from datetime import datetime, timezone
+from typing import Literal, Union
 
 from azure.core.credentials import AccessToken
 from azure.identity import DefaultAzureCredential
@@ -75,7 +75,7 @@ class AzureCredentialManager(BaseCredentialManager):
         :return: True if a new Azure access token is needed; false otherwise.
         """
         try:
-            current_time_utc = datetime.now(UTC).timestamp()
+            current_time_utc = datetime.now(timezone.utc).timestamp()
             return self.access_token.expires_on < current_time_utc
         except AttributeError:
             # access_token not set
@@ -165,7 +165,7 @@ class AzureCloudContainerConnection(BaseCloudStorageConnection):
 
     def upload_object(
         self,
-        message: str | dict,
+        message: Union[str, dict],
         container_name: str,
         filename: str,
     ) -> None:

@@ -1,5 +1,5 @@
 import copy
-from typing import Literal
+from typing import Literal, Union
 
 from app.harmonization import (
     DoubleMetaphone,
@@ -215,7 +215,9 @@ def _standardize_names_in_resource(
     return resource
 
 
-def _standardize_phones_in_resource(resource: dict, overwrite=True) -> dict | None:
+def _standardize_phones_in_resource(
+    resource: dict, overwrite=True
+) -> Union[dict, None]:
     if not overwrite:
         resource = copy.deepcopy(resource)
 
@@ -260,7 +262,7 @@ def _extract_countries_from_resource(
 
 def _standardize_dob_in_resource(
     resource: dict, format: str = "%Y-%m-%d", overwrite=True
-) -> dict | None:
+) -> Union[dict, None]:
     if not overwrite:
         resource = copy.deepcopy(resource)
 

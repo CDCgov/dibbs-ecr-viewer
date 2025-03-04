@@ -2,9 +2,8 @@ import json
 import pathlib
 from unittest import mock
 
-from fastapi.testclient import TestClient
-
 from app.main import app
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 

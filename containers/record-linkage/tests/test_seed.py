@@ -1,7 +1,6 @@
 import pathlib
 
 import pyarrow.parquet as pq
-
 from app.linkage.seed import (
     adjust_birthdate,
     convert_to_patient_fhir_resources,

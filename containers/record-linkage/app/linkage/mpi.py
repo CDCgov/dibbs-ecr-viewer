@@ -2,6 +2,7 @@ import datetime
 import logging
 import uuid
 from functools import cache
+from typing import Union
 
 from sqlalchemy import Select, and_, select, text
 from sqlalchemy.dialects.postgresql import aggregate_order_by, array_agg
@@ -616,7 +617,7 @@ class DIBBsMPIConnectorClient(BaseMPIConnectorClient):
                 )
 
     @cache
-    def _get_external_source_id(self, external_source_name: str) -> str | None:
+    def _get_external_source_id(self, external_source_name: str) -> Union[str, None]:
         """
         Gets the external source id for the external source name provided.
         :param external_source_name: The external source name.

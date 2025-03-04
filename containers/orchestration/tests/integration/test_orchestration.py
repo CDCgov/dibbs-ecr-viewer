@@ -6,11 +6,10 @@ from unittest.mock import patch
 import httpx
 import psycopg2
 import pytest
-from lxml import etree
-from starlette.testclient import TestClient
-
 from app.config import get_settings
 from app.main import app
+from lxml import etree
+from starlette.testclient import TestClient
 
 
 @pytest.fixture

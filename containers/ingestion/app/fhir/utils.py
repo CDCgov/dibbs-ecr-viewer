@@ -1,8 +1,7 @@
 import json
 import random
-from collections.abc import Callable
 from functools import cache
-from typing import Any, Literal
+from typing import Any, Callable, Literal, Union
 
 import fhirpathpy
 
@@ -52,7 +51,7 @@ def extract_value_with_resource_path(
     resource: dict,
     path: str,
     selection_criteria: Literal["first", "last", "random", "all"] = "first",
-) -> Any | None:
+) -> Union[Any, None]:
     """
     Yields a single value from a resource based on a provided `fhir_path`.
     If the path doesn't map to an extant value in the first, returns

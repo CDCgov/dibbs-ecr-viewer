@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional, Union
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -61,37 +61,37 @@ class ParseMessageInput(BaseModel):
     message_format: Literal["fhir", "hl7v2", "ecr"] = Field(
         description="The format of the message."
     )
-    message_type: Literal["ecr", "elr", "vxu"] | None = Field(
+    message_type: Optional[Literal["ecr", "elr", "vxu"]] = Field(
         default=None,
         description="The type of message that values will be extracted from. Required "
         "when 'message_format is not FHIR.",
     )
-    parsing_schema: dict | None = Field(
+    parsing_schema: Optional[dict] = Field(
         description="A schema describing which fields to extract from the message. This"
         " must be a JSON object with key:value pairs of the form "
         "<my-field>:<FHIR-to-my-field>.",
         default=None,
     )
-    parsing_schema_name: str | None = Field(
+    parsing_schema_name: Optional[str] = Field(
         description="The name of a schema that was previously"
         " loaded in the service to use to extract fields from the message.",
         default=None,
     )
-    fhir_converter_url: str | None = Field(
+    fhir_converter_url: Optional[str] = Field(
         description="The URL of an instance of the PHDI FHIR converter. Required when "
         "the message is not already in FHIR format.",
         default=None,
     )
-    credential_manager: Literal["azure", "gcp"] | None = Field(
+    credential_manager: Optional[Literal["azure", "gcp"]] = Field(
         description="The type of credential manager to use for authentication with a "
         "FHIR converter when conversion to FHIR is required.",
         default=None,
     )
-    include_metadata: Literal["true", "false"] | None = Field(
+    include_metadata: Optional[Literal["true", "false"]] = Field(
         description="Boolean to include metadata in the response.",
         default=None,
     )
-    message: str | dict = Field(description="The message to be parsed.")
+    message: Union[str, dict] = Field(description="The message to be parsed.")
 
     @model_validator(mode="before")
     def require_message_type_when_not_fhir(cls, values):
@@ -254,21 +254,21 @@ class ParsingSchemaSecondaryFieldModel(BaseModel):
     fhir_path: str
     data_type: PARSING_SCHEMA_DATA_TYPES
     nullable: bool
-    secondary_schema: dict[str, ParsingSchemaTertiaryFieldModel] | None = None
+    secondary_schema: Optional[dict[str, ParsingSchemaTertiaryFieldModel]] = None
 
 
 class ParsingSchemaFieldModel(BaseModel):
     fhir_path: str
     data_type: PARSING_SCHEMA_DATA_TYPES
     nullable: bool
-    secondary_schema: dict[str, ParsingSchemaSecondaryFieldModel] | None = None
+    secondary_schema: Optional[dict[str, ParsingSchemaSecondaryFieldModel]] = None
 
 
 class ParsingSchemaModel(BaseModel):
     parsing_schema: dict[str, ParsingSchemaFieldModel] = Field(
         description="A JSON formatted parsing schema to upload."
     )
-    overwrite: bool | None = Field(
+    overwrite: Optional[bool] = Field(
         description="When `true` if a schema already exists for the provided name it "
         "will be replaced. When `false` no action will be taken and the response will "
         "indicate that a schema for the given name already exists. To proceed submit a "

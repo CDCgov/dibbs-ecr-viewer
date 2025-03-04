@@ -1,4 +1,5 @@
 import json
+from typing import Union
 
 import google.auth.transport.requests
 from google.auth.credentials import Credentials
@@ -153,7 +154,7 @@ class GcpCloudStorageConnection(BaseCloudStorageConnection):
 
     def upload_object(
         self,
-        message: str | dict,
+        message: Union[str, dict],
         container_name: str,
         filename: str,
         content_type="application/json",

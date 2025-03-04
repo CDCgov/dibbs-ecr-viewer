@@ -1,14 +1,13 @@
 import io
 import json
 import pathlib
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from unittest import mock
 
 import pytest
-from azure.storage.blob import ContainerClient
-
 from app.cloud.azure import AzureCloudContainerConnection, AzureCredentialManager
 from app.cloud.gcp import GcpCloudStorageConnection, GcpCredentialManager
+from azure.storage.blob import ContainerClient
 
 
 @mock.patch("app.cloud.azure.DefaultAzureCredential")
@@ -17,7 +16,7 @@ def test_azure_credential_manager(mock_az_creds):
     az_resource_location = "https://some-url"
     az_scope = "some-scope"
     az_access_token_str = "some-token"
-    az_access_token_exp = datetime.now(UTC).timestamp() + 1000
+    az_access_token_exp = datetime.now(timezone.utc).timestamp() + 1000
     az_access_token = mock.Mock(
         token=az_access_token_str, expires_on=az_access_token_exp
     )
@@ -40,7 +39,7 @@ def test_azure_credential_manager_default_scope(mock_az_creds):
     az_resource_location = "https://some-url"
 
     az_access_token_str = "some-token"
-    az_access_token_exp = datetime.now(UTC).timestamp() + 1000
+    az_access_token_exp = datetime.now(timezone.utc).timestamp() + 1000
     az_access_token = mock.Mock(
         token=az_access_token_str, expires_on=az_access_token_exp
     )
@@ -65,12 +64,12 @@ def test_azure_credential_manager_reuse_token(mock_az_creds):
     az_resource_location = "https://some-url"
 
     az_access_token_str1 = "some-token1"
-    az_access_token_exp1 = datetime.now(UTC).timestamp() + 1000
+    az_access_token_exp1 = datetime.now(timezone.utc).timestamp() + 1000
     az_access_token1 = mock.Mock(
         token=az_access_token_str1, expires_on=az_access_token_exp1
     )
     az_access_token_str2 = "some-token2"
-    az_access_token_exp2 = datetime.now(UTC).timestamp() + 1000
+    az_access_token_exp2 = datetime.now(timezone.utc).timestamp() + 1000
     az_access_token2 = mock.Mock(
         token=az_access_token_str2, expires_on=az_access_token_exp2
     )
@@ -97,12 +96,12 @@ def test_azure_credential_manager_refresh_token(mock_az_creds):
     az_resource_location = "https://some-url"
 
     az_access_token_str1 = "some-token1"
-    az_access_token_exp1 = datetime.now(UTC).timestamp() - 1000
+    az_access_token_exp1 = datetime.now(timezone.utc).timestamp() - 1000
     az_access_token1 = mock.Mock(
         token=az_access_token_str1, expires_on=az_access_token_exp1
     )
     az_access_token_str2 = "some-token2"
-    az_access_token_exp2 = datetime.now(UTC).timestamp() + 1000
+    az_access_token_exp2 = datetime.now(timezone.utc).timestamp() + 1000
     az_access_token2 = mock.Mock(
         token=az_access_token_str2, expires_on=az_access_token_exp2
     )
@@ -129,12 +128,12 @@ def test_azure_credential_manager_force_refresh_token(mock_az_creds):
     az_resource_location = "https://some-url"
 
     az_access_token_str1 = "some-token1"
-    az_access_token_exp1 = datetime.now(UTC).timestamp() + 1000
+    az_access_token_exp1 = datetime.now(timezone.utc).timestamp() + 1000
     az_access_token1 = mock.Mock(
         token=az_access_token_str1, expires_on=az_access_token_exp1
     )
     az_access_token_str2 = "some-token2"
-    az_access_token_exp2 = datetime.now(UTC).timestamp() + 1000
+    az_access_token_exp2 = datetime.now(timezone.utc).timestamp() + 1000
     az_access_token2 = mock.Mock(
         token=az_access_token_str2, expires_on=az_access_token_exp2
     )
