@@ -1,14 +1,11 @@
 import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
-import {
-  BlobClient,
-  BlobDownloadResponseParsed,
-  BlobServiceClient,
-} from "@azure/storage-blob";
+import { BlobClient, BlobDownloadResponseParsed } from "@azure/storage-blob";
 import { Bundle } from "fhir/r4";
 import { NextResponse } from "next/server";
 
-import { s3Client } from "@/app/api/services/s3Client";
 import { AZURE_SOURCE, S3_SOURCE, streamToJson } from "@/app/api/utils";
+import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
+import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
@@ -79,19 +76,10 @@ export const get_s3 = async (
 export const get_azure = async (
   ecr_id: string | null,
 ): Promise<FhirDataResponse> => {
-  // TODO: Make this global after we get Azure access
-  const blobClient = BlobServiceClient.fromConnectionString(
-    process.env.AZURE_STORAGE_CONNECTION_STRING!,
-  );
-
-  if (!process.env.AZURE_CONTAINER_NAME)
-    throw Error("Azure container name not found");
-
-  const containerName = process.env.AZURE_CONTAINER_NAME;
+  const containerClient = azureBlobContainerClient();
   const blobName = `${ecr_id}.json`;
 
   try {
-    const containerClient = blobClient.getContainerClient(containerName);
     const blockBlobClient: BlobClient = containerClient.getBlobClient(blobName);
 
     const downloadResponse: BlobDownloadResponseParsed =

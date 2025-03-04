@@ -1,7 +1,0 @@
-import { S3Client } from "@aws-sdk/client-s3";
-
-export const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_CUSTOM_ENDPOINT,
-  forcePathStyle: process.env.AWS_CUSTOM_ENDPOINT !== undefined,
-});

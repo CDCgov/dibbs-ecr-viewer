@@ -5,11 +5,13 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      args:
+        - APP_VERSION=1.0
     ports:
       - "3000:3000"
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
-      - NBS_PUB_KEY=${NBS_PUB_KEY}
+      - NBS_PUB_KEY=${NBS_PUB_KEY:-}
       # POSTGRES
       - DATABASE_URL=postgres://postgres:pw@postgres:5432/ecr_viewer_db
       # AWS

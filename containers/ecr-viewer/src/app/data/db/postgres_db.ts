@@ -44,3 +44,20 @@ export const getDB = (): IDatabaseScope => {
     };
   });
 };
+
+/**
+ * Performs a health check on the PostgreSQL database connection.
+ * @returns The status of the postgres connection or undefined if missing environment values.
+ */
+export const postgresHealthCheck = async () => {
+  if (!process.env.DATABASE_URL) {
+    return undefined;
+  }
+  try {
+    await getDB().database.connect();
+    return "UP";
+  } catch (error: unknown) {
+    console.error(error);
+    return "DOWN";
+  }
+};
