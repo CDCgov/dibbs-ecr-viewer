@@ -2,7 +2,7 @@
 
 ### Introduction
 
-The DIBBs Message Parser offers a REST API for extracting desired fields from a given message. The service natively supports extracting values from FHIR bundles, but it can support parsing Hl7v2 (eLR, VXU, ADT, etc.) and CDA(eCR) messages by first using the [DIBBs FHIR Converter](https://cdcgov.github.io/phdi/latest/containers/fhir-converter.html) to convert them to FHIR. Fields are extracted using a "parsing schema" which is simply a mapping in key:value format between desired field names (keys) and the [FHIRPaths](https://build.fhir.org/fhirpath.html) within the bundle to the values. In addition the data type of value (string, integer, float, boolean, date, timestamp) as well as whether the value can be null (`true`, `false`) must be specified. A simple example of a schema for extracting a patient's first and last name from messages is shown below.
+The DIBBs Message Parser offers a REST API for extracting desired fields from a given message. The service natively supports extracting values from FHIR bundles, but it can support parsing Hl7v2 (eLR, VXU, ADT, etc.) and CDA(eCR) messages by first using the [DIBBs FHIR Converter](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/fhir-converter.html) to convert them to FHIR. Fields are extracted using a "parsing schema" which is simply a mapping in key:value format between desired field names (keys) and the [FHIRPaths](https://build.fhir.org/fhirpath.html) within the bundle to the values. In addition the data type of value (string, integer, float, boolean, date, timestamp) as well as whether the value can be null (`true`, `false`) must be specified. A simple example of a schema for extracting a patient's first and last name from messages is shown below.
 
 ```
 {
@@ -112,7 +112,7 @@ To run the Message Parser with Docker, follow these steps.
 Docker version 20.10.21, build baeda1f
 ```
 
-2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/phdi/message-parser:latest`.
+2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/message-parser:latest`.
 3. Run the service with ` docker run -p 8080:8080 message-parser:latest`.
 
 Congratulations, the Message Parser should now be running on `localhost:8080`!
@@ -121,9 +121,9 @@ Congratulations, the Message Parser should now be running on `localhost:8080`!
 
 We recommend running the Message Parser from a container, but if that isn’t feasible for a given use case, you can also run the service directly from Python using the steps below.
 
-1. Ensure that both Git and Python 3.10 or higher are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/message-parser/`.
+1. Ensure that both Git and Python 3.13 or higher are installed.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/message-parser/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.
 5. Activate the virtual environment with `source .venv/bin/activate` (MacOS and Linux), `venv\Scripts\activate` (Windows Command Prompt), or `.venv\Scripts\Activate.ps1` (Windows Power Shell).
 6. Install all of the Python dependencies for the Message Parser with `pip install -r requirements.txt` into your virtual environment.
@@ -134,8 +134,8 @@ We recommend running the Message Parser from a container, but if that isn’t fe
 To build the Docker image for the Message Parser from source instead of downloading it from the PHDI repository follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/message-parser/`.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/message-parser/`.
 4. Run `docker build -t message-parser .`.
 
 ### The API

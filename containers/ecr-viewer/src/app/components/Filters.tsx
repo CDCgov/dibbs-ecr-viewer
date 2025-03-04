@@ -6,15 +6,11 @@ import React, {
   useRef,
   useState,
 } from "react";
+
 import { Button } from "@trussworks/react-uswds";
-import { Autorenew, Coronavirus, Event } from "@/app/components/Icon";
-import {
-  Filter,
-  RadioDateOption,
-  RadioDateOptions,
-  CustomDateInput,
-} from "@/app/components/BaseFilter";
+
 import { useQueryParam } from "@/app/hooks/useQueryParam";
+import { formatDateTime } from "@/app/services/formatDateService";
 import {
   CustomDateRangeOption,
   DEFAULT_DATE_RANGE,
@@ -22,7 +18,14 @@ import {
   dateRangeLabels,
   isValidParamDates,
 } from "@/app/utils/date-utils";
-import { formatDateTime } from "@/app/services/formatDateService";
+
+import {
+  Filter,
+  RadioDateOption,
+  RadioDateOptions,
+  CustomDateInput,
+} from "./BaseFilter";
+import { Autorenew, Coronavirus, Event } from "./Icon";
 
 enum ParamName {
   Condition = "condition",
@@ -195,7 +198,7 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
     const prevFilterConditions = conditions.reduce(
       (dict: { [key: string]: boolean }, condition: string) => {
         dict[condition] = conditionValue(condition);
-        if (dict[condition] != filterConditions[condition]) {
+        if (dict[condition] !== filterConditions[condition]) {
           changed = true;
         }
         return dict;

@@ -1,25 +1,24 @@
-import { loadYamlConfig } from "@/app/api/utils";
+import React from "react";
+
+import { render, screen } from "@testing-library/react";
+import { Bundle } from "fhir/r4";
+
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryRelevantClinicalDetails,
 } from "@/app/services/ecrSummaryService";
-import BundleWithClinicalInfo from "../../../../../../test-data/fhir/BundleClinicalInfo.json";
 import { evaluateEcrSummaryRelevantLabResults } from "@/app/services/ecrSummaryService";
-import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
-import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-import BundleEcrSummary from "../../../../../../test-data/fhir/BundleEcrSummary.json";
-import { Bundle } from "fhir/r4";
-import { render, screen } from "@testing-library/react";
-import React from "react";
+import BundleWithClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
+import BundleEcrSummary from "@/app/tests/assets/BundleEcrSummary.json";
+import BundleLab from "@/app/tests/assets/BundleLab.json";
+import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 
-const mappings = loadYamlConfig();
 describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Clinical Details", () => {
     it("should return 'No Data' string when no SNOMED code is provided", () => {
       const expectedValue = "No matching clinical data found in this eCR";
       const actual = evaluateEcrSummaryRelevantClinicalDetails(
         BundleWithClinicalInfo as unknown as Bundle,
-        mappings,
         "",
       );
 
@@ -31,7 +30,6 @@ describe("ecrSummaryService Tests", () => {
       const expectedValue = "No matching clinical data found in this eCR";
       const actual = evaluateEcrSummaryRelevantClinicalDetails(
         BundleWithClinicalInfo as unknown as Bundle,
-        mappings,
         "invalid-snomed-code",
       );
 
@@ -42,7 +40,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return the correct active problem when the provided SNOMED code matches", () => {
       const result = evaluateEcrSummaryRelevantClinicalDetails(
         BundleWithClinicalInfo as unknown as Bundle,
-        mappings,
         "263133002",
       );
       expect(result).toHaveLength(1);
@@ -64,7 +61,6 @@ describe("ecrSummaryService Tests", () => {
       const expectedValue = "No matching lab results found in this eCR";
       const actual = evaluateEcrSummaryRelevantLabResults(
         BundleLab as unknown as Bundle,
-        mappings,
         "",
       );
 
@@ -76,7 +72,6 @@ describe("ecrSummaryService Tests", () => {
       const expectedValue = "No matching lab results found in this eCR";
       const actual = evaluateEcrSummaryRelevantLabResults(
         BundleLab as unknown as Bundle,
-        mappings,
         "invalid-snomed-code",
       );
 
@@ -87,7 +82,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return the correct lab result(s) when the provided SNOMED code matches", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
         BundleLab as unknown as Bundle,
-        mappings,
         "test-snomed",
       );
       expect(result).toHaveLength(3); // 2 results, plus last item is divider line
@@ -108,7 +102,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return all lab results when lab results are not LabReportElementData", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
         BundleLabNoLabIds as unknown as Bundle,
-        mappings,
         "840539006",
       );
       expect(result).toHaveLength(2); // 1 result, plus last item is divider line
@@ -125,7 +118,6 @@ describe("ecrSummaryService Tests", () => {
     it("should not include the last empty divider line when lastDividerLine is false", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
         BundleLab as unknown as Bundle,
-        mappings,
         "test-snomed",
         false,
       );
@@ -138,7 +130,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return titles based on snomed code, and return human-readable name if available", () => {
       const actual = evaluateEcrSummaryConditionSummary(
         BundleEcrSummary as unknown as Bundle,
-        mappings,
       );
 
       expect(actual[0].title).toEqual("Hepatitis C");
@@ -149,7 +140,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return summaries based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
         BundleEcrSummary as unknown as Bundle,
-        mappings,
       );
       render(
         actual[1].conditionDetails.map((detail) => (
@@ -174,7 +164,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return clinical details based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
         BundleEcrSummary as unknown as Bundle,
-        mappings,
       );
 
       render(
@@ -188,7 +177,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return lab details based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
         BundleEcrSummary as unknown as Bundle,
-        mappings,
       );
 
       render(
@@ -205,7 +193,6 @@ describe("ecrSummaryService Tests", () => {
     it("should return immunization details based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
         BundleEcrSummary as unknown as Bundle,
-        mappings,
       );
       render(
         actual[1].immunizationDetails.map((detail) => (
@@ -216,41 +203,38 @@ describe("ecrSummaryService Tests", () => {
       expect(screen.getByText("SARS-CoV-2 PCR Vaccine")).toBeInTheDocument();
     });
     it("should not display non-related immunization details", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
-        {
-          ...BundleEcrSummary,
-          entry: [
-            ...BundleEcrSummary.entry,
-            {
-              fullUrl: "urn:uuid:6689c3f5-f256-9c28-bd98-89905630f28d",
-              resource: {
-                resourceType: "Immunization",
-                vaccineCode: {
-                  coding: [
-                    {
-                      code: "24",
-                      system: "urn:oid:2.16.840.1.113883.12.292",
-                      display: "anthrax",
-                    },
-                  ],
-                },
-                extension: [
+      const actual = evaluateEcrSummaryConditionSummary({
+        ...BundleEcrSummary,
+        entry: [
+          ...BundleEcrSummary.entry,
+          {
+            fullUrl: "urn:uuid:6689c3f5-f256-9c28-bd98-89905630f28d",
+            resource: {
+              resourceType: "Immunization",
+              vaccineCode: {
+                coding: [
                   {
-                    url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
-                    valueCoding: [
-                      {
-                        code: "722545003",
-                        system: "http://snomed.info/sct",
-                      },
-                    ],
+                    code: "24",
+                    system: "urn:oid:2.16.840.1.113883.12.292",
+                    display: "anthrax",
                   },
                 ],
               },
+              extension: [
+                {
+                  url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  valueCoding: [
+                    {
+                      code: "722545003",
+                      system: "http://snomed.info/sct",
+                    },
+                  ],
+                },
+              ],
             },
-          ],
-        } as unknown as Bundle,
-        mappings,
-      );
+          },
+        ],
+      } as unknown as Bundle);
       render(
         actual[1].immunizationDetails.map((detail) => (
           <React.Fragment key={Math.random()}>{detail.value}</React.Fragment>
@@ -261,14 +245,13 @@ describe("ecrSummaryService Tests", () => {
       expect(screen.queryByText("anthrax")).not.toBeInTheDocument();
     });
     it("should return empty array if none found", () => {
-      const actual = evaluateEcrSummaryConditionSummary({} as Bundle, mappings);
+      const actual = evaluateEcrSummaryConditionSummary({} as Bundle);
 
       expect(actual).toBeEmpty();
     });
     it("should return the the requested snomed first", () => {
       const verifyNotFirst = evaluateEcrSummaryConditionSummary(
         BundleEcrSummary as unknown as Bundle,
-        mappings,
       );
 
       expect(verifyNotFirst[0].title).not.toEqual(
@@ -277,7 +260,6 @@ describe("ecrSummaryService Tests", () => {
 
       const actual = evaluateEcrSummaryConditionSummary(
         BundleEcrSummary as unknown as Bundle,
-        mappings,
         "840539006",
       );
       expect(actual[0].title).toEqual(

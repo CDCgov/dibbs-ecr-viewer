@@ -1,20 +1,13 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
-import fs from "fs";
-import YAML from "js-yaml";
 import { Bundle, Condition } from "fhir/r4";
-import BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
+import { axe } from "jest-axe";
+
+import BundleWithPatient from "@/app/tests/assets/BundlePatient.json";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-import { PathMappings } from "@/app/utils/data-utils";
 
 describe("Active Problems Table", () => {
   let container: HTMLElement;
   beforeEach(() => {
-    const fhirPathFile = fs
-      .readFileSync("./src/app/api/fhirPath.yaml", "utf8")
-      .toString();
-    const fhirPathMappings = YAML.load(fhirPathFile) as PathMappings;
-
     const activeProblemsData: Condition[] = [
       {
         id: "80db768f-19ea-f1d0-f9e5-22d854d7acc5",
@@ -51,6 +44,7 @@ describe("Active Problems Table", () => {
         ],
         resourceType: "Condition",
         onsetDateTime: "12/14/2022",
+        onsetAge: { value: 123 },
         clinicalStatus: {
           coding: [
             {
@@ -95,7 +89,7 @@ describe("Active Problems Table", () => {
           },
         ],
         resourceType: "Condition",
-        onsetDateTime: "08/19/2021",
+        onsetAge: { value: 152 },
         clinicalStatus: {
           coding: [
             {
@@ -155,7 +149,6 @@ describe("Active Problems Table", () => {
       returnProblemsTable(
         BundleWithPatient as unknown as Bundle,
         activeProblemsData,
-        fhirPathMappings,
       )!,
     ).container;
   });
@@ -165,9 +158,9 @@ describe("Active Problems Table", () => {
   it("should pass accessibility test", async () => {
     expect(await axe(container)).toHaveNoViolations();
   });
-  it("should calculate onset age", () => {
-    expect(screen.getByText("145")).toBeInTheDocument();
-    expect(screen.getByText("144")).toBeInTheDocument();
+  it("should use or calculate onset age", () => {
+    expect(screen.getByText("123")).toBeInTheDocument();
+    expect(screen.getByText("152")).toBeInTheDocument();
     expect(screen.getByText("141")).toBeInTheDocument();
   });
 });

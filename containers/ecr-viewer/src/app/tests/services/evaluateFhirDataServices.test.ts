@@ -1,4 +1,5 @@
-import { loadYamlConfig } from "@/app/api/utils";
+import { Bundle, CodeableConcept, Observation, Patient } from "fhir/r4";
+
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -15,36 +16,34 @@ import {
   evaluateAlcoholUse,
   evaluatePatientLanguage,
   evaluatePatientVitalStatus,
+  getHumanReadableCodeableConcept,
+  censorGender,
 } from "@/app/services/evaluateFhirDataService";
-import { Bundle, Patient } from "fhir/r4";
-import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
-import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
-import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
-import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
-
-const mappings = loadYamlConfig();
+import BundleEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
+import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
+import BundlePatient from "@/app/tests/assets/BundlePatient.json";
+import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
+import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
+import mappings from "@/app/view-data/fhirPath";
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Reference", () => {
     it("should return undefined if resource not found", () => {
-      const actual = evaluateReference(
+      const actual = evaluateReference<Observation>(
         BundleMiscNotes as unknown as Bundle,
-        mappings,
         "Observation/1234",
       );
 
       expect(actual).toBeUndefined();
     });
     it("should return the resource if the resource is available", () => {
-      const actual = evaluateReference(
+      const actual = evaluateReference<Patient>(
         BundlePatient as unknown as Bundle,
-        mappings,
         "Patient/99999999-4p89-4b96-b6ab-c46406839cea",
       );
 
-      expect(actual.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
-      expect(actual.resourceType).toEqual("Patient");
+      expect(actual?.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
+      expect(actual?.resourceType).toEqual("Patient");
     });
   });
 
@@ -169,10 +168,7 @@ describe("evaluateFhirDataServices tests", () => {
 
   describe("Evaluate Patient Race", () => {
     it("should return race category and extension if available", () => {
-      const actual = evaluatePatientRace(
-        BundlePatient as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluatePatientRace(BundlePatient as unknown as Bundle);
       expect(actual).toEqual("Black or African American\nAfrican");
     });
   });
@@ -181,17 +177,13 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return ethnicity category and extension if available", () => {
       const actual = evaluatePatientEthnicity(
         BundlePatient as unknown as Bundle,
-        mappings,
       );
       expect(actual).toEqual("Hispanic or Latino\nWhite");
     });
   });
 
   it("should return tribal affiliation if available", () => {
-    const actual = evaluateDemographicsData(
-      BundlePatient as unknown as Bundle,
-      mappings,
-    );
+    const actual = evaluateDemographicsData(BundlePatient as unknown as Bundle);
     const ext = actual.availableData.filter(
       (d) => d.title === "Tribal Affiliation",
     );
@@ -203,10 +195,7 @@ describe("evaluateFhirDataServices tests", () => {
 
   describe("Evaluate Facility Id", () => {
     it("should return the facility id", () => {
-      const actual = evaluateFacilityId(
-        BundleEcrMetadata as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluateFacilityId(BundleEcrMetadata as unknown as Bundle);
 
       expect(actual).toEqual("112233445566778899");
     });
@@ -216,7 +205,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return the correct Encounter ID", () => {
       const actual = evaluateEncounterId(
         BundleEcrMetadata as unknown as Bundle,
-        mappings,
       );
 
       expect(actual).toEqual("123456789");
@@ -227,7 +215,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return the correct Encounter care team", () => {
       const actual = evaluateEncounterCareTeamTable(
         BundleEcrMetadata as unknown as Bundle,
-        mappings,
       );
 
       expect(actual).toMatchSnapshot();
@@ -238,7 +225,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return the organization and practitioner when practitioner role is found ", () => {
       const actual = evaluatePractitionerRoleReference(
         BundlePractitionerRole as unknown as Bundle,
-        mappings,
         "PractitionerRole/b18c20c1-123b-fd12-71cf-9dd0abae8ced",
       );
 
@@ -261,7 +247,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return undefined organization and practitioner when practitioner role is not found", () => {
       const actual = evaluatePractitionerRoleReference(
         BundlePractitionerRole as unknown as Bundle,
-        mappings,
         "unknown",
       );
 
@@ -315,10 +300,7 @@ describe("evaluateFhirDataServices tests", () => {
           },
         },
       ];
-      const actual = evaluateEmergencyContact(
-        BundlePatientAndContact,
-        mappings,
-      );
+      const actual = evaluateEmergencyContact(BundlePatientAndContact);
       expect(actual).toEqual(
         `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999`,
       );
@@ -393,10 +375,7 @@ describe("evaluateFhirDataServices tests", () => {
           ],
         },
       ];
-      const actual = evaluateEmergencyContact(
-        BundlePatientAndContact,
-        mappings,
-      );
+      const actual = evaluateEmergencyContact(BundlePatientAndContact);
       expect(actual).toEqual(
         `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
       );
@@ -435,10 +414,7 @@ describe("evaluateFhirDataServices tests", () => {
           ],
         },
       ];
-      const actual = evaluateEmergencyContact(
-        BundlePatientAndContact,
-        mappings,
-      );
+      const actual = evaluateEmergencyContact(BundlePatientAndContact);
       expect(actual).toEqual(
         `Sister\nAnastasia Bubbletea Pizza\nHome: 555-995-9999`,
       );
@@ -446,7 +422,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return undefined if a patient has no contact", () => {
       const actual = evaluateEmergencyContact(
         BundlePatient as unknown as Bundle,
-        mappings,
       );
       expect(actual).toBeUndefined();
     });
@@ -454,16 +429,12 @@ describe("evaluateFhirDataServices tests", () => {
 
   describe("Evaluate Patient Address", () => {
     it("should return the 1 address", () => {
-      const actual = evaluatePatientAddress(
-        BundlePatient as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluatePatientAddress(BundlePatient as unknown as Bundle);
       expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
     });
     it("should return all 3 of the addresses", () => {
       const actual = evaluatePatientAddress(
         BundlePatientMultiple as unknown as Bundle,
-        mappings,
       );
       expect(actual).toEqual(
         "Home:\n" +
@@ -488,7 +459,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return the 1 name", () => {
       const actual = evaluatePatientName(
         BundlePatient as unknown as Bundle,
-        mappings,
         false,
       );
       expect(actual).toEqual("Han Solo");
@@ -496,7 +466,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return all 2 of the names", () => {
       const actual = evaluatePatientName(
         BundlePatientMultiple as unknown as Bundle,
-        mappings,
         false,
       );
       expect(actual).toEqual(
@@ -506,7 +475,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should only return the official name for the banner", () => {
       const actual = evaluatePatientName(
         BundlePatientMultiple as unknown as Bundle,
-        mappings,
         true,
       );
       expect(actual).toEqual("Anakin Skywalker");
@@ -514,7 +482,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should only return the official name for the banner", () => {
       const actual = evaluatePatientName(
         BundlePatient as unknown as Bundle,
-        mappings,
         true,
       );
       expect(actual).toEqual("Han Solo");
@@ -523,10 +490,7 @@ describe("evaluateFhirDataServices tests", () => {
 
   describe("Evaluate Alcohol Use", () => {
     it("should return the use, intake comment", () => {
-      const actual = evaluateAlcoholUse(
-        BundlePatient as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluateAlcoholUse(BundlePatient as unknown as Bundle);
       expect(actual).toEqual(
         "Use: Current drinker of alcohol (finding)\n" +
           "Intake (standard drinks/week): .29/d\n" +
@@ -536,7 +500,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should empty string because there is no use, intake, or comment", () => {
       const actual = evaluateAlcoholUse(
         BundlePatientMultiple as unknown as Bundle,
-        mappings,
       );
       expect(actual).toEqual("");
     });
@@ -560,7 +523,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return an empty string when no `deceasedBoolean` value is present", () => {
       const actual = evaluatePatientVitalStatus(
         BundlePatient as unknown as Bundle,
-        mappings,
       );
       expect(actual).toEqual("");
     });
@@ -568,7 +530,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return `Alive` when `deceasedBoolean` is `false`", () => {
       const actual = evaluatePatientVitalStatus(
         getPatientBundle(false) as unknown as Bundle,
-        mappings,
       );
       expect(actual).toEqual("Alive");
     });
@@ -576,7 +537,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("should return `Deceased` when `deceasedBoolean` is `true`", () => {
       const actual = evaluatePatientVitalStatus(
         getPatientBundle(true) as unknown as Bundle,
-        mappings,
       );
       expect(actual).toEqual("Deceased");
     });
@@ -586,7 +546,6 @@ describe("evaluateFhirDataServices tests", () => {
     it("Should display language, proficiency, and mode", () => {
       const actual = evaluatePatientLanguage(
         BundlePatient as unknown as Bundle,
-        mappings,
       );
 
       expect(actual).toEqual("English\nGood\nExpressed spoken");
@@ -641,10 +600,7 @@ describe("evaluateFhirDataServices tests", () => {
         ],
       };
 
-      const actual = evaluatePatientLanguage(
-        patient as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluatePatientLanguage(patient as unknown as Bundle);
 
       expect(actual).toEqual("English\n\nHindi");
     });
@@ -684,12 +640,101 @@ describe("evaluateFhirDataServices tests", () => {
         ],
       };
 
-      const actual = evaluatePatientLanguage(
-        patient as unknown as Bundle,
-        mappings,
-      );
+      const actual = evaluatePatientLanguage(patient as unknown as Bundle);
 
       expect(actual).toEqual("Spanish\n\nEnglish");
+    });
+  });
+
+  describe("Get Human Readable CodeableConcept", () => {
+    it("should return undefined if no coding is available", () => {
+      const codeableConcept = undefined;
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+
+      expect(actual).toBeUndefined();
+    });
+
+    it("should return the text value if available", () => {
+      const textValue = "this is condition";
+      const codeableConcept: CodeableConcept = {
+        text: textValue,
+        coding: [
+          {
+            display: "Condition",
+            code: "64572001",
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(textValue);
+    });
+
+    it("should return the first display value if there is no text value", () => {
+      const correctDisplayValue = "Condition";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            display: "Condition",
+            code: "64572001",
+          },
+          {
+            display: "A Condition",
+            code: "AC",
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(correctDisplayValue);
+    });
+
+    it("should return the code and system of the first coding with both of them if there is no text or display value", () => {
+      const codeValue = "64572001";
+      const systemValue = "http://snomed.info/sct";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            code: "AC",
+          },
+          {
+            code: codeValue,
+            system: systemValue,
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(`${codeValue} (${systemValue})`);
+    });
+
+    it("should return the code of the first first coding with a code if there is no text, display, or a code/system pair", () => {
+      const codeValue = "64572001";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            code: codeValue,
+          },
+        ],
+      };
+
+      const actual = getHumanReadableCodeableConcept(codeableConcept);
+      expect(actual).toEqual(codeValue);
+    });
+  });
+
+  describe("Censor Gender", () => {
+    it("should return the string if 'Male' or 'Female'", () => {
+      const expected = "Male";
+      const actual = censorGender(expected);
+      expect(actual).toEqual(expected);
+    });
+
+    it("should return an empty string if 'Other'", () => {
+      const expected = "Other";
+      const actual = censorGender(expected);
+      expect(actual).toEqual("");
     });
   });
 });

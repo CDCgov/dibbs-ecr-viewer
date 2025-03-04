@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Before opening a bug report, search for the behavior in the existing [issues](https://github.com/CDCgov/phdi/issues).
+        Before opening a bug report, search for the behavior in the existing [issues](https://github.com/CDCgov/dibbs-ecr-viewer/issues).
 
         ---
 

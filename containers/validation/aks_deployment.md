@@ -34,7 +34,7 @@ aks-nodepool1-31718369-0   Ready    agent   6m44s   v1.12.8
 In the `Dockerfile`, take note of the port that the app is exposed to. In this example, we will use 8080
 
 ```
-FROM python:3.11-slim
+FROM python:3.13-slim
 ...
 EXPOSE 8080
 CMD uvicorn app.main:app --host 0.0.0.0 --port 8080
@@ -60,7 +60,7 @@ spec:
         app: validation
     spec:
       containers:
-      - image: ghcr.io/cdcgov/phdi/validation:v1.0.7
+      - image: ghcr.io/cdcgov/dibbs-ecr-viewer/validation:v1.0.7
         imagePullPolicy: Always
         name: validation
         ports:

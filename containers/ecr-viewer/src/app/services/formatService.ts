@@ -1,7 +1,9 @@
 import "server-only"; // FHIR evaluation/formatting should be done server side
 
 import { Address, ContactPoint, HumanName } from "fhir/r4";
+
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
+
 import { formatDate } from "./formatDateService";
 
 /**
@@ -110,12 +112,12 @@ export const formatPhoneNumber = (
  * @returns The formatted vital signs information.
  */
 export const formatVitals = (
-  heightAmount: string,
-  heightUnit: string,
-  weightAmount: string,
-  weightUnit: string,
-  bmiAmount: string,
-  bmiUnit: string,
+  heightAmount: string | undefined,
+  heightUnit: string | undefined,
+  weightAmount: string | undefined,
+  weightUnit: string | undefined,
+  bmiAmount: string | undefined,
+  bmiUnit: string | undefined,
 ) => {
   let heightString = "";
   let weightString = "";

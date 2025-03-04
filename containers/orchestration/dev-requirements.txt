@@ -1,0 +1,9 @@
+asyncio
+httpx
+psycopg2-binary>=2.9.10
+pytest
+pytest-asyncio
+pytest-env
+pytest-mock
+requests-mock
+testcontainers[compose]>=4.9.1

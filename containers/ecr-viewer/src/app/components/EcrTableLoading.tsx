@@ -1,4 +1,4 @@
-import { range } from "../utils/data-utils";
+import { range } from "@/app/utils/data-utils";
 
 /**
  * The Ecr Library table, but with blobs instead of data.
@@ -9,7 +9,7 @@ export const EcrTableLoading = () => {
     <tbody>
       {range(10).map((i) => {
         return (
-          <BlobRow key={i} themeColor={i % 2 == 0 ? "gray" : "dark-gray"} />
+          <BlobRow key={i} themeColor={i % 2 === 0 ? "gray" : "dark-gray"} />
         );
       })}
     </tbody>
