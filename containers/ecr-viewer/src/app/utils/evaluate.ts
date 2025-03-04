@@ -54,6 +54,11 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
       valid = ["CodeableConcept", "Coding", "Quantity"].includes(
         nodeInfo.fhirNodeDataType,
       );
+    } else if (
+      expectedType === "Coding" &&
+      nodeInfo.path === "Coding.entries.eRSDwarnings"
+    ) {
+      // TODO #461: Remove this hard coded corner case
     } else {
       valid =
         expectedType.toLowerCase() ===
