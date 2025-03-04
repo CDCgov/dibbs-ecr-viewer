@@ -1,6 +1,7 @@
 /* eslint-disable unused-imports/no-unused-vars */
 namespace NodeJS {
   interface ProcessEnv {
+    APP_VERSION: string;
     AUTH_KEYCLOAK_ID?: string;
     AUTH_KEYCLOAK_SECRET?: string;
     AUTH_KEYCLOAK_ISSUER?: string;
@@ -40,6 +41,5 @@ namespace NodeJS {
     SQL_SERVER_HOST: string;
     SQL_SERVER_PASSWORD: string;
     SQL_SERVER_USER: string;
-    VERSION: string;
   }
 }

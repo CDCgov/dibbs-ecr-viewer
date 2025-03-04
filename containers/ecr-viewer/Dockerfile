@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1.7-labs
 FROM node:22-alpine AS base
 
-ARG VERSION
+ARG APP_VERSION
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -51,7 +51,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV VERSION=$VERSION
+ENV APP_VERSION=$APP_VERSION
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 ENV OTEL_TRACES_EXPORTER=otlp

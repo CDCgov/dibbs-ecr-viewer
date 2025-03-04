@@ -68,4 +68,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VERSION: ${{ inputs.container-tag }}
+            APP_VERSION: ${{ inputs.container-tag }}
