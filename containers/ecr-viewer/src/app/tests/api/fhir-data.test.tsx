@@ -2,12 +2,14 @@
  * @jest-environment node
  */
 import fs from "fs";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { mockClient } from "aws-sdk-client-mock";
-import { GET } from "../../api/fhir-data/route"; // Adjust the import path to your actual file path
-import { sdkStreamMixin } from "@smithy/util-stream";
-import { NextRequest } from "next/server";
 import { Readable } from "stream";
+
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { sdkStreamMixin } from "@smithy/util-stream";
+import { mockClient } from "aws-sdk-client-mock";
+import { NextRequest } from "next/server";
+
+import { GET } from "@/app/api/fhir-data/route"; // Adjust the import path to your actual file path
 
 const s3Mock = mockClient(S3Client);
 const stream = sdkStreamMixin(

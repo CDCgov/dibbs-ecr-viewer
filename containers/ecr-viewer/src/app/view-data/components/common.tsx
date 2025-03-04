@@ -1,20 +1,32 @@
+import classNames from "classnames";
+import {
+  Bundle,
+  Coding,
+  Condition,
+  Immunization,
+  Organization,
+  Reference,
+} from "fhir/r4";
+
 import {
   calculatePatientAge,
   evaluateReference,
 } from "@/app/services/evaluateFhirDataService";
-import EvaluateTable, {
-  ColumnInfoInput,
-} from "@/app/view-data/components/EvaluateTable";
-import { PathMappings, safeParse } from "@/app/utils/data-utils";
-import { Bundle, Coding, Condition, Immunization, Organization } from "fhir/r4";
-import classNames from "classnames";
 import { formatDateTime } from "@/app/services/formatDateService";
+import { safeParse } from "@/app/utils/data-utils";
+
+import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
+
+type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
+  manufacturer?: Reference & {
+    name?: string;
+  };
+};
 
 /**
  * Generates a formatted table representing the list of immunizations based on the provided array of immunizations and mappings.
  * @param fhirBundle - The FHIR bundle containing patient and immunizations information.
  * @param immunizationsArray - An array containing the list of immunizations.
- * @param mappings - An object containing the FHIR path mappings.
  * @param caption - The string to display above the table
  * @param className - Optional. The css class to be added to the table.
  * @returns - A formatted table React element representing the list of immunizations, or undefined if the immunizations array is empty.
@@ -22,7 +34,6 @@ import { formatDateTime } from "@/app/services/formatDateService";
 export const returnImmunizations = (
   fhirBundle: Bundle,
   immunizationsArray: Immunization[],
-  mappings: PathMappings,
   caption: string,
   className?: string,
 ): React.JSX.Element | undefined => {
@@ -41,28 +52,41 @@ export const returnImmunizations = (
     { columnName: "Lot Number", infoPath: "immunizationsLotNumber" },
   ];
 
-  immunizationsArray.forEach((entry) => {
-    entry.occurrenceDateTime = formatDateTime(entry.occurrenceDateTime ?? "");
+  const modifiedImmunizations: ModifiedImmunization[] = immunizationsArray.map(
+    (initialImmunization) => {
+      const newImmunization: ModifiedImmunization = {
+        ...initialImmunization,
+      };
 
-    const manufacturer = evaluateReference<Organization>(
-      fhirBundle,
-      mappings,
-      entry.manufacturer?.reference || "",
-    );
-    if (manufacturer) {
-      (entry.manufacturer as any).name = manufacturer.name || "";
-    }
-  });
+      newImmunization.occurrenceDateTime = formatDateTime(
+        initialImmunization.occurrenceDateTime,
+      );
 
-  immunizationsArray.sort(
+      const manufacturer = evaluateReference<Organization>(
+        fhirBundle,
+        initialImmunization.manufacturer?.reference,
+      );
+
+      if (manufacturer) {
+        newImmunization.manufacturer = {
+          ...initialImmunization.manufacturer,
+          name: manufacturer.name || "",
+        };
+      }
+
+      return newImmunization;
+    },
+  );
+
+  modifiedImmunizations.sort(
     (a, b) =>
       new Date(b.occurrenceDateTime ?? "").getTime() -
       new Date(a.occurrenceDateTime ?? "").getTime(),
   );
+
   return (
     <EvaluateTable
-      resources={immunizationsArray}
-      mappings={mappings}
+      resources={modifiedImmunizations}
       columns={columnInfo}
       caption={caption}
       className={classNames("margin-y-0", className)}
@@ -74,13 +98,11 @@ export const returnImmunizations = (
  * Generates a formatted table representing the list of problems based on the provided array of problems and mappings.
  * @param fhirBundle - The FHIR bundle containing patient information.
  * @param problemsArray - An array containing the list of Conditions.
- * @param mappings - An object containing the FHIR path mappings.
  * @returns - A formatted table React element representing the list of problems, or undefined if the problems array is empty.
  */
 export const returnProblemsTable = (
   fhirBundle: Bundle,
   problemsArray: Condition[],
-  mappings: PathMappings,
 ): React.JSX.Element | undefined => {
   problemsArray = problemsArray.filter(
     (entry) => entry.code?.coding?.some((c: Coding) => c?.display),
@@ -109,7 +131,7 @@ export const returnProblemsTable = (
     entry.onsetDateTime = formatDateTime(entry.onsetDateTime);
     entry.onsetAge ||= entry.onsetDateTime
       ? {
-          value: calculatePatientAge(fhirBundle, mappings, entry.onsetDateTime),
+          value: calculatePatientAge(fhirBundle, entry.onsetDateTime),
         }
       : undefined;
   });
@@ -127,7 +149,6 @@ export const returnProblemsTable = (
   return (
     <EvaluateTable
       resources={problemsArray}
-      mappings={mappings}
       columns={columnInfo}
       caption="Problems List"
       className="margin-y-0"

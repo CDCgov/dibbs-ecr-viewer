@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
+
 import classNames from "classnames";
-import { ToolTipElement } from "@/app/view-data/components/ToolTipElement";
+
 import { FieldValue } from "./FieldValue";
+import { ToolTipElement } from "./ToolTipElement";
 
 export interface DisplayDataProps {
   title?: string;

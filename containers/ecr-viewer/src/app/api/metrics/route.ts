@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { metrics } from "@opentelemetry/api";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Handles GET requests by fetching data from different sources based on the environment configuration.

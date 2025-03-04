@@ -1,13 +1,18 @@
 import React from "react";
-import { AccordionSection, AccordionSubSection } from "../../component-utils";
-import {
-  DataTableDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
+
 import {
   LabReportElementData,
   isLabReportElementDataList,
 } from "@/app/services/labsService";
+import {
+  AccordionSection,
+  AccordionSubSection,
+} from "@/app/view-data/component-utils";
+import {
+  DataTableDisplay,
+  DisplayDataProps,
+} from "@/app/view-data/components/DataDisplay";
+
 import LabResultDetail from "./LabResultDetail";
 
 interface LabInfoProps {

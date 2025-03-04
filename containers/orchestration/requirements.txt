@@ -1,10 +1,11 @@
-pydantic==1.10.13
-fastapi==0.112.2
+pydantic>=2.0.0
+pydantic-settings
+fastapi>=0.112.2
 python-multipart # required by fastapi
 uvicorn[standard]
 lxml
 requests
 python-dotenv
-opentelemetry-distro==0.48b0
-opentelemetry-exporter-otlp==1.27.0
-opentelemetry-exporter-prometheus==0.48b0
+opentelemetry-distro>=0.48b0
+opentelemetry-exporter-otlp>=1.27.0
+opentelemetry-exporter-prometheus>=0.48b0

@@ -1,4 +1,5 @@
 import { makeEnvPublic } from "next-runtime-env";
+
 import { register } from "./instrumentation";
 
 jest.mock("next-runtime-env", () => ({

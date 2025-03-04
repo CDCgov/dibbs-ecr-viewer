@@ -1,4 +1,4 @@
-import "../styles/styles.scss";
+import "@/styles/styles.scss";
 import { PublicEnvScript, env } from "next-runtime-env";
 
 export const metadata = {

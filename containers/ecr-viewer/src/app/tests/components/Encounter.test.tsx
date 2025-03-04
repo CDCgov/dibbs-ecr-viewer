@@ -1,7 +1,9 @@
+import React from "react";
+
 import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
-import EncounterDetails from "../../view-data/components/Encounter";
-import React from "react";
+
+import EncounterDetails from "@/app/view-data/components/Encounter";
 
 describe("Encounter", () => {
   let container: HTMLElement;

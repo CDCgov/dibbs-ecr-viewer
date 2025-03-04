@@ -1,5 +1,5 @@
-import { get_pool } from "./db/sqlserver_db";
 import { getDB } from "./db/postgres_db";
+import { get_pool } from "./db/sqlserver_db";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.
@@ -33,7 +33,7 @@ const get_conditions_postgres = async (): Promise<string[]> => {
     const conditions = await database.any<{ condition: string }>(getConditions);
 
     return conditions.map((c) => c.condition);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching data: ", error);
     throw Error("Error fetching data");
   }
@@ -54,7 +54,7 @@ const get_conditions_sqlserver = async () => {
       condition: string;
     }>("SELECT DISTINCT condition FROM ecr_viewer.ecr_rr_conditions ORDER BY condition");
     return result.recordset.map((row) => row.condition);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching data: ", error);
     throw Error("Error fetching data");
   }
