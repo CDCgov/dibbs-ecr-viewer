@@ -2,23 +2,27 @@ import React from "react";
 import { signIn } from "next-auth/react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { RedirectButton } from "@/app/signin/components/RedirectButton";
+import RedirectPage from "@/app/signin/page";
 
 jest.mock("next-auth/react", () => ({
   signIn: jest.fn(),
 }));
 
+jest.mock("../../../../api/auth/auth", () => ({
+  providerMap: [
+    {
+      id: "moria",
+      name: "Moria",
+    },
+  ],
+}));
+
 describe("Sign-in Page", () => {
   let container: HTMLElement;
 
-  const MOCK_PROVIDER = {
-    id: "moria",
-    name: "Moria",
-  };
-
   const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeAll(() => {
-    container = render(<RedirectButton provider={MOCK_PROVIDER} />).container;
+    container = render(<RedirectPage />).container;
     process.env.BASE_PATH = "ecr-viewer";
   });
   afterAll(() => {
@@ -39,14 +43,14 @@ describe("Sign-in Page", () => {
       url: MOCK_CALLBACK_URL,
     });
 
-    render(<RedirectButton provider={MOCK_PROVIDER} />);
+    render(<RedirectPage />);
 
     const button = screen.getByRole("button", {
       name: /log in via/i,
     });
     fireEvent.click(button);
 
-    expect(signIn).toHaveBeenCalledWith(MOCK_PROVIDER.id, {
+    expect(signIn).toHaveBeenCalledWith("moria", {
       callbackUrl: "ecr-viewer",
     });
   });
