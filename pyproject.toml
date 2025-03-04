@@ -1,3 +1,5 @@
+[project]
+requires-python = ">=3.13"
 
 [tool.poetry]
 name = "phdi"
@@ -25,7 +27,6 @@ homepage = "https://github.com/CDCgov/dibbs-ecr-viewer"
 repository = "https://github.com/CDCgov/dibbs-ecr-viewer"
 documentation = "https://cdcgov.github.io/dibbs-ecr-viewer"
 readme = "README.md"
-require-python = ">=3.13"
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -62,8 +63,6 @@ pdoc = "^15.0.0"
 pytest = "^7.1.0"
 pytest-cov = "^3.0.0"
 toml = "^0.10.2"
-
-[tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.2"
 
 [build-system]
