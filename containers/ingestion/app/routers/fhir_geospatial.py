@@ -1,4 +1,4 @@
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Body, Response, status
 from pydantic import BaseModel, Field, field_validator
@@ -39,27 +39,27 @@ class GeocodeAddressInBundleInput(BaseModel):
     geocode_method: Literal["smarty", "census"] = Field(
         description="The geocoding service to be used."
     )
-    smarty_auth_id: Optional[str] = Field(
+    smarty_auth_id: str | None = Field(
         description="Authentication ID for the geocoding service. Must be provided in "
         "the request body or set as an environment variable of the "
         "service if "
         "`geocode_method` is `smarty`.",
         default=None,
     )
-    smarty_auth_token: Optional[str] = Field(
+    smarty_auth_token: str | None = Field(
         description="Authentication Token for the geocoding service. Must be provided "
         "in the request body or set as an environment variable of the "
         "service if "
         "`geocode_method` is `smarty`.",
         default=None,
     )
-    license_type: Optional[license_types] = Field(
+    license_type: license_types | None = Field(
         description="License type for the geocoding service. Must be provided "
         "in the request body or set as an environment variable of the "
         "service if `geocode_method` is `smarty`.",
         default="us-rooftop-geocoding-enterprise-cloud",
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "modified and returned.",
         default=True,

@@ -1,8 +1,9 @@
 import json
 import random
+from collections.abc import Callable
 from datetime import date, datetime
 from functools import cache
-from typing import Any, Callable, Literal, Union
+from typing import Any, Literal
 
 import fhirpathpy
 import rapidfuzz
@@ -52,7 +53,7 @@ def load_mpi_env_vars_os():
 
 
 def datetime_to_str(
-    input_date: Union[str, date, datetime], include_time: bool = False
+    input_date: str | date | datetime, include_time: bool = False
 ) -> str:
     """
     Convert a date or datetime object to a string; if a string is provided,
@@ -81,7 +82,7 @@ def datetime_to_str(
             return input_date
 
     # if input is a date or datetime then convert in the expected format
-    elif isinstance(input_date, (date, datetime)):
+    elif isinstance(input_date, date | datetime):
         if include_time:
             return input_date.strftime("%Y-%m-%d %H:%M:%S")
         else:
@@ -183,7 +184,7 @@ def extract_value_with_resource_path(
     resource: dict,
     path: str,
     selection_criteria: Literal["first", "last", "random", "all"] = "first",
-) -> Union[Any, None]:
+) -> Any | None:
     """
     Yields a single value from a resource based on a provided `fhir_path`.
     If the path doesn't map to an extant value in the first, returns

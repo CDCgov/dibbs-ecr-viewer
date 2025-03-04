@@ -1,19 +1,19 @@
 from functools import lru_cache
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    cred_manager: Optional[Literal["azure", "gcp"]] = None
-    salt_str: Optional[str] = None
-    fhir_url: Optional[str] = None
-    smarty_auth_id: Optional[str] = None
-    smarty_auth_token: Optional[str] = None
-    license_type: Optional[str] = None
-    cloud_provider: Optional[Literal["azure", "gcp"]] = None
-    bucket_name: Optional[str] = None
-    storage_account_url: Optional[str] = None
+    cred_manager: Literal["azure", "gcp"] | None = None
+    salt_str: str | None = None
+    fhir_url: str | None = None
+    smarty_auth_id: str | None = None
+    smarty_auth_token: str | None = None
+    license_type: str | None = None
+    cloud_provider: Literal["azure", "gcp"] | None = None
+    bucket_name: str | None = None
+    storage_account_url: str | None = None
 
 
 @lru_cache

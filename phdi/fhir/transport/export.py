@@ -1,5 +1,3 @@
-from typing import Union
-
 import polling
 import requests
 
@@ -163,7 +161,7 @@ def _compose_export_url(
 
 def _export_from_fhir_server_poll_call(
     poll_url: str, cred_manager: BaseCredentialManager
-) -> Union[requests.Response, None]:
+) -> requests.Response | None:
     """
     Called by `export_from_fhir_server_poll` to see if the export files are ready
     based on received status code. If an export is still in progress, then returns

@@ -1,5 +1,3 @@
-from typing import Union
-
 from smartystreets_python_sdk import ClientBuilder, StaticCredentials, us_street
 from smartystreets_python_sdk.us_street.lookup import Lookup
 
@@ -39,7 +37,7 @@ class SmartyGeocodeClient(BaseGeocodeClient):
         """
         return self.__client
 
-    def geocode_from_str(self, address: str) -> Union[GeocodeResult, None]:
+    def geocode_from_str(self, address: str) -> GeocodeResult | None:
         """
         Geocodes the provided address, which is formatted as a string. If the
         result cannot be latitude- or longitude-located, then Smarty failed
@@ -60,7 +58,7 @@ class SmartyGeocodeClient(BaseGeocodeClient):
         self.__client.send_lookup(lookup)
         return self._parse_smarty_result(lookup)
 
-    def geocode_from_dict(self, address: dict) -> Union[GeocodeResult, None]:
+    def geocode_from_dict(self, address: dict) -> GeocodeResult | None:
         """
         Geocodes the provided address, which is formatted as a dictionary.
 
@@ -106,7 +104,7 @@ class SmartyGeocodeClient(BaseGeocodeClient):
         return self._parse_smarty_result(lookup)
 
     @staticmethod
-    def _parse_smarty_result(lookup) -> Union[GeocodeResult, None]:
+    def _parse_smarty_result(lookup) -> GeocodeResult | None:
         """
         Parses a returned Smarty geocoding result into a GeocodeResult object.
         If the Smarty lookup is null or doesn't include latitude and longitude

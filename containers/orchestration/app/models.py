@@ -1,4 +1,4 @@
-from typing import Literal, Optional, Union
+from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -26,8 +26,8 @@ class OrchestrationRequest(BaseModel):
             " passed data."
         )
     )
-    message: Union[dict, str] = Field(description="The message to be validated.")
-    rr_data: Optional[str] = Field(
+    message: dict | str = Field(description="The message to be validated.")
+    rr_data: str | None = Field(
         description="If an eICR message, the accompanying Reportability Response data.",
         default=None,
     )
@@ -93,11 +93,11 @@ class OrchestrationResponse(BaseModel):
     The config for responses from the /extract endpoint.
     """
 
-    message: Optional[str] = Field(
+    message: str | None = Field(
         description="A message describing the result of a request to "
         "the /process-message endpoint."
     )
-    processed_values: Union[dict, str] = Field(
+    processed_values: dict | str = Field(
         description="A set of key:value pairs or XML-formatted string containing the "
         "values extracted from the message."
     )
@@ -120,7 +120,7 @@ class ListConfigsResponse(BaseModel):
 class WorkflowServiceStepModel(BaseModel):
     service: str
     endpoint: str
-    params: Optional[dict] = None
+    params: dict | None = None
 
 
 class ProcessingConfigModel(BaseModel):
@@ -129,7 +129,7 @@ class ProcessingConfigModel(BaseModel):
         "that maps to a list of `WorkflowServiceStep` objects, each defining one step "
         "in the orchestration configuration to upload."
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="When `true` if a config already exists for the provided name it "
         "will be replaced. When `false` no action will be taken and the response will "
         "indicate that a config for the given name already exists. To proceed submit a "

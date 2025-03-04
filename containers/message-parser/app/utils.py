@@ -607,7 +607,7 @@ def get_phdc_section(
         "header",
     ],
     tree: ET.ElementTree,
-) -> Union[ET.Element, ET.ElementTree]:
+) -> Union[ET.Element, ET.ElementTree]:  # noqa: UP007 Cython does not support Union
     """
     Returns the specified section of a PHDC from a file.
 

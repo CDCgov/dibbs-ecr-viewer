@@ -1,6 +1,7 @@
 import os
 
 import pytest
+
 from app.config import get_settings
 from app.utils import (
     check_for_fhir,

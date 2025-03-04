@@ -1,5 +1,7 @@
 import pathlib
 
+from lxml import etree
+
 from app.validation.xml_utils import (
     ECR_NAMESPACES,
     EICR_MSG_ID_XPATH,
@@ -18,7 +20,6 @@ from app.validation.xml_utils import (
     validate_xml_elements,
     validate_xml_value,
 )
-from lxml import etree
 
 test_include_errors = ["fatal", "errors", "warnings", "information"]
 

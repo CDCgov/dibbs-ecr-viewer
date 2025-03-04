@@ -1,5 +1,7 @@
 import pathlib
 
+from fastapi.testclient import TestClient
+
 from app.constants import ValidateResponse
 from app.main import (
     app,
@@ -8,7 +10,6 @@ from app.main import (
     validate_fhir_bundle,
     validate_vxu_msg,
 )
-from fastapi.testclient import TestClient
 
 client = TestClient(app)
 test_error_types = ["errors", "warnings", "information"]
