@@ -1,5 +1,5 @@
 ---
-name: Streamline Spike Template
+name: Streamline Spike Template 📚📓
 about: Used for exploratory engineering spikes
 title: ""
 labels: Streamline eCR
