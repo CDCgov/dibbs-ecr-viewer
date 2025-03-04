@@ -136,7 +136,7 @@ describe("ECR Metadata", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("should not display the reportability summary table if there is no data available", () => {
+  it("should let the user know that a reportable condition hasn't been found if there is no data available", () => {
     const emptyRrDetails: ReportableConditions = {};
     render(
       <EcrMetadata
@@ -148,14 +148,10 @@ describe("ECR Metadata", () => {
       />,
     );
     expect(
-      screen.queryByText(/reportability summary/i),
-    ).not.toBeInTheDocument();
+      screen.getByText("Reportability Summary", { selector: "h5" }),
+    ).toBeInTheDocument();
     expect(
-      screen.queryByText(/reportable conditions/i),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText(/rckms rule summary/i)).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(/jurisdiction sent ecr/i),
-    ).not.toBeInTheDocument();
+      screen.getByText("No reportable condition found"),
+    ).toBeInTheDocument();
   });
 });
