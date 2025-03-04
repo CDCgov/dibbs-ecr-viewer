@@ -12,7 +12,9 @@ from app.refine import refine, validate_message, validate_sections_to_include
 from app.utils import create_clinical_services_dict, read_json_from_assets
 
 settings = get_settings()
-TCR_ENDPOINT = f"{settings['tcr_url']}/get-value-sets?condition_code="
+TCR_ENDPOINT = (
+    f"{settings['TRIGGER_CODE_REFERENCE_URL']}/get-value-sets?condition_code="
+)
 
 
 # Instantiate FastAPI via DIBBs' BaseService class
