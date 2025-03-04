@@ -138,7 +138,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     },
     {
       title: "EHR Software Name",
-      value: evaluateValue(fhirBundle, "ehrSoftware"),
+      value: evaluateValue(fhirBundle, fhirPathMappings.ehrSoftware),
     },
   ];
 

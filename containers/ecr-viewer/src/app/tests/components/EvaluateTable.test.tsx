@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+import { Mapping } from "@/app/utils/evaluate";
 import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
-  Mappings,
 } from "@/app/view-data/components/EvaluateTable";
 
 describe("Evaluate table", () => {
@@ -102,7 +102,7 @@ describe("Evaluate table", () => {
     expect(screen.queryByText("No data")).not.toBeInTheDocument();
   });
   describe("hiddenBaseText", () => {
-    const pathMapping: Mappings = { idPath: "id", notePath: "note.text" };
+    const pathMapping: Mapping = { idPath: "id", notePath: "note.text" };
     describe("single column", () => {
       const columnInfo: ColumnInfoInput[] = [
         {
@@ -135,7 +135,7 @@ describe("Evaluate table", () => {
       });
       it("should show notes text and replace 'View notes' with 'Hide notes' when 'View notes' button is clicked", async () => {
         const user = userEvent.setup();
-        const pathMapping: Mappings = { notePath: "note.text" };
+        const pathMapping: Mapping = { notePath: "note.text" };
         const fhirResource = [
           {
             note: [

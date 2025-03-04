@@ -17,10 +17,7 @@ type TravelHistoryColumn = ColumnInfoInput & { infoPath: keyof PathMappings };
  * @returns - A formatted table representing the patient's travel history, or undefined if no relevant data is found.
  */
 export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
-  const travelHistory: Observation[] = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientTravelHistory,
-  );
+  const travelHistory = evaluate(fhirBundle, "patientTravelHistory");
 
   const columns: TravelHistoryColumn[] = [
     {

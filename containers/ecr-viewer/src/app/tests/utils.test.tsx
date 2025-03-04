@@ -6,7 +6,6 @@ import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
 import { CarePlanActivity } from "fhir/r4b";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import {
   evaluateSocialData,
   evaluatePatientName,
@@ -292,7 +291,7 @@ describe("Utils", () => {
     it("should return empty if active problem name is undefined", () => {
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
-        evaluate(BundleNoActiveProblems, fhirPathMappings.activeProblems),
+        evaluate(BundleNoActiveProblems as unknown as Bundle, "activeProblems"),
       );
 
       expect(actual).toBeUndefined();

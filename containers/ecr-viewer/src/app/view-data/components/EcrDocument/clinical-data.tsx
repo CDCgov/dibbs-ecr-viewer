@@ -399,22 +399,23 @@ export const returnProceduresTable = (
  * @returns The JSX element representing the table, or undefined if no vital signs are found.
  */
 export const returnVitalsTable = (fhirBundle: Bundle) => {
-  const height = evaluateValue(fhirBundle, "patientHeight");
+  const height = evaluateValue(fhirBundle, fhirPathMappings.patientHeight);
   const heightDate: string | undefined = evaluate(
     fhirBundle,
     "patientHeightDate",
   )[0];
 
-  const weight = evaluateValue(fhirBundle, "patientWeight");
+  const weight = evaluateValue(fhirBundle, fhirPathMappings.patientWeight);
   const weightDate: string | undefined = evaluate(
     fhirBundle,
     "patientWeightDate",
   )[0];
 
-  const bmi = evaluateValue(fhirBundle, "patientBmi");
+  const bmi = evaluateValue(fhirBundle, fhirPathMappings.patientBmi);
   const bmiDate: string | undefined = evaluate(fhirBundle, "patientBmiDate")[0];
 
   if (!height && !weight && !bmi) {
+    console.log("no data");
     return undefined;
   }
 

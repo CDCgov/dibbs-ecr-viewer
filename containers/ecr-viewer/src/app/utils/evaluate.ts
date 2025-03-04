@@ -5,30 +5,26 @@ import {
   CodeableConcept,
   Coding,
   Element,
+  FhirResource,
   Quantity,
   Resource,
 } from "fhir/r4";
 import {
   Context,
   evaluate as fhirPathEvaluate,
-  Model,
   Path,
   UserInvocationTable,
 } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import fhirPathMappings, {
-  PathMappings,
-  PathTypes,
-  ValueX,
-} from "@/app/data/fhirPath";
+import fhirPathMappings, { PathTypes, ValueX } from "@/app/data/fhirPath";
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const evaluateCache: Map<string, any> = new Map();
 
-const isBundle = (e: Element | Element[] | Resource): e is Bundle => {
+const isBundle = (e: Element | Element[] | FhirResource): e is Bundle => {
   if ("resourceType" in e) {
     return e?.resourceType === "Bundle";
   }
@@ -36,14 +32,12 @@ const isBundle = (e: Element | Element[] | Resource): e is Bundle => {
   return false;
 };
 
-type FhirData = Element | Element[] | Resource | undefined;
+type FhirData = Element | Element[] | FhirResource | undefined;
 
 const evaluateRaw = (
-  // TODO: Follow up on FHIR/fhirpath typing
   fhirData: FhirData,
   path: string | Path,
   context?: Context,
-  model?: Model,
   options?: {
     resolveInternalTypes?: boolean;
     // TODO: Follow up on FHIR/fhirpath typing
@@ -65,36 +59,22 @@ const evaluateRaw = (
   if (!evaluateCache.has(key)) {
     evaluateCache.set(
       key,
-      fhirPathEvaluate(fhirData, path, context, model, options),
+      fhirPathEvaluate(fhirData, path, context, fhirpath_r4_model, options),
     );
   }
   return evaluateCache.get(key);
 };
 
-interface TypeMapping {
-  [key: string]: Element | Resource | ValueX | unknown;
-}
+/**
+ * Reset the evaluate cache map
+ */
+export const clearEvaluateCache = () => {
+  evaluateCache.clear();
+};
+
 export interface Mapping {
   [key: string]: string;
 }
-
-const _evaluate = <
-  T extends TypeMapping,
-  M extends Mapping,
-  P extends keyof M & keyof T,
->(
-  fhirData: FhirData,
-  pathKey: P,
-  mappings: M,
-  context?: Context,
-): T[P][] => {
-  return evaluateRaw(
-    fhirData,
-    mappings[pathKey],
-    context,
-    fhirpath_r4_model,
-  ) as T[P][];
-};
 
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data.
@@ -108,19 +88,20 @@ export const evaluate = <K extends keyof PathTypes>(
   pathKey: K,
   context?: Context,
 ) => {
-  return _evaluate<PathTypes, PathMappings, K>(
+  return evaluateFor<PathTypes[K]>(
     fhirData,
-    pathKey,
-    fhirPathMappings,
+    fhirPathMappings[pathKey],
     context,
   );
 };
 
 /**
- *
- * @param fhirData
- * @param path
- * @param context
+ * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
+ * escape hatch when not using a `fhirPathmapping`. See `evaluate` for the common usage.
+ * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
+ * @param path - The FHIRPath expression to evaluate.
+ * @param [context] - Optional context object to provide additional data for evaluation.
+ * @returns - An array containing the result of the evaluation.
  */
 export const evaluateFor = <Result>(
   fhirData: FhirData,
@@ -130,12 +111,11 @@ export const evaluateFor = <Result>(
   return evaluateRaw(fhirData, path, context) as Result[];
 };
 
-/**
- * Reset the evaluate cache map
- */
-export const clearEvaluateCache = () => {
-  evaluateCache.clear();
-};
+// Map from computer to human readable units
+const UNIT_MAP = new Map([
+  ["[lb_av]", "lb"],
+  ["[in_i]", "in"],
+]);
 
 /**
  * Evaluates the FHIR path and returns the appropriate string value. Supports choice elements (e.g. using `.value` in path to get valueString or valueCoding)
@@ -161,12 +141,13 @@ export const evaluateValue = (entry: FhirData, path: string): string => {
 
   if (originalValuePath === "Quantity") {
     const data: Quantity = originalValue;
-    let unit = data.unit;
+    let unit = data.unit || "";
+    unit = UNIT_MAP.get(unit) || unit;
     const firstLetterRegex = /^[a-z]/i;
     if (unit?.match(firstLetterRegex)) {
       unit = " " + unit;
     }
-    value = `${data.value ?? ""}${unit ?? ""}`;
+    value = `${data.value ?? ""}${unit}`;
   } else if (originalValuePath === "CodeableConcept") {
     const data: CodeableConcept = originalValue;
     value = getHumanReadableCodeableConcept(data) ?? "";
