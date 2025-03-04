@@ -2,7 +2,7 @@ import React from "react";
 import { signIn } from "next-auth/react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { Redirect } from "@/app/signin/signin";
+import { RedirectButton } from "@/app/signin/components/RedirectButton";
 
 jest.mock("next-auth/react", () => ({
   signIn: jest.fn(),
@@ -16,12 +16,13 @@ describe("Sign-in Page", () => {
     name: "Moria",
   };
 
+  const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeAll(() => {
-    container = render(<Redirect provider={MOCK_PROVIDER} />).container;
+    container = render(<RedirectButton provider={MOCK_PROVIDER} />).container;
     process.env.BASE_PATH = "ecr-viewer";
   });
   afterAll(() => {
-    delete process.env.BASE_PATH;
+    process.env.BASE_PATH = ORIG_BASE_PATH;
   });
 
   it("should match snapshot", () => {
@@ -38,7 +39,7 @@ describe("Sign-in Page", () => {
       url: MOCK_CALLBACK_URL,
     });
 
-    render(<Redirect provider={MOCK_PROVIDER} />);
+    render(<RedirectButton provider={MOCK_PROVIDER} />);
 
     const button = screen.getByRole("button", {
       name: /log in via/i,
