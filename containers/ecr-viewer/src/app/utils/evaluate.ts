@@ -9,12 +9,7 @@ import {
   Quantity,
   Resource,
 } from "fhir/r4";
-import {
-  Context,
-  evaluate as fhirPathEvaluate,
-  Path,
-  UserInvocationTable,
-} from "fhirpath";
+import { Context, evaluate as fhirPathEvaluate, Path } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import fhirPathMappings, { PathTypes, ValueX } from "@/app/data/fhirPath";
@@ -34,20 +29,19 @@ const isBundle = (e: Element | Element[] | FhirResource): e is Bundle => {
 
 type FhirData = Element | Element[] | FhirResource | undefined;
 
-const evaluateRaw = (
+/**
+ * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
+ * escape hatch when not using a `fhirPathmapping`. See `evaluate` for the common usage.
+ * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
+ * @param path - The FHIRPath expression to evaluate.
+ * @param [context] - Optional context object to provide additional data for evaluation.
+ * @returns - An array containing the result of the evaluation.
+ */
+export const evaluateFor = <Result>(
   fhirData: FhirData,
   path: string | Path,
   context?: Context,
-  options?: {
-    resolveInternalTypes?: boolean;
-    // TODO: Follow up on FHIR/fhirpath typing
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    traceFn?: (value: any, label: string) => void;
-    userInvocationTable?: UserInvocationTable;
-  },
-  // TODO: Follow up on FHIR/fhirpath typing
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any[] => {
+): Result[] => {
   if (!fhirData) return [];
   // Since the bundle does not have an ID, prefer to just use "bundle" instead
   const fhirDataIdentifier: string =
@@ -59,7 +53,7 @@ const evaluateRaw = (
   if (!evaluateCache.has(key)) {
     evaluateCache.set(
       key,
-      fhirPathEvaluate(fhirData, path, context, fhirpath_r4_model, options),
+      fhirPathEvaluate(fhirData, path, context, fhirpath_r4_model),
     );
   }
   return evaluateCache.get(key);
@@ -93,22 +87,6 @@ export const evaluate = <K extends keyof PathTypes>(
     fhirPathMappings[pathKey],
     context,
   );
-};
-
-/**
- * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
- * escape hatch when not using a `fhirPathmapping`. See `evaluate` for the common usage.
- * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
- * @param path - The FHIRPath expression to evaluate.
- * @param [context] - Optional context object to provide additional data for evaluation.
- * @returns - An array containing the result of the evaluation.
- */
-export const evaluateFor = <Result>(
-  fhirData: FhirData,
-  path: string,
-  context?: Context,
-): Result[] => {
-  return evaluateRaw(fhirData, path, context) as Result[];
 };
 
 // Map from computer to human readable units
