@@ -114,21 +114,15 @@ const data: { [K in keyof PathTypes]: string } = {
 
   // Vitals
   patientHeight:
-    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.code='8302-2').first().valueQuantity.value",
-  patientHeightMeasurement:
-    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='8302-2').first().valueQuantity.unit",
+    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.code='8302-2').first().value",
   patientHeightDate:
     "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='8302-2').first().effectiveDateTime",
   patientWeight:
-    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='29463-7').first().valueQuantity.value",
-  patientWeightMeasurement:
-    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='29463-7').first().valueQuantity.unit",
+    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='29463-7').first().value",
   patientWeightDate:
     "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='29463-7').first().effectiveDateTime",
   patientBmi:
-    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='39156-5').valueQuantity.value",
-  patientBmiMeasurement:
-    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='39156-5').valueQuantity.unit",
+    "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='39156-5').value",
   patientBmiDate:
     "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.first().code='39156-5').effectiveDateTime",
 

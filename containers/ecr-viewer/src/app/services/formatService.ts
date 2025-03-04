@@ -101,55 +101,6 @@ export const formatPhoneNumber = (
   }
 };
 
-/**
- * Formats vital signs information into separate strings with proper units.
- * @param heightAmount - The amount of height.
- * @param heightUnit - The measurement type of height (e.g., "[in_i]" for inches, "cm" for centimeters).
- * @param weightAmount - The amount of weight.
- * @param weightUnit - The measurement type of weight (e.g., "[lb_av]" for pounds, "kg" for kilograms).
- * @param bmiAmount - The Body Mass Index (BMI).
- * @param bmiUnit - The measurement type of Body Mass Index (BMI) (e.g., kg/m2)
- * @returns The formatted vital signs information.
- */
-export const formatVitals = (
-  heightAmount: string | undefined,
-  heightUnit: string | undefined,
-  weightAmount: string | undefined,
-  weightUnit: string | undefined,
-  bmiAmount: string | undefined,
-  bmiUnit: string | undefined,
-) => {
-  let heightString = "";
-  let weightString = "";
-  let bmiString = "";
-  let heightType = "";
-  let weightType = "";
-
-  if (heightAmount && heightUnit) {
-    if (heightUnit === "[in_i]") {
-      heightType = "in";
-    } else if (heightUnit === "cm") {
-      heightType = "cm";
-    }
-    heightString = `${heightAmount} ${heightType}`;
-  }
-
-  if (weightAmount && weightUnit) {
-    if (weightUnit === "[lb_av]") {
-      weightType = "lb";
-    } else if (weightUnit === "kg") {
-      weightType = "kg";
-    }
-    weightString = `${weightAmount} ${weightType}`;
-  }
-
-  if (bmiAmount && bmiUnit) {
-    bmiString = `${bmiAmount} ${bmiUnit}`;
-  }
-
-  return { height: heightString, weight: weightString, bmi: bmiString };
-};
-
 const contactSortOrder = [
   "phone",
   "fax",

@@ -1,5 +1,6 @@
 import {
   Address,
+  CarePlanActivity,
   CareTeamParticipant,
   CodeableConcept,
   Coding,
@@ -63,12 +64,12 @@ export type PathTypes = {
   patientMaritalStatus: string;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
-  eicrCustodianRef: Reference;
+  eicrCustodianRef: string;
   dateTimeEcrCreated: string;
   ehrSoftware: ValueX;
-  ehrManufacturerModel: unknown;
-  eRSDwarnings: unknown;
-  compositionAuthorRefs: unknown;
+  ehrManufacturerModel: string;
+  eRSDwarnings: Coding;
+  compositionAuthorRefs: Reference;
   encounterEndDate: string;
   encounterStartDate: string;
   encounterDiagnosis: EncounterDiagnosis;
@@ -86,13 +87,10 @@ export type PathTypes = {
   rrDetails: Observation;
   clinicalReasonForVisit: ValueX;
   patientHeight: ValueX;
-  patientHeightMeasurement: string;
   patientHeightDate: string;
   patientWeight: ValueX;
-  patientWeightMeasurement: string;
   patientWeightDate: string;
   patientBmi: ValueX;
-  patientBmiMeasurement: string;
   patientBmiDate: string;
   resolve: unknown;
   activeProblems: Condition;
@@ -102,11 +100,11 @@ export type PathTypes = {
   activeProblemsComments: string;
   historyOfPresentIllness: string;
   planOfTreatment: string;
-  plannedProcedures: unknown;
+  plannedProcedures: CarePlanActivity;
   plannedProcedureName: string;
   plannedProcedureOrderedDate: string;
   plannedProcedureScheduledDate: string;
-  adminMedicationsRefs: Reference;
+  adminMedicationsRefs: string;
   careTeamParticipants: CareTeamParticipant;
   careTeamParticipantMemberName: HumanName;
   careTeamParticipantRole: string;
@@ -146,21 +144,5 @@ export type PathTypes = {
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
 };
-
-type ValueOf<T> = T[keyof T];
-
-type ReverseMap<T extends Record<keyof T, keyof any>> = {
-  [K in keyof T as T[K]]: K;
-};
-
-type ReversedPathMappings = ReverseMap<PathMappings>;
-
-export type MappingTypes = {
-  [V in PathMappings[K]]: PathTypes[K];
-};
-
-// {
-//     [Property in ValueOf<PathMappings>]: PathTypes[Property]
-// }
 
 export default fhirPathMappings;

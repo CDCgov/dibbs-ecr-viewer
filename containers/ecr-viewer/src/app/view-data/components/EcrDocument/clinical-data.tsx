@@ -17,7 +17,7 @@ import {
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
-import { formatName, formatVitals } from "@/app/services/formatService";
+import { formatName } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
 import {
@@ -67,7 +67,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       title: "Problems List",
       value: returnProblemsTable(
         fhirBundle,
-        evaluate(fhirBundle, fhirPathMappings.activeProblems),
+        evaluate(fhirBundle, "activeProblems"),
       ),
     },
   ];
@@ -77,14 +77,12 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
-      value: returnProceduresTable(
-        evaluate(fhirBundle, fhirPathMappings.procedures),
-      ),
+      value: returnProceduresTable(evaluate(fhirBundle, "procedures")),
     },
     {
       title: "Planned Procedures",
       value: returnPlannedProceduresTable(
-        evaluate(fhirBundle, fhirPathMappings.plannedProcedures),
+        evaluate(fhirBundle, "plannedProcedures"),
       ),
     },
     evaluatePlanOfTreatment(fhirBundle, "Plan of Treatment"),
@@ -112,7 +110,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       title: "Immunization History",
       value: returnImmunizations(
         fhirBundle,
-        evaluate(fhirBundle, fhirPathMappings.immunizations),
+        evaluate(fhirBundle, "immunizations"),
         "Immunization History",
       ),
     },
@@ -135,9 +133,9 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
 const evaluateAdministeredMedication = (
   fhirBundle: Bundle,
 ): AdministeredMedicationTableData[] => {
-  const administeredMedicationReferences: string[] | undefined = evaluate(
+  const administeredMedicationReferences = evaluate(
     fhirBundle,
-    fhirPathMappings.adminMedicationsRefs,
+    "adminMedicationsRefs",
   );
   if (!administeredMedicationReferences?.length) {
     return [];
@@ -184,10 +182,7 @@ type ModifiedCareTeamParticipant = Omit<
 export const returnCareTeamTable = (
   bundle: Bundle,
 ): React.JSX.Element | undefined => {
-  const careTeamParticipants: CareTeamParticipant[] = evaluate(
-    bundle,
-    fhirPathMappings.careTeamParticipants,
-  );
+  const careTeamParticipants = evaluate(bundle, "careTeamParticipants");
   if (careTeamParticipants.length === 0) {
     return undefined;
   }
@@ -404,74 +399,39 @@ export const returnProceduresTable = (
  * @returns The JSX element representing the table, or undefined if no vital signs are found.
  */
 export const returnVitalsTable = (fhirBundle: Bundle) => {
-  const heightAmount: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientHeight,
-  )[0];
-  const heightUnit: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientHeightMeasurement,
-  )[0];
+  const height = evaluateValue(fhirBundle, "patientHeight");
   const heightDate: string | undefined = evaluate(
     fhirBundle,
-    fhirPathMappings.patientHeightDate,
+    "patientHeightDate",
   )[0];
-  const weightAmount: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientWeight,
-  )[0];
-  const weightUnit: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientWeightMeasurement,
-  )[0];
+
+  const weight = evaluateValue(fhirBundle, "patientWeight");
   const weightDate: string | undefined = evaluate(
     fhirBundle,
-    fhirPathMappings.patientWeightDate,
-  )[0];
-  const bmiAmount: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientBmi,
-  )[0];
-  const bmiUnit: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientBmiMeasurement,
-  )[0];
-  const bmiDate: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientBmiDate,
+    "patientWeightDate",
   )[0];
 
-  const formattedVitals = formatVitals(
-    heightAmount,
-    heightUnit,
-    weightAmount,
-    weightUnit,
-    bmiAmount,
-    bmiUnit,
-  );
+  const bmi = evaluateValue(fhirBundle, "patientBmi");
+  const bmiDate: string | undefined = evaluate(fhirBundle, "patientBmiDate")[0];
 
-  if (
-    !formattedVitals.height &&
-    !formattedVitals.weight &&
-    !formattedVitals.bmi
-  ) {
+  if (!height && !weight && !bmi) {
     return undefined;
   }
 
   const vitalsData = [
     {
       vitalReading: "Height",
-      result: formattedVitals.height || noData,
+      result: height || noData,
       date: formatDateTime(heightDate) || noData,
     },
     {
       vitalReading: "Weight",
-      result: formattedVitals.weight || noData,
+      result: weight || noData,
       date: formatDateTime(weightDate) || noData,
     },
     {
       vitalReading: "BMI",
-      result: formattedVitals.bmi || noData,
+      result: bmi || noData,
       date: formatDateTime(bmiDate) || noData,
     },
   ];

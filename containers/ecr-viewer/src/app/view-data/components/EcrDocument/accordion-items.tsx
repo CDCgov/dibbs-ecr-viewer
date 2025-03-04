@@ -2,7 +2,6 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import {
   evaluateDemographicsData,
@@ -42,7 +41,7 @@ export const getEcrDocumentAccordionItems = (
   const facilityData = evaluateFacilityData(fhirBundle);
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
-    evaluate(fhirBundle, fhirPathMappings.diagnosticReports),
+    evaluate(fhirBundle, "diagnosticReports"),
   );
   const hasUnavailableData = () => {
     const unavailableDataArrays = [

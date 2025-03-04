@@ -111,8 +111,7 @@ export const getLabJsonObject = (
   // Get reference value (result ID) from Observations
   const observations = getObservations(report, fhirBundle);
   const observationRefValsArray = observations.flatMap((observation) => {
-    const refVal: string[] =
-      evaluate(observation, fhirPathMappings.observationReferenceValue) ?? [];
+    const refVal = evaluate(observation, "observationReferenceValue");
     return extractNumbersAndPeriods(refVal);
   });
   const observationRefVal = [...new Set(observationRefValsArray)].join(", "); // should only be 1
@@ -198,7 +197,7 @@ const returnSpecimenSource = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle);
   const specimenSource = observations.flatMap((observation) => {
-    return evaluate(observation, fhirPathMappings.specimenSource);
+    return evaluate(observation, "specimenSource");
   });
   if (!specimenSource || specimenSource.length === 0) {
     return noData;
@@ -218,10 +217,7 @@ const returnCollectionTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle);
   const collectionTime = observations.flatMap((observation) => {
-    const rawTime: string[] = evaluate(
-      observation,
-      fhirPathMappings.specimenCollectionTime,
-    );
+    const rawTime = evaluate(observation, "specimenCollectionTime");
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 
@@ -244,10 +240,7 @@ const returnReceivedTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle);
   const receivedTime = observations.flatMap((observation) => {
-    const rawTime: string[] = evaluate(
-      observation,
-      fhirPathMappings.specimenReceivedTime,
-    );
+    const rawTime = evaluate(observation, "specimenReceivedTime");
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 
@@ -545,10 +538,7 @@ export const evaluateLabOrganizationData = (
   fhirBundle: Bundle,
   labReportCount: number,
 ) => {
-  const orgMappings: Organization[] = evaluate(
-    fhirBundle,
-    fhirPathMappings.organizations,
-  );
+  const orgMappings = evaluate(fhirBundle, "organizations");
   let matchingOrg: Organization = orgMappings.filter(
     (organization) => organization.id === id,
   )[0];

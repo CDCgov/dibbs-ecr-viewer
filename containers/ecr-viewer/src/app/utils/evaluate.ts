@@ -36,9 +36,11 @@ const isBundle = (e: Element | Element[] | Resource): e is Bundle => {
   return false;
 };
 
+type FhirData = Element | Element[] | Resource | undefined;
+
 const evaluateRaw = (
   // TODO: Follow up on FHIR/fhirpath typing
-  fhirData: Element | Resource | undefined,
+  fhirData: FhirData,
   path: string | Path,
   context?: Context,
   model?: Model,
@@ -55,8 +57,9 @@ const evaluateRaw = (
   if (!fhirData) return [];
   // Since the bundle does not have an ID, prefer to just use "bundle" instead
   const fhirDataIdentifier: string =
-    (isBundle(fhirData) ? fhirData?.entry?.[0]?.fullUrl : fhirData?.id) ??
-    JSON.stringify(fhirData);
+    (isBundle(fhirData)
+      ? fhirData?.entry?.[0]?.fullUrl
+      : !Array.isArray(fhirData) && fhirData?.id) || JSON.stringify(fhirData);
   const key =
     fhirDataIdentifier + JSON.stringify(context) + JSON.stringify(path);
   if (!evaluateCache.has(key)) {
@@ -75,25 +78,12 @@ export interface Mapping {
   [key: string]: string;
 }
 
-/**
- * Evaluates a FHIRPath expression on the provided FHIR data.
- * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
- * @param pathKey - The FHIRPath expression to evaluate.
- * @param mappings
- * @param [context] - Optional context object to provide additional data for evaluation.
- * @param [model] - Optional model object to provide additional data for evaluation.
- * @param [options] - Optional options object for additional configuration.
- * @param [options.resolveInternalTypes] - Whether to resolve internal types in the evaluation.
- * @param [options.traceFn] - Optional trace function for logging evaluation traces.
- * @param [options.userInvocationTable] - Optional table for tracking user invocations.
- * @returns - An array containing the result of the evaluation.
- */
-export const _evaluate = <
+const _evaluate = <
   T extends TypeMapping,
   M extends Mapping,
   P extends keyof M & keyof T,
 >(
-  fhirData: Element | Resource | undefined,
+  fhirData: FhirData,
   pathKey: P,
   mappings: M,
   context?: Context,
@@ -107,13 +97,14 @@ export const _evaluate = <
 };
 
 /**
- *
- * @param fhirData
- * @param pathKey
- * @param context
+ * Evaluates a FHIRPath expression on the provided FHIR data.
+ * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
+ * @param pathKey - The key of the FHIRPath expression to evaluate.
+ * @param [context] - Optional context object to provide additional data for evaluation.
+ * @returns - An array containing the result of the evaluation.
  */
 export const evaluate = <K extends keyof PathTypes>(
-  fhirData: Element | Resource | undefined,
+  fhirData: FhirData,
   pathKey: K,
   context?: Context,
 ) => {
@@ -132,7 +123,7 @@ export const evaluate = <K extends keyof PathTypes>(
  * @param context
  */
 export const evaluateFor = <Result>(
-  fhirData: Element | Resource | undefined,
+  fhirData: FhirData,
   path: string,
   context?: Context,
 ): Result[] => {
@@ -152,10 +143,7 @@ export const clearEvaluateCache = () => {
  * @param path - The path within the resource to extract the value from.
  * @returns - The evaluated value as a string.
  */
-export const evaluateValue = (
-  entry: Element | Resource | undefined,
-  path: string,
-): string => {
+export const evaluateValue = (entry: FhirData, path: string): string => {
   const originalValue = evaluateFor<ValueX>(entry, path)[0];
 
   if (
