@@ -1,8 +1,9 @@
-import { axe } from "jest-axe";
 import { act, render } from "@testing-library/react";
+import { axe } from "jest-axe";
+import router from "next-router-mock";
+
 import EcrTableHeader from "@/app/components/EcrTableHeader";
 import { INITIAL_HEADERS } from "@/app/constants";
-import router from "next-router-mock";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => router,

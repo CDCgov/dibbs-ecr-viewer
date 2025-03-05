@@ -19,7 +19,7 @@ help:
 
 run-docker:
 	@echo "Running Ingestion service using Docker on localhost:$(INGESTION_PORT)..."
-	docker pull ghcr.io/cdcgov/phdi/ingestion:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/ingestion:latest
 	docker run -p $(INGESTION_PORT):8080 ingestion:latest
 
 run-python:

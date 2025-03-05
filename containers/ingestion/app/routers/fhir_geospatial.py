@@ -1,7 +1,7 @@
 from typing import Annotated, Literal, Optional
 
 from fastapi import APIRouter, Body, Response, status
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from app.config import get_settings
 from app.fhir.geospatial import CensusFhirGeocodeClient, SmartyFhirGeocodeClient
@@ -44,20 +44,19 @@ class GeocodeAddressInBundleInput(BaseModel):
         "the request body or set as an environment variable of the "
         "service if "
         "`geocode_method` is `smarty`.",
-        default="",
+        default=None,
     )
     smarty_auth_token: Optional[str] = Field(
         description="Authentication Token for the geocoding service. Must be provided "
         "in the request body or set as an environment variable of the "
         "service if "
         "`geocode_method` is `smarty`.",
-        default="",
+        default=None,
     )
     license_type: Optional[license_types] = Field(
         description="License type for the geocoding service. Must be provided "
         "in the request body or set as an environment variable of the "
-        "service if "
-        "`geocode_method` is `smarty`.",
+        "service if `geocode_method` is `smarty`.",
         default="us-rooftop-geocoding-enterprise-cloud",
     )
     overwrite: Optional[bool] = Field(
@@ -66,7 +65,7 @@ class GeocodeAddressInBundleInput(BaseModel):
         default=True,
     )
 
-    _check_for_fhir = validator("bundle", allow_reuse=True)(check_for_fhir_bundle)
+    _check_for_fhir = field_validator("bundle")(check_for_fhir_bundle)
 
 
 @router.post("/geocode_bundle", status_code=200, responses=sample_geocode_response)

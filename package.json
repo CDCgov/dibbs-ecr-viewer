@@ -1,0 +1,22 @@
+{
+  "name": "dibbs-ecr-viewer",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "cd containers/ecr-viewer && eslint --ext=.ts,.tsx --fix . && cd ../..",
+    "typecheck": "cd containers/ecr-viewer && tsc --noEmit && cd ../.."
+  },
+  "devDependencies": {
+    "@dword-design/eslint-plugin-import-alias": "^5.1.1",
+    "@next/eslint-plugin-next": "^15.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^15.2.0",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsdoc": "^50.6.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "typescript": "^5.7.3"
+  }
+}

@@ -628,9 +628,10 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                   class="usa-accordion__heading"
                 >
                   <button
+                    aria-controls="patient-info-loading"
                     aria-expanded="true"
                     class="usa-accordion__button"
-                    data-testid="accordionButton_undefined"
+                    data-testid="accordionButton_patient-info-loading"
                     type="button"
                   >
                     Patient Info
@@ -638,7 +639,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </h3>
                 <div
                   class="usa-accordion__content usa-prose"
-                  data-testid="accordionItem_undefined"
+                  data-testid="accordionItem_patient-info-loading"
+                  id="patient-info-loading"
                 >
                   <div
                     class="margin-top-0"
@@ -1000,9 +1002,10 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                   class="usa-accordion__heading"
                 >
                   <button
+                    aria-controls="encounter-info-loading"
                     aria-expanded="true"
                     class="usa-accordion__button"
-                    data-testid="accordionButton_undefined"
+                    data-testid="accordionButton_encounter-info-loading"
                     type="button"
                   >
                     Encounter Info
@@ -1010,7 +1013,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </h3>
                 <div
                   class="usa-accordion__content usa-prose"
-                  data-testid="accordionItem_undefined"
+                  data-testid="accordionItem_encounter-info-loading"
+                  id="encounter-info-loading"
                 >
                   <div
                     class="margin-top-0"
@@ -1280,9 +1284,10 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                   class="usa-accordion__heading"
                 >
                   <button
+                    aria-controls="clinical-info-loading"
                     aria-expanded="true"
                     class="usa-accordion__button"
-                    data-testid="accordionButton_undefined"
+                    data-testid="accordionButton_clinical-info-loading"
                     type="button"
                   >
                     Clinical Info
@@ -1290,7 +1295,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </h3>
                 <div
                   class="usa-accordion__content usa-prose"
-                  data-testid="accordionItem_undefined"
+                  data-testid="accordionItem_clinical-info-loading"
+                  id="clinical-info-loading"
                 >
                   <div
                     class="margin-top-0"
@@ -1636,9 +1642,10 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                   class="usa-accordion__heading"
                 >
                   <button
+                    aria-controls="lab-info-loading"
                     aria-expanded="true"
                     class="usa-accordion__button"
-                    data-testid="accordionButton_undefined"
+                    data-testid="accordionButton_lab-info-loading"
                     type="button"
                   >
                     Lab Info
@@ -1646,7 +1653,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </h3>
                 <div
                   class="usa-accordion__content usa-prose"
-                  data-testid="accordionItem_undefined"
+                  data-testid="accordionItem_lab-info-loading"
+                  id="lab-info-loading"
                 >
                   <div
                     class="margin-top-0"
@@ -1773,9 +1781,10 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                   class="usa-accordion__heading"
                 >
                   <button
+                    aria-controls="ecr-metadata-loading"
                     aria-expanded="true"
                     class="usa-accordion__button"
-                    data-testid="accordionButton_undefined"
+                    data-testid="accordionButton_ecr-metadata-loading"
                     type="button"
                   >
                     eCR Metadata
@@ -1783,7 +1792,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </h3>
                 <div
                   class="usa-accordion__content usa-prose"
-                  data-testid="accordionItem_undefined"
+                  data-testid="accordionItem_ecr-metadata-loading"
+                  id="ecr-metadata-loading"
                 >
                   <div
                     class="margin-top-0"
@@ -2101,9 +2111,10 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                   class="usa-accordion__heading"
                 >
                   <button
+                    aria-controls="unavailable-info-loading"
                     aria-expanded="true"
                     class="usa-accordion__button"
-                    data-testid="accordionButton_undefined"
+                    data-testid="accordionButton_unavailable-info-loading"
                     type="button"
                   >
                     Unavailable Info
@@ -2111,7 +2122,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </h3>
                 <div
                   class="usa-accordion__content usa-prose"
-                  data-testid="accordionItem_undefined"
+                  data-testid="accordionItem_unavailable-info-loading"
+                  id="unavailable-info-loading"
                 />
               </div>
             </div>

@@ -1,5 +1,6 @@
-import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { render, screen } from "@testing-library/react";
+
+import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 describe("JsonTable", () => {
   it("returns an HTML representation of the table", () => {

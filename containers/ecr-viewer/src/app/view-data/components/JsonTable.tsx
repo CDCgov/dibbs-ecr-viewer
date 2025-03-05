@@ -1,9 +1,11 @@
+import classNames from "classnames";
+
 import {
   HtmlTableJson,
   HtmlTableJsonRow,
 } from "@/app/services/htmlTableService";
 import { noData } from "@/app/utils/data-utils";
-import classNames from "classnames";
+
 import { BaseTable, ColumnInfoInput } from "./EvaluateTable";
 import { ToolTipElement } from "./ToolTipElement";
 

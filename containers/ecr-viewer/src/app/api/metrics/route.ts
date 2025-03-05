@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { metrics } from "@opentelemetry/api";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Handles GET requests by fetching data from different sources based on the environment configuration.
@@ -19,9 +19,9 @@ export async function POST(request: NextRequest) {
     unit: "ms",
   });
   timeOnPageHistrogram.record(endTime - startTime, {
-    startTime: startTime,
-    endTime: endTime,
-    fhirId: fhirId,
+    startTime,
+    endTime,
+    fhirId,
   });
   return NextResponse.json({ message: "ok" }, { status: 200 });
 }

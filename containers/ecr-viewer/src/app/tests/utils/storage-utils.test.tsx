@@ -1,7 +1,7 @@
 import {
   saveToSessionStorage,
   retrieveFromSessionStorage,
-} from "../../utils/storage-utils";
+} from "@/app/utils/storage-utils";
 
 describe("Session Storage saving utils", () => {
   beforeEach(() => {

@@ -112,7 +112,8 @@ class FhirConverterInput(BaseModel):
         description="The message to be converted as a string.",
     )
     input_type: InputType = Field(
-        description="The type of message to be converted.", example="vxu"
+        description="The type of message to be converted.",
+        json_schema_extra={"example": "vxu"},
     )
     root_template: RootTemplate = Field(
         description="Name of the liquid template within to be used for conversion.",

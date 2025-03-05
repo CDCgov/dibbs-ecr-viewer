@@ -19,7 +19,7 @@ unless pursuant to an existing contract or agreement.
 
 ## Bug reports
 
-If you think you found a bug in PHDI, search our [issues list](https://github.com/CDCgov/phdi/issues) in case someone has opened a similar issue. We'll close duplicate issues to help keep our backlog neat and tidy.
+If you think you found a bug in PHDI, search our [issues list](https://github.com/CDCgov/dibbs-ecr-viewer/issues) in case someone has opened a similar issue. We'll close duplicate issues to help keep our backlog neat and tidy.
 
 It's very helpful if you can prepare a reproduction of the bug. In other words, provide a small test case that we can run to confirm your bug. This makes it easier to find and fix the problem.
 
@@ -27,7 +27,7 @@ It's very helpful if you can prepare a reproduction of the bug. In other words, 
 
 If you find yourself wishing for a new feature on PHDI, you're probably not alone.
 
-Open an issue on our [issues list](https://github.com/CDCgov/phdi/issues) that describes the feature you'd like to see, why you want it, and how it should work. Please try to be as descriptive as possible. We can't guarantee that we'll be able to develop a requested feature, but we'll do our best to give it the care and consideration it deserves.
+Open an issue on our [issues list](https://github.com/CDCgov/dibbs-ecr-viewer/issues) that describes the feature you'd like to see, why you want it, and how it should work. Please try to be as descriptive as possible. We can't guarantee that we'll be able to develop a requested feature, but we'll do our best to give it the care and consideration it deserves.
 
 ## Contributing code and documentation changes
 
@@ -120,7 +120,7 @@ To run tests:
 poetry run pytest
 ```
 
-If you're running the SDK library in a virtual environment (in which you've run `poetry install` to install all dependencies), you can also simply activate the environment, navigate to `phdi/tests/`, and run `pytest`.
+If you're running the SDK library in a virtual environment (in which you've run `poetry install` to install all dependencies), you can also simply activate the environment, navigate to `dibbs-ecr-viewer/tests/`, and run `pytest`.
 
 Foundational libraries used for testing include:
 

@@ -19,7 +19,7 @@ help:
 
 run-docker:
 	@echo "Running Message Parser service using Docker on localhost:$(MESSAGE_PARSER_PORT)..."
-	docker pull ghcr.io/cdcgov/phdi/message-parser:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/message-parser:latest
 	docker run -p $(MESSAGE_PARSER_PORT):8080 message-parser:latest
 
 run-python:

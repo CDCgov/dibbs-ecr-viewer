@@ -1,10 +1,13 @@
 "use client";
 import React, { ReactNode } from "react";
-import Cookies from "js-cookie";
+
 import { Label, Select } from "@trussworks/react-uswds";
-import { Pagination } from "@/app/components/Pagination";
-import { useQueryParam } from "@/app/hooks/useQueryParam";
+import Cookies from "js-cookie";
+
 import { PAGE_SIZES } from "@/app/constants";
+import { useQueryParam } from "@/app/hooks/useQueryParam";
+
+import { Pagination } from "./Pagination";
 
 interface EcrPaginationWrapperProps {
   totalCount: number;

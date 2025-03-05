@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
+
 import Link from "next/link";
-import { toSentenceCase } from "../utils/format-utils";
-import { saveToSessionStorage } from "../utils/storage-utils";
-import { noData } from "../utils/data-utils";
-import { useQueryParam } from "../hooks/useQueryParam";
-import { EcrDisplay } from "../services/listEcrDataService";
+
+import { useQueryParam } from "@/app/hooks/useQueryParam";
+import { EcrDisplay } from "@/app/services/listEcrDataService";
+import { noData } from "@/app/utils/data-utils";
+import { toSentenceCase } from "@/app/utils/format-utils";
+import { saveToSessionStorage } from "@/app/utils/storage-utils";
 
 /**
  * Formats a single row of the eCR table.

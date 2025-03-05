@@ -5,8 +5,10 @@
  * The component has been adapted to move the state control from inside the component to the consuming site.
  */
 import React from "react";
+
 import classnames from "classnames";
-import { AccordionItem as AccordionItemProps } from "../types";
+
+import { AccordionItem as AccordionItemProps } from "@/app/view-data/types";
 
 type AccordionProps = {
   items: AccordionItemProps[];

@@ -21,7 +21,7 @@ RUN dotnet publish \
   -o output
 
 # Set up python Server
-FROM python:3.10-slim AS runtime
+FROM python:3.13-slim AS runtime
 
 # Copy FHIR-Converter binary from build stage
 COPY --from=build /build/FHIR-Converter/output /build/FHIR-Converter/output

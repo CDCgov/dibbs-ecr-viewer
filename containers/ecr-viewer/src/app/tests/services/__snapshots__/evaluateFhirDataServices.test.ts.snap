@@ -24,7 +24,7 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
               </span>,
             },
             "Role": {
-              "value": "ATND",
+              "value": "attender",
             },
           },
         ],

@@ -111,7 +111,7 @@ export const formatDateTime = (dateTimeString: string | undefined): string => {
  */
 export const formatDate = (dateString?: string): string | undefined => {
   if (dateString) {
-    let date = new Date(dateString);
+    const date = new Date(dateString);
 
     if (date.toString() === "Invalid Date") {
       const newDateStr = reformatNumericTimestampToISO(dateString);

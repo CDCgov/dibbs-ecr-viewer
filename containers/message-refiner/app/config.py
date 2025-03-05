@@ -1,6 +1,7 @@
 from functools import lru_cache
 
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -9,9 +10,9 @@ class Settings(BaseSettings):
     These urls need to live in a .env file at the root level and should be set.
     """
 
-    tcr_url: str = Field(
+    TRIGGER_CODE_REFERENCE_URL: str = Field(
         description="The URL for the Trigger Code Reference service.",
-        env="TRIGGER_CODE_REFERENCE_URL",
+        json_schema_extra={"env": "TRIGGER_CODE_REFERENCE_URL"},
     )
 
 
@@ -25,4 +26,4 @@ def get_settings() -> Settings:
     :return: the specified Settings. The value of each key is read from the
     corresponding environment variable.
     """
-    return Settings().dict()
+    return Settings().model_dump()

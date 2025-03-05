@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
+import { cookies } from "next/headers";
+
+import { DEFAULT_ITEMS_PER_PAGE } from "@/app/constants";
 import HomePage from "@/app/page";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import { returnParamDates } from "@/app/utils/date-utils";
-import { cookies } from "next/headers";
-import { DEFAULT_ITEMS_PER_PAGE } from "../constants";
 
 jest.mock("../services/listEcrDataService", () => {
   return {

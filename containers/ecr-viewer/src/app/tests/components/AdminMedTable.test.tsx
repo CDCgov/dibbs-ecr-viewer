@@ -1,5 +1,6 @@
-import { AdministeredMedication } from "@/app/view-data/components/AdministeredMedication";
 import { render, screen } from "@testing-library/react";
+
+import { AdministeredMedication } from "@/app/view-data/components/AdministeredMedication";
 
 describe("AdminMedTable", () => {
   it("should not render anything if there is no administered medications", () => {

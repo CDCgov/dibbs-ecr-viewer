@@ -1,15 +1,16 @@
 /**
  * @jest-environment node
  */
+import { S3ServiceException } from "@aws-sdk/client-s3";
+import { BlobServiceClient } from "@azure/storage-blob";
+
 import {
   get_azure,
   get_fhir_data,
   get_s3,
 } from "@/app/api/fhir-data/fhir-data-service";
-
 import { s3Client } from "@/app/api/services/s3Client";
 import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
-import { BlobServiceClient } from "@azure/storage-blob";
 
 jest.mock("../../../data/db/postgres_db", () => ({
   getDB: jest.fn(),
@@ -23,12 +24,10 @@ jest.mock("@azure/storage-blob", () => ({
   },
 }));
 
-const DEFAULT_MAPPINGS = { key: "value" };
 jest.mock("../../../api/utils", () => {
   const originalModule = jest.requireActual("../../../api/utils");
   return {
     ...originalModule,
-    loadYamlConfig: () => DEFAULT_MAPPINGS,
     streamToJson: (body: string) => body,
   };
 });
@@ -36,7 +35,6 @@ jest.mock("../../../api/utils", () => {
 const defaultFhirBundle = "hi";
 const simpleResponse = {
   fhirBundle: defaultFhirBundle,
-  fhirPathMappings: DEFAULT_MAPPINGS,
 };
 
 describe("get_fhir_data", () => {
@@ -85,11 +83,16 @@ describe("get_s3", () => {
     expect(s3Client.send).toHaveBeenCalledTimes(1);
   });
 
-  it("should return an 404 error response when id unknown", async () => {
+  it("should return a 404 error response when id is unknown", async () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
     s3Client.send = jest.fn().mockImplementation(async () => {
-      throw { Code: "NoSuchKey", message: "No such Key" };
+      throw new S3ServiceException({
+        name: "NoSuchKey",
+        message: "No such Key",
+        $fault: "server",
+        $metadata: {},
+      });
     });
     const response = await get_s3("123");
     expect(response.status).toEqual(404);
@@ -97,15 +100,32 @@ describe("get_s3", () => {
     expect(s3Client.send).toHaveBeenCalledTimes(1);
   });
 
-  it("should return an 500 error response when database query fails", async () => {
+  it("should return a 500 error response when an unexpected error occurs", async () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
     s3Client.send = jest.fn().mockImplementation(async () => {
-      throw { Code: "Something else", message: "Oh no!" };
+      throw new S3ServiceException({
+        name: "Something else",
+        message: "Oh no!",
+        $fault: "server",
+        $metadata: {},
+      });
     });
     const response = await get_s3("123");
     expect(response.status).toEqual(500);
     expect(response.payload).toEqual({ message: "Oh no!" });
+    expect(s3Client.send).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return a 500 error response when error is not an S3ServiceException", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    s3Client.send = jest.fn().mockImplementation(async () => {
+      throw new Error("test error");
+    });
+    const response = await get_s3("123");
+    expect(response.status).toEqual(500);
+    expect(response.payload).toEqual({ message: "test error" });
     expect(s3Client.send).toHaveBeenCalledTimes(1);
   });
 });

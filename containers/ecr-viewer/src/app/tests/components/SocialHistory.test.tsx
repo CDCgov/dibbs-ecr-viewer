@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
-import SocialHistory from "../../view-data/components/SocialHistory";
+
+import SocialHistory from "@/app/view-data/components/SocialHistory";
 
 describe("SocialHistory", () => {
   let container: HTMLElement;

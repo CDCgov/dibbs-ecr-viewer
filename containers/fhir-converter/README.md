@@ -102,7 +102,7 @@ path-to-application:
 
 #### Get Microsoft FHIR Converter
 
-Using whichever command line tool you're comfortable with (Powershell on Windows, or Terminal on Linux and MacOS), download the FHIR Converter source code from Github with the following command. We recommend cloning it as a sibling to the `phdi` repo.
+Using whichever command line tool you're comfortable with (Powershell on Windows, or Terminal on Linux and MacOS), download the FHIR Converter source code from Github with the following command. We recommend cloning it as a sibling to the `dibbs-ecr-viewer` repo.
 
 ```bash
 git clone https://github.com/skylight-hq/FHIR-Converter
@@ -152,8 +152,8 @@ To run the DIBBs FHIR Conversion service with Docker, follow these steps.
 Docker version 20.10.21, build baeda1f
 ```
 
-2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/phdi/fhir-converter:latest`.
-3. Run the service with ` docker run -p 8080:8080 ghcr.io/cdcgov/phdi/fhir-converter:latest`.
+2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/fhir-converter:latest`.
+3. Run the service with ` docker run -p 8080:8080 ghcr.io/cdcgov/dibbs-ecr-viewer/fhir-converter:latest`.
 
 Congratulations, the FHIR Conversion service should now be running on `localhost:8080`!
 
@@ -161,9 +161,9 @@ Congratulations, the FHIR Conversion service should now be running on `localhost
 
 For local development, you may prefer to run the service directly from Python. To do so, follow the steps below.
 
-1. Ensure that both Git and Python 3.10 are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/fhir-converter/`.
+1. Ensure that both Git and Python 3.13 are installed.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/fhir-converter/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.
 5. Activate the virtual environment with `source .venv/bin/activate` (MacOS and Linux), `venv\Scripts\activate` (Windows Command Prompt), or `.venv\Scripts\Activate.ps1` (Windows PowerShell).
 6. Install all of the Python dependencies for the ingestion service with `pip install -r requirements.txt` into your virtual environment.
@@ -174,8 +174,8 @@ For local development, you may prefer to run the service directly from Python. T
 To build the Docker image for the FHIR Conversion service from source code instead of downloading it from the PHDI repository, follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/fhir-converter/`.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/fhir-converter/`.
 4. Run the service with `make docker-local`.
 
 ### Developing workflow for simultaneous `FHIR-Converter` (tool) and `fhir-converter` (service) development
@@ -183,14 +183,14 @@ To build the Docker image for the FHIR Conversion service from source code inste
 Both repos should be checked out and set up per the instructions above. We use releases to version the `FHIR-Converter` code and always have the docker build pull from one of those releases. To make a coordinated change between the repos.
 
 1. Create a branch on the `FHIR-Converter` repo with your changes and push it to the fork.
-2. Create a branch on the `phdi` repo with your changes.
+2. Create a branch on the `dibbs-ecr-viewer` repo with your changes.
 3. Update the `Dockerfile` to pull the repo from your branch instead of the release by updating the value passed to the `--branch` argument.
 4. When iterating on the `FHIR-Converter` repo, be sure to push all changes you want to test.
 5. When pulling in those changes use the `make build-image-no-cache` command as otherwise the changes to the branch will not be picked up
 6. When happy with your changes, create a PR on the `FHIR-Converter` repo and get review.
 7. Once merged, make a release following the convention `v{base microsoft version}-skylight-{counter}`.
 8. Update the `Dockerfile` to point to this new release.
-9. Create a PR for your chagnes on the `phdi` repo and get review.
+9. Create a PR for your chagnes on the `dibbs-ecr-viewer` repo and get review.
 
 #### Tips & Tricks
 

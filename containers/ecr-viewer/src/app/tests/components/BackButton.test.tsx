@@ -1,5 +1,6 @@
-import { BackButton } from "@/app/components/BackButton";
 import { render, screen } from "@testing-library/react";
+
+import { BackButton } from "@/app/components/BackButton";
 
 describe("Back button", () => {
   it("should not appear when non integrated = false", () => {

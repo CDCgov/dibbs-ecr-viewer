@@ -1,3 +1,5 @@
+import { ContactPoint, HumanName } from "fhir/r4";
+
 import {
   formatName,
   formatVitals,
@@ -5,7 +7,6 @@ import {
   formatAddress,
   formatPhoneNumber,
 } from "@/app/services/formatService";
-import { ContactPoint, HumanName } from "fhir/r4";
 
 describe("FormatService tests", () => {
   describe("Format Name", () => {

@@ -1,7 +1,10 @@
 import React from "react";
-import Header from "@/app/components/Header";
-import PatientBanner from "./PatientBanner";
+
 import { env } from "next-runtime-env";
+
+import Header from "@/app/components/Header";
+
+import PatientBanner from "./PatientBanner";
 
 /**
  * Layout component for the ecr viewer page.

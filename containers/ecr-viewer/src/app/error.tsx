@@ -1,7 +1,8 @@
 "use client"; // Error components must be Client Components
 
 import { useEffect } from "react";
-import { GenericError } from "@/app/components/ErrorPage";
+
+import { GenericError } from "./components/ErrorPage";
 
 /**
  * Renders an Error component to display when an error occurs.

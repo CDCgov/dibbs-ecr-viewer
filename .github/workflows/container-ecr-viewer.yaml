@@ -36,6 +36,7 @@ jobs:
         run: |
           npm ci
           npm run lint
+          npm run lint:tsc
   test-node-containers:
     runs-on: ubuntu-latest
     steps:

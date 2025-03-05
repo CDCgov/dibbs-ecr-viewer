@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { test, expect } from "@playwright/test";
 
 test.skip("should not have any automatically detectable accessibility issues", async ({
   page,
@@ -26,7 +26,7 @@ test.skip("fully expanded should not have any automatically detectable accessibi
   await page.getByRole("button", { name: "Expand all labs" }).click();
 
   const viewCommentButtons = await page.getByTestId("comment-button").all();
-  for (let viewCommentButton of viewCommentButtons) {
+  for (const viewCommentButton of viewCommentButtons) {
     await viewCommentButton.scrollIntoViewIfNeeded();
     await viewCommentButton.click();
   }

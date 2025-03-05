@@ -42,7 +42,7 @@ def test_config_not_found():
     }
 
 
-def test_upload_config():
+def test_upload_config_good():
     request_body = {
         "workflow": {
             "workflow": [
@@ -63,6 +63,27 @@ def test_upload_config():
     )
     assert response.status_code == 201
     assert response.json() == {"message": "Config uploaded successfully!"}
+
+
+def test_upload_config_already_exists():
+    request_body = {
+        "workflow": {
+            "workflow": [
+                {
+                    "service": "ingestion",
+                    "url": "some-url-for-an-ingestion-service",
+                    "endpoint": "/fhir/harmonization/standardization/standardize_names",
+                }
+            ]
+        }
+    }
+    test_config_name = "test_config1.json"
+
+    # Upload a new config.
+    response = client.put(
+        f"/configs/{test_config_name}",
+        json=request_body,
+    )
 
     # Attempt to upload a config with name that already exists.
     response = client.put(

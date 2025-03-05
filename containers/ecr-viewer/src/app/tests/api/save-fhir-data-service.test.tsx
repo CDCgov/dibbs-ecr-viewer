@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 
-import { saveMetadataToPostgres } from "../../api/save-fhir-data/save-fhir-data-service";
-import { BundleMetadata } from "../../api/save-fhir-data/types";
-import { getDB } from "../../data/db/postgres_db";
+import { saveMetadataToPostgres } from "@/app/api/save-fhir-data/save-fhir-data-service";
+import { BundleMetadata } from "@/app/api/save-fhir-data/types";
+import { getDB } from "@/app/data/db/postgres_db";
 
 jest.mock("../../data/db/postgres_db", () => ({
   getDB: jest.fn(),

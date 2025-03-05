@@ -19,7 +19,7 @@ help:
 
 run-docker:
 	@echo "Running Message Refiner service using Docker on localhost:$(MESSAGE_REFINER_PORT)..."
-	docker pull ghcr.io/cdcgov/phdi/message-refiner:latest
+	docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/message-refiner:latest
 	docker run -p $(MESSAGE_REFINER_PORT):8080 message-refiner:latest
 
 run-python:

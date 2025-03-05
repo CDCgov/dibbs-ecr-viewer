@@ -1,8 +1,9 @@
-import { axe } from "jest-axe";
 import { act, render } from "@testing-library/react";
+import { axe } from "jest-axe";
+import router from "next-router-mock";
+
 import EcrTableContent from "@/app/components/EcrTableContent";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
-import router from "next-router-mock";
 
 jest.mock("../../services/listEcrDataService");
 
@@ -25,10 +26,10 @@ describe("EcrTableContent", () => {
       `second-condition-${i + 1}`,
     ],
     rule_summaries: [`rule-summary-${i + 1}`, `second-summary-${i + 1}`],
-    patient_report_date: i == 0 ? "" : `2021-01-0${(i % 9) + 1}`,
+    patient_report_date: i === 0 ? "" : `2021-01-0${(i % 9) + 1}`,
     date_created: `2021-01-0${(i % 9) + 1}`,
     eicr_set_id: `123${i}`,
-    eicr_version_number: i == 0 ? undefined : `${i}`,
+    eicr_version_number: i === 0 ? undefined : `${i}`,
   }));
   const mockDateRange = {
     startDate: new Date("12-01-2024"),

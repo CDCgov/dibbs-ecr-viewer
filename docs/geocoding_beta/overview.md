@@ -12,8 +12,8 @@ As a part of that initiative, the CDC and Office of the National Coordinator for
 
 ## What is the Geocoding Building Block?
 
-**The Geocoding Building Block** creates tools for mapping geospatial data to its canonical representation for purposes of standardization, validation, cleaning, and/or enrichment. This Building Block is available as a module in the phdi [Python SDK](https://github.com/CDCgov/phdi). This SDK creates a standardized library where users can geocode an individual address or multiple addresses within a FHIR bundle. The current functionality supports standardizing addresses in a variety of input formats (both validation and cleaning) and enriching data with latitude and longitude.
-Read through the [Geospatial Tutorial](https://github.com/CDCgov/phdi/blob/main/tutorials/geospatial-tutorial.md) for more detail about using the geospatial module.
+**The Geocoding Building Block** creates tools for mapping geospatial data to its canonical representation for purposes of standardization, validation, cleaning, and/or enrichment. This Building Block is available as a module in the phdi [Python SDK](https://github.com/CDCgov/dibbs-ecr-viewer). This SDK creates a standardized library where users can geocode an individual address or multiple addresses within a FHIR bundle. The current functionality supports standardizing addresses in a variety of input formats (both validation and cleaning) and enriching data with latitude and longitude.
+Read through the [Geospatial Tutorial](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/tutorials/geospatial-tutorial.md) for more detail about using the geospatial module.
 
 ## What are the objectives of the Beta?
 
@@ -23,7 +23,7 @@ Read through the [Geospatial Tutorial](https://github.com/CDCgov/phdi/blob/main/
 
 ## What is the level of commitment?
 
-- Beta partners submit a “[Become a Geocoding Beta Partner](https://github.com/CDCgov/phdi/issues/new/choose)” issue on Github.
+- Beta partners submit a “[Become a Geocoding Beta Partner](https://github.com/CDCgov/dibbs-ecr-viewer/issues/new/choose)” issue on Github.
   - Beta partner schedules a 15 minute call to share API authentication credentials for a subsidized Smarty license current geocoding workflow
 - Beta partners use Geocoding Building Block at least once
   - Partner installs the SDK
@@ -33,7 +33,7 @@ Read through the [Geospatial Tutorial](https://github.com/CDCgov/phdi/blob/main/
 
 ## How can I get involved?
 
-- File a “[Become a Geocoding Beta Partner](https://github.com/CDCgov/phdi/issues/new/choose)” ticket in the phdi repo.
+- File a “[Become a Geocoding Beta Partner](https://github.com/CDCgov/dibbs-ecr-viewer/issues/new/choose)” ticket in the phdi repo.
 
 # Beta Onboarding and Support
 
@@ -41,8 +41,8 @@ Read through the [Geospatial Tutorial](https://github.com/CDCgov/phdi/blob/main/
 
 **Installing the SDK**
 
-- Follow the “[Getting Started](https://github.com/CDCgov/phdi#getting-started)” instructions to install the SDK in an appropriate Python environment.
-- Read through the [Geospatial Tutorial](https://github.com/CDCgov/phdi/blob/main/tutorials/geospatial-tutorial.md) for more detail about using the geospatial module.
+- Follow the “[Getting Started](https://github.com/CDCgov/dibbs-ecr-viewer#getting-started)” instructions to install the SDK in an appropriate Python environment.
+- Read through the [Geospatial Tutorial](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/tutorials/geospatial-tutorial.md) for more detail about using the geospatial module.
 
 **Select a geocoding service**
 
@@ -68,18 +68,18 @@ Although the Smarty and Census geocoding services operate very similarly in the 
     - Census: 123 Main Street
   - Note that when using the Census geocoding service with FHIR resources, the address (line) cannot be overwritten. To prevent a loss of output information, please use the geocoding service that best suits your needs.
 
-For example use cases and additional guidance on the geocoding services, please see the [Common Uses](https://github.com/CDCgov/phdi/blob/main/tutorials/geospatial-tutorial.md#common-uses) documentation.
+For example use cases and additional guidance on the geocoding services, please see the [Common Uses](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/tutorials/geospatial-tutorial.md#common-uses) documentation.
 
 **Receiving a CDC subsidized Smarty license (API key)**
 
-- Create a [ticket in the phdi repo](https://github.com/CDCgov/phdi/issues/new/choose) to request to become a Geocoding Beta partner. Creating this ticket will kick-off the process to retrieve a CDC-subsidized Smarty license.
+- Create a [ticket in the phdi repo](https://github.com/CDCgov/dibbs-ecr-viewer/issues/new/choose) to request to become a Geocoding Beta partner. Creating this ticket will kick-off the process to retrieve a CDC-subsidized Smarty license.
 - A PHDI team member will respond on the ticket to set up an unrecorded call to screenshare API authentication credentials for your STLT.
 - Record those credentials in a secure place!
 - Use those credentials to authenticate in the phdi SDK.
 
 ## How do I receive technical support?
 
-For technical support, please **create tickets in the phdi Github repo** using the [issue templates](https://github.com/CDCgov/phdi/issues/new/choose) provided. There are issue templates for:
+For technical support, please **create tickets in the phdi Github repo** using the [issue templates](https://github.com/CDCgov/dibbs-ecr-viewer/issues/new/choose) provided. There are issue templates for:
 
 - Support & Maintenance
 - Feature requests

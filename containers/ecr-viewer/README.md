@@ -19,7 +19,7 @@ To run the eCR Viewer with Docker, follow these steps.
 Docker version 20.10.21, build baeda1f
 ```
 
-2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/phdi/ecr-viewer:latest`.
+2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/ecr-viewer:latest`.
 3. Run the service with `docker run -p 8080:8080 ecr-viewer:latest`.
 
 Congratulations, the eCR Viewer should now be running on `localhost:8080`!
@@ -33,8 +33,8 @@ We recommend running the eCR Viewer from a container, but if that isn't feasible
 To build the Docker image for the eCR Viewer from source instead of downloading it from the PHDI repository follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/ecr-viewer/`.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
 4. Run `docker build -t ecr-viewer .`.
 
 ## Non Integrated Viewer
@@ -57,8 +57,8 @@ If you consistently encounter the error message `"ecr_viewer_db" does not exist`
 To run the eCR Viewer locally:
 
 1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/phdi`.
-3. Navigate to `/phdi/containers/ecr-viewer/`.
+2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
 4. Install all of the Node dependencies for the eCR Viewer with `npm install`.
 5. Setup your `.env.local` by running `npm run setup-local-env`.
 6. Create seed data with `npm run convert-seed-data` - this will take ~10 minutes. Note that this process will fail immediately if the Docker daemon isn't running.
@@ -70,7 +70,7 @@ The default IDP is keycloak for local development. The default user is `ecr-view
 
 ### Windows Setup
 
-The eCR Viewer is primailly deveoped on Mac silicon machines, See this [integreation testing wiki page](https://github.com/CDCgov/phdi/wiki/Integration-Testing#running-integration-tests-locally-on-windows) for additional infomation for running on Windows machines.
+The eCR Viewer is primailly deveoped on Mac silicon machines, See this [integreation testing wiki page](https://github.com/CDCgov/dibbs-ecr-viewer/wiki/Integration-Testing#running-integration-tests-locally-on-windows) for additional infomation for running on Windows machines.
 
 ### Updating Seed Data
 

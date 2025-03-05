@@ -1,6 +1,8 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
-import { Pagination } from "../../components/Pagination";
+
+import { render, screen, fireEvent } from "@testing-library/react";
+
+import { Pagination } from "@/app/components/Pagination";
 
 const mockSearchParams = new URLSearchParams();
 jest.mock("next/navigation", () => {

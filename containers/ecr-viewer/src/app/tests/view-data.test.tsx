@@ -1,7 +1,9 @@
 import React from "react";
+
 import { render, screen } from "@testing-library/react";
-import ECRViewerPage from "../view-data/page";
-import { get_fhir_data } from "../api/fhir-data/fhir-data-service";
+
+import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
+import ECRViewerPage from "@/app/view-data/page";
 
 jest.mock("../view-data/component-utils", () => ({
   metrics: jest.fn(),
@@ -24,19 +26,20 @@ function mockFetch(
   return fn.mockImplementation(() =>
     Promise.resolve({
       ok: status === 200 ? true : false,
-      status: status,
-      statusText: statusText,
+      status,
+      statusText,
       json: () => data,
     }),
   );
 }
 
 describe("ECRViewerPage", () => {
+  const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeAll(() => {
     process.env.BASE_PATH = "ecr-viewer";
   });
   afterAll(() => {
-    delete process.env.BASE_PATH;
+    process.env.BASE_PATH = ORIG_BASE_PATH;
     jest.resetAllMocks();
   });
 
