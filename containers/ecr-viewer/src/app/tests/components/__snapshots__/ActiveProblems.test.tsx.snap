@@ -52,7 +52,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          123
+          123 years
         </td>
         <td
           class="text-top"
@@ -100,7 +100,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          152
+          152 years
         </td>
         <td
           class="text-top"
@@ -126,7 +126,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          141
+          141 years
         </td>
         <td
           class="text-top"
