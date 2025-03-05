@@ -46,7 +46,7 @@ services:
     env_file:
       - .env
     extra_hosts:
-    - host.docker.internal:host-gateway
+      - host.docker.internal:host-gateway
     environment:
       - OTEL_TRACES_EXPORTER=none
       - OTEL_METRICS_EXPORTER=none
