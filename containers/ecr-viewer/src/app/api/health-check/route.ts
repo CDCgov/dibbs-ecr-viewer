@@ -12,7 +12,7 @@ import { sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
 export async function GET() {
   return NextResponse.json(
     {
-      status: "OK",
+      status: "UP",
       version: process.env.APP_VERSION,
       dependencies: {
         sqlserver: await sqlServerHealthCheck(),
