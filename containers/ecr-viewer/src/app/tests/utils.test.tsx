@@ -168,7 +168,36 @@ describe("Utils", () => {
       expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
     });
   });
+
   describe("Calculate Patient Age", () => {
+    it("should return a value in years if years is 2 or above", () => {
+      const patientAge = calculatePatientAge(
+        BundleWithPatient as unknown as Bundle,
+        "1879-05-25",
+      );
+
+      expect(patientAge).toEqual("2 years");
+    });
+
+    it("should return a value displaying months and days if years is under 2", () => {
+      // 1877-05-25
+      const patientAge = calculatePatientAge(
+        BundleWithPatient as unknown as Bundle,
+        "1879-05-24",
+      );
+
+      expect(patientAge).toEqual("23 months, 29 days");
+    });
+
+    it("should return a value that can display 0 months and only in days", () => {
+      const patientAge = calculatePatientAge(
+        BundleWithPatient as unknown as Bundle,
+        "1877-05-30",
+      );
+
+      expect(patientAge).toEqual("0 months, 5 days");
+    });
+
     it("when no date is given, should return patient age when DOB is available", () => {
       // Fixed "today" for testing purposes
       jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
@@ -182,11 +211,13 @@ describe("Utils", () => {
       // Return to real time
       jest.useRealTimers();
     });
+
     it("should return nothing when DOB is unavailable", () => {
       const patientAge = calculatePatientAge(undefined as any);
 
       expect(patientAge).toEqual(undefined);
     });
+
     it("when date is given, should return age at given date", () => {
       const givenDate = "2020-01-01";
       const expectedAge = "142 years";

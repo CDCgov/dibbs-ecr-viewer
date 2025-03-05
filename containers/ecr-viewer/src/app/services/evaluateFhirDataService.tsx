@@ -222,10 +222,12 @@ const getFormattedAge = (laterDate: Date, earlierDate: Date): string => {
 
   // If the difference is less than 2 years, display months and days
   const months = dateFns.differenceInMonths(laterDate, earlierDate);
-  const days = dateFns.differenceInDays(laterDate, earlierDate);
 
-  // Calculate the remaining days after calculating months
-  const remainingDays = days - months * 30; // Approximate month length
+  // Add the number of months to the earlier date
+  const dateAfterMonths = dateFns.addMonths(earlierDate, months);
+
+  // Get the difference in days between the later date and the new date after full months
+  const remainingDays = dateFns.differenceInDays(laterDate, dateAfterMonths);
 
   return `${months} months, ${remainingDays} days`;
 };
