@@ -132,7 +132,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}/tests/integration
         run: |
           python -m pytest -m "integration"
-      
+
       - name: Get docker logs
         if: ${{ !cancelled() }}
         working-directory: ./containers/${{env.CONTAINER}}/e2e
