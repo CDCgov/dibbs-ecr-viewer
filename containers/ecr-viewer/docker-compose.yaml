@@ -34,9 +34,6 @@ services:
       - AUTH_KEYCLOAK_SECRET=${AUTH_KEYCLOAK_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
       - AUTH_KEYCLOAK_ISSUER=${AUTH_KEYCLOAK_ISSUER:-http://localhost:8070/realms/master}
       # Open Telemetry
-      - OTEL_TRACES_EXPORTER=none
-      - OTEL_METRICS_EXPORTER=none
-      - OTEL_LOGS_EXPORTER=none
       - OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=http/protobuf
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4318/v1/metrics
       - OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
