@@ -9,7 +9,7 @@ import {
   LabReportElementData,
 } from "@/app/services/labsService";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
-import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json"
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import { evaluate } from "@/app/utils/evaluate";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import fhirPathMappings from "@/app/view-data/fhirPath";
