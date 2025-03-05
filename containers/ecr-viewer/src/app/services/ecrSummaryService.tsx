@@ -3,7 +3,8 @@ import React from "react";
 import { Address, Bundle, Condition, DomainResource } from "fhir/r4";
 
 import { evaluateData } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import { evaluateAll, evaluateOne } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
@@ -34,7 +35,9 @@ import { getReportabilitySummaries } from "./reportabilityService";
  * @returns An array of patient details objects containing title and value pairs.
  */
 export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
-  const patientSex = toTitleCase(evaluate(fhirBundle, "patientGender")[0]);
+  const patientSex = toTitleCase(
+    evaluateOne(fhirBundle, fhirPathMappings.patientGender),
+  );
 
   return evaluateData([
     {
@@ -43,7 +46,7 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "DOB",
-      value: formatDate(evaluate(fhirBundle, "patientDOB")[0]),
+      value: formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB)),
     },
     {
       title: "Sex",
@@ -52,11 +55,15 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Patient Address",
-      value: findCurrentAddress(evaluate(fhirBundle, "patientAddressList")),
+      value: findCurrentAddress(
+        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
+      ),
     },
     {
       title: "Patient Contact",
-      value: formatContactPoint(evaluate(fhirBundle, "patientTelecom")),
+      value: formatContactPoint(
+        evaluateAll(fhirBundle, fhirPathMappings.patientTelecom),
+      ),
     },
   ]);
 };
@@ -102,7 +109,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Encounter Type",
-      value: evaluate(fhirBundle, "encounterType"),
+      value: evaluateOne(fhirBundle, fhirPathMappings.encounterType),
     },
     {
       title: "Encounter Diagnosis",
@@ -110,11 +117,13 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Name",
-      value: evaluate(fhirBundle, "facilityName"),
+      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
     },
     {
       title: "Facility Contact",
-      value: formatPhoneNumber(evaluate(fhirBundle, "facilityContact")[0]),
+      value: formatPhoneNumber(
+        evaluateOne(fhirBundle, fhirPathMappings.facilityContact),
+      ),
     },
   ]);
 };
@@ -129,7 +138,7 @@ export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
   snomedCode?: string,
 ): ConditionSummary[] => {
-  const rrArray = evaluate(fhirBundle, "rrDetails");
+  const rrArray = evaluateAll(fhirBundle, fhirPathMappings.rrDetails);
   const conditionsList: {
     [index: string]: { ruleSummaries: Set<string>; snomedDisplay: string };
   } = {};
@@ -231,7 +240,7 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
     return [{ value: noData, dividerLine: true }];
   }
 
-  const problemsList = evaluate(fhirBundle, "activeProblems");
+  const problemsList = evaluateAll(fhirBundle, fhirPathMappings.activeProblems);
   const problemsListFiltered = getRelevantResources(problemsList, snomedCode);
 
   if (problemsListFiltered.length === 0) {
@@ -265,10 +274,16 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [{ value: noData, dividerLine: true }];
   }
 
-  const labReports = evaluate(fhirBundle, "diagnosticReports");
+  const labReports = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.diagnosticReports,
+  );
   const labsWithCode = getRelevantResources(labReports, snomedCode);
 
-  const observationsList = evaluate(fhirBundle, "observations");
+  const observationsList = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.observations,
+  );
   const obsIdsWithCode: (string | undefined)[] = getRelevantResources(
     observationsList,
     snomedCode,
@@ -327,8 +342,8 @@ export const evaluateEcrSummaryRelevantLabResults = (
  */
 const evaluateEncounterDate = (fhirBundle: Bundle) => {
   return formatStartEndDateTime(
-    evaluate(fhirBundle, "encounterStartDate").join(""),
-    evaluate(fhirBundle, "encounterEndDate").join(""),
+    evaluateOne(fhirBundle, fhirPathMappings.encounterStartDate),
+    evaluateOne(fhirBundle, fhirPathMappings.encounterEndDate),
   );
 };
 
@@ -336,9 +351,13 @@ const evaluateEcrSummaryRelevantImmunizations = (
   fhirBundle: Bundle,
   snomedCode: string,
 ): DisplayDataProps[] => {
-  const immunizations = evaluate(fhirBundle, "stampedImmunizations", {
-    snomedCode,
-  });
+  const immunizations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.stampedImmunizations,
+    {
+      snomedCode,
+    },
+  );
   const immunizationTable = returnImmunizations(
     fhirBundle,
     immunizations,

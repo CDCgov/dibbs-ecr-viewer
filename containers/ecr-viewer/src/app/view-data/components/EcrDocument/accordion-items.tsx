@@ -11,7 +11,8 @@ import {
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
-import { evaluate } from "@/app/utils/evaluate";
+import { evaluateAll } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
@@ -41,7 +42,7 @@ export const getEcrDocumentAccordionItems = (
   const facilityData = evaluateFacilityData(fhirBundle);
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
-    evaluate(fhirBundle, "diagnosticReports"),
+    evaluateAll(fhirBundle, fhirPathMappings.diagnosticReports),
   );
   const hasUnavailableData = () => {
     const unavailableDataArrays = [

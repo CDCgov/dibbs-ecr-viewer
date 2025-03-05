@@ -4,14 +4,14 @@ import { Table } from "@trussworks/react-uswds";
 import classNames from "classnames";
 import { Element } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateValue } from "@/app/utils/evaluate";
+import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
 
 import EvaluateTableRow from "./EvaluateTableRow";
 
-export interface Mapping {
-  [key: string]: string;
-}
+export type Mapping = {
+  [key: string]: string | FhirPath<string>;
+};
 
 export interface ColumnInfoInput {
   columnName: string;

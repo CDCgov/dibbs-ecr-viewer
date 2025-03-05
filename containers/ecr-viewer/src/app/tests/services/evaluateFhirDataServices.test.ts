@@ -1,6 +1,5 @@
 import { Bundle, CodeableConcept, Patient } from "fhir/r4";
 
-import mappings from "@/app/data/fhirPath";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -23,6 +22,7 @@ import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
 import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
 import { evaluateValue } from "@/app/utils/evaluate";
+import mappings from "@/app/utils/evaluate/fhir-paths";
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Identifier", () => {

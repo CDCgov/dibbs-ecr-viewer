@@ -10,7 +10,6 @@ import {
   Reference,
 } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 import {
   formatDate,
@@ -21,10 +20,12 @@ import { formatName } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
 import {
-  evaluate,
+  evaluateAll,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   AdministeredMedication,
@@ -67,7 +68,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       title: "Problems List",
       value: returnProblemsTable(
         fhirBundle,
-        evaluate(fhirBundle, "activeProblems"),
+        evaluateAll(fhirBundle, fhirPathMappings.activeProblems),
       ),
     },
   ];
@@ -77,12 +78,14 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
-      value: returnProceduresTable(evaluate(fhirBundle, "procedures")),
+      value: returnProceduresTable(
+        evaluateAll(fhirBundle, fhirPathMappings.procedures),
+      ),
     },
     {
       title: "Planned Procedures",
       value: returnPlannedProceduresTable(
-        evaluate(fhirBundle, "plannedProcedures"),
+        evaluateAll(fhirBundle, fhirPathMappings.plannedProcedures),
       ),
     },
     evaluatePlanOfTreatment(fhirBundle, "Plan of Treatment"),
@@ -110,7 +113,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       title: "Immunization History",
       value: returnImmunizations(
         fhirBundle,
-        evaluate(fhirBundle, "immunizations"),
+        evaluateAll(fhirBundle, fhirPathMappings.immunizations),
         "Immunization History",
       ),
     },
@@ -133,9 +136,9 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
 const evaluateAdministeredMedication = (
   fhirBundle: Bundle,
 ): AdministeredMedicationTableData[] => {
-  const administeredMedicationReferences = evaluate(
+  const administeredMedicationReferences = evaluateAll(
     fhirBundle,
-    "adminMedicationsRefs",
+    fhirPathMappings.adminMedicationsRefs,
   );
   if (!administeredMedicationReferences?.length) {
     return [];
@@ -182,7 +185,10 @@ type ModifiedCareTeamParticipant = Omit<
 export const returnCareTeamTable = (
   bundle: Bundle,
 ): React.JSX.Element | undefined => {
-  const careTeamParticipants = evaluate(bundle, "careTeamParticipants");
+  const careTeamParticipants = evaluateAll(
+    bundle,
+    fhirPathMappings.careTeamParticipants,
+  );
   if (careTeamParticipants.length === 0) {
     return undefined;
   }
@@ -400,19 +406,22 @@ export const returnProceduresTable = (
  */
 export const returnVitalsTable = (fhirBundle: Bundle) => {
   const height = evaluateValue(fhirBundle, fhirPathMappings.patientHeight);
-  const heightDate: string | undefined = evaluate(
+  const heightDate: string | undefined = evaluateOne(
     fhirBundle,
-    "patientHeightDate",
-  )[0];
+    fhirPathMappings.patientHeightDate,
+  );
 
   const weight = evaluateValue(fhirBundle, fhirPathMappings.patientWeight);
-  const weightDate: string | undefined = evaluate(
+  const weightDate: string | undefined = evaluateOne(
     fhirBundle,
-    "patientWeightDate",
-  )[0];
+    fhirPathMappings.patientWeightDate,
+  );
 
   const bmi = evaluateValue(fhirBundle, fhirPathMappings.patientBmi);
-  const bmiDate: string | undefined = evaluate(fhirBundle, "patientBmiDate")[0];
+  const bmiDate: string | undefined = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.patientBmiDate,
+  );
 
   if (!height && !weight && !bmi) {
     return undefined;

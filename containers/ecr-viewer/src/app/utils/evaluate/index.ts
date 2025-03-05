@@ -12,12 +12,9 @@ import {
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import fhirPathMappings, {
-  PathTypeNames,
-  PathTypes,
-  ValueX,
-} from "@/app/data/fhirPath";
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
+
+import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,14 +78,14 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
 
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
- * escape hatch when not using a `fhirPathmapping`. See `evaluate` for the common usage.
+ * escape hatch when not using a `fhirPathmapping`. See `evaluateAll` or `evaluateOne` for the common usage.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param path - The FHIRPath expression to evaluate.
  * @param expectedType - Optionally, the type of the expected result as a string.
  * @param [context] - Optional context object to provide additional data for evaluation.
  * @returns - An array containing the result of the evaluation.
  */
-export const evaluateFor = <Result>(
+export const evaluateAllAndCheck = <Result>(
   fhirData: FhirData,
   path: string,
   expectedType: string,
@@ -116,6 +113,29 @@ export const evaluateFor = <Result>(
 };
 
 /**
+ * Only to be used as an escape hatch when not using a `fhirPathMapping`. See `evaluateOne` for the
+ * common usage. Same as `evaluateAllAndCheck`, but ensures a singleton or undefined is returned.
+ * @param args - The same arguments as `evaluateAllAndCheck`.
+ * @returns - An array containing the result of the evaluation.
+ */
+export const evaluateOneAndCheck = <Result>(
+  ...args: Parameters<typeof evaluateAllAndCheck<Result>>
+) => {
+  const res = evaluateAllAndCheck<Result>(...args);
+  if (res.length === 0) {
+    return undefined;
+  } else if (res.length > 1) {
+    console.error(
+      `Expected one result, but got ${res.length}. Args: ${JSON.stringify(
+        args,
+      )}`,
+    );
+  }
+
+  return res[0];
+};
+
+/**
  * Reset the evaluate cache map
  */
 export const clearEvaluateCache = () => {
@@ -125,19 +145,40 @@ export const clearEvaluateCache = () => {
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
- * @param pathKey - The key of the FHIRPath expression to evaluate.
+ * @param fhirPath - The FhirPath describing the FHIRPath expression to evaluate.
  * @param [context] - Optional context object to provide additional data for evaluation.
  * @returns - An array containing the result of the evaluation.
  */
-export const evaluate = <K extends keyof PathTypes>(
+export const evaluateAll = <K extends keyof PathTypes>(
   fhirData: FhirData,
-  pathKey: K,
+  fhirPath: FhirPath<K>,
   context?: Context,
 ) => {
-  return evaluateFor<PathTypes[K]>(
+  return evaluateAllAndCheck<PathTypes[K]>(
     fhirData,
-    fhirPathMappings[pathKey],
-    PathTypeNames[pathKey],
+    fhirPath.path,
+    fhirPath.type,
+    context,
+  );
+};
+
+/**
+ * Evaluates a FHIRPath expression on the provided FHIR data and returns the single
+ * expected item, or undefined if not available.
+ * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
+ * @param fhirPath - The FhirPath describing the FHIRPath expression to evaluate.
+ * @param [context] - Optional context object to provide additional data for evaluation.
+ * @returns - An array containing the result of the evaluation.
+ */
+export const evaluateOne = <K extends keyof PathTypes>(
+  fhirData: FhirData,
+  fhirPath: FhirPath<K>,
+  context?: Context,
+) => {
+  return evaluateOneAndCheck<PathTypes[K]>(
+    fhirData,
+    fhirPath.path,
+    fhirPath.type,
     context,
   );
 };
@@ -154,8 +195,14 @@ const UNIT_MAP = new Map([
  * @param path - The path within the resource to extract the value from.
  * @returns - The evaluated value as a string.
  */
-export const evaluateValue = (entry: FhirData, path: string): string => {
-  const originalValue = evaluateFor<ValueX>(entry, path, "ValueX")[0];
+export const evaluateValue = (
+  entry: FhirData,
+  path: string | FhirPath<string>,
+): string => {
+  const [fhirPath, type] =
+    typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
+  const originalValue =
+    evaluateOneAndCheck<ValueX>(entry, fhirPath, type) || "";
 
   if (
     typeof originalValue === "string" ||
@@ -204,23 +251,21 @@ export const evaluateReference = <T extends Resource>(
 ): T | undefined => {
   if (!ref) return undefined;
   const [resourceType, id] = ref.split("/");
-  const result: Resource | undefined = evaluateFor<Resource>(
+  const result = evaluateOneAndCheck<T>(
     fhirBundle,
-    fhirPathMappings.resolve,
+    fhirPathMappings.resolve.path,
     resourceType,
     {
       resourceType,
       id,
     },
-  )[0];
+  );
 
-  if (!result) {
-    return undefined;
-  } else if (result?.resourceType !== resourceType) {
+  if (result && result?.resourceType !== resourceType) {
     console.error(
       `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
     );
   }
 
-  return result as T;
+  return result;
 };

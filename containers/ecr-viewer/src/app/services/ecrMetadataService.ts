@@ -1,12 +1,13 @@
 import { Bundle, Organization } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { CompleteData, evaluateData } from "@/app/utils/data-utils";
 import {
-  evaluate,
+  evaluateAll,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import {
@@ -44,7 +45,7 @@ export interface ERSDWarning {
  * @returns An object containing evaluated and formatted eCR metadata.
  */
 export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
-  const rrDetails = evaluate(fhirBundle, "rrDetails");
+  const rrDetails = evaluateAll(fhirBundle, fhirPathMappings.rrDetails);
 
   const reportableConditionsList: ReportableConditions = {};
 
@@ -73,7 +74,8 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     });
   }
 
-  const custodianRef = evaluate(fhirBundle, "eicrCustodianRef")[0] ?? "";
+  const custodianRef =
+    evaluateOne(fhirBundle, fhirPathMappings.eicrCustodianRef) ?? "";
   const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
   const eicrReleaseVersion = (fhirBundle: Bundle) => {
@@ -90,7 +92,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     }
   };
 
-  const fhirERSDWarnings = evaluate(fhirBundle, "eRSDwarnings");
+  const fhirERSDWarnings = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.eRSDwarnings,
+  );
   const eRSDTextList: ERSDWarning[] = [];
 
   for (const warning of fhirERSDWarnings) {
@@ -122,11 +127,13 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       title: "eICR ID",
       toolTip:
         "Unique document ID for the eICR that originates from the medical record. Different from the Document ID that NBS creates for all incoming records.",
-      value: evaluate(fhirBundle, "eicrIdentifier")[0],
+      value: evaluateOne(fhirBundle, fhirPathMappings.eicrIdentifier),
     },
     {
       title: "Date/Time eCR Created",
-      value: formatDateTime(evaluate(fhirBundle, "dateTimeEcrCreated")[0]),
+      value: formatDateTime(
+        evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
+      ),
     },
     {
       title: "eICR Release Version",
@@ -134,7 +141,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     },
     {
       title: "EHR Manufacturer Model Name",
-      value: evaluate(fhirBundle, "ehrManufacturerModel")[0],
+      value: evaluateOne(fhirBundle, fhirPathMappings.ehrManufacturerModel),
     },
     {
       title: "EHR Software Name",
@@ -175,7 +182,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 };
 
 const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
-  const authorRefs = evaluate(fhirBundle, "compositionAuthorRefs");
+  const authorRefs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.compositionAuthorRefs,
+  );
 
   const authorDetails: DisplayDataProps[][] = [];
   authorRefs.forEach((ref) => {
