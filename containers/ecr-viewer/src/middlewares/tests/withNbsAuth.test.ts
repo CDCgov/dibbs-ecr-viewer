@@ -13,7 +13,7 @@ jest.mock("jose", () => ({
 }));
 
 // defer computation to make sure env vars are set
-const middleware = () => chainMiddleware([withNbsAuth]);
+const middleware = chainMiddleware([withNbsAuth]);
 
 describe("NBS Auth Middleware", () => {
   const ORIG_NBS_AUTH = process.env.NBS_AUTH;
@@ -33,7 +33,7 @@ describe("NBS Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/api?id=1234&auth=abcd",
     );
 
-    const resp = await middleware()(req);
+    const resp = await middleware(req);
     expect((resp as NextResponse).cookies.get("auth-token")).toEqual({
       name: "auth-token",
       path: "/",
@@ -50,7 +50,7 @@ describe("NBS Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/api/fhir-data/",
     );
 
-    const resp = await middleware()(req);
+    const resp = await middleware(req);
     expect(resp?.headers.get("x-middleware-rewrite")).toBe(
       "https://www.example.com/ecr-viewer/error/auth",
     );
@@ -65,7 +65,7 @@ describe("NBS Auth Middleware", () => {
     );
     req.cookies.set("auth-token", "foobar");
 
-    const resp = await middleware()(req);
+    const resp = await middleware(req);
 
     expect(jwtVerify).toHaveBeenCalled();
     expect(importSPKI).toHaveBeenCalledWith("FOOBAR", "RS256");
@@ -76,7 +76,7 @@ describe("NBS Auth Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
-    const resp = await middleware()(req);
+    const resp = await middleware(req);
     expect(resp?.headers.get("x-middleware-rewrite")).toBe(
       "https://www.example.com/ecr-viewer/error/auth",
     );

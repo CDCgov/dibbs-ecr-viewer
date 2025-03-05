@@ -3,31 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
 
-/**
- * Acts as a middleware for handling authentication and authorization in a Next.js application.
- * @param req - The incoming request object provided by Next.js.
- * @returns A promise that resolves to a `NextResponse` object, which could
- *     be a redirection, an error response, or a signal to proceed to the next middleware or page
- *     handler based on the authentication and authorization logic.
- */
-// export async function middleware(
-//   req: NextRequestWithAuth,
-// ): Promise<NextResponse | NextMiddlewareResult> {
-//   const isNbsAuthEnabled = process.env.NBS_AUTH === "true";
-//   if (isNbsAuthEnabled) {
-//     const nbsAuth = set_auth_cookie(req) ?? (await authorize_api(req));
-//     if (nbsAuth) {
-//       return nbsAuth;
-//     } else {
-//       return NextResponse.rewrite(
-//         new URL(`${process.env.BASE_PATH}/error/auth`, req.nextUrl.origin),
-//       );
-//     }
-//   } else {
-//     return withAuth(req);
-//   }
-// }
-
 // https://reacthustle.com/blog/how-to-chain-multiple-middleware-functions-in-nextjs
 // https://github.com/jmarioste/next-middleware-guide/
 

@@ -13,7 +13,7 @@ jest.mock("next-auth/jwt", () => ({
 }));
 
 // defer computation to make sure env vars are set
-const middleware = () => chainMiddleware([withNextAuth]);
+const middleware = chainMiddleware([withNextAuth]);
 
 describe("Middleware", () => {
   const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
@@ -36,7 +36,7 @@ describe("Middleware", () => {
       "https://www.example.com/ecr-viewer/api?id=123",
     );
 
-    const resp = await middleware()(req);
+    const resp = await middleware(req);
     expect(resp?.status).toBeGreaterThanOrEqual(300);
     expect(resp?.status).toBeLessThan(400);
     expect(resp?.headers.get("Location")).toBe(
@@ -50,7 +50,7 @@ describe("Middleware", () => {
       "https://www.example.com/ecr-viewer/api/fhir-data/",
     );
 
-    const resp = await middleware()(req);
+    const resp = await middleware(req);
     expect(resp?.status).toBe(200);
   });
 });

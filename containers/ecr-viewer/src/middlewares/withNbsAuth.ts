@@ -9,9 +9,9 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
  * @returns a NextResponse
  */
 export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
-  if (process.env.NBS_AUTH !== "true") return next;
-
   return async function (request: NextRequest) {
+    if (process.env.NBS_AUTH !== "true") return next(request);
+
     const nbsAuthResp =
       set_auth_cookie(request) ?? (await authorize_api(request));
     if (nbsAuthResp) {

@@ -11,9 +11,9 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
  * @returns a NextResponse
  */
 export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
-  if (process.env.NBS_AUTH === "true") return next;
-
   return async function (request: NextRequest) {
+    if (process.env.NBS_AUTH === "true") return next(request);
+
     const response = await withAuth(request as NextRequestWithAuth);
     if (response instanceof Response) {
       return response as NextResponse;
