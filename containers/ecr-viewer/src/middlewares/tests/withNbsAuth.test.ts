@@ -12,7 +12,6 @@ jest.mock("jose", () => ({
   jwtVerify: jest.fn(() => true),
 }));
 
-// defer computation to make sure env vars are set
 const middleware = chainMiddleware([withNbsAuth]);
 
 describe("NBS Auth Middleware", () => {

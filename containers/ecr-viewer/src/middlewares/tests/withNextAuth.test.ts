@@ -12,10 +12,9 @@ jest.mock("next-auth/jwt", () => ({
   getToken: jest.fn(),
 }));
 
-// defer computation to make sure env vars are set
 const middleware = chainMiddleware([withNextAuth]);
 
-describe("Middleware", () => {
+describe("Next Auth Middleware", () => {
   const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
   const ORIG_NBS_AUTH = process.env.NBS_AUTH;
   const ORIG_BASE_PATH = process.env.BASE_PATH;
