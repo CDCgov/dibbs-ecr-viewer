@@ -14,11 +14,7 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 
-import fhirPathMappings, {
-  PathTypes,
-  ValueX,
-  FhirPath,
-} from "./fhir-paths";
+import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,7 +85,7 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
  * @param [context] - Optional context object to provide additional data for evaluation.
  * @returns - An array containing the result of the evaluation.
  */
-export const evaluateFor = <Result>(
+export const evaluateAllFor = <Result>(
   fhirData: FhirData,
   path: string,
   expectedType: string,
@@ -116,6 +112,19 @@ export const evaluateFor = <Result>(
   return evaluateCache.get(key);
 };
 
+const evaluateOneFor = <Result>(
+  ...args: Parameters<typeof evaluateAllFor<Result>>
+) => {
+  const res = evaluateAllFor<Result>(...args);
+  if (res.length === 0) {
+    return undefined;
+  } else if (res.length > 1) {
+    console.error(`Expected one result, but got many: ${JSON.stringify(args)}`);
+  }
+
+  return res[0];
+};
+
 /**
  * Reset the evaluate cache map
  */
@@ -126,17 +135,36 @@ export const clearEvaluateCache = () => {
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
- * @param pathKey - The key of the FHIRPath expression to evaluate.
- * @param fhirPath
+ * @param fhirPath - The FhirPath describing the FHIRPath expression to evaluate.
  * @param [context] - Optional context object to provide additional data for evaluation.
  * @returns - An array containing the result of the evaluation.
  */
-export const evaluate = <K extends keyof PathTypes>(
+export const evaluateAll = <K extends keyof PathTypes>(
   fhirData: FhirData,
   fhirPath: FhirPath<K>,
   context?: Context,
 ) => {
-  return evaluateFor<PathTypes[K]>(
+  return evaluateAllFor<PathTypes[K]>(
+    fhirData,
+    fhirPath.path,
+    fhirPath.type,
+    context,
+  );
+};
+
+/**
+ * Evaluates a FHIRPath expression on the provided FHIR data.
+ * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
+ * @param fhirPath - The FhirPath describing the FHIRPath expression to evaluate.
+ * @param [context] - Optional context object to provide additional data for evaluation.
+ * @returns - An array containing the result of the evaluation.
+ */
+export const evaluateOne = <K extends keyof PathTypes>(
+  fhirData: FhirData,
+  fhirPath: FhirPath<K>,
+  context?: Context,
+) => {
+  return evaluateOneFor<PathTypes[K]>(
     fhirData,
     fhirPath.path,
     fhirPath.type,
@@ -162,7 +190,7 @@ export const evaluateValue = (
 ): string => {
   const [fhirPath, type] =
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
-  const originalValue = evaluateFor<ValueX>(entry, fhirPath, type)[0];
+  const originalValue = evaluateOneFor<ValueX>(entry, fhirPath, type) || "";
 
   if (
     typeof originalValue === "string" ||
@@ -211,15 +239,15 @@ export const evaluateReference = <T extends Resource>(
 ): T | undefined => {
   if (!ref) return undefined;
   const [resourceType, id] = ref.split("/");
-  const result: Resource | undefined = evaluateFor<Resource>(
+  const result: Resource | undefined = evaluateOneFor<Resource>(
     fhirBundle,
-    fhirPathMappings.resolve,
+    fhirPathMappings.resolve.path,
     resourceType,
     {
       resourceType,
       id,
     },
-  )[0];
+  );
 
   if (!result) {
     return undefined;
