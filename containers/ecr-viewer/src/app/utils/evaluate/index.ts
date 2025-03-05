@@ -14,11 +14,7 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 
-import fhirPathMappings, {
-  PathTypes,
-  ValueX,
-  FhirPath,
-} from "./fhir-paths";
+import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
