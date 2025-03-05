@@ -4,11 +4,13 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
 import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import {
-  evaluate,
-  evaluateFor,
+  evaluateAll,
+  evaluateAllAndCheck,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 
 describe("evaluate", () => {
   let fhirPathEvaluateSpy: jest.SpyInstance;
@@ -32,7 +34,7 @@ describe("evaluate", () => {
     // }, {})
     // console.log(JSON.stringify(combined))
 
-    evaluateFor<string>({ id: "1234" }, "id", "string");
+    evaluateAllAndCheck<string>({ id: "1234" }, "id", "string");
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
       { id: "1234" },
@@ -42,8 +44,8 @@ describe("evaluate", () => {
     );
   });
   it("should call fhirpath.evaluate 1 time when the same call is made 2 times", () => {
-    evaluateFor<string>({ id: "2345" }, "id", "string");
-    evaluateFor<string>({ id: "2345" }, "id", "string");
+    evaluateAllAndCheck<string>({ id: "2345" }, "id", "string");
+    evaluateAllAndCheck<string>({ id: "2345" }, "id", "string");
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
       { id: "2345" },
@@ -53,8 +55,8 @@ describe("evaluate", () => {
     );
   });
   it("should call fhirpath.evaluate 2 time when the context is different", () => {
-    evaluateFor<string>({ id: "%id" }, "id", "string", { id: 1 });
-    evaluateFor<string>({ id: "%id" }, "id", "string", { id: 2 });
+    evaluateAllAndCheck<string>({ id: "%id" }, "id", "string", { id: 1 });
+    evaluateAllAndCheck<string>({ id: "%id" }, "id", "string", { id: 2 });
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledTimes(2);
     expect(fhirPathEvaluateSpy).toHaveBeenNthCalledWith(
@@ -75,21 +77,21 @@ describe("evaluate", () => {
 
   it("should call once per bundle url", () => {
     // this test can use any valid mapping
-    evaluate(
+    evaluateAll(
       {
         resourceType: "Bundle",
         type: "document",
         entry: [{ fullUrl: "test/123" }],
       },
-      "careTeamParticipantPeriod",
+      fhirPathMappings.careTeamParticipantPeriod,
     );
-    evaluate(
+    evaluateAll(
       {
         resourceType: "Bundle",
         type: "document",
         entry: [{ fullUrl: "test/123" }],
       },
-      "careTeamParticipantPeriod",
+      fhirPathMappings.careTeamParticipantPeriod,
     );
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
@@ -106,10 +108,10 @@ describe("evaluate", () => {
 
   it("should call once if id is the same", () => {
     // this test can use any valid mapping
-    evaluate({ id: "1234" }, "careTeamParticipantPeriod");
-    evaluate(
+    evaluateAll({ id: "1234" }, fhirPathMappings.careTeamParticipantPeriod);
+    evaluateAll(
       { id: "1234", resourceType: "Observation" },
-      "careTeamParticipantPeriod",
+      fhirPathMappings.careTeamParticipantPeriod,
     );
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
@@ -118,6 +120,51 @@ describe("evaluate", () => {
       undefined,
       fhirpath_r4_model,
     );
+  });
+
+  describe("evaluateOne", () => {
+    it("should return undefined if no result", () => {
+      const res = evaluateOne({}, fhirPathMappings.plannedProcedureOrderedDate);
+      expect(res).toBeUndefined();
+    });
+
+    it("should return value if one result", () => {
+      const res = evaluateOne(
+        {
+          extension: [
+            {
+              url: "dibbs.orderedDate",
+              valueString: "first",
+            },
+          ],
+        },
+        fhirPathMappings.plannedProcedureOrderedDate,
+      );
+      expect(res).toEqual("first");
+    });
+
+    it("should return first value and log error if multiple results", () => {
+      jest.spyOn(console, "error").mockImplementation((msg) => {
+        expect(msg).toContain("Expected one result, but got 2.");
+      });
+
+      const res = evaluateOne(
+        {
+          extension: [
+            {
+              url: "dibbs.orderedDate",
+              valueString: "first",
+            },
+            {
+              url: "dibbs.orderedDate",
+              valueString: "second",
+            },
+          ],
+        },
+        fhirPathMappings.plannedProcedureOrderedDate,
+      );
+      expect(res).toEqual("first");
+    });
   });
 });
 

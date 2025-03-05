@@ -78,14 +78,14 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
 
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
- * escape hatch when not using a `fhirPathmapping`. See `evaluate` for the common usage.
+ * escape hatch when not using a `fhirPathmapping`. See `evaluateAll` or `evaluateOne` for the common usage.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param path - The FHIRPath expression to evaluate.
  * @param expectedType - Optionally, the type of the expected result as a string.
  * @param [context] - Optional context object to provide additional data for evaluation.
  * @returns - An array containing the result of the evaluation.
  */
-export const evaluateAllFor = <Result>(
+export const evaluateAllAndCheck = <Result>(
   fhirData: FhirData,
   path: string,
   expectedType: string,
@@ -112,14 +112,24 @@ export const evaluateAllFor = <Result>(
   return evaluateCache.get(key);
 };
 
-const evaluateOneFor = <Result>(
-  ...args: Parameters<typeof evaluateAllFor<Result>>
+/**
+ * Only to be used as an escape hatch when not using a `fhirPathMapping`. See `evaluateOne` for the
+ * common usage. Same as `evaluateAllAndCheck`, but ensures a singleton or undefined is returned.
+ * @param args - The same arguments as `evaluateAllAndCheck`.
+ * @returns - An array containing the result of the evaluation.
+ */
+export const evaluateOneAndCheck = <Result>(
+  ...args: Parameters<typeof evaluateAllAndCheck<Result>>
 ) => {
-  const res = evaluateAllFor<Result>(...args);
+  const res = evaluateAllAndCheck<Result>(...args);
   if (res.length === 0) {
     return undefined;
   } else if (res.length > 1) {
-    console.error(`Expected one result, but got many: ${JSON.stringify(args)}`);
+    console.error(
+      `Expected one result, but got ${res.length}. Args: ${JSON.stringify(
+        args,
+      )}`,
+    );
   }
 
   return res[0];
@@ -144,7 +154,7 @@ export const evaluateAll = <K extends keyof PathTypes>(
   fhirPath: FhirPath<K>,
   context?: Context,
 ) => {
-  return evaluateAllFor<PathTypes[K]>(
+  return evaluateAllAndCheck<PathTypes[K]>(
     fhirData,
     fhirPath.path,
     fhirPath.type,
@@ -153,7 +163,8 @@ export const evaluateAll = <K extends keyof PathTypes>(
 };
 
 /**
- * Evaluates a FHIRPath expression on the provided FHIR data.
+ * Evaluates a FHIRPath expression on the provided FHIR data and returns the single
+ * expected item, or undefined if not available.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param fhirPath - The FhirPath describing the FHIRPath expression to evaluate.
  * @param [context] - Optional context object to provide additional data for evaluation.
@@ -164,7 +175,7 @@ export const evaluateOne = <K extends keyof PathTypes>(
   fhirPath: FhirPath<K>,
   context?: Context,
 ) => {
-  return evaluateOneFor<PathTypes[K]>(
+  return evaluateOneAndCheck<PathTypes[K]>(
     fhirData,
     fhirPath.path,
     fhirPath.type,
@@ -190,7 +201,8 @@ export const evaluateValue = (
 ): string => {
   const [fhirPath, type] =
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
-  const originalValue = evaluateOneFor<ValueX>(entry, fhirPath, type) || "";
+  const originalValue =
+    evaluateOneAndCheck<ValueX>(entry, fhirPath, type) || "";
 
   if (
     typeof originalValue === "string" ||
@@ -239,7 +251,7 @@ export const evaluateReference = <T extends Resource>(
 ): T | undefined => {
   if (!ref) return undefined;
   const [resourceType, id] = ref.split("/");
-  const result: Resource | undefined = evaluateOneFor<Resource>(
+  const result = evaluateOneAndCheck<T>(
     fhirBundle,
     fhirPathMappings.resolve.path,
     resourceType,
@@ -249,13 +261,11 @@ export const evaluateReference = <T extends Resource>(
     },
   );
 
-  if (!result) {
-    return undefined;
-  } else if (result?.resourceType !== resourceType) {
+  if (result && result?.resourceType !== resourceType) {
     console.error(
       `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
     );
   }
 
-  return result as T;
+  return result;
 };

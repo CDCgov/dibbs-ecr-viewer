@@ -42,7 +42,7 @@ export type PathTypes = {
   patientTelecom: ContactPoint;
   patientCounty: string;
   patientCountry: string;
-  patientIds: Identifier;
+  patientIds: string;
   patientDOB: string;
   patientVitalStatus: boolean;
   patientDOD: string;
@@ -64,7 +64,7 @@ export type PathTypes = {
   patientSexualOrientation: ValueX;
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
-  patientMaritalStatus: string;
+  patientMaritalStatus: ValueX;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -79,7 +79,7 @@ export type PathTypes = {
   encounterType: string;
   encounterID: Identifier;
   facilityContact: string;
-  facilityContactAddress: Reference;
+  facilityContactAddress: string;
   facilityLocation: string;
   facilityName: string;
   facilityAddress: Address;
@@ -109,14 +109,14 @@ export type PathTypes = {
   plannedProcedureScheduledDate: string;
   adminMedicationsRefs: string;
   careTeamParticipants: CareTeamParticipant;
-  careTeamParticipantMemberName: HumanName;
+  careTeamParticipantMemberName: string;
   careTeamParticipantRole: string;
   careTeamParticipantStatus: string;
   careTeamParticipantPeriod: string;
   immunizations: Immunization;
   immunizationsName: string;
   immunizationsAdminDate: string;
-  immunizationsDoseNumber: number;
+  immunizationsDoseNumber: ValueX;
   immunizationsManufacturerName: string;
   immunizationsLotNumber: unknown;
   procedures: Procedure;
@@ -178,7 +178,7 @@ const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(resourceType = 'Patient').address.first().country",
   },
   patientIds: {
-    type: "Identifier",
+    type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
   },
   patientDOB: {
@@ -266,7 +266,7 @@ const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http://hl7.org/fhir/StructureDefinition/patient-religion').value",
   },
   patientMaritalStatus: {
-    type: "string",
+    type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').maritalStatus",
   },
   eicrIdentifier: {
@@ -326,8 +326,8 @@ const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(resourceType = 'Location')[0].telecom.where(system = 'phone')[0].value",
   },
   facilityContactAddress: {
-    type: "Reference",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].serviceProvider",
+    type: "string",
+    path: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].serviceProvider.reference",
   },
   facilityLocation: {
     type: "string",
@@ -436,7 +436,7 @@ const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "CareTeamParticipant",
     path: "Bundle.entry.resource.where(resourceType='CareTeam').participant",
   },
-  careTeamParticipantMemberName: { type: "HumanName", path: "member.name" },
+  careTeamParticipantMemberName: { type: "string", path: "member.name" },
   careTeamParticipantRole: { type: "string", path: "role.text" },
   careTeamParticipantStatus: {
     type: "string",
@@ -456,7 +456,8 @@ const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Immunization.occurrenceDateTime",
   },
   immunizationsDoseNumber: {
-    type: "number",
+    // TODO #469: This should strictly speaking be "number", but conversion is buggy
+    type: "ValueX",
     path: "Immunization.protocolApplied.where(doseNumberPositiveInt.exists()).doseNumberPositiveInt",
   },
   immunizationsManufacturerName: {
@@ -508,7 +509,7 @@ const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",
   },
   observationReferenceRange: { type: "string", path: "referenceRange.text" },
-  observationDeviceReference: { type: "Reference", path: "device.reference" },
+  observationDeviceReference: { type: "string", path: "device.reference" },
   observationNote: { type: "string", path: "note.text" },
   observationOrganism: { type: "string", path: "code.coding.display.first()" },
   observationAntibiotic: {

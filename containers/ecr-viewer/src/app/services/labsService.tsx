@@ -19,7 +19,7 @@ import {
   safeParse,
 } from "@/app/utils/data-utils";
 import {
-  evaluate,
+  evaluateAll,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -105,13 +105,17 @@ export const getObservations = (
  * @returns The JSON representation of the lab report.
  */
 export const getLabJsonObject = (
-  report: DiagnosticReport,
+  report: DiagnosticReport | undefined,
   fhirBundle: Bundle,
 ): HtmlTableJson => {
+  if (!report) return {} as HtmlTableJson;
   // Get reference value (result ID) from Observations
   const observations = getObservations(report, fhirBundle);
   const observationRefValsArray = observations.flatMap((observation) => {
-    const refVal = evaluate(observation, "observationReferenceValue");
+    const refVal = evaluateAll(
+      observation,
+      fhirPathMappings.observationReferenceValue,
+    );
     return extractNumbersAndPeriods(refVal);
   });
   const observationRefVal = [...new Set(observationRefValsArray)].join(", "); // should only be 1
@@ -197,7 +201,7 @@ const returnSpecimenSource = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle);
   const specimenSource = observations.flatMap((observation) => {
-    return evaluate(observation, "specimenSource");
+    return evaluateAll(observation, fhirPathMappings.specimenSource);
   });
   if (!specimenSource || specimenSource.length === 0) {
     return noData;
@@ -217,7 +221,10 @@ const returnCollectionTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle);
   const collectionTime = observations.flatMap((observation) => {
-    const rawTime = evaluate(observation, "specimenCollectionTime");
+    const rawTime = evaluateAll(
+      observation,
+      fhirPathMappings.specimenCollectionTime,
+    );
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 
@@ -240,7 +247,10 @@ const returnReceivedTime = (
 ): RenderableNode => {
   const observations = getObservations(report, fhirBundle);
   const receivedTime = observations.flatMap((observation) => {
-    const rawTime = evaluate(observation, "specimenReceivedTime");
+    const rawTime = evaluateAll(
+      observation,
+      fhirPathMappings.specimenReceivedTime,
+    );
     return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
   });
 
@@ -353,9 +363,11 @@ export function evaluateObservationTable(
  * @returns - An array of React elements representing the lab observations.
  */
 export const evaluateDiagnosticReportData = (
-  report: DiagnosticReport,
+  report: DiagnosticReport | undefined,
   fhirBundle: Bundle,
 ): React.JSX.Element | undefined => {
+  if (!report) return undefined;
+
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "Component",
@@ -399,9 +411,11 @@ export const evaluateDiagnosticReportData = (
  * @returns - An array of React elements representing the lab organisms table.
  */
 export const evaluateOrganismsReportData = (
-  report: DiagnosticReport,
+  report: DiagnosticReport | undefined,
   fhirBundle: Bundle,
 ): React.JSX.Element | undefined => {
+  if (!report) return undefined;
+
   let components: ObservationComponent[] = [];
   let observation: Observation | undefined;
 
@@ -538,7 +552,7 @@ export const evaluateLabOrganizationData = (
   fhirBundle: Bundle,
   labReportCount: number,
 ) => {
-  const orgMappings = evaluate(fhirBundle, "organizations");
+  const orgMappings = evaluateAll(fhirBundle, fhirPathMappings.organizations);
   let matchingOrg: Organization = orgMappings.filter(
     (organization) => organization.id === id,
   )[0];

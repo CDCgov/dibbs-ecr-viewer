@@ -1,7 +1,7 @@
 import { Bundle, Observation } from "fhir/r4";
 
 import { noData } from "@/app/utils/data-utils";
-import { evaluate, evaluateValue } from "@/app/utils/evaluate";
+import { evaluateAll, evaluateValue } from "@/app/utils/evaluate";
 import fhirPathMappings, {
   PathMappings,
 } from "@/app/utils/evaluate/fhir-paths";
@@ -19,7 +19,10 @@ type TravelHistoryColumn = ColumnInfoInput & { infoPath: keyof PathMappings };
  * @returns - A formatted table representing the patient's travel history, or undefined if no relevant data is found.
  */
 export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
-  const travelHistory = evaluate(fhirBundle, "patientTravelHistory");
+  const travelHistory = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.patientTravelHistory,
+  );
 
   const columns: TravelHistoryColumn[] = [
     {
