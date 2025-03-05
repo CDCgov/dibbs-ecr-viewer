@@ -127,20 +127,15 @@ export const returnProblemsTable = (
     },
   ];
 
-  problemsArray.forEach((entry) => {
-    entry.onsetDateTime = formatDateTime(entry.onsetDateTime);
-    entry.onsetAge ||= entry.onsetDateTime
-      ? {
-          value: calculatePatientAge(fhirBundle, entry.onsetDateTime),
-        }
-      : undefined;
-  });
+  const conditions: ConditionWithFormattedAge[] = problemsArray.map((pr) =>
+    createFormattedCondition(pr, fhirBundle),
+  );
 
-  if (problemsArray.length === 0) {
+  if (conditions.length === 0) {
     return undefined;
   }
 
-  problemsArray.sort(
+  conditions.sort(
     (a, b) =>
       new Date(b.onsetDateTime ?? "").getTime() -
       new Date(a.onsetDateTime ?? "").getTime(),
@@ -148,11 +143,45 @@ export const returnProblemsTable = (
 
   return (
     <EvaluateTable
-      resources={problemsArray}
+      resources={conditions}
       columns={columnInfo}
       caption="Problems List"
       className="margin-y-0"
       fixed={false}
     />
   );
+};
+
+type ConditionWithFormattedAge = Omit<Condition, "onsetAge"> & {
+  onsetAge?: { value: string | undefined };
+};
+
+const createFormattedCondition = (
+  condition: Condition,
+  fhirBundle: Bundle,
+): ConditionWithFormattedAge => {
+  const formattedOnsetDateTime = formatDateTime(condition.onsetDateTime);
+
+  const formattedCondition: ConditionWithFormattedAge = {
+    ...condition,
+    onsetDateTime: formattedOnsetDateTime,
+    onsetAge: getOnsetAge(
+      condition.onsetAge,
+      formattedOnsetDateTime,
+      fhirBundle,
+    ),
+  };
+
+  return formattedCondition;
+};
+
+const getOnsetAge = (
+  onsetAge: Condition["onsetAge"],
+  onsetDateTime: Condition["onsetDateTime"],
+  fhirBundle: Bundle,
+) => {
+  if (onsetAge?.value) return { value: `${onsetAge.value} years` };
+  if (!onsetDateTime) return undefined;
+
+  return { value: calculatePatientAge(fhirBundle, onsetDateTime) };
 };

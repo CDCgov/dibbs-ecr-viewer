@@ -159,8 +159,8 @@ describe("Active Problems Table", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
   it("should use or calculate onset age", () => {
-    expect(screen.getByText("123")).toBeInTheDocument();
-    expect(screen.getByText("152")).toBeInTheDocument();
-    expect(screen.getByText("141")).toBeInTheDocument();
+    expect(screen.getByText("123 years")).toBeInTheDocument();
+    expect(screen.getByText("152 years")).toBeInTheDocument();
+    expect(screen.getByText("141 years")).toBeInTheDocument();
   });
 });

@@ -172,24 +172,65 @@ export const evaluatePatientDOB = (fhirBundle: Bundle) =>
  * @param [givenDate] - Optional. The target date to calculate the age. Defaults to the current date if not provided.
  * @returns - The age of the patient in years, or undefined if date of birth is not available or if date of death exists.
  */
-export const calculatePatientAge = (fhirBundle: Bundle, givenDate?: string) => {
-  const patientDOBString: string = evaluate(
-    fhirBundle,
-    fhirPathMappings.patientDOB,
-  )[0];
-  const patientDODString: string = evaluate(
+export const calculatePatientAge = (
+  fhirBundle: Bundle,
+  givenDate?: string,
+): string | undefined => {
+  const deathDate: string | undefined = evaluate(
     fhirBundle,
     fhirPathMappings.patientDOD,
   )[0];
-  if (patientDOBString && !patientDODString && !givenDate) {
-    const patientDOB = new Date(patientDOBString);
-    return dateFns.differenceInYears(new Date(), patientDOB);
-  } else if (patientDOBString && givenDate) {
-    const patientDOB = new Date(patientDOBString);
-    return dateFns.differenceInYears(new Date(givenDate), patientDOB);
-  } else {
+
+  // if a death date is available, don't calculate patient age
+  if (deathDate) {
     return undefined;
   }
+
+  const patientDOBString: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.patientDOB,
+  )[0];
+
+  // date is provided, use that
+  if (patientDOBString && givenDate) {
+    return getFormattedAge(new Date(givenDate), new Date(patientDOBString));
+  }
+
+  const encounterStartDate: string | undefined = evaluate(
+    fhirBundle,
+    fhirPathMappings.encounterStartDate,
+  )[0];
+
+  // use the encounter start date if one is available, otherwise we'll fall back to today's date
+  const differenceFromDate = encounterStartDate
+    ? encounterStartDate
+    : new Date();
+
+  // no date provided, use encounter date
+  if (patientDOBString && encounterStartDate) {
+    return getFormattedAge(
+      new Date(differenceFromDate),
+      new Date(patientDOBString),
+    );
+  }
+
+  return undefined;
+};
+
+const getFormattedAge = (startDate: Date, endDate: Date): string => {
+  const ageInYears = dateFns.differenceInYears(startDate, endDate);
+  if (ageInYears >= 2) {
+    return `${ageInYears} years`;
+  }
+
+  // If the difference is less than 2 years, display months and days
+  const months = dateFns.differenceInMonths(endDate, startDate);
+  const days = dateFns.differenceInDays(endDate, startDate);
+
+  // Calculate the remaining days after calculating months
+  const remainingDays = days - months * 30; // Approximate month length
+
+  return `${months} months, ${remainingDays} days`;
 };
 
 /**
@@ -210,7 +251,7 @@ export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
   if (patientDOBString && patientDODString) {
     const patientDOB = new Date(patientDOBString);
     const patientDOD = new Date(patientDODString);
-    return dateFns.differenceInYears(patientDOD, patientDOB);
+    return getFormattedAge(patientDOB, patientDOD);
   } else {
     return undefined;
   }
