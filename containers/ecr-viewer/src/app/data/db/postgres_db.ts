@@ -54,7 +54,7 @@ export const postgresHealthCheck = async () => {
     return undefined;
   }
   try {
-    await getDB().database.connect();
+    await (await getDB().database.connect()).done();
     return "UP";
   } catch (error: unknown) {
     console.error(error);

@@ -20,7 +20,13 @@ describe("postgres health check", () => {
   });
   it("should return UP connection was successful", async () => {
     process.env.DATABASE_URL = "https://postgres";
+    const mockDone = jest.fn();
+    mockConnect.mockReturnValue({
+      done: mockDone,
+    });
+
     expect(await postgresHealthCheck()).toEqual("UP");
+    expect(mockDone).toHaveBeenCalledOnce();
   });
   it("should return DOWN connection was failed", async () => {
     jest.spyOn(console, "error").mockImplementation();
