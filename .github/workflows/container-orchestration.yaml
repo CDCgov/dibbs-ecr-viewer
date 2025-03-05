@@ -135,18 +135,18 @@ jobs:
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}/e2e
+        working-directory: ./containers/${{env.CONTAINER}}
         shell: bash
         run: |
           echo "Saving $container logs"
-          docker compose --profile "*" logs --timestamps >& e2e-run.log
+          docker compose --profile "*" logs --timestamps >& integration-run.log
 
       - name: Archive docker logs
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: logs
-          path: ./containers/${{env.CONTAINER}}/e2e/e2e-run.log
+          path: ./containers/${{env.CONTAINER}}/integration-run.log
           retention-days: 30
 
   build-orchestration-container:
