@@ -5,9 +5,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    network_mode: host
-    args:
+      args:
       - APP_VERSION=1.0
+    network_mode: host
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY=${NBS_PUB_KEY:-}
