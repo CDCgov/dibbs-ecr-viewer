@@ -1,12 +1,12 @@
 import { Bundle, Organization } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { CompleteData, evaluateData } from "@/app/utils/data-utils";
 import {
   evaluate,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import {

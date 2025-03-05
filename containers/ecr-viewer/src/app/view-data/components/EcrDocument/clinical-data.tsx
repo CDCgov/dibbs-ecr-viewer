@@ -10,7 +10,6 @@ import {
   Reference,
 } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 import {
   formatDate,
@@ -25,6 +24,7 @@ import {
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   AdministeredMedication,

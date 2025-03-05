@@ -12,12 +12,13 @@ import {
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
+import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
+
 import fhirPathMappings, {
-  PathTypeNames,
   PathTypes,
   ValueX,
-} from "@/app/data/fhirPath";
-import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
+  FhirPath,
+} from "./fhir-paths";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -126,18 +127,19 @@ export const clearEvaluateCache = () => {
  * Evaluates a FHIRPath expression on the provided FHIR data.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param pathKey - The key of the FHIRPath expression to evaluate.
+ * @param fhirPath
  * @param [context] - Optional context object to provide additional data for evaluation.
  * @returns - An array containing the result of the evaluation.
  */
 export const evaluate = <K extends keyof PathTypes>(
   fhirData: FhirData,
-  pathKey: K,
+  fhirPath: FhirPath<K>,
   context?: Context,
 ) => {
   return evaluateFor<PathTypes[K]>(
     fhirData,
-    fhirPathMappings[pathKey],
-    PathTypeNames[pathKey],
+    fhirPath.path,
+    fhirPath.type,
     context,
   );
 };
@@ -154,8 +156,13 @@ const UNIT_MAP = new Map([
  * @param path - The path within the resource to extract the value from.
  * @returns - The evaluated value as a string.
  */
-export const evaluateValue = (entry: FhirData, path: string): string => {
-  const originalValue = evaluateFor<ValueX>(entry, path, "ValueX")[0];
+export const evaluateValue = (
+  entry: FhirData,
+  path: string | FhirPath<string>,
+): string => {
+  const [fhirPath, type] =
+    typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
+  const originalValue = evaluateFor<ValueX>(entry, fhirPath, type)[0];
 
   if (
     typeof originalValue === "string" ||

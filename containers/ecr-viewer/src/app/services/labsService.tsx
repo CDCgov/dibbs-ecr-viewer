@@ -12,7 +12,6 @@ import {
 } from "fhir/r4";
 import { Coding, ObservationComponent } from "fhir/r4b";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import {
   RenderableNode,
   arrayToElement,
@@ -24,6 +23,7 @@ import {
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import {
   extractNumbersAndPeriods,
   toKebabCase,

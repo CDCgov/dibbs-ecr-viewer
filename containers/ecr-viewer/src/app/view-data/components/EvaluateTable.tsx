@@ -4,8 +4,8 @@ import { Table } from "@trussworks/react-uswds";
 import classNames from "classnames";
 import { Element } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateValue } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 
 import EvaluateTableRow from "./EvaluateTableRow";
 

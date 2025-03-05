@@ -15,7 +15,6 @@ import {
   PractitionerRole,
 } from "fhir/r4";
 
-import fhirPathMappings from "@/app/data/fhirPath";
 import { evaluateData, noData } from "@/app/utils/data-utils";
 import {
   evaluate,
@@ -23,6 +22,7 @@ import {
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
