@@ -203,29 +203,26 @@ export const calculatePatientAge = (
 
   // use the encounter start date if one is available, otherwise we'll fall back to today's date
   const differenceFromDate = encounterStartDate
-    ? encounterStartDate
+    ? new Date(encounterStartDate)
     : new Date();
 
   // no date provided, use encounter date
-  if (patientDOBString && encounterStartDate) {
-    return getFormattedAge(
-      new Date(differenceFromDate),
-      new Date(patientDOBString),
-    );
+  if (patientDOBString) {
+    return getFormattedAge(differenceFromDate, new Date(patientDOBString));
   }
 
   return undefined;
 };
 
-const getFormattedAge = (startDate: Date, endDate: Date): string => {
-  const ageInYears = dateFns.differenceInYears(startDate, endDate);
+const getFormattedAge = (laterDate: Date, earlierDate: Date): string => {
+  const ageInYears = dateFns.differenceInYears(laterDate, earlierDate);
   if (ageInYears >= 2) {
     return `${ageInYears} years`;
   }
 
   // If the difference is less than 2 years, display months and days
-  const months = dateFns.differenceInMonths(endDate, startDate);
-  const days = dateFns.differenceInDays(endDate, startDate);
+  const months = dateFns.differenceInMonths(laterDate, earlierDate);
+  const days = dateFns.differenceInDays(laterDate, earlierDate);
 
   // Calculate the remaining days after calculating months
   const remainingDays = days - months * 30; // Approximate month length
@@ -239,19 +236,21 @@ const getFormattedAge = (startDate: Date, endDate: Date): string => {
  * @returns - The age of the patient at death in years, or undefined if date of birth or date of death is not available.
  */
 export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
-  const patientDOBString: string = evaluate(
+  const patientDOBString: string | undefined = evaluate(
     fhirBundle,
     fhirPathMappings.patientDOB,
   )[0];
-  const patientDODString: string = evaluate(
+
+  const patientDODString: string | undefined = evaluate(
     fhirBundle,
     fhirPathMappings.patientDOD,
   )[0];
 
   if (patientDOBString && patientDODString) {
-    const patientDOB = new Date(patientDOBString);
-    const patientDOD = new Date(patientDODString);
-    return getFormattedAge(patientDOB, patientDOD);
+    return getFormattedAge(
+      new Date(patientDODString),
+      new Date(patientDOBString),
+    );
   } else {
     return undefined;
   }

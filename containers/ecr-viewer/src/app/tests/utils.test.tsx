@@ -177,7 +177,7 @@ describe("Utils", () => {
         BundleWithPatient as unknown as Bundle,
       );
 
-      expect(patientAge).toEqual(146);
+      expect(patientAge).toEqual("146 years");
 
       // Return to real time
       jest.useRealTimers();
@@ -189,7 +189,7 @@ describe("Utils", () => {
     });
     it("when date is given, should return age at given date", () => {
       const givenDate = "2020-01-01";
-      const expectedAge = 142;
+      const expectedAge = "142 years";
 
       const resultAge = calculatePatientAge(
         BundleWithPatient as unknown as Bundle,
@@ -204,7 +204,7 @@ describe("Utils", () => {
     jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
 
     const expectedAgeAtDeath = undefined;
-    const expectedAge = 146;
+    const expectedAge = "146 years";
 
     const patientAge = calculatePatientAge(
       BundleWithPatient as unknown as Bundle,
@@ -226,14 +226,14 @@ describe("Utils", () => {
         BundleWithDeceasedPatient as unknown as Bundle,
       );
 
-      const expectedAgeAtDeath = 4;
+      const expectedAgeAtDeath = "4 years";
 
       expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
     });
     it("should have a defined Age at Death, and not have a defined Current Age when Date of Death is given", () => {
       jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
 
-      const expectedAgeAtDeath = 4;
+      const expectedAgeAtDeath = "4 years";
       const expectedAge = undefined;
 
       const patientAge = calculatePatientAge(
