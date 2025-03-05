@@ -173,6 +173,7 @@ def test_success_save_to_ecr_viewer(setup, clean_up_db):
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
 
+        print(orchestration_response.content)
         assert orchestration_response.status_code == 200
 
 
