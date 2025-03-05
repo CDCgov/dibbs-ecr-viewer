@@ -132,6 +132,23 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}/tests/integration
         run: |
           python -m pytest -m "integration"
+      
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}/e2e
+        shell: bash
+        run: |
+          echo "Saving $container logs"
+          docker compose --profile "*" logs --timestamps >& e2e-run.log
+
+      - name: Archive docker logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: ./containers/${{env.CONTAINER}}/e2e/e2e-run.log
+          retention-days: 30
+
   build-orchestration-container:
     runs-on: ubuntu-latest
     steps:
