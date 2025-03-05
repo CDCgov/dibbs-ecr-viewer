@@ -1,4 +1,4 @@
-from typing import Literal, Union
+from typing import Literal
 
 import requests
 
@@ -14,7 +14,7 @@ class CensusGeocodeClient(BaseGeocodeClient):
     def __init__(self):
         self.__client = ()
 
-    def geocode_from_str(self, address: str) -> Union[GeocodeResult, None]:
+    def geocode_from_str(self, address: str) -> GeocodeResult | None:
         """
         Geocodes a string-formatted address using Census API with searchtype =
         "onelineaddress". If a result is found, encodes as a GeocodeResult object and
@@ -36,7 +36,7 @@ class CensusGeocodeClient(BaseGeocodeClient):
 
         return self._parse_census_result(response)
 
-    def geocode_from_dict(self, address: dict) -> Union[GeocodeResult, None]:
+    def geocode_from_dict(self, address: dict) -> GeocodeResult | None:
         """
         Geocodes the provided address, which is formatted as a dictionary.
         using the Census API with searchtype = "address". If a result is found, encodes
@@ -77,7 +77,7 @@ class CensusGeocodeClient(BaseGeocodeClient):
 
     @staticmethod
     def _format_address(
-        address: Union[str, dict], searchtype: Literal["onelineaddress", "address"]
+        address: str | dict, searchtype: Literal["onelineaddress", "address"]
     ):
         """
         Formats an address for Census API call according to the given address type. A
@@ -167,7 +167,7 @@ class CensusGeocodeClient(BaseGeocodeClient):
             return response.json()["result"]
 
     @staticmethod
-    def _parse_census_result(lookup) -> Union[GeocodeResult, None]:
+    def _parse_census_result(lookup) -> GeocodeResult | None:
         """
         Parses a returned Census geocoding result into our standardized GeocodeResult
         class. If the Census lookup is null or doesn't include matched address
