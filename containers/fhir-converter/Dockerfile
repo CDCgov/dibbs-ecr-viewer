@@ -42,13 +42,14 @@ WORKDIR /code
 # Set --build-arg CACHBUSTSERVICE=<random number here> to only invalidate the python code installation
 ARG CACHEBUSTSERVICE=1
 
-COPY requirements.txt .
+COPY containers/fhir-converter/requirements.txt .
 RUN pip install -r requirements.txt
 
+
 # Copy FastAPI app
-COPY app /code/app
-COPY assets /code/assets
-COPY test-data /test-data
+COPY containers/fhir-converter/app /code/app
+COPY containers/fhir-converter/assets /code/assets
+COPY test-data /code/test-data
 COPY README.md /code/README.md
 
 EXPOSE 8080

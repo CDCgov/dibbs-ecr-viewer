@@ -19,11 +19,11 @@ import {
   getHumanReadableCodeableConcept,
   censorGender,
 } from "@/app/services/evaluateFhirDataService";
-import BundleEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
-import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
-import BundlePatient from "@/app/tests/assets/BundlePatient.json";
-import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
-import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
+import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
+import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import mappings from "@/app/view-data/fhirPath";
 
 describe("evaluateFhirDataServices tests", () => {

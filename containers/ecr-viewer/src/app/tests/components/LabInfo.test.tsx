@@ -8,8 +8,8 @@ import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/services/labsService";
-import BundleLab from "@/app/tests/assets/BundleLab.json";
-import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
+import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json"
 import { evaluate } from "@/app/utils/evaluate";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import fhirPathMappings from "@/app/view-data/fhirPath";

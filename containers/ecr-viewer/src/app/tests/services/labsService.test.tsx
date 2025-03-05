@@ -19,9 +19,9 @@ import {
   returnAnalysisTime,
   LabReportElementData,
 } from "@/app/services/labsService";
-import BundleLab from "@/app/tests/assets/BundleLab.json";
-import BundleLabInvalidResultsDiv from "@/app/tests/assets/BundleLabInvalidResultsDiv.json";
-import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
+import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
+import BundleLabInvalidResultsDiv from "../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import { noData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
