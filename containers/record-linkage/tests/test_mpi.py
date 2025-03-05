@@ -6,10 +6,11 @@ import re
 import uuid
 
 import pytest
+from sqlalchemy import Select, select, text
+
 from app.linkage.dal import DataAccessLayer
 from app.linkage.mpi import DIBBsMPIConnectorClient
 from app.utils import _clean_up
-from sqlalchemy import Select, select, text
 
 patient_resource = json.load(
     open(

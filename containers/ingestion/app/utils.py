@@ -1,6 +1,5 @@
 import json
 import pathlib
-from typing import Optional, Union
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -15,13 +14,13 @@ class StandardResponse(BaseModel):
     Service."""
 
     status_code: int = Field(description="The HTTP status code of the response.")
-    message: Optional[Union[str, dict]] = Field(
+    message: str | dict | None = Field(
         default=None,
         description="A message from the service, used to provide details on an error "
         "that was encounted while attempting the process a request, or the response "
         "a FHIR server.",
     )
-    bundle: Optional[dict] = Field(default=None, description="A FHIR bundle")
+    bundle: dict | None = Field(default=None, description="A FHIR bundle")
 
     @model_validator(mode="before")
     def any_of(cls, values):

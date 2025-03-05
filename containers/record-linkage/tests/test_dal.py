@@ -2,10 +2,11 @@ import datetime
 import os
 import pathlib
 
+from sqlalchemy import Engine, Table, select, text
+
 from app.linkage.dal import DataAccessLayer
 from app.linkage.mpi import DIBBsMPIConnectorClient
 from app.utils import _clean_up
-from sqlalchemy import Engine, Table, select, text
 
 
 def _init_db() -> DataAccessLayer:

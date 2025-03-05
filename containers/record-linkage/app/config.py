@@ -1,5 +1,4 @@
 from functools import lru_cache
-from typing import Optional
 
 from pydantic import Field
 from pydantic_settings import BaseSettings
@@ -22,11 +21,11 @@ class Settings(BaseSettings):
         description="The password used to connect to the MPI database",
     )
     mpi_port: str = Field(description="The port used to connect to the MPI database")
-    connection_pool_size: Optional[int] = Field(
+    connection_pool_size: int | None = Field(
         description="The number of MPI database connections in the connection pool",
         default=5,
     )
-    connection_pool_max_overflow: Optional[int] = Field(
+    connection_pool_max_overflow: int | None = Field(
         description="The maximum number of MPI database connections that can be opened "
         "above the connection pool size",
         default=10,
