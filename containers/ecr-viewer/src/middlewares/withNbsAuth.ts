@@ -12,16 +12,15 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
     if (process.env.NBS_AUTH !== "true") return next(request);
 
-    const nbsAuthResp =
-      set_auth_cookie(request) ?? (await authorize_api(request));
-    if (nbsAuthResp) {
-      return nbsAuthResp;
-    } else {
-      return NextResponse.rewrite(
-        new URL(`${process.env.BASE_PATH}/error/auth`, request.nextUrl.origin),
-        { request },
-      );
-    }
+    const nbsAuthResp = set_auth_cookie(request);
+    if (nbsAuthResp) return nbsAuthResp;
+
+    if (await authorize_api(request)) return next(request);
+
+    return NextResponse.rewrite(
+      new URL(`${process.env.BASE_PATH}/error/auth`, request.nextUrl.origin),
+      { request },
+    );
   };
 };
 
@@ -53,16 +52,13 @@ function set_auth_cookie(req: NextRequest) {
  *   returns a JSON response indicating that authentication is required with a 401 status code.
  * @param req - The incoming Next.js request object, which includes the request cookies
  *   and URL information used for extracting the authentication token and determining the request path.
- * @returns - A Next.js response object configured to return a 401 status with an
- *   "Auth required" message if authentication fails or is required. Returns `NextResponse.next()` to
- *   continue to the next middleware or handler if authentication succeeds. Returns `null` to indicate
- *   no action is taken by this middleware for non-applicable routes or in development mode.
+ * @returns - Whether the user is authorized.
  */
 async function authorize_api(req: NextRequest) {
   const auth = req.cookies.get("auth-token")?.value;
 
   if (!auth) {
-    return null;
+    return false;
   }
   try {
     await jwtVerify(
@@ -70,7 +66,7 @@ async function authorize_api(req: NextRequest) {
       await importSPKI(process.env.NBS_PUB_KEY as string, "RS256"),
     );
   } catch (e) {
-    return null;
+    return false;
   }
-  return NextResponse.next();
+  return true;
 }
