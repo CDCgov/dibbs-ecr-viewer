@@ -1,3 +1,5 @@
+import * as dateFns from "date-fns";
+
 /**
  * Formats a string by converting it to lowercase, replacing spaces with hyphens, and removing special characters except underscores.
  * @param input - The input string to be formatted.
@@ -62,3 +64,35 @@ export function extractNumbersAndPeriods(inputValues: string[]): string[] {
     return "";
   });
 }
+/**
+ * Helper function to return a patient's age formatted as a string. If the calculated age,
+ * given a `laterDate` and an `earlierDate`, is greater than or equal to 2, it will return an
+ * age formatted as `x years`. If the age calculated is less than 2 years, it will return
+ * an age formatted as `x months, y days`.
+ * @param laterDate Date later in time
+ * @param earlierDate Date earlier in time
+ * @returns A formatted age, either in years or months and days
+ */
+export const getFormattedAge = (laterDate: Date, earlierDate: Date): string => {
+  function makePlural(value: number): string {
+    return value !== 1 ? "s" : "";
+  }
+
+  const ageInYears = dateFns.differenceInYears(laterDate, earlierDate);
+  if (ageInYears >= 2) {
+    return `${ageInYears} years`;
+  }
+
+  // If the difference is less than 2 years, display months and days
+  const months = dateFns.differenceInMonths(laterDate, earlierDate);
+
+  // Add the number of months to the earlier date
+  const dateAfterMonths = dateFns.addMonths(earlierDate, months);
+
+  // Get the difference in days between the later date and the new date after full months
+  const remainingDays = dateFns.differenceInDays(laterDate, dateAfterMonths);
+
+  return `${months} month${makePlural(
+    months,
+  )}, ${remainingDays} day${makePlural(remainingDays)}`;
+};

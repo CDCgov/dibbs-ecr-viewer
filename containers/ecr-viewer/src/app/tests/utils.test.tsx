@@ -179,6 +179,16 @@ describe("Utils", () => {
       expect(patientAge).toEqual("2 years");
     });
 
+    it("should not be plural if months/days equals 1", () => {
+      // 1877-05-25
+      const patientAge = calculatePatientAge(
+        BundleWithPatient as unknown as Bundle,
+        "1877-06-26",
+      );
+
+      expect(patientAge).toEqual("1 month, 1 day");
+    });
+
     it("should return a value displaying months and days if years is under 2", () => {
       // 1877-05-25
       const patientAge = calculatePatientAge(

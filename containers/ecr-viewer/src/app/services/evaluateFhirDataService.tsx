@@ -1,6 +1,5 @@
 import "server-only"; // FHIR evaluation should be done server side
 
-import * as dateFns from "date-fns";
 import {
   Address,
   Bundle,
@@ -29,7 +28,11 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import { evaluateData, noData } from "@/app/utils/data-utils";
 import { evaluate } from "@/app/utils/evaluate";
-import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
+import {
+  getFormattedAge,
+  toSentenceCase,
+  toTitleCase,
+} from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import fhirPathMappings from "@/app/view-data/fhirPath";
@@ -191,23 +194,23 @@ export const calculatePatientAge = (
     fhirPathMappings.patientDOB,
   )[0];
 
-  // date is provided, use that
+  // date is provided by caller, use that
   if (patientDOBString && givenDate) {
     return getFormattedAge(new Date(givenDate), new Date(patientDOBString));
   }
 
-  const encounterStartDate: string | undefined = evaluate(
-    fhirBundle,
-    fhirPathMappings.encounterStartDate,
-  )[0];
-
-  // use the encounter start date if one is available, otherwise we'll fall back to today's date
-  const differenceFromDate = encounterStartDate
-    ? new Date(encounterStartDate)
-    : new Date();
-
-  // no date provided, use encounter date
+  // no date provided, use encounter or today's date
   if (patientDOBString) {
+    const encounterStartDate: string | undefined = evaluate(
+      fhirBundle,
+      fhirPathMappings.encounterStartDate,
+    )[0];
+
+    // use the encounter start date if one is available, otherwise we'll fall back to today's date
+    const differenceFromDate = encounterStartDate
+      ? new Date(encounterStartDate)
+      : new Date();
+
     return getFormattedAge(differenceFromDate, new Date(patientDOBString));
   }
 
@@ -238,33 +241,6 @@ export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
   } else {
     return undefined;
   }
-};
-
-/**
- * Helper function to return a patient's age formatted as a string. If the calculated age,
- * given a `laterDate` and an `earlierDate`, is greater than or equal to 2, it will return an
- * age formatted as `x years`. If the age calculated is less than 2 years, it will return
- * an age formatted as `x months, y days`.
- * @param laterDate Date later in time
- * @param earlierDate Date earlier in time
- * @returns A formatted age, either in years or months and days
- */
-const getFormattedAge = (laterDate: Date, earlierDate: Date): string => {
-  const ageInYears = dateFns.differenceInYears(laterDate, earlierDate);
-  if (ageInYears >= 2) {
-    return `${ageInYears} years`;
-  }
-
-  // If the difference is less than 2 years, display months and days
-  const months = dateFns.differenceInMonths(laterDate, earlierDate);
-
-  // Add the number of months to the earlier date
-  const dateAfterMonths = dateFns.addMonths(earlierDate, months);
-
-  // Get the difference in days between the later date and the new date after full months
-  const remainingDays = dateFns.differenceInDays(laterDate, dateAfterMonths);
-
-  return `${months} months, ${remainingDays} days`;
 };
 
 /**
