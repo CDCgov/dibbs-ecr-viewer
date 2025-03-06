@@ -44,7 +44,7 @@ describe("Sign-in Page", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("should open signin with correct provider when login button is clicked", async () => {
+  it("should open signin with correct provider when sign-in button is clicked", async () => {
     const MOCK_CALLBACK_URL = "https://http.cat";
     (signIn as jest.Mock).mockResolvedValueOnce({
       url: MOCK_CALLBACK_URL,
@@ -53,7 +53,7 @@ describe("Sign-in Page", () => {
     render(<RedirectPage />);
 
     const button = screen.getByRole("button", {
-      name: /log in via/i,
+      name: /sign in via/i,
     });
     fireEvent.click(button);
 

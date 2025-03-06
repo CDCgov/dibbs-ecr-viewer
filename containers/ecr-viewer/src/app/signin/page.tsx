@@ -25,7 +25,7 @@ const RedirectPage = () => {
           Looks like you're trying to access the eCR Viewer
         </h1>
         <p className="font-sans-lg text-normal margin-0">
-          You need to log in to see the eCR Viewer
+          You need to sign in to see the eCR Viewer
         </p>
         <RedirectButton provider={providerMap[0]} />
       </div>

@@ -27,7 +27,7 @@ export const RedirectButton = ({ provider }: RedirectProps) => {
           await signIn(provider.id);
         }}
       >
-        Log in via {provider.name}
+        Sign in via {provider.name}
         <ArrowForward aria-hidden={true} size={3} />
       </Button>
     </>

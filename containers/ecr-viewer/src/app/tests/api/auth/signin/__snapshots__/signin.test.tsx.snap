@@ -17,14 +17,14 @@ exports[`Sign-in Page should match snapshot 1`] = `
       <p
         class="font-sans-lg text-normal margin-0"
       >
-        You need to log in to see the eCR Viewer
+        You need to sign in to see the eCR Viewer
       </p>
       <button
         class="usa-button redirect-button"
         data-testid="button"
         type="button"
       >
-        Log in via 
+        Sign in via 
         Keycloak
         <svg
           aria-hidden="true"
