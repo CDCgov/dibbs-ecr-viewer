@@ -24,9 +24,7 @@ services:
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azure-storage:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
       # SQL Server
-      - SQL_SERVER_USER=${SQL_SERVER_USER:-sa}
-      - SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
-      - SQL_SERVER_HOST=${SQL_SERVER_HOST:-sqlserver}
+      - SQL_SERVER_CONNECTION_STRING=Server=sqlserver;Port=1433;User ID=sa;Password=Password1!;Encrypt=false;
       # Orchestration
       - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
     profiles:

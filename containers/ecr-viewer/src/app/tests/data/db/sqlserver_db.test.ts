@@ -3,39 +3,62 @@
  */
 import sql from "mssql";
 
-import { sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
+import { get_pool, sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
 
-jest.mock("mssql", () => ({ connect: jest.fn() }));
+jest.mock("mssql", () => ({
+  connect: jest.fn(),
+  close: jest.fn(),
+  ConnectionPool: {
+    parseConnectionString: () => ({
+      server: "localhost",
+      options: { workstationId: 1234 },
+    }),
+  },
+}));
+
+describe("sql server getPool", () => {
+  afterEach(() => {
+    delete process.env.SQL_SERVER_CONNECTION_STRING;
+    delete process.env.DB_CIPHER;
+    jest.resetAllMocks();
+  });
+
+  it("should return call connect with SQL_SERVER_CONNECTION_STRING and cipher", async () => {
+    process.env.SQL_SERVER_CONNECTION_STRING =
+      "server= localhost;port=1433;workstation id=1234";
+    process.env.DB_CIPHER = "rsa512";
+    await get_pool();
+    expect(sql.connect).toHaveBeenCalledExactlyOnceWith({
+      options: {
+        cryptoCredentialsDetails: { ciphers: "rsa512" },
+        connectTimeout: 30000,
+        workstationId: 1234,
+      },
+      server: "localhost",
+    });
+  });
+  it("should throw an error when SQL_SERVER isn't provided", async () => {
+    delete process.env.SQL_SERVER_CONNECTION_STRING;
+    await expect(get_pool()).rejects.toThrowWithMessage(
+      Error,
+      "Missing SQL_SERVER_CONNECTION_STRING",
+    );
+  });
+});
 
 describe("sql server health check", () => {
   afterEach(() => {
-    process.env.SQL_SERVER_HOST = "";
-    process.env.SQL_SERVER_USER = "";
-    process.env.SQL_SERVER_PASSWORD = "";
+    delete process.env.SQL_SERVER_CONNECTION_STRING;
+    jest.resetAllMocks();
   });
 
-  it("should return UNDEFINED when SQL_SERVER_HOST is not set", async () => {
-    process.env.SQL_SERVER_HOST = "";
-    process.env.SQL_SERVER_USER = "user";
-    process.env.SQL_SERVER_PASSWORD = "pw";
+  it("should return UNDEFINED when SQL_SERVER_CONNECTION_STRING is not set", async () => {
+    delete process.env.SQL_SERVER_CONNECTION_STRING;
     expect(await sqlServerHealthCheck()).toBeUndefined();
   });
-  it("should return UNDEFINED when SQL_SERVER_HOST is not set", async () => {
-    process.env.SQL_SERVER_HOST = "hostname";
-    process.env.SQL_SERVER_USER = "";
-    process.env.SQL_SERVER_PASSWORD = "pw";
-    expect(await sqlServerHealthCheck()).toBeUndefined();
-  });
-  it("should return UNDEFINED when SQL_SERVER_HOST is not set", async () => {
-    process.env.SQL_SERVER_HOST = "hostname";
-    process.env.SQL_SERVER_USER = "user";
-    process.env.SQL_SERVER_PASSWORD = "";
-    expect(await sqlServerHealthCheck()).toBeUndefined();
-  });
+
   it("should return UP when pool is available", async () => {
-    process.env.SQL_SERVER_HOST = "hostname";
-    process.env.SQL_SERVER_USER = "user";
-    process.env.SQL_SERVER_PASSWORD = "pw";
+    process.env.SQL_SERVER_CONNECTION_STRING = "hostname";
     (sql.connect as jest.Mock).mockImplementationOnce(() => ({
       connected: true,
     }));
@@ -43,9 +66,7 @@ describe("sql server health check", () => {
     expect(await sqlServerHealthCheck()).toEqual("UP");
   });
   it("should return DOWN when pool is not connected", async () => {
-    process.env.SQL_SERVER_HOST = "hostname";
-    process.env.SQL_SERVER_USER = "user";
-    process.env.SQL_SERVER_PASSWORD = "pw";
+    process.env.SQL_SERVER_CONNECTION_STRING = "hostname";
     (sql.connect as jest.Mock).mockImplementationOnce(() => ({
       connected: false,
     }));
@@ -54,9 +75,7 @@ describe("sql server health check", () => {
   });
   it("should return DOWN when pool throws an error", async () => {
     jest.spyOn(console, "error").mockImplementation();
-    process.env.SQL_SERVER_HOST = "hostname";
-    process.env.SQL_SERVER_USER = "user";
-    process.env.SQL_SERVER_PASSWORD = "pw";
+    process.env.SQL_SERVER_CONNECTION_STRING = "hostname";
 
     (sql.connect as jest.Mock).mockImplementationOnce(() => {
       throw new Error("Failed to connect");

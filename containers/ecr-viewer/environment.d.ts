@@ -38,8 +38,6 @@ namespace NodeJS {
     NON_INTEGRATED_VIEWER: "true" | "false";
     ORCHESTRATION_URL: string;
     SOURCE: "s3" | "azure";
-    SQL_SERVER_HOST: string;
-    SQL_SERVER_PASSWORD: string;
-    SQL_SERVER_USER: string;
+    SQL_SERVER_CONNECTION_STRING?: string;
   }
 }
