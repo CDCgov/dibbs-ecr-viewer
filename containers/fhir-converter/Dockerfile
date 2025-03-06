@@ -45,7 +45,6 @@ ARG CACHEBUSTSERVICE=1
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-
 # Copy FastAPI app
 COPY app /code/app
 COPY assets /code/assets
