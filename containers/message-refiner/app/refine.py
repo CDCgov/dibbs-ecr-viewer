@@ -1,5 +1,4 @@
 import logging
-from typing import Optional, Union
 
 from lxml import etree
 
@@ -69,8 +68,8 @@ def validate_sections_to_include(sections_to_include: str | None) -> tuple[list,
 
 def refine(
     validated_message: etree.Element,
-    sections_to_include: Optional[list[str]] = None,
-    clinical_services: Optional[dict[str, list[str]]] = None,
+    sections_to_include: list[str] | None = None,
+    clinical_services: dict[str, list[str]] | None = None,
 ) -> str:
     """
     Refines an eICR XML document by processing its sections based on the provided parameters.
@@ -206,7 +205,7 @@ def _process_section(
     combined_xpaths: str,
     namespaces: dict,
     template_ids: list[str],
-    clinical_services_codes: Optional[list[str]] = None,
+    clinical_services_codes: list[str] | None = None,
 ) -> None:
     """
     Processes a section by checking for elements, finding observations,
@@ -389,7 +388,7 @@ def _prune_unwanted_siblings(
 
 def _extract_observation_data(
     observation: etree.Element,
-) -> dict[str, Union[str, bool]]:
+) -> dict[str, str | bool]:
     """
     Extracts relevant data from an observation element, including checking for trigger code template ID.
 

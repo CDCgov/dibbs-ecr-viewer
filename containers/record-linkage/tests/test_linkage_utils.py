@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 import pytest
+
 from app.linkage.link import datetime_to_str
 
 

@@ -6,10 +6,11 @@ from unittest.mock import patch
 import httpx
 import psycopg2
 import pytest
-from app.config import get_settings
-from app.main import app
 from lxml import etree
 from starlette.testclient import TestClient
+
+from app.config import get_settings
+from app.main import app
 
 
 @pytest.fixture
@@ -59,13 +60,17 @@ def test_health_check(setup):
             ":",
             service_response,
         )
-        assert service_response.status_code == 200
+        assert service_response.status_code == 200, (
+            f"Expected status code 200, but got ${service_response.status_code}. Response content is ${service_response.content}"
+        )
 
 
 @pytest.mark.integration
 def test_openapi():
     actual_response = httpx.get(ORCHESTRATION_URL + "/orchestration/openapi.json")
-    assert actual_response.status_code == 200
+    assert actual_response.status_code == 200, (
+        f"Expected status code 200, but got ${actual_response.status_code}. Response content is ${actual_response.content}"
+    )
 
 
 @pytest.mark.integration
@@ -82,7 +87,9 @@ def test_process_message_endpoint(setup, clean_up_db):
         "message": message,
     }
     orchestration_response = httpx.post(PROCESS_MESSAGE_ENDPOINT, json=request)
-    assert orchestration_response.status_code == 200
+    assert orchestration_response.status_code == 200, (
+        f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+    )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
 
 
@@ -104,7 +111,9 @@ def test_process_zip_endpoint_with_zip(setup, clean_up_db):
         orchestration_response = httpx.post(
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files
         )
-        assert orchestration_response.status_code == 200
+        assert orchestration_response.status_code == 200, (
+            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        )
         assert orchestration_response.json()["message"] == "Processing succeeded!"
 
 
@@ -126,7 +135,9 @@ def test_process_zip_endpoint_with_zip_and_rr_data(setup, clean_up_db):
         orchestration_response = httpx.post(
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
-        assert orchestration_response.status_code == 200
+        assert orchestration_response.status_code == 200, (
+            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        )
         assert orchestration_response.json()["message"] == "Processing succeeded!"
         assert orchestration_response.json()["processed_values"] is not None
 
@@ -150,7 +161,9 @@ def test_failed_save_to_ecr_viewer(setup, clean_up_db):
         orchestration_response = httpx.post(
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=120
         )
-        assert orchestration_response.status_code == 500
+        assert orchestration_response.status_code == 500, (
+            f"Expected status code 500, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        )
 
 
 @pytest.mark.integration
@@ -173,7 +186,9 @@ def test_success_save_to_ecr_viewer(setup, clean_up_db):
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
 
-        assert orchestration_response.status_code == 200
+        assert orchestration_response.status_code == 200, (
+            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        )
 
 
 @pytest.mark.integration
@@ -196,7 +211,9 @@ def test_previous_response_mapping_for_ecr_viewer(setup, clean_up_db):
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
 
-        assert orchestration_response.status_code == 200
+        assert orchestration_response.status_code == 200, (
+            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        )
 
 
 @pytest.mark.integration
@@ -217,7 +234,9 @@ def test_process_message_fhir(setup):
         "message": message,
     }
     orchestration_response = httpx.post(PROCESS_MESSAGE_ENDPOINT, json=request)
-    assert orchestration_response.status_code == 200
+    assert orchestration_response.status_code == 200, (
+        f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+    )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
 
 
@@ -255,7 +274,9 @@ def test_process_message_fhir_phdc(setup):
         orchestration_response = client.post("dummy_url", json=request)
 
         # Assertions
-        assert orchestration_response.status_code == 200
+        assert orchestration_response.status_code == 200, (
+            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        )
         try:
             parsed_xml = etree.fromstring(orchestration_response.text.encode())
             assert parsed_xml.tag == "root"  # Confirm correct root element
@@ -281,7 +302,9 @@ def test_process_message_hl7(setup):
     orchestration_response = httpx.post(
         PROCESS_MESSAGE_ENDPOINT, json=request, timeout=30
     )
-    assert orchestration_response.status_code == 200
+    assert orchestration_response.status_code == 200, (
+        f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+    )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
 
 

@@ -7,6 +7,8 @@ from datetime import date, datetime
 from json.decoder import JSONDecodeError
 
 import pytest
+from sqlalchemy import select, text
+
 from app.linkage.algorithms import DIBBS_BASIC, DIBBS_ENHANCED
 from app.linkage.dal import DataAccessLayer
 from app.linkage.link import (
@@ -36,7 +38,6 @@ from app.linkage.link import (
 )
 from app.linkage.mpi import DIBBsMPIConnectorClient
 from app.utils import _clean_up
-from sqlalchemy import select, text
 
 
 def _init_db() -> DataAccessLayer:

@@ -1,6 +1,14 @@
 # syntax=docker.io/docker/dockerfile:1.7-labs
 FROM node:22-alpine AS base
 
+ARG APP_VERSION
+# Prometheus preferred transfer is via HTTP
+ARG OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=http/protobuf
+ARG OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otel-collector:4318/v1/metrics
+# Jaeger preferred routing is gRPC for native OTLP
+ARG OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
+ARG OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces 
+
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
@@ -49,18 +57,16 @@ USER nextjs
 
 EXPOSE 3000
 
+ENV APP_VERSION=$APP_VERSION
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 ENV OTEL_TRACES_EXPORTER=otlp
 ENV OTEL_METRICS_EXPORTER=otlp
 ENV OTEL_LOGS_EXPORTER=none
-# Prometheus preferred transfer is via HTTP
-ENV OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=http/protobuf
-ENV OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otel-collector:4318/v1/metrics
-# Jaeger preferred routing is gRPC for native OTLP
-ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
-# Contrary to orchestration, this must be 4318
-ENV OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces 
+ENV OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=$OTEL_EXPORTER_OTLP_METRICS_PROTOCOL
+ENV OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=$OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=$OTEL_EXPORTER_OTLP_TRACES_PROTOCOL
+ENV OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
 
 
 # server.js is created by next build from the standalone output

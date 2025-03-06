@@ -58,7 +58,7 @@ services:
     environment:
       - OTEL_TRACES_EXPORTER=none
       - OTEL_METRICS_EXPORTER=none
-      - ECR_VIEWER_URL=http://ecr-viewer:3000/ecr-viewer
+      - ECR_VIEWER_URL=http://localhost:3000/ecr-viewer
     healthcheck:
       test: ["CMD", "curl", "-f", "http://orchestration-service:8080/"]
       interval: 10s
