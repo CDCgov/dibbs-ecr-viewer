@@ -1,8 +1,7 @@
 import { render } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
-
-import { evaluateTravelHistoryTable } from "@/app/services/socialHistoryService";
 import BundleWithTravelHistory from "../../../../../../test-data/fhir/BundleTravelHistory.json";
+import { evaluateTravelHistoryTable } from "@/app/services/socialHistoryService";
 
 describe("Travel History", () => {
   it("should display a table ", () => {

@@ -1,5 +1,9 @@
 import { Bundle, CodeableConcept, Observation, Patient } from "fhir/r4";
-
+import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
+import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -19,11 +23,6 @@ import {
   getHumanReadableCodeableConcept,
   censorGender,
 } from "@/app/services/evaluateFhirDataService";
-import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
-import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
-import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
-import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import mappings from "@/app/view-data/fhirPath";
 
 describe("evaluateFhirDataServices tests", () => {

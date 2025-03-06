@@ -1,9 +1,8 @@
 import { Bundle } from "fhir/r4";
-
-import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import BundleWithEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
+import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 
 describe("Evaluate Ecr Metadata", () => {
   it("should have no available data where there is no data", () => {
