@@ -24,7 +24,7 @@ export async function middleware(
       );
     }
   } else {
-    return withAuth(req);
+    return withAuth(req, { pages: { signIn: `/signin` } });
   }
 }
 
