@@ -169,10 +169,14 @@ describe("Filter by Reportable Conditions Component", () => {
     const checkbox = screen.getByLabelText("Condition1");
     await user.click(checkbox);
 
-    expect(toggleFilterButton.getAttribute("aria-label")).toBe("Filter by Reportable Condition, 1 selected");
+    expect(toggleFilterButton.getAttribute("aria-label")).toBe(
+      "Filter by Reportable Condition, 1 selected",
+    );
 
     await user.click(checkbox);
-    expect(toggleFilterButton.getAttribute("aria-label")).toBe("Filter by Reportable Condition");
+    expect(toggleFilterButton.getAttribute("aria-label")).toBe(
+      "Filter by Reportable Condition",
+    );
   });
 
   it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
@@ -341,7 +345,7 @@ describe("Filter by Date Component", () => {
     await user.click(toggleButton);
     expect(screen.queryByText(/Filter by Received Date/)).toBeNull();
   });
-  
+
   it("Updates filter date range when selection is made", async () => {
     const user = userEvent.setup();
     const { rerender } = renderFilters();
@@ -400,7 +404,9 @@ describe("Filter by Date Component", () => {
       name: /Filter by Received Date/i,
     });
 
-    expect(toggleButton.getAttribute("aria-label")).toBe("Filter by Received Date, Last year selected");
+    expect(toggleButton.getAttribute("aria-label")).toBe(
+      "Filter by Received Date, Last year selected",
+    );
     await user.click(toggleButton);
 
     // Change selection to "Last 7 days"
@@ -413,7 +419,9 @@ describe("Filter by Date Component", () => {
       name: /Apply Filter For Received Date/i,
     });
     await user.click(applyFilterButton);
-    expect(toggleButton.getAttribute("aria-label")).toBe("Filter by Received Date, Last 7 days selected");
+    expect(toggleButton.getAttribute("aria-label")).toBe(
+      "Filter by Received Date, Last 7 days selected",
+    );
   });
 
   it("Navigates with the correct query string on applying filters", async () => {

@@ -84,7 +84,9 @@ export const Filter = ({
           className={`margin-right-0 ${
             isActive ? "filters-applied" : "filter-button"
           }`}
-          aria-label={`Filter by ${type}` + getSelectedFiltersLabel(isActive, title, tag)}
+          aria-label={
+            `Filter by ${type}` + getSelectedFiltersLabel(isActive, title, tag)
+          }
           aria-haspopup="listbox"
           aria-expanded={isFilterBoxOpen}
           onClick={() => {
@@ -163,7 +165,11 @@ const ApplyFilterButton = ({ type }: { type: string }) => {
   );
 };
 
-const getSelectedFiltersLabel = (isActive: boolean, title?: string, tag?: ReactNode) => {
+const getSelectedFiltersLabel = (
+  isActive: boolean,
+  title?: string,
+  tag?: ReactNode,
+) => {
   if (isActive) {
     if (title?.length) {
       return `, ${title} selected`;
