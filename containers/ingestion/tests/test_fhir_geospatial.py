@@ -3,10 +3,11 @@ import os
 import pathlib
 from unittest import mock
 
-from app.config import get_settings
-from app.main import app
 from fastapi import Response, status
 from fastapi.testclient import TestClient
+
+from app.config import get_settings
+from app.main import app
 
 client = TestClient(app)
 

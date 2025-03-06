@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import APIRouter, Response, status
 from pydantic import BaseModel, Field, field_validator
@@ -24,11 +24,11 @@ class UploadBundleToFhirServerInput(BaseModel):
         "The FHIR API provides additional details on creating [FHIR-conformant "
         "batch/transaction](https://hl7.org/fhir/http.html#transaction) bundles."
     )
-    cred_manager: Optional[Literal["azure", "gcp"]] = Field(
+    cred_manager: Literal["azure", "gcp"] | None = Field(
         default=None,
         description="The credential manager used to authenticate to the FHIR server.",
     )
-    fhir_url: Optional[str] = Field(
+    fhir_url: str | None = Field(
         default=None, description="The url of the FHIR server to upload to."
     )
 
