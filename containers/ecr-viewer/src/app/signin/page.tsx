@@ -1,4 +1,4 @@
-import { providerMap } from "../api/auth/auth";
+import { providerMap } from "@/app/api/auth/auth";
 import bgRedirect from "../../../assets/bg-redirect.svg";
 import { RedirectButton } from "@/app/signin/components/RedirectButton";
 
@@ -26,7 +26,6 @@ const RedirectPage = () => {
         <p className="font-sans-lg text-normal margin-0">
           You need to log in to see the eCR Viewer
         </p>
-        <br />
         <RedirectButton provider={providerMap[0]} />
       </div>
     </div>

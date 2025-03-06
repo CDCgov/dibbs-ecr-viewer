@@ -3,7 +3,7 @@
 import { Button } from "@trussworks/react-uswds";
 import { ArrowForward } from "@/app/components/Icon";
 import { signIn } from "next-auth/react";
-import { ProviderDetails } from "../../api/auth/auth";
+import { ProviderDetails } from "@/app/api/auth/auth";
 
 interface RedirectProps {
   provider: ProviderDetails;
@@ -23,7 +23,7 @@ export const RedirectButton = ({ provider }: RedirectProps) => {
         className="redirect-button"
         type="button"
         onClick={async () => {
-          await signIn(provider.id, { callbackUrl: process.env.BASE_PATH });
+          await signIn(provider.id);
         }}
       >
         Log in via {provider.name}

@@ -11,6 +11,10 @@ jest.mock("next-auth/react", () => ({
 jest.mock("../../../../api/auth/auth", () => ({
   providerMap: [
     {
+      id: "keycloak",
+      name: "Keycloak",
+    },
+    {
       id: "moria",
       name: "Moria",
     },
@@ -38,7 +42,7 @@ describe("Sign-in Page", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("should open signin with correct provider and callback URL when login button is clicked", async () => {
+  it("should open signin with correct provider when login button is clicked", async () => {
     const MOCK_CALLBACK_URL = "https://http.cat";
     (signIn as jest.Mock).mockResolvedValueOnce({
       url: MOCK_CALLBACK_URL,
@@ -51,8 +55,6 @@ describe("Sign-in Page", () => {
     });
     fireEvent.click(button);
 
-    expect(signIn).toHaveBeenCalledWith("moria", {
-      callbackUrl: "ecr-viewer",
-    });
+    expect(signIn).toHaveBeenCalledWith("keycloak");
   });
 });

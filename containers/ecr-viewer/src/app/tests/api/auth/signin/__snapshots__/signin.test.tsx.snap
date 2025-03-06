@@ -19,14 +19,13 @@ exports[`Sign-in Page should match snapshot 1`] = `
       >
         You need to log in to see the eCR Viewer
       </p>
-      <br />
       <button
         class="usa-button redirect-button"
         data-testid="button"
         type="button"
       >
         Log in via 
-        Moria
+        Keycloak
         <svg
           aria-hidden="true"
           class="usa-icon usa-icon--size-3"
