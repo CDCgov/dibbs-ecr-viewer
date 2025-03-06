@@ -2,7 +2,6 @@ import json
 import pathlib
 import urllib.parse
 import warnings
-from typing import Union
 from urllib.parse import parse_qs, urlencode
 
 import requests
@@ -368,7 +367,7 @@ def _dereference_included_resource(
     column_params: dict,
     ref_dicts: dict,
     table_name: str,
-) -> Union[dict, None]:
+) -> dict | None:
     anchor_id = anchor_resource.get("id", "")
     [direction, ref_path] = column_params["reference_location"].split(":", 1)
     referenced_type = path_to_use.split(".")[0]

@@ -1,6 +1,6 @@
 import datetime
 import pathlib
-from typing import Literal, Union
+from typing import Literal
 
 import phonenumbers
 import pycountry
@@ -12,7 +12,7 @@ FHIR_DATE_FORMAT = "%Y-%m-%d"
 FHIR_DATE_DELIM = "-"
 
 
-def double_metaphone_string(string: str, dmeta=None) -> list[Union[str, None]]:
+def double_metaphone_string(string: str, dmeta=None) -> list[str | None]:
     """
     Performs the double metaphone phonetic encoding algorithm on the given
     string. Returns a list holding the primary and secondary phonetic
@@ -87,8 +87,8 @@ def standardize_country_code(
 
 
 def standardize_phone(
-    raw_phone: Union[str, list[str]], countries: list = [None, "US"]
-) -> Union[str, list[str]]:
+    raw_phone: str | list[str], countries: list = [None, "US"]
+) -> str | list[str]:
     """
     Parses phone number and generates its standardized ISO E.164 international format
     for each given phone number and optional list of associated countries. If an input
@@ -149,11 +149,11 @@ def standardize_phone(
 
 
 def standardize_name(
-    raw_name: Union[str, list[str]],
+    raw_name: str | list[str],
     trim: bool = True,
     case: Literal["upper", "lower", "title"] = "upper",
     remove_numbers: bool = True,
-) -> Union[str, list[str]]:
+) -> str | list[str]:
     """
     Performs basic standardization (described below) on each given name. Removes
     punctuation characters and performs a variety of additional cleaning operations.

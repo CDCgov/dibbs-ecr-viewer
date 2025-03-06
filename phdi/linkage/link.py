@@ -4,10 +4,10 @@ import hashlib
 import json
 import logging
 import pathlib
+from collections.abc import Callable
 from itertools import combinations
 from math import log
 from random import sample
-from typing import Callable, Union
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -56,7 +56,7 @@ def block_data(data: pd.DataFrame, blocks: list) -> dict:
 def calculate_log_odds(
     m_probs: dict,
     u_probs: dict,
-    file_to_write: Union[pathlib.Path, None] = None,
+    file_to_write: pathlib.Path | None = None,
 ):
     """
     Calculate the per-field log odds ratio score that two records will
@@ -89,8 +89,8 @@ def calculate_log_odds(
 def calculate_m_probs(
     data: pd.DataFrame,
     true_matches: dict,
-    cols: Union[list[str], None] = None,
-    file_to_write: Union[pathlib.Path, None] = None,
+    cols: list[str] | None = None,
+    file_to_write: pathlib.Path | None = None,
 ):
     """
     For a given set of patient records, calculate the per-field
@@ -137,9 +137,9 @@ def calculate_m_probs(
 def calculate_u_probs(
     data: pd.DataFrame,
     true_matches: dict,
-    n_samples: Union[int, None] = None,
-    cols: Union[list, None] = None,
-    file_to_write: Union[pathlib.Path, None] = None,
+    n_samples: int | None = None,
+    cols: list | None = None,
+    file_to_write: pathlib.Path | None = None,
 ):
     """
     For a given set of patient records, calculate the per-field
@@ -802,7 +802,7 @@ def perform_linkage_pass(
     blocks: list,
     feature_funcs: dict[str, Callable],
     matching_rule: Callable,
-    cluster_ratio: Union[float, None] = None,
+    cluster_ratio: float | None = None,
     **kwargs,
 ) -> dict:
     """
@@ -989,8 +989,8 @@ def read_linkage_config(config_file: pathlib.Path) -> list[dict]:
 
 
 def score_linkage_vs_truth(
-    found_matches: dict[Union[int, str], set],
-    true_matches: dict[Union[int, str], set],
+    found_matches: dict[int | str, set],
+    true_matches: dict[int | str, set],
     records_in_dataset: int,
     expand_clusters_pairwise: bool = False,
 ) -> tuple:
@@ -1390,7 +1390,7 @@ def _group_patient_block_by_person(data_block: list[list]) -> dict[str, list]:
 
 
 def _map_matches_to_record_ids(
-    match_list: Union[list[tuple], list[set]], data_block, cluster_mode: bool = False
+    match_list: list[tuple] | list[set], data_block, cluster_mode: bool = False
 ) -> list[tuple]:
     """
     Helper function to turn a list of tuples of row indices in a block
@@ -1502,7 +1502,7 @@ def _is_empty_extraction_field(block_vals: dict, field: str):
     return False
 
 
-def _write_prob_file(prob_dict: dict, file_to_write: Union[pathlib.Path, None]):
+def _write_prob_file(prob_dict: dict, file_to_write: pathlib.Path | None):
     """
     Helper method to write a probability dictionary to a JSON file, if
     a valid path is supplied.

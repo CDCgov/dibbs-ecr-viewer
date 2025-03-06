@@ -2,9 +2,10 @@ import pathlib
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
-from app.main import app, get_clinical_services
 from fastapi.testclient import TestClient
 from lxml import etree
+
+from app.main import app, get_clinical_services
 
 client = TestClient(app)
 

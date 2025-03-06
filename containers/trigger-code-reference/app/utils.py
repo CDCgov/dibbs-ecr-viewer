@@ -1,12 +1,11 @@
 import json
 import sqlite3
 from pathlib import Path
-from typing import Union
 
 import fhirpathpy
 
 
-def convert_inputs_to_list(value: Union[list, str, int, float]) -> list:
+def convert_inputs_to_list(value: list | str | int | float) -> list:
     """
     Small helper function that checks the type of the input.
     Our code wants items to be in a list and will transform int/float to list
@@ -16,7 +15,7 @@ def convert_inputs_to_list(value: Union[list, str, int, float]) -> list:
     :param value: string, int, float, list to check
     :return: A list free of excess whitespace
     """
-    if isinstance(value, (int, float)):
+    if isinstance(value, int | float):
         return [str(value)]
     elif isinstance(value, str):
         common_delimiters = [",", "|", ";"]
@@ -30,7 +29,7 @@ def convert_inputs_to_list(value: Union[list, str, int, float]) -> list:
         raise ValueError("Unsupported input type for sanitation.")
 
 
-def get_clean_snomed_code(snomed_code: Union[list, str, int, float]) -> list:
+def get_clean_snomed_code(snomed_code: list | str | int | float) -> list:
     """
     This is a small helper function that takes a SNOMED code, sanitizes it,
     then checks to confirm only one SNOMED code has been provided.
@@ -132,7 +131,7 @@ def get_concepts_list(snomed_code: list) -> list[tuple]:
 
 def get_concepts_dict(
     concept_list: list[tuple],
-    filter_concept_list: Union[str, list] = None,
+    filter_concept_list: str | list = None,
 ) -> dict:
     """
     This function parses a list of tuples containing data on clinical codes
