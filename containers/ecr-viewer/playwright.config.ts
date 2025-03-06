@@ -47,5 +47,6 @@ export default defineConfig({
     url: "http://localhost:3000/ecr-viewer",
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
+    stdout: "pipe",
   },
 });

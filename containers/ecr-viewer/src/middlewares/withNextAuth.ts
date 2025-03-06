@@ -14,7 +14,9 @@ export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
     if (process.env.NBS_AUTH === "true") return next(request);
 
-    const response = await withAuth(request as NextRequestWithAuth);
+    const response = await withAuth(request as NextRequestWithAuth, {
+      pages: { signIn: `/signin` },
+    });
     if (response instanceof Response) {
       return response as NextResponse;
     } else {

@@ -39,7 +39,7 @@ describe("Next Auth Middleware", () => {
     expect(resp?.status).toBeGreaterThanOrEqual(300);
     expect(resp?.status).toBeLessThan(400);
     expect(resp?.headers.get("Location")).toBe(
-      "https://www.example.com/api/auth/signin?callbackUrl=%2Fecr-viewer%2Fapi%3Fid%3D123",
+      "https://www.example.com/signin?callbackUrl=%2Fecr-viewer%2Fapi%3Fid%3D123",
     );
   });
 
