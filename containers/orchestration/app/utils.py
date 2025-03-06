@@ -4,7 +4,6 @@ import os
 import pathlib
 from functools import cache
 from pathlib import Path
-from typing import Optional
 from zipfile import ZipFile
 
 from dotenv import load_dotenv
@@ -135,7 +134,7 @@ def search_for_ecr_data(valid_zipfile: ZipFile) -> dict:
     return return_data
 
 
-def search_for_file_in_zip(filename: str, zipfile: ZipFile) -> Optional[str]:
+def search_for_file_in_zip(filename: str, zipfile: ZipFile) -> str | None:
     """
     Searches for a file by name within a zip file.
 
