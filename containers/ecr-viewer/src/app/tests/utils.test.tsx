@@ -170,6 +170,27 @@ describe("Utils", () => {
   });
 
   describe("Calculate Patient Age", () => {
+    it("should calculate a patient's age using the encounter date when one is available", () => {
+      const patientWithEncounterStartDate = {
+        ...BundleWithPatient,
+        entry: [
+          ...BundleWithPatient.entry,
+          {
+            resource: {
+              resourceType: "Encounter",
+              period: { start: "1900-05-28" },
+            },
+          },
+        ],
+      } as unknown as Bundle;
+
+      const patientAge = calculatePatientAge(
+        patientWithEncounterStartDate as unknown as Bundle,
+      );
+
+      expect(patientAge).toEqual("23 years");
+    });
+
     it("should return a value in years if years is 2 or above", () => {
       const patientAge = calculatePatientAge(
         BundleWithPatient as unknown as Bundle,
@@ -179,8 +200,7 @@ describe("Utils", () => {
       expect(patientAge).toEqual("2 years");
     });
 
-    it("should not be plural if months/days equals 1", () => {
-      // 1877-05-25
+    it("should not return a plural unit if months/days equals 1", () => {
       const patientAge = calculatePatientAge(
         BundleWithPatient as unknown as Bundle,
         "1877-06-26",
@@ -190,7 +210,6 @@ describe("Utils", () => {
     });
 
     it("should return a value displaying months and days if years is under 2", () => {
-      // 1877-05-25
       const patientAge = calculatePatientAge(
         BundleWithPatient as unknown as Bundle,
         "1879-05-24",
@@ -272,8 +291,8 @@ describe("Utils", () => {
       expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
     });
 
-    it("should return age at death in months/days when DOD is given", () => {
-      const testBundle = {
+    it("should return age at death in months/days when age is under 2 years", () => {
+      const patientWithDeathDate = {
         ...BundleWithDeceasedPatient,
         entry: [
           {
@@ -287,7 +306,8 @@ describe("Utils", () => {
         ],
       } as unknown as Bundle;
 
-      const patientAgeAtDeath = calculatePatientAgeAtDeath(testBundle);
+      const patientAgeAtDeath =
+        calculatePatientAgeAtDeath(patientWithDeathDate);
 
       const expectedAgeAtDeath = "12 months, 5 days";
 
