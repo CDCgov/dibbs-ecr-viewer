@@ -234,10 +234,10 @@ export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
   )[0];
 
   if (patientDOBString && patientDODString) {
-    return getFormattedAge(
-      new Date(patientDODString),
-      new Date(patientDOBString),
-    );
+    const laterDate = new Date(patientDODString);
+    const earlierDate = new Date(patientDOBString);
+
+    return getFormattedAge(laterDate, earlierDate);
   } else {
     return undefined;
   }
