@@ -134,9 +134,10 @@ async function listEcrDataSqlserver(
 
   try {
     const conditionsSubQuery =
-      "SELECT STRING_AGG([condition], ',') FROM (SELECT DISTINCT erc.[condition] FROM ecr_viewer.ecr_rr_conditions AS erc WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_conditions";
+      "SELECT STUFF(( SELECT DISTINCT ',' + erc.[condition] FROM ecr_viewer.ecr_rr_conditions AS erc WHERE erc.eICR_ID = ed.eICR_ID FOR XML PATH ('')), 1, 1, '')";
     const ruleSummariesSubQuery =
-      "SELECT STRING_AGG(rule_summary, ',') FROM (SELECT DISTINCT ers.rule_summary FROM ecr_viewer.ecr_rr_rule_summaries AS ers LEFT JOIN ecr_viewer.ecr_rr_conditions as erc ON ers.ecr_rr_conditions_id = erc.uuid WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_rule_summaries";
+      "SELECT STUFF(( SELECT DISTINCT ',' + ers.rule_summary FROM ecr_viewer.ecr_rr_rule_summaries AS ers LEFT JOIN ecr_viewer.ecr_rr_conditions as erc ON ers.ecr_rr_conditions_id = erc.uuid WHERE erc.eICR_ID = ed.eICR_ID FOR XML PATH ('')), 1, 1, '')";
+
     const sortStatement = generateSqlServerSortStatement(
       sortColumn,
       sortDirection,
