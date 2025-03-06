@@ -65,8 +65,6 @@ export const Filter = ({
     openBtnRef?.current?.parentElement?.focus();
   }, []);
 
-  console.log(tag);
-
   // This filter has closed. We need the special submitted case to prevent
   // a race condition with submitting and resetting if we try to do a reset
   // just after submitting.
@@ -86,12 +84,12 @@ export const Filter = ({
           className={`margin-right-0 ${
             isActive ? "filters-applied" : "filter-button"
           }`}
-          aria-label={`Filter by ${type}` + (isActive ? `, ${title ?? tag} selected` : "")}
+          aria-label={`Filter by ${type}` + getSelectedFiltersLabel(isActive, title, tag)}
           aria-haspopup="listbox"
           aria-expanded={isFilterBoxOpen}
           onClick={() => {
             setIsFilterBoxOpen(!isFilterBoxOpen);
-          }} 
+          }}
           type="button"
         >
           <span ref={openBtnRef} className="square-205 usa-icon">
@@ -163,6 +161,20 @@ const ApplyFilterButton = ({ type }: { type: string }) => {
       </Button>
     </div>
   );
+};
+
+const getSelectedFiltersLabel = (isActive: boolean, title?: string, tag?: ReactNode) => {
+  if (isActive) {
+    if (title?.length) {
+      return `, ${title} selected`;
+    }
+
+    if (tag) {
+      return `, ${tag} selected`;
+    }
+  }
+
+  return "";
 };
 
 /**
