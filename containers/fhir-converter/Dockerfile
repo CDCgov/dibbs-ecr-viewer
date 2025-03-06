@@ -42,7 +42,7 @@ WORKDIR /code
 # Set --build-arg CACHBUSTSERVICE=<random number here> to only invalidate the python code installation
 ARG CACHEBUSTSERVICE=1
 
-COPY containers/fhir-converter/requirements.txt .
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 
