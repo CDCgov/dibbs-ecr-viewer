@@ -65,7 +65,7 @@ export const getEcrDocumentAccordionItems = (
       (array) => Array.isArray(array) && array.length > 0,
     );
   };
-
+  console.log(ecrMetadata);
   const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
@@ -110,7 +110,7 @@ export const getEcrDocumentAccordionItems = (
     {
       title: "Clinical Info",
       content: Object.values(clinicalData).some(
-        (section) => section.availableData.length > 0,
+        (section) => section.availableData.length > 0
       ) ? (
         <ClinicalInfo
           clinicalNotes={clinicalData.clinicalNotes.availableData}
@@ -159,9 +159,9 @@ export const getEcrDocumentAccordionItems = (
               }
               rrDetails={ecrMetadata.rrDetails}
               eRSDWarnings={ecrMetadata.eRSDWarnings}
-              eicrAuthorDetails={ecrMetadata.eicrAuthorDetails.map(
-                (details) => details.availableData,
-              )}
+              eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
+                .filter((details) => details.availableData.length > 0)
+                .map((details) => details.availableData)}
             />
           ) : (
             <p className="text-italic padding-bottom-05">
@@ -200,7 +200,7 @@ export const getEcrDocumentAccordionItems = (
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,
               ]}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails.map(
-                (authorDetails) => authorDetails.unavailableData,
+                (authorDetails) => authorDetails.unavailableData
               )}
             />
           ) : (
