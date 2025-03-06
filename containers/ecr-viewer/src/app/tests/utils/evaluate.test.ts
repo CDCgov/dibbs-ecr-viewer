@@ -25,15 +25,6 @@ describe("evaluate", () => {
   });
 
   it("fhirpath should be called 1 time when 1 call is made ", () => {
-    // const combined = Object.keys(fhirPathMappings).reduce((acc, cur) => {
-    //   acc[cur] = {
-    //     type: PathTypeNames[cur],
-    //     path: fhirPathMappings[cur],
-    //   }
-    //   return acc;
-    // }, {})
-    // console.log(JSON.stringify(combined))
-
     evaluateAllAndCheck<string>({ id: "1234" }, "id", "string");
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
