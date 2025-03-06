@@ -261,6 +261,29 @@ describe("Utils", () => {
 
       expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
     });
+
+    it("should return age at death in months/days when DOD is given", () => {
+      const testBundle = {
+        ...BundleWithDeceasedPatient,
+        entry: [
+          {
+            ...BundleWithDeceasedPatient.entry[0],
+            resource: {
+              ...BundleWithDeceasedPatient.entry[0].resource,
+              birthDate: "1818-01-27",
+              deceasedDate: "1819-02-01",
+            },
+          },
+        ],
+      } as unknown as Bundle;
+
+      const patientAgeAtDeath = calculatePatientAgeAtDeath(testBundle);
+
+      const expectedAgeAtDeath = "12 months, 5 days";
+
+      expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
+    });
+
     it("should have a defined Age at Death, and not have a defined Current Age when Date of Death is given", () => {
       jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
 
