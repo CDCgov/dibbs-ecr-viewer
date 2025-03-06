@@ -21,10 +21,6 @@ import {
   Reference,
 } from "fhir/r4";
 
-// import fhirPathMappings from "./fhir-paths";
-
-export type PathMappings = typeof fhirPathMappings;
-
 export type ValueX =
   | boolean
   | number
@@ -148,7 +144,7 @@ export type PathTypes = {
   stampedImmunizations: Immunization;
 };
 
-type PathKeys = keyof PathTypes;
+export type FhirPathKeys = keyof PathTypes;
 
 export interface FhirPath<K> {
   type: string;
@@ -156,7 +152,7 @@ export interface FhirPath<K> {
   name: K;
 }
 
-const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
+const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientNameList: {
     type: "HumanName",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').name",
@@ -545,14 +541,14 @@ const _fhirPathMappings: { [K in PathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 };
 
-const fhirPathMappings: { [K in PathKeys]: FhirPath<K> } = (
-  Object.keys(_fhirPathMappings) as PathKeys[]
+const fhirPathMappings: { [K in FhirPathKeys]: FhirPath<K> } = (
+  Object.keys(_fhirPathMappings) as FhirPathKeys[]
 ).reduce(
   (acc, cur) => {
     acc[cur].name = cur;
     return acc;
   },
-  _fhirPathMappings as { [K in PathKeys]: FhirPath<K> },
+  _fhirPathMappings as { [K in FhirPathKeys]: FhirPath<K> },
 );
 
 export default fhirPathMappings;
