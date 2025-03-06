@@ -21,9 +21,7 @@ test.describe("keycloak", () => {
   });
   test("should require a login on main page", async ({ page }) => {
     await page.goto("/ecr-viewer");
-    await page.waitForURL(
-      "ecr-viewer/api/auth/signin?callbackUrl=%2Fecr-viewer%2F",
-    );
+    await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
 
     await page.getByRole("button").click();
 
@@ -38,7 +36,7 @@ test.describe("keycloak", () => {
   test("should require a login on view-data page", async ({ page }) => {
     await page.goto("/ecr-viewer/view-data?id=1234");
     await page.waitForURL(
-      "ecr-viewer/api/auth/signin?callbackUrl=%2Fecr-viewer%2Fview-data%3Fid%3D1234",
+      "ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2Fview-data%3Fid%3D1234",
     );
 
     await page.getByRole("button").click();
