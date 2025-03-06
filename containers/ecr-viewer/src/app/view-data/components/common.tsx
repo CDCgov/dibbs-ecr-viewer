@@ -180,7 +180,12 @@ const getOnsetAge = (
   onsetDateTime: Condition["onsetDateTime"],
   fhirBundle: Bundle,
 ) => {
-  if (onsetAge?.value) return { value: `${onsetAge.value} years` };
+  if (onsetAge?.value) {
+    return {
+      value: `${onsetAge.value} year${onsetAge.value !== 1 ? "s" : ""}`,
+    };
+  }
+
   if (!onsetDateTime) return undefined;
 
   return { value: calculatePatientAge(fhirBundle, onsetDateTime) };
