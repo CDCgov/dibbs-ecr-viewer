@@ -207,11 +207,11 @@ export const calculatePatientAge = (
     )[0];
 
     // use the encounter start date if one is available, otherwise we'll fall back to today's date
-    const differenceFromDate = encounterStartDate
+    const laterDate = encounterStartDate
       ? new Date(encounterStartDate)
       : new Date();
 
-    return getFormattedAge(differenceFromDate, new Date(patientDOBString));
+    return getFormattedAge(laterDate, new Date(patientDOBString));
   }
 
   return undefined;
