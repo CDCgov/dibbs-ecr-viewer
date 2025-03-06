@@ -1,6 +1,7 @@
-import { providerMap } from "@/app/api/auth/auth";
 import bgRedirect from "../../../assets/bg-redirect.svg";
-import { RedirectButton } from "@/app/signin/components/RedirectButton";
+import { providerMap } from "@/app/api/auth/auth";
+
+import { RedirectButton } from "./components/RedirectButton";
 
 /**
  * @returns a sign-in (redirect) page

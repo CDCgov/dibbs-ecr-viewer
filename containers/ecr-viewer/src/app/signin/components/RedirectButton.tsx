@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@trussworks/react-uswds";
-import { ArrowForward } from "@/app/components/Icon";
 import { signIn } from "next-auth/react";
+
 import { ProviderDetails } from "@/app/api/auth/auth";
+import { ArrowForward } from "@/app/components/Icon";
 
 interface RedirectProps {
   provider: ProviderDetails;

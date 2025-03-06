@@ -1,7 +1,9 @@
 import React from "react";
-import { signIn } from "next-auth/react";
+
 import { render, screen, fireEvent } from "@testing-library/react";
 import { axe } from "jest-axe";
+import { signIn } from "next-auth/react";
+
 import RedirectPage from "@/app/signin/page";
 
 jest.mock("next-auth/react", () => ({
