@@ -1,6 +1,7 @@
 /* eslint-disable unused-imports/no-unused-vars */
 namespace NodeJS {
   interface ProcessEnv {
+    APP_VERSION: string; // Version of eCR Viewer. This value is set at build time
     AUTH_KEYCLOAK_ID?: string;
     AUTH_KEYCLOAK_SECRET?: string;
     AUTH_KEYCLOAK_ISSUER?: string;

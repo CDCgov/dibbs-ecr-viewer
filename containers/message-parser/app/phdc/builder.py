@@ -1,7 +1,7 @@
 import logging
 import uuid
 from datetime import datetime
-from typing import Literal, Optional
+from typing import Literal
 
 from lxml import etree as ET
 
@@ -930,9 +930,9 @@ class PHDCBuilder:
         id: str,
         root: str = None,
         assigningAuthorityName: str = None,
-        telecom_data: Optional[list[Telecom]] = None,
-        address_data: Optional[list[Address]] = None,
-        patient_data: Optional[Patient] = None,
+        telecom_data: list[Telecom] | None = None,
+        address_data: list[Address] | None = None,
+        patient_data: Patient | None = None,
     ) -> ET.Element:
         """
         Builds a `recordTarget` XML element for recordTarget data, which refers to

@@ -1,7 +1,8 @@
 import pathlib
 
-from app.fhir.conversion.convert import add_rr_data_to_eicr
 from lxml import etree
+
+from app.fhir.conversion.convert import add_rr_data_to_eicr
 
 
 def test_add_rr_to_ecr():

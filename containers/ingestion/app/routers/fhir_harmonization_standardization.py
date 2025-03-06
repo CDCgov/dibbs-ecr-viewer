@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import APIRouter
 from pydantic import BaseModel, Field, field_validator
@@ -32,19 +32,19 @@ class StandardizeNamesInput(BaseModel):
         description="A FHIR resource or bundle in JSON format.",
         json_schema_extra={"example": sample_name_request_data},
     )
-    trim: Optional[bool] = Field(
+    trim: bool | None = Field(
         description="When true, leading and trailing spaces are removed.", default=True
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "is modified and returned.",
         default=True,
     )
-    case: Optional[Literal["upper", "lower", "title"]] = Field(
+    case: Literal["upper", "lower", "title"] | None = Field(
         description="The type of casing that should be used.",
         default="upper",
     )
-    remove_numbers: Optional[bool] = Field(
+    remove_numbers: bool | None = Field(
         description="If true, delete numeric characters; if false leave numbers in "
         "place.",
         default=True,
@@ -86,7 +86,7 @@ class StandardizePhonesInput(BaseModel):
         description="A FHIR resource or bundle in JSON format.",
         json_schema_extra={"example": sample_phone_request_data},
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` "
         "is modified and returned.",
         default=True,
@@ -134,11 +134,11 @@ class StandardizeBirthDateInput(BaseModel):
         description="A FHIR resource or bundle in JSON format.",
         json_schema_extra={"example": sample_date_of_birth_request_data},
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="If true, `data` is modified in-place; if false, a copy of `data` is modified and returned.",
         default=True,
     )
-    format: Optional[str] = Field(
+    format: str | None = Field(
         default="%Y-%m-%d",
         description="The date format that the input DOB is supplied in.",
         json_schema_extra={
