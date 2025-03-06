@@ -74,8 +74,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     });
   }
 
-  const custodianRef =
-    evaluateOne(fhirBundle, fhirPathMappings.eicrCustodianRef);
+  const custodianRef = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.eicrCustodianRef,
+  );
   const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
   const eicrReleaseVersion = (fhirBundle: Bundle) => {
