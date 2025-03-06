@@ -9,6 +9,7 @@ import {
   DiagnosticReport,
   EncounterDiagnosis,
   EncounterParticipant,
+  Extension,
   HumanName,
   Identifier,
   Immunization,
@@ -48,6 +49,7 @@ export type PathTypes = {
   patientEthnicity: ValueX;
   patientEthnicityDetailed: ValueX;
   patientCommunication: PatientCommunication;
+  patientProficiencyExtension: Extension;
   patientTribalAffiliation: ValueX;
   patientEmergencyContact: PatientContact;
   patientCurrentJobTitle: ValueX;
@@ -152,6 +154,8 @@ export interface FhirPath<K> {
   name: K;
 }
 
+// Make sure the "type" here matches the type-land type descrived in `PathTypes`
+// "name" field is added programmatically below
 const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientNameList: {
     type: "HumanName",
@@ -213,6 +217,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientCommunication: {
     type: "PatientCommunication",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').communication",
+  },
+  patientProficiencyExtension: {
+    type: "Extension",
+    path: "extension.where(url = 'http://hl7.org/fhir/StructureDefinition/patient-proficiency')",
   },
   patientTribalAffiliation: {
     type: "ValueX",

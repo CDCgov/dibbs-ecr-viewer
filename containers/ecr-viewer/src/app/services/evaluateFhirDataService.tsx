@@ -7,10 +7,8 @@ import {
   CodeableConcept,
   Condition,
   Encounter,
-  Extension,
   Location,
   Organization,
-  Period,
   Practitioner,
   PractitionerRole,
 } from "fhir/r4";
@@ -18,9 +16,7 @@ import {
 import { evaluateData, noData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
-  evaluateAllAndCheck,
   evaluateOne,
-  evaluateOneAndCheck,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -534,8 +530,7 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
 
   const tables = participants.map((participant) => {
     const role = evaluateValue(participant, "type");
-    const { start, end } =
-      evaluateOneAndCheck<Period>(participant, "period", "Period") ?? {};
+    const { start, end } = participant.period ?? {};
     const participantRef = participant.individual?.reference;
 
     const { practitioner } = evaluatePractitionerRoleReference(
@@ -685,10 +680,9 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
     .map((communication) => {
       const patientLanguage = evaluateValue(communication, "language.coding");
 
-      const patientProficiencyExtension = evaluateAllAndCheck<Extension>(
+      const patientProficiencyExtension = evaluateAll(
         communication,
-        "extension.where(url = 'http://hl7.org/fhir/StructureDefinition/patient-proficiency')",
-        "Extension",
+        fhirPathMappings.patientProficiencyExtension,
       );
       const languageProficency = evaluateValue(
         patientProficiencyExtension,
