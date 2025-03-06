@@ -147,7 +147,7 @@ jobs:
         with:
           name: logs
           path: ./containers/${{env.CONTAINER}}/integration-run.log
-          retention-days: 30
+          retention-days: 5
 
   build-orchestration-container:
     runs-on: ubuntu-latest
