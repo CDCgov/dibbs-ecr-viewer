@@ -65,8 +65,8 @@ export function extractNumbersAndPeriods(inputValues: string[]): string[] {
   });
 }
 /**
- * Helper function to return a patient's age formatted as a string. If the calculated age,
- * given a `laterDate` and an `earlierDate`, is greater than or equal to 2, it will return an
+ * Return a patient's age formatted as a string. If the calculated age,
+ * given a `laterDate` and an `earlierDate`, is greater than or equal to 2 years, it will return an
  * age formatted as `x years`. If the age calculated is less than 2 years, it will return
  * an age formatted as `x months, y days`.
  * @param laterDate Date later in time
