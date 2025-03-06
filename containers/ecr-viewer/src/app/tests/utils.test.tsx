@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
 import { CarePlanActivity } from "fhir/r4b";
+
 import BundleCareTeam from "../../../../../test-data/fhir/BundleCareTeam.json";
 import BundleWithMiscNotes from "../../../../../test-data/fhir/BundleMiscNotes.json";
 import BundleNoActiveProblems from "../../../../../test-data/fhir/BundleNoActiveProblems.json";

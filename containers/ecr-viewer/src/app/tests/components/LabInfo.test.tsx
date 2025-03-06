@@ -3,6 +3,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Bundle } from "fhir/r4";
+
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import {

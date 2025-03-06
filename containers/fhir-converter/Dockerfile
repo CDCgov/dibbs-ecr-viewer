@@ -47,9 +47,8 @@ RUN pip install -r requirements.txt
 
 
 # Copy FastAPI app
-COPY containers/fhir-converter/app /code/app
-COPY containers/fhir-converter/assets /code/assets
-COPY test-data /code/test-data
+COPY app /code/app
+COPY assets /code/assets
 COPY README.md /code/README.md
 
 EXPOSE 8080

@@ -1,4 +1,5 @@
 import { Bundle } from "fhir/r4";
+
 import BundleWithEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";

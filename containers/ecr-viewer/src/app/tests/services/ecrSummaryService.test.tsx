@@ -1,6 +1,8 @@
 import React from "react";
+
 import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
+
 import BundleWithClinicalInfo from "../../../../../../test-data/fhir/BundleClinicalInfo.json";
 import BundleEcrSummary from "../../../../../../test-data/fhir/BundleEcrSummary.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";

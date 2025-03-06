@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
+
 import BundleWithTravelHistory from "../../../../../../test-data/fhir/BundleTravelHistory.json";
 import { evaluateTravelHistoryTable } from "@/app/services/socialHistoryService";
 
