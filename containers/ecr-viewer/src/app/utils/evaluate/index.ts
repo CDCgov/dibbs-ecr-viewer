@@ -78,7 +78,10 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
 
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
- * escape hatch when not using a `fhirPathmapping`. See `evaluateAll` or `evaluateOne` for the common usage.
+ * escape hatch during testing when not using a `fhirPathmapping`.
+ * @see {@link evaluateAll} for retrieving all results for a `FhirPath`
+ * @see {@link evaluateOne} for retrieving a singleton result for a `FhirPath`
+ * @see {@link evaluateValue} for retrieving a singleton result and formatting it as a string
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param path - The FHIRPath expression to evaluate.
  * @param expectedType - Optionally, the type of the expected result as a string.
@@ -113,8 +116,10 @@ export const evaluateAllAndCheck = <Result>(
 };
 
 /**
- * Only to be used as an escape hatch when not using a `fhirPathMapping`. See `evaluateOne` for the
- * common usage. Same as `evaluateAllAndCheck`, but ensures a singleton or undefined is returned.
+ * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
+ * escape hatch during testing when not using a `fhirPathmapping`.
+ * @see {@link evaluateOne} for retrieving a singleton result for a `FhirPath`
+ * @see {@link evaluateValue} for retrieving a singleton result and formatting it as a string
  * @param args - The same arguments as `evaluateAllAndCheck`.
  * @returns - An array containing the result of the evaluation.
  */
@@ -143,7 +148,10 @@ export const clearEvaluateCache = () => {
 };
 
 /**
- * Evaluates a FHIRPath expression on the provided FHIR data.
+ * Evaluates a FhirPath on the provided FHIR data and returns the results as an
+ * Array (may be empty). This function ensures the types are constrained at compile time and
+ * checked at runtime (as a logged error, not a throwing one).
+ * @see {@link evaluateOne} if you expect only one result.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param fhirPath - The FhirPath describing the FHIRPath expression to evaluate.
  * @param [context] - Optional context object to provide additional data for evaluation.
@@ -163,8 +171,15 @@ export const evaluateAll = <K extends keyof PathTypes>(
 };
 
 /**
- * Evaluates a FHIRPath expression on the provided FHIR data and returns the single
- * expected item, or undefined if not available.
+ * Evaluates a FHIRPath on the provided FHIR data and returns the single
+ * expected item, or undefined if not available. This function ensures the types
+ * are constrained at compile time and checked at runtime (as a logged error,
+ * not a throwing one). Additionally, if more than one result is evaluated,
+ * the first will be returned and an error logged with info on the evaluation
+ * and number of results.
+ * @see {@link evaluateAll} if you expect more than one result.
+ * @see {@link evaluateValue} if your path ends in `.value` or it is a simple type and
+ * you want to ensure a string is always returned.
  * @param fhirData - The FHIR data to evaluate the FHIRPath expression on.
  * @param fhirPath - The FhirPath describing the FHIRPath expression to evaluate.
  * @param [context] - Optional context object to provide additional data for evaluation.
@@ -190,7 +205,14 @@ const UNIT_MAP = new Map([
 ]);
 
 /**
- * Evaluates the FHIR path and returns the appropriate string value. Supports choice elements (e.g. using `.value` in path to get valueString or valueCoding)
+ * Evaluates the FHIR path and formats it as an appropriate string value (may be empty). Supports
+ * choice elements (e.g. using `.value` in path to get valueString or valueCoding) or
+ * elemnts of type string, number, boolean, Coding, CodeableConcept, or Quantity.
+ *
+ * Expects a single element to be returned from the path. If more than one is evaluated, the
+ * first will be returned and an error will be logged to the console with information
+ * on the evaluation.
+ * @see {@link evaluateOne} if you want the structured underlying data in its original form
  * @param entry - The FHIR resource to evaluate.
  * @param path - The path within the resource to extract the value from.
  * @returns - The evaluated value as a string.
@@ -240,7 +262,13 @@ export const evaluateValue = (
 };
 
 /**
- * Evaluates a reference in a FHIR bundle.
+ * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource
+ * must be provided as a type parameter. This will also be checked at runtime and an
+ * error logged if it does not match.
+ *
+ * Expects a single element to be returned from the reference. If more than one is evaluated, the
+ * first will be returned and an error will be logged to the console with information
+ * on the evaluation.
  * @param fhirBundle - The FHIR bundle containing resources.
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
