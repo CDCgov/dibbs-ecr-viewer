@@ -3,7 +3,7 @@ import { Bundle, Observation } from "fhir/r4";
 import { noData } from "@/app/utils/data-utils";
 import { evaluateAll, evaluateValue } from "@/app/utils/evaluate";
 import fhirPathMappings, {
-  PathMappings,
+  FhirPathKeys,
 } from "@/app/utils/evaluate/fhir-paths";
 import { ColumnInfoInput } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
@@ -11,7 +11,7 @@ import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 
-type TravelHistoryColumn = ColumnInfoInput & { infoPath: keyof PathMappings };
+type TravelHistoryColumn = ColumnInfoInput & { infoPath: FhirPathKeys };
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
