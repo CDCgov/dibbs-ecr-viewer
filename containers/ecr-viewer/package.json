@@ -114,11 +114,9 @@
     "jest-extended": "^4.0.2",
     "jest-fail-on-console": "^3.3.1",
     "jest-fetch-mock": "^3.0.3",
-    "next-plugin-yaml": "^1.0.1",
     "postcss": "^8.4.38",
     "prettier": "3.1.0",
     "sass": "^1.69.5",
-    "typescript": "^5.8.2",
-    "yaml-jest-transform": "^2.0.2"
+    "typescript": "^5.8.2"
   }
 }

@@ -482,7 +482,7 @@
         "id": "0.0.000.000000.0.00.000.0.0.0.000000.000",
         "protocolApplied": [
           {
-            "doseNumberPositiveInt": "2"
+            "doseNumberPositiveInt": 2
           }
         ],
         "occurrenceDateTime": "2024-01-15T09:34:00-04:00",
