@@ -159,6 +159,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Browsers
+        working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:install
 
       - name: Set up env vars
