@@ -14,6 +14,7 @@ import {
 } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { safeParse } from "@/app/utils/data-utils";
+import { makePlural } from "@/app/utils/format-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 
@@ -182,7 +183,7 @@ const getOnsetAge = (
 ) => {
   if (onsetAge?.value) {
     return {
-      value: `${onsetAge.value} year${onsetAge.value !== 1 ? "s" : ""}`,
+      value: `${onsetAge.value} year${makePlural(onsetAge.value)}`,
     };
   }
 

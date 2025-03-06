@@ -74,10 +74,6 @@ export function extractNumbersAndPeriods(inputValues: string[]): string[] {
  * @returns A formatted age, either in years or months and days
  */
 export const getFormattedAge = (laterDate: Date, earlierDate: Date): string => {
-  function makePlural(value: number): string {
-    return value !== 1 ? "s" : "";
-  }
-
   const ageInYears = dateFns.differenceInYears(laterDate, earlierDate);
   if (ageInYears >= 2) {
     return `${ageInYears} years`;
@@ -95,4 +91,13 @@ export const getFormattedAge = (laterDate: Date, earlierDate: Date): string => {
   return `${months} month${makePlural(
     months,
   )}, ${remainingDays} day${makePlural(remainingDays)}`;
+};
+
+/**
+ * Returns an `s` if the provided value does not equal 1, otherwise returns an empty string
+ * @param value a number, typically representing days, months, or years
+ * @returns an `s` or an empty string
+ */
+export const makePlural = (value: number) => {
+  return value !== 1 ? "s" : "";
 };
