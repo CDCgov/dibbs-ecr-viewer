@@ -6,14 +6,13 @@ import { Bundle } from "fhir/r4";
 
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-
 import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/services/labsService";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { evaluateAll } from "@/app/utils/evaluate";
 import LabInfo from "@/app/view-data/components/LabInfo";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {

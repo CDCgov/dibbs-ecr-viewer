@@ -4,7 +4,6 @@ import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadat
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
 import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
-
 import {
   evaluateEncounterId,
   evaluateFacilityId,
