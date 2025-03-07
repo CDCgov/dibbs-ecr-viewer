@@ -23,7 +23,7 @@ describe("EcrSummary tests", () => {
       },
       {
         title: "Race",
-        value: "White"
+        value: "White",
       },
       { 
         title: "Ethnicity",

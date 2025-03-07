@@ -159,9 +159,9 @@ export const getEcrDocumentAccordionItems = (
               }
               rrDetails={ecrMetadata.rrDetails}
               eRSDWarnings={ecrMetadata.eRSDWarnings}
-              eicrAuthorDetails={ecrMetadata.eicrAuthorDetails.map(
-                (details) => details.availableData,
-              )}
+              eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
+                .filter((details) => details.availableData.length > 0)
+                .map((details) => details.availableData)}
             />
           ) : (
             <p className="text-italic padding-bottom-05">
