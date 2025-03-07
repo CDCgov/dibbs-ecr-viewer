@@ -21,6 +21,7 @@ import {
   getHumanReadableCodeableConcept,
   censorGender,
 } from "@/app/services/evaluateFhirDataService";
+import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
 
 describe("evaluateFhirDataServices tests", () => {
