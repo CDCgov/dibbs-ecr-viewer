@@ -35,8 +35,6 @@ const HomePage = async ({
     return <NotFound />;
   }
 
-  console.log({ searchParams });
-
   const cookieStore = cookies();
   const prefItemsPerPage = cookieStore.get("itemsPerPage")?.value;
   const itemsPerPage =
