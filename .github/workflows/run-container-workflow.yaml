@@ -12,8 +12,46 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Since gh workflow run does not return an ID, there is a very small chance that this may return an incorrect RUN_ID
+      # This functionality should be released by Q2 2025: https://github.com/cli/cli/issues/4001#issuecomment-2558116235
       - name: Run specified workflow
+        id: trigger-workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh workflow run .github/workflows/container-${{ inputs.container }}.yaml
+          RUN_ID=$(gh run list --workflow=container-${{ inputs.container }}.yaml --event=workflow_dispatch --json databaseId --limit 1 --jq '.[0].databaseId')
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
+
+      - name: Wait for container workflow to complete
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ steps.trigger-workflow.outputs.RUN_ID }}
+        run: |
+          echo "Waiting for workflow run ID: $RUN_ID to complete..."
+
+          # Wait for the workflow to complete
+          while true; do
+            status=$(gh run view $RUN_ID --json status --jq '.status')
+            echo "Current status: $status"
+
+            if [[ "$status" == "completed" ]]; then
+              break
+            fi
+
+            sleep 10 
+          done
+
+      - name: Check container workflow result
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ steps.trigger-workflow.outputs.RUN_ID }}
+        run: |
+          conclusion=$(gh run view $RUN_ID --json conclusion --jq '.conclusion')
+
+          if [[ "$conclusion" != "success" ]]; then
+            echo "Container workflow failed with conclusion: $conclusion"
+            exit 1
+          else
+            echo "Container workflow succeeded!"
+          fi
