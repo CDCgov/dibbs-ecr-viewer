@@ -4,8 +4,8 @@ import userEvent from "@testing-library/user-event";
 import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
+  Mapping,
 } from "@/app/view-data/components/EvaluateTable";
-import { PathMappings } from "@/app/view-data/fhirPath";
 
 describe("Evaluate table", () => {
   it("should create an empty table with a caption", () => {
@@ -102,7 +102,7 @@ describe("Evaluate table", () => {
     expect(screen.queryByText("No data")).not.toBeInTheDocument();
   });
   describe("hiddenBaseText", () => {
-    const pathMapping: PathMappings = { idPath: "id", notePath: "note.text" };
+    const pathMapping: Mapping = { idPath: "id", notePath: "note.text" };
     describe("single column", () => {
       const columnInfo: ColumnInfoInput[] = [
         {
@@ -135,7 +135,7 @@ describe("Evaluate table", () => {
       });
       it("should show notes text and replace 'View notes' with 'Hide notes' when 'View notes' button is clicked", async () => {
         const user = userEvent.setup();
-        const pathMapping: PathMappings = { notePath: "note.text" };
+        const pathMapping: Mapping = { notePath: "note.text" };
         const fhirResource = [
           {
             note: [

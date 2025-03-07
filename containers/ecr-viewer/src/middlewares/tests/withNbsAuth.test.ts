@@ -3,32 +3,26 @@
  */
 import { importSPKI, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
-import { NextRequestWithAuth } from "next-auth/middleware";
 
-import { middleware } from "./middleware";
+import { chainMiddleware } from "@/middleware";
+import { withNbsAuth } from "@/middlewares/withNbsAuth";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),
   jwtVerify: jest.fn(() => true),
 }));
 
-// Mock next-auth/jwt getToken
-jest.mock("next-auth/jwt", () => ({
-  getToken: jest.fn(),
-}));
+const middleware = chainMiddleware([withNbsAuth]);
 
-describe("Middleware", () => {
-  const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
+describe("NBS Auth Middleware", () => {
   const ORIG_NBS_AUTH = process.env.NBS_AUTH;
   const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeEach(() => {
-    process.env.NEXTAUTH_SECRET = "test-secret";
     process.env.BASE_PATH = "ecr-viewer";
     process.env.NBS_AUTH = "true";
     jest.resetAllMocks(); // Reset mocks before each test
   });
   afterEach(() => {
-    process.env.NEXTAUTH_SECRET = ORIG_NEXTAUTH_SECRET;
     process.env.NBS_AUTH = ORIG_NBS_AUTH;
     process.env.BASE_PATH = ORIG_BASE_PATH;
   });
@@ -37,9 +31,8 @@ describe("Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api?id=1234&auth=abcd",
     );
-    (req as NextRequestWithAuth).nextauth = { token: null };
 
-    const resp = await middleware(req as NextRequestWithAuth);
+    const resp = await middleware(req);
     expect((resp as NextResponse).cookies.get("auth-token")).toEqual({
       name: "auth-token",
       path: "/",
@@ -55,9 +48,8 @@ describe("Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/fhir-data/",
     );
-    (req as NextRequestWithAuth).nextauth = { token: null };
 
-    const resp = await middleware(req as NextRequestWithAuth);
+    const resp = await middleware(req);
     expect(resp?.headers.get("x-middleware-rewrite")).toBe(
       "https://www.example.com/ecr-viewer/error/auth",
     );
@@ -70,10 +62,9 @@ describe("Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/fhir-data/",
     );
-    (req as NextRequestWithAuth).nextauth = { token: null };
     req.cookies.set("auth-token", "foobar");
 
-    const resp = await middleware(req as NextRequestWithAuth);
+    const resp = await middleware(req);
 
     expect(jwtVerify).toHaveBeenCalled();
     expect(importSPKI).toHaveBeenCalledWith("FOOBAR", "RS256");
@@ -84,8 +75,7 @@ describe("Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
-    (req as NextRequestWithAuth).nextauth = { token: null };
-    const resp = await middleware(req as NextRequestWithAuth);
+    const resp = await middleware(req);
     expect(resp?.headers.get("x-middleware-rewrite")).toBe(
       "https://www.example.com/ecr-viewer/error/auth",
     );

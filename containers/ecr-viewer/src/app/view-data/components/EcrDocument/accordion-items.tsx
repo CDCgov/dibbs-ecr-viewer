@@ -11,7 +11,8 @@ import {
   evaluateFacilityData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
-import { evaluate } from "@/app/utils/evaluate";
+import { evaluateAll } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
@@ -20,7 +21,6 @@ import EncounterDetails from "@/app/view-data/components/Encounter";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
 
 import { evaluateClinicalData } from "./clinical-data";
@@ -42,7 +42,7 @@ export const getEcrDocumentAccordionItems = (
   const facilityData = evaluateFacilityData(fhirBundle);
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
-    evaluate(fhirBundle, fhirPathMappings.diagnosticReports),
+    evaluateAll(fhirBundle, fhirPathMappings.diagnosticReports),
   );
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
@@ -159,9 +159,9 @@ export const getEcrDocumentAccordionItems = (
               }
               rrDetails={ecrMetadata.rrDetails}
               eRSDWarnings={ecrMetadata.eRSDWarnings}
-              eicrAuthorDetails={ecrMetadata.eicrAuthorDetails.map(
-                (details) => details.availableData,
-              )}
+              eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
+                .filter((details) => details.availableData.length > 0)
+                .map((details) => details.availableData)}
             />
           ) : (
             <p className="text-italic padding-bottom-05">
