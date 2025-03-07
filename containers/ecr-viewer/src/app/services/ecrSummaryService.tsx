@@ -16,6 +16,8 @@ import {
 
 import {
   evaluatePatientName,
+  evaluatePatientRace,
+  evaluatePatientEthnicity,
   evaluateEncounterDiagnosis,
   getHumanReadableCodeableConcept,
   censorGender,
@@ -52,6 +54,14 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
       value: censorGender(patientSex),
+    },
+    {
+      title: "Race",
+      value: evaluatePatientRace(fhirBundle),
+    },
+    {
+      title: "Ethnicity",
+      value: evaluatePatientEthnicity(fhirBundle),
     },
     {
       title: "Patient Address",

@@ -82,6 +82,44 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
             <div
               class="data-title padding-right-1"
             >
+              Race
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              White
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
+              Ethnicity
+            </div>
+            <div
+              class="grid-col maxw7 text-pre-line p-list"
+            >
+              Not Hispanic or Latino
+            </div>
+          </div>
+          <div
+            class="section__line_blue"
+          />
+        </div>
+        <div>
+          <div
+            class="grid-row"
+          >
+            <div
+              class="data-title padding-right-1"
+            >
               Patient Address
             </div>
             <div
