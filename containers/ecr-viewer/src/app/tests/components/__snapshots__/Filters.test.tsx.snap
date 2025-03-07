@@ -319,7 +319,7 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by Received Date"
+            aria-label="Filter by Received Date, Last year selected"
             class="usa-button margin-right-0 filters-applied"
             data-testid="button"
             type="button"
@@ -575,7 +575,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
           <button
             aria-expanded="false"
             aria-haspopup="listbox"
-            aria-label="Filter by Received Date"
+            aria-label="Filter by Received Date, Last year selected"
             class="usa-button margin-right-0 filters-applied"
             data-testid="button"
             type="button"

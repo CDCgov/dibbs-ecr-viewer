@@ -7,28 +7,37 @@ services:
       dockerfile: Dockerfile
       args:
         - APP_VERSION=1.0
-    ports:
-      - "3000:3000"
+    network_mode: host
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY=${NBS_PUB_KEY:-}
       # POSTGRES
-      - DATABASE_URL=postgres://postgres:pw@postgres:5432/ecr_viewer_db
+      - DATABASE_URL=postgres://postgres:pw@localhost:5432/ecr_viewer_db
       # AWS
-      - AWS_CUSTOM_ENDPOINT=http://aws-storage:4566
+      - AWS_CUSTOM_ENDPOINT=http://localhost:4566
       - AWS_REGION=${AWS_REGION:-us-east-1}
       - ECR_BUCKET_NAME=${ECR_BUCKET_NAME:-ecr-viewer-files}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-123}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-xyz}
       # Azure
-      - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azure-storage:10000/devstoreaccount1;
+      - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
       # SQL Server
       - SQL_SERVER_USER=${SQL_SERVER_USER:-sa}
       - SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
-      - SQL_SERVER_HOST=${SQL_SERVER_HOST:-sqlserver}
+      - SQL_SERVER_HOST=${SQL_SERVER_HOST:-localhost}
       # Orchestration
       - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
+      # Auth
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000/ecr-viewer/api/auth/}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-EjHXcPcFD17f5nYRaQeN9ncNpOoU80HTA6x4UBUk5pM=}
+      # Keycloak
+      - AUTH_KEYCLOAK_ID=${AUTH_KEYCLOAK_ID:-ecr-viewer}
+      - AUTH_KEYCLOAK_SECRET=${AUTH_KEYCLOAK_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
+      - AUTH_KEYCLOAK_ISSUER=${AUTH_KEYCLOAK_ISSUER:-http://localhost:8070/realms/master}
+      # Open Telemetry
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4318/v1/metrics
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces
     profiles:
       - ecr-viewer
 

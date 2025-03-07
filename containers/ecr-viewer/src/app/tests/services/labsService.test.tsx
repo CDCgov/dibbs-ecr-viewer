@@ -23,14 +23,22 @@ import BundleLab from "@/app/tests/assets/BundleLab.json";
 import BundleLabInvalidResultsDiv from "@/app/tests/assets/BundleLabInvalidResultsDiv.json";
 import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { noData } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import {
+  evaluateAll,
+  evaluateAllAndCheck,
+  evaluateOneAndCheck,
+} from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import mappings from "@/app/view-data/fhirPath";
 import { AccordionItem } from "@/app/view-data/types";
 
 const pathLabReportNormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'c090d379-9aea-f26e-4ddc-378223841e3b')";
-const labReportNormal = evaluate(BundleLab, pathLabReportNormal)[0];
+const labReportNormal = evaluateOneAndCheck<DiagnosticReport>(
+  BundleLab as Bundle,
+  pathLabReportNormal,
+  "DiagnosticReport",
+);
 const labReportNormalJsonObject = {
   resultId: "Result.1.2.3.4.5",
   resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
@@ -156,7 +164,11 @@ const labReportNormalJsonObject = {
 
 const pathLabReportAbnormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '68477c03-5689-f9e5-c267-a3c7bdff6fe0')";
-const labReportAbnormal = evaluate(BundleLab, pathLabReportAbnormal)[0];
+const labReportAbnormal = evaluateOneAndCheck<DiagnosticReport>(
+  BundleLab as Bundle,
+  pathLabReportAbnormal,
+  "DiagnosticReport",
+);
 const labReportAbnormalJsonObject = getLabJsonObject(
   labReportAbnormal,
   BundleLab as unknown as Bundle,
@@ -164,10 +176,11 @@ const labReportAbnormalJsonObject = getLabJsonObject(
 
 const pathLabOrganismsTableAndNarr =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'b0f590a6-4bf5-7add-9716-2bd3ba6defb2')";
-const labOrganismsTableAndNarr = evaluate(
-  BundleLab,
+const labOrganismsTableAndNarr = evaluateOneAndCheck<DiagnosticReport>(
+  BundleLab as Bundle,
   pathLabOrganismsTableAndNarr,
-)[0];
+  "DiagnosticReport",
+);
 
 describe("LabsService tests", () => {
   describe("Labs Utils", () => {
@@ -189,10 +202,11 @@ describe("LabsService tests", () => {
 
         const expectedObservationPath =
           "Bundle.entry.resource.where(resourceType = 'Observation').where(id = '1c0f3367-0588-c90e-fed0-0d8c15c5ac1b')";
-        const expectedResult = evaluate(
-          BundleLab,
+        const expectedResult = evaluateAllAndCheck<Observation>(
+          BundleLab as Bundle,
           expectedObservationPath,
-        ) as unknown[] as Observation[];
+          "Observation",
+        );
         expect(result.toString()).toBe(expectedResult.toString());
       });
 
@@ -227,10 +241,11 @@ describe("LabsService tests", () => {
       });
 
       it("returns correct Json Object for table without data-id", () => {
-        const labReportWithoutIds: DiagnosticReport = evaluate(
-          BundleLabNoLabIds,
+        const labReportWithoutIds = evaluateOneAndCheck<DiagnosticReport>(
+          BundleLabNoLabIds as Bundle,
           "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
-        )[0];
+          "DiagnosticReport",
+        );
         const labReportJsonObjectWithoutId = {
           resultId: undefined,
           resultName: "",
@@ -494,7 +509,10 @@ describe("LabsService tests", () => {
 
   describe("Evaluate Diagnostic Report", () => {
     it("should evaluate diagnostic report results", () => {
-      const report = evaluate(BundleLab, mappings.diagnosticReports)[0];
+      const report = evaluateAll(
+        BundleLab as Bundle,
+        fhirPathMappings.diagnosticReports,
+      )[0];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -525,7 +543,10 @@ describe("LabsService tests", () => {
       expect(actual).toBeUndefined();
     });
     it("should evaluate test method results", () => {
-      const report = evaluate(BundleLab, mappings.diagnosticReports)[0];
+      const report = evaluateAll(
+        BundleLab as Bundle,
+        fhirPathMappings.diagnosticReports,
+      )[0];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -538,7 +559,10 @@ describe("LabsService tests", () => {
       ).not.toBeEmpty();
     });
     it("should display comment", () => {
-      const report = evaluate(BundleLab, mappings.diagnosticReports)[2];
+      const report = evaluateAll(
+        BundleLab as Bundle,
+        fhirPathMappings.diagnosticReports,
+      )[2];
       const actual = evaluateDiagnosticReportData(
         report,
         BundleLab as unknown as Bundle,
@@ -576,7 +600,7 @@ describe("LabsService tests", () => {
     it("should return a list of LabReportElementData if the lab results in the HTML table have ID's", () => {
       const result = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
-        evaluate(BundleLab, mappings.diagnosticReports),
+        evaluateAll(BundleLab as Bundle, fhirPathMappings.diagnosticReports),
       );
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
@@ -585,7 +609,10 @@ describe("LabsService tests", () => {
     it("should return a list of DisplayDataProps if the lab results in the HTML table do not have ID's", () => {
       const result = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
-        evaluate(BundleLabNoLabIds, mappings.diagnosticReports),
+        evaluateAll(
+          BundleLabNoLabIds as Bundle,
+          fhirPathMappings.diagnosticReports,
+        ),
       );
       expect(result[0]).toHaveProperty("title");
       expect(result[0]).toHaveProperty("value");
@@ -594,7 +621,7 @@ describe("LabsService tests", () => {
     it("should properly count the number of labs", () => {
       const result = evaluateLabInfoData(
         BundleLab as Bundle,
-        evaluate(BundleLab, mappings.diagnosticReports),
+        evaluateAll(BundleLab as Bundle, fhirPathMappings.diagnosticReports),
       );
       expect(isLabReportElementDataList(result)).toBeTrue();
       const props = (result[0] as LabReportElementData)

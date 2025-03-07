@@ -8,12 +8,10 @@ import {
   Reference,
 } from "fhir/r4";
 
-import {
-  calculatePatientAge,
-  evaluateReference,
-} from "@/app/services/evaluateFhirDataService";
+import { calculatePatientAge } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { safeParse } from "@/app/utils/data-utils";
+import { evaluateReference } from "@/app/utils/evaluate";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 

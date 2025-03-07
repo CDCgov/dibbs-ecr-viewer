@@ -1,4 +1,4 @@
-import { Bundle, CodeableConcept, Observation, Patient } from "fhir/r4";
+import { Bundle, CodeableConcept, Patient } from "fhir/r4";
 
 import {
   evaluateEncounterId,
@@ -6,8 +6,6 @@ import {
   evaluatePatientRace,
   evaluatePatientEthnicity,
   evaluatePractitionerRoleReference,
-  evaluateReference,
-  evaluateValue,
   evaluateEmergencyContact,
   evaluatePatientAddress,
   evaluatePatientName,
@@ -20,141 +18,13 @@ import {
   censorGender,
 } from "@/app/services/evaluateFhirDataService";
 import BundleEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
-import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
 import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
 import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
-import mappings from "@/app/view-data/fhirPath";
+import { evaluateValue } from "@/app/utils/evaluate";
+import mappings from "@/app/utils/evaluate/fhir-paths";
 
 describe("evaluateFhirDataServices tests", () => {
-  describe("Evaluate Reference", () => {
-    it("should return undefined if resource not found", () => {
-      const actual = evaluateReference<Observation>(
-        BundleMiscNotes as unknown as Bundle,
-        "Observation/1234",
-      );
-
-      expect(actual).toBeUndefined();
-    });
-    it("should return the resource if the resource is available", () => {
-      const actual = evaluateReference<Patient>(
-        BundlePatient as unknown as Bundle,
-        "Patient/99999999-4p89-4b96-b6ab-c46406839cea",
-      );
-
-      expect(actual?.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
-      expect(actual?.resourceType).toEqual("Patient");
-    });
-  });
-
-  describe("evaluate value", () => {
-    it("should provide the string in the case of valueString", () => {
-      const actual = evaluateValue(
-        { resourceType: "Observation", valueString: "abc" } as any,
-        "value",
-      );
-
-      expect(actual).toEqual("abc");
-    });
-    it("should provide the string in the case of valueCodeableConcept", () => {
-      const actual = evaluateValue(
-        {
-          resourceType: "Observation",
-          valueCodeableConcept: {
-            coding: [
-              {
-                display: "Negative",
-                code: "N",
-              },
-            ],
-          },
-        } as any,
-        "value",
-      );
-
-      expect(actual).toEqual("Negative");
-    });
-    it("should provide the string in the case of valueCoding", () => {
-      const actual = evaluateValue(
-        {
-          resourceType: "Extension",
-          valueCoding: {
-            display: "Negative",
-            code: "N",
-          },
-        } as any,
-        "value",
-      );
-
-      expect(actual).toEqual("Negative");
-    });
-    it("should provide the string in the case of valueBoolean", () => {
-      const actual = evaluateValue(
-        {
-          resourceType: "Extension",
-          valueBoolean: true,
-        } as any,
-        "value",
-      );
-
-      expect(actual).toEqual("true");
-    });
-    it("should provide the code as a fallback in the case of valueCodeableConcept", () => {
-      const actual = evaluateValue(
-        {
-          resourceType: "Observation",
-          valueCodeableConcept: {
-            coding: [
-              {
-                code: "N",
-              },
-            ],
-          },
-        } as any,
-        "value",
-      );
-
-      expect(actual).toEqual("N");
-    });
-    it("should provide the code as a fallback in the case of valueCoding", () => {
-      const actual = evaluateValue(
-        {
-          resourceType: "Extension",
-          valueCoding: {
-            code: "N",
-          },
-        } as any,
-        "value",
-      );
-
-      expect(actual).toEqual("N");
-    });
-    describe("Quantity", () => {
-      it("should provide the value and string unit with a space inbetween", () => {
-        const actual = evaluateValue(
-          {
-            resourceType: "Observation",
-            valueQuantity: { value: 1, unit: "ft" },
-          } as any,
-          "value",
-        );
-
-        expect(actual).toEqual("1 ft");
-      });
-      it("should provide the value and symbol unit", () => {
-        const actual = evaluateValue(
-          {
-            resourceType: "Observation",
-            valueQuantity: { value: 1, unit: "%" },
-          } as any,
-          "value",
-        );
-
-        expect(actual).toEqual("1%");
-      });
-    });
-  });
-
   describe("Evaluate Identifier", () => {
     it("should return the Identifier value", () => {
       const actual = evaluateValue(

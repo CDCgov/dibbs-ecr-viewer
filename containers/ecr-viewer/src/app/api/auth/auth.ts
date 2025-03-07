@@ -2,6 +2,11 @@ import NextAuth from "next-auth";
 import AzureAdProvider from "next-auth/providers/azure-ad";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
+export interface ProviderDetails {
+  id: string;
+  name: string;
+}
+
 const keycloak = () => {
   if (
     process.env.AUTH_KEYCLOAK_ID &&
@@ -22,21 +27,16 @@ const azure = () => {
       tenantId: process.env.AUTH_AZURE_AD_TENANT_ID,
     });
 };
-const handler = NextAuth({
-  providers: [keycloak(), azure()].filter((p) => p !== undefined),
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      const nextURL = new URL(url, baseUrl);
-      const callbackUrl = nextURL.searchParams.get("callbackUrl");
-      const defaultUrl = `${baseUrl}/ecr-viewer`;
+const providers = [keycloak(), azure()].filter((p) => p !== undefined);
 
-      if (callbackUrl) url = callbackUrl;
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (url === baseUrl) return defaultUrl;
-      else if (new URL(url).origin === baseUrl) return url;
-      return defaultUrl;
-    },
+export const providerMap: ProviderDetails[] = providers.map((provider) => ({
+  id: provider.id,
+  name: provider.name,
+}));
+
+export const handler = NextAuth({
+  providers,
+  pages: {
+    signIn: `${process.env.BASE_PATH}/signin`,
   },
 });
-
-export { handler as GET, handler as POST };

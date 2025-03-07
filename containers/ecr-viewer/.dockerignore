@@ -1,6 +1,7 @@
 .next
 .github
 .env
+.env.local
 docker-compose.yaml
 Dockerfile
 node_modules

@@ -13,7 +13,8 @@ import {
   evaluatePatientAddress,
   calculatePatientAgeAtDeath,
 } from "@/app/services/evaluateFhirDataService";
-import { evaluate } from "@/app/utils/evaluate";
+import { evaluateAll } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   evaluateClinicalData,
@@ -25,7 +26,6 @@ import {
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import BundleCareTeam from "./assets/BundleCareTeam.json";
 import BundleWithMiscNotes from "./assets/BundleMiscNotes.json";
@@ -292,7 +292,10 @@ describe("Utils", () => {
     it("should return empty if active problem name is undefined", () => {
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
-        evaluate(BundleNoActiveProblems, fhirPathMappings.activeProblems),
+        evaluateAll(
+          BundleNoActiveProblems as unknown as Bundle,
+          fhirPathMappings.activeProblems,
+        ),
       );
 
       expect(actual).toBeUndefined();
