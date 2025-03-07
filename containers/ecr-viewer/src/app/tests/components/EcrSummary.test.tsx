@@ -23,11 +23,9 @@ describe("EcrSummary tests", () => {
       },
       {
         title: "Race",
-        value: "White"
+        value: "White",
       },
-      { title: "Ethnicity",
-        value: "Not Hispanic or Latino"
-      },
+      { title: "Ethnicity", value: "Not Hispanic or Latino" },
       {
         title: "Patient Address",
         value: "1050 Millennium Falcon ST\nSpace, CA\n00123, US",
