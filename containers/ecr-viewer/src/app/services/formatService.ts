@@ -114,12 +114,14 @@ export const formatAddressList = (
 ) => {
   if (!addresses) return "";
   if (Array.isArray(addresses)) {
-    return addresses.map((address) =>
-      formatAddress(address, {
-        includeUse: addresses.length > 1,
-        includePeriod: true,
-      }),
-    );
+    return addresses
+      .map((address) =>
+        formatAddress(address, {
+          includeUse: addresses.length > 1,
+          includePeriod: true,
+        }),
+      )
+      .join("\n\n");
   } else {
     return formatAddress(addresses);
   }
