@@ -65,7 +65,7 @@ export const getEcrDocumentAccordionItems = (
       (array) => Array.isArray(array) && array.length > 0,
     );
   };
-  console.log(ecrMetadata);
+
   const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
