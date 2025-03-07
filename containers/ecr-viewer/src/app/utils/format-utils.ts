@@ -98,6 +98,6 @@ export const getFormattedAge = (laterDate: Date, earlierDate: Date): string => {
  * @param value a number, typically representing days, months, or years
  * @returns an `s` or an empty string
  */
-export const makePlural = (value: number) => {
+export const makePlural = (value: number): "s" | "" => {
   return value !== 1 ? "s" : "";
 };
