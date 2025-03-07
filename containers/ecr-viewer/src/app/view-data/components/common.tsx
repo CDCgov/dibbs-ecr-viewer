@@ -126,7 +126,7 @@ export const returnProblemsTable = (
     },
   ];
 
-  const conditions: ConditionWithFormattedAge[] = problemsArray.map((pr) =>
+  const conditions: ConditionWithFormattedOnsetAge[] = problemsArray.map((pr) =>
     createFormattedCondition(pr, fhirBundle),
   );
 
@@ -151,20 +151,20 @@ export const returnProblemsTable = (
   );
 };
 
-type ConditionWithFormattedAge = Omit<Condition, "onsetAge"> & {
+type ConditionWithFormattedOnsetAge = Omit<Condition, "onsetAge"> & {
   onsetAge?: { value: string | undefined };
 };
 
 const createFormattedCondition = (
   condition: Condition,
   fhirBundle: Bundle,
-): ConditionWithFormattedAge => {
+): ConditionWithFormattedOnsetAge => {
   const formattedOnsetDateTime = formatDateTime(condition.onsetDateTime);
 
-  const formattedCondition: ConditionWithFormattedAge = {
+  const formattedCondition: ConditionWithFormattedOnsetAge = {
     ...condition,
     onsetDateTime: formattedOnsetDateTime,
-    onsetAge: getOnsetAge(
+    onsetAge: getFormattedOnsetAge(
       condition.onsetAge,
       formattedOnsetDateTime,
       fhirBundle,
@@ -174,11 +174,12 @@ const createFormattedCondition = (
   return formattedCondition;
 };
 
-const getOnsetAge = (
+const getFormattedOnsetAge = (
   onsetAge: Condition["onsetAge"],
   onsetDateTime: Condition["onsetDateTime"],
   fhirBundle: Bundle,
 ) => {
+  // when an onset age value is provided in the patient data (in years) we'll use that
   if (onsetAge?.value) {
     return {
       value: `${onsetAge.value} year${makePlural(onsetAge.value)}`,
