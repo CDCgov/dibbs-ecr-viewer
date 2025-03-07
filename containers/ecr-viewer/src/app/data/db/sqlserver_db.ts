@@ -5,23 +5,19 @@ import sql, { ConnectionPool } from "mssql";
  * @returns A promise resolving to a connection pool.
  */
 export const get_pool = async () => {
-  if (process.env.SQL_SERVER_CONNECTION_STRING) {
-    const connectionConfig = ConnectionPool.parseConnectionString(
-      process.env.SQL_SERVER_CONNECTION_STRING,
-    );
-    return await sql.connect({
-      ...connectionConfig,
-      options: {
-        ...connectionConfig.options,
-        connectTimeout: 30000,
-        cryptoCredentialsDetails: {
-          ciphers: process.env.DB_CIPHER,
-        },
+  const connectionConfig = ConnectionPool.parseConnectionString(
+    process.env.DATABASE_URL,
+  );
+  return await sql.connect({
+    ...connectionConfig,
+    options: {
+      ...connectionConfig.options,
+      connectTimeout: 30000,
+      cryptoCredentialsDetails: {
+        ciphers: process.env.DB_CIPHER,
       },
-    });
-  } else {
-    throw Error("Missing SQL_SERVER_CONNECTION_STRING");
-  }
+    },
+  });
 };
 
 /**
@@ -29,7 +25,7 @@ export const get_pool = async () => {
  * @returns The status of the SQL Server connection or undefined if missing environment values.
  */
 export const sqlServerHealthCheck = async () => {
-  if (!process.env.SQL_SERVER_CONNECTION_STRING) {
+  if (process.env.METADATA_DATABASE_TYPE !== "sqlserver") {
     return undefined;
   }
   try {

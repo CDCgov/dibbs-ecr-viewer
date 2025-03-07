@@ -12,7 +12,9 @@ services:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY=${NBS_PUB_KEY:-}
       # POSTGRES
-      - DATABASE_URL=postgres://postgres:pw@localhost:5432/ecr_viewer_db
+      # - DATABASE_URL=postgres://postgres:pw@localhost:5432/ecr_viewer_db
+      # SQL Server
+      - DATABASE_URL=${DATABASE_URL:-Server=localhost;Port=1433;User ID=sa;Password=Password1!;Encrypt=false;}
       # AWS
       - AWS_CUSTOM_ENDPOINT=http://localhost:4566
       - AWS_REGION=${AWS_REGION:-us-east-1}
@@ -22,8 +24,6 @@ services:
       # Azure
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
-      # SQL Server
-      - SQL_SERVER_CONNECTION_STRING=${SQL_SERVER_CONNECTION_STRING:-Server=localhost;Port=1433;User ID=sa;Password=Password1!;Encrypt=false;}
       # Orchestration
       - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
       # Auth

@@ -22,7 +22,6 @@ namespace NodeJS {
       | "AZURE_INTEGRATED"
       | "AZURE_PG_NON_INTEGRATED"
       | "AZURE_SQLSERVER_NON_INTEGRATED";
-    DATABASE_TYPE: string;
     DATABASE_URL: string;
     DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
@@ -38,6 +37,5 @@ namespace NodeJS {
     NON_INTEGRATED_VIEWER: "true" | "false";
     ORCHESTRATION_URL: string;
     SOURCE: "s3" | "azure";
-    SQL_SERVER_CONNECTION_STRING?: string;
   }
 }

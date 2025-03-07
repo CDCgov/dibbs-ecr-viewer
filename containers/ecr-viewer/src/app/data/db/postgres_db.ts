@@ -50,7 +50,7 @@ export const getDB = (): IDatabaseScope => {
  * @returns The status of the postgres connection or undefined if missing environment values.
  */
 export const postgresHealthCheck = async () => {
-  if (!process.env.DATABASE_URL) {
+  if (process.env.METADATA_DATABASE_TYPE !== "postgres") {
     return undefined;
   }
   try {
