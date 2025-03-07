@@ -25,9 +25,9 @@ describe("EcrSummary tests", () => {
         title: "Race",
         value: "White",
       },
-      { 
+      {
         title: "Ethnicity",
-        value: "Not Hispanic or Latino"
+        value: "Not Hispanic or Latino",
       },
       {
         title: "Patient Address",
