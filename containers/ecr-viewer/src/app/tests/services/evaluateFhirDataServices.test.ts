@@ -61,6 +61,28 @@ describe("evaluateFhirDataServices tests", () => {
     );
   });
 
+  it("should return parent/guardian if available", () => {
+    const actual = evaluateDemographicsData(BundlePatient as unknown as Bundle);
+    const ext = actual.availableData.filter(
+      (d) => d.title === "Parent/Guardian",
+    );
+    expect(ext).toHaveLength(1);
+    expect(ext[0].value).toEqual(
+      `Grandparent
+Luthen Rael
+Home:
+1357 Galactic Drive
+Sometown, OR
+94949, US
+
+Work:
+123 Galactic Drive
+Sometown, OR
+94949, US
+Home: 123-456-6909`,
+    );
+  });
+
   describe("Evaluate Facility Id", () => {
     it("should return the facility id", () => {
       const actual = evaluateFacilityId(BundleEcrMetadata as unknown as Bundle);

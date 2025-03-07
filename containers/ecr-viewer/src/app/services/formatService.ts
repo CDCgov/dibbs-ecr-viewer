@@ -80,7 +80,7 @@ type AddressConfig = { includeUse?: boolean; includePeriod?: boolean };
 export const formatAddress = (
   { line, city, state, postalCode, country, use, period }: Address = {},
   config: AddressConfig = {},
-) => {
+): string => {
   const { includeUse, includePeriod } = {
     ...DEFAULT_ADDRESS_CONFIG,
     ...config,
@@ -107,11 +107,11 @@ export const formatAddress = (
 /**
  * Formats a list of addresses with use if more than one and separated by double newlines
  * @param addresses A list of addresses, a single address, or undefined
- * @returns The formatted address list
+ * @returns The formatted address list, can be empty string
  */
 export const formatAddressList = (
   addresses: Address[] | Address | undefined,
-) => {
+): string => {
   if (!addresses) return "";
   if (Array.isArray(addresses)) {
     return addresses
@@ -134,7 +134,7 @@ export const formatAddressList = (
  */
 export const formatCurrentAddress = (
   addresses: Address[] | Address | undefined,
-) => {
+): string => {
   if (!addresses) return "";
   if (!Array.isArray(addresses)) return formatAddress(addresses);
 
@@ -248,13 +248,13 @@ export const formatContactPoint = (
 /**
  * Format a patient contact (emergency or guardian)
  * @param contacts A list of patient contacts
- * @param includeAllAddresses Whether to format all addresses, or just the most relevant
- * @returns Formatted patient contact
+ * @param includeAllAddresses Whether to format all addresses, or just the most relevant (default false)
+ * @returns Formatted patient contact, undefined if no contact
  */
 export const formatPatientContact = (
   contacts: RelatedPerson[] | PatientContact[],
   includeAllAddresses: boolean = false,
-) => {
+): string | undefined => {
   if (contacts.length === 0) return undefined;
 
   return contacts

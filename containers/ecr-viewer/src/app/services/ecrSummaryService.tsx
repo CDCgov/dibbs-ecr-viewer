@@ -45,7 +45,7 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
 
   const age = calculatePatientAge(fhirBundle);
   const parentGuardian =
-    !age || age < 88
+    !age || age < 18
       ? [
           {
             title: "Patient Parent/Guardian",
