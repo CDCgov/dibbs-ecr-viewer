@@ -138,8 +138,8 @@ const DATE_PARAM_REGEX = /^\d{4}-\d{2}-\d{2}\|\d{4}-\d{2}-\d{2}$/;
  * @returns A boolean; true if the params are valid, false if invalid.
  */
 export function isValidParamDates(
-  dateRange: string,
-  datesParam: string | undefined,
+  dateRange: string | null,
+  datesParam: string | null | undefined,
 ): boolean {
   if (dateRange === CustomDateRangeOption) {
     return !!datesParam && DATE_PARAM_REGEX.test(datesParam);
