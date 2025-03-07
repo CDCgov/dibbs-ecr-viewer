@@ -20,6 +20,7 @@ import {
   Procedure,
   Quantity,
   Reference,
+  RelatedPerson,
 } from "fhir/r4";
 
 export type ValueX =
@@ -52,6 +53,7 @@ export type PathTypes = {
   patientProficiencyExtension: Extension;
   patientTribalAffiliation: ValueX;
   patientEmergencyContact: PatientContact;
+  patientGuardian: RelatedPerson;
   patientCurrentJobTitle: ValueX;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
@@ -229,6 +231,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientEmergencyContact: {
     type: "PatientContact",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').contact",
+  },
+  patientGuardian: {
+    type: "RelatedPerson",
+    path: "Bundle.entry.resource.where(resourceType = 'RelatedPerson')",
   },
 
   // Social History
