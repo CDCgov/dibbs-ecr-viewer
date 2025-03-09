@@ -53,7 +53,7 @@
     "@opentelemetry/semantic-conventions": "^1.27.0",
     "@opentelemetry/sql-common": "^0.40.1",
     "@opentelemetry/winston-transport": "^0.7.0",
-    "@testing-library/user-event": "^14.5.2",
+    "@testing-library/user-event": "^14.6.1",
     "@trussworks/react-uswds": "^9.1.0",
     "@uswds/uswds": "^3.11.0",
     "@vercel/otel": "^1.10.0",
