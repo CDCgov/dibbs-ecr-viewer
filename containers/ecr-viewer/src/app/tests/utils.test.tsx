@@ -23,6 +23,7 @@ import {
   evaluatePatientAddress,
   calculatePatientAgeAtDeath,
 } from "@/app/services/evaluateFhirDataService";
+import { formatAge } from "@/app/services/formatService";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
@@ -241,6 +242,18 @@ describe("Utils", () => {
     // Return to real time
     jest.useRealTimers();
   });
+
+  it("should return a value that can display 0 months and only in days", () => {
+    const patientAge = calculatePatientAge(
+      BundleWithPatient as unknown as Bundle,
+      "1877-05-30",
+    );
+
+    const formattedPatientAge = formatAge(patientAge);
+
+    expect(formattedPatientAge).toEqual("0 months, 5 days");
+  });
+
   describe("Calculate Age at Death", () => {
     it("should return age at death when DOD is given", () => {
       const patientAgeAtDeath = calculatePatientAgeAtDeath(
@@ -268,6 +281,31 @@ describe("Utils", () => {
 
       // Return to real time
       jest.useRealTimers();
+    });
+
+    it("should return age at death in months/days when age is under 2 years", () => {
+      const patientWithDeathDate = {
+        ...BundleWithDeceasedPatient,
+        entry: [
+          {
+            ...BundleWithDeceasedPatient.entry[0],
+            resource: {
+              ...BundleWithDeceasedPatient.entry[0].resource,
+              birthDate: "1818-01-27",
+              deceasedDate: "1819-02-01",
+            },
+          },
+        ],
+      } as unknown as Bundle;
+
+      const patientAgeAtDeath =
+        calculatePatientAgeAtDeath(patientWithDeathDate);
+
+      const formattedPatientAgeAtDeath = formatAge(patientAgeAtDeath);
+
+      const expectedAgeAtDeath = "12 months, 5 days";
+
+      expect(formattedPatientAgeAtDeath).toEqual(expectedAgeAtDeath);
     });
   });
 

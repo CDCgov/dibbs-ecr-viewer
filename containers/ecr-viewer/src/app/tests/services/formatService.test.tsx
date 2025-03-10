@@ -1,9 +1,6 @@
-import { Bundle, ContactPoint, HumanName } from "fhir/r4";
+import { ContactPoint, HumanName } from "fhir/r4";
 
-import {
-  calculatePatientAge,
-  calculatePatientAgeAtDeath,
-} from "@/app/services/evaluateFhirDataService";
+import { Age } from "@/app/services/evaluateFhirDataService";
 import {
   formatName,
   formatContactPoint,
@@ -11,8 +8,6 @@ import {
   formatPhoneNumber,
   formatAge,
 } from "@/app/services/formatService";
-import BundleWithPatient from "@/app/tests/assets/BundlePatient.json";
-import BundleWithDeceasedPatient from "@/app/tests/assets/BundlePatientDeceased.json";
 
 describe("FormatService tests", () => {
   describe("Format Name", () => {
@@ -54,72 +49,38 @@ describe("FormatService tests", () => {
 
   describe("Format age", () => {
     it("should not return a plural unit if months/days equals 1", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1877-06-26",
-      );
-
-      const formattedPatientAge = formatAge(patientAge);
+      const age: Age = {
+        years: 0,
+        months: 1,
+        days: 1,
+      };
+      const formattedPatientAge = formatAge(age);
 
       expect(formattedPatientAge).toEqual("1 month, 1 day");
     });
 
     it("should return a value in years if years is 2 or above", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1879-05-25",
-      );
+      const age: Age = {
+        years: 2,
+        months: 0,
+        days: 0,
+      };
 
-      const formattedPatientAge = formatAge(patientAge);
+      const formattedPatientAge = formatAge(age);
 
       expect(formattedPatientAge).toEqual("2 years");
     });
 
     it("should return a value displaying months and days if years is under 2", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1879-05-24",
-      );
+      const age: Age = {
+        years: 1,
+        months: 11,
+        days: 29,
+      };
 
-      const formattedPatientAge = formatAge(patientAge);
+      const formattedPatientAge = formatAge(age);
 
       expect(formattedPatientAge).toEqual("23 months, 29 days");
-    });
-
-    it("should return age at death in months/days when age is under 2 years", () => {
-      const patientWithDeathDate = {
-        ...BundleWithDeceasedPatient,
-        entry: [
-          {
-            ...BundleWithDeceasedPatient.entry[0],
-            resource: {
-              ...BundleWithDeceasedPatient.entry[0].resource,
-              birthDate: "1818-01-27",
-              deceasedDate: "1819-02-01",
-            },
-          },
-        ],
-      } as unknown as Bundle;
-
-      const patientAgeAtDeath =
-        calculatePatientAgeAtDeath(patientWithDeathDate);
-
-      const formattedPatientAgeAtDeath = formatAge(patientAgeAtDeath);
-
-      const expectedAgeAtDeath = "12 months, 5 days";
-
-      expect(formattedPatientAgeAtDeath).toEqual(expectedAgeAtDeath);
-    });
-
-    it("should return a value that can display 0 months and only in days", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1877-05-30",
-      );
-
-      const formattedPatientAge = formatAge(patientAge);
-
-      expect(formattedPatientAge).toEqual("0 months, 5 days");
     });
   });
 
