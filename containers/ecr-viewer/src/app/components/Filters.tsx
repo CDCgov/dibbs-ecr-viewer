@@ -54,7 +54,7 @@ export const FilterOpenContext = createContext<FilterOpenContextValue>({
 
 interface FilterProps {
   allConditions: string[];
-  initConditions: string[] | undefined;
+  initConditions: string[];
   initCustomDate: string;
   initDateRange: DateRangeOption;
 }
@@ -155,17 +155,9 @@ const FilterReportableConditions = ({
 }: FilterProps) => {
   const { updateQueryParam, pushQueryUpdate } = useQueryParam();
 
-  const conditionValue = (c: string) => {
-    if (initConditions === undefined) {
-      return true;
-    } else {
-      return initConditions.includes(c);
-    }
-  };
-
   const initFilterState = allConditions.reduce(
     (dict: { [key: string]: boolean }, condition: string) => {
-      dict[condition] = conditionValue(condition);
+      dict[condition] = initConditions.includes(condition);
       return dict;
     },
     {} as { [key: string]: boolean },
@@ -173,6 +165,7 @@ const FilterReportableConditions = ({
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
 
+  // Keep state in sync with updated params
   useEffect(() => setFilterConditions(initFilterState), [initConditions]);
 
   // Build list of conditions to filter on

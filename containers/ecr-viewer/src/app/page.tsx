@@ -65,6 +65,7 @@ const HomePage = async ({
             eCR Library
           </h2>
           <LibrarySearch
+            initSearchTerm={config.search}
             className="margin-left-auto"
             textBoxClassName="width-21-9375"
           />
