@@ -56,8 +56,6 @@ const HomePage = async ({
 
   const allConditions = await getAllConditions();
 
-  console.log({ config, filterDates, filterConditionsArr });
-
   return (
     <div className="display-flex flex-column height-viewport">
       <Header />
@@ -71,7 +69,12 @@ const HomePage = async ({
             textBoxClassName="width-21-9375"
           />
         </div>
-        <Filters conditions={allConditions} />
+        <Filters
+          allConditions={allConditions}
+          initConditions={filterConditionsArr ?? allConditions}
+          initCustomDate={config.dates}
+          initDateRange={config.dateRange}
+        />
         <EcrPaginationWrapper
           totalCount={totalCount}
           itemsPerPage={config.itemsPerPage}

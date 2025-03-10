@@ -16,6 +16,8 @@ export enum DateRangeOptions {
 
 export const CustomDateRangeOption = "custom";
 
+export type DateRangeOption = DateRangeOptions | typeof CustomDateRangeOption;
+
 const isProd = process.env.NODE_ENV === "production";
 // Local dev default = Last year ; Prod default = Last 24 hours
 export const DEFAULT_DATE_RANGE = isProd

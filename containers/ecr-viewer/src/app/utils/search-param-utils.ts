@@ -2,7 +2,11 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 
 import { DEFAULT_ITEMS_PER_PAGE, INITIAL_HEADERS } from "@/app/constants";
 
-import { DEFAULT_DATE_RANGE, isValidParamDates } from "./date-utils";
+import {
+  DEFAULT_DATE_RANGE,
+  DateRangeOption,
+  isValidParamDates,
+} from "./date-utils";
 
 /**
  * A function, which given the search params, returns a list of search params to delete due
@@ -39,7 +43,7 @@ type LibraryConfig = {
   direction: string;
   condition: string | undefined;
   dates: string;
-  dateRange: string;
+  dateRange: DateRangeOption;
   search: string;
 };
 
@@ -122,11 +126,9 @@ const getSearchParam = <K extends keyof LibraryConfig>(
   if (typeof defaultVal === "number") {
     (val as number) = Number(singleVal);
     (altDefaultVal as number) = Number(altDefault);
-    console.log({ val, defaultVal, altDefaultVal, number: true });
   } else {
     (val as string | undefined) = singleVal;
     (altDefaultVal as string | undefined) = altDefault;
-    console.log({ val, defaultVal, altDefaultVal, number: false });
   }
 
   // Allow empty strings to return if explicitly sent
