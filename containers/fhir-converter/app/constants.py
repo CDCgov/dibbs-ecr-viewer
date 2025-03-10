@@ -1,7 +1,6 @@
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -112,12 +111,13 @@ class FhirConverterInput(BaseModel):
         description="The message to be converted as a string.",
     )
     input_type: InputType = Field(
-        description="The type of message to be converted.", example="vxu"
+        description="The type of message to be converted.",
+        json_schema_extra={"example": "vxu"},
     )
     root_template: RootTemplate = Field(
         description="Name of the liquid template within to be used for conversion.",
     )
-    rr_data: Optional[str] = Field(
+    rr_data: str | None = Field(
         description="If an eICR message, the accompanying Reportability Response data.",
         default=None,
     )

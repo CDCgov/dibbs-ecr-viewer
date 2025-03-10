@@ -1,17 +1,10 @@
 import React from "react";
 
-import {
-  Address,
-  Bundle,
-  Condition,
-  DiagnosticReport,
-  DomainResource,
-  Immunization,
-  Observation,
-} from "fhir/r4";
+import { Address, Bundle, Condition, DomainResource } from "fhir/r4";
 
 import { evaluateData } from "@/app/utils/data-utils";
-import { evaluate } from "@/app/utils/evaluate";
+import { evaluateAll, evaluateOne } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
@@ -20,10 +13,11 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import fhirPathMappings from "@/app/view-data/fhirPath";
 
 import {
   evaluatePatientName,
+  evaluatePatientRace,
+  evaluatePatientEthnicity,
   evaluateEncounterDiagnosis,
   getHumanReadableCodeableConcept,
   censorGender,
@@ -44,7 +38,7 @@ import { getReportabilitySummaries } from "./reportabilityService";
  */
 export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
   const patientSex = toTitleCase(
-    evaluate(fhirBundle, fhirPathMappings.patientGender)[0],
+    evaluateOne(fhirBundle, fhirPathMappings.patientGender),
   );
 
   return evaluateData([
@@ -54,7 +48,7 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "DOB",
-      value: formatDate(evaluate(fhirBundle, fhirPathMappings.patientDOB)[0]),
+      value: formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB)),
     },
     {
       title: "Sex",
@@ -62,15 +56,23 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
       value: censorGender(patientSex),
     },
     {
+      title: "Race",
+      value: evaluatePatientRace(fhirBundle),
+    },
+    {
+      title: "Ethnicity",
+      value: evaluatePatientEthnicity(fhirBundle),
+    },
+    {
       title: "Patient Address",
       value: findCurrentAddress(
-        evaluate(fhirBundle, fhirPathMappings.patientAddressList),
+        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
       ),
     },
     {
       title: "Patient Contact",
       value: formatContactPoint(
-        evaluate(fhirBundle, fhirPathMappings.patientTelecom),
+        evaluateAll(fhirBundle, fhirPathMappings.patientTelecom),
       ),
     },
   ]);
@@ -117,7 +119,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Encounter Type",
-      value: evaluate(fhirBundle, fhirPathMappings.encounterType),
+      value: evaluateOne(fhirBundle, fhirPathMappings.encounterType),
     },
     {
       title: "Encounter Diagnosis",
@@ -125,12 +127,12 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Name",
-      value: evaluate(fhirBundle, fhirPathMappings.facilityName),
+      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
     },
     {
       title: "Facility Contact",
       value: formatPhoneNumber(
-        evaluate(fhirBundle, fhirPathMappings.facilityContact)[0],
+        evaluateOne(fhirBundle, fhirPathMappings.facilityContact),
       ),
     },
   ]);
@@ -146,10 +148,7 @@ export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
   snomedCode?: string,
 ): ConditionSummary[] => {
-  const rrArray: Observation[] = evaluate(
-    fhirBundle,
-    fhirPathMappings.rrDetails,
-  );
+  const rrArray = evaluateAll(fhirBundle, fhirPathMappings.rrDetails);
   const conditionsList: {
     [index: string]: { ruleSummaries: Set<string>; snomedDisplay: string };
   } = {};
@@ -251,10 +250,7 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
     return [{ value: noData, dividerLine: true }];
   }
 
-  const problemsList: Condition[] = evaluate(
-    fhirBundle,
-    fhirPathMappings.activeProblems,
-  );
+  const problemsList = evaluateAll(fhirBundle, fhirPathMappings.activeProblems);
   const problemsListFiltered = getRelevantResources(problemsList, snomedCode);
 
   if (problemsListFiltered.length === 0) {
@@ -288,13 +284,13 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [{ value: noData, dividerLine: true }];
   }
 
-  const labReports: DiagnosticReport[] = evaluate(
+  const labReports = evaluateAll(
     fhirBundle,
     fhirPathMappings.diagnosticReports,
   );
   const labsWithCode = getRelevantResources(labReports, snomedCode);
 
-  const observationsList: Observation[] = evaluate(
+  const observationsList = evaluateAll(
     fhirBundle,
     fhirPathMappings.observations,
   );
@@ -356,8 +352,8 @@ export const evaluateEcrSummaryRelevantLabResults = (
  */
 const evaluateEncounterDate = (fhirBundle: Bundle) => {
   return formatStartEndDateTime(
-    evaluate(fhirBundle, fhirPathMappings.encounterStartDate).join(""),
-    evaluate(fhirBundle, fhirPathMappings.encounterEndDate).join(""),
+    evaluateOne(fhirBundle, fhirPathMappings.encounterStartDate),
+    evaluateOne(fhirBundle, fhirPathMappings.encounterEndDate),
   );
 };
 
@@ -365,7 +361,7 @@ const evaluateEcrSummaryRelevantImmunizations = (
   fhirBundle: Bundle,
   snomedCode: string,
 ): DisplayDataProps[] => {
-  const immunizations: Immunization[] = evaluate(
+  const immunizations = evaluateAll(
     fhirBundle,
     fhirPathMappings.stampedImmunizations,
     {

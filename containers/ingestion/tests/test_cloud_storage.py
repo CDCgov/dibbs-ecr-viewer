@@ -2,8 +2,9 @@ import json
 import pathlib
 from unittest import mock
 
-from app.main import app
 from fastapi.testclient import TestClient
+
+from app.main import app
 
 client = TestClient(app)
 
@@ -44,7 +45,7 @@ def test_cloud_storage_params_success(patched_blob_write, patched_get_provider):
         "in test_bucket container with the name test_file_name."
     )
     expected_response = {
-        "status_code": "201",
+        "status_code": 201,
         "message": expected_message,
         "bundle": None,
     }
@@ -68,7 +69,7 @@ def test_cloud_storage_missing_provider():
     )
 
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": expected_message,
         "bundle": None,
     }
@@ -87,7 +88,7 @@ def test_cloud_storage_wrong_provider():
     }
 
     expected_detail_loc = "cloud_provider"
-    expected_detail_msg = "unexpected value; permitted: 'azure', 'gcp'"
+    expected_detail_msg = "Input should be 'azure' or 'gcp'"
     expected_status_code = 422
     actual_response = client.post(client_url, json=test_request)
 
@@ -111,7 +112,7 @@ def test_cloud_storage_missing_bucket():
         "them as environment variables to this service. missing values: bucket_name."
     )
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": expected_message,
         "bundle": None,
     }
@@ -130,7 +131,7 @@ def test_cloud_storage_missing_filename():
     }
 
     expected_detail_loc = "file_name"
-    expected_detail_msg = "none is not an allowed value"
+    expected_detail_msg = "Input should be a valid string"
     expected_status_code = 422
     actual_response = client.post(client_url, json=test_request)
 
@@ -147,7 +148,7 @@ def test_cloud_storage_missing_blob():
         "file_name": "file_name",
     }
 
-    expected_detail_msg = "none is not an allowed value"
+    expected_detail_msg = "Input should be a valid dictionary"
     expected_detail_loc = "blob"
     expected_status_code = 422
     actual_response = client.post(client_url, json=test_request)
@@ -173,7 +174,7 @@ def test_cloud_storage_missing_storage_url():
         "missing values: storage_account_url."
     )
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": expected_message,
         "bundle": None,
     }

@@ -3,10 +3,11 @@ import os
 import pathlib
 from unittest import mock
 
-from app.config import get_settings
-from app.main import app
 from fastapi import Response, status
 from fastapi.testclient import TestClient
+
+from app.config import get_settings
+from app.main import app
 
 client = TestClient(app)
 
@@ -26,7 +27,7 @@ def test_geocode_bundle_returns_errors_from_smarty(patched_smarty_client):
     }
 
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": "Smarty raised the following exception: I am a test error message",
         "bundle": None,
     }
@@ -43,6 +44,11 @@ def test_geocode_bundle_returns_errors_from_smarty(patched_smarty_client):
 
 @mock.patch("app.routers.fhir_geospatial.CensusFhirGeocodeClient")
 def test_geocode_bundle_success_census(patched_client):
+    patched_client.return_value.geocode_bundle.return_value = {
+        "bundle": {"resourceType": "Bundle", "entry": []},
+        "someKey": "someValue",
+    }
+
     test_request = {"bundle": test_bundle, "geocode_method": "census"}
 
     client.post("/fhir/geospatial/geocode/geocode_bundle", json=test_request)
@@ -54,6 +60,11 @@ def test_geocode_bundle_success_census(patched_client):
 
 @mock.patch("app.routers.fhir_geospatial.SmartyFhirGeocodeClient")
 def test_geocode_bundle_success_smarty(patched_client):
+    patched_client.return_value.geocode_bundle.return_value = {
+        "bundle": {"resourceType": "Bundle", "entry": []},
+        "someKey": "someValue",
+    }
+
     test_request = {
         "bundle": test_bundle,
         "geocode_method": "smarty",
@@ -100,7 +111,7 @@ def test_geocode_bundle_smarty_no_auth_id():
         "environment variables to this service. missing values: smarty_auth_id."
     )
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": expected_message,
         "bundle": None,
     }
@@ -112,7 +123,9 @@ def test_geocode_bundle_smarty_no_auth_id():
     assert actual_response.json() == expected_response
 
 
-def test_geocode_bundle_smarty_no_auth_token():
+@mock.patch("app.utils.get_settings")
+def test_geocode_bundle_smarty_no_auth_token(mock_get_settings):
+    mock_get_settings.return_value = {"smarty_auth_token": None}
     test_request = {
         "bundle": test_bundle,
         "geocode_method": "smarty",
@@ -126,7 +139,7 @@ def test_geocode_bundle_smarty_no_auth_token():
         "environment variables to this service. missing values: smarty_auth_token."
     )
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": expected_message,
         "bundle": None,
     }

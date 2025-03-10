@@ -1,5 +1,4 @@
 from datetime import date, datetime
-from typing import Union
 
 from phdi.linkage.config import get_settings
 
@@ -46,7 +45,7 @@ def load_mpi_env_vars_os():
 
 
 def datetime_to_str(
-    input_date: Union[str, date, datetime], include_time: bool = False
+    input_date: str | date | datetime, include_time: bool = False
 ) -> str:
     """
     Convert a date or datetime object to a string; if a string is provided,
@@ -75,7 +74,7 @@ def datetime_to_str(
             return input_date
 
     # if input is a date or datetime then convert in the expected format
-    elif isinstance(input_date, (date, datetime)):
+    elif isinstance(input_date, date | datetime):
         if include_time:
             return input_date.strftime("%Y-%m-%d %H:%M:%S")
         else:

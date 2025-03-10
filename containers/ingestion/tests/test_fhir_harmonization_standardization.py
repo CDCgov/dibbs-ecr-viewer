@@ -2,8 +2,9 @@ import copy
 import json
 import pathlib
 
-from app.main import app
 from fastapi.testclient import TestClient
+
+from app.main import app
 
 client = TestClient(app)
 
@@ -14,7 +15,7 @@ test_bundle = json.load(
 
 def test_standardize_names_success():
     expected_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": copy.deepcopy(test_bundle),
     }
@@ -38,9 +39,10 @@ def test_standardize_names_missing_data():
     assert actual_response.json() == {
         "detail": [
             {
+                "type": "missing",
                 "loc": ["body", "data"],
-                "msg": "field required",
-                "type": "value_error.missing",
+                "msg": "Field required",
+                "input": {},
             }
         ]
     }
@@ -58,9 +60,43 @@ def test_standardize_names_not_fhir():
     assert actual_response.json() == {
         "detail": [
             {
-                "loc": ["body", "data"],
-                "msg": "Must provide a FHIR resource or bundle",
                 "type": "assertion_error",
+                "loc": ["body", "data"],
+                "msg": "Assertion failed, Must provide a FHIR resource or bundle",
+                "input": {
+                    "resourceType": "",
+                    "id": "bundle-transaction",
+                    "meta": {"lastUpdated": "2018-03-11T11:22:16Z"},
+                    "type": "transaction",
+                    "entry": [
+                        {
+                            "resource": {
+                                "resourceType": "Patient",
+                                "name": [
+                                    {
+                                        "family": "Smith",
+                                        "given": ["DeeDee"],
+                                        "use": "official",
+                                    }
+                                ],
+                                "gender": "female",
+                                "telecom": [{"system": "phone", "value": "8015557777"}],
+                                "address": [
+                                    {
+                                        "line": ["123 Main St."],
+                                        "city": "Anycity",
+                                        "state": "CA",
+                                        "postalCode": "12345",
+                                        "country": "USA",
+                                    }
+                                ],
+                                "birthDate": "1955-11-05",
+                            },
+                            "request": {"method": "POST", "url": "Patient"},
+                        }
+                    ],
+                },
+                "ctx": {"error": {}},
             }
         ]
     }
@@ -80,25 +116,29 @@ def test_standardize_names_bad_parameters():
     assert actual_response.json() == {
         "detail": [
             {
+                "type": "bool_parsing",
                 "loc": ["body", "trim"],
-                "msg": "value could not be parsed to a boolean",
-                "type": "type_error.bool",
+                "msg": "Input should be a valid boolean, unable to interpret input",
+                "input": "",
             },
             {
+                "type": "bool_parsing",
                 "loc": ["body", "overwrite"],
-                "msg": "value could not be parsed to a boolean",
-                "type": "type_error.bool",
+                "msg": "Input should be a valid boolean, unable to interpret input",
+                "input": "",
             },
             {
+                "type": "literal_error",
                 "loc": ["body", "case"],
-                "msg": "unexpected value; permitted: 'upper', 'lower', 'title'",
-                "type": "value_error.const",
-                "ctx": {"given": "", "permitted": ["upper", "lower", "title"]},
+                "msg": "Input should be 'upper', 'lower' or 'title'",
+                "input": "",
+                "ctx": {"expected": "'upper', 'lower' or 'title'"},
             },
             {
+                "type": "bool_parsing",
                 "loc": ["body", "remove_numbers"],
-                "msg": "value could not be parsed to a boolean",
-                "type": "type_error.bool",
+                "msg": "Input should be a valid boolean, unable to interpret input",
+                "input": "",
             },
         ]
     }
@@ -106,7 +146,7 @@ def test_standardize_names_bad_parameters():
 
 def test_standardize_phones_success():
     expected_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": copy.deepcopy(test_bundle),
     }
@@ -129,9 +169,10 @@ def test_standardize_phones_missing_data():
     assert actual_response.json() == {
         "detail": [
             {
+                "type": "missing",
                 "loc": ["body", "data"],
-                "msg": "field required",
-                "type": "value_error.missing",
+                "msg": "Field required",
+                "input": {},
             }
         ]
     }
@@ -148,9 +189,10 @@ def test_standardize_phones_bad_overwrite_value():
     assert actual_response.json() == {
         "detail": [
             {
+                "type": "bool_parsing",
                 "loc": ["body", "overwrite"],
-                "msg": "value could not be parsed to a boolean",
-                "type": "type_error.bool",
+                "msg": "Input should be a valid boolean, unable to interpret input",
+                "input": "",
             }
         ]
     }
@@ -158,7 +200,7 @@ def test_standardize_phones_bad_overwrite_value():
 
 def test_standardize_dob_success():
     expected_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": copy.deepcopy(test_bundle),
     }
@@ -172,7 +214,7 @@ def test_standardize_dob_success():
     assert actual_response.json() == expected_response
 
     expected_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": copy.deepcopy(test_bundle),
     }
@@ -186,7 +228,7 @@ def test_standardize_dob_success():
     assert actual_response.json() == expected_response
 
     expected_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": copy.deepcopy(test_bundle),
     }
@@ -204,7 +246,7 @@ def test_standardize_dob_failures():
     updated_bundle = copy.deepcopy(test_bundle)
     updated_bundle["entry"][0]["resource"]["birthDate"] = ""
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": "Date of Birth must be supplied!",
         "bundle": updated_bundle,
     }
@@ -219,7 +261,7 @@ def test_standardize_dob_failures():
     updated_bundle = copy.deepcopy(test_bundle)
     updated_bundle["entry"][0]["resource"]["birthDate"] = "1978-02-30"
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": "Invalid date supplied: 1978-02-30",
         "bundle": updated_bundle,
     }

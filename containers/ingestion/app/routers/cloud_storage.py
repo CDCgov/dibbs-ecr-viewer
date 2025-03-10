@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import APIRouter, Response, status
 from pydantic import BaseModel, Field
@@ -17,18 +17,20 @@ router = APIRouter(
 
 class WriteBlobToStorageInput(BaseModel):
     blob: dict = Field(description="Contents of a blob to be written to cloud storage.")
-    cloud_provider: Optional[Literal["azure", "gcp"]] = Field(
+    cloud_provider: Literal["azure", "gcp"] | None = Field(
+        default=None,
         description="The cloud provider hosting the storage resource that the blob will"
         " be uploaded to. Must be provided in the request body or set as an environment"
-        " variable of the service."
+        " variable of the service.",
     )
-    bucket_name: Optional[str] = Field(
+    bucket_name: str | None = Field(
+        default=None,
         description="Name of the cloud storage bucket that the blob should be uploaded "
         "to. Must be provided in the request body or set as an environment variable of "
-        "the service."
+        "the service.",
     )
     file_name: str = Field(description="Name of the blob")
-    storage_account_url: Optional[str] = Field(
+    storage_account_url: str | None = Field(
         description="The URL of an Azure storage account. Must be provided in the "
         "request body or set as an environment variable of the service is "
         "'cloud_provider' is 'azure'.",
@@ -79,7 +81,7 @@ def write_blob_to_cloud_storage_endpoint(
 
     response.status_code = status.HTTP_201_CREATED
     return {
-        "status_code": "201",
+        "status_code": 201,
         "message": (
             "The data has successfully been stored "
             "in the {} cloud in {} container with the name {}.".format(

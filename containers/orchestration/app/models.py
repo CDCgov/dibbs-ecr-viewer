@@ -1,6 +1,6 @@
-from typing import Literal, Optional, Union
+from typing import Literal
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 # Request and response models
@@ -26,13 +26,13 @@ class OrchestrationRequest(BaseModel):
             " passed data."
         )
     )
-    message: Union[dict, str] = Field(description="The message to be validated.")
-    rr_data: Optional[str] = Field(
+    message: dict | str = Field(description="The message to be validated.")
+    rr_data: str | None = Field(
         description="If an eICR message, the accompanying Reportability Response data.",
         default=None,
     )
 
-    @root_validator()
+    @model_validator(mode="before")
     def validate_rr_with_ecr(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that RR data is supplied if and only if the uploaded data
@@ -51,7 +51,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @root_validator()
+    @model_validator(mode="before")
     def validate_types_agree(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that the stream type of a message matches the encoded data
@@ -63,7 +63,7 @@ class OrchestrationRequest(BaseModel):
         data_type = values.get("data_type")
         if message_type == "ecr" and (data_type != "ecr" and data_type != "zip"):
             raise ValueError(
-                "For an eCR message, `data_type` must be either `ecr` or `zip`."
+                "for an eCR message, `data_type` must be either `ecr` or `zip`."
             )
         if message_type == "fhir" and data_type != "fhir":
             raise ValueError(
@@ -72,7 +72,7 @@ class OrchestrationRequest(BaseModel):
             )
         return values
 
-    @root_validator()
+    @model_validator(mode="before")
     def validate_fhir_message_is_dict(cls, values: dict[str, str]) -> dict[str, str]:
         """
         Validates that requests specifying a FHIR data type are formatted as
@@ -82,7 +82,7 @@ class OrchestrationRequest(BaseModel):
         data_type = values.get("data_type")
         if data_type == "fhir" and not isinstance(message, dict):
             raise ValueError(
-                "A `data_type` of FHIR requires the input message "
+                "a `data_type` of FHIR requires the input message "
                 "to be a valid dictionary."
             )
         return values
@@ -93,11 +93,11 @@ class OrchestrationResponse(BaseModel):
     The config for responses from the /extract endpoint.
     """
 
-    message: Optional[str] = Field(
+    message: str | None = Field(
         description="A message describing the result of a request to "
         "the /process-message endpoint."
     )
-    processed_values: Union[dict, str] = Field(
+    processed_values: dict | str = Field(
         description="A set of key:value pairs or XML-formatted string containing the "
         "values extracted from the message."
     )
@@ -120,7 +120,7 @@ class ListConfigsResponse(BaseModel):
 class WorkflowServiceStepModel(BaseModel):
     service: str
     endpoint: str
-    params: Optional[dict]
+    params: dict | None = None
 
 
 class ProcessingConfigModel(BaseModel):
@@ -129,7 +129,7 @@ class ProcessingConfigModel(BaseModel):
         "that maps to a list of `WorkflowServiceStep` objects, each defining one step "
         "in the orchestration configuration to upload."
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="When `true` if a config already exists for the provided name it "
         "will be replaced. When `false` no action will be taken and the response will "
         "indicate that a config for the given name already exists. To proceed submit a "

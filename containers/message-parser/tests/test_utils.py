@@ -4,6 +4,8 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
+from frozendict import frozendict
+
 from app.config import get_settings
 from app.utils import (
     convert_to_fhir,
@@ -16,7 +18,6 @@ from app.utils import (
     load_parsing_schema,
     search_for_required_values,
 )
-from frozendict import frozendict
 
 
 def test_load_parsing_schema_success():

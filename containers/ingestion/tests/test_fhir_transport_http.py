@@ -4,9 +4,10 @@ import os
 import pathlib
 from unittest import mock
 
+from fastapi.testclient import TestClient
+
 from app.config import get_settings
 from app.main import app
-from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
@@ -51,7 +52,7 @@ def test_upload_bundle_to_fhir_server_request_params_success(
     )
     assert actual_response.status_code == 200
     assert actual_response.json() == {
-        "status_code": "200",
+        "status_code": 200,
         "message": {
             "fhir_server_response": {
                 "fhir_server_status_code": [200],
@@ -100,7 +101,7 @@ def test_upload_bundle_to_fhir_server_env_params_success(
 
     assert actual_response.status_code == 200
     assert actual_response.json() == {
-        "status_code": "200",
+        "status_code": 200,
         "message": {
             "fhir_server_response": {
                 "fhir_server_status_code": [200],
@@ -145,7 +146,7 @@ def test_upload_bundle_to_fhir_server_missing_params(
         "values: cred_manager, fhir_url."
     )
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": expected_message,
         "bundle": None,
     }
@@ -177,7 +178,7 @@ def test_upload_bundle_to_fhir_server_bad_response_from_server(
     assert ~patched_bundle_upload.called
     assert actual_response.status_code == 400
     assert actual_response.json() == {
-        "status_code": "400",
+        "status_code": 400,
         "message": {
             "fhir_server_response": {
                 "fhir_server_status_code": [400],
@@ -224,7 +225,7 @@ def test_upload_bundle_to_fhir_server_partial_success(
     )
     assert actual_response.status_code == 400
     assert actual_response.json() == {
-        "status_code": "400",
+        "status_code": 400,
         "message": {
             "fhir_server_response": {
                 "fhir_server_status_code": [200],
@@ -260,9 +261,10 @@ def test_upload_bundle_to_fhir_missing_bundle(patched_bundle_upload):
     assert actual_response.json() == {
         "detail": [
             {
+                "type": "missing",
                 "loc": ["body", "bundle"],
-                "msg": "field required",
-                "type": "value_error.missing",
+                "msg": "Field required",
+                "input": {},
             }
         ]
     }
@@ -315,7 +317,7 @@ def test_upload_bundle_to_fhir_server_request_params_success_500(
     )
     assert actual_response.status_code == 200
     assert actual_response.json() == {
-        "status_code": "200",
+        "status_code": 200,
         "message": {
             "fhir_server_response": {
                 "fhir_server_status_code": [200, 200],
@@ -378,7 +380,7 @@ def test_upload_bundle_to_fhir_server_partial_success_500(
     )
     assert actual_response.status_code == 400
     assert actual_response.json() == {
-        "status_code": "400",
+        "status_code": 400,
         "message": {
             "fhir_server_response": {
                 "fhir_server_status_code": [200, 400],

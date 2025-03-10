@@ -1,11 +1,10 @@
 from functools import lru_cache
-from typing import Optional
 
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    fhir_converter_url: Optional[str]
+    fhir_converter_url: str | None = None
 
 
 @lru_cache
@@ -18,4 +17,4 @@ def get_settings() -> dict:
     :return: A dictionary with keys specified by the Settings. The value of each key is
     read from the corresponding environment variable.
     """
-    return Settings().dict()
+    return Settings().model_dump()

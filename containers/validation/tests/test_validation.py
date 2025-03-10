@@ -1,5 +1,8 @@
 import pathlib
 
+from fastapi.testclient import TestClient
+
+from app.constants import ValidateResponse
 from app.main import (
     app,
     validate_ecr_msg,
@@ -7,7 +10,6 @@ from app.main import (
     validate_fhir_bundle,
     validate_vxu_msg,
 )
-from fastapi.testclient import TestClient
 
 client = TestClient(app)
 test_error_types = ["errors", "warnings", "information"]
@@ -25,16 +27,16 @@ sample_file_good_with_RR = open(
 
 
 def test_validate_ecr_invalid_xml():
-    expected_result2 = {
-        "message_valid": False,
-        "validation_results": {
+    expected_result2 = ValidateResponse(
+        message_valid=False,
+        validation_results={
             "fatal": ["eCR Message is not valid XML!"],
             "errors": [],
             "warnings": [],
             "information": [],
             "message_ids": {},
         },
-    }
+    )
     actual_result2 = validate_ecr_msg(
         message="my ecr contents", include_error_types=test_error_types
     )
@@ -45,9 +47,9 @@ def test_validate_ecr_valid():
     actual_result1 = validate_ecr_msg(
         message=sample_file_good_with_RR, include_error_types=test_error_types
     )
-    expected_result1 = {
-        "message_valid": True,
-        "validation_results": {
+    expected_result1 = ValidateResponse(
+        message_valid=True,
+        validation_results={
             "fatal": [],
             "errors": [],
             "warnings": [],
@@ -63,14 +65,14 @@ def test_validate_ecr_valid():
                 },
             },
         },
-    }
+    )
     assert actual_result1 == expected_result1
 
 
 def test_validate_ecr_invalid():
-    expected_result3 = {
-        "message_valid": False,
-        "validation_results": {
+    expected_result3 = ValidateResponse(
+        message_valid=False,
+        validation_results={
             "fatal": [
                 "Could not find field. Field name: "
                 "'eICR Version Number' "
@@ -101,7 +103,7 @@ def test_validate_ecr_invalid():
                 "rr": {},
             },
         },
-    }
+    )
     actual_result3 = validate_ecr_msg(
         message=sample_file_bad, include_error_types=test_error_types
     )
@@ -110,32 +112,32 @@ def test_validate_ecr_invalid():
 
 def test_validate_elr():
     result = validate_elr_msg("my elr contents", test_error_types)
-    assert result == {
-        "message_valid": True,
-        "validation_results": {
+    assert result == ValidateResponse(
+        message_valid=True,
+        validation_results={
             "details": "No validation was actually performed. Validation for ELR is "
             "only stubbed currently."
         },
-    }
+    )
 
 
 def test_validate_vxu():
     result = validate_vxu_msg("my vxu contents", test_error_types)
-    assert result == {
-        "message_valid": True,
-        "validation_results": {
+    assert result == ValidateResponse(
+        message_valid=True,
+        validation_results={
             "details": "No validation was actually performed. Validation for VXU is "
             "only stubbed currently."
         },
-    }
+    )
 
 
 def test_validate_fhir_bundle():
     result = validate_fhir_bundle("my fhir bundle contents", test_error_types)
-    assert result == {
-        "message_valid": True,
-        "validation_results": {
+    assert result == ValidateResponse(
+        message_valid=True,
+        validation_results={
             "details": "No validation was actually performed. Validation for FHIR is "
             "only stubbed currently."
         },
-    }
+    )

@@ -158,6 +158,27 @@ describe("Filter by Reportable Conditions Component", () => {
     expect(tag.textContent).toContain("2");
   });
 
+  it("updates aria-label with number of conditions to filter on", async () => {
+    const user = userEvent.setup();
+    renderFilters();
+    const toggleFilterButton = screen.getByRole("button", {
+      name: /Filter by reportable condition/i,
+    });
+    await user.click(toggleFilterButton);
+
+    const checkbox = screen.getByLabelText("Condition1");
+    await user.click(checkbox);
+
+    expect(toggleFilterButton.getAttribute("aria-label")).toBe(
+      "Filter by Reportable Condition, 1 selected",
+    );
+
+    await user.click(checkbox);
+    expect(toggleFilterButton.getAttribute("aria-label")).toBe(
+      "Filter by Reportable Condition",
+    );
+  });
+
   it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
     const user = userEvent.setup();
     renderFilters();
@@ -300,6 +321,7 @@ describe("Filter by Date Component", () => {
 
     expect(container).toMatchSnapshot();
   });
+
   it("Toggles Filter by Date combo box visibility", async () => {
     const user = userEvent.setup();
     renderFilters();
@@ -323,6 +345,7 @@ describe("Filter by Date Component", () => {
     await user.click(toggleButton);
     expect(screen.queryByText(/Filter by Received Date/)).toBeNull();
   });
+
   it("Updates filter date range when selection is made", async () => {
     const user = userEvent.setup();
     const { rerender } = renderFilters();
@@ -372,6 +395,35 @@ describe("Filter by Date Component", () => {
       }),
     ).toHaveTextContent("Last 7 days");
   });
+
+  it("updates aria-label with selected date range", async () => {
+    const user = userEvent.setup();
+    renderFilters();
+
+    const toggleButton = screen.getByRole("button", {
+      name: /Filter by Received Date/i,
+    });
+
+    expect(toggleButton.getAttribute("aria-label")).toBe(
+      "Filter by Received Date, Last year selected",
+    );
+    await user.click(toggleButton);
+
+    // Change selection to "Last 7 days"
+    const radioLast7Days = screen.getByRole("radio", {
+      name: "Last 7 days",
+    });
+    await user.click(radioLast7Days);
+
+    const applyFilterButton = screen.getByRole("button", {
+      name: /Apply Filter For Received Date/i,
+    });
+    await user.click(applyFilterButton);
+    expect(toggleButton.getAttribute("aria-label")).toBe(
+      "Filter by Received Date, Last 7 days selected",
+    );
+  });
+
   it("Navigates with the correct query string on applying filters", async () => {
     const user = userEvent.setup();
     const mockPush = jest.fn();
@@ -399,6 +451,7 @@ describe("Filter by Date Component", () => {
       expect.stringContaining("dateRange=last-7-days"),
     );
   });
+
   it("If a date range is checked but button is closed without applying filter, filters should reset", async () => {
     const user = userEvent.setup();
     renderFilters();

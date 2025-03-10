@@ -43,7 +43,7 @@ Congratulations, the Record Linkage service should now be running on `localhost:
 
 We recommend running the Record Linkage service from a container, but if that isn't feasible for a given use case, you can also run the service directly from Python using the steps below.
 
-1. Ensure that both Git and Python 3.10 or higher are installed.
+1. Ensure that both Git and Python 3.12 or higher are installed.
 2. Clone the DIBBs repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/record-linkage/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.

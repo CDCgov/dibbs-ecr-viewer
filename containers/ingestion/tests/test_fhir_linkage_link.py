@@ -3,9 +3,10 @@ import json
 import os
 import pathlib
 
+from fastapi.testclient import TestClient
+
 from app.config import get_settings
 from app.main import app
-from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
@@ -18,7 +19,7 @@ def test_add_patient_identifier_in_bundle_success():
     test_request = {"bundle": test_bundle, "salt_str": "test_hash"}
 
     expected_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": copy.deepcopy(test_bundle),
     }
@@ -43,9 +44,10 @@ def test_add_patient_identifier_in_bundle_missing_bundle():
     expected_response = {
         "detail": [
             {
+                "type": "missing",
                 "loc": ["body", "bundle"],
-                "msg": "field required",
-                "type": "value_error.missing",
+                "msg": "Field required",
+                "input": {},
             }
         ]
     }
@@ -60,14 +62,16 @@ def test_add_patient_identifier_in_bundle_bad_parameter_types():
     expected_response = {
         "detail": [
             {
+                "type": "string_type",
                 "loc": ["body", "salt_str"],
-                "msg": "str type expected",
-                "type": "type_error.str",
+                "msg": "Input should be a valid string",
+                "input": [],
             },
             {
+                "type": "bool_parsing",
                 "loc": ["body", "overwrite"],
-                "msg": "value could not be parsed to a boolean",
-                "type": "type_error.bool",
+                "msg": "Input should be a valid boolean, unable to interpret input",
+                "input": 123,
             },
         ]
     }
@@ -81,7 +85,7 @@ def test_add_patient_identifier_in_bundle_salt_from_env():
     test_request = {"bundle": test_bundle}
 
     expected_response = {
-        "status_code": "200",
+        "status_code": 200,
         "message": None,
         "bundle": copy.deepcopy(test_bundle),
     }
@@ -112,7 +116,7 @@ def test_add_patient_identifier_in_bundle_salt_from_env_missing():
         "service. missing values: salt_str."
     )
     expected_response = {
-        "status_code": "400",
+        "status_code": 400,
         "message": expected_message,
         "bundle": None,
     }

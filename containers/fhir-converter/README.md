@@ -161,7 +161,7 @@ Congratulations, the FHIR Conversion service should now be running on `localhost
 
 For local development, you may prefer to run the service directly from Python. To do so, follow the steps below.
 
-1. Ensure that both Git and Python 3.10 are installed.
+1. Ensure that both Git and Python 3.13 are installed.
 2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/fhir-converter/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.

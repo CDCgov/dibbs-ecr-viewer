@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TEST_RUNNER_PYTHON_VERSION: 3.11
+  TEST_RUNNER_PYTHON_VERSION: 3.13
   CONTAINER: orchestration
 
 jobs:
@@ -132,6 +132,23 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}/tests/integration
         run: |
           python -m pytest -m "integration"
+
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        shell: bash
+        run: |
+          echo "Saving $container logs"
+          docker compose --profile "*" logs --timestamps >& integration-run.log
+
+      - name: Archive docker logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: ./containers/${{env.CONTAINER}}/integration-run.log
+          retention-days: 5
+
   build-orchestration-container:
     runs-on: ubuntu-latest
     steps:

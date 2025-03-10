@@ -2,8 +2,9 @@ from copy import deepcopy
 from unittest import mock
 
 import pytest
-from app.main import app
 from fastapi.testclient import TestClient
+
+from app.main import app
 
 client = TestClient(app)
 
@@ -334,7 +335,7 @@ def test_parse_message_non_fhir_missing_message_type():
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "When the message format is not FHIR then the message type must be included."
+        == "Value error, when the message format is not FHIR then the message type must be included."
     )
 
 
@@ -350,7 +351,7 @@ def test_parse_message_internal_and_external_schema(test_reference_schema):
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "Values for both 'parsing_schema' and 'parsing_schema_name' have been "
+        == "Value error, values for both 'parsing_schema' and 'parsing_schema_name' have been "
         "provided. Only one of these values is permited."
     )
 
@@ -365,7 +366,7 @@ def test_parse_message_neither_internal_nor_external_schema():
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "Values for 'parsing_schema' and 'parsing_schema_name' have not been "
+        == "Value error, values for 'parsing_schema' and 'parsing_schema_name' have not been "
         "provided. One, but not both, of these values is required."
     )
 
@@ -385,7 +386,7 @@ def test_schema_without_reference_lookup(test_reference_schema):
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "Secondary fields in the parsing schema that reference other "
+        == "Value error, secondary fields in the parsing schema that reference other "
         "resources must include a `reference_lookup` field that identifies "
         "where the reference ID can be found."
     )
@@ -406,7 +407,7 @@ def test_schema_without_identifier_path(test_reference_schema):
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "Secondary fields in the parsing schema that provide `reference_lookup` "
+        == "Value error, secondary fields in the parsing schema that provide `reference_lookup` "
         "locations must have a `fhir_path` that begins with `Bundle` and identifies "
         "the type of resource being referenced."
     )

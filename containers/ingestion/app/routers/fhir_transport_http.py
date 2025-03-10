@@ -1,7 +1,7 @@
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import APIRouter, Response, status
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from app.fhir.transport import upload_bundle_to_fhir_server
 from app.utils import (
@@ -24,16 +24,15 @@ class UploadBundleToFhirServerInput(BaseModel):
         "The FHIR API provides additional details on creating [FHIR-conformant "
         "batch/transaction](https://hl7.org/fhir/http.html#transaction) bundles."
     )
-    cred_manager: Optional[Literal["azure", "gcp"]] = Field(
-        description="The credential manager used to authenticate to the FHIR server."
+    cred_manager: Literal["azure", "gcp"] | None = Field(
+        default=None,
+        description="The credential manager used to authenticate to the FHIR server.",
     )
-    fhir_url: Optional[str] = Field(
-        description="The url of the FHIR server to upload to."
+    fhir_url: str | None = Field(
+        default=None, description="The url of the FHIR server to upload to."
     )
 
-    _check_for_fhir_bundle = validator("bundle", allow_reuse=True)(
-        check_for_fhir_bundle
-    )
+    _check_for_fhir_bundle = field_validator("bundle")(check_for_fhir_bundle)
 
 
 @router.post("/upload_bundle_to_fhir_server", status_code=200)
@@ -54,7 +53,7 @@ def upload_bundle_to_fhir_server_endpoint(
     search_result = search_for_required_values(input, required_values)
     if search_result != "All values were found.":
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"status_code": "400", "message": search_result}
+        return {"status_code": 400, "message": search_result}
 
     input["cred_manager"] = get_cred_manager(
         cred_manager=input["cred_manager"], location_url=input["fhir_url"]

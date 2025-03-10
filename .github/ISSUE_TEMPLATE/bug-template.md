@@ -1,5 +1,5 @@
 ---
-name: Streamline Bug Template
+name: Streamline Bug Template 🐛
 about: Capture bugs with this
 title: ""
 labels: "\U0001F41B bug, Streamline eCR"

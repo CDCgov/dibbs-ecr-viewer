@@ -1,6 +1,8 @@
 import pathlib
 
 import pytest
+from lxml import etree
+
 from app.refine import (
     _are_elements_present,
     _create_minimal_section,
@@ -17,7 +19,6 @@ from app.refine import (
     validate_message,
     validate_sections_to_include,
 )
-from lxml import etree
 
 TRIGGER_CODE_TEMPLATE_IDS = [
     "2.16.840.1.113883.10.20.15.2.3.5",

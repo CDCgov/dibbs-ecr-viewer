@@ -1,6 +1,6 @@
-from typing import Literal, Optional, Union
+from typing import Literal
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 PARSING_SCHEMA_DATA_TYPES = Literal[
     "string", "integer", "float", "boolean", "date", "datetime", "array", "struct"
@@ -36,7 +36,7 @@ def validate_secondary_reference_fields(values):
                 and "reference_lookup" not in secondary_field_definition
             ):
                 raise ValueError(
-                    "Secondary fields in the parsing schema that reference other "
+                    "secondary fields in the parsing schema that reference other "
                     "resources must include a `reference_lookup` field that "
                     "identifies where the reference ID can be found."
                 )
@@ -45,7 +45,7 @@ def validate_secondary_reference_fields(values):
                 and not secondary_field_definition.get("fhir_path").startswith("Bundle")
             ):
                 raise ValueError(
-                    "Secondary fields in the parsing schema that provide "
+                    "secondary fields in the parsing schema that provide "
                     "`reference_lookup` locations must have a `fhir_path` that "
                     "begins with `Bundle` and identifies the type of resource "
                     "being referenced."
@@ -61,38 +61,39 @@ class ParseMessageInput(BaseModel):
     message_format: Literal["fhir", "hl7v2", "ecr"] = Field(
         description="The format of the message."
     )
-    message_type: Optional[Literal["ecr", "elr", "vxu"]] = Field(
+    message_type: Literal["ecr", "elr", "vxu"] | None = Field(
+        default=None,
         description="The type of message that values will be extracted from. Required "
-        "when 'message_format is not FHIR."
+        "when 'message_format is not FHIR.",
     )
-    parsing_schema: Optional[dict] = Field(
+    parsing_schema: dict | None = Field(
         description="A schema describing which fields to extract from the message. This"
         " must be a JSON object with key:value pairs of the form "
         "<my-field>:<FHIR-to-my-field>.",
-        default={},
+        default=None,
     )
-    parsing_schema_name: Optional[str] = Field(
+    parsing_schema_name: str | None = Field(
         description="The name of a schema that was previously"
         " loaded in the service to use to extract fields from the message.",
-        default="",
+        default=None,
     )
-    fhir_converter_url: Optional[str] = Field(
+    fhir_converter_url: str | None = Field(
         description="The URL of an instance of the PHDI FHIR converter. Required when "
         "the message is not already in FHIR format.",
-        default="",
+        default=None,
     )
-    credential_manager: Optional[Literal["azure", "gcp"]] = Field(
+    credential_manager: Literal["azure", "gcp"] | None = Field(
         description="The type of credential manager to use for authentication with a "
         "FHIR converter when conversion to FHIR is required.",
         default=None,
     )
-    include_metadata: Optional[Literal["true", "false"]] = Field(
+    include_metadata: Literal["true", "false"] | None = Field(
         description="Boolean to include metadata in the response.",
         default=None,
     )
-    message: Union[str, dict] = Field(description="The message to be parsed.")
+    message: str | dict = Field(description="The message to be parsed.")
 
-    @root_validator
+    @model_validator(mode="before")
     def require_message_type_when_not_fhir(cls, values):
         """
         Function that checks when non-fhir-formatted data is given whether a
@@ -109,12 +110,12 @@ class ParseMessageInput(BaseModel):
             and values.get("message_type") is None
         ):
             raise ValueError(
-                "When the message format is not FHIR then the message type must be "
+                "when the message format is not FHIR then the message type must be "
                 "included."
             )
         return values
 
-    @root_validator
+    @model_validator(mode="before")
     def prohibit_schema_and_schema_name(cls, values):
         """
         Function that checks whether the user has provided
@@ -127,17 +128,14 @@ class ParseMessageInput(BaseModel):
           parsing_schema_name are provided in API call.
         :return values: the parsing_schema and parsing_schema_name provided by the user
         """
-        if (
-            values.get("parsing_schema") != {}
-            and values.get("parsing_schema_name") != ""
-        ):
+        if values.get("parsing_schema") and values.get("parsing_schema_name"):
             raise ValueError(
-                "Values for both 'parsing_schema' and 'parsing_schema_name' have been "
+                "values for both 'parsing_schema' and 'parsing_schema_name' have been "
                 "provided. Only one of these values is permited."
             )
         return values
 
-    @root_validator
+    @model_validator(mode="before")
     def require_schema_or_schema_name(cls, values):
         """
         Function that checks whether the user has provided
@@ -150,12 +148,9 @@ class ParseMessageInput(BaseModel):
           are missing from API call.
         :return values: the parsing_schema and parsing_schema_name provided by the user
         """
-        if (
-            values.get("parsing_schema") == {}
-            and values.get("parsing_schema_name") == ""
-        ):
+        if not values.get("parsing_schema") and not values.get("parsing_schema_name"):
             raise ValueError(
-                "Values for 'parsing_schema' and 'parsing_schema_name' have not been "
+                "values for 'parsing_schema' and 'parsing_schema_name' have not been "
                 "provided. One, but not both, of these values is required."
             )
         return values
@@ -163,7 +158,7 @@ class ParseMessageInput(BaseModel):
     # TODO: As part of future work, move validation of the schema more fully
     # into pydanatic, rather than duplicate schema validation on each model
     # and the schema upload
-    @root_validator
+    @model_validator(mode="before")
     def require_reference_fields_to_have_lookups(cls, values):
         """
         Ensures that reference fields in a model have corresponding lookups.
@@ -259,21 +254,21 @@ class ParsingSchemaSecondaryFieldModel(BaseModel):
     fhir_path: str
     data_type: PARSING_SCHEMA_DATA_TYPES
     nullable: bool
-    secondary_schema: Optional[dict[str, ParsingSchemaTertiaryFieldModel]]
+    secondary_schema: dict[str, ParsingSchemaTertiaryFieldModel] | None = None
 
 
 class ParsingSchemaFieldModel(BaseModel):
     fhir_path: str
     data_type: PARSING_SCHEMA_DATA_TYPES
     nullable: bool
-    secondary_schema: Optional[dict[str, ParsingSchemaSecondaryFieldModel]]
+    secondary_schema: dict[str, ParsingSchemaSecondaryFieldModel] | None = None
 
 
 class ParsingSchemaModel(BaseModel):
     parsing_schema: dict[str, ParsingSchemaFieldModel] = Field(
         description="A JSON formatted parsing schema to upload."
     )
-    overwrite: Optional[bool] = Field(
+    overwrite: bool | None = Field(
         description="When `true` if a schema already exists for the provided name it "
         "will be replaced. When `false` no action will be taken and the response will "
         "indicate that a schema for the given name already exists. To proceed submit a "

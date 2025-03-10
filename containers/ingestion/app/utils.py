@@ -1,8 +1,7 @@
 import json
 import pathlib
-from typing import Optional, Union
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 from app.cloud.azure import AzureCloudContainerConnection, AzureCredentialManager
 from app.cloud.core import BaseCredentialManager
@@ -14,15 +13,16 @@ class StandardResponse(BaseModel):
     """The standard schema for the body of responses returned by the DIBBs Ingestion
     Service."""
 
-    status_code: str = Field(description="The HTTP status code of the response.")
-    message: Optional[Union[str, dict]] = Field(
+    status_code: int = Field(description="The HTTP status code of the response.")
+    message: str | dict | None = Field(
+        default=None,
         description="A message from the service, used to provide details on an error "
         "that was encounted while attempting the process a request, or the response "
-        "a FHIR server."
+        "a FHIR server.",
     )
-    bundle: Optional[dict] = Field(description="A FHIR bundle")
+    bundle: dict | None = Field(default=None, description="A FHIR bundle")
 
-    @root_validator
+    @model_validator(mode="before")
     def any_of(cls, values):
         """
         Validates that at least one of the specified fields is present.

@@ -2,7 +2,6 @@ import { ContactPoint, HumanName } from "fhir/r4";
 
 import {
   formatName,
-  formatVitals,
   formatContactPoint,
   formatAddress,
   formatPhoneNumber,
@@ -43,68 +42,6 @@ describe("FormatService tests", () => {
 
       const result = formatName(emptyHumanName);
       expect(result).toEqual(expectedName);
-    });
-  });
-
-  describe("formatVitals", () => {
-    test("formats height, weight, and BMI correctly when all parameters are provided", () => {
-      const result = formatVitals(
-        "65",
-        "[in_i]",
-        "150",
-        "[lb_av]",
-        "25",
-        "kg/m2",
-      );
-      expect(result).toEqual({
-        height: "65 in",
-        weight: "150 lb",
-        bmi: "25 kg/m2",
-      });
-    });
-
-    test("returns empty strings for missing parameters", () => {
-      const resultNoHeight = formatVitals(
-        "",
-        "",
-        "150",
-        "[lb_av]",
-        "25",
-        "kg/m2",
-      );
-      expect(resultNoHeight).toEqual({
-        height: "",
-        weight: "150 lb",
-        bmi: "25 kg/m2",
-      });
-
-      const resultNoWeight = formatVitals(
-        "65",
-        "[in_i]",
-        "",
-        "",
-        "25",
-        "kg/m2",
-      );
-      expect(resultNoWeight).toEqual({
-        height: "65 in",
-        weight: "",
-        bmi: "25 kg/m2",
-      });
-
-      const resultNoBmi = formatVitals(
-        "65",
-        "[in_i]",
-        "150",
-        "[lb_av]",
-        "",
-        "",
-      );
-      expect(resultNoBmi).toEqual({
-        height: "65 in",
-        weight: "150 lb",
-        bmi: "",
-      });
     });
   });
 

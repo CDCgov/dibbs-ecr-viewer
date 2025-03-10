@@ -3,8 +3,9 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
-from app.main import app
 from fastapi.testclient import TestClient
+
+from app.main import app
 
 client = TestClient(app)
 
@@ -201,27 +202,34 @@ def test_process_message_invalid_config():
     }
 
 
-def test_process_message_mismatched_data_types():
+def test_process_message_mismatched_data_types_ecr():
     request = {
         "message_type": "ecr",
         "data_type": "fhir",
-        "message": "foo",
+        "message": {"foo": "bar"},
         "config_file_name": "sample-orchestration-config.json",
     }
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "For an eCR message, `data_type` must be either `ecr` or `zip`."
+        == "Value error, for an eCR message, `data_type` must be either `ecr` or `zip`."
     )
 
-    request["message_type"] = "fhir"
-    request["data_type"] = "zip"
+
+def test_process_message_mismatched_data_types_fhir():
+    request = {
+        "message_type": "fhir",
+        "data_type": "zip",
+        "message": "foo",
+        "config_file_name": "sample-orchestration-config.json",
+    }
+
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "`data_type` and `message_type` parameters must both be `fhir` in "
+        == "Value error, `data_type` and `message_type` parameters must both be `fhir` in "
         "order to process a FHIR bundle."
     )
 
@@ -237,7 +245,7 @@ def test_process_message_invalid_fhir():
     assert actual_response.status_code == 422
     assert (
         actual_response.json()["detail"][0]["msg"]
-        == "A `data_type` of FHIR requires the input message "
+        == "Value error, a `data_type` of FHIR requires the input message "
         "to be a valid dictionary."
     )
 
