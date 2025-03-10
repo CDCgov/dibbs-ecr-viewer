@@ -43,8 +43,10 @@ type LibraryConfig = {
   search: string;
 };
 
-// Mapping from param name to function that validates and returns a list of params to delete
-const SEARCH_PARAMS: {
+/**
+ * Mapping from param name to default and function that validates and returns a list of params to delete
+ */
+export const LIBRARY_SEARCH_PARAMS: {
   [K in keyof LibraryConfig]: {
     default: LibraryConfig[K];
     validator?: ValidationFn;
@@ -116,7 +118,7 @@ const getSearchParam = <K extends keyof LibraryConfig>(
 
   let val: LibraryConfig[K] | undefined;
   let altDefaultVal: LibraryConfig[K] | undefined;
-  const defaultVal = SEARCH_PARAMS[key]?.default;
+  const defaultVal = LIBRARY_SEARCH_PARAMS[key]?.default;
   if (typeof defaultVal === "number") {
     (val as number) = Number(singleVal);
     (altDefaultVal as number) = Number(altDefault);
@@ -138,15 +140,16 @@ const getSearchParam = <K extends keyof LibraryConfig>(
 };
 
 /**
- *
- * @param searchParams
- * @param cookieStore
+ * Get the library config with all search params populated with values or defaults
+ * @param searchParams - The page's search params
+ * @param cookieStore - The cookie store from the request
+ * @returns the library config
  */
 export const getLibraryConfig = (
   searchParams: PageSearchParams,
   cookieStore: ReadonlyRequestCookies,
 ): LibraryConfig => {
-  const keys = Object.keys(SEARCH_PARAMS) as (keyof LibraryConfig)[];
+  const keys = Object.keys(LIBRARY_SEARCH_PARAMS) as (keyof LibraryConfig)[];
   const config = keys.reduce(
     <K extends keyof LibraryConfig>(acc: Partial<LibraryConfig>, key: K) => {
       acc[key] = getSearchParam(searchParams, key, cookieStore.get(key)?.value);
