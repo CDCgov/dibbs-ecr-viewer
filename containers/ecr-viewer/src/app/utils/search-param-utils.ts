@@ -47,7 +47,7 @@ type LibraryConfig = {
   search: string;
 };
 
-type LibraryParam = keyof LibraryConfig;
+export type LibraryParam = keyof LibraryConfig;
 
 /**
  * Mapping from param name to default and function that validates and returns a list of params to delete
