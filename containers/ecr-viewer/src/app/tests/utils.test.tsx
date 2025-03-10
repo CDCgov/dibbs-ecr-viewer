@@ -243,7 +243,7 @@ describe("Utils", () => {
     jest.useRealTimers();
   });
 
-  it("should return a value that can display 0 months and only in days", () => {
+  it("should return a value that can display only in days", () => {
     const patientAge = calculatePatientAge(
       BundleWithPatient as unknown as Bundle,
       "1877-05-30",
@@ -251,7 +251,7 @@ describe("Utils", () => {
 
     const formattedPatientAge = formatAge(patientAge);
 
-    expect(formattedPatientAge).toEqual("0 months, 5 days");
+    expect(formattedPatientAge).toEqual("5 days");
   });
 
   describe("Calculate Age at Death", () => {
