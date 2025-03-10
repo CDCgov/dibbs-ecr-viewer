@@ -3,8 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { LIBRARY_SEARCH_PARAMS } from "@/app/utils/search-param-utils";
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
+// This is currently hard coded on the library search params, but could be made configurable
+// with a matcher down the road.
+
 /**
- * Checks that all URL params are valid and deletes them and redirects the url if not
+ * Checks that all URL params are valid and deletes them and redirects the url if not.
  * @param next The next middleware to call
  * @returns middleware function
  */

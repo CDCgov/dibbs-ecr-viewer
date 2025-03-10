@@ -60,8 +60,11 @@ export const LIBRARY_SEARCH_PARAMS: {
 } = {
   itemsPerPage: {
     default: DEFAULT_ITEMS_PER_PAGE,
-    // TODO: Is there a cutoff on the high end?
     validator: isPositiveInt("itemsPerPage"),
+  },
+  page: {
+    default: 1,
+    validator: isPositiveInt("page"),
   },
   columnId: {
     default: "date_created",
@@ -75,11 +78,6 @@ export const LIBRARY_SEARCH_PARAMS: {
         return ["columnId", "direction"];
       }
     },
-  },
-  page: {
-    default: 1,
-    // TODO: check if too high
-    validator: isPositiveInt("page"),
   },
   direction: {
     default: "DESC",
