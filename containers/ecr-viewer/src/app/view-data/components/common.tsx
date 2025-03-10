@@ -10,6 +10,7 @@ import {
 
 import { calculatePatientAge } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
+import { formatAge } from "@/app/services/formatService";
 import { safeParse } from "@/app/utils/data-utils";
 import { evaluateReference } from "@/app/utils/evaluate";
 import { makePlural } from "@/app/utils/format-utils";
@@ -188,5 +189,7 @@ const getFormattedOnsetAge = (
 
   if (!onsetDateTime) return undefined;
 
-  return { value: calculatePatientAge(fhirBundle, onsetDateTime) };
+  return {
+    value: formatAge(calculatePatientAge(fhirBundle, onsetDateTime)),
+  };
 };

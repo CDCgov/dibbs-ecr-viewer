@@ -1,5 +1,6 @@
 import "server-only"; // FHIR evaluation should be done server side
 
+import * as dateFns from "date-fns";
 import {
   Address,
   Bundle,
@@ -20,11 +21,7 @@ import {
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
-import {
-  getFormattedAge,
-  toSentenceCase,
-  toTitleCase,
-} from "@/app/utils/format-utils";
+import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
@@ -37,6 +34,7 @@ import {
   formatAddress,
   formatContactPoint,
   formatName,
+  formatAge,
   formatPhoneNumber,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
@@ -152,16 +150,22 @@ export const evaluateEncounterId = (fhirBundle: Bundle) => {
 export const evaluatePatientDOB = (fhirBundle: Bundle) =>
   formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB));
 
+export interface Age {
+  years: number;
+  months: number;
+  days: number;
+}
+
 /**
  * Calculates the age of a patient to a given date or today, unless DOD exists.
  * @param fhirBundle - The FHIR bundle containing patient information.
  * @param [givenDate] - Optional. The target date to calculate the age. Defaults to the current date if not provided.
- * @returns - The age of the patient in years, or undefined if date of birth is not available or if date of death exists.
+ * @returns - The exact age of the patient in years/months/days, or undefined if date of birth is not available or if date of death exists.
  */
 export const calculatePatientAge = (
   fhirBundle: Bundle,
   givenDate?: string,
-): string | undefined => {
+): Age | undefined => {
   const deathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
 
   // if a death date is available, don't calculate patient age
@@ -173,7 +177,7 @@ export const calculatePatientAge = (
 
   // date is provided by caller, use that
   if (patientDOBString && givenDate) {
-    return getFormattedAge(new Date(givenDate), new Date(patientDOBString));
+    return getPatientAge(new Date(givenDate), new Date(patientDOBString));
   }
 
   // no date provided, use encounter or today's date
@@ -188,7 +192,7 @@ export const calculatePatientAge = (
       ? new Date(encounterStartDate)
       : new Date();
 
-    return getFormattedAge(laterDate, new Date(patientDOBString));
+    return getPatientAge(laterDate, new Date(patientDOBString));
   }
 
   return undefined;
@@ -197,9 +201,11 @@ export const calculatePatientAge = (
 /**
  * Calculates Patient Age at Death if DOB and DOD exist, otherwise returns undefined
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @returns - The age of the patient at death in years, or undefined if date of birth or date of death is not available.
+ * @returns - The age of the patient at death in years/months/days, or undefined if date of birth or date of death is not available.
  */
-export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
+export const calculatePatientAgeAtDeath = (
+  fhirBundle: Bundle,
+): Age | undefined => {
   const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
 
   const patientDODString = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
@@ -208,10 +214,27 @@ export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
     const laterDate = new Date(patientDODString);
     const earlierDate = new Date(patientDOBString);
 
-    return getFormattedAge(laterDate, earlierDate);
+    return getPatientAge(laterDate, earlierDate);
   } else {
     return undefined;
   }
+};
+
+/**
+ * Helper function to calculate an age
+ * @param laterDate Date later in time
+ * @param earlierDate Date earlier in time
+ * @returns An `Age`
+ */
+const getPatientAge = (laterDate: Date, earlierDate: Date): Age => {
+  const duration = dateFns.intervalToDuration({
+    start: earlierDate,
+    end: laterDate,
+  });
+
+  const { years, months, days } = duration;
+
+  return { years: years ?? 0, months: months ?? 0, days: days ?? 0 };
 };
 
 /**
@@ -336,11 +359,11 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
     },
     {
       title: "Current Age",
-      value: calculatePatientAge(fhirBundle)?.toString(),
+      value: formatAge(calculatePatientAge(fhirBundle)),
     },
     {
       title: "Age at Death",
-      value: calculatePatientAgeAtDeath(fhirBundle),
+      value: formatAge(calculatePatientAgeAtDeath(fhirBundle)),
     },
     {
       title: "Vital Status",

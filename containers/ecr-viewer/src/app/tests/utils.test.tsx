@@ -188,43 +188,7 @@ describe("Utils", () => {
         patientWithEncounterStartDate as unknown as Bundle,
       );
 
-      expect(patientAge).toEqual("23 years");
-    });
-
-    it("should return a value in years if years is 2 or above", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1879-05-25",
-      );
-
-      expect(patientAge).toEqual("2 years");
-    });
-
-    it("should not return a plural unit if months/days equals 1", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1877-06-26",
-      );
-
-      expect(patientAge).toEqual("1 month, 1 day");
-    });
-
-    it("should return a value displaying months and days if years is under 2", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1879-05-24",
-      );
-
-      expect(patientAge).toEqual("23 months, 29 days");
-    });
-
-    it("should return a value that can display 0 months and only in days", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1877-05-30",
-      );
-
-      expect(patientAge).toEqual("0 months, 5 days");
+      expect(patientAge).toEqual({ years: 23, months: 0, days: 3 });
     });
 
     it("when no date is given, should return patient age when DOB is available", () => {
@@ -235,7 +199,7 @@ describe("Utils", () => {
         BundleWithPatient as unknown as Bundle,
       );
 
-      expect(patientAge).toEqual("146 years");
+      expect(patientAge).toEqual({ years: 146, months: 9, days: 18 });
 
       // Return to real time
       jest.useRealTimers();
@@ -249,14 +213,13 @@ describe("Utils", () => {
 
     it("when date is given, should return age at given date", () => {
       const givenDate = "2020-01-01";
-      const expectedAge = "142 years";
 
-      const resultAge = calculatePatientAge(
+      const patientAge = calculatePatientAge(
         BundleWithPatient as unknown as Bundle,
         givenDate,
       );
 
-      expect(resultAge).toEqual(expectedAge);
+      expect(patientAge).toEqual({ years: 142, months: 7, days: 7 });
     });
   });
 
@@ -264,7 +227,6 @@ describe("Utils", () => {
     jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
 
     const expectedAgeAtDeath = undefined;
-    const expectedAge = "146 years";
 
     const patientAge = calculatePatientAge(
       BundleWithPatient as unknown as Bundle,
@@ -275,7 +237,7 @@ describe("Utils", () => {
     );
 
     expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
-    expect(patientAge).toEqual(expectedAge);
+    expect(patientAge).toEqual({ years: 146, months: 9, days: 18 });
 
     // Return to real time
     jest.useRealTimers();
@@ -286,38 +248,12 @@ describe("Utils", () => {
         BundleWithDeceasedPatient as unknown as Bundle,
       );
 
-      const expectedAgeAtDeath = "4 years";
-
-      expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
-    });
-
-    it("should return age at death in months/days when age is under 2 years", () => {
-      const patientWithDeathDate = {
-        ...BundleWithDeceasedPatient,
-        entry: [
-          {
-            ...BundleWithDeceasedPatient.entry[0],
-            resource: {
-              ...BundleWithDeceasedPatient.entry[0].resource,
-              birthDate: "1818-01-27",
-              deceasedDate: "1819-02-01",
-            },
-          },
-        ],
-      } as unknown as Bundle;
-
-      const patientAgeAtDeath =
-        calculatePatientAgeAtDeath(patientWithDeathDate);
-
-      const expectedAgeAtDeath = "12 months, 5 days";
-
-      expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
+      expect(patientAgeAtDeath).toEqual({ years: 4, months: 9, days: 26 });
     });
 
     it("should have a defined Age at Death, and not have a defined Current Age when Date of Death is given", () => {
       jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
-
-      const expectedAgeAtDeath = "4 years";
+      // 1877-05-25
       const expectedAge = undefined;
 
       const patientAge = calculatePatientAge(
@@ -328,7 +264,7 @@ describe("Utils", () => {
         BundleWithDeceasedPatient as unknown as Bundle,
       );
 
-      expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
+      expect(patientAgeAtDeath).toEqual({ years: 4, months: 9, days: 26 });
       expect(patientAge).toEqual(expectedAge);
 
       // Return to real time
