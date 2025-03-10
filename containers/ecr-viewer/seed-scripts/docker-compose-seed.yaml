@@ -55,6 +55,8 @@ services:
       driver: "json-file"
     env_file:
       - ../../orchestration/.env
+    extra_hosts:
+      - host.docker.internal:host-gateway
     environment:
       - OTEL_TRACES_EXPORTER=none
       - OTEL_METRICS_EXPORTER=none
