@@ -4,7 +4,7 @@ import { INITIAL_HEADERS } from "@/app/constants";
 import { isValidParamDates } from "@/app/utils/date-utils";
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
-// pulled out since its utsed for two params
+// pulled out since its used for two params
 const checkDates = (searchParams: URLSearchParams) => {
   const dateRange = searchParams.get("dateRange");
   const datesParam = searchParams.get("dates");

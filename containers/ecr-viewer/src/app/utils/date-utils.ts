@@ -152,14 +152,14 @@ export function isValidParamDates(
 
 /**
  * Returns the date range period based on the provided search parameters.
- * @param searchParams - The current search parameters.
+ * @param dateRange - The dateRange search param.
+ * @param datesParam - The dates search param.
  * @returns The date range period object derived from the search parameters.
  */
-export function returnParamDates(searchParams: {
-  [key: string]: string | string[] | undefined;
-}): DateRangePeriod {
-  const dateRange = (searchParams?.dateRange as string) || DEFAULT_DATE_RANGE;
-  const datesParam = searchParams?.dates as string | undefined;
+export function returnParamDates(
+  dateRange: string,
+  datesParam: string,
+): DateRangePeriod {
   if (!isValidParamDates(dateRange, datesParam))
     return convertDateOptionToDateRange(DEFAULT_DATE_RANGE);
   if (dateRange === CustomDateRangeOption) {

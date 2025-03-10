@@ -337,6 +337,7 @@ const generateWhereStatementSqlServer = (
     : "NULL IS NULL";
   const statementDate = generateFilterDateStatementSqlServer(filterDates);
 
+  console.log({ statementConditions, statementSearch, statementDate });
   return `(${statementSearch}) AND (${statementDate}) AND (${statementConditions})`;
 };
 
