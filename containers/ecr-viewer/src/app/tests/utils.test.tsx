@@ -265,7 +265,6 @@ describe("Utils", () => {
 
     it("should have a defined Age at Death, and not have a defined Current Age when Date of Death is given", () => {
       jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
-      // 1877-05-25
       const expectedAge = undefined;
 
       const patientAge = calculatePatientAge(
