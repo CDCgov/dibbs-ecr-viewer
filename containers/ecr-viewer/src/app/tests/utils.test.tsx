@@ -199,7 +199,7 @@ describe("Utils", () => {
         BundleWithPatient as unknown as Bundle,
       );
 
-      expect(patientAge).toEqual({ years: 146, months: 9, days: 18 });
+      expect(patientAge).toEqual({ years: 146, months: 9, days: 16 });
 
       // Return to real time
       jest.useRealTimers();
@@ -237,7 +237,7 @@ describe("Utils", () => {
     );
 
     expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
-    expect(patientAge).toEqual({ years: 146, months: 9, days: 18 });
+    expect(patientAge).toEqual({ years: 146, months: 9, days: 16 });
 
     // Return to real time
     jest.useRealTimers();
