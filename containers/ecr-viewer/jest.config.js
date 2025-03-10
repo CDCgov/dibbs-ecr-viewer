@@ -14,7 +14,7 @@ const customJestConfig = {
     "^mssql$": "<rootDir>/src/app/tests/__mocks__/mssql.js",
     "^tedious$": "<rootDir>/src/app/tests/__mocks__/mssql.js",
   },
-  testPathIgnorePatterns: ["<rootDir>/e2e", "<rootDir>/integration/"],
+  testPathIgnorePatterns: ["<rootDir>/e2e"],
   collectCoverage: true,
 };
 // "<rootDir>/integration/"

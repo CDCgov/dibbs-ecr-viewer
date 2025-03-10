@@ -2,7 +2,6 @@ import { Kysely } from "kysely";
 
 import { db } from "./database";
 import {
-  Extended,
   ExtendedECR,
   NewExtendedECR,
   ExtendedECRUpdate,
@@ -20,6 +19,8 @@ import {
   ECRRuleSummariesUpdate,
 } from "./extended_types";
 
+const extdb = db as Kysely<any>;
+
 /**
  * Finds an eICR by its ID
  * @async
@@ -34,7 +35,7 @@ export async function findExtendedEcrById(
     throw new Error("eICR ID is required.");
   }
   try {
-    const val = await (db as Kysely<Extended>)
+    const val = await extdb
       .selectFrom("ecr_data")
       .where("eICR_ID", "=", id)
       .selectAll()
@@ -46,7 +47,8 @@ export async function findExtendedEcrById(
     if (val && val.longitude !== undefined) {
       val.longitude = parseFloat(val.longitude.toString());
     }
-    return val;
+
+    return val as ExtendedECR;
   } catch (error) {
     console.error(error);
   }
@@ -62,7 +64,7 @@ export async function findExtendedEcrById(
 export async function findExtendedEcr(
   criteria: Partial<ExtendedECR> | null,
 ): Promise<ExtendedECR[]> {
-  let query = (db as Kysely<Extended>).selectFrom("ecr_data");
+  let query = extdb.selectFrom("ecr_data");
 
   if (!criteria || criteria === null) {
     throw new Error("eICR Criteria is required.");
@@ -84,7 +86,7 @@ export async function findExtendedEcr(
     }
   }
 
-  return vals;
+  return vals as ExtendedECR[];
 }
 
 /**
@@ -101,11 +103,13 @@ export async function createExtendedEcr(
     throw new Error("eICR Data is required.");
   }
   try {
-    return await (db as Kysely<Extended>)
+    const val = await extdb
       .insertInto("ecr_data")
       .values(ecr)
       .returningAll()
-      .executeTakeFirstOrThrow();
+      .executeTakeFirstOrThrow(); 
+
+    return val as ExtendedECR;
   } catch (error) {
     console.error(error);
   }
@@ -123,7 +127,7 @@ export async function updateExtendedEcr(
   eICR_ID: string | null,
   updateWith: ExtendedECRUpdate,
 ): Promise<void> {
-  await (db as Kysely<Extended>)
+  await extdb
     .updateTable("ecr_data")
     .set(updateWith)
     .where("eICR_ID", "=", eICR_ID)
@@ -145,7 +149,7 @@ export async function deleteExtendedEcr(
     throw new Error("Cannot find ECR with given ID.");
   }
   if (ecr) {
-    await (db as Kysely<Extended>)
+    await extdb
       .deleteFrom("ecr_data")
       .where("eICR_ID", "=", eICR_ID)
       .execute();
@@ -166,11 +170,13 @@ export async function deleteExtendedEcr(
 export async function findAddressById(
   id: string,
 ): Promise<PatientAddress | undefined> {
-  return await (db as Kysely<Extended>)
+  const val = await extdb
     .selectFrom("patient_address")
     .where("uuid", "=", id)
     .selectAll()
     .executeTakeFirst();
+    
+  return val as PatientAddress;
 }
 
 /**
@@ -183,7 +189,7 @@ export async function findAddressById(
 export async function findAddress(
   criteria: Partial<PatientAddress>,
 ): Promise<PatientAddress[]> {
-  let query = (db as Kysely<Extended>).selectFrom("patient_address");
+  let query = extdb.selectFrom("patient_address");
 
   for (const criterium of Object.keys(criteria) as (keyof PatientAddress)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -191,7 +197,7 @@ export async function findAddress(
     }
   }
 
-  return await query.selectAll().execute();
+  return await query.selectAll().execute() as PatientAddress[];
 }
 
 /**
@@ -208,11 +214,13 @@ export async function createAddress(
     throw new Error("eICR Data is required.");
   }
   try {
-    return await (db as Kysely<Extended>)
+    const vals = await extdb
       .insertInto("patient_address")
       .values(patient_address)
       .returningAll()
       .executeTakeFirstOrThrow();
+
+    return vals as PatientAddress;
   } catch (error) {
     console.error(error);
   }
@@ -230,7 +238,7 @@ export async function updateAddress(
   uuid: string,
   updateWith: PatientAddressUpdate,
 ): Promise<void> {
-  await (db as Kysely<Extended>)
+  await extdb
     .updateTable("patient_address")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -250,7 +258,7 @@ export async function deleteAddress(
   const address = await findAddressById(uuid);
 
   if (address) {
-    await (db as Kysely<Extended>)
+    await extdb
       .deleteFrom("patient_address")
       .where("uuid", "=", uuid)
       .execute();
@@ -269,7 +277,7 @@ export async function deleteAddress(
  * @returns an eCR Lab object
  */
 export async function findLabById(id: string): Promise<ECRLabs | undefined> {
-  const val = await (db as Kysely<Extended>)
+  const val = await extdb
     .selectFrom("ecr_labs")
     .where("uuid", "=", id)
     .selectAll()
@@ -301,7 +309,7 @@ export async function findLabById(id: string): Promise<ECRLabs | undefined> {
       val.test_result_reference_range_low_value.toString(),
     );
   }
-  return val;
+  return val as ECRLabs;
 }
 
 /**
@@ -312,7 +320,7 @@ export async function findLabById(id: string): Promise<ECRLabs | undefined> {
  * @returns an eCR Lab object
  */
 export async function findLab(criteria: Partial<ECRLabs>): Promise<ECRLabs[]> {
-  let query = (db as Kysely<Extended>).selectFrom("ecr_labs");
+  let query = extdb.selectFrom("ecr_labs");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRLabs)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -346,7 +354,7 @@ export async function findLab(criteria: Partial<ECRLabs>): Promise<ECRLabs[]> {
       );
     }
   }
-  return vals;
+  return vals as ECRLabs[];
 }
 
 /**
@@ -363,11 +371,13 @@ export async function createLab(
     throw new Error("eICR Lab Data is required.");
   }
   try {
-    return await (db as Kysely<Extended>)
+    const vals = await extdb
       .insertInto("ecr_labs")
       .values(lab)
       .returningAll()
       .executeTakeFirstOrThrow();
+
+    return vals as ECRLabs;
   } catch (error) {
     console.error(error);
   }
@@ -385,7 +395,7 @@ export async function updateLab(
   uuid: string,
   updateWith: ECRLabsUpdate,
 ): Promise<void> {
-  await (db as Kysely<Extended>)
+  await extdb
     .updateTable("ecr_labs")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -403,7 +413,7 @@ export async function deleteLab(uuid: string): Promise<ECRLabs | undefined> {
   const ecr = await findLabById(uuid);
 
   if (ecr) {
-    await (db as Kysely<Extended>)
+    await extdb
       .deleteFrom("ecr_labs")
       .where("uuid", "=", uuid)
       .execute();
@@ -424,11 +434,12 @@ export async function deleteLab(uuid: string): Promise<ECRLabs | undefined> {
 export async function findEcrConditionById(
   id: string,
 ): Promise<ECRConditions | undefined> {
-  return await (db as Kysely<Extended>)
+  const vals = await extdb
     .selectFrom("ecr_rr_conditions")
     .where("uuid", "=", id)
     .selectAll()
     .executeTakeFirst();
+  return vals as ECRConditions;
 }
 
 /**
@@ -441,7 +452,7 @@ export async function findEcrConditionById(
 export async function findEcrCondition(
   criteria: Partial<ECRConditions>,
 ): Promise<ECRConditions[]> {
-  let query = (db as Kysely<Extended>).selectFrom("ecr_rr_conditions");
+  let query = extdb.selectFrom("ecr_rr_conditions");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRConditions)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -449,7 +460,7 @@ export async function findEcrCondition(
     }
   }
 
-  return await query.selectAll().execute();
+  return await query.selectAll().execute() as ECRConditions[];
 }
 
 /**
@@ -466,11 +477,12 @@ export async function createEcrCondition(
     throw new Error("eICR Data is required.");
   }
   try {
-    return await (db as Kysely<Extended>)
+    const vals = await extdb
       .insertInto("ecr_rr_conditions")
       .values(condition)
       .returningAll()
       .executeTakeFirstOrThrow();
+    return vals as ECRConditions;
   } catch (error) {
     console.error(error);
   }
@@ -488,7 +500,7 @@ export async function updateEcrCondition(
   uuid: string,
   updateWith: ECRConditionsUpdate,
 ): Promise<void> {
-  await (db as Kysely<Extended>)
+  await extdb
     .updateTable("ecr_rr_conditions")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -508,7 +520,7 @@ export async function deleteEcrCondition(
   const ecr = await findEcrConditionById(uuid);
 
   if (ecr) {
-    await (db as Kysely<Extended>)
+    await extdb
       .deleteFrom("ecr_rr_conditions")
       .where("uuid", "=", uuid)
       .execute();
@@ -529,11 +541,12 @@ export async function deleteEcrCondition(
 export async function findEcrRuleById(
   id: string,
 ): Promise<ECRRuleSummaries | undefined> {
-  return await (db as Kysely<Extended>)
+  const vals = await extdb
     .selectFrom("ecr_rr_rule_summaries")
     .where("uuid", "=", id)
     .selectAll()
     .executeTakeFirst();
+  return vals as ECRRuleSummaries;
 }
 
 /**
@@ -546,7 +559,7 @@ export async function findEcrRuleById(
 export async function findEcrRule(
   criteria: Partial<ECRRuleSummaries>,
 ): Promise<ECRRuleSummaries[]> {
-  let query = (db as Kysely<Extended>).selectFrom("ecr_rr_rule_summaries");
+  let query = extdb.selectFrom("ecr_rr_rule_summaries");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRRuleSummaries)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -554,7 +567,7 @@ export async function findEcrRule(
     }
   }
 
-  return await query.selectAll().execute();
+  return await query.selectAll().execute() as ECRRuleSummaries[];
 }
 
 /**
@@ -571,11 +584,12 @@ export async function createEcrRule(
     throw new Error("eICR Data is required.");
   }
   try {
-    return await (db as Kysely<Extended>)
+    const vals = await extdb
       .insertInto("ecr_rr_rule_summaries")
       .values(rule_summary)
       .returningAll()
       .executeTakeFirstOrThrow();
+    return vals as ECRRuleSummaries
   } catch (error) {
     console.error(error);
   }
@@ -593,7 +607,7 @@ export async function updateEcrRule(
   uuid: string,
   updateWith: ECRRuleSummariesUpdate,
 ): Promise<void> {
-  await (db as Kysely<Extended>)
+  await extdb
     .updateTable("ecr_rr_rule_summaries")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -613,7 +627,7 @@ export async function deleteEcrRule(
   const rule_summary = await findEcrRuleById(uuid);
 
   if (rule_summary) {
-    await (db as Kysely<Extended>)
+    await extdb
       .deleteFrom("ecr_rr_rule_summaries")
       .where("uuid", "=", uuid)
       .execute();

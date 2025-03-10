@@ -11,10 +11,9 @@ import {
   NewECR,
   ECRUpdate,
 } from "./core_types";
-import { Core } from "./core_types";
 import { db } from "./database";
 
-const coredb = db as Kysely<Core>;
+const coredb = db as Kysely<any>;
 
 // ECR_DATA
 
@@ -34,9 +33,10 @@ export async function findEcrById(id: string | null): Promise<ECR | undefined> {
       .selectFrom("ecr_data")
       .where("eICR_ID", "=", id)
       .selectAll()
-      .executeTakeFirst();
+      .executeTakeFirst() as ECR;
+
   } catch (error) {
-    console.error(error);
+    throw new Error("eICR not found.");
   }
 }
 
@@ -60,7 +60,7 @@ export async function findEcr(criteria: Partial<ECR> | null): Promise<ECR[]> {
     }
   }
 
-  return await query.selectAll().execute();
+  return await query.selectAll().execute() as ECR[];
 }
 
 /**
@@ -79,7 +79,7 @@ export async function createEcr(ecr: NewECR | null): Promise<ECR | undefined> {
       .insertInto("ecr_data")
       .values(ecr)
       .returningAll()
-      .executeTakeFirstOrThrow();
+      .executeTakeFirstOrThrow() as ECR;
   } catch (error) {
     console.error(error);
   }
@@ -141,7 +141,7 @@ export async function findEcrConditionById(
     .selectFrom("ecr_rr_conditions")
     .where("uuid", "=", id)
     .selectAll()
-    .executeTakeFirst();
+    .executeTakeFirst() as ECRConditions;
 }
 
 /**
@@ -162,7 +162,7 @@ export async function findEcrCondition(
     }
   }
 
-  return await query.selectAll().execute();
+  return await query.selectAll().execute() as ECRConditions[];
 }
 
 /**
@@ -183,7 +183,7 @@ export async function createEcrCondition(
       .insertInto("ecr_rr_conditions")
       .values(condition)
       .returningAll()
-      .executeTakeFirstOrThrow();
+      .executeTakeFirstOrThrow() as ECRConditions;
   } catch (error) {
     console.error(error);
   }
@@ -246,7 +246,7 @@ export async function findEcrRuleById(
     .selectFrom("ecr_rr_rule_summaries")
     .where("uuid", "=", id)
     .selectAll()
-    .executeTakeFirst();
+    .executeTakeFirst() as ECRRuleSummaries;
 }
 
 /**
@@ -267,7 +267,7 @@ export async function findEcrRule(
     }
   }
 
-  return await query.selectAll().execute();
+  return await query.selectAll().execute() as ECRRuleSummaries[];
 }
 
 /**
@@ -288,7 +288,7 @@ export async function createEcrRule(
       .insertInto("ecr_rr_rule_summaries")
       .values(rule_summary)
       .returningAll()
-      .executeTakeFirstOrThrow();
+      .executeTakeFirstOrThrow() as ECRRuleSummaries;
   } catch (error) {
     console.error(error);
   }

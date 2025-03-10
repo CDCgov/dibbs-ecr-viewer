@@ -21,7 +21,7 @@ export interface CoreMetadataModel {
 }
 
 export interface ExtendedMetadataModel {
-  eICR_ID: string;
+  eicr_id: string;
   data_source: "DB" | "S3";
   data_link: string;
   first_name: string;
@@ -109,7 +109,7 @@ async function listCoreEcrData(
     searchTerm,
     filterConditions,
   );
-  const sortStatement = generateSortStatement(sortColumn, sortDirection);
+  const sortStatement = generateCoreSortStatement(sortColumn, sortDirection);
   const queryString = `SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_viewer.ecr_data ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_viewer.ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereClause} GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number ${sortStatement} OFFSET ${startIndex.toString()} ROWS FETCH NEXT ${itemsPerPage.toString()} ROWS ONLY`;
   const result = await sql.raw<CoreMetadataModel>(queryString).execute(db);
   const list = result.rows;
@@ -130,11 +130,11 @@ async function listExtendedEcrData(
       "SELECT STRING_AGG(condition, ',') FROM (SELECT DISTINCT erc.condition FROM ecr_viewer.ecr_rr_conditions AS erc WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_conditions";
     const ruleSummariesSubQuery =
       "SELECT STRING_AGG(rule_summary, ',') FROM (SELECT DISTINCT ers.rule_summary FROM ecr_viewer.ecr_rr_rule_summaries AS ers LEFT JOIN ecr_viewer.ecr_rr_conditions as erc ON ers.ecr_rr_conditions_id = erc.uuid WHERE erc.eICR_ID = ed.eICR_ID) AS distinct_rule_summaries";
-    const sortStatement = generateSqlServerSortStatement(
+    const sortStatement = generateExtendedSortStatement(
       sortColumn,
       sortDirection,
     );
-    const whereStatement = generateWhereStatementSqlServer(
+    const whereStatement = generateExtendedWhereStatement(
       filterDates,
       searchTerm,
       filterConditions,
@@ -191,7 +191,7 @@ const processExtendedMetadata = (
 ): EcrDisplay[] => {
   return responseBody.map((object) => {
     const result = {
-      ecrId: object.eICR_ID || "",
+      ecrId: object.eicr_id || "",
       patient_first_name: object.first_name || "",
       patient_last_name: object.last_name || "",
       patient_date_of_birth: object.birth_date
@@ -252,8 +252,8 @@ const getTotalCoreEcrCount = async (
     filterConditions,
   );
   const query = `SELECT count(DISTINCT ed.eICR_ID) as count FROM ecr_viewer.ecr_data as ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc on ed.eICR_ID = erc.eICR_ID WHERE ${whereClause}`;
-  const result = await sql.raw<{ count: number }>(query).execute(db);
-  return result.rows[0].count;
+  const result = await sql.raw<{ count: string }>(query).execute(db);
+  return parseInt(result.rows[0].count, 10);
 };
 
 const getTotalExtendedEcrCount = async (
@@ -262,15 +262,15 @@ const getTotalExtendedEcrCount = async (
   filterConditions?: string[],
 ): Promise<number> => {
   try {
-    const whereStatement = generateWhereStatementSqlServer(
+    const whereStatement = generateExtendedWhereStatement(
       filterDates,
       searchTerm,
       filterConditions,
     );
 
     const query = `SELECT COUNT(DISTINCT ed.eICR_ID) as count FROM ecr_viewer.ecr_data ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID WHERE ${whereStatement}`;
-    const result = await sql.raw<{ count: number }>(query).execute(db);
-    return result.rows[0].count;
+    const result = await sql.raw<{ count: string }>(query).execute(db);
+    return parseInt(result.rows[0].count);
   } catch (error: unknown) {
     console.error(error);
     return Promise.reject(error);
@@ -289,11 +289,11 @@ export const generateCoreWhereStatement = (
   searchTerm?: string,
   filterConditions?: string[],
 ) => {
-  const statementSearch = generateSearchStatement(searchTerm);
+  const statementSearch = generateCoreSearchStatement(searchTerm);
   const statementConditions = filterConditions
     ? generateFilterConditionsStatement(filterConditions)
     : "NULL IS NULL";
-  const statementDate = generateFilterDateStatementPostgres(filterDates);
+  const statementDate = generateFilterDateStatement(filterDates);
 
   return `(${statementSearch}) AND (${statementDate}) AND (${statementConditions})`;
 };
@@ -305,16 +305,16 @@ export const generateCoreWhereStatement = (
  * @param filterConditions - Optional array of reportable conditions used to filter
  * @returns - where statement for SQL Server
  */
-const generateWhereStatementSqlServer = (
+const generateExtendedWhereStatement = (
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
 ) => {
-  const statementSearch = generateSearchStatementSqlServer(searchTerm);
+  const statementSearch = generateExtendedSearchStatement(searchTerm);
   const statementConditions = filterConditions
     ? generateFilterConditionsStatementSqlServer(filterConditions)
     : "NULL IS NULL";
-  const statementDate = generateFilterDateStatementSqlServer(filterDates);
+  const statementDate = generateFilterDateStatement(filterDates);
 
   return `(${statementSearch}) AND (${statementDate}) AND (${statementConditions})`;
 };
@@ -324,7 +324,7 @@ const generateWhereStatementSqlServer = (
  * @param searchTerm - Optional search term used to filter
  * @returns custom type format object for use by pg-promise
  */
-export const generateSearchStatement = (searchTerm?: string) => {
+export const generateCoreSearchStatement = (searchTerm?: string) => {
   const searchFields = ["ed.patient_name_first", "ed.patient_name_last"];
   return searchFields
     .map((field) => {
@@ -337,14 +337,15 @@ export const generateSearchStatement = (searchTerm?: string) => {
     .join(" OR ");
 };
 
-const generateSearchStatementSqlServer = (searchTerm?: string) => {
+const generateExtendedSearchStatement = (searchTerm?: string) => {
   const searchFields = ["ed.first_name", "ed.last_name"];
   return searchFields
     .map((field) => {
       if (!searchTerm) {
         return "NULL IS NULL";
       }
-      return `${field} LIKE '%${searchTerm}%'`;
+      const escapedSearchTerm = searchTerm.replace(/'/g, "''");
+      return `${field} LIKE '%${escapedSearchTerm}%'`;
     })
     .join(" OR ");
 };
@@ -401,23 +402,7 @@ const generateFilterConditionsStatementSqlServer = (
  * @param props.endDate - End date of date range
  * @returns custom type format object for use by pg-promise
  */
-export const generateFilterDateStatementPostgres = ({
-  startDate,
-  endDate,
-}: DateRangePeriod) => {
-  return [
-    `ed.date_created >= '${startDate
-      .toISOString()
-      .replace("Z", "-05:00")
-      .replace("T05", "T00")}'`,
-    `ed.date_created <= '${endDate
-      .toISOString()
-      .replace("Z", "-05:00")
-      .replace("T05", "T00")}'`,
-  ].join(" AND ");
-};
-
-const generateFilterDateStatementSqlServer = ({
+export const generateFilterDateStatement = ({
   startDate,
   endDate,
 }: DateRangePeriod) => {
@@ -433,7 +418,7 @@ const generateFilterDateStatementSqlServer = ({
  * @param direction - The direction to sort by
  * @returns custom type format object for use by pg-promise
  */
-export const generateSortStatement = (
+export const generateCoreSortStatement = (
   columnName: string,
   direction: string,
 ) => {
@@ -456,7 +441,7 @@ export const generateSortStatement = (
   return `ORDER BY ${columnName} ${direction}`;
 };
 
-const generateSqlServerSortStatement = (
+const generateExtendedSortStatement = (
   columnName: string,
   direction: string,
 ) => {

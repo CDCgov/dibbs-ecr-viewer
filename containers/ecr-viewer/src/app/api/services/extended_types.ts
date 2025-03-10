@@ -119,9 +119,9 @@ export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>;
 export type ECRRuleSummariesUpdate = Updateable<ecr_rr_rule_summaries>;
 
 export interface Extended {
-  ecr_data: ecr_data;
-  patient_address: patient_address;
-  ecr_labs: ecr_labs;
-  ecr_rr_conditions: ecr_rr_conditions;
-  ecr_rr_rule_summaries: ecr_rr_rule_summaries;
+  "ecr_viewer.ecr_data": ecr_data;
+  "ecr_viewer.patient_address": patient_address;
+  "ecr_viewer.ecr_labs": ecr_labs;
+  "ecr_viewer.ecr_rr_conditions": ecr_rr_conditions;
+  "ecr_viewer.ecr_rr_rule_summaries": ecr_rr_rule_summaries;
 }

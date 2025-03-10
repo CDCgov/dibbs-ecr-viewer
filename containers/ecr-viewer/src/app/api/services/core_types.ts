@@ -46,7 +46,7 @@ export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>;
 export type ECRRuleSummariesUpdate = Updateable<ecr_rr_rule_summaries>;
 
 export interface Core {
-  ecr_data: ecr_data;
-  ecr_rr_conditions: ecr_rr_conditions;
-  ecr_rr_rule_summaries: ecr_rr_rule_summaries;
+  "ecr_viewer.ecr_data": ecr_data;
+  "ecr_viewer.ecr_rr_conditions": ecr_rr_conditions;
+  "ecr_viewer.ecr_rr_rule_summaries": ecr_rr_rule_summaries;
 }

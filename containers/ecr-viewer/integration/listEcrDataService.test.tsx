@@ -6,26 +6,32 @@ import {
   CoreMetadataModel,
   EcrDisplay,
   generateFilterConditionsStatement,
-  generateSearchStatement,
+  generateCoreSearchStatement,
   generateCoreWhereStatement,
   getTotalEcrCount,
   processCoreMetadata,
   listEcrData,
-  generateFilterDateStatementPostgres,
+  generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
 import {
+  buildExtended,
+  dropExtended,
+  clearExtended,
+  buildCore,
+  dropCore,
+  clearCore,
   buildCoreAlias,
   dropCoreAlias,
+  clearCoreAlias,
   buildExtendedAlias,
   dropExtendedAlias,
-  clearCoreAlias,
   clearExtendedAlias,
 } from "@/app/api/services/db_schema";
 import { db } from "@/app/api/services/database";
 
 const testDateRange = {
   startDate: new Date("12-01-2024"),
-  endDate: new Date("12-02-2024"),
+  endDate: new Date("12-03-2024"),
 };
 
 const coreTemplate = {
@@ -37,9 +43,9 @@ const coreTemplate = {
   patient_name_first: "Billy",
   patient_name_last: "Bob",
   patient_birth_date: new Date("2024-12-01T12:00:00Z"),
-  date_created: new Date("2024-12-01T12:00:00Z"),
-  report_date: new Date("2024-12-01T12:00:00Z"),
-};
+  date_created: new Date("2024-12-02T12:00:00Z"),
+  report_date: new Date("2024-12-02T12:00:00Z"),
+}
 
 const extendedTemplate = {
   eicr_id: "12345",
@@ -68,17 +74,17 @@ const extendedTemplate = {
   rr_id: "12345",
   processing_status: "Processed",
   eicr_version_number: "1.0",
-  authoring_date: new Date("2024-12-31T05:00:00.000Z"),
+  authoring_date: new Date("2024-12-02T05:00:00.000Z"),
   authoring_provider: "Dr. Droid",
   provider_id: "12345",
   facility_id: "12345",
   facility_name: "Jedi Temple",
   encounter_type: "Checkup",
-  encounter_start_date: new Date("2024-12-31T05:00:00.000Z"),
-  encounter_end_date: new Date("2024-12-31T05:00:00.000Z"),
+  encounter_start_date: new Date("2024-12-02T05:00:00.000Z"),
+  encounter_end_date: new Date("2024-12-02T05:00:00.000Z"),
   reason_for_visit: "Checkup",
   active_problems: ["Dead"],
-  date_created: new Date("2025-01-01"),
+  date_created: new Date("2024-12-02T12:00:00Z"),
 };
 
 describe("listEcrDataService", () => {
@@ -227,14 +233,18 @@ describe("listEcrDataService", () => {
       );
       expect(actual).toEqual([
         {
-          date_created: "12/01/2024 7:00\u00A0AM\u00A0EST",
+          date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
           ecrId: "12345",
           patient_date_of_birth: "12/01/2024",
           patient_first_name: "Billy",
           patient_last_name: "Bob",
-          patient_report_date: "12/01/2024 12:00\u00A0AM\u00A0EST",
-          reportable_conditions: ["Condition1"],
-          rule_summaries: ["Rule1"],
+          patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
+          reportable_conditions: [
+            "Condition1",
+          ],
+          rule_summaries: [
+            "Rule1"
+          ],
           eicr_set_id: "123",
           eicr_version_number: "1",
         },
@@ -255,14 +265,18 @@ describe("listEcrDataService", () => {
       );
       expect(actual).toEqual([
         {
-          date_created: "12/01/2024 7:00\u00A0AM\u00A0EST",
+          date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
           ecrId: "12345",
           patient_date_of_birth: "12/01/2024",
           patient_first_name: "Billy",
           patient_last_name: "Bob",
-          patient_report_date: "12/01/2024 12:00\u00A0AM\u00A0EST",
-          reportable_conditions: ["Condition1"],
-          rule_summaries: ["Rule1"],
+          patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
+          reportable_conditions: [
+            "Condition1",
+          ],
+          rule_summaries: [
+            "Rule1"
+          ],
           eicr_set_id: "123",
           eicr_version_number: "1",
         },
@@ -335,12 +349,28 @@ describe("listEcrDataService", () => {
         testDateRange,
       );
       // Assert
-      expect(result).toEqual([extendedTemplate]);
+      expect(result).toEqual([{
+        date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
+        ecrId: "12345",
+        patient_date_of_birth: "12/31/2024",
+        patient_first_name: "Obi-Wan",
+        patient_last_name: "Kenobi",
+        patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
+        reportable_conditions: [
+          "Condition1",
+        ],
+        rule_summaries: [
+          "Rule1"
+        ],
+        eicr_set_id: "12345",
+        eicr_version_number: "1.0",
+      }]);
     });
   });
 
-  describe("get total ecr count", () => {
+  describe("get total core ecr count", () => {
     beforeAll(async () => {
+      process.env.METADATA_DATABASE_SCHEMA = "core";
       await buildCoreAlias();
     });
     afterAll(async () => {
@@ -349,11 +379,11 @@ describe("listEcrDataService", () => {
 
     it("should call db to get all ecrs", async () => {
       const actual = await getTotalEcrCount(testDateRange);
-      expect(actual).toEqual("0");
+      expect(actual).toEqual(0);
     });
     it("should use search term in count query", async () => {
       const actual = await getTotalEcrCount(testDateRange, "blah", undefined);
-      expect(actual).toEqual("0");
+      expect(actual).toEqual(0);
     });
     it("should escape the search term in count query", async () => {
       const actual = await getTotalEcrCount(
@@ -361,29 +391,62 @@ describe("listEcrDataService", () => {
         "O'Riley",
         undefined,
       );
-      expect(actual).toEqual("0");
+      expect(actual).toEqual(0);
     });
     it("should use filter conditions in count query", async () => {
       const actual = await getTotalEcrCount(testDateRange, "", [
         "Anthrax (disorder)",
       ]);
-      expect(actual).toEqual("0");
+      expect(actual).toEqual(0);
+    });
+  });
+
+  describe("get total extended ecr count", () => {
+    beforeAll(async () => {
+      process.env.METADATA_DATABASE_SCHEMA = "extended";
+      await buildExtendedAlias();
+    });
+    afterAll(async () => {
+      await dropExtendedAlias();
+    });
+
+    it("should call db to get all ecrs", async () => {
+      const actual = await getTotalEcrCount(testDateRange);
+      expect(actual).toEqual(0);
+    });
+    it("should use search term in count query", async () => {
+      const actual = await getTotalEcrCount(testDateRange, "blah", undefined);
+      expect(actual).toEqual(0);
+    });
+    it("should escape the search term in count query", async () => {
+      const actual = await getTotalEcrCount(
+        testDateRange,
+        "O'Riley",
+        undefined,
+      );
+      expect(actual).toEqual(0);
+    });
+    it("should use filter conditions in count query", async () => {
+      const actual = await getTotalEcrCount(testDateRange, "", [
+        "Anthrax (disorder)",
+      ]);
+      expect(actual).toEqual(0);
     });
   });
 
   describe("generate search statement", () => {
     it("should use the search term in the search statement", () => {
-      expect(generateSearchStatement("Dan")).toEqual(
+      expect(generateCoreSearchStatement("Dan")).toEqual(
         "ed.patient_name_first ILIKE '%Dan%' OR ed.patient_name_last ILIKE '%Dan%'",
       );
     });
     it("should escape characters when an apostrophe is added", () => {
-      expect(generateSearchStatement("O'Riley")).toEqual(
+      expect(generateCoreSearchStatement("O'Riley")).toEqual(
         "ed.patient_name_first ILIKE '%O''Riley%' OR ed.patient_name_last ILIKE '%O''Riley%'",
       );
     });
     it("should only generate true statements when no search is provided", () => {
-      expect(generateSearchStatement("")).toEqual(
+      expect(generateCoreSearchStatement("")).toEqual(
         "NULL IS NULL OR NULL IS NULL",
       );
     });
@@ -401,13 +464,13 @@ describe("listEcrDataService", () => {
       );
     });
     it("should add date range in the filter statement", () => {
-      expect(generateFilterDateStatementPostgres(testDateRange)).toEqual(
-        "ed.date_created >= '2024-12-01T00:00:00.000-05:00' AND ed.date_created <= '2024-12-02T00:00:00.000-05:00'",
+      expect(generateFilterDateStatement(testDateRange)).toEqual(
+        "ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z'",
       );
     });
     it("should display all conditions in date range by default if no filter has been added", () => {
       expect(generateCoreWhereStatement(testDateRange, "", undefined)).toEqual(
-        "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T00:00:00.000-05:00' AND ed.date_created <= '2024-12-02T00:00:00.000-05:00') AND (NULL IS NULL)",
+        "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (NULL IS NULL)",
       );
     });
   });
@@ -419,21 +482,21 @@ describe("listEcrDataService", () => {
           "Anthrax (disorder)",
         ]),
       ).toEqual(
-        "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T00:00:00.000-05:00' AND ed.date_created <= '2024-12-02T00:00:00.000-05:00') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
+        "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
       );
     });
     it("should generate where statement using search statement (no conditions filter provided)", () => {
       expect(
         generateCoreWhereStatement(testDateRange, "blah", undefined),
       ).toEqual(
-        "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T00:00:00.000-05:00' AND ed.date_created <= '2024-12-02T00:00:00.000-05:00') AND (NULL IS NULL)",
+        "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (NULL IS NULL)",
       );
     });
     it("should generate where statement using filter conditions statement (no search provided)", () => {
       expect(
         generateCoreWhereStatement(testDateRange, "", ["Anthrax (disorder)"]),
       ).toEqual(
-        "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T00:00:00.000-05:00' AND ed.date_created <= '2024-12-02T00:00:00.000-05:00') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
+        "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
       );
     });
   });

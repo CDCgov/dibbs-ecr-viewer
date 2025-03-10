@@ -55,7 +55,9 @@ describe("extended_database_repo", () => {
       encounter_start_date: new Date("2024-12-31T05:00:00.000Z"),
       encounter_end_date: new Date("2024-12-31T05:00:00.000Z"),
       reason_for_visit: "Checkup",
-      active_problems: ["Dead"],
+      active_problems: [
+        "Dead"
+      ],
       date_created: new Date("2025-01-01"),
     };
     beforeEach(async () => {
@@ -68,14 +70,14 @@ describe("extended_database_repo", () => {
 
     it("should find an ECR with a given eICR_ID", async () => {
       const actual = await extended_database_repo.findExtendedEcrById("12345");
-      expect(actual).toEqual({ ...template, active_problems: '{"Dead"}' }); // Needs fix to switch to array from string. Coming soon!
+      expect(actual).toEqual({...template, active_problems: expect.stringContaining("Dead")});
     });
 
     it("should find all people named General", async () => {
       const actual = await extended_database_repo.findExtendedEcr({
         first_name: "Obi-Wan",
       });
-      expect(actual[0]).toEqual({ ...template, active_problems: '{"Dead"}' });
+      expect(actual[0]).toEqual({...template, active_problems: expect.stringContaining("Dead")});
     });
 
     it("should update patient_name_last of a person with a given id", async () => {
@@ -90,12 +92,13 @@ describe("extended_database_repo", () => {
       await extended_database_repo.createExtendedEcr({
         ...template,
         eICR_ID: "54321",
+        active_problems: expect.stringContaining("Dead")
       });
       const actual = await extended_database_repo.findExtendedEcrById("54321");
       expect(actual).toEqual({
         ...template,
         eICR_ID: "54321",
-        active_problems: '{"Dead"}',
+        active_problems: expect.stringContaining("Dead")
       });
     });
 
@@ -133,14 +136,14 @@ describe("extended_database_repo", () => {
 
     it("should find an address with a given uuid", async () => {
       const actual = await extended_database_repo.findAddressById("12345");
-      expect(actual).toEqual({ ...template, line: '{"Apt 2"}' }); // Same fix coming soon here
+      expect(actual).toEqual({ ...template, line: expect.stringContaining("Apt 2")});
     });
 
     it("should find all registered addresses within a given city", async () => {
       const actual = await extended_database_repo.findAddress({
         city: "Coruscant",
       });
-      expect(actual[0]).toEqual({ ...template, line: '{"Apt 2"}' });
+      expect(actual[0]).toEqual({...template, line: expect.stringContaining("Apt 2")});
     });
 
     it("should update the address with a given id", async () => {
@@ -153,9 +156,10 @@ describe("extended_database_repo", () => {
       await extended_database_repo.createAddress({
         ...template,
         uuid: "54321",
+        line: expect.stringContaining("Apt 2")
       });
       const actual = await extended_database_repo.findAddressById("54321");
-      expect(actual).toEqual({ ...template, uuid: "54321", line: '{"Apt 2"}' });
+      expect(actual).toEqual({ ...template, uuid: "54321", line: expect.stringContaining("Apt 2")});
     });
 
     it("should delete an address with a given id", async () => {

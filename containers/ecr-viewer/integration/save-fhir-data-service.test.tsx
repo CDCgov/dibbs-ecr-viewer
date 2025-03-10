@@ -188,7 +188,6 @@ const baseCoreMetadata: BundleMetadata = {
 
 describe("saveCoreMetadata", () => {
   beforeAll(async () => {
-    process.env.METADATA_DATABASE_SCHEMA = "core";
     await buildCore();
   });
 
