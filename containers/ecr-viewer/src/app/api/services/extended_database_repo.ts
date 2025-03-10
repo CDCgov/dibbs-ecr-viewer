@@ -107,7 +107,7 @@ export async function createExtendedEcr(
       .insertInto("ecr_data")
       .values(ecr)
       .returningAll()
-      .executeTakeFirstOrThrow(); 
+      .executeTakeFirstOrThrow();
 
     return val as ExtendedECR;
   } catch (error) {
@@ -149,10 +149,7 @@ export async function deleteExtendedEcr(
     throw new Error("Cannot find ECR with given ID.");
   }
   if (ecr) {
-    await extdb
-      .deleteFrom("ecr_data")
-      .where("eICR_ID", "=", eICR_ID)
-      .execute();
+    await extdb.deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
   }
 
   return ecr;
@@ -175,7 +172,7 @@ export async function findAddressById(
     .where("uuid", "=", id)
     .selectAll()
     .executeTakeFirst();
-    
+
   return val as PatientAddress;
 }
 
@@ -197,7 +194,7 @@ export async function findAddress(
     }
   }
 
-  return await query.selectAll().execute() as PatientAddress[];
+  return (await query.selectAll().execute()) as PatientAddress[];
 }
 
 /**
@@ -413,10 +410,7 @@ export async function deleteLab(uuid: string): Promise<ECRLabs | undefined> {
   const ecr = await findLabById(uuid);
 
   if (ecr) {
-    await extdb
-      .deleteFrom("ecr_labs")
-      .where("uuid", "=", uuid)
-      .execute();
+    await extdb.deleteFrom("ecr_labs").where("uuid", "=", uuid).execute();
   }
 
   return ecr;
@@ -460,7 +454,7 @@ export async function findEcrCondition(
     }
   }
 
-  return await query.selectAll().execute() as ECRConditions[];
+  return (await query.selectAll().execute()) as ECRConditions[];
 }
 
 /**
@@ -567,7 +561,7 @@ export async function findEcrRule(
     }
   }
 
-  return await query.selectAll().execute() as ECRRuleSummaries[];
+  return (await query.selectAll().execute()) as ECRRuleSummaries[];
 }
 
 /**
@@ -589,7 +583,7 @@ export async function createEcrRule(
       .values(rule_summary)
       .returningAll()
       .executeTakeFirstOrThrow();
-    return vals as ECRRuleSummaries
+    return vals as ECRRuleSummaries;
   } catch (error) {
     console.error(error);
   }

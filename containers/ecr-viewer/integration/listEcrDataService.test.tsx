@@ -45,7 +45,7 @@ const coreTemplate = {
   patient_birth_date: new Date("2024-12-01T12:00:00Z"),
   date_created: new Date("2024-12-02T12:00:00Z"),
   report_date: new Date("2024-12-02T12:00:00Z"),
-}
+};
 
 const extendedTemplate = {
   eicr_id: "12345",
@@ -239,12 +239,8 @@ describe("listEcrDataService", () => {
           patient_first_name: "Billy",
           patient_last_name: "Bob",
           patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
-          reportable_conditions: [
-            "Condition1",
-          ],
-          rule_summaries: [
-            "Rule1"
-          ],
+          reportable_conditions: ["Condition1"],
+          rule_summaries: ["Rule1"],
           eicr_set_id: "123",
           eicr_version_number: "1",
         },
@@ -271,12 +267,8 @@ describe("listEcrDataService", () => {
           patient_first_name: "Billy",
           patient_last_name: "Bob",
           patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
-          reportable_conditions: [
-            "Condition1",
-          ],
-          rule_summaries: [
-            "Rule1"
-          ],
+          reportable_conditions: ["Condition1"],
+          rule_summaries: ["Rule1"],
           eicr_set_id: "123",
           eicr_version_number: "1",
         },
@@ -349,22 +341,20 @@ describe("listEcrDataService", () => {
         testDateRange,
       );
       // Assert
-      expect(result).toEqual([{
-        date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
-        ecrId: "12345",
-        patient_date_of_birth: "12/31/2024",
-        patient_first_name: "Obi-Wan",
-        patient_last_name: "Kenobi",
-        patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
-        reportable_conditions: [
-          "Condition1",
-        ],
-        rule_summaries: [
-          "Rule1"
-        ],
-        eicr_set_id: "12345",
-        eicr_version_number: "1.0",
-      }]);
+      expect(result).toEqual([
+        {
+          date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
+          ecrId: "12345",
+          patient_date_of_birth: "12/31/2024",
+          patient_first_name: "Obi-Wan",
+          patient_last_name: "Kenobi",
+          patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
+          reportable_conditions: ["Condition1"],
+          rule_summaries: ["Rule1"],
+          eicr_set_id: "12345",
+          eicr_version_number: "1.0",
+        },
+      ]);
     });
   });
 

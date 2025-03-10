@@ -29,12 +29,11 @@ export async function findEcrById(id: string | null): Promise<ECR | undefined> {
     throw new Error("eICR ID is required.");
   }
   try {
-    return await coredb
+    return (await coredb
       .selectFrom("ecr_data")
       .where("eICR_ID", "=", id)
       .selectAll()
-      .executeTakeFirst() as ECR;
-
+      .executeTakeFirst()) as ECR;
   } catch (error) {
     throw new Error("eICR not found.");
   }
@@ -60,7 +59,7 @@ export async function findEcr(criteria: Partial<ECR> | null): Promise<ECR[]> {
     }
   }
 
-  return await query.selectAll().execute() as ECR[];
+  return (await query.selectAll().execute()) as ECR[];
 }
 
 /**
@@ -75,11 +74,11 @@ export async function createEcr(ecr: NewECR | null): Promise<ECR | undefined> {
     throw new Error("eICR Data is required.");
   }
   try {
-    return await coredb
+    return (await coredb
       .insertInto("ecr_data")
       .values(ecr)
       .returningAll()
-      .executeTakeFirstOrThrow() as ECR;
+      .executeTakeFirstOrThrow()) as ECR;
   } catch (error) {
     console.error(error);
   }
@@ -137,11 +136,11 @@ export async function deleteEcr(
 export async function findEcrConditionById(
   id: string,
 ): Promise<ECRConditions | undefined> {
-  return await coredb
+  return (await coredb
     .selectFrom("ecr_rr_conditions")
     .where("uuid", "=", id)
     .selectAll()
-    .executeTakeFirst() as ECRConditions;
+    .executeTakeFirst()) as ECRConditions;
 }
 
 /**
@@ -162,7 +161,7 @@ export async function findEcrCondition(
     }
   }
 
-  return await query.selectAll().execute() as ECRConditions[];
+  return (await query.selectAll().execute()) as ECRConditions[];
 }
 
 /**
@@ -179,11 +178,11 @@ export async function createEcrCondition(
     throw new Error("eICR Data is required.");
   }
   try {
-    return await coredb
+    return (await coredb
       .insertInto("ecr_rr_conditions")
       .values(condition)
       .returningAll()
-      .executeTakeFirstOrThrow() as ECRConditions;
+      .executeTakeFirstOrThrow()) as ECRConditions;
   } catch (error) {
     console.error(error);
   }
@@ -242,11 +241,11 @@ export async function deleteEcrCondition(
 export async function findEcrRuleById(
   id: string,
 ): Promise<ECRRuleSummaries | undefined> {
-  return await coredb
+  return (await coredb
     .selectFrom("ecr_rr_rule_summaries")
     .where("uuid", "=", id)
     .selectAll()
-    .executeTakeFirst() as ECRRuleSummaries;
+    .executeTakeFirst()) as ECRRuleSummaries;
 }
 
 /**
@@ -267,7 +266,7 @@ export async function findEcrRule(
     }
   }
 
-  return await query.selectAll().execute() as ECRRuleSummaries[];
+  return (await query.selectAll().execute()) as ECRRuleSummaries[];
 }
 
 /**
@@ -284,11 +283,11 @@ export async function createEcrRule(
     throw new Error("eICR Data is required.");
   }
   try {
-    return await coredb
+    return (await coredb
       .insertInto("ecr_rr_rule_summaries")
       .values(rule_summary)
       .returningAll()
-      .executeTakeFirstOrThrow() as ECRRuleSummaries;
+      .executeTakeFirstOrThrow()) as ECRRuleSummaries;
   } catch (error) {
     console.error(error);
   }

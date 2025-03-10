@@ -20,15 +20,15 @@ describe("Conditions service", () => {
       condition: "condition2",
     });
   });
-  
+
   afterAll(async () => {
     await dropCore();
   });
-  
+
   const ORIG_METADATA_DATABASE_TYPE = process.env.METADATA_DATABASE_TYPE;
   it("Should throw an error if the database type is undefined", async () => {
     delete process.env.METADATA_DATABASE_TYPE;
-    
+
     await expect(getAllConditions()).rejects.toThrow(
       "Database type is undefined.",
     );
