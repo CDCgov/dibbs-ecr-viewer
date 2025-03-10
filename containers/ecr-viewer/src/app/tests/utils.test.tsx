@@ -6,6 +6,16 @@ import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
 import { CarePlanActivity } from "fhir/r4b";
 
+import BundleCareTeam from "../../../../../test-data/fhir/BundleCareTeam.json";
+import BundleWithMiscNotes from "../../../../../test-data/fhir/BundleMiscNotes.json";
+import BundleNoActiveProblems from "../../../../../test-data/fhir/BundleNoActiveProblems.json";
+import BundleWithPatient from "../../../../../test-data/fhir/BundlePatient.json";
+import BundleWithDeceasedPatient from "../../../../../test-data/fhir/BundlePatientDeceased.json";
+import BundleWithPendingResultsOnly from "../../../../../test-data/fhir/BundlePendingResultsOnly.json";
+import BundleWithScheduledOrdersOnly from "../../../../../test-data/fhir/BundleScheduledOrdersOnly.json";
+import BundleWithSexualOrientation from "../../../../../test-data/fhir/BundleSexualOrientation.json";
+import BundleWithTravelHistory from "../../../../../test-data/fhir/BundleTravelHistory.json";
+import BundleWithTravelHistoryEmpty from "../../../../../test-data/fhir/BundleTravelHistoryEmpty.json";
 import {
   evaluateSocialData,
   evaluatePatientName,
@@ -26,17 +36,6 @@ import {
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-
-import BundleCareTeam from "./assets/BundleCareTeam.json";
-import BundleWithMiscNotes from "./assets/BundleMiscNotes.json";
-import BundleNoActiveProblems from "./assets/BundleNoActiveProblems.json";
-import BundleWithPatient from "./assets/BundlePatient.json";
-import BundleWithDeceasedPatient from "./assets/BundlePatientDeceased.json";
-import BundleWithPendingResultsOnly from "./assets/BundlePendingResultsOnly.json";
-import BundleWithScheduledOrdersOnly from "./assets/BundleScheduledOrdersOnly.json";
-import BundleWithSexualOrientation from "./assets/BundleSexualOrientation.json";
-import BundleWithTravelHistory from "./assets/BundleTravelHistory.json";
-import BundleWithTravelHistoryEmpty from "./assets/BundleTravelHistoryEmpty.json";
 
 describe("Utils", () => {
   describe("Evaluate Social Data", () => {

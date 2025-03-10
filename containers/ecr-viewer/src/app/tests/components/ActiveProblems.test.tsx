@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { Bundle, Condition } from "fhir/r4";
 import { axe } from "jest-axe";
 
-import BundleWithPatient from "@/app/tests/assets/BundlePatient.json";
+import BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import { returnProblemsTable } from "@/app/view-data/components/common";
 
 describe("Active Problems Table", () => {
