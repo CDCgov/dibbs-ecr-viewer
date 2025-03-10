@@ -187,7 +187,11 @@ export const formatAge = (age: Age | undefined): string | undefined => {
   // when years is under 2, convert them to months and add to total
   const totalMonths = years * 12 + months;
 
-  return `${totalMonths} month${makePlural(
-    totalMonths,
-  )}, ${days} day${makePlural(days)}`;
+  return `${getFormattedMonths(totalMonths)}${days} day${makePlural(days)}`;
+};
+
+const getFormattedMonths = (months: number): string => {
+  if (months < 1) return "";
+
+  return `${months} month${makePlural(months)}, `;
 };

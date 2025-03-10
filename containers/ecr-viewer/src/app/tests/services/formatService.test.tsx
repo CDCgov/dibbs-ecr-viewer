@@ -1,6 +1,5 @@
 import { ContactPoint, HumanName } from "fhir/r4";
 
-import { Age } from "@/app/services/evaluateFhirDataService";
 import {
   formatName,
   formatContactPoint,
@@ -48,39 +47,51 @@ describe("FormatService tests", () => {
   });
 
   describe("Format age", () => {
-    it("should not return a plural unit if months/days equals 1", () => {
-      const age: Age = {
-        years: 0,
-        months: 1,
-        days: 1,
-      };
-      const formattedPatientAge = formatAge(age);
+    it("should only show days", () => {
+      expect(formatAge({ years: 0, months: 0, days: 27 })).toEqual("27 days");
+      expect(formatAge({ years: 0, months: 0, days: 31 })).toEqual("31 days");
+      expect(formatAge({ years: 0, months: 0, days: 1 })).toEqual("1 day");
+    });
 
-      expect(formattedPatientAge).toEqual("1 month, 1 day");
+    it("should not return a plural unit if months/days equals 1", () => {
+      expect(
+        formatAge({
+          years: 0,
+          months: 1,
+          days: 1,
+        }),
+      ).toEqual("1 month, 1 day");
     });
 
     it("should return a value in years if years is 2 or above", () => {
-      const age: Age = {
-        years: 2,
-        months: 0,
-        days: 0,
-      };
-
-      const formattedPatientAge = formatAge(age);
-
-      expect(formattedPatientAge).toEqual("2 years");
+      expect(formatAge({ years: 2, months: 0, days: 0 })).toEqual("2 years");
+      expect(formatAge({ years: 4, months: 6, days: 12 })).toEqual("4 years");
     });
 
     it("should return a value displaying months and days if years is under 2", () => {
-      const age: Age = {
-        years: 1,
-        months: 11,
-        days: 29,
-      };
+      expect(
+        formatAge({
+          years: 1,
+          months: 11,
+          days: 29,
+        }),
+      ).toEqual("23 months, 29 days");
 
-      const formattedPatientAge = formatAge(age);
+      expect(
+        formatAge({
+          years: 1,
+          months: 0,
+          days: 31,
+        }),
+      ).toEqual("12 months, 31 days");
 
-      expect(formattedPatientAge).toEqual("23 months, 29 days");
+      expect(
+        formatAge({
+          years: 1,
+          months: 6,
+          days: 1,
+        }),
+      ).toEqual("18 months, 1 day");
     });
   });
 
