@@ -1,6 +1,5 @@
 import "server-only"; // FHIR evaluation should be done server side
 
-import * as dateFns from "date-fns";
 import {
   Address,
   Bundle,
@@ -12,6 +11,7 @@ import {
   Practitioner,
   PractitionerRole,
 } from "fhir/r4";
+import { DateTime } from "luxon";
 
 import { evaluateData, noData } from "@/app/utils/data-utils";
 import {
@@ -177,7 +177,10 @@ export const calculatePatientAge = (
 
   // date is provided by caller, use that
   if (patientDOBString && givenDate) {
-    return getPatientAge(new Date(givenDate), new Date(patientDOBString));
+    return getPatientAge(
+      DateTime.fromJSDate(new Date(givenDate)),
+      DateTime.fromJSDate(new Date(patientDOBString)),
+    );
   }
 
   // no date provided, use encounter or today's date
@@ -192,7 +195,10 @@ export const calculatePatientAge = (
       ? new Date(encounterStartDate)
       : new Date();
 
-    return getPatientAge(laterDate, new Date(patientDOBString));
+    return getPatientAge(
+      DateTime.fromJSDate(laterDate),
+      DateTime.fromJSDate(new Date(patientDOBString)),
+    );
   }
 
   return undefined;
@@ -211,8 +217,8 @@ export const calculatePatientAgeAtDeath = (
   const patientDODString = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
 
   if (patientDOBString && patientDODString) {
-    const laterDate = new Date(patientDODString);
-    const earlierDate = new Date(patientDOBString);
+    const laterDate = DateTime.fromJSDate(new Date(patientDODString));
+    const earlierDate = DateTime.fromJSDate(new Date(patientDOBString));
 
     return getPatientAge(laterDate, earlierDate);
   } else {
@@ -221,20 +227,21 @@ export const calculatePatientAgeAtDeath = (
 };
 
 /**
- * Helper function to calculate an age
- * @param laterDate Date later in time
- * @param earlierDate Date earlier in time
+ * Helper function to calculate an age given two `DateTimes`
+ * @param laterDate DateTime later in time
+ * @param earlierDate DateTime earlier in time
  * @returns An `Age`
  */
-const getPatientAge = (laterDate: Date, earlierDate: Date): Age => {
-  const duration = dateFns.intervalToDuration({
-    start: earlierDate,
-    end: laterDate,
-  });
+const getPatientAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
+  const { years, months, days } = laterDate
+    .diff(earlierDate, ["years", "months", "days"])
+    .toObject();
 
-  const { years, months, days } = duration;
-
-  return { years: years ?? 0, months: months ?? 0, days: days ?? 0 };
+  return {
+    years: years ?? 0,
+    months: months ?? 0,
+    days: Math.round(days ?? 0),
+  };
 };
 
 /**

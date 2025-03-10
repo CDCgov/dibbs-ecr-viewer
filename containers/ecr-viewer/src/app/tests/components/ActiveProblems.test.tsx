@@ -221,7 +221,7 @@ describe("Active Problems Table", () => {
           },
         ],
         resourceType: "Condition",
-        onsetDateTime: "06/28/1877 1:00 PM",
+        onsetDateTime: "06/28/1877",
         clinicalStatus: {
           coding: [
             {
