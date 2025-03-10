@@ -91,7 +91,7 @@ const HomePage = async ({
             ) : (
               <Suspense
                 // key needed to force fallback state to retrigger on params change
-                key={JSON.stringify({ ...config })}
+                key={JSON.stringify(config)}
                 fallback={<EcrTableLoading />}
               >
                 <EcrTableContent
