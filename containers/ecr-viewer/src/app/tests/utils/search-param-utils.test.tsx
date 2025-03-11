@@ -60,18 +60,22 @@ describe("search param utils", () => {
     });
   });
 
-  describe("condition", () => {
-    it("accepts everything as of now", () => {
-      const { validator } = LIBRARY_SEARCH_PARAMS.condition;
-      expect(validator).toBeUndefined();
-    });
-  });
+  (["condition", "search"] as LibraryParam[]).map((param) =>
+    describe(param, () => {
+      it("accepts everything as of now", () => {
+        const { validator } = LIBRARY_SEARCH_PARAMS[param];
+        expect(validator).toBeUndefined();
+      });
+    }),
+  );
 
   // Use the same validator
   describe("dates & dateRange", () => {
     const { validator } = LIBRARY_SEARCH_PARAMS.dates;
     it("is the same validator as dateRange", () => {
-      expect(validator).toStrictEqual(LIBRARY_SEARCH_PARAMS.dateRange);
+      expect(validator).toStrictEqual(
+        LIBRARY_SEARCH_PARAMS.dateRange.validator,
+      );
     });
     it("accepts a standard range", () => {
       const actual = validator!(new URLSearchParams("dateRange=last-7-days"));
