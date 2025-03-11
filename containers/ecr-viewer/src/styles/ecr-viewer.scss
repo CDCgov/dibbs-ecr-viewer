@@ -285,6 +285,7 @@ html {
   position: sticky;
   height: 100vh;
   top: var(--patient-banner-buffer);
+  overflow-y: auto;
 
   .usa-sidenav__item a:not(.usa-sidenav__sublist a) {
     font-weight: bold;
