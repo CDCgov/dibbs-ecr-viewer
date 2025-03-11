@@ -26,17 +26,32 @@ describe("Param Check Middleware", () => {
   });
 
   it("should redirect to a url without a bad param", async () => {
-    const req = new NextRequest("https://www.example.com/ecr-viewer?page=-2");
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer?page=-2&itemsPerPage=3",
+    );
 
     const resp = await middleware(req);
     expect(resp?.status).toBeGreaterThanOrEqual(300);
     expect(resp?.status).toBeLessThan(400);
     expect(resp?.headers.get("Location")).toBe(
-      "https://www.example.com/ecr-viewer",
+      "https://www.example.com/ecr-viewer?itemsPerPage=3",
     );
   });
 
-  it("should not rediret when param is good", async () => {
+  it("should redirect to a url without multiple params", async () => {
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer?page=2&itemsPerPage=4&page=3",
+    );
+
+    const resp = await middleware(req);
+    expect(resp?.status).toBeGreaterThanOrEqual(300);
+    expect(resp?.status).toBeLessThan(400);
+    expect(resp?.headers.get("Location")).toBe(
+      "https://www.example.com/ecr-viewer?page=2&itemsPerPage=4",
+    );
+  });
+
+  it("should not redirect when params are good", async () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer?page=3");
 
     const resp = await middleware(req);

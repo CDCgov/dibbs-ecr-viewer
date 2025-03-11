@@ -19,6 +19,16 @@ export const withUrlParamChecks: MiddlewareFactory = (
     let changed = false;
     for (const [param, spec] of Object.entries(LIBRARY_SEARCH_PARAMS)) {
       if (url.searchParams.has(param)) {
+        // We never expect a param to be specified multiple times, delete later entries
+        const paramVals = url.searchParams.getAll(param);
+        if (paramVals.length > 1) {
+          paramVals.slice(1).forEach((val) => {
+            url.searchParams.delete(param, val);
+          });
+          changed = true;
+        }
+
+        // Check param's validation function
         const toDelete = spec.validator?.(url.searchParams) ?? [];
         toDelete.forEach((p) => {
           url.searchParams.delete(p);

@@ -3,6 +3,7 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 import { DEFAULT_ITEMS_PER_PAGE, INITIAL_HEADERS } from "@/app/constants";
 
 import {
+  CustomDateRangeOption,
   DEFAULT_DATE_RANGE,
   DateRangeOption,
   isValidParamDates,
@@ -16,12 +17,14 @@ type ValidationFn = (searchParams: URLSearchParams) => string[] | undefined;
 
 export type PageSearchParams = { [key: string]: string | string[] | undefined };
 
-// pulled out since its used for two params
+// helper to check date paramaters are valid, used for both params
 const checkDates: ValidationFn = (searchParams: URLSearchParams) => {
   const dateRange = searchParams.get("dateRange");
   const datesParam = searchParams.get("dates");
   if ((dateRange || datesParam) && !isValidParamDates(dateRange, datesParam)) {
     return ["dates", "dateRange"];
+  } else if (dateRange !== CustomDateRangeOption && datesParam !== null) {
+    return ["dates"];
   }
 };
 

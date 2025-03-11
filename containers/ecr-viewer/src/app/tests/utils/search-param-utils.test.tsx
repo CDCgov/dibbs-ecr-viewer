@@ -87,9 +87,27 @@ describe("search param utils", () => {
       );
       expect(actual).toBeUndefined();
     });
-    it("rejects nonsense headers", () => {
+    it("rejects nonsense headers for dates", () => {
       const actual = validator!(new URLSearchParams("dates=123"));
       expect(actual).toStrictEqual(["dates", "dateRange"]);
+    });
+    it("rejects nonsense headers for dateRange", () => {
+      const actual = validator!(new URLSearchParams("dateRange=123"));
+      expect(actual).toStrictEqual(["dates", "dateRange"]);
+    });
+    it("rejects bad combination of valid headers", () => {
+      const actual = validator!(
+        new URLSearchParams(
+          "dateRange=last-7-days&dates=2023-01-01|2024-01-01",
+        ),
+      );
+      expect(actual).toStrictEqual(["dates"]);
+    });
+    it("rejects bad combination of partially invalid headers", () => {
+      const actual = validator!(
+        new URLSearchParams("dateRange=last-7-days&dates="),
+      );
+      expect(actual).toStrictEqual(["dates"]);
     });
   });
 });
