@@ -95,6 +95,9 @@ export const LIBRARY_SEARCH_PARAMS: {
   },
   condition: {
     default: undefined,
+    // Middleware runs on the edge runtime, so we can't make db calls. Would need
+    // to do a fetch to the API conditions endpoint to get the valid conditions
+    // and filter by. This may be worth it in the future, but not today.
   },
   dates: {
     default: "",
