@@ -2,8 +2,13 @@ import "server-only"; // FHIR evaluation/formatting should be done server side
 
 import { Address, ContactPoint, HumanName } from "fhir/r4";
 
-import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
+import {
+  makePlural,
+  toSentenceCase,
+  toTitleCase,
+} from "@/app/utils/format-utils";
 
+import { Age } from "./evaluateFhirDataService";
 import { formatDate } from "./formatDateService";
 
 /**
@@ -161,4 +166,32 @@ export const formatContactPoint = (
     }
   }
   return contactArr.join("\n");
+};
+
+/**
+ * Takes a patient's age and formats it into a string. If the patient is 2 years or older
+ * the function will return `x years`. When the patient is under 2 years old, it will
+ * return the age in `x months, y days`.
+ * @param age the age of a patient
+ * @returns patient age formatted as a string, either as `x years` or `x months, y days`
+ */
+export const formatAge = (age: Age | undefined): string | undefined => {
+  if (!age) return undefined;
+
+  const { years, months, days } = age;
+
+  if (years >= 2) {
+    return `${years} years`;
+  }
+
+  // when years is under 2, convert them to months and add to total
+  const totalMonths = years * 12 + months;
+
+  return `${getFormattedMonths(totalMonths)}${days} day${makePlural(days)}`;
+};
+
+const getFormattedMonths = (months: number): string => {
+  if (months < 1) return "";
+
+  return `${months} month${makePlural(months)}, `;
 };

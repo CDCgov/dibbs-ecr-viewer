@@ -1,8 +1,8 @@
 import { Bundle, Observation, Patient } from "fhir/r4";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import BundleMiscNotes from "@/app/tests/assets/BundleMiscNotes.json";
-import BundlePatient from "@/app/tests/assets/BundlePatient.json";
+import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import {
   evaluateAll,
   evaluateAllAndCheck,

@@ -1,5 +1,9 @@
 import { Bundle, CodeableConcept, Patient } from "fhir/r4";
 
+import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
+import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -17,10 +21,6 @@ import {
   getHumanReadableCodeableConcept,
   censorGender,
 } from "@/app/services/evaluateFhirDataService";
-import BundleEcrMetadata from "@/app/tests/assets/BundleEcrMetadata.json";
-import BundlePatient from "@/app/tests/assets/BundlePatient.json";
-import BundlePatientMultiple from "@/app/tests/assets/BundlePatientMultiple.json";
-import BundlePractitionerRole from "@/app/tests/assets/BundlePractitionerRole.json";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
 

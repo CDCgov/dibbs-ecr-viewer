@@ -5,6 +5,7 @@ import {
   formatContactPoint,
   formatAddress,
   formatPhoneNumber,
+  formatAge,
 } from "@/app/services/formatService";
 
 describe("FormatService tests", () => {
@@ -42,6 +43,56 @@ describe("FormatService tests", () => {
 
       const result = formatName(emptyHumanName);
       expect(result).toEqual(expectedName);
+    });
+  });
+
+  describe("Format age", () => {
+    it("should only show days", () => {
+      expect(formatAge({ years: 0, months: 0, days: 27 })).toEqual("27 days");
+      expect(formatAge({ years: 0, months: 0, days: 31 })).toEqual("31 days");
+      expect(formatAge({ years: 0, months: 0, days: 1 })).toEqual("1 day");
+      expect(formatAge({ years: 0, months: 0, days: 0 })).toEqual("0 days");
+    });
+
+    it("should not return a plural unit if months/days equals 1", () => {
+      expect(
+        formatAge({
+          years: 0,
+          months: 1,
+          days: 1,
+        }),
+      ).toEqual("1 month, 1 day");
+    });
+
+    it("should return a value in years if years is 2 or above", () => {
+      expect(formatAge({ years: 2, months: 0, days: 0 })).toEqual("2 years");
+      expect(formatAge({ years: 4, months: 6, days: 12 })).toEqual("4 years");
+    });
+
+    it("should return a value displaying months and days if years is under 2", () => {
+      expect(
+        formatAge({
+          years: 1,
+          months: 11,
+          days: 29,
+        }),
+      ).toEqual("23 months, 29 days");
+
+      expect(
+        formatAge({
+          years: 1,
+          months: 0,
+          days: 31,
+        }),
+      ).toEqual("12 months, 31 days");
+
+      expect(
+        formatAge({
+          years: 1,
+          months: 6,
+          days: 1,
+        }),
+      ).toEqual("18 months, 1 day");
     });
   });
 
