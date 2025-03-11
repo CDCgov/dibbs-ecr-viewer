@@ -165,7 +165,7 @@ const FilterReportableConditions = ({
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
 
-  // Keep state in sync with updated params
+  // Keep state in sync with updated params while maintaining correct focus on submit
   useEffect(() => setFilterConditions(initFilterState), [initConditions]);
 
   // Build list of conditions to filter on
@@ -278,7 +278,7 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const [endDate, setEndDate] = useState<string>(initEnd);
   const isFilterDateDefault = filterDateOption === DEFAULT_DATE_RANGE;
 
-  // If we get new initializers, update the state
+  // Keep state in sync with updated params while maintaining correct focus on submit
   useEffect(() => {
     setStartDate(initStart);
     setEndDate(initEnd);
