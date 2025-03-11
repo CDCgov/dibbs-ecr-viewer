@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Annotated
 
@@ -12,7 +13,7 @@ description = (Path(__file__).parent.parent / "README.md").read_text(encoding="u
 
 app = FastAPI(
     title="PHDI FHIR Converter Service",
-    version="0.0.1",
+    version=os.getenv("APP_VERSION", "1.0.0"),
     contact={
         "name": "CDC Public Health Data Infrastructure",
         "url": "https://cdcgov.github.io/dibbs-ecr-viewer/",

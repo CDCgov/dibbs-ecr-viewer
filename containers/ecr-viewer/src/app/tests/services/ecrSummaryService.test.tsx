@@ -3,17 +3,17 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 
+import BundleWithClinicalInfo from "../../../../../../test-data/fhir/BundleClinicalInfo.json";
+import BundleEcrSummary from "../../../../../../test-data/fhir/BundleEcrSummary.json";
+import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryPatientDetails,
   evaluateEcrSummaryRelevantClinicalDetails,
 } from "@/app/services/ecrSummaryService";
 import { evaluateEcrSummaryRelevantLabResults } from "@/app/services/ecrSummaryService";
-import BundleWithClinicalInfo from "@/app/tests/assets/BundleClinicalInfo.json";
-import BundleEcrSummary from "@/app/tests/assets/BundleEcrSummary.json";
-import BundleLab from "@/app/tests/assets/BundleLab.json";
-import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
-import BundlePatient from "@/app/tests/assets/BundlePatient.json";
 
 describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Clinical Details", () => {
