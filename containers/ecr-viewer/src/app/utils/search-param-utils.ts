@@ -10,10 +10,10 @@ import {
 } from "./date-utils";
 
 /**
- * A function, which given the search params, returns a list of search params to delete due
- * to invalid values
+ * A function, which given the search params, makes the search params valid, typically
+ * by deleting offending params
  */
-type ValidationFn = (searchParams: URLSearchParams) => string[] | undefined;
+type ValidationFn = (searchParams: URLSearchParams) => void;
 
 export type PageSearchParams = { [key: string]: string | string[] | undefined };
 
@@ -22,9 +22,10 @@ const checkDates: ValidationFn = (searchParams: URLSearchParams) => {
   const dateRange = searchParams.get("dateRange");
   const datesParam = searchParams.get("dates");
   if ((dateRange || datesParam) && !isValidParamDates(dateRange, datesParam)) {
-    return ["dates", "dateRange"];
+    searchParams.delete("dates");
+    searchParams.delete("dateRange");
   } else if (dateRange !== CustomDateRangeOption && datesParam !== null) {
-    return ["dates"];
+    searchParams.delete("dates");
   }
 };
 
@@ -34,7 +35,7 @@ const isPositiveInt = (paramName: string): ValidationFn => {
     const param = searchParams.get(paramName) as string;
     const value = parseInt(param);
     if (Number.isNaN(value) || value < 1) {
-      return [paramName];
+      searchParams.delete(paramName);
     }
   };
 };
@@ -78,7 +79,8 @@ export const LIBRARY_SEARCH_PARAMS: {
       );
       if (!validIds.includes(param)) {
         // if we're deleteing the column, doesn't make sense to keep the direciton
-        return ["columnId", "direction"];
+        searchParams.delete("columnId");
+        searchParams.delete("direction");
       }
     },
   },
@@ -87,7 +89,7 @@ export const LIBRARY_SEARCH_PARAMS: {
     validator: (searchParams) => {
       const param = searchParams.get("direction") as string;
       if (!["ASC", "DESC"].includes(param)) {
-        return ["direction"];
+        searchParams.delete("direction");
       }
     },
   },

@@ -16,7 +16,6 @@ export const withUrlParamChecks: MiddlewareFactory = (
 ) => {
   return async function (request: NextRequest) {
     const url = request.nextUrl.clone();
-    let changed = false;
     for (const [param, spec] of Object.entries(LIBRARY_SEARCH_PARAMS)) {
       if (url.searchParams.has(param)) {
         // We never expect a param to be specified multiple times, delete later entries
@@ -25,19 +24,16 @@ export const withUrlParamChecks: MiddlewareFactory = (
           paramVals.slice(1).forEach((val) => {
             url.searchParams.delete(param, val);
           });
-          changed = true;
         }
 
         // Check param's validation function
-        const toDelete = spec.validator?.(url.searchParams) ?? [];
-        toDelete.forEach((p) => {
-          url.searchParams.delete(p);
-          changed = true;
-        });
+        spec.validator?.(url.searchParams);
       }
     }
 
-    if (changed) {
+    if (
+      url.searchParams.toString() !== request.nextUrl.searchParams.toString()
+    ) {
       return NextResponse.redirect(url);
     } else {
       return next(request);
