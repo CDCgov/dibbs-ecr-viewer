@@ -256,7 +256,7 @@ export const formatContactPoint = (
  * @param includeAllAddresses Whether to format all addresses, or just the most relevant (default false)
  * @returns Formatted patient contact, undefined if no contact
  */
-export const formatPatientContact = (
+export const formatPatientContactList = (
   contacts: RelatedPerson[] | PatientContact[],
   includeAllAddresses: boolean = false,
 ): string | undefined => {

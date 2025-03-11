@@ -11,7 +11,7 @@ import {
   formatAddress,
   formatPhoneNumber,
   formatCurrentAddress,
-  formatPatientContact,
+  formatPatientContactList,
   formatCodeableConcept,
   formatAge,
 } from "@/app/services/formatService";
@@ -456,7 +456,7 @@ describe("FormatService tests", () => {
           },
         },
       ];
-      const actual = formatPatientContact(contact);
+      const actual = formatPatientContactList(contact);
       expect(actual).toEqual(
         `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999`,
       );
@@ -522,7 +522,7 @@ describe("FormatService tests", () => {
           ],
         },
       ];
-      const actual = formatPatientContact(contact);
+      const actual = formatPatientContactList(contact);
       expect(actual).toEqual(
         `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
       );
@@ -552,14 +552,14 @@ describe("FormatService tests", () => {
           ],
         },
       ];
-      const actual = formatPatientContact(contact);
+      const actual = formatPatientContactList(contact);
       expect(actual).toEqual(
         `Sister\nAnastasia Bubbletea Pizza\nHome: 555-995-9999`,
       );
     });
     // TODO PR: Add tests for RelatedPerson
     it("should return undefined if a patient has no contact", () => {
-      const actual = formatPatientContact([]);
+      const actual = formatPatientContactList([]);
       expect(actual).toBeUndefined();
     });
   });

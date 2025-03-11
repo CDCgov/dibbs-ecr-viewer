@@ -36,7 +36,7 @@ import {
   formatContactPoint,
   formatName,
   formatNameList,
-  formatPatientContact,
+  formatPatientContactList,
   formatAge,
   formatPhoneNumber,
 } from "./formatService";
@@ -414,14 +414,14 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
     },
     {
       title: "Parent/Guardian",
-      value: formatPatientContact(
+      value: formatPatientContactList(
         evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
         true,
       ),
     },
     {
       title: "Emergency Contact",
-      value: formatPatientContact(
+      value: formatPatientContactList(
         evaluateAll(fhirBundle, fhirPathMappings.patientEmergencyContact),
       ),
     },

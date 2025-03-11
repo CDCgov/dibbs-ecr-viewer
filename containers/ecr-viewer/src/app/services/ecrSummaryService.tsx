@@ -27,7 +27,7 @@ import {
   formatCodeableConcept,
   formatContactPoint,
   formatCurrentAddress,
-  formatPatientContact,
+  formatPatientContactList,
   formatPhoneNumber,
 } from "./formatService";
 import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
@@ -49,7 +49,7 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
       ? [
           {
             title: "Parent/Guardian",
-            value: formatPatientContact(
+            value: formatPatientContactList(
               evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
             ),
           },
