@@ -48,7 +48,7 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
     !age || age.years < 18
       ? [
           {
-            title: "Patient Parent/Guardian",
+            title: "Parent/Guardian",
             value: formatPatientContact(
               evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
             ),

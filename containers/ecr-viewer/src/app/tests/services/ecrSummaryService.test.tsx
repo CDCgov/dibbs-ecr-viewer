@@ -285,7 +285,7 @@ describe("ecrSummaryService Tests", () => {
       );
 
       const guardian = actual.availableData.find(
-        (d) => d.title === "Patient Parent/Guardian",
+        (d) => d.title === "Parent/Guardian",
       );
 
       expect(guardian).toBeUndefined();
@@ -311,7 +311,7 @@ describe("ecrSummaryService Tests", () => {
       );
 
       const guardian = actual.availableData.find(
-        (d) => d.title === "Patient Parent/Guardian",
+        (d) => d.title === "Parent/Guardian",
       );
 
       expect(guardian?.value).toEqual(
