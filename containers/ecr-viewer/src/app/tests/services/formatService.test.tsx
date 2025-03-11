@@ -51,6 +51,7 @@ describe("FormatService tests", () => {
       expect(formatAge({ years: 0, months: 0, days: 27 })).toEqual("27 days");
       expect(formatAge({ years: 0, months: 0, days: 31 })).toEqual("31 days");
       expect(formatAge({ years: 0, months: 0, days: 1 })).toEqual("1 day");
+      expect(formatAge({ years: 0, months: 0, days: 0 })).toEqual("0 days");
     });
 
     it("should not return a plural unit if months/days equals 1", () => {
