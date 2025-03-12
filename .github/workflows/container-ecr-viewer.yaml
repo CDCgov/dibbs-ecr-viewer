@@ -173,7 +173,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run convert-seed-data
         env:
-          SEED_DATA_DIRECTORIES: e2e
+          SEED_DATA_DIRECTORIES: star-wars
 
       - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}

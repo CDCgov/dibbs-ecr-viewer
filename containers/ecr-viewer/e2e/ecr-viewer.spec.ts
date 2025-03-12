@@ -1,36 +1,44 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-test.skip("should not have any automatically detectable accessibility issues", async ({
-  page,
-}) => {
-  // Set timetout to 2 minutes because the first call to local stack s3 can take ~1:30
-  test.setTimeout(120_000);
+import { logInToKeycloack, waitForKeycloak } from "./utils";
 
-  await page.goto(
-    "/ecr-viewer/view-data?id=1.2.840.114350.1.13.297.3.7.8.688883.567479",
-  );
-  await page.getByText("Patient Name").first().waitFor();
+test.describe("viewer page", () => {
+  test.beforeAll(waitForKeycloak);
+  test.beforeEach(logInToKeycloack);
 
-  const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+  test("should not have any automatically detectable accessibility issues", async ({
+    page,
+  }) => {
+    // Set timetout to 2 minutes because the first call to local stack s3 can take ~1:30
+    test.setTimeout(120_000);
 
-  expect(accessibilityScanResults.violations).toEqual([]);
-});
+    await page.goto(
+      "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+    );
+    await page.getByText("Patient Name").first().waitFor();
 
-test.skip("fully expanded should not have any automatically detectable accessibility issues", async ({
-  page,
-}) => {
-  await page.goto(
-    "/ecr-viewer/view-data?id=1.2.840.114350.1.13.297.3.7.8.688883.567479",
-  );
-  await page.getByRole("button", { name: "Expand all labs" }).click();
+    const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 
-  const viewCommentButtons = await page.getByTestId("comment-button").all();
-  for (const viewCommentButton of viewCommentButtons) {
-    await viewCommentButton.scrollIntoViewIfNeeded();
-    await viewCommentButton.click();
-  }
-  const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
 
-  expect(accessibilityScanResults.violations).toEqual([]);
+  // TODO: we need seed data with structured labs to get this running again
+  test.skip("fully expanded should not have any automatically detectable accessibility issues", async ({
+    page,
+  }) => {
+    await page.goto(
+      "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+    );
+    await page.getByRole("button", { name: "Expand all labs" }).click();
+
+    const viewCommentButtons = await page.getByTestId("comment-button").all();
+    for (const viewCommentButton of viewCommentButtons) {
+      await viewCommentButton.scrollIntoViewIfNeeded();
+      await viewCommentButton.click();
+    }
+    const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
 });
