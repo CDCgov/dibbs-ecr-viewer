@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-import { waitForKeycloak } from "../utils";
+import { waitForKeycloak } from "./utils";
 
 test.describe("keycloak", () => {
   test.beforeAll(waitForKeycloak);
