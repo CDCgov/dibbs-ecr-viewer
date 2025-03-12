@@ -1,11 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-import { logInToKeycloack, waitForKeycloak } from "./utils";
+import { logInToKeycloak, waitForKeycloak } from "./utils";
 
 test.describe("ecr library page", () => {
   test.beforeAll(waitForKeycloak);
-  test.beforeEach(logInToKeycloack);
+  test.beforeEach(logInToKeycloak);
 
   test.describe("eCR Library page", () => {
     test("has title", async ({ page }) => {

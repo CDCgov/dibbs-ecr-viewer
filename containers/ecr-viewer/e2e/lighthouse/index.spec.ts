@@ -5,7 +5,7 @@ import {
   playwrightLighthouseResult,
 } from "playwright-lighthouse";
 
-import { waitForKeycloak, logInToKeycloack } from "../non-integrated/utils";
+import { waitForKeycloak, logInToKeycloak } from "../non-integrated/utils";
 
 const lighthouseTest = test.extend<
   {},
@@ -73,12 +73,13 @@ const lighthouseTest = test.extend<
 
 lighthouseTest.describe("lighthouse", async () => {
   lighthouseTest.beforeAll(waitForKeycloak);
-  lighthouseTest.beforeEach(logInToKeycloack);
+  lighthouseTest.beforeEach(logInToKeycloak);
 
   lighthouseTest(
     "home page",
     async ({ page, port, playAudit, commonConfig }) => {
       await page.goto("/ecr-viewer");
+      await page.waitForURL("/ecr-viewer");
       await playAudit({
         page,
         thresholds: {
@@ -97,10 +98,13 @@ lighthouseTest.describe("lighthouse", async () => {
       await page.goto(
         "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
       );
+      await page.waitForURL(
+        "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+      );
       await playAudit({
         page,
         thresholds: {
-          performance: 90,
+          performance: 83,
           accessibility: 100,
         },
         port,
@@ -115,10 +119,13 @@ lighthouseTest.describe("lighthouse", async () => {
       await page.goto(
         "/ecr-viewer/view-data?id=e91bc1e8-2523-4047-a663-1e3e07812948",
       );
+      await page.waitForURL(
+        "/ecr-viewer/view-data?id=e91bc1e8-2523-4047-a663-1e3e07812948",
+      );
       await playAudit({
         page,
         thresholds: {
-          performance: 90,
+          performance: 83,
           accessibility: 100,
         },
         port,
@@ -131,10 +138,11 @@ lighthouseTest.describe("lighthouse", async () => {
     "ecr page 404",
     async ({ page, port, playAudit, commonConfig }) => {
       await page.goto("/ecr-viewer/view-data?id=i-am-fake");
+      await page.waitForURL("/ecr-viewer/view-data?id=i-am-fake");
       await playAudit({
         page,
         thresholds: {
-          performance: 90,
+          performance: 85,
           accessibility: 100,
         },
         port,

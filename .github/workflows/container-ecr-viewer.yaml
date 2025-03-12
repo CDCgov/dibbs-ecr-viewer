@@ -190,7 +190,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:lighthouse
 
-      - name: Upload playwright report - lighthouse
+      - name: Upload playwright report - Lighthouse
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

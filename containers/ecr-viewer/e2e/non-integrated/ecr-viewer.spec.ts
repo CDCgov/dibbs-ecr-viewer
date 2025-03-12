@@ -1,11 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-import { logInToKeycloack, waitForKeycloak } from "./utils";
+import { logInToKeycloak, waitForKeycloak } from "./utils";
 
 test.describe("viewer page", () => {
   test.beforeAll(waitForKeycloak);
-  test.beforeEach(logInToKeycloack);
+  test.beforeEach(logInToKeycloak);
 
   test("should not have any automatically detectable accessibility issues", async ({
     page,
