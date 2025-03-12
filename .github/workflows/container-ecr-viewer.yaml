@@ -186,6 +186,18 @@ jobs:
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
+      - name: Run Playwright tests - Lighthouse
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:e2e:lighthouse
+
+      - name: Upload playwright report - lighthouse
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: lighthouse-report
+          path: containers/${{env.CONTAINER}}/lighthouse/
+          retention-days: 5
+
       - name: Set CONFIG_NAME to AWS_INTEGRATED
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
