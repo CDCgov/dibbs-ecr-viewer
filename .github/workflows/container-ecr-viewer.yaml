@@ -194,6 +194,14 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
+          name: playwright-report-lighthouse
+          path: containers/${{env.CONTAINER}}/playwright-report/
+          retention-days: 5
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
           name: lighthouse-report
           path: containers/${{env.CONTAINER}}/lighthouse/
           retention-days: 5
