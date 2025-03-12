@@ -41,6 +41,14 @@ test.describe("ecr library page", () => {
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
       ).toEqual(1);
+
+      // Make sure reset button works
+      await page.getByLabel("reset").click();
+      await expect(page.getByText("Showing 1-4")).toBeVisible();
+      await expect(page.getByText("Zika Virus Disease")).toBeVisible();
+      expect(
+        (await page.locator("tbody > tr").allTextContents()).length,
+      ).toEqual(4);
     });
 
     test("Search should filter results ", async ({ page }) => {
