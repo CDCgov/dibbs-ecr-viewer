@@ -43,7 +43,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run local-dev",
+    command: "npm run local-docker",
     url: "http://localhost:3000/ecr-viewer",
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
