@@ -7,8 +7,10 @@ import BundleWithClinicalInfo from "../../../../../../test-data/fhir/BundleClini
 import BundleEcrSummary from "../../../../../../test-data/fhir/BundleEcrSummary.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import {
   evaluateEcrSummaryConditionSummary,
+  evaluateEcrSummaryPatientDetails,
   evaluateEcrSummaryRelevantClinicalDetails,
 } from "@/app/services/ecrSummaryService";
 import { evaluateEcrSummaryRelevantLabResults } from "@/app/services/ecrSummaryService";
@@ -264,6 +266,56 @@ describe("ecrSummaryService Tests", () => {
       );
       expect(actual[0].title).toEqual(
         "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+      );
+    });
+  });
+
+  describe("Evaluate eCR Summary Patient Details", () => {
+    it("should get all relevant patient details", () => {
+      const actual = evaluateEcrSummaryPatientDetails(
+        BundlePatient as unknown as Bundle,
+      );
+
+      expect(actual.unavailableData).toBeEmpty();
+    });
+
+    it("should not show parent/guardian info if adult", () => {
+      const actual = evaluateEcrSummaryPatientDetails(
+        BundlePatient as unknown as Bundle,
+      );
+
+      const guardian = actual.availableData.find(
+        (d) => d.title === "Parent/Guardian",
+      );
+
+      expect(guardian).toBeUndefined();
+    });
+
+    it("should show parent/guardian info if minor", () => {
+      const bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          {
+            fullUrl: "urn:uuid:99999999-4p89-4b96-b6ab-c46406839cea",
+            resource: {
+              ...BundlePatient.entry.at(0)?.resource,
+              birthDate: "2025-01-01",
+            },
+          },
+          ...BundlePatient.entry.slice(1),
+        ],
+      };
+      const actual = evaluateEcrSummaryPatientDetails(
+        bundle as unknown as Bundle,
+      );
+
+      const guardian = actual.availableData.find(
+        (d) => d.title === "Parent/Guardian",
+      );
+
+      expect(guardian?.value).toEqual(
+        `Grandparent\nLuthen Rael\n1357 Galactic Drive\nSometown, OR\n94949, US\nHome: 123-456-6909`,
       );
     });
   });

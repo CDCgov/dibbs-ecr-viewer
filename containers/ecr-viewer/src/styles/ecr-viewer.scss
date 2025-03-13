@@ -283,8 +283,9 @@ html {
   width: $nav-wrapper-width;
   min-width: $nav-wrapper-width;
   position: sticky;
-  height: 100vh;
+  height: calc(100vh - var(--patient-banner-buffer));
   top: var(--patient-banner-buffer);
+  overflow-y: auto;
 
   .usa-sidenav__item a:not(.usa-sidenav__sublist a) {
     font-weight: bold;

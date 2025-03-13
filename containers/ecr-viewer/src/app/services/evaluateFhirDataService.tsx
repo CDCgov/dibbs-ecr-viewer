@@ -3,7 +3,6 @@ import "server-only"; // FHIR evaluation should be done server side
 import {
   Address,
   Bundle,
-  CodeableConcept,
   Condition,
   Encounter,
   Location,
@@ -32,8 +31,12 @@ import {
 } from "./formatDateService";
 import {
   formatAddress,
+  formatAddressList,
+  formatCodeableConcept,
   formatContactPoint,
   formatName,
+  formatNameList,
+  formatPatientContactList,
   formatAge,
   formatPhoneNumber,
 } from "./formatService";
@@ -62,9 +65,7 @@ export const evaluatePatientName = (
     return formatName(officialName ?? nameList[0]);
   }
 
-  return nameList
-    .map((name) => formatName(name, nameList.length > 1))
-    .join("\n");
+  return formatNameList(nameList);
 };
 
 /**
@@ -114,18 +115,7 @@ export const evaluatePatientAddress = (fhirBundle: Bundle) => {
     fhirPathMappings.patientAddressList,
   );
 
-  if (addresses.length > 0) {
-    return addresses
-      .map((address) => {
-        return formatAddress(address, {
-          includeUse: addresses.length > 1,
-          includePeriod: true,
-        });
-      })
-      .join("\n\n");
-  } else {
-    return "";
-  }
+  return formatAddressList(addresses);
 };
 
 /**
@@ -423,8 +413,17 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       ),
     },
     {
+      title: "Parent/Guardian",
+      value: formatPatientContactList(
+        evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
+        true,
+      ),
+    },
+    {
       title: "Emergency Contact",
-      value: evaluateEmergencyContact(fhirBundle),
+      value: formatPatientContactList(
+        evaluateAll(fhirBundle, fhirPathMappings.patientEmergencyContact),
+      ),
     },
     {
       title: "Patient IDs",
@@ -546,7 +545,7 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
     },
     {
       title: "Provider Address",
-      value: practitioner?.address?.map((address) => formatAddress(address)),
+      value: formatAddressList(practitioner?.address),
     },
     {
       title: "Provider Contact",
@@ -558,7 +557,7 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
     },
     {
       title: "Provider Facility Address",
-      value: organization?.address?.map((address) => formatAddress(address)),
+      value: formatAddressList(organization?.address),
     },
     {
       title: "Provider ID",
@@ -616,36 +615,6 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
       className="caption-data-title margin-y-0"
     />
   );
-};
-
-/**
- * Evaluates emergency contact information from the FHIR bundle and formats it into a readable string.
- * @param fhirBundle - The FHIR bundle containing patient information.
- * @returns The formatted emergency contact information.
- */
-export const evaluateEmergencyContact = (fhirBundle: Bundle) => {
-  const contacts = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.patientEmergencyContact,
-  );
-
-  if (contacts.length === 0) return undefined;
-
-  return contacts
-    .map((contact) => {
-      const relationship = toSentenceCase(
-        getHumanReadableCodeableConcept(contact.relationship?.[0]),
-      );
-
-      const contactName = contact.name ? formatName(contact.name) : "";
-      const address = contact.address ? formatAddress(contact.address) : "";
-      const phoneNumbers = formatContactPoint(contact.telecom);
-
-      return [relationship, contactName, address, phoneNumbers]
-        .filter(Boolean)
-        .join("\n");
-    })
-    .join("\n\n");
 };
 
 /**
@@ -709,7 +678,7 @@ export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
     .map((diagnosis) => {
       const reference = diagnosis.condition?.reference;
       const condition = evaluateReference<Condition>(fhirBundle, reference);
-      return getHumanReadableCodeableConcept(condition?.code);
+      return formatCodeableConcept(condition?.code);
     })
     .filter(Boolean)
     .join(", ");
@@ -756,49 +725,6 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
     })
     .filter(Boolean)
     .join("\n\n");
-};
-
-/**
- * Attempts to return a human-readable display value for a CodeableConcept. It will return the first
- * available value in the following order:
- * 1) `undefined` if the `CodeableConcept` is falsy
- * 2) `CodeableConcept.text`
- * 3) value of the first `coding` with a `display` value
- * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
- * 5) `code` of the first `coding` with a `code` value
- * 6) `undefined`
- * @param codeableConcept - The CodeableConcept to get the display value from.
- * @returns - The human-readable display value of the CodeableConcept.
- */
-export const getHumanReadableCodeableConcept = (
-  codeableConcept: CodeableConcept | undefined,
-) => {
-  if (!codeableConcept) {
-    return undefined;
-  }
-
-  const { coding, text } = codeableConcept;
-
-  if (text) {
-    return text;
-  }
-
-  const firstCodingWithDisplay = coding?.find((c) => c.display);
-  if (firstCodingWithDisplay?.display) {
-    return firstCodingWithDisplay.display;
-  }
-
-  const firstCodingWithCodeSystem = coding?.find((c) => c.code && c.system);
-  if (firstCodingWithCodeSystem?.code && firstCodingWithCodeSystem?.system) {
-    return `${firstCodingWithCodeSystem.code} (${firstCodingWithCodeSystem.system})`;
-  }
-
-  const firstCodingWithCode = coding?.find((c) => c.code);
-  if (firstCodingWithCode?.code) {
-    return firstCodingWithCode.code;
-  }
-
-  return undefined;
 };
 
 /**

@@ -1,6 +1,13 @@
 import "server-only"; // FHIR evaluation/formatting should be done server side
 
-import { Address, ContactPoint, HumanName } from "fhir/r4";
+import {
+  Address,
+  CodeableConcept,
+  ContactPoint,
+  HumanName,
+  PatientContact,
+  RelatedPerson,
+} from "fhir/r4";
 
 import {
   makePlural,
@@ -38,6 +45,25 @@ export const formatName = (
   return segments.filter(Boolean).join(" ");
 };
 
+/**
+ * Format's a list of a person's names. Adding the `use` if there is more
+ * than one name
+ * @param humanNames A list of (or single) name
+ * @returns The formatted name string
+ */
+export const formatNameList = (
+  humanNames: HumanName[] | HumanName | undefined,
+): string => {
+  if (!humanNames) return "";
+  if (Array.isArray(humanNames)) {
+    return humanNames
+      .map((name) => formatName(name, humanNames.length > 1))
+      .join("\n");
+  } else {
+    return formatName(humanNames);
+  }
+};
+
 const DEFAULT_ADDRESS_CONFIG = { includeUse: false, includePeriod: false };
 type AddressConfig = { includeUse?: boolean; includePeriod?: boolean };
 
@@ -59,7 +85,7 @@ type AddressConfig = { includeUse?: boolean; includePeriod?: boolean };
 export const formatAddress = (
   { line, city, state, postalCode, country, use, period }: Address = {},
   config: AddressConfig = {},
-) => {
+): string => {
   const { includeUse, includePeriod } = {
     ...DEFAULT_ADDRESS_CONFIG,
     ...config,
@@ -81,6 +107,62 @@ export const formatAddress = (
   ]
     .filter(Boolean)
     .join("\n");
+};
+
+/**
+ * Formats a list of addresses with use if more than one and separated by double newlines
+ * @param addresses A list of addresses, a single address, or undefined
+ * @returns The formatted address list, can be empty string
+ */
+export const formatAddressList = (
+  addresses: Address[] | Address | undefined,
+): string => {
+  if (!addresses) return "";
+  if (Array.isArray(addresses)) {
+    return addresses
+      .map((address) =>
+        formatAddress(address, {
+          includeUse: addresses.length > 1,
+          includePeriod: true,
+        }),
+      )
+      .join("\n\n");
+  } else {
+    return formatAddress(addresses);
+  }
+};
+
+/**
+ * Find the most current home address.
+ * @param addresses - List of addresses.
+ * @returns A string with the formatted current address or an empty string if no address.
+ */
+export const formatCurrentAddress = (
+  addresses: Address[] | Address | undefined,
+): string => {
+  if (!addresses) return "";
+  if (!Array.isArray(addresses)) return formatAddress(addresses);
+
+  // current home address is first pick
+  let address = addresses.find(
+    (a) => a.use === "home" && !!a.period?.start && !a.period?.end,
+  );
+  // then current address
+  if (!address) {
+    address = addresses.find((a) => !!a.period?.start && !a.period?.end);
+  }
+
+  // then home address
+  if (!address) {
+    address = addresses.find((a) => a.use === "home");
+  }
+
+  // then first address
+  if (!address) {
+    address = addresses[0];
+  }
+
+  return formatAddress(address);
 };
 
 const VALID_PHONE_NUMBER_REGEX = /^\d{3}-\d{3}-\d{4}$/;
@@ -166,6 +248,80 @@ export const formatContactPoint = (
     }
   }
   return contactArr.join("\n");
+};
+
+/**
+ * Format a patient contact (emergency or guardian)
+ * @param contacts A list of patient contacts
+ * @param includeAllAddresses Whether to format all addresses, or just the most relevant (default false)
+ * @returns Formatted patient contact, undefined if no contact
+ */
+export const formatPatientContactList = (
+  contacts: RelatedPerson[] | PatientContact[],
+  includeAllAddresses: boolean = false,
+): string | undefined => {
+  if (contacts.length === 0) return undefined;
+
+  return contacts
+    .map((contact) => {
+      const relationship = toSentenceCase(
+        formatCodeableConcept(contact.relationship?.[0]),
+      );
+
+      const contactName = formatNameList(contact.name);
+      const address = includeAllAddresses
+        ? formatAddressList(contact.address)
+        : formatCurrentAddress(contact.address);
+      const phoneNumbers = formatContactPoint(contact.telecom);
+
+      return [relationship, contactName, address, phoneNumbers]
+        .filter(Boolean)
+        .join("\n");
+    })
+    .join("\n\n");
+};
+
+/**
+ * Attempts to return a human-readable display value for a CodeableConcept. It will return the first
+ * available value in the following order:
+ * 1) `undefined` if the `CodeableConcept` is falsy
+ * 2) `CodeableConcept.text`
+ * 3) value of the first `coding` with a `display` value
+ * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
+ * 5) `code` of the first `coding` with a `code` value
+ * 6) `undefined`
+ * @param codeableConcept - The CodeableConcept to get the display value from.
+ * @returns - The human-readable display value of the CodeableConcept.
+ */
+export const formatCodeableConcept = (
+  codeableConcept: CodeableConcept | undefined,
+): string | undefined => {
+  if (!codeableConcept) {
+    return undefined;
+  }
+
+  const { coding, text } = codeableConcept;
+
+  if (text) {
+    return text;
+  }
+
+  const firstCodingWithDisplay = coding?.find((c) => c.display);
+  if (firstCodingWithDisplay?.display) {
+    return firstCodingWithDisplay.display;
+  }
+
+  const firstCodingWithCodeSystem = coding?.find((c) => c.code && c.system);
+  if (firstCodingWithCodeSystem?.code && firstCodingWithCodeSystem?.system) {
+    return `${firstCodingWithCodeSystem.code} (${firstCodingWithCodeSystem.system})`;
+  }
+
+  const firstCodingWithCode = coding?.find((c) => c.code);
+  if (firstCodingWithCode?.code) {
+    return firstCodingWithCode.code;
+  }
+
+  return undefined;
 };
 
 /**

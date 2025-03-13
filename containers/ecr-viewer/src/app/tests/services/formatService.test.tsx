@@ -1,10 +1,18 @@
-import { ContactPoint, HumanName } from "fhir/r4";
+import {
+  CodeableConcept,
+  ContactPoint,
+  HumanName,
+  PatientContact,
+} from "fhir/r4";
 
 import {
   formatName,
   formatContactPoint,
   formatAddress,
   formatPhoneNumber,
+  formatCurrentAddress,
+  formatPatientContactList,
+  formatCodeableConcept,
   formatAge,
 } from "@/app/services/formatService";
 
@@ -341,6 +349,59 @@ describe("FormatService tests", () => {
     });
   });
 
+  describe("formatCurrentAddress", () => {
+    const base = {
+      line: ["123 Main St"],
+    };
+
+    it("should return empty when no addresses available", () => {
+      const actual = formatCurrentAddress([]);
+
+      expect(actual).toEqual("");
+    });
+
+    it("should return first address when no use or period", () => {
+      const actual = formatCurrentAddress([
+        { ...base, city: "1" },
+        { ...base, city: "2" },
+      ]);
+
+      expect(actual).toEqual("123 Main St\n1");
+    });
+
+    it("should return first home address when no current period", () => {
+      const actual = formatCurrentAddress([
+        { ...base, use: "work", city: "1" },
+        { ...base, use: "home", city: "2" },
+        { ...base, use: "home", city: "3" },
+        {
+          ...base,
+          use: "home",
+          city: "3",
+          period: { start: "2020-03-01", end: "2020-04-01" },
+        },
+      ]);
+
+      expect(actual).toEqual("123 Main St\n2");
+    });
+
+    it("should return current home address", () => {
+      const actual = formatCurrentAddress([
+        { ...base, use: "work", city: "1" },
+        { ...base, use: "home", city: "2" },
+        { ...base, use: "home", city: "3", period: { start: "2024-03-13" } },
+        {
+          ...base,
+          use: "home",
+          city: "4",
+          period: { start: "2024-03-10", end: "2024-03-12" },
+        },
+      ]);
+
+      expect(actual).toEqual("123 Main St\n3");
+    });
+  });
+
   describe("Format phone number", () => {
     it("should return undefined when phone number is undefined", () => {
       const actual = formatPhoneNumber(undefined);
@@ -357,6 +418,227 @@ describe("FormatService tests", () => {
       const actual = formatPhoneNumber("5551234567 +1");
 
       expect(actual).toEqual("555-123-4567");
+    });
+  });
+
+  describe("Format Patient Contact", () => {
+    it("should format an emergency contact", () => {
+      const contact: PatientContact[] = [
+        {
+          relationship: [
+            {
+              coding: [
+                {
+                  display: "sister",
+                },
+              ],
+            },
+          ],
+          telecom: [
+            {
+              system: "phone",
+              value: "+1-555-995-9999",
+              use: "home",
+            },
+          ],
+          name: {
+            given: ["Anastasia", "Bubbletea"],
+            family: "Pizza",
+          },
+          address: {
+            use: "home",
+            line: ["999 Single Court"],
+            city: "BEVERLY HILLS",
+            state: "CA",
+            country: "USA",
+            postalCode: "90210",
+            district: "LOS ANGELE",
+          },
+        },
+      ];
+      const actual = formatPatientContactList(contact);
+      expect(actual).toEqual(
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999`,
+      );
+    });
+    it("should return multiple emergency contacts", () => {
+      const contact: PatientContact[] = [
+        {
+          relationship: [
+            {
+              coding: [
+                {
+                  display: "sister",
+                },
+              ],
+            },
+          ],
+          telecom: [
+            {
+              system: "phone",
+              value: "+1-555-995-9999",
+              use: "home",
+            },
+          ],
+          name: {
+            given: ["Anastasia", "Bubbletea"],
+            family: "Pizza",
+          },
+          address: {
+            use: "home",
+            line: ["999 Single Court"],
+            city: "BEVERLY HILLS",
+            state: "CA",
+            country: "USA",
+            postalCode: "90210",
+            district: "LOS ANGELE",
+          },
+        },
+        {
+          relationship: [
+            {
+              coding: [
+                {
+                  display: "brother",
+                },
+              ],
+            },
+          ],
+          name: {
+            given: ["Alberto", "Bonanza", "Bartholomew"],
+            family: "Eggbert",
+          },
+          telecom: [
+            {
+              system: "phone",
+              value: "+1-555-995-1000",
+              use: "home",
+            },
+            {
+              system: "fax",
+              value: "+1-555-995-1001",
+              use: "home",
+            },
+          ],
+        },
+      ];
+      const actual = formatPatientContactList(contact);
+      expect(actual).toEqual(
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
+      );
+    });
+    it("should not return empty space when address is not available in", () => {
+      const contact: PatientContact[] = [
+        {
+          relationship: [
+            {
+              coding: [
+                {
+                  display: "sister",
+                },
+              ],
+            },
+          ],
+          name: {
+            given: ["Anastasia", "Bubbletea"],
+            family: "Pizza",
+          },
+          telecom: [
+            {
+              system: "phone",
+              value: "+1-555-995-9999",
+              use: "home",
+            },
+          ],
+        },
+      ];
+      const actual = formatPatientContactList(contact);
+      expect(actual).toEqual(
+        `Sister\nAnastasia Bubbletea Pizza\nHome: 555-995-9999`,
+      );
+    });
+    // TODO PR: Add tests for RelatedPerson
+    it("should return undefined if a patient has no contact", () => {
+      const actual = formatPatientContactList([]);
+      expect(actual).toBeUndefined();
+    });
+  });
+
+  describe("Format CodeableConcept", () => {
+    it("should return undefined if no coding is available", () => {
+      const codeableConcept = undefined;
+
+      const actual = formatCodeableConcept(codeableConcept);
+
+      expect(actual).toBeUndefined();
+    });
+
+    it("should return the text value if available", () => {
+      const textValue = "this is condition";
+      const codeableConcept: CodeableConcept = {
+        text: textValue,
+        coding: [
+          {
+            display: "Condition",
+            code: "64572001",
+          },
+        ],
+      };
+
+      const actual = formatCodeableConcept(codeableConcept);
+      expect(actual).toEqual(textValue);
+    });
+
+    it("should return the first display value if there is no text value", () => {
+      const correctDisplayValue = "Condition";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            display: "Condition",
+            code: "64572001",
+          },
+          {
+            display: "A Condition",
+            code: "AC",
+          },
+        ],
+      };
+
+      const actual = formatCodeableConcept(codeableConcept);
+      expect(actual).toEqual(correctDisplayValue);
+    });
+
+    it("should return the code and system of the first coding with both of them if there is no text or display value", () => {
+      const codeValue = "64572001";
+      const systemValue = "http://snomed.info/sct";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            code: "AC",
+          },
+          {
+            code: codeValue,
+            system: systemValue,
+          },
+        ],
+      };
+
+      const actual = formatCodeableConcept(codeableConcept);
+      expect(actual).toEqual(`${codeValue} (${systemValue})`);
+    });
+
+    it("should return the code of the first first coding with a code if there is no text, display, or a code/system pair", () => {
+      const codeValue = "64572001";
+      const codeableConcept: CodeableConcept = {
+        coding: [
+          {
+            code: codeValue,
+          },
+        ],
+      };
+
+      const actual = formatCodeableConcept(codeableConcept);
+      expect(actual).toEqual(codeValue);
     });
   });
 });
