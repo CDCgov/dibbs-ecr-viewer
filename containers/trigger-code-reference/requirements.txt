@@ -1,6 +1,9 @@
 fastapi>=0.109.1
-fhirpathpy
 pathlib
 pydantic>=2.0.0
 requests
 uvicorn
+fhirpathpy
+sqlmodel
+fhir.resources
+tqdm

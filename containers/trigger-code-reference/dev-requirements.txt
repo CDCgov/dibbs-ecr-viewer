@@ -4,3 +4,4 @@ pytest
 python-dotenv
 testcontainers[compose]
 tqdm
+fhir.resources
