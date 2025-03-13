@@ -28,15 +28,8 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "lighthouse",
-      use: { ...devices["Desktop Chrome"] },
-      retries: 2,
-      testMatch: /lighthouse.spec.ts/,
-    },
-    {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
-      testIgnore: /lighthouse.spec.ts/,
     },
 
     {

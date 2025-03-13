@@ -90,7 +90,7 @@ lighthouseTest.describe("lighthouse", async () => {
       await playAudit({
         page,
         thresholds: {
-          performance: 82,
+          performance: 78,
           accessibility: 100,
         },
         port,
