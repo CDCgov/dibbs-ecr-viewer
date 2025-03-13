@@ -10,13 +10,15 @@ import {
   Reference,
 } from "fhir/r4";
 
-import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
 import {
   formatDate,
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
-import { formatName } from "@/app/services/formatService";
+import {
+  formatCodeableConcept,
+  formatName,
+} from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
 import {
@@ -161,7 +163,7 @@ const evaluateAdministeredMedication = (
         date:
           medicationAdministration?.effectiveDateTime ??
           medicationAdministration?.effectivePeriod?.start,
-        name: getHumanReadableCodeableConcept(medication?.code),
+        name: formatCodeableConcept(medication?.code),
       });
       return data;
     },

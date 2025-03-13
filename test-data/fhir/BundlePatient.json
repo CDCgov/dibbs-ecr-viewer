@@ -350,6 +350,65 @@
         "method": "PUT",
         "url": "Observation/b467f663-f4f5-78af-a677-05b5545d8716"
       }
+    },
+    {
+      "fullUrl": "urn:uuid:6e01fadc-40b4-5b8a-62b7-0bb2634dfbd3",
+      "resource": {
+        "resourceType": "RelatedPerson",
+        "id": "6e01fadc-40b4-5b8a-62b7-0bb2634dfbd3",
+        "relationship": [
+          {
+            "coding": [
+              {
+                "code": "GRPRN",
+                "system": "urn:oid:2.16.840.1.113883.5.111",
+                "display": "Grandparent"
+              }
+            ]
+          }
+        ],
+        "name": [
+          {
+            "family": "Rael",
+            "given": ["Luthen"]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "(123)456-6909",
+            "use": "home"
+          }
+        ],
+        "address": [
+          {
+            "use": "home",
+            "line": ["1357 Galactic Drive"],
+            "city": "SomeTown",
+            "state": "OR",
+            "country": "US",
+            "postalCode": "94949"
+          },
+          {
+            "use": "work",
+            "line": ["123 Galactic Drive"],
+            "city": "SomeTown",
+            "state": "OR",
+            "country": "US",
+            "postalCode": "94949"
+          }
+        ],
+        "patient": {
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
+        },
+        "meta": {
+          "source": "ecr"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "RelatedPerson/6e01fadc-40b4-5b8a-62b7-0bb2634dfbd3"
+      }
     }
   ]
 }
