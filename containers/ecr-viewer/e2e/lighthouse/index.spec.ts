@@ -1,4 +1,7 @@
-import { Browser, chromium, test } from "@playwright/test";
+import os from "os";
+import path from "path";
+
+import { BrowserContext, chromium, test } from "@playwright/test";
 import getPort from "get-port";
 import {
   playwrightLighthouseConfig,
@@ -11,7 +14,7 @@ const lighthouseTest = test.extend<
   {},
   {
     port: number;
-    browser: Browser;
+    context: BrowserContext;
     playAudit: (
       config: playwrightLighthouseConfig,
     ) => Promise<playwrightLighthouseResult>;
@@ -27,17 +30,19 @@ const lighthouseTest = test.extend<
     { scope: "worker" },
   ],
 
-  browser: [
+  context: [
     async ({ port }, use) => {
-      const browser = await chromium.launch({
+      const userDataDir = path.join(os.tmpdir(), "pw", String(Math.random()));
+      const context = await chromium.launchPersistentContext(userDataDir, {
         args: [
           `--remote-debugging-port=${port}`,
           "--ignore-certificate-errors",
         ],
       });
-      await use(browser);
+      await use(context);
+      await context.close();
     },
-    { scope: "worker" },
+    { scope: "test" },
   ],
 
   playAudit: [
@@ -59,6 +64,9 @@ const lighthouseTest = test.extend<
       );
       const commonConfig = {
         config: lighthouseDesktopConfig.default,
+        opts: {
+          disableStorageReset: true,
+        },
         reports: {
           formats: {
             html: !!process.env.CI,
@@ -79,11 +87,10 @@ lighthouseTest.describe("lighthouse", async () => {
     "home page",
     async ({ page, port, playAudit, commonConfig }) => {
       await page.goto("/ecr-viewer");
-      await page.waitForURL("/ecr-viewer");
       await playAudit({
         page,
         thresholds: {
-          performance: 75,
+          performance: 95,
           accessibility: 100,
         },
         port,
@@ -98,13 +105,10 @@ lighthouseTest.describe("lighthouse", async () => {
       await page.goto(
         "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
       );
-      await page.waitForURL(
-        "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
-      );
       await playAudit({
         page,
         thresholds: {
-          performance: 83,
+          performance: 93,
           accessibility: 100,
         },
         port,
@@ -119,13 +123,10 @@ lighthouseTest.describe("lighthouse", async () => {
       await page.goto(
         "/ecr-viewer/view-data?id=e91bc1e8-2523-4047-a663-1e3e07812948",
       );
-      await page.waitForURL(
-        "/ecr-viewer/view-data?id=e91bc1e8-2523-4047-a663-1e3e07812948",
-      );
       await playAudit({
         page,
         thresholds: {
-          performance: 83,
+          performance: 93,
           accessibility: 100,
         },
         port,
@@ -138,11 +139,10 @@ lighthouseTest.describe("lighthouse", async () => {
     "ecr page 404",
     async ({ page, port, playAudit, commonConfig }) => {
       await page.goto("/ecr-viewer/view-data?id=i-am-fake");
-      await page.waitForURL("/ecr-viewer/view-data?id=i-am-fake");
       await playAudit({
         page,
         thresholds: {
-          performance: 85,
+          performance: 93,
           accessibility: 100,
         },
         port,
