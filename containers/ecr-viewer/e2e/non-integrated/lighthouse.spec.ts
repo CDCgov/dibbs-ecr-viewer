@@ -8,7 +8,7 @@ import {
   playwrightLighthouseResult,
 } from "playwright-lighthouse";
 
-import { waitForKeycloak, logInToKeycloak } from "../non-integrated/utils";
+import { waitForKeycloak, logInToKeycloak } from "./utils";
 
 const lighthouseTest = test.extend<
   {},

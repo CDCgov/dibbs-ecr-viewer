@@ -144,18 +144,6 @@ jobs:
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
-      - name: Run Playwright tests - Lighthouse
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:lighthouse
-
-      - name: Upload playwright report - Lighthouse
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report-lighthouse
-          path: containers/${{env.CONTAINER}}/playwright-report/
-          retention-days: 5
-
       - name: Upload Lighthouse report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

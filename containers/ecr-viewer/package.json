@@ -23,7 +23,6 @@
     "test:e2e:install": "playwright install --with-deps",
     "test:e2e": "playwright test ./e2e/non-integrated",
     "test:e2e:integrated": "playwright test ./e2e/integrated",
-    "test:e2e:lighthouse": "playwright test ./e2e/lighthouse --project=chromium --retries=3",
     "clear-local": "docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile \"*\" down -v",
     "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit'",
     "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'"
