@@ -8,6 +8,8 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
 /**
  * Checks that all URL params are valid and deletes them and redirects the url if not.
+ * Note, we only check params that we expect and have validators for, all others will
+ * pass through unchanged.
  * @param next The next middleware to call
  * @returns middleware function
  */

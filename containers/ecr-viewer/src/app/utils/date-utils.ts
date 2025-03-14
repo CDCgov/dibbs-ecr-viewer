@@ -144,7 +144,10 @@ export function isValidParamDates(
   datesParam: string | null,
 ): boolean {
   if (dateRange === CustomDateRangeOption) {
-    return !!datesParam && DATE_PARAM_REGEX.test(datesParam);
+    const structurallyValid = !!datesParam && DATE_PARAM_REGEX.test(datesParam);
+    if (!structurallyValid) return false;
+    const { startDate, endDate } = buildCustomDateRange(datesParam);
+    return startDate <= endDate;
   } else {
     return Object.values(DateRangeOptions).includes(
       dateRange as DateRangeOptions,

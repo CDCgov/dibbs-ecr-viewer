@@ -128,5 +128,12 @@ describe("search param utils", () => {
       validator!(params);
       expect(params.toString()).toStrictEqual("dateRange=last-7-days");
     });
+    it("rejects custom date where end date is before start date", () => {
+      const params = new URLSearchParams(
+        "dateRange=custom&dates=2025-01-01|2024-01-01",
+      );
+      validator!(params);
+      expect(params.toString()).toStrictEqual("");
+    });
   });
 });
