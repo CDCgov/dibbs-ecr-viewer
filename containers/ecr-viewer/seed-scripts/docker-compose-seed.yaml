@@ -55,6 +55,8 @@ services:
       driver: "json-file"
     env_file:
       - ../../orchestration/.env
+    extra_hosts:
+      - host.docker.internal:host-gateway
     environment:
       - OTEL_TRACES_EXPORTER=none
       - OTEL_METRICS_EXPORTER=none
@@ -76,4 +78,4 @@ services:
       - ./baseECR:/code/baseECR
     environment:
       - CONFIG_NAME=${CONFIG_NAME}
-      - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-LA}
+      - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}

@@ -63,9 +63,7 @@ describe("Reading query params on home page", () => {
 
     render(await HomePage({ searchParams }));
 
-    expect(returnParamDates).toHaveBeenCalledWith({
-      dateRange: "last-7-days",
-    });
+    expect(returnParamDates).toHaveBeenCalledWith("last-7-days", "");
     expect(returnParamDates).toHaveReturnedWith(mockReturnDates);
   });
 });

@@ -1,4 +1,4 @@
-import { Bundle, CodeableConcept, Patient } from "fhir/r4";
+import { Bundle } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
@@ -10,7 +10,6 @@ import {
   evaluatePatientRace,
   evaluatePatientEthnicity,
   evaluatePractitionerRoleReference,
-  evaluateEmergencyContact,
   evaluatePatientAddress,
   evaluatePatientName,
   evaluateDemographicsData,
@@ -18,7 +17,6 @@ import {
   evaluateAlcoholUse,
   evaluatePatientLanguage,
   evaluatePatientVitalStatus,
-  getHumanReadableCodeableConcept,
   censorGender,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -60,6 +58,28 @@ describe("evaluateFhirDataServices tests", () => {
     expect(ext).toHaveLength(1);
     expect(ext[0].value).toEqual(
       "Fort Mojave Indian Tribe of Arizona, California",
+    );
+  });
+
+  it("should return parent/guardian if available", () => {
+    const actual = evaluateDemographicsData(BundlePatient as unknown as Bundle);
+    const ext = actual.availableData.filter(
+      (d) => d.title === "Parent/Guardian",
+    );
+    expect(ext).toHaveLength(1);
+    expect(ext[0].value).toEqual(
+      `Grandparent
+Luthen Rael
+Home:
+1357 Galactic Drive
+Sometown, OR
+94949, US
+
+Work:
+123 Galactic Drive
+Sometown, OR
+94949, US
+Home: 123-456-6909`,
     );
   });
 
@@ -123,177 +143,6 @@ describe("evaluateFhirDataServices tests", () => {
       expect(actual.organization).toBeUndefined();
 
       expect(actual.practitioner).toBeUndefined();
-    });
-  });
-
-  describe("Evaluate Emergency Contact", () => {
-    it("should return an emergency contact", () => {
-      const BundlePatientAndContact = JSON.parse(
-        JSON.stringify(BundlePatient),
-      ) as unknown as Bundle;
-      const patientIndex = BundlePatientAndContact.entry!.findIndex(
-        (entry) => entry.resource?.resourceType === "Patient",
-      );
-
-      (
-        BundlePatientAndContact.entry![patientIndex].resource as Patient
-      ).contact = [
-        {
-          relationship: [
-            {
-              coding: [
-                {
-                  display: "sister",
-                },
-              ],
-            },
-          ],
-          telecom: [
-            {
-              system: "phone",
-              value: "+1-555-995-9999",
-              use: "home",
-            },
-          ],
-          name: {
-            given: ["Anastasia", "Bubbletea"],
-            family: "Pizza",
-          },
-          address: {
-            use: "home",
-            line: ["999 Single Court"],
-            city: "BEVERLY HILLS",
-            state: "CA",
-            country: "USA",
-            postalCode: "90210",
-            district: "LOS ANGELE",
-          },
-        },
-      ];
-      const actual = evaluateEmergencyContact(BundlePatientAndContact);
-      expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999`,
-      );
-    });
-    it("should return multiple emergency contacts", () => {
-      const BundlePatientAndContact = JSON.parse(
-        JSON.stringify(BundlePatient),
-      ) as unknown as Bundle;
-      const patientIndex = BundlePatientAndContact.entry!.findIndex(
-        (entry) => entry.resource?.resourceType === "Patient",
-      );
-
-      (
-        BundlePatientAndContact.entry![patientIndex].resource as Patient
-      ).contact = [
-        {
-          relationship: [
-            {
-              coding: [
-                {
-                  display: "sister",
-                },
-              ],
-            },
-          ],
-          telecom: [
-            {
-              system: "phone",
-              value: "+1-555-995-9999",
-              use: "home",
-            },
-          ],
-          name: {
-            given: ["Anastasia", "Bubbletea"],
-            family: "Pizza",
-          },
-          address: {
-            use: "home",
-            line: ["999 Single Court"],
-            city: "BEVERLY HILLS",
-            state: "CA",
-            country: "USA",
-            postalCode: "90210",
-            district: "LOS ANGELE",
-          },
-        },
-        {
-          relationship: [
-            {
-              coding: [
-                {
-                  display: "brother",
-                },
-              ],
-            },
-          ],
-          name: {
-            given: ["Alberto", "Bonanza", "Bartholomew"],
-            family: "Eggbert",
-          },
-          telecom: [
-            {
-              system: "phone",
-              value: "+1-555-995-1000",
-              use: "home",
-            },
-            {
-              system: "fax",
-              value: "+1-555-995-1001",
-              use: "home",
-            },
-          ],
-        },
-      ];
-      const actual = evaluateEmergencyContact(BundlePatientAndContact);
-      expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
-      );
-    });
-    it("should not return empty space when address is not available in", () => {
-      const BundlePatientAndContact = JSON.parse(
-        JSON.stringify(BundlePatient),
-      ) as unknown as Bundle;
-      const patientIndex = BundlePatientAndContact.entry!.findIndex(
-        (entry) => entry.resource?.resourceType === "Patient",
-      );
-
-      (
-        BundlePatientAndContact.entry![patientIndex].resource as Patient
-      ).contact = [
-        {
-          relationship: [
-            {
-              coding: [
-                {
-                  display: "sister",
-                },
-              ],
-            },
-          ],
-          name: {
-            given: ["Anastasia", "Bubbletea"],
-            family: "Pizza",
-          },
-          telecom: [
-            {
-              system: "phone",
-              value: "+1-555-995-9999",
-              use: "home",
-            },
-          ],
-        },
-      ];
-      const actual = evaluateEmergencyContact(BundlePatientAndContact);
-      expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\nHome: 555-995-9999`,
-      );
-    });
-    it("should return undefined if a patient has no contact", () => {
-      const actual = evaluateEmergencyContact(
-        BundlePatient as unknown as Bundle,
-      );
-      expect(actual).toBeUndefined();
     });
   });
 
@@ -513,84 +362,6 @@ describe("evaluateFhirDataServices tests", () => {
       const actual = evaluatePatientLanguage(patient as unknown as Bundle);
 
       expect(actual).toEqual("Spanish\n\nEnglish");
-    });
-  });
-
-  describe("Get Human Readable CodeableConcept", () => {
-    it("should return undefined if no coding is available", () => {
-      const codeableConcept = undefined;
-
-      const actual = getHumanReadableCodeableConcept(codeableConcept);
-
-      expect(actual).toBeUndefined();
-    });
-
-    it("should return the text value if available", () => {
-      const textValue = "this is condition";
-      const codeableConcept: CodeableConcept = {
-        text: textValue,
-        coding: [
-          {
-            display: "Condition",
-            code: "64572001",
-          },
-        ],
-      };
-
-      const actual = getHumanReadableCodeableConcept(codeableConcept);
-      expect(actual).toEqual(textValue);
-    });
-
-    it("should return the first display value if there is no text value", () => {
-      const correctDisplayValue = "Condition";
-      const codeableConcept: CodeableConcept = {
-        coding: [
-          {
-            display: "Condition",
-            code: "64572001",
-          },
-          {
-            display: "A Condition",
-            code: "AC",
-          },
-        ],
-      };
-
-      const actual = getHumanReadableCodeableConcept(codeableConcept);
-      expect(actual).toEqual(correctDisplayValue);
-    });
-
-    it("should return the code and system of the first coding with both of them if there is no text or display value", () => {
-      const codeValue = "64572001";
-      const systemValue = "http://snomed.info/sct";
-      const codeableConcept: CodeableConcept = {
-        coding: [
-          {
-            code: "AC",
-          },
-          {
-            code: codeValue,
-            system: systemValue,
-          },
-        ],
-      };
-
-      const actual = getHumanReadableCodeableConcept(codeableConcept);
-      expect(actual).toEqual(`${codeValue} (${systemValue})`);
-    });
-
-    it("should return the code of the first first coding with a code if there is no text, display, or a code/system pair", () => {
-      const codeValue = "64572001";
-      const codeableConcept: CodeableConcept = {
-        coding: [
-          {
-            code: codeValue,
-          },
-        ],
-      };
-
-      const actual = getHumanReadableCodeableConcept(codeableConcept);
-      expect(actual).toEqual(codeValue);
     });
   });
 

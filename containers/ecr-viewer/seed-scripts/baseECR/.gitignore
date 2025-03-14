@@ -1,3 +1,4 @@
-bundle.json
-**/*.xml
 *
+!star-wars
+!star-wars/**
+bundle.json

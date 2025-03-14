@@ -12,7 +12,7 @@ import {
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import { getHumanReadableCodeableConcept } from "@/app/services/evaluateFhirDataService";
+import { formatCodeableConcept } from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
@@ -250,7 +250,7 @@ export const evaluateValue = (
     value = `${data.value ?? ""}${unit}`;
   } else if (originalValuePath === "CodeableConcept") {
     const data: CodeableConcept = originalValue;
-    value = getHumanReadableCodeableConcept(data) ?? "";
+    value = formatCodeableConcept(data) ?? "";
   } else if (originalValuePath === "Coding") {
     const data: Coding = originalValue;
     value = data?.display || data?.code || "";

@@ -144,6 +144,94 @@ describe("Active Problems Table", () => {
           ],
         },
       },
+      {
+        id: "4f962a2f-db60-0b87-20cc-557e17124452",
+        code: {
+          coding: [
+            {
+              code: "R51.9",
+              system: "urn:oid:2.16.840.1.113883.6.90",
+              display: "Headache",
+            },
+          ],
+        },
+        subject: {
+          reference: "Patient/34080650-1e86-08fe-c2c9-faa37629edd3",
+        },
+        category: [
+          {
+            coding: [
+              {
+                code: "problem-item-list",
+                system:
+                  "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                display: "Problem List Item",
+              },
+            ],
+          },
+        ],
+        identifier: [
+          {
+            value: "95240",
+            system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+          },
+        ],
+        resourceType: "Condition",
+        onsetAge: { value: 1 },
+        clinicalStatus: {
+          coding: [
+            {
+              code: "55561003",
+              system: "http://snomed.info/sct",
+              display: "Active",
+            },
+          ],
+        },
+      },
+      {
+        id: "9e465247-8dbb-f778-dd7f-4d56c59485b0",
+        code: {
+          coding: [
+            {
+              code: "M54.9",
+              system: "urn:oid:2.16.840.1.113883.6.90",
+              display: "Backache",
+            },
+          ],
+        },
+        subject: {
+          reference: "Patient/34080650-1e86-08fe-c2c9-faa37629edd3",
+        },
+        category: [
+          {
+            coding: [
+              {
+                code: "problem-item-list",
+                system:
+                  "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                display: "Problem List Item",
+              },
+            ],
+          },
+        ],
+        identifier: [
+          {
+            value: "95252",
+            system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+          },
+        ],
+        resourceType: "Condition",
+        onsetDateTime: "06/28/1877",
+        clinicalStatus: {
+          coding: [
+            {
+              code: "55561003",
+              system: "http://snomed.info/sct",
+              display: "Active",
+            },
+          ],
+        },
+      },
     ];
     container = render(
       returnProblemsTable(
@@ -159,8 +247,12 @@ describe("Active Problems Table", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
   it("should use or calculate onset age", () => {
-    expect(screen.getByText("123")).toBeInTheDocument();
-    expect(screen.getByText("152")).toBeInTheDocument();
-    expect(screen.getByText("141")).toBeInTheDocument();
+    expect(screen.getByText("123 years")).toBeInTheDocument();
+    expect(screen.getByText("152 years")).toBeInTheDocument();
+    expect(screen.getByText("141 years")).toBeInTheDocument();
+    expect(screen.getByText("1 year")).toBeInTheDocument();
+
+    // Uses the fallback `onsetDateTime` if no year is available
+    expect(screen.getByText("1 month, 3 days")).toBeInTheDocument();
   });
 });

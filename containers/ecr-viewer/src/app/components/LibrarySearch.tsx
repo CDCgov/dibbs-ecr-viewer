@@ -5,6 +5,7 @@ import { Search } from "@trussworks/react-uswds";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
 
 interface LibrarySearchProps {
+  initSearchTerm?: string;
   className?: string;
   textBoxClassName?: string;
 }
@@ -12,12 +13,17 @@ interface LibrarySearchProps {
 /**
  * eCR Library search bar component
  * @param props - Properties to pass into
+ * @param props.initSearchTerm - term to initialize the value with
  * @param props.className - The class name to pass into the USWDS search component
  * @param props.textBoxClassName - The class name to pass into the input props for the USWDS search component
  * @returns - Search bar component for the eCR Library
  */
-const LibrarySearch = ({ className, textBoxClassName }: LibrarySearchProps) => {
-  const { searchParams, updateQueryParam, pushQueryUpdate } = useQueryParam();
+const LibrarySearch = ({
+  initSearchTerm,
+  className,
+  textBoxClassName,
+}: LibrarySearchProps) => {
+  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
 
   return (
     <Search
@@ -30,7 +36,7 @@ const LibrarySearch = ({ className, textBoxClassName }: LibrarySearchProps) => {
         updateQueryParam("search", searchTerm);
         pushQueryUpdate();
       }}
-      defaultValue={searchParams.get("search") ?? undefined}
+      defaultValue={initSearchTerm}
       size="small"
       large={true}
       className={className}
