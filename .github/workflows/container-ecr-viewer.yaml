@@ -83,7 +83,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run convert-seed-data
         env:
-          SEED_DATA_DIRECTORIES: e2e
+          SEED_DATA_DIRECTORIES: star-wars
 
       - name: Start app
         run: CONFIG_NAME=AWS_SQLSERVER_NON_INTEGRATED docker compose --profile AWS_SQLSERVER_NON_INTEGRATED --profile ecr-viewer up -d
@@ -169,11 +169,10 @@ jobs:
           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
-        if: false
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run convert-seed-data
         env:
-          SEED_DATA_DIRECTORIES: e2e
+          SEED_DATA_DIRECTORIES: star-wars
 
       - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}
