@@ -135,13 +135,13 @@ const DATE_PARAM_REGEX = /^\d{4}-\d{2}-\d{2}\|\d{4}-\d{2}-\d{2}$/;
 
 /**
  * Checks if the the filter by date parameters are valid.
- * @param dateRange A string that defines the date range.
- * @param datesParam A string that contains the custom date range, if relevant.
+ * @param dateRange A string that defines the date range or null if no param set.
+ * @param datesParam A string that contains the custom date range or null if not param set.
  * @returns A boolean; true if the params are valid, false if invalid.
  */
 export function isValidParamDates(
   dateRange: string | null,
-  datesParam: string | null | undefined,
+  datesParam: string | null,
 ): boolean {
   if (dateRange === CustomDateRangeOption) {
     return !!datesParam && DATE_PARAM_REGEX.test(datesParam);
