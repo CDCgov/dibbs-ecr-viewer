@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 
-import { findCurrentAddress } from "@/app/services/ecrSummaryService";
 import EcrSummary, {
   ConditionSummary,
 } from "@/app/view-data/components/EcrSummary";
@@ -203,59 +202,6 @@ describe("EcrSummary tests", () => {
       );
 
       expect(screen.getByText("2 CONDITIONS FOUND"));
-    });
-  });
-
-  describe("findCurrentAddress", () => {
-    const base = {
-      line: ["123 Main St"],
-    };
-
-    it("should return empty when no addresses available", () => {
-      const actual = findCurrentAddress([]);
-
-      expect(actual).toEqual("");
-    });
-
-    it("should return first address when no use or period", () => {
-      const actual = findCurrentAddress([
-        { ...base, city: "1" },
-        { ...base, city: "2" },
-      ]);
-
-      expect(actual).toEqual("123 Main St\n1");
-    });
-
-    it("should return first home address when no current period", () => {
-      const actual = findCurrentAddress([
-        { ...base, use: "work", city: "1" },
-        { ...base, use: "home", city: "2" },
-        { ...base, use: "home", city: "3" },
-        {
-          ...base,
-          use: "home",
-          city: "3",
-          period: { start: "2020-03-01", end: "2020-04-01" },
-        },
-      ]);
-
-      expect(actual).toEqual("123 Main St\n2");
-    });
-
-    it("should return current home address", () => {
-      const actual = findCurrentAddress([
-        { ...base, use: "work", city: "1" },
-        { ...base, use: "home", city: "2" },
-        { ...base, use: "home", city: "3", period: { start: "2024-03-13" } },
-        {
-          ...base,
-          use: "home",
-          city: "4",
-          period: { start: "2024-03-10", end: "2024-03-12" },
-        },
-      ]);
-
-      expect(actual).toEqual("123 Main St\n3");
     });
   });
 });

@@ -39,9 +39,12 @@ import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
-import { getHumanReadableCodeableConcept } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
-import { formatAddress, formatPhoneNumber } from "./formatService";
+import {
+  formatAddress,
+  formatCodeableConcept,
+  formatPhoneNumber,
+} from "./formatService";
 import {
   HtmlTableJson,
   HtmlTableJsonRow,
@@ -487,7 +490,7 @@ export const evaluateLabInfoData = (
       "Organization/",
       "",
     );
-    const title = getHumanReadableCodeableConcept(report.code) ?? "Unknown";
+    const title = formatCodeableConcept(report.code) ?? "Unknown";
     const item = {
       title: (
         <>
