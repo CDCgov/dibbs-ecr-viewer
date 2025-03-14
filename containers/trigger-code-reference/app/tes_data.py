@@ -1,3 +1,4 @@
+import string
 import sys
 
 import requests
@@ -5,7 +6,7 @@ from fhir.resources.bundle import Bundle
 from fhir.resources.valueset import ValueSet
 from key import TEST_API_KEY
 from sqlmodel import Session, SQLModel, create_engine, select
-from tes_models import Concept, ConceptType, Condition
+from tes_models import Concept, ConceptType, Condition, IcdCrosswalk
 from tqdm import tqdm
 
 _DB_URL = "sqlite:///../data/tes.db"
@@ -87,6 +88,9 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
                                 new_concept = Concept(
                                     name=concept.display,
                                     code=concept.code,
+                                    gem_formatted_code=_get_gem_formatted_code(
+                                        concept.code
+                                    ),
                                     system=system.system,
                                     types=new_types,
                                 )
@@ -118,6 +122,9 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
                             new_concept = Concept(
                                 name=system.display,
                                 code=system.code,
+                                gem_formatted_code=_get_gem_formatted_code(
+                                    concept.code
+                                ),
                                 system=system.system,
                                 types=new_types,
                             )
@@ -218,7 +225,43 @@ def _build_concept_type_by_code_dict():
     return dict
 
 
+def _get_gem_formatted_code(code: str) -> str:
+    return code.translate(str.maketrans("", "", string.punctuation))
+
+
+def _build_crosswalk_table():
+    """
+    Reads the ICD-10-CM Generalized Equivalency Mappings file published by CMS
+    to create a crosswalk table between ICD10 codes and a selected set of ICD9
+    codes (the selected set are those relevant to ICD10 codes).
+    """
+    with Session(get_engine()) as session:
+        table_rows = []
+        row_id = 1
+        with open("../seed-scripts/diagnosis_gems_2018/2018_I10gem.txt") as gem:
+            for row in gem:
+                line = row.strip()
+                if line != "":
+                    # Some formatting in the file is a tab, others are 4 spaces...
+                    code_components = line.split()
+                    code_components = [row_id] + [
+                        x for x in code_components if x.strip() != ""
+                    ]
+                    crosswalk_row = IcdCrosswalk(
+                        id=code_components[0],
+                        icd10_code=code_components[1],
+                        icd9_code=code_components[2],
+                        match_flags=code_components[3],
+                    )
+                    table_rows.append(crosswalk_row)
+                    row_id += 1
+
+        session.add_all(table_rows)
+        session.commit()
+
+
 if __name__ == "__main__":
     concept_code_types_dict = _build_concept_type_by_code_dict()
     # print(concept_code_types_dict["14480-8"])
     retreive_tes_info_and_save(concept_code_types_dict)
+    _build_crosswalk_table()

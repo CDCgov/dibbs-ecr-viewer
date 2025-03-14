@@ -2,6 +2,13 @@ from sqlalchemy import UniqueConstraint
 from sqlmodel import Field, Relationship, SQLModel
 
 
+class IcdCrosswalk(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    icd10_code: str = Field(default=None, foreign_key="concept.gem_formatted_code")
+    icd9_code: str
+    match_flags: str
+
+
 class ConditionConceptLink(SQLModel, table=True):
     concept_id: int | None = Field(
         default=None, foreign_key="concept.id", primary_key=True
@@ -15,6 +22,7 @@ class Concept(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str | None
     code: str
+    gem_formatted_code: str
     system: str
 
     types: list["ConceptType"] = Relationship(back_populates="concept")
