@@ -35,11 +35,13 @@ export default defineConfig({
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
+      testIgnore: /lighthouse.spec.ts/,
     },
 
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
+      testIgnore: /lighthouse.spec.ts/,
     },
   ],
   webServer: {

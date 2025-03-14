@@ -11,6 +11,7 @@ seed-scripts/baseECR/CO
 
 /test-results/
 /playwright-report/
+/lighthouse/
 /blob-report/
 /playwright/.cache/
 
