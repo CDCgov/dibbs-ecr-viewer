@@ -8,12 +8,12 @@ import {
   Reference,
 } from "fhir/r4";
 
-import {
-  calculatePatientAge,
-  evaluateReference,
-} from "@/app/services/evaluateFhirDataService";
+import { calculatePatientAge } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
+import { formatAge } from "@/app/services/formatService";
 import { safeParse } from "@/app/utils/data-utils";
+import { evaluateReference } from "@/app/utils/evaluate";
+import { makePlural } from "@/app/utils/format-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 
@@ -127,20 +127,15 @@ export const returnProblemsTable = (
     },
   ];
 
-  problemsArray.forEach((entry) => {
-    entry.onsetDateTime = formatDateTime(entry.onsetDateTime);
-    entry.onsetAge ||= entry.onsetDateTime
-      ? {
-          value: calculatePatientAge(fhirBundle, entry.onsetDateTime),
-        }
-      : undefined;
-  });
+  const conditions: ConditionWithFormattedOnsetAge[] = problemsArray.map((pr) =>
+    createFormattedCondition(pr, fhirBundle),
+  );
 
-  if (problemsArray.length === 0) {
+  if (conditions.length === 0) {
     return undefined;
   }
 
-  problemsArray.sort(
+  conditions.sort(
     (a, b) =>
       new Date(b.onsetDateTime ?? "").getTime() -
       new Date(a.onsetDateTime ?? "").getTime(),
@@ -148,11 +143,53 @@ export const returnProblemsTable = (
 
   return (
     <EvaluateTable
-      resources={problemsArray}
+      resources={conditions}
       columns={columnInfo}
       caption="Problems List"
       className="margin-y-0"
       fixed={false}
     />
   );
+};
+
+type ConditionWithFormattedOnsetAge = Omit<Condition, "onsetAge"> & {
+  onsetAge?: { value: string | undefined };
+};
+
+const createFormattedCondition = (
+  condition: Condition,
+  fhirBundle: Bundle,
+): ConditionWithFormattedOnsetAge => {
+  const formattedOnsetDateTime = formatDateTime(condition.onsetDateTime);
+
+  const formattedCondition: ConditionWithFormattedOnsetAge = {
+    ...condition,
+    onsetDateTime: formattedOnsetDateTime,
+    onsetAge: getFormattedOnsetAge(
+      condition.onsetAge,
+      formattedOnsetDateTime,
+      fhirBundle,
+    ),
+  };
+
+  return formattedCondition;
+};
+
+const getFormattedOnsetAge = (
+  onsetAge: Condition["onsetAge"],
+  onsetDateTime: Condition["onsetDateTime"],
+  fhirBundle: Bundle,
+) => {
+  // when an onset age value is provided in the patient data (in years) we'll use that
+  if (onsetAge?.value) {
+    return {
+      value: `${onsetAge.value} year${makePlural(onsetAge.value)}`,
+    };
+  }
+
+  if (!onsetDateTime) return undefined;
+
+  return {
+    value: formatAge(calculatePatientAge(fhirBundle, onsetDateTime)),
+  };
 };

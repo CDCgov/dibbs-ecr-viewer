@@ -62,3 +62,12 @@ export function extractNumbersAndPeriods(inputValues: string[]): string[] {
     return "";
   });
 }
+
+/**
+ * Returns an `s` if the provided value does not equal 1, otherwise returns an empty string
+ * @param value a number, typically representing days, months, or years
+ * @returns an `s` or an empty string
+ */
+export const makePlural = (value: number): "s" | "" => {
+  return value !== 1 ? "s" : "";
+};
