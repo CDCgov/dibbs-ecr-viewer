@@ -21,13 +21,16 @@ namespace NodeJS {
       | "AWS_SQLSERVER_NON_INTEGRATED"
       | "AZURE_INTEGRATED"
       | "AZURE_PG_NON_INTEGRATED"
-      | "AZURE_SQLSERVER_NON_INTEGRATED";
+      | "AZURE_SQLSERVER_NON_INTEGRATED"
+      | "GCS_INTEGRATED"
+      | "GCS_PG_NON_INTEGRATED"
+      | "GCS_SQLSERVER_NON_INTEGRATED";
     DATABASE_TYPE: string;
     DATABASE_URL: string;
     DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
-    GITHUB_ID: string;
-    GITHUB_SECRET: string;
+    GOOGLE_KEY?: string;
+    GCS_BUCKET_NAME?: string;
     METADATA_DATABASE_SCHEMA?: "core" | "extended";
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";
     NBS_AUTH: "true" | "false";

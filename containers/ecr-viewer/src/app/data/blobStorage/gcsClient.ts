@@ -1,0 +1,36 @@
+import Storage from "@google-cloud/storage";
+
+/**
+ * Connect to the google cloud storage bucket.
+ * @returns The google cloud storage bucket.
+ */
+export const gcsClient = () => {
+  if (process.env.GOOGLE_KEY && process.env.GCS_BUCKET_NAME) {
+    const storage = new Storage({
+      credentials: JSON.parse(process.env.GOOGLE_KEY),
+    });
+    return storage.bucket(process.env.GCS_BUCKET_NAME);
+  }
+};
+
+/**
+ * Performs a health check on the Google cloud storage connection.
+ * @returns The status of the google cloud storage connection or undefined if missing environment values.
+ */
+export const gcsHealthCheck = async () => {
+  if (!process.env.GOOGLE_KEY || !process.env.GCS_BUCKET_NAME) {
+    return undefined;
+  }
+  try {
+    const client = gcsClient();
+
+    if (await client?.exists()) {
+      return "UP";
+    }
+    console.error("Bucket does not exist.");
+    return "DOWN";
+  } catch (error: unknown) {
+    console.error(error);
+    return "DOWN";
+  }
+};
