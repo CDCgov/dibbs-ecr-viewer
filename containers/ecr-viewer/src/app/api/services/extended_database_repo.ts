@@ -1,6 +1,6 @@
 import { Kysely } from "kysely";
 
-import { db } from "./database";
+import { getDb } from "./database";
 import {
   ExtendedECR,
   NewExtendedECR,
@@ -17,9 +17,10 @@ import {
   ECRRuleSummaries,
   NewECRRuleSummaries,
   ECRRuleSummariesUpdate,
+  Extended,
 } from "./extended_types";
 
-const extdb = db as Kysely<any>;
+const extdb = () => getDb() as Kysely<Extended>;
 
 /**
  * Finds an eICR by its ID
@@ -35,7 +36,7 @@ export async function findExtendedEcrById(
     throw new Error("eICR ID is required.");
   }
   try {
-    const val = await extdb
+    const val = await extdb()
       .selectFrom("ecr_data")
       .where("eICR_ID", "=", id)
       .selectAll()
@@ -64,7 +65,7 @@ export async function findExtendedEcrById(
 export async function findExtendedEcr(
   criteria: Partial<ExtendedECR> | null,
 ): Promise<ExtendedECR[]> {
-  let query = extdb.selectFrom("ecr_data");
+  let query = extdb().selectFrom("ecr_data");
 
   if (!criteria || criteria === null) {
     throw new Error("eICR Criteria is required.");
@@ -77,7 +78,7 @@ export async function findExtendedEcr(
   }
 
   const vals = await query.selectAll().execute();
-  for (let val of vals) {
+  for (const val of vals) {
     if (val && val.latitude !== undefined) {
       val.latitude = parseFloat(val.latitude.toString());
     }
@@ -103,7 +104,7 @@ export async function createExtendedEcr(
     throw new Error("eICR Data is required.");
   }
   try {
-    const val = await extdb
+    const val = await extdb()
       .insertInto("ecr_data")
       .values(ecr)
       .returningAll()
@@ -127,7 +128,7 @@ export async function updateExtendedEcr(
   eICR_ID: string | null,
   updateWith: ExtendedECRUpdate,
 ): Promise<void> {
-  await extdb
+  await extdb()
     .updateTable("ecr_data")
     .set(updateWith)
     .where("eICR_ID", "=", eICR_ID)
@@ -149,7 +150,10 @@ export async function deleteExtendedEcr(
     throw new Error("Cannot find ECR with given ID.");
   }
   if (ecr) {
-    await extdb.deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
+    await extdb()
+      .deleteFrom("ecr_data")
+      .where("eICR_ID", "=", eICR_ID)
+      .execute();
   }
 
   return ecr;
@@ -167,7 +171,7 @@ export async function deleteExtendedEcr(
 export async function findAddressById(
   id: string,
 ): Promise<PatientAddress | undefined> {
-  const val = await extdb
+  const val = await extdb()
     .selectFrom("patient_address")
     .where("uuid", "=", id)
     .selectAll()
@@ -186,7 +190,7 @@ export async function findAddressById(
 export async function findAddress(
   criteria: Partial<PatientAddress>,
 ): Promise<PatientAddress[]> {
-  let query = extdb.selectFrom("patient_address");
+  let query = extdb().selectFrom("patient_address");
 
   for (const criterium of Object.keys(criteria) as (keyof PatientAddress)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -211,7 +215,7 @@ export async function createAddress(
     throw new Error("eICR Data is required.");
   }
   try {
-    const vals = await extdb
+    const vals = await extdb()
       .insertInto("patient_address")
       .values(patient_address)
       .returningAll()
@@ -235,7 +239,7 @@ export async function updateAddress(
   uuid: string,
   updateWith: PatientAddressUpdate,
 ): Promise<void> {
-  await extdb
+  await extdb()
     .updateTable("patient_address")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -255,7 +259,7 @@ export async function deleteAddress(
   const address = await findAddressById(uuid);
 
   if (address) {
-    await extdb
+    await extdb()
       .deleteFrom("patient_address")
       .where("uuid", "=", uuid)
       .execute();
@@ -274,7 +278,7 @@ export async function deleteAddress(
  * @returns an eCR Lab object
  */
 export async function findLabById(id: string): Promise<ECRLabs | undefined> {
-  const val = await extdb
+  const val = await extdb()
     .selectFrom("ecr_labs")
     .where("uuid", "=", id)
     .selectAll()
@@ -317,7 +321,7 @@ export async function findLabById(id: string): Promise<ECRLabs | undefined> {
  * @returns an eCR Lab object
  */
 export async function findLab(criteria: Partial<ECRLabs>): Promise<ECRLabs[]> {
-  let query = extdb.selectFrom("ecr_labs");
+  let query = extdb().selectFrom("ecr_labs");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRLabs)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -325,7 +329,7 @@ export async function findLab(criteria: Partial<ECRLabs>): Promise<ECRLabs[]> {
     }
   }
   const vals = await query.selectAll().execute();
-  for (let val of vals) {
+  for (const val of vals) {
     if (
       val.test_result_quantitative !== undefined &&
       val.test_result_quantitative !== null
@@ -368,7 +372,7 @@ export async function createLab(
     throw new Error("eICR Lab Data is required.");
   }
   try {
-    const vals = await extdb
+    const vals = await extdb()
       .insertInto("ecr_labs")
       .values(lab)
       .returningAll()
@@ -392,7 +396,7 @@ export async function updateLab(
   uuid: string,
   updateWith: ECRLabsUpdate,
 ): Promise<void> {
-  await extdb
+  await extdb()
     .updateTable("ecr_labs")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -410,7 +414,7 @@ export async function deleteLab(uuid: string): Promise<ECRLabs | undefined> {
   const ecr = await findLabById(uuid);
 
   if (ecr) {
-    await extdb.deleteFrom("ecr_labs").where("uuid", "=", uuid).execute();
+    await extdb().deleteFrom("ecr_labs").where("uuid", "=", uuid).execute();
   }
 
   return ecr;
@@ -428,7 +432,7 @@ export async function deleteLab(uuid: string): Promise<ECRLabs | undefined> {
 export async function findEcrConditionById(
   id: string,
 ): Promise<ECRConditions | undefined> {
-  const vals = await extdb
+  const vals = await extdb()
     .selectFrom("ecr_rr_conditions")
     .where("uuid", "=", id)
     .selectAll()
@@ -446,7 +450,7 @@ export async function findEcrConditionById(
 export async function findEcrCondition(
   criteria: Partial<ECRConditions>,
 ): Promise<ECRConditions[]> {
-  let query = extdb.selectFrom("ecr_rr_conditions");
+  let query = extdb().selectFrom("ecr_rr_conditions");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRConditions)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -471,7 +475,7 @@ export async function createEcrCondition(
     throw new Error("eICR Data is required.");
   }
   try {
-    const vals = await extdb
+    const vals = await extdb()
       .insertInto("ecr_rr_conditions")
       .values(condition)
       .returningAll()
@@ -494,7 +498,7 @@ export async function updateEcrCondition(
   uuid: string,
   updateWith: ECRConditionsUpdate,
 ): Promise<void> {
-  await extdb
+  await extdb()
     .updateTable("ecr_rr_conditions")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -514,7 +518,7 @@ export async function deleteEcrCondition(
   const ecr = await findEcrConditionById(uuid);
 
   if (ecr) {
-    await extdb
+    await extdb()
       .deleteFrom("ecr_rr_conditions")
       .where("uuid", "=", uuid)
       .execute();
@@ -535,7 +539,7 @@ export async function deleteEcrCondition(
 export async function findEcrRuleById(
   id: string,
 ): Promise<ECRRuleSummaries | undefined> {
-  const vals = await extdb
+  const vals = await extdb()
     .selectFrom("ecr_rr_rule_summaries")
     .where("uuid", "=", id)
     .selectAll()
@@ -553,7 +557,7 @@ export async function findEcrRuleById(
 export async function findEcrRule(
   criteria: Partial<ECRRuleSummaries>,
 ): Promise<ECRRuleSummaries[]> {
-  let query = extdb.selectFrom("ecr_rr_rule_summaries");
+  let query = extdb().selectFrom("ecr_rr_rule_summaries");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRRuleSummaries)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -578,7 +582,7 @@ export async function createEcrRule(
     throw new Error("eICR Data is required.");
   }
   try {
-    const vals = await extdb
+    const vals = await extdb()
       .insertInto("ecr_rr_rule_summaries")
       .values(rule_summary)
       .returningAll()
@@ -601,7 +605,7 @@ export async function updateEcrRule(
   uuid: string,
   updateWith: ECRRuleSummariesUpdate,
 ): Promise<void> {
-  await extdb
+  await extdb()
     .updateTable("ecr_rr_rule_summaries")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -621,7 +625,7 @@ export async function deleteEcrRule(
   const rule_summary = await findEcrRuleById(uuid);
 
   if (rule_summary) {
-    await extdb
+    await extdb()
       .deleteFrom("ecr_rr_rule_summaries")
       .where("uuid", "=", uuid)
       .execute();

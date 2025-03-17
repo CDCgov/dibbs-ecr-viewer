@@ -1,6 +1,6 @@
+import { MssqlDialect } from "kysely";
 import * as tarn from "tarn";
 import * as tedious from "tedious";
-import { MssqlDialect } from "kysely";
 
 export const dialect = {
   dialect: new MssqlDialect({
@@ -13,8 +13,8 @@ export const dialect = {
     },
     tedious: {
       ...tedious,
-      connectionFactory: () =>
-        new tedious.Connection({
+      connectionFactory: () => {
+        const opts = {
           authentication: {
             options: {
               password: process.env.SQL_SERVER_PASSWORD,
@@ -26,10 +26,28 @@ export const dialect = {
             database: "master",
             port: 1433,
             trustServerCertificate: true,
-            connectTimeout: 30000,
+            connectTimeout: 3000,
+            // debug: {
+            //   packet: true,
+            //   data: true,
+            //   payload: true,
+            //   token: true,
+            // }
           },
           server: process.env.SQL_SERVER_HOST || "localhost",
-        }),
+        };
+        // console.log({opts})
+        try {
+          const { Connection } = tedious;
+          const res = new Connection(opts);
+          // res.on('debug', console.log)
+          res.on("error", (e) => console.log({ e }));
+          return res;
+        } catch (e) {
+          console.log({ e });
+          throw e;
+        }
+      },
     },
   }),
 };

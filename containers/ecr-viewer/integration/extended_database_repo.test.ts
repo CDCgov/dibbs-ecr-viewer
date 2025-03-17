@@ -2,12 +2,12 @@
  * @jest-environment node
  */
 
-import * as extended_database_repo from "@/app/api/services/extended_database_repo";
 import {
   buildExtended,
   clearExtended,
   dropExtended,
 } from "@/app/api/services/db_schema";
+import * as extended_database_repo from "@/app/api/services/extended_database_repo";
 
 describe("extended_database_repo", () => {
   beforeAll(async () => {

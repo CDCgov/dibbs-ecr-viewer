@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import { db } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
@@ -111,7 +111,7 @@ async function listCoreEcrData(
   );
   const sortStatement = generateCoreSortStatement(sortColumn, sortDirection);
   const queryString = `SELECT ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.report_date, ed.set_id, ed.eicr_version_number,  ARRAY_AGG(DISTINCT erc.condition) AS conditions, ARRAY_AGG(DISTINCT ers.rule_summary) AS rule_summaries FROM ecr_viewer.ecr_data ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_viewer.ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereClause} GROUP BY ed.eICR_ID, ed.patient_name_first, ed.patient_name_last, ed.patient_birth_date, ed.date_created, ed.report_date, ed.set_id, ed.eicr_version_number ${sortStatement} OFFSET ${startIndex.toString()} ROWS FETCH NEXT ${itemsPerPage.toString()} ROWS ONLY`;
-  const result = await sql.raw<CoreMetadataModel>(queryString).execute(db);
+  const result = await sql.raw<CoreMetadataModel>(queryString).execute(getDb());
   const list = result.rows;
   return processCoreMetadata(list);
 }
@@ -143,7 +143,7 @@ async function listExtendedEcrData(
     const queryString = `SELECT ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number, (${conditionsSubQuery}) AS conditions, (${ruleSummariesSubQuery}) AS rule_summaries FROM ecr_viewer.ecr_data ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID LEFT JOIN ecr_viewer.ecr_rr_rule_summaries ers ON erc.uuid = ers.ecr_rr_conditions_id WHERE ${whereStatement} GROUP BY ed.eICR_ID, ed.first_name, ed.last_name, ed.birth_date, ed.encounter_start_date, ed.date_created, ed.set_id, ed.eicr_version_number ${sortStatement} OFFSET ${startIndex.toString()} ROWS FETCH NEXT ${itemsPerPage.toString()} ROWS ONLY`;
     const result = await sql
       .raw<ExtendedMetadataModel>(queryString)
-      .execute(db);
+      .execute(getDb());
     const list = result.rows;
     return processExtendedMetadata(list);
   } catch (error: unknown) {
@@ -252,7 +252,7 @@ const getTotalCoreEcrCount = async (
     filterConditions,
   );
   const query = `SELECT count(DISTINCT ed.eICR_ID) as count FROM ecr_viewer.ecr_data as ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc on ed.eICR_ID = erc.eICR_ID WHERE ${whereClause}`;
-  const result = await sql.raw<{ count: string }>(query).execute(db);
+  const result = await sql.raw<{ count: string }>(query).execute(getDb());
   return parseInt(result.rows[0].count, 10);
 };
 
@@ -269,7 +269,7 @@ const getTotalExtendedEcrCount = async (
     );
 
     const query = `SELECT COUNT(DISTINCT ed.eICR_ID) as count FROM ecr_viewer.ecr_data ed LEFT JOIN ecr_viewer.ecr_rr_conditions erc ON ed.eICR_ID = erc.eICR_ID WHERE ${whereStatement}`;
-    const result = await sql.raw<{ count: string }>(query).execute(db);
+    const result = await sql.raw<{ count: string }>(query).execute(getDb());
     return parseInt(result.rows[0].count);
   } catch (error: unknown) {
     console.error(error);

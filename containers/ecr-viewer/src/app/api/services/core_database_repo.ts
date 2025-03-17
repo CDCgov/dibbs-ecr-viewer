@@ -11,9 +11,9 @@ import {
   NewECR,
   ECRUpdate,
 } from "./core_types";
-import { db } from "./database";
+import { getDb } from "./database";
 
-const coredb = db as Kysely<any>;
+const coredb = () => getDb() as Kysely<Core>;
 
 // ECR_DATA
 
@@ -29,7 +29,7 @@ export async function findEcrById(id: string | null): Promise<ECR | undefined> {
     throw new Error("eICR ID is required.");
   }
   try {
-    return (await coredb
+    return (await coredb()
       .selectFrom("ecr_data")
       .where("eICR_ID", "=", id)
       .selectAll()
@@ -47,7 +47,7 @@ export async function findEcrById(id: string | null): Promise<ECR | undefined> {
  * @returns an eICR object
  */
 export async function findEcr(criteria: Partial<ECR> | null): Promise<ECR[]> {
-  let query = coredb.selectFrom("ecr_data");
+  let query = coredb().selectFrom("ecr_data");
 
   if (!criteria) {
     throw new Error("eICR Criteria is required.");
@@ -74,7 +74,7 @@ export async function createEcr(ecr: NewECR | null): Promise<ECR | undefined> {
     throw new Error("eICR Data is required.");
   }
   try {
-    return (await coredb
+    return (await coredb()
       .insertInto("ecr_data")
       .values(ecr)
       .returningAll()
@@ -96,7 +96,7 @@ export async function updateEcr(
   eICR_ID: string | null,
   updateWith: ECRUpdate,
 ): Promise<void> {
-  await coredb
+  await coredb()
     .updateTable("ecr_data")
     .set(updateWith)
     .where("eICR_ID", "=", eICR_ID)
@@ -119,7 +119,10 @@ export async function deleteEcr(
     return undefined;
   }
 
-  await coredb.deleteFrom("ecr_data").where("eICR_ID", "=", eICR_ID).execute();
+  await coredb()
+    .deleteFrom("ecr_data")
+    .where("eICR_ID", "=", eICR_ID)
+    .execute();
 
   return ecr;
 }
@@ -136,7 +139,7 @@ export async function deleteEcr(
 export async function findEcrConditionById(
   id: string,
 ): Promise<ECRConditions | undefined> {
-  return (await coredb
+  return (await coredb()
     .selectFrom("ecr_rr_conditions")
     .where("uuid", "=", id)
     .selectAll()
@@ -153,7 +156,7 @@ export async function findEcrConditionById(
 export async function findEcrCondition(
   criteria: Partial<ECRConditions>,
 ): Promise<ECRConditions[]> {
-  let query = coredb.selectFrom("ecr_rr_conditions");
+  let query = coredb().selectFrom("ecr_rr_conditions");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRConditions)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -177,15 +180,11 @@ export async function createEcrCondition(
   if (!condition) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    return (await coredb
-      .insertInto("ecr_rr_conditions")
-      .values(condition)
-      .returningAll()
-      .executeTakeFirstOrThrow()) as ECRConditions;
-  } catch (error) {
-    console.error(error);
-  }
+  return (await coredb()
+    .insertInto("ecr_rr_conditions")
+    .values(condition)
+    .returningAll()
+    .executeTakeFirstOrThrow()) as ECRConditions;
 }
 
 /**
@@ -200,7 +199,7 @@ export async function updateEcrCondition(
   uuid: string,
   updateWith: ECRConditionsUpdate,
 ): Promise<void> {
-  await coredb
+  await coredb()
     .updateTable("ecr_rr_conditions")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -220,7 +219,7 @@ export async function deleteEcrCondition(
   const ecr = await findEcrConditionById(uuid);
 
   if (ecr) {
-    await coredb
+    await coredb()
       .deleteFrom("ecr_rr_conditions")
       .where("uuid", "=", uuid)
       .execute();
@@ -241,7 +240,7 @@ export async function deleteEcrCondition(
 export async function findEcrRuleById(
   id: string,
 ): Promise<ECRRuleSummaries | undefined> {
-  return (await coredb
+  return (await coredb()
     .selectFrom("ecr_rr_rule_summaries")
     .where("uuid", "=", id)
     .selectAll()
@@ -258,7 +257,7 @@ export async function findEcrRuleById(
 export async function findEcrRule(
   criteria: Partial<ECRRuleSummaries>,
 ): Promise<ECRRuleSummaries[]> {
-  let query = coredb.selectFrom("ecr_rr_rule_summaries");
+  let query = coredb().selectFrom("ecr_rr_rule_summaries");
 
   for (const criterium of Object.keys(criteria) as (keyof ECRRuleSummaries)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
@@ -282,15 +281,12 @@ export async function createEcrRule(
   if (!rule_summary) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    return (await coredb
-      .insertInto("ecr_rr_rule_summaries")
-      .values(rule_summary)
-      .returningAll()
-      .executeTakeFirstOrThrow()) as ECRRuleSummaries;
-  } catch (error) {
-    console.error(error);
-  }
+  const db = coredb();
+  return (await db
+    .insertInto("ecr_rr_rule_summaries")
+    .values(rule_summary)
+    .returningAll()
+    .executeTakeFirstOrThrow()) as ECRRuleSummaries;
 }
 
 /**
@@ -305,7 +301,8 @@ export async function updateEcrRule(
   uuid: string,
   updateWith: ECRRuleSummariesUpdate,
 ): Promise<void> {
-  await coredb
+  const db = coredb();
+  await db
     .updateTable("ecr_rr_rule_summaries")
     .set(updateWith)
     .where("uuid", "=", uuid)
@@ -325,7 +322,8 @@ export async function deleteEcrRule(
   const rule_summary = await findEcrRuleById(uuid);
 
   if (rule_summary) {
-    await coredb
+    const db = coredb();
+    await db
       .deleteFrom("ecr_rr_rule_summaries")
       .where("uuid", "=", uuid)
       .execute();

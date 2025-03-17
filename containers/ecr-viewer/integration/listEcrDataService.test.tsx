@@ -1,6 +1,15 @@
 /**
  * @jest-environment node
  */
+import { getDb } from "@/app/api/services/database";
+import {
+  buildCoreAlias,
+  dropCoreAlias,
+  clearCoreAlias,
+  buildExtendedAlias,
+  dropExtendedAlias,
+  clearExtendedAlias,
+} from "@/app/api/services/db_schema";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   CoreMetadataModel,
@@ -13,21 +22,6 @@ import {
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
-import {
-  buildExtended,
-  dropExtended,
-  clearExtended,
-  buildCore,
-  dropCore,
-  clearCore,
-  buildCoreAlias,
-  dropCoreAlias,
-  clearCoreAlias,
-  buildExtendedAlias,
-  dropExtendedAlias,
-  clearExtendedAlias,
-} from "@/app/api/services/db_schema";
-import { db } from "@/app/api/services/database";
 
 const testDateRange = {
   startDate: new Date("12-01-2024"),
@@ -175,11 +169,11 @@ describe("listEcrDataService", () => {
     });
 
     beforeEach(async () => {
-      await (db as any)
+      await (getDb() as any)
         .insertInto("ecr_viewer.ecr_data")
         .values(coreTemplate)
         .execute();
-      await (db as any)
+      await (getDb() as any)
         .insertInto("ecr_viewer.ecr_rr_conditions")
         .values({
           uuid: "12345",
@@ -187,7 +181,7 @@ describe("listEcrDataService", () => {
           condition: "Condition1",
         })
         .execute();
-      await (db as any)
+      await (getDb() as any)
         .insertInto("ecr_viewer.ecr_rr_rule_summaries")
         .values({
           uuid: "12345",
@@ -287,11 +281,11 @@ describe("listEcrDataService", () => {
     });
 
     beforeEach(async () => {
-      await (db as any)
+      await (getDb() as any)
         .insertInto("ecr_viewer.ecr_data")
         .values(extendedTemplate)
         .execute();
-      await (db as any)
+      await (getDb() as any)
         .insertInto("ecr_viewer.ecr_rr_conditions")
         .values({
           uuid: "12345",
@@ -299,7 +293,7 @@ describe("listEcrDataService", () => {
           condition: "Condition1",
         })
         .execute();
-      await (db as any)
+      await (getDb() as any)
         .insertInto("ecr_viewer.ecr_rr_rule_summaries")
         .values({
           uuid: "12345",
