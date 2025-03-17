@@ -132,9 +132,17 @@ jobs:
         env:
           SEED_DATA_DIRECTORIES: star-wars
 
+      - name: Run local docker and wait for it to be ready
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+
       - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
 
       - name: Upload playwright report - Non-Integrated
         uses: actions/upload-artifact@v4
@@ -157,9 +165,17 @@ jobs:
         run: |
           sed -i 's/AWS_SQLSERVER_NON_INTEGRATED/AWS_INTEGRATED/' .env.local
 
+      - name: Run local docker and wait for it to be ready
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
+
       - name: Run Playwright tests - Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:integrated
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
 
       - name: Upload playwright report - integrated
         uses: actions/upload-artifact@v4

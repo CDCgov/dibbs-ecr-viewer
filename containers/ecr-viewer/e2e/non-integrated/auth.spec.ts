@@ -1,10 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-import { waitForKeycloak } from "./utils";
-
 test.describe("keycloak", () => {
-  test.beforeAll(waitForKeycloak);
-
   test("should require a login on main page", async ({ page }) => {
     await page.goto("/ecr-viewer");
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");

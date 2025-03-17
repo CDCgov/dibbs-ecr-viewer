@@ -1,26 +1,4 @@
-import { PlaywrightTestArgs, expect, request } from "@playwright/test";
-
-/**
- * Helper to ensuer keycloak is ready to use
- */
-export const waitForKeycloak = async () => {
-  const context = await request.newContext();
-  for (let attempt = 1; attempt <= 10; attempt++) {
-    try {
-      const response = await context.get(
-        process.env.AUTH_KEYCLOAK_ISSUER ??
-          "http://localhost:8070/realms/master/",
-      );
-      if (response.status() === 200) {
-        console.log(`Keycloak is ready`);
-        break;
-      }
-    } catch (error) {
-      console.log(`Waiting for Keycloak...`);
-    }
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-  }
-};
+import { PlaywrightTestArgs, expect } from "@playwright/test";
 
 /**
  * Helper to lot into via keycloak and go to the viewer page

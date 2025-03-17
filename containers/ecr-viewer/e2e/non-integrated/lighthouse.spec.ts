@@ -8,7 +8,7 @@ import {
   playwrightLighthouseResult,
 } from "playwright-lighthouse";
 
-import { waitForKeycloak, logInToKeycloak } from "./utils";
+import { logInToKeycloak } from "./utils";
 
 const lighthouseTest = test.extend<
   {},
@@ -80,7 +80,6 @@ const lighthouseTest = test.extend<
 });
 
 lighthouseTest.describe("lighthouse", async () => {
-  lighthouseTest.beforeAll(waitForKeycloak);
   lighthouseTest.beforeEach(logInToKeycloak);
 
   lighthouseTest(
@@ -90,7 +89,7 @@ lighthouseTest.describe("lighthouse", async () => {
       await playAudit({
         page,
         thresholds: {
-          performance: 78,
+          performance: 95,
           accessibility: 100,
         },
         port,
@@ -108,7 +107,7 @@ lighthouseTest.describe("lighthouse", async () => {
       await playAudit({
         page,
         thresholds: {
-          performance: 70,
+          performance: 95,
           accessibility: 100,
         },
         port,
@@ -126,7 +125,7 @@ lighthouseTest.describe("lighthouse", async () => {
       await playAudit({
         page,
         thresholds: {
-          performance: 70,
+          performance: 95,
           accessibility: 100,
         },
         port,
@@ -142,7 +141,7 @@ lighthouseTest.describe("lighthouse", async () => {
       await playAudit({
         page,
         thresholds: {
-          performance: 80,
+          performance: 95,
           accessibility: 100,
         },
         port,
