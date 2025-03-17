@@ -178,7 +178,7 @@ def _fetch_bundle(current_iteration: int) -> Bundle:
     return Bundle(**data)
 
 
-def _build_concept_type_by_code_dict():
+def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
     url = "https://tes.tools.aimsplatform.org/api/fhir/ValueSet"
     response = requests.get(
         url,
