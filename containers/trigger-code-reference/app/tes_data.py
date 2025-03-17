@@ -41,25 +41,7 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
         all_concepts: dict[(str, str)] = {}
         while True:
             print(f"Fetching batch {current_iteration + 1}")
-            response = requests.get(
-                f"{_TES_API_URL}",
-                params={
-                    "context-type": f"{_CONTEXT_SYSTEM}|{_CONTEXT_CODE}",
-                    "_getpagesoffset": current_iteration * _BATCH_SIZE,
-                    "_count": _BATCH_SIZE,
-                },
-                headers=_TES_HEADER,
-            )
-
-            if response.status_code != 200:
-                print("Error fetching condition data")
-                print(response.url)
-                print(response.text)
-                sys.exit(1)
-
-            data = response.json()
-
-            bundle = Bundle(**data)
+            bundle = _fetch_bundle(current_iteration)
 
             for entry in tqdm(
                 bundle.entry, desc="Processing ValueSets", unit=" ValueSet", leave=False
@@ -172,6 +154,28 @@ def _get_coding(valueSet: ValueSet) -> list[str]:
             valueSet.useContext,
         )
     )[0].valueCodeableConcept.coding[0]
+
+
+def _fetch_bundle(current_iteration: int) -> Bundle:
+    response = requests.get(
+        f"{_TES_API_URL}",
+        params={
+            "context-type": f"{_CONTEXT_SYSTEM}|{_CONTEXT_CODE}",
+            "_getpagesoffset": current_iteration * _BATCH_SIZE,
+            "_count": _BATCH_SIZE,
+        },
+        headers=_TES_HEADER,
+    )
+
+    if response.status_code != 200:
+        print("Error fetching condition data")
+        print(response.url)
+        print(response.text)
+        sys.exit(1)
+
+    data = response.json()
+
+    return Bundle(**data)
 
 
 def _build_concept_type_by_code_dict():
