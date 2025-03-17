@@ -1,15 +1,18 @@
 /**
  * @jest-environment node
  */
-import { getDb } from "@/app/api/services/database";
+import { ExpressionBuilder, sql } from "kysely";
+
+import * as core_database_repo from "@/app/api/services/core_database_repo";
 import {
-  buildCoreAlias,
-  dropCoreAlias,
-  clearCoreAlias,
-  buildExtendedAlias,
-  dropExtendedAlias,
-  clearExtendedAlias,
+  buildExtended,
+  dropExtended,
+  clearExtended,
+  buildCore,
+  dropCore,
+  clearCore,
 } from "@/app/api/services/db_schema";
+import * as extended_database_repo from "@/app/api/services/extended_database_repo";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   CoreMetadataModel,
@@ -29,7 +32,7 @@ const testDateRange = {
 };
 
 const coreTemplate = {
-  eicr_id: "12345",
+  eICR_ID: "12345",
   set_id: "123",
   data_source: "DB",
   fhir_reference_link: "",
@@ -42,7 +45,7 @@ const coreTemplate = {
 };
 
 const extendedTemplate = {
-  eicr_id: "12345",
+  eICR_ID: "12345",
   set_id: "12345",
   fhir_reference_link: "http://example.com",
   last_name: "Kenobi",
@@ -80,6 +83,14 @@ const extendedTemplate = {
   active_problems: ["Dead"],
   date_created: new Date("2024-12-02T12:00:00Z"),
 };
+
+// Tests rewritten to fit Kysely in following commit
+
+const mockExpressionBuilder = {
+  and: jest.fn((conditions) => conditions.filter(Boolean)), // Mimics AND conditions
+  or: jest.fn((conditions) => conditions.filter(Boolean)), // Mimics OR conditions
+  exists: jest.fn((subQuery) => sql`${subQuery}`), // Simulates EXISTS subquery
+} as unknown as ExpressionBuilder<any, any>;
 
 describe("listEcrDataService", () => {
   describe("process Metadata", () => {
@@ -161,42 +172,33 @@ describe("listEcrDataService", () => {
   describe("listCoreEcrData", () => {
     beforeAll(async () => {
       process.env.METADATA_DATABASE_SCHEMA = "core";
-      await buildCoreAlias();
+      await buildCore();
     });
 
     afterAll(async () => {
-      await dropCoreAlias();
+      await dropCore();
     });
 
     beforeEach(async () => {
-      await (getDb() as any)
-        .insertInto("ecr_viewer.ecr_data")
-        .values(coreTemplate)
-        .execute();
-      await (getDb() as any)
-        .insertInto("ecr_viewer.ecr_rr_conditions")
-        .values({
-          uuid: "12345",
-          eicr_id: "12345",
-          condition: "Condition1",
-        })
-        .execute();
-      await (getDb() as any)
-        .insertInto("ecr_viewer.ecr_rr_rule_summaries")
-        .values({
-          uuid: "12345",
-          ecr_rr_conditions_id: "12345",
-          rule_summary: "Rule1",
-        })
-        .execute();
+      await core_database_repo.createEcr(coreTemplate);
+      await core_database_repo.createEcrCondition({
+        uuid: "12345",
+        eICR_ID: "12345",
+        condition: "Condition1",
+      });
+      await core_database_repo.createEcrRule({
+        uuid: "12345",
+        ecr_rr_conditions_id: "12345",
+        rule_summary: "Rule1",
+      });
     });
 
     afterEach(async () => {
-      await clearCoreAlias();
+      await clearCore();
     });
 
     it("should return empty array when no data is found", async () => {
-      await clearCoreAlias();
+      await clearCore();
       const startIndex = 0;
       const itemsPerPage = 25;
       const columnName = "date_created";
@@ -273,42 +275,33 @@ describe("listEcrDataService", () => {
   describe("listExtendedEcrData", () => {
     beforeAll(async () => {
       process.env.METADATA_DATABASE_SCHEMA = "extended";
-      await buildExtendedAlias();
+      await buildExtended();
     });
 
     afterAll(async () => {
-      await dropExtendedAlias();
+      await dropExtended();
     });
 
     beforeEach(async () => {
-      await (getDb() as any)
-        .insertInto("ecr_viewer.ecr_data")
-        .values(extendedTemplate)
-        .execute();
-      await (getDb() as any)
-        .insertInto("ecr_viewer.ecr_rr_conditions")
-        .values({
-          uuid: "12345",
-          eicr_id: "12345",
-          condition: "Condition1",
-        })
-        .execute();
-      await (getDb() as any)
-        .insertInto("ecr_viewer.ecr_rr_rule_summaries")
-        .values({
-          uuid: "12345",
-          ecr_rr_conditions_id: "12345",
-          rule_summary: "Rule1",
-        })
-        .execute();
+      await extended_database_repo.createExtendedEcr(extendedTemplate);
+      await extended_database_repo.createEcrCondition({
+        uuid: "12345",
+        eICR_ID: "12345",
+        condition: "Condition1",
+      });
+      await extended_database_repo.createEcrRule({
+        uuid: "12345",
+        ecr_rr_conditions_id: "12345",
+        rule_summary: "Rule1",
+      });
     });
 
     afterEach(async () => {
-      await clearExtendedAlias();
+      await clearExtended();
     });
 
     it("should return empty array when no data is found", async () => {
-      await clearExtendedAlias();
+      await clearExtended();
       const startIndex = 0;
       const itemsPerPage = 25;
       const columnName = "date_created";
@@ -355,10 +348,10 @@ describe("listEcrDataService", () => {
   describe("get total core ecr count", () => {
     beforeAll(async () => {
       process.env.METADATA_DATABASE_SCHEMA = "core";
-      await buildCoreAlias();
+      await buildCore();
     });
     afterAll(async () => {
-      await dropCoreAlias();
+      await dropCore();
     });
 
     it("should call db to get all ecrs", async () => {
@@ -388,10 +381,10 @@ describe("listEcrDataService", () => {
   describe("get total extended ecr count", () => {
     beforeAll(async () => {
       process.env.METADATA_DATABASE_SCHEMA = "extended";
-      await buildExtendedAlias();
+      await buildExtended();
     });
     afterAll(async () => {
-      await dropExtendedAlias();
+      await dropExtended();
     });
 
     it("should call db to get all ecrs", async () => {
@@ -482,6 +475,60 @@ describe("listEcrDataService", () => {
       ).toEqual(
         "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
       );
+    });
+  });
+
+  describe("generate Kysely search statement", () => {
+    it("should return an OR condition for search term", () => {
+      const searchCondition = generateCoreSearchStatement(
+        mockExpressionBuilder,
+        "John",
+      );
+
+      expect(searchCondition).toBeDefined();
+      expect(mockExpressionBuilder.or).toHaveBeenCalled();
+    });
+
+    it("should return TRUE if no search term is provided", () => {
+      const searchCondition = generateCoreSearchStatement(
+        mockExpressionBuilder,
+      );
+      expect(searchCondition).toBeDefined();
+      expect(searchCondition).toEqual(sql`TRUE`);
+    });
+  });
+
+  describe("generate Kysely filter conditions statement", () => {
+    it("should generate an EXISTS subquery when conditions are provided", () => {
+      const conditions = ["Condition1", "Condition2"];
+      const filterStatement = generateFilterConditionsStatement(
+        mockExpressionBuilder,
+        conditions,
+      );
+
+      expect(filterStatement).toBeDefined();
+      expect(mockExpressionBuilder.exists).toHaveBeenCalled();
+    });
+
+    it("should return TRUE if no conditions are provided", () => {
+      const filterStatement = generateFilterConditionsStatement(
+        mockExpressionBuilder,
+      );
+      expect(filterStatement).toEqual(sql`TRUE`);
+    });
+  });
+
+  describe("generate Kysely where statement", () => {
+    it("should return a valid WHERE clause with all conditions", () => {
+      const whereClause = generateCoreWhereStatement(
+        mockExpressionBuilder,
+        testDateRange,
+        "John Doe",
+        ["Condition1", "Condition2"],
+      );
+
+      expect(whereClause).toBeDefined();
+      expect(mockExpressionBuilder.and).toHaveBeenCalled();
     });
   });
 });

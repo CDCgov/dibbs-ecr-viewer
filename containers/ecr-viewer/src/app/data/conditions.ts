@@ -19,7 +19,7 @@ export const getAllConditions = async (): Promise<string[]> => {
         .distinct()
         .orderBy("condition")
         .execute();
-      return result.map((row: { condition: string }) => row.condition);
+      return result.map((row) => row.condition);
     } catch (error: unknown) {
       console.error("Error fetching data: ", error);
       throw new Error("Error fetching data");
