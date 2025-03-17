@@ -1,4 +1,3 @@
-import { sql } from "kysely";
 import { Kysely, ExpressionBuilder, sql } from "kysely";
 
 import { Core } from "@/app/api/services/core_types";
