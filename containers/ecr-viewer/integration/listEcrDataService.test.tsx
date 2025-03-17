@@ -2,9 +2,7 @@
  * @jest-environment node
  */
 import { ExpressionBuilder, sql } from "kysely";
-import { ExpressionBuilder, sql } from "kysely";
 
-import * as core_database_repo from "@/app/api/services/core_database_repo";
 import * as core_database_repo from "@/app/api/services/core_database_repo";
 import {
   buildExtended,
@@ -14,7 +12,6 @@ import {
   dropCore,
   clearCore,
 } from "@/app/api/services/db_schema";
-import * as extended_database_repo from "@/app/api/services/extended_database_repo";
 import * as extended_database_repo from "@/app/api/services/extended_database_repo";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
