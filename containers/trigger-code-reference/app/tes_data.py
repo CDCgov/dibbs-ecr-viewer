@@ -5,7 +5,7 @@ import requests
 from fhir.resources.bundle import Bundle
 from fhir.resources.valueset import ValueSet
 from key import TEST_API_KEY
-from sqlmodel import Session, SQLModel, create_engine, select
+from sqlmodel import Session, SQLModel, create_engine
 from tes_models import Concept, ConceptType, Condition, IcdCrosswalk
 from tqdm import tqdm
 
@@ -18,7 +18,9 @@ _TES_HEADER = {"X-API-KEY": _TES_API_KEY}
 _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
 
-_engine = create_engine(_DB_URL, echo=True)
+_DEBUG = True
+
+_engine = create_engine(_DB_URL, echo=_DEBUG)
 SQLModel.metadata.create_all(_engine)
 
 
@@ -78,12 +80,9 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
                             if concept_code_and_system in all_concepts:
                                 concepts.add(all_concepts[concept_code_and_system])
                             else:
-                                new_types = []
-                                for type in concept_code_to_type_dict.get(
-                                    concept.code, []
-                                ):
-                                    new_type = ConceptType(type=type)
-                                    new_types.append(new_type)
+                                new_types = new_types = _get_concept_types(
+                                    concept.code, concept_code_to_type_dict
+                                )
 
                                 new_concept = Concept(
                                     name=concept.display,
@@ -100,7 +99,6 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
                                 for new_type in new_types:
                                     new_type.concept = new_concept
 
-                                session.add(new_concept)
                                 session.add_all(new_types)
 
                 if valueSet.expansion and valueSet.expansion.contains:
@@ -114,17 +112,14 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
                         if concept_code_and_system in all_concepts:
                             concepts.add(all_concepts[concept_code_and_system])
                         else:
-                            new_types = []
-                            for type in concept_code_to_type_dict.get(system.code, []):
-                                new_type = ConceptType(type=type)
-                                new_types.append(new_type)
+                            new_types = _get_concept_types(
+                                system.code, concept_code_to_type_dict
+                            )
 
                             new_concept = Concept(
                                 name=system.display,
                                 code=system.code,
-                                gem_formatted_code=_get_gem_formatted_code(
-                                    concept.code
-                                ),
+                                gem_formatted_code=_get_gem_formatted_code(system.code),
                                 system=system.system,
                                 types=new_types,
                             )
@@ -134,17 +129,9 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
                             for new_type in new_types:
                                 new_type.concept = new_concept
 
-                            session.add(new_concept)
                             session.add_all(new_types)
 
-                coding = list(
-                    filter(
-                        lambda x: x.code.code == "focus"
-                        and x.code.system
-                        == "http://terminology.hl7.org/CodeSystem/usage-context-type",
-                        valueSet.useContext,
-                    )
-                )[0].valueCodeableConcept.coding[0]
+                coding = _get_coding(valueSet)
 
                 condition = Condition(
                     name=valueSet.title,
@@ -166,22 +153,25 @@ def retreive_tes_info_and_save(concept_code_to_type_dict):
         session.commit()
 
 
-def get_condition_name_and_concept_codes_from_condition_code(condition_code: str):
-    """
-    Given a condition code, this function retrieves the condition name and the set of concept codes associated with it.
-    """
-    with Session(get_engine()) as session:
-        statement = select(Condition).where(Condition.code == condition_code)
-        results = session.exec(statement)
+def _get_concept_types(
+    conceptCode: str, concept_code_to_type_dict: dict
+) -> list[ConceptType]:
+    new_types = []
+    for type in concept_code_to_type_dict.get(conceptCode, []):
+        new_type = ConceptType(type=type)
+        new_types.append(new_type)
+    return new_types
 
-        try:
-            condition = results.one()
-        except Exception as e:
-            print(f"Condition with code {condition_code} not found.")
-            print(e)
-            sys.exit(1)
 
-        return condition.name, {x.code for x in condition.concepts}
+def _get_coding(valueSet: ValueSet) -> list[str]:
+    return list(
+        filter(
+            lambda x: x.code.code == "focus"
+            and x.code.system
+            == "http://terminology.hl7.org/CodeSystem/usage-context-type",
+            valueSet.useContext,
+        )
+    )[0].valueCodeableConcept.coding[0]
 
 
 def _build_concept_type_by_code_dict():
@@ -209,7 +199,7 @@ def _build_concept_type_by_code_dict():
     ):
         valueSet: ValueSet = entry.resource
         # valueSet.id is the type
-        print(valueSet.id)
+        print(f"Found concept type: {valueSet.id}")
         for concept in tqdm(
             valueSet.expansion.contains,
             desc=f"Processing concepts in expansion.contains for {valueSet.id}",
