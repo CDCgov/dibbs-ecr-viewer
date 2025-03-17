@@ -6,13 +6,13 @@ import requests
 from dotenv import load_dotenv
 from fhir.resources.bundle import Bundle
 from fhir.resources.valueset import ValueSet
-from sqlmodel import Session, SQLModel, create_engine
-from tes_models import Concept, ConceptType, Condition, IcdCrosswalk
+from sqlmodel import Session
 from tqdm import tqdm
 
-load_dotenv()
+from app.db import get_engine
+from app.tes_models import Concept, ConceptType, Condition, IcdCrosswalk
 
-_DB_URL = "sqlite:///../data/tes.db"
+load_dotenv()
 
 # TES API key can be obtained here once registered: https://tes.tools.aimsplatform.org/
 _TES_API_URL = "https://tes.tools.aimsplatform.org/api/fhir/ValueSet"
@@ -22,18 +22,6 @@ _BATCH_SIZE = 1000
 _TES_HEADER = {"X-API-KEY": _TES_API_KEY}
 _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
-
-_DEBUG = True
-
-_engine = create_engine(_DB_URL, echo=_DEBUG)
-SQLModel.metadata.create_all(_engine)
-
-
-def get_engine():
-    """
-    Returns the engine for the database
-    """
-    return _engine
 
 
 def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):

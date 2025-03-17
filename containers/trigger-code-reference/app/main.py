@@ -6,6 +6,7 @@ from fastapi import Body, Query, Response
 
 from app.base_service import BaseService
 from app.models import InsertConditionInput
+from app.tes_utils import get_concepts_list_tes
 from app.utils import (
     _find_codes_by_resource_type,
     add_human_readable_reportable_condition_name,
@@ -171,7 +172,8 @@ async def get_value_sets_for_condition(
         )
     else:
         clean_snomed_code = get_clean_snomed_code(condition_code)
-        concepts_list = get_concepts_list(clean_snomed_code)
+        # concepts_list = get_concepts_list(clean_snomed_code)
+        concepts_list = get_concepts_list_tes(clean_snomed_code)
         values = get_concepts_dict(concepts_list, filter_concepts)
     return values
 

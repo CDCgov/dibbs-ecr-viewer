@@ -3,19 +3,19 @@ import json
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import Session, select
-from tes_data import get_engine
-from tes_models import (
+
+from app.tes_data import get_engine
+from app.tes_models import (
     Condition,
 )
-from utils import format_icd9_crosswalks, get_clean_snomed_code, get_concepts_dict
+from app.utils import format_icd9_crosswalks, get_clean_snomed_code, get_concepts_dict
 
 
-def _get_concepts_list_tes(snomed_code: list) -> list[tuple]:
+def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
     """
-    Given a SNOMED code, this function runs a SQL query that joins
-    conditions to value sets, then uses the value set ids to get the
+    Given a SNOMED code, this function runs a SQL query to get the
     value set type, concept codes, and concept system
-    from the eRSD database grouped by value set type and system. It
+    from the TES database grouped by value set type and system. It
     also uses the GEM crosswalk tables to find any ICD-9 conversion
     codes that might be represented under the given condition's
     umbrella.
@@ -75,7 +75,7 @@ def _get_concepts_list_tes(snomed_code: list) -> list[tuple]:
 
 
 if __name__ == "__main__":
-    concepts_list = _get_concepts_list_tes(["276197005"])
+    concepts_list = get_concepts_list_tes(["276197005"])
     # concepts_list = _get_concepts_list_tes(["840539006"])
     values = get_concepts_dict(concepts_list, "")
     json_string = json.dumps(values, indent=8)
