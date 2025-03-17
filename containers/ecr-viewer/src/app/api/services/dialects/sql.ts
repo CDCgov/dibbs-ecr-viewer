@@ -20,7 +20,6 @@ export const dialect = {
               password: process.env.SQL_SERVER_PASSWORD,
               userName: process.env.SQL_SERVER_USER || "sa",
             },
-            type: "default",
           },
           options: {
             database: "master",

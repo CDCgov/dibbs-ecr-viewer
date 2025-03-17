@@ -10,8 +10,8 @@ import { pgConstructor } from "./buildPg";
 
 let db: Kysely<Core> | Kysely<Extended>;
 
-var db_type = process.env.METADATA_DATABASE_TYPE;
-var db_schema = process.env.METADATA_DATABASE_SCHEMA;
+const db_type = process.env.METADATA_DATABASE_TYPE;
+const db_schema = process.env.METADATA_DATABASE_SCHEMA;
 
 switch (db_type) {
   case "sqlserver":

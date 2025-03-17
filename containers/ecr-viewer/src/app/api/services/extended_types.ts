@@ -9,10 +9,10 @@ import {
 export interface ecr_data {
   eICR_ID: Generated<string>;
   set_id: string | undefined;
-  fhir_reference_link: string | null;
-  last_name: string | undefined;
-  first_name: string | undefined;
-  birth_date: ColumnType<Date | undefined>;
+  fhir_reference_link: string;
+  last_name: string;
+  first_name: string;
+  birth_date: ColumnType<Date>;
   gender: string | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
@@ -39,11 +39,11 @@ export interface ecr_data {
   facility_id: string | undefined;
   facility_name: string | undefined;
   encounter_type: string | undefined;
-  encounter_start_date: ColumnType<Date | undefined>;
+  encounter_start_date: ColumnType<Date>;
   encounter_end_date: ColumnType<Date | undefined>;
   reason_for_visit: string | undefined;
   active_problems: string[] | undefined;
-  date_created: ColumnType<Date | undefined>;
+  date_created: ColumnType<Date>;
 }
 
 export interface patient_address {
@@ -119,9 +119,9 @@ export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>;
 export type ECRRuleSummariesUpdate = Updateable<ecr_rr_rule_summaries>;
 
 export interface Extended {
-  "ecr_viewer.ecr_data": ecr_data;
-  "ecr_viewer.patient_address": patient_address;
-  "ecr_viewer.ecr_labs": ecr_labs;
-  "ecr_viewer.ecr_rr_conditions": ecr_rr_conditions;
-  "ecr_viewer.ecr_rr_rule_summaries": ecr_rr_rule_summaries;
+  ecr_data: ecr_data;
+  patient_address: patient_address;
+  ecr_labs: ecr_labs;
+  ecr_rr_conditions: ecr_rr_conditions;
+  ecr_rr_rule_summaries: ecr_rr_rule_summaries;
 }

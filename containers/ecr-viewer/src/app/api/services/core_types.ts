@@ -9,16 +9,16 @@ import {
 export interface ecr_data {
   eICR_ID: Generated<string>;
   set_id: string | undefined;
-  data_source: string | undefined;
-  fhir_reference_link: string | undefined;
+  data_source: "DB" | "S3";
+  fhir_reference_link: string;
   eicr_version_number: string | undefined;
 
   patient_name_first: string;
   patient_name_last: string;
-  patient_birth_date: ColumnType<Date | undefined>;
+  patient_birth_date: ColumnType<Date>;
 
-  date_created: ColumnType<Date | undefined>;
-  report_date: ColumnType<Date | undefined>;
+  date_created: ColumnType<Date>;
+  report_date: ColumnType<Date>;
 }
 
 export interface ecr_rr_conditions {
@@ -46,7 +46,7 @@ export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>;
 export type ECRRuleSummariesUpdate = Updateable<ecr_rr_rule_summaries>;
 
 export interface Core {
-  "ecr_viewer.ecr_data": ecr_data;
-  "ecr_viewer.ecr_rr_conditions": ecr_rr_conditions;
-  "ecr_viewer.ecr_rr_rule_summaries": ecr_rr_rule_summaries;
+  ecr_data: ecr_data;
+  ecr_rr_conditions: ecr_rr_conditions;
+  ecr_rr_rule_summaries: ecr_rr_rule_summaries;
 }

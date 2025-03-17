@@ -53,7 +53,7 @@ export async function findEcr(criteria: Partial<ECR> | null): Promise<ECR[]> {
     throw new Error("eICR Criteria is required.");
   }
 
-  for (const criterium of Object.keys(criteria) as (keyof ECR)[]) {
+  for (const criterium of Object.keys(criteria) as (keyof ECR)[]) {  // GOES TO HELPER FUNCTION
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
       query = query.where(criterium, "=", criteria[criterium]);
     }
@@ -184,7 +184,7 @@ export async function createEcrCondition(
       .returningAll()
       .executeTakeFirstOrThrow()) as ECRConditions;
   } catch (error) {
-    console.error(error);
+    throw new Error("eICR not found: " + error);
   }
 }
 

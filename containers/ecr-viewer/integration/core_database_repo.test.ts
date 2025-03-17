@@ -105,7 +105,7 @@ describe("database_repo", () => {
 
   // ecr_rr_conditions
   describe("ecr_rr_conditions", () => {
-    var expected = {
+    const expected = {
       eICR_ID: "12345",
       uuid: "12345",
       condition: "Dark Magic",
@@ -140,13 +140,13 @@ describe("database_repo", () => {
 
     it("should create a condition", async () => {
       await database_repo.createEcrCondition({
-        eICR_ID: "54321",
+        eICR_ID: "12345",
         uuid: "54321",
         condition: "Dark Magic",
       });
       const actual = await database_repo.findEcrConditionById("54321");
       expect(actual).toEqual({
-        eICR_ID: "54321",
+        eICR_ID: "12345",
         uuid: "54321",
         condition: "Dark Magic",
       });
@@ -163,7 +163,7 @@ describe("database_repo", () => {
   describe("ecr_rr_rule_summaries", () => {
     const expected = {
       uuid: "12345",
-      ecr_rr_conditions_id: "12345",
+      ecr_rr_conditions_id: "54321",
       rule_summary: "Dark Magic",
     };
 
@@ -174,6 +174,7 @@ describe("database_repo", () => {
     afterEach(async () => {
       await clearCore();
     });
+
     it("should find a rule summary with a given uuid", async () => {
       const actual = await database_repo.findEcrRuleById("12345");
       expect(actual).toEqual(expected);
@@ -197,13 +198,13 @@ describe("database_repo", () => {
     it("should create a rule summary", async () => {
       await database_repo.createEcrRule({
         uuid: "54321",
-        ecr_rr_conditions_id: "54321",
+        ecr_rr_conditions_id: "12345",
         rule_summary: "Dark Magic",
       });
       const actual = await database_repo.findEcrRuleById("54321");
       expect(actual).toEqual({
         uuid: "54321",
-        ecr_rr_conditions_id: "54321",
+        ecr_rr_conditions_id: "12345",
         rule_summary: "Dark Magic",
       });
     });
