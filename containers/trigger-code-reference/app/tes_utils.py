@@ -1,6 +1,7 @@
 import json
 
-from sqlalchemy import SQLAlchemyError, text
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import Session, select
 from tes_data import get_engine
 from tes_models import (
@@ -75,6 +76,7 @@ def _get_concepts_list_tes(snomed_code: list) -> list[tuple]:
 
 if __name__ == "__main__":
     concepts_list = _get_concepts_list_tes(["276197005"])
+    # concepts_list = _get_concepts_list_tes(["840539006"])
     values = get_concepts_dict(concepts_list, "")
     json_string = json.dumps(values, indent=8)
     print(json_string)
