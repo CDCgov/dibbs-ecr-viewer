@@ -28,7 +28,7 @@ const azure = () => {
     return AzureAdProvider({
       clientId: process.env.AUTH_CLIENT_ID,
       clientSecret: process.env.AUTH_CLIENT_SECRET,
-      tenantId: process.env.AUTH_TENANT_ID,
+      tenantId: process.env.AUTH_ISSUER,
     });
 };
 const providers = [keycloak(), azure()].filter((p) => p !== undefined);

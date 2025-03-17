@@ -6,7 +6,6 @@ namespace NodeJS {
     AUTH_CLIENT_SECRET?: string;
     AUTH_ISSUER?: string;
     AUTH_PROVIDER?: "keycloak" | "ad";
-    AUTH_TENANT_ID?: string;
     AWS_ACCESS_KEY_ID: string;
     AWS_CUSTOM_ENDPOINT: string;
     AWS_REGION: string;
