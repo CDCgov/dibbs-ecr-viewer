@@ -31,7 +31,7 @@ def get_engine():
     return _engine
 
 
-def retreive_tes_info_and_save(concept_code_to_type_dict):
+def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
     """
     Fetches the TES API for ValueSets and saves them to the database
     """
