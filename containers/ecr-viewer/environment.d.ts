@@ -40,7 +40,7 @@ namespace NodeJS {
     NEXTAUTH_SECRET: string;
     NON_INTEGRATED_VIEWER: "true" | "false";
     ORCHESTRATION_URL: string;
-    SOURCE: "s3" | "azure";
+    SOURCE: "s3" | "azure" | "gcs";
     SQL_SERVER_HOST: string;
     SQL_SERVER_PASSWORD: string;
     SQL_SERVER_USER: string;
