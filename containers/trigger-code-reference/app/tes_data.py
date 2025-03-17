@@ -1,18 +1,23 @@
+import os
 import string
 import sys
 
 import requests
+from dotenv import load_dotenv
 from fhir.resources.bundle import Bundle
 from fhir.resources.valueset import ValueSet
-from key import TEST_API_KEY
 from sqlmodel import Session, SQLModel, create_engine
 from tes_models import Concept, ConceptType, Condition, IcdCrosswalk
 from tqdm import tqdm
 
+load_dotenv()
+
 _DB_URL = "sqlite:///../data/tes.db"
 
+# TES API key can be obtained here once registered: https://tes.tools.aimsplatform.org/
 _TES_API_URL = "https://tes.tools.aimsplatform.org/api/fhir/ValueSet"
-_TES_API_KEY = TEST_API_KEY
+_TES_API_KEY = os.getenv("TES_API_KEY")
+
 _BATCH_SIZE = 1000
 _TES_HEADER = {"X-API-KEY": _TES_API_KEY}
 _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
