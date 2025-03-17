@@ -20,6 +20,7 @@ export const dialect = {
               password: process.env.SQL_SERVER_PASSWORD,
               userName: process.env.SQL_SERVER_USER || "sa",
             },
+            type: "default",
           },
           options: {
             database: "master",
@@ -35,11 +36,9 @@ export const dialect = {
           },
           server: process.env.SQL_SERVER_HOST || "localhost",
         };
-        // console.log({opts})
         try {
           const { Connection } = tedious;
           const res = new Connection(opts);
-          // res.on('debug', console.log)
           res.on("error", (e) => console.log({ e }));
           return res;
         } catch (e) {
