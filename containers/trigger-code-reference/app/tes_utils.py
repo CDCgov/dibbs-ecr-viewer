@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import Session, select
 
-from app.tes_data import get_engine
+from app.db import get_engine
 from app.tes_models import (
     Condition,
 )

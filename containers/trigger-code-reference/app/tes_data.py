@@ -6,11 +6,9 @@ import requests
 from dotenv import load_dotenv
 from fhir.resources.bundle import Bundle
 from fhir.resources.valueset import ValueSet
-from sqlmodel import Session
+from sqlmodel import Session, SQLModel, create_engine
+from tes_models import Concept, ConceptType, Condition, IcdCrosswalk
 from tqdm import tqdm
-
-from app.db import get_engine
-from app.tes_models import Concept, ConceptType, Condition, IcdCrosswalk
 
 load_dotenv()
 
@@ -23,12 +21,25 @@ _TES_HEADER = {"X-API-KEY": _TES_API_KEY}
 _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
 
+_DB_URL = "sqlite:///../data/tes.db"
+_DEBUG = True
+
+_engine = create_engine(_DB_URL, echo=_DEBUG)
+SQLModel.metadata.create_all(_engine)
+
+
+def _get_engine():
+    """
+    Returns the engine for the database
+    """
+    return _engine
+
 
 def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
     """
     Fetches the TES API for ValueSets and saves them to the database
     """
-    with Session(get_engine()) as session:
+    with Session(_get_engine()) as session:
         current_iteration = 0
         conditions: set[Condition] = set()
         all_concepts: dict[(str, str)] = {}
@@ -222,7 +233,7 @@ def _build_crosswalk_table():
     to create a crosswalk table between ICD10 codes and a selected set of ICD9
     codes (the selected set are those relevant to ICD10 codes).
     """
-    with Session(get_engine()) as session:
+    with Session(_get_engine()) as session:
         table_rows = []
         row_id = 1
         with open("../seed-scripts/diagnosis_gems_2018/2018_I10gem.txt") as gem:
