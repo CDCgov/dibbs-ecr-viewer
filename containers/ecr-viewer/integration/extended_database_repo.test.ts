@@ -2,12 +2,12 @@
  * @jest-environment node
  */
 
-import * as extended_database_repo from "@/app/api/services/extended_database_repo";
 import {
   buildExtended,
   clearExtended,
   dropExtended,
 } from "@/app/api/services/db_schema";
+import * as extended_database_repo from "@/app/api/services/extended_database_repo";
 
 describe("extended_database_repo", () => {
   beforeAll(async () => {
@@ -60,7 +60,11 @@ describe("extended_database_repo", () => {
     };
     beforeEach(async () => {
       await extended_database_repo.createExtendedEcr(template);
-      await extended_database_repo.createExtendedEcr({...template, eICR_ID: "54321", first_name: "Anakin"})
+      await extended_database_repo.createExtendedEcr({
+        ...template,
+        eICR_ID: "54321",
+        first_name: "Anakin",
+      });
     });
 
     afterEach(async () => {
@@ -79,10 +83,12 @@ describe("extended_database_repo", () => {
       const actual = await extended_database_repo.findExtendedEcr({
         first_name: "Obi-Wan",
       });
-      expect(actual).toEqual([{
-        ...template,
-        active_problems: expect.stringContaining("Dead"),
-      }]);
+      expect(actual).toEqual([
+        {
+          ...template,
+          active_problems: expect.stringContaining("Dead"),
+        },
+      ]);
     });
 
     it("should update patient_name_last of a person with a given id", async () => {
@@ -133,7 +139,12 @@ describe("extended_database_repo", () => {
     };
     beforeEach(async () => {
       await extended_database_repo.createAddress(template);
-      await extended_database_repo.createAddress({...template, uuid: "54321", city: "Mustafar", eICR_ID: "54321"})
+      await extended_database_repo.createAddress({
+        ...template,
+        uuid: "54321",
+        city: "Mustafar",
+        eICR_ID: "54321",
+      });
     });
 
     afterEach(async () => {
@@ -152,10 +163,12 @@ describe("extended_database_repo", () => {
       const actual = await extended_database_repo.findAddress({
         city: "Coruscant",
       });
-      expect(actual).toEqual([{
-        ...template,
-        line: expect.stringContaining("Apt 2"),
-      }]);
+      expect(actual).toEqual([
+        {
+          ...template,
+          line: expect.stringContaining("Apt 2"),
+        },
+      ]);
     });
 
     it("should update the address with a given id", async () => {
@@ -212,7 +225,12 @@ describe("extended_database_repo", () => {
     };
     beforeEach(async () => {
       await extended_database_repo.createLab(template);
-      await extended_database_repo.createLab({...template, uuid: "54321", eICR_ID: "321", test_type: "Good"})
+      await extended_database_repo.createLab({
+        ...template,
+        uuid: "54321",
+        eICR_ID: "321",
+        test_type: "Good",
+      });
     });
 
     afterEach(async () => {
@@ -227,7 +245,7 @@ describe("extended_database_repo", () => {
       const actual = await extended_database_repo.findLab({
         test_type: "Evil",
       });
-      expect(actual).toEqual([{...template}]);
+      expect(actual).toEqual([{ ...template }]);
     });
 
     it("should update the lab with a given id", async () => {
@@ -260,7 +278,12 @@ describe("extended_database_repo", () => {
     };
     beforeEach(async () => {
       await extended_database_repo.createEcrCondition(template);
-      await extended_database_repo.createEcrCondition({...template, eICR_ID: "54321", uuid: "321", condition: "Good Magic"})
+      await extended_database_repo.createEcrCondition({
+        ...template,
+        eICR_ID: "54321",
+        uuid: "321",
+        condition: "Good Magic",
+      });
     });
 
     afterEach(async () => {
@@ -275,7 +298,7 @@ describe("extended_database_repo", () => {
       const actual = await extended_database_repo.findEcrCondition({
         condition: "Dark Magic",
       });
-      expect(actual).toEqual([{...template, uuid: "123"}]);
+      expect(actual).toEqual([{ ...template, uuid: "123" }]);
     });
 
     it("should update the condition with a given id", async () => {
@@ -312,7 +335,11 @@ describe("extended_database_repo", () => {
     };
     beforeEach(async () => {
       await extended_database_repo.createEcrRule(template);
-      await extended_database_repo.createEcrRule({...template, uuid: "54321", rule_summary: "Real Bad Magic"})
+      await extended_database_repo.createEcrRule({
+        ...template,
+        uuid: "54321",
+        rule_summary: "Real Bad Magic",
+      });
     });
 
     afterEach(async () => {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
+import { withUrlParamChecks } from "./middlewares/withUrlParamChecks";
 
 // https://reacthustle.com/blog/how-to-chain-multiple-middleware-functions-in-nextjs
 // https://github.com/jmarioste/next-middleware-guide/
@@ -51,7 +52,7 @@ export const chainMiddleware = (
 /**
  * Composed middleware handlers
  */
-export default chainMiddleware([withNbsAuth, withNextAuth]);
+export default chainMiddleware([withNbsAuth, withNextAuth, withUrlParamChecks]);
 
 export const config = {
   matcher: [

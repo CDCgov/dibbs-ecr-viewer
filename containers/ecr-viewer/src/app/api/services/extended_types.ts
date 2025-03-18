@@ -9,10 +9,10 @@ import {
 export interface ecr_data {
   eICR_ID: Generated<string>;
   set_id: string | undefined;
-  fhir_reference_link: string;
-  last_name: string;
-  first_name: string;
-  birth_date: ColumnType<Date>;
+  fhir_reference_link: string | undefined;
+  last_name: string | undefined;
+  first_name: string | undefined;
+  birth_date: ColumnType<Date> | undefined;
   gender: string | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
@@ -39,7 +39,7 @@ export interface ecr_data {
   facility_id: string | undefined;
   facility_name: string | undefined;
   encounter_type: string | undefined;
-  encounter_start_date: ColumnType<Date>;
+  encounter_start_date: ColumnType<Date> | undefined;
   encounter_end_date: ColumnType<Date | undefined>;
   reason_for_visit: string | undefined;
   active_problems: string[] | undefined;

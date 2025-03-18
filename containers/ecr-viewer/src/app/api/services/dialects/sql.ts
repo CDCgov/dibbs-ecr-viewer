@@ -1,6 +1,6 @@
+import { MssqlDialect } from "kysely";
 import * as tarn from "tarn";
 import * as tedious from "tedious";
-import { MssqlDialect } from "kysely";
 
 export const dialect = {
   dialect: new MssqlDialect({

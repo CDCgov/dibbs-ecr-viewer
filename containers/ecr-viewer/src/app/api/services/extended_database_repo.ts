@@ -17,9 +17,10 @@ import {
   ECRRuleSummaries,
   NewECRRuleSummaries,
   ECRRuleSummariesUpdate,
+  Extended,
 } from "./extended_types";
 
-const extdb = db as Kysely<any>;
+const extdb = db as Kysely<Extended>;
 
 /**
  * Finds an eICR by its ID
@@ -77,7 +78,7 @@ export async function findExtendedEcr(
   }
 
   const vals = await query.selectAll().execute();
-  for (let val of vals) {
+  for (const val of vals) {
     if (val && val.latitude !== undefined) {
       val.latitude = parseFloat(val.latitude.toString());
     }
@@ -325,7 +326,7 @@ export async function findLab(criteria: Partial<ECRLabs>): Promise<ECRLabs[]> {
     }
   }
   const vals = await query.selectAll().execute();
-  for (let val of vals) {
+  for (const val of vals) {
     if (
       val.test_result_quantitative !== undefined &&
       val.test_result_quantitative !== null
@@ -450,7 +451,7 @@ export async function findEcrCondition(
 
   for (const criterium of Object.keys(criteria) as (keyof ECRConditions)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
-      query = query.where(criterium, "=", criteria[criterium]);
+      query = query.where(criterium, "=", criteria[criterium]!);
     }
   }
 
@@ -557,7 +558,7 @@ export async function findEcrRule(
 
   for (const criterium of Object.keys(criteria) as (keyof ECRRuleSummaries)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
-      query = query.where(criterium, "=", criteria[criterium]);
+      query = query.where(criterium, "=", criteria[criterium]!);
     }
   }
 

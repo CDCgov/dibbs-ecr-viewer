@@ -1,6 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 
+import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
+import BundleLabInvalidResultsDiv from "../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
+import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import {
   getLabJsonObject,
   getObservations,
@@ -19,9 +22,6 @@ import {
   returnAnalysisTime,
   LabReportElementData,
 } from "@/app/services/labsService";
-import BundleLab from "@/app/tests/assets/BundleLab.json";
-import BundleLabInvalidResultsDiv from "@/app/tests/assets/BundleLabInvalidResultsDiv.json";
-import BundleLabNoLabIds from "@/app/tests/assets/BundleLabNoLabIds.json";
 import { noData } from "@/app/utils/data-utils";
 import {
   evaluateAll,

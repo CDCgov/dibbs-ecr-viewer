@@ -1,10 +1,11 @@
 // Kysely ORM Connection Client
 
 import { Kysely } from "kysely";
+
+import { pgConstructor } from "./buildPg";
+import { sqlConstructor } from "./buildSql";
 import { Core } from "./core_types";
 import { Extended } from "./extended_types";
-import { sqlConstructor } from "./buildSql";
-import { pgConstructor } from "./buildPg";
 
 // Dialect to communicate with the database, interface to define its structure.
 
@@ -27,5 +28,22 @@ switch (db_type) {
       db = pgConstructor("core");
     }
 }
+
+/**
+ * Performs a health check on the PostgreSQL database connection.
+ * @returns The status of the postgres connection or undefined if missing environment values.
+ */
+export const metadataDatabaseHealthCheck = async () => {
+  if (!process.env.METADATA_DATABASE_TYPE) {
+    return undefined;
+  }
+  try {
+    await (db as Kysely<Core>).connection().execute(async (_db) => {});
+    return "UP";
+  } catch (error: unknown) {
+    console.error(error);
+    return "DOWN";
+  }
+};
 
 export { db };

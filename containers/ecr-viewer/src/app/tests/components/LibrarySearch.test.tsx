@@ -63,7 +63,7 @@ describe("Library Search", () => {
     mockSearchParams.append("page", "4");
     mockSearchParams.append("search", "Em");
 
-    render(<LibrarySearch />);
+    render(<LibrarySearch initSearchTerm="Em" />);
     const searchBox = screen.getByRole("searchbox");
     const searchButton = screen.getByRole("button");
 
@@ -75,9 +75,7 @@ describe("Library Search", () => {
   });
 
   it("should put the search term in the box if already in search params", async () => {
-    mockSearchParams.append("search", "blah");
-
-    render(<LibrarySearch />);
+    render(<LibrarySearch initSearchTerm="blah" />);
 
     expect(screen.getByDisplayValue("blah")).toBeVisible();
   });

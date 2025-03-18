@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { metadataDatabaseHealthCheck } from "@/app/api/services/database";
 import { azureBlobStorageHealthCheck } from "@/app/data/blobStorage/azureClient";
 import { s3HealthCheck } from "@/app/data/blobStorage/s3Client";
-import { postgresHealthCheck } from "@/app/data/db/postgres_db";
-import { sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
 
 /**
  * Health check for ECR Viwer
@@ -15,8 +14,7 @@ export async function GET() {
       status: "UP",
       version: process.env.APP_VERSION,
       dependencies: {
-        sqlserver: await sqlServerHealthCheck(),
-        postgres: await postgresHealthCheck(),
+        metadataDb: await metadataDatabaseHealthCheck(),
         s3: await s3HealthCheck(),
         azureBlobStorage: await azureBlobStorageHealthCheck(),
       },

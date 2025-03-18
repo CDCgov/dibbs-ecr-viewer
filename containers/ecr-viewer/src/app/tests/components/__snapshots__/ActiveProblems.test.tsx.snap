@@ -52,7 +52,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          123
+          123 years
         </td>
         <td
           class="text-top"
@@ -100,7 +100,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          152
+          152 years
         </td>
         <td
           class="text-top"
@@ -126,7 +126,63 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top"
         >
-          141
+          141 years
+        </td>
+        <td
+          class="text-top"
+        >
+          <span
+            class="no-data text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top"
+        >
+          Headache
+        </td>
+        <td
+          class="text-top"
+        >
+          <span
+            class="no-data text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top"
+        >
+          1 year
+        </td>
+        <td
+          class="text-top"
+        >
+          <span
+            class="no-data text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top"
+        >
+          Backache
+        </td>
+        <td
+          class="text-top"
+        >
+          06/28/1877
+        </td>
+        <td
+          class="text-top"
+        >
+          1 month, 3 days
         </td>
         <td
           class="text-top"

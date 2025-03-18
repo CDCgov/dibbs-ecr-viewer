@@ -8,6 +8,7 @@ import RedirectPage from "@/app/signin/page";
 
 jest.mock("next-auth/react", () => ({
   signIn: jest.fn(),
+  SessionProvider: ({ children }: { children: unknown }) => <>{children}</>,
 }));
 
 jest.mock("../../../../api/auth/auth", () => ({

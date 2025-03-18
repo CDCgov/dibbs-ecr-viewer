@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -59,7 +60,7 @@ class BaseService:
         self.include_health_check_endpoint = include_health_check_endpoint
         self.app = FastAPI(
             title=service_name,
-            version="1.7.6",
+            version=os.getenv("APP_VERSION", "1.0.0"),
             contact=DIBBS_CONTACT,
             license_info=LICENSES[license_info],
             description=description,

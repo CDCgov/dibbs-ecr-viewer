@@ -58,6 +58,7 @@
       }
     ],
     "no-unused-vars": "off",
+    "no-var": "error",
     "object-shorthand": "error",
     "prefer-const": "error",
     "unused-imports/no-unused-imports": "error",
