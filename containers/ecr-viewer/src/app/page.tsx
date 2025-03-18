@@ -11,11 +11,12 @@ import { EcrTableLoading } from "./components/EcrTableLoading";
 import Filters from "./components/Filters";
 import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
-import { DEFAULT_ITEMS_PER_PAGE, INITIAL_HEADERS } from "./constants";
+import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./data/conditions";
 import NotFound from "./not-found";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
+import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
@@ -26,7 +27,7 @@ import { returnParamDates } from "./utils/date-utils";
 const HomePage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: PageSearchParams;
 }) => {
   const isNonIntegratedViewer =
     env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
@@ -36,30 +37,20 @@ const HomePage = async ({
   }
 
   const cookieStore = cookies();
-  const prefItemsPerPage = cookieStore.get("itemsPerPage")?.value;
-  const itemsPerPage =
-    Number(searchParams?.itemsPerPage) ||
-    Number(prefItemsPerPage) ||
-    DEFAULT_ITEMS_PER_PAGE;
-
-  const currentPage = Number(searchParams?.page) || 1;
-  const sortColumn = (searchParams?.columnId as string) || "date_created";
-  const sortDirection = (searchParams?.direction as string) || "DESC";
-  const searchTerm = searchParams?.search as string | undefined;
-  const filterConditions = searchParams?.condition as string | undefined;
-  const filterConditionsArr = filterConditions?.split("|");
-  const filterDates = returnParamDates(searchParams);
+  const config = getLibraryConfig(searchParams, cookieStore);
+  const filterConditionsArr = config.condition?.split("|");
+  const filterDates = returnParamDates(config.dateRange, config.dates);
 
   const tableHeaders = INITIAL_HEADERS.map((header) => {
     return {
       ...header,
-      sortDirection: header.id === sortColumn ? sortDirection : "",
+      sortDirection: header.id === config.columnId ? config.direction : "",
     };
   });
 
   const totalCount = await getTotalEcrCount(
     filterDates,
-    searchTerm,
+    config.search,
     filterConditionsArr,
   );
 
@@ -74,15 +65,21 @@ const HomePage = async ({
             eCR Library
           </h2>
           <LibrarySearch
+            initSearchTerm={config.search}
             className="margin-left-auto"
             textBoxClassName="width-21-9375"
           />
         </div>
-        <Filters conditions={allConditions} />
+        <Filters
+          allConditions={allConditions}
+          initConditions={filterConditionsArr ?? allConditions}
+          initCustomDate={config.dates}
+          initDateRange={config.dateRange}
+        />
         <EcrPaginationWrapper
           totalCount={totalCount}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
+          itemsPerPage={config.itemsPerPage}
+          currentPage={config.page}
         >
           <EcrTableWrapper>
             <EcrTableHeader
@@ -94,15 +91,15 @@ const HomePage = async ({
             ) : (
               <Suspense
                 // key needed to force fallback state to retrigger on params change
-                key={JSON.stringify({ ...searchParams, itemsPerPage })}
+                key={JSON.stringify(config)}
                 fallback={<EcrTableLoading />}
               >
                 <EcrTableContent
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  sortColumn={sortColumn}
-                  sortDirection={sortDirection}
-                  searchTerm={searchTerm}
+                  currentPage={config.page}
+                  itemsPerPage={config.itemsPerPage}
+                  sortColumn={config.columnId}
+                  sortDirection={config.direction}
+                  searchTerm={config.search}
                   filterConditions={filterConditionsArr}
                   filterDates={filterDates}
                 />

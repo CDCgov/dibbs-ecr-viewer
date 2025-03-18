@@ -8,7 +8,6 @@ import React, {
 } from "react";
 
 import { Button, Label } from "@trussworks/react-uswds";
-import { useSearchParams } from "next/navigation";
 
 import { toKebabCase } from "@/app/utils/format-utils";
 
@@ -51,7 +50,6 @@ export const Filter = ({
   const { filterBoxOpen, setFilterBoxOpen, lastOpenButtonRef } =
     useContext(FilterOpenContext);
   const openBtnRef = useRef<HTMLElement | null>(null);
-  const searchParams = useSearchParams();
 
   const isFilterBoxOpen = filterBoxOpen === type;
   const setIsFilterBoxOpen = useCallback((open: boolean) => {
@@ -73,9 +71,6 @@ export const Filter = ({
       resetHandler();
     }
   }, [filterBoxOpen]);
-
-  // Force a reset if the search params update
-  useEffect(resetHandler, [searchParams]);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Address, Bundle, Condition, DomainResource } from "fhir/r4";
+import { Bundle, Condition, DomainResource } from "fhir/r4";
 
 import { evaluateData } from "@/app/utils/data-utils";
 import { evaluateAll, evaluateOne } from "@/app/utils/evaluate";
@@ -19,13 +19,15 @@ import {
   evaluatePatientRace,
   evaluatePatientEthnicity,
   evaluateEncounterDiagnosis,
-  getHumanReadableCodeableConcept,
   censorGender,
+  calculatePatientAge,
 } from "./evaluateFhirDataService";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
 import {
-  formatAddress,
+  formatCodeableConcept,
   formatContactPoint,
+  formatCurrentAddress,
+  formatPatientContactList,
   formatPhoneNumber,
 } from "./formatService";
 import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
@@ -40,6 +42,19 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
   const patientSex = toTitleCase(
     evaluateOne(fhirBundle, fhirPathMappings.patientGender),
   );
+
+  const age = calculatePatientAge(fhirBundle);
+  const parentGuardian =
+    !age || age.years < 18
+      ? [
+          {
+            title: "Parent/Guardian",
+            value: formatPatientContactList(
+              evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
+            ),
+          },
+        ]
+      : [];
 
   return evaluateData([
     {
@@ -65,7 +80,7 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Patient Address",
-      value: findCurrentAddress(
+      value: formatCurrentAddress(
         evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
       ),
     },
@@ -75,35 +90,8 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
         evaluateAll(fhirBundle, fhirPathMappings.patientTelecom),
       ),
     },
+    ...parentGuardian,
   ]);
-};
-
-/**
- * Find the most current home address.
- * @param addresses - List of addresses.
- * @returns A string with the formatted current address or an empty string if no address.
- */
-export const findCurrentAddress = (addresses: Address[]) => {
-  // current home address is first pick
-  let address = addresses.find(
-    (a) => a.use === "home" && !!a.period?.start && !a.period?.end,
-  );
-  // then current address
-  if (!address) {
-    address = addresses.find((a) => !!a.period?.start && !a.period?.end);
-  }
-
-  // then home address
-  if (!address) {
-    address = addresses.find((a) => a.use === "home");
-  }
-
-  // then first address
-  if (!address) {
-    address = addresses[0];
-  }
-
-  return formatAddress(address);
 };
 
 /**
@@ -162,9 +150,8 @@ export const evaluateEcrSummaryConditionSummary = (
         conditionsList[snomed] = {
           ruleSummaries: new Set(),
           snomedDisplay:
-            getHumanReadableCodeableConcept(
-              observation?.valueCodeableConcept,
-            ) ?? "Unknown Condition",
+            formatCodeableConcept(observation?.valueCodeableConcept) ??
+            "Unknown Condition",
         };
       }
 

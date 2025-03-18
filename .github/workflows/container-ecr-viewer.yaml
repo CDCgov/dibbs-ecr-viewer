@@ -37,6 +37,7 @@ jobs:
           npm ci
           npm run lint
           npm run lint:tsc
+
   test-node-containers:
     runs-on: ubuntu-latest
     steps:
@@ -58,49 +59,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ env.CONTAINER }}
-
-  lighthouse:
-    if: false
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{env.NODE_VERSION}}
-
-      - name: Set up env vars
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
-
-      - name: Run seed data conversion
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run convert-seed-data
-        env:
-          SEED_DATA_DIRECTORIES: e2e
-
-      - name: Start app
-        run: CONFIG_NAME=AWS_SQLSERVER_NON_INTEGRATED docker compose --profile AWS_SQLSERVER_NON_INTEGRATED --profile ecr-viewer up -d
-        working-directory: ./containers/${{env.CONTAINER}}
-
-      - name: Wait for Application to be ready
-        run: |
-          until curl --output /dev/null --silent --head --fail http://localhost:3000/ecr-viewer; do
-            printf '.'
-            sleep 5
-          done
-
-      - name: Run Lighthouse
-        uses: treosh/lighthouse-ci-action@v12
-        with:
-          configPath: "./containers/${{env.CONTAINER}}/lighthouserc.yaml"
-          uploadArtifacts: true
 
   build-container:
     runs-on: ubuntu-latest
@@ -169,15 +127,22 @@ jobs:
           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run seed data conversion
-        if: false
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run convert-seed-data
         env:
-          SEED_DATA_DIRECTORIES: e2e
+          SEED_DATA_DIRECTORIES: star-wars
+
+      - name: Run local docker and wait for it to be ready
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
 
       - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
 
       - name: Upload playwright report - Non-Integrated
         uses: actions/upload-artifact@v4
@@ -187,14 +152,30 @@ jobs:
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: lighthouse-report
+          path: containers/${{env.CONTAINER}}/lighthouse/
+          retention-days: 5
+
       - name: Set CONFIG_NAME to AWS_INTEGRATED
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           sed -i 's/AWS_SQLSERVER_NON_INTEGRATED/AWS_INTEGRATED/' .env.local
 
+      - name: Run local docker and wait for it to be ready
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
+
       - name: Run Playwright tests - Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:integrated
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
 
       - name: Upload playwright report - integrated
         uses: actions/upload-artifact@v4

@@ -1,24 +1,6 @@
-import { test, expect, request } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 test.describe("keycloak", () => {
-  test.beforeAll(async () => {
-    const context = await request.newContext();
-    for (let attempt = 1; attempt <= 10; attempt++) {
-      try {
-        const response = await context.get(
-          process.env.AUTH_KEYCLOAK_ISSUER ??
-            "http://localhost:8070/realms/master/",
-        );
-        if (response.status() === 200) {
-          console.log(`Keycloak is ready`);
-          break;
-        }
-      } catch (error) {
-        console.log(`Waiting for Keycloak...`);
-      }
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-    }
-  });
   test("should require a login on main page", async ({ page }) => {
     await page.goto("/ecr-viewer");
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");

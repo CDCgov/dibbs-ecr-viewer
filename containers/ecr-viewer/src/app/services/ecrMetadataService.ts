@@ -10,12 +10,14 @@ import {
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
-import {
-  evaluatePractitionerRoleReference,
-  getHumanReadableCodeableConcept,
-} from "./evaluateFhirDataService";
+import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
-import { formatAddress, formatContactPoint, formatName } from "./formatService";
+import {
+  formatAddress,
+  formatCodeableConcept,
+  formatContactPoint,
+  formatName,
+} from "./formatService";
 import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
@@ -51,7 +53,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
   for (const condition of rrDetails) {
     const name =
-      getHumanReadableCodeableConcept(condition.valueCodeableConcept) ??
+      formatCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
     const triggers = getReportabilitySummaries(condition);
 
