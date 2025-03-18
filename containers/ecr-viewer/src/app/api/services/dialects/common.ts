@@ -17,8 +17,9 @@ const map: { [key: string]: MappedSqlThings } = {
 };
 
 /**
- *
- * @param key
+ * helper to get mapped sql expression
+ * @param key which thing to get
+ * @returns mapped sql
  */
 export const getSql = <K extends keyof MappedSqlThings>(
   key: K,

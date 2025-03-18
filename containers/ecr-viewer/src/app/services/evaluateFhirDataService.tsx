@@ -1,10 +1,8 @@
 import "server-only"; // FHIR evaluation should be done server side
 
-import * as dateFns from "date-fns";
 import {
   Address,
   Bundle,
-  CodeableConcept,
   Condition,
   Encounter,
   Location,
@@ -12,6 +10,7 @@ import {
   Practitioner,
   PractitionerRole,
 } from "fhir/r4";
+import { DateTime } from "luxon";
 
 import { evaluateData, noData } from "@/app/utils/data-utils";
 import {
@@ -32,8 +31,13 @@ import {
 } from "./formatDateService";
 import {
   formatAddress,
+  formatAddressList,
+  formatCodeableConcept,
   formatContactPoint,
   formatName,
+  formatNameList,
+  formatPatientContactList,
+  formatAge,
   formatPhoneNumber,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
@@ -61,9 +65,7 @@ export const evaluatePatientName = (
     return formatName(officialName ?? nameList[0]);
   }
 
-  return nameList
-    .map((name) => formatName(name, nameList.length > 1))
-    .join("\n");
+  return formatNameList(nameList);
 };
 
 /**
@@ -113,18 +115,7 @@ export const evaluatePatientAddress = (fhirBundle: Bundle) => {
     fhirPathMappings.patientAddressList,
   );
 
-  if (addresses.length > 0) {
-    return addresses
-      .map((address) => {
-        return formatAddress(address, {
-          includeUse: addresses.length > 1,
-          includePeriod: true,
-        });
-      })
-      .join("\n\n");
-  } else {
-    return "";
-  }
+  return formatAddressList(addresses);
 };
 
 /**
@@ -149,42 +140,98 @@ export const evaluateEncounterId = (fhirBundle: Bundle) => {
 export const evaluatePatientDOB = (fhirBundle: Bundle) =>
   formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB));
 
+export interface Age {
+  years: number;
+  months: number;
+  days: number;
+}
+
 /**
  * Calculates the age of a patient to a given date or today, unless DOD exists.
  * @param fhirBundle - The FHIR bundle containing patient information.
  * @param [givenDate] - Optional. The target date to calculate the age. Defaults to the current date if not provided.
- * @returns - The age of the patient in years, or undefined if date of birth is not available or if date of death exists.
+ * @returns - The exact age of the patient in years/months/days, or undefined if date of birth is not available or if date of death exists.
  */
-export const calculatePatientAge = (fhirBundle: Bundle, givenDate?: string) => {
+export const calculatePatientAge = (
+  fhirBundle: Bundle,
+  givenDate?: string,
+): Age | undefined => {
+  const deathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+
+  // if a death date is available, don't calculate patient age
+  if (deathDate) {
+    return undefined;
+  }
+
   const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
+
+  // date is provided by caller, use that
+  if (patientDOBString && givenDate) {
+    return getPatientAge(
+      DateTime.fromJSDate(new Date(givenDate)),
+      DateTime.fromJSDate(new Date(patientDOBString)),
+    );
+  }
+
+  // no date provided, use encounter or today's date
+  if (patientDOBString) {
+    const encounterStartDate = evaluateOne(
+      fhirBundle,
+      fhirPathMappings.encounterStartDate,
+    );
+
+    // use the encounter start date if one is available, otherwise we'll fall back to today's date
+    const laterDate = encounterStartDate
+      ? new Date(encounterStartDate)
+      : new Date();
+
+    return getPatientAge(
+      DateTime.fromJSDate(laterDate),
+      DateTime.fromJSDate(new Date(patientDOBString)),
+    );
+  }
+
+  return undefined;
+};
+
+/**
+ * Calculates Patient Age at Death if DOB and DOD exist, otherwise returns undefined
+ * @param fhirBundle - The FHIR bundle containing patient information.
+ * @returns - The age of the patient at death in years/months/days, or undefined if date of birth or date of death is not available.
+ */
+export const calculatePatientAgeAtDeath = (
+  fhirBundle: Bundle,
+): Age | undefined => {
+  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
+
   const patientDODString = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
-  if (patientDOBString && !patientDODString && !givenDate) {
-    const patientDOB = new Date(patientDOBString);
-    return dateFns.differenceInYears(new Date(), patientDOB);
-  } else if (patientDOBString && givenDate) {
-    const patientDOB = new Date(patientDOBString);
-    return dateFns.differenceInYears(new Date(givenDate), patientDOB);
+
+  if (patientDOBString && patientDODString) {
+    const laterDate = DateTime.fromJSDate(new Date(patientDODString));
+    const earlierDate = DateTime.fromJSDate(new Date(patientDOBString));
+
+    return getPatientAge(laterDate, earlierDate);
   } else {
     return undefined;
   }
 };
 
 /**
- * Calculates Patient Age at Death if DOB and DOD exist, otherwise returns undefined
- * @param fhirBundle - The FHIR bundle containing patient information.
- * @returns - The age of the patient at death in years, or undefined if date of birth or date of death is not available.
+ * Helper function to calculate an age given two `DateTimes`
+ * @param laterDate DateTime later in time
+ * @param earlierDate DateTime earlier in time
+ * @returns An `Age`
  */
-export const calculatePatientAgeAtDeath = (fhirBundle: Bundle) => {
-  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
-  const patientDODString = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+const getPatientAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
+  const { years, months, days } = laterDate
+    .diff(earlierDate, ["years", "months", "days"])
+    .toObject();
 
-  if (patientDOBString && patientDODString) {
-    const patientDOB = new Date(patientDOBString);
-    const patientDOD = new Date(patientDODString);
-    return dateFns.differenceInYears(patientDOD, patientDOB);
-  } else {
-    return undefined;
-  }
+  return {
+    years: years ?? 0,
+    months: months ?? 0,
+    days: Math.round(days ?? 0),
+  };
 };
 
 /**
@@ -309,11 +356,11 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
     },
     {
       title: "Current Age",
-      value: calculatePatientAge(fhirBundle)?.toString(),
+      value: formatAge(calculatePatientAge(fhirBundle)),
     },
     {
       title: "Age at Death",
-      value: calculatePatientAgeAtDeath(fhirBundle),
+      value: formatAge(calculatePatientAgeAtDeath(fhirBundle)),
     },
     {
       title: "Vital Status",
@@ -366,8 +413,17 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       ),
     },
     {
+      title: "Parent/Guardian",
+      value: formatPatientContactList(
+        evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
+        true,
+      ),
+    },
+    {
       title: "Emergency Contact",
-      value: evaluateEmergencyContact(fhirBundle),
+      value: formatPatientContactList(
+        evaluateAll(fhirBundle, fhirPathMappings.patientEmergencyContact),
+      ),
     },
     {
       title: "Patient IDs",
@@ -489,7 +545,7 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
     },
     {
       title: "Provider Address",
-      value: practitioner?.address?.map((address) => formatAddress(address)),
+      value: formatAddressList(practitioner?.address),
     },
     {
       title: "Provider Contact",
@@ -501,7 +557,7 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
     },
     {
       title: "Provider Facility Address",
-      value: organization?.address?.map((address) => formatAddress(address)),
+      value: formatAddressList(organization?.address),
     },
     {
       title: "Provider ID",
@@ -559,36 +615,6 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
       className="caption-data-title margin-y-0"
     />
   );
-};
-
-/**
- * Evaluates emergency contact information from the FHIR bundle and formats it into a readable string.
- * @param fhirBundle - The FHIR bundle containing patient information.
- * @returns The formatted emergency contact information.
- */
-export const evaluateEmergencyContact = (fhirBundle: Bundle) => {
-  const contacts = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.patientEmergencyContact,
-  );
-
-  if (contacts.length === 0) return undefined;
-
-  return contacts
-    .map((contact) => {
-      const relationship = toSentenceCase(
-        getHumanReadableCodeableConcept(contact.relationship?.[0]),
-      );
-
-      const contactName = contact.name ? formatName(contact.name) : "";
-      const address = contact.address ? formatAddress(contact.address) : "";
-      const phoneNumbers = formatContactPoint(contact.telecom);
-
-      return [relationship, contactName, address, phoneNumbers]
-        .filter(Boolean)
-        .join("\n");
-    })
-    .join("\n\n");
 };
 
 /**
@@ -652,7 +678,7 @@ export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
     .map((diagnosis) => {
       const reference = diagnosis.condition?.reference;
       const condition = evaluateReference<Condition>(fhirBundle, reference);
-      return getHumanReadableCodeableConcept(condition?.code);
+      return formatCodeableConcept(condition?.code);
     })
     .filter(Boolean)
     .join(", ");
@@ -699,49 +725,6 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
     })
     .filter(Boolean)
     .join("\n\n");
-};
-
-/**
- * Attempts to return a human-readable display value for a CodeableConcept. It will return the first
- * available value in the following order:
- * 1) `undefined` if the `CodeableConcept` is falsy
- * 2) `CodeableConcept.text`
- * 3) value of the first `coding` with a `display` value
- * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
- * 5) `code` of the first `coding` with a `code` value
- * 6) `undefined`
- * @param codeableConcept - The CodeableConcept to get the display value from.
- * @returns - The human-readable display value of the CodeableConcept.
- */
-export const getHumanReadableCodeableConcept = (
-  codeableConcept: CodeableConcept | undefined,
-) => {
-  if (!codeableConcept) {
-    return undefined;
-  }
-
-  const { coding, text } = codeableConcept;
-
-  if (text) {
-    return text;
-  }
-
-  const firstCodingWithDisplay = coding?.find((c) => c.display);
-  if (firstCodingWithDisplay?.display) {
-    return firstCodingWithDisplay.display;
-  }
-
-  const firstCodingWithCodeSystem = coding?.find((c) => c.code && c.system);
-  if (firstCodingWithCodeSystem?.code && firstCodingWithCodeSystem?.system) {
-    return `${firstCodingWithCodeSystem.code} (${firstCodingWithCodeSystem.system})`;
-  }
-
-  const firstCodingWithCode = coding?.find((c) => c.code);
-  if (firstCodingWithCode?.code) {
-    return firstCodingWithCode.code;
-  }
-
-  return undefined;
 };
 
 /**

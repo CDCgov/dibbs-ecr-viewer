@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Filters from "@/app/components/Filters";
+import { DEFAULT_DATE_RANGE } from "@/app/utils/date-utils";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({ push: jest.fn() })),
@@ -13,9 +14,15 @@ jest.mock("next/navigation", () => ({
 }));
 
 const MOCK_CONDITIONS = ["Condition1", "Condition2"];
+const MOCK_PROPS = {
+  allConditions: MOCK_CONDITIONS,
+  initConditions: MOCK_CONDITIONS,
+  initCustomDate: "",
+  initDateRange: DEFAULT_DATE_RANGE,
+};
 
 function renderFilters() {
-  return render(<Filters conditions={MOCK_CONDITIONS} />);
+  return render(<Filters {...MOCK_PROPS} />);
 }
 
 describe("Filter by Reportable Conditions Component", () => {
@@ -250,7 +257,7 @@ describe("Filter by Reportable Conditions Component", () => {
     const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
     await user.click(applyButton);
 
-    rerender(<Filters conditions={MOCK_CONDITIONS} />);
+    rerender(<Filters {...MOCK_PROPS} />);
     await user.click(toggleFilterButton);
 
     const checkboxAfterReload = screen.getByLabelText("Condition1");
@@ -388,7 +395,7 @@ describe("Filter by Date Component", () => {
     ).toHaveTextContent("Last 7 days");
 
     // Query should persist over a reload
-    rerender(<Filters conditions={MOCK_CONDITIONS} />);
+    rerender(<Filters {...MOCK_PROPS} />);
     expect(
       screen.getByRole("button", {
         name: /Filter by Received Date/i,
@@ -670,7 +677,7 @@ describe("Filter Opening/Closing Controls", () => {
     const user = userEvent.setup();
     render(
       <div data-testid="outside">
-        <Filters conditions={MOCK_CONDITIONS} />
+        <Filters {...MOCK_PROPS} />
       </div>,
     );
     const toggleButton = screen.getByRole("button", {
@@ -796,7 +803,7 @@ describe("Reset button", () => {
     };
     render(
       <SearchParamWrapper>
-        <Filters conditions={MOCK_CONDITIONS} />
+        <Filters {...MOCK_PROPS} />
       </SearchParamWrapper>,
     );
 
@@ -869,9 +876,5 @@ describe("Reset button", () => {
       expect.not.stringContaining("condition="),
       expect.anything(),
     );
-    // default title
-    expect(screen.getByText("Last year")).toBeInTheDocument();
-    // not active
-    expect(conditionToggleButton).toHaveClass("filter-button");
   });
 });

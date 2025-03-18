@@ -454,7 +454,7 @@ export async function findEcrCondition(
 
   for (const criterium of Object.keys(criteria) as (keyof ECRConditions)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
-      query = query.where(criterium, "=", criteria[criterium]);
+      query = query.where(criterium, "=", criteria[criterium]!);
     }
   }
 
@@ -561,7 +561,7 @@ export async function findEcrRule(
 
   for (const criterium of Object.keys(criteria) as (keyof ECRRuleSummaries)[]) {
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
-      query = query.where(criterium, "=", criteria[criterium]);
+      query = query.where(criterium, "=", criteria[criterium]!);
     }
   }
 

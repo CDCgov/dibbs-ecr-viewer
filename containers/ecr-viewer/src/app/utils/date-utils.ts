@@ -16,6 +16,8 @@ export enum DateRangeOptions {
 
 export const CustomDateRangeOption = "custom";
 
+export type DateRangeOption = DateRangeOptions | typeof CustomDateRangeOption;
+
 const isProd = process.env.NODE_ENV === "production";
 // Local dev default = Last year ; Prod default = Last 24 hours
 export const DEFAULT_DATE_RANGE = isProd
@@ -133,16 +135,19 @@ const DATE_PARAM_REGEX = /^\d{4}-\d{2}-\d{2}\|\d{4}-\d{2}-\d{2}$/;
 
 /**
  * Checks if the the filter by date parameters are valid.
- * @param dateRange A string that defines the date range.
- * @param datesParam A string that contains the custom date range, if relevant.
+ * @param dateRange A string that defines the date range or null if no param set.
+ * @param datesParam A string that contains the custom date range or null if not param set.
  * @returns A boolean; true if the params are valid, false if invalid.
  */
 export function isValidParamDates(
-  dateRange: string,
-  datesParam: string | undefined,
+  dateRange: string | null,
+  datesParam: string | null,
 ): boolean {
   if (dateRange === CustomDateRangeOption) {
-    return !!datesParam && DATE_PARAM_REGEX.test(datesParam);
+    const structurallyValid = !!datesParam && DATE_PARAM_REGEX.test(datesParam);
+    if (!structurallyValid) return false;
+    const { startDate, endDate } = buildCustomDateRange(datesParam);
+    return startDate <= endDate;
   } else {
     return Object.values(DateRangeOptions).includes(
       dateRange as DateRangeOptions,
@@ -152,14 +157,14 @@ export function isValidParamDates(
 
 /**
  * Returns the date range period based on the provided search parameters.
- * @param searchParams - The current search parameters.
+ * @param dateRange - The dateRange search param.
+ * @param datesParam - The dates search param.
  * @returns The date range period object derived from the search parameters.
  */
-export function returnParamDates(searchParams: {
-  [key: string]: string | string[] | undefined;
-}): DateRangePeriod {
-  const dateRange = (searchParams?.dateRange as string) || DEFAULT_DATE_RANGE;
-  const datesParam = searchParams?.dates as string | undefined;
+export function returnParamDates(
+  dateRange: string,
+  datesParam: string,
+): DateRangePeriod {
   if (!isValidParamDates(dateRange, datesParam))
     return convertDateOptionToDateRange(DEFAULT_DATE_RANGE);
   if (dateRange === CustomDateRangeOption) {
