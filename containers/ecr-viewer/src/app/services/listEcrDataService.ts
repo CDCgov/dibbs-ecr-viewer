@@ -1,9 +1,11 @@
-import { db } from "@/app/api/services/database";
-import { DateRangePeriod } from "@/app/utils/date-utils";
-import { Core } from "@/app/api/services/core_types";
 import { Kysely, ExpressionBuilder, sql } from "kysely";
+
+import { Core } from "@/app/api/services/core_types";
+import { db } from "@/app/api/services/database";
+import { Extended } from "@/app/api/services/extended_types";
+import { DateRangePeriod } from "@/app/utils/date-utils";
+
 import { formatDate, formatDateTime } from "./formatDateService";
-import { ecr_data, Extended } from "../api/services/extended_types";
 
 export interface CoreMetadataModel {
   eicr_id: string;
@@ -109,39 +111,52 @@ async function listCoreEcrData(
 ): Promise<EcrDisplay[]> {
   try {
     const query = db
-      .selectFrom('ecr_data as ed')
-      .leftJoin('ecr_rr_conditions as erc', 'ed.eICR_ID', 'erc.eICR_ID')
-      .leftJoin('ecr_rr_rule_summaries as ers', 'erc.uuid', 'ers.ecr_rr_conditions_id')
+      .selectFrom("ecr_data as ed")
+      .leftJoin("ecr_rr_conditions as erc", "ed.eICR_ID", "erc.eICR_ID")
+      .leftJoin(
+        "ecr_rr_rule_summaries as ers",
+        "erc.uuid",
+        "ers.ecr_rr_conditions_id",
+      )
       .select([
-        'ed.eICR_ID as eicr_id',
-        'ed.patient_name_first',
-        'ed.patient_name_last',
-        'ed.patient_birth_date',
-        'ed.date_created',
-        'ed.report_date',
-        'ed.set_id',
-        'ed.data_source',
-        'ed.fhir_reference_link as data_link',
-        'ed.eicr_version_number',
-        sql<string[]>`ARRAY_AGG(DISTINCT erc.condition)`.as('conditions'),
-        sql<string[]>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as('rule_summaries'),
+        "ed.eICR_ID as eicr_id",
+        "ed.patient_name_first",
+        "ed.patient_name_last",
+        "ed.patient_birth_date",
+        "ed.date_created",
+        "ed.report_date",
+        "ed.set_id",
+        "ed.data_source",
+        "ed.fhir_reference_link as data_link",
+        "ed.eicr_version_number",
+        sql<string[]>`ARRAY_AGG(DISTINCT erc.condition)`.as("conditions"),
+        sql<string[]>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as(
+          "rule_summaries",
+        ),
       ])
-      .where((eb) => generateCoreWhereStatement(eb, filterDates, searchTerm, filterConditions))
+      .where((eb) =>
+        generateCoreWhereStatement(
+          eb,
+          filterDates,
+          searchTerm,
+          filterConditions,
+        ),
+      )
       .groupBy([
-        'ed.eICR_ID',
-        'ed.patient_name_first',
-        'ed.patient_name_last',
-        'ed.patient_birth_date',
-        'ed.date_created',
-        'ed.report_date',
-        'ed.set_id',
-        'ed.data_source',
-        'ed.fhir_reference_link',
-        'ed.eicr_version_number',
+        "ed.eICR_ID",
+        "ed.patient_name_first",
+        "ed.patient_name_last",
+        "ed.patient_birth_date",
+        "ed.date_created",
+        "ed.report_date",
+        "ed.set_id",
+        "ed.data_source",
+        "ed.fhir_reference_link",
+        "ed.eicr_version_number",
       ])
       .orderBy(
         sql.ref(sortColumn) as any,
-        sortDirection.toLowerCase() === 'desc' ? 'desc' : 'asc'
+        sortDirection.toLowerCase() === "desc" ? "desc" : "asc",
       )
       .offset(startIndex)
       .limit(itemsPerPage);
@@ -149,10 +164,21 @@ async function listCoreEcrData(
     const result = await query.execute();
     return processCoreMetadata(result);
   } catch (error) {
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
 }
 
+/**
+ *
+ * @param db
+ * @param startIndex
+ * @param itemsPerPage
+ * @param sortColumn
+ * @param sortDirection
+ * @param filterDates
+ * @param searchTerm
+ * @param filterConditions
+ */
 export async function listExtendedEcrData(
   db: Kysely<Extended>,
   startIndex: number,
@@ -165,35 +191,49 @@ export async function listExtendedEcrData(
 ): Promise<EcrDisplay[]> {
   try {
     const query = db
-      .selectFrom('ecr_data as ed')
-      .leftJoin('ecr_rr_conditions as erc', 'ed.eICR_ID', 'erc.eICR_ID')
-      .leftJoin('ecr_rr_rule_summaries as ers', 'erc.uuid', 'ers.ecr_rr_conditions_id')
+      .selectFrom("ecr_data as ed")
+      .leftJoin("ecr_rr_conditions as erc", "ed.eICR_ID", "erc.eICR_ID")
+      .leftJoin(
+        "ecr_rr_rule_summaries as ers",
+        "erc.uuid",
+        "ers.ecr_rr_conditions_id",
+      )
       .select([
-        'ed.eICR_ID as eicr_id',
-        'ed.first_name',
-        'ed.last_name',
-        'ed.birth_date',
-        'ed.encounter_start_date',
-        'ed.date_created',
-        'ed.set_id',
-        'ed.eicr_version_number',
-        'ed.fhir_reference_link as data_link',
-        sql<string>`ARRAY_AGG(DISTINCT erc.condition)`.as('conditions'),
-        sql<string>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as('rule_summaries'),
+        "ed.eICR_ID as eicr_id",
+        "ed.first_name",
+        "ed.last_name",
+        "ed.birth_date",
+        "ed.encounter_start_date",
+        "ed.date_created",
+        "ed.set_id",
+        "ed.eicr_version_number",
+        "ed.fhir_reference_link as data_link",
+        sql<string>`ARRAY_AGG(DISTINCT erc.condition)`.as("conditions"),
+        sql<string>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as("rule_summaries"),
       ])
-      .where((eb) => generateExtendedWhereStatement(eb as ExpressionBuilder<Extended, "ecr_data">, filterDates, searchTerm, filterConditions))
+      .where((eb) =>
+        generateExtendedWhereStatement(
+          eb as ExpressionBuilder<Extended, "ecr_data">,
+          filterDates,
+          searchTerm,
+          filterConditions,
+        ),
+      )
       .groupBy([
-        'ed.eICR_ID',
-        'ed.first_name',
-        'ed.last_name',
-        'ed.birth_date',
-        'ed.encounter_start_date',
-        'ed.date_created',
-        'ed.set_id',
-        'ed.fhir_reference_link',
-        'ed.eicr_version_number',
+        "ed.eICR_ID",
+        "ed.first_name",
+        "ed.last_name",
+        "ed.birth_date",
+        "ed.encounter_start_date",
+        "ed.date_created",
+        "ed.set_id",
+        "ed.fhir_reference_link",
+        "ed.eicr_version_number",
       ])
-      .orderBy(sql.ref(sortColumn), sortDirection.toLowerCase() === 'desc' ? 'desc' : 'asc')
+      .orderBy(
+        sql.ref(sortColumn),
+        sortDirection.toLowerCase() === "desc" ? "desc" : "asc",
+      )
       .offset(startIndex)
       .limit(itemsPerPage);
 
@@ -332,6 +372,7 @@ const getTotalExtendedEcrCount = async (
 
 /**
  * A custom type format for where statement
+ * @param eb
  * @param filterDates - The date (range) to filter on
  * @param searchTerm - Optional search term used to filter
  * @param filterConditions - Optional array of reportable conditions used to filter
@@ -341,7 +382,7 @@ export const generateCoreWhereStatement = (
   eb: ExpressionBuilder<any, any>,
   filterDates: DateRangePeriod,
   searchTerm?: string,
-  filterConditions?: string[]
+  filterConditions?: string[],
 ) => {
   return eb.and([
     generateCoreSearchStatement(eb, searchTerm),
@@ -352,13 +393,14 @@ export const generateCoreWhereStatement = (
 
 /**
  *  Generate where statement for SQL Server
+ * @param eb
  * @param filterDates - The date (range) to filter on
  * @param searchTerm - Optional search term used to filter
  * @param filterConditions - Optional array of reportable conditions used to filter
  * @returns - where statement for SQL Server
  */
 const generateExtendedWhereStatement = (
-  eb: ExpressionBuilder<Extended, 'ecr_data'>,
+  eb: ExpressionBuilder<Extended, "ecr_data">,
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
@@ -367,92 +409,110 @@ const generateExtendedWhereStatement = (
     [
       generateExtendedSearchStatement(eb, searchTerm),
       generateFilterDateStatement(eb, filterDates),
-      filterConditions?.length ? generateFilterConditionsStatementSqlServer(eb, filterConditions) : undefined,
-    ].filter((condition) => condition !== undefined)
+      filterConditions?.length
+        ? generateFilterConditionsStatementSqlServer(eb, filterConditions)
+        : undefined,
+    ].filter((condition) => condition !== undefined),
   );
 };
 
 /**
  * A custom type format for search statement
+ * @param eb
  * @param searchTerm - Optional search term used to filter
  * @returns custom type format object for use by pg-promise
  */
 export const generateCoreSearchStatement = (
-  eb: ExpressionBuilder<any, any>, 
-  searchTerm?: string
+  eb: ExpressionBuilder<any, any>,
+  searchTerm?: string,
 ) => {
   if (!searchTerm) return sql`TRUE`; // No filtering needed
 
   return eb.or([
-    eb('ed.patient_name_first', 'ilike', `%${searchTerm}%`),
-    eb('ed.patient_name_last', 'ilike', `%${searchTerm}%`),
+    eb("ed.patient_name_first", "ilike", `%${searchTerm}%`),
+    eb("ed.patient_name_last", "ilike", `%${searchTerm}%`),
   ]);
 };
 
 const generateExtendedSearchStatement = (
-  eb: ExpressionBuilder<Extended, 'ecr_data'>,
-  searchTerm?: string
+  eb: ExpressionBuilder<Extended, "ecr_data">,
+  searchTerm?: string,
 ) => {
   if (!searchTerm) {
     return eb.val(true);
   }
 
   return eb.or([
-    eb(sql.ref('ed.first_name'), 'ilike', `%${searchTerm}%`),
-    eb(sql.ref('ed.last_name'), 'ilike', `%${searchTerm}%`),
+    eb(sql.ref("ed.first_name"), "ilike", `%${searchTerm}%`),
+    eb(sql.ref("ed.last_name"), "ilike", `%${searchTerm}%`),
   ]);
 };
 
 /**
  * A custom type format for statement filtering conditions
+ * @param eb
  * @param filterConditions - Optional array of reportable conditions used to filter
  * @returns custom type format object for use by pg-promise
  */
 export const generateFilterConditionsStatement = (
-  eb: ExpressionBuilder<any, any>, 
-  filterConditions?: string[]
+  eb: ExpressionBuilder<any, any>,
+  filterConditions?: string[],
 ) => {
-  if (!filterConditions || filterConditions.length === 0) return sql`TRUE`; 
+  if (!filterConditions || filterConditions.length === 0) return sql`TRUE`;
 
   return eb.exists(
     eb
-      .selectFrom('ecr_rr_conditions as erc_sub')
-      .select('erc_sub.eICR_ID')
-      .whereRef('erc_sub.eICR_ID', '=', 'ed.eICR_ID')
+      .selectFrom("ecr_rr_conditions as erc_sub")
+      .select("erc_sub.eICR_ID")
+      .whereRef("erc_sub.eICR_ID", "=", "ed.eICR_ID")
       .where((subEb) =>
         subEb.or(
           filterConditions.map((condition) =>
-            subEb('erc_sub.condition', 'ilike', `%${condition}%`)
-          )
-        )
-      )
+            subEb("erc_sub.condition", "ilike", `%${condition}%`),
+          ),
+        ),
+      ),
   );
 };
 
 const generateFilterConditionsStatementSqlServer = (
-  eb: ExpressionBuilder<Extended, 'ecr_data'>,
+  eb: ExpressionBuilder<Extended, "ecr_data">,
   filterConditions: string[],
 ) => {
   if (filterConditions.every((item) => item === "")) {
-    return eb(sql.ref('ed.eICR_ID'), 'not in', (subQb: ExpressionBuilder<Extended, 'ecr_rr_conditions'>) =>
-      subQb
-        .selectFrom('ecr_rr_conditions as erc_sub')
-        .select('erc_sub.eICR_ID')
-        .where('erc_sub.condition', 'is not', null)
+    return eb(
+      sql.ref("ed.eICR_ID"),
+      "not in",
+      (subQb: ExpressionBuilder<Extended, "ecr_rr_conditions">) =>
+        subQb
+          .selectFrom("ecr_rr_conditions as erc_sub")
+          .select("erc_sub.eICR_ID")
+          .where("erc_sub.condition", "is not", null),
     );
   }
 
-  return eb(sql.ref('ed.eICR_ID'), 'in', (subQb: ExpressionBuilder<Extended, 'ecr_rr_conditions'>) =>
-    subQb
-      .selectFrom('ecr_data as ed_sub')
-      .leftJoin('ecr_rr_conditions as erc_sub', 'ed_sub.eICR_ID', 'erc_sub.eICR_ID')
-      .select('ed_sub.eICR_ID')
-      .where((eb) =>
-        eb.and([
-          eb('erc_sub.condition', 'is not', null),
-          eb.or(filterConditions.map((condition) => eb('erc_sub.condition', 'like', `%${condition}%`))),
-        ])
-      )
+  return eb(
+    sql.ref("ed.eICR_ID"),
+    "in",
+    (subQb: ExpressionBuilder<Extended, "ecr_rr_conditions">) =>
+      subQb
+        .selectFrom("ecr_data as ed_sub")
+        .leftJoin(
+          "ecr_rr_conditions as erc_sub",
+          "ed_sub.eICR_ID",
+          "erc_sub.eICR_ID",
+        )
+        .select("ed_sub.eICR_ID")
+        .where((eb) =>
+          eb.and([
+            eb("erc_sub.condition", "is not", null),
+            eb.or(
+              filterConditions.map((condition) =>
+                eb("erc_sub.condition", "like", `%${condition}%`),
+              ),
+            ),
+          ]),
+        ),
   );
 };
 
@@ -461,15 +521,21 @@ const generateFilterConditionsStatementSqlServer = (
  * @param props - The props representing the date range to filter on
  * @param props.startDate - Start date of date range
  * @param props.endDate - End date of date range
+ * @param eb
+ * @param root0
+ * @param root0.startDate
+ * @param root0.endDate
+ * @param eb.startDate
+ * @param eb.endDate
  * @returns custom type format object for use by pg-promise
  */
 export const generateFilterDateStatement = (
-  eb: ExpressionBuilder<any, any>, 
-  { startDate, endDate }: DateRangePeriod
+  eb: ExpressionBuilder<any, any>,
+  { startDate, endDate }: DateRangePeriod,
 ) => {
   return eb.and([
-    eb('ed.date_created', '>=', sql`${startDate.toISOString()}`),
-    eb('ed.date_created', '<=', sql`${endDate.toISOString()}`)
+    eb("ed.date_created", ">=", sql`${startDate.toISOString()}`),
+    eb("ed.date_created", "<=", sql`${endDate.toISOString()}`),
   ]);
 };
 

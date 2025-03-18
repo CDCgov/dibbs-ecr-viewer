@@ -1,10 +1,11 @@
 // Kysely ORM Connection Client
 
 import { Kysely } from "kysely";
+
+import { pgConstructor } from "./buildPg";
+import { sqlConstructor } from "./buildSql";
 import { Core } from "./core_types";
 import { Extended } from "./extended_types";
-import { sqlConstructor } from "./buildSql";
-import { pgConstructor } from "./buildPg";
 
 // Dialect to communicate with the database, interface to define its structure.
 

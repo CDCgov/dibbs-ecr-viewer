@@ -77,7 +77,7 @@ export async function findExtendedEcr(
   }
 
   const vals = await query.selectAll().execute();
-  for (let val of vals) {
+  for (const val of vals) {
     if (val && val.latitude !== undefined) {
       val.latitude = parseFloat(val.latitude.toString());
     }
@@ -325,7 +325,7 @@ export async function findLab(criteria: Partial<ECRLabs>): Promise<ECRLabs[]> {
     }
   }
   const vals = await query.selectAll().execute();
-  for (let val of vals) {
+  for (const val of vals) {
     if (
       val.test_result_quantitative !== undefined &&
       val.test_result_quantitative !== null

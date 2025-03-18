@@ -1,8 +1,13 @@
 import { Kysely } from "kysely";
-import { Core } from "./core_types";
-import { Extended } from "./extended_types";
-import { dialect } from "./dialects/postgres";
 
+import { Core } from "./core_types";
+import { dialect } from "./dialects/postgres";
+import { Extended } from "./extended_types";
+
+/**
+ *
+ * @param schema
+ */
 export const pgConstructor = (schema: "core" | "extended") => {
   if (schema === "core") {
     return new Kysely<Core>(dialect);
