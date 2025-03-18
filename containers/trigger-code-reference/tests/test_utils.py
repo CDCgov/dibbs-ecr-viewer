@@ -6,10 +6,10 @@ from unittest.mock import patch
 import pytest
 
 from app.utils import (
-    _find_codes_by_resource_type,
     add_human_readable_reportable_condition_name,
     add_reportable_condition_extension,
     convert_inputs_to_list,
+    find_codes_by_resource_type,
     get_clean_snomed_code,
     get_concepts_dict,
     get_concepts_list,
@@ -145,21 +145,19 @@ def test_find_codes_by_resource_type():
     # Update assertions with actual codes from the bundle
     # * LOINC code for SARS-like Coronavirus
     # * SNOMED code for "Detected (qualifier value)" - indicates a positive test result
-    assert ["94310-0", "260373001"] == _find_codes_by_resource_type(
-        observation_resource
-    )
+    assert ["94310-0", "260373001"] == find_codes_by_resource_type(observation_resource)
 
     # SNOMED code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
     # this is the official SNOMED code for COVID-19
-    assert ["840539006"] == _find_codes_by_resource_type(condition_resource)
+    assert ["840539006"] == find_codes_by_resource_type(condition_resource)
 
     # CVX code for "COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose"
     # * specifically refers to the Moderna COVID-19 Vaccine
-    assert ["207"] == _find_codes_by_resource_type(immunization_resource)
+    assert ["207"] == find_codes_by_resource_type(immunization_resource)
 
     # LOINC code for SARS-like Coronavirus
     # * standard LOINC code for COVID-19 PCR diagnostic test
-    assert ["94310-0"] == _find_codes_by_resource_type(diagnostic_resource)
+    assert ["94310-0"] == find_codes_by_resource_type(diagnostic_resource)
 
     # Test for a resource we don't stamp for (Patient - unchanged)
     patient_resource = next(
@@ -167,12 +165,12 @@ def test_find_codes_by_resource_type():
         for e in message.get("entry", [])
         if e.get("resource", {}).get("resourceType") == "Patient"
     )
-    assert [] == _find_codes_by_resource_type(patient_resource)
+    assert [] == find_codes_by_resource_type(patient_resource)
 
     # test for a resource we do stamp that doesn't have any codes
     del observation_resource["code"]
     del observation_resource["valueCodeableConcept"]
-    assert [] == _find_codes_by_resource_type(observation_resource)
+    assert [] == find_codes_by_resource_type(observation_resource)
 
 
 @patch("app.utils._get_condition_name_from_snomed_code")
