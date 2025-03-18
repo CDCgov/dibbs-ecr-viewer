@@ -11,5 +11,5 @@ Before you can run the seed script, you'll need to acquire a TES API key. Make a
 1. Install dependencies
 2. Update (or create) your `.env` file to include your TES API key. Ex: `TES_API_KEY=xxxx....`
 3. If a `tes.db` file already exists in the `/data` directory, go ahead and delete it
-4. Run the `data/tes_data.py` script directly with `python data/tes_data.py`. This will create the `tes.db` file and load it with data from the TES API
+4. Navigate into the `/data` directory (`cd /data`) and run the `tes_data.py` script with `python tes_data.py`. This will create the `tes.db` file and load it with data from the TES API
 5. You should see the output from the script and a newly created `tes.db` database file in the `/data` directory
