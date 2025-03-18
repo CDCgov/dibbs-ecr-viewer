@@ -1,4 +1,4 @@
-import { Kysely, ExpressionBuilder, sql } from "kysely";
+import { Kysely, ExpressionBuilder, sql, OrderByExpression } from "kysely";
 
 import { Core } from "@/app/api/services/core_types";
 import { getDb } from "@/app/api/services/database";
@@ -29,8 +29,8 @@ export interface ExtendedMetadataModel {
   first_name: string | undefined;
   last_name: string | undefined;
   birth_date: Date | undefined;
-  conditions: string;
-  rule_summaries: string;
+  conditions: string[];
+  rule_summaries: string[];
   encounter_start_date: Date | undefined;
   date_created: Date;
   set_id: string | undefined;
@@ -162,10 +162,7 @@ async function listCoreEcrData(
         "ecr_data.fhir_reference_link",
         "ecr_data.eicr_version_number",
       ])
-      .orderBy(
-        sql.ref(sortColumn),
-        sortDirection.toLowerCase() === "desc" ? "desc" : "asc",
-      )
+      .orderBy(generateCoreSortStatement(sortColumn, sortDirection))
       .offset(startIndex)
       .limit(itemsPerPage);
 
@@ -221,10 +218,12 @@ export async function listExtendedEcrData(
         "ecr_data.set_id",
         "ecr_data.eicr_version_number",
         "ecr_data.fhir_reference_link as data_link",
-        sql<string>`ARRAY_AGG(DISTINCT ecr_rr_conditions.condition)`.as(
+        sql<string[]>`ARRAY_AGG(DISTINCT ecr_rr_conditions.condition)`.as(
           "conditions",
         ),
-        sql<string>`ARRAY_AGG(DISTINCT ecr_rr_rule_summaries.rule_summary)`.as(
+        sql<
+          string[]
+        >`ARRAY_AGG(DISTINCT ecr_rr_rule_summaries.rule_summary)`.as(
           "rule_summaries",
         ),
       ])
@@ -247,10 +246,7 @@ export async function listExtendedEcrData(
         "ecr_data.fhir_reference_link",
         "ecr_data.eicr_version_number",
       ])
-      .orderBy(
-        sql.ref(sortColumn),
-        sortDirection.toLowerCase() === "desc" ? "desc" : "asc",
-      )
+      .orderBy(generateExtendedSortStatement(sortColumn, sortDirection))
       .offset(startIndex)
       .limit(itemsPerPage);
 
@@ -299,6 +295,7 @@ export const processCoreMetadata = (
 const processExtendedMetadata = (
   responseBody: ExtendedMetadataModel[],
 ): EcrDisplay[] => {
+  console.log({ responseBody });
   return responseBody.map((object) => {
     const result = {
       ecrId: object.eicr_id || "",
@@ -307,8 +304,8 @@ const processExtendedMetadata = (
       patient_date_of_birth: object.birth_date
         ? formatDate(object.birth_date.toISOString())
         : "",
-      reportable_conditions: object.conditions?.split(",") ?? [],
-      rule_summaries: object.rule_summaries?.split(",") ?? [],
+      reportable_conditions: object.conditions ?? [],
+      rule_summaries: object.rule_summaries ?? [],
       date_created: object.date_created
         ? formatDateTime(object.date_created.toISOString())
         : "",
@@ -363,15 +360,13 @@ const getTotalCoreEcrCount = async (
       "ecr_data.eICR_ID",
       "ecr_rr_conditions.eICR_ID",
     )
-    .select((eb) =>
-      eb.fn.count<number>("ecr_data.eICR_ID").distinct().as("count"),
-    )
+    .select((eb) => eb.fn.count("ecr_data.eICR_ID").distinct().as("count"))
     .where((eb) =>
       generateCoreWhereStatement(eb, filterDates, searchTerm, filterConditions),
     )
     .executeTakeFirst();
 
-  return result?.count ?? 0;
+  return Number(result?.count) || 0;
 };
 
 const getTotalExtendedEcrCount = async (
@@ -386,9 +381,7 @@ const getTotalExtendedEcrCount = async (
       "ecr_data.eICR_ID",
       "ecr_rr_conditions.eICR_ID",
     )
-    .select((eb) =>
-      eb.fn.count<number>("ecr_data.eICR_ID").distinct().as("count"),
-    )
+    .select((eb) => eb.fn.count("ecr_data.eICR_ID").distinct().as("count"))
     .where((eb) =>
       generateExtendedWhereStatement(
         eb,
@@ -399,7 +392,7 @@ const getTotalExtendedEcrCount = async (
     )
     .executeTakeFirst();
 
-  return result?.count ?? 0;
+  return Number(result?.count) || 0;
 };
 
 /**
@@ -559,54 +552,76 @@ export const generateFilterDateStatement = (
  * A custom type format for sort statement
  * @param columnName - The column to sort by
  * @param direction - The direction to sort by
- * @returns custom type format object for use by pg-promise
+ * @returns custom type format object for use by kysely
  */
 export const generateCoreSortStatement = (
   columnName: string,
   direction: string,
-) => {
-  const validColumns = ["patient", "date_created", "report_date"];
+): OrderByExpression<Core, "ecr_data", {}>[] => {
+  // Valid columns and directions
+  const validColumns: { [key: string]: string } = {
+    patient: "patient",
+    date_created: "date_created",
+    report_date: "encounter_start_date",
+  };
   const validDirections = ["ASC", "DESC"];
 
-  // Validation check
-  if (!validColumns.includes(columnName)) {
-    columnName = "date_created";
-  }
+  // Validation checks
+  columnName = validColumns[columnName] ?? "date_created";
   if (!validDirections.includes(direction)) {
     direction = "DESC";
   }
+  direction = direction.toLowerCase();
 
   if (columnName === "patient") {
-    return `ORDER BY ed.patient_name_last ${direction}, ed.patient_name_first ${direction}`;
+    return [
+      `patient_name_first ${direction}`,
+      `patient_name_last ${direction}`,
+    ] as OrderByExpression<Core, "ecr_data", {}>[];
   }
-
   // Default case for other columns
-  return `ORDER BY ${columnName} ${direction}`;
+  return [`${columnName} ${direction}`] as OrderByExpression<
+    Core,
+    "ecr_data",
+    {}
+  >[];
 };
 
-// TODO PR: is this needed anywhere?
-// const generateExtendedSortStatement = (
-//   columnName: string,
-//   direction: string,
-// ) => {
-//   // Valid columns and directions
-//   const validColumns: { [key: string]: string } = {
-//     patient: "patient",
-//     date_created: "date_created",
-//     report_date: "encounter_start_date",
-//   };
-//   const validDirections = ["ASC", "DESC"];
+/**
+ * A custom type format for sort statement
+ * @param columnName - The column to sort by
+ * @param direction - The direction to sort by
+ * @returns custom type format object for use by kysely
+ */
+export const generateExtendedSortStatement = (
+  columnName: string,
+  direction: string,
+): OrderByExpression<Extended, "ecr_data", {}>[] => {
+  // Valid columns and directions
+  const validColumns: { [key: string]: string } = {
+    patient: "patient",
+    date_created: "date_created",
+    report_date: "encounter_start_date",
+  };
+  const validDirections = ["ASC", "DESC"];
 
-//   // Validation checks
-//   columnName = validColumns[columnName] ?? "date_created";
-//   if (!validDirections.includes(direction)) {
-//     direction = "DESC";
-//   }
+  // Validation checks
+  columnName = validColumns[columnName] ?? "date_created";
+  if (!validDirections.includes(direction)) {
+    direction = "DESC";
+  }
+  direction = direction.toLowerCase();
 
-//   if (columnName === "patient") {
-//     return `ORDER BY ed.first_name ${direction}, ed.last_name ${direction}`;
-//   }
-
-//   // Default case for other columns
-//   return `ORDER BY ed.${columnName} ${direction}`;
-// };
+  if (columnName === "patient") {
+    return [
+      `first_name ${direction}`,
+      `last_name ${direction}`,
+    ] as OrderByExpression<Extended, "ecr_data", {}>[];
+  }
+  // Default case for other columns
+  return [`${columnName} ${direction}`] as OrderByExpression<
+    Extended,
+    "ecr_data",
+    {}
+  >[];
+};

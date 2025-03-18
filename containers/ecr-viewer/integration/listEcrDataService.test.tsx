@@ -100,7 +100,9 @@ const getCoreWhere = (
     | AndWrapper<Core, "ecr_data", SqlBool>,
 ) => {
   const coredb = getDb() as Kysely<Core>;
-  return coredb.selectFrom("ecr_data").where(ebCallBack).compile().sql;
+  const rawRes = coredb.selectFrom("ecr_data").where(ebCallBack).compile();
+  const start = 'select from "ecr_data" where ';
+  return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };
 };
 // Tests rewritten to fit Kysely in following commit
 
@@ -425,140 +427,193 @@ describe("listEcrDataService", () => {
 
   describe("generate search statement", () => {
     it("should use the search term in the search statement", () => {
-      expect(
-        getCoreWhere((eb) => generateCoreSearchStatement(eb, "Dan")),
-      ).toEqual(
-        "ed.patient_name_first ILIKE '%Dan%' OR ed.patient_name_last ILIKE '%Dan%'",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateCoreSearchStatement(eb, "Dan"),
       );
+      expect(sql).toEqual(
+        '("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2)',
+      );
+      expect(params).toStrictEqual(["%Dan%", "%Dan%"]);
     });
     it("should escape characters when an apostrophe is added", () => {
-      expect(
-        getCoreWhere((eb) => generateCoreSearchStatement(eb, "O'Riley")),
-      ).toEqual(
-        "ed.patient_name_first ILIKE '%O''Riley%' OR ed.patient_name_last ILIKE '%O''Riley%'",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateCoreSearchStatement(eb, "O'Riley"),
       );
+      expect(sql).toEqual(
+        '("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2)',
+      );
+      expect(params).toStrictEqual(["%O'Riley%", "%O'Riley%"]);
     });
     it("should only generate true statements when no search is provided", () => {
-      expect(getCoreWhere((eb) => generateCoreSearchStatement(eb, ""))).toEqual(
-        "NULL IS NULL OR NULL IS NULL",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateCoreSearchStatement(eb, ""),
       );
+      expect(sql).toEqual("$1");
+      expect(params).toStrictEqual([true]);
     });
   });
 
   describe("generate filter conditions statement", () => {
     it("should add conditions in the filter statement", () => {
-      expect(
-        getCoreWhere((eb) =>
-          generateFilterConditionsStatement(eb, ["Anthrax (disorder)"]),
-        ),
-      ).toEqual(
-        "ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%'))",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateFilterConditionsStatement(eb, ["Anthrax (disorder)"]),
       );
+      expect(sql).toEqual(
+        'exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and "erc_sub"."condition" ilike $1)',
+      );
+      expect(params).toStrictEqual(["%Anthrax (disorder)%"]);
     });
     it("should only look for eCRs with no conditions when de-selecting all conditions on filter", () => {
-      expect(
-        getCoreWhere((eb) => generateFilterConditionsStatement(eb, [""])),
-      ).toEqual(
-        "ed.eICR_ID NOT IN (SELECT DISTINCT erc_sub.eICR_ID FROM ecr_viewer.ecr_rr_conditions erc_sub WHERE erc_sub.condition IS NOT NULL)",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateFilterConditionsStatement(eb, [""]),
       );
+      expect(sql).toEqual(
+        'exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and "erc_sub"."condition" ilike $1)',
+      );
+      expect(params).toStrictEqual(["%%"]);
     });
     it("should add date range in the filter statement", () => {
-      expect(
-        getCoreWhere((eb) => generateFilterDateStatement(eb, testDateRange)),
-      ).toEqual(
-        "ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z'",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateFilterDateStatement(eb, testDateRange),
       );
+      expect(sql).toEqual(
+        '("ecr_data"."date_created" >= $1 and "ecr_data"."date_created" <= $2)',
+      );
+      expect(params).toStrictEqual([
+        testDateRange.startDate,
+        testDateRange.endDate,
+      ]);
     });
     it("should display all conditions in date range by default if no filter has been added", () => {
-      expect(
-        getCoreWhere((eb) =>
-          generateCoreWhereStatement(eb, testDateRange, "", undefined),
-        ),
-      ).toEqual(
-        "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (NULL IS NULL)",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateCoreWhereStatement(eb, testDateRange, "", undefined),
       );
+      expect(sql).toEqual(
+        '($1 and ("ecr_data"."date_created" >= $2 and "ecr_data"."date_created" <= $3) and $4)',
+      );
+      expect(params).toStrictEqual([
+        true,
+        testDateRange.startDate,
+        testDateRange.endDate,
+        true,
+      ]);
     });
   });
 
   describe("generate where statement", () => {
     it("should generate where statement using search and filter statements", () => {
-      expect(
-        getCoreWhere((eb) =>
-          generateCoreWhereStatement(eb, testDateRange, "blah", [
-            "Anthrax (disorder)",
-          ]),
-        ),
-      ).toEqual(
-        "select from ecr_data where (ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateCoreWhereStatement(eb, testDateRange, "blah", [
+          "Anthrax (disorder)",
+        ]),
       );
+      expect(sql).toEqual(
+        '(("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2) and ("ecr_data"."date_created" >= $3 and "ecr_data"."date_created" <= $4) and exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and "erc_sub"."condition" ilike $5))',
+      );
+      expect(params).toStrictEqual([
+        "%blah%",
+        "%blah%",
+        testDateRange.startDate,
+        testDateRange.endDate,
+        "%Anthrax (disorder)%",
+      ]);
     });
     it("should generate where statement using search statement (no conditions filter provided)", () => {
-      expect(
-        getCoreWhere((eb) =>
-          generateCoreWhereStatement(eb, testDateRange, "blah", undefined),
-        ),
-      ).toEqual(
-        "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (NULL IS NULL)",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateCoreWhereStatement(eb, testDateRange, "blah", undefined),
       );
+      expect(sql).toEqual(
+        '(("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2) and ("ecr_data"."date_created" >= $3 and "ecr_data"."date_created" <= $4) and $5)',
+      );
+      expect(params).toStrictEqual([
+        "%blah%",
+        "%blah%",
+        testDateRange.startDate,
+        testDateRange.endDate,
+        true,
+      ]);
     });
     it("should generate where statement using filter conditions statement (no search provided)", () => {
-      expect(
-        getCoreWhere((eb) =>
-          generateCoreWhereStatement(eb, testDateRange, "", [
-            "Anthrax (disorder)",
-          ]),
-        ),
-      ).toEqual(
-        "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
+      const { sql, params } = getCoreWhere((eb) =>
+        generateCoreWhereStatement(eb, testDateRange, "", [
+          "Anthrax (disorder)",
+        ]),
       );
+      expect(sql).toEqual(
+        '($1 and ("ecr_data"."date_created" >= $2 and "ecr_data"."date_created" <= $3) and exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and "erc_sub"."condition" ilike $4))',
+      );
+      expect(params).toStrictEqual([
+        true,
+        testDateRange.startDate,
+        testDateRange.endDate,
+        "%Anthrax (disorder)%",
+      ]);
     });
   });
 
   describe("generate Kysely search statement", () => {
     it("should return an OR condition for search term", () => {
-      const searchCondition = getCoreWhere((eb) =>
+      const { sql, params } = getCoreWhere((eb) =>
         generateCoreSearchStatement(eb, "John"),
       );
 
-      expect(searchCondition).toEqual("John");
+      expect(sql).toEqual(
+        '("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2)',
+      );
+      expect(params).toStrictEqual(["%John%", "%John%"]);
     });
 
     it("should return TRUE if no search term is provided", () => {
-      const searchCondition = getCoreWhere((eb) =>
+      const { sql, params } = getCoreWhere((eb) =>
         generateCoreSearchStatement(eb),
       );
-      expect(searchCondition).toEqual("TRUE");
+      expect(sql).toEqual("$1");
+      expect(params).toStrictEqual([true]);
     });
   });
 
   describe("generate Kysely filter conditions statement", () => {
     it("should generate an EXISTS subquery when conditions are provided", () => {
       const conditions = ["Condition1", "Condition2"];
-      const filterStatement = getCoreWhere((eb) =>
+      const { sql, params } = getCoreWhere((eb) =>
         generateFilterConditionsStatement(eb, conditions),
       );
 
-      expect(filterStatement).toEqual("something");
+      expect(sql).toEqual(
+        'exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2))',
+      );
+      expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
     });
 
     it("should return TRUE if no conditions are provided", () => {
-      const filterStatement = getCoreWhere((eb) =>
+      const { sql, params } = getCoreWhere((eb) =>
         generateFilterConditionsStatement(eb),
       );
-      expect(filterStatement).toEqual("TRUE");
+      expect(sql).toEqual("$1");
+      expect(params).toStrictEqual([true]);
     });
   });
 
   describe("generate Kysely where statement", () => {
     it("should return a valid WHERE clause with all conditions", () => {
-      const whereClause = getCoreWhere((eb) =>
+      const { sql, params } = getCoreWhere((eb) =>
         generateCoreWhereStatement(eb, testDateRange, "John Doe", [
           "Condition1",
           "Condition2",
         ]),
       );
 
-      expect(whereClause).toEqual("something");
+      expect(sql).toEqual(
+        '(("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2) and ("ecr_data"."date_created" >= $3 and "ecr_data"."date_created" <= $4) and exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and ("erc_sub"."condition" ilike $5 or "erc_sub"."condition" ilike $6)))',
+      );
+      expect(params).toStrictEqual([
+        "%John Doe%",
+        "%John Doe%",
+        testDateRange.startDate,
+        testDateRange.endDate,
+        "%Condition1%",
+        "%Condition2%",
+      ]);
     });
   });
 });
