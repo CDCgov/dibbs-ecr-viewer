@@ -11,8 +11,6 @@ from app.tes_utils import (
     get_concepts_list_tes,
 )
 from app.utils import (
-    # get_concepts_list,
-    # add_human_readable_reportable_condition_name,
     add_reportable_condition_extension,
     find_codes_by_resource_type,
     find_conditions,
@@ -179,7 +177,6 @@ async def get_value_sets_for_condition(
     else:
         clean_snomed_code = get_clean_snomed_code(condition_code)
         concepts_list = get_concepts_list_tes(clean_snomed_code)
-        # concepts_list = get_concepts_list(condition_code)
         values = get_concepts_dict(concepts_list, filter_concepts)
     return values
 
