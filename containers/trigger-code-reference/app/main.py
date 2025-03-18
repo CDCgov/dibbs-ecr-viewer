@@ -83,8 +83,6 @@ async def stamp_condition_extensions(
 
     for condition_code in condition_codes:
         cond_list = get_concepts_list_tes([condition_code])
-        # cond_list = get_concepts_list([condition_code])
-        # print(cond_list)
         cond_dict = get_concepts_dict(cond_list)
         stamp_codes_to_service_codes[condition_code] = cond_dict
 
