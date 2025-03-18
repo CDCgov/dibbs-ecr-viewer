@@ -188,7 +188,6 @@ export const saveExtendedMetadata = async (
         .values({
           eICR_ID: ecrId,
           set_id: metadata.eicr_set_id,
-          fhir_reference_link: null, // Not implemented yet
           last_name: metadata.last_name,
           first_name: metadata.first_name,
           birth_date: metadata.birth_date,
@@ -222,6 +221,7 @@ export const saveExtendedMetadata = async (
           encounter_end_date: metadata.encounter_end_date,
           reason_for_visit: metadata.reason_for_visit,
           active_problems: metadata.active_problems,
+          date_created: new Date(),
         })
         .execute();
       if (metadata.patient_addresses) {
@@ -360,6 +360,8 @@ export const saveCoreMetadata = async (
           data_source: "DB",
           report_date: new Date(metadata.report_date),
           eicr_version_number: metadata.eicr_version_number,
+          fhir_reference_link: "null",
+          date_created: new Date(),
         })
         .execute();
 

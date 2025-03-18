@@ -29,4 +29,21 @@ switch (db_type) {
     }
 }
 
+/**
+ * Performs a health check on the PostgreSQL database connection.
+ * @returns The status of the postgres connection or undefined if missing environment values.
+ */
+export const metadataDatabaseHealthCheck = async () => {
+  if (!process.env.METADATA_DATABASE_TYPE) {
+    return undefined;
+  }
+  try {
+    await (db as Kysely<Core>).connection().execute(async (_db) => {});
+    return "UP";
+  } catch (error: unknown) {
+    console.error(error);
+    return "DOWN";
+  }
+};
+
 export { db };

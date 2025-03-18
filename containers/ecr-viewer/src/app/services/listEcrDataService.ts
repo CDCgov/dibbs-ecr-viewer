@@ -25,13 +25,13 @@ export interface CoreMetadataModel {
 export interface ExtendedMetadataModel {
   eicr_id: string;
   // data_source: "DB" | "S3";
-  data_link: string;
-  first_name: string;
-  last_name: string;
-  birth_date: Date;
+  data_link: string | undefined;
+  first_name: string | undefined;
+  last_name: string | undefined;
+  birth_date: Date | undefined;
   conditions: string;
   rule_summaries: string;
-  encounter_start_date: Date;
+  encounter_start_date: Date | undefined;
   date_created: Date;
   set_id: string | undefined;
   eicr_version_number: string | undefined;
