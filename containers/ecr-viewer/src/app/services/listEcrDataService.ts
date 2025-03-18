@@ -2,6 +2,7 @@ import { Kysely, ExpressionBuilder, sql, OrderByExpression } from "kysely";
 
 import { Core } from "@/app/api/services/core_types";
 import { getDb } from "@/app/api/services/database";
+import { getSql } from "@/app/api/services/dialects/common";
 import { Extended } from "@/app/api/services/extended_types";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
@@ -374,7 +375,7 @@ const getTotalExtendedEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await (getDb() as Kysely<Extended>)
+  const query =  (getDb() as Kysely<Extended>)
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",
@@ -390,7 +391,10 @@ const getTotalExtendedEcrCount = async (
         filterConditions,
       ),
     )
-    .executeTakeFirst();
+
+    console.log({query: query.compile()})
+
+    const result = await query.executeTakeFirst();
 
   return Number(result?.count) || 0;
 };
@@ -446,8 +450,8 @@ export const generateCoreSearchStatement = (
   if (!searchTerm) return eb.val(true); // No filtering needed
 
   return eb.or([
-    eb("ecr_data.patient_name_first", "ilike", `%${searchTerm}%`),
-    eb("ecr_data.patient_name_last", "ilike", `%${searchTerm}%`),
+    eb("ecr_data.patient_name_first", getSql("like"), `%${searchTerm}%`),
+    eb("ecr_data.patient_name_last", getSql("like"), `%${searchTerm}%`),
   ]);
 };
 
@@ -460,8 +464,8 @@ const generateExtendedSearchStatement = (
   }
 
   return eb.or([
-    eb("ecr_data.first_name", "ilike", `%${searchTerm}%`),
-    eb("ecr_data.last_name", "ilike", `%${searchTerm}%`),
+    eb("ecr_data.first_name", getSql("like"), `%${searchTerm}%`),
+    eb("ecr_data.last_name", getSql("like"), `%${searchTerm}%`),
   ]);
 };
 
@@ -485,7 +489,7 @@ export const generateFilterConditionsStatement = (
       .where((subEb) =>
         subEb.or(
           filterConditions.map((condition) =>
-            subEb("erc_sub.condition", "ilike", `%${condition}%`),
+            subEb("erc_sub.condition", getSql("like"), `%${condition}%`),
           ),
         ),
       ),

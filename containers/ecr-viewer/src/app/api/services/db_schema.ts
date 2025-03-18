@@ -106,13 +106,13 @@ export const buildExtended = async () => {
     .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
-    .addColumn("condition", "varchar")
+    .addColumn("condition", "varchar(255)")
     .execute();
   await extdb()
     .schema.createTable("ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
-    .addColumn("rule_summary", "varchar")
+    .addColumn("rule_summary", "varchar(255)")
     .execute();
 };
 
@@ -168,13 +168,13 @@ export const buildCore = async () => {
     .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
-    .addColumn("condition", "varchar")
+    .addColumn("condition", "varchar(255)")
     .execute();
   await coredb()
     .schema.createTable("ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
-    .addColumn("rule_summary", "varchar")
+    .addColumn("rule_summary", "varchar(255)")
     .execute();
 };
 

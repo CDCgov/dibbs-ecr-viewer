@@ -71,19 +71,11 @@ export async function findEcr(criteria: Partial<ECR> | null): Promise<ECR[]> {
  * @param ecr - the NewECR to be persisted
  * @returns the created eICR object
  */
-export async function createEcr(ecr: NewECR | null): Promise<ECR | undefined> {
+export async function createEcr(ecr: NewECR | null): Promise<void> {
   if (!ecr) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    return (await coredb()
-      .insertInto("ecr_data")
-      .values(ecr)
-      .returningAll()
-      .executeTakeFirstOrThrow()) as ECR;
-  } catch (error) {
-    console.error(error);
-  }
+  await coredb().insertInto("ecr_data").values(ecr).execute();
 }
 
 /**
@@ -178,19 +170,12 @@ export async function findEcrCondition(
  */
 export async function createEcrCondition(
   condition: NewECRConditions | null,
-): Promise<ECRConditions | undefined> {
+): Promise<void> {
   if (!condition) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    return (await coredb()
-      .insertInto("ecr_rr_conditions")
-      .values(condition)
-      .returningAll()
-      .executeTakeFirstOrThrow()) as ECRConditions;
-  } catch (error) {
-    throw new Error("eICR not found: " + error);
-  }
+  console.log({ condition });
+  await coredb().insertInto("ecr_rr_conditions").values(condition).execute();
 }
 
 /**
@@ -283,16 +268,14 @@ export async function findEcrRule(
  */
 export async function createEcrRule(
   rule_summary: NewECRRuleSummaries,
-): Promise<ECRRuleSummaries | undefined> {
+): Promise<void> {
   if (!rule_summary) {
     throw new Error("eICR Data is required.");
   }
-  const db = coredb();
-  return (await db
+  await coredb()
     .insertInto("ecr_rr_rule_summaries")
     .values(rule_summary)
-    .returningAll()
-    .executeTakeFirstOrThrow()) as ECRRuleSummaries;
+    .execute();
 }
 
 /**

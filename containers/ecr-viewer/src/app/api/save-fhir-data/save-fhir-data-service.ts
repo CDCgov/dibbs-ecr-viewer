@@ -221,8 +221,7 @@ export const saveExtendedMetadata = async (
           encounter_start_date: metadata.encounter_start_date,
           encounter_end_date: metadata.encounter_end_date,
           reason_for_visit: metadata.reason_for_visit,
-          active_problems: metadata.active_problems,
-          date_created: new Date(),
+          active_problems: metadata.active_problems?.join("\n\n"),
         })
         .execute();
       if (metadata.patient_addresses) {
@@ -235,7 +234,7 @@ export const saveExtendedMetadata = async (
               use: address.use,
               type: address.type,
               text: address.text,
-              line: address.line,
+              line: address.line?.join("\n"),
               city: address.city,
               district: address.district,
               state: address.state,
@@ -319,8 +318,10 @@ export const saveExtendedMetadata = async (
       status: 200,
     };
   } catch (error: unknown) {
+    const message = "Failed to insert metadata to database.";
+    console.error({ message, error });
     return {
-      message: "Failed to insert metadata to database.",
+      message,
       status: 500,
     };
   }

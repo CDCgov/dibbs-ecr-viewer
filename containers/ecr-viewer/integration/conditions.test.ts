@@ -25,18 +25,8 @@ describe("Conditions service", () => {
     await dropCore();
   });
 
-  const ORIG_METADATA_DATABASE_TYPE = process.env.METADATA_DATABASE_TYPE;
-  it("Should throw an error if the database type is undefined", async () => {
-    delete process.env.METADATA_DATABASE_TYPE;
-
-    await expect(getAllConditions()).rejects.toThrow(
-      "Database type is undefined.",
-    );
-  });
-
   it("Should retrieve all unique conditions", async () => {
-    process.env.METADATA_DATABASE_TYPE = ORIG_METADATA_DATABASE_TYPE;
     const conditions = await getAllConditions();
-    expect(conditions).toEqual(["condition1", "condition2"]);
+    expect(conditions).toStrictEqual(["condition1", "condition2"]);
   });
 });

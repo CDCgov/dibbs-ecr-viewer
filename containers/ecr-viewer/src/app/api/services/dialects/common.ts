@@ -1,18 +1,21 @@
-import { ColumnDataType, Expression, sql } from "kysely";
+import { ComparisonOperator, ColumnDataType, Expression, sql } from "kysely";
 
 type MappedSqlThings = {
   now: Expression<string>;
   datetimeType: ColumnDataType | Expression<string>;
+  like: ComparisonOperator;
 };
 
 const map: { [key: string]: MappedSqlThings } = {
   postgres: {
     now: sql`NOW()`,
     datetimeType: "timestamptz",
+    like: "ilike",
   },
   sqlserver: {
     now: sql`SYSDATETIMEOFFSET()`,
     datetimeType: sql`DATETIMEOFFSET`,
+    like: "like",
   },
 };
 

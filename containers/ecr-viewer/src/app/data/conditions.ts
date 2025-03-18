@@ -9,20 +9,16 @@ import { Extended } from "@/app/api/services/extended_types";
  * @returns Array of conditions
  */
 export const getAllConditions = async (): Promise<string[]> => {
-  if (process.env.METADATA_DATABASE_TYPE === undefined) {
-    throw new Error("Database type is undefined.");
-  } else {
-    try {
-      const result = await (getDb() as Kysely<Core | Extended>)
-        .selectFrom("ecr_rr_conditions")
-        .select("condition")
-        .distinct()
-        .orderBy("condition")
-        .execute();
-      return result.map((row) => row.condition);
-    } catch (error: unknown) {
-      console.error("Error fetching data: ", error);
-      throw new Error("Error fetching data");
-    }
+  try {
+    const result = await (getDb() as Kysely<Core | Extended>)
+      .selectFrom("ecr_rr_conditions")
+      .select("condition")
+      .distinct()
+      .orderBy("condition")
+      .execute();
+    return result.map((row) => row.condition);
+  } catch (error: unknown) {
+    console.error("Error fetching data: ", error);
+    throw new Error("Error fetching data");
   }
 };
