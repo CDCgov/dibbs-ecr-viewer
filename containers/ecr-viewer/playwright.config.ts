@@ -35,18 +35,20 @@ export default defineConfig({
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
+      testIgnore: /lighthouse.spec.ts/,
     },
 
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
+      testIgnore: /lighthouse.spec.ts/,
     },
   ],
   webServer: {
-    command: "npm run local-dev",
+    command: "npm run local-docker",
     url: "http://localhost:3000/ecr-viewer",
-    timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
+    timeout: 240 * 1000,
+    reuseExistingServer: true,
     stdout: "pipe",
   },
 });

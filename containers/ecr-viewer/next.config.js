@@ -19,7 +19,6 @@ const nextConfig = {
   basePath,
   env: {
     BASE_PATH: basePath,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
 };
 

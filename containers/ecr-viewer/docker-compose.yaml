@@ -31,10 +31,10 @@ services:
       # Auth
       - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000/ecr-viewer/api/auth/}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-EjHXcPcFD17f5nYRaQeN9ncNpOoU80HTA6x4UBUk5pM=}
-      # Keycloak
-      - AUTH_KEYCLOAK_ID=${AUTH_KEYCLOAK_ID:-ecr-viewer}
-      - AUTH_KEYCLOAK_SECRET=${AUTH_KEYCLOAK_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
-      - AUTH_KEYCLOAK_ISSUER=${AUTH_KEYCLOAK_ISSUER:-http://localhost:8070/realms/master}
+      - AUTH_PROVIDER=${AUTH_PROVIDER:-keycloak}
+      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-ecr-viewer}
+      - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
+      - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
       # Open Telemetry
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4318/v1/metrics
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces

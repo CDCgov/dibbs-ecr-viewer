@@ -2,12 +2,10 @@
 namespace NodeJS {
   interface ProcessEnv {
     APP_VERSION: string; // Version of eCR Viewer. This value is set at build time
-    AUTH_KEYCLOAK_ID?: string;
-    AUTH_KEYCLOAK_SECRET?: string;
-    AUTH_KEYCLOAK_ISSUER?: string;
-    AUTH_AZURE_AD_ID?: string;
-    AUTH_AZURE_AD_SECRET?: string;
-    AUTH_AZURE_AD_TENANT_ID?: string;
+    AUTH_CLIENT_ID?: string;
+    AUTH_CLIENT_SECRET?: string;
+    AUTH_ISSUER?: string;
+    AUTH_PROVIDER?: "keycloak" | "ad";
     AWS_ACCESS_KEY_ID: string;
     AWS_CUSTOM_ENDPOINT: string;
     AWS_REGION: string;

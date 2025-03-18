@@ -14,9 +14,9 @@ import { formatDateTime } from "@/app/services/formatDateService";
 import {
   CustomDateRangeOption,
   DEFAULT_DATE_RANGE,
+  DateRangeOption,
   DateRangeOptions,
   dateRangeLabels,
-  isValidParamDates,
 } from "@/app/utils/date-utils";
 
 import {
@@ -53,17 +53,19 @@ export const FilterOpenContext = createContext<FilterOpenContextValue>({
 });
 
 interface FilterProps {
-  conditions: string[];
+  allConditions: string[];
+  initConditions: string[];
+  initCustomDate: string;
+  initDateRange: DateRangeOption;
 }
 
 /**
  * Functional component that renders Filters section in eCR Library.
  * Includes Filter component for reportable conditions.
  * @param props - props to pass to Filters
- * @param props.conditions - List of conditions avilable to filter on
  * @returns The rendered Filters component.
  */
-const Filters = ({ conditions }: FilterProps) => {
+const Filters = (props: FilterProps) => {
   const [filterBoxOpen, setFilterBoxOpen] = useState<string>(FILTER_CLOSED);
   const lastOpenButtonRef = useRef<HTMLElement | null>(null);
   const { searchParams, deleteQueryParam, pushQueryUpdate } = useQueryParam();
@@ -115,8 +117,8 @@ const Filters = ({ conditions }: FilterProps) => {
       <div className="margin-x-3 margin-y-105 display-flex flex-align-center gap-105">
         <span className="line-height-sans-6">FILTERS:</span>
         <FilterOpenContext.Provider value={filterOpenContextValue}>
-          <FilterByDate />
-          <FilterReportableConditions conditions={conditions} />
+          <FilterByDate {...props} />
+          <FilterReportableConditions {...props} />
         </FilterOpenContext.Provider>
 
         {paramKeys.some((k) => searchParams.get(k) !== null) && (
@@ -141,20 +143,30 @@ const Filters = ({ conditions }: FilterProps) => {
 /**
  * Functional component for filtering eCRs in the Library based on reportable conditions.
  * @param props - props to pass to FilterReportableConditions
- * @param props.conditions - Conditions to filter on
+ * @param props.allConditions - List of conditions to filter on
+ * @param props.initConditions - List of conditions that are initially true (default undefined)
  * @returns The rendered FilterReportableConditions component.
  * - Users can select specific conditions or select all conditions.
  * - Updates the browser's query string when the filter is applied.
  */
-const FilterReportableConditions = ({ conditions }: FilterProps) => {
-  const { searchParams, updateQueryParam, pushQueryUpdate } = useQueryParam();
-  const [filterConditions, setFilterConditions] = useState<{
-    [key: string]: boolean;
-  }>({});
+const FilterReportableConditions = ({
+  initConditions,
+  allConditions,
+}: FilterProps) => {
+  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
 
-  useEffect(() => {
-    resetFilterConditions(conditions);
-  }, []);
+  const initFilterState = allConditions.reduce(
+    (dict: { [key: string]: boolean }, condition: string) => {
+      dict[condition] = initConditions.includes(condition);
+      return dict;
+    },
+    {} as { [key: string]: boolean },
+  );
+
+  const [filterConditions, setFilterConditions] = useState(initFilterState);
+
+  // Keep state in sync with updated params while maintaining correct focus on submit
+  useEffect(() => setFilterConditions(initFilterState), [initConditions]);
 
   // Build list of conditions to filter on
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,38 +195,11 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
     (val) => val === true,
   );
 
-  const resetFilterConditions = (conditions: string[]) => {
-    const conditionParam = searchParams.get(ParamName.Condition);
-    const conditionsToTrue = new Set(conditionParam?.split("|") || []);
-
-    const conditionValue = (c: string) => {
-      if (conditionParam === null) {
-        return true;
-      } else {
-        return conditionsToTrue.has(c);
-      }
-    };
-    let changed = false;
-    const prevFilterConditions = conditions.reduce(
-      (dict: { [key: string]: boolean }, condition: string) => {
-        dict[condition] = conditionValue(condition);
-        if (dict[condition] !== filterConditions[condition]) {
-          changed = true;
-        }
-        return dict;
-      },
-      {} as { [key: string]: boolean },
-    );
-    if (changed) {
-      setFilterConditions(prevFilterConditions);
-    }
-  };
-
   return (
     <Filter
       type="Reportable Condition"
       isActive={!isAllSelected}
-      resetHandler={() => resetFilterConditions(Object.keys(filterConditions))}
+      resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
       tag={
         Object.keys(filterConditions).filter(
@@ -275,43 +260,36 @@ const FilterReportableConditions = ({ conditions }: FilterProps) => {
 
 /**
  * Functional component for filtering eCRs in the Library based on date.
+ * @param props component props
+ * @param props.initCustomDate initial custom date value
+ * @param props.initDateRange initial range option selected
  * @returns The rendered FilterByDate component.
  * - Users can select specific date ranges or specify a custom date range.
  * - Updates the browser's query string when the filter is applied.
  */
-const FilterByDate = () => {
+const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const today = new Date().toLocaleDateString("en-CA");
-  const { searchParams, deleteQueryParam, updateQueryParam, pushQueryUpdate } =
+  const { deleteQueryParam, updateQueryParam, pushQueryUpdate } =
     useQueryParam();
   const [filterDateOption, setFilterDateOption] =
-    useState<string>(DEFAULT_DATE_RANGE);
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
+    useState<string>(initDateRange);
+  const [initStart, initEnd] = initCustomDate.split("|");
+  const [startDate, setStartDate] = useState<string>(initStart);
+  const [endDate, setEndDate] = useState<string>(initEnd);
   const isFilterDateDefault = filterDateOption === DEFAULT_DATE_RANGE;
 
-  const resetFilterDate = () => {
-    const queryDateRange = searchParams.get(ParamName.DateRange) || "";
-    const queryCustomDates = searchParams.get(ParamName.Dates) || "";
-
-    if (isValidParamDates(queryDateRange, queryCustomDates)) {
-      setFilterDateOption(queryDateRange);
-      const [startDate, endDate] = queryCustomDates?.split("|");
-      setStartDate(startDate);
-      setEndDate(endDate);
-    } else {
-      setFilterDateOption(DEFAULT_DATE_RANGE);
-      setStartDate("");
-      setEndDate("");
-    }
-  };
-
-  // on mount, make sure the filters match the search params
-  useEffect(resetFilterDate, []);
+  // Keep state in sync with updated params while maintaining correct focus on submit
+  useEffect(() => {
+    setStartDate(initStart);
+    setEndDate(initEnd);
+  }, [initCustomDate]);
+  useEffect(() => {
+    setFilterDateOption(initDateRange);
+  }, [initDateRange]);
 
   const submitHandler = () => {
     if (filterDateOption === CustomDateRangeOption) {
       const actualEndDate = endDate || today;
-      setEndDate(actualEndDate);
       const datesParam = `${startDate}|${actualEndDate}`;
       updateQueryParam(
         ParamName.DateRange,
@@ -328,8 +306,6 @@ const FilterByDate = () => {
       );
       deleteQueryParam(ParamName.Dates);
       pushQueryUpdate();
-      setStartDate("");
-      setEndDate("");
     }
   };
 
@@ -337,7 +313,11 @@ const FilterByDate = () => {
     <Filter
       type="Received Date"
       isActive={true}
-      resetHandler={resetFilterDate}
+      resetHandler={() => {
+        setStartDate(initStart);
+        setEndDate(initEnd);
+        setFilterDateOption(initDateRange);
+      }}
       icon={Event}
       title={
         filterDateOption === CustomDateRangeOption
