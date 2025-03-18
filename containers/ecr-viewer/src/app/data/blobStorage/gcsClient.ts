@@ -24,10 +24,10 @@ export const gcsHealthCheck = async () => {
   try {
     const client = gcsClient();
 
-    if (await client?.exists()) {
+    if ((await client?.exists())?.[0]) {
       return "UP";
     }
-    console.error("Bucket does not exist.");
+    console.error("Failed to connect to GCS. Bucket does not exist.");
     return "DOWN";
   } catch (error: unknown) {
     console.error(error);

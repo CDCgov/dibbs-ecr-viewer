@@ -47,7 +47,7 @@ describe("gcs", () => {
 
   describe("health check", () => {
     it("should return 'UP' if the bucket exists", async () => {
-      mockExists.mockResolvedValue(true);
+      mockExists.mockResolvedValue([true]);
 
       const result = await gcsHealthCheck();
 
@@ -57,7 +57,7 @@ describe("gcs", () => {
 
     it("should return 'DOWN' if the bucket does not exist", async () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
-      mockExists.mockResolvedValue(false);
+      mockExists.mockResolvedValue([false]);
 
       const result = await gcsHealthCheck();
 
@@ -67,7 +67,7 @@ describe("gcs", () => {
 
     it("should return 'DOWN' if there is an error", async () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
-      mockExists.mockResolvedValue(false);
+      mockExists.mockResolvedValue([false]);
 
       const result = await gcsHealthCheck();
 
