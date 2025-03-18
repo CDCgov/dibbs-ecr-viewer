@@ -431,15 +431,13 @@ describe("listEcrDataService", () => {
         generateCoreSearchStatement(eb, "Dan"),
       );
       if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-        
-      expect(sql).toEqual(
-        '("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2)',
-      );
+        expect(sql).toEqual(
+          '("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2)',
+        );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-        
-      expect(sql).toEqual(
-        '("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2)',
-      );
+        expect(sql).toEqual(
+          '("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2)',
+        );
       }
       expect(params).toStrictEqual(["%Dan%", "%Dan%"]);
     });
@@ -449,14 +447,14 @@ describe("listEcrDataService", () => {
       );
       if (process.env.METADATA_DATABASE_TYPE === "postgres") {
         expect(sql).toEqual(
-        '("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2)',
-      );
+          '("ecr_data"."patient_name_first" ilike $1 or "ecr_data"."patient_name_last" ilike $2)',
+        );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-        '("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2)',
-      );
+          '("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2)',
+        );
       }
-      
+
       expect(params).toStrictEqual(["%O'Riley%", "%O'Riley%"]);
     });
     it("should only generate true statements when no search is provided", () => {
@@ -483,7 +481,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          "exists (select \"erc_sub\".\"eICR_ID\" from \"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eICR_ID\" = \"ecr_data\".\"eICR_ID\" and \"erc_sub\".\"condition\" like @1)",
+          'exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and "erc_sub"."condition" like @1)',
         );
       }
       expect(params).toStrictEqual(["%Anthrax (disorder)%"]);

@@ -375,7 +375,7 @@ const getTotalExtendedEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const query =  (getDb() as Kysely<Extended>)
+  const query = (getDb() as Kysely<Extended>)
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",
@@ -390,11 +390,11 @@ const getTotalExtendedEcrCount = async (
         searchTerm,
         filterConditions,
       ),
-    )
+    );
 
-    console.log({query: query.compile()})
+  console.log({ query: query.compile() });
 
-    const result = await query.executeTakeFirst();
+  const result = await query.executeTakeFirst();
 
   return Number(result?.count) || 0;
 };
