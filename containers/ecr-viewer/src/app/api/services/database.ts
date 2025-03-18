@@ -11,24 +11,35 @@ import { Extended } from "./extended_types";
 
 let db: Kysely<Core> | Kysely<Extended>;
 
-const db_type = process.env.METADATA_DATABASE_TYPE;
-const db_schema = process.env.METADATA_DATABASE_SCHEMA;
+/**
+ * Get the database global.
+ * @returns global db
+ */
+export const getDb = () => {
+  if (db) {
+    return db;
+  }
 
-switch (db_type) {
-  case "sqlserver":
-    if (db_schema === "extended") {
-      db = sqlConstructor("extended");
-    } else {
-      db = sqlConstructor("core");
-    }
-  case "postgres":
-    if (db_schema === "extended") {
-      db = pgConstructor("extended");
-    } else {
-      db = pgConstructor("core");
-    }
-}
+  const db_type = process.env.METADATA_DATABASE_TYPE;
+  const db_schema = process.env.METADATA_DATABASE_SCHEMA;
 
+  if (db_schema !== "core" && db_schema !== "extended") {
+    throw new Error(`unknown db schema: ${db_schema}`);
+  }
+
+  switch (db_type) {
+    case "sqlserver":
+      db = sqlConstructor(db_schema);
+      break;
+    case "postgres":
+      db = pgConstructor(db_schema);
+      break;
+    default:
+      throw new Error(`unknown db type: ${db_type}`);
+  }
+
+  return db;
+};
 /**
  * Performs a health check on the PostgreSQL database connection.
  * @returns The status of the postgres connection or undefined if missing environment values.
@@ -38,7 +49,7 @@ export const metadataDatabaseHealthCheck = async () => {
     return undefined;
   }
   try {
-    await (db as Kysely<Core>).connection().execute(async (_db) => {});
+    await (getDb() as Kysely<Core>).connection().execute(async (_db) => {});
     return "UP";
   } catch (error: unknown) {
     console.error(error);

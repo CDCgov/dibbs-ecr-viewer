@@ -5,7 +5,7 @@ import { Bundle } from "fhir/r4";
 import { Kysely } from "kysely";
 
 import { Core } from "@/app/api/services/core_types";
-import { db } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { Extended } from "@/app/api/services/extended_types";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
@@ -181,6 +181,7 @@ export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
+  const db = getDb();
   try {
     await (db as Kysely<Extended>).transaction().execute(async (trx) => {
       await trx
@@ -347,6 +348,7 @@ export const saveCoreMetadata = async (
     }
 
     // Start transaction
+    const db = getDb();
     await (db as Kysely<Core>).transaction().execute(async (trx) => {
       // Insert main ECR metadata
       await trx

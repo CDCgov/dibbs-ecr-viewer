@@ -1,7 +1,7 @@
 import { Kysely, ExpressionBuilder, sql } from "kysely";
 
 import { Core } from "@/app/api/services/core_types";
-import { db } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { Extended } from "@/app/api/services/extended_types";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
@@ -74,7 +74,7 @@ export async function listEcrData(
   switch (SCHEMA_TYPE) {
     case "core":
       return listCoreEcrData(
-        db as Kysely<Core>,
+        getDb() as Kysely<Core>,
         startIndex,
         itemsPerPage,
         sortColumn,
@@ -85,7 +85,7 @@ export async function listEcrData(
       );
     case "extended":
       return listExtendedEcrData(
-        db as Kysely<Extended>,
+        getDb() as Kysely<Extended>,
         startIndex,
         itemsPerPage,
         sortColumn,
@@ -133,8 +133,12 @@ async function listCoreEcrData(
         "ecr_data.data_source",
         "ecr_data.fhir_reference_link as data_link",
         "ecr_data.eicr_version_number",
-        sql<string[]>`ARRAY_AGG(DISTINCT erc.condition)`.as("conditions"),
-        sql<string[]>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as(
+        sql<string[]>`ARRAY_AGG(DISTINCT ecr_rr_conditions.condition)`.as(
+          "conditions",
+        ),
+        sql<
+          string[]
+        >`ARRAY_AGG(DISTINCT ecr_rr_rule_summaries.rule_summary)`.as(
           "rule_summaries",
         ),
       ])
@@ -217,8 +221,12 @@ export async function listExtendedEcrData(
         "ecr_data.set_id",
         "ecr_data.eicr_version_number",
         "ecr_data.fhir_reference_link as data_link",
-        sql<string>`ARRAY_AGG(DISTINCT erc.condition)`.as("conditions"),
-        sql<string>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as("rule_summaries"),
+        sql<string>`ARRAY_AGG(DISTINCT ecr_rr_conditions.condition)`.as(
+          "conditions",
+        ),
+        sql<string>`ARRAY_AGG(DISTINCT ecr_rr_rule_summaries.rule_summary)`.as(
+          "rule_summaries",
+        ),
       ])
       .where((eb) =>
         generateExtendedWhereStatement(
@@ -348,7 +356,7 @@ const getTotalCoreEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await (db as Kysely<Core>)
+  const result = await (getDb() as Kysely<Core>)
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",
@@ -371,7 +379,7 @@ const getTotalExtendedEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await (db as Kysely<Extended>)
+  const result = await (getDb() as Kysely<Extended>)
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",

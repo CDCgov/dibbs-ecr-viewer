@@ -1,7 +1,7 @@
 import { Kysely } from "kysely";
 
 import { Core } from "./core_types";
-import { dialect } from "./dialects/sql";
+import { dialect } from "./dialects/sqlserver";
 import { Extended } from "./extended_types";
 
 /**

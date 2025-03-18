@@ -11,7 +11,7 @@ import {
 
 import * as core_database_repo from "@/app/api/services/core_database_repo";
 import { Core, NewECR } from "@/app/api/services/core_types";
-import { db } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import {
   buildExtended,
   dropExtended,
@@ -99,7 +99,7 @@ const getCoreWhere = (
     | ExpressionWrapper<Core, "ecr_data", SqlBool>
     | AndWrapper<Core, "ecr_data", SqlBool>,
 ) => {
-  const coredb = db as Kysely<Core>;
+  const coredb = getDb() as Kysely<Core>;
   return coredb.selectFrom("ecr_data").where(ebCallBack).compile().sql;
 };
 // Tests rewritten to fit Kysely in following commit
@@ -532,7 +532,6 @@ describe("listEcrDataService", () => {
   });
 
   describe("generate Kysely filter conditions statement", () => {
-    const coredb = db as Kysely<Core>;
     it("should generate an EXISTS subquery when conditions are provided", () => {
       const conditions = ["Condition1", "Condition2"];
       const filterStatement = getCoreWhere((eb) =>
@@ -551,7 +550,6 @@ describe("listEcrDataService", () => {
   });
 
   describe("generate Kysely where statement", () => {
-    const coredb = db as Kysely<Core>;
     it("should return a valid WHERE clause with all conditions", () => {
       const whereClause = getCoreWhere((eb) =>
         generateCoreWhereStatement(eb, testDateRange, "John Doe", [

@@ -1,11 +1,18 @@
 import { Kysely, sql } from "kysely";
 
 import { Core } from "./core_types";
-import { db } from "./database";
+import { getDb } from "./database";
+import { getSql } from "./dialects/common";
 import { Extended } from "./extended_types";
 
-const extdb = db as Kysely<Extended>;
-const coredb = db as Kysely<Core>;
+const extdb = () => {
+  process.env.METADATA_DATABASE_SCHEMA = "extended";
+  return getDb() as Kysely<Extended>;
+};
+const coredb = () => {
+  process.env.METADATA_DATABASE_SCHEMA = "core";
+  return getDb() as Kysely<Core>;
+};
 
 /**
  * Builds the extended schema to a test database
@@ -13,8 +20,8 @@ const coredb = db as Kysely<Core>;
  * @function buildExtended
  */
 export const buildExtended = async () => {
-  await extdb.schema
-    .createTable("ecr_data")
+  await extdb()
+    .schema.createTable("ecr_data")
     .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("set_id", "varchar(255)")
     .addColumn("fhir_reference_link", "varchar(255)")
@@ -51,12 +58,12 @@ export const buildExtended = async () => {
     .addColumn("encounter_end_date", "date")
     .addColumn("reason_for_visit", "text")
     .addColumn("active_problems", "text")
-    .addColumn("date_created", "timestamptz", (cb) =>
-      cb.notNull().defaultTo(sql`NOW()`),
+    .addColumn("date_created", getSql("datetimeType"), (cb) =>
+      cb.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
     .execute();
-  await extdb.schema
-    .createTable("patient_address")
+  await extdb()
+    .schema.createTable("patient_address")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("use", "varchar(50)")
     .addColumn("type", "varchar(50)")
@@ -71,8 +78,8 @@ export const buildExtended = async () => {
     .addColumn("period_end", "date")
     .addColumn("eICR_ID", "varchar(200)")
     .execute();
-  await extdb.schema
-    .createTable("ecr_labs")
+  await extdb()
+    .schema.createTable("ecr_labs")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eICR_ID", "varchar(200)")
     .addColumn("test_type", "varchar(255)")
@@ -95,14 +102,14 @@ export const buildExtended = async () => {
     .addColumn("specimen_collection_date", "date")
     .addColumn("performing_lab", "varchar(255)")
     .execute();
-  await extdb.schema
-    .createTable("ecr_rr_conditions")
+  await extdb()
+    .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
     .addColumn("condition", "varchar")
     .execute();
-  await extdb.schema
-    .createTable("ecr_rr_rule_summaries")
+  await extdb()
+    .schema.createTable("ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
     .addColumn("rule_summary", "varchar")
@@ -115,11 +122,11 @@ export const buildExtended = async () => {
  * @function dropExtended
  */
 export const dropExtended = async () => {
-  await extdb.schema.dropTable("ecr_data").execute();
-  await extdb.schema.dropTable("patient_address").execute();
-  await extdb.schema.dropTable("ecr_labs").execute();
-  await extdb.schema.dropTable("ecr_rr_conditions").execute();
-  await extdb.schema.dropTable("ecr_rr_rule_summaries").execute();
+  await extdb().schema.dropTable("patient_address").ifExists().execute();
+  await extdb().schema.dropTable("ecr_labs").ifExists().execute();
+  await extdb().schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
+  await extdb().schema.dropTable("ecr_rr_conditions").ifExists().execute();
+  await extdb().schema.dropTable("ecr_data").ifExists().execute();
 };
 
 /**
@@ -128,11 +135,11 @@ export const dropExtended = async () => {
  * @function clearExtended
  */
 export const clearExtended = async () => {
-  await extdb.deleteFrom("ecr_data").execute();
-  await extdb.deleteFrom("patient_address").execute();
-  await extdb.deleteFrom("ecr_labs").execute();
-  await extdb.deleteFrom("ecr_rr_conditions").execute();
-  await extdb.deleteFrom("ecr_rr_rule_summaries").execute();
+  await extdb().deleteFrom("patient_address").execute();
+  await extdb().deleteFrom("ecr_labs").execute();
+  await extdb().deleteFrom("ecr_rr_rule_summaries").execute();
+  await extdb().deleteFrom("ecr_rr_conditions").execute();
+  await extdb().deleteFrom("ecr_data").execute();
 };
 
 /**
@@ -141,8 +148,9 @@ export const clearExtended = async () => {
  * @function buildCore
  */
 export const buildCore = async () => {
-  await coredb.schema
-    .createTable("ecr_data")
+  await dropExtended(); // make sure we're starting from scratch
+  await coredb()
+    .schema.createTable("ecr_data")
     .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("set_id", "varchar(255)")
     .addColumn("eicr_version_number", "varchar(50)")
@@ -151,19 +159,19 @@ export const buildCore = async () => {
     .addColumn("patient_name_first", "varchar(100)", (cb) => cb.notNull())
     .addColumn("patient_name_last", "varchar(100)", (cb) => cb.notNull())
     .addColumn("patient_birth_date", "date", (cb) => cb.notNull())
-    .addColumn("date_created", "timestamptz", (cb) =>
-      cb.notNull().defaultTo(sql`NOW()`),
+    .addColumn("date_created", getSql("datetimeType"), (cb) =>
+      cb.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
     .addColumn("report_date", "date", (cb) => cb.notNull())
     .execute();
-  await coredb.schema
-    .createTable("ecr_rr_conditions")
+  await coredb()
+    .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
     .addColumn("condition", "varchar")
     .execute();
-  await coredb.schema
-    .createTable("ecr_rr_rule_summaries")
+  await coredb()
+    .schema.createTable("ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
     .addColumn("rule_summary", "varchar")
@@ -175,11 +183,7 @@ export const buildCore = async () => {
  * @async
  * @function dropCore
  */
-export const dropCore = async () => {
-  await coredb.schema.dropTable("ecr_data").execute();
-  await coredb.schema.dropTable("ecr_rr_conditions").execute();
-  await coredb.schema.dropTable("ecr_rr_rule_summaries").execute();
-};
+export const dropCore = dropExtended;
 
 /**
  * Clears the core schema tables on a test database
@@ -187,7 +191,7 @@ export const dropCore = async () => {
  * @function clearCore
  */
 export const clearCore = async () => {
-  await coredb.deleteFrom("ecr_data").execute();
-  await coredb.deleteFrom("ecr_rr_conditions").execute();
-  await coredb.deleteFrom("ecr_rr_rule_summaries").execute();
+  await coredb().deleteFrom("ecr_rr_rule_summaries").execute();
+  await coredb().deleteFrom("ecr_rr_conditions").execute();
+  await coredb().deleteFrom("ecr_data").execute();
 };

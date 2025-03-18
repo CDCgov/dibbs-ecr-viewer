@@ -1,7 +1,7 @@
 import { Kysely } from "kysely";
 
 import { Core } from "@/app/api/services/core_types";
-import { db } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { Extended } from "@/app/api/services/extended_types";
 
 /**
@@ -13,7 +13,7 @@ export const getAllConditions = async (): Promise<string[]> => {
     throw new Error("Database type is undefined.");
   } else {
     try {
-      const result = await (db as Kysely<Core | Extended>)
+      const result = await (getDb() as Kysely<Core | Extended>)
         .selectFrom("ecr_rr_conditions")
         .select("condition")
         .distinct()
