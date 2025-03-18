@@ -36,4 +36,4 @@ API documentation is published automatically with Sphinx and hosted via GitHub p
 
 ## DIBBs Release Process
 
-Create a new release on [Github](https://github.com/CDCgov/dibbs-ecr-viewer/releases/new). Beta versions of deployment should ensure that `Set as a pre-release` is checked. The new release will trigger the [createNewRelease action](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/.github/workflows/createNewRelease.yaml) which will run tests and image deployment. 
+Create a new release on [Github](https://github.com/CDCgov/dibbs-ecr-viewer/releases/new). Beta versions of deployment should ensure that `Set as a pre-release` is checked. The new release will trigger the [createNewRelease action](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/.github/workflows/createNewRelease.yaml) which will run tests and image deployment.
