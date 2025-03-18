@@ -203,7 +203,7 @@ jobs:
 
   integration-tests:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         db_type: ["pg", "sqlserver"]
 
