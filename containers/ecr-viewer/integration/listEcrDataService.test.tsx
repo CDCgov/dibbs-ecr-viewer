@@ -1,9 +1,17 @@
 /**
  * @jest-environment node
  */
-import { Kysely, ExpressionBuilder, sql } from "kysely";
+import {
+  Kysely,
+  ExpressionBuilder,
+  AndWrapper,
+  ExpressionWrapper,
+  SqlBool,
+} from "kysely";
 
 import * as core_database_repo from "@/app/api/services/core_database_repo";
+import { Core, NewECR } from "@/app/api/services/core_types";
+import { db } from "@/app/api/services/database";
 import {
   buildExtended,
   dropExtended,
@@ -25,15 +33,13 @@ import {
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
-import { db } from "@/app/api/services/database";
-import { Core } from "@/app/api/services/core_types";
 
 const testDateRange = {
   startDate: new Date("12-01-2024"),
   endDate: new Date("12-03-2024"),
 };
 
-const coreTemplate = {
+const coreTemplate: NewECR = {
   eICR_ID: "12345",
   set_id: "123",
   data_source: "DB",
@@ -86,13 +92,17 @@ const extendedTemplate = {
   date_created: new Date("2024-12-02T12:00:00Z"),
 };
 
+const getCoreWhere = (
+  ebCallBack: (
+    eb: ExpressionBuilder<Core, "ecr_data">,
+  ) =>
+    | ExpressionWrapper<Core, "ecr_data", SqlBool>
+    | AndWrapper<Core, "ecr_data", SqlBool>,
+) => {
+  const coredb = db as Kysely<Core>;
+  return coredb.selectFrom("ecr_data").where(ebCallBack).compile().sql;
+};
 // Tests rewritten to fit Kysely in following commit
-
-const mockExpressionBuilder = {
-  and: jest.fn((conditions) => conditions.filter(Boolean)), // Mimics AND conditions
-  or: jest.fn((conditions) => conditions.filter(Boolean)), // Mimics OR conditions
-  exists: jest.fn((subQuery) => sql`${subQuery}`), // Simulates EXISTS subquery
-} as unknown as ExpressionBuilder<any, any>;
 
 describe("listEcrDataService", () => {
   describe("process Metadata", () => {
@@ -415,17 +425,21 @@ describe("listEcrDataService", () => {
 
   describe("generate search statement", () => {
     it("should use the search term in the search statement", () => {
-      expect(generateCoreSearchStatement("Dan")).toEqual(
+      expect(
+        getCoreWhere((eb) => generateCoreSearchStatement(eb, "Dan")),
+      ).toEqual(
         "ed.patient_name_first ILIKE '%Dan%' OR ed.patient_name_last ILIKE '%Dan%'",
       );
     });
     it("should escape characters when an apostrophe is added", () => {
-      expect(generateCoreSearchStatement("O'Riley")).toEqual(
+      expect(
+        getCoreWhere((eb) => generateCoreSearchStatement(eb, "O'Riley")),
+      ).toEqual(
         "ed.patient_name_first ILIKE '%O''Riley%' OR ed.patient_name_last ILIKE '%O''Riley%'",
       );
     });
     it("should only generate true statements when no search is provided", () => {
-      expect(generateCoreSearchStatement("")).toEqual(
+      expect(getCoreWhere((eb) => generateCoreSearchStatement(eb, ""))).toEqual(
         "NULL IS NULL OR NULL IS NULL",
       );
     });
@@ -433,22 +447,34 @@ describe("listEcrDataService", () => {
 
   describe("generate filter conditions statement", () => {
     it("should add conditions in the filter statement", () => {
-      expect(generateFilterConditionsStatement(["Anthrax (disorder)"])).toEqual(
+      expect(
+        getCoreWhere((eb) =>
+          generateFilterConditionsStatement(eb, ["Anthrax (disorder)"]),
+        ),
+      ).toEqual(
         "ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%'))",
       );
     });
     it("should only look for eCRs with no conditions when de-selecting all conditions on filter", () => {
-      expect(generateFilterConditionsStatement([""])).toEqual(
+      expect(
+        getCoreWhere((eb) => generateFilterConditionsStatement(eb, [""])),
+      ).toEqual(
         "ed.eICR_ID NOT IN (SELECT DISTINCT erc_sub.eICR_ID FROM ecr_viewer.ecr_rr_conditions erc_sub WHERE erc_sub.condition IS NOT NULL)",
       );
     });
     it("should add date range in the filter statement", () => {
-      expect(generateFilterDateStatement(testDateRange)).toEqual(
+      expect(
+        getCoreWhere((eb) => generateFilterDateStatement(eb, testDateRange)),
+      ).toEqual(
         "ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z'",
       );
     });
     it("should display all conditions in date range by default if no filter has been added", () => {
-      expect(generateCoreWhereStatement(testDateRange, "", undefined)).toEqual(
+      expect(
+        getCoreWhere((eb) =>
+          generateCoreWhereStatement(eb, testDateRange, "", undefined),
+        ),
+      ).toEqual(
         "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (NULL IS NULL)",
       );
     });
@@ -457,23 +483,31 @@ describe("listEcrDataService", () => {
   describe("generate where statement", () => {
     it("should generate where statement using search and filter statements", () => {
       expect(
-        (db as Kysely<Core>).selectNoFrom(eb => generateCoreWhereStatement(eb, testDateRange, "blah", [
-          "Anthrax (disorder)",
-        ])).compile().sql
+        getCoreWhere((eb) =>
+          generateCoreWhereStatement(eb, testDateRange, "blah", [
+            "Anthrax (disorder)",
+          ]),
+        ),
       ).toEqual(
-        "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
+        "select from ecr_data where (ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
       );
     });
     it("should generate where statement using search statement (no conditions filter provided)", () => {
       expect(
-        generateCoreWhereStatement(testDateRange, "blah", undefined),
+        getCoreWhere((eb) =>
+          generateCoreWhereStatement(eb, testDateRange, "blah", undefined),
+        ),
       ).toEqual(
         "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (NULL IS NULL)",
       );
     });
     it("should generate where statement using filter conditions statement (no search provided)", () => {
       expect(
-        generateCoreWhereStatement(testDateRange, "", ["Anthrax (disorder)"]),
+        getCoreWhere((eb) =>
+          generateCoreWhereStatement(eb, testDateRange, "", [
+            "Anthrax (disorder)",
+          ]),
+        ),
       ).toEqual(
         "(NULL IS NULL OR NULL IS NULL) AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
       );
@@ -482,55 +516,51 @@ describe("listEcrDataService", () => {
 
   describe("generate Kysely search statement", () => {
     it("should return an OR condition for search term", () => {
-      const searchCondition = generateCoreSearchStatement(
-        mockExpressionBuilder,
-        "John",
+      const searchCondition = getCoreWhere((eb) =>
+        generateCoreSearchStatement(eb, "John"),
       );
 
-      expect(searchCondition).toBeDefined();
-      expect(mockExpressionBuilder.or).toHaveBeenCalled();
+      expect(searchCondition).toEqual("John");
     });
 
     it("should return TRUE if no search term is provided", () => {
-      const searchCondition = generateCoreSearchStatement(
-        mockExpressionBuilder,
+      const searchCondition = getCoreWhere((eb) =>
+        generateCoreSearchStatement(eb),
       );
-      expect(searchCondition).toBeDefined();
-      expect(searchCondition).toEqual(sql`TRUE`);
+      expect(searchCondition).toEqual("TRUE");
     });
   });
 
   describe("generate Kysely filter conditions statement", () => {
+    const coredb = db as Kysely<Core>;
     it("should generate an EXISTS subquery when conditions are provided", () => {
       const conditions = ["Condition1", "Condition2"];
-      const filterStatement = generateFilterConditionsStatement(
-        mockExpressionBuilder,
-        conditions,
+      const filterStatement = getCoreWhere((eb) =>
+        generateFilterConditionsStatement(eb, conditions),
       );
 
-      expect(filterStatement).toBeDefined();
-      expect(mockExpressionBuilder.exists).toHaveBeenCalled();
+      expect(filterStatement).toEqual("something");
     });
 
     it("should return TRUE if no conditions are provided", () => {
-      const filterStatement = generateFilterConditionsStatement(
-        mockExpressionBuilder,
+      const filterStatement = getCoreWhere((eb) =>
+        generateFilterConditionsStatement(eb),
       );
-      expect(filterStatement).toEqual(sql`TRUE`);
+      expect(filterStatement).toEqual("TRUE");
     });
   });
 
   describe("generate Kysely where statement", () => {
+    const coredb = db as Kysely<Core>;
     it("should return a valid WHERE clause with all conditions", () => {
-      const whereClause = generateCoreWhereStatement(
-        mockExpressionBuilder,
-        testDateRange,
-        "John Doe",
-        ["Condition1", "Condition2"],
+      const whereClause = getCoreWhere((eb) =>
+        generateCoreWhereStatement(eb, testDateRange, "John Doe", [
+          "Condition1",
+          "Condition2",
+        ]),
       );
 
-      expect(whereClause).toBeDefined();
-      expect(mockExpressionBuilder.and).toHaveBeenCalled();
+      expect(whereClause).toEqual("something");
     });
   });
 });

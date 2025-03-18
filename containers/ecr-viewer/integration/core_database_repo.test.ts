@@ -3,6 +3,7 @@
  */
 
 import * as database_repo from "@/app/api/services/core_database_repo";
+import { NewECR } from "@/app/api/services/core_types";
 import { buildCore, clearCore, dropCore } from "@/app/api/services/db_schema";
 
 describe("database_repo", () => {
@@ -15,7 +16,7 @@ describe("database_repo", () => {
   });
 
   describe("ecr_data", () => {
-    const expected = {
+    const expected: NewECR = {
       eICR_ID: "12345",
       set_id: "setid",
       data_source: "DB",
