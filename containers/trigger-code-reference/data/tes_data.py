@@ -236,7 +236,7 @@ def _build_crosswalk_table():
     with Session(_get_engine()) as session:
         table_rows = []
         row_id = 1
-        with open("../seed-scripts/diagnosis_gems_2018/2018_I10gem.txt") as gem:
+        with open("./diagnosis_gems_2018/2018_I10gem.txt") as gem:
             for row in gem:
                 line = row.strip()
                 if line != "":
@@ -260,6 +260,5 @@ def _build_crosswalk_table():
 
 if __name__ == "__main__":
     concept_code_types_dict = _build_concept_type_by_code_dict()
-    # print(concept_code_types_dict["14480-8"])
     retreive_tes_info_and_save(concept_code_types_dict)
     _build_crosswalk_table()
