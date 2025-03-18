@@ -4,6 +4,8 @@ import { metadataDatabaseHealthCheck } from "@/app/api/services/database";
 import { azureBlobStorageHealthCheck } from "@/app/data/blobStorage/azureClient";
 import { s3HealthCheck } from "@/app/data/blobStorage/s3Client";
 
+export const revalidate = 10;
+
 /**
  * Health check for ECR Viwer
  * @returns Response with status OK.
