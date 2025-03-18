@@ -12,7 +12,7 @@ export async function register() {
 }
 
 function setupConfigurationVariables() {
-  switch (process.env.CONFIG_NAME.toUpperCase()) {
+  switch (process.env.CONFIG_NAME?.toUpperCase()) {
     case "AWS_INTEGRATED":
       process.env.NBS_AUTH = "true";
       process.env.NON_INTEGRATED_VIEWER = "false";
