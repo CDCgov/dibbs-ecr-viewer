@@ -10,13 +10,6 @@ const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jest-environment-jsdom",
   modulePathIgnorePatterns: ["<rootDir>/.next"],
-  moduleNameMapper:
-    process.env.TEST_TYPE !== "integration"
-      ? {
-          "^mssql$": "<rootDir>/src/app/tests/__mocks__/mssql.js",
-          "^tedious$": "<rootDir>/src/app/tests/__mocks__/mssql.js",
-        }
-      : {},
   testPathIgnorePatterns: ["<rootDir>/e2e"],
   collectCoverage: true,
   testMatch:
