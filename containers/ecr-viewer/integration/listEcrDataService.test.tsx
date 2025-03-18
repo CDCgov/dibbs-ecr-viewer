@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { ExpressionBuilder, sql } from "kysely";
+import { Kysely, ExpressionBuilder, sql } from "kysely";
 
 import * as core_database_repo from "@/app/api/services/core_database_repo";
 import {
@@ -25,6 +25,8 @@ import {
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
+import { db } from "@/app/api/services/database";
+import { Core } from "@/app/api/services/core_types";
 
 const testDateRange = {
   startDate: new Date("12-01-2024"),
@@ -455,9 +457,9 @@ describe("listEcrDataService", () => {
   describe("generate where statement", () => {
     it("should generate where statement using search and filter statements", () => {
       expect(
-        generateCoreWhereStatement(testDateRange, "blah", [
+        (db as Kysely<Core>).selectNoFrom(eb => generateCoreWhereStatement(eb, testDateRange, "blah", [
           "Anthrax (disorder)",
-        ]),
+        ])).compile().sql
       ).toEqual(
         "(ed.patient_name_first ILIKE '%blah%' OR ed.patient_name_last ILIKE '%blah%') AND (ed.date_created >= '2024-12-01T05:00:00.000Z' AND ed.date_created <= '2024-12-03T05:00:00.000Z') AND (ed.eICR_ID IN (SELECT DISTINCT ed_sub.eICR_ID FROM ecr_viewer.ecr_data ed_sub LEFT JOIN ecr_viewer.ecr_rr_conditions erc_sub ON ed_sub.eICR_ID = erc_sub.eICR_ID WHERE erc_sub.condition IS NOT NULL AND (erc_sub.condition ILIKE '%Anthrax (disorder)%')))",
       );
