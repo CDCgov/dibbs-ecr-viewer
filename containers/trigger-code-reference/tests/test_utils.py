@@ -5,14 +5,16 @@ from unittest.mock import patch
 
 import pytest
 
+from app.tes_utils import (
+    add_human_readable_reportable_condition_name_tes,
+    get_concepts_list_tes,
+)
 from app.utils import (
-    add_human_readable_reportable_condition_name,
     add_reportable_condition_extension,
     convert_inputs_to_list,
     find_codes_by_resource_type,
     get_clean_snomed_code,
     get_concepts_dict,
-    get_concepts_list,
 )
 
 
@@ -53,7 +55,7 @@ def test_get_concepts_list_normal(mock_db):
         ("sdtc", "772150003", "http://snomed.info/sct", None),
     ]
     mock_db.fetchall.return_value = db_result
-    result = get_concepts_list([code])
+    result = get_concepts_list_tes([code])
     assert result == [
         ("dxtc", "A36.3|A36", "http://hl7.org/fhir/sid/icd-10-cm"),
         ("dxtc", "0363|0036", "http://hl7.org/fhir/sid/icd-9-cm"),
@@ -65,7 +67,7 @@ def test_get_concepts_list_normal(mock_db):
 def test_get_concepts_list_no_results(mock_db):
     code = ["junk_id"]
     mock_db.fetchall.return_value = []
-    result = get_concepts_list(code)
+    result = get_concepts_list_tes(code)
     assert result == []
 
 
@@ -73,7 +75,7 @@ def test_get_concepts_list_no_results(mock_db):
 def test_get_concepts_list_sql_error(mock_db):
     snomed_id = 276197005
     mock_db.execute.side_effect = sqlite3.Error("SQL error")
-    result = get_concepts_list([snomed_id])
+    result = get_concepts_list_tes([snomed_id])
     assert "error" in result
     assert "SQL error" in result["error"]
 
@@ -173,7 +175,7 @@ def test_find_codes_by_resource_type():
     assert [] == find_codes_by_resource_type(observation_resource)
 
 
-@patch("app.utils._get_condition_name_from_snomed_code")
+@patch("app.tes_utils._get_condition_name_from_snomed_code_tes")
 def test_add_reportable_condition_extension(mock_get_condition_name):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
@@ -235,7 +237,7 @@ def test_add_reportable_condition_extension(mock_get_condition_name):
     assert found_stamp
 
 
-@patch("app.utils._get_condition_name_from_snomed_code")
+@patch("app.tes_utils._get_condition_name_from_snomed_code_tes")
 def test_add_human_readable_reportable_condition_name(mock_get_condition_name):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
     observation_resource = [
@@ -247,6 +249,6 @@ def test_add_human_readable_reportable_condition_name(mock_get_condition_name):
     expected_condition_name = "Cyclosporiasis"
     mock_get_condition_name.return_value = expected_condition_name
 
-    result = add_human_readable_reportable_condition_name(observation_resource)
+    result = add_human_readable_reportable_condition_name_tes(observation_resource)
 
     assert result["valueCodeableConcept"]["text"] == expected_condition_name

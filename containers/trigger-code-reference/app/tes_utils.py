@@ -1,13 +1,6 @@
 import json
+import sqlite3
 
-from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import Session, select
-
-from app.db import get_engine
-from app.tes_models import (
-    Condition,
-)
 from app.utils import format_icd9_crosswalks, get_clean_snomed_code, get_concepts_dict
 
 
@@ -25,79 +18,72 @@ def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
       the relevant codes (including any found ICD-9 conversions, if they
       exist), and code systems as objects within.
     """
+
+    query = """
+    SELECT
+        ct.type,
+        GROUP_CONCAT(cs.code, '|') AS codes,
+        cs.system AS system,
+        GROUP_CONCAT(icd9_conversions, '|') AS crosswalk_conversions
+    FROM
+        condition c
+    JOIN
+        conditionconceptlink ccl on ccl.condition_id = c.id
+    JOIN
+        concepttype ct on ct.concept_id = ccl.concept_id
+    JOIN
+        concept cs on ct.concept_id = cs.id
+    LEFT JOIN
+        (SELECT icd10_code, GROUP_CONCAT(icd9_code, '|') AS icd9_conversions FROM icdcrosswalk GROUP BY icd10_code) ON gem_formatted_code = icd10_code
+    WHERE
+        c.id = ?
+    GROUP BY
+        ct.type, cs.system
+    """
+    # Connect to the SQLite database, execute sql query, then close
     try:
-        engine = get_engine()
-        with Session(engine) as session:
-            # get code ID
+        with sqlite3.connect("./data/tes.db") as conn:
+            cursor = conn.cursor()
             code = get_clean_snomed_code(snomed_code)[0]
+            condition_id = _get_condition_id_from_snowmed_code_tes(code)
+            cursor.execute(query, [condition_id])
+            concept_list = cursor.fetchall()
 
-            # Get the condition by code
-            stmt = select(Condition).where(Condition.code == code)
-            condition = session.exec(stmt).first()
-
-            if not condition:
-                return []
-            query = """
-            SELECT
-                ct.type,
-                GROUP_CONCAT(cs.code, '|') AS codes,
-                cs.system AS system,
-                GROUP_CONCAT(icd9_conversions, '|') AS crosswalk_conversions
-            FROM
-                condition c
-            JOIN
-                conditionconceptlink ccl on ccl.condition_id = c.id
-            JOIN
-                concepttype ct on ct.concept_id = ccl.concept_id
-            JOIN
-                concept cs on ct.concept_id = cs.id
-            LEFT JOIN
-                (SELECT icd10_code, GROUP_CONCAT(icd9_code, '|') AS icd9_conversions FROM icdcrosswalk GROUP BY icd10_code) ON gem_formatted_code = icd10_code
-            WHERE
-                c.id = :condition_id
-            GROUP BY
-                ct.type, cs.system
-            """
-            rs = session.execute(text(query), {"condition_id": condition.id}).all()
-
-            if not rs:
+            # We know it's not an actual error because we didn't get kicked to
+            # except, so just return the lack of results
+            if not concept_list:
                 return []
 
-            refined_list = format_icd9_crosswalks(rs)
+        # Add any existing ICD-9 codes into the main code components
+        # Tuples are immutable so we'll need to make some fresh ones
+        refined_list = format_icd9_crosswalks(concept_list)
+        return refined_list
+    except sqlite3.Error as e:
+        return {"error": f"An SQL error occurred: {str(e)}"}
 
-            return refined_list
-    except SQLAlchemyError:
-        return {"error": "An SQL error occurred"}
 
-
-def get_condition_name_and_concept_codes_from_condition_code(condition_code: str):
+def _get_condition_id_from_snowmed_code_tes(condition_code: str) -> str:
     """
-    Given a condition code, this function retrieves the condition name and the set of concept codes associated with it.
+    Given a condition code, this function retrieves the condition id
     """
-    with Session(get_engine()) as session:
-        statement = select(Condition).where(Condition.code == condition_code)
-        results = session.exec(statement)
+    with sqlite3.connect("./data/tes.db") as conn:
+        row = conn.execute(
+            "SELECT id FROM condition WHERE code = ?", (condition_code,)
+        ).fetchone()
 
-        try:
-            condition = results.one()
-        except Exception as e:
-            print(f"Condition with code {condition_code} not found.")
-            print(e)
-            return {"error": f"Condition with code {condition_code} not found."}
-
-        return condition.name, {x.code for x in condition.concepts}
+    return row[0] if row else None
 
 
 def _get_condition_name_from_snomed_code_tes(condition_code: str) -> str:
     """
     Given a condition code, this function retrieves the condition name
     """
-    with Session(get_engine()) as session:
-        statement = select(Condition).where(Condition.code == condition_code)
-        results = session.exec(statement)
-        condition = results.one()
+    with sqlite3.connect("./data/tes.db") as conn:
+        row = conn.execute(
+            "SELECT name FROM condition WHERE code = ?", (condition_code,)
+        ).fetchone()
 
-    return condition.name
+    return row[0] if row else None
 
 
 def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:

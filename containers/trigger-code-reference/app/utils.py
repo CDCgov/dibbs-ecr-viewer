@@ -222,71 +222,71 @@ def add_reportable_condition_extension(
     return resource
 
 
-def add_human_readable_reportable_condition_name(resource: dict) -> dict:
-    """
-    Add a human readable name to the valueCodeableConcept.text field of a condition resource.
+# def add_human_readable_reportable_condition_name(resource: dict) -> dict:
+#     """
+#     Add a human readable name to the valueCodeableConcept.text field of a condition resource.
 
-    If the resource is a Condition, get the SNOMED code to look up the human-readable name
-    If we we do not have a human-readable name, we will use the display of the SNOMED code
-    If we do not have a SNOMED code in the valueCodeableConcept, we will use the display of the
-    first coding, if any.
-    None of these fallbacks should be used, however in the situation where data is missing in our
-    database and in the FHIR bundle, we still need to be able to handle valid FHIR bundles.
-    """
-    if not resource.get("code"):
-        return resource
+#     If the resource is a Condition, get the SNOMED code to look up the human-readable name
+#     If we we do not have a human-readable name, we will use the display of the SNOMED code
+#     If we do not have a SNOMED code in the valueCodeableConcept, we will use the display of the
+#     first coding, if any.
+#     None of these fallbacks should be used, however in the situation where data is missing in our
+#     database and in the FHIR bundle, we still need to be able to handle valid FHIR bundles.
+#     """
+#     if not resource.get("code"):
+#         return resource
 
-    # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]
-    has_condition = any(
-        x.get("system") == "http://snomed.info/sct" and x.get("code") == "64572001"
-        for x in resource["code"]["coding"]
-    )
-    if not has_condition:
-        return resource
+#     # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]
+#     has_condition = any(
+#         x.get("system") == "http://snomed.info/sct" and x.get("code") == "64572001"
+#         for x in resource["code"]["coding"]
+#     )
+#     if not has_condition:
+#         return resource
 
-    # Get the first SNOMED coding from resource["valueCodeableConcept"]["coding"], if any
-    condition_code = next(
-        (
-            x
-            for x in resource["valueCodeableConcept"]["coding"]
-            if x["system"] == "http://snomed.info/sct"
-        ),
-        None,
-    )
+#     # Get the first SNOMED coding from resource["valueCodeableConcept"]["coding"], if any
+#     condition_code = next(
+#         (
+#             x
+#             for x in resource["valueCodeableConcept"]["coding"]
+#             if x["system"] == "http://snomed.info/sct"
+#         ),
+#         None,
+#     )
 
-    if condition_code:
-        human_readable_condition_name = _get_condition_name_from_snomed_code(
-            condition_code["code"]
-        )
+#     if condition_code:
+#         human_readable_condition_name = _get_condition_name_from_snomed_code(
+#             condition_code["code"]
+#         )
 
-        if human_readable_condition_name:
-            resource["valueCodeableConcept"]["text"] = human_readable_condition_name
-        elif "display" in condition_code:
-            resource["valueCodeableConcept"]["text"] = condition_code["display"]
-    else:
-        # Fallback to the first available display text if condition_code is absent
-        fallback_display = next(
-            (
-                x["display"]
-                for x in resource["valueCodeableConcept"]["coding"]
-                if "display" in x
-            ),
-            None,
-        )
-        if fallback_display:
-            resource["valueCodeableConcept"]["text"] = fallback_display
+#         if human_readable_condition_name:
+#             resource["valueCodeableConcept"]["text"] = human_readable_condition_name
+#         elif "display" in condition_code:
+#             resource["valueCodeableConcept"]["text"] = condition_code["display"]
+#     else:
+#         # Fallback to the first available display text if condition_code is absent
+#         fallback_display = next(
+#             (
+#                 x["display"]
+#                 for x in resource["valueCodeableConcept"]["coding"]
+#                 if "display" in x
+#             ),
+#             None,
+#         )
+#         if fallback_display:
+#             resource["valueCodeableConcept"]["text"] = fallback_display
 
-    return resource
+#     return resource
 
 
 # TODO: Swap to TES
-def _get_condition_name_from_snomed_code(snomed_code: str) -> str:
-    with sqlite3.connect("./seed-scripts/rckms.db") as conn:
-        row = conn.execute(
-            "SELECT name FROM conditions WHERE id = ?", (snomed_code,)
-        ).fetchone()
+# def _get_condition_name_from_snomed_code(snomed_code: str) -> str:
+#     with sqlite3.connect("./seed-scripts/rckms.db") as conn:
+#         row = conn.execute(
+#             "SELECT name FROM conditions WHERE id = ?", (snomed_code,)
+#         ).fetchone()
 
-    return row[0] if row else None
+#     return row[0] if row else None
 
 
 def read_json_from_assets(filename: str) -> dict:
