@@ -1,4 +1,4 @@
-import Storage from "@google-cloud/storage";
+import { Storage } from "@google-cloud/storage";
 
 /**
  * Connect to the google cloud storage bucket.
