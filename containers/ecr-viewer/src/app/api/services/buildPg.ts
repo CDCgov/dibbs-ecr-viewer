@@ -5,8 +5,9 @@ import { dialect } from "./dialects/postgres";
 import { Extended } from "./extended_types";
 
 /**
- *
- * @param schema
+ * construct a postgres db instance
+ * @param schema core or extended
+ * @returns postgres db instance
  */
 export const pgConstructor = (schema: "core" | "extended") => {
   if (schema === "core") {

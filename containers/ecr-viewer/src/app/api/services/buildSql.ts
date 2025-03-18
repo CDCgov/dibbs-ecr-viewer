@@ -5,8 +5,9 @@ import { dialect } from "./dialects/sql";
 import { Extended } from "./extended_types";
 
 /**
- *
- * @param schema
+ * construct a sql server db instance
+ * @param schema core or extended
+ * @returns sql server db instance
  */
 export const sqlConstructor = (schema: "core" | "extended") => {
   if (schema === "core") {

@@ -10,10 +10,11 @@ import {
   ECR,
   NewECR,
   ECRUpdate,
+  Core,
 } from "./core_types";
 import { db } from "./database";
 
-const coredb = db as Kysely<any>;
+const coredb = db as Kysely<Core>;
 
 // ECR_DATA
 
