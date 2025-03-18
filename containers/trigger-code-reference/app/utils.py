@@ -170,7 +170,7 @@ def get_concepts_dict(
     return concept_dict
 
 
-def _find_codes_by_resource_type(resource: dict) -> list[str]:
+def find_codes_by_resource_type(resource: dict) -> list[str]:
     """
     For a given resource, extracts the chief clinical codes within the
     resource body. The FHIRpath location of this resource depends on the
@@ -279,6 +279,7 @@ def add_human_readable_reportable_condition_name(resource: dict) -> dict:
     return resource
 
 
+# TODO: Swap to TES
 def _get_condition_name_from_snomed_code(snomed_code: str) -> str:
     with sqlite3.connect("./seed-scripts/rckms.db") as conn:
         row = conn.execute(

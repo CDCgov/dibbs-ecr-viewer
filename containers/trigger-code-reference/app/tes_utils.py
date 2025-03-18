@@ -37,7 +37,6 @@ def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
 
             if not condition:
                 return []
-
             query = """
             SELECT
                 ct.type,
@@ -46,11 +45,11 @@ def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
                 GROUP_CONCAT(icd9_conversions, '|') AS crosswalk_conversions
             FROM
                 condition c
-            LEFT JOIN
+            JOIN
                 conditionconceptlink ccl on ccl.condition_id = c.id
-            LEFT JOIN
+            JOIN
                 concepttype ct on ct.concept_id = ccl.concept_id
-            LEFT JOIN
+            JOIN
                 concept cs on ct.concept_id = cs.id
             LEFT JOIN
                 (SELECT icd10_code, GROUP_CONCAT(icd9_code, '|') AS icd9_conversions FROM icdcrosswalk GROUP BY icd10_code) ON gem_formatted_code = icd10_code
@@ -64,14 +63,29 @@ def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
             if not rs:
                 return []
 
-            # Ensure this with SQL instead?
-            filtered_array = [t for t in rs if t[0] is not None]
-
-            refined_list = format_icd9_crosswalks(filtered_array)
+            refined_list = format_icd9_crosswalks(rs)
 
             return refined_list
     except SQLAlchemyError:
         return {"error": "An SQL error occurred"}
+
+
+def get_condition_name_and_concept_codes_from_condition_code(condition_code: str):
+    """
+    Given a condition code, this function retrieves the condition name and the set of concept codes associated with it.
+    """
+    with Session(get_engine()) as session:
+        statement = select(Condition).where(Condition.code == condition_code)
+        results = session.exec(statement)
+
+        try:
+            condition = results.one()
+        except Exception as e:
+            print(f"Condition with code {condition_code} not found.")
+            print(e)
+            return {"error": f"Condition with code {condition_code} not found."}
+
+        return condition.name, {x.code for x in condition.concepts}
 
 
 if __name__ == "__main__":
