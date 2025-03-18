@@ -133,8 +133,12 @@ async function listCoreEcrData(
         "ecr_data.data_source",
         "ecr_data.fhir_reference_link as data_link",
         "ecr_data.eicr_version_number",
-        sql<string[]>`ARRAY_AGG(DISTINCT erc.condition)`.as("conditions"),
-        sql<string[]>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as(
+        sql<string[]>`ARRAY_AGG(DISTINCT ecr_rr_conditions.condition)`.as(
+          "conditions",
+        ),
+        sql<
+          string[]
+        >`ARRAY_AGG(DISTINCT ecr_rr_rule_summaries.rule_summary)`.as(
           "rule_summaries",
         ),
       ])
@@ -217,8 +221,12 @@ export async function listExtendedEcrData(
         "ecr_data.set_id",
         "ecr_data.eicr_version_number",
         "ecr_data.fhir_reference_link as data_link",
-        sql<string>`ARRAY_AGG(DISTINCT erc.condition)`.as("conditions"),
-        sql<string>`ARRAY_AGG(DISTINCT ers.rule_summary)`.as("rule_summaries"),
+        sql<string>`ARRAY_AGG(DISTINCT ecr_rr_conditions.condition)`.as(
+          "conditions",
+        ),
+        sql<string>`ARRAY_AGG(DISTINCT ecr_rr_rule_summaries.rule_summary)`.as(
+          "rule_summaries",
+        ),
       ])
       .where((eb) =>
         generateExtendedWhereStatement(
