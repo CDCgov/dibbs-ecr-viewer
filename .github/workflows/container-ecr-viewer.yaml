@@ -229,7 +229,7 @@ jobs:
           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: updcase db type
-        run: echo "DB_TYPE=${echo "${{matrix.db_type}}" | tr '[:lower]' '[:upper]' }" >> "${GITHUB_ENV}"
+        run: echo "DB_TYPE=${echo "${{matrix.db_type}}" | tr '[:lower:]' '[:upper:]' }" >> "${GITHUB_ENV}"
 
       - name: Set config for db type
         working-directory: ./containers/${{env.CONTAINER}}
