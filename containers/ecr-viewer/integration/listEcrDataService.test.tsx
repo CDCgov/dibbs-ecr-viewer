@@ -188,15 +188,15 @@ describe("listEcrDataService", () => {
     beforeEach(async () => {
       await core_database_repo.createEcr(coreTemplate);
       await core_database_repo.createEcrCondition({
-          uuid: "12345",
-          eICR_ID: "12345",
-          condition: "Condition1",
-        })
+        uuid: "12345",
+        eICR_ID: "12345",
+        condition: "Condition1",
+      });
       await core_database_repo.createEcrRule({
-          uuid: "12345",
-          ecr_rr_conditions_id: "12345",
-          rule_summary: "Rule1",
-        })
+        uuid: "12345",
+        ecr_rr_conditions_id: "12345",
+        rule_summary: "Rule1",
+      });
     });
 
     afterEach(async () => {
@@ -291,15 +291,15 @@ describe("listEcrDataService", () => {
     beforeEach(async () => {
       await extended_database_repo.createExtendedEcr(extendedTemplate);
       await extended_database_repo.createEcrCondition({
-          uuid: "12345",
-          eICR_ID: "12345",
-          condition: "Condition1",
-        })
+        uuid: "12345",
+        eICR_ID: "12345",
+        condition: "Condition1",
+      });
       await extended_database_repo.createEcrRule({
-          uuid: "12345",
-          ecr_rr_conditions_id: "12345",
-          rule_summary: "Rule1",
-        })
+        uuid: "12345",
+        ecr_rr_conditions_id: "12345",
+        rule_summary: "Rule1",
+      });
     });
 
     afterEach(async () => {
@@ -485,52 +485,54 @@ describe("listEcrDataService", () => {
   });
 
   describe("generate Kysely search statement", () => {
-    it('should return an OR condition for search term', () => {
+    it("should return an OR condition for search term", () => {
       const searchCondition = generateCoreSearchStatement(
         mockExpressionBuilder,
-        'John'
+        "John",
       );
-      
+
       expect(searchCondition).toBeDefined();
       expect(mockExpressionBuilder.or).toHaveBeenCalled();
     });
-  
-    it('should return TRUE if no search term is provided', () => {
-      const searchCondition = generateCoreSearchStatement(mockExpressionBuilder);
+
+    it("should return TRUE if no search term is provided", () => {
+      const searchCondition = generateCoreSearchStatement(
+        mockExpressionBuilder,
+      );
       expect(searchCondition).toBeDefined();
       expect(searchCondition).toEqual(sql`TRUE`);
     });
   });
 
   describe("generate Kysely filter conditions statement", () => {
-    it('should generate an EXISTS subquery when conditions are provided', () => {
-      const conditions = ['Condition1', 'Condition2'];
+    it("should generate an EXISTS subquery when conditions are provided", () => {
+      const conditions = ["Condition1", "Condition2"];
       const filterStatement = generateFilterConditionsStatement(
         mockExpressionBuilder,
-        conditions
+        conditions,
       );
-  
+
       expect(filterStatement).toBeDefined();
       expect(mockExpressionBuilder.exists).toHaveBeenCalled();
     });
-  
-    it('should return TRUE if no conditions are provided', () => {
+
+    it("should return TRUE if no conditions are provided", () => {
       const filterStatement = generateFilterConditionsStatement(
-        mockExpressionBuilder
+        mockExpressionBuilder,
       );
       expect(filterStatement).toEqual(sql`TRUE`);
     });
   });
 
   describe("generate Kysely where statement", () => {
-    it('should return a valid WHERE clause with all conditions', () => {
+    it("should return a valid WHERE clause with all conditions", () => {
       const whereClause = generateCoreWhereStatement(
         mockExpressionBuilder,
         testDateRange,
-        'John Doe',
-        ['Condition1', 'Condition2']
+        "John Doe",
+        ["Condition1", "Condition2"],
       );
-  
+
       expect(whereClause).toBeDefined();
       expect(mockExpressionBuilder.and).toHaveBeenCalled();
     });

@@ -53,7 +53,8 @@ export async function findEcr(criteria: Partial<ECR> | null): Promise<ECR[]> {
     throw new Error("eICR Criteria is required.");
   }
 
-  for (const criterium of Object.keys(criteria) as (keyof ECR)[]) {  // GOES TO HELPER FUNCTION
+  for (const criterium of Object.keys(criteria) as (keyof ECR)[]) {
+    // GOES TO HELPER FUNCTION
     if (criteria[criterium] !== undefined && criteria[criterium] !== null) {
       query = query.where(criterium, "=", criteria[criterium]);
     }
