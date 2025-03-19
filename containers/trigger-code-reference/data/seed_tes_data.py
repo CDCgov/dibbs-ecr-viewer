@@ -22,7 +22,7 @@ _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
 
 _DB_URL = "sqlite:///../data/tes.db"
-_DEBUG = True
+_DEBUG = False  # Set this to True if you'd like to see DB migration output
 
 _engine = create_engine(_DB_URL, echo=_DEBUG)
 SQLModel.metadata.create_all(_engine)
@@ -37,7 +37,7 @@ def _get_engine():
 
 def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
     """
-    Fetches the TES API for ValueSets and saves them to the database
+    Fetches Condition and Concept data from the TES API and builds out the SQLite database.
     """
     with Session(_get_engine()) as session:
         current_iteration = 0
@@ -61,31 +61,14 @@ def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
                         leave=False,
                     ):
                         for concept in system.concept:
-                            concept_code_and_system = (concept.code, system.system)
-
-                            if concept_code_and_system in all_concepts:
-                                concepts.add(all_concepts[concept_code_and_system])
-                            else:
-                                new_types = new_types = _get_concept_types(
-                                    concept.code, concept_code_to_type_dict
-                                )
-
-                                new_concept = Concept(
-                                    name=concept.display,
-                                    code=concept.code,
-                                    gem_formatted_code=_get_gem_formatted_code(
-                                        concept.code
-                                    ),
-                                    system=system.system,
-                                    types=new_types,
-                                )
-                                all_concepts[concept_code_and_system] = new_concept
-                                concepts.add(new_concept)
-
-                                for new_type in new_types:
-                                    new_type.concept = new_concept
-
-                                session.add_all(new_types)
+                            _build_concept(
+                                session,
+                                concepts,
+                                all_concepts,
+                                concept_code_to_type_dict,
+                                concept,
+                                system,
+                            )
 
                 if valueSet.expansion and valueSet.expansion.contains:
                     for system in tqdm(
@@ -94,29 +77,14 @@ def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
                         unit=" Concept",
                         leave=False,
                     ):
-                        concept_code_and_system = (system.code, system.system)
-                        if concept_code_and_system in all_concepts:
-                            concepts.add(all_concepts[concept_code_and_system])
-                        else:
-                            new_types = _get_concept_types(
-                                system.code, concept_code_to_type_dict
-                            )
-
-                            new_concept = Concept(
-                                name=system.display,
-                                code=system.code,
-                                gem_formatted_code=_get_gem_formatted_code(system.code),
-                                system=system.system,
-                                types=new_types,
-                            )
-                            all_concepts[concept_code_and_system] = new_concept
-                            concepts.add(new_concept)
-
-                            # Link the concept and type
-                            for new_type in new_types:
-                                new_type.concept = new_concept
-
-                            session.add_all(new_types)
+                        _build_concept(
+                            session,
+                            concepts,
+                            all_concepts,
+                            concept_code_to_type_dict,
+                            system,
+                            system,
+                        )
 
                 coding = _get_coding(valueSet)
 
@@ -140,9 +108,45 @@ def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
         session.commit()
 
 
+def _build_concept(
+    session: Session,
+    concepts: set[Concept],
+    all_concepts: dict[(str, str)],
+    concept_code_to_type_dict: dict[str, list[str]],
+    currentConcept,
+    currentSystem,
+):
+    """
+    Creates a new Concept and its associated data.
+    """
+    concept_code_and_system = (currentConcept.code, currentSystem.system)
+
+    if concept_code_and_system in all_concepts:
+        concepts.add(all_concepts[concept_code_and_system])
+    else:
+        new_types = _get_concept_types(currentConcept.code, concept_code_to_type_dict)
+
+        new_concept = Concept(
+            name=currentConcept.display,
+            code=currentConcept.code,
+            gem_formatted_code=_get_gem_formatted_code(currentConcept.code),
+            system=currentSystem.system,
+            types=new_types,
+        )
+        all_concepts[concept_code_and_system] = new_concept
+        concepts.add(new_concept)
+
+        for new_type in new_types:
+            new_type.concept = new_concept
+        session.add_all(new_types)
+
+
 def _get_concept_types(
     conceptCode: str, concept_code_to_type_dict: dict
 ) -> list[ConceptType]:
+    """
+    Helper function that returns a list of concept types associated with a Concept
+    """
     new_types = []
     for type in concept_code_to_type_dict.get(conceptCode, []):
         new_type = ConceptType(type=type)
@@ -151,6 +155,9 @@ def _get_concept_types(
 
 
 def _get_coding(valueSet: ValueSet) -> list[str]:
+    """
+    Helper function that takes a ValueSet and returns a filtered list
+    """
     return list(
         filter(
             lambda x: x.code.code == "focus"
@@ -162,6 +169,9 @@ def _get_coding(valueSet: ValueSet) -> list[str]:
 
 
 def _fetch_conditions_bundle(current_iteration: int) -> Bundle:
+    """
+    Makes a request to the TES API and returns the data as a FHIR bundle
+    """
     response = requests.get(
         _TES_API_URL,
         params={
@@ -184,6 +194,10 @@ def _fetch_conditions_bundle(current_iteration: int) -> Bundle:
 
 
 def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
+    """
+    Makes a request to the TES API and builds a dictionary from the results. This
+    dictionary maps a Concept to one or more types.
+    """
     # Make a request to grab all 6 available concept types
     response = requests.get(
         _TES_API_URL,
@@ -223,11 +237,14 @@ def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
                 dict[concept.code].append(valueSet.id)
             else:
                 dict[concept.code] = [valueSet.id]
-    print("Concept types found:", ",".join(concept_types_found))
+    print("Concept types found:", ", ".join(concept_types_found))
     return dict
 
 
 def _get_gem_formatted_code(code: str) -> str:
+    """
+    Takes a code and converts it to the Generalized Equivalency Mapping code format
+    """
     return code.translate(str.maketrans("", "", string.punctuation))
 
 
