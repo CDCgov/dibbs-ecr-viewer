@@ -102,7 +102,7 @@ const getCoreWhere = (
 ) => {
   const coredb = getDb() as Kysely<Core>;
   const rawRes = coredb.selectFrom("ecr_data").where(ebCallBack).compile();
-  const start = 'select from "ecr_data" where ';
+  const start = 'select from "ecr_viewer"."ecr_data" where ';
   return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };
 };
 // Tests rewritten to fit Kysely in following commit
@@ -437,7 +437,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2)',
+          '("ecr_viewer"."ecr_data"."patient_name_first" like @1 or "ecr_viewer"."ecr_data"."patient_name_last" like @2)',
         );
       }
       expect(params).toStrictEqual(["%Dan%", "%Dan%"]);
@@ -452,7 +452,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2)',
+          '("ecr_viewer"."ecr_data"."patient_name_first" like @1 or "ecr_viewer"."ecr_data"."patient_name_last" like @2)',
         );
       }
 
@@ -482,7 +482,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          'exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @1))',
+          'exists (select "erc_sub"."eICR_ID" from "ecr_viewer"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_viewer"."ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @1))',
         );
       }
       expect(params).toStrictEqual(["%Anthrax (disorder)%"]);
@@ -497,7 +497,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '"ecr_data"."eICR_ID" not in (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."condition" is not null)',
+          '"ecr_viewer"."ecr_data"."eICR_ID" not in (select "erc_sub"."eICR_ID" from "ecr_viewer"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."condition" is not null)',
         );
       }
 
@@ -513,7 +513,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '("ecr_data"."date_created" >= @1 and "ecr_data"."date_created" <= @2)',
+          '("ecr_viewer"."ecr_data"."date_created" >= @1 and "ecr_viewer"."ecr_data"."date_created" <= @2)',
         );
       }
 
@@ -532,7 +532,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '(@1 = @2 and ("ecr_data"."date_created" >= @3 and "ecr_data"."date_created" <= @4) and @5 = @6)',
+          '(@1 = @2 and ("ecr_viewer"."ecr_data"."date_created" >= @3 and "ecr_viewer"."ecr_data"."date_created" <= @4) and @5 = @6)',
         );
       }
 
@@ -560,7 +560,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '(("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2) and ("ecr_data"."date_created" >= @3 and "ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @5)))',
+          '(("ecr_viewer"."ecr_data"."patient_name_first" like @1 or "ecr_viewer"."ecr_data"."patient_name_last" like @2) and ("ecr_viewer"."ecr_data"."date_created" >= @3 and "ecr_viewer"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eICR_ID" from "ecr_viewer"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_viewer"."ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @5)))',
         );
       }
 
@@ -582,7 +582,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '(("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2) and ("ecr_data"."date_created" >= @3 and "ecr_data"."date_created" <= @4) and @5 = @6)',
+          '(("ecr_viewer"."ecr_data"."patient_name_first" like @1 or "ecr_viewer"."ecr_data"."patient_name_last" like @2) and ("ecr_viewer"."ecr_data"."date_created" >= @3 and "ecr_viewer"."ecr_data"."date_created" <= @4) and @5 = @6)',
         );
       }
 
@@ -607,7 +607,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '(@1 = @2 and ("ecr_data"."date_created" >= @3 and "ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @5)))',
+          '(@1 = @2 and ("ecr_viewer"."ecr_data"."date_created" >= @3 and "ecr_viewer"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eICR_ID" from "ecr_viewer"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_viewer"."ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @5)))',
         );
       }
 
@@ -633,7 +633,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2)',
+          '("ecr_viewer"."ecr_data"."patient_name_first" like @1 or "ecr_viewer"."ecr_data"."patient_name_last" like @2)',
         );
       }
       expect(params).toStrictEqual(["%John%", "%John%"]);
@@ -665,7 +665,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          'exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
+          'exists (select "erc_sub"."eICR_ID" from "ecr_viewer"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_viewer"."ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
         );
       }
       expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
@@ -699,7 +699,7 @@ describe("listEcrDataService", () => {
         );
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(
-          '(("ecr_data"."patient_name_first" like @1 or "ecr_data"."patient_name_last" like @2) and ("ecr_data"."date_created" >= @3 and "ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eICR_ID" from "ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @5 or "erc_sub"."condition" like @6))))',
+          '(("ecr_viewer"."ecr_data"."patient_name_first" like @1 or "ecr_viewer"."ecr_data"."patient_name_last" like @2) and ("ecr_viewer"."ecr_data"."date_created" >= @3 and "ecr_viewer"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eICR_ID" from "ecr_viewer"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eICR_ID" = "ecr_viewer"."ecr_data"."eICR_ID" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @5 or "erc_sub"."condition" like @6))))',
         );
       }
       expect(params).toStrictEqual([
