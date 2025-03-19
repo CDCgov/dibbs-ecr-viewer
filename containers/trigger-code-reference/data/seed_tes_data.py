@@ -22,7 +22,7 @@ _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
 
 _DB_URL = "sqlite:///../data/tes.db"
-_DEBUG = False  # Set this to True if you'd like to see DB migration output
+_DEBUG = True  # Set this to True if you'd like to see DB migration output
 
 _engine = create_engine(_DB_URL, echo=_DEBUG)
 SQLModel.metadata.create_all(_engine)
