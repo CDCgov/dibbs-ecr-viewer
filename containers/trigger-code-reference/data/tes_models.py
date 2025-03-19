@@ -20,7 +20,7 @@ class ConditionConceptLink(SQLModel, table=True):
 
 class Concept(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    name: str | None
+    name: str | None  # Some concepts in TES have a NULL name
     code: str
     gem_formatted_code: str
     system: str
