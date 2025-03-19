@@ -45,7 +45,7 @@ def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
         all_concepts: dict[(str, str)] = {}
         while True:
             print(f"Fetching batch {current_iteration + 1}")
-            bundle = _fetch_bundle(current_iteration)
+            bundle = _fetch_conditions_bundle(current_iteration)
 
             for entry in tqdm(
                 bundle.entry, desc="Processing ValueSets", unit=" ValueSet", leave=False
@@ -112,6 +112,7 @@ def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
                             all_concepts[concept_code_and_system] = new_concept
                             concepts.add(new_concept)
 
+                            # Link the concept and type
                             for new_type in new_types:
                                 new_type.concept = new_concept
 
@@ -160,9 +161,9 @@ def _get_coding(valueSet: ValueSet) -> list[str]:
     )[0].valueCodeableConcept.coding[0]
 
 
-def _fetch_bundle(current_iteration: int) -> Bundle:
+def _fetch_conditions_bundle(current_iteration: int) -> Bundle:
     response = requests.get(
-        f"{_TES_API_URL}",
+        _TES_API_URL,
         params={
             "context-type": f"{_CONTEXT_SYSTEM}|{_CONTEXT_CODE}",
             "_getpagesoffset": current_iteration * _BATCH_SIZE,
@@ -183,9 +184,9 @@ def _fetch_bundle(current_iteration: int) -> Bundle:
 
 
 def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
-    url = "https://tes.tools.aimsplatform.org/api/fhir/ValueSet"
+    # Make a request to grab all 6 available concept types
     response = requests.get(
-        url,
+        _TES_API_URL,
         params={
             "_id": "dxtc,ostc,lotc,lrtc,mrtc,sdtc",
         },
@@ -202,24 +203,27 @@ def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
 
     bundle = Bundle(**data)
     dict = {}
+    concept_types_found = []
     for entry in tqdm(
         bundle.entry, desc="Processing ValueSets", unit=" ValueSet", leave=False
     ):
         valueSet: ValueSet = entry.resource
-        # valueSet.id is the type
-        print(f"Found concept type: {valueSet.id}")
+
+        # The ValueSet's id is the concept type
+        concept_types_found.append(valueSet.id)
+
         for concept in tqdm(
             valueSet.expansion.contains,
             desc=f"Processing concepts in expansion.contains for {valueSet.id}",
             unit=" Concept",
             leave=False,
         ):
-            ## these are not 1 to 1
-            # a concept can have multiple types
+            # A concept can have multiple types
             if concept.code in dict:
                 dict[concept.code].append(valueSet.id)
             else:
                 dict[concept.code] = [valueSet.id]
+    print("Concept types found:", ",".join(concept_types_found))
     return dict
 
 
