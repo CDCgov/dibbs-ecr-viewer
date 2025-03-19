@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from app.tes_utils import (
+from app.db import (
     add_human_readable_reportable_condition_name_tes,
     get_concepts_list_tes,
 )
@@ -175,7 +175,7 @@ def test_find_codes_by_resource_type():
     assert [] == find_codes_by_resource_type(observation_resource)
 
 
-@patch("app.tes_utils._get_condition_name_from_snomed_code_tes")
+@patch("app.db._get_condition_name_from_snomed_code_tes")
 def test_add_reportable_condition_extension(mock_get_condition_name):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
@@ -237,7 +237,7 @@ def test_add_reportable_condition_extension(mock_get_condition_name):
     assert found_stamp
 
 
-@patch("app.tes_utils._get_condition_name_from_snomed_code_tes")
+@patch("app.db._get_condition_name_from_snomed_code_tes")
 def test_add_human_readable_reportable_condition_name(mock_get_condition_name):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
     observation_resource = [

@@ -7,14 +7,14 @@ from app.utils import format_icd9_crosswalks, get_clean_snomed_code, get_concept
 def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
     """
     Given a SNOMED code, this function runs a SQL query to get the
-    value set type, concept codes, and concept system
-    from the TES database grouped by value set type and system. It
+    concept type, concept codes, and concept system
+    from the TES database grouped by concept type and system. It
     also uses the GEM crosswalk tables to find any ICD-9 conversion
     codes that might be represented under the given condition's
     umbrella.
 
     :param snomed_code: SNOMED code to check
-    :return: A list of tuples with valueset type, a delimited-string of
+    :return: A list of tuples with concept type, a delimited-string of
       the relevant codes (including any found ICD-9 conversions, if they
       exist), and code systems as objects within.
     """
@@ -145,7 +145,6 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
 
 if __name__ == "__main__":
     concepts_list = get_concepts_list_tes(["276197005"])
-    # concepts_list = _get_concepts_list_tes(["840539006"])
     values = get_concepts_dict(concepts_list, "")
     json_string = json.dumps(values, indent=8)
     print(json_string)

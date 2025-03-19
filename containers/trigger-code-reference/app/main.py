@@ -5,11 +5,11 @@ from typing import Annotated
 from fastapi import Body, Query, Response
 
 from app.base_service import BaseService
-from app.models import InsertConditionInput
-from app.tes_utils import (
+from app.db import (
     add_human_readable_reportable_condition_name_tes,
     get_concepts_list_tes,
 )
+from app.models import InsertConditionInput
 from app.utils import (
     add_reportable_condition_extension,
     find_codes_by_resource_type,
