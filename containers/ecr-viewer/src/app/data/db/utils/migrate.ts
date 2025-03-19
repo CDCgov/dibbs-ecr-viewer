@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 import {
   Kysely,
@@ -8,14 +9,33 @@ import {
   PostgresDialect,
   MssqlDialect,
 } from "kysely";
-import { Pool } from "pg";
+import pkg from "pg";
 import * as tarn from "tarn";
 import * as tedious from "tedious";
 
 // Empty interface used only in migrations
 interface Database {}
+const { Pool } = pkg;
 
-const schema = process.env.SCHEMA;
+// Hard-coded, whole-cloth-stolen from instrumentation.ts
+// Workaround for being unable to import the register() function directly
+switch (process.env.CONFIG_NAME) {
+  case "AWS_PG_NON_INTEGRATED":
+    process.env.METADATA_DATABASE_SCHEMA = "core";
+    break;
+  case "AWS_SQLSERVER_NON_INTEGRATED":
+    process.env.METADATA_DATABASE_SCHEMA = "extended";
+    break;
+  case "AZURE_PG_NON_INTEGRATED":
+    process.env.METADATA_DATABASE_SCHEMA = "core";
+    break;
+  case "AZURE_SQLSERVER_NON_INTEGRATED":
+    process.env.METADATA_DATABASE_SCHEMA = "extended";
+    break;
+  default:
+    break;
+}
+const schema = process.env.METADATA_DATABASE_SCHEMA;
 
 if (!schema || (schema !== "core" && schema !== "extended")) {
   console.error(
@@ -90,7 +110,12 @@ async function getKyselyInstance(): Promise<Kysely<Database>> {
   }
 }
 
-async function migrateDatabase(db: Kysely<Database>, migrationsDir: string) {
+async function runMigration(
+  db: Kysely<Database>,
+  migrationsDir: string,
+  command: string,
+  target?: string,
+) {
   const migrator = new Migrator({
     db,
     provider: new FileMigrationProvider({
@@ -100,19 +125,50 @@ async function migrateDatabase(db: Kysely<Database>, migrationsDir: string) {
     }),
   });
 
-  const { error, results } = await migrator.migrateToLatest();
-
-  if (error) {
-    console.error("Migration failed:", error);
-    process.exit(1);
+  if (command === "up") {
+    const { error, results } = await migrator.migrateToLatest();
+    if (error) {
+      console.error("Migration failed:", error);
+      process.exit(1);
+    }
+    console.log("Migrations applied:", results || "No migrations to apply");
+  } else if (command === "down") {
+    if (target) {
+      const { error, results } = await migrator.migrateTo(target);
+      if (error) {
+        console.error(`Failed to migrate to ${target}`, error);
+        process.exit(1);
+      }
+      console.log(`Migrated to ${target}`, results || "No changes");
+    } else {
+      const { error, results } = await migrator.migrateDown();
+      if (error) {
+        console.error("Rollback failed:", error);
+        process.exit(1);
+      }
+      console.log(
+        "Migration rolled back:",
+        results || "No migrations to roll back",
+      );
+    }
   }
-  console.log("Migrations applied:", results);
 }
 
 async function main() {
   const db = await getKyselyInstance();
-  const migrationsDir = path.join(__dirname, `db/schemas/${schema}`);
-  await migrateDatabase(db, migrationsDir);
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
+  const command = process.argv[2];
+  if (!command || (command !== "up" && command !== "down")) {
+    console.error('Please provide "up" or "down" as the first argument');
+    process.exit(1);
+  }
+
+  const target = command === "down" ? process.argv[3] : undefined;
+
+  await runMigration(db, migrationsDir, command, target);
+
+  await db.destroy();
 }
 
 main().catch((err) => {

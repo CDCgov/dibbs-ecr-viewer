@@ -28,8 +28,8 @@
     "clear-local": "docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile \"*\" down -v",
     "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit'",
     "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'",
-    "db:migrate:core": "npx ts-node migrate.ts core",
-    "db:migrate:extended": "npx ts-node migrate.ts extended"
+    "db:migrate": "if [ \"$NODE_ENV\" = \"development\" ]; then npx @dotenvx/dotenvx run -f .env.local -- ts-node --transpile-only src/app/data/db/utils/migrate.ts up; else echo \"Error: db:migrate can only run in development\"; exit 1; fi",
+    "db:migrate:down": "if [ \"$NODE_ENV\" = \"development\" ]; then npx @dotenvx/dotenvx run -f .env.local -- ts-node --transpile-only src/app/data/db/utils/migrate.ts down; else echo \"Error: db:migrate:down can only run in development\"; exit 1; fi"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.772.0",
@@ -132,6 +132,7 @@
     "postcss": "^8.4.38",
     "prettier": "3.1.0",
     "sass": "^1.69.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
 }
