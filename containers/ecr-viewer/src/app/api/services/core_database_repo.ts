@@ -174,7 +174,6 @@ export async function createEcrCondition(
   if (!condition) {
     throw new Error("eICR Data is required.");
   }
-  console.log({ condition });
   await coredb().insertInto("ecr_rr_conditions").values(condition).execute();
 }
 

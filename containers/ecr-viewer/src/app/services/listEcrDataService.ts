@@ -155,12 +155,6 @@ async function listCoreEcrData(
       .selectAll()
       .execute();
 
-    console.log({
-      query: mainQuery.selectFrom("ecrs").selectAll().compile(),
-      ecrs,
-      searchTerm,
-    });
-
     const conditions = await mainQuery
       .selectFrom("ecrs")
       .leftJoin(
@@ -273,12 +267,6 @@ export async function listExtendedEcrData(
       .selectFrom("ecrs")
       .selectAll()
       .execute();
-
-    console.log({
-      query: mainQuery.selectFrom("ecrs").selectAll().compile(),
-      ecrs,
-      searchTerm,
-    });
 
     const conditions = await mainQuery
       .selectFrom("ecrs")

@@ -8,6 +8,7 @@ import {
   dropExtended,
 } from "@/app/api/services/db_schema";
 import * as extended_database_repo from "@/app/api/services/extended_database_repo";
+import { NewExtendedECR } from "@/app/api/services/extended_types";
 
 describe("extended_database_repo", () => {
   beforeAll(async () => {
@@ -19,7 +20,7 @@ describe("extended_database_repo", () => {
   });
 
   describe("ecr_data", () => {
-    const template = {
+    const template: NewExtendedECR = {
       eICR_ID: "12345",
       set_id: "12345",
       fhir_reference_link: "http://example.com",
@@ -55,7 +56,7 @@ describe("extended_database_repo", () => {
       encounter_start_date: new Date("2024-12-31T05:00:00.000Z"),
       encounter_end_date: new Date("2024-12-31T05:00:00.000Z"),
       reason_for_visit: "Checkup",
-      active_problems: ["Dead"],
+      active_problems: "Dead",
       date_created: new Date("2025-01-01"),
     };
     beforeEach(async () => {
@@ -103,7 +104,6 @@ describe("extended_database_repo", () => {
       await extended_database_repo.createExtendedEcr({
         ...template,
         eICR_ID: "123",
-        active_problems: expect.stringContaining("Dead"),
       });
       const actual = await extended_database_repo.findExtendedEcrById("123");
       expect(actual).toEqual({
@@ -127,7 +127,7 @@ describe("extended_database_repo", () => {
       use: "home",
       type: "postal",
       text: "1234 Main St",
-      line: ["Apt 2"],
+      line: "Apt 2",
       city: "Coruscant",
       district: "Galactic City",
       state: "Coruscant",
@@ -181,7 +181,6 @@ describe("extended_database_repo", () => {
       await extended_database_repo.createAddress({
         ...template,
         uuid: "123",
-        line: expect.stringContaining("Apt 2"),
       });
       const actual = await extended_database_repo.findAddressById("123");
       expect(actual).toEqual({
