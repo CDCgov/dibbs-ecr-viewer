@@ -23,7 +23,7 @@ _TES_HEADER = {"X-API-KEY": _TES_API_KEY}
 _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
 
-_DB_URL = "sqlite:///../data/tes.db"
+_DB_URL = "sqlite:///tes.db"
 _DEBUG = True  # Set this to True if you'd like to see DB migration output
 
 _engine = create_engine(_DB_URL, echo=_DEBUG)
