@@ -4,7 +4,9 @@ import sys
 
 import requests
 from dotenv import load_dotenv
+from fhir.resources.backboneelement import BackboneElement
 from fhir.resources.bundle import Bundle
+from fhir.resources.coding import Coding
 from fhir.resources.valueset import ValueSet
 from sqlmodel import Session, SQLModel, create_engine
 from tes_models import Concept, ConceptType, Condition, IcdCrosswalk
@@ -113,8 +115,8 @@ def _build_concept(
     concepts: set[Concept],
     all_concepts: dict[(str, str)],
     concept_code_to_type_dict: dict[str, list[str]],
-    currentConcept,
-    currentSystem,
+    currentConcept: Coding,
+    currentSystem: BackboneElement,
 ):
     """
     Creates a new Concept and its associated data.
