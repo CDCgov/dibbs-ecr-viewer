@@ -35,7 +35,7 @@ def _get_engine():
     return _engine
 
 
-def retreive_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
+def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
     """
     Fetches Condition and Concept data from the TES API and builds out the SQLite database.
     """
@@ -281,5 +281,5 @@ def _build_crosswalk_table():
 
 if __name__ == "__main__":
     concept_code_types_dict = _build_concept_type_by_code_dict()
-    retreive_tes_info_and_save(concept_code_types_dict)
+    _retrieve_tes_info_and_save(concept_code_types_dict)
     _build_crosswalk_table()
