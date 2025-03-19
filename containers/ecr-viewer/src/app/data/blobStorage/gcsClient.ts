@@ -5,9 +5,13 @@ import { Storage } from "@google-cloud/storage";
  * @returns The google cloud storage bucket.
  */
 export const gcsClient = () => {
-  if (process.env.GOOGLE_KEY && process.env.GCS_BUCKET_NAME) {
+  if (process.env.GCS_BUCKET_NAME) {
     const storage = new Storage({
-      credentials: JSON.parse(process.env.GOOGLE_KEY),
+      apiEndpoint: process.env.GCS_API_ENDPOINT,
+      projectId: process.env.GCP_PROJECT_ID,
+      credentials: process.env.GCP_CREDENTIALS
+        ? JSON.parse(process.env.GCP_CREDENTIALS)
+        : undefined,
     });
     return storage.bucket(process.env.GCS_BUCKET_NAME);
   }
@@ -18,7 +22,7 @@ export const gcsClient = () => {
  * @returns The status of the google cloud storage connection or undefined if missing environment values.
  */
 export const gcsHealthCheck = async () => {
-  if (!process.env.GOOGLE_KEY || !process.env.GCS_BUCKET_NAME) {
+  if (!process.env.GCS_BUCKET_NAME) {
     return undefined;
   }
   try {

@@ -27,7 +27,9 @@ namespace NodeJS {
     DATABASE_URL: string;
     DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
-    GOOGLE_KEY?: string;
+    GCP_CREDENTIALS?: string;
+    GCP_PROJECT_ID?: string;
+    GCS_API_ENDPOINT?: string;
     GCS_BUCKET_NAME?: string;
     METADATA_DATABASE_SCHEMA?: "core" | "extended";
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";

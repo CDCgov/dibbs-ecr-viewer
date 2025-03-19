@@ -18,29 +18,58 @@ jest.mock("@google-cloud/storage", () => {
 describe("gcs", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.GOOGLE_KEY = JSON.stringify({ key: "fake-key" });
     process.env.GCS_BUCKET_NAME = "fake-bucket";
   });
 
   afterAll(() => {
     jest.resetAllMocks();
-    delete process.env.GOOGLE_KEY;
     delete process.env.GCS_BUCKET_NAME;
+    delete process.env.GCS_API_ENDPOINT;
+    delete process.env.GCP_PROJECT_ID;
+    delete process.env.GCP_CREDENTIALS;
   });
 
   describe("client", () => {
     it("should return undefined if env variables are not set", () => {
-      delete process.env.GOOGLE_KEY;
+      delete process.env.GCS_BUCKET_NAME;
       expect(gcsClient()).toBeUndefined();
     });
 
-    it("should call Storage with GOOGLE_KEY", () => {
+    it("should call Storage without any values", () => {
       const bucket = gcsClient();
 
       expect(bucket).toBeDefined();
       expect(mockBucket).toHaveBeenCalledExactlyOnceWith("fake-bucket");
       expect(Storage).toHaveBeenCalledExactlyOnceWith({
-        credentials: JSON.parse(process.env.GOOGLE_KEY!),
+        apiEndpoint: undefined,
+        credentials: undefined,
+        projectId: undefined,
+      });
+    });
+    it("should call Storage without any values", () => {
+      const bucket = gcsClient();
+
+      expect(bucket).toBeDefined();
+      expect(mockBucket).toHaveBeenCalledExactlyOnceWith("fake-bucket");
+      expect(Storage).toHaveBeenCalledExactlyOnceWith({
+        apiEndpoint: undefined,
+        credentials: undefined,
+        projectId: undefined,
+      });
+    });
+
+    it("should call Storage without all related environment variables", () => {
+      process.env.GCS_API_ENDPOINT = "http://localhost:8080";
+      process.env.GCP_PROJECT_ID = "projectId";
+      process.env.GCP_CREDENTIALS = JSON.stringify({ key: "fake-key" });
+      const bucket = gcsClient();
+
+      expect(bucket).toBeDefined();
+      expect(mockBucket).toHaveBeenCalledExactlyOnceWith("fake-bucket");
+      expect(Storage).toHaveBeenCalledExactlyOnceWith({
+        apiEndpoint: "http://localhost:8080",
+        credentials: { key: "fake-key" },
+        projectId: "projectId",
       });
     });
   });
@@ -73,14 +102,6 @@ describe("gcs", () => {
 
       expect(result).toBe("DOWN");
       expect(mockExists).toHaveBeenCalled();
-    });
-
-    it("should return undefined if GOOGLE_KEY is not set", async () => {
-      delete process.env.GOOGLE_KEY;
-
-      const result = await gcsHealthCheck();
-
-      expect(result).toBeUndefined();
     });
 
     it("should return undefined if GCS_BUCKET_NAME is not set", async () => {
