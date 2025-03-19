@@ -5,6 +5,7 @@ import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
  */
 export async function register() {
   setupConfigurationVariables();
+  await runDatabaseMigrations();
 
   if (process.env.NEXT_RUNTIME === "nodejs") {
     await import("./app/services/instrumentation");
@@ -35,4 +36,11 @@ function setupConfigurationVariables() {
     process.env.METADATA_DATABASE_TYPE = "sqlserver";
     process.env.METADATA_DATABASE_SCHEMA = "extended";
   }
+}
+
+/**
+ * Run database migrations by importing migrate package with side effects
+ */
+async function runDatabaseMigrations() {
+  await import("./app/data/db/utils/migrate");
 }
