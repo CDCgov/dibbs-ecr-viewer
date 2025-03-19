@@ -43,7 +43,7 @@ export interface ecr_data {
   encounter_end_date: ColumnType<Date | undefined>;
   reason_for_visit: string | undefined;
   active_problems: string | undefined;
-  date_created: Generated<ColumnType<Date>>;
+  date_created: Generated<Date>;
 }
 
 export interface patient_address {

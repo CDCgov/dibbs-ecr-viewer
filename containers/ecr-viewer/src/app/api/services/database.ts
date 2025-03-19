@@ -12,6 +12,22 @@ import { Extended } from "./extended_types";
 let db: Kysely<Core> | Kysely<Extended>;
 
 /**
+ * Get the current database dialect
+ * @returns string describing dialect
+ */
+export const dbDialect = () => {
+  return process.env.METADATA_DATABASE_TYPE;
+};
+
+/**
+ * Get the current database schema
+ * @returns string describing schema
+ */
+export const dbSchema = () => {
+  return process.env.METADATA_DATABASE_SCHEMA;
+};
+
+/**
  * Get the database global.
  * @returns global db
  */
@@ -20,8 +36,8 @@ export const getDb = () => {
     return db;
   }
 
-  const db_type = process.env.METADATA_DATABASE_TYPE;
-  const db_schema = process.env.METADATA_DATABASE_SCHEMA;
+  const db_type = dbDialect();
+  const db_schema = dbSchema();
 
   if (db_schema !== "core" && db_schema !== "extended") {
     throw new Error(`unknown db schema: ${db_schema}`);
