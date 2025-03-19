@@ -2,6 +2,8 @@ import sqlite3
 
 from app.utils import format_icd9_crosswalks, get_clean_snomed_code
 
+_TES_DB_URL = "./data/tes.db"
+
 
 def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
     """
@@ -41,7 +43,7 @@ def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
     """
     # Connect to the SQLite database, execute sql query, then close
     try:
-        with sqlite3.connect("./data/tes.db") as conn:
+        with sqlite3.connect(_TES_DB_URL) as conn:
             cursor = conn.cursor()
             code = get_clean_snomed_code(snomed_code)[0]
             condition_id = _get_condition_id_from_snowmed_code_tes(code)
@@ -65,7 +67,7 @@ def _get_condition_id_from_snowmed_code_tes(condition_code: str) -> str:
     """
     Given a condition code, this function retrieves the condition id
     """
-    with sqlite3.connect("./data/tes.db") as conn:
+    with sqlite3.connect(_TES_DB_URL) as conn:
         row = conn.execute(
             "SELECT id FROM condition WHERE code = ?", (condition_code,)
         ).fetchone()
@@ -77,7 +79,7 @@ def _get_condition_name_from_snomed_code_tes(condition_code: str) -> str:
     """
     Given a condition code, this function retrieves the condition name
     """
-    with sqlite3.connect("./data/tes.db") as conn:
+    with sqlite3.connect(_TES_DB_URL) as conn:
         row = conn.execute(
             "SELECT name FROM condition WHERE code = ?", (condition_code,)
         ).fetchone()
