@@ -1,7 +1,6 @@
-import json
 import sqlite3
 
-from app.utils import format_icd9_crosswalks, get_clean_snomed_code, get_concepts_dict
+from app.utils import format_icd9_crosswalks, get_clean_snomed_code
 
 
 def get_concepts_list_tes(snomed_code: list) -> list[tuple]:
@@ -141,10 +140,3 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
             resource["valueCodeableConcept"]["text"] = fallback_display
 
     return resource
-
-
-if __name__ == "__main__":
-    concepts_list = get_concepts_list_tes(["276197005"])
-    values = get_concepts_dict(concepts_list, "")
-    json_string = json.dumps(values, indent=8)
-    print(json_string)
