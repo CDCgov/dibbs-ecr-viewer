@@ -148,10 +148,8 @@ async function listCoreEcrData(
         .fetch(itemsPerPage),
     );
 
-    const ecrs: Partial<CoreMetadataModel>[] = await mainQuery
-      .selectFrom("ecrs")
-      .selectAll()
-      .execute();
+    const rawEcrs: Omit<CoreMetadataModel, "conditions" | "rule_summaries">[] =
+      await mainQuery.selectFrom("ecrs").selectAll().execute();
 
     const conditions = await mainQuery
       .selectFrom("ecrs")
@@ -180,21 +178,24 @@ async function listCoreEcrData(
       .distinct()
       .execute();
 
-    ecrs.forEach((ecr) => {
-      ecr.conditions = conditions
-        .filter(
-          ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
-        )
-        .map(({ condition }) => condition) as string[];
-      ecr.rule_summaries = rule_summaries
-        .filter(
-          ({ eicr_id, rule_summary }) =>
-            rule_summary && eicr_id === ecr.eicr_id,
-        )
-        .map(({ rule_summary }) => rule_summary) as string[];
+    const ecrs: CoreMetadataModel[] = rawEcrs.map((ecr) => {
+      return {
+        ...ecr,
+        conditions: conditions
+          .filter(
+            ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
+          )
+          .map(({ condition }) => condition) as string[],
+        rule_summaries: rule_summaries
+          .filter(
+            ({ eicr_id, rule_summary }) =>
+              rule_summary && eicr_id === ecr.eicr_id,
+          )
+          .map(({ rule_summary }) => rule_summary) as string[],
+      };
     });
 
-    return ecrs as CoreMetadataModel[];
+    return ecrs;
   });
 
   return processCoreMetadata(res);
@@ -261,10 +262,10 @@ export async function listExtendedEcrData(
         .fetch(itemsPerPage),
     );
 
-    const ecrs: Partial<ExtendedMetadataModel>[] = await mainQuery
-      .selectFrom("ecrs")
-      .selectAll()
-      .execute();
+    const rawEcrs: Omit<
+      ExtendedMetadataModel,
+      "conditions" | "rule_summaries"
+    >[] = await mainQuery.selectFrom("ecrs").selectAll().execute();
 
     const conditions = await mainQuery
       .selectFrom("ecrs")
@@ -293,21 +294,24 @@ export async function listExtendedEcrData(
       .distinct()
       .execute();
 
-    ecrs.forEach((ecr) => {
-      ecr.conditions = conditions
-        .filter(
-          ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
-        )
-        .map(({ condition }) => condition) as string[];
-      ecr.rule_summaries = rule_summaries
-        .filter(
-          ({ eicr_id, rule_summary }) =>
-            rule_summary && eicr_id === ecr.eicr_id,
-        )
-        .map(({ rule_summary }) => rule_summary) as string[];
+    const ecrs: ExtendedMetadataModel[] = rawEcrs.map((ecr) => {
+      return {
+        ...ecr,
+        conditions: conditions
+          .filter(
+            ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
+          )
+          .map(({ condition }) => condition) as string[],
+        rule_summaries: rule_summaries
+          .filter(
+            ({ eicr_id, rule_summary }) =>
+              rule_summary && eicr_id === ecr.eicr_id,
+          )
+          .map(({ rule_summary }) => rule_summary) as string[],
+      };
     });
 
-    return ecrs as ExtendedMetadataModel[];
+    return ecrs;
   });
 
   return processExtendedMetadata(res);
