@@ -1,4 +1,4 @@
-import { Kysely, sql } from "kysely";
+import { Kysely } from "kysely";
 
 import { Core } from "./core_types";
 import { getDb } from "./database";
@@ -20,6 +20,7 @@ const coredb = () => {
  * @function buildExtended
  */
 export const buildExtended = async () => {
+  await dropExtended();
   await extdb()
     .schema.createTable("ecr_data")
     .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
@@ -59,7 +60,7 @@ export const buildExtended = async () => {
     .addColumn("reason_for_visit", "text")
     .addColumn("active_problems", "text")
     .addColumn("date_created", getSql("datetimeType"), (cb) =>
-      cb.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+      cb.notNull().defaultTo(getSql("now")),
     )
     .execute();
   await extdb()
@@ -160,7 +161,7 @@ export const buildCore = async () => {
     .addColumn("patient_name_last", "varchar(100)", (cb) => cb.notNull())
     .addColumn("patient_birth_date", "date", (cb) => cb.notNull())
     .addColumn("date_created", getSql("datetimeType"), (cb) =>
-      cb.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+      cb.notNull().defaultTo(getSql("now")),
     )
     .addColumn("report_date", "date", (cb) => cb.notNull())
     .execute();

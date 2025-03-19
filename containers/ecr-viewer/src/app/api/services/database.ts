@@ -54,7 +54,7 @@ export const getDb = () => {
       throw new Error(`unknown db type: ${db_type}`);
   }
 
-  return db;
+  return db.withSchema("ecr_viewer");
 };
 /**
  * Performs a health check on the PostgreSQL database connection.

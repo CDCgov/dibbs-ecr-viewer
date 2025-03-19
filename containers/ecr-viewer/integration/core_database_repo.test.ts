@@ -24,9 +24,9 @@ describe("database_repo", () => {
       eicr_version_number: "50000",
       patient_name_first: "Boba",
       patient_name_last: "Fett",
-      patient_birth_date: new Date("1969-02-10T05:00:00.000Z"),
+      patient_birth_date: new Date("1969-02-11"),
       date_created: new Date("2025-01-01"),
-      report_date: new Date("2025-02-06T05:00:00.000Z"),
+      report_date: new Date("2025-02-07"),
     };
     beforeEach(async () => {
       await database_repo.createEcr(expected);
@@ -55,7 +55,7 @@ describe("database_repo", () => {
     });
 
     it("should create an ECR", async () => {
-      await database_repo.createEcr({
+      const data: NewECR = {
         eICR_ID: "54321",
         set_id: "setid",
         data_source: "DB",
@@ -66,20 +66,10 @@ describe("database_repo", () => {
         patient_birth_date: new Date("1969-02-11"),
         date_created: new Date("2025-01-01"),
         report_date: new Date("2025-02-07"),
-      });
+      };
+      await database_repo.createEcr(data);
       const actual = await database_repo.findEcrById("54321");
-      expect(actual).toEqual({
-        eICR_ID: "54321",
-        set_id: "setid",
-        data_source: "DB",
-        fhir_reference_link: "link",
-        eicr_version_number: "50000",
-        patient_name_first: "Boba",
-        patient_name_last: "Fett",
-        patient_birth_date: new Date("1969-02-10T05:00:00.000Z"),
-        date_created: new Date("2025-01-01"),
-        report_date: new Date("2025-02-06T05:00:00.000Z"),
-      });
+      expect(actual).toEqual(data);
     });
 
     it("should delete an ECR with a given id", async () => {

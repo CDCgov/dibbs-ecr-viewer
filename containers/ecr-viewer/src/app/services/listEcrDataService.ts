@@ -1,7 +1,7 @@
 import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
 
 import { Core } from "@/app/api/services/core_types";
-import { getDb } from "@/app/api/services/database";
+import { dbSchema, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { Extended } from "@/app/api/services/extended_types";
 import { DateRangePeriod } from "@/app/utils/date-utils";
@@ -70,9 +70,7 @@ export async function listEcrData(
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<EcrDisplay[]> {
-  const SCHEMA_TYPE = process.env.METADATA_DATABASE_SCHEMA;
-
-  switch (SCHEMA_TYPE) {
+  switch (dbSchema()) {
     case "core":
       return listCoreEcrData(
         getDb() as Kysely<Core>,
@@ -353,7 +351,7 @@ export const processCoreMetadata = (
 const processExtendedMetadata = (
   responseBody: ExtendedMetadataModel[],
 ): EcrDisplay[] => {
-  return responseBody.map((object) => {
+  const res = responseBody.map((object) => {
     const result = {
       ecrId: object.eicr_id || "",
       patient_first_name: object.first_name || "",
@@ -375,6 +373,9 @@ const processExtendedMetadata = (
 
     return result;
   });
+  console.log({ responseBody, res });
+
+  return res;
 };
 
 /**
