@@ -49,17 +49,17 @@ export const buildExtended = async () => {
     .addColumn("rr_id", "varchar(255)")
     .addColumn("processing_status", "varchar(255)")
     .addColumn("eicr_version_number", "varchar(50)")
-    .addColumn("authoring_date", "date")
+    .addColumn("authoring_date", "datetime")
     .addColumn("authoring_provider", "varchar(255)")
     .addColumn("provider_id", "varchar(255)")
     .addColumn("facility_id", "varchar(255)")
     .addColumn("facility_name", "varchar(255)")
     .addColumn("encounter_type", "varchar(255)")
-    .addColumn("encounter_start_date", "date")
-    .addColumn("encounter_end_date", "date")
-    .addColumn("reason_for_visit", "text")
-    .addColumn("active_problems", "text")
-    .addColumn("date_created", getSql("datetimeType"), (cb) =>
+    .addColumn("encounter_start_date", "datetime")
+    .addColumn("encounter_end_date", "datetime")
+    .addColumn("reason_for_visit", getSql("maxVarchar"))
+    .addColumn("active_problems", getSql("maxVarchar"))
+    .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
       cb.notNull().defaultTo(getSql("now")),
     )
     .execute();
@@ -75,8 +75,8 @@ export const buildExtended = async () => {
     .addColumn("state", "varchar(100)")
     .addColumn("postal_code", "varchar(20)")
     .addColumn("country", "varchar(100)")
-    .addColumn("period_start", "date")
-    .addColumn("period_end", "date")
+    .addColumn("period_start", getSql("datetimeTzType"))
+    .addColumn("period_end", getSql("datetimeTzType"))
     .addColumn("eICR_ID", "varchar(200)")
     .execute();
   await extdb()
@@ -107,13 +107,13 @@ export const buildExtended = async () => {
     .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
-    .addColumn("condition", "text")
+    .addColumn("condition", getSql("maxVarchar"))
     .execute();
   await extdb()
     .schema.createTable("ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
-    .addColumn("rule_summary", "text")
+    .addColumn("rule_summary", getSql("maxVarchar"))
     .execute();
 };
 
@@ -160,7 +160,7 @@ export const buildCore = async () => {
     .addColumn("patient_name_first", "varchar(100)", (cb) => cb.notNull())
     .addColumn("patient_name_last", "varchar(100)", (cb) => cb.notNull())
     .addColumn("patient_birth_date", "date", (cb) => cb.notNull())
-    .addColumn("date_created", getSql("datetimeType"), (cb) =>
+    .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
       cb.notNull().defaultTo(getSql("now")),
     )
     .addColumn("report_date", "date", (cb) => cb.notNull())
@@ -169,13 +169,13 @@ export const buildCore = async () => {
     .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
-    .addColumn("condition", "text")
+    .addColumn("condition", getSql("maxVarchar"))
     .execute();
   await coredb()
     .schema.createTable("ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
-    .addColumn("rule_summary", "text")
+    .addColumn("rule_summary", getSql("maxVarchar"))
     .execute();
 };
 

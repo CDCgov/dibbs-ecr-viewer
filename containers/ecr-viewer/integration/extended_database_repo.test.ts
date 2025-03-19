@@ -77,6 +77,7 @@ describe("extended_database_repo", () => {
       expect(actual).toEqual({
         ...template,
         active_problems: expect.stringContaining("Dead"),
+        birth_date: new Date("2024-12-31"), // only date part is used
       });
     });
 
@@ -88,6 +89,7 @@ describe("extended_database_repo", () => {
         {
           ...template,
           active_problems: expect.stringContaining("Dead"),
+          birth_date: new Date("2024-12-31"), // only date part is used
         },
       ]);
     });
@@ -110,6 +112,7 @@ describe("extended_database_repo", () => {
         ...template,
         eICR_ID: "123",
         active_problems: expect.stringContaining("Dead"),
+        birth_date: new Date("2024-12-31"), // only date part is used
       });
     });
 
@@ -219,7 +222,7 @@ describe("extended_database_repo", () => {
       test_result_reference_range_high_value: 7,
       test_result_reference_range_high_units: "MP",
       specimen_type: "Blood",
-      specimen_collection_date: new Date("2024-12-31T05:00:00.000Z"),
+      specimen_collection_date: new Date("2024-12-31"),
       performing_lab: "Atlanta, GA",
     };
     beforeEach(async () => {
