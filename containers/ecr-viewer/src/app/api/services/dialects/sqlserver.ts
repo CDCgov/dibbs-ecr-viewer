@@ -1,6 +1,9 @@
 import { Kysely, MssqlDialect } from "kysely";
 import * as tarn from "tarn";
 import * as tedious from "tedious";
+import parse from "mssql-connection-string";
+
+const dbConfig = parse(process.env.DATABASE_URL || "");
 
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
@@ -21,18 +24,18 @@ export const dialect = {
           const res = new tedious.Connection({
             authentication: {
               options: {
-                password: process.env.SQL_SERVER_PASSWORD,
-                userName: process.env.SQL_SERVER_USER || "sa",
+                password: dbConfig.password,
+                userName: dbConfig.user || "sa",
               },
               type: "default",
             },
             options: {
-              database: "master",
-              port: 1433,
+              database: dbConfig.database || "master",
+              port: parseInt(dbConfig.options.port || "1433"),
               trustServerCertificate: true,
               connectTimeout: 3000,
             },
-            server: process.env.SQL_SERVER_HOST || "localhost",
+            server: dbConfig.server || "localhost",
           });
           res.on("error", (e) => console.log(e));
           return res;

@@ -1,5 +1,8 @@
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
+import pdu, { DatabaseConfig } from "ts-parse-database-url";
+
+const dbConfig: DatabaseConfig = pdu(process.env.DATABASE_URL || "");
 
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
@@ -7,12 +10,11 @@ import { Extended } from "@/app/api/services/types/extended";
 export const dialect = {
   dialect: new PostgresDialect({
     pool: new Pool({
-      database: process.env.POSTGRES_DATABASE || "ecr_viewer_db",
-      host: process.env.POSTGRES_HOST,
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      port: parseInt(process.env.POSTGRES_PORT || "5432"),
-      max: parseInt(process.env.POSTGRES_MAX_THREADPOOL || "10"),
+      database: dbConfig.database || "ecr_viewer_db",
+      host: dbConfig.host || "localhost",
+      user: dbConfig.user,
+      password: dbConfig.password,
+      port: dbConfig.port || 5432,
     }),
   }),
 };
