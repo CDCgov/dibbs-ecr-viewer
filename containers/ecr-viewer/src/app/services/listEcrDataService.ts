@@ -377,7 +377,6 @@ const processExtendedMetadata = (
 
     return result;
   });
-  console.log({ responseBody, res });
 
   return res;
 };

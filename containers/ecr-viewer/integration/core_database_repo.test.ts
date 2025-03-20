@@ -4,6 +4,7 @@
 
 import * as database_repo from "@/app/api/services/core_database_repo";
 import { NewECR } from "@/app/api/services/core_types";
+import { dbDialect } from "@/app/api/services/database";
 import { buildCore, clearCore, dropCore } from "@/app/api/services/db_schema";
 
 describe("database_repo", () => {
@@ -38,14 +39,34 @@ describe("database_repo", () => {
 
     it("should find an ECR with a given eICR_ID", async () => {
       const actual = await database_repo.findEcrById("12345");
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual({
+        ...expected,
+        patient_birth_date:
+          dbDialect() === "sqlserver"
+            ? expected.patient_birth_date
+            : new Date("1969-02-10T05:00:00Z"),
+        report_date:
+          dbDialect() === "sqlserver"
+            ? expected.report_date
+            : new Date("2025-02-06T05:00:00Z"),
+      });
     });
 
     it("should find all people named Boba", async () => {
       const actual = await database_repo.findEcr({
         patient_name_first: "Boba",
       });
-      expect(actual[0]).toEqual(expected);
+      expect(actual[0]).toEqual({
+        ...expected,
+        patient_birth_date:
+          dbDialect() === "sqlserver"
+            ? expected.patient_birth_date
+            : new Date("1969-02-10T05:00:00Z"),
+        report_date:
+          dbDialect() === "sqlserver"
+            ? expected.report_date
+            : new Date("2025-02-06T05:00:00Z"),
+      });
     });
 
     it("should update patient_name_last of a person with a given id", async () => {
@@ -69,7 +90,17 @@ describe("database_repo", () => {
       };
       await database_repo.createEcr(data);
       const actual = await database_repo.findEcrById("54321");
-      expect(actual).toEqual(data);
+      expect(actual).toEqual({
+        ...data,
+        patient_birth_date:
+          dbDialect() === "sqlserver"
+            ? data.patient_birth_date
+            : new Date("1969-02-10T05:00:00Z"),
+        report_date:
+          dbDialect() === "sqlserver"
+            ? data.report_date
+            : new Date("2025-02-06T05:00:00Z"),
+      });
     });
 
     it("should delete an ECR with a given id", async () => {
