@@ -61,7 +61,7 @@ test.describe("ecr library page", () => {
 
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
       await expect(
-        page.getByRole("cell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
+        page.getByRole("cell", { name: "Minch YodaV1\nDOB: 01/01/1905" }),
       ).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
