@@ -168,6 +168,7 @@ describe("saveExtendedMetadata", () => {
       rr: [],
       report_date: new Date("12/20/2024"),
     } as unknown as BundleExtendedMetadata;
+    jest.spyOn(console, "error").mockImplementation();
     const resp = await saveExtendedMetadata(badMetadata, "1-2-3-4");
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");

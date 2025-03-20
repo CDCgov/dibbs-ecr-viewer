@@ -17,7 +17,7 @@ export interface ecr_data {
   patient_name_last: string;
   patient_birth_date: ColumnType<Date>;
 
-  date_created: ColumnType<Date>;
+  date_created: Generated<Date>;
   report_date: ColumnType<Date>;
 }
 

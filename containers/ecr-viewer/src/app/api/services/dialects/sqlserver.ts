@@ -31,10 +31,11 @@ export const dialect = {
             },
             server: process.env.SQL_SERVER_HOST || "localhost",
           });
-          res.on("error", (e) => console.log({ e }));
+          res.on("error", (e) => console.log(e));
           return res;
         } catch (e) {
-          console.log({ e });
+          // kysely eats the errors and just keeps retrying
+          console.log(e);
           throw e;
         }
       },

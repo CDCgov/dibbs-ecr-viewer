@@ -99,21 +99,11 @@ export async function findExtendedEcr(
  */
 export async function createExtendedEcr(
   ecr: NewExtendedECR | null,
-): Promise<ExtendedECR | undefined> {
+): Promise<void> {
   if (!ecr || ecr === null) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    const val = await extdb()
-      .insertInto("ecr_data")
-      .values(ecr)
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    return val as ExtendedECR;
-  } catch (error) {
-    console.error(error);
-  }
+  await extdb().insertInto("ecr_data").values(ecr).execute();
 }
 
 /**
@@ -210,21 +200,11 @@ export async function findAddress(
  */
 export async function createAddress(
   patient_address: NewPatientAddress,
-): Promise<PatientAddress | undefined> {
+): Promise<void> {
   if (!patient_address || patient_address === null) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    const vals = await extdb()
-      .insertInto("patient_address")
-      .values(patient_address)
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    return vals as PatientAddress;
-  } catch (error) {
-    console.error(error);
-  }
+  await extdb().insertInto("patient_address").values(patient_address).execute();
 }
 
 /**
@@ -365,23 +345,11 @@ export async function findLab(criteria: Partial<ECRLabs>): Promise<ECRLabs[]> {
  * @function createLab
  * @returns the created eCR Lab object
  */
-export async function createLab(
-  lab: NewECRLabs | null,
-): Promise<ECRLabs | undefined> {
+export async function createLab(lab: NewECRLabs | null): Promise<void> {
   if (!lab || lab === null) {
     throw new Error("eICR Lab Data is required.");
   }
-  try {
-    const vals = await extdb()
-      .insertInto("ecr_labs")
-      .values(lab)
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    return vals as ECRLabs;
-  } catch (error) {
-    console.error(error);
-  }
+  await extdb().insertInto("ecr_labs").values(lab).execute();
 }
 
 /**
@@ -470,20 +438,14 @@ export async function findEcrCondition(
  */
 export async function createEcrCondition(
   condition: NewECRConditions | null,
-): Promise<ECRConditions | undefined> {
+): Promise<void> {
   if (!condition || condition === null) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    const vals = await extdb()
-      .insertInto("ecr_rr_conditions")
-      .values(condition)
-      .returningAll()
-      .executeTakeFirstOrThrow();
-    return vals as ECRConditions;
-  } catch (error) {
-    console.error(error);
-  }
+  await extdb()
+    .insertInto("ecr_rr_conditions")
+    .values(condition)
+    .executeTakeFirstOrThrow();
 }
 
 /**
@@ -577,20 +539,14 @@ export async function findEcrRule(
  */
 export async function createEcrRule(
   rule_summary: NewECRRuleSummaries,
-): Promise<ECRRuleSummaries | undefined> {
+): Promise<void> {
   if (!rule_summary || rule_summary === null) {
     throw new Error("eICR Data is required.");
   }
-  try {
-    const vals = await extdb()
-      .insertInto("ecr_rr_rule_summaries")
-      .values(rule_summary)
-      .returningAll()
-      .executeTakeFirstOrThrow();
-    return vals as ECRRuleSummaries;
-  } catch (error) {
-    console.error(error);
-  }
+  await extdb()
+    .insertInto("ecr_rr_rule_summaries")
+    .values(rule_summary)
+    .execute();
 }
 
 /**

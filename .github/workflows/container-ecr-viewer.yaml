@@ -245,6 +245,13 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:integration:${{ matrix.db_type }}
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ env.CONTAINER }}
+
       - name: Docker down
         working-directory: ./containers/${{env.CONTAINER}}
         run: docker compose --profile "*" down

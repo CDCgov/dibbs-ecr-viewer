@@ -4,6 +4,7 @@
 
 import * as database_repo from "@/app/api/services/core_database_repo";
 import { NewECR } from "@/app/api/services/core_types";
+import { dbDialect } from "@/app/api/services/database";
 import { buildCore, clearCore, dropCore } from "@/app/api/services/db_schema";
 
 describe("database_repo", () => {
@@ -24,9 +25,9 @@ describe("database_repo", () => {
       eicr_version_number: "50000",
       patient_name_first: "Boba",
       patient_name_last: "Fett",
-      patient_birth_date: new Date("1969-02-10T05:00:00.000Z"),
+      patient_birth_date: new Date("1969-02-11"),
       date_created: new Date("2025-01-01"),
-      report_date: new Date("2025-02-06T05:00:00.000Z"),
+      report_date: new Date("2025-02-07"),
     };
     beforeEach(async () => {
       await database_repo.createEcr(expected);
@@ -38,14 +39,34 @@ describe("database_repo", () => {
 
     it("should find an ECR with a given eICR_ID", async () => {
       const actual = await database_repo.findEcrById("12345");
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual({
+        ...expected,
+        patient_birth_date:
+          dbDialect() === "sqlserver"
+            ? expected.patient_birth_date
+            : new Date("1969-02-10T05:00:00Z"),
+        report_date:
+          dbDialect() === "sqlserver"
+            ? expected.report_date
+            : new Date("2025-02-06T05:00:00Z"),
+      });
     });
 
     it("should find all people named Boba", async () => {
       const actual = await database_repo.findEcr({
         patient_name_first: "Boba",
       });
-      expect(actual[0]).toEqual(expected);
+      expect(actual[0]).toEqual({
+        ...expected,
+        patient_birth_date:
+          dbDialect() === "sqlserver"
+            ? expected.patient_birth_date
+            : new Date("1969-02-10T05:00:00Z"),
+        report_date:
+          dbDialect() === "sqlserver"
+            ? expected.report_date
+            : new Date("2025-02-06T05:00:00Z"),
+      });
     });
 
     it("should update patient_name_last of a person with a given id", async () => {
@@ -55,7 +76,7 @@ describe("database_repo", () => {
     });
 
     it("should create an ECR", async () => {
-      await database_repo.createEcr({
+      const data: NewECR = {
         eICR_ID: "54321",
         set_id: "setid",
         data_source: "DB",
@@ -66,19 +87,19 @@ describe("database_repo", () => {
         patient_birth_date: new Date("1969-02-11"),
         date_created: new Date("2025-01-01"),
         report_date: new Date("2025-02-07"),
-      });
+      };
+      await database_repo.createEcr(data);
       const actual = await database_repo.findEcrById("54321");
       expect(actual).toEqual({
-        eICR_ID: "54321",
-        set_id: "setid",
-        data_source: "DB",
-        fhir_reference_link: "link",
-        eicr_version_number: "50000",
-        patient_name_first: "Boba",
-        patient_name_last: "Fett",
-        patient_birth_date: new Date("1969-02-10T05:00:00.000Z"),
-        date_created: new Date("2025-01-01"),
-        report_date: new Date("2025-02-06T05:00:00.000Z"),
+        ...data,
+        patient_birth_date:
+          dbDialect() === "sqlserver"
+            ? data.patient_birth_date
+            : new Date("1969-02-10T05:00:00Z"),
+        report_date:
+          dbDialect() === "sqlserver"
+            ? data.report_date
+            : new Date("2025-02-06T05:00:00Z"),
       });
     });
 

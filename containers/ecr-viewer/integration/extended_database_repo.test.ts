@@ -2,12 +2,14 @@
  * @jest-environment node
  */
 
+import { dbDialect } from "@/app/api/services/database";
 import {
   buildExtended,
   clearExtended,
   dropExtended,
 } from "@/app/api/services/db_schema";
 import * as extended_database_repo from "@/app/api/services/extended_database_repo";
+import { NewExtendedECR } from "@/app/api/services/extended_types";
 
 describe("extended_database_repo", () => {
   beforeAll(async () => {
@@ -19,7 +21,7 @@ describe("extended_database_repo", () => {
   });
 
   describe("ecr_data", () => {
-    const template = {
+    const template: NewExtendedECR = {
       eICR_ID: "12345",
       set_id: "12345",
       fhir_reference_link: "http://example.com",
@@ -55,7 +57,7 @@ describe("extended_database_repo", () => {
       encounter_start_date: new Date("2024-12-31T05:00:00.000Z"),
       encounter_end_date: new Date("2024-12-31T05:00:00.000Z"),
       reason_for_visit: "Checkup",
-      active_problems: ["Dead"],
+      active_problems: "Dead",
       date_created: new Date("2025-01-01"),
     };
     beforeEach(async () => {
@@ -76,6 +78,10 @@ describe("extended_database_repo", () => {
       expect(actual).toEqual({
         ...template,
         active_problems: expect.stringContaining("Dead"),
+        birth_date:
+          dbDialect() === "sqlserver"
+            ? new Date("2024-12-31")
+            : template.birth_date, // only date part is used
       });
     });
 
@@ -87,6 +93,10 @@ describe("extended_database_repo", () => {
         {
           ...template,
           active_problems: expect.stringContaining("Dead"),
+          birth_date:
+            dbDialect() === "sqlserver"
+              ? new Date("2024-12-31")
+              : template.birth_date, // only date part is used
         },
       ]);
     });
@@ -103,13 +113,16 @@ describe("extended_database_repo", () => {
       await extended_database_repo.createExtendedEcr({
         ...template,
         eICR_ID: "123",
-        active_problems: expect.stringContaining("Dead"),
       });
       const actual = await extended_database_repo.findExtendedEcrById("123");
       expect(actual).toEqual({
         ...template,
         eICR_ID: "123",
         active_problems: expect.stringContaining("Dead"),
+        birth_date:
+          dbDialect() === "sqlserver"
+            ? new Date("2024-12-31")
+            : template.birth_date, // only date part is used
       });
     });
 
@@ -127,7 +140,7 @@ describe("extended_database_repo", () => {
       use: "home",
       type: "postal",
       text: "1234 Main St",
-      line: ["Apt 2"],
+      line: "Apt 2",
       city: "Coruscant",
       district: "Galactic City",
       state: "Coruscant",
@@ -181,7 +194,6 @@ describe("extended_database_repo", () => {
       await extended_database_repo.createAddress({
         ...template,
         uuid: "123",
-        line: expect.stringContaining("Apt 2"),
       });
       const actual = await extended_database_repo.findAddressById("123");
       expect(actual).toEqual({
@@ -220,7 +232,7 @@ describe("extended_database_repo", () => {
       test_result_reference_range_high_value: 7,
       test_result_reference_range_high_units: "MP",
       specimen_type: "Blood",
-      specimen_collection_date: new Date("2024-12-31T05:00:00.000Z"),
+      specimen_collection_date: new Date("2024-12-31"),
       performing_lab: "Atlanta, GA",
     };
     beforeEach(async () => {
@@ -238,14 +250,28 @@ describe("extended_database_repo", () => {
     });
     it("should find a lab with a given uuid", async () => {
       const actual = await extended_database_repo.findLabById("12345");
-      expect(actual).toEqual(template);
+      expect(actual).toEqual({
+        ...template,
+        specimen_collection_date:
+          dbDialect() === "sqlserver"
+            ? template.specimen_collection_date
+            : new Date("2024-12-30T05:00:00Z"),
+      });
     });
 
     it("should find all labs with test_type Evil", async () => {
       const actual = await extended_database_repo.findLab({
         test_type: "Evil",
       });
-      expect(actual).toEqual([{ ...template }]);
+      expect(actual).toEqual([
+        {
+          ...template,
+          specimen_collection_date:
+            dbDialect() === "sqlserver"
+              ? template.specimen_collection_date
+              : new Date("2024-12-30T05:00:00Z"),
+        },
+      ]);
     });
 
     it("should update the lab with a given id", async () => {
@@ -259,7 +285,14 @@ describe("extended_database_repo", () => {
     it("should create a lab", async () => {
       await extended_database_repo.createLab({ ...template, uuid: "123" });
       const actual = await extended_database_repo.findLabById("123");
-      expect(actual).toEqual({ ...template, uuid: "123" });
+      expect(actual).toEqual({
+        ...template,
+        uuid: "123",
+        specimen_collection_date:
+          dbDialect() === "sqlserver"
+            ? template.specimen_collection_date
+            : new Date("2024-12-30T05:00:00Z"),
+      });
     });
 
     it("should delete a lab with a given id", async () => {

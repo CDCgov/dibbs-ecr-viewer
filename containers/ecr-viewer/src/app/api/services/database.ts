@@ -12,6 +12,22 @@ import { Extended } from "./extended_types";
 let db: Kysely<Core> | Kysely<Extended>;
 
 /**
+ * Get the current database dialect
+ * @returns string describing dialect
+ */
+export const dbDialect = () => {
+  return process.env.METADATA_DATABASE_TYPE;
+};
+
+/**
+ * Get the current database schema
+ * @returns string describing schema
+ */
+export const dbSchema = () => {
+  return process.env.METADATA_DATABASE_SCHEMA;
+};
+
+/**
  * Get the database global.
  * @returns global db
  */
@@ -20,8 +36,8 @@ export const getDb = () => {
     return db;
   }
 
-  const db_type = process.env.METADATA_DATABASE_TYPE;
-  const db_schema = process.env.METADATA_DATABASE_SCHEMA;
+  const db_type = dbDialect();
+  const db_schema = dbSchema();
 
   if (db_schema !== "core" && db_schema !== "extended") {
     throw new Error(`unknown db schema: ${db_schema}`);
@@ -37,12 +53,13 @@ export const getDb = () => {
     default:
       throw new Error(`unknown db type: ${db_type}`);
   }
+  db = db.withSchema("ecr_viewer");
 
   return db;
 };
 /**
- * Performs a health check on the PostgreSQL database connection.
- * @returns The status of the postgres connection or undefined if missing environment values.
+ * Performs a health check on the metadata database connection.
+ * @returns The status of the metadata db connection or undefined if missing environment values.
  */
 export const metadataDatabaseHealthCheck = async () => {
   if (!process.env.METADATA_DATABASE_TYPE) {
@@ -56,5 +73,3 @@ export const metadataDatabaseHealthCheck = async () => {
     return "DOWN";
   }
 };
-
-export { db };
