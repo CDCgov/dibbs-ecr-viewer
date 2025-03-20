@@ -58,8 +58,8 @@ export const getDb = () => {
   return db;
 };
 /**
- * Performs a health check on the PostgreSQL database connection.
- * @returns The status of the postgres connection or undefined if missing environment values.
+ * Performs a health check on the metadata database connection.
+ * @returns The status of the metadata db connection or undefined if missing environment values.
  */
 export const metadataDatabaseHealthCheck = async () => {
   if (!process.env.METADATA_DATABASE_TYPE) {
@@ -73,5 +73,3 @@ export const metadataDatabaseHealthCheck = async () => {
     return "DOWN";
   }
 };
-
-export { db };

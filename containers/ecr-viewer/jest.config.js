@@ -16,6 +16,10 @@ const customJestConfig = {
     process.env.TEST_TYPE === "integration"
       ? ["<rootDir>/integration/**/?(*.)+(spec|test).[jt]s?(x)"]
       : ["<rootDir>/src/**/?(*.)+(spec|test).[jt]s?(x)"],
+  setupFiles:
+    process.env.TEST_TYPE === "integration"
+      ? ["<rootDir>/integration/setup.ts"]
+      : [],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
