@@ -1,10 +1,17 @@
 import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobClient, BlobDownloadResponseParsed } from "@azure/storage-blob";
+import { ApiError } from "@google-cloud/storage";
 import { Bundle } from "fhir/r4";
 import { NextResponse } from "next/server";
 
-import { AZURE_SOURCE, S3_SOURCE, streamToJson } from "@/app/api/utils";
+import {
+  AZURE_SOURCE,
+  GCS_SOURCE,
+  S3_SOURCE,
+  streamToJson,
+} from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
+import { gcsClient } from "@/app/data/blobStorage/gcsClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
@@ -25,6 +32,8 @@ export async function get_fhir_data(ecr_id: string | null) {
     res = await get_s3(ecr_id);
   } else if (process.env.SOURCE === AZURE_SOURCE) {
     res = await get_azure(ecr_id);
+  } else if (process.env.SOURCE === GCS_SOURCE) {
+    res = await get_gcs(ecr_id);
   } else {
     res = { payload: { message: "Invalid source" }, status: 500 };
   }
@@ -103,5 +112,48 @@ export const get_azure = async (
     } else {
       return { payload: { message: error.message }, status: 500 };
     }
+  }
+};
+
+/**
+ * Retrieves FHIR data from Google Cloud storage based on eCR ID.
+ * @param ecr_id - The id of the ecr to fetch.
+ * @returns A promise resolving to a NextResponse object.
+ */
+const get_gcs = async (ecr_id: string | null): Promise<FhirDataResponse> => {
+  const client = gcsClient();
+  const blobName = `${ecr_id}.json`;
+
+  if (client) {
+    try {
+      const contents = await client.file(blobName).download();
+
+      const content = await streamToJson(contents);
+
+      return {
+        payload: { fhirBundle: content },
+        status: 200,
+      };
+    } catch (error: unknown) {
+      console.error(
+        "Failed to download the FHIR data from Google Cloud Storage:",
+        error,
+      );
+
+      if (error instanceof ApiError && error.code === 404) {
+        return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+      }
+
+      if (error instanceof Error) {
+        return { payload: { message: error.message }, status: 500 };
+      }
+
+      return { payload: { message: "Internal Server Error." }, status: 500 };
+    }
+  } else {
+    return {
+      payload: { message: "GCS environment variables are missing." },
+      status: 500,
+    };
   }
 };

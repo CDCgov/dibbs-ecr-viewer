@@ -3,21 +3,24 @@
  */
 import { S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobServiceClient } from "@azure/storage-blob";
+import { ApiError } from "@google-cloud/storage";
 
 import {
   get_azure,
   get_fhir_data,
   get_s3,
 } from "@/app/api/fhir-data/fhir-data-service";
-import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
+import { AZURE_SOURCE, GCS_SOURCE, S3_SOURCE } from "@/app/api/utils";
+import { gcsClient } from "@/app/data/blobStorage/gcsClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 jest.mock("../../../data/db/postgres_db", () => ({
   getDB: jest.fn(),
 }));
-
 jest.mock("../../../data/blobStorage/s3Client");
-
+jest.mock("../../../data/blobStorage/gcsClient", () => ({
+  gcsClient: jest.fn(),
+}));
 jest.mock("@azure/storage-blob", () => ({
   BlobServiceClient: {
     fromConnectionString: jest.fn(),
@@ -43,6 +46,10 @@ describe("get_fhir_data", () => {
     jest.resetAllMocks();
   });
 
+  afterAll(() => {
+    process.env.SOURCE = S3_SOURCE;
+  });
+
   it("should return a 500 response when METADATA_DATABASE_TYPE is invalid", async () => {
     (process.env.SOURCE as any) = "p0$+gre$";
 
@@ -52,6 +59,91 @@ describe("get_fhir_data", () => {
     expect(response.status).toEqual(500);
     expect(await response.json()).toEqual({
       message: "Invalid source",
+    });
+  });
+
+  describe("gcs", () => {
+    beforeEach(() => {
+      process.env.SOURCE = GCS_SOURCE;
+      process.env.GCS_BUCKET_NAME = "ecr-viewer-files";
+    });
+    afterAll(() => {
+      delete process.env.GCS_BUCKET_NAME;
+    });
+
+    it("should return 200 when the file is found", async () => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      (gcsClient as jest.Mock).mockReturnValue({
+        file: () => ({ download: () => "Some text" }),
+      });
+
+      const response = await get_fhir_data("1234");
+
+      expect(await response.json()).toEqual({ fhirBundle: "Some text" });
+      expect(response.status).toEqual(200);
+    });
+
+    it("should return 404 when file not found", async () => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      (gcsClient as jest.Mock).mockReturnValue({
+        file: () => ({
+          download: () =>
+            Promise.reject(
+              new ApiError({
+                code: 404,
+              } as any),
+            ),
+        }),
+      });
+
+      const response = await get_fhir_data("1234");
+
+      expect(await response.json()).toEqual({ message: "eCR ID not found" });
+      expect(response.status).toEqual(404);
+    });
+
+    it("should return 500 when an error is thrown", async () => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      (gcsClient as jest.Mock).mockReturnValue({
+        file: () => ({
+          download: () => Promise.reject(new Error("Something went wrong!")),
+        }),
+      });
+
+      const response = await get_fhir_data("1234");
+
+      expect(await response.json()).toEqual({
+        message: "Something went wrong!",
+      });
+      expect(response.status).toEqual(500);
+    });
+
+    it("should return 500 when a string is thrown", async () => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      (gcsClient as jest.Mock).mockReturnValue({
+        file: () => ({
+          download: () => Promise.reject("Uh oh :|"),
+        }),
+      });
+
+      const response = await get_fhir_data("1234");
+
+      expect(await response.json()).toEqual({
+        message: "Internal Server Error.",
+      });
+      expect(response.status).toEqual(500);
+    });
+
+    it("should return 500 GCS_BUCKET_NAME is not set", async () => {
+      delete process.env.GCS_BUCKET_NAME;
+      jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const response = await get_fhir_data("1234");
+
+      expect(await response.json()).toEqual({
+        message: "GCS environment variables are missing.",
+      });
+      expect(response.status).toEqual(500);
     });
   });
 });
