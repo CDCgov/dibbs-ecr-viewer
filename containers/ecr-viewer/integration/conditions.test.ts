@@ -3,19 +3,19 @@
  */
 
 import { buildCore, dropCore } from "@/app/api/services/db_schema";
-import { createEcrCondition } from "@/app/api/services/extended_database_repo";
+import { createEcrCondition } from "@/app/api/services/helpers/common";
 import { getAllConditions } from "@/app/data/conditions";
 
 describe("Conditions service", () => {
   beforeAll(async () => {
     await buildCore();
     await createEcrCondition({
-      eICR_ID: "12345",
+      eicr_id: "12345",
       uuid: "12345",
       condition: "condition1",
     });
     await createEcrCondition({
-      eICR_ID: "54321",
+      eicr_id: "54321",
       uuid: "54321",
       condition: "condition2",
     });

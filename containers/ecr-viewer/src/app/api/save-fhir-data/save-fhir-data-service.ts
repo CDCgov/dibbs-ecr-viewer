@@ -4,9 +4,9 @@ import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { Kysely } from "kysely";
 
-import { Core } from "@/app/api/services/core_types";
 import { getDb } from "@/app/api/services/database";
-import { Extended } from "@/app/api/services/extended_types";
+import { Core } from "@/app/api/services/types/core";
+import { Extended } from "@/app/api/services/types/extended";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
@@ -181,17 +181,17 @@ export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  const db = getDb();
+  const db = getDb() as Kysely<Extended>;
   try {
     await (db as Kysely<Extended>).transaction().execute(async (trx) => {
       await trx
         .insertInto("ecr_data")
         .values({
-          eICR_ID: ecrId,
+          eicr_id: ecrId,
           set_id: metadata.eicr_set_id,
           last_name: metadata.last_name,
           first_name: metadata.first_name,
-          birth_date: metadata.birth_date,
+          birth_date: asDate(metadata.birth_date),
           gender: metadata.gender,
           birth_sex: metadata.birth_sex,
           gender_identity: metadata.gender_identity,
@@ -212,16 +212,16 @@ export const saveExtendedMetadata = async (
           rr_id: metadata.rr_id,
           processing_status: metadata.processing_status,
           eicr_version_number: metadata.eicr_version_number,
-          authoring_date: metadata.authoring_datetime,
+          authoring_date: asDate(metadata.authoring_datetime),
           authoring_provider: metadata.provider_id,
           provider_id: metadata.provider_id,
           facility_id: metadata.facility_id_number,
           facility_name: metadata.facility_name,
           encounter_type: metadata.encounter_type,
-          encounter_start_date: metadata.encounter_start_date,
-          encounter_end_date: metadata.encounter_end_date,
+          encounter_start_date: asDate(metadata.encounter_start_date),
+          encounter_end_date: asDate(metadata.encounter_end_date),
           reason_for_visit: metadata.reason_for_visit,
-          active_problems: metadata.active_problems?.join("\n\n"),
+          active_problems: metadata.active_problems,
         })
         .execute();
       if (metadata.patient_addresses) {
@@ -234,15 +234,15 @@ export const saveExtendedMetadata = async (
               use: address.use,
               type: address.type,
               text: address.text,
-              line: address.line?.join("\n"),
+              line: address.line,
               city: address.city,
               district: address.district,
               state: address.state,
               postal_code: address.postal_code,
               country: address.country,
-              period_start: address.period_start,
-              period_end: address.period_end,
-              eICR_ID: ecrId,
+              period_start: asDate(address.period_start),
+              period_end: asDate(address.period_end),
+              eicr_id: ecrId,
             })
             .execute();
         }
@@ -253,7 +253,7 @@ export const saveExtendedMetadata = async (
             .insertInto("ecr_labs")
             .values({
               uuid: lab.uuid,
-              eICR_ID: ecrId,
+              eicr_id: ecrId,
               test_type: lab.test_type,
               test_type_code: lab.test_type_code,
               test_type_system: lab.test_type_system,
@@ -277,7 +277,7 @@ export const saveExtendedMetadata = async (
               test_result_reference_range_high_units:
                 lab.test_result_ref_range_high_units,
               specimen_type: lab.specimen_type,
-              specimen_collection_date: lab.specimen_collection_date,
+              specimen_collection_date: asDate(lab.specimen_collection_date),
               performing_lab: lab.performing_lab,
             })
             .execute();
@@ -292,7 +292,7 @@ export const saveExtendedMetadata = async (
             .insertInto("ecr_rr_conditions")
             .values({
               uuid: rr_conditions_uuid,
-              eICR_ID: ecrId,
+              eicr_id: ecrId,
               condition: rrItem.condition,
             })
             .execute();
@@ -355,7 +355,7 @@ export const saveCoreMetadata = async (
       await trx
         .insertInto("ecr_data")
         .values({
-          eICR_ID: ecrId,
+          eicr_id: ecrId,
           set_id: metadata.eicr_set_id,
           patient_name_last: metadata.last_name,
           patient_name_first: metadata.first_name,
@@ -377,7 +377,7 @@ export const saveCoreMetadata = async (
             .insertInto("ecr_rr_conditions")
             .values({
               uuid: tempId,
-              eICR_ID: ecrId,
+              eicr_id: ecrId,
               condition: rrItem.condition,
             })
             .execute();
@@ -404,8 +404,10 @@ export const saveCoreMetadata = async (
       status: 200,
     };
   } catch (error: unknown) {
+    const message = "Failed to insert metadata to database.";
+    console.error({ message, error });
     return {
-      message: "Failed to insert metadata to database.",
+      message,
       status: 500,
     };
   }
@@ -464,4 +466,11 @@ export const saveWithMetadata = async (
   }
 
   return { message: responseMessage, status: responseStatus };
+};
+
+// helper to parse a maybe string into a date or undefined
+const asDate = (d: string | undefined): Date | undefined => {
+  if (!d) return undefined;
+
+  return new Date(d);
 };

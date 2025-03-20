@@ -1,8 +1,8 @@
 import { Kysely } from "kysely";
 
-import { Core } from "./core_types";
 import { dialect } from "./dialects/postgres";
-import { Extended } from "./extended_types";
+import { Core } from "./types/core";
+import { Extended } from "./types/extended";
 
 /**
  * construct a postgres db instance

@@ -1,8 +1,8 @@
 import { Kysely } from "kysely";
 
-import { Core } from "@/app/api/services/core_types";
 import { getDb } from "@/app/api/services/database";
-import { Extended } from "@/app/api/services/extended_types";
+import { Core } from "@/app/api/services/types/core";
+import { Extended } from "@/app/api/services/types/extended";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.

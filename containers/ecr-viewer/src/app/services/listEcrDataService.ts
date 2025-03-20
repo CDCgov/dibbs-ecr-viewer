@@ -1,9 +1,9 @@
 import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
 
-import { Core } from "@/app/api/services/core_types";
 import { dbSchema, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
-import { Extended } from "@/app/api/services/extended_types";
+import { Core } from "@/app/api/services/types/core";
+import { Extended } from "@/app/api/services/types/extended";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
@@ -11,7 +11,7 @@ import { formatDate, formatDateTime } from "./formatDateService";
 export interface CoreMetadataModel {
   eicr_id: string;
   data_source: "DB" | "S3";
-  data_link: string;
+  data_link: string | undefined;
   patient_name_first: string;
   patient_name_last: string;
   patient_birth_date: Date;
@@ -114,8 +114,8 @@ async function listCoreEcrData(
         .selectFrom("ecr_data")
         .leftJoin(
           "ecr_rr_conditions",
-          "ecr_data.eICR_ID",
-          "ecr_rr_conditions.eICR_ID",
+          "ecr_data.eicr_id",
+          "ecr_rr_conditions.eicr_id",
         )
         .leftJoin(
           "ecr_rr_rule_summaries",
@@ -123,7 +123,7 @@ async function listCoreEcrData(
           "ecr_rr_rule_summaries.ecr_rr_conditions_id",
         )
         .select([
-          "ecr_data.eICR_ID as eicr_id",
+          "ecr_data.eicr_id as eicr_id",
           "ecr_data.patient_name_first",
           "ecr_data.patient_name_last",
           "ecr_data.patient_birth_date",
@@ -156,7 +156,7 @@ async function listCoreEcrData(
       .leftJoin(
         "ecr_rr_conditions",
         "ecrs.eicr_id",
-        "ecr_rr_conditions.eICR_ID",
+        "ecr_rr_conditions.eicr_id",
       )
       .select(["ecrs.eicr_id", "ecr_rr_conditions.condition"])
       .distinct()
@@ -167,7 +167,7 @@ async function listCoreEcrData(
       .leftJoin(
         "ecr_rr_conditions",
         "ecrs.eicr_id",
-        "ecr_rr_conditions.eICR_ID",
+        "ecr_rr_conditions.eicr_id",
       )
       .leftJoin(
         "ecr_rr_rule_summaries",
@@ -229,8 +229,8 @@ export async function listExtendedEcrData(
         .selectFrom("ecr_data")
         .leftJoin(
           "ecr_rr_conditions",
-          "ecr_data.eICR_ID",
-          "ecr_rr_conditions.eICR_ID",
+          "ecr_data.eicr_id",
+          "ecr_rr_conditions.eicr_id",
         )
         .leftJoin(
           "ecr_rr_rule_summaries",
@@ -238,7 +238,7 @@ export async function listExtendedEcrData(
           "ecr_rr_rule_summaries.ecr_rr_conditions_id",
         )
         .select([
-          "ecr_data.eICR_ID as eicr_id",
+          "ecr_data.eicr_id as eicr_id",
           "ecr_data.first_name",
           "ecr_data.last_name",
           "ecr_data.birth_date",
@@ -272,7 +272,7 @@ export async function listExtendedEcrData(
       .leftJoin(
         "ecr_rr_conditions",
         "ecrs.eicr_id",
-        "ecr_rr_conditions.eICR_ID",
+        "ecr_rr_conditions.eicr_id",
       )
       .select(["ecrs.eicr_id", "ecr_rr_conditions.condition"])
       .distinct()
@@ -283,7 +283,7 @@ export async function listExtendedEcrData(
       .leftJoin(
         "ecr_rr_conditions",
         "ecrs.eicr_id",
-        "ecr_rr_conditions.eICR_ID",
+        "ecr_rr_conditions.eicr_id",
       )
       .leftJoin(
         "ecr_rr_rule_summaries",
@@ -418,10 +418,10 @@ const getTotalCoreEcrCount = async (
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",
-      "ecr_data.eICR_ID",
-      "ecr_rr_conditions.eICR_ID",
+      "ecr_data.eicr_id",
+      "ecr_rr_conditions.eicr_id",
     )
-    .select((eb) => eb.fn.count("ecr_data.eICR_ID").distinct().as("count"))
+    .select((eb) => eb.fn.count("ecr_data.eicr_id").distinct().as("count"))
     .where((eb) =>
       generateCoreWhereStatement(eb, filterDates, searchTerm, filterConditions),
     )
@@ -439,10 +439,10 @@ const getTotalExtendedEcrCount = async (
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",
-      "ecr_data.eICR_ID",
-      "ecr_rr_conditions.eICR_ID",
+      "ecr_data.eicr_id",
+      "ecr_rr_conditions.eicr_id",
     )
-    .select((eb) => eb.fn.count("ecr_data.eICR_ID").distinct().as("count"))
+    .select((eb) => eb.fn.count("ecr_data.eicr_id").distinct().as("count"))
     .where((eb) =>
       generateExtendedWhereStatement(
         eb,
@@ -539,10 +539,10 @@ export const generateFilterConditionsStatement = (
   if (!filterConditions || filterConditions.length === 0) return trueStmt(eb);
 
   if (filterConditions.every((item) => item === "")) {
-    return eb("ecr_data.eICR_ID", "not in", (subQb) =>
+    return eb("ecr_data.eicr_id", "not in", (subQb) =>
       subQb
         .selectFrom("ecr_rr_conditions as erc_sub")
-        .select("erc_sub.eICR_ID")
+        .select("erc_sub.eicr_id")
         .where("erc_sub.condition", "is not", null),
     );
   }
@@ -550,8 +550,8 @@ export const generateFilterConditionsStatement = (
   return eb.exists(
     eb
       .selectFrom("ecr_rr_conditions as erc_sub")
-      .select("erc_sub.eICR_ID")
-      .whereRef("erc_sub.eICR_ID", "=", "ecr_data.eICR_ID")
+      .select("erc_sub.eicr_id")
+      .whereRef("erc_sub.eicr_id", "=", "ecr_data.eicr_id")
       .where((subEb) =>
         subEb("erc_sub.condition", "is not", null).and(
           subEb.or(

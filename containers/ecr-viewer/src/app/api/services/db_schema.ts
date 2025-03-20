@@ -1,9 +1,9 @@
 import { Kysely } from "kysely";
 
-import { Core } from "./core_types";
 import { getDb } from "./database";
 import { getSql } from "./dialects/common";
-import { Extended } from "./extended_types";
+import { Core } from "./types/core";
+import { Extended } from "./types/extended";
 
 const extdb = () => {
   process.env.METADATA_DATABASE_SCHEMA = "extended";
@@ -23,7 +23,7 @@ export const buildExtended = async () => {
   await dropExtended();
   await extdb()
     .schema.createTable("ecr_data")
-    .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
+    .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("set_id", "varchar(255)")
     .addColumn("fhir_reference_link", "varchar(255)")
     .addColumn("last_name", "varchar(255)", (cb) => cb.notNull())
@@ -77,12 +77,12 @@ export const buildExtended = async () => {
     .addColumn("country", "varchar(100)")
     .addColumn("period_start", getSql("datetimeTzType"))
     .addColumn("period_end", getSql("datetimeTzType"))
-    .addColumn("eICR_ID", "varchar(200)")
+    .addColumn("eicr_id", "varchar(200)")
     .execute();
   await extdb()
     .schema.createTable("ecr_labs")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
-    .addColumn("eICR_ID", "varchar(200)")
+    .addColumn("eicr_id", "varchar(200)")
     .addColumn("test_type", "varchar(255)")
     .addColumn("test_type_code", "varchar(255)")
     .addColumn("test_type_system", "varchar(255)")
@@ -106,7 +106,7 @@ export const buildExtended = async () => {
   await extdb()
     .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
-    .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
+    .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
     .addColumn("condition", getSql("maxVarchar"))
     .execute();
   await extdb()
@@ -152,7 +152,7 @@ export const buildCore = async () => {
   await dropExtended(); // make sure we're starting from scratch
   await coredb()
     .schema.createTable("ecr_data")
-    .addColumn("eICR_ID", "varchar(200)", (cb) => cb.primaryKey())
+    .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("set_id", "varchar(255)")
     .addColumn("eicr_version_number", "varchar(50)")
     .addColumn("data_source", "varchar(2)", (cb) => cb.notNull()) // S3 or DB
@@ -168,7 +168,7 @@ export const buildCore = async () => {
   await coredb()
     .schema.createTable("ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
-    .addColumn("eICR_ID", "varchar(255)", (cb) => cb.notNull())
+    .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
     .addColumn("condition", getSql("maxVarchar"))
     .execute();
   await coredb()

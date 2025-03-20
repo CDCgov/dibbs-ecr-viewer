@@ -1,29 +1,16 @@
-import {
-  ColumnType,
-  Generated,
-  Insertable,
-  Selectable,
-  Updateable,
-} from "kysely";
+import { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 export interface ecr_data {
-  eICR_ID: Generated<string>;
+  eicr_id: Generated<string>;
   set_id: string | undefined;
-  data_source: "DB" | "S3";
-  fhir_reference_link: string;
   eicr_version_number: string | undefined;
-
-  patient_name_first: string;
-  patient_name_last: string;
-  patient_birth_date: ColumnType<Date>;
-
+  fhir_reference_link: string | undefined;
   date_created: Generated<Date>;
-  report_date: ColumnType<Date>;
 }
 
 export interface ecr_rr_conditions {
   uuid: Generated<string>;
-  eICR_ID: string;
+  eicr_id: string;
   condition: string;
 }
 
@@ -45,7 +32,7 @@ export type ECRRuleSummaries = Selectable<ecr_rr_rule_summaries>;
 export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>;
 export type ECRRuleSummariesUpdate = Updateable<ecr_rr_rule_summaries>;
 
-export interface Core {
+export interface Common {
   ecr_data: ecr_data;
   ecr_rr_conditions: ecr_rr_conditions;
   ecr_rr_rule_summaries: ecr_rr_rule_summaries;

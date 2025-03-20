@@ -47,7 +47,7 @@
         <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1"
           displayName="Male" />
         <!-- yoda is 900 years old -->
-        <birthTime value="11250101" />
+        <birthTime value="19050101" />
         <!-- If sdtc:deceasedInd is true then sdtc:deceasedTime must be present -->
         <sdtc:deceasedInd value="false" />
         <!-- yoda's race is unknown -->

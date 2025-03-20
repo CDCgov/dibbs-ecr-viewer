@@ -6,20 +6,19 @@ import {
   Updateable,
 } from "kysely";
 
-export interface ecr_data {
-  eICR_ID: Generated<string>;
-  set_id: string | undefined;
-  fhir_reference_link: string | undefined;
+import { Common, ecr_data } from "./common";
+
+export interface extended_ecr_data extends ecr_data {
   last_name: string | undefined;
   first_name: string | undefined;
-  birth_date: ColumnType<Date> | undefined;
+  birth_date: Date | undefined;
   gender: string | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
   race: string | undefined;
   ethnicity: string | undefined;
-  latitude: number | undefined;
-  longitude: number | undefined;
+  latitude: ColumnType<number, string> | undefined;
+  longitude: ColumnType<number, string> | undefined;
   homelessness_status: string | undefined;
   disabilities: string | undefined;
   tribal_affiliation: string | undefined;
@@ -33,17 +32,16 @@ export interface ecr_data {
   rr_id: string | undefined;
   processing_status: string | undefined;
   eicr_version_number: string | undefined;
-  authoring_date: ColumnType<Date | undefined>;
+  authoring_date: Date | undefined;
   authoring_provider: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
   facility_name: string | undefined;
   encounter_type: string | undefined;
-  encounter_start_date: ColumnType<Date> | undefined;
-  encounter_end_date: ColumnType<Date | undefined>;
+  encounter_start_date: Date | undefined;
+  encounter_end_date: Date | undefined;
   reason_for_visit: string | undefined;
   active_problems: string | undefined;
-  date_created: Generated<Date>;
 }
 
 export interface patient_address {
@@ -57,19 +55,19 @@ export interface patient_address {
   state: string | undefined;
   postal_code: string | undefined;
   country: string | undefined;
-  period_start: ColumnType<Date | undefined>;
-  period_end: ColumnType<Date | undefined>;
-  eICR_ID: string | null; // Nullable foreign key reference
+  period_start: Date | undefined;
+  period_end: Date | undefined;
+  eicr_id: string | null; // Nullable foreign key reference
 }
 
 export interface ecr_labs {
   uuid: Generated<string>;
-  eICR_ID: string;
+  eicr_id: string;
   test_type: string | undefined;
   test_type_code: string | undefined;
   test_type_system: string | undefined;
   test_result_qualitative: string | undefined;
-  test_result_quantitative: number | null;
+  test_result_quantitative: ColumnType<number, string> | null;
   test_result_units: string | undefined;
   test_result_code: string | undefined;
   test_result_code_display: string | undefined;
@@ -77,30 +75,21 @@ export interface ecr_labs {
   test_result_interpretation: string | undefined;
   test_result_interpretation_code: string | undefined;
   test_result_interpretation_system: string | undefined;
-  test_result_reference_range_low_value: number | string | null;
+  test_result_reference_range_low_value:
+    | ColumnType<number, string>
+    | string
+    | null;
   test_result_reference_range_low_units: string | undefined;
   test_result_reference_range_high_value: number | string | null;
   test_result_reference_range_high_units: string | undefined;
   specimen_type: string | undefined;
-  specimen_collection_date: ColumnType<Date | undefined>;
+  specimen_collection_date: Date | undefined;
   performing_lab: string | undefined;
 }
 
-export interface ecr_rr_conditions {
-  uuid: Generated<string>;
-  eICR_ID: string;
-  condition: string;
-}
-
-export interface ecr_rr_rule_summaries {
-  uuid: Generated<string>;
-  ecr_rr_conditions_id: string;
-  rule_summary: string;
-}
-
-export type ExtendedECR = Selectable<ecr_data>;
-export type NewExtendedECR = Insertable<ecr_data>;
-export type ExtendedECRUpdate = Updateable<ecr_data>;
+export type ExtendedECR = Selectable<extended_ecr_data>;
+export type NewExtendedECR = Insertable<extended_ecr_data>;
+export type ExtendedECRUpdate = Updateable<extended_ecr_data>;
 
 export type PatientAddress = Selectable<patient_address>;
 export type NewPatientAddress = Insertable<patient_address>;
@@ -110,18 +99,8 @@ export type ECRLabs = Selectable<ecr_labs>;
 export type NewECRLabs = Insertable<ecr_labs>;
 export type ECRLabsUpdate = Updateable<ecr_labs>;
 
-export type ECRConditions = Selectable<ecr_rr_conditions>;
-export type NewECRConditions = Insertable<ecr_rr_conditions>;
-export type ECRConditionsUpdate = Updateable<ecr_rr_conditions>;
-
-export type ECRRuleSummaries = Selectable<ecr_rr_rule_summaries>;
-export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>;
-export type ECRRuleSummariesUpdate = Updateable<ecr_rr_rule_summaries>;
-
-export interface Extended {
-  ecr_data: ecr_data;
+export interface Extended extends Common {
+  ecr_data: extended_ecr_data;
   patient_address: patient_address;
   ecr_labs: ecr_labs;
-  ecr_rr_conditions: ecr_rr_conditions;
-  ecr_rr_rule_summaries: ecr_rr_rule_summaries;
 }

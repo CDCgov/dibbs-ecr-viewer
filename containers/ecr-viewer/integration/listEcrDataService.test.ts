@@ -9,8 +9,6 @@ import {
   SqlBool,
 } from "kysely";
 
-import * as core_database_repo from "@/app/api/services/core_database_repo";
-import { Core, NewECR } from "@/app/api/services/core_types";
 import { dbDialect, getDb } from "@/app/api/services/database";
 import {
   buildExtended,
@@ -20,8 +18,13 @@ import {
   dropCore,
   clearCore,
 } from "@/app/api/services/db_schema";
-import * as extended_database_repo from "@/app/api/services/extended_database_repo";
-import { NewExtendedECR } from "@/app/api/services/extended_types";
+import {
+  createEcrCondition,
+  createEcrRule,
+} from "@/app/api/services/helpers/common";
+import { createCoreEcr } from "@/app/api/services/helpers/core";
+import { Core, NewCoreECR } from "@/app/api/services/types/core";
+import { NewExtendedECR } from "@/app/api/services/types/extended";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   CoreMetadataModel,
@@ -40,8 +43,8 @@ const testDateRange = {
   endDate: new Date("12-03-2024"),
 };
 
-const coreTemplate: NewECR = {
-  eICR_ID: "12345",
+const coreTemplate: NewCoreECR = {
+  eicr_id: "12345",
   set_id: "123",
   data_source: "DB",
   fhir_reference_link: "",
@@ -54,7 +57,7 @@ const coreTemplate: NewECR = {
 };
 
 const extendedTemplate: NewExtendedECR = {
-  eICR_ID: "12345",
+  eicr_id: "12345",
   set_id: "12345",
   fhir_reference_link: "http://example.com",
   last_name: "Kenobi",
@@ -65,8 +68,8 @@ const extendedTemplate: NewExtendedECR = {
   gender_identity: "Based",
   race: "Star Guy",
   ethnicity: "Star Guy",
-  latitude: 0.0,
-  longitude: 0.0,
+  latitude: "0.0",
+  longitude: "0.0",
   homelessness_status: "Homeless",
   disabilities: "None",
   tribal_affiliation: "None",
@@ -195,13 +198,13 @@ describe("listEcrDataService", () => {
     });
 
     beforeEach(async () => {
-      await core_database_repo.createEcr(coreTemplate);
-      await core_database_repo.createEcrCondition({
+      await createCoreEcr(coreTemplate);
+      await createEcrCondition({
         uuid: "12345",
-        eICR_ID: "12345",
+        eicr_id: "12345",
         condition: "Condition1",
       });
-      await core_database_repo.createEcrRule({
+      await createEcrRule({
         uuid: "12345",
         ecr_rr_conditions_id: "12345",
         rule_summary: "Rule1",
@@ -304,13 +307,13 @@ describe("listEcrDataService", () => {
     });
 
     beforeEach(async () => {
-      await extended_database_repo.createExtendedEcr(extendedTemplate);
-      await extended_database_repo.createEcrCondition({
+      await createExtendedEcr(extendedTemplate);
+      await createEcrCondition({
         uuid: "12345",
-        eICR_ID: "12345",
+        eicr_id: "12345",
         condition: "Condition1",
       });
-      await extended_database_repo.createEcrRule({
+      await createEcrRule({
         uuid: "12345",
         ecr_rr_conditions_id: "12345",
         rule_summary: "Rule1",
@@ -719,3 +722,46 @@ describe("listEcrDataService", () => {
     });
   });
 });
+function createExtendedEcr(
+  extendedTemplate: {} & {
+    eicr_id?: string | undefined;
+    set_id?: string | undefined;
+    fhir_reference_link?: string | undefined;
+    eicr_version_number?: string | undefined;
+    date_created?: Date | undefined;
+    last_name?: string | undefined;
+    first_name?: string | undefined;
+    birth_date?: Date | undefined;
+    gender?: string | undefined;
+    birth_sex?: string | undefined;
+    gender_identity?: string | undefined;
+    race?: string | undefined;
+    ethnicity?: string | undefined;
+    latitude?: string | undefined;
+    longitude?: string | undefined;
+    homelessness_status?: string | undefined;
+    disabilities?: string | undefined;
+    tribal_affiliation?: string | undefined;
+    tribal_enrollment_status?: string | undefined;
+    current_job_title?: string | undefined;
+    current_job_industry?: string | undefined;
+    usual_occupation?: string | undefined;
+    usual_industry?: string | undefined;
+    preferred_language?: string | undefined;
+    pregnancy_status?: string | undefined;
+    rr_id?: string | undefined;
+    processing_status?: string | undefined;
+    authoring_date?: Date | undefined;
+    authoring_provider?: string | undefined;
+    provider_id?: string | undefined;
+    facility_id?: string | undefined;
+    facility_name?: string | undefined;
+    encounter_type?: string | undefined;
+    encounter_start_date?: Date | undefined;
+    encounter_end_date?: Date | undefined;
+    reason_for_visit?: string | undefined;
+    active_problems?: string | undefined;
+  },
+) {
+  throw new Error("Function not implemented.");
+}
