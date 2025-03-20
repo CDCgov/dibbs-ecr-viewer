@@ -242,6 +242,7 @@ describe("saveCoreMetadata", () => {
   });
 
   it("should return an error when db save fails", async () => {
+    jest.spyOn(console, "error").mockImplementation();
     const badMetadata = {
       last_name: null,
       first_name: null,
@@ -250,7 +251,7 @@ describe("saveCoreMetadata", () => {
       eicr_set_id: "1234",
       eicr_version_number: "1",
       rr: [],
-      report_date: new Date("12/20/2024"),
+      report_date: new Date("a"),
     } as unknown as BundleMetadata;
     const resp = await saveCoreMetadata(badMetadata, "1-2-3-4");
 

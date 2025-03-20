@@ -149,7 +149,7 @@ export const clearExtended = async () => {
  * @function buildCore
  */
 export const buildCore = async () => {
-  await dropExtended(); // make sure we're starting from scratch
+  await dropCore(); // make sure we're starting from scratch
   await coredb()
     .schema.createTable("ecr_data")
     .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
@@ -157,9 +157,9 @@ export const buildCore = async () => {
     .addColumn("eicr_version_number", "varchar(50)")
     .addColumn("data_source", "varchar(2)", (cb) => cb.notNull()) // S3 or DB
     .addColumn("fhir_reference_link", "varchar(500)")
-    .addColumn("patient_name_first", "varchar(100)", (cb) => cb.notNull())
-    .addColumn("patient_name_last", "varchar(100)", (cb) => cb.notNull())
-    .addColumn("patient_birth_date", "date", (cb) => cb.notNull())
+    .addColumn("patient_name_first", "varchar(100)")
+    .addColumn("patient_name_last", "varchar(100)")
+    .addColumn("patient_birth_date", "date")
     .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
       cb.notNull().defaultTo(getSql("now")),
     )
