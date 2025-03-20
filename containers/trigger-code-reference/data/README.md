@@ -9,7 +9,7 @@ Before you can run the seed script, you'll need to acquire a TES API key. Make a
 ## Running the script
 
 1. Get set up to run the TCRS locally ([see here](../README.md#running-from-python-source-code))
-2. Ensure dev dependencies are installed with `pip install -r dev-requirements.txt`
+2. Ensure dependencies have been installed
 3. Update (or create) your `.env` file to include your TES API key. Ex: `TES_API_KEY=xxxx....`
 4. If a `tes.db` file already exists in the `/data` directory, go ahead and delete it
 5. Navigate into the `/data` directory (`cd /data`) and run the `seed_tes_data.py` script with `python seed_tes_data.py`. This will create the `tes.db` file and load it with data from the TES API
