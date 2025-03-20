@@ -104,6 +104,15 @@ describe("gcs", () => {
       expect(mockExists).toHaveBeenCalled();
     });
 
+    it("should return 'DOWN' if an error is thrown", async () => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      mockExists.mockRejectedValue(new Error("Uh oh"));
+
+      const result = await gcsHealthCheck();
+
+      expect(result).toBe("DOWN");
+    });
+
     it("should return undefined if GCS_BUCKET_NAME is not set", async () => {
       delete process.env.GCS_BUCKET_NAME;
 
