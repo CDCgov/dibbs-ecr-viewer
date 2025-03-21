@@ -23,7 +23,6 @@ services:
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
       # GCS
-      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME:-ecr-viewer-files}
       - 'GCP_KEY=${GCP_KEY:-{ "client_email": "ecr@example.com", "private_key": "1234" }}'
       - GCP_PROJECT_ID=${GCP_PROJECT_ID:-proj}
       - GCS_API_ENDPOINT=${GCS_API_ENDPOINT:-http://localhost:10001/}

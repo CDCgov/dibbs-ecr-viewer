@@ -65,10 +65,10 @@ describe("get_fhir_data", () => {
   describe("gcs", () => {
     beforeEach(() => {
       process.env.SOURCE = GCS_SOURCE;
-      process.env.GCS_BUCKET_NAME = "ecr-viewer-files";
+      process.env.ECR_BUCKET_NAME = "ecr-viewer-files";
     });
     afterAll(() => {
-      delete process.env.GCS_BUCKET_NAME;
+      process.env.ECR_BUCKET_NAME = "";
     });
 
     it("should return 200 when the file is found", async () => {
@@ -134,8 +134,8 @@ describe("get_fhir_data", () => {
       expect(response.status).toEqual(500);
     });
 
-    it("should return 500 GCS_BUCKET_NAME is not set", async () => {
-      delete process.env.GCS_BUCKET_NAME;
+    it("should return 500 ECR_BUCKET_NAME is not set", async () => {
+      process.env.ECR_BUCKET_NAME = "";
       jest.spyOn(console, "error").mockImplementation(() => {});
 
       const response = await get_fhir_data("1234");

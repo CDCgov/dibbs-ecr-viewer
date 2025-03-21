@@ -18,20 +18,27 @@ jest.mock("@google-cloud/storage", () => {
 describe("gcs", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.GCS_BUCKET_NAME = "fake-bucket";
+    process.env.ECR_BUCKET_NAME = "fake-bucket";
+    process.env.SOURCE = "gcs";
   });
 
   afterAll(() => {
     jest.resetAllMocks();
-    delete process.env.GCS_BUCKET_NAME;
+    process.env.ECR_BUCKET_NAME = "";
+    process.env.SOURCE = "s3";
     delete process.env.GCS_API_ENDPOINT;
     delete process.env.GCP_PROJECT_ID;
     delete process.env.GCP_CREDENTIALS;
   });
 
   describe("client", () => {
-    it("should return undefined if env variables are not set", () => {
-      delete process.env.GCS_BUCKET_NAME;
+    it("should return undefined if ECR_BUCKET_NAME is not set", () => {
+      process.env.ECR_BUCKET_NAME = "";
+      expect(gcsClient()).toBeUndefined();
+    });
+
+    it("should return undefined if SOURCE is not gcs", () => {
+      process.env.SOURCE = "s3";
       expect(gcsClient()).toBeUndefined();
     });
 
@@ -113,8 +120,16 @@ describe("gcs", () => {
       expect(result).toBe("DOWN");
     });
 
-    it("should return undefined if GCS_BUCKET_NAME is not set", async () => {
-      delete process.env.GCS_BUCKET_NAME;
+    it("should return undefined if ECR_BUCKET_NAME is not set", async () => {
+      process.env.ECR_BUCKET_NAME = "";
+
+      const result = await gcsHealthCheck();
+
+      expect(result).toBeUndefined();
+    });
+
+    it("should return undefined if SOURCE is not gcs", async () => {
+      process.env.SOURCE = "s3";
 
       const result = await gcsHealthCheck();
 
