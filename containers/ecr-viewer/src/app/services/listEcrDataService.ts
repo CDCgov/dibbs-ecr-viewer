@@ -462,7 +462,7 @@ const getTotalExtendedEcrCount = async (
  * @param filterDates - The date (range) to filter on
  * @param searchTerm - Optional search term used to filter
  * @param filterConditions - Optional array of reportable conditions used to filter
- * @returns custom type format object for use by pg-promise
+ * @returns expression wrapper for use in where
  */
 export const generateCoreWhereStatement = (
   eb: ExpressionBuilder<Core, "ecr_data">,
@@ -498,7 +498,7 @@ const generateExtendedWhereStatement = (
  * A custom type format for search statement
  * @param eb expression builder
  * @param searchTerm - Optional search term used to filter
- * @returns custom type format object for use by pg-promise
+ * @returns expression wrapper for use in where
  */
 export const generateCoreSearchStatement = (
   eb: ExpressionBuilder<Core, "ecr_data">,
@@ -530,7 +530,7 @@ const generateExtendedSearchStatement = (
  * A custom type format for statement filtering conditions
  * @param eb expression builder
  * @param filterConditions - Optional array of reportable conditions used to filter
- * @returns custom type format object for use by pg-promise
+ * @returns expression wrapper for use in where
  */
 export const generateFilterConditionsStatement = (
   eb: ExpressionBuilder<Core | Extended, "ecr_data">,
