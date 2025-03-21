@@ -2,40 +2,37 @@ import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
 
 import { dbSchema, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
+import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
 
-export interface CoreMetadataModel {
+interface CommonMetadataModel {
   eicr_id: string;
-  data_source: "DB" | "S3";
   data_link: string | undefined;
-  patient_name_first: string;
-  patient_name_last: string;
-  patient_birth_date: Date;
   conditions: string[];
   rule_summaries: string[];
-  report_date: Date;
   date_created: Date;
   set_id: string | undefined;
   eicr_version_number: string | undefined;
 }
 
-export interface ExtendedMetadataModel {
-  eicr_id: string;
+export interface CoreMetadataModel extends CommonMetadataModel {
+  data_source: "DB" | "S3";
+  patient_name_first: string;
+  patient_name_last: string;
+  patient_birth_date: Date;
+  report_date: Date;
+}
+
+export interface ExtendedMetadataModel extends CommonMetadataModel {
   // data_source: "DB" | "S3";
-  data_link: string | undefined;
   first_name: string | undefined;
   last_name: string | undefined;
   birth_date: Date | undefined;
-  conditions: string[];
-  rule_summaries: string[];
   encounter_start_date: Date | undefined;
-  date_created: Date;
-  set_id: string | undefined;
-  eicr_version_number: string | undefined;
 }
 
 export interface EcrDisplay {
@@ -73,7 +70,7 @@ export async function listEcrData(
   switch (dbSchema()) {
     case "core":
       return listCoreEcrData(
-        getDb() as Kysely<Core>,
+        getDb<Core>(),
         startIndex,
         itemsPerPage,
         sortColumn,
@@ -84,7 +81,7 @@ export async function listEcrData(
       );
     case "extended":
       return listExtendedEcrData(
-        getDb() as Kysely<Extended>,
+        getDb<Extended>(),
         startIndex,
         itemsPerPage,
         sortColumn,
@@ -533,7 +530,7 @@ const generateExtendedSearchStatement = (
  * @returns expression wrapper for use in where
  */
 export const generateFilterConditionsStatement = (
-  eb: ExpressionBuilder<Core | Extended, "ecr_data">,
+  eb: ExpressionBuilder<Common, "ecr_data">,
   filterConditions?: string[] | undefined,
 ) => {
   if (!filterConditions || filterConditions.length === 0) return trueStmt(eb);
@@ -573,7 +570,7 @@ export const generateFilterConditionsStatement = (
  * @returns expression builder with date filters included
  */
 export const generateFilterDateStatement = (
-  eb: ExpressionBuilder<Core | Extended, "ecr_data">,
+  eb: ExpressionBuilder<Common, "ecr_data">,
   { startDate, endDate }: DateRangePeriod,
 ) => {
   return eb.and([
@@ -665,5 +662,5 @@ export const generateExtendedSortStatement = (
  * @param eb expression builder
  * @returns a statement that will evaluate to true
  */
-const trueStmt = (eb: ExpressionBuilder<Core | Extended, "ecr_data">) =>
+const trueStmt = (eb: ExpressionBuilder<Common, "ecr_data">) =>
   eb(eb.val(true), "=", true);
