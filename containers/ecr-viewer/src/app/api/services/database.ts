@@ -69,6 +69,7 @@ export const getDb = () => {
 
   return db;
 };
+
 /**
  * Performs a health check on the metadata database connection.
  * @returns The status of the metadata db connection or undefined if missing environment values.
