@@ -11,13 +11,12 @@ services:
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY=${NBS_PUB_KEY:-}
-      # POSTGRES
-      - DATABASE_URL=postgres://postgres:pw@localhost:5432/ecr_viewer_db
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-pw}
-      - POSTGRES_HOST=${POSTGRES_HOST:-localhost}
-      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE:-ecr_viewer_db}
+      # METADATA DATABASE
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
+      # SQL Server - backwards compat
+      - SQL_SERVER_USER
+      - SQL_SERVER_PASSWORD
+      - SQL_SERVER_HOST
 
       # AWS
       - AWS_CUSTOM_ENDPOINT=http://localhost:4566
@@ -28,10 +27,6 @@ services:
       # Azure
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
-      # SQL Server
-      - SQL_SERVER_USER=${SQL_SERVER_USER:-sa}
-      - SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
-      - SQL_SERVER_HOST=${SQL_SERVER_HOST:-localhost}
       # Orchestration
       - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
       # Auth
