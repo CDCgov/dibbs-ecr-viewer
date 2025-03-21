@@ -31,6 +31,7 @@ export const dbSchema = () => {
  * @returns string describing namespace
  */
 export const dbNamespace = () => {
+  // use a different schema in testing so seed data doesn't get wiped out
   return process.env.TEST_TYPE === "integration"
     ? "test_ev_schema"
     : "ecr_viewer";
@@ -63,7 +64,6 @@ export const getDb = <T>() => {
       throw new Error(`unknown db type: ${db_type}`);
   }
 
-  // use a different schema in testing so seed data doesn't get wiped out
   db = (db as Kysely<T>).withSchema(dbNamespace());
 
   return db as Kysely<T>;

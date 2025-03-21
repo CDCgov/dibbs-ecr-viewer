@@ -363,7 +363,7 @@ const getTotalCoreEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await (getDb() as Kysely<Core>)
+  const result = await getDb<Core>()
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",
@@ -384,7 +384,7 @@ const getTotalExtendedEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await (getDb() as Kysely<Extended>)
+  const result = await getDb<Extended>()
     .selectFrom("ecr_data")
     .leftJoin(
       "ecr_rr_conditions",

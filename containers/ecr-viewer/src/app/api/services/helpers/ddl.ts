@@ -1,5 +1,3 @@
-import { Kysely } from "kysely";
-
 import { dbNamespace, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { Common } from "@/app/api/services/types/common";
@@ -8,11 +6,11 @@ import { Extended } from "@/app/api/services/types/extended";
 
 const extdb = () => {
   process.env.METADATA_DATABASE_SCHEMA = "extended";
-  return getDb() as Kysely<Extended>;
+  return getDb<Extended>();
 };
 const coredb = () => {
   process.env.METADATA_DATABASE_SCHEMA = "core";
-  return getDb() as Kysely<Core>;
+  return getDb<Core>();
 };
 
 const buildCommon = async () => {

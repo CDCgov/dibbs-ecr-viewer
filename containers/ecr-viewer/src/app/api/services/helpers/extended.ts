@@ -1,5 +1,3 @@
-import { Kysely } from "kysely";
-
 import { getDb } from "@/app/api/services/database";
 import {
   NewExtendedECR,
@@ -8,7 +6,7 @@ import {
   Extended,
 } from "@/app/api/services/types/extended";
 
-const extdb = () => getDb() as Kysely<Extended>;
+const extdb = () => getDb<Extended>();
 
 /**
  * Creates an eICR object

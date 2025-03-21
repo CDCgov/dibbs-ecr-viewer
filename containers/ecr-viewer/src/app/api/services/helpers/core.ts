@@ -1,9 +1,7 @@
-import { Kysely } from "kysely";
-
 import { getDb } from "@/app/api/services/database";
 import { NewCoreECR, Core } from "@/app/api/services/types/core";
 
-const coredb = () => getDb() as Kysely<Core>;
+const coredb = () => getDb<Core>();
 
 /**
  * Creates an eICR object

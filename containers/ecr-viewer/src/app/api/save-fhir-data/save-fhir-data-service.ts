@@ -2,7 +2,6 @@ import { randomUUID } from "crypto";
 
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
-import { Kysely } from "kysely";
 
 import { dbSchema, getDb } from "@/app/api/services/database";
 import { Core } from "@/app/api/services/types/core";
@@ -181,7 +180,7 @@ export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  const db = getDb() as Kysely<Extended>;
+  const db = getDb<Extended>();
   try {
     await db.transaction().execute(async (trx) => {
       await trx
@@ -331,7 +330,7 @@ export const saveCoreMetadata = async (
     }
 
     // Start transaction
-    const db = getDb() as Kysely<Core>;
+    const db = getDb<Core>();
     await db.transaction().execute(async (trx) => {
       // Insert main ECR metadata
       await trx

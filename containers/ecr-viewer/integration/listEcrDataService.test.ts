@@ -2,7 +2,6 @@
  * @jest-environment node
  */
 import {
-  Kysely,
   ExpressionBuilder,
   AndWrapper,
   ExpressionWrapper,
@@ -104,7 +103,7 @@ const getCoreWhere = (
     | ExpressionWrapper<Core, "ecr_data", SqlBool>
     | AndWrapper<Core, "ecr_data", SqlBool>,
 ) => {
-  const coredb = getDb() as Kysely<Core>;
+  const coredb = getDb<Core>();
   const rawRes = coredb.selectFrom("ecr_data").where(ebCallBack).compile();
   const start = `select from "${dbNamespace()}"."ecr_data" where `;
   return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };

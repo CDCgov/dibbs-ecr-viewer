@@ -1,8 +1,5 @@
-import { Kysely } from "kysely";
-
 import { getDb } from "@/app/api/services/database";
-import { Core } from "@/app/api/services/types/core";
-import { Extended } from "@/app/api/services/types/extended";
+import { Common } from "@/app/api/services/types/common";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.
@@ -10,7 +7,7 @@ import { Extended } from "@/app/api/services/types/extended";
  */
 export const getAllConditions = async (): Promise<string[]> => {
   try {
-    const result = await (getDb() as Kysely<Core | Extended>)
+    const result = await getDb<Common>()
       .selectFrom("ecr_rr_conditions")
       .select("condition")
       .distinct()
