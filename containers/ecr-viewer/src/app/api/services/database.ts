@@ -2,14 +2,13 @@
 
 import { Kysely } from "kysely";
 
-import { pgConstructor } from "./dialects/postgres";
-import { sqlServerConstructor } from "./dialects/sqlserver";
-import { Core } from "./types/core";
-import { Extended } from "./types/extended";
+import { dialect as postgres } from "./dialects/postgres";
+import { dialect as sqlserver } from "./dialects/sqlserver";
+import { Common } from "./types/common";
 
 // Dialect to communicate with the database, interface to define its structure.
 
-let db: Kysely<Core> | Kysely<Extended>;
+let db: unknown;
 
 /**
  * Get the current database dialect
@@ -28,12 +27,22 @@ export const dbSchema = () => {
 };
 
 /**
+ * Get the current database namespace (schema)
+ * @returns string describing namespace
+ */
+export const dbNamespace = () => {
+  return process.env.TEST_TYPE === "integration"
+    ? "test_ev_schema"
+    : "ecr_viewer";
+};
+
+/**
  * Get the database global.
  * @returns global db
  */
-export const getDb = () => {
+export const getDb = <T>() => {
   if (db) {
-    return db;
+    return db as Kysely<T>;
   }
 
   const db_type = dbDialect();
@@ -45,18 +54,21 @@ export const getDb = () => {
 
   switch (db_type) {
     case "sqlserver":
-      db = sqlServerConstructor(db_schema);
+      db = new Kysely(sqlserver);
       break;
     case "postgres":
-      db = pgConstructor(db_schema);
+      db = new Kysely(postgres);
       break;
     default:
       throw new Error(`unknown db type: ${db_type}`);
   }
-  db = db.withSchema("ecr_viewer");
 
-  return db;
+  // use a different schema in testing so seed data doesn't get wiped out
+  db = (db as Kysely<T>).withSchema(dbNamespace());
+
+  return db as Kysely<T>;
 };
+
 /**
  * Performs a health check on the metadata database connection.
  * @returns The status of the metadata db connection or undefined if missing environment values.
@@ -66,7 +78,9 @@ export const metadataDatabaseHealthCheck = async () => {
     return undefined;
   }
   try {
-    await (getDb() as Kysely<Core>).connection().execute(async (_db) => {});
+    await getDb<Common>()
+      .connection()
+      .execute(async (_db) => {});
     return "UP";
   } catch (error: unknown) {
     console.error(error);
