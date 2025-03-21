@@ -18,6 +18,7 @@ interface Database {}
 const { Pool } = pkg;
 
 async function getKyselyInstance(): Promise<Kysely<Database>> {
+  const schema = getSchema();
   if (schema === "core") {
     const databaseUrl = process.env.DATABASE_URL;
     if (!databaseUrl) {
@@ -151,7 +152,7 @@ function getSchema() {
 async function main() {
   const schema = getSchema();
   if (!schema || (schema !== "core" && schema !== "extended")) {
-    console.error("No database supported by config. Skipping migration.");
+    console.warn("No database supported by config. Skipping migration.");
     return;
   }
 
