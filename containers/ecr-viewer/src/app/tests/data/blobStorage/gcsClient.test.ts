@@ -26,7 +26,7 @@ describe("gcs", () => {
     jest.resetAllMocks();
     process.env.ECR_BUCKET_NAME = "";
     process.env.SOURCE = "s3";
-    delete process.env.GCS_API_ENDPOINT;
+    delete process.env.GCP_API_ENDPOINT;
     delete process.env.GCP_PROJECT_ID;
     delete process.env.GCP_CREDENTIALS;
   });
@@ -66,7 +66,7 @@ describe("gcs", () => {
     });
 
     it("should call Storage without all related environment variables", () => {
-      process.env.GCS_API_ENDPOINT = "http://localhost:8080";
+      process.env.GCP_API_ENDPOINT = "http://localhost:8080";
       process.env.GCP_PROJECT_ID = "projectId";
       process.env.GCP_CREDENTIALS = JSON.stringify({ key: "fake-key" });
       const bucket = gcsClient();

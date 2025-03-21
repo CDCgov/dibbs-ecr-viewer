@@ -7,7 +7,7 @@ import { Storage } from "@google-cloud/storage";
 export const gcsClient = () => {
   if (process.env.SOURCE === "gcs" && process.env.ECR_BUCKET_NAME) {
     const storage = new Storage({
-      apiEndpoint: process.env.GCS_API_ENDPOINT,
+      apiEndpoint: process.env.GCP_API_ENDPOINT,
       projectId: process.env.GCP_PROJECT_ID,
       credentials: process.env.GCP_CREDENTIALS
         ? JSON.parse(process.env.GCP_CREDENTIALS)

@@ -29,7 +29,7 @@ namespace NodeJS {
     ECR_BUCKET_NAME: string;
     GCP_CREDENTIALS?: string;
     GCP_PROJECT_ID?: string;
-    GCS_API_ENDPOINT?: string;
+    GCP_API_ENDPOINT?: string;
     METADATA_DATABASE_SCHEMA?: "core" | "extended";
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";
     NBS_AUTH: "true" | "false";
