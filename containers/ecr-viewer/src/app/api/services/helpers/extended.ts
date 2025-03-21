@@ -6,15 +6,13 @@ import {
   Extended,
 } from "@/app/api/services/types/extended";
 
-const extdb = () => getDb<Extended>();
-
 /**
  * Creates an eICR object
  * @param ecr - the NewExtendedECR to be persisted
  * @returns the created eICR object
  */
 export async function createExtendedEcr(ecr: NewExtendedECR): Promise<void> {
-  await extdb().insertInto("ecr_data").values(ecr).execute();
+  await getDb<Extended>().insertInto("ecr_data").values(ecr).execute();
 }
 
 /**
@@ -25,7 +23,10 @@ export async function createExtendedEcr(ecr: NewExtendedECR): Promise<void> {
 export async function createAddress(
   patient_address: NewPatientAddress,
 ): Promise<void> {
-  await extdb().insertInto("patient_address").values(patient_address).execute();
+  await getDb<Extended>()
+    .insertInto("patient_address")
+    .values(patient_address)
+    .execute();
 }
 
 /**
@@ -34,5 +35,5 @@ export async function createAddress(
  * @returns the created eCR Lab object
  */
 export async function createLab(lab: NewECRLabs): Promise<void> {
-  await extdb().insertInto("ecr_labs").values(lab).execute();
+  await getDb<Extended>().insertInto("ecr_labs").values(lab).execute();
 }

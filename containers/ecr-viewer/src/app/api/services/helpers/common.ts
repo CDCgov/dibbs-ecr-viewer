@@ -5,8 +5,6 @@ import {
   NewECRRuleSummaries,
 } from "@/app/api/services/types/common";
 
-const db = () => getDb<Common>();
-
 /**
  * Creates an eCR condition object
  * @param condition - the NewECRConditions to be created
@@ -15,7 +13,10 @@ const db = () => getDb<Common>();
 export async function createEcrCondition(
   condition: NewECRConditions,
 ): Promise<void> {
-  await db().insertInto("ecr_rr_conditions").values(condition).execute();
+  await getDb<Common>()
+    .insertInto("ecr_rr_conditions")
+    .values(condition)
+    .execute();
 }
 
 /**
@@ -26,5 +27,8 @@ export async function createEcrCondition(
 export async function createEcrRule(
   rule_summary: NewECRRuleSummaries,
 ): Promise<void> {
-  await db().insertInto("ecr_rr_rule_summaries").values(rule_summary).execute();
+  await getDb<Common>()
+    .insertInto("ecr_rr_rule_summaries")
+    .values(rule_summary)
+    .execute();
 }

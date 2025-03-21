@@ -182,94 +182,96 @@ export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  const db = getDb<Extended>();
   try {
-    await db.transaction().execute(async (trx) => {
-      await trx
-        .insertInto("ecr_data")
-        .values({
-          eicr_id: ecrId,
-          set_id: metadata.eicr_set_id,
-          last_name: metadata.last_name,
-          first_name: metadata.first_name,
-          birth_date: metadata.birth_date,
-          gender: metadata.gender,
-          birth_sex: metadata.birth_sex,
-          gender_identity: metadata.gender_identity,
-          race: metadata.race,
-          ethnicity: metadata.ethnicity,
-          latitude: metadata.latitude,
-          longitude: metadata.longitude,
-          homelessness_status: metadata.homelessness_status,
-          disabilities: metadata.disabilities,
-          tribal_affiliation: metadata.tribal_affiliation,
-          tribal_enrollment_status: metadata.tribal_enrollment_status,
-          current_job_title: metadata.current_job_title,
-          current_job_industry: metadata.current_job_industry,
-          usual_occupation: metadata.usual_occupation,
-          usual_industry: metadata.usual_industry,
-          preferred_language: metadata.preferred_language,
-          pregnancy_status: metadata.pregnancy_status,
-          rr_id: metadata.rr_id,
-          processing_status: metadata.processing_status,
-          eicr_version_number: metadata.eicr_version_number,
-          authoring_date: asDate(metadata.authoring_datetime),
-          authoring_provider: metadata.provider_id,
-          provider_id: metadata.provider_id,
-          facility_id: metadata.facility_id_number,
-          facility_name: metadata.facility_name,
-          encounter_type: metadata.encounter_type,
-          encounter_start_date: asDate(metadata.encounter_start_date),
-          encounter_end_date: asDate(metadata.encounter_end_date),
-          reason_for_visit: metadata.reason_for_visit,
-          active_problems: metadata.active_problems,
-        })
-        .execute();
-      if (metadata.patient_addresses) {
-        for (const address of metadata.patient_addresses) {
-          const patient_address_uuid = randomUUID();
-          await trx
-            .insertInto("patient_address")
-            .values({
-              uuid: patient_address_uuid,
-              ...address,
-              period_start: asDate(address.period_start),
-              period_end: asDate(address.period_end),
-              eicr_id: ecrId,
-            })
-            .execute();
+    await getDb<Extended>()
+      .transaction()
+      .execute(async (trx) => {
+        await trx
+          .insertInto("ecr_data")
+          .values({
+            eicr_id: ecrId,
+            set_id: metadata.eicr_set_id,
+            last_name: metadata.last_name,
+            first_name: metadata.first_name,
+            birth_date: metadata.birth_date,
+            gender: metadata.gender,
+            birth_sex: metadata.birth_sex,
+            gender_identity: metadata.gender_identity,
+            race: metadata.race,
+            ethnicity: metadata.ethnicity,
+            latitude: metadata.latitude,
+            longitude: metadata.longitude,
+            homelessness_status: metadata.homelessness_status,
+            disabilities: metadata.disabilities,
+            tribal_affiliation: metadata.tribal_affiliation,
+            tribal_enrollment_status: metadata.tribal_enrollment_status,
+            current_job_title: metadata.current_job_title,
+            current_job_industry: metadata.current_job_industry,
+            usual_occupation: metadata.usual_occupation,
+            usual_industry: metadata.usual_industry,
+            preferred_language: metadata.preferred_language,
+            pregnancy_status: metadata.pregnancy_status,
+            rr_id: metadata.rr_id,
+            processing_status: metadata.processing_status,
+            eicr_version_number: metadata.eicr_version_number,
+            authoring_date: asDate(metadata.authoring_datetime),
+            authoring_provider: metadata.provider_id,
+            provider_id: metadata.provider_id,
+            facility_id: metadata.facility_id_number,
+            facility_name: metadata.facility_name,
+            encounter_type: metadata.encounter_type,
+            encounter_start_date: asDate(metadata.encounter_start_date),
+            encounter_end_date: asDate(metadata.encounter_end_date),
+            reason_for_visit: metadata.reason_for_visit,
+            active_problems: metadata.active_problems,
+          })
+          .execute();
+        if (metadata.patient_addresses) {
+          for (const address of metadata.patient_addresses) {
+            const patient_address_uuid = randomUUID();
+            await trx
+              .insertInto("patient_address")
+              .values({
+                uuid: patient_address_uuid,
+                ...address,
+                period_start: asDate(address.period_start),
+                period_end: asDate(address.period_end),
+                eicr_id: ecrId,
+              })
+              .execute();
+          }
         }
-      }
-      if (metadata.labs) {
-        for (const lab of metadata.labs) {
-          // some fields need renaming
-          const {
-            test_result_ref_range_low: test_result_reference_range_low_value,
-            test_result_ref_range_high: test_result_reference_range_high_value,
-            test_result_ref_range_low_units:
-              test_result_reference_range_low_units,
-            test_result_ref_range_high_units:
-              test_result_reference_range_high_units,
-            ...labValues
-          } = lab;
-          await trx
-            .insertInto("ecr_labs")
-            .values({
-              ...labValues,
-              test_result_reference_range_low_value,
-              test_result_reference_range_high_value,
-              test_result_reference_range_low_units,
-              test_result_reference_range_high_units,
-              eicr_id: ecrId,
-              specimen_collection_date: asDate(lab.specimen_collection_date),
-            })
-            .execute();
+        if (metadata.labs) {
+          for (const lab of metadata.labs) {
+            // some fields need renaming
+            const {
+              test_result_ref_range_low: test_result_reference_range_low_value,
+              test_result_ref_range_high:
+                test_result_reference_range_high_value,
+              test_result_ref_range_low_units:
+                test_result_reference_range_low_units,
+              test_result_ref_range_high_units:
+                test_result_reference_range_high_units,
+              ...labValues
+            } = lab;
+            await trx
+              .insertInto("ecr_labs")
+              .values({
+                ...labValues,
+                test_result_reference_range_low_value,
+                test_result_reference_range_high_value,
+                test_result_reference_range_low_units,
+                test_result_reference_range_high_units,
+                eicr_id: ecrId,
+                specimen_collection_date: asDate(lab.specimen_collection_date),
+              })
+              .execute();
+          }
         }
-      }
 
-      // The actual type here is a beast, but we know that this mapping is functionally sound
-      await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
-    });
+        // The actual type here is a beast, but we know that this mapping is functionally sound
+        await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+      });
     return {
       message: "Success. Saved metadata to database.",
       status: 200,
@@ -343,26 +345,27 @@ export const saveCoreMetadata = async (
     }
 
     // Start transaction
-    const db = getDb<Core>();
-    await db.transaction().execute(async (trx) => {
-      // Insert main ECR metadata
-      await trx
-        .insertInto("ecr_data")
-        .values({
-          eicr_id: ecrId,
-          set_id: metadata.eicr_set_id,
-          patient_name_last: metadata.last_name,
-          patient_name_first: metadata.first_name,
-          patient_birth_date: metadata.birth_date,
-          data_source: "DB",
-          report_date: new Date(metadata.report_date),
-          eicr_version_number: metadata.eicr_version_number,
-        })
-        .execute();
+    await getDb<Core>()
+      .transaction()
+      .execute(async (trx) => {
+        // Insert main ECR metadata
+        await trx
+          .insertInto("ecr_data")
+          .values({
+            eicr_id: ecrId,
+            set_id: metadata.eicr_set_id,
+            patient_name_last: metadata.last_name,
+            patient_name_first: metadata.first_name,
+            patient_birth_date: metadata.birth_date,
+            data_source: "DB",
+            report_date: new Date(metadata.report_date),
+            eicr_version_number: metadata.eicr_version_number,
+          })
+          .execute();
 
-      // The actual type here is a beast, but we know that this mapping is functionally sound
-      await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
-    });
+        // The actual type here is a beast, but we know that this mapping is functionally sound
+        await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+      });
     return {
       message: "Success. Saved metadata to database.",
       status: 200,

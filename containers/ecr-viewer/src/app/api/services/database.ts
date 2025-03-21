@@ -47,12 +47,6 @@ export const getDb = <T>() => {
   }
 
   const db_type = dbDialect();
-  const db_schema = dbSchema();
-
-  if (db_schema !== "core" && db_schema !== "extended") {
-    throw new Error(`unknown db schema: ${db_schema}`);
-  }
-
   switch (db_type) {
     case "sqlserver":
       db = new Kysely(sqlserver);

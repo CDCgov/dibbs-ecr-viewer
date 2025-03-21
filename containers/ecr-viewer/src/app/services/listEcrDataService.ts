@@ -76,7 +76,7 @@ export async function listEcrData(
       listFn = listExtendedEcrData;
       break;
     default:
-      throw new Error("Unsupported database type");
+      throw new Error(`Unsupported database schema: ${dbSchema()}`);
   }
 
   return listFn(
