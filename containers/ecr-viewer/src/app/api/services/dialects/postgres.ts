@@ -6,7 +6,7 @@ import { Extended } from "@/app/api/services/types/extended";
 
 export const dialect = {
   dialect: new PostgresDialect({
-    pool: new Pool({connectionString: process.env.DATABASE_URL}),
+    pool: new Pool({ connectionString: process.env.DATABASE_URL }),
   }),
 };
 
