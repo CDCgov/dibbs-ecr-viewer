@@ -66,6 +66,7 @@
     "js-cookie": "^3.0.5",
     "kysely": "^0.27.5",
     "luxon": "^3.5.0",
+    "mssql": "^11.0.1",
     "next": "^14.2.24",
     "next-auth": "^4.24.11",
     "next-router-mock": "^0.9.13",

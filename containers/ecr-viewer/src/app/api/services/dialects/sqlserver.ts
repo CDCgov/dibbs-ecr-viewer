@@ -1,14 +1,19 @@
 import { MssqlDialect } from "kysely";
+import { ConnectionPool } from "mssql";
 import * as tarn from "tarn";
 import * as tedious from "tedious";
+
+const dbConfig = ConnectionPool.parseConnectionString(
+  process.env.DATABASE_URL || "",
+);
 
 export const dialect = {
   dialect: new MssqlDialect({
     tarn: {
       ...tarn,
       options: {
-        min: 0,
-        max: 100,
+        min: dbConfig.pool.min || 0,
+        max: dbConfig.pool.max || 100,
       },
     },
     tedious: {
@@ -18,18 +23,22 @@ export const dialect = {
           const res = new tedious.Connection({
             authentication: {
               options: {
-                password: process.env.SQL_SERVER_PASSWORD,
-                userName: process.env.SQL_SERVER_USER || "sa",
+                password: dbConfig.password || process.env.SQL_SERVER_PASSWORD,
+                userName: dbConfig.user || process.env.SQL_SERVER_USER || "sa",
+                domain: dbConfig.domain,
               },
-              type: "default",
+              type: dbConfig.authentication?.type || "default",
             },
             options: {
-              database: "master",
-              port: 1433,
+              database: dbConfig.database || "master",
+              port: dbConfig.port || 1433,
               trustServerCertificate: true,
-              connectTimeout: 3000,
+              connectTimeout: dbConfig.connectionTimeout || 3000,
+              requestTimeout: dbConfig.requestTimeout,
+              ...dbConfig.options,
             },
-            server: process.env.SQL_SERVER_HOST || "localhost",
+            server:
+              dbConfig.server || process.env.SQL_SERVER_HOST || "localhost",
           });
           res.on("error", (e) => console.log(e));
           return res;
