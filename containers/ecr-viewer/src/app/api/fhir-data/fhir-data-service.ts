@@ -118,7 +118,7 @@ export const get_azure = async (
 /**
  * Retrieves FHIR data from Google Cloud storage based on eCR ID.
  * @param ecr_id - The id of the ecr to fetch.
- * @returns A promise resolving to a NextResponse object.
+ * @returns A promise resolving to a FhirDataResponse object.
  */
 const get_gcs = async (ecr_id: string | null): Promise<FhirDataResponse> => {
   const client = gcsClient();
