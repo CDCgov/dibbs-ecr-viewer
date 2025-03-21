@@ -1,10 +1,7 @@
-import { Kysely, MssqlDialect } from "kysely";
+import { MssqlDialect } from "kysely";
 import { ConnectionPool } from "mssql";
 import * as tarn from "tarn";
 import * as tedious from "tedious";
-
-import { Core } from "@/app/api/services/types/core";
-import { Extended } from "@/app/api/services/types/extended";
 
 const dbConfig = ConnectionPool.parseConnectionString(
   process.env.DATABASE_URL || "",
@@ -53,19 +50,4 @@ export const dialect = {
       },
     },
   }),
-};
-
-/**
- * construct a sql server db instance
- * @param schema core or extended
- * @returns sql server db instance
- */
-export const sqlServerConstructor = (schema: "core" | "extended") => {
-  if (schema === "core") {
-    return new Kysely<Core>(dialect);
-  } else if (schema === "extended") {
-    return new Kysely<Extended>(dialect);
-  } else {
-    throw new Error("Invalid schema type.");
-  }
 };

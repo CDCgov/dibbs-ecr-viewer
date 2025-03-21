@@ -17,7 +17,7 @@ import {
   clearExtended,
   dropCore,
   dropExtended,
-} from "@/app/api/services/db_schema";
+} from "@/app/api/services/helpers/ddl";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
   patient_id: "12345",

@@ -96,6 +96,24 @@ Running tests:
 - `npm run test` - Run the full suite of unit tests.
 - `npm run test:watch` - Run tests in [watch mode](https://jestjs.io/docs/cli#--watch). Tests will run that only affect changed code. It will rerun whenever a new change is detected.
 
+#### Integration Testing
+
+Integration tests utilize Jest as the test runner. They rely on having a database already running in a separate process.
+
+Running tests:
+
+Postgres:
+
+- set your `CONFIG` in `.env.local` to a postgres-using option (e.g. `AWS_PG_NON_INTEGRATED`)
+- `npm run local-dev` - get the postgres db running
+- `npm run test:integration:pg` - Run the full suite of unit tests with postgres.
+
+SQL Server:
+
+- set your `CONFIG` in `.env.local` to a sqlserver-using option (e.g. `AWS_SQLSERVER_NON_INTEGRATED`)
+- `npm run local-dev` - get the sql server db running
+- `npm run test:integration:sqlserver` - Run the full suite of unit tests with sql server.
+
 #### End to End Testing
 
 End to end test utilize the Playwright framerwork.

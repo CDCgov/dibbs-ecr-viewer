@@ -4,7 +4,7 @@ import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { Kysely } from "kysely";
 
-import { getDb } from "@/app/api/services/database";
+import { dbSchema, getDb } from "@/app/api/services/database";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
@@ -183,7 +183,7 @@ export const saveExtendedMetadata = async (
 ): Promise<SaveResponse> => {
   const db = getDb() as Kysely<Extended>;
   try {
-    await (db as Kysely<Extended>).transaction().execute(async (trx) => {
+    await db.transaction().execute(async (trx) => {
       await trx
         .insertInto("ecr_data")
         .values({
@@ -231,15 +231,7 @@ export const saveExtendedMetadata = async (
             .insertInto("patient_address")
             .values({
               uuid: patient_address_uuid,
-              use: address.use,
-              type: address.type,
-              text: address.text,
-              line: address.line,
-              city: address.city,
-              district: address.district,
-              state: address.state,
-              postal_code: address.postal_code,
-              country: address.country,
+              ...address,
               period_start: asDate(address.period_start),
               period_end: asDate(address.period_end),
               eicr_id: ecrId,
@@ -249,36 +241,26 @@ export const saveExtendedMetadata = async (
       }
       if (metadata.labs) {
         for (const lab of metadata.labs) {
+          // some fields need renaming
+          const {
+            test_result_ref_range_low: test_result_reference_range_low_value,
+            test_result_ref_range_high: test_result_reference_range_high_value,
+            test_result_ref_range_low_units:
+              test_result_reference_range_low_units,
+            test_result_ref_range_high_units:
+              test_result_reference_range_high_units,
+            ...labValues
+          } = lab;
           await trx
             .insertInto("ecr_labs")
             .values({
-              uuid: lab.uuid,
+              ...labValues,
+              test_result_reference_range_low_value,
+              test_result_reference_range_high_value,
+              test_result_reference_range_low_units,
+              test_result_reference_range_high_units,
               eicr_id: ecrId,
-              test_type: lab.test_type,
-              test_type_code: lab.test_type_code,
-              test_type_system: lab.test_type_system,
-              test_result_qualitative: lab.test_result_qualitative,
-              test_result_quantitative: lab.test_result_quantitative,
-              test_result_units: lab.test_result_units,
-              test_result_code: lab.test_result_code,
-              test_result_code_display: lab.test_result_code_display,
-              test_result_code_system: lab.test_result_code_system,
-              test_result_interpretation: lab.test_result_interpretation,
-              test_result_interpretation_code:
-                lab.test_result_interpretation_code,
-              test_result_interpretation_system:
-                lab.test_result_interpretation_system,
-              test_result_reference_range_low_value:
-                lab.test_result_ref_range_low,
-              test_result_reference_range_low_units:
-                lab.test_result_ref_range_low_units,
-              test_result_reference_range_high_value:
-                lab.test_result_ref_range_high,
-              test_result_reference_range_high_units:
-                lab.test_result_ref_range_high_units,
-              specimen_type: lab.specimen_type,
               specimen_collection_date: asDate(lab.specimen_collection_date),
-              performing_lab: lab.performing_lab,
             })
             .execute();
         }
@@ -349,8 +331,8 @@ export const saveCoreMetadata = async (
     }
 
     // Start transaction
-    const db = getDb();
-    await (db as Kysely<Core>).transaction().execute(async (trx) => {
+    const db = getDb() as Kysely<Core>;
+    await db.transaction().execute(async (trx) => {
       // Insert main ECR metadata
       await trx
         .insertInto("ecr_data")
@@ -363,8 +345,6 @@ export const saveCoreMetadata = async (
           data_source: "DB",
           report_date: new Date(metadata.report_date),
           eicr_version_number: metadata.eicr_version_number,
-          fhir_reference_link: "null",
-          date_created: new Date(),
         })
         .execute();
 
@@ -430,14 +410,13 @@ export const saveWithMetadata = async (
 ): Promise<SaveResponse> => {
   let fhirDataResult;
   let metadataResult;
-  const metadataType = process.env.METADATA_DATABASE_SCHEMA;
 
   try {
     [fhirDataResult, metadataResult] = await Promise.all([
       saveFhirData(fhirBundle, ecrId, saveSource),
       saveFhirMetadata(
         ecrId,
-        metadataType,
+        dbSchema(),
         metadata as BundleMetadata | BundleExtendedMetadata,
       ),
     ]);
