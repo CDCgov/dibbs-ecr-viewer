@@ -17,33 +17,6 @@ import * as tedious from "tedious";
 interface Database {}
 const { Pool } = pkg;
 
-// Hard-coded, whole-cloth-stolen from instrumentation.ts
-// Workaround for being unable to import the register() function directly
-switch (process.env.CONFIG_NAME) {
-  case "AWS_PG_NON_INTEGRATED":
-    process.env.METADATA_DATABASE_SCHEMA = "core";
-    break;
-  case "AWS_SQLSERVER_NON_INTEGRATED":
-    process.env.METADATA_DATABASE_SCHEMA = "extended";
-    break;
-  case "AZURE_PG_NON_INTEGRATED":
-    process.env.METADATA_DATABASE_SCHEMA = "core";
-    break;
-  case "AZURE_SQLSERVER_NON_INTEGRATED":
-    process.env.METADATA_DATABASE_SCHEMA = "extended";
-    break;
-  default:
-    break;
-}
-const schema = process.env.METADATA_DATABASE_SCHEMA;
-
-if (!schema || (schema !== "core" && schema !== "extended")) {
-  console.error(
-    'Please set SCHEMA environment variable to "core" or "extended"',
-  );
-  process.exit(1);
-}
-
 async function getKyselyInstance(): Promise<Kysely<Database>> {
   if (schema === "core") {
     const databaseUrl = process.env.DATABASE_URL;
@@ -154,7 +127,34 @@ async function runMigration(
   }
 }
 
+function getSchema() {
+  if (process.env.METADATA_DATABASE_SCHEMA) {
+    return process.env.METADATA_DATABASE_SCHEMA;
+  }
+  if (
+    ["AWS_PG_NON_INTEGRATED", "AZURE_PG_NON_INTEGRATED"].includes(
+      process.env.CONFIG_NAME || "",
+    )
+  ) {
+    return "core";
+  }
+  if (
+    ["AWS_SQLSERVER_NON_INTEGRATED", "AZURE_SQLSERVER_NON_INTEGRATED"].includes(
+      process.env.CONFIG_NAME || "",
+    )
+  ) {
+    return "extended";
+  }
+  return undefined;
+}
+
 async function main() {
+  const schema = getSchema();
+  if (!schema || (schema !== "core" && schema !== "extended")) {
+    console.error("No database supported by config. Skipping migration.");
+    return;
+  }
+
   const db = await getKyselyInstance();
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
