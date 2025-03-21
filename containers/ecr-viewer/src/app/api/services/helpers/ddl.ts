@@ -4,6 +4,7 @@ import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 
+// Only used in testing, so this is safe to manipulate ENV
 const extdb = () => {
   process.env.METADATA_DATABASE_SCHEMA = "extended";
   return getDb<Extended>();

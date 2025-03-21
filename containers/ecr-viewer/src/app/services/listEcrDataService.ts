@@ -141,7 +141,7 @@ async function listCoreEcrData(
           .fetch(itemsPerPage),
       );
 
-      return getMetaModelData<CoreMetadataModel>(
+      return await getMetaModelData<CoreMetadataModel>(
         mainQuery as unknown as Kysely<EcrsCte>,
       );
     });
@@ -199,7 +199,7 @@ async function listExtendedEcrData(
           .fetch(itemsPerPage),
       );
 
-      return getMetaModelData<ExtendedMetadataModel>(
+      return await getMetaModelData<ExtendedMetadataModel>(
         mainQuery as unknown as Kysely<EcrsCte>,
       );
     });
@@ -211,7 +211,7 @@ async function listExtendedEcrData(
 // So we cast everything to a Kysely<EcrsCte> which has the same functionality and types we need.
 // It's a bit gross, but it reduces the code repetition substantially
 interface EcrsCte extends Common {
-  ecrs: { eicr_id: string } & ecr_data;
+  ecrs: ecr_data;
 }
 
 // Helper to execute the main ecr fetching CTE and also join in the conditions
@@ -545,7 +545,7 @@ export const generateCoreSortStatement = (
   const validColumns: { [key: string]: string } = {
     patient: "patient",
     date_created: "date_created",
-    report_date: "encounter_start_date",
+    report_date: "report_date",
   };
   const validDirections = ["ASC", "DESC"];
 
