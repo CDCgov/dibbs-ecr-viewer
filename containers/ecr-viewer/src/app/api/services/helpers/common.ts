@@ -1,5 +1,3 @@
-import { Kysely } from "kysely";
-
 import { getDb } from "@/app/api/services/database";
 import {
   Common,
@@ -7,7 +5,7 @@ import {
   NewECRRuleSummaries,
 } from "@/app/api/services/types/common";
 
-const db = () => getDb() as unknown as Kysely<Common>;
+const db = () => getDb<Common>();
 
 /**
  * Creates an eCR condition object

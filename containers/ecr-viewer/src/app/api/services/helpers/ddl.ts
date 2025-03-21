@@ -16,7 +16,7 @@ const coredb = () => {
 };
 
 const buildCommon = async () => {
-  const db = getDb() as unknown as Kysely<Common>;
+  const db = getDb<Common>();
   await db.schema.createSchema(dbNamespace()).ifNotExists().execute();
   await db.schema
     .createTable("ecr_data")
@@ -46,7 +46,7 @@ const buildCommon = async () => {
  *
  */
 const dropCommon = async () => {
-  const db = getDb() as unknown as Kysely<Common>;
+  const db = getDb<Common>();
   await db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
   await db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
   await db.schema.dropTable("ecr_data").ifExists().execute();
@@ -56,7 +56,7 @@ const dropCommon = async () => {
  *
  */
 const clearCommon = async () => {
-  const db = getDb() as unknown as Kysely<Common>;
+  const db = getDb<Common>();
   await db.deleteFrom("ecr_rr_rule_summaries").execute();
   await db.deleteFrom("ecr_rr_conditions").execute();
   await db.deleteFrom("ecr_data").execute();
