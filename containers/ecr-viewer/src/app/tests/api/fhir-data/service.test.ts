@@ -46,10 +46,6 @@ describe("get_fhir_data", () => {
     jest.resetAllMocks();
   });
 
-  afterAll(() => {
-    process.env.SOURCE = S3_SOURCE;
-  });
-
   it("should return a 500 response when METADATA_DATABASE_TYPE is invalid", async () => {
     (process.env.SOURCE as any) = "p0$+gre$";
 
