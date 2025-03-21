@@ -2,7 +2,7 @@ import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
 
 import { dbSchema, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
-import { Common } from "@/app/api/services/types/common";
+import { Common, ecr_data } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 import { DateRangePeriod } from "@/app/utils/date-utils";
@@ -67,30 +67,27 @@ export async function listEcrData(
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<EcrDisplay[]> {
+  let listFn: typeof listCoreEcrData;
   switch (dbSchema()) {
     case "core":
-      return listCoreEcrData(
-        startIndex,
-        itemsPerPage,
-        sortColumn,
-        sortDirection,
-        filterDates,
-        searchTerm,
-        filterConditions,
-      );
+      listFn = listCoreEcrData;
+      break;
     case "extended":
-      return listExtendedEcrData(
-        startIndex,
-        itemsPerPage,
-        sortColumn,
-        sortDirection,
-        filterDates,
-        searchTerm,
-        filterConditions,
-      );
+      listFn = listExtendedEcrData;
+      break;
     default:
       throw new Error("Unsupported database type");
   }
+
+  return listFn(
+    startIndex,
+    itemsPerPage,
+    sortColumn,
+    sortDirection,
+    filterDates,
+    searchTerm,
+    filterConditions,
+  );
 }
 
 async function listCoreEcrData(
@@ -144,56 +141,9 @@ async function listCoreEcrData(
           .fetch(itemsPerPage),
       );
 
-      const rawEcrs: Omit<
-        CoreMetadataModel,
-        "conditions" | "rule_summaries"
-      >[] = await mainQuery.selectFrom("ecrs").selectAll().execute();
-
-      const conditions = await mainQuery
-        .selectFrom("ecrs")
-        .leftJoin(
-          "ecr_rr_conditions",
-          "ecrs.eicr_id",
-          "ecr_rr_conditions.eicr_id",
-        )
-        .select(["ecrs.eicr_id", "ecr_rr_conditions.condition"])
-        .distinct()
-        .execute();
-
-      const rule_summaries = await mainQuery
-        .selectFrom("ecrs")
-        .leftJoin(
-          "ecr_rr_conditions",
-          "ecrs.eicr_id",
-          "ecr_rr_conditions.eicr_id",
-        )
-        .leftJoin(
-          "ecr_rr_rule_summaries",
-          "ecr_rr_conditions.uuid",
-          "ecr_rr_rule_summaries.ecr_rr_conditions_id",
-        )
-        .select(["ecrs.eicr_id", "ecr_rr_rule_summaries.rule_summary"])
-        .distinct()
-        .execute();
-
-      const ecrs: CoreMetadataModel[] = rawEcrs.map((ecr) => {
-        return {
-          ...ecr,
-          conditions: conditions
-            .filter(
-              ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
-            )
-            .map(({ condition }) => condition) as string[],
-          rule_summaries: rule_summaries
-            .filter(
-              ({ eicr_id, rule_summary }) =>
-                rule_summary && eicr_id === ecr.eicr_id,
-            )
-            .map(({ rule_summary }) => rule_summary) as string[],
-        };
-      });
-
-      return ecrs;
+      return getMetaModelData<CoreMetadataModel>(
+        mainQuery as unknown as Kysely<EcrsCte>,
+      );
     });
 
   return processCoreMetadata(res);
@@ -249,60 +199,86 @@ async function listExtendedEcrData(
           .fetch(itemsPerPage),
       );
 
-      const rawEcrs: Omit<
-        ExtendedMetadataModel,
-        "conditions" | "rule_summaries"
-      >[] = await mainQuery.selectFrom("ecrs").selectAll().execute();
-
-      const conditions = await mainQuery
-        .selectFrom("ecrs")
-        .leftJoin(
-          "ecr_rr_conditions",
-          "ecrs.eicr_id",
-          "ecr_rr_conditions.eicr_id",
-        )
-        .select(["ecrs.eicr_id", "ecr_rr_conditions.condition"])
-        .distinct()
-        .execute();
-
-      const rule_summaries = await mainQuery
-        .selectFrom("ecrs")
-        .leftJoin(
-          "ecr_rr_conditions",
-          "ecrs.eicr_id",
-          "ecr_rr_conditions.eicr_id",
-        )
-        .leftJoin(
-          "ecr_rr_rule_summaries",
-          "ecr_rr_conditions.uuid",
-          "ecr_rr_rule_summaries.ecr_rr_conditions_id",
-        )
-        .select(["ecrs.eicr_id", "ecr_rr_rule_summaries.rule_summary"])
-        .distinct()
-        .execute();
-
-      const ecrs: ExtendedMetadataModel[] = rawEcrs.map((ecr) => {
-        return {
-          ...ecr,
-          conditions: conditions
-            .filter(
-              ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
-            )
-            .map(({ condition }) => condition) as string[],
-          rule_summaries: rule_summaries
-            .filter(
-              ({ eicr_id, rule_summary }) =>
-                rule_summary && eicr_id === ecr.eicr_id,
-            )
-            .map(({ rule_summary }) => rule_summary) as string[],
-        };
-      });
-
-      return ecrs;
+      return getMetaModelData<ExtendedMetadataModel>(
+        mainQuery as unknown as Kysely<EcrsCte>,
+      );
     });
 
   return processExtendedMetadata(res);
 }
+
+// The actual type of the CTE we creqte in both list fns is truly gnarly (and not exported)
+// So we cast everything to a Kysely<EcrsCte> which has the same functionality and types we need.
+// It's a bit gross, but it reduces the code repetition substantially
+interface EcrsCte extends Common {
+  ecrs: { eicr_id: string } & ecr_data;
+}
+
+// Helper to execute the main ecr fetching CTE and also join in the conditions
+// and rule summary data. If this is ever a performance problem, we could likely
+// push this into the DB. Array/string aggregation functions are a mess across the SQLs
+// so this solution is a bit back to basics and lets JS handle the join (there's never much
+// data returned)
+const getMetaModelData = async <T extends CommonMetadataModel>(
+  mainQuery: Kysely<EcrsCte>,
+): Promise<T[]> => {
+  const rawEcrs = (await mainQuery
+    .selectFrom("ecrs")
+    .selectAll()
+    .execute()) as Omit<T, "conditions" | "rule_summaries">[];
+
+  const conditions = await mainQuery
+    .selectFrom("ecrs")
+    .leftJoin("ecr_rr_conditions", "ecrs.eicr_id", "ecr_rr_conditions.eicr_id")
+    .select(["ecrs.eicr_id", "ecr_rr_conditions.condition"])
+    .distinct()
+    .execute();
+
+  const rule_summaries = await mainQuery
+    .selectFrom("ecrs")
+    .leftJoin("ecr_rr_conditions", "ecrs.eicr_id", "ecr_rr_conditions.eicr_id")
+    .leftJoin(
+      "ecr_rr_rule_summaries",
+      "ecr_rr_conditions.uuid",
+      "ecr_rr_rule_summaries.ecr_rr_conditions_id",
+    )
+    .select(["ecrs.eicr_id", "ecr_rr_rule_summaries.rule_summary"])
+    .distinct()
+    .execute();
+
+  const ecrs = rawEcrs.map((ecr) => {
+    return {
+      ...ecr,
+      conditions: conditions
+        .filter(
+          ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
+        )
+        .map(({ condition }) => condition) as string[],
+      rule_summaries: rule_summaries
+        .filter(
+          ({ eicr_id, rule_summary }) =>
+            rule_summary && eicr_id === ecr.eicr_id,
+        )
+        .map(({ rule_summary }) => rule_summary) as string[],
+    };
+  }) as T[];
+
+  return ecrs;
+};
+
+// Helper to handle the common parts of the data
+const processCommonMetadata = <T extends CommonMetadataModel>(object: T) => {
+  return {
+    ecrId: object.eicr_id || "",
+    reportable_conditions: object.conditions || [],
+    rule_summaries: object.rule_summaries || [],
+    date_created: object.date_created
+      ? formatDateTime(object.date_created.toISOString())
+      : "",
+    eicr_set_id: object.set_id,
+    eicr_version_number: object.eicr_version_number,
+  };
+};
 
 /**
  * Processes a list of eCR data retrieved from Postgres.
@@ -314,22 +290,15 @@ export const processCoreMetadata = (
 ): EcrDisplay[] => {
   return responseBody.map((object) => {
     return {
-      ecrId: object.eicr_id || "",
+      ...processCommonMetadata(object),
       patient_first_name: object.patient_name_first || "",
       patient_last_name: object.patient_name_last || "",
       patient_date_of_birth: object.patient_birth_date
         ? formatDate(object.patient_birth_date.toISOString())
         : "",
-      reportable_conditions: object.conditions || [],
-      rule_summaries: object.rule_summaries || [],
-      date_created: object.date_created
-        ? formatDateTime(object.date_created.toISOString())
-        : "",
       patient_report_date: object.report_date
         ? formatDateTime(object.report_date.toISOString())
         : "",
-      eicr_set_id: object.set_id,
-      eicr_version_number: object.eicr_version_number,
     };
   });
 };
@@ -344,22 +313,15 @@ const processExtendedMetadata = (
 ): EcrDisplay[] => {
   const res = responseBody.map((object) => {
     const result = {
-      ecrId: object.eicr_id || "",
+      ...processCommonMetadata(object),
       patient_first_name: object.first_name || "",
       patient_last_name: object.last_name || "",
       patient_date_of_birth: object.birth_date
         ? formatDate(object.birth_date.toISOString())
         : "",
-      reportable_conditions: object.conditions ?? [],
-      rule_summaries: object.rule_summaries ?? [],
-      date_created: object.date_created
-        ? formatDateTime(object.date_created.toISOString())
-        : "",
       patient_report_date: object.encounter_start_date
         ? formatDateTime(object.encounter_start_date.toISOString())
         : "",
-      eicr_set_id: object.set_id,
-      eicr_version_number: object.eicr_version_number,
     };
 
     return result;
