@@ -2,8 +2,8 @@
 
 import { Kysely } from "kysely";
 
-import { pgConstructor } from "./buildPg";
-import { sqlConstructor } from "./buildSql";
+import { pgConstructor } from "./dialects/postgres";
+import { sqlServerConstructor } from "./dialects/sqlserver";
 import { Core } from "./types/core";
 import { Extended } from "./types/extended";
 
@@ -45,7 +45,7 @@ export const getDb = () => {
 
   switch (db_type) {
     case "sqlserver":
-      db = sqlConstructor(db_schema);
+      db = sqlServerConstructor(db_schema);
       break;
     case "postgres":
       db = pgConstructor(db_schema);

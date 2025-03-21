@@ -12,10 +12,10 @@ services:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY=${NBS_PUB_KEY:-}
       # POSTGRES
-      - DATABASE_URL=postgres://postgres:pw@postgres:5432/ecr_viewer_db
+      - DATABASE_URL=postgres://postgres:pw@localhost:5432/ecr_viewer_db
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-pw}
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres}
+      - POSTGRES_HOST=${POSTGRES_HOST:-localhost}
       - POSTGRES_PORT=${POSTGRES_PORT:-5432}
       - POSTGRES_DATABASE=${POSTGRES_DATABASE:-ecr_viewer_db}
 
