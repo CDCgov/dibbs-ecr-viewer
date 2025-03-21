@@ -2,8 +2,10 @@ import { randomUUID } from "crypto";
 
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
+import { Kysely } from "kysely";
 
 import { dbSchema, getDb } from "@/app/api/services/database";
+import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
@@ -264,35 +266,9 @@ export const saveExtendedMetadata = async (
             .execute();
         }
       }
-      if (metadata.rr) {
-        // Loop through each condition/rule object in rr array
-        for (const rrItem of metadata.rr) {
-          const rr_conditions_uuid = randomUUID();
-          // Insert condition into ecr_rr_conditions
-          await trx
-            .insertInto("ecr_rr_conditions")
-            .values({
-              uuid: rr_conditions_uuid,
-              eicr_id: ecrId,
-              condition: rrItem.condition,
-            })
-            .execute();
-          // Loop through the rule summaries array
-          if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
-            for (const summary of rrItem.rule_summaries) {
-              // Insert each rule summary with reference to the condition
-              await trx
-                .insertInto("ecr_rr_rule_summaries")
-                .values({
-                  uuid: randomUUID(),
-                  ecr_rr_conditions_id: rr_conditions_uuid,
-                  rule_summary: summary.summary,
-                })
-                .execute();
-            }
-          }
-        }
-      }
+
+      // The actual type here is a beast, but we know that this mapping is functionally sound
+      await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
     });
     return {
       message: "Success. Saved metadata to database.",
@@ -305,6 +281,43 @@ export const saveExtendedMetadata = async (
       message,
       status: 500,
     };
+  }
+};
+
+// Helper to save RR to the database (common across schemas)
+const saveRR = async (
+  trx: Kysely<Common>,
+  metadata: BundleMetadata | BundleExtendedMetadata,
+  ecrId: string,
+) => {
+  if (!metadata.rr) return;
+
+  // Loop through each condition/rule object in rr array
+  for (const rrItem of metadata.rr) {
+    const rr_conditions_uuid = randomUUID();
+    // Insert condition into ecr_rr_conditions
+    await trx
+      .insertInto("ecr_rr_conditions")
+      .values({
+        uuid: rr_conditions_uuid,
+        eicr_id: ecrId,
+        condition: rrItem.condition,
+      })
+      .execute();
+    // Loop through the rule summaries array
+    if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
+      for (const summary of rrItem.rule_summaries) {
+        // Insert each rule summary with reference to the condition
+        await trx
+          .insertInto("ecr_rr_rule_summaries")
+          .values({
+            uuid: randomUUID(),
+            ecr_rr_conditions_id: rr_conditions_uuid,
+            rule_summary: summary.summary,
+          })
+          .execute();
+      }
+    }
   }
 };
 
@@ -347,36 +360,8 @@ export const saveCoreMetadata = async (
         })
         .execute();
 
-      // Loop through each condition/rule object in rr array
-      if (metadata.rr && metadata.rr.length > 0) {
-        for (const rrItem of metadata.rr) {
-          // Insert condition into ecr_rr_conditions
-          const tempId = randomUUID();
-          await trx
-            .insertInto("ecr_rr_conditions")
-            .values({
-              uuid: tempId,
-              eicr_id: ecrId,
-              condition: rrItem.condition,
-            })
-            .execute();
-
-          // Loop through the rule summaries array
-          if (rrItem.rule_summaries && rrItem.rule_summaries.length > 0) {
-            for (const summaryObj of rrItem.rule_summaries) {
-              // Insert each associated summary into ecr_rr_rule_summaries
-              await trx
-                .insertInto("ecr_rr_rule_summaries")
-                .values({
-                  uuid: randomUUID(),
-                  ecr_rr_conditions_id: tempId,
-                  rule_summary: summaryObj.summary,
-                })
-                .execute();
-            }
-          }
-        }
-      }
+      // The actual type here is a beast, but we know that this mapping is functionally sound
+      await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
     });
     return {
       message: "Success. Saved metadata to database.",
