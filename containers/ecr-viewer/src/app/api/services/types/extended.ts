@@ -11,7 +11,7 @@ import { Common, ecr_data } from "./common";
 export interface extended_ecr_data extends ecr_data {
   last_name: string | undefined;
   first_name: string | undefined;
-  birth_date: Date | undefined;
+  birth_date: ColumnType<Date, string> | undefined;
   gender: string | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;

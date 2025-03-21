@@ -7,9 +7,9 @@ export interface core_ecr_data extends ecr_data {
 
   patient_name_first: string;
   patient_name_last: string;
-  patient_birth_date: ColumnType<Date>;
+  patient_birth_date: ColumnType<Date, string>;
 
-  report_date: ColumnType<Date>;
+  report_date: Date;
 }
 
 export type CoreECR = Selectable<core_ecr_data>;

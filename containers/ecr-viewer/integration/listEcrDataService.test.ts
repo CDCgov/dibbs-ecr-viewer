@@ -52,7 +52,7 @@ const coreTemplate: NewCoreECR = {
   eicr_version_number: "1",
   patient_name_first: "Billy",
   patient_name_last: "Bob",
-  patient_birth_date: new Date("2024-12-01T12:00:00Z"),
+  patient_birth_date: "2024-12-01",
   date_created: new Date("2024-12-02T12:00:00Z"),
   report_date: new Date("2024-12-02T12:00:00Z"),
 };
@@ -63,7 +63,7 @@ const extendedTemplate: NewExtendedECR = {
   fhir_reference_link: "http://example.com",
   last_name: "Kenobi",
   first_name: "Obi-Wan",
-  birth_date: new Date("2024-12-31T05:00:00.000Z"),
+  birth_date: "2024-12-31",
   gender: "Based",
   birth_sex: "Based",
   gender_identity: "Based",
