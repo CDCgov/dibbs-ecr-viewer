@@ -35,6 +35,9 @@ export const dialect = {
               trustServerCertificate: true,
               connectTimeout: dbConfig.connectionTimeout || 3000,
               requestTimeout: dbConfig.requestTimeout,
+              cryptoCredentialsDetails: {
+                ciphers: process.env.DB_CIPHER,
+              },
               ...dbConfig.options,
             },
             server:

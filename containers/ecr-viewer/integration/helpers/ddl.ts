@@ -44,7 +44,7 @@ const buildCommon = async () => {
 };
 
 /**
- *
+ * Drops the common schema from a test database
  */
 const dropCommon = async () => {
   const db = getDb<Common>();
@@ -54,7 +54,7 @@ const dropCommon = async () => {
 };
 
 /**
- *
+ * Clears the common schema from a test database
  */
 const clearCommon = async () => {
   const db = getDb<Common>();
@@ -65,8 +65,6 @@ const clearCommon = async () => {
 
 /**
  * Builds the extended schema to a test database
- * @async
- * @function buildExtended
  */
 export const buildExtended = async () => {
   await dropExtended();
@@ -150,8 +148,6 @@ export const buildExtended = async () => {
 
 /**
  * Drops the extended schema from a test database
- * @async
- * @function dropExtended
  */
 export const dropExtended = async () => {
   await extdb().schema.dropTable("patient_address").ifExists().execute();
@@ -161,8 +157,6 @@ export const dropExtended = async () => {
 
 /**
  * Clears the extended schema tables on a test database
- * @async
- * @function clearExtended
  */
 export const clearExtended = async () => {
   await extdb().deleteFrom("patient_address").execute();
@@ -172,8 +166,6 @@ export const clearExtended = async () => {
 
 /**
  * Builds the core schema to a test database
- * @async
- * @function buildCore
  */
 export const buildCore = async () => {
   await dropCore(); // make sure we're starting from scratch
@@ -191,14 +183,10 @@ export const buildCore = async () => {
 
 /**
  * Drops the core schema from a test database
- * @async
- * @function dropCore
  */
 export const dropCore = dropCommon;
 
 /**
  * Clears the core schema tables on a test database
- * @async
- * @function clearCore
  */
 export const clearCore = clearCommon;
