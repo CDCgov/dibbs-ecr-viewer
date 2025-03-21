@@ -17,7 +17,9 @@ const coredb = () => {
 
 const buildCommon = async () => {
   const db = getDb<Common>();
-  await db.schema.createSchema(dbNamespace()).ifNotExists().execute();
+  try {
+    await db.schema.createSchema(dbNamespace()).execute();
+  } catch {}
   await db.schema
     .createTable("ecr_data")
     .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
