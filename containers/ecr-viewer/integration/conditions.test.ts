@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 
-import { buildCore, dropCore } from "@/app/api/services/db_schema";
 import { createEcrCondition } from "@/app/api/services/helpers/common";
+import { buildCore, dropCore } from "@/app/api/services/helpers/ddl";
 import { getAllConditions } from "@/app/data/conditions";
 
 describe("Conditions service", () => {

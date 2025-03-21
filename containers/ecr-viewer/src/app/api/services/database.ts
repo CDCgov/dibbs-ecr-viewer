@@ -28,6 +28,16 @@ export const dbSchema = () => {
 };
 
 /**
+ * Get the current database namespace (schema)
+ * @returns string describing namespace
+ */
+export const dbNamespace = () => {
+  return process.env.TEST_TYPE === "integration"
+    ? "test_ev_schema"
+    : "ecr_viewer";
+};
+
+/**
  * Get the database global.
  * @returns global db
  */
@@ -53,7 +63,9 @@ export const getDb = () => {
     default:
       throw new Error(`unknown db type: ${db_type}`);
   }
-  db = db.withSchema("ecr_viewer");
+
+  // use a different schema in testing so seed data doesn't get wiped out
+  db = db.withSchema(dbNamespace());
 
   return db;
 };
