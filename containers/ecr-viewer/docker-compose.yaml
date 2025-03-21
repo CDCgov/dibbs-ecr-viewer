@@ -141,7 +141,8 @@ services:
       - 10001:10001
     command: ["-scheme", "http", "-port", "10001"]
     volumes:
-      - gcp-data:/data
+      - ./seed-scripts/gcp:/data
+      - gcp-data:/storage
     profiles:
       - GCS_INTEGRATED
       - GCS_PG_NON_INTEGRATED
@@ -174,8 +175,3 @@ volumes:
   azure-data:
   aws-data:
   gcp-data:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./seed-scripts/gcp/
