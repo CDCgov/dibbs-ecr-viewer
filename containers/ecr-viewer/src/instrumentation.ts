@@ -12,7 +12,6 @@ export async function register() {
 }
 
 function setupConfigurationVariables() {
-  console.log(`setting up config: ${process.env.CONFIG_NAME}`);
   switch (process.env.CONFIG_NAME) {
     case "AWS_INTEGRATED":
       process.env.NBS_AUTH = "true";
