@@ -20,10 +20,6 @@ export interface ecr_rr_rule_summaries {
   rule_summary: string;
 }
 
-export type ECR = Selectable<ecr_data>;
-export type NewECR = Insertable<ecr_data>;
-export type ECRUpdate = Updateable<ecr_data>;
-
 export type ECRConditions = Selectable<ecr_rr_conditions>;
 export type NewECRConditions = Insertable<ecr_rr_conditions>;
 export type ECRConditionsUpdate = Updateable<ecr_rr_conditions>;
