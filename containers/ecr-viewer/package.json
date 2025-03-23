@@ -28,7 +28,7 @@
     "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.682.0",
+    "@aws-sdk/client-s3": "^3.772.0",
     "@azure/storage-blob": "^12.24.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "@next/bundle-analyzer": "^15.1.7",
