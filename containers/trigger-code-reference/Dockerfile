@@ -10,9 +10,9 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install -r requirements.txt
 
+COPY ./data /code/data
 COPY ./app /code/app
 COPY ./assets /code/assets
-COPY ./seed-scripts /code/seed-scripts
 COPY ./README.md /code/README.md
 
 EXPOSE 8080

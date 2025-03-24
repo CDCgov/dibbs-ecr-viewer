@@ -5,15 +5,17 @@ from typing import Annotated
 from fastapi import Body, Query, Response
 
 from app.base_service import BaseService
+from app.db import (
+    add_human_readable_reportable_condition_name_tes,
+    get_concepts_list_tes,
+)
 from app.models import InsertConditionInput
 from app.utils import (
-    _find_codes_by_resource_type,
-    add_human_readable_reportable_condition_name,
     add_reportable_condition_extension,
+    find_codes_by_resource_type,
     find_conditions,
     get_clean_snomed_code,
     get_concepts_dict,
-    get_concepts_list,
     read_json_from_assets,
 )
 
@@ -80,19 +82,20 @@ async def stamp_condition_extensions(
     condition_codes = find_conditions(input.bundle)
 
     for condition_code in condition_codes:
-        cond_list = get_concepts_list([condition_code])
+        cond_list = get_concepts_list_tes([condition_code])
         cond_dict = get_concepts_dict(cond_list)
         stamp_codes_to_service_codes[condition_code] = cond_dict
 
     bundle_entries = input.bundle.get("entry", [])
     for entry in bundle_entries:
         resource = entry.get("resource", {})
-        resource = add_human_readable_reportable_condition_name(resource)
+        resource = add_human_readable_reportable_condition_name_tes(resource)
         rtype = resource.get("resourceType")
         if rtype in RESOURCE_TO_SERVICE_TYPES:
             # Some resources might be coded in one or more schemes, so we'll
             # need to check for any that are applicable
-            r_codes = _find_codes_by_resource_type(resource)
+            r_codes = find_codes_by_resource_type(resource)
+
             if len(r_codes) == 0:
                 continue
 
@@ -171,7 +174,7 @@ async def get_value_sets_for_condition(
         )
     else:
         clean_snomed_code = get_clean_snomed_code(condition_code)
-        concepts_list = get_concepts_list(clean_snomed_code)
+        concepts_list = get_concepts_list_tes(clean_snomed_code)
         values = get_concepts_dict(concepts_list, filter_concepts)
     return values
 

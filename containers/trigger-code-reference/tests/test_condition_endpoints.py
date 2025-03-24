@@ -81,7 +81,7 @@ def test_get_value_sets_for_condition(mock_db):
 
 # Note: This function is defined in utils, but we mock it in the namespace
 # coming from main because that's where the endpoint is invoking it from
-@patch("app.main.get_concepts_list")
+@patch("app.main.get_concepts_list_tes")
 def test_stamp_conditions_no_resources_to_stamp(patched_get_services_list):
     # We don't stamp patient resources, bundle should be a no-op
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
@@ -115,7 +115,7 @@ def test_stamp_conditions_no_resources_to_stamp(patched_get_services_list):
     assert not found_matching_extension
 
 
-@patch("app.main.get_concepts_list")
+@patch("app.main.get_concepts_list_tes")
 def test_stamp_condition_extensions(patched_get_services_list):
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
 
@@ -145,7 +145,7 @@ def test_stamp_condition_extensions(patched_get_services_list):
     assert found_matching_extension
 
 
-@patch("app.main.get_concepts_list")
+@patch("app.main.get_concepts_list_tes")
 def test_stamp_condition_extensions_with_no_conditions(patched_get_services_list):
     """Test that when no conditions are provided, no stamping occurs"""
     message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
