@@ -1,5 +1,7 @@
 import { makeEnvPublic } from "next-runtime-env";
 
+import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
+
 /**
  * The register function will be callled once when nextjs server is instantiated
  */
@@ -12,10 +14,12 @@ export async function register() {
 }
 
 function setupConfigurationVariables() {
-  const sourceMap: { [key: string]: "s3" | "azure" | "gcp" } = {
-    AWS: "s3",
-    AZURE: "azure",
-    GCS: "gcp",
+  const sourceMap: {
+    [key: string]: typeof S3_SOURCE | typeof AZURE_SOURCE | typeof GCP_SOURCE;
+  } = {
+    AWS: S3_SOURCE,
+    AZURE: AZURE_SOURCE,
+    GCS: GCP_SOURCE,
   };
 
   switch (process.env.CONFIG_NAME) {

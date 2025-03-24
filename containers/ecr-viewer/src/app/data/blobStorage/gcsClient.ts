@@ -1,11 +1,13 @@
 import { Storage } from "@google-cloud/storage";
 
+import { GCP_SOURCE } from "@/app/api/utils";
+
 /**
  * Connect to the google cloud storage bucket.
  * @returns The google cloud storage bucket.
  */
 export const gcsClient = () => {
-  if (process.env.SOURCE === "gcp" && process.env.ECR_BUCKET_NAME) {
+  if (process.env.SOURCE === GCP_SOURCE && process.env.ECR_BUCKET_NAME) {
     const storage = new Storage({
       apiEndpoint: process.env.GCP_API_ENDPOINT,
       projectId: process.env.GCP_PROJECT_ID,
@@ -22,7 +24,7 @@ export const gcsClient = () => {
  * @returns The status of the google cloud storage connection or undefined if missing environment values.
  */
 export const gcsHealthCheck = async () => {
-  if (process.env.SOURCE !== "gcp" || !process.env.ECR_BUCKET_NAME) {
+  if (process.env.SOURCE !== GCP_SOURCE || !process.env.ECR_BUCKET_NAME) {
     return undefined;
   }
   try {

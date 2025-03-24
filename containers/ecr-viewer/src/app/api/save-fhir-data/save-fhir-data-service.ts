@@ -163,7 +163,7 @@ export const saveFhirData = async (
   } else {
     return {
       message:
-        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", or "azure").',
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
       status: 400,
     };
   }
