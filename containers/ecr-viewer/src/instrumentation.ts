@@ -21,6 +21,7 @@ function setupConfigurationVariables() {
     AZURE: AZURE_SOURCE,
     GCP: GCP_SOURCE,
   };
+  process.env.SOURCE = sourceMap[process.env.CONFIG_NAME.split("_")[0]];
 
   switch (process.env.CONFIG_NAME) {
     case "AWS_INTEGRATED":
@@ -28,7 +29,6 @@ function setupConfigurationVariables() {
     case "GCP_INTEGRATED":
       process.env.NBS_AUTH = "true";
       process.env.NON_INTEGRATED_VIEWER = "false";
-      process.env.SOURCE = sourceMap[process.env.CONFIG_NAME.split("_")[0]];
       break;
 
     case "AWS_PG_NON_INTEGRATED":
@@ -36,7 +36,6 @@ function setupConfigurationVariables() {
     case "GCP_PG_NON_INTEGRATED":
       process.env.NBS_AUTH = "false";
       process.env.NON_INTEGRATED_VIEWER = "true";
-      process.env.SOURCE = sourceMap[process.env.CONFIG_NAME.split("_")[0]];
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "core";
       break;
@@ -46,7 +45,6 @@ function setupConfigurationVariables() {
     case "GCP_SQLSERVER_NON_INTEGRATED":
       process.env.NBS_AUTH = "false";
       process.env.NON_INTEGRATED_VIEWER = "true";
-      process.env.SOURCE = sourceMap[process.env.CONFIG_NAME.split("_")[0]];
       process.env.METADATA_DATABASE_TYPE = "sqlserver";
       process.env.METADATA_DATABASE_SCHEMA = "extended";
       break;
