@@ -20,10 +20,7 @@ export const azureBlobContainerClient = () => {
  * @returns The status of the azure blob connection or undefined if missing environment values.
  */
 export const azureBlobStorageHealthCheck = async () => {
-  if (
-    !process.env.AZURE_STORAGE_CONNECTION_STRING ||
-    !(process.env.AZURE_CONTAINER_NAME || process.env.ECR_BUCKET_NAME)
-  ) {
+  if (process.env.SOURCE !== "azure") {
     return undefined;
   }
   try {
