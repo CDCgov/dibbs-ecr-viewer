@@ -262,15 +262,16 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
 
   const content = evaluateValue(
     fhirBundle,
-    fhirPathMappings.historyOfPresentIllness,
+    fhirPathMappings.historyOfPresentIllness
   );
   const tables = formatTablesToJSON(content);
-  
+
+  // Not a table, safe parse the string content
   if (tables.length === 0) {
     return {
       title,
       value: safeParse(content),
-      toolTip, 
+      toolTip,
     };
   }
 
