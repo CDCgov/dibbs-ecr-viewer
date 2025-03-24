@@ -158,7 +158,7 @@ describe("saveFhirData", () => {
 
     expect(result).toEqual({
       message:
-        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", or "azure").',
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
       status: 400,
     });
   });
