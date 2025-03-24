@@ -21,14 +21,15 @@ describe("s3 health check", () => {
   afterEach(() => {
     jest.resetAllMocks();
     process.env.ECR_BUCKET_NAME = "";
+    process.env.SOURCE = "s3";
   });
 
-  it("should return UNDEFINED if missing bucket name", async () => {
-    process.env.ECR_BUCKET_NAME = "";
+  it("should return UNDEFINED if SOURCE is not s3", async () => {
+    process.env.SOURCE = "azure";
     expect(await s3HealthCheck()).toBeUndefined();
   });
   it("should return UP when health command succeeds", async () => {
-    process.env.ECR_BUCKET_NAME = "bucket";
+    process.env.SOURCE = "s3";
     mockSend.mockResolvedValue({ $metadata: { httpStatusCode: 200 } });
 
     const result = await s3HealthCheck();
@@ -36,7 +37,7 @@ describe("s3 health check", () => {
   });
   it("should return DOWN when health command fails", async () => {
     jest.spyOn(console, "error").mockImplementation();
-    process.env.ECR_BUCKET_NAME = "bucket";
+    process.env.SOURCE = "s3";
     mockSend.mockResolvedValue({ $metadata: { httpStatusCode: 404 } });
 
     const result = await s3HealthCheck();
@@ -44,7 +45,7 @@ describe("s3 health check", () => {
   });
   it("should return DOWN when s3 throws an error", async () => {
     jest.spyOn(console, "error").mockImplementation();
-    process.env.ECR_BUCKET_NAME = "bucket";
+    process.env.SOURCE = "s3";
     mockSend.mockRejectedValue(new Error("Connection failed"));
 
     const result = await s3HealthCheck();
