@@ -252,6 +252,7 @@ export const returnCareTeamTable = (
 
 /**
  * Helper to evaluate the misc notes which can be either a string or a table.
+ * Note: Malformed HTML will result in hydration errors (but text will still display)
  * @param fhirBundle - The FHIR bundle containing clinical data.
  * @returns data display props with the appropriate values
  */
