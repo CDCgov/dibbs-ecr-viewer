@@ -9,7 +9,7 @@ export const azureBlobContainerClient = () => {
     process.env.AZURE_STORAGE_CONNECTION_STRING,
   );
   const containerClient = blobClient.getContainerClient(
-    process.env.AZURE_CONTAINER_NAME,
+    process.env.AZURE_CONTAINER_NAME || process.env.ECR_BUCKET_NAME,
   );
 
   return containerClient;
@@ -22,7 +22,7 @@ export const azureBlobContainerClient = () => {
 export const azureBlobStorageHealthCheck = async () => {
   if (
     !process.env.AZURE_STORAGE_CONNECTION_STRING ||
-    !process.env.AZURE_CONTAINER_NAME
+    !(process.env.AZURE_CONTAINER_NAME || process.env.ECR_BUCKET_NAME)
   ) {
     return undefined;
   }
