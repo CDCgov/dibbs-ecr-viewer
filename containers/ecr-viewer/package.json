@@ -28,7 +28,7 @@
     "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.682.0",
+    "@aws-sdk/client-s3": "^3.772.0",
     "@azure/storage-blob": "^12.24.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "@next/bundle-analyzer": "^15.1.7",
@@ -64,7 +64,7 @@
     "js-cookie": "^3.0.5",
     "luxon": "^3.5.0",
     "mssql": "^11.0.1",
-    "next": "^14.2.24",
+    "next": "^14.2.25",
     "next-auth": "^4.24.11",
     "next-router-mock": "^0.9.13",
     "next-runtime-env": "^3.2.2",
@@ -99,7 +99,7 @@
     "@types/sanitize-html": "^2.13.0",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
-    "autoprefixer": "^10.4.19",
+    "autoprefixer": "^10.4.21",
     "aws-sdk-client-mock": "^3.1.0",
     "concurrently": "^9.0.1",
     "eslint": "8.56.0",

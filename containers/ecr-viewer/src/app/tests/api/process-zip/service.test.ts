@@ -27,7 +27,7 @@ describe("processZip", () => {
         processed_values: {
           responses: [
             { stamped_ecr: { extended_bundle: mockEcr } },
-            { metadata_values: mockMetadata },
+            { metadata_values: { parsed_values: mockMetadata } },
           ],
         },
       }),

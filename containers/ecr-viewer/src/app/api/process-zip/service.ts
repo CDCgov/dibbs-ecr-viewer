@@ -14,7 +14,11 @@ interface OrchestrationRawResponse {
   processed_values: {
     responses: [
       { stamped_ecr: { extended_bundle: Bundle } },
-      { metadata_values: BundleExtendedMetadata | BundleMetadata }?,
+      {
+        metadata_values: {
+          parsed_values: BundleExtendedMetadata | BundleMetadata;
+        };
+      }?,
     ];
   };
 }
@@ -65,7 +69,8 @@ const getOrchestrationResponse = async (file: File): Promise<BundleInfo> => {
     const resp: OrchestrationRawResponse = await response.json();
     return {
       ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
-      metadata: resp.processed_values.responses?.[1]?.metadata_values,
+      metadata:
+        resp.processed_values.responses?.[1]?.metadata_values.parsed_values,
     };
   }
 };
