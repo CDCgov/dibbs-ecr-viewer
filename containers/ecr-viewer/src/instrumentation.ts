@@ -21,7 +21,7 @@ function setupConfigurationVariables() {
     AZURE: AZURE_SOURCE,
     GCP: GCP_SOURCE,
   };
-  process.env.SOURCE = sourceMap[process.env.CONFIG_NAME.split("_")[0]];
+  process.env.SOURCE = sourceMap[process.env.CONFIG_NAME?.split("_")[0]];
 
   switch (process.env.CONFIG_NAME) {
     case "AWS_INTEGRATED":
