@@ -207,7 +207,7 @@ async function listExtendedEcrData(
   return processExtendedMetadata(res);
 }
 
-// The actual type of the CTE we creqte in both list fns is truly gnarly (and not exported)
+// The actual type of the CTE we create in both list fns is truly gnarly (and not exported)
 // So we cast everything to a Kysely<EcrsCte> which has the same functionality and types we need.
 // It's a bit gross, but it reduces the code repetition substantially
 interface EcrsCte extends Common {
