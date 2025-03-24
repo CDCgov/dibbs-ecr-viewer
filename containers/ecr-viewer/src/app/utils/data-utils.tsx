@@ -61,6 +61,7 @@ export const isDataAvailable = (item: DisplayDataProps): Boolean => {
 
 /**
  * Parses and sanitizes the html while also mapping common hl7v3 tags to html.
+ * Malformed HTML will result in hydration errors (but text will still display)
  * @param val - The string of content to parse.
  * @returns - Returns sanitized and mapped content.
  */
