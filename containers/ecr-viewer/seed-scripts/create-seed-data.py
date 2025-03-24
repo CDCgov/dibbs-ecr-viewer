@@ -38,9 +38,9 @@ def _process_files(args):
     folder_paths = []
     configName = "integrated.json"
     config = os.getenv("CONFIG_NAME") or ""
-    if config.endswith("NON_INTEGRATED"):
+    if "_SQLSERVER_" in config:
         configName = "non-integrated-extended.json"
-    elif config.endswith("INTEGRATED"):
+    elif "_PG_" in config:
         configName = "non-integrated-core.json"
 
     def _process_eicrs(subfolder, folder, folder_path, payload):
