@@ -1,6 +1,6 @@
 import { Storage } from "@google-cloud/storage";
 
-import { gcsClient, gcsHealthCheck } from "@/app/data/blobStorage/gcsClient";
+import { gcpClient, gcpHealthCheck } from "@/app/data/blobStorage/gcpClient";
 
 const mockExists = jest.fn();
 
@@ -34,16 +34,16 @@ describe("gcp", () => {
   describe("client", () => {
     it("should return undefined if ECR_BUCKET_NAME is not set", () => {
       process.env.ECR_BUCKET_NAME = "";
-      expect(gcsClient()).toBeUndefined();
+      expect(gcpClient()).toBeUndefined();
     });
 
-    it("should return undefined if SOURCE is not gcs", () => {
+    it("should return undefined if SOURCE is not gcp", () => {
       process.env.SOURCE = "s3";
-      expect(gcsClient()).toBeUndefined();
+      expect(gcpClient()).toBeUndefined();
     });
 
     it("should call Storage without any values", () => {
-      const bucket = gcsClient();
+      const bucket = gcpClient();
 
       expect(bucket).toBeDefined();
       expect(mockBucket).toHaveBeenCalledExactlyOnceWith("fake-bucket");
@@ -54,7 +54,7 @@ describe("gcp", () => {
       });
     });
     it("should call Storage without any values", () => {
-      const bucket = gcsClient();
+      const bucket = gcpClient();
 
       expect(bucket).toBeDefined();
       expect(mockBucket).toHaveBeenCalledExactlyOnceWith("fake-bucket");
@@ -69,7 +69,7 @@ describe("gcp", () => {
       process.env.GCP_API_ENDPOINT = "http://localhost:8080";
       process.env.GCP_PROJECT_ID = "projectId";
       process.env.GCP_CREDENTIALS = JSON.stringify({ key: "fake-key" });
-      const bucket = gcsClient();
+      const bucket = gcpClient();
 
       expect(bucket).toBeDefined();
       expect(mockBucket).toHaveBeenCalledExactlyOnceWith("fake-bucket");
@@ -85,7 +85,7 @@ describe("gcp", () => {
     it("should return 'UP' if the bucket exists", async () => {
       mockExists.mockResolvedValue([true]);
 
-      const result = await gcsHealthCheck();
+      const result = await gcpHealthCheck();
 
       expect(result).toBe("UP");
       expect(mockExists).toHaveBeenCalled();
@@ -95,7 +95,7 @@ describe("gcp", () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
       mockExists.mockResolvedValue([false]);
 
-      const result = await gcsHealthCheck();
+      const result = await gcpHealthCheck();
 
       expect(result).toBe("DOWN");
       expect(mockExists).toHaveBeenCalled();
@@ -105,7 +105,7 @@ describe("gcp", () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
       mockExists.mockResolvedValue([false]);
 
-      const result = await gcsHealthCheck();
+      const result = await gcpHealthCheck();
 
       expect(result).toBe("DOWN");
       expect(mockExists).toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe("gcp", () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
       mockExists.mockRejectedValue(new Error("Uh oh"));
 
-      const result = await gcsHealthCheck();
+      const result = await gcpHealthCheck();
 
       expect(result).toBe("DOWN");
     });
@@ -123,15 +123,15 @@ describe("gcp", () => {
     it("should return undefined if ECR_BUCKET_NAME is not set", async () => {
       process.env.ECR_BUCKET_NAME = "";
 
-      const result = await gcsHealthCheck();
+      const result = await gcpHealthCheck();
 
       expect(result).toBeUndefined();
     });
 
-    it("should return undefined if SOURCE is not gcs", async () => {
+    it("should return undefined if SOURCE is not gcp", async () => {
       process.env.SOURCE = "s3";
 
-      const result = await gcsHealthCheck();
+      const result = await gcpHealthCheck();
 
       expect(result).toBeUndefined();
     });

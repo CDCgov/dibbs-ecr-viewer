@@ -2,14 +2,14 @@ import { Bundle } from "fhir/r4";
 
 import { saveFhirData } from "@/app/api/save-fhir-data/save-fhir-data-service";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
-import { gcsClient } from "@/app/data/blobStorage/gcsClient";
+import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 jest.mock("../../../../app/data/blobStorage/azureClient", () => ({
   azureBlobContainerClient: jest.fn(),
 }));
-jest.mock("../../../../app/data/blobStorage/gcsClient", () => ({
-  gcsClient: jest.fn(),
+jest.mock("../../../../app/data/blobStorage/gcpClient", () => ({
+  gcpClient: jest.fn(),
 }));
 jest.mock("../../../../app/data/blobStorage/s3Client", () => ({
   s3Client: { send: jest.fn() },
@@ -119,10 +119,10 @@ describe("saveFhirData", () => {
     });
   });
 
-  it("should return 200 when saving to GCS succeeds", async () => {
+  it("should return 200 when saving to GCP succeeds", async () => {
     const mockSave = jest.fn().mockResolvedValue(undefined);
     const mockFile = jest.fn().mockReturnValue({ save: mockSave });
-    (gcsClient as jest.Mock).mockReturnValue({
+    (gcpClient as jest.Mock).mockReturnValue({
       file: mockFile,
     });
 
@@ -132,16 +132,16 @@ describe("saveFhirData", () => {
       message: "Success. Saved FHIR bundle.",
       status: 200,
     });
-    expect(gcsClient).toHaveBeenCalledOnce();
+    expect(gcpClient).toHaveBeenCalledOnce();
     expect(mockFile).toHaveBeenCalledExactlyOnceWith(ecrFileName);
     expect(mockSave).toHaveBeenCalledExactlyOnceWith(fhirBundleString);
   });
 
-  it("should return 500 when saving to GCS fails", async () => {
+  it("should return 500 when saving to GCP fails", async () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
     const mockSave = jest.fn().mockRejectedValue(new Error("Failed to save"));
     const mockFile = jest.fn().mockReturnValue({ save: mockSave });
-    (gcsClient as jest.Mock).mockReturnValue({
+    (gcpClient as jest.Mock).mockReturnValue({
       file: mockFile,
     });
 

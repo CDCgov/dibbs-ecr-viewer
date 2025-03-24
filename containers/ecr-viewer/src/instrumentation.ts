@@ -19,7 +19,7 @@ function setupConfigurationVariables() {
   } = {
     AWS: S3_SOURCE,
     AZURE: AZURE_SOURCE,
-    GCS: GCP_SOURCE,
+    GCP: GCP_SOURCE,
   };
 
   switch (process.env.CONFIG_NAME) {

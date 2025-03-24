@@ -11,15 +11,15 @@ import {
   get_s3,
 } from "@/app/api/fhir-data/fhir-data-service";
 import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "@/app/api/utils";
-import { gcsClient } from "@/app/data/blobStorage/gcsClient";
+import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 jest.mock("../../../data/db/postgres_db", () => ({
   getDB: jest.fn(),
 }));
 jest.mock("../../../data/blobStorage/s3Client");
-jest.mock("../../../data/blobStorage/gcsClient", () => ({
-  gcsClient: jest.fn(),
+jest.mock("../../../data/blobStorage/gcpClient", () => ({
+  gcpClient: jest.fn(),
 }));
 jest.mock("@azure/storage-blob", () => ({
   BlobServiceClient: {
@@ -69,7 +69,7 @@ describe("get_fhir_data", () => {
 
     it("should return 200 when the file is found", async () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
-      (gcsClient as jest.Mock).mockReturnValue({
+      (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({ download: () => "Some text" }),
       });
 
@@ -81,7 +81,7 @@ describe("get_fhir_data", () => {
 
     it("should return 404 when file not found", async () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
-      (gcsClient as jest.Mock).mockReturnValue({
+      (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({
           download: () =>
             Promise.reject(
@@ -100,7 +100,7 @@ describe("get_fhir_data", () => {
 
     it("should return 500 when an error is thrown", async () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
-      (gcsClient as jest.Mock).mockReturnValue({
+      (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({
           download: () => Promise.reject(new Error("Something went wrong!")),
         }),
@@ -116,7 +116,7 @@ describe("get_fhir_data", () => {
 
     it("should return 500 when a string is thrown", async () => {
       jest.spyOn(console, "error").mockImplementation(() => {});
-      (gcsClient as jest.Mock).mockReturnValue({
+      (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({
           download: () => Promise.reject("Uh oh :|"),
         }),
@@ -137,7 +137,7 @@ describe("get_fhir_data", () => {
       const response = await get_fhir_data("1234");
 
       expect(await response.json()).toEqual({
-        message: "GCS environment variables are missing.",
+        message: "GCP environment variables are missing.",
       });
       expect(response.status).toEqual(500);
     });

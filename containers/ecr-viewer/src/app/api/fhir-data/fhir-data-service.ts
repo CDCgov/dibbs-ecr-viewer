@@ -11,7 +11,7 @@ import {
   streamToJson,
 } from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
-import { gcsClient } from "@/app/data/blobStorage/gcsClient";
+import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
@@ -33,7 +33,7 @@ export async function get_fhir_data(ecr_id: string | null) {
   } else if (process.env.SOURCE === AZURE_SOURCE) {
     res = await get_azure(ecr_id);
   } else if (process.env.SOURCE === GCP_SOURCE) {
-    res = await get_gcs(ecr_id);
+    res = await get_gcp(ecr_id);
   } else {
     res = { payload: { message: "Invalid source" }, status: 500 };
   }
@@ -120,8 +120,8 @@ export const get_azure = async (
  * @param ecr_id - The id of the ecr to fetch.
  * @returns A promise resolving to a FhirDataResponse object.
  */
-const get_gcs = async (ecr_id: string | null): Promise<FhirDataResponse> => {
-  const client = gcsClient();
+const get_gcp = async (ecr_id: string | null): Promise<FhirDataResponse> => {
+  const client = gcpClient();
   const blobName = `${ecr_id}.json`;
 
   if (client) {
@@ -151,7 +151,7 @@ const get_gcs = async (ecr_id: string | null): Promise<FhirDataResponse> => {
     }
   } else {
     return {
-      payload: { message: "GCS environment variables are missing." },
+      payload: { message: "GCP environment variables are missing." },
       status: 500,
     };
   }

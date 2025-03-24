@@ -6,7 +6,7 @@ import sql from "mssql";
 
 import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
-import { gcsClient } from "@/app/data/blobStorage/gcsClient";
+import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 import { getDB } from "@/app/data/db/postgres_db";
 import { get_pool } from "@/app/data/db/sqlserver_db";
@@ -113,11 +113,11 @@ const saveToAzure = async (
  * @param ecrId - The unique ID for the eCR associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
-const saveToGCS = async (
+const saveToGCP = async (
   fhirBundle: Bundle,
   ecrId: string,
 ): Promise<SaveResponse> => {
-  const containerClient = gcsClient();
+  const containerClient = gcpClient();
   const blobName = `${ecrId}.json`;
   const body = JSON.stringify(fhirBundle);
 
@@ -159,7 +159,7 @@ export const saveFhirData = async (
   } else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(fhirBundle, ecrId);
   } else if (saveSource === GCP_SOURCE) {
-    return await saveToGCS(fhirBundle, ecrId);
+    return await saveToGCP(fhirBundle, ecrId);
   } else {
     return {
       message:
