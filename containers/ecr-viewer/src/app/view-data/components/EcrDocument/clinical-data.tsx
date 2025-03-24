@@ -264,14 +264,9 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
     fhirBundle,
     fhirPathMappings.historyOfPresentIllness,
   );
-
   const tables = formatTablesToJSON(content);
-  const areAllTablesEmpty = 
-      tables.length === 0 ||
-      tables.every((item) => item.tables?.every((table) => table.length === 0))
-  ;
   
-  if (areAllTablesEmpty) {
+  if (tables.length === 0) {
     return {
       title,
       value: safeParse(content),
