@@ -169,7 +169,7 @@ const VALID_PHONE_NUMBER_REGEX = /^\d{3}-\d{3}-\d{4}( \D\w*)?$/;
 /**
  * Formats a phone number into a standard format of XXX-XXX-XXXX x123.
  * @param phoneNumber - The phone number to format.
- * @returns The formatted phone number or "Invalid Number" if the input is invalid or undefined if the input is empty.
+ * @returns The formatted phone number or "Invalid Number: <unformatted phone number>" if the input is invalid or undefined if the input is empty.
  */
 export const formatPhoneNumber = (
   phoneNumber: string | undefined,
