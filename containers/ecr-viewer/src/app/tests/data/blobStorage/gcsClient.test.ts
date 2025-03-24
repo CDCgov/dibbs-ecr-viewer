@@ -15,11 +15,11 @@ jest.mock("@google-cloud/storage", () => {
     })),
   };
 });
-describe("gcs", () => {
+describe("gcp", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     process.env.ECR_BUCKET_NAME = "fake-bucket";
-    process.env.SOURCE = "gcs";
+    process.env.SOURCE = "gcp";
   });
 
   afterAll(() => {

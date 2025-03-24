@@ -126,7 +126,7 @@ describe("saveFhirData", () => {
       file: mockFile,
     });
 
-    const result = await saveFhirData(fhirBundle, ecrId, "gcs");
+    const result = await saveFhirData(fhirBundle, ecrId, "gcp");
 
     expect(result).toEqual({
       message: "Success. Saved FHIR bundle.",
@@ -145,7 +145,7 @@ describe("saveFhirData", () => {
       file: mockFile,
     });
 
-    const result = await saveFhirData(fhirBundle, ecrId, "gcs");
+    const result = await saveFhirData(fhirBundle, ecrId, "gcp");
 
     expect(result).toEqual({
       message: "Failed to save FHIR bundle.",

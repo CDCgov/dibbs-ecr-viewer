@@ -10,7 +10,7 @@ import {
   get_fhir_data,
   get_s3,
 } from "@/app/api/fhir-data/fhir-data-service";
-import { AZURE_SOURCE, GCS_SOURCE, S3_SOURCE } from "@/app/api/utils";
+import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "@/app/api/utils";
 import { gcsClient } from "@/app/data/blobStorage/gcsClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
@@ -58,9 +58,9 @@ describe("get_fhir_data", () => {
     });
   });
 
-  describe("gcs", () => {
+  describe("gcp", () => {
     beforeEach(() => {
-      process.env.SOURCE = GCS_SOURCE;
+      process.env.SOURCE = GCP_SOURCE;
       process.env.ECR_BUCKET_NAME = "ecr-viewer-files";
     });
     afterAll(() => {

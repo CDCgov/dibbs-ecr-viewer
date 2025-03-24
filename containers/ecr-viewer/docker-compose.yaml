@@ -67,7 +67,7 @@ services:
     profiles:
       - AWS_PG_NON_INTEGRATED
       - AZURE_PG_NON_INTEGRATED
-      - GCS_PG_NON_INTEGRATED
+      - GCP_PG_NON_INTEGRATED
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -91,7 +91,7 @@ services:
     profiles:
       - AWS_SQLSERVER_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
-      - GCS_SQLSERVER_NON_INTEGRATED
+      - GCP_SQLSERVER_NON_INTEGRATED
 
   aws-storage:
     image: gresau/localstack-persist:3
@@ -143,9 +143,9 @@ services:
       - ./seed-scripts/gcp:/data
       - gcp-data:/storage
     profiles:
-      - GCS_INTEGRATED
-      - GCS_PG_NON_INTEGRATED
-      - GCS_SQLSERVER_NON_INTEGRATED
+      - GCP_INTEGRATED
+      - GCP_PG_NON_INTEGRATED
+      - GCP_SQLSERVER_NON_INTEGRATED
 
   # Keycloak for authentication
   keycloak:

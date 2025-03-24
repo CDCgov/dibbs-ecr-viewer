@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 import {
   AZURE_SOURCE,
-  GCS_SOURCE,
+  GCP_SOURCE,
   S3_SOURCE,
   streamToJson,
 } from "@/app/api/utils";
@@ -32,7 +32,7 @@ export async function get_fhir_data(ecr_id: string | null) {
     res = await get_s3(ecr_id);
   } else if (process.env.SOURCE === AZURE_SOURCE) {
     res = await get_azure(ecr_id);
-  } else if (process.env.SOURCE === GCS_SOURCE) {
+  } else if (process.env.SOURCE === GCP_SOURCE) {
     res = await get_gcs(ecr_id);
   } else {
     res = { payload: { message: "Invalid source" }, status: 500 };

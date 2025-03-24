@@ -4,7 +4,7 @@ import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import sql from "mssql";
 
-import { S3_SOURCE, AZURE_SOURCE, GCS_SOURCE } from "@/app/api/utils";
+import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 import { gcsClient } from "@/app/data/blobStorage/gcsClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
@@ -158,7 +158,7 @@ export const saveFhirData = async (
     return await saveToS3(fhirBundle, ecrId);
   } else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(fhirBundle, ecrId);
-  } else if (saveSource === GCS_SOURCE) {
+  } else if (saveSource === GCP_SOURCE) {
     return await saveToGCS(fhirBundle, ecrId);
   } else {
     return {
