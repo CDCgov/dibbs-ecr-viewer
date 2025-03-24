@@ -71,7 +71,7 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
 
   if (!doc.querySelector("table")) {
     return jsonArray;
-  };
+  }
 
   // <li>{name}<table/></li> OR <list><item>{name}<table /></item></list>
   const liArray = doc.querySelectorAll("li, list > item");

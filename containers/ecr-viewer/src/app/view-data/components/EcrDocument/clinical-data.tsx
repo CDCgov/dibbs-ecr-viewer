@@ -262,7 +262,7 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
 
   const content = evaluateValue(
     fhirBundle,
-    fhirPathMappings.historyOfPresentIllness
+    fhirPathMappings.historyOfPresentIllness,
   );
   const tables = formatTablesToJSON(content);
 
