@@ -266,13 +266,16 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
   );
 
   const tables = formatTablesToJSON(content);
-
-  // Not a table, safe parse the string content
-  if (tables.length === 0) {
+  const areAllTablesEmpty = 
+      tables.length === 0 ||
+      tables.every((item) => item.tables?.every((table) => table.length === 0))
+  ;
+  
+  if (areAllTablesEmpty) {
     return {
       title,
       value: safeParse(content),
-      toolTip,
+      toolTip, 
     };
   }
 
