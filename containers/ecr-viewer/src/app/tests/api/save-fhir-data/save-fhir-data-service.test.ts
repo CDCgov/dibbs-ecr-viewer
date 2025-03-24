@@ -153,6 +153,17 @@ describe("saveFhirData", () => {
     });
   });
 
+  it("should return 500 when GCP is not configured", async () => {
+    (gcpClient as jest.Mock).mockReturnValue(undefined);
+
+    const result = await saveFhirData(fhirBundle, ecrId, "gcp");
+
+    expect(result).toEqual({
+      message: "Failed to save the FHIR bundle due to misconfiguration.",
+      status: 500,
+    });
+  });
+
   it("should return an error for an invalid save source", async () => {
     const result = await saveFhirData(fhirBundle, ecrId, "invalid-source");
 

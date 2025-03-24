@@ -137,7 +137,7 @@ describe("get_fhir_data", () => {
       const response = await get_fhir_data("1234");
 
       expect(await response.json()).toEqual({
-        message: "GCP environment variables are missing.",
+        message: "Failed to download the FHIR data due to misconfiguration.",
       });
       expect(response.status).toEqual(500);
     });

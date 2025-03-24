@@ -124,35 +124,36 @@ const get_gcp = async (ecr_id: string | null): Promise<FhirDataResponse> => {
   const client = gcpClient();
   const blobName = `${ecr_id}.json`;
 
-  if (client) {
-    try {
-      const contents = await client.file(blobName).download();
-      const fhirBundle = await streamToJson(contents);
-
-      return {
-        payload: { fhirBundle },
-        status: 200,
-      };
-    } catch (error: unknown) {
-      console.error(
-        "Failed to download the FHIR data from Google Cloud Storage:",
-        error,
-      );
-
-      if (error instanceof ApiError && error.code === 404) {
-        return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-      }
-
-      if (error instanceof Error) {
-        return { payload: { message: error.message }, status: 500 };
-      }
-
-      return { payload: { message: "Internal Server Error." }, status: 500 };
-    }
-  } else {
+  if (!client) {
     return {
-      payload: { message: "GCP environment variables are missing." },
+      payload: {
+        message: "Failed to download the FHIR data due to misconfiguration.",
+      },
       status: 500,
     };
+  }
+  try {
+    const contents = await client.file(blobName).download();
+    const fhirBundle = await streamToJson(contents);
+
+    return {
+      payload: { fhirBundle },
+      status: 200,
+    };
+  } catch (error: unknown) {
+    console.error(
+      "Failed to download the FHIR data from Google Cloud Storage:",
+      error,
+    );
+
+    if (error instanceof ApiError && error.code === 404) {
+      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+    }
+
+    if (error instanceof Error) {
+      return { payload: { message: error.message }, status: 500 };
+    }
+
+    return { payload: { message: "Internal Server Error." }, status: 500 };
   }
 };

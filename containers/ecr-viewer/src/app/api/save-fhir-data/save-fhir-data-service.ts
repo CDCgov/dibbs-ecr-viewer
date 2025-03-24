@@ -121,8 +121,14 @@ const saveToGCP = async (
   const blobName = `${ecrId}.json`;
   const body = JSON.stringify(fhirBundle);
 
+  if (!containerClient) {
+    return {
+      message: "Failed to save the FHIR bundle due to misconfiguration.",
+      status: 500,
+    };
+  }
   try {
-    await containerClient?.file(blobName).save(body);
+    await containerClient.file(blobName).save(body);
 
     return {
       message: "Success. Saved FHIR bundle.",
