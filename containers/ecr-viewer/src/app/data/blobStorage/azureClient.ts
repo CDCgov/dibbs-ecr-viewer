@@ -5,14 +5,17 @@ import { BlobServiceClient } from "@azure/storage-blob";
  * @returns A promise resolving to a azure blob container client.
  */
 export const azureBlobContainerClient = () => {
-  const blobClient = BlobServiceClient.fromConnectionString(
-    process.env.AZURE_STORAGE_CONNECTION_STRING,
-  );
-  const containerClient = blobClient.getContainerClient(
-    process.env.AZURE_CONTAINER_NAME || process.env.ECR_BUCKET_NAME,
-  );
+  if (process.env.AZURE_STORAGE_CONNECTION_STRING) {
+    const blobClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING,
+    );
+    const containerClient = blobClient.getContainerClient(
+      process.env.AZURE_CONTAINER_NAME || process.env.ECR_BUCKET_NAME,
+    );
 
-  return containerClient;
+    return containerClient;
+  }
+  return undefined;
 };
 
 /**
@@ -26,6 +29,9 @@ export const azureBlobStorageHealthCheck = async () => {
   try {
     const containerClient = azureBlobContainerClient();
 
+    if (!containerClient) {
+      return "DOWN";
+    }
     if (await containerClient.exists()) {
       return "UP";
     }

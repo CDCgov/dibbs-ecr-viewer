@@ -136,6 +136,7 @@ describe("get_azure", () => {
   };
 
   beforeEach(() => {
+    process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
     const containerClient = {
       getBlobClient: jest.fn().mockReturnValue(blockBlobClient),
     };
@@ -151,6 +152,7 @@ describe("get_azure", () => {
 
   afterEach(() => {
     process.env.SOURCE = S3_SOURCE;
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
     jest.resetAllMocks();
   });
 
@@ -179,7 +181,7 @@ describe("get_azure", () => {
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
   });
 
-  it("should return an 404 error response when id unknown", async () => {
+  it("should return a 404 error response when id unknown", async () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
@@ -191,7 +193,7 @@ describe("get_azure", () => {
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
   });
 
-  it("should return an 500 error response when database query fails", async () => {
+  it("should return a 500 error response when database query fails", async () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
@@ -201,5 +203,29 @@ describe("get_azure", () => {
     expect(response.status).toEqual(500);
     expect(response.payload).toEqual({ message: "Oh no!" });
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return a 500 error response when azure is not setup", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    blockBlobClient.download = jest.fn().mockImplementation(async () => {
+      throw { statusCode: 409, message: "Oh no!" };
+    });
+    const response = await get_azure("123");
+    expect(response.status).toEqual(500);
+    expect(response.payload).toEqual({ message: "Oh no!" });
+    expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
+  });
+  it("should return a 500 error response when AZURE_STORAGE_CONNECTION_STRING is missing", async () => {
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+    blockBlobClient.download = jest.fn().mockImplementation(async () => {
+      throw { statusCode: 409, message: "Oh no!" };
+    });
+    const response = await get_azure("123");
+    expect(response.status).toEqual(500);
+    expect(response.payload).toEqual({
+      message:
+        "Failed to download the FHIR data due to misconfiguration of client.",
+    });
   });
 });

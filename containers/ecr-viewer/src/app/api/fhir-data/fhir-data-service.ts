@@ -78,30 +78,40 @@ export const get_azure = async (
 ): Promise<FhirDataResponse> => {
   const containerClient = azureBlobContainerClient();
   const blobName = `${ecr_id}.json`;
+  if (containerClient) {
+    try {
+      const blockBlobClient: BlobClient =
+        containerClient.getBlobClient(blobName);
 
-  try {
-    const blockBlobClient: BlobClient = containerClient.getBlobClient(blobName);
+      const downloadResponse: BlobDownloadResponseParsed =
+        await blockBlobClient.download();
+      const content = await streamToJson(downloadResponse.readableStreamBody);
 
-    const downloadResponse: BlobDownloadResponseParsed =
-      await blockBlobClient.download();
-    const content = await streamToJson(downloadResponse.readableStreamBody);
+      return {
+        payload: { fhirBundle: content },
+        status: 200,
+      };
 
-    return {
-      payload: { fhirBundle: content },
-      status: 200,
-    };
-
-    // The Azure SDK doesn't export its exception types
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    console.error(
-      "Failed to download the FHIR data from Azure Blob Storage:",
-      error,
-    );
-    if (error?.statusCode === 404) {
-      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
-    } else {
-      return { payload: { message: error.message }, status: 500 };
+      // The Azure SDK doesn't export its exception types
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error(
+        "Failed to download the FHIR data from Azure Blob Storage:",
+        error,
+      );
+      if (error?.statusCode === 404) {
+        return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+      } else {
+        return { payload: { message: error.message }, status: 500 };
+      }
     }
+  } else {
+    return {
+      payload: {
+        message:
+          "Failed to download the FHIR data due to misconfiguration of client.",
+      },
+      status: 500,
+    };
   }
 };

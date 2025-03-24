@@ -6,12 +6,12 @@ namespace NodeJS {
     AUTH_CLIENT_SECRET?: string;
     AUTH_ISSUER?: string;
     AUTH_PROVIDER?: "keycloak" | "ad";
-    AWS_ACCESS_KEY_ID: string;
-    AWS_CUSTOM_ENDPOINT: string;
-    AWS_REGION: string;
-    AWS_SECRET_ACCESS_KEY: string;
-    AZURE_CONTAINER_NAME: string;
-    AZURE_STORAGE_CONNECTION_STRING: string;
+    AWS_ACCESS_KEY_ID?: string;
+    AWS_CUSTOM_ENDPOINT?: string;
+    AWS_REGION?: string;
+    AWS_SECRET_ACCESS_KEY?: string;
+    AZURE_CONTAINER_NAME?: string;
+    AZURE_STORAGE_CONNECTION_STRING?: string;
     BASE_PATH: string;
     CONFIG_NAME:
       | "AWS_INTEGRATED"
