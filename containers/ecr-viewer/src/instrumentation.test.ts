@@ -99,4 +99,17 @@ describe("register and and setupConfigurationVariables", () => {
       "NON_INTEGRATED_VIEWER",
     ]);
   });
+
+  it("should do nothing if CONFIG_NAME is not set", async () => {
+    // @ts-expect-error
+    delete process.env.CONFIG_NAME;
+    await register();
+
+    expect(process.env.NBS_AUTH).toBeUndefined();
+    expect(process.env.NON_INTEGRATED_VIEWER).toBeUndefined();
+    expect(process.env.SOURCE).toBeUndefined();
+    expect(makeEnvPublic).toHaveBeenCalledExactlyOnceWith([
+      "NON_INTEGRATED_VIEWER",
+    ]);
+  });
 });
