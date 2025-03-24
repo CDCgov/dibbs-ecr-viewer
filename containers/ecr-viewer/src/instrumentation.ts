@@ -15,7 +15,7 @@ export async function register() {
 
 function setupConfigurationVariables() {
   const sourceMap: {
-    [key: string]: typeof S3_SOURCE | typeof AZURE_SOURCE | typeof GCP_SOURCE;
+    [key: string]: typeof process.env.SOURCE;
   } = {
     AWS: S3_SOURCE,
     AZURE: AZURE_SOURCE,
