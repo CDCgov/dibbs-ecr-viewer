@@ -1,9 +1,10 @@
-anyio>=4.4.0
-cryptography>=44.0.1
-detect_delimiter
+azure-identity
+azure-keyvault-secrets
+azure-storage-blob
 fastapi>=0.109.1
 fhirpathpy
-httpx
+google-auth
+google-cloud-storage
 phonenumbers
 polling
 pycountry
@@ -12,6 +13,4 @@ pydantic>=2.0.0
 rapidfuzz
 requests
 smartystreets_python_sdk
-typing_extensions>=4.8.0
 urllib3
-uvicorn
