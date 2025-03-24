@@ -19,11 +19,16 @@ services:
       file: ./docker-compose.yaml
       service: azure-storage
     profiles: ["", "azure"]
+  gcp-storage:
+    extends:
+      file: ./docker-compose.yaml
+      service: gcp-storage
+    profiles: ["gcp"]
   ecr-viewer:
     extends:
       file: ./docker-compose.yaml
       service: ecr-viewer
-    profiles: ["", "azure", "aws", "sqlserver"]
+    profiles: ["", "azure", "aws", "sqlserver", "gcp"]
     environment:
       - CONFIG_NAME=AZURE_PG_NON_INTEGRATED
       - ORCHESTRATION_URL=http://orchestration-service:8080
@@ -97,3 +102,4 @@ volumes:
   db:
   azure-data:
   aws-data:
+  gcp-data:

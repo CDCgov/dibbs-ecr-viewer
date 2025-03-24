@@ -134,7 +134,7 @@ services:
       - AZURE_PG_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
 
-  gcp-gcs:
+  gcp-storage:
     image: fsouza/fake-gcs-server
     ports:
       - 10001:10001
