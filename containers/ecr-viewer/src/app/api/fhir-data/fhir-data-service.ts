@@ -59,9 +59,9 @@ export const get_s3 = async (
     });
 
     const { Body } = await s3Client.send(command);
-    const content = await streamToJson(Body);
+    const fhirBundle = await streamToJson(Body);
 
-    return { payload: { fhirBundle: content }, status: 200 };
+    return { payload: { fhirBundle }, status: 200 };
   } catch (error: unknown) {
     console.error("S3 GetObject error:", error);
 
@@ -93,10 +93,10 @@ export const get_azure = async (
 
     const downloadResponse: BlobDownloadResponseParsed =
       await blockBlobClient.download();
-    const content = await streamToJson(downloadResponse.readableStreamBody);
+    const fhirBundle = await streamToJson(downloadResponse.readableStreamBody);
 
     return {
-      payload: { fhirBundle: content },
+      payload: { fhirBundle },
       status: 200,
     };
 
@@ -127,11 +127,10 @@ const get_gcs = async (ecr_id: string | null): Promise<FhirDataResponse> => {
   if (client) {
     try {
       const contents = await client.file(blobName).download();
-
-      const content = await streamToJson(contents);
+      const fhirBundle = await streamToJson(contents);
 
       return {
-        payload: { fhirBundle: content },
+        payload: { fhirBundle },
         status: 200,
       };
     } catch (error: unknown) {
