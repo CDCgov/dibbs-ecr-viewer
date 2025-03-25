@@ -24,7 +24,7 @@ namespace NodeJS {
       | "GCP_PG_NON_INTEGRATED"
       | "GCP_SQLSERVER_NON_INTEGRATED";
     DATABASE_TYPE: string;
-    DATABASE_URL: string;
+    DATABASE_URL?: string;
     DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
     GCP_CREDENTIALS?: string;
@@ -40,8 +40,8 @@ namespace NodeJS {
     NON_INTEGRATED_VIEWER: "true" | "false";
     ORCHESTRATION_URL: string;
     SOURCE: "s3" | "azure" | "gcp";
-    SQL_SERVER_HOST: string;
-    SQL_SERVER_PASSWORD: string;
-    SQL_SERVER_USER: string;
+    SQL_SERVER_HOST?: string;
+    SQL_SERVER_PASSWORD?: string;
+    SQL_SERVER_USER?: string;
   }
 }
