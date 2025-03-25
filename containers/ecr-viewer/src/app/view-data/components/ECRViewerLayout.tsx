@@ -1,8 +1,7 @@
 import React from "react";
 
-import { env } from "next-runtime-env";
-
 import Header from "@/app/components/Header";
+import { isLoggedInUser } from "@/app/utils/auth-utils";
 
 import PatientBanner from "./PatientBanner";
 
@@ -14,7 +13,7 @@ import PatientBanner from "./PatientBanner";
  * @param props.children Content inside the layout
  * @returns laid out ecr viewer
  */
-export const ECRViewerLayout = ({
+export const ECRViewerLayout = async ({
   patientName,
   patientDOB,
   children,
@@ -23,15 +22,12 @@ export const ECRViewerLayout = ({
   patientDOB?: string;
   children: React.ReactNode;
 }) => {
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+  const loggedIn = await isLoggedInUser();
 
   return (
     <main className="width-full minw-main">
       <Header />
-      {isNonIntegratedViewer && (
-        <PatientBanner name={patientName} dob={patientDOB} />
-      )}
+      {loggedIn && <PatientBanner name={patientName} dob={patientDOB} />}
       <div className="main-container">
         <div className="width-main padding-main">
           <div className="content-wrapper">{children}</div>

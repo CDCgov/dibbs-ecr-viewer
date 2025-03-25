@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import classNames from "classnames";
 import Link from "next/link";
-import { env } from "next-runtime-env";
+import { useSession } from "next-auth/react";
 
 import { retrieveFromSessionStorage } from "@/app/utils/storage-utils";
 
@@ -23,15 +23,15 @@ interface BackButtonProps {
  */
 export const BackButton = ({ className, iconClassName }: BackButtonProps) => {
   const [savedUrlParams, setSavedUrlParams] = useState<string | null>(null);
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
 
   useEffect(() => {
     setSavedUrlParams(retrieveFromSessionStorage("urlParams") as string | null);
   }, []);
 
   return (
-    isNonIntegratedViewer && (
+    isLoggedIn && (
       <Link
         href={savedUrlParams ? `/?${savedUrlParams}` : "/"}
         className={classNames("display-inline-block", className)}

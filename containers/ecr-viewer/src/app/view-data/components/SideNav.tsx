@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
-import { env } from "next-runtime-env";
+import { useSession } from "next-auth/react";
 
 import { BackButton } from "@/app/components/BackButton";
 import { toKebabCase } from "@/app/utils/format-utils";
@@ -133,6 +133,7 @@ export const sortHeadings = (headings: HeadingObject[]): SectionConfig[] => {
 const SideNav: React.FC = () => {
   const [sectionConfigs, setSectionConfigs] = useState<SectionConfig[]>([]);
   const [activeSection, setActiveSection] = useState<string>("");
+  const { data: session } = useSession();
 
   // HACK: Once the tooltips render, we need to re-check all the headings
   // as this breaks references. This is fundamentally a problem with uswds's
@@ -165,13 +166,12 @@ const SideNav: React.FC = () => {
     const sortedHeadings: SectionConfig[] = sortHeadings(headings);
     setSectionConfigs(sortedHeadings);
 
-    const isNonIntegratedViewer =
-      env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+    const isLoggedIn = !!session;
 
     const oneRem = parseFloat(
       getComputedStyle(document.documentElement).fontSize,
     );
-    const topOffset = (isNonIntegratedViewer ? 3 * oneRem : 0) + 2 * oneRem;
+    const topOffset = (isLoggedIn ? 3 * oneRem : 0) + 2 * oneRem;
 
     const options = {
       root: null,

@@ -1,4 +1,4 @@
-import { env } from "next-runtime-env";
+import { useSession } from "next-auth/react";
 
 import ErrorPage from "./components/ErrorPage";
 
@@ -7,8 +7,8 @@ import ErrorPage from "./components/ErrorPage";
  * @returns 404 Page
  */
 const NotFound = () => {
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+  const { data: session } = useSession();
+  const loggedIn = !!session;
 
   return (
     <ErrorPage
@@ -20,7 +20,7 @@ const NotFound = () => {
         <li>
           <b>Check the URL:</b> Make sure there are no typos in the address.
         </li>
-        {!isNonIntegratedViewer && (
+        {!loggedIn && (
           <li>
             <b>Return to NBS:</b> Return to NBS and try to reopen the eCR.
           </li>

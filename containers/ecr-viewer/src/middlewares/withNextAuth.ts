@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
 
+import { providerMap } from "@/app/api/auth/auth";
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
 /**
@@ -12,7 +13,21 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
  */
 export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
-    if (process.env.NBS_AUTH === "true") return next(request);
+    if (process.env.NBS_AUTH === "true") {
+      if (request.headers.get("x-nbs-authorized") === "true") {
+        // User already authorized to view this page, skip main auth flow
+        return next(request);
+      } else if (providerMap.length === 0) {
+        // Auth not actually set up, so show generic 404 instead of landing page
+        return NextResponse.rewrite(
+          new URL(
+            `${process.env.BASE_PATH}/error/notfound`,
+            request.nextUrl.origin,
+          ),
+          { request },
+        );
+      }
+    }
 
     const response = await withAuth(request as NextRequestWithAuth, {
       pages: { signIn: `/signin` },

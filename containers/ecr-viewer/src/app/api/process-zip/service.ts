@@ -33,7 +33,7 @@ interface BundleInfo {
  * @returns name of the orchestration config
  */
 const getOrchestrationConfigName = () => {
-  if (process.env.NON_INTEGRATED_VIEWER === "true") {
+  if (!!process.env.METADATA_DATABASE_TYPE) {
     if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
       return "bundle-metadata-extended.json";
     } else {
