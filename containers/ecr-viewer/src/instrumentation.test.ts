@@ -1,9 +1,5 @@
 import { register } from "./instrumentation";
 
-jest.mock("next-runtime-env", () => ({
-  makeEnvPublic: jest.fn(),
-}));
-
 jest.mock("./app/services/instrumentation", () => jest.fn());
 
 describe("register and and setupConfigurationVariables", () => {

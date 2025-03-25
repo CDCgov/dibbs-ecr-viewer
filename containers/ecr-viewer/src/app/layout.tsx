@@ -1,5 +1,4 @@
 import "@/styles/styles.scss";
-import { PublicEnvScript } from "next-runtime-env";
 
 import AuthSessionProvider from "./components/AuthSessionProvider";
 
@@ -23,9 +22,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <PublicEnvScript nonce={{ headerKey: "x-nonce" }} />
-      </head>
+      <head />
       <body className="overflow-x-auto">
         <AuthSessionProvider>{children}</AuthSessionProvider>
       </body>

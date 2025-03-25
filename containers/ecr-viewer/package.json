@@ -68,7 +68,6 @@
     "next": "^14.2.25",
     "next-auth": "^4.24.11",
     "next-router-mock": "^0.9.13",
-    "next-runtime-env": "^3.2.2",
     "node-html-parser": "^7.0.1",
     "pg-promise": "^11.6.0",
     "postcss-discard-comments": "^7.0.3",
