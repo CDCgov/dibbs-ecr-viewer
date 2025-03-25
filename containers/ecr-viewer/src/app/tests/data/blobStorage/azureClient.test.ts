@@ -32,7 +32,7 @@ describe("azure blob container", () => {
 
     it("should create container client with ECR_BUCKET_NAME", () => {
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
-      process.env.AZURE_CONTAINER_NAME = "";
+      delete process.env.AZURE_CONTAINER_NAME;
       process.env.ECR_BUCKET_NAME = "container2";
       const mockGetContainerClient = jest
         .fn()
@@ -62,20 +62,16 @@ describe("azure blob container", () => {
     });
     afterEach(() => {
       jest.resetAllMocks();
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "";
-      process.env.AZURE_CONTAINER_NAME = "";
+      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+      delete process.env.AZURE_CONTAINER_NAME;
     });
-    it("should return UNDEFINED if missing connection string", async () => {
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "";
-      process.env.AZURE_CONTAINER_NAME = "container";
-      expect(await azureBlobStorageHealthCheck()).toBeUndefined();
-    });
-    it("should return UNDEFINED if missing container name", async () => {
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
-      process.env.AZURE_CONTAINER_NAME = "";
+
+    it("should return UNDEFINED if SOURCE is not azure", async () => {
+      process.env.SOURCE = "s3";
       expect(await azureBlobStorageHealthCheck()).toBeUndefined();
     });
     it("should return UP when the container exists", async () => {
+      process.env.SOURCE = "azure";
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
       process.env.AZURE_CONTAINER_NAME = "container";
       mockExists.mockResolvedValue(true);
