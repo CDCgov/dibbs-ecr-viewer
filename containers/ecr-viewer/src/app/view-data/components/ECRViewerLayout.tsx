@@ -12,7 +12,7 @@ import PatientBanner from "./PatientBanner";
  * @param props.children Content inside the layout
  * @returns laid out ecr viewer
  */
-export const ECRViewerLayout = async ({
+export const ECRViewerLayout = ({
   patientName,
   patientDOB,
   children,
