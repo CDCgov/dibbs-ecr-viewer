@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./data/conditions";
+import NotFound from "./not-found";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
@@ -27,13 +28,9 @@ const HomePage = async ({
 }: {
   searchParams: PageSearchParams;
 }) => {
-  // TODO PR: we can never get here anymore, right?
-  // const isNonIntegratedViewer =
-  //   env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
-
-  // if (!isNonIntegratedViewer) {
-  //   return <NotFound />;
-  // }
+  if (!process.env.METADATA_DATABASE_TYPE) {
+    return <NotFound />;
+  }
 
   const cookieStore = cookies();
   const config = getLibraryConfig(searchParams, cookieStore);
