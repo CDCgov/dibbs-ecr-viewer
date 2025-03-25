@@ -13,7 +13,7 @@ $main-min-width: $ecr-viewer-container-min-width + $ecr-viewer-gap +
   $nav-wrapper-width + $main-container-padding * 2;
 
 html {
-  --patient-banner-buffer: 0;
+  --patient-banner-buffer: 2.75rem;
 }
 
 // ===== Page styling ===== //
