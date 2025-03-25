@@ -1,5 +1,6 @@
-import { S3_SOURCE } from "@/app/api/utils";
 import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
+
+import { S3_SOURCE } from "@/app/api/utils";
 
 export const s3Client = new S3Client({
   region: process.env.AWS_REGION,
