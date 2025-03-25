@@ -22,6 +22,10 @@ services:
       # Azure
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
+      # GCP
+      - 'GCP_KEY=${GCP_KEY:-{ "client_email": "ecr@example.com", "private_key": "1234" }}'
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID:-proj}
+      - GCP_API_ENDPOINT=${GCP_API_ENDPOINT:-http://localhost:10001/}
       # SQL Server
       - SQL_SERVER_USER=${SQL_SERVER_USER:-sa}
       - SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
@@ -63,6 +67,7 @@ services:
     profiles:
       - AWS_PG_NON_INTEGRATED
       - AZURE_PG_NON_INTEGRATED
+      - GCP_PG_NON_INTEGRATED
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -86,6 +91,7 @@ services:
     profiles:
       - AWS_SQLSERVER_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
+      - GCP_SQLSERVER_NON_INTEGRATED
 
   aws-storage:
     image: gresau/localstack-persist:3
@@ -128,6 +134,19 @@ services:
       - AZURE_PG_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
 
+  gcp-storage:
+    image: fsouza/fake-gcs-server
+    ports:
+      - 10001:10001
+    command: ["-scheme", "http", "-port", "10001"]
+    volumes:
+      - ./seed-scripts/gcp:/data
+      - gcp-data:/storage
+    profiles:
+      - GCP_INTEGRATED
+      - GCP_PG_NON_INTEGRATED
+      - GCP_SQLSERVER_NON_INTEGRATED
+
   # Keycloak for authentication
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.2
@@ -154,3 +173,4 @@ volumes:
   db:
   azure-data:
   aws-data:
+  gcp-data:

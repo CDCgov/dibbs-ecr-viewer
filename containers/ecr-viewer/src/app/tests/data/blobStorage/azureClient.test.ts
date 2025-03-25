@@ -12,13 +12,7 @@ jest.mock("@azure/storage-blob");
 
 describe("azure blob container", () => {
   describe("client", () => {
-    it("should return undefined when AZURE_STORAGE_CONNECTION_STRING is not provided", () => {
-      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
-
-      expect(azureBlobContainerClient()).toBeUndefined();
-    });
-
-    it("should create container client with AZURE_CONTAINER_NAME", () => {
+    it("should create container client", () => {
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
       process.env.AZURE_CONTAINER_NAME = "container";
       const mockGetContainerClient = jest
@@ -68,21 +62,22 @@ describe("azure blob container", () => {
     });
     afterEach(() => {
       jest.resetAllMocks();
-      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
-      delete process.env.AZURE_CONTAINER_NAME;
-      process.env.ECR_BUCKET_NAME = "";
-      process.env.SOURCE = "s3";
+      process.env.AZURE_STORAGE_CONNECTION_STRING = "";
+      process.env.AZURE_CONTAINER_NAME = "";
     });
-
-    it("should return UNDEFINED if SOURCE is not azure", async () => {
-      process.env.SOURCE = "s3";
+    it("should return UNDEFINED if missing connection string", async () => {
       process.env.AZURE_STORAGE_CONNECTION_STRING = "";
       process.env.AZURE_CONTAINER_NAME = "container";
       expect(await azureBlobStorageHealthCheck()).toBeUndefined();
     });
-    it("should return UP when SOURCE is azure and client exists", async () => {
-      process.env.SOURCE = "azure";
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "something";
+    it("should return UNDEFINED if missing container name", async () => {
+      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
+      process.env.AZURE_CONTAINER_NAME = "";
+      expect(await azureBlobStorageHealthCheck()).toBeUndefined();
+    });
+    it("should return UP when the container exists", async () => {
+      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
+      process.env.AZURE_CONTAINER_NAME = "container";
       mockExists.mockResolvedValue(true);
 
       const result = await azureBlobStorageHealthCheck();
