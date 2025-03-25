@@ -8,7 +8,7 @@ import {
 /**
  * Creates an eCR condition object
  * @param condition - the NewECRConditions to be created
- * @returns the created eCR condition object
+ * @returns promise
  */
 export async function createEcrCondition(
   condition: NewECRConditions,
@@ -22,7 +22,7 @@ export async function createEcrCondition(
 /**
  * Creates an eCR rule summary object
  * @param rule_summary - the NewECRRuleSummaries record to be created
- * @returns the created eCR rule object
+ * @returns promise
  */
 export async function createEcrRule(
   rule_summary: NewECRRuleSummaries,

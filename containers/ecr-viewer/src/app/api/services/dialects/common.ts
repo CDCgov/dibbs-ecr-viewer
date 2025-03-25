@@ -8,7 +8,11 @@ type MappedSqlThings = {
   maxVarchar: Expression<string>;
 };
 
-const map: { [key: string]: MappedSqlThings } = {
+const map: {
+  [K in NonNullable<
+    typeof process.env.METADATA_DATABASE_TYPE
+  >]: MappedSqlThings;
+} = {
   postgres: {
     now: sql`NOW()`,
     datetimeType: "timestamp",

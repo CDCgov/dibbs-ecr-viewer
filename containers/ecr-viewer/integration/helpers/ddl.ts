@@ -16,6 +16,8 @@ const coredb = () => {
 
 const buildCommon = async () => {
   const db = getDb<Common>();
+  // schema creation is in a try catch since it fails if it already exists
+  // and `if exists` isn't supported by sql server
   try {
     await db.schema.createSchema(dbNamespace()).execute();
   } catch {}
