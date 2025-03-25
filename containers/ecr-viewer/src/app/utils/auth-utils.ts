@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth/next";
 
 /**
- * Server side helper for whether this user is logged in. For client side, see `useLoggedInUser`
- * from next-auth. A user can have access to an ecr page without being a logged in user if
+ * Server side helper for whether this user is logged in. For client side, see `useLoggedInUser`.
+ * A user can have access to an ecr page without being a logged in user if
  * they are authenticated via an NBS jwt.
  * @returns whether the user is logged in
  */
