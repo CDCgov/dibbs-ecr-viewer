@@ -20,29 +20,21 @@ jest.mock("next/headers", () => ({
     get: jest.fn(),
   }),
 }));
+jest.mock("../components/AuthSessionProvider", () => ({
+  useIsLoggedInUser: () => true,
+}));
 
 describe("Home Page", () => {
   afterEach(() => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "false";
+    process.env.METADATA_DATABASE_TYPE = "postgres";
     jest.clearAllMocks();
   });
-  it("env false value, should not show the homepage", async () => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "false";
+  it("no metadata database, should not show the homepage", async () => {
+    delete process.env.METADATA_DATABASE_TYPE;
     render(await HomePage({ searchParams: {} }));
     expect(screen.getByText("Page not found")).toBeInTheDocument();
   });
-  it("env invalid value, should not show the homepage", async () => {
-    // @ts-ignore
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "foo";
-    render(await HomePage({ searchParams: {} }));
-    expect(screen.getByText("Page not found")).toBeInTheDocument();
-  });
-  it("env no value, should not show the homepage", async () => {
-    render(await HomePage({ searchParams: {} }));
-    expect(screen.getByText("Page not found")).toBeInTheDocument();
-  });
-  it("env true value, should show the homepage", async () => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
+  it("yes metadata database, should show the homepage", async () => {
     render(await HomePage({ searchParams: {} }));
     expect(getTotalEcrCount).toHaveBeenCalledOnce();
     expect(screen.queryByText("Page not found")).not.toBeInTheDocument();
@@ -51,7 +43,6 @@ describe("Home Page", () => {
 
 describe("Reading query params on home page", () => {
   it("should call returnParamDates with the correct dateRange from query params", async () => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
     const mockDateRange = "last-7-days";
     const searchParams = { dateRange: mockDateRange };
     const mockReturnDates = {
@@ -70,8 +61,6 @@ describe("Reading query params on home page", () => {
 
 describe("Reading cookie for itemsPerPage", () => {
   it("should use default if no query param or cookie", async () => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
-
     render(await HomePage({ searchParams: {} }));
 
     expect(
@@ -80,7 +69,6 @@ describe("Reading cookie for itemsPerPage", () => {
   });
 
   it("should use cookie before default", async () => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
     (cookies as jest.Mock).mockReturnValue({
       get: jest.fn().mockReturnValue({ value: "2312" }),
     });
@@ -91,7 +79,6 @@ describe("Reading cookie for itemsPerPage", () => {
   });
 
   it("should use query param if set", async () => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
     const itemsPerPage = "432190";
     (cookies as jest.Mock).mockReturnValue({
       get: jest.fn().mockReturnValue({ value: "2312" }),

@@ -50,9 +50,7 @@ describe("NBS Auth Middleware", () => {
     );
 
     const resp = await middleware(req);
-    expect(resp?.headers.get("x-middleware-rewrite")).toBe(
-      "https://www.example.com/ecr-viewer/error/auth",
-    );
+    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
     expect(resp?.status).toBe(200);
   });
 
@@ -60,7 +58,7 @@ describe("NBS Auth Middleware", () => {
     process.env.NBS_PUB_KEY = "FOOBAR";
 
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/fhir-data/",
+      "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
     req.cookies.set("auth-token", "foobar");
 
@@ -76,9 +74,7 @@ describe("NBS Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
     const resp = await middleware(req);
-    expect(resp?.headers.get("x-middleware-rewrite")).toBe(
-      "https://www.example.com/ecr-viewer/error/auth",
-    );
+    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
     expect(resp?.status).toBe(200);
   });
 });

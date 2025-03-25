@@ -7,6 +7,10 @@ import SideNav, {
   countObjects,
 } from "@/app/view-data/components/SideNav";
 
+jest.mock("../../components/AuthSessionProvider", () => ({
+  useIsLoggedInUser: () => true,
+}));
+
 describe("SectionConfig", () => {
   beforeEach(() => {
     // IntersectionObserver isn't available in test environment
@@ -17,14 +21,6 @@ describe("SectionConfig", () => {
       disconnect: () => null,
     });
     window.IntersectionObserver = mockIntersectionObserver;
-  });
-
-  beforeAll(() => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
-  });
-
-  afterAll(() => {
-    process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "false";
   });
 
   it("should create an instance with correct title and id", () => {
