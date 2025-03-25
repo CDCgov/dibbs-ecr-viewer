@@ -165,11 +165,11 @@ export const formatCurrentAddress = (
   return formatAddress(address);
 };
 
-const VALID_PHONE_NUMBER_REGEX = /^\d{3}-\d{3}-\d{4}$/;
+const VALID_PHONE_NUMBER_REGEX = /^\d{3}-\d{3}-\d{4}( \D\w*)?$/;
 /**
- * Formats a phone number into a standard format of XXX-XXX-XXXX.
+ * Formats a phone number into a standard format of XXX-XXX-XXXX x123.
  * @param phoneNumber - The phone number to format.
- * @returns The formatted phone number or "Invalid Number" if the input is invalid or undefined if the input is empty.
+ * @returns The formatted phone number or "Invalid Number: <unformatted phone number>" if the input is invalid or undefined if the input is empty.
  */
 export const formatPhoneNumber = (
   phoneNumber: string | undefined,
@@ -178,13 +178,14 @@ export const formatPhoneNumber = (
 
   const formatted = phoneNumber
     .replace("+1", "")
-    .replace(/\D/g, "")
-    .replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+    .replace(/\W/g, "")
+    .replace(/(\d{3})(\d{3})(\d{4})(.*)/, "$1-$2-$3 $4")
+    .trim();
 
   if (VALID_PHONE_NUMBER_REGEX.test(formatted)) {
     return formatted;
   } else {
-    return "Invalid Number";
+    return `Invalid Number: ${phoneNumber}`;
   }
 };
 

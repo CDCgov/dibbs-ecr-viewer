@@ -209,6 +209,11 @@ describe("POST Save FHIR Data API Route - Azure", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
+  });
+
+  afterAll(() => {
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
   });
 
   it("sends data to Azure Blob Storage and returns a success response", async () => {

@@ -6,12 +6,12 @@ namespace NodeJS {
     AUTH_CLIENT_SECRET?: string;
     AUTH_ISSUER?: string;
     AUTH_PROVIDER?: "keycloak" | "ad";
-    AWS_ACCESS_KEY_ID: string;
-    AWS_CUSTOM_ENDPOINT: string;
-    AWS_REGION: string;
-    AWS_SECRET_ACCESS_KEY: string;
-    AZURE_CONTAINER_NAME: string;
-    AZURE_STORAGE_CONNECTION_STRING: string;
+    AWS_ACCESS_KEY_ID?: string;
+    AWS_CUSTOM_ENDPOINT?: string;
+    AWS_REGION?: string;
+    AWS_SECRET_ACCESS_KEY?: string;
+    AZURE_CONTAINER_NAME?: string;
+    AZURE_STORAGE_CONNECTION_STRING?: string;
     BASE_PATH: string;
     CONFIG_NAME:
       | "AWS_INTEGRATED"
@@ -19,13 +19,17 @@ namespace NodeJS {
       | "AWS_SQLSERVER_NON_INTEGRATED"
       | "AZURE_INTEGRATED"
       | "AZURE_PG_NON_INTEGRATED"
-      | "AZURE_SQLSERVER_NON_INTEGRATED";
+      | "AZURE_SQLSERVER_NON_INTEGRATED"
+      | "GCP_INTEGRATED"
+      | "GCP_PG_NON_INTEGRATED"
+      | "GCP_SQLSERVER_NON_INTEGRATED";
     DATABASE_TYPE: string;
     DATABASE_URL: string;
     DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
-    GITHUB_ID: string;
-    GITHUB_SECRET: string;
+    GCP_CREDENTIALS?: string;
+    GCP_PROJECT_ID?: string;
+    GCP_API_ENDPOINT?: string;
     METADATA_DATABASE_SCHEMA?: "core" | "extended";
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";
     NBS_AUTH: "true" | "false";
@@ -35,7 +39,7 @@ namespace NodeJS {
     NEXTAUTH_SECRET: string;
     NON_INTEGRATED_VIEWER: "true" | "false";
     ORCHESTRATION_URL: string;
-    SOURCE: "s3" | "azure";
+    SOURCE: "s3" | "azure" | "gcp";
     SQL_SERVER_HOST: string;
     SQL_SERVER_PASSWORD: string;
     SQL_SERVER_USER: string;

@@ -61,6 +61,10 @@ const mockBlobServiceClient = {
 };
 
 describe("GET API Route", () => {
+  afterAll(() => {
+    process.env.SOURCE = "s3";
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+  });
   it("fetches data from S3 and returns a JSON response", async () => {
     const fakeId = "test-id";
     process.env.SOURCE = "s3";
@@ -84,6 +88,7 @@ describe("GET API Route", () => {
   it("fetches data from Azure Blob Storage and returns a JSON response", async () => {
     const fakeId = "test-id";
     process.env.SOURCE = "azure";
+    process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
     const request = new NextRequest(`http://localhost?id=${fakeId}`);
 
     const response = await GET(request);

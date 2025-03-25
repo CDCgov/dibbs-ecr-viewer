@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { azureBlobStorageHealthCheck } from "@/app/data/blobStorage/azureClient";
+import { gcpHealthCheck } from "@/app/data/blobStorage/gcpClient";
 import { s3HealthCheck } from "@/app/data/blobStorage/s3Client";
 import { postgresHealthCheck } from "@/app/data/db/postgres_db";
 import { sqlServerHealthCheck } from "@/app/data/db/sqlserver_db";
@@ -21,6 +22,7 @@ export async function GET() {
         postgres: await postgresHealthCheck(),
         s3: await s3HealthCheck(),
         azureBlobStorage: await azureBlobStorageHealthCheck(),
+        gcp: await gcpHealthCheck(),
       },
     },
     { status: 200 },

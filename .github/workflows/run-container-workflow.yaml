@@ -25,7 +25,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh workflow run .github/workflows/container-${{ inputs.container }}.yaml
-          sleep 1
+          sleep 5
           RUN_ID=$(gh run list --workflow=container-${{ inputs.container }}.yaml --event=workflow_dispatch --json databaseId --limit 1 --jq '.[0].databaseId')
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 

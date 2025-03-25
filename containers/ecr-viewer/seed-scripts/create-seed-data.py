@@ -37,15 +37,10 @@ def _process_files(args):
     requests = []
     folder_paths = []
     configName = "integrated.json"
-    if (
-        os.getenv("CONFIG_NAME") == "AWS_SQLSERVER_NON_INTEGRATED"
-        or os.getenv("CONFIG_NAME") == "AZURE_SQLSERVER_NON_INTEGRATED"
-    ):
+    config = os.getenv("CONFIG_NAME") or ""
+    if "_SQLSERVER_" in config:
         configName = "non-integrated-extended.json"
-    elif (
-        os.getenv("CONFIG_NAME") == "AZURE_PG_NON_INTEGRATED"
-        or os.getenv("CONFIG_NAME") == "AWS_PG_NON_INTEGRATED"
-    ):
+    elif "_PG_" in config:
         configName = "non-integrated-core.json"
 
     def _process_eicrs(subfolder, folder, folder_path, payload):
