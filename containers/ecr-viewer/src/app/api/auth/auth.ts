@@ -38,6 +38,11 @@ export const providerMap: ProviderDetails[] = providers.map((provider) => ({
   name: provider.name,
 }));
 
+/**
+ * @returns whether any auth provider is configured
+ */
+export const isProviderConfigured = () => providerMap.length > 0;
+
 export const handler = NextAuth({
   providers,
   callbacks: {

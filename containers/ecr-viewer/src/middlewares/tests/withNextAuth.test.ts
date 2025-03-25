@@ -4,6 +4,7 @@
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+import { isProviderConfigured } from "@/app/api/auth/auth";
 import { chainMiddleware } from "@/middleware";
 import { withNextAuth } from "@/middlewares/withNextAuth";
 
@@ -11,6 +12,8 @@ import { withNextAuth } from "@/middlewares/withNextAuth";
 jest.mock("next-auth/jwt", () => ({
   getToken: jest.fn(),
 }));
+
+jest.mock("../../app/api/auth/auth");
 
 const middleware = chainMiddleware([withNextAuth]);
 
@@ -22,7 +25,8 @@ describe("Next Auth Middleware", () => {
     process.env.NEXTAUTH_SECRET = "test-secret";
     process.env.BASE_PATH = "ecr-viewer";
     process.env.NBS_AUTH = "false";
-    jest.resetAllMocks(); // Reset mocks before each test
+    jest.clearAllMocks(); // Reset mocks before each test
+    (isProviderConfigured as jest.Mock).mockReturnValue(true);
   });
   afterEach(() => {
     process.env.NEXTAUTH_SECRET = ORIG_NEXTAUTH_SECRET;
@@ -43,7 +47,7 @@ describe("Next Auth Middleware", () => {
     );
   });
 
-  it("should not rediret when authorized", async () => {
+  it("should not redirect when authorized", async () => {
     (getToken as jest.Mock).mockResolvedValue("123");
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/fhir-data/",
@@ -51,5 +55,47 @@ describe("Next Auth Middleware", () => {
 
     const resp = await middleware(req);
     expect(resp?.status).toBe(200);
+    expect(getToken).toHaveBeenCalled();
+  });
+
+  it("should redirect when not configured", async () => {
+    (isProviderConfigured as jest.Mock).mockReturnValue(false);
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer/api/fhir-data/",
+    );
+
+    const resp = await middleware(req);
+    expect(resp?.status).toBe(307);
+    expect(getToken).not.toHaveBeenCalled();
+  });
+
+  describe("when used in conjucntion with NBS auth", () => {
+    beforeEach(() => {
+      process.env.NBS_AUTH = "true";
+    });
+
+    it("should pass through if nbs authorized", async () => {
+      (getToken as jest.Mock).mockResolvedValue("123");
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/fhir-data/",
+      );
+      req.headers.set("x-nbs-authorized", "true");
+
+      const resp = await middleware(req);
+      expect(resp?.status).toBe(200);
+      expect(getToken).not.toHaveBeenCalled();
+    });
+
+    it("should delegate to next auth when not nbs authorized", async () => {
+      (getToken as jest.Mock).mockResolvedValue("123");
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/fhir-data/",
+      );
+      req.headers.set("x-nbs-authorized", "false");
+
+      const resp = await middleware(req);
+      expect(resp?.status).toBe(200);
+      expect(getToken).toHaveBeenCalled();
+    });
   });
 });
