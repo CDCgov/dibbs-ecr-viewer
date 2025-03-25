@@ -81,6 +81,13 @@ const saveToAzure = async (
   const blobName = `${ecrId}.json`;
   const body = JSON.stringify(fhirBundle);
 
+  if (!containerClient) {
+    return {
+      message: "Failed to save FHIR bundle due to misconfiguration of client.",
+      status: 500,
+    };
+  }
+
   try {
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 

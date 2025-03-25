@@ -262,7 +262,6 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
     fhirBundle,
     fhirPathMappings.historyOfPresentIllness,
   );
-
   const tables = formatTablesToJSON(content);
 
   // Not a table, safe parse the string content

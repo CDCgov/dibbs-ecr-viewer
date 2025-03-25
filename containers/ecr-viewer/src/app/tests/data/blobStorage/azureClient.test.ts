@@ -3,6 +3,7 @@
  */
 import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
 
+import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
 import {
   azureBlobContainerClient,
   azureBlobStorageHealthCheck,
@@ -12,7 +13,7 @@ jest.mock("@azure/storage-blob");
 
 describe("azure blob container", () => {
   describe("client", () => {
-    it("should create container client with AZURE_CONTAINER_NAME", () => {
+    it("should create container client", () => {
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
       process.env.AZURE_CONTAINER_NAME = "container";
       const mockGetContainerClient = jest
@@ -32,7 +33,7 @@ describe("azure blob container", () => {
 
     it("should create container client with ECR_BUCKET_NAME", () => {
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
-      process.env.AZURE_CONTAINER_NAME = "";
+      delete process.env.AZURE_CONTAINER_NAME;
       process.env.ECR_BUCKET_NAME = "container2";
       const mockGetContainerClient = jest
         .fn()
@@ -62,42 +63,34 @@ describe("azure blob container", () => {
     });
     afterEach(() => {
       jest.resetAllMocks();
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "";
-      process.env.AZURE_CONTAINER_NAME = "";
-      process.env.ECR_BUCKET_NAME = "";
+      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+      delete process.env.AZURE_CONTAINER_NAME;
     });
-    it("should return UNDEFINED if missing connection string", async () => {
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "";
-      process.env.AZURE_CONTAINER_NAME = "container";
-      expect(await azureBlobStorageHealthCheck()).toBeUndefined();
-    });
-    it("should return UNDEFINED if missing container name", async () => {
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
-      process.env.AZURE_CONTAINER_NAME = "";
-      process.env.ECR_BUCKET_NAME = "";
-      expect(await azureBlobStorageHealthCheck()).toBeUndefined();
-    });
-    it("should return UP when provided ECR_BUCKET_NAME and not AZURE_CONTAINER_NAME", async () => {
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
-      process.env.AZURE_CONTAINER_NAME = "";
-      process.env.ECR_BUCKET_NAME = "container";
-      mockExists.mockResolvedValue(true);
 
-      const result = await azureBlobStorageHealthCheck();
-      expect(result).toEqual("UP");
+    it("should return UNDEFINED if SOURCE is not azure", async () => {
+      process.env.SOURCE = S3_SOURCE;
+      expect(await azureBlobStorageHealthCheck()).toBeUndefined();
     });
     it("should return UP when the container exists", async () => {
+      process.env.SOURCE = AZURE_SOURCE;
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
       process.env.AZURE_CONTAINER_NAME = "container";
       mockExists.mockResolvedValue(true);
 
       const result = await azureBlobStorageHealthCheck();
       expect(result).toEqual("UP");
+    });
+    it("should return DOWN when the container is not initialized", async () => {
+      process.env.SOURCE = AZURE_SOURCE;
+      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+      mockExists.mockResolvedValue(false);
+
+      const result = await azureBlobStorageHealthCheck();
+      expect(result).toEqual("DOWN");
     });
     it("should return DOWN when the container does not exist", async () => {
       jest.spyOn(console, "error").mockImplementation();
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
-      process.env.AZURE_CONTAINER_NAME = "??";
+      process.env.SOURCE = AZURE_SOURCE;
       mockExists.mockResolvedValue(false);
 
       const result = await azureBlobStorageHealthCheck();
@@ -105,8 +98,7 @@ describe("azure blob container", () => {
     });
     it("should return DOWN when the container throws an error", async () => {
       jest.spyOn(console, "error").mockImplementation();
-      process.env.AZURE_STORAGE_CONNECTION_STRING = "??";
-      process.env.AZURE_CONTAINER_NAME = "container";
+      process.env.SOURCE = AZURE_SOURCE;
       mockExists.mockRejectedValue(new Error("Connection error"));
 
       const result = await azureBlobStorageHealthCheck();
