@@ -3,6 +3,7 @@
  */
 import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
 
+import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
 import {
   azureBlobContainerClient,
   azureBlobStorageHealthCheck,
@@ -67,11 +68,11 @@ describe("azure blob container", () => {
     });
 
     it("should return UNDEFINED if SOURCE is not azure", async () => {
-      process.env.SOURCE = "s3";
+      process.env.SOURCE = S3_SOURCE;
       expect(await azureBlobStorageHealthCheck()).toBeUndefined();
     });
     it("should return UP when the container exists", async () => {
-      process.env.SOURCE = "azure";
+      process.env.SOURCE = AZURE_SOURCE;
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
       process.env.AZURE_CONTAINER_NAME = "container";
       mockExists.mockResolvedValue(true);
@@ -80,7 +81,7 @@ describe("azure blob container", () => {
       expect(result).toEqual("UP");
     });
     it("should return DOWN when the container is not initialized", async () => {
-      process.env.SOURCE = "azure";
+      process.env.SOURCE = AZURE_SOURCE;
       delete process.env.AZURE_STORAGE_CONNECTION_STRING;
       mockExists.mockResolvedValue(false);
 
@@ -89,7 +90,7 @@ describe("azure blob container", () => {
     });
     it("should return DOWN when the container does not exist", async () => {
       jest.spyOn(console, "error").mockImplementation();
-      process.env.SOURCE = "azure";
+      process.env.SOURCE = AZURE_SOURCE;
       mockExists.mockResolvedValue(false);
 
       const result = await azureBlobStorageHealthCheck();
@@ -97,7 +98,7 @@ describe("azure blob container", () => {
     });
     it("should return DOWN when the container throws an error", async () => {
       jest.spyOn(console, "error").mockImplementation();
-      process.env.SOURCE = "azure";
+      process.env.SOURCE = AZURE_SOURCE;
       mockExists.mockRejectedValue(new Error("Connection error"));
 
       const result = await azureBlobStorageHealthCheck();

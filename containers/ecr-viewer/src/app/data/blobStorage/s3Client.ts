@@ -1,3 +1,4 @@
+import { S3_SOURCE } from "@/app/api/utils";
 import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
 
 export const s3Client = new S3Client({
@@ -11,7 +12,7 @@ export const s3Client = new S3Client({
  * @returns The status of the AWS S3 connection or undefined if missing environment values.
  */
 export const s3HealthCheck = async () => {
-  if (process.env.SOURCE !== "s3") {
+  if (process.env.SOURCE !== S3_SOURCE) {
     return undefined;
   }
   try {

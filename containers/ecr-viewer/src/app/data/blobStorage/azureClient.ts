@@ -1,5 +1,7 @@
 import { BlobServiceClient } from "@azure/storage-blob";
 
+import { AZURE_SOURCE } from "@/app/api/utils";
+
 /**
  * Connect to the Azure blob container.
  * @returns A promise resolving to a azure blob container client.
@@ -23,7 +25,7 @@ export const azureBlobContainerClient = () => {
  * @returns The status of the azure blob connection or undefined if missing environment values.
  */
 export const azureBlobStorageHealthCheck = async () => {
-  if (process.env.SOURCE !== "azure") {
+  if (process.env.SOURCE !== AZURE_SOURCE) {
     return undefined;
   }
   try {
