@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 
 import classNames from "classnames";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 
 import { retrieveFromSessionStorage } from "@/app/utils/storage-utils";
 
+import { useIsLoggedInUser } from "./AuthSessionProvider";
 import { ArrowBack } from "./Icon";
 
 interface BackButtonProps {
@@ -23,8 +23,7 @@ interface BackButtonProps {
  */
 export const BackButton = ({ className, iconClassName }: BackButtonProps) => {
   const [savedUrlParams, setSavedUrlParams] = useState<string | null>(null);
-  const { data: session } = useSession();
-  const isLoggedIn = !!session;
+  const isLoggedIn = useIsLoggedInUser();
 
   useEffect(() => {
     setSavedUrlParams(retrieveFromSessionStorage("urlParams") as string | null);

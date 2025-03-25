@@ -1,5 +1,5 @@
 "use client";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 
 /**
  * Root layout for the view-data page
@@ -7,12 +7,25 @@ import { SessionProvider } from "next-auth/react";
  * @param props.children content
  * @returns laid out content
  */
-const AuthSessionProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthSessionProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   return (
     <SessionProvider basePath={`${process.env.BASE_PATH}/api/auth`}>
       {children}
     </SessionProvider>
   );
+};
+
+/**
+ * Hook to tell whether the user is logged in (vs anonymously able to see ecr page via NBS)
+ * @returns whether the user is logged in
+ */
+export const useIsLoggedInUser = () => {
+  const { data: session } = useSession();
+  return !!session;
 };
 
 export default AuthSessionProvider;

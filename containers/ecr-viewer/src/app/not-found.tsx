@@ -1,5 +1,4 @@
-import { useSession } from "next-auth/react";
-
+import { useIsLoggedInUser } from "./components/AuthSessionProvider";
 import ErrorPage from "./components/ErrorPage";
 
 /**
@@ -7,8 +6,7 @@ import ErrorPage from "./components/ErrorPage";
  * @returns 404 Page
  */
 const NotFound = () => {
-  const { data: session } = useSession();
-  const loggedIn = !!session;
+  const isLoggedIn = useIsLoggedInUser();
 
   return (
     <ErrorPage
@@ -20,7 +18,7 @@ const NotFound = () => {
         <li>
           <b>Check the URL:</b> Make sure there are no typos in the address.
         </li>
-        {!loggedIn && (
+        {!isLoggedIn && (
           <li>
             <b>Return to NBS:</b> Return to NBS and try to reopen the eCR.
           </li>
