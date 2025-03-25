@@ -2,20 +2,11 @@ import "@/styles/styles.scss";
 import { PublicEnvScript } from "next-runtime-env";
 
 import AuthSessionProvider from "./components/AuthSessionProvider";
-import { isLoggedInUser } from "./utils/auth-utils";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
   description: "View your eCR data in an easy-to-understand format.",
 };
-
-const PATIENT_BANNER_BUFFER = "2.75rem";
-
-declare module "react" {
-  interface CSSProperties {
-    "--patient-banner-buffer"?: typeof PATIENT_BANNER_BUFFER | 0;
-  }
-}
 
 /**
  * `RootLayout` serves as the top-level layout component for a React application.
@@ -30,15 +21,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const loggedIn = await isLoggedInUser();
-
   return (
-    <html
-      lang="en"
-      style={{
-        "--patient-banner-buffer": loggedIn ? PATIENT_BANNER_BUFFER : 0,
-      }}
-    >
+    <html lang="en">
       <head>
         <PublicEnvScript nonce={{ headerKey: "x-nonce" }} />
       </head>

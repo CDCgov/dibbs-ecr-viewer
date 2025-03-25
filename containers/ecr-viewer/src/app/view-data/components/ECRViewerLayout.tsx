@@ -1,7 +1,6 @@
 import React from "react";
 
 import Header from "@/app/components/Header";
-import { isLoggedInUser } from "@/app/utils/auth-utils";
 
 import PatientBanner from "./PatientBanner";
 
@@ -22,12 +21,10 @@ export const ECRViewerLayout = async ({
   patientDOB?: string;
   children: React.ReactNode;
 }) => {
-  const loggedIn = await isLoggedInUser();
-
   return (
     <main className="width-full minw-main">
       <Header />
-      {loggedIn && <PatientBanner name={patientName} dob={patientDOB} />}
+      <PatientBanner name={patientName} dob={patientDOB} />
       <div className="main-container">
         <div className="width-main padding-main">
           <div className="content-wrapper">{children}</div>
