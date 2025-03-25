@@ -409,6 +409,13 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
 
   if (vitals.length === 0) return;
 
+  // Sort by code to get consistent and reasonable order (e.g. blood pressures near each other)
+  vitals.sort((a, b) =>
+    (a?.code?.coding?.[0]?.code ?? 0) < (b?.code?.coding?.[0]?.code ?? 0)
+      ? -1
+      : 1,
+  );
+
   const columns = [
     {
       columnName: "Vital Reading",
