@@ -15,12 +15,9 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
     const nbsAuthResp = set_auth_cookie(request);
     if (nbsAuthResp) return nbsAuthResp;
 
-    if (await authorize_api(request)) return next(request);
-
-    return NextResponse.rewrite(
-      new URL(`${process.env.BASE_PATH}/error/auth`, request.nextUrl.origin),
-      { request },
-    );
+    const authorized = await authorize_api(request);
+    request.headers.set("x-nbs-authorized", `${authorized}`);
+    return next(request);
   };
 };
 
