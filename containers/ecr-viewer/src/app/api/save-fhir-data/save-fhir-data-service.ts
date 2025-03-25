@@ -8,8 +8,9 @@ import { dbSchema, getDb } from "@/app/api/services/database";
 import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
-import { S3_SOURCE, AZURE_SOURCE } from "@/app/api/utils";
+import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
+import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
@@ -27,7 +28,7 @@ interface SaveResponse {
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
-export const saveToS3 = async (fhirBundle: Bundle, ecrId: string) => {
+const saveToS3 = async (fhirBundle: Bundle, ecrId: string) => {
   const bucketName = process.env.ECR_BUCKET_NAME;
   const objectKey = `${ecrId}.json`;
   const body = JSON.stringify(fhirBundle);
@@ -72,7 +73,7 @@ export const saveToS3 = async (fhirBundle: Bundle, ecrId: string) => {
  * @param ecrId - The unique ID for the eCR associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
-export const saveToAzure = async (
+const saveToAzure = async (
   fhirBundle: Bundle,
   ecrId: string,
 ): Promise<SaveResponse> => {
@@ -109,6 +110,46 @@ export const saveToAzure = async (
 };
 
 /**
+ * Saves a FHIR bundle to Google Cloud Storage.
+ * @param fhirBundle - The FHIR bundle to be saved.
+ * @param ecrId - The unique ID for the eCR associated with the FHIR bundle.
+ * @returns An object containing the status and message.
+ */
+const saveToGCP = async (
+  fhirBundle: Bundle,
+  ecrId: string,
+): Promise<SaveResponse> => {
+  const containerClient = gcpClient();
+  const blobName = `${ecrId}.json`;
+  const body = JSON.stringify(fhirBundle);
+
+  if (!containerClient) {
+    return {
+      message: "Failed to save the FHIR bundle due to misconfiguration.",
+      status: 500,
+    };
+  }
+  try {
+    await containerClient.file(blobName).save(body);
+
+    return {
+      message: "Success. Saved FHIR bundle.",
+      status: 200,
+    };
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to save FHIR bundle to Google Cloud Storage.",
+      error,
+      ecrId,
+    });
+    return {
+      message: "Failed to save FHIR bundle.",
+      status: 500,
+    };
+  }
+};
+
+/**
  * @async
  * @function saveFhirData
  * @param fhirBundle - The FHIR bundle to be saved.
@@ -125,10 +166,12 @@ export const saveFhirData = async (
     return await saveToS3(fhirBundle, ecrId);
   } else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(fhirBundle, ecrId);
+  } else if (saveSource === GCP_SOURCE) {
+    return await saveToGCP(fhirBundle, ecrId);
   } else {
     return {
       message:
-        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", or "azure").',
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
       status: 400,
     };
   }

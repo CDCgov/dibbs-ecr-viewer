@@ -1,5 +1,6 @@
 export const S3_SOURCE = "s3";
 export const AZURE_SOURCE = "azure";
+export const GCP_SOURCE = "gcp";
 
 /**
  * Converts stream data to json data

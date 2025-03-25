@@ -100,7 +100,7 @@ describe("register and and setupConfigurationVariables", () => {
     ]);
   });
 
-  it("should doe nothing if CONFIG_NAME is not set", async () => {
+  it("should do nothing if CONFIG_NAME is not set", async () => {
     // @ts-expect-error
     delete process.env.CONFIG_NAME;
     await register();
