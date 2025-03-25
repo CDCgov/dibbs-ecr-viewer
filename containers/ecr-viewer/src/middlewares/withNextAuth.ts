@@ -18,7 +18,7 @@ export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
         // User already authorized to view this page, skip main auth flow
         return next(request);
       } else if (providerMap.length === 0) {
-        // Auth not actually set up, so show generic 404 instead of landing page
+        // Auth not actually set up, so show generic 404 instead of signin page
         return NextResponse.rewrite(
           new URL(
             `${process.env.BASE_PATH}/error/notfound`,
