@@ -42,5 +42,5 @@ jobs:
         run: |
           echo "Waiting for workflow run ID: $RUN_ID to complete..."
           echo "https://github.com/CDCgov/dibbs-ecr-viewer/actions/runs/$RUN_ID"
-          
-          gh run watch $RUN_ID -i 30 --exit-status 
+
+          gh run watch $RUN_ID -i 30 --exit-status
