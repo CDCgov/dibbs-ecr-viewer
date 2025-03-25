@@ -407,6 +407,8 @@ export const returnProceduresTable = (
 export const returnVitalsTable = (fhirBundle: Bundle) => {
   const vitals = evaluateAll(fhirBundle, fhirPathMappings.patientVitalSigns);
 
+  if (vitals.length === 0) return;
+
   const columns = [
     {
       columnName: "Vital Reading",
