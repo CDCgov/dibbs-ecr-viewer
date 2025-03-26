@@ -104,13 +104,13 @@ Running tests:
 
 Postgres:
 
-- set your `CONFIG` in `.env.local` to a postgres-using option (e.g. `AWS_PG_DUAL`)
+- set your `CONFIG_NAME` in `.env.local` to a postgres-using option (e.g. `AWS_PG_DUAL`)
 - `npm run local-dev` - get the postgres db running
 - `npm run test:integration:pg` - Run the full suite of unit tests with postgres.
 
 SQL Server:
 
-- set your `CONFIG` in `.env.local` to a sqlserver-using option (e.g. `AWS_SQLSERVER_NON_INTEGRATED`)
+- set your `CONFIG_NAME` in `.env.local` to a sqlserver-using option (e.g. `AWS_SQLSERVER_NON_INTEGRATED`)
 - `npm run local-dev` - get the sql server db running
 - `npm run test:integration:sqlserver` - Run the full suite of unit tests with sql server.
 
