@@ -4,7 +4,6 @@
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-import { isProviderConfigured } from "@/app/api/auth/auth";
 import { chainMiddleware } from "@/middleware";
 import { withNextAuth } from "@/middlewares/withNextAuth";
 
@@ -25,13 +24,14 @@ describe("Next Auth Middleware", () => {
     process.env.NEXTAUTH_SECRET = "test-secret";
     process.env.BASE_PATH = "ecr-viewer";
     process.env.NBS_AUTH = "false";
+    process.env.AUTH_PROVIDER = "keycloak";
     jest.clearAllMocks(); // Reset mocks before each test
-    (isProviderConfigured as jest.Mock).mockReturnValue(true);
   });
   afterEach(() => {
     process.env.NEXTAUTH_SECRET = ORIG_NEXTAUTH_SECRET;
     process.env.NBS_AUTH = ORIG_NBS_AUTH;
     process.env.BASE_PATH = ORIG_BASE_PATH;
+    delete process.env.AUTH_PROVIDER;
   });
 
   it("should redirect to the signin url when not authorized", async () => {
@@ -59,7 +59,7 @@ describe("Next Auth Middleware", () => {
   });
 
   it("should redirect when not configured", async () => {
-    (isProviderConfigured as jest.Mock).mockReturnValue(false);
+    delete process.env.AUTH_PROVIDER;
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/fhir-data/",
     );

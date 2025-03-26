@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
 
-import { isProviderConfigured } from "@/app/api/auth/auth";
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
 /**
@@ -22,7 +21,7 @@ export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
     }
 
     // Auth not actually set up, so show generic 404 instead of signin page
-    if (!isProviderConfigured()) {
+    if (!process.env.AUTH_PROVIDER) {
       return NextResponse.redirect(
         new URL(
           `${process.env.BASE_PATH}/error/notfound`,
