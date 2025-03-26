@@ -103,7 +103,7 @@ jobs:
       - name: Set CONFIG_NAME to ${{ matrix.config }}
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
-          sed -i 's/AWS_SQLSERVER_NON_INTEGRATED/${{ matrix.config }}/' .env.local
+          sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config }}/' .env.local
 
       - name: Run seed data conversion
         run: npm run convert-seed-data
@@ -172,7 +172,7 @@ jobs:
       - name: Set CONFIG_NAME to AWS_INTEGRATED
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
-          sed -i 's/AWS_SQLSERVER_NON_INTEGRATED/AWS_INTEGRATED/' .env.local
+          sed -i 's/AWS_SQLSERVER_DUAL/AWS_INTEGRATED/' .env.local
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
@@ -244,7 +244,7 @@ jobs:
       - name: Set config for db type
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
-          sed -i 's/AWS_.*_NON_INTEGRATED/AWS_${DB_TYPE}_NON_INTEGRATED/' .env.local
+          sed -i 's/AWS_.*_DUAL/AWS_${DB_TYPE}_NON_INTEGRATED/' .env.local
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
