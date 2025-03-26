@@ -50,7 +50,7 @@ describe("NBS Auth Middleware", () => {
     );
 
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
+    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
     expect(resp?.status).toBe(200);
   });
 
