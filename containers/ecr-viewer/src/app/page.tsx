@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 
 import { Table } from "@trussworks/react-uswds";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 import EcrPaginationWrapper from "./components/EcrPaginationWrapper";
 import EcrTableContent from "./components/EcrTableContent";
@@ -12,7 +13,6 @@ import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./data/conditions";
-import NotFound from "./not-found";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
@@ -29,8 +29,7 @@ const HomePage = async ({
   searchParams: PageSearchParams;
 }) => {
   if (!process.env.METADATA_DATABASE_TYPE) {
-    // Yes, this is a component, but calling it as a function makes the tests happy
-    return await NotFound();
+    notFound();
   }
 
   const cookieStore = cookies();

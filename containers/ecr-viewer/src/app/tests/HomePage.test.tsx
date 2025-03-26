@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 import { DEFAULT_ITEMS_PER_PAGE } from "@/app/constants";
 import HomePage from "@/app/page";
@@ -36,12 +37,12 @@ describe("Home Page", () => {
   it("no metadata database, should not show the homepage", async () => {
     delete process.env.METADATA_DATABASE_TYPE;
     render(await HomePage({ searchParams: {} }));
-    expect(screen.getByText("Page not found")).toBeInTheDocument();
+    expect(notFound).toHaveBeenCalled();
   });
   it("yes metadata database, should show the homepage", async () => {
     render(await HomePage({ searchParams: {} }));
     expect(getTotalEcrCount).toHaveBeenCalledOnce();
-    expect(screen.queryByText("Page not found")).not.toBeInTheDocument();
+    expect(notFound).not.toHaveBeenCalled();
   });
 });
 
