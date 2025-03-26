@@ -46,7 +46,7 @@ describe("NBS Auth Middleware", () => {
 
   it("should not authorize the api endpoints without auth", async () => {
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/fhir-data/",
+      "https://www.example.com/ecr-viewer/api/save-fhir-data/",
     );
 
     const resp = await middleware(req);
@@ -60,7 +60,7 @@ describe("NBS Auth Middleware", () => {
     process.env.NBS_PUB_KEY = "FOOBAR";
 
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/fhir-data/",
+      "https://www.example.com/ecr-viewer/api/save-fhir-data/",
     );
     req.cookies.set("auth-token", "foobar");
 

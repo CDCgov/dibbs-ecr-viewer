@@ -69,9 +69,5 @@ export const config = {
      * to not run on the homepage:
      */
     "/",
-    /**
-     * Run middleware on getting fhir-data
-     */
-    "/api/fhir-data",
   ],
 };

@@ -32,22 +32,20 @@ describe("Next Auth Middleware", () => {
 
   it("should redirect to the signin url when not authorized", async () => {
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api?id=123",
+      "https://www.example.com/ecr-viewer/view-data?id=123",
     );
 
     const resp = await middleware(req);
     expect(resp?.status).toBeGreaterThanOrEqual(300);
     expect(resp?.status).toBeLessThan(400);
     expect(resp?.headers.get("Location")).toBe(
-      "https://www.example.com/signin?callbackUrl=%2Fecr-viewer%2Fapi%3Fid%3D123",
+      "https://www.example.com/signin?callbackUrl=%2Fecr-viewer%2Fview-data%3Fid%3D123",
     );
   });
 
   it("should not rediret when authorized", async () => {
     (getToken as jest.Mock).mockResolvedValue("123");
-    const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/fhir-data/",
-    );
+    const req = new NextRequest("https://www.example.com/ecr-viewer");
 
     const resp = await middleware(req);
     expect(resp?.status).toBe(200);
