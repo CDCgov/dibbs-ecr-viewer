@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import bgRedirect from "../../../assets/bg-redirect.svg";
 import { providerMap } from "@/app/api/auth/auth";
 
@@ -7,6 +9,7 @@ import { RedirectButton } from "./components/RedirectButton";
  * @returns a sign-in (redirect) page
  */
 const RedirectPage = () => {
+  if (!providerMap[0]) notFound();
   return (
     <div
       className="position-relative text-white"
