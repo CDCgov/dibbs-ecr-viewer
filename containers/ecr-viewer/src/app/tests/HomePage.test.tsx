@@ -24,6 +24,9 @@ jest.mock("next/headers", () => ({
 jest.mock("../components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
 }));
+jest.mock("../utils/auth-utils", () => ({
+  isLoggedInUser: jest.fn().mockResolvedValue(true),
+}));
 
 describe("Home Page", () => {
   afterEach(() => {

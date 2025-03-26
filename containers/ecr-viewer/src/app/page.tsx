@@ -29,7 +29,8 @@ const HomePage = async ({
   searchParams: PageSearchParams;
 }) => {
   if (!process.env.METADATA_DATABASE_TYPE) {
-    return <NotFound />;
+    // Yes, this is a component, but calling it as a function makes the tests happy
+    return await NotFound();
   }
 
   const cookieStore = cookies();
