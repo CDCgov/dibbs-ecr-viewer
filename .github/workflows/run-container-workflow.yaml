@@ -5,9 +5,15 @@ on:
       container:
         required: true
         type: string
+      ref_name:
+        required: true
+        type: string
   workflow_call:
     inputs:
       container:
+        required: true
+        type: string
+      ref_name:
         required: true
         type: string
 jobs:
@@ -24,9 +30,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run .github/workflows/container-${{ inputs.container }}.yaml
+          gh workflow run .github/workflows/container-${{ inputs.container }}.yaml --ref ${{ inputs.ref_name }}
           sleep 5
-          RUN_ID=$(gh run list --workflow=container-${{ inputs.container }}.yaml --event=workflow_dispatch --json databaseId --limit 1 --jq '.[0].databaseId')
+          RUN_ID=$(gh run list --workflow=container-${{ inputs.container }}.yaml --event=workflow_dispatch --branch ${{ inputs.ref_name }} --json databaseId --limit 1 --jq '.[0].databaseId')
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Wait for container workflow to complete
@@ -35,29 +41,6 @@ jobs:
           RUN_ID: ${{ steps.trigger-workflow.outputs.RUN_ID }}
         run: |
           echo "Waiting for workflow run ID: $RUN_ID to complete..."
+          echo "https://github.com/CDCgov/dibbs-ecr-viewer/actions/runs/$RUN_ID"
 
-          # Wait for the workflow to complete
-          while true; do
-            status=$(gh run view $RUN_ID --json status --jq '.status')
-            echo "Current status: $status"
-
-            if [[ "$status" == "completed" ]]; then
-              break
-            fi
-
-            sleep 10 
-          done
-
-      - name: Check container workflow result
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUN_ID: ${{ steps.trigger-workflow.outputs.RUN_ID }}
-        run: |
-          conclusion=$(gh run view $RUN_ID --json conclusion --jq '.conclusion')
-
-          if [[ "$conclusion" != "success" ]]; then
-            echo "Container workflow failed with conclusion: $conclusion"
-            exit 1
-          else
-            echo "Container workflow succeeded!"
-          fi
+          gh run watch $RUN_ID -i 30 --exit-status

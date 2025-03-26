@@ -11,8 +11,13 @@ services:
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY=${NBS_PUB_KEY:-}
-      # POSTGRES
-      - DATABASE_URL=postgres://postgres:pw@localhost:5432/ecr_viewer_db
+      # METADATA DATABASE
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
+      # SQL Server - backwards compat
+      - SQL_SERVER_USER
+      - SQL_SERVER_PASSWORD
+      - SQL_SERVER_HOST
+
       # AWS
       - AWS_CUSTOM_ENDPOINT=http://localhost:4566
       - AWS_REGION=${AWS_REGION:-us-east-1}
@@ -26,10 +31,6 @@ services:
       - 'GCP_KEY=${GCP_KEY:-{ "client_email": "ecr@example.com", "private_key": "1234" }}'
       - GCP_PROJECT_ID=${GCP_PROJECT_ID:-proj}
       - GCP_API_ENDPOINT=${GCP_API_ENDPOINT:-http://localhost:10001/}
-      # SQL Server
-      - SQL_SERVER_USER=${SQL_SERVER_USER:-sa}
-      - SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
-      - SQL_SERVER_HOST=${SQL_SERVER_HOST:-localhost}
       # Orchestration
       - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
       # Auth

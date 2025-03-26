@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+
 import { processZip } from "@/app/api/process-zip/service";
 import {
   saveFhirData,
@@ -9,6 +10,7 @@ import {
 import { S3_SOURCE } from "@/app/api/utils";
 
 jest.mock("../../../api/save-fhir-data/save-fhir-data-service");
+jest.mock("../../../api/services/database");
 
 describe("processZip", () => {
   const mockFile = new File(["content"], "test.zip");

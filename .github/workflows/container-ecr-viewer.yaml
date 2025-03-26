@@ -79,6 +79,10 @@ jobs:
           cache-to: type=gha,mode=max
 
   convert-data:
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ["AWS_SQLSERVER_NON_INTEGRATED", "AZURE_PG_NON_INTEGRATED"]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -95,6 +99,11 @@ jobs:
         run: |
           npm run setup-local-env
           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
+
+      - name: Set CONFIG_NAME to ${{ matrix.config }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          sed -i 's/AWS_SQLSERVER_NON_INTEGRATED/${{ matrix.config }}/' .env.local
 
       - name: Run seed data conversion
         run: npm run convert-seed-data
@@ -200,3 +209,58 @@ jobs:
           name: logs
           path: ./containers/${{env.CONTAINER}}/e2e/e2e-run.log
           retention-days: 5
+
+  integration-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        db_type: ["pg", "sqlserver"]
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{env.NODE_VERSION}}
+
+      - name: Install dependencies
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm ci
+
+      - name: Set up env vars
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          npm run setup-local-env
+          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
+
+      - name: upcase db type
+        shell: bash
+        run: echo "DB_TYPE=$(echo "${{matrix.db_type}}" | tr '[:lower:]' '[:upper:]' )" >> "${GITHUB_ENV}"
+
+      - name: Set config for db type
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          sed -i 's/AWS_.*_NON_INTEGRATED/AWS_${DB_TYPE}_NON_INTEGRATED/' .env.local
+
+      - name: Run local docker and wait for it to be ready
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
+
+      - name: Run integration tests - ${{ matrix.db_type }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:integration:${{ matrix.db_type }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ env.CONTAINER }}
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down

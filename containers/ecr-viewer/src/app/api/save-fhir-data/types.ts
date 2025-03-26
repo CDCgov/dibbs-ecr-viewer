@@ -2,14 +2,14 @@ interface Address {
   use: "home" | "work" | "temp" | "old" | "billing" | undefined;
   type: "postal" | "physical" | "both" | undefined;
   text: string | undefined;
-  line: string[] | undefined;
+  line: string | undefined;
   city: string | undefined;
   district: string | undefined;
   state: string | undefined;
   postal_code: string | undefined;
   country: string | undefined;
-  period_start: Date | undefined;
-  period_end: Date | undefined;
+  period_start: string | undefined;
+  period_end: string | undefined;
 }
 
 interface Lab {
@@ -18,7 +18,7 @@ interface Lab {
   test_type_code: string | undefined;
   test_type_system: string | undefined;
   test_result_qualitative: string | undefined;
-  test_result_quantitative: number | undefined;
+  test_result_quantitative: string | undefined;
   test_result_units: string | undefined;
   test_result_code: string | undefined;
   test_result_code_display: string | undefined;
@@ -32,7 +32,7 @@ interface Lab {
   test_result_ref_range_high_units: string | undefined;
   specimen_type: string | undefined;
   performing_lab: string | undefined;
-  specimen_collection_date: Date | undefined;
+  specimen_collection_date: string | undefined;
 }
 
 interface ruleSummary {
@@ -51,8 +51,8 @@ export interface BundleExtendedMetadata {
   race: string | undefined;
   ethnicity: string | undefined;
   patient_addresses: Address[] | undefined;
-  latitude: number | undefined;
-  longitude: number | undefined;
+  latitude: string | undefined;
+  longitude: string | undefined;
   rr_id: string | undefined;
   processing_status: string | undefined;
   eicr_set_id: string | undefined;
@@ -60,16 +60,16 @@ export interface BundleExtendedMetadata {
   eicr_version_number: string;
   replaced_eicr_id: string | undefined;
   replaced_eicr_version: string | undefined;
-  authoring_datetime: Date | undefined;
+  authoring_datetime: string | undefined;
   provider_id: string | undefined;
   facility_id_number: string | undefined;
   facility_name: string | undefined;
   facility_type: string | undefined;
   encounter_type: string | undefined;
-  encounter_start_date: Date | undefined;
-  encounter_end_date: Date | undefined;
+  encounter_start_date: string | undefined;
+  encounter_end_date: string | undefined;
   reason_for_visit: string | undefined;
-  active_problems: string[] | undefined;
+  active_problems: string | undefined;
   labs: Lab[] | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
@@ -86,9 +86,9 @@ export interface BundleExtendedMetadata {
   ecr_id: string;
   last_name: string | undefined;
   first_name: string | undefined;
-  birth_date: Date | undefined;
+  birth_date: string | undefined;
   rr: RR[] | undefined;
-  report_date: Date | undefined;
+  report_date: string | undefined;
 }
 export interface BundleMetadata {
   last_name: string;

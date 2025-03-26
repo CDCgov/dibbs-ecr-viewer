@@ -2,7 +2,7 @@ CREATE SCHEMA ecr_viewer
 
     CREATE TABLE ecr_viewer.ecr_data
     (
-        eICR_ID                  VARCHAR(200) PRIMARY KEY,
+        eicr_id                  VARCHAR(200) PRIMARY KEY,
         set_id                   VARCHAR(255),
         fhir_reference_link      VARCHAR(255),
         last_name                VARCHAR(255),
@@ -55,13 +55,13 @@ CREATE SCHEMA ecr_viewer
         country VARCHAR(255),
         period_start DATETIMEOFFSET,
         period_end DATETIMEOFFSET,
-        eICR_ID VARCHAR(200) REFERENCES ecr_viewer.ecr_data (eICR_ID)
+        eicr_id VARCHAR(200) REFERENCES ecr_viewer.ecr_data (eicr_id)
     )
 
     CREATE TABLE ecr_viewer.ecr_rr_conditions
     (
         UUID      VARCHAR(200) PRIMARY KEY,
-        eICR_ID   VARCHAR(200) NOT NULL REFERENCES ecr_viewer.ecr_data (eICR_ID),
+        eicr_id   VARCHAR(200) NOT NULL REFERENCES ecr_viewer.ecr_data (eicr_id),
         condition VARCHAR(MAX)
     )
 
@@ -76,7 +76,7 @@ CREATE SCHEMA ecr_viewer
     CREATE TABLE ecr_viewer.ecr_labs
     (
         UUID                                   VARCHAR(200),
-        eICR_ID                                VARCHAR(200) REFERENCES ecr_viewer.ecr_data (eICR_ID),
+        eicr_id                                VARCHAR(200) REFERENCES ecr_viewer.ecr_data (eicr_id),
         test_type                              VARCHAR(255),
         test_type_code                         VARCHAR(50),
         test_type_system                       VARCHAR(255),
@@ -96,5 +96,5 @@ CREATE SCHEMA ecr_viewer
         specimen_type                          VARCHAR(255),
         specimen_collection_date               DATE,
         performing_lab                         VARCHAR(255),
-        PRIMARY KEY (UUID, eICR_ID)
+        PRIMARY KEY (UUID, eicr_id)
     );

@@ -11,6 +11,7 @@ jest.mock("../services/listEcrDataService", () => {
     getTotalEcrCount: jest.fn().mockResolvedValue(0),
   };
 });
+jest.mock("../../app/api/services/database");
 jest.mock("../data/conditions");
 jest.mock("../components/Filters");
 jest.mock("../components/LibrarySearch");

@@ -88,6 +88,15 @@ export const get_azure = async (
   const containerClient = azureBlobContainerClient();
   const blobName = `${ecr_id}.json`;
 
+  if (!containerClient) {
+    return {
+      payload: {
+        message:
+          "Failed to download the FHIR data due to misconfiguration of client.",
+      },
+      status: 500,
+    };
+  }
   try {
     const blockBlobClient: BlobClient = containerClient.getBlobClient(blobName);
 

@@ -19,6 +19,7 @@ jest.mock("@aws-sdk/client-s3", () => ({
     input,
   })),
 }));
+jest.mock("../../../../app/api/services/database");
 
 describe("saveFhirData", () => {
   const fhirBundle: Bundle = { resourceType: "Bundle", type: "batch" };
