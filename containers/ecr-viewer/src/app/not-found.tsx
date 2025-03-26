@@ -1,12 +1,12 @@
-import { useIsLoggedInUser } from "./components/AuthSessionProvider";
 import ErrorPage from "./components/ErrorPage";
+import { isLoggedInUser } from "./utils/auth-utils";
 
 /**
  * 404 page
  * @returns 404 Page
  */
-const NotFound = () => {
-  const isLoggedIn = useIsLoggedInUser();
+const NotFound = async () => {
+  const isLoggedIn = await isLoggedInUser();
 
   return (
     <ErrorPage

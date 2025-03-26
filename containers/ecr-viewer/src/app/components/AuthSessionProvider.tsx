@@ -27,5 +27,3 @@ export const useIsLoggedInUser = () => {
   const { data: session } = useSession();
   return !!session;
 };
-
-export default AuthSessionProvider;

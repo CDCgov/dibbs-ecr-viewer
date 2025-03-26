@@ -1,6 +1,6 @@
 import "@/styles/styles.scss";
 
-import AuthSessionProvider from "./components/AuthSessionProvider";
+import { AuthSessionProvider } from "./components/AuthSessionProvider";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
@@ -15,7 +15,7 @@ export const metadata = {
  * @returns A React element representing the top-level HTML structure, with the
  *   `children` rendered inside the `<body>` tag.
  */
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
