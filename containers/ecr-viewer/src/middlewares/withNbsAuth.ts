@@ -17,9 +17,10 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
 
     // NBS auth can only be used for ecr viewer pages
     const { pathname } = request.nextUrl;
-    const authorized =
-      pathname.endsWith(`/view-data`) && (await authorize_api(request));
-    console.log({ pathname, authorized });
+    if (!pathname.endsWith(`/view-data`)) return next(request);
+
+    const authorized = await authorize_api(request);
+
     // set the header on the request since we need to run nbs auth before next auth
     request.headers.set("x-nbs-authorized", `${authorized}`);
     return next(request);

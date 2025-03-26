@@ -63,7 +63,7 @@ export const config = {
      * - _next/image (image optimization files)
      * - images (static files in public/images/ directory)
      */
-    "/((?!api|_next/static|_next/image|public|img|uswds|images).*)",
+    "/((?!api|error|_next/static|_next/image|public|img|uswds|images).*)",
     /**
      * Fix issue where the pattern above was causing middleware
      * to not run on the homepage:

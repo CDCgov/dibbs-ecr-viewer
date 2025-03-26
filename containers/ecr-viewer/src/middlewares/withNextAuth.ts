@@ -22,9 +22,13 @@ export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
 
     // Auth not actually set up, so show generic 404 instead of signin page
     if (!process.env.AUTH_PROVIDER) {
+      const problem =
+        request.headers.get("x-nbs-authorized") === "false"
+          ? "auth"
+          : "notfound";
       return NextResponse.redirect(
         new URL(
-          `${process.env.BASE_PATH}/error/notfound`,
+          `${process.env.BASE_PATH}/error/${problem}`,
           request.nextUrl.origin,
         ),
       );
