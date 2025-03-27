@@ -8,7 +8,7 @@ Display an eCR
 
 - `id=[string]` where `id` is the ID of the eCR.
 - `snomed-code=[string]` where `snomed-code` is the condition the user is viewing the eCR for. OPTIONAL.
-- `auth=[string]` where `auth` is the authentication token for the user. Only required if NBS_AUTH is true.
+- `auth=[string]` where `auth` is the authentication token for the user. Only required if NBS_PUB_KEY is set and other auth not enabled.
 
 **Method** : `GET`
 

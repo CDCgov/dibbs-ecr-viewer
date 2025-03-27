@@ -13,7 +13,7 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
     if (
-      process.env.NBS_AUTH === "true" &&
+      !!process.env.NBS_PUB_KEY &&
       request.headers.get("x-nbs-authorized") === "true"
     ) {
       // User already authorized to view this page, skip main auth flow

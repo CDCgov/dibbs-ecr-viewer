@@ -18,7 +18,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AWS_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("s3");
   });
 
@@ -26,7 +25,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AWS_PG_NON_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("false");
     expect(process.env.SOURCE).toBe("s3");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
@@ -36,7 +34,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AWS_SQLSERVER_NON_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("false");
     expect(process.env.SOURCE).toBe("s3");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("sqlserver");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
@@ -46,7 +43,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AWS_PG_DUAL";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("s3");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
@@ -56,7 +52,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AWS_SQLSERVER_DUAL";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("s3");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("sqlserver");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
@@ -66,7 +61,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AZURE_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("azure");
   });
 
@@ -74,7 +68,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AZURE_PG_NON_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("false");
     expect(process.env.SOURCE).toBe("azure");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
@@ -84,7 +77,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AZURE_SQLSERVER_NON_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("false");
     expect(process.env.SOURCE).toBe("azure");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("sqlserver");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
@@ -94,7 +86,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AZURE_PG_DUAL";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("azure");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
@@ -104,7 +95,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "AZURE_SQLSERVER_DUAL";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("azure");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("sqlserver");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
@@ -114,7 +104,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "GCP_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("gcp");
   });
 
@@ -122,7 +111,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "GCP_PG_NON_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("false");
     expect(process.env.SOURCE).toBe("gcp");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
@@ -132,7 +120,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "GCP_SQLSERVER_NON_INTEGRATED";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("false");
     expect(process.env.SOURCE).toBe("gcp");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("sqlserver");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
@@ -142,7 +129,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "GCP_PG_DUAL";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("gcp");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
@@ -152,7 +138,6 @@ describe("register and and setupConfigurationVariables", () => {
     process.env.CONFIG_NAME = "GCP_SQLSERVER_DUAL";
     await register();
 
-    expect(process.env.NBS_AUTH).toBe("true");
     expect(process.env.SOURCE).toBe("gcp");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("sqlserver");
     expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
@@ -163,7 +148,6 @@ describe("register and and setupConfigurationVariables", () => {
     delete process.env.CONFIG_NAME;
     await register();
 
-    expect(process.env.NBS_AUTH).toBeUndefined();
     expect(process.env.SOURCE).toBeUndefined();
   });
 });

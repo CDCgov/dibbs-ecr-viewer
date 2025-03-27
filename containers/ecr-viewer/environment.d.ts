@@ -29,7 +29,6 @@ namespace NodeJS {
       | "GCP_SQLSERVER_NON_INTEGRATED"
       | "GCP_PG_DUAL"
       | "GCP_SQLSERVER_DUAL";
-    DATABASE_TYPE: string;
     DATABASE_URL?: string;
     DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
@@ -38,8 +37,7 @@ namespace NodeJS {
     GCP_API_ENDPOINT?: string;
     METADATA_DATABASE_SCHEMA?: "core" | "extended";
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";
-    NBS_AUTH: "true" | "false";
-    NBS_PUB_KEY: string;
+    NBS_PUB_KEY?: string;
     NEXT_RUNTIME: string;
     NEXTAUTH_SECRET: string;
     ORCHESTRATION_URL: string;

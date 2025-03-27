@@ -18,18 +18,18 @@ const middleware = chainMiddleware([withNextAuth]);
 
 describe("Next Auth Middleware", () => {
   const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
-  const ORIG_NBS_AUTH = process.env.NBS_AUTH;
+  const ORIG_NBS_PUB_KEY = process.env.NBS_PUB_KEY;
   const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeEach(() => {
     process.env.NEXTAUTH_SECRET = "test-secret";
     process.env.BASE_PATH = "ecr-viewer";
-    process.env.NBS_AUTH = "false";
+    delete process.env.NBS_PUB_KEY;
     process.env.AUTH_PROVIDER = "keycloak";
     jest.clearAllMocks(); // Reset mocks before each test
   });
   afterEach(() => {
     process.env.NEXTAUTH_SECRET = ORIG_NEXTAUTH_SECRET;
-    process.env.NBS_AUTH = ORIG_NBS_AUTH;
+    process.env.NBS_PUB_KEY = ORIG_NBS_PUB_KEY;
     process.env.BASE_PATH = ORIG_BASE_PATH;
     delete process.env.AUTH_PROVIDER;
   });
@@ -71,7 +71,7 @@ describe("Next Auth Middleware", () => {
 
   describe("when used in conjucntion with NBS auth", () => {
     beforeEach(() => {
-      process.env.NBS_AUTH = "true";
+      process.env.NBS_PUB_KEY = "foo";
     });
 
     it("should pass through if nbs authorized", async () => {

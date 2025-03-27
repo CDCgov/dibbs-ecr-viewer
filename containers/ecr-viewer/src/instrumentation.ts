@@ -23,12 +23,9 @@ function setupConfigurationVariables() {
 
   // INTEGRATED and DUAL should have NBS auth
   if (process.env.CONFIG_NAME?.endsWith("_NON_INTEGRATED")) {
-    process.env.NBS_AUTH = "false";
+    delete process.env.NBS_PUB_KEY; // makes dev life easier
   } else if (process.env.CONFIG_NAME?.endsWith("_INTEGRATED")) {
-    process.env.NBS_AUTH = "true";
     delete process.env.AUTH_PROVIDER; // makes dev life easier
-  } else if (process.env.CONFIG_NAME?.endsWith("_DUAL")) {
-    process.env.NBS_AUTH = "true";
   }
 
   if (process.env.CONFIG_NAME?.includes("_PG_")) {
