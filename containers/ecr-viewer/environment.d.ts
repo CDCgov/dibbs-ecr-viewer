@@ -40,10 +40,8 @@ namespace NodeJS {
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";
     NBS_AUTH: "true" | "false";
     NBS_PUB_KEY: string;
-    NEXT_PUBLIC_NON_INTEGRATED_VIEWER: "true" | "false";
     NEXT_RUNTIME: string;
     NEXTAUTH_SECRET: string;
-    NON_INTEGRATED_VIEWER: "true" | "false";
     ORCHESTRATION_URL: string;
     SOURCE: "s3" | "azure" | "gcp";
     SQL_SERVER_HOST?: string;

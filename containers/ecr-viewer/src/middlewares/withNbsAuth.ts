@@ -12,17 +12,17 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
     if (process.env.NBS_AUTH !== "true") return next(request);
 
-    const nbsAuthResp = set_auth_cookie(request);
+    const nbsAuthResp = setAuthCookie(request);
     if (nbsAuthResp) return nbsAuthResp;
 
     // NBS auth can only be used for ecr viewer pages
     const { pathname } = request.nextUrl;
     if (!pathname.endsWith(`/view-data`)) return next(request);
 
-    const authorized = await authorize_api(request);
+    const isAuthorized = await checkIsAuthorized(request);
 
     // set the header on the request since we need to run nbs auth before next auth
-    request.headers.set("x-nbs-authorized", `${authorized}`);
+    request.headers.set("x-nbs-authorized", `${isAuthorized}`);
     return next(request);
   };
 };
@@ -36,7 +36,7 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
  *   "auth-token" cookie if the "auth" parameter exists, or `null` if the
  *   "auth" parameter does not exist in the request.
  */
-function set_auth_cookie(req: NextRequest) {
+function setAuthCookie(req: NextRequest) {
   const url = req.nextUrl;
   const auth = url.searchParams.get("auth");
   if (auth) {
@@ -49,7 +49,7 @@ function set_auth_cookie(req: NextRequest) {
 }
 
 /**
- * Authorizes API requests based on an authentication token provided in the request's cookies.
+ * Authorizes requests based on an authentication token provided in the request's cookies.
  *   The function checks for the presence of an "auth-token" cookie and attempts to verify it
  *   using JWT verification with a public key. If the token is missing or invalid, the function
  *   returns a JSON response indicating that authentication is required with a 401 status code.
@@ -57,7 +57,7 @@ function set_auth_cookie(req: NextRequest) {
  *   and URL information used for extracting the authentication token and determining the request path.
  * @returns - Whether the user is authorized.
  */
-async function authorize_api(req: NextRequest) {
+async function checkIsAuthorized(req: NextRequest) {
   const auth = req.cookies.get("auth-token")?.value;
 
   if (!auth) {
