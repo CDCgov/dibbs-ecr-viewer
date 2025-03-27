@@ -36,7 +36,7 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
  *   "auth-token" cookie if the "auth" parameter exists, or `null` if the
  *   "auth" parameter does not exist in the request.
  */
-function setAuthCookie(req: NextRequest) {
+const setAuthCookie = (req: NextRequest) => {
   const url = req.nextUrl;
   const auth = url.searchParams.get("auth");
   if (auth) {
@@ -46,7 +46,7 @@ function setAuthCookie(req: NextRequest) {
     return response;
   }
   return null;
-}
+};
 
 /**
  * Authorizes requests based on an authentication token provided in the request's cookies.
@@ -57,7 +57,7 @@ function setAuthCookie(req: NextRequest) {
  *   and URL information used for extracting the authentication token and determining the request path.
  * @returns - Whether the user is authorized.
  */
-async function checkIsAuthorized(req: NextRequest) {
+const checkIsAuthorized = async (req: NextRequest) => {
   const auth = req.cookies.get("auth-token")?.value;
 
   if (!auth) {
@@ -72,4 +72,4 @@ async function checkIsAuthorized(req: NextRequest) {
     return false;
   }
   return true;
-}
+};
