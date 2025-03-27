@@ -166,7 +166,6 @@ flowchart LR
     subgraph aws["fab:fa-docker AWS"]
       s3["fab:fa-python <code>S3</code>"]
     end
-    mr <--> |<br><code>GET /fhir-data</code>| aws
 	mr <==> |<code>POST /save-fhir-data</code>| aws
 
   end
@@ -192,7 +191,6 @@ graph TD
     A[ecr-viewer]
     subgraph API Endpoints
         direction TB
-        M[GET /fhir-data]
         N[POST /save-fhir-data]
     end
     A --> M
