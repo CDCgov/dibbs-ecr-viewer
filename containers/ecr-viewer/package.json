@@ -61,7 +61,7 @@
     "@uswds/uswds": "^3.11.0",
     "@vercel/otel": "^1.10.0",
     "classnames": "^2.5.1",
-    "fhirpath": "^3.10.4",
+    "fhirpath": "^3.18.0",
     "html-react-parser": "^5.1.4",
     "jose": "5.2.2",
     "js-cookie": "^3.0.5",
