@@ -4,26 +4,22 @@ import { fileURLToPath } from "url";
 import { getDb, dbSchema } from "@/app/api/services/database";
 
 import { Kysely, Migrator, FileMigrationProvider } from "kysely";
+import { MultiDirectoryMigrationProvider } from "./multiDirectoryMigrationProvider";
 
 // Empty interface used only in migrations
 interface Database {}
 
-// Run common migrations before schema-specific ones
 // Fix import error (https://github.com/kysely-org/kysely/issues/362)? tsc and node and how we import stuff? That's why none of the imports work.
 
 async function runMigration(
   db: Kysely<Database>,
-  migrationsDir: string,
+  migrationsDir: string[],
   command: string,
   target?: string,
 ) {
   const migrator = new Migrator({
     db,
-    provider: new FileMigrationProvider({
-      fs,
-      path,
-      migrationFolder: migrationsDir,
-    }),
+    provider: new MultiDirectoryMigrationProvider(migrationsDir, fs, path),
   });
 
   if (command === "up") {
@@ -55,30 +51,33 @@ async function runMigration(
   }
 }
 
-export async function main() {
-  const schema = dbSchema();
-  if (!schema || (schema !== "core" && schema !== "extended")) {
-    console.warn("No database supported by config. Skipping migration.");
-    return;
-  }
+export async function migrate() {
+  try {
+    const schema = dbSchema();
+    if (!schema || (schema !== "core" && schema !== "extended")) {
+      console.warn("No database supported by config. Skipping migration.");
+      return;
+    }
 
-  const db = getDb() as Kysely<any>;
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
-  const command = process.argv[2];
-  if (!command || (command !== "up" && command !== "down")) {
-    console.error('Please provide "up" or "down" as the first argument');
+    const db = getDb() as Kysely<any>;
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const commonDir = path.join(__dirname, `../schemas/common`);
+    const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
+    const command = process.argv[2];
+    if (!command || (command !== "up" && command !== "down")) {
+      console.error('Please provide "up" or "down" as the first argument');
+      process.exit(1);
+    }
+
+    const target = command === "down" ? process.argv[3] : undefined;
+
+    await runMigration(db, [commonDir, migrationsDir], command, target);
+
+    await db.destroy();
+  } catch (error) {
+    console.error(error);
     process.exit(1);
   }
-
-  const target = command === "down" ? process.argv[3] : undefined;
-  
-  await runMigration(db, migrationsDir, command, target);
-
-  await db.destroy();
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+migrate();
