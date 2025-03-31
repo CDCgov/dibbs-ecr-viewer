@@ -8,6 +8,9 @@ import { Kysely, Migrator, FileMigrationProvider } from "kysely";
 // Empty interface used only in migrations
 interface Database {}
 
+// Run common migrations before schema-specific ones
+// Fix import error (https://github.com/kysely-org/kysely/issues/362)? tsc and node and how we import stuff? That's why none of the imports work.
+
 async function runMigration(
   db: Kysely<Database>,
   migrationsDir: string,
@@ -69,7 +72,7 @@ export async function main() {
   }
 
   const target = command === "down" ? process.argv[3] : undefined;
-
+  
   await runMigration(db, migrationsDir, command, target);
 
   await db.destroy();

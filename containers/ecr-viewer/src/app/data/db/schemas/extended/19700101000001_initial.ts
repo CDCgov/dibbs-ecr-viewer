@@ -1,5 +1,5 @@
 import { Kysely } from "kysely";
-
+import { dbSchema } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 
 /**
@@ -12,6 +12,11 @@ import { getSql } from "@/app/api/services/dialects/common";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
   // Kysely requires <any>
+
+  if (dbSchema() === "core") {
+    console.log("Core schema detected. Skipping extended migration.");
+    return;
+  }
 
   const extendedCheck = await db
     .selectFrom("ecr_viewer.ecr_data")

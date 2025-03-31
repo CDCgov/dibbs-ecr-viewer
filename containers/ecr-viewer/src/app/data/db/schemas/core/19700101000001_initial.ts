@@ -1,3 +1,5 @@
+import { dbSchema } from "@/app/api/services/database";
+import { getSql } from "@/app/api/services/dialects/common";
 import { Kysely, sql } from "kysely";
 
 /**
@@ -9,6 +11,12 @@ import { Kysely, sql } from "kysely";
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
+
+  if (dbSchema() === "extended") {
+    console.log("Extended schema detected. Skipping core migration.");
+    return;
+  }
+
   // Install uuid-ossp extension (Postgres-specific)
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
 
@@ -27,8 +35,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("data_source", "varchar(2)", (cb) => cb.notNull()) // S3 or DB
     .addColumn("patient_name_first", "varchar(100)")
     .addColumn("patient_name_last", "varchar(100)")
-    .addColumn("patient_birth_date", "date")
-    .addColumn("report_date", "date", (cb) => cb.notNull())
+    .addColumn("patient_birth_date", getSql("datetimeType"))
+    .addColumn("report_date", getSql("datetimeType"), (cb) => cb.notNull())
     .execute();
 }
 
