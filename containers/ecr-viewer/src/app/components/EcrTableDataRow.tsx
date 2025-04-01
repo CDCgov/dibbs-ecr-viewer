@@ -115,6 +115,15 @@ export const EcrTableDataRow = ({
   );
 };
 
+/**
+ * A set of child row of a main row. It contains more limited data on other eCRs from the same
+ * set as the main one. Up to five related eCRs are shown to start, then the rest can be
+ * expanded
+ * @param props - React props
+ * @param props.item - an EcrDisplay item
+ * @param props.patientName - the formatted patient name
+ * @returns array of related ecr rows
+ */
 const RelatedRows = ({
   item,
   patientName,
@@ -169,6 +178,17 @@ const RelatedRows = ({
   );
 };
 
+/**
+ * One child row of a main row. It contains more limited data on other eCRs from the same
+ * set as the main one.
+ * @param props - React props
+ * @param props.patientName - the formatted patient name
+ * @param props.ecr - The RelatedEcr to display
+ * @param props.mainDateCreated - The date the main eCR was created. Used to determine formatting of the related date
+ * @param props.numRows - The total number of rows in the set of related rows (for a11y)
+ * @param props.index - The index of this row in the set of related rows (for a11y)
+ * @returns one related ecr row
+ */
 const RelatedRow = ({
   patientName,
   ecr,
@@ -207,6 +227,7 @@ const RelatedRow = ({
   );
 };
 
+// A row that animates in by sliding/fading
 const SlidingRow = ({
   children,
   id,
@@ -234,6 +255,8 @@ const SlidingRow = ({
   );
 };
 
+// When the link is clicked, the current url is saved (to enable better "back to
+// library" experience)
 const UrlSavingLink = ({
   ecrId,
   children,
