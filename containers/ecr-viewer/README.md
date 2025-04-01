@@ -142,59 +142,30 @@ Note: The diagram omits infrastructure related to OpenTelemetry. OpenTelemetry e
 
 ```mermaid
 flowchart LR
-
-  subgraph requests["Requests"]
+  subgraph api["API"]
     direction TB
     subgraph GET["fas:fa-download <code>GET</code>"]
-      hc["<code>/</code>\n(health check)"]
-      viewdata["<code>/view-data</code>\n(List View)"]
-      detail["<code>/view-data/id</code>\n(Detail View)"]
-
+      hc["<code>/api/health-check</code><br />(health check)"]
     end
     subgraph POST["fas:fa-upload <code>POST</code>"]
-      ecr["<code>/api/save-fhir-data</code>\n(Save ECR to source)"]
+      saveFhirData["<code>/api/save-fhir-data</code><br />(Save eCR)"]
     end
   end
-
-
-  subgraph service[REST API Service]
+  subgraph pages["Pages"]
+    direction TB
+      view-data["<code>/view-data</code><br />(eCR Viewer)"]
+      ecr["<code>/</code><br />(eCR Library)"]
+  end
+  subgraph service[Cloud]
     direction TB
     subgraph mr["fab:fa-docker container"]
-      viewer["fab:fa-python <code>ecr-viewer<br>HTTP:3000/</code>"]
-	  postgres["fab:fa-python <code>postgres<br>HTTP:3000/</code>"]
+      viewer["fab:fa-node fab:fa-react <code>ecr-viewer<br>HTTP:3000/</code>"]
     end
-    subgraph aws["fab:fa-docker AWS"]
-      s3["fab:fa-python <code>S3</code>"]
-    end
-	mr <==> |<code>POST /save-fhir-data</code>| aws
-
+    fileStorage["fab:fa-file File Storage"]
+    postgres["fab:fa-database Database"]
+	mr <--> |eCR FHIR Data| fileStorage
+	mr <--> |eCR Metadata| postgres
   end
-
-  subgraph response["Responses"]
-    subgraph JSON["fa:fa-file-alt <code>JSON</code>"]
-      rsp-hc["fa:fa-file-code <code>OK</code> fa:fa-thumbs-up"]
-      fhirdata["fa:fa-file-code FHIR Data"]
-	  post-ecr["200"]
-    end
-  end
-
-hc -.-> mr -.-> rsp-hc
-viewdata --> mr --> fhirdata
-detail --> mr --> fhirdata
-ecr ===> mr ===> post-ecr
-```
-
-#### Application API
-
-```mermaid
-graph TD
-    A[ecr-viewer]
-    subgraph API Endpoints
-        direction TB
-        N[POST /save-fhir-data]
-    end
-    A --> M
-    A --> N
-    style A fill:#f9f,stroke:#333,stroke-width:4px,color:#000
-    style API Endpoints fill:#bfb,stroke:#333,stroke-width:2px
+  api <--> mr
+  pages <--> mr
 ```
