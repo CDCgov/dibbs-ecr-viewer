@@ -135,5 +135,28 @@ test.describe("ecr library page", () => {
       ).toEqual(1);
       await expect(page.getByLabel("Last 30 Days")).toBeVisible();
     });
+
+    test("when selecting an old date range, eCRs should be filtered out", async ({
+      page,
+    }) => {
+      await page.goto("/ecr-viewer");
+      await expect(page.getByTestId("filter-tag")).toContainText(
+        totalNumOfConditions,
+      );
+      await expect(page.getByText("Showing 1-4 of 4 eCRs")).toBeVisible();
+
+      await page.getByRole("button", { name: "Last Year" }).click();
+      // playwright doesn't believe the option is in the viewport even though it very much is
+      await page.getByLabel("Custom date range").dispatchEvent("click");
+      await page.getByTestId("start-date").fill("2024-01-01");
+      await page.getByTestId("end-date").fill("2024-01-02");
+      await page.getByLabel("Apply Filter").click();
+
+      await page.waitForURL(
+        "/ecr-viewer?dateRange=custom&dates=2024-01-01%7C2024-01-02",
+      );
+
+      await expect(page.getByText("Showing 0-0 of 0 eCRs")).toBeVisible();
+    });
   });
 });
