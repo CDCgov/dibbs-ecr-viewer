@@ -25,8 +25,7 @@ async function runMigration(
   if (command === "up") {
     const { error, results } = await migrator.migrateToLatest();
     if (error) {
-      console.error("Migration failed:", error);
-      process.exit(1);
+      throw new Error("Migration failed: " + error);
     }
     console.log("Migrations applied:", results || "No migrations to apply");
   } else if (command === "down") {
@@ -51,7 +50,7 @@ async function runMigration(
   }
 }
 
-export async function migrate() {
+export async function migrate(command:string) {
   try {
     const schema = dbSchema();
     if (!schema || (schema !== "core" && schema !== "extended")) {
@@ -63,7 +62,6 @@ export async function migrate() {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const commonDir = path.join(__dirname, `../schemas/common`);
     const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
-    const command = process.argv[2];
     if (!command || (command !== "up" && command !== "down")) {
       console.error('Please provide "up" or "down" as the first argument');
       process.exit(1);
@@ -73,11 +71,9 @@ export async function migrate() {
 
     await runMigration(db, [commonDir, migrationsDir], command, target);
 
-    await db.destroy();
+    // await db.destroy();
   } catch (error) {
     console.error(error);
     process.exit(1);
   }
 }
-
-migrate();

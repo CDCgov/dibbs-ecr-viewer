@@ -11,24 +11,24 @@ import { getSql } from "@/app/api/services/dialects/common";
 export async function up(db: Kysely<any>): Promise<void> {
   // Kysely requires <any>
   const schemaExists = await db
-    .selectFrom("information_schema.schemata")
-    .select("schema_name")
-    .where("schema_name", "=", "ecr_viewer")
+    .selectFrom(dbNamespace() + ".ecr_data")
+    .selectAll()
     .executeTakeFirst();
 
   if (schemaExists) {
     console.log(
-      "Schema ecr_viewer already exists in database. Skipping table creation.",
+      "Schema already exists in database. Skipping table creation.",
     );
     return;
   }
 
+  // dbNamespace() since we will be using in test_ev & ecr_viewer?
   try {
     await db.schema.createSchema(dbNamespace()).execute();
   } catch {}
 
   await db.schema
-    .createTable("ecr_viewer.ecr_data")
+    .createTable(dbNamespace() + ".ecr_data")
     .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("set_id", "varchar(255)")
     .addColumn("eicr_version_number", "varchar(50)")
@@ -39,14 +39,14 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute();
 
   await db.schema
-    .createTable("ecr_rr_conditions")
+    .createTable(dbNamespace() + ".ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
     .addColumn("condition", getSql("maxVarchar"))
     .execute();
 
   await db.schema
-    .createTable("ecr_rr_rule_summaries")
+    .createTable(dbNamespace() + ".ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
     .addColumn("rule_summary", getSql("maxVarchar"))
