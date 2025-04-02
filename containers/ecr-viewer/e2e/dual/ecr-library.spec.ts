@@ -143,7 +143,7 @@ test.describe("ecr library page", () => {
       await expect(page.getByTestId("filter-tag")).toContainText(
         totalNumOfConditions,
       );
-      await expect(page.getByText("Showing 1-4 of 4 eCRs")).toBeVisible();
+      await expect(page.getByText("Showing 1-2 of 2 eCRs")).toBeVisible();
 
       await page.getByRole("button", { name: "Last Year" }).click();
       // playwright doesn't believe the option is in the viewport even though it very much is
