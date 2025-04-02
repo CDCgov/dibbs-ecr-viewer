@@ -160,7 +160,7 @@ test.describe("ecr library page", () => {
     });
   });
 
-  test.only("eCR sorting", async ({ page }) => {
+  test("eCR sorting", async ({ page }) => {
     await page.goto("/ecr-viewer");
 
     for (const [header, colIndex] of [
