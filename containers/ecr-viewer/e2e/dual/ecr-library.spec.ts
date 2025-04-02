@@ -145,7 +145,7 @@ test.describe("ecr library page", () => {
       );
       await expect(page.getByText("Showing 1-2 of 2 eCRs")).toBeVisible();
 
-      await page.getByRole("button", { name: "Last Year" }).click();
+      await page.getByLabel(/Filter by Received Date/).click();
       // playwright doesn't believe the option is in the viewport even though it very much is
       await page.getByLabel("Custom date range").dispatchEvent("click");
       await page.getByTestId("start-date").fill("2024-01-01");
