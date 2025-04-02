@@ -1,32 +1,77 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
-<table>
+<table
+  role="treegrid"
+>
   <tbody>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-1"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="1"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-1
-           
-          Last-1
-        </a>
-        <br />
-        DOB: 
-        2000-01-01
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-1"
+            >
+              First-1 Last-1
+            </a>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-01
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <span
           class="no-data text-italic text-base"
         >
           No data
         </span>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -38,7 +83,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -51,32 +98,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-2"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="2"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-2
-           
-          Last-2
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          1
-        </span>
-        <br />
-        DOB: 
-        2000-01-02
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-2"
+            >
+              First-2 Last-2
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              1
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-02
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-02
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -88,7 +178,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -101,32 +193,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-3"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="3"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-3
-           
-          Last-3
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          2
-        </span>
-        <br />
-        DOB: 
-        2000-01-03
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-3"
+            >
+              First-3 Last-3
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              2
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-03
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-03
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -138,7 +273,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -151,32 +288,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-4"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="4"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-4
-           
-          Last-4
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          3
-        </span>
-        <br />
-        DOB: 
-        2000-01-04
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-4"
+            >
+              First-4 Last-4
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              3
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-04
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-04
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -188,7 +368,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -201,32 +383,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-5"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="5"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-5
-           
-          Last-5
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          4
-        </span>
-        <br />
-        DOB: 
-        2000-01-05
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-5"
+            >
+              First-5 Last-5
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              4
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-05
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-05
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -238,7 +463,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -251,32 +478,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-6"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="6"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-6
-           
-          Last-6
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          5
-        </span>
-        <br />
-        DOB: 
-        2000-01-06
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-6"
+            >
+              First-6 Last-6
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              5
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-06
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-06
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -288,7 +558,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -301,32 +573,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-7"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="7"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-7
-           
-          Last-7
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          6
-        </span>
-        <br />
-        DOB: 
-        2000-01-07
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-7"
+            >
+              First-7 Last-7
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              6
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-07
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-07
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -338,7 +653,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -351,32 +668,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-8"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="8"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-8
-           
-          Last-8
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          7
-        </span>
-        <br />
-        DOB: 
-        2000-01-08
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-8"
+            >
+              First-8 Last-8
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              7
+            </span>
+            <br />
+            DOB: 
+            2000-01-08
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-08
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-08
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -388,7 +748,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -401,32 +763,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-9"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="9"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-9
-           
-          Last-9
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          8
-        </span>
-        <br />
-        DOB: 
-        2000-01-09
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-9"
+            >
+              First-9 Last-9
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              8
+            </span>
+            <br />
+            DOB: 
+            2000-01-09
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-09
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-09
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -438,7 +843,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -451,32 +858,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-10"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="10"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-10
-           
-          Last-10
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          9
-        </span>
-        <br />
-        DOB: 
-        2000-01-01
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-10"
+            >
+              First-10 Last-10
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              9
+            </span>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-01
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-01
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -488,7 +938,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -501,32 +953,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-11"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="11"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-11
-           
-          Last-11
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          10
-        </span>
-        <br />
-        DOB: 
-        2000-01-02
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-11"
+            >
+              First-11 Last-11
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              10
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-02
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-02
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -538,7 +1033,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -551,32 +1048,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-12"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="12"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-12
-           
-          Last-12
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          11
-        </span>
-        <br />
-        DOB: 
-        2000-01-03
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-12"
+            >
+              First-12 Last-12
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              11
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-03
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-03
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -588,7 +1128,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -601,32 +1143,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-13"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="13"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-13
-           
-          Last-13
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          12
-        </span>
-        <br />
-        DOB: 
-        2000-01-04
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-13"
+            >
+              First-13 Last-13
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              12
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-04
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-04
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -638,7 +1223,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -651,32 +1238,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-14"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="14"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-14
-           
-          Last-14
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          13
-        </span>
-        <br />
-        DOB: 
-        2000-01-05
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-14"
+            >
+              First-14 Last-14
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              13
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-05
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-05
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -688,7 +1318,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -701,32 +1333,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-15"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="15"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-15
-           
-          Last-15
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          14
-        </span>
-        <br />
-        DOB: 
-        2000-01-06
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-15"
+            >
+              First-15 Last-15
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              14
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-06
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-06
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -738,7 +1413,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -751,32 +1428,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-16"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="16"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-16
-           
-          Last-16
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          15
-        </span>
-        <br />
-        DOB: 
-        2000-01-07
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-16"
+            >
+              First-16 Last-16
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              15
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-07
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-07
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -788,7 +1508,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -801,32 +1523,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-17"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="17"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-17
-           
-          Last-17
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          16
-        </span>
-        <br />
-        DOB: 
-        2000-01-08
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-17"
+            >
+              First-17 Last-17
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              16
+            </span>
+            <br />
+            DOB: 
+            2000-01-08
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-08
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-08
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -838,7 +1603,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -851,32 +1618,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-18"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="18"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-18
-           
-          Last-18
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          17
-        </span>
-        <br />
-        DOB: 
-        2000-01-09
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-18"
+            >
+              First-18 Last-18
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              17
+            </span>
+            <br />
+            DOB: 
+            2000-01-09
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-09
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-09
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -888,7 +1698,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -901,32 +1713,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-19"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="19"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-19
-           
-          Last-19
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          18
-        </span>
-        <br />
-        DOB: 
-        2000-01-01
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-19"
+            >
+              First-19 Last-19
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              18
+            </span>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-01
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-01
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -938,7 +1793,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -951,32 +1808,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-20"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="20"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-20
-           
-          Last-20
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          19
-        </span>
-        <br />
-        DOB: 
-        2000-01-02
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-20"
+            >
+              First-20 Last-20
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              19
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-02
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-02
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -988,7 +1888,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1001,32 +1903,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-21"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="21"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-21
-           
-          Last-21
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          20
-        </span>
-        <br />
-        DOB: 
-        2000-01-03
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-21"
+            >
+              First-21 Last-21
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              20
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-03
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-03
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1038,7 +1983,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1051,32 +1998,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-22"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="22"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-22
-           
-          Last-22
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          21
-        </span>
-        <br />
-        DOB: 
-        2000-01-04
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-22"
+            >
+              First-22 Last-22
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              21
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-04
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-04
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1088,7 +2078,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1101,32 +2093,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-23"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="23"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-23
-           
-          Last-23
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          22
-        </span>
-        <br />
-        DOB: 
-        2000-01-05
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-23"
+            >
+              First-23 Last-23
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              22
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-05
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-05
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1138,7 +2173,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1151,32 +2188,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-24"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="24"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-24
-           
-          Last-24
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          23
-        </span>
-        <br />
-        DOB: 
-        2000-01-06
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-24"
+            >
+              First-24 Last-24
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              23
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-06
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-06
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1188,7 +2268,9 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1201,32 +2283,75 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         </ul>
       </td>
     </tr>
-    <tr>
-      <td>
-        <a
-          href="/view-data?id=id-25"
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="25"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
         >
-          First-25
-           
-          Last-25
-        </a>
-        <span
-          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
-        >
-          V
-          24
-        </span>
-        <br />
-        DOB: 
-        2000-01-07
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-25"
+            >
+              First-25 Last-25
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              24
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-07
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         2021-01-07
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1238,7 +2363,5196 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
           </li>
         </ul>
       </td>
-      <td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-25
+          </li>
+          <li>
+            second-summary-25
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
+<table
+  role="treegrid"
+>
+  <tbody>
+    <tr
+      aria-expanded="true"
+      aria-level="1"
+      aria-posinset="1"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="Hide Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(0);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-1"
+            >
+              First-1 Last-1
+            </a>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <span
+          class="no-data text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-1
+          </li>
+          <li>
+            second-condition-1
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-1
+          </li>
+          <li>
+            second-summary-1
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="1"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-0"
+      role="row"
+      style="opacity: 0; transform: translateY(-50%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-0"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -1
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        12/31/2020
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="2"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-1"
+      role="row"
+      style="opacity: 0; transform: translateY(-50%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-1"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -2
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        <strong>
+          7:00 PM EST
+        </strong>
+         
+        01/01/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="3"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-2"
+      role="row"
+      style="opacity: 0; transform: translateY(-50%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-2"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -3
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/02/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="4"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-3"
+      role="row"
+      style="opacity: 0; transform: translateY(-50%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-3"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -4
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/03/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="5"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-4"
+      role="row"
+      style="opacity: 0; transform: translateY(-50%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-4"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -5
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/04/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      class="related-row"
+      id="related-row-show-more-id-1"
+      role="row"
+      style="opacity: 0; transform: translateY(-50%);"
+    >
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        <button
+          class="usa-button usa-button--unstyled"
+          data-testid="button"
+          type="button"
+        >
+          Show 
+          2
+           more eCR
+          s
+        </button>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="2"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-2"
+            >
+              First-2 Last-2
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              1
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-2
+          </li>
+          <li>
+            second-condition-2
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-2
+          </li>
+          <li>
+            second-summary-2
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="3"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-3"
+            >
+              First-3 Last-3
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              2
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-3
+          </li>
+          <li>
+            second-condition-3
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-3
+          </li>
+          <li>
+            second-summary-3
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="4"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-4"
+            >
+              First-4 Last-4
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              3
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-4
+          </li>
+          <li>
+            second-condition-4
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-4
+          </li>
+          <li>
+            second-summary-4
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="5"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-5"
+            >
+              First-5 Last-5
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              4
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-5
+          </li>
+          <li>
+            second-condition-5
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-5
+          </li>
+          <li>
+            second-summary-5
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="6"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-6"
+            >
+              First-6 Last-6
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              5
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-6
+          </li>
+          <li>
+            second-condition-6
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-6
+          </li>
+          <li>
+            second-summary-6
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="7"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-7"
+            >
+              First-7 Last-7
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              6
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-7
+          </li>
+          <li>
+            second-condition-7
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-7
+          </li>
+          <li>
+            second-summary-7
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="8"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-8"
+            >
+              First-8 Last-8
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              7
+            </span>
+            <br />
+            DOB: 
+            2000-01-08
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-8
+          </li>
+          <li>
+            second-condition-8
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-8
+          </li>
+          <li>
+            second-summary-8
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="9"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-9"
+            >
+              First-9 Last-9
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              8
+            </span>
+            <br />
+            DOB: 
+            2000-01-09
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-9
+          </li>
+          <li>
+            second-condition-9
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-9
+          </li>
+          <li>
+            second-summary-9
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="10"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-10"
+            >
+              First-10 Last-10
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              9
+            </span>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-10
+          </li>
+          <li>
+            second-condition-10
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-10
+          </li>
+          <li>
+            second-summary-10
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="11"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-11"
+            >
+              First-11 Last-11
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              10
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-11
+          </li>
+          <li>
+            second-condition-11
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-11
+          </li>
+          <li>
+            second-summary-11
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="12"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-12"
+            >
+              First-12 Last-12
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              11
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-12
+          </li>
+          <li>
+            second-condition-12
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-12
+          </li>
+          <li>
+            second-summary-12
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="13"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-13"
+            >
+              First-13 Last-13
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              12
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-13
+          </li>
+          <li>
+            second-condition-13
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-13
+          </li>
+          <li>
+            second-summary-13
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="14"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-14"
+            >
+              First-14 Last-14
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              13
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-14
+          </li>
+          <li>
+            second-condition-14
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-14
+          </li>
+          <li>
+            second-summary-14
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="15"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-15"
+            >
+              First-15 Last-15
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              14
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-15
+          </li>
+          <li>
+            second-condition-15
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-15
+          </li>
+          <li>
+            second-summary-15
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="16"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-16"
+            >
+              First-16 Last-16
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              15
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-16
+          </li>
+          <li>
+            second-condition-16
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-16
+          </li>
+          <li>
+            second-summary-16
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="17"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-17"
+            >
+              First-17 Last-17
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              16
+            </span>
+            <br />
+            DOB: 
+            2000-01-08
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-17
+          </li>
+          <li>
+            second-condition-17
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-17
+          </li>
+          <li>
+            second-summary-17
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="18"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-18"
+            >
+              First-18 Last-18
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              17
+            </span>
+            <br />
+            DOB: 
+            2000-01-09
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-18
+          </li>
+          <li>
+            second-condition-18
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-18
+          </li>
+          <li>
+            second-summary-18
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="19"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-19"
+            >
+              First-19 Last-19
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              18
+            </span>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-19
+          </li>
+          <li>
+            second-condition-19
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-19
+          </li>
+          <li>
+            second-summary-19
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="20"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-20"
+            >
+              First-20 Last-20
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              19
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-20
+          </li>
+          <li>
+            second-condition-20
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-20
+          </li>
+          <li>
+            second-summary-20
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="21"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-21"
+            >
+              First-21 Last-21
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              20
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-21
+          </li>
+          <li>
+            second-condition-21
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-21
+          </li>
+          <li>
+            second-summary-21
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="22"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-22"
+            >
+              First-22 Last-22
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              21
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-22
+          </li>
+          <li>
+            second-condition-22
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-22
+          </li>
+          <li>
+            second-summary-22
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="23"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-23"
+            >
+              First-23 Last-23
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              22
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-23
+          </li>
+          <li>
+            second-condition-23
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-23
+          </li>
+          <li>
+            second-summary-23
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="24"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-24"
+            >
+              First-24 Last-24
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              23
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-24
+          </li>
+          <li>
+            second-condition-24
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-24
+          </li>
+          <li>
+            second-summary-24
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="25"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-25"
+            >
+              First-25 Last-25
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              24
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-25
+          </li>
+          <li>
+            second-condition-25
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-25
+          </li>
+          <li>
+            second-summary-25
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
+<table
+  role="treegrid"
+>
+  <tbody>
+    <tr
+      aria-expanded="true"
+      aria-level="1"
+      aria-posinset="1"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="Hide Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(0);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-1"
+            >
+              First-1 Last-1
+            </a>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <span
+          class="no-data text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-1
+          </li>
+          <li>
+            second-condition-1
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-1
+          </li>
+          <li>
+            second-summary-1
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="1"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-0"
+      role="row"
+      style="opacity: 0; transform: translateY(NaN%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-0"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -1
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        12/31/2020
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="2"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-1"
+      role="row"
+      style="opacity: 0; transform: translateY(NaN%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-1"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -2
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        <strong>
+          7:00 PM EST
+        </strong>
+         
+        01/01/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="3"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-2"
+      role="row"
+      style="opacity: 0; transform: translateY(NaN%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-2"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -3
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/02/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="4"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-3"
+      role="row"
+      style="opacity: 0; transform: translateY(NaN%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-3"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -4
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/03/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="5"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-4"
+      role="row"
+      style="opacity: 0; transform: translateY(NaN%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-4"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -5
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/04/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="6"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-5"
+      role="row"
+      style="opacity: 0; transform: translateY(NaN%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-5"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -6
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/05/2021
+      </td>
+    </tr>
+    <tr
+      aria-level="2"
+      aria-posinset="7"
+      aria-setsize="7"
+      class="related-row"
+      id="related-row-id-rel-1-6"
+      role="row"
+      style="opacity: 0; transform: translateY(NaN%);"
+    >
+      <td
+        role="gridcell"
+      >
+        <a
+          href="/view-data?id=id-rel-1-6"
+        >
+          First-1 Last-1
+        </a>
+        <span
+          class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+        >
+          V
+          -7
+        </span>
+      </td>
+      <td
+        colspan="999"
+        role="gridcell"
+      >
+        7:00 PM EST
+         
+        01/06/2021
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="2"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-2"
+            >
+              First-2 Last-2
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              1
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-2
+          </li>
+          <li>
+            second-condition-2
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-2
+          </li>
+          <li>
+            second-summary-2
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="3"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-3"
+            >
+              First-3 Last-3
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              2
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-3
+          </li>
+          <li>
+            second-condition-3
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-3
+          </li>
+          <li>
+            second-summary-3
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="4"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-4"
+            >
+              First-4 Last-4
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              3
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-4
+          </li>
+          <li>
+            second-condition-4
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-4
+          </li>
+          <li>
+            second-summary-4
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="5"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-5"
+            >
+              First-5 Last-5
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              4
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-5
+          </li>
+          <li>
+            second-condition-5
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-5
+          </li>
+          <li>
+            second-summary-5
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="6"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-6"
+            >
+              First-6 Last-6
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              5
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-6
+          </li>
+          <li>
+            second-condition-6
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-6
+          </li>
+          <li>
+            second-summary-6
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="7"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-7"
+            >
+              First-7 Last-7
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              6
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-7
+          </li>
+          <li>
+            second-condition-7
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-7
+          </li>
+          <li>
+            second-summary-7
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="8"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-8"
+            >
+              First-8 Last-8
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              7
+            </span>
+            <br />
+            DOB: 
+            2000-01-08
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-8
+          </li>
+          <li>
+            second-condition-8
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-8
+          </li>
+          <li>
+            second-summary-8
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="9"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-9"
+            >
+              First-9 Last-9
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              8
+            </span>
+            <br />
+            DOB: 
+            2000-01-09
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-9
+          </li>
+          <li>
+            second-condition-9
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-9
+          </li>
+          <li>
+            second-summary-9
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="10"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-10"
+            >
+              First-10 Last-10
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              9
+            </span>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-10
+          </li>
+          <li>
+            second-condition-10
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-10
+          </li>
+          <li>
+            second-summary-10
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="11"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-11"
+            >
+              First-11 Last-11
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              10
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-11
+          </li>
+          <li>
+            second-condition-11
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-11
+          </li>
+          <li>
+            second-summary-11
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="12"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-12"
+            >
+              First-12 Last-12
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              11
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-12
+          </li>
+          <li>
+            second-condition-12
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-12
+          </li>
+          <li>
+            second-summary-12
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="13"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-13"
+            >
+              First-13 Last-13
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              12
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-13
+          </li>
+          <li>
+            second-condition-13
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-13
+          </li>
+          <li>
+            second-summary-13
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="14"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-14"
+            >
+              First-14 Last-14
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              13
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-14
+          </li>
+          <li>
+            second-condition-14
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-14
+          </li>
+          <li>
+            second-summary-14
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="15"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-15"
+            >
+              First-15 Last-15
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              14
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-15
+          </li>
+          <li>
+            second-condition-15
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-15
+          </li>
+          <li>
+            second-summary-15
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="16"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-16"
+            >
+              First-16 Last-16
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              15
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-16
+          </li>
+          <li>
+            second-condition-16
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-16
+          </li>
+          <li>
+            second-summary-16
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="17"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-17"
+            >
+              First-17 Last-17
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              16
+            </span>
+            <br />
+            DOB: 
+            2000-01-08
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-17
+          </li>
+          <li>
+            second-condition-17
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-17
+          </li>
+          <li>
+            second-summary-17
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="18"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-18"
+            >
+              First-18 Last-18
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              17
+            </span>
+            <br />
+            DOB: 
+            2000-01-09
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-18
+          </li>
+          <li>
+            second-condition-18
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-18
+          </li>
+          <li>
+            second-summary-18
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="19"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-19"
+            >
+              First-19 Last-19
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              18
+            </span>
+            <br />
+            DOB: 
+            2000-01-01
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-19
+          </li>
+          <li>
+            second-condition-19
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-19
+          </li>
+          <li>
+            second-summary-19
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="20"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-20"
+            >
+              First-20 Last-20
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              19
+            </span>
+            <br />
+            DOB: 
+            2000-01-02
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-20
+          </li>
+          <li>
+            second-condition-20
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-20
+          </li>
+          <li>
+            second-summary-20
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="21"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-21"
+            >
+              First-21 Last-21
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              20
+            </span>
+            <br />
+            DOB: 
+            2000-01-03
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-21
+          </li>
+          <li>
+            second-condition-21
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-21
+          </li>
+          <li>
+            second-summary-21
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="22"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-22"
+            >
+              First-22 Last-22
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              21
+            </span>
+            <br />
+            DOB: 
+            2000-01-04
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-22
+          </li>
+          <li>
+            second-condition-22
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-22
+          </li>
+          <li>
+            second-summary-22
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="23"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-23"
+            >
+              First-23 Last-23
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              22
+            </span>
+            <br />
+            DOB: 
+            2000-01-05
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-23
+          </li>
+          <li>
+            second-condition-23
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-23
+          </li>
+          <li>
+            second-summary-23
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="24"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-24"
+            >
+              First-24 Last-24
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              23
+            </span>
+            <br />
+            DOB: 
+            2000-01-06
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-24
+          </li>
+          <li>
+            second-condition-24
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            rule-summary-24
+          </li>
+          <li>
+            second-summary-24
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr
+      aria-expanded="false"
+      aria-level="1"
+      aria-posinset="25"
+      aria-setsize="25"
+      class="main-row"
+      role="row"
+    >
+      <td
+        role="gridcell"
+      >
+        <div
+          class="patient-name-cell"
+        >
+          <button
+            aria-label="View Related eCRs"
+            class="usa-button usa-button--unstyled usa-button expand-ecrs-button text-base"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon square-3 expand-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              style="transform: rotate(-90deg);"
+              viewBox="2 2 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </button>
+          <div
+            class="patient-name-content"
+          >
+            <a
+              href="/view-data?id=id-25"
+            >
+              First-25 Last-25
+            </a>
+            <span
+              class="usa-tag margin-x-1 padding-x-05 padding-y-2px bg-primary-lighter radius-md text-thin text-base-dark"
+            >
+              V
+              24
+            </span>
+            <br />
+            DOB: 
+            2000-01-07
+          </div>
+        </div>
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        <ul
+          class="ecr-table-list"
+        >
+          <li>
+            reportable-condition-25
+          </li>
+          <li>
+            second-condition-25
+          </li>
+        </ul>
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >

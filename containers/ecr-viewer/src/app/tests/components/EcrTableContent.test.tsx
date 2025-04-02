@@ -1,9 +1,11 @@
-import { act, render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import router from "next-router-mock";
 
 import EcrTableContent from "@/app/components/EcrTableContent";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
+import { range } from "@/app/utils/data-utils";
 
 jest.mock("../../services/listEcrDataService");
 jest.mock("../../../app/api/services/database");
@@ -31,6 +33,12 @@ describe("EcrTableContent", () => {
     date_created: `2021-01-0${(i % 9) + 1}`,
     eicr_set_id: `123${i}`,
     eicr_version_number: i === 0 ? undefined : `${i}`,
+    related_ecrs: range(7).map((j) => ({
+      eicr_id: `id-rel-${i + 1}-${j}`,
+      set_id: `123${i}`,
+      eicr_version_number: `${i - j - 1}`,
+      date_created: new Date(`2021-01-0${((i + j) % 9) + 1}`),
+    })),
   }));
   const mockDateRange = {
     startDate: new Date("12-01-2024"),
@@ -46,12 +54,15 @@ describe("EcrTableContent", () => {
 
   describe("load with an eCR", () => {
     it("should match snapshot", async () => {
+      const user = userEvent.setup();
       mockedListEcrData.mockResolvedValue(mockData);
       const table = document.createElement("table");
+      table.setAttribute("role", "treegrid");
       const { container } = render(
         await EcrTableContent({
           currentPage: 1,
           itemsPerPage: 25,
+          totalEcrCount: mockData.length,
           sortColumn: "date_created",
           sortDirection: "DESC",
           filterDates: mockDateRange,
@@ -61,15 +72,32 @@ describe("EcrTableContent", () => {
         },
       );
       expect(container).toMatchSnapshot();
+
+      // expand an ecr row
+      const expandEcrButton = screen.getAllByRole("button", {
+        name: "View Related eCRs",
+      });
+      await user.click(expandEcrButton[0]);
+      expect(container).toMatchSnapshot();
+
+      // expand the show more
+      const showMoreEcr = screen.getByRole("button", {
+        name: "Show 2 more eCRs",
+      });
+      await user.click(showMoreEcr);
+      expect(container).toMatchSnapshot();
     });
 
     it("should pass accessibility", async () => {
+      const user = userEvent.setup();
       mockedListEcrData.mockResolvedValue(mockData);
       const table = document.createElement("table");
+      table.setAttribute("role", "treegrid");
       const { container } = render(
         await EcrTableContent({
           currentPage: 1,
           itemsPerPage: 25,
+          totalEcrCount: mockData.length,
           sortColumn: "date_created",
           sortDirection: "DESC",
           filterDates: mockDateRange,
@@ -81,6 +109,26 @@ describe("EcrTableContent", () => {
       await act(async () => {
         expect(await axe(container)).toHaveNoViolations();
       });
+
+      // expand an ecr row
+      const expandEcrButton = screen.getAllByRole("button", {
+        name: "View Related eCRs",
+      });
+      await user.click(expandEcrButton[0]);
+
+      await act(async () => {
+        expect(await axe(container)).toHaveNoViolations();
+      });
+
+      // expand the show more
+      const showMoreEcr = screen.getByRole("button", {
+        name: "Show 2 more eCRs",
+      });
+      await user.click(showMoreEcr);
+
+      await act(async () => {
+        expect(await axe(container)).toHaveNoViolations();
+      });
     });
   });
 
@@ -88,10 +136,12 @@ describe("EcrTableContent", () => {
     mockedListEcrData.mockResolvedValue(mockData);
 
     const table = document.createElement("table");
+    table.setAttribute("role", "treegrid");
     render(
       await EcrTableContent({
         currentPage: 1,
         itemsPerPage: 25,
+        totalEcrCount: mockData.length,
         sortColumn: "date_created",
         sortDirection: "DESC",
         filterDates: mockDateRange,

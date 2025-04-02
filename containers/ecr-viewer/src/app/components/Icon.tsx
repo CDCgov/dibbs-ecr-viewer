@@ -7,6 +7,7 @@ export const ArrowForward = UswdsIcon.ArrowForward;
 export const ArrowUpward = UswdsIcon.ArrowUpward;
 export const Autorenew = UswdsIcon.Autorenew;
 export const Error = UswdsIcon.Error;
+export const ExpandMore = UswdsIcon.ExpandMore;
 export const Event = UswdsIcon.Event;
 export const Coronavirus = UswdsIcon.Coronavirus;
 export const NavigateBefore = UswdsIcon.NavigateBefore;

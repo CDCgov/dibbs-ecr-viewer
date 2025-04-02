@@ -43,11 +43,11 @@ test.describe("ecr library page", () => {
 
       // Make sure reset button works
       await page.getByLabel("reset").click();
-      await expect(page.getByText("Showing 1-4")).toBeVisible();
+      await expect(page.getByText("Showing 1-2")).toBeVisible();
       await expect(page.getByText("Zika Virus Disease")).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(4);
+      ).toEqual(2);
     });
 
     test("Search should filter results ", async ({ page }) => {
@@ -61,7 +61,7 @@ test.describe("ecr library page", () => {
 
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
       await expect(
-        page.getByRole("cell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
+        page.getByRole("gridcell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
       ).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
@@ -102,16 +102,16 @@ test.describe("ecr library page", () => {
 
       await page.getByText("Showing 1-1").waitFor();
 
-      await expect(page.getByLabel("Page 3")).toBeVisible();
+      await expect(page.getByLabel("Page 2")).toBeVisible();
 
       await page.getByTestId("Select").selectOption("100");
 
-      await expect(page.getByLabel("Page 3")).not.toBeVisible();
-      await expect(page.getByText("Showing 1-4")).toBeVisible();
+      await expect(page.getByLabel("Page 2")).not.toBeVisible();
+      await expect(page.getByText("Showing 1-2")).toBeVisible();
       await expect(page.getByText("Yoda")).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(4);
+      ).toEqual(2);
     });
 
     test("When visiting a direct url all query parameters should be applied", async ({
@@ -157,6 +157,19 @@ test.describe("ecr library page", () => {
       );
 
       await expect(page.getByText("Showing 0-0 of 0 eCRs")).toBeVisible();
+    });
+  });
+
+  test.describe("eCR grouping", () => {
+    test("expanding group", async ({ page }) => {
+      await page.goto("/ecr-viewer");
+      await expect(
+        page.getByRole("button", { name: "View Related eCRs" }),
+      ).toBeVisible();
+      await page.getByRole("button", { name: "View Related eCRs" }).click();
+      await expect(
+        (await page.getByRole("row", { level: 2 }).all()).length,
+      ).toEqual(2);
     });
   });
 });

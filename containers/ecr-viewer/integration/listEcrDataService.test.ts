@@ -46,7 +46,7 @@ const coreTemplate: NewCoreECR = {
   set_id: "123",
   data_source: "DB",
   fhir_reference_link: "",
-  eicr_version_number: "1",
+  eicr_version_number: "2",
   patient_name_first: "Billy",
   patient_name_last: "Bob",
   patient_birth_date: "2024-12-01",
@@ -56,7 +56,7 @@ const coreTemplate: NewCoreECR = {
 
 const extendedTemplate: NewExtendedECR = {
   eicr_id: "12345",
-  set_id: "12345",
+  set_id: "123",
   fhir_reference_link: "http://example.com",
   last_name: "Kenobi",
   first_name: "Obi-Wan",
@@ -80,7 +80,7 @@ const extendedTemplate: NewExtendedECR = {
   pregnancy_status: "Not Pregnant",
   rr_id: "12345",
   processing_status: "Processed",
-  eicr_version_number: "1.0",
+  eicr_version_number: "2",
   authoring_date: new Date("2024-12-02T05:00:00.000Z"),
   authoring_provider: "Dr. Droid",
   provider_id: "12345",
@@ -92,6 +92,13 @@ const extendedTemplate: NewExtendedECR = {
   reason_for_visit: "Checkup",
   active_problems: "Dead",
   date_created: new Date("2024-12-02T12:00:00Z"),
+};
+
+// prior version of ecr
+const relatedEcr = {
+  eicr_id: `36545`,
+  eicr_version_number: "1",
+  date_created: new Date("2024-12-01T11:00:00Z"),
 };
 
 const getCoreWhere = (
@@ -131,9 +138,9 @@ describe("listEcrDataService", () => {
           conditions: ["Long"],
           rule_summaries: ["Longer"],
           data_source: "DB",
-          data_link: "",
           set_id: "123",
           eicr_version_number: "1",
+          related_ecrs: [],
         },
         {
           eicr_id: "ecr2",
@@ -145,9 +152,9 @@ describe("listEcrDataService", () => {
           conditions: ["Stuff"],
           rule_summaries: ["Other stuff", "Even more stuff"],
           data_source: "DB",
-          data_link: "",
           set_id: "124",
           eicr_version_number: "1",
+          related_ecrs: [],
         },
       ];
 
@@ -163,6 +170,7 @@ describe("listEcrDataService", () => {
           rule_summaries: expect.arrayContaining(["Longer"]),
           eicr_set_id: "123",
           eicr_version_number: "1",
+          related_ecrs: [],
         },
         {
           ecrId: "ecr2",
@@ -178,6 +186,7 @@ describe("listEcrDataService", () => {
           ]),
           eicr_set_id: "124",
           eicr_version_number: "1",
+          related_ecrs: [],
         },
       ];
       const result = processCoreMetadata(responseBody);
@@ -197,6 +206,7 @@ describe("listEcrDataService", () => {
 
     beforeEach(async () => {
       await createCoreEcr(coreTemplate);
+      await createCoreEcr({ ...coreTemplate, ...relatedEcr });
       await createEcrCondition({
         uuid: "12345",
         eicr_id: "12345",
@@ -243,7 +253,7 @@ describe("listEcrDataService", () => {
         direction,
         testDateRange,
       );
-      expect(actual).toEqual([
+      expect(actual).toStrictEqual([
         {
           date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
           ecrId: "12345",
@@ -257,7 +267,13 @@ describe("listEcrDataService", () => {
           reportable_conditions: ["Condition1"],
           rule_summaries: ["Rule1"],
           eicr_set_id: "123",
-          eicr_version_number: "1",
+          eicr_version_number: "2",
+          related_ecrs: [
+            {
+              ...relatedEcr,
+              set_id: "123",
+            },
+          ],
         },
       ]);
     });
@@ -274,7 +290,7 @@ describe("listEcrDataService", () => {
         direction,
         testDateRange,
       );
-      expect(actual).toEqual([
+      expect(actual).toStrictEqual([
         {
           date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
           ecrId: "12345",
@@ -288,7 +304,8 @@ describe("listEcrDataService", () => {
           reportable_conditions: ["Condition1"],
           rule_summaries: ["Rule1"],
           eicr_set_id: "123",
-          eicr_version_number: "1",
+          eicr_version_number: "2",
+          related_ecrs: [{ ...relatedEcr, set_id: "123" }],
         },
       ]);
     });
@@ -306,6 +323,7 @@ describe("listEcrDataService", () => {
 
     beforeEach(async () => {
       await createExtendedEcr(extendedTemplate);
+      await createExtendedEcr({ ...extendedTemplate, ...relatedEcr });
       await createEcrCondition({
         uuid: "12345",
         eicr_id: "12345",
@@ -360,8 +378,14 @@ describe("listEcrDataService", () => {
           patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
           reportable_conditions: ["Condition1"],
           rule_summaries: ["Rule1"],
-          eicr_set_id: "12345",
-          eicr_version_number: "1.0",
+          eicr_set_id: "123",
+          eicr_version_number: "2",
+          related_ecrs: [
+            {
+              ...relatedEcr,
+              set_id: "123",
+            },
+          ],
         },
       ]);
     });
@@ -371,6 +395,8 @@ describe("listEcrDataService", () => {
     beforeAll(async () => {
       process.env.METADATA_DATABASE_SCHEMA = "core";
       await buildCore();
+      await createCoreEcr(coreTemplate);
+      await createCoreEcr({ ...coreTemplate, ...relatedEcr });
     });
     afterAll(async () => {
       await dropCore();
@@ -378,7 +404,7 @@ describe("listEcrDataService", () => {
 
     it("should call db to get all ecrs", async () => {
       const actual = await getTotalEcrCount(testDateRange);
-      expect(actual).toEqual(0);
+      expect(actual).toEqual(1);
     });
     it("should use search term in count query", async () => {
       const actual = await getTotalEcrCount(testDateRange, "blah", undefined);
@@ -404,6 +430,8 @@ describe("listEcrDataService", () => {
     beforeAll(async () => {
       process.env.METADATA_DATABASE_SCHEMA = "extended";
       await buildExtended();
+      await createExtendedEcr(extendedTemplate);
+      await createExtendedEcr({ ...extendedTemplate, ...relatedEcr });
     });
     afterAll(async () => {
       await dropExtended();
@@ -411,7 +439,7 @@ describe("listEcrDataService", () => {
 
     it("should call db to get all ecrs", async () => {
       const actual = await getTotalEcrCount(testDateRange);
-      expect(actual).toEqual(0);
+      expect(actual).toEqual(1);
     });
     it("should use search term in count query", async () => {
       const actual = await getTotalEcrCount(testDateRange, "blah", undefined);
