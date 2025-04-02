@@ -2487,7 +2487,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       class="related-row"
       id="related-row-id-rel-1-0"
       role="row"
-      style="opacity: 0; transform: translateY(-50%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -2520,7 +2520,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       class="related-row"
       id="related-row-id-rel-1-1"
       role="row"
-      style="opacity: 0; transform: translateY(-50%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -2555,7 +2555,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       class="related-row"
       id="related-row-id-rel-1-2"
       role="row"
-      style="opacity: 0; transform: translateY(-50%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -2588,7 +2588,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       class="related-row"
       id="related-row-id-rel-1-3"
       role="row"
-      style="opacity: 0; transform: translateY(-50%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -2621,7 +2621,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       class="related-row"
       id="related-row-id-rel-1-4"
       role="row"
-      style="opacity: 0; transform: translateY(-50%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -2652,7 +2652,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       class="related-row"
       id="related-row-show-more-id-1"
       role="row"
-      style="opacity: 0; transform: translateY(-50%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         colspan="999"
@@ -5059,7 +5059,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       class="related-row"
       id="related-row-id-rel-1-0"
       role="row"
-      style="opacity: 0; transform: translateY(NaN%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -5092,7 +5092,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       class="related-row"
       id="related-row-id-rel-1-1"
       role="row"
-      style="opacity: 0; transform: translateY(NaN%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -5127,7 +5127,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       class="related-row"
       id="related-row-id-rel-1-2"
       role="row"
-      style="opacity: 0; transform: translateY(NaN%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -5160,7 +5160,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       class="related-row"
       id="related-row-id-rel-1-3"
       role="row"
-      style="opacity: 0; transform: translateY(NaN%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -5193,7 +5193,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       class="related-row"
       id="related-row-id-rel-1-4"
       role="row"
-      style="opacity: 0; transform: translateY(NaN%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -5226,7 +5226,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       class="related-row"
       id="related-row-id-rel-1-5"
       role="row"
-      style="opacity: 0; transform: translateY(NaN%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"
@@ -5259,7 +5259,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       class="related-row"
       id="related-row-id-rel-1-6"
       role="row"
-      style="opacity: 0; transform: translateY(NaN%);"
+      style="opacity: 1; transform: none;"
     >
       <td
         role="gridcell"

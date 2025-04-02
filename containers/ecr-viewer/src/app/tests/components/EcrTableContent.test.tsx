@@ -78,6 +78,7 @@ describe("EcrTableContent", () => {
         name: "View Related eCRs",
       });
       await user.click(expandEcrButton[0]);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       expect(container).toMatchSnapshot();
 
       // expand the show more
@@ -85,6 +86,7 @@ describe("EcrTableContent", () => {
         name: "Show 2 more eCRs",
       });
       await user.click(showMoreEcr);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       expect(container).toMatchSnapshot();
     });
 
