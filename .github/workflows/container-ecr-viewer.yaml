@@ -113,7 +113,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config_name: ["AWS_SQLSERVER_DUAL", "AWS_INTEGRATED"]
+        - config_name: AWS_SQLSERVER_DUAL
+          azure_ad: true
+        - config_name: AZURE_PG_DUAL
+          azure_ad: false
+        - config_name: AWS_INTEGRATED
+          azure_ad: false
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -144,6 +149,18 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config_name }}/' .env.local
+
+      - name: Set up Azure AD
+        if: ${{ matrix.azure_ad }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          sed -i 's/AUTH_PROVIDER=.*$/AUTH_PROVIDER=ad/' .env.local
+          sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}'
+          sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}'
+          sed -i 's/AUTH_ISSUER=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}'
+          echo "AZURE_AD_USER=${{ secrets.AZURE_AD_USER }}" >> .env.local
+          echo "AZURE_AD_PASSWORD=${{ secrets.AZURE_AD_PASSWORD }}" >> .env.local
+          cat .env.local
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}
