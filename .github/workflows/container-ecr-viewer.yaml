@@ -113,12 +113,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        - config_name: AWS_SQLSERVER_DUAL
-          azure_ad: true
-        - config_name: AZURE_PG_DUAL
-          azure_ad: false
-        - config_name: AWS_INTEGRATED
-          azure_ad: false
+        include:
+          - config_name: AWS_SQLSERVER_DUAL
+            azure_ad: true
+          - config_name: AZURE_PG_DUAL
+            azure_ad: false
+          - config_name: AWS_INTEGRATED
+            azure_ad: false
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
