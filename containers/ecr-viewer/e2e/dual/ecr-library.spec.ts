@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/test";
 import { logIn } from "../utils";
 
 test.describe("ecr library page", () => {
-  test.beforeEach(logIn);
+  test.beforeEach(({ page }) => logIn(page));
 
   test.describe("eCR Library page", () => {
     test("has title", async ({ page }) => {

@@ -1,44 +1,62 @@
-import { PlaywrightTestArgs, expect } from "@playwright/test";
+import { Page, expect } from "@playwright/test";
 
 /**
  * Helper to lot into via keycloak and go to the viewer page
- * @param props playwright test args
- * @param props.page page
+ * @param page page
  */
-export const logInToKeycloak = async ({ page }: PlaywrightTestArgs) => {
-  await page.goto("/ecr-viewer");
-  await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
-
-  await page.getByRole("button").click();
-
+const logInToKeycloak = async (page: Page) => {
   await page
     .getByRole("textbox", { name: "username" })
     .fill("ecr-viewer-admin");
   await page.getByRole("textbox", { name: "password" }).fill("pw");
   await page.getByRole("button", { name: "Sign in" }).click();
-
-  await expect(page.getByText("eCR Library")).toBeVisible();
 };
 
 /**
  * Helper to lot into via Azure AD and go to the viewer page
- * @param props playwright test args
- * @param props.page page
+ * @param page page
  */
-export const logInToAd = async ({ page }: PlaywrightTestArgs) => {
-  await page.goto("/ecr-viewer");
+const logInToAd = async (page: Page) => {
   // TODO: not implemented
+  await page
+    .getByLabel("Enter your email, phone, or Skype.")
+    .fill(process.env.AZURE_AD_USER!);
+  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByLabel("Password").fill(process.env.AZURE_AD_PASSWORD!);
+  await page.getByRole("button", { name: "Sign In" }).click();
 };
 
 /**
- * Log in to the appropriate provider depending on environment vars
+ * Helper to lot into ecr viewer
+ * @param page page
+ * @param url optionally, the url to go to to force login
+ * @param expectText optionally, the text to expect upon successful login
  */
-export const logIn =
-  process.env.AUTH_PROVIDER === "keycloak"
-    ? logInToKeycloak
-    : process.env.AUTH_PROVIDER === "ad"
-      ? logInToAd
-      : () => {};
+export const logIn = async (
+  page: Page,
+  url = "/ecr-viewer/",
+  expectText = "eCR Library",
+) => {
+  await page.goto(url);
+  await page.waitForURL(
+    `ecr-viewer/signin?callbackUrl=${encodeURIComponent(url)}`,
+  );
+
+  await page.getByRole("button").click();
+
+  switch (process.env.AUTH_PROVIDER) {
+    case "keycloak": {
+      await logInToKeycloak(page);
+      break;
+    }
+    case "ad": {
+      await logInToAd(page);
+      break;
+    }
+  }
+
+  await expect(page.getByText(expectText)).toBeVisible();
+};
 
 /**
  * non-expiring auth search param for testing local nbs auth
