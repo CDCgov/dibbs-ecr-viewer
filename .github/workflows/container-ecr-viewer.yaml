@@ -156,9 +156,9 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           sed -i 's/AUTH_PROVIDER=.*$/AUTH_PROVIDER=ad/' .env.local
-          sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}'
-          sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}'
-          sed -i 's/AUTH_ISSUER=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}'
+          sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
+          sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
+          sed -i 's/AUTH_ISSUER=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
           echo "AZURE_AD_USER=${{ secrets.AZURE_AD_USER }}" >> .env.local
           echo "AZURE_AD_PASSWORD=${{ secrets.AZURE_AD_PASSWORD }}" >> .env.local
           cat .env.local
