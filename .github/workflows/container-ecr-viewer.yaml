@@ -78,37 +78,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  convert-data:
-    strategy:
-      fail-fast: false
-      matrix:
-        config: ["AWS_SQLSERVER_NON_INTEGRATED", "AZURE_PG_NON_INTEGRATED"]
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{env.NODE_VERSION}}
-
-      - name: Set up env vars
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
-
-      - name: Set CONFIG_NAME to ${{ matrix.config }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config }}/' .env.local
-
-      - name: Run seed data conversion
-        run: npm run convert-seed-data
-        working-directory: ./containers/${{env.CONTAINER}}
-
   e2e-tests:
     strategy:
       fail-fast: false
@@ -157,11 +126,10 @@ jobs:
         run: |
           sed -i 's/AUTH_PROVIDER=.*$/AUTH_PROVIDER=ad/' .env.local
           sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
-          sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
-          sed -i 's/AUTH_ISSUER=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
+          sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_SECRET }}/' .env.local
+          sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
           echo "AZURE_AD_USER=${{ secrets.AZURE_AD_USER }}" >> .env.local
           echo "AZURE_AD_PASSWORD=${{ secrets.AZURE_AD_PASSWORD }}" >> .env.local
-          cat .env.local
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}

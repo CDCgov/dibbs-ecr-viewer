@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import AzureAdProvider from "next-auth/providers/azure-ad";
+import { Provider } from "next-auth/providers/index";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 export interface ProviderDetails {
@@ -31,7 +32,9 @@ const azure = () => {
       tenantId: process.env.AUTH_ISSUER,
     });
 };
-const providers = [keycloak(), azure()].filter((p) => p !== undefined);
+const providers = [keycloak(), azure()].filter(
+  (p) => p !== undefined,
+) as Provider[];
 
 export const providerMap: ProviderDetails[] = providers.map((provider) => ({
   id: provider.id,
