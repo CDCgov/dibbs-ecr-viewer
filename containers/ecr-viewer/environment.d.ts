@@ -12,7 +12,7 @@ namespace EnvironmentVariables {
     //#region auth_non_integrated
     /**
      * @category Authentication - Non-Integrated
-     * @description The application/client id used to idenitfy the client.
+     * @description The application/client id used to identify the client.
      */
     AUTH_CLIENT_ID?: string;
     /**
@@ -151,7 +151,7 @@ namespace EnvironmentVariables {
     ECR_BUCKET_NAME: string;
     /**
      * @category Base Required
-     * @description The full URL that the orchestration URL is available at.
+     * @description The full URL of the orchestration service.
      */
     ORCHESTRATION_URL: string;
     //#endregion required
