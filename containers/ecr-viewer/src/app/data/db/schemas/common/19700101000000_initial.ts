@@ -1,7 +1,10 @@
+// import { Kysely } from "kysely";
 import { Kysely } from "kysely";
 
 import { dbNamespace } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
+
+const schema = dbNamespace();
 
 /**
  * Common schema initialization.
@@ -10,23 +13,38 @@ import { getSql } from "@/app/api/services/dialects/common";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
   // Kysely requires <any>
-  const schemaExists = await db
-    .selectFrom(dbNamespace() + ".ecr_data")
-    .selectAll()
-    .executeTakeFirst();
+  let result;
 
-  if (schemaExists) {
+  if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
+    result = await db
+      .selectFrom("sys.schemas")
+      .select("name")
+      .where("name", "=", schema)
+      .executeTakeFirst();
+  } else {
+    result = await db
+      .selectFrom("information_schema.schemata")
+      .select("schema_name")
+      .where("schema_name", "=", schema)
+      .executeTakeFirst();
+  }
+
+  if (!!result) {
     console.log("Schema already exists in database. Skipping table creation.");
     return;
   }
 
+  console.log("1");
   // dbNamespace() since we will be using in test_ev & ecr_viewer?
   try {
-    await db.schema.createSchema(dbNamespace()).execute();
-  } catch {}
+    await db.schema.createSchema(schema).execute(); // first instance of schema mutation
+  } catch (error) {
+    throw new Error("Failed to create schema or already exists: " + error);
+  }
 
+  console.log("2");
   await db.schema
-    .createTable(dbNamespace() + ".ecr_data")
+    .createTable(schema + ".ecr_data")
     .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("set_id", "varchar(255)")
     .addColumn("eicr_version_number", "varchar(50)")
@@ -35,16 +53,16 @@ export async function up(db: Kysely<any>): Promise<void> {
       cb.notNull().defaultTo(getSql("now")),
     )
     .execute();
-
+  console.log("3");
   await db.schema
-    .createTable(dbNamespace() + ".ecr_rr_conditions")
+    .createTable(schema + ".ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
     .addColumn("condition", getSql("maxVarchar"))
     .execute();
 
   await db.schema
-    .createTable(dbNamespace() + ".ecr_rr_rule_summaries")
+    .createTable(schema + ".ecr_rr_rule_summaries")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("ecr_rr_conditions_id", "varchar(200)")
     .addColumn("rule_summary", getSql("maxVarchar"))
@@ -58,13 +76,16 @@ export async function up(db: Kysely<any>): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function down(db: Kysely<any>): Promise<void> {
   await db.schema
-    .dropTable("ecr_viewer.ecr_rr_rule_summaries")
+    .dropTable(schema + ".ecr_rr_rule_summaries")
     .ifExists()
     .execute();
   await db.schema
-    .dropTable("ecr_viewer.ecr_rr_conditions")
+    .dropTable(schema + ".ecr_rr_conditions")
     .ifExists()
     .execute();
-  await db.schema.dropTable("ecr_viewer.ecr_data").ifExists().execute();
-  await db.schema.dropSchema("ecr_viewer").ifExists().execute();
+  await db.schema
+    .dropTable(schema + ".ecr_data")
+    .ifExists()
+    .execute();
+  await db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }

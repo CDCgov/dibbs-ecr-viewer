@@ -23,9 +23,9 @@ async function runMigration(
     db,
     provider: new MultiDirectoryMigrationProvider(migrationsDir, fs, path),
   });
-
   if (command === "up") {
     const { error, results } = await migrator.migrateToLatest();
+    console.log("Migration results: ", results); //
     if (error) {
       throw new Error("Migration failed: " + error);
     }
@@ -35,7 +35,6 @@ async function runMigration(
       const { error, results } = await migrator.migrateTo(target);
       if (error) {
         console.error(`Failed to migrate to ${target}`, error);
-        process.exit(1);
       }
       console.log(`Migrated to ${target}`, results || "No changes");
     } else {
@@ -71,7 +70,6 @@ export async function migrate(command: string) {
     const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
     if (!command || (command !== "up" && command !== "down")) {
       console.error('Please provide "up" or "down" as the first argument');
-      process.exit(1);
     }
 
     const target = command === "down" ? process.argv[3] : undefined;
@@ -80,7 +78,6 @@ export async function migrate(command: string) {
 
     await db.destroy();
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    throw new Error("Migration failed: " + error);
   }
 }
