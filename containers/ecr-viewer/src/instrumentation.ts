@@ -1,15 +1,10 @@
-import { makeEnvPublic } from "next-runtime-env";
 import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
-import { migrate } from "@/app/data/db/utils/migrate";
 
 /**
  * The register function will be callled once when nextjs server is instantiated
  */
 export async function register() {
   setupConfigurationVariables();
-  if (process.env.NODE_ENV !== "development") {
-    await migrate("up");
-  }
 
   if (process.env.NEXT_RUNTIME === "nodejs") {
     await import("./app/services/instrumentation");

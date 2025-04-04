@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import * as path from "path";
+
 import { Migration, MigrationProvider } from "kysely";
 
 export class MultiDirectoryMigrationProvider implements MigrationProvider {
@@ -46,8 +47,8 @@ export class MultiDirectoryMigrationProvider implements MigrationProvider {
     const migrations: Record<string, Migration> = {};
 
     for (const [name, filePath] of migrationPaths) {
-      const module = await import(filePath);
-      migrations[name] = module;
+      const migrationCode = await import(filePath);
+      migrations[name] = migrationCode;
     }
 
     return migrations;

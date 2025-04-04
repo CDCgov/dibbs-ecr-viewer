@@ -16,64 +16,64 @@ describe("Migrations: ", () => {
 
   describe("database before migrations", () => {
     it("has a blank schema", async () => {
-        const result = await (db as any)
-            .selectFrom("ecr_viewer.ecr_data")
-            .selectAll()
-            .executeTakeFirst();
+      const result = await (db as any)
+        .selectFrom("ecr_viewer.ecr_data")
+        .selectAll()
+        .executeTakeFirst();
 
-        expect(result).toBeUndefined();
+      expect(result).toBeUndefined();
     });
   });
 
   describe("database after migrations", () => {
     describe("has the core schema", () => {
-        beforeAll(async () => {
-            process.env.METADATA_DATABASE_SCHEMA = "core";
-            await migrate("up");
-        });
+      beforeAll(async () => {
+        process.env.METADATA_DATABASE_SCHEMA = "core";
+        await migrate("up");
+      });
 
-        it("and the common schema", async () => {
-            const commonCheck = await (db as Kysely<any>)
-                .selectFrom("ecr_viewer.ecr_rr_conditions")
-                .select("uuid")
-                .executeTakeFirst();
+      it("and the common schema", async () => {
+        const commonCheck = await (db as Kysely<any>)
+          .selectFrom("ecr_viewer.ecr_rr_conditions")
+          .select("uuid")
+          .executeTakeFirst();
 
-            expect(commonCheck).not.toBeUndefined();
-        });
+        expect(commonCheck).not.toBeUndefined();
+      });
 
-        it("and builds properly", async () => {
-            const coreCheck = await (db as Kysely<any>)
-                .selectFrom("ecr_viewer.ecr_data")
-                .select("patient_name_first")
-                .executeTakeFirst();
+      it("and builds properly", async () => {
+        const coreCheck = await (db as Kysely<any>)
+          .selectFrom("ecr_viewer.ecr_data")
+          .select("patient_name_first")
+          .executeTakeFirst();
 
-            expect(coreCheck).not.toBeUndefined();
-            // Check for migrations log here?
-        });
+        expect(coreCheck).not.toBeUndefined();
+        // Check for migrations log here?
+      });
     });
     describe("has the extended schema", () => {
-        beforeAll(async () => {
-            process.env.METADATA_DATABASE_SCHEMA = "extended";
-            await migrate("up");
-        });
+      beforeAll(async () => {
+        process.env.METADATA_DATABASE_SCHEMA = "extended";
+        await migrate("up");
+      });
 
-        it("and the common schema", async () => {
-            const commonCheck = await (db as Kysely<any>)
-                .selectFrom("ecr_viewer.ecr_rr_conditions")
-                .select("uuid")
-                .executeTakeFirst();
+      it("and the common schema", async () => {
+        const commonCheck = await (db as Kysely<any>)
+          .selectFrom("ecr_viewer.ecr_rr_conditions")
+          .select("uuid")
+          .executeTakeFirst();
 
-            expect(commonCheck).not.toBeUndefined();
-        });
+        expect(commonCheck).not.toBeUndefined();
+      });
 
-        it("and builds properly", async () => {
-            const extendedCheck = await (db as Kysely<any>)
-                .selectFrom("ecr_viewer.ecr_data")
-                .select("first_name")
-                .executeTakeFirst();
+      it("and builds properly", async () => {
+        const extendedCheck = await (db as Kysely<any>)
+          .selectFrom("ecr_viewer.ecr_data")
+          .select("first_name")
+          .executeTakeFirst();
 
-            expect(extendedCheck).not.toBeUndefined();
-        });
+        expect(extendedCheck).not.toBeUndefined();
+      });
     });
   });
 });

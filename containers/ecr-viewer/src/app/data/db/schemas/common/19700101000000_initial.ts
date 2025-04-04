@@ -16,9 +16,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .executeTakeFirst();
 
   if (schemaExists) {
-    console.log(
-      "Schema already exists in database. Skipping table creation.",
-    );
+    console.log("Schema already exists in database. Skipping table creation.");
     return;
   }
 

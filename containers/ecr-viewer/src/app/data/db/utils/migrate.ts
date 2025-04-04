@@ -1,9 +1,11 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+
+import { Kysely, Migrator } from "kysely";
+
 import { getDb, dbSchema } from "@/app/api/services/database";
 
-import { Kysely, Migrator, FileMigrationProvider } from "kysely";
 import { MultiDirectoryMigrationProvider } from "./multiDirectoryMigrationProvider";
 
 // Empty interface used only in migrations
@@ -50,7 +52,11 @@ async function runMigration(
   }
 }
 
-export async function migrate(command:string) {
+/**
+ *
+ * @param command "up" or "down"; specifies the direction of the migration to run
+ */
+export async function migrate(command: string) {
   try {
     const schema = dbSchema();
     if (!schema || (schema !== "core" && schema !== "extended")) {
@@ -58,6 +64,7 @@ export async function migrate(command:string) {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = getDb() as Kysely<any>;
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const commonDir = path.join(__dirname, `../schemas/common`);
@@ -71,7 +78,7 @@ export async function migrate(command:string) {
 
     await runMigration(db, [commonDir, migrationsDir], command, target);
 
-    // await db.destroy();
+    await db.destroy();
   } catch (error) {
     console.error(error);
     process.exit(1);
