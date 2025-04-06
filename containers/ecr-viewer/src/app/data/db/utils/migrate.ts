@@ -11,8 +11,6 @@ import { MultiDirectoryMigrationProvider } from "./multiDirectoryMigrationProvid
 // Empty interface used only in migrations
 interface Database {}
 
-// Fix import error (https://github.com/kysely-org/kysely/issues/362)? tsc and node and how we import stuff? That's why none of the imports work.
-
 async function runMigration(
   db: Kysely<Database>,
   migrationsDir: string[],
@@ -52,10 +50,9 @@ async function runMigration(
 }
 
 /**
- *
- * @param command "up" or "down"; specifies the direction of the migration to run
+ * Applies all pending migrations
  */
-export async function migrate(command: string) {
+export async function migrateUp() {
   try {
     const schema = dbSchema();
     if (!schema || (schema !== "core" && schema !== "extended")) {
@@ -68,13 +65,47 @@ export async function migrate(command: string) {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const commonDir = path.join(__dirname, `../schemas/common`);
     const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
-    if (!command || (command !== "up" && command !== "down")) {
-      console.error('Please provide "up" or "down" as the first argument');
+
+    await runMigration(db, [commonDir, migrationsDir], "up");
+
+    await db.destroy();
+  } catch (error) {
+    throw new Error("Migration failed: " + error);
+  }
+}
+
+/**
+ * Reverts migrations
+ * @param migrationNames Optional array of migration names to revert. If empty, reverts the most recent migration.
+ */
+export async function migrateDown(migrationNames: string[] = []) {
+  try {
+    const schema = dbSchema();
+    if (!schema || (schema !== "core" && schema !== "extended")) {
+      console.warn("No database supported by config. Skipping migration.");
+      return;
     }
 
-    const target = command === "down" ? process.argv[3] : undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = getDb() as Kysely<any>;
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const commonDir = path.join(__dirname, `../schemas/common`);
+    const migrationsDir = path.join(__dirname, `../schemas/${schema}`);
 
-    await runMigration(db, [commonDir, migrationsDir], command, target);
+    if (migrationNames.length === 0) {
+      // Revert the most recent migration
+      await runMigration(db, [commonDir, migrationsDir], "down");
+    } else {
+      // Revert each specified migration one by one
+      for (const migrationName of migrationNames) {
+        await runMigration(
+          db,
+          [commonDir, migrationsDir],
+          "down",
+          migrationName,
+        );
+      }
+    }
 
     await db.destroy();
   } catch (error) {

@@ -29,14 +29,14 @@ export type DbUtils = {
     schemaName: string,
     tableName: string,
     columnName: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>;
   getTable: (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kysely: Kysely<any>,
     schemaName: string,
     tableName: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getSchema: (kysely: Kysely<any>, schemaName: string) => Promise<any>;
@@ -50,10 +50,10 @@ export type DbUtils = {
  * @throws {Error} - If the dialect is not supported or not set.
  */
 export function getDbUtils(): DbUtils {
-  const dialect = process.env.DB_DIALECT;
+  const dialect = process.env.METADATA_DATABASE_TYPE;
 
   if (!dialect) {
-    throw new Error("DB_DIALECT environment variable is not set");
+    throw new Error("METADATA_DATABASE_TYPE environment variable is not set");
   }
 
   if (dialect === "postgres") {
@@ -61,6 +61,6 @@ export function getDbUtils(): DbUtils {
   } else if (dialect === "sqlserver") {
     return sqlServerUtils;
   } else {
-    throw new Error(`Unsupported dialect: ${dialect.constructor.name}`);
+    throw new Error(`Unsupported dialect: ${dialect}`);
   }
 }
