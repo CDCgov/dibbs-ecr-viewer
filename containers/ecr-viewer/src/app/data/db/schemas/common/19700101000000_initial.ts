@@ -29,12 +29,8 @@ export async function up(db: Kysely<any>): Promise<void> {
       .executeTakeFirst();
   }
 
-  if (!!result) {
-    console.log("Schema already exists in database. Skipping table creation.");
-    return;
-  }
+  console.log("Result: " + result);
 
-  console.log("1");
   // dbNamespace() since we will be using in test_ev & ecr_viewer?
   try {
     await db.schema.createSchema(schema).execute(); // first instance of schema mutation
@@ -42,7 +38,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     throw new Error("Failed to create schema or already exists: " + error);
   }
 
-  console.log("2");
   await db.schema
     .createTable(schema + ".ecr_data")
     .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
@@ -53,8 +48,8 @@ export async function up(db: Kysely<any>): Promise<void> {
       cb.notNull().defaultTo(getSql("now")),
     )
     .execute();
-  console.log("3");
-  await db.schema
+
+    await db.schema
     .createTable(schema + ".ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
