@@ -49,7 +49,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .execute();
 
-    await db.schema
+  await db.schema
     .createTable(schema + ".ecr_rr_conditions")
     .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
     .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())

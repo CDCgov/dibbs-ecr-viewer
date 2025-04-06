@@ -7,6 +7,7 @@ import { Kysely } from "kysely";
  * @returns true if the schema exists, false otherwise
  */
 export async function schemaExistsByName(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   kysely: Kysely<any>,
   schemaName: string,
 ): Promise<boolean> {
@@ -27,6 +28,7 @@ export async function schemaExistsByName(
  * @returns true if the table exists, false otherwise
  */
 export async function tableExistsByName(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   kysely: Kysely<any>,
   schemaName: string,
   tableName: string,
@@ -50,6 +52,7 @@ export async function tableExistsByName(
  * @returns true if the column exists, false otherwise
  */
 export async function columnExistsByName(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   kysely: Kysely<any>,
   schemaName: string,
   tableName: string,
@@ -75,6 +78,7 @@ export async function columnExistsByName(
  * @returns the column information if it exists, undefined otherwise
  */
 export async function getColumn(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   kysely: Kysely<any>,
   schemaName: string,
   tableName: string,
@@ -98,6 +102,7 @@ export async function getColumn(
  * @returns the table information if it exists, undefined otherwise
  */
 export async function getTable(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   kysely: Kysely<any>,
   schemaName: string,
   tableName: string,
@@ -117,6 +122,7 @@ export async function getTable(
  * @param schemaName - the name of the schema to return
  * @returns the schema information if it exists, undefined otherwise
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getSchema(kysely: Kysely<any>, schemaName: string) {
   const result = await kysely
     .selectFrom("information_schema.schemata")
@@ -131,6 +137,7 @@ export async function getSchema(kysely: Kysely<any>, schemaName: string) {
  * @param kysely - the Kysely instance
  * @returns all schemas in the database
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getSchemas(kysely: Kysely<any>) {
   const result = await kysely
     .selectFrom("information_schema.schemata")

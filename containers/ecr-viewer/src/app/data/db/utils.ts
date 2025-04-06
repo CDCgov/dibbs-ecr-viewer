@@ -6,32 +6,41 @@ import * as sqlServerUtils from "./dialects/sqlserver/utils";
 // Define a type for the utils object to ensure type safety
 export type DbUtils = {
   schemaExistsByName: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kysely: Kysely<any>,
     schemaName: string,
   ) => Promise<boolean>;
   tableExistsByName: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kysely: Kysely<any>,
     schemaName: string,
     tableName: string,
   ) => Promise<boolean>;
   columnExistsByName: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kysely: Kysely<any>,
     schemaName: string,
     tableName: string,
     columnName: string,
   ) => Promise<boolean>;
   getColumn: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kysely: Kysely<any>,
     schemaName: string,
     tableName: string,
     columnName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>;
   getTable: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kysely: Kysely<any>,
     schemaName: string,
     tableName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getSchema: (kysely: Kysely<any>, schemaName: string) => Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getSchemas: (kysely: Kysely<any>) => Promise<any[]>;
 };
 
