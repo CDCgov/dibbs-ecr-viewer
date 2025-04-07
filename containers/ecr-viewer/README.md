@@ -138,8 +138,6 @@ Can be found in [api-documentation.md](api-documentation.md).
 
 # Architecture Diagram
 
-Note: The diagram omits infrastructure related to OpenTelemetry. OpenTelemetry enables logging and performance tracking; it is omitted for ease of viewing.
-
 ```mermaid
 flowchart LR
 

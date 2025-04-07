@@ -40,9 +40,6 @@ services:
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-ecr-viewer}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
       - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
-      # Open Telemetry
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4318/v1/metrics
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces
     profiles:
       - ecr-viewer
 

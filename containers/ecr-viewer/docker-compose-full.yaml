@@ -51,9 +51,6 @@ services:
       driver: "json-file"
     env_file:
       - ../orchestration/.env
-    environment:
-      - OTEL_TRACES_EXPORTER=none
-      - OTEL_METRICS_EXPORTER=none
   validation-service:
     platform: linux/amd64
     build:
