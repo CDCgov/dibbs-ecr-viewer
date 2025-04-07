@@ -148,7 +148,7 @@ flowchart LR
       hc["<code>/api/health-check</code><br />(health check)"]
     end
     subgraph POST["fas:fa-upload <code>POST</code>"]
-      saveFhirData["<code>/api/save-fhir-data</code><br />(Save eCR)"]
+      saveFhirData["<code>/api/process-zip</code><br />(Save eCR)"]
     end
   end
   subgraph pages["Pages"]
