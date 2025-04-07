@@ -11,8 +11,13 @@ services:
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY=${NBS_PUB_KEY:-}
-      # POSTGRES
-      - DATABASE_URL=postgres://postgres:pw@localhost:5432/ecr_viewer_db
+      # METADATA DATABASE
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
+      # SQL Server - backwards compat
+      - SQL_SERVER_USER
+      - SQL_SERVER_PASSWORD
+      - SQL_SERVER_HOST
+
       # AWS
       - AWS_CUSTOM_ENDPOINT=http://localhost:4566
       - AWS_REGION=${AWS_REGION:-us-east-1}
@@ -22,10 +27,10 @@ services:
       # Azure
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
-      # SQL Server
-      - SQL_SERVER_USER=${SQL_SERVER_USER:-sa}
-      - SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
-      - SQL_SERVER_HOST=${SQL_SERVER_HOST:-localhost}
+      # GCP
+      - 'GCP_KEY=${GCP_KEY:-{ "client_email": "ecr@example.com", "private_key": "1234" }}'
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID:-proj}
+      - GCP_API_ENDPOINT=${GCP_API_ENDPOINT:-http://localhost:10001/}
       # Orchestration
       - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
       # Auth
@@ -35,9 +40,6 @@ services:
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-ecr-viewer}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
       - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
-      # Open Telemetry
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4318/v1/metrics
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces
     profiles:
       - ecr-viewer
 
@@ -63,6 +65,10 @@ services:
     profiles:
       - AWS_PG_NON_INTEGRATED
       - AZURE_PG_NON_INTEGRATED
+      - GCP_PG_NON_INTEGRATED
+      - AWS_PG_DUAL
+      - AZURE_PG_DUAL
+      - GCP_PG_DUAL
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -86,6 +92,10 @@ services:
     profiles:
       - AWS_SQLSERVER_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
+      - GCP_SQLSERVER_NON_INTEGRATED
+      - AWS_SQLSERVER_DUAL
+      - AZURE_SQLSERVER_DUAL
+      - GCP_SQLSERVER_DUAL
 
   aws-storage:
     image: gresau/localstack-persist:3
@@ -98,6 +108,8 @@ services:
       - AWS_INTEGRATED
       - AWS_PG_NON_INTEGRATED
       - AWS_SQLSERVER_NON_INTEGRATED
+      - AWS_PG_DUAL
+      - AWS_SQLSERVER_DUAL
 
   azure-storage:
     build:
@@ -127,6 +139,23 @@ services:
       - AZURE_INTEGRATED
       - AZURE_PG_NON_INTEGRATED
       - AZURE_SQLSERVER_NON_INTEGRATED
+      - AZURE_PG_DUAL
+      - AZURE_SQLSERVER_DUAL
+
+  gcp-storage:
+    image: fsouza/fake-gcs-server
+    ports:
+      - 10001:10001
+    command: ["-scheme", "http", "-port", "10001"]
+    volumes:
+      - ./seed-scripts/gcp:/data
+      - gcp-data:/storage
+    profiles:
+      - GCP_INTEGRATED
+      - GCP_PG_NON_INTEGRATED
+      - GCP_SQLSERVER_NON_INTEGRATED
+      - GCP_PG_DUAL
+      - GCP_SQLSERVER_DUAL
 
   # Keycloak for authentication
   keycloak:
@@ -154,3 +183,4 @@ volumes:
   db:
   azure-data:
   aws-data:
+  gcp-data:

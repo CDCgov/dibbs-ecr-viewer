@@ -26,6 +26,7 @@ jest.mock("next/navigation", () => ({
       toString: () => params.toString(),
     };
   },
+  notFound: jest.fn(),
 }));
 
 // Make sure the auto-generated IDs are stable for snapshot testing

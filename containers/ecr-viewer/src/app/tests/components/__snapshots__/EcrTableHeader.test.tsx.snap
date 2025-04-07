@@ -14,7 +14,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-label="Sort by Patient"
+          aria-description="Sort by Patient"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           disabled=""
@@ -50,7 +50,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-label="Sort by Received Date"
+          aria-description="Sort by Received Date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           disabled=""
@@ -86,7 +86,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-label="Sort by Encounter Date"
+          aria-description="Sort by Encounter Date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           disabled=""
@@ -159,7 +159,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-label="Sort by Patient"
+          aria-description="Sort by Patient"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           id="patient-sort-button"
@@ -194,7 +194,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-label="Sort by Received Date"
+          aria-description="Sort by Received Date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           id="date_created-sort-button"
@@ -229,7 +229,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-label="Sort by Encounter Date"
+          aria-description="Sort by Encounter Date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           id="encounter_date-sort-button"

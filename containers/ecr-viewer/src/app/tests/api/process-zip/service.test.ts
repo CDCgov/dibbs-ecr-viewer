@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+
 import { processZip } from "@/app/api/process-zip/service";
 import {
   saveFhirData,
@@ -9,6 +10,7 @@ import {
 import { S3_SOURCE } from "@/app/api/utils";
 
 jest.mock("../../../api/save-fhir-data/save-fhir-data-service");
+jest.mock("../../../api/services/database");
 
 describe("processZip", () => {
   const mockFile = new File(["content"], "test.zip");
@@ -99,12 +101,12 @@ describe("processZip", () => {
         }),
       });
       appendMock = jest.spyOn(FormData.prototype, "append");
-      process.env.NON_INTEGRATED_VIEWER = "false";
+      process.env.METADATA_DATABASE_TYPE = undefined;
       process.env.METADATA_DATABASE_SCHEMA = undefined;
     });
-    it("should use bundle-only.json when non_integrated_viewer is false ", async () => {
-      process.env.NON_INTEGRATED_VIEWER = "false";
-      process.env.METADATA_DATABASE_SCHEMA = undefined;
+    it("should use bundle-only.json when no metadata db", async () => {
+      delete process.env.METADATA_DATABASE_TYPE;
+      delete process.env.METADATA_DATABASE_SCHEMA;
 
       await processZip(mockFile);
 
@@ -113,8 +115,8 @@ describe("processZip", () => {
         "bundle-only.json",
       );
     });
-    it("should use bundle-metadata-extended.json when non_integrated_viewer is true and metadata is extended ", async () => {
-      process.env.NON_INTEGRATED_VIEWER = "true";
+    it("should use bundle-metadata-extended.json when metadata db esists and metadata is extended ", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "extended";
 
       await processZip(mockFile);
@@ -124,8 +126,8 @@ describe("processZip", () => {
         "bundle-metadata-extended.json",
       );
     });
-    it("should use bundle-metadata-core.json when non_integrated_viewer is true and metadata is core ", async () => {
-      process.env.NON_INTEGRATED_VIEWER = "true";
+    it("should use bundle-metadata-core.json when metadata db esists and metadata is core ", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "core";
 
       await processZip(mockFile);

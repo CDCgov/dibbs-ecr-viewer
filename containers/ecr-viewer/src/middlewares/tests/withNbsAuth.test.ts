@@ -15,15 +15,14 @@ jest.mock("jose", () => ({
 const middleware = chainMiddleware([withNbsAuth]);
 
 describe("NBS Auth Middleware", () => {
-  const ORIG_NBS_AUTH = process.env.NBS_AUTH;
   const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeEach(() => {
     process.env.BASE_PATH = "ecr-viewer";
-    process.env.NBS_AUTH = "true";
+    process.env.NBS_PUB_KEY = "foo";
     jest.resetAllMocks(); // Reset mocks before each test
   });
   afterEach(() => {
-    process.env.NBS_AUTH = ORIG_NBS_AUTH;
+    delete process.env.NBS_PUB_KEY;
     process.env.BASE_PATH = ORIG_BASE_PATH;
   });
 
@@ -46,13 +45,11 @@ describe("NBS Auth Middleware", () => {
 
   it("should not authorize the api endpoints without auth", async () => {
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/fhir-data/",
+      "https://www.example.com/ecr-viewer/api/save-fhir-data/",
     );
 
     const resp = await middleware(req);
-    expect(resp?.headers.get("x-middleware-rewrite")).toBe(
-      "https://www.example.com/ecr-viewer/error/auth",
-    );
+    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
     expect(resp?.status).toBe(200);
   });
 
@@ -60,7 +57,7 @@ describe("NBS Auth Middleware", () => {
     process.env.NBS_PUB_KEY = "FOOBAR";
 
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/fhir-data/",
+      "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
     req.cookies.set("auth-token", "foobar");
 
@@ -76,9 +73,7 @@ describe("NBS Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
     const resp = await middleware(req);
-    expect(resp?.headers.get("x-middleware-rewrite")).toBe(
-      "https://www.example.com/ecr-viewer/error/auth",
-    );
+    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
     expect(resp?.status).toBe(200);
   });
 });

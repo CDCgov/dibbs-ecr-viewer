@@ -217,7 +217,10 @@ describe("FormatService tests", () => {
     });
 
     it("should return 'Invalid Number' when junk things passed", () => {
-      expect(formatPhoneNumber("+11111111")).toBe("Invalid Number");
+      expect(formatPhoneNumber("+11111111")).toBe("Invalid Number: +11111111");
+      expect(formatPhoneNumber("+11111111111111111")).toBe(
+        "Invalid Number: +11111111111111111",
+      );
     });
 
     it("should format a valid phone number", () => {
@@ -226,6 +229,22 @@ describe("FormatService tests", () => {
       expect(formatPhoneNumber("1111111111")).toBe("111-111-1111");
       expect(formatPhoneNumber("111-111-1111")).toBe("111-111-1111");
       expect(formatPhoneNumber("(111) 111-1111")).toBe("111-111-1111");
+      expect(formatPhoneNumber("(111) 111-1111x123")).toBe("111-111-1111 x123");
+      expect(formatPhoneNumber("(111) 111-1111-x123")).toBe(
+        "111-111-1111 x123",
+      );
+      expect(formatPhoneNumber("(111) 111-1111 x123")).toBe(
+        "111-111-1111 x123",
+      );
+      expect(formatPhoneNumber("(111) 111-1111 ext123")).toBe(
+        "111-111-1111 ext123",
+      );
+      expect(formatPhoneNumber("(111) 111-1111 ext 123")).toBe(
+        "111-111-1111 ext123",
+      );
+      expect(formatPhoneNumber("(111) 111-1111 ext. 123")).toBe(
+        "111-111-1111 ext123",
+      );
     });
   });
 

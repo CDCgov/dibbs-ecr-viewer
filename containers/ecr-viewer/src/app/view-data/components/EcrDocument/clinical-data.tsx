@@ -20,10 +20,9 @@ import {
   formatName,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { evaluateData, noData, safeParse } from "@/app/utils/data-utils";
+import { evaluateData, safeParse } from "@/app/utils/data-utils";
 import {
   evaluateAll,
-  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -35,7 +34,6 @@ import {
 } from "@/app/view-data/components/AdministeredMedication";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
-  BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
@@ -264,7 +262,6 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
     fhirBundle,
     fhirPathMappings.historyOfPresentIllness,
   );
-
   const tables = formatTablesToJSON(content);
 
   // Not a table, safe parse the string content
@@ -407,65 +404,38 @@ export const returnProceduresTable = (
  * @returns The JSX element representing the table, or undefined if no vital signs are found.
  */
 export const returnVitalsTable = (fhirBundle: Bundle) => {
-  const height = evaluateValue(fhirBundle, fhirPathMappings.patientHeight);
-  const heightDate: string | undefined = evaluateOne(
-    fhirBundle,
-    fhirPathMappings.patientHeightDate,
+  const vitals = evaluateAll(fhirBundle, fhirPathMappings.patientVitalSigns);
+
+  if (vitals.length === 0) return;
+
+  // Sort by code to get consistent and reasonable order (e.g. blood pressures near each other)
+  vitals.sort((a, b) =>
+    (a?.code?.coding?.[0]?.code ?? 0) < (b?.code?.coding?.[0]?.code ?? 0)
+      ? -1
+      : 1,
   );
 
-  const weight = evaluateValue(fhirBundle, fhirPathMappings.patientWeight);
-  const weightDate: string | undefined = evaluateOne(
-    fhirBundle,
-    fhirPathMappings.patientWeightDate,
-  );
-
-  const bmi = evaluateValue(fhirBundle, fhirPathMappings.patientBmi);
-  const bmiDate: string | undefined = evaluateOne(
-    fhirBundle,
-    fhirPathMappings.patientBmiDate,
-  );
-
-  if (!height && !weight && !bmi) {
-    return undefined;
-  }
-
-  const vitalsData = [
-    {
-      vitalReading: "Height",
-      result: height || noData,
-      date: formatDateTime(heightDate) || noData,
-    },
-    {
-      vitalReading: "Weight",
-      result: weight || noData,
-      date: formatDateTime(weightDate) || noData,
-    },
-    {
-      vitalReading: "BMI",
-      result: bmi || noData,
-      date: formatDateTime(bmiDate) || noData,
-    },
-  ];
   const columns = [
-    { columnName: "Vital Reading" },
-    { columnName: "Result" },
-    { columnName: "Date/Time" },
+    {
+      columnName: "Vital Reading",
+      infoPath: "vitalSignType",
+      applyToValue: toSentenceCase,
+    },
+    { columnName: "Result", infoPath: "vitalSignValue" },
+    {
+      columnName: "Date/Time",
+      infoPath: "vitalSignDateTime",
+      applyToValue: formatDateTime,
+    },
   ];
 
   return (
-    <BaseTable
+    <EvaluateTable
+      resources={vitals}
       columns={columns}
       caption="Vital Signs"
       className="margin-y-0"
       fixed={false}
-    >
-      {vitalsData.map((entry, index: number) => (
-        <tr key={`table-row-${index}`}>
-          <td>{entry.vitalReading}</td>
-          <td>{entry.result}</td>
-          <td>{entry.date}</td>
-        </tr>
-      ))}
-    </BaseTable>
+    />
   );
 };

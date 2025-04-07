@@ -388,7 +388,7 @@ describe("htmlTableService tests", () => {
 
     it("should return an empty array when HTML string input has no tables", () => {
       const htmlString =
-        "<div><h1>Hello, World!</h1><p>This HTML string has no tables.</p></div>";
+        "<list><item><caption>Caption A</caption><content><content><content>Content A</content><br />Content B</content><br /></content></item></list><footnote>Footnote</footnote>";
       const expectedResult: [] = [];
 
       const result = formatTablesToJSON(htmlString);

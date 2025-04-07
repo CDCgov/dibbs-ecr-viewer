@@ -1,10 +1,17 @@
 import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobClient, BlobDownloadResponseParsed } from "@azure/storage-blob";
+import { ApiError } from "@google-cloud/storage";
 import { Bundle } from "fhir/r4";
 import { NextResponse } from "next/server";
 
-import { AZURE_SOURCE, S3_SOURCE, streamToJson } from "@/app/api/utils";
+import {
+  AZURE_SOURCE,
+  GCP_SOURCE,
+  S3_SOURCE,
+  streamToJson,
+} from "@/app/api/utils";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
+import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
@@ -25,6 +32,8 @@ export async function get_fhir_data(ecr_id: string | null) {
     res = await get_s3(ecr_id);
   } else if (process.env.SOURCE === AZURE_SOURCE) {
     res = await get_azure(ecr_id);
+  } else if (process.env.SOURCE === GCP_SOURCE) {
+    res = await get_gcp(ecr_id);
   } else {
     res = { payload: { message: "Invalid source" }, status: 500 };
   }
@@ -50,9 +59,9 @@ export const get_s3 = async (
     });
 
     const { Body } = await s3Client.send(command);
-    const content = await streamToJson(Body);
+    const fhirBundle = await streamToJson(Body);
 
-    return { payload: { fhirBundle: content }, status: 200 };
+    return { payload: { fhirBundle }, status: 200 };
   } catch (error: unknown) {
     console.error("S3 GetObject error:", error);
 
@@ -79,15 +88,24 @@ export const get_azure = async (
   const containerClient = azureBlobContainerClient();
   const blobName = `${ecr_id}.json`;
 
+  if (!containerClient) {
+    return {
+      payload: {
+        message:
+          "Failed to download the FHIR data due to misconfiguration of client.",
+      },
+      status: 500,
+    };
+  }
   try {
     const blockBlobClient: BlobClient = containerClient.getBlobClient(blobName);
 
     const downloadResponse: BlobDownloadResponseParsed =
       await blockBlobClient.download();
-    const content = await streamToJson(downloadResponse.readableStreamBody);
+    const fhirBundle = await streamToJson(downloadResponse.readableStreamBody);
 
     return {
-      payload: { fhirBundle: content },
+      payload: { fhirBundle },
       status: 200,
     };
 
@@ -103,5 +121,48 @@ export const get_azure = async (
     } else {
       return { payload: { message: error.message }, status: 500 };
     }
+  }
+};
+
+/**
+ * Retrieves FHIR data from Google Cloud storage based on eCR ID.
+ * @param ecr_id - The id of the ecr to fetch.
+ * @returns A promise resolving to a FhirDataResponse object.
+ */
+const get_gcp = async (ecr_id: string | null): Promise<FhirDataResponse> => {
+  const client = gcpClient();
+  const blobName = `${ecr_id}.json`;
+
+  if (!client) {
+    return {
+      payload: {
+        message: "Failed to download the FHIR data due to misconfiguration.",
+      },
+      status: 500,
+    };
+  }
+  try {
+    const contents = await client.file(blobName).download();
+    const fhirBundle = await streamToJson(contents);
+
+    return {
+      payload: { fhirBundle },
+      status: 200,
+    };
+  } catch (error: unknown) {
+    console.error(
+      "Failed to download the FHIR data from Google Cloud Storage:",
+      error,
+    );
+
+    if (error instanceof ApiError && error.code === 404) {
+      return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
+    }
+
+    if (error instanceof Error) {
+      return { payload: { message: error.message }, status: 500 };
+    }
+
+    return { payload: { message: "Internal Server Error." }, status: 500 };
   }
 };

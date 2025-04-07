@@ -89,12 +89,10 @@ export type PathTypes = {
   encounterParticipants: EncounterParticipant;
   rrDetails: Observation;
   clinicalReasonForVisit: ValueX;
-  patientHeight: ValueX;
-  patientHeightDate: string;
-  patientWeight: ValueX;
-  patientWeightDate: string;
-  patientBmi: ValueX;
-  patientBmiDate: string;
+  patientVitalSigns: Observation;
+  vitalSignType: CodeableConcept;
+  vitalSignValue: ValueX;
+  vitalSignDateTime: ValueX;
   resolve: unknown;
   activeProblems: Condition;
   activeProblemsDisplay: string;
@@ -388,30 +386,23 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Vitals
-  patientHeight: {
+  patientVitalSigns: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(category.coding.code = 'vital-signs')",
+  },
+  vitalSignType: {
+    type: "CodeableConcept",
+    path: "code",
+  },
+  vitalSignValue: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '8302-2').first().value",
+    path: "value",
   },
-  patientHeightDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.first().code = '8302-2').first().effectiveDateTime",
-  },
-  patientWeight: {
+  vitalSignDateTime: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.first().code = '29463-7').first().value",
+    path: "effectiveDateTime",
   },
-  patientWeightDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.first().code = '29463-7').first().effectiveDateTime",
-  },
-  patientBmi: {
-    type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.first().code = '39156-5').value",
-  },
-  patientBmiDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.first().code = '39156-5').effectiveDateTime",
-  },
+
   resolve: {
     type: "unknown",
     path: "Bundle.entry.resource.where(resourceType = %resourceType).where(id = %id)",

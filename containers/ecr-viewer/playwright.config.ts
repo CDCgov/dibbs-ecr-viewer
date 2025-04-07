@@ -46,7 +46,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run local-docker",
-    url: "http://localhost:3000/ecr-viewer",
+    port: 3000,
     timeout: 240 * 1000,
     reuseExistingServer: true,
     stdout: "pipe",

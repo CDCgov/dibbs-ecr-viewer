@@ -7,6 +7,7 @@ import { POST } from "@/app/api/process-zip/route";
 import { processZip } from "@/app/api/process-zip/service";
 
 jest.mock("../../../api/process-zip/service");
+jest.mock("../../../api/services/database");
 
 describe("POST Process Zip", () => {
   const mockFile = new File(["content"], "test.zip", {

@@ -39,7 +39,7 @@ To build the Docker image for the eCR Viewer from source instead of downloading 
 
 ## Non Integrated Viewer
 
-To enable the Non Integrated Viewer homepage, set the environment variable `CONFIG_NAME` equal to `AWS_PG_NON_INTEGRATED`, `AWS_SQLSERVER_NON_INTEGRATED`,`AZURE_PG_NON_INTEGRATED`, or `AZURE_SQLSERVER_NON_INTEGRATED` . This will enable the Non Integrated viewer homepage at `localhost:3000/ecr-viewer`.
+To enable the Non Integrated Viewer homepage, set the environment variable `CONFIG_NAME` equal to `<AWS | AZURE | GCP>_<PG | SQLSERVER>_<NON_INTEGRATED | DUAL>`. This will enable the Non Integrated viewer homepage at `localhost:3000/ecr-viewer`.
 
 ## Potential Issues
 
@@ -96,15 +96,35 @@ Running tests:
 - `npm run test` - Run the full suite of unit tests.
 - `npm run test:watch` - Run tests in [watch mode](https://jestjs.io/docs/cli#--watch). Tests will run that only affect changed code. It will rerun whenever a new change is detected.
 
+#### Integration Testing
+
+Integration tests utilize Jest as the test runner. They rely on having a database already running in a separate process.
+
+Running tests:
+
+Postgres:
+
+- set your `CONFIG_NAME` in `.env.local` to a postgres-using option (e.g. `AWS_PG_DUAL`)
+- `npm run local-dev` - get the postgres db running
+- `npm run test:integration:pg` - Run the full suite of unit tests with postgres.
+
+SQL Server:
+
+- set your `CONFIG_NAME` in `.env.local` to a sqlserver-using option (e.g. `AWS_SQLSERVER_NON_INTEGRATED`)
+- `npm run local-dev` - get the sql server db running
+- `npm run test:integration:sqlserver` - Run the full suite of unit tests with sql server.
+
 #### End to End Testing
 
 End to end test utilize the Playwright framerwork.
 Running Tests:
 
-1. set `SEED_DATA_DIRECTORIES=e2e` in your `.env.local`, then `npm run convert-seed-data:build` to save all required eCRs necessary for e2e tests. The tests require all eCRs located in `/seed-scripts/baseECR/e2e` have been saved (and no other eCRs).
-2. `npm run test:e2e` to run the tests against http://localhost:3000/ecr-viewer.
+1. make sure your `CONFIG_NAME` ends in `_DUAL`
+2. run `npm run convert-seed-data:build` to save all required eCRs necessary for e2e tests. The tests require all eCRs located in `/seed-scripts/baseECR/e2e` have been saved (and no other eCRs).
+3. `npm run test:e2e` to run the tests against http://localhost:3000/ecr-viewer.
    - If the service isn't available, Playwright is [configured to spin it up](https://playwright.dev/docs/test-webserver).
    - If you would prefer to spin up the service manually, you can run `npm run local-dev` or `npm run local-docker`.
+4. To run the `npm run test:e2e:integrated`, change your `CONFIG_NAME` to one that ends in `_INTEGRATED` (without a `NON_` in front of it), then run the command
 
 Other useful playwright tools/commands
 
@@ -117,8 +137,6 @@ Other useful playwright tools/commands
 Can be found in [api-documentation.md](api-documentation.md).
 
 # Architecture Diagram
-
-Note: The diagram omits infrastructure related to OpenTelemetry. OpenTelemetry enables logging and performance tracking; it is omitted for ease of viewing.
 
 ```mermaid
 flowchart LR
@@ -146,7 +164,6 @@ flowchart LR
     subgraph aws["fab:fa-docker AWS"]
       s3["fab:fa-python <code>S3</code>"]
     end
-    mr <--> |<br><code>GET /fhir-data</code>| aws
 	mr <==> |<code>POST /save-fhir-data</code>| aws
 
   end
@@ -172,7 +189,6 @@ graph TD
     A[ecr-viewer]
     subgraph API Endpoints
         direction TB
-        M[GET /fhir-data]
         N[POST /save-fhir-data]
     end
     A --> M

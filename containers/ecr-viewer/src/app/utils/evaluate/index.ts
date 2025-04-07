@@ -202,6 +202,7 @@ export const evaluateOne = <K extends keyof PathTypes>(
 const UNIT_MAP = new Map([
   ["[lb_av]", "lb"],
   ["[in_i]", "in"],
+  ["[in_us]", "in"],
 ]);
 
 /**

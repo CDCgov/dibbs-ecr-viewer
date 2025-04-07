@@ -10,17 +10,20 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
  */
 export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
-    if (process.env.NBS_AUTH !== "true") return next(request);
+    if (!process.env.NBS_PUB_KEY) return next(request);
 
-    const nbsAuthResp = set_auth_cookie(request);
+    const nbsAuthResp = setAuthCookie(request);
     if (nbsAuthResp) return nbsAuthResp;
 
-    if (await authorize_api(request)) return next(request);
+    // NBS auth can only be used for ecr viewer pages
+    const { pathname } = request.nextUrl;
+    if (!pathname.endsWith(`/view-data`)) return next(request);
 
-    return NextResponse.rewrite(
-      new URL(`${process.env.BASE_PATH}/error/auth`, request.nextUrl.origin),
-      { request },
-    );
+    const isAuthorized = await checkIsAuthorized(request);
+
+    // set the header on the request since we need to run nbs auth before next auth
+    request.headers.set("x-nbs-authorized", `${isAuthorized}`);
+    return next(request);
   };
 };
 
@@ -33,7 +36,7 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
  *   "auth-token" cookie if the "auth" parameter exists, or `null` if the
  *   "auth" parameter does not exist in the request.
  */
-function set_auth_cookie(req: NextRequest) {
+const setAuthCookie = (req: NextRequest) => {
   const url = req.nextUrl;
   const auth = url.searchParams.get("auth");
   if (auth) {
@@ -43,10 +46,10 @@ function set_auth_cookie(req: NextRequest) {
     return response;
   }
   return null;
-}
+};
 
 /**
- * Authorizes API requests based on an authentication token provided in the request's cookies.
+ * Authorizes requests based on an authentication token provided in the request's cookies.
  *   The function checks for the presence of an "auth-token" cookie and attempts to verify it
  *   using JWT verification with a public key. If the token is missing or invalid, the function
  *   returns a JSON response indicating that authentication is required with a 401 status code.
@@ -54,7 +57,7 @@ function set_auth_cookie(req: NextRequest) {
  *   and URL information used for extracting the authentication token and determining the request path.
  * @returns - Whether the user is authorized.
  */
-async function authorize_api(req: NextRequest) {
+const checkIsAuthorized = async (req: NextRequest) => {
   const auth = req.cookies.get("auth-token")?.value;
 
   if (!auth) {
@@ -69,4 +72,4 @@ async function authorize_api(req: NextRequest) {
     return false;
   }
   return true;
-}
+};

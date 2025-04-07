@@ -18,7 +18,7 @@ describe("Param Check Middleware", () => {
   beforeEach(() => {
     process.env.NEXTAUTH_SECRET = "test-secret";
     process.env.BASE_PATH = "ecr-viewer";
-    process.env.NBS_AUTH = "false";
+    delete process.env.NBS_PUB_KEY;
     jest.resetAllMocks(); // Reset mocks before each test
   });
   afterEach(() => {

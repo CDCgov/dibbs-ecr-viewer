@@ -1,14 +1,12 @@
-import { env } from "next-runtime-env";
-
 import ErrorPage from "./components/ErrorPage";
+import { isLoggedInUser } from "./utils/auth-utils";
 
 /**
  * 404 page
  * @returns 404 Page
  */
-const NotFound = () => {
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
+const NotFound = async () => {
+  const isLoggedIn = await isLoggedInUser();
 
   return (
     <ErrorPage
@@ -20,7 +18,7 @@ const NotFound = () => {
         <li>
           <b>Check the URL:</b> Make sure there are no typos in the address.
         </li>
-        {!isNonIntegratedViewer && (
+        {!isLoggedIn && (
           <li>
             <b>Return to NBS:</b> Return to NBS and try to reopen the eCR.
           </li>

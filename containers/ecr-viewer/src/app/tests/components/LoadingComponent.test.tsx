@@ -5,6 +5,10 @@ import { axe } from "jest-axe";
 
 import { EcrLoadingSkeleton } from "@/app/view-data/components/LoadingComponent";
 
+jest.mock("../../components/AuthSessionProvider", () => ({
+  useIsLoggedInUser: () => true,
+}));
+
 describe("Snapshot test for EcrLoadingSkeleton", () => {
   let container: HTMLElement;
 
