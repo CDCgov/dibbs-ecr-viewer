@@ -38,8 +38,12 @@ export const logIn = async (
   expectText = "eCR Library",
 ) => {
   await page.goto(url);
+  let newUrl = url.replace(/&?auth\=[^&]+/, "");
+  if (newUrl.endsWith("?")) {
+    newUrl = newUrl.replace("?", "/");
+  }
   await page.waitForURL(
-    `/ecr-viewer/signin?callbackUrl=${encodeURIComponent(url)}`,
+    `/ecr-viewer/signin?callbackUrl=${encodeURIComponent(newUrl)}`,
   );
 
   await page.getByRole("button").click();
@@ -55,7 +59,7 @@ export const logIn = async (
     }
   }
 
-  await expect(page.getByText(expectText)).toBeVisible();
+  await expect(page.getByText(expectText).first()).toBeVisible();
 };
 
 /**
