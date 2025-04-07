@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 import { logIn, nbsAuthParam } from "../utils";
 
 test.describe("auth", () => {
-  test.only("should require a login on main page", async ({ page }) => {
+  test("should require a login on main page", async ({ page }) => {
     await logIn(page);
   });
 
