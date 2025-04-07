@@ -120,7 +120,7 @@ namespace EnvironmentVariables {
     //#region required
     /**
      * @category Base Required
-     * @description Base path for the eCR Viewer.
+     * @description Base url path for the eCR Viewer.
      * @example /ecr-viewer
      */
     BASE_PATH: string;

@@ -87,7 +87,7 @@ flowchart LR
 
 ## Environment Variable Setup
 
-The full list of environment variables can be found in {@link NodeJS.ProcessEnv}
+The full list of environment variables can be found in {@link NodeJS.ProcessEnv}. Below, you'll find more information about the groups of environment variables supported by the Viewer.
 
 ### Base Required
 
@@ -99,7 +99,7 @@ A storage container for the eCRs must be created for all deployments. Depending 
 
 ### Authentication Setup
 
-Authentication is required when running any mode modes of the application.
+Authentication is required when running any mode of the application.
 
 #### Integrated Authentication
 
@@ -107,7 +107,7 @@ Integrated eCR Viewer will rely on NBS to authenticate the user. The variables c
 
 #### Non-Integrated Authentication
 
-Non-Integrated/Dual rely on an external authentication provider, like azure ad, entra, or keycloak. The variables can be found in {@link EnvironmentVariables.Authentication}.
+Non-Integrated/Dual rely on an external authentication provider, like Azure AD, Entra, or Keycloak. The variables can be found in {@link EnvironmentVariables.Authentication}.
 
 ### eCR Metadata Storage
 
