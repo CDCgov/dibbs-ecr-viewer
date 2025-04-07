@@ -1,4 +1,10 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
 # they will be requested for review when someone opens a pull request.
-*       @akasper @angelathe @austin-hall-skylight @BobanL @gordonfarrell @jakewheeler @JNygaard-Skylight @lina-roth @mcmcgrath13 @robertmitchellv
+
+# ecr viewer team
+*       @akasper @angelathe @austin-hall-skylight @gordonfarrell @JNygaard-Skylight @mcmcgrath13 
+
+# refiner team
+/containers/message-refiner/ @jakewheeler @lina-roth @robertmitchellv
+
