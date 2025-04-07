@@ -1,13 +1,7 @@
 import { Bundle } from "fhir/r4";
 
-import {
-  saveFhirData,
-  saveWithMetadata,
-} from "@/app/api/save-fhir-data/save-fhir-data-service";
-import {
-  BundleExtendedMetadata,
-  BundleMetadata,
-} from "@/app/api/save-fhir-data/types";
+import { saveFhirData, saveWithMetadata } from "./save-fhir-data-service";
+import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
 interface OrchestrationRawResponse {
   message: string;

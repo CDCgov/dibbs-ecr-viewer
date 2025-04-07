@@ -1,6 +1,6 @@
 import { Bundle } from "fhir/r4";
 
-import { saveFhirData } from "@/app/api/save-fhir-data/save-fhir-data-service";
+import { saveFhirData } from "@/app/api/process-zip/save-fhir-data-service";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";

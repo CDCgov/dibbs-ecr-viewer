@@ -5,11 +5,11 @@
 import {
   saveCoreMetadata,
   saveExtendedMetadata,
-} from "@/app/api/save-fhir-data/save-fhir-data-service";
+} from "@/app/api/process-zip/save-fhir-data-service";
 import {
   BundleMetadata,
   BundleExtendedMetadata,
-} from "@/app/api/save-fhir-data/types";
+} from "@/app/api/process-zip/types";
 
 import {
   buildCore,

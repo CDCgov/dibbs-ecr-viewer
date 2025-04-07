@@ -2,14 +2,14 @@
  * @jest-environment node
  */
 
-import { processZip } from "@/app/api/process-zip/service";
 import {
   saveFhirData,
   saveWithMetadata,
-} from "@/app/api/save-fhir-data/save-fhir-data-service";
+} from "@/app/api/process-zip/save-fhir-data-service";
+import { processZip } from "@/app/api/process-zip/service";
 import { S3_SOURCE } from "@/app/api/utils";
 
-jest.mock("../../../api/save-fhir-data/save-fhir-data-service");
+jest.mock("../../../api/process-zip/save-fhir-data-service");
 jest.mock("../../../api/services/database");
 
 describe("processZip", () => {
