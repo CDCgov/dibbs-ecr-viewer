@@ -39,7 +39,7 @@ export const logIn = async (
 ) => {
   await page.goto(url);
   await page.waitForURL(
-    `ecr-viewer/signin?callbackUrl=${encodeURIComponent(url)}`,
+    `/ecr-viewer/signin?callbackUrl=${encodeURIComponent(url)}`,
   );
 
   await page.getByRole("button").click();
