@@ -28,8 +28,8 @@ flowchart LR
     subgraph container["fab:fa-docker container"]
       viewer["fab:fa-node fab:fa-react <code>ecr-viewer<br>HTTP:3000/</code>"]
     end
-    fileStorage["fab:fa-file File Storage"]
-	container <--> |eCR FHIR Data| fileStorage
+    blobStorage["fab:fa-file Blob Storage"]
+	container <--> |eCR FHIR Data| blobStorage
   end
   user --> nbs
   nbs -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by NBS| container
@@ -47,10 +47,10 @@ flowchart LR
     subgraph container["fab:fa-docker container"]
       viewer["fab:fa-node fab:fa-react <code>ecr-viewer<br>HTTP:3000/</code>"]
     end
-    fileStorage["fab:fa-file File Storage"]
+    blobStorage["fab:fa-file Blob Storage"]
     metadata["fab:fa-database Database"]
     identityProvider["Identity Provider<br>(e.g. Keycloak/Azure Ad)"]
-	container <--> |eCR FHIR Data| fileStorage
+	container <--> |eCR FHIR Data| blobStorage
 	container <--> |eCR Metadata| metadata
     container -->|Validates User| identityProvider
   end
@@ -71,10 +71,10 @@ flowchart LR
     subgraph container["fab:fa-docker container"]
       viewer["fab:fa-node fab:fa-react <code>ecr-viewer<br>HTTP:3000/</code>"]
     end
-    fileStorage["fab:fa-file File Storage"]
+    blobStorage["fab:fa-file Blob Storage"]
     metadata["fab:fa-database Database"]
     identityProvider["Identity Provider<br>(e.g. Keycloak/Azure Ad)"]
-	container <--> |eCR FHIR Data| fileStorage
+	container <--> |eCR FHIR Data| blobStorage
 	container <--> |eCR Metadata| metadata
     container -->|Validates User| identityProvider
   end

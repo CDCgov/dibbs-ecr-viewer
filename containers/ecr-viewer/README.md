@@ -161,9 +161,9 @@ flowchart LR
     subgraph mr["fab:fa-docker container"]
       viewer["fab:fa-node fab:fa-react <code>ecr-viewer<br>HTTP:3000/</code>"]
     end
-    fileStorage["fab:fa-file File Storage"]
+    blobStorage["fab:fa-file Blob Storage"]
     postgres["fab:fa-database Database"]
-	mr <--> |eCR FHIR Data| fileStorage
+	mr <--> |eCR FHIR Data| blobStorage
 	mr <--> |eCR Metadata| postgres
   end
   api <--> mr
