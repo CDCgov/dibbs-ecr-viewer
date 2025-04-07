@@ -2,12 +2,6 @@
 FROM node:22-alpine AS base
 
 ARG APP_VERSION
-# Prometheus preferred transfer is via HTTP
-ARG OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=http/protobuf
-ARG OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otel-collector:4318/v1/metrics
-# Jaeger preferred routing is gRPC for native OTLP
-ARG OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
-ARG OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
 
 # Install dependencies only when needed
 FROM base AS deps
