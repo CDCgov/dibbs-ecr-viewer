@@ -5,10 +5,6 @@ import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
  */
 export async function register() {
   setupConfigurationVariables();
-
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("./app/services/instrumentation");
-  }
 }
 
 function setupConfigurationVariables() {
