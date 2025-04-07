@@ -31,6 +31,11 @@ export type DbUtils = {
     columnName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>;
+  getTables: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    kysely: Kysely<any>,
+    schemaName: string,
+  ) => Promise<string[]>;
   getTable: (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kysely: Kysely<any>,

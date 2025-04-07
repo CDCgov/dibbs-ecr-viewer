@@ -94,6 +94,24 @@ export async function getColumn(
 
   return result;
 }
+
+/**
+ *
+ * @param kysely - the Kysely instance
+ * @param schemaName - the name of the schema to be examined
+ * @returns - the names of all tables in the given schema
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getTables(kysely: Kysely<any>, schemaName: string) {
+  const result = await kysely
+    .selectFrom("information_schema.tables")
+    .select("table_name")
+    .where("table_schema", "=", schemaName)
+    .execute();
+
+  return result.map((row) => row.table_name);
+}
+
 /**
  *
  * @param kysely - the Kysely instance

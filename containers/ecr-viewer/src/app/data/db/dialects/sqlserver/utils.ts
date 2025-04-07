@@ -103,6 +103,24 @@ export async function getColumn(
 /**
  *
  * @param kysely - the Kysely instance
+ * @param schemaName - the name of the schema to be examined
+ * @returns - the names of all tables in the given schema
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getTables(kysely: Kysely<any>, schemaName: string) {
+  const result = await kysely
+    .selectFrom("sys.tables as t")
+    .innerJoin("sys.schemas as s", "s.schema_id", "t.schema_id")
+    .select("t.name as table_name")
+    .where("s.name", "=", schemaName)
+    .execute();
+
+  return result.map((row) => row.table_name);
+}
+
+/**
+ *
+ * @param kysely - the Kysely instance
  * @param schemaName - the name of the schema containing the table
  * @param tableName - the name of the table to return
  * @returns the table information if it exists, undefined otherwise
