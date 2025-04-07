@@ -111,15 +111,17 @@ Non-Integrated/Dual rely on an external authentication provider, like Azure AD, 
 
 ### eCR Metadata Storage
 
-In order to store metadata for the eCR Library, an eCR metadata database must be created. The variables can be found in {@link EnvironmentVariables.EcrMetadataStorage}
+Non-Integrated/Dual require a database to store eCR metadata. The variables can be found in {@link EnvironmentVariables.EcrMetadataStorage}.
 
 ### Removed Environment Variables
 
 These are variables that have been retired and no longer have a use in the app. These can be safely removed when installing the current version.
 
-| Name | Description | Version Removed | Date Removed |
-| ---- | ----------- | --------------- | ------------ |
-|      |             |                 |              |
+| Name                  | Description                  | Version Removed |
+| --------------------- | ---------------------------- | --------------- |
+| `SQL_SERVER_HOST`     | Replaced with `DATABASE_URL` | 3.1             |
+| `SQL_SERVER_PASSWORD` | Replaced with `DATABASE_URL` | 3.1             |
+| `SQL_SERVER_USER`     | Replaced with `DATABASE_URL` | 3.1             |
 
 ## Inserting data
 
