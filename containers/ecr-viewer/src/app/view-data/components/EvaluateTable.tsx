@@ -19,7 +19,7 @@ export interface ColumnInfoInput {
   value?: string;
   className?: string;
   hiddenBaseText?: string;
-  applyToValue?: (value: string) => React.ReactNode;
+  applyToValue?: (value: string) => ReactNode;
 }
 
 interface TableProps {
