@@ -1,11 +1,21 @@
-import { Generated, Insertable, Selectable, Updateable } from "kysely";
+import {
+  ColumnType,
+  Generated,
+  Insertable,
+  Selectable,
+  Updateable,
+} from "kysely";
 
 export interface ecr_data {
   eicr_id: Generated<string>;
-  set_id: string | undefined;
+  set_id: string;
   eicr_version_number: string | undefined;
   fhir_reference_link: string | undefined;
   date_created: Generated<Date>;
+  last_name: string | undefined;
+  first_name: string | undefined;
+  birth_date: ColumnType<Date, string> | undefined;
+  encounter_start_date: Date | undefined;
 }
 
 export interface ecr_rr_conditions {

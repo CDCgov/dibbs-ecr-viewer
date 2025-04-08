@@ -1,11 +1,12 @@
+import { sql } from "kysely";
+
 import { dbNamespace, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { getDbUtils } from "@/app/data/db/utils";
-import { sql } from "kysely";
 
 const db = getDb();
 const schema = dbNamespace();
-let utils = getDbUtils();
+const utils = getDbUtils();
 
 interface MigrationRow {
   name: string;

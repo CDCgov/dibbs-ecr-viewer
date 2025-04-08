@@ -9,9 +9,6 @@ import {
 import { Common, ecr_data } from "./common";
 
 export interface extended_ecr_data extends ecr_data {
-  last_name: string | undefined;
-  first_name: string | undefined;
-  birth_date: ColumnType<Date, string> | undefined;
   gender: string | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
@@ -38,7 +35,6 @@ export interface extended_ecr_data extends ecr_data {
   facility_id: string | undefined;
   facility_name: string | undefined;
   encounter_type: string | undefined;
-  encounter_start_date: Date | undefined;
   encounter_end_date: Date | undefined;
   reason_for_visit: string | undefined;
   active_problems: string | undefined;

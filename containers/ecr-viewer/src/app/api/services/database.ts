@@ -23,7 +23,11 @@ export const dbDialect = () => {
  * @returns string describing schema
  */
 export const dbSchema = () => {
-  return process.env.METADATA_DATABASE_SCHEMA;
+  const schema = process.env.METADATA_DATABASE_SCHEMA;
+  if (!["core", "extended"].includes(schema!)) {
+    throw new Error(`Unknown database schema: ${schema}`);
+  }
+  return schema;
 };
 
 /**
