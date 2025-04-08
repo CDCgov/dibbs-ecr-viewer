@@ -2,6 +2,16 @@ import { Storage } from "@google-cloud/storage";
 
 import { GCP_SOURCE } from "@/app/api/utils";
 
+import {
+  BlobResponse,
+  DELETE_FAILURE,
+  DELETE_MISCONFIGURED,
+  DELETE_SUCCESS,
+  SAVE_FAILURE,
+  SAVE_MISCONFIGURED,
+  SAVE_SUCCESS,
+} from "./utils";
+
 /**
  * Connect to the google cloud storage bucket.
  * @returns The google cloud storage bucket.
@@ -38,5 +48,61 @@ export const gcpHealthCheck = async () => {
   } catch (error: unknown) {
     console.error(error);
     return "DOWN";
+  }
+};
+
+/**
+ * Saves content to Google Cloud Storage.
+ * @param body - The string content to be saved.
+ * @param objectKey - The unique ID for the blob.
+ * @returns An object containing the status and message.
+ */
+export const saveToGCP = async (
+  body: string,
+  objectKey: string,
+): Promise<BlobResponse> => {
+  const containerClient = gcpClient();
+
+  if (!containerClient) {
+    return SAVE_MISCONFIGURED;
+  }
+  try {
+    await containerClient.file(objectKey).save(body);
+
+    return SAVE_SUCCESS;
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to save blob to Google Cloud Storage.",
+      error,
+      objectKey,
+    });
+    return SAVE_FAILURE;
+  }
+};
+
+/**
+ * Deletes content from Google Cloud Storage.
+ * @param objectKey - The unique ID for the blob.
+ * @returns An object containing the status and message.
+ */
+export const deleteFromGCP = async (
+  objectKey: string,
+): Promise<BlobResponse> => {
+  const containerClient = gcpClient();
+
+  if (!containerClient) {
+    return DELETE_MISCONFIGURED;
+  }
+  try {
+    await containerClient.file(objectKey).delete();
+
+    return DELETE_SUCCESS;
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to delete blob to Google Cloud Storage.",
+      error,
+      objectKey,
+    });
+    return DELETE_FAILURE;
   }
 };

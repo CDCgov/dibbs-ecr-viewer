@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
 
-import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { Bundle } from "fhir/r4";
 import { Kysely } from "kysely";
 
@@ -9,9 +8,12 @@ import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
-import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
-import { gcpClient } from "@/app/data/blobStorage/gcpClient";
-import { s3Client } from "@/app/data/blobStorage/s3Client";
+import {
+  deleteFromAzure,
+  saveToAzure,
+} from "@/app/data/blobStorage/azureClient";
+import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
+import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
@@ -19,142 +21,6 @@ interface SaveResponse {
   message: string;
   status: number;
 }
-
-/**
- * Saves a FHIR bundle to an AWS S3 bucket.
- * @async
- * @function saveToS3
- * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
- * @returns An object containing the status and message.
- */
-const saveToS3 = async (fhirBundle: Bundle, ecrId: string) => {
-  const bucketName = process.env.ECR_BUCKET_NAME;
-  const objectKey = `${ecrId}.json`;
-  const body = JSON.stringify(fhirBundle);
-
-  try {
-    const input = {
-      Body: body,
-      Bucket: bucketName,
-      Key: objectKey,
-      ContentType: "application/json",
-    };
-    const command = new PutObjectCommand(input);
-    const response: PutObjectCommandOutput = await s3Client.send(command);
-    const httpStatusCode = response?.$metadata?.httpStatusCode;
-
-    if (httpStatusCode !== 200) {
-      throw new Error(`HTTP Status Code: ${httpStatusCode}`);
-    }
-
-    return {
-      message: "Success. Saved FHIR bundle.",
-      status: 200,
-    };
-  } catch (error: unknown) {
-    console.error({
-      message: "Failed to save FHIR bundle to S3.",
-      error,
-      ecrId,
-    });
-    return {
-      message: "Failed to save FHIR bundle.",
-      status: 500,
-    };
-  }
-};
-
-/**
- * Saves a FHIR bundle to Azure Blob Storage.
- * @async
- * @function saveToAzure
- * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique ID for the eCR associated with the FHIR bundle.
- * @returns An object containing the status and message.
- */
-const saveToAzure = async (
-  fhirBundle: Bundle,
-  ecrId: string,
-): Promise<SaveResponse> => {
-  const containerClient = azureBlobContainerClient();
-  const blobName = `${ecrId}.json`;
-  const body = JSON.stringify(fhirBundle);
-
-  if (!containerClient) {
-    return {
-      message: "Failed to save FHIR bundle due to misconfiguration of client.",
-      status: 500,
-    };
-  }
-
-  try {
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-    const response = await blockBlobClient.upload(body, body.length, {
-      blobHTTPHeaders: { blobContentType: "application/json" },
-    });
-
-    if (response._response.status !== 201) {
-      throw new Error(`HTTP Status Code: ${response._response.status}`);
-    }
-
-    return {
-      message: "Success. Saved FHIR bundle.",
-      status: 200,
-    };
-  } catch (error: unknown) {
-    console.error({
-      message: "Failed to save FHIR bundle to Azure Blob Storage.",
-      error,
-      ecrId,
-    });
-    return {
-      message: "Failed to save FHIR bundle.",
-      status: 500,
-    };
-  }
-};
-
-/**
- * Saves a FHIR bundle to Google Cloud Storage.
- * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique ID for the eCR associated with the FHIR bundle.
- * @returns An object containing the status and message.
- */
-const saveToGCP = async (
-  fhirBundle: Bundle,
-  ecrId: string,
-): Promise<SaveResponse> => {
-  const containerClient = gcpClient();
-  const blobName = `${ecrId}.json`;
-  const body = JSON.stringify(fhirBundle);
-
-  if (!containerClient) {
-    return {
-      message: "Failed to save the FHIR bundle due to misconfiguration.",
-      status: 500,
-    };
-  }
-  try {
-    await containerClient.file(blobName).save(body);
-
-    return {
-      message: "Success. Saved FHIR bundle.",
-      status: 200,
-    };
-  } catch (error: unknown) {
-    console.error({
-      message: "Failed to save FHIR bundle to Google Cloud Storage.",
-      error,
-      ecrId,
-    });
-    return {
-      message: "Failed to save FHIR bundle.",
-      status: 500,
-    };
-  }
-};
 
 /**
  * @async
@@ -169,12 +35,14 @@ export const saveFhirData = async (
   ecrId: string,
   saveSource: string,
 ): Promise<SaveResponse> => {
+  const body = JSON.stringify(fhirBundle);
+  const objectKey = `${ecrId}.json`;
   if (saveSource === S3_SOURCE) {
-    return await saveToS3(fhirBundle, ecrId);
+    return await saveToS3(body, objectKey);
   } else if (saveSource === AZURE_SOURCE) {
-    return await saveToAzure(fhirBundle, ecrId);
+    return await saveToAzure(body, objectKey);
   } else if (saveSource === GCP_SOURCE) {
-    return await saveToGCP(fhirBundle, ecrId);
+    return await saveToGCP(body, objectKey);
   } else {
     return {
       message:
@@ -195,12 +63,13 @@ export const deleteFhirData = async (
   ecrId: string,
   saveSource: string,
 ): Promise<SaveResponse> => {
+  const objectKey = `${ecrId}.json`;
   if (saveSource === S3_SOURCE) {
-    return await deleteFromS3(ecrId);
+    return await deleteFromS3(objectKey);
   } else if (saveSource === AZURE_SOURCE) {
-    return await deleteFromAzure(ecrId);
+    return await deleteFromAzure(objectKey);
   } else if (saveSource === GCP_SOURCE) {
-    return await deleteFromGCP(ecrId);
+    return await deleteFromGCP(objectKey);
   } else {
     return {
       message:
