@@ -186,8 +186,36 @@ export const saveFhirData = async (
 
 /**
  * @async
+ * @function deleteFhirData
+ * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param saveSource - The location to save the FHIR bundle.
+ * @returns An object containing the status and message.
+ */
+export const deleteFhirData = async (
+  ecrId: string,
+  saveSource: string,
+): Promise<SaveResponse> => {
+  if (saveSource === S3_SOURCE) {
+    return await deleteFromS3(ecrId);
+  } else if (saveSource === AZURE_SOURCE) {
+    return await deleteFromAzure(ecrId);
+  } else if (saveSource === GCP_SOURCE) {
+    return await deleteFromGCP(ecrId);
+  } else {
+    return {
+      message:
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
+      status: 400,
+    };
+  }
+};
+
+/**
+ * @async
  * @function saveFhirMetadata
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param fhirDataPromise
+ * @param rollbackFhirDataFn
  * @param metadataType - Whether metadata is persisted using the "core" or "extended" schema
  * @param metadata - The metadata to be saved.
  * @returns An object containing the status and message.
@@ -196,14 +224,23 @@ const saveFhirMetadata = async (
   ecrId: string,
   metadataType: "core" | "extended" | undefined,
   metadata: BundleMetadata | BundleExtendedMetadata,
+  fhirDataPromise: Promise<SaveResponse>,
+  rollbackFhirDataFn: () => Promise<void>,
 ): Promise<SaveResponse> => {
   try {
     if (metadataType === "core") {
-      return await saveCoreMetadata(metadata as BundleMetadata, ecrId);
+      return await saveCoreMetadata(
+        metadata as BundleMetadata,
+        ecrId,
+        fhirDataPromise,
+        rollbackFhirDataFn,
+      );
     } else if (metadataType === "extended") {
       return await saveExtendedMetadata(
         metadata as BundleExtendedMetadata,
         ecrId,
+        fhirDataPromise,
+        rollbackFhirDataFn,
       );
     } else {
       return {
@@ -224,6 +261,8 @@ const saveFhirMetadata = async (
 /**
  * @async
  * @function saveExtendedMetaData
+ * @param fhirDataPromise
+ * @param rollbackFhirDataFn
  * @param metadata - The FHIR bundle metadata to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
@@ -231,6 +270,8 @@ const saveFhirMetadata = async (
 export const saveExtendedMetadata = async (
   metadata: BundleExtendedMetadata,
   ecrId: string,
+  fhirDataPromise: Promise<SaveResponse>,
+  rollbackFhirDataFn: () => Promise<void>,
 ): Promise<SaveResponse> => {
   try {
     await getDb<Extended>()
@@ -321,6 +362,14 @@ export const saveExtendedMetadata = async (
 
         // The actual type here is a beast, but we know that this mapping is functionally sound
         await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+
+        // Make sure the fhir data also saves
+        const fhirDataResponse = await fhirDataPromise;
+        if (fhirDataResponse.status !== 200) {
+          throw new Error(
+            `Failed to save fhir data: ${JSON.stringify(fhirDataResponse)}`,
+          );
+        }
       });
     return {
       message: "Success. Saved metadata to database.",
@@ -377,6 +426,8 @@ const saveRR = async (
  * Saves a FHIR bundle metadata to a postgres database.
  * @async
  * @function saveCoreMetadata
+ * @param fhirDataPromise
+ * @param rollbackFhirDataFn
  * @param metadata - The FHIR bundle metadata to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
@@ -384,7 +435,11 @@ const saveRR = async (
 export const saveCoreMetadata = async (
   metadata: BundleMetadata,
   ecrId: string,
+  fhirDataPromise: Promise<SaveResponse>,
+  rollbackFhirDataFn: () => Promise<void>,
 ): Promise<SaveResponse> => {
+  let rollBackFhirData = true;
+
   try {
     if (!metadata) {
       console.error("eICR Data is required.");
@@ -415,6 +470,17 @@ export const saveCoreMetadata = async (
 
         // The actual type here is a beast, but we know that this mapping is functionally sound
         await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+
+        // Make sure the fhir data also saves
+        const fhirDataResponse = await fhirDataPromise;
+        if (fhirDataResponse.status !== 200) {
+          rollBackFhirData = false;
+          throw new Error(
+            `Failed to save fhir data - rolling back metadata: ${JSON.stringify(
+              fhirDataResponse,
+            )}`,
+          );
+        }
       });
     return {
       message: "Success. Saved metadata to database.",
@@ -423,6 +489,11 @@ export const saveCoreMetadata = async (
   } catch (error: unknown) {
     const message = "Failed to insert metadata to database.";
     console.error({ message, error });
+
+    if (rollBackFhirData) {
+      await rollbackFhirDataFn();
+    }
+
     return {
       message,
       status: 500,
@@ -449,14 +520,23 @@ export const saveWithMetadata = async (
   let metadataResult;
 
   try {
-    [fhirDataResult, metadataResult] = await Promise.all([
+    metadataResult = saveFhirMetadata(
+      ecrId,
+      dbSchema(),
+      metadata as BundleMetadata | BundleExtendedMetadata,
       saveFhirData(fhirBundle, ecrId, saveSource),
-      saveFhirMetadata(
-        ecrId,
-        dbSchema(),
-        metadata as BundleMetadata | BundleExtendedMetadata,
-      ),
-    ]);
+      () => deleteFhirData(ecrId, saveSource),
+    );
+
+    // try {
+    //   [fhirDataResult, metadataResult] = await Promise.all([
+    //     saveFhirData(fhirBundle, ecrId, saveSource),
+    //     saveFhirMetadata(
+    //       ecrId,
+    //       dbSchema(),
+    //       metadata as BundleMetadata | BundleExtendedMetadata,
+    //     ),
+    //   ]);
   } catch (error: unknown) {
     const message = "Failed to save FHIR data with metadata.";
     console.error({ message, error, ecrId });
