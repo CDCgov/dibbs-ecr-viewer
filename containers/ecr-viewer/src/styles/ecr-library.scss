@@ -63,18 +63,64 @@
     text-decoration: none;
   }
 
-  tbody tr td div {
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 400;
+  tbody {
+    isolation: isolate;
+
+    td {
+      border-bottom: 0;
+    }
+
+    tr {
+      position: relative;
+
+      &:first-child td {
+        border-top: none;
+      }
+
+      &.main-row {
+        z-index: 2;
+
+        &:nth-child(odd) td {
+          background-color: white;
+        }
+
+        &:nth-child(even) td {
+          background-color: color("base-lightest");
+        }
+
+        td:first-child {
+          padding-left: 0.25rem;
+        }
+      }
+
+      &.related-row {
+        z-index: 1; // behind main row
+
+        td {
+          background-color: #f9f9f9;
+          border-top: 1px solid color("base-lighter");
+
+          &:first-child {
+            padding-left: 4rem;
+          }
+        }
+      }
+    }
   }
 
-  &.usa-table--striped tbody tr:nth-child(odd) td {
-    background-color: white;
-  }
+  .patient-name-cell {
+    display: grid;
+    grid-template-columns: 1.75rem auto;
+    grid-template-areas: "button content";
 
-  &.usa-table--striped tbody tr:nth-child(even) td {
-    background-color: color("base-lightest");
+    .expand-ecrs-button {
+      grid-area: button;
+      outline-offset: -0.25rem;
+    }
+
+    .patient-name-content {
+      grid-area: content;
+    }
   }
 
   thead {
@@ -83,21 +129,17 @@
     th {
       background-color: color("base-lighter");
       border-bottom: 1px solid var(--Base-base, #71767a);
+
+      &:first-child {
+        padding-left: 2rem;
+      }
     }
   }
 
-  thead tr th:first-child,
-  tbody tr td:first-child {
-    padding-left: 1.5rem;
-  }
-
-  tbody td {
-    border-top: 0;
-    border-bottom: 1px solid var(--ink, #111);
-  }
-
-  tbody tr:last-child td {
-    border-bottom: none;
+  @media (prefers-reduced-motion: no-preference) {
+    .expand-icon {
+      transition: transform 0.2s ease-in-out;
+    }
   }
 }
 

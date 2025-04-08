@@ -13,7 +13,7 @@ $main-min-width: $ecr-viewer-container-min-width + $ecr-viewer-gap +
   $nav-wrapper-width + $main-container-padding * 2;
 
 html {
-  --patient-banner-buffer: 2.75rem;
+  --patient-banner-buffer: 3.1rem;
 }
 
 // ===== Page styling ===== //
@@ -333,11 +333,9 @@ html {
 
 .patient-banner {
   display: flex;
-  padding: 0.5rem 1.5rem;
+  padding: 0.85rem 1.5rem;
   align-items: center;
   gap: 12px;
-  align-self: stretch;
-  min-height: 44px;
 
   background: var(--Info-info-darker, #2e6276);
 
@@ -345,7 +343,7 @@ html {
 
   font-size: 1.375rem;
   font-style: normal;
-  line-height: normal;
+  line-height: 1.15;
 
   position: sticky;
   top: 0;

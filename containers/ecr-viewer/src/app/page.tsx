@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
 
-import { Table } from "@trussworks/react-uswds";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -93,6 +92,7 @@ const HomePage = async ({
                 <EcrTableContent
                   currentPage={config.page}
                   itemsPerPage={config.itemsPerPage}
+                  totalEcrCount={totalCount}
                   sortColumn={config.columnId}
                   sortDirection={config.direction}
                   searchTerm={config.search}
@@ -118,16 +118,15 @@ const HomePage = async ({
 const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="ecr-library-wrapper width-full overflow-auto">
-      <Table
-        bordered={false}
-        fullWidth={true}
-        striped={true}
-        fixed={true}
-        className="table-ecr-library margin-0"
-        data-testid="table"
+      <table
+        id="treegrid-table"
+        role="treegrid"
+        aria-label="eCR Library Results"
+        aria-readonly="true"
+        className="usa-table usa-table--borderless width-full table-ecr-library margin-0"
       >
         {children}
-      </Table>
+      </table>
     </div>
   );
 };

@@ -9,11 +9,18 @@ import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
 
+export interface RelatedEcr {
+  eicr_id: string;
+  date_created: Date;
+  eicr_version_number: string | undefined;
+  set_id: string;
+}
+
 interface CommonMetadataModel {
   eicr_id: string;
-  data_link: string | undefined;
   conditions: string[];
   rule_summaries: string[];
+  related_ecrs: RelatedEcr[];
   date_created: Date;
   set_id: string | undefined;
   eicr_version_number: string | undefined;
@@ -46,6 +53,7 @@ export interface EcrDisplay {
   date_created: string;
   eicr_set_id: string | undefined;
   eicr_version_number: string | undefined;
+  related_ecrs: RelatedEcr[];
 }
 
 /**
@@ -102,32 +110,16 @@ async function listCoreEcrData(
   const res = await getDb<Core>()
     .transaction()
     .execute(async (trx) => {
-      const mainQuery = trx.with("ecrs", (db) =>
+      const mainQuery = trx.with("ecr_sets", (db) =>
         db
           .selectFrom("ecr_data")
-          .leftJoin(
-            "ecr_rr_conditions",
-            "ecr_data.eicr_id",
-            "ecr_rr_conditions.eicr_id",
-          )
-          .leftJoin(
-            "ecr_rr_rule_summaries",
-            "ecr_rr_conditions.uuid",
-            "ecr_rr_rule_summaries.ecr_rr_conditions_id",
-          )
-          .select([
-            "ecr_data.eicr_id as eicr_id",
-            "ecr_data.patient_name_first",
-            "ecr_data.patient_name_last",
-            "ecr_data.patient_birth_date",
-            "ecr_data.date_created",
-            "ecr_data.report_date",
+          .select(({ eb }) => [
             "ecr_data.set_id",
-            "ecr_data.data_source",
-            "ecr_data.fhir_reference_link as data_link",
-            "ecr_data.eicr_version_number",
+            eb.fn
+              .max(eb.cast<number>("ecr_data.eicr_version_number", "integer"))
+              .as("max_version_number"),
           ])
-          .distinct()
+          .groupBy(["ecr_data.set_id"])
           .where((eb) =>
             generateCoreWhereStatement(
               eb,
@@ -135,14 +127,36 @@ async function listCoreEcrData(
               searchTerm,
               filterConditions,
             ),
+          ),
+      );
+
+      const ecrQuery = mainQuery.with("ecrs", (db) =>
+        db
+          .selectFrom("ecr_sets")
+          .leftJoin("ecr_data", (join) =>
+            join
+              .onRef("ecr_data.set_id", "=", "ecr_sets.set_id")
+              .on("ecr_sets.max_version_number", "=", (eb) =>
+                eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+              ),
           )
+          .select([
+            "ecr_data.eicr_id",
+            "ecr_data.patient_name_first",
+            "ecr_data.patient_name_last",
+            "ecr_data.patient_birth_date",
+            "ecr_data.report_date",
+            "ecr_data.date_created",
+            "ecr_data.set_id",
+            "ecr_data.eicr_version_number",
+          ])
           .orderBy(generateCoreSortStatement(sortColumn, sortDirection))
           .offset(startIndex)
           .fetch(itemsPerPage),
       );
 
       return await getMetaModelData<CoreMetadataModel>(
-        mainQuery as unknown as Kysely<EcrsCte>,
+        ecrQuery as unknown as Kysely<EcrsCte>,
       );
     });
 
@@ -161,31 +175,16 @@ async function listExtendedEcrData(
   const res = await getDb<Extended>()
     .transaction()
     .execute(async (trx) => {
-      const mainQuery = trx.with("ecrs", (db) =>
+      const mainQuery = trx.with("ecr_sets", (db) =>
         db
           .selectFrom("ecr_data")
-          .leftJoin(
-            "ecr_rr_conditions",
-            "ecr_data.eicr_id",
-            "ecr_rr_conditions.eicr_id",
-          )
-          .leftJoin(
-            "ecr_rr_rule_summaries",
-            "ecr_rr_conditions.uuid",
-            "ecr_rr_rule_summaries.ecr_rr_conditions_id",
-          )
-          .select([
-            "ecr_data.eicr_id as eicr_id",
-            "ecr_data.first_name",
-            "ecr_data.last_name",
-            "ecr_data.birth_date",
-            "ecr_data.encounter_start_date",
-            "ecr_data.date_created",
+          .select(({ eb }) => [
             "ecr_data.set_id",
-            "ecr_data.eicr_version_number",
-            "ecr_data.fhir_reference_link as data_link",
+            eb.fn
+              .max(eb.cast<number>("ecr_data.eicr_version_number", "integer"))
+              .as("max_version_number"),
           ])
-          .distinct()
+          .groupBy(["ecr_data.set_id"])
           .where((eb) =>
             generateExtendedWhereStatement(
               eb,
@@ -193,14 +192,36 @@ async function listExtendedEcrData(
               searchTerm,
               filterConditions,
             ),
+          ),
+      );
+
+      const ecrQuery = mainQuery.with("ecrs", (db) =>
+        db
+          .selectFrom("ecr_sets")
+          .leftJoin("ecr_data", (join) =>
+            join
+              .onRef("ecr_data.set_id", "=", "ecr_sets.set_id")
+              .on("ecr_sets.max_version_number", "=", (eb) =>
+                eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+              ),
           )
+          .select([
+            "ecr_data.eicr_id",
+            "ecr_data.first_name",
+            "ecr_data.last_name",
+            "ecr_data.birth_date",
+            "ecr_data.encounter_start_date",
+            "ecr_data.date_created",
+            "ecr_data.set_id",
+            "ecr_data.eicr_version_number",
+          ])
           .orderBy(generateExtendedSortStatement(sortColumn, sortDirection))
           .offset(startIndex)
           .fetch(itemsPerPage),
       );
 
       return await getMetaModelData<ExtendedMetadataModel>(
-        mainQuery as unknown as Kysely<EcrsCte>,
+        ecrQuery as unknown as Kysely<EcrsCte>,
       );
     });
 
@@ -212,6 +233,7 @@ async function listExtendedEcrData(
 // It's a bit gross, but it reduces the code repetition substantially
 interface EcrsCte extends Common {
   ecrs: ecr_data;
+  ecr_sets: { set_id: string; max_version_number: number };
 }
 
 // Helper to execute the main ecr fetching CTE and also join in the conditions
@@ -225,7 +247,7 @@ const getMetaModelData = async <T extends CommonMetadataModel>(
   const rawEcrs = (await mainQuery
     .selectFrom("ecrs")
     .selectAll()
-    .execute()) as Omit<T, "conditions" | "rule_summaries">[];
+    .execute()) as Omit<T, "conditions" | "rule_summaries" | "related_ecrs">[];
 
   const conditions = await mainQuery
     .selectFrom("ecrs")
@@ -246,6 +268,25 @@ const getMetaModelData = async <T extends CommonMetadataModel>(
     .distinct()
     .execute();
 
+  const related_ecrs = await mainQuery
+    .selectFrom("ecr_sets")
+    .leftJoin("ecr_data", "ecr_sets.set_id", "ecr_data.set_id")
+    .select([
+      "ecr_data.eicr_id",
+      "ecr_data.set_id",
+      "ecr_data.eicr_version_number",
+      "ecr_data.date_created",
+    ])
+    .orderBy(["ecr_data.date_created desc"])
+    .where((eb) =>
+      eb(
+        "ecr_sets.max_version_number",
+        "!=",
+        eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+      ),
+    )
+    .execute();
+
   const ecrs = rawEcrs.map((ecr) => {
     return {
       ...ecr,
@@ -260,6 +301,7 @@ const getMetaModelData = async <T extends CommonMetadataModel>(
             rule_summary && eicr_id === ecr.eicr_id,
         )
         .map(({ rule_summary }) => rule_summary) as string[],
+      related_ecrs: related_ecrs.filter(({ set_id }) => set_id === ecr.set_id),
     };
   }) as T[];
 
@@ -277,6 +319,7 @@ const processCommonMetadata = <T extends CommonMetadataModel>(object: T) => {
       : "",
     eicr_set_id: object.set_id,
     eicr_version_number: object.eicr_version_number,
+    related_ecrs: object.related_ecrs || [],
   };
 };
 
@@ -342,9 +385,7 @@ export const getTotalEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const SCHEMA_TYPE = process.env.METADATA_DATABASE_SCHEMA;
-
-  switch (SCHEMA_TYPE) {
+  switch (dbSchema()) {
     case "core":
       return getTotalCoreEcrCount(filterDates, searchTerm, filterConditions);
     case "extended":
@@ -365,12 +406,7 @@ const getTotalCoreEcrCount = async (
 ): Promise<number> => {
   const result = await getDb<Core>()
     .selectFrom("ecr_data")
-    .leftJoin(
-      "ecr_rr_conditions",
-      "ecr_data.eicr_id",
-      "ecr_rr_conditions.eicr_id",
-    )
-    .select((eb) => eb.fn.count("ecr_data.eicr_id").distinct().as("count"))
+    .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
       generateCoreWhereStatement(eb, filterDates, searchTerm, filterConditions),
     )
@@ -386,12 +422,7 @@ const getTotalExtendedEcrCount = async (
 ): Promise<number> => {
   const result = await getDb<Extended>()
     .selectFrom("ecr_data")
-    .leftJoin(
-      "ecr_rr_conditions",
-      "ecr_data.eicr_id",
-      "ecr_rr_conditions.eicr_id",
-    )
-    .select((eb) => eb.fn.count("ecr_data.eicr_id").distinct().as("count"))
+    .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
       generateExtendedWhereStatement(
         eb,

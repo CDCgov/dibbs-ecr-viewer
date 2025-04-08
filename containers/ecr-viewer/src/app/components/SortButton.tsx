@@ -40,7 +40,7 @@ export const SortButton: React.FC<SortButtonProps> = ({
   return (
     <Button
       id={`${columnId}-sort-button`}
-      aria-label={`Sort by ${columnName}`}
+      aria-description={`Sort by ${columnName}`}
       className="sort-button usa-button"
       type="button"
       disabled={disabled}

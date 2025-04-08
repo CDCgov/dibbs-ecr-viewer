@@ -1,5 +1,7 @@
 import React from "react";
 
+import { LayoutGroup } from "motion/react";
+
 import { listEcrData } from "@/app/services/listEcrDataService";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
@@ -10,6 +12,7 @@ import { EcrTableDataRow } from "./EcrTableDataRow";
  * @param props - The properties passed to the component.
  * @param props.currentPage - The current page to be displayed
  * @param props.itemsPerPage - The number of items to be displayed in the table
+ * @param props.totalEcrCount - The total number of eCRs that match these criteria
  * @param props.sortColumn - The column to sort by
  * @param props.sortDirection - The direction to sort by
  * @param props.filterDates - The date range used to filter data
@@ -20,6 +23,7 @@ import { EcrTableDataRow } from "./EcrTableDataRow";
 const EcrTableContent = async ({
   currentPage,
   itemsPerPage,
+  totalEcrCount,
   sortColumn,
   sortDirection,
   searchTerm,
@@ -28,6 +32,7 @@ const EcrTableContent = async ({
 }: {
   currentPage: number;
   itemsPerPage: number;
+  totalEcrCount: number;
   sortColumn: string;
   sortDirection: string;
   filterDates: DateRangePeriod;
@@ -47,11 +52,18 @@ const EcrTableContent = async ({
   );
 
   return (
-    <tbody>
-      {data.map((item, index) => (
-        <EcrTableDataRow key={index} item={item} />
-      ))}
-    </tbody>
+    <LayoutGroup>
+      <tbody>
+        {data.map((item, index) => (
+          <EcrTableDataRow
+            key={index}
+            item={item}
+            numEcrs={totalEcrCount}
+            index={(currentPage - 1) * itemsPerPage + index}
+          />
+        ))}
+      </tbody>
+    </LayoutGroup>
   );
 };
 

@@ -172,7 +172,9 @@ const SideNav: React.FC = () => {
 
     const options = {
       root: null,
-      rootMargin: `-${topOffset}px 0px -100% 0px`,
+      rootMargin: `-${topOffset}px 0px -${
+        window.innerHeight - topOffset - 1
+      }px 0px`,
       threshold: 0,
     };
 

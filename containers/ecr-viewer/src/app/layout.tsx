@@ -1,6 +1,7 @@
 import "@/styles/styles.scss";
 
 import { AuthSessionProvider } from "./components/AuthSessionProvider";
+import RespectMotionPreferences from "./components/RespectMotionPreferences";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
@@ -21,11 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head />
-      <body className="overflow-x-auto">
-        <AuthSessionProvider>{children}</AuthSessionProvider>
-      </body>
-    </html>
+    <RespectMotionPreferences>
+      <html lang="en">
+        <head />
+        <body className="overflow-x-auto">
+          <AuthSessionProvider>{children}</AuthSessionProvider>
+        </body>
+      </html>
+    </RespectMotionPreferences>
   );
 }
