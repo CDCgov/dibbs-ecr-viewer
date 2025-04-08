@@ -4,7 +4,7 @@ import { Kysely } from "kysely";
 
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
-import { Common } from "./types/common";
+import { Core } from "./types/core";
 
 // Dialect to communicate with the database, interface to define its structure.
 
@@ -76,7 +76,7 @@ export const metadataDatabaseHealthCheck = async () => {
     return undefined;
   }
   try {
-    await getDb<Common>()
+    await getDb<Core>()
       .connection()
       .execute(async (_db) => {});
     return "UP";

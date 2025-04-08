@@ -2,7 +2,7 @@ import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
 
 import { getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
-import { Common, ecr_data } from "@/app/api/services/types/common";
+import { Core, ecr_data } from "@/app/api/services/types/core";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
@@ -60,7 +60,7 @@ export async function listEcrData(
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<EcrDisplay[]> {
-  const res = await getDb<Common>()
+  const res = await getDb<Core>()
     .transaction()
     .execute(async (trx) => {
       const mainQuery = trx.with("ecr_sets", (db) =>
@@ -117,7 +117,7 @@ export async function listEcrData(
 // The actual type of the CTE we create in both list fns is truly gnarly (and not exported)
 // So we cast everything to a Kysely<EcrsCte> which has the same functionality and types we need.
 // It's a bit gross, but it reduces the code repetition substantially
-interface EcrsCte extends Common {
+interface EcrsCte extends Core {
   ecrs: ecr_data;
   ecr_sets: { set_id: string; max_version_number: number };
 }
@@ -235,7 +235,7 @@ export const getTotalEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await getDb<Common>()
+  const result = await getDb<Core>()
     .selectFrom("ecr_data")
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
@@ -255,7 +255,7 @@ export const getTotalEcrCount = async (
  * @returns - expression wrapper for use in where
  */
 export const generateWhereStatement = (
-  eb: ExpressionBuilder<Common, "ecr_data">,
+  eb: ExpressionBuilder<Core, "ecr_data">,
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
@@ -272,7 +272,7 @@ export const generateWhereStatement = (
  * @returns expression wrapper for use in where
  */
 export const generateSearchStatement = (
-  eb: ExpressionBuilder<Common, "ecr_data">,
+  eb: ExpressionBuilder<Core, "ecr_data">,
   searchTerm?: string,
 ) => {
   if (!searchTerm) {
@@ -292,7 +292,7 @@ export const generateSearchStatement = (
  * @returns expression wrapper for use in where
  */
 export const generateFilterConditionsStatement = (
-  eb: ExpressionBuilder<Common, "ecr_data">,
+  eb: ExpressionBuilder<Core, "ecr_data">,
   filterConditions?: string[] | undefined,
 ) => {
   if (!filterConditions || filterConditions.length === 0) return trueStmt(eb);
@@ -332,7 +332,7 @@ export const generateFilterConditionsStatement = (
  * @returns expression builder with date filters included
  */
 export const generateFilterDateStatement = (
-  eb: ExpressionBuilder<Common, "ecr_data">,
+  eb: ExpressionBuilder<Core, "ecr_data">,
   { startDate, endDate }: DateRangePeriod,
 ) => {
   return eb.and([
@@ -350,7 +350,7 @@ export const generateFilterDateStatement = (
 export const generateSortStatement = (
   columnName: string,
   direction: string,
-): OrderByExpression<Common, "ecr_data", {}>[] => {
+): OrderByExpression<Core, "ecr_data", {}>[] => {
   // Valid columns and directions
   const validColumns: { [key: string]: string } = {
     patient: "patient",
@@ -370,11 +370,11 @@ export const generateSortStatement = (
     return [
       `first_name ${direction}`,
       `last_name ${direction}`,
-    ] as OrderByExpression<Common, "ecr_data", {}>[];
+    ] as OrderByExpression<Core, "ecr_data", {}>[];
   }
   // Default case for other columns
   return [`${columnName} ${direction}`] as OrderByExpression<
-    Common,
+    Core,
     "ecr_data",
     {}
   >[];
@@ -385,5 +385,5 @@ export const generateSortStatement = (
  * @param eb expression builder
  * @returns a statement that will evaluate to true
  */
-const trueStmt = (eb: ExpressionBuilder<Common, "ecr_data">) =>
+const trueStmt = (eb: ExpressionBuilder<Core, "ecr_data">) =>
   eb(eb.val(true), "=", true);

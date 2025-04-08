@@ -1,6 +1,5 @@
 import { dbNamespace, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
-import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 
@@ -15,7 +14,7 @@ const coredb = () => {
 };
 
 const buildCommon = async () => {
-  const db = getDb<Common>();
+  const db = getDb<Core>();
   // schema creation is in a try catch since it fails if it already exists
   // and `if exists` isn't supported by sql server
   try {
@@ -49,7 +48,7 @@ const buildCommon = async () => {
  * Drops the common schema from a test database
  */
 const dropCommon = async () => {
-  const db = getDb<Common>();
+  const db = getDb<Core>();
   await db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
   await db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
   await db.schema.dropTable("ecr_data").ifExists().execute();
@@ -59,7 +58,7 @@ const dropCommon = async () => {
  * Clears the common schema from a test database
  */
 const clearCommon = async () => {
-  const db = getDb<Common>();
+  const db = getDb<Core>();
   await db.deleteFrom("ecr_rr_rule_summaries").execute();
   await db.deleteFrom("ecr_rr_conditions").execute();
   await db.deleteFrom("ecr_data").execute();

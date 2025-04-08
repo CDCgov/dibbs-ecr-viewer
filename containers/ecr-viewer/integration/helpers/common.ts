@@ -1,9 +1,19 @@
 import { getDb } from "@/app/api/services/database";
 import {
-  Common,
+  Core,
+  NewECR,
   NewECRConditions,
   NewECRRuleSummaries,
-} from "@/app/api/services/types/common";
+} from "@/app/api/services/types/core";
+
+/**
+ * Creates an eICR object
+ * @param ecr - the NewECR to be persisted
+ * @returns promise
+ */
+export async function createCoreEcr(ecr: NewECR): Promise<void> {
+  await getDb<Core>().insertInto("ecr_data").values(ecr).execute();
+}
 
 /**
  * Creates an eCR condition object
@@ -13,7 +23,7 @@ import {
 export async function createEcrCondition(
   condition: NewECRConditions,
 ): Promise<void> {
-  await getDb<Common>()
+  await getDb<Core>()
     .insertInto("ecr_rr_conditions")
     .values(condition)
     .execute();
@@ -27,7 +37,7 @@ export async function createEcrCondition(
 export async function createEcrRule(
   rule_summary: NewECRRuleSummaries,
 ): Promise<void> {
-  await getDb<Common>()
+  await getDb<Core>()
     .insertInto("ecr_rr_rule_summaries")
     .values(rule_summary)
     .execute();

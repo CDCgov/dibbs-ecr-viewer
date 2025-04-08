@@ -6,7 +6,7 @@ import {
   Updateable,
 } from "kysely";
 
-import { Common, ecr_data } from "./common";
+import { Core, ecr_data } from "./core";
 
 export interface extended_ecr_data extends ecr_data {
   gender: string | undefined;
@@ -95,7 +95,7 @@ export type ECRLabs = Selectable<ecr_labs>;
 export type NewECRLabs = Insertable<ecr_labs>;
 export type ECRLabsUpdate = Updateable<ecr_labs>;
 
-export interface Extended extends Common {
+export interface Extended extends Core {
   ecr_data: extended_ecr_data;
   patient_address: patient_address;
   ecr_labs: ecr_labs;

@@ -9,8 +9,7 @@ import {
 } from "kysely";
 
 import { dbDialect, dbNamespace, getDb } from "@/app/api/services/database";
-import { Common } from "@/app/api/services/types/common";
-import { Core, NewCoreECR } from "@/app/api/services/types/core";
+import { Core, NewECR } from "@/app/api/services/types/core";
 import { NewExtendedECR } from "@/app/api/services/types/extended";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
@@ -25,8 +24,11 @@ import {
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
 
-import { createEcrCondition, createEcrRule } from "./helpers/common";
-import { createCoreEcr } from "./helpers/core";
+import {
+  createEcrCondition,
+  createEcrRule,
+  createCoreEcr,
+} from "./helpers/common";
 import {
   buildExtended,
   dropExtended,
@@ -42,7 +44,7 @@ const testDateRange = {
   endDate: new Date("12-03-2024"),
 };
 
-const coreTemplate: NewCoreECR = {
+const coreTemplate: NewECR = {
   eicr_id: "12345",
   set_id: "123",
   fhir_reference_link: "",
@@ -103,12 +105,12 @@ const relatedEcr = {
 
 const getWhere = (
   ebCallBack: (
-    eb: ExpressionBuilder<Common, "ecr_data">,
+    eb: ExpressionBuilder<Core, "ecr_data">,
   ) =>
-    | ExpressionWrapper<Common, "ecr_data", SqlBool>
+    | ExpressionWrapper<Core, "ecr_data", SqlBool>
     | AndWrapper<Core, "ecr_data", SqlBool>,
 ) => {
-  const coredb = getDb<Common>();
+  const coredb = getDb<Core>();
   const rawRes = coredb.selectFrom("ecr_data").where(ebCallBack).compile();
   const start = `select from "${dbNamespace()}"."ecr_data" where `;
   return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };

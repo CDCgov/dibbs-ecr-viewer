@@ -5,7 +5,6 @@ import { Bundle } from "fhir/r4";
 import { Kysely } from "kysely";
 
 import { dbSchema, getDb } from "@/app/api/services/database";
-import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
@@ -320,7 +319,7 @@ export const saveExtendedMetadata = async (
         }
 
         // The actual type here is a beast, but we know that this mapping is functionally sound
-        await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+        await saveRR(trx as unknown as Kysely<Core>, metadata, ecrId);
       });
     return {
       message: "Success. Saved metadata to database.",
@@ -338,7 +337,7 @@ export const saveExtendedMetadata = async (
 
 // Helper to save RR to the database (common across schemas)
 const saveRR = async (
-  trx: Kysely<Common>,
+  trx: Kysely<Core>,
   metadata: BundleMetadata | BundleExtendedMetadata,
   ecrId: string,
 ) => {
@@ -413,7 +412,7 @@ export const saveCoreMetadata = async (
           .execute();
 
         // The actual type here is a beast, but we know that this mapping is functionally sound
-        await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+        await saveRR(trx as unknown as Kysely<Core>, metadata, ecrId);
       });
     return {
       message: "Success. Saved metadata to database.",
