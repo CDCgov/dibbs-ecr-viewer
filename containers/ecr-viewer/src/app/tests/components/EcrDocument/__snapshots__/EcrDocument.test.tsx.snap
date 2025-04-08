@@ -32,7 +32,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
             data-testid="button"
             type="button"
           >
-            Expand all 
+            Expand all
             sections
           </button>
           <span
@@ -43,7 +43,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
             data-testid="button"
             type="button"
           >
-            Collapse all 
+            Collapse all
             sections
           </button>
         </div>
@@ -269,7 +269,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          Current Age
+                          Age at Encounter
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"

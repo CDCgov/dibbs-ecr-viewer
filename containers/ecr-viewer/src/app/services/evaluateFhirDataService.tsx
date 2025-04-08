@@ -355,7 +355,7 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       value: evaluatePatientDOB(fhirBundle),
     },
     {
-      title: "Current Age",
+      title: "Age at Encounter",
       value: formatAge(calculatePatientAge(fhirBundle)),
     },
     {

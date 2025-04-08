@@ -223,7 +223,7 @@ describe("Utils", () => {
     });
   });
 
-  it("should have a defined Current Age, and not have a defined Age at Death when Date of Death is not given", () => {
+  it("should have a defined Age at Encounter, and not have a defined Age at Death when Date of Death is not given", () => {
     jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
 
     const expectedAgeAtDeath = undefined;
@@ -263,7 +263,7 @@ describe("Utils", () => {
       expect(patientAgeAtDeath).toEqual({ years: 4, months: 9, days: 26 });
     });
 
-    it("should have a defined Age at Death, and not have a defined Current Age when Date of Death is given", () => {
+    it("should have a defined Age at Death, and not have a defined Age at Encounter when Date of Death is given", () => {
       jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
       const expectedAge = undefined;
 
