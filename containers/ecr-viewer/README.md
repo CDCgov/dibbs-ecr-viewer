@@ -1,5 +1,7 @@
 # Getting Started with DIBBs eCR Viewer
 
+If you're looking to contribute to development on the eCR Viewer, you're in the right place. If you're trying to run a deployment of the Viewer instead, please refer to our [guide.md](./guide.md)
+
 ## Introduction
 
 The DIBBs eCR Viewer service offers a REST API for processing eCR FHIR messages into an HTML page that displays key information in a readable format and makes specific data fields easy to find.
