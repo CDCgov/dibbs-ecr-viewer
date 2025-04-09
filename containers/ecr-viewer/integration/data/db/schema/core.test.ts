@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { dbNamespace, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { getDbUtils } from "@/app/data/db/utils";
@@ -7,11 +11,20 @@ const db = getDb();
 const schema = dbNamespace();
 const utils = getDbUtils();
 
-describe("Common Schema: ", () => {
+describe("Core Schema: ", () => {
   beforeAll(async () => {
+    process.env.METADATA_DATABASE_SCHEMA = "core";
+    console.log(schema);
     await migrateUp();
   });
+
   afterAll(async () => {
+    await db.schema.dropTable('kysely_migration').ifExists().execute();
+    const tables = await utils.getTables(db, schema);
+    for (const table of tables) {
+      await db.schema.dropTable(table).ifExists().execute();
+    }
+    await db.schema.dropSchema(schema).ifExists().execute();
     await db.destroy();
   });
 
@@ -436,7 +449,7 @@ describe("Common Schema: ", () => {
     });
 
     it("has the correct migrations applied", async () => {
-      const migrationNames = getDbUtils().getMigrations(db);
+      const migrationNames = await getDbUtils().getMigrations(db);
       expect(migrationNames).toContain("19700101000000_initial");
       expect(migrationNames).toContain("19700101000001_initial");
     });

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { dbNamespace, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { getDbUtils } from "@/app/data/db/utils";
@@ -1738,7 +1742,7 @@ describe("Extended Schema: ", () => {
     });
 
     it("has the correct migrations applied", async () => {
-      const migrationNames = getDbUtils().getMigrations(db);
+      const migrationNames = await getDbUtils().getMigrations(db);
       expect(migrationNames).toContain("19700101000000_initial");
       expect(migrationNames).toContain("19700101000001_initial");
     });

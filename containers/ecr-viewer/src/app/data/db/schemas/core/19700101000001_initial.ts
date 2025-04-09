@@ -22,7 +22,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .select("patient_name_first")
     .executeTakeFirst();
 
-  if (!coreCheck) {
+  if (coreCheck) {
     console.log("Core migration already run. Skipping table creation.");
     return;
   }

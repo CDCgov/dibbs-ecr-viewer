@@ -19,7 +19,7 @@ export async function up(db: Kysely<any>): Promise<void> {
 
   try {
     if (!schemaExists) {
-      await db.schema.createSchema(schema).execute(); // first instance of schema mutation
+      await db.schema.createSchema(schema).execute();
     }
   } catch (error) {
     throw new Error("Failed to create schema or already exists: " + error);
