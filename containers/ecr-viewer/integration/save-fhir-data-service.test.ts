@@ -7,6 +7,8 @@ import {
   BundleMetadata,
   BundleExtendedMetadata,
 } from "@/app/api/save-fhir-data/types";
+import { getDb } from "@/app/api/services/database";
+import { Core } from "@/app/api/services/types/core";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
 
 import {
@@ -227,16 +229,21 @@ describe("save core metadata", () => {
   });
 
   it("should save without any rr", async () => {
+    let rolledback = false;
     const resp = await saveFhirMetadata(
       "1-2-3-4",
       "core",
       baseCoreMetadata,
       makePromiseResolveWithStatus(200),
-      () => makePromiseResolveWithStatus(200),
+      () => {
+        rolledback = true;
+        return makePromiseResolveWithStatus(200);
+      },
     );
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
+    expect(rolledback).toBeFalse();
   });
 
   it("should save with rr without rule summaries", async () => {
@@ -285,7 +292,8 @@ describe("save core metadata", () => {
     expect(resp.status).toEqual(200);
   });
 
-  it("should return an error when db save fails", async () => {
+  it("should return an error and roll back fhir bundle when db save fails", async () => {
+    let rolledback = false;
     jest.spyOn(console, "error").mockImplementation();
     const badMetadata = {
       last_name: null,
@@ -302,10 +310,40 @@ describe("save core metadata", () => {
       "core",
       badMetadata,
       makePromiseResolveWithStatus(200),
-      () => makePromiseResolveWithStatus(200),
+      () => {
+        rolledback = true;
+        return makePromiseResolveWithStatus(200);
+      },
     );
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
     expect(resp.status).toEqual(500);
+    expect(rolledback).toBeTrue();
+  });
+
+  it("should return an error and roll back db when fhir bundle save fails", async () => {
+    let rolledback = false;
+    jest.spyOn(console, "error").mockImplementation();
+    const resp = await saveFhirMetadata(
+      "1-2-3-4-5-6",
+      "core",
+      baseCoreMetadata,
+      makePromiseResolveWithStatus(500),
+      () => {
+        rolledback = true;
+        return makePromiseResolveWithStatus(200);
+      },
+    );
+
+    const res = await getDb<Core>()
+      .selectFrom("ecr_data")
+      .selectAll()
+      .where("ecr_data.eicr_id", "=", "1-2-3-4-5-6")
+      .execute();
+
+    expect(resp.message).toEqual("Failed to insert metadata to database.");
+    expect(resp.status).toEqual(500);
+    expect(rolledback).toBeFalse();
+    expect(res).toHaveLength(0);
   });
 });
