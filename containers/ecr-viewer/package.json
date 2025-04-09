@@ -27,7 +27,9 @@
     "test:e2e:integrated": "playwright test ./e2e/integrated",
     "clear-local": "docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile \"*\" down -v",
     "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit'",
-    "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'"
+    "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'",
+    "db:migrate:up": "npx @dotenvx/dotenvx run -f .env.local -- ts-node migrate.ts up",
+    "db:migrate:down": "npx @dotenvx/dotenvx run -f .env.local -- ts-node migrate.ts down"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.772.0",
@@ -130,6 +132,7 @@
     "postcss": "^8.4.38",
     "prettier": "3.1.0",
     "sass": "^1.69.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
 }
