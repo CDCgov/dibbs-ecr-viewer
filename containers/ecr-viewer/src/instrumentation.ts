@@ -1,4 +1,5 @@
 import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
+import { hasPendingMigrations } from "./app/data/db/utils/migrate";
 
 /**
  * The register function will be callled once when nextjs server is instantiated
@@ -8,6 +9,13 @@ export async function register() {
 
   if (process.env.NEXT_RUNTIME === "nodejs") {
     await import("./app/services/instrumentation");
+  }
+
+  if (await hasPendingMigrations()) {
+    console.error(
+      "Pending migrations detected. Please run the migration command before starting the server.",
+    );
+    process.exit(1);
   }
 }
 
