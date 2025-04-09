@@ -1,8 +1,7 @@
 import React, { Suspense } from "react";
 
-import { Table } from "@trussworks/react-uswds";
 import { cookies } from "next/headers";
-import { env } from "next-runtime-env";
+import { notFound } from "next/navigation";
 
 import EcrPaginationWrapper from "./components/EcrPaginationWrapper";
 import EcrTableContent from "./components/EcrTableContent";
@@ -13,7 +12,6 @@ import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./data/conditions";
-import NotFound from "./not-found";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
@@ -29,11 +27,8 @@ const HomePage = async ({
 }: {
   searchParams: PageSearchParams;
 }) => {
-  const isNonIntegratedViewer =
-    env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
-
-  if (!isNonIntegratedViewer) {
-    return <NotFound />;
+  if (!process.env.METADATA_DATABASE_TYPE) {
+    notFound();
   }
 
   const cookieStore = cookies();
@@ -97,6 +92,7 @@ const HomePage = async ({
                 <EcrTableContent
                   currentPage={config.page}
                   itemsPerPage={config.itemsPerPage}
+                  totalEcrCount={totalCount}
                   sortColumn={config.columnId}
                   sortDirection={config.direction}
                   searchTerm={config.search}
@@ -122,16 +118,15 @@ const HomePage = async ({
 const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="ecr-library-wrapper width-full overflow-auto">
-      <Table
-        bordered={false}
-        fullWidth={true}
-        striped={true}
-        fixed={true}
-        className="table-ecr-library margin-0"
-        data-testid="table"
+      <table
+        id="treegrid-table"
+        role="treegrid"
+        aria-label="eCR Library Results"
+        aria-readonly="true"
+        className="usa-table usa-table--borderless width-full table-ecr-library margin-0"
       >
         {children}
-      </Table>
+      </table>
     </div>
   );
 };

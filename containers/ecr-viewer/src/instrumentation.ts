@@ -1,5 +1,3 @@
-import { makeEnvPublic } from "next-runtime-env";
-
 import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
 
 /**
@@ -7,10 +5,6 @@ import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
  */
 export async function register() {
   setupConfigurationVariables();
-
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("./app/services/instrumentation");
-  }
 }
 
 function setupConfigurationVariables() {
@@ -23,34 +17,18 @@ function setupConfigurationVariables() {
   };
   process.env.SOURCE = sourceMap[process.env.CONFIG_NAME?.split("_")[0]];
 
-  switch (process.env.CONFIG_NAME) {
-    case "AWS_INTEGRATED":
-    case "AZURE_INTEGRATED":
-    case "GCP_INTEGRATED":
-      process.env.NBS_AUTH = "true";
-      process.env.NON_INTEGRATED_VIEWER = "false";
-      break;
-
-    case "AWS_PG_NON_INTEGRATED":
-    case "AZURE_PG_NON_INTEGRATED":
-    case "GCP_PG_NON_INTEGRATED":
-      process.env.NBS_AUTH = "false";
-      process.env.NON_INTEGRATED_VIEWER = "true";
-      process.env.METADATA_DATABASE_TYPE = "postgres";
-      process.env.METADATA_DATABASE_SCHEMA = "core";
-      break;
-
-    case "AWS_SQLSERVER_NON_INTEGRATED":
-    case "AZURE_SQLSERVER_NON_INTEGRATED":
-    case "GCP_SQLSERVER_NON_INTEGRATED":
-      process.env.NBS_AUTH = "false";
-      process.env.NON_INTEGRATED_VIEWER = "true";
-      process.env.METADATA_DATABASE_TYPE = "sqlserver";
-      process.env.METADATA_DATABASE_SCHEMA = "extended";
-      break;
-
-    default:
-      break;
+  // INTEGRATED and DUAL should have NBS auth
+  if (process.env.CONFIG_NAME?.endsWith("_NON_INTEGRATED")) {
+    delete process.env.NBS_PUB_KEY; // makes dev life easier
+  } else if (process.env.CONFIG_NAME?.endsWith("_INTEGRATED")) {
+    delete process.env.AUTH_PROVIDER; // makes dev life easier
   }
-  makeEnvPublic(["NON_INTEGRATED_VIEWER"]);
+
+  if (process.env.CONFIG_NAME?.includes("_PG_")) {
+    process.env.METADATA_DATABASE_TYPE = "postgres";
+    process.env.METADATA_DATABASE_SCHEMA = "core";
+  } else if (process.env.CONFIG_NAME?.includes("_SQLSERVER_")) {
+    process.env.METADATA_DATABASE_TYPE = "sqlserver";
+    process.env.METADATA_DATABASE_SCHEMA = "extended";
+  }
 }

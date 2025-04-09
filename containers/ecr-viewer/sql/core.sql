@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE SCHEMA ecr_viewer;
 
 CREATE TABLE ecr_viewer.ecr_data (
-  eICR_ID VARCHAR(200) PRIMARY KEY,
+  eicr_id VARCHAR(200) PRIMARY KEY,
   set_id VARCHAR(255),
   eicr_version_number VARCHAR(50),
   data_source VARCHAR(2), -- S3 or DB
@@ -17,7 +17,7 @@ CREATE TABLE ecr_viewer.ecr_data (
 
 CREATE TABLE ecr_viewer.ecr_rr_conditions (
     uuid VARCHAR(200) PRIMARY KEY,
-    eICR_ID VARCHAR(200) NOT NULL REFERENCES ecr_viewer.ecr_data(eICR_ID),
+    eicr_id VARCHAR(200) NOT NULL REFERENCES ecr_viewer.ecr_data(eicr_id),
     condition VARCHAR
 );
 

@@ -294,27 +294,27 @@ Mos Eisley, CO
                   <tbody>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Campylobacter, NAAT
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Abnormal (Abnormal)
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Not Detected
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -325,27 +325,27 @@ Mos Eisley, CO
                     </tr>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Plesiomonas shigelloides, NAAT
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Not Detected
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Not Detected
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -619,27 +619,27 @@ Mos Eisley, CO
                   <tbody>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Campylobacter, NAAT
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Not Detected
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Not Detected
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -650,27 +650,27 @@ Mos Eisley, CO
                     </tr>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Plesiomonas shigelloides, NAAT
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Not Detected
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Not Detected
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -1051,17 +1051,17 @@ Coruscant, MA
                   <tbody>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Organism ID
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Acinetobacter baumannii
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -1070,7 +1070,7 @@ Coruscant, MA
                         </span>
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -1079,7 +1079,7 @@ Coruscant, MA
                         </span>
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <button
                           aria-controls="hidden-comment-r:id"
@@ -1110,22 +1110,22 @@ Coruscant, MA
                     </tr>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Sodium
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         139 mmol/L
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         138 mmol/L - 145 mmol/L
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -1134,7 +1134,7 @@ Coruscant, MA
                         </span>
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         <span
                           class="no-data text-italic text-base"
@@ -1180,66 +1180,66 @@ Coruscant, MA
                   <tbody>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Acinetobacter baumannii
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Amikacin
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         MIC
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         0.25: Susceptible
                       </td>
                     </tr>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Acinetobacter baumannii
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Avycaz (Ceftazidime/Avibactam)
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         MIC
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         0.05: Intermediate
                       </td>
                     </tr>
                     <tr>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Acinetobacter baumannii
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         Levofloxacin
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         MIC
                       </td>
                       <td
-                        class="text-top"
+                        class="text-top text-pre-line"
                       >
                         0.75: Resistant
                       </td>

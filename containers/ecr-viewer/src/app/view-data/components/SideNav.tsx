@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
-import { env } from "next-runtime-env";
 
 import { BackButton } from "@/app/components/BackButton";
 import { toKebabCase } from "@/app/utils/format-utils";
@@ -165,17 +164,17 @@ const SideNav: React.FC = () => {
     const sortedHeadings: SectionConfig[] = sortHeadings(headings);
     setSectionConfigs(sortedHeadings);
 
-    const isNonIntegratedViewer =
-      env("NEXT_PUBLIC_NON_INTEGRATED_VIEWER") === "true";
-
+    // account for patient banner to find intersect line that is mid-header
     const oneRem = parseFloat(
       getComputedStyle(document.documentElement).fontSize,
     );
-    const topOffset = (isNonIntegratedViewer ? 3 * oneRem : 0) + 2 * oneRem;
+    const topOffset = 5 * oneRem;
 
     const options = {
       root: null,
-      rootMargin: `-${topOffset}px 0px -100% 0px`,
+      rootMargin: `-${topOffset}px 0px -${
+        window.innerHeight - topOffset - 1
+      }px 0px`,
       threshold: 0,
     };
 

@@ -17,6 +17,7 @@ jobs:
     uses: ./.github/workflows/run-container-workflow.yaml
     with:
       container: ${{ matrix.container }}
+      ref_name: ${{ github.ref_name }}
     secrets: inherit
 
   # Rebuild all containers for the new release

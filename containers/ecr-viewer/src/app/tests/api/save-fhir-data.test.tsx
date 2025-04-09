@@ -31,6 +31,7 @@ jest.mock("@azure/storage-blob", () => {
     },
   };
 });
+jest.mock("../../../app/api/services/database");
 
 const fakeData = (source: string) => ({
   fhirBundle: {

@@ -75,8 +75,8 @@ const Header = ({
   return (
     <th
       id={`${column.id}-header`}
-      scope="col"
       role="columnheader"
+      scope="col"
       className={column.className}
       data-sortable={column.dataSortable}
       aria-sort={getAriaSortValue(column.sortDirection)}

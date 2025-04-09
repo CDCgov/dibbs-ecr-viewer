@@ -14,9 +14,6 @@ import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "@/app/api/utils";
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 
-jest.mock("../../../data/db/postgres_db", () => ({
-  getDB: jest.fn(),
-}));
 jest.mock("../../../data/blobStorage/s3Client");
 jest.mock("../../../data/blobStorage/gcpClient", () => ({
   gcpClient: jest.fn(),

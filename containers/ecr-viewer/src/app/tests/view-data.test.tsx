@@ -16,6 +16,9 @@ jest.mock("../view-data/components/LoadingComponent", () => ({
 jest.mock("../api/fhir-data/fhir-data-service", () => ({
   get_fhir_data: jest.fn(),
 }));
+jest.mock("../components/AuthSessionProvider", () => ({
+  useIsLoggedInUser: () => true,
+}));
 
 function mockFetch(
   fn: jest.Mock,

@@ -17,14 +17,19 @@ namespace NodeJS {
       | "AWS_INTEGRATED"
       | "AWS_PG_NON_INTEGRATED"
       | "AWS_SQLSERVER_NON_INTEGRATED"
+      | "AWS_PG_DUAL"
+      | "AWS_SQLSERVER_DUAL"
       | "AZURE_INTEGRATED"
       | "AZURE_PG_NON_INTEGRATED"
       | "AZURE_SQLSERVER_NON_INTEGRATED"
+      | "AZURE_PG_DUAL"
+      | "AZURE_SQLSERVER_DUAL"
       | "GCP_INTEGRATED"
       | "GCP_PG_NON_INTEGRATED"
-      | "GCP_SQLSERVER_NON_INTEGRATED";
-    DATABASE_TYPE: string;
-    DATABASE_URL: string;
+      | "GCP_SQLSERVER_NON_INTEGRATED"
+      | "GCP_PG_DUAL"
+      | "GCP_SQLSERVER_DUAL";
+    DATABASE_URL?: string;
     DB_CIPHER?: string;
     ECR_BUCKET_NAME: string;
     GCP_CREDENTIALS?: string;
@@ -32,16 +37,13 @@ namespace NodeJS {
     GCP_API_ENDPOINT?: string;
     METADATA_DATABASE_SCHEMA?: "core" | "extended";
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";
-    NBS_AUTH: "true" | "false";
-    NBS_PUB_KEY: string;
-    NEXT_PUBLIC_NON_INTEGRATED_VIEWER: "true" | "false";
+    NBS_PUB_KEY?: string;
     NEXT_RUNTIME: string;
     NEXTAUTH_SECRET: string;
-    NON_INTEGRATED_VIEWER: "true" | "false";
     ORCHESTRATION_URL: string;
     SOURCE: "s3" | "azure" | "gcp";
-    SQL_SERVER_HOST: string;
-    SQL_SERVER_PASSWORD: string;
-    SQL_SERVER_USER: string;
+    SQL_SERVER_HOST?: string;
+    SQL_SERVER_PASSWORD?: string;
+    SQL_SERVER_USER?: string;
   }
 }
