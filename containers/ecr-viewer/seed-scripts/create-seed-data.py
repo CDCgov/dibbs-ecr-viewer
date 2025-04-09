@@ -71,7 +71,7 @@ def _process_files():
     n = 0
     failed = []
     num_requests = len(requests)
-    for index, response in enumerate(grequests.imap(requests, size=8)):
+    for index, response in grequests.imap_enumerate(requests, size=8):
         n += 1
         folder_path = folder_paths[index]
         if response is None:
