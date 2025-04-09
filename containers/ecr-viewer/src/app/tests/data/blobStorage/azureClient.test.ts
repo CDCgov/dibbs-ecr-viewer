@@ -7,6 +7,7 @@ import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
 import {
   azureBlobContainerClient,
   azureBlobStorageHealthCheck,
+  deleteFromAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
 
@@ -116,7 +117,7 @@ describe("azure blob container", () => {
     });
   });
 
-  describe("saveToAzure", () => {
+  describe("save blob", () => {
     it("should return 200 when saving to Azure succeeds", async () => {
       process.env.SOURCE = AZURE_SOURCE;
       process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
@@ -173,6 +174,61 @@ describe("azure blob container", () => {
 
       expect(result).toEqual({
         message: "Failed to save FHIR bundle.",
+        status: 500,
+      });
+    });
+  });
+
+  describe("delete blob", () => {
+    it("should return 200 when saving to Azure succeeds", async () => {
+      process.env.SOURCE = AZURE_SOURCE;
+      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
+      process.env.AZURE_CONTAINER_NAME = "container";
+      const mockDelete = jest
+        .fn()
+        .mockResolvedValue({ _response: { status: 200 }, succeeded: true });
+      const mockBlockBlobClient = jest.fn().mockReturnValue({
+        deleteIfExists: mockDelete,
+      });
+      const mockGetContainerClient = jest
+        .fn()
+        .mockReturnValue({ getBlockBlobClient: mockBlockBlobClient });
+      (BlobServiceClient.fromConnectionString as jest.Mock).mockReturnValue({
+        getContainerClient: mockGetContainerClient,
+      });
+
+      const result = await deleteFromAzure(fileName);
+
+      expect(result).toEqual({
+        message: "Success. Deleted FHIR bundle.",
+        status: 200,
+      });
+      expect(mockBlockBlobClient).toHaveBeenCalledExactlyOnceWith(fileName);
+      expect(mockDelete).toHaveBeenCalledOnce();
+    });
+
+    it("should return 500 when saving to Azure succeeds", async () => {
+      process.env.SOURCE = AZURE_SOURCE;
+      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
+      process.env.AZURE_CONTAINER_NAME = "container";
+      const mockDelete = jest
+        .fn()
+        .mockResolvedValue({ _response: { status: 403 }, succeeded: false });
+      const mockBlockBlobClient = jest.fn().mockReturnValue({
+        deleteIfExists: mockDelete,
+      });
+      const mockGetContainerClient = jest
+        .fn()
+        .mockReturnValue({ getBlockBlobClient: mockBlockBlobClient });
+      (BlobServiceClient.fromConnectionString as jest.Mock).mockReturnValue({
+        getContainerClient: mockGetContainerClient,
+      });
+      jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await deleteFromAzure(fileName);
+
+      expect(result).toEqual({
+        message: "Failed to delete FHIR bundle.",
         status: 500,
       });
     });
