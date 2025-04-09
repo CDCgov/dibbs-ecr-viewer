@@ -5,9 +5,6 @@ import { getSql } from "@/app/api/services/dialects/common";
 
 /**
  * Based on ecr-viewer/sql/core.sql.
- * Core schema initialization. This version is hard-coded to the
- * original postgres implementation. Future versions will be
- * database-agnostic.
  * @param db - the database connection
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

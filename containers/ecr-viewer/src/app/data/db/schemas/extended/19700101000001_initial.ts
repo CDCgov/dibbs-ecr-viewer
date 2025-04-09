@@ -5,9 +5,6 @@ import { getSql } from "@/app/api/services/dialects/common";
 
 /**
  * Based on ecr-viewer/sql/extended.sql.
- * Extended schema initialization. This version is hard-coded to the
- * original SQL Server implementation. Future versions will be
- * database-agnostic.
  * @param db - the database connection
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
