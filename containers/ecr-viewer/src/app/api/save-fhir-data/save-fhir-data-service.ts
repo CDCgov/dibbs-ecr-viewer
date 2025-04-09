@@ -109,6 +109,19 @@ export const saveFhirMetadata = async (
     return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {
+        // check ecr doesn't already exist
+        const res = await trx
+          .selectFrom("ecr_data")
+          .select((eb) => eb.fn.countAll().as("num_ecr"))
+          .where("ecr_data.eicr_id", "=", ecrId)
+          .executeTakeFirst();
+        if (res && Number(res.num_ecr) > 0) {
+          return {
+            message: `eCR already loaded: ${ecrId}`,
+            status: 409,
+          };
+        }
+
         // Insert main ECR metadata
         if (metadataType === "core") {
           await saveCoreMetadata(trx, metadata as BundleMetadata, ecrId);

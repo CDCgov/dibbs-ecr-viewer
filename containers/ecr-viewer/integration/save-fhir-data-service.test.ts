@@ -395,23 +395,54 @@ describe("save metadata", () => {
       expect(rolledback).toBeFalse();
       expect(res).toHaveLength(0);
     });
-  });
 
-  it("should 400 with unknown schema", async () => {
-    let rolledback = false;
-    const resp = await saveFhirMetadata(
-      "1-2-3-4",
-      "unknown" as "core", // appease typescript
-      baseCoreMetadata,
-      makePromiseResolveWithStatus(200),
-      () => {
-        rolledback = true;
-        return makePromiseResolveWithStatus(200);
-      },
-    );
+    it("should 409 if same eCR inserted twice", async () => {
+      let rolledback = false;
+      const resp1 = await saveFhirMetadata(
+        "1-2-3-4",
+        "core",
+        baseCoreMetadata,
+        makePromiseResolveWithStatus(200),
+        () => {
+          rolledback = true;
+          return makePromiseResolveWithStatus(200);
+        },
+      );
 
-    expect(resp.message).toEqual("Unknown metadataType: unknown");
-    expect(resp.status).toEqual(400);
-    expect(rolledback).toBeFalse();
+      expect(resp1.status).toEqual(200);
+      expect(rolledback).toBeFalse();
+
+      const resp2 = await saveFhirMetadata(
+        "1-2-3-4",
+        "core",
+        baseCoreMetadata,
+        makePromiseResolveWithStatus(200),
+        () => {
+          rolledback = true;
+          return makePromiseResolveWithStatus(200);
+        },
+      );
+
+      expect(resp2.status).toEqual(409);
+      expect(rolledback).toBeFalse();
+    });
+
+    it("should 400 with unknown schema", async () => {
+      let rolledback = false;
+      const resp = await saveFhirMetadata(
+        "1-2-3-4",
+        "unknown" as "core", // appease typescript
+        baseCoreMetadata,
+        makePromiseResolveWithStatus(200),
+        () => {
+          rolledback = true;
+          return makePromiseResolveWithStatus(200);
+        },
+      );
+
+      expect(resp.message).toEqual("Unknown metadataType: unknown");
+      expect(resp.status).toEqual(400);
+      expect(rolledback).toBeFalse();
+    });
   });
 });
