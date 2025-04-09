@@ -106,7 +106,7 @@ export const saveFhirMetadata = async (
     }
 
     // Start transaction
-    await getDb<Core>()
+    return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {
         // Insert main ECR metadata
@@ -138,11 +138,12 @@ export const saveFhirMetadata = async (
             )}`,
           );
         }
+
+        return {
+          message: "Success. Saved metadata to database.",
+          status: 200,
+        };
       });
-    return {
-      message: "Success. Saved metadata to database.",
-      status: 200,
-    };
   } catch (error: unknown) {
     const message = "Failed to insert metadata to database.";
     console.error({ message, error, ecrId });
