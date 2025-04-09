@@ -87,7 +87,7 @@ export const deleteFhirData = async (
  * @param rollbackFhirDataFn - thunk to roll back the saving of the fhir bundle
  * @returns An object containing the status and message.
  */
-const saveFhirMetadata = async (
+export const saveFhirMetadata = async (
   ecrId: string,
   metadataType: "core" | "extended" | undefined,
   metadata: BundleMetadata | BundleExtendedMetadata,
@@ -166,7 +166,7 @@ const saveFhirMetadata = async (
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
-export const saveExtendedMetadata = async (
+const saveExtendedMetadata = async (
   trx: Transaction<Extended>,
   metadata: BundleExtendedMetadata,
   ecrId: string,
@@ -260,7 +260,7 @@ export const saveExtendedMetadata = async (
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
-export const saveCoreMetadata = async (
+const saveCoreMetadata = async (
   trx: Transaction<Core>,
   metadata: BundleMetadata,
   ecrId: string,

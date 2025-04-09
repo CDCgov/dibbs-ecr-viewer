@@ -2,14 +2,12 @@
  * @jest-environment node
  */
 
-import {
-  saveCoreMetadata,
-  saveExtendedMetadata,
-} from "@/app/api/save-fhir-data/save-fhir-data-service";
+import { saveFhirMetadata } from "@/app/api/save-fhir-data/save-fhir-data-service";
 import {
   BundleMetadata,
   BundleExtendedMetadata,
 } from "@/app/api/save-fhir-data/types";
+import { BlobResponse } from "@/app/data/blobStorage/utils";
 
 import {
   buildCore,
@@ -105,7 +103,7 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   report_date: "2024-12-20",
 };
 
-describe("saveExtendedMetadata", () => {
+describe("save extended metadata", () => {
   beforeAll(async () => {
     await buildExtended();
   });
@@ -119,7 +117,13 @@ describe("saveExtendedMetadata", () => {
   });
 
   it("should save without any rr", async () => {
-    const resp = await saveExtendedMetadata(baseExtendedMetadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "extended",
+      baseExtendedMetadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
   });
@@ -135,7 +139,13 @@ describe("saveExtendedMetadata", () => {
       ],
     };
 
-    const resp = await saveExtendedMetadata(metadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "extended",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
@@ -152,7 +162,13 @@ describe("saveExtendedMetadata", () => {
       ],
     };
 
-    const resp = await saveExtendedMetadata(metadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "extended",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
@@ -170,7 +186,13 @@ describe("saveExtendedMetadata", () => {
       report_date: new Date("12/20/2024"),
     } as unknown as BundleExtendedMetadata;
     jest.spyOn(console, "error").mockImplementation();
-    const resp = await saveExtendedMetadata(badMetadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "extended",
+      badMetadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
     expect(resp.status).toEqual(500);
@@ -188,7 +210,10 @@ const baseCoreMetadata: BundleMetadata = {
   report_date: "12/20/2024",
 };
 
-describe("saveCoreMetadata", () => {
+const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
+  new Promise((resolve) => resolve({ message: "hi there", status }));
+
+describe("save core metadata", () => {
   beforeAll(async () => {
     await buildCore();
   });
@@ -202,7 +227,13 @@ describe("saveCoreMetadata", () => {
   });
 
   it("should save without any rr", async () => {
-    const resp = await saveCoreMetadata(baseCoreMetadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      baseCoreMetadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
@@ -219,7 +250,13 @@ describe("saveCoreMetadata", () => {
       ],
     };
 
-    const resp = await saveCoreMetadata(metadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
@@ -236,7 +273,13 @@ describe("saveCoreMetadata", () => {
       ],
     };
 
-    const resp = await saveCoreMetadata(metadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
@@ -254,7 +297,13 @@ describe("saveCoreMetadata", () => {
       rr: [],
       report_date: new Date("a"),
     } as unknown as BundleMetadata;
-    const resp = await saveCoreMetadata(badMetadata, "1-2-3-4");
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      badMetadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
     expect(resp.status).toEqual(500);
