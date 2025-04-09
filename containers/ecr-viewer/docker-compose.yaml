@@ -51,9 +51,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./seed-scripts/sql/01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
-      - ./sql/core.sql:/docker-entrypoint-initdb.d/core.sql
-      - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass
+      - ./seed-scripts/sql/01-init.sql:/docker-entrypoint-initdb.d/01-init.sql  # Keep if needed
+      - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass  # Keep if needed
       - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
@@ -80,15 +79,13 @@ services:
       - MSSQL_SA_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
     ports:
       - "1433:1433"
-    volumes:
-      - ./sql/entrypoint.sh:/var/opt/mssql/scripts/entrypoint.sh
-      - ./sql/extended.sql:/var/opt/mssql/scripts/extended.sql
-    entrypoint: /bin/bash -c "/var/opt/mssql/scripts/entrypoint.sh"
+    # volumes:
+    #   # No volumes needed unless you add persistent storage
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          'opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Password1! -Q "SELECT * FROM sys.tables where name=''ECR_DATA''" -C | grep -q "(0 rows affected)" && exit 1 || exit 0',
+          'opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -C || exit 1',
         ]
       interval: 20s
       retries: 5
@@ -99,7 +96,7 @@ services:
       - AWS_SQLSERVER_DUAL
       - AZURE_SQLSERVER_DUAL
       - GCP_SQLSERVER_DUAL
-
+    
   aws-storage:
     image: gresau/localstack-persist:3
     ports:
