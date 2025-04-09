@@ -5,7 +5,7 @@ import zipfile
 
 import grequests
 
-UPLOAD_URL = "http://ecr-viewer:3000/ecr-viewer/api/process-zip"
+UPLOAD_URL = "http://localhost:3000/ecr-viewer/api/process-zip"
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 
