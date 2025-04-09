@@ -1,6 +1,7 @@
 import { Storage } from "@google-cloud/storage";
 
 import {
+  deleteFromGCP,
   gcpClient,
   gcpHealthCheck,
   saveToGCP,
@@ -8,8 +9,11 @@ import {
 
 const mockExists = jest.fn();
 
+const mockDelete = jest.fn().mockResolvedValue(undefined);
 const mockSave = jest.fn().mockResolvedValue(undefined);
-const mockFile = jest.fn().mockReturnValue({ save: mockSave });
+const mockFile = jest
+  .fn()
+  .mockReturnValue({ save: mockSave, delete: mockDelete });
 
 const mockBucket = jest.fn().mockImplementation(() => ({
   exists: mockExists,
@@ -179,6 +183,41 @@ describe("gcp", () => {
 
       expect(result).toEqual({
         message: "Failed to save the FHIR bundle due to misconfiguration.",
+        status: 500,
+      });
+    });
+  });
+
+  describe("delete blob", () => {
+    it("should return 200 when deleting from GCP succeeds", async () => {
+      const result = await deleteFromGCP(fileName);
+
+      expect(result).toEqual({
+        message: "Success. Deleted FHIR bundle.",
+        status: 200,
+      });
+      expect(mockFile).toHaveBeenCalledExactlyOnceWith(fileName);
+      expect(mockDelete).toHaveBeenCalledExactlyOnceWith();
+    });
+
+    it("should return 500 when deleting from GCP fails", async () => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      mockDelete.mockRejectedValue(new Error("Failed to delete"));
+
+      const result = await deleteFromGCP(fileName);
+
+      expect(result).toEqual({
+        message: "Failed to delete FHIR bundle.",
+        status: 500,
+      });
+    });
+
+    it("should return 500 when GCP is not configured", async () => {
+      process.env.SOURCE = "azure";
+      const result = await deleteFromGCP(fileName);
+
+      expect(result).toEqual({
+        message: "Failed to delete the FHIR bundle due to misconfiguration.",
         status: 500,
       });
     });
