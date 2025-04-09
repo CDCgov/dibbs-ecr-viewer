@@ -1,7 +1,7 @@
 import { dbNamespace, getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { getDbUtils } from "@/app/data/db/utils";
-import { sql } from "kysely";
+import { migrateUp } from "@/app/data/db/utils/migrate";
 
 const db = getDb();
 const schema = dbNamespace();
@@ -13,6 +13,9 @@ interface MigrationRow {
 }
 
 describe("Extended Schema: ", () => {
+  beforeAll(async () => {
+    await migrateUp();
+  });
   afterAll(async () => {
     await db.destroy();
   });
@@ -1730,15 +1733,12 @@ describe("Extended Schema: ", () => {
   });
   describe("Migration Status: ", () => {
     it("has two migrations applied", async () => {
-      const migrations =
-        await sql<MigrationRow>`SELECT * FROM kysely_migrations`.execute(db);
-      expect(migrations.rows.length).toBe(2);
+      const migrationNames = await getDbUtils().getMigrations(db);
+      expect(migrationNames.length).toBe(2);
     });
 
     it("has the correct migrations applied", async () => {
-      const migrations =
-        await sql<MigrationRow>`SELECT * FROM kysely_migrations`.execute(db);
-      const migrationNames = migrations.rows.map((m) => m.name);
+      const migrationNames = getDbUtils().getMigrations(db);
       expect(migrationNames).toContain("19700101000000_initial");
       expect(migrationNames).toContain("19700101000001_initial");
     });
