@@ -20,7 +20,7 @@
     "format:check": "prettier --check '**/*.{js,json,md,ts,tsx,scss,yaml,yml}'",
     "test": "TZ=America/New_York jest",
     "test:watch": "TZ=America/New_York jest --watch",
-    "test:integration:pg": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'METADATA_DATABASE_TYPE=postgres TEST_TYPE=integration TZ=America/New_York jest --runInBand --detectOpenHandles'",
+    "test:integration:pg": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'METADATA_DATABASE_TYPE=postgres TEST_TYPE=integration TZ=America/New_York jest --runInBand --watch --detectOpenHandles'",
     "test:integration:sqlserver": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'METADATA_DATABASE_TYPE=sqlserver TEST_TYPE=integration TZ=America/New_York jest --runInBand --detectOpenHandles'",
     "test:e2e:install": "playwright install --with-deps",
     "test:e2e": "playwright test ./e2e/dual",

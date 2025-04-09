@@ -170,7 +170,16 @@ export async function columnExistsByName(
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getMigrations(kysely: Kysely<any>): Promise<string[]> {
-  const result =
-    await sql<MigrationRow>`SELECT * FROM kysely_migrations`.execute(kysely);
-  return result.rows.map((m) => m.name); // Return only the migration names
+  try {
+    const result = await kysely
+      .selectFrom('kysely_migration')
+      .select('name')
+      .execute();
+    const pog = result.map((row) => row.name); // Return only the migration names
+    console.log(pog);
+    return pog
+  } catch (error) {
+    console.log([])
+    return [];
+  }
 }

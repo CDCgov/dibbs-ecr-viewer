@@ -25,7 +25,7 @@ async function main() {
       process.exit(1);
     }
   } catch (error) {
-    console.error("Migration failed:", error.message);
+    console.error("Migration failed:", error);
     process.exit(1);
   }
 }

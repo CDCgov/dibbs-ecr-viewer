@@ -3,6 +3,10 @@ import { Kysely } from "kysely";
 import * as postgresUtils from "./dialects/postgres/utils";
 import * as sqlServerUtils from "./dialects/sqlserver/utils";
 
+import { dbDialect, dbNamespace } from "@/app/api/services/database";
+import { dialect as postgres } from "@/app/api/services/dialects/postgres";
+import { dialect as sqlserver } from "@/app/api/services/dialects/sqlserver";
+
 // Define a type for the utils object to ensure type safety
 export type DbUtils = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,3 +84,30 @@ export function getDbUtils(): DbUtils {
     throw new Error(`Unsupported dialect: ${dialect}`);
   }
 }
+
+let db: unknown;
+/**
+ * Get the database global.
+ * @returns global db
+ */
+export const getMigrationDb = <T>() => {
+  // if (db) {
+  //   return db as Kysely<T>;
+  // }
+
+  const db_type = dbDialect();
+  switch (db_type) {
+    case "sqlserver":
+      db = new Kysely(sqlserver);
+      break;
+    case "postgres":
+      db = new Kysely(postgres);
+      break;
+    default:
+      throw new Error(`unknown db type: ${db_type}`);
+  }
+
+  db = (db as Kysely<T>);
+
+  return db as Kysely<T>;
+};
