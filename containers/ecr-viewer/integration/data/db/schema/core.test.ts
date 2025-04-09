@@ -5,7 +5,7 @@ import { migrateUp } from "@/app/data/db/utils/migrate";
 
 const db = getDb();
 const schema = dbNamespace();
-let utils = getDbUtils();
+const utils = getDbUtils();
 
 describe("Common Schema: ", () => {
   beforeAll(async () => {
