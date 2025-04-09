@@ -20,6 +20,7 @@ const customJestConfig = {
     process.env.TEST_TYPE === "integration"
       ? ["<rootDir>/integration/setup.ts"]
       : [],
+  // transformIgnorePatterns: ["/node_modules/(?!(@azure)/)", "\\.pnp\\.[^\\\/]+$"]
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

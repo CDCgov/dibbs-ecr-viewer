@@ -50,7 +50,7 @@ export const get_s3 = async (
   ecr_id: string | null,
 ): Promise<FhirDataResponse> => {
   const bucketName = process.env.ECR_BUCKET_NAME;
-  const objectKey = `${ecr_id}.json`; // This could also come from the request, e.g., req.query.key
+  const objectKey = `${ecr_id}.json`;
 
   try {
     const command = new GetObjectCommand({
