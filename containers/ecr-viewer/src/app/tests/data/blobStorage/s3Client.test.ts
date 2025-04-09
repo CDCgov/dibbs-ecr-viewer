@@ -5,6 +5,7 @@ import {
   s3HealthCheck,
   s3Client,
   saveToS3,
+  deleteFromS3,
 } from "@/app/data/blobStorage/s3Client";
 
 jest.mock("@aws-sdk/client-s3", () => ({
@@ -13,6 +14,9 @@ jest.mock("@aws-sdk/client-s3", () => ({
   })),
   HeadBucketCommand: jest.fn(),
   PutObjectCommand: jest.fn().mockImplementation((input) => ({
+    input,
+  })),
+  DeleteObjectCommand: jest.fn().mockImplementation((input) => ({
     input,
   })),
 }));
@@ -67,7 +71,7 @@ describe("s3 client", () => {
     });
   });
 
-  describe("saveToS3", () => {
+  describe("save blob", () => {
     it("should return 200 when saving to s3 succeeds", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
       process.env.SOURCE = "s3";
@@ -94,6 +98,38 @@ describe("s3 client", () => {
 
       expect(result).toEqual({
         message: "Failed to save FHIR bundle.",
+        status: 500,
+      });
+    });
+  });
+
+  describe("delete blob", () => {
+    it("should return 200 when deleting from s3 succeeds", async () => {
+      process.env.ECR_BUCKET_NAME = "bucket";
+      process.env.SOURCE = "s3";
+      mockSend.mockResolvedValue({
+        $metadata: { httpStatusCode: 200 },
+      });
+
+      const result = await deleteFromS3(fileName);
+
+      expect(result).toEqual({
+        message: "Success. Deleted FHIR bundle.",
+        status: 200,
+      });
+      expect(s3Client.send).toHaveBeenCalledOnce();
+    });
+
+    it("should return 500 when deleting from s3 fails", async () => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      mockSend.mockResolvedValue({
+        $metadata: { httpStatusCode: 500 },
+      });
+
+      const result = await deleteFromS3(fileName);
+
+      expect(result).toEqual({
+        message: "Failed to delete FHIR bundle.",
         status: 500,
       });
     });
