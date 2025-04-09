@@ -5,7 +5,7 @@ import zipfile
 
 import grequests
 
-UPLOAD_URL = "http://0.0.0.0:3000/ecr-viewer/api/process-zip"
+UPLOAD_URL = "http://host.docker.internal:3000/ecr-viewer/api/process-zip"
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 
