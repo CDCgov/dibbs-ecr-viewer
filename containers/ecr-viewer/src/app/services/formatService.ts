@@ -6,6 +6,7 @@ import {
   ContactPoint,
   HumanName,
   PatientContact,
+  Quantity,
   RelatedPerson,
 } from "fhir/r4";
 
@@ -323,6 +324,32 @@ export const formatCodeableConcept = (
   }
 
   return undefined;
+};
+
+// Map from computer to human readable units
+const UNIT_MAP = new Map([
+  ["[lb_av]", "lb"],
+  ["[in_i]", "in"],
+  ["[in_us]", "in"],
+]);
+
+/**
+ * Takes a quantity and formats it into a string. Handles spacing of units and re-maps
+ * certain robot-looking units into human-looking units
+ * @param data the Quantity to format
+ * @returns formatted string
+ */
+export const formatQuantity = (
+  data: Quantity | undefined,
+): string | undefined => {
+  if (!data || !data.value) return;
+  let unit = data.unit || "";
+  unit = UNIT_MAP.get(unit) || unit;
+  const firstLetterRegex = /^[a-z]/i;
+  if (unit?.match(firstLetterRegex)) {
+    unit = " " + unit;
+  }
+  return `${data.value ?? ""}${unit}`;
 };
 
 /**

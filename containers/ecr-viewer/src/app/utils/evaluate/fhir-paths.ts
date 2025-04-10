@@ -14,6 +14,7 @@ import {
   Identifier,
   Immunization,
   Observation,
+  ObservationReferenceRange,
   Organization,
   PatientCommunication,
   PatientContact,
@@ -130,7 +131,7 @@ export type PathTypes = {
   observationReferenceValue: string;
   observationComponent: string;
   observationValue: string;
-  observationReferenceRange: string;
+  observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
   observationNote: string;
   observationOrganism: string;
@@ -536,7 +537,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",
   },
-  observationReferenceRange: { type: "string", path: "referenceRange.text" },
+  observationReferenceRange: {
+    type: "ObservationReferenceRange",
+    path: "referenceRange",
+  },
   observationDeviceReference: { type: "string", path: "device.reference" },
   observationNote: { type: "string", path: "note.text" },
   observationOrganism: { type: "string", path: "code.coding.display.first()" },

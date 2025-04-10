@@ -6,13 +6,17 @@ import {
   Coding,
   Element,
   FhirResource,
+  ObservationReferenceRange,
   Quantity,
   Resource,
 } from "fhir/r4";
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import { formatCodeableConcept } from "@/app/services/formatService";
+import {
+  formatCodeableConcept,
+  formatQuantity,
+} from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
@@ -198,13 +202,6 @@ export const evaluateOne = <K extends keyof PathTypes>(
   );
 };
 
-// Map from computer to human readable units
-const UNIT_MAP = new Map([
-  ["[lb_av]", "lb"],
-  ["[in_i]", "in"],
-  ["[in_us]", "in"],
-]);
-
 /**
  * Evaluates the FHIR path and formats it as an appropriate string value (may be empty). Supports
  * choice elements (e.g. using `.value` in path to get valueString or valueCoding) or
@@ -242,19 +239,22 @@ export const evaluateValue = (
 
   if (originalValuePath === "Quantity") {
     const data: Quantity = originalValue;
-    let unit = data.unit || "";
-    unit = UNIT_MAP.get(unit) || unit;
-    const firstLetterRegex = /^[a-z]/i;
-    if (unit?.match(firstLetterRegex)) {
-      unit = " " + unit;
-    }
-    value = `${data.value ?? ""}${unit}`;
+    value = formatQuantity(data) || "";
   } else if (originalValuePath === "CodeableConcept") {
     const data: CodeableConcept = originalValue;
     value = formatCodeableConcept(data) ?? "";
   } else if (originalValuePath === "Coding") {
     const data: Coding = originalValue;
     value = data?.display || data?.code || "";
+  } else if (originalValuePath === "Observation.referenceRange") {
+    const data: ObservationReferenceRange = originalValue;
+    const low = formatQuantity(data.low);
+    const high = formatQuantity(data.high);
+    if (low || high) {
+      value = `${low} - ${high}`;
+    } else {
+      value = data.text || "";
+    }
   } else if (typeof originalValue === "object") {
     console.log(`Not implemented for ${originalValuePath}`);
   }
