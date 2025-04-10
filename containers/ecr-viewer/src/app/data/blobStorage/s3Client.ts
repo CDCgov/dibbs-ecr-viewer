@@ -1,6 +1,21 @@
-import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  DeleteObjectCommandOutput,
+  HeadBucketCommand,
+  PutObjectCommand,
+  PutObjectCommandOutput,
+  S3Client,
+} from "@aws-sdk/client-s3";
 
 import { S3_SOURCE } from "@/app/api/utils";
+
+import {
+  BlobResponse,
+  DELETE_FAILURE,
+  DELETE_SUCCESS,
+  SAVE_FAILURE,
+  SAVE_SUCCESS,
+} from "./utils";
 
 export const s3Client = new S3Client({
   region: process.env.AWS_REGION,
@@ -28,5 +43,77 @@ export const s3HealthCheck = async () => {
   } catch (error: unknown) {
     console.error(error);
     return "DOWN";
+  }
+};
+
+/**
+ * Saves a FHIR bundle to an AWS S3 bucket.
+ * @param body - The string content to be saved.
+ * @param objectKey - The name of the blob.
+ * @returns An object containing the status and message.
+ */
+export const saveToS3 = async (
+  body: string,
+  objectKey: string,
+): Promise<BlobResponse> => {
+  const bucketName = process.env.ECR_BUCKET_NAME;
+
+  try {
+    const input = {
+      Body: body,
+      Bucket: bucketName,
+      Key: objectKey,
+      ContentType: "application/json",
+    };
+    const command = new PutObjectCommand(input);
+    const response: PutObjectCommandOutput = await s3Client.send(command);
+    const httpStatusCode = response?.$metadata?.httpStatusCode;
+
+    if (httpStatusCode !== 200) {
+      throw new Error(`HTTP Status Code: ${httpStatusCode}`);
+    }
+
+    return SAVE_SUCCESS;
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to save blob to S3.",
+      error,
+      objectKey,
+    });
+    return SAVE_FAILURE;
+  }
+};
+
+/**
+ * Deletes a blob from an AWS S3 bucket.
+ * @param objectKey - The name of the blob.
+ * @returns An object containing the status and message.
+ */
+export const deleteFromS3 = async (
+  objectKey: string,
+): Promise<BlobResponse> => {
+  const bucketName = process.env.ECR_BUCKET_NAME;
+
+  try {
+    const input = {
+      Bucket: bucketName,
+      Key: objectKey,
+    };
+    const command = new DeleteObjectCommand(input);
+    const response: DeleteObjectCommandOutput = await s3Client.send(command);
+    const httpStatusCode = response?.$metadata?.httpStatusCode;
+
+    if (httpStatusCode !== 200) {
+      throw new Error(`HTTP Status Code: ${httpStatusCode}`);
+    }
+
+    return DELETE_SUCCESS;
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to delete blob to S3.",
+      error,
+      objectKey,
+    });
+    return DELETE_FAILURE;
   }
 };
