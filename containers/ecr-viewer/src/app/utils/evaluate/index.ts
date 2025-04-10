@@ -16,6 +16,7 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 import {
   formatCodeableConcept,
   formatQuantity,
+  formatRange,
 } from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
@@ -248,13 +249,8 @@ export const evaluateValue = (
     value = data?.display || data?.code || "";
   } else if (originalValuePath === "Observation.referenceRange") {
     const data: ObservationReferenceRange = originalValue;
-    const low = formatQuantity(data.low);
-    const high = formatQuantity(data.high);
-    if (low || high) {
-      value = `${low} - ${high}`;
-    } else {
-      value = data.text || "";
-    }
+    const range = formatRange(data);
+    value = range || data.text || "";
   } else if (typeof originalValue === "object") {
     console.log(`Not implemented for ${originalValuePath}`);
   }
