@@ -7,6 +7,7 @@ import {
   HumanName,
   PatientContact,
   Quantity,
+  Range,
   RelatedPerson,
 } from "fhir/r4";
 
@@ -350,6 +351,25 @@ export const formatQuantity = (
     unit = " " + unit;
   }
   return `${data.value ?? ""}${unit}`;
+};
+
+/**
+ * Takes a range and formats it into a string. Handles spacing of units and re-maps
+ * certain robot-looking units into human-looking units
+ * @param data the Range to format
+ * @returns formatted string
+ */
+export const formatRange = (data: Range | undefined): string | undefined => {
+  if (!data) return;
+  const low = formatQuantity(data.low);
+  const high = formatQuantity(data.high);
+  if (low && high) {
+    return `${low} - ${high}`;
+  } else if (low) {
+    return `>=${low}`;
+  } else if (high) {
+    return `<=${high}`;
+  }
 };
 
 /**
