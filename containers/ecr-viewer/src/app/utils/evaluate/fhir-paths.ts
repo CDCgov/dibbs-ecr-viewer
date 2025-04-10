@@ -17,6 +17,7 @@ import {
   Organization,
   PatientCommunication,
   PatientContact,
+  Period,
   Procedure,
   Quantity,
   Reference,
@@ -73,8 +74,7 @@ export type PathTypes = {
   ehrManufacturerModel: string;
   eRSDwarnings: Coding;
   compositionAuthorRefs: Reference;
-  encounterEndDate: string;
-  encounterStartDate: string;
+  encounterPeriod: Period;
   encounterDiagnosis: EncounterDiagnosis;
   encounterType: string;
   encounterID: Identifier;
@@ -316,13 +316,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Encounter Info
-  encounterEndDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period.end",
-  },
-  encounterStartDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
+  encounterPeriod: {
+    type: "Period",
+    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period",
   },
   encounterDiagnosis: {
     type: "EncounterDiagnosis",

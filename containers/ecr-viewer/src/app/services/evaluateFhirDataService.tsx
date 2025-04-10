@@ -147,51 +147,42 @@ export interface Age {
 }
 
 /**
- * Calculates the age of a patient to a given date or today, unless DOD exists.
+ * Calculates the patient's age at a specific point in time or the current date.
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param [givenDate] - Optional. The target date to calculate the age. Defaults to the current date if not provided.
- * @returns - The exact age of the patient in years/months/days, or undefined if date of birth is not available or if date of death exists.
+ * @param [givenDate] - Optional date to calculate age at, overrides encounter dates
+ * @returns The patient's age in years, or undefined if:
+ *   - Patient has a recorded death date
+ *   - Patient has no birth date
  */
 export const calculatePatientAge = (
   fhirBundle: Bundle,
   givenDate?: string,
 ): Age | undefined => {
-  const deathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
 
-  // if a death date is available, don't calculate patient age
+  // If no patient DOB is available, return undefined.
+  if (!patientDOBString) {
+    return undefined;
+  }
+
+  const patientDOB = DateTime.fromJSDate(new Date(patientDOBString));
+
+  // If date is provided by caller, use that.
+  if (givenDate) {
+    return calculateYearsFrom(
+      DateTime.fromJSDate(new Date(givenDate)),
+      patientDOB,
+    );
+  }
+
+  // If a death date is available, return undefined.
+  const deathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
   if (deathDate) {
     return undefined;
   }
 
-  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
-
-  // date is provided by caller, use that
-  if (patientDOBString && givenDate) {
-    return getPatientAge(
-      DateTime.fromJSDate(new Date(givenDate)),
-      DateTime.fromJSDate(new Date(patientDOBString)),
-    );
-  }
-
-  // no date provided, use encounter or today's date
-  if (patientDOBString) {
-    const encounterStartDate = evaluateOne(
-      fhirBundle,
-      fhirPathMappings.encounterStartDate,
-    );
-
-    // use the encounter start date if one is available, otherwise we'll fall back to today's date
-    const laterDate = encounterStartDate
-      ? new Date(encounterStartDate)
-      : new Date();
-
-    return getPatientAge(
-      DateTime.fromJSDate(laterDate),
-      DateTime.fromJSDate(new Date(patientDOBString)),
-    );
-  }
-
-  return undefined;
+  // Default to current date if no encounter date is available
+  return calculateYearsFrom(DateTime.now(), patientDOB);
 };
 
 /**
@@ -210,7 +201,7 @@ export const calculatePatientAgeAtDeath = (
     const laterDate = DateTime.fromJSDate(new Date(patientDODString));
     const earlierDate = DateTime.fromJSDate(new Date(patientDOBString));
 
-    return getPatientAge(laterDate, earlierDate);
+    return calculateYearsFrom(laterDate, earlierDate);
   } else {
     return undefined;
   }
@@ -222,7 +213,10 @@ export const calculatePatientAgeAtDeath = (
  * @param earlierDate DateTime earlier in time
  * @returns An `Age`
  */
-const getPatientAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
+const calculateYearsFrom = (
+  laterDate: DateTime,
+  earlierDate: DateTime,
+): Age => {
   const { years, months, days } = laterDate
     .diff(earlierDate, ["years", "months", "days"])
     .toObject();
@@ -354,10 +348,7 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       title: "DOB",
       value: evaluatePatientDOB(fhirBundle),
     },
-    {
-      title: "Age at Encounter",
-      value: formatAge(calculatePatientAge(fhirBundle)),
-    },
+    createPatientAgeDataProp(fhirBundle),
     {
       title: "Age at Death",
       value: formatAge(calculatePatientAgeAtDeath(fhirBundle)),
@@ -445,8 +436,7 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
     {
       title: "Encounter Date/Time",
       value: formatStartEndDateTime(
-        evaluateOne(fhirBundle, fhirPathMappings.encounterStartDate),
-        evaluateOne(fhirBundle, fhirPathMappings.encounterEndDate),
+        evaluateOne(fhirBundle, fhirPathMappings.encounterPeriod),
       ),
     },
     {
@@ -586,7 +576,6 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
 
   const tables = participants.map((participant) => {
     const role = evaluateValue(participant, "type");
-    const { start, end } = participant.period ?? {};
     const participantRef = participant.individual?.reference;
 
     const { practitioner } = evaluatePractitionerRoleReference(
@@ -602,7 +591,7 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
         value: role || noData,
       },
       Dates: {
-        value: formatStartEndDate(start, end) || noData,
+        value: formatStartEndDate(participant.period) || noData,
       },
     } as HtmlTableJsonRow;
   });
@@ -734,4 +723,65 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
  */
 export const censorGender = (gender: string | undefined) => {
   return gender && ["Male", "Female"].includes(gender) ? gender : "";
+};
+
+/**
+ * Creates a DisplayDataProps object for patient age data based on the following:
+ * 1) If the patient has a death date, it returns an empty object.
+ * 2) If the encounter has a start date, it calculates the age at that date.
+ * 3) If the encounter has an end date and it is in the past, it calculates the age at that end date.
+ * 4) If there are no encounter dates, it calculates the current age.
+ * @param fhirBundle - The FHIR bundle containing patient data.
+ * @returns A DisplayDataProps object with title, tooltip, and value for patient age.
+ */
+export const createPatientAgeDataProp = (
+  fhirBundle: Bundle,
+): DisplayDataProps => {
+  const encounterPeriod = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.encounterPeriod,
+  );
+  const hasDeathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+  let title = "Current Age";
+  let toolTip;
+  let value;
+
+  // If patient has death date, return empty object
+  if (hasDeathDate) {
+    return { title, toolTip, value };
+  }
+
+  // Handle encounter start date
+  if (encounterPeriod?.start) {
+    title = "Age at Encounter";
+    value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.start));
+    return { title, toolTip, value };
+  }
+
+  // Handle encounter end date
+  if (encounterPeriod?.end) {
+    const encounterEnd = DateTime.fromJSDate(new Date(encounterPeriod.end));
+
+    if (encounterEnd <= DateTime.now()) {
+      title = "Age at Encounter";
+      toolTip =
+        "Age at end date of encounter. Start date of encounter is not available.";
+      value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.end));
+    } else {
+      value = formatAge(calculatePatientAge(fhirBundle));
+      if (value) {
+        toolTip =
+          "Age at current date. No encounter start date and encounter end date is in the future.";
+      }
+    }
+    return { title, toolTip, value };
+  }
+
+  // Handle no encounter dates
+  value = formatAge(calculatePatientAge(fhirBundle));
+  if (value) {
+    toolTip = "Age at current date. No encounter date available.";
+  }
+
+  return { title, toolTip, value };
 };

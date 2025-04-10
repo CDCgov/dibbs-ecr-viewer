@@ -2,6 +2,8 @@ import { Bundle } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
+import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
+import BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
 import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
 import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
@@ -18,9 +20,15 @@ import {
   evaluatePatientLanguage,
   evaluatePatientVitalStatus,
   censorGender,
+  calculatePatientAge,
+  calculatePatientAgeAtDeath,
+  createPatientAgeDataProp,
 } from "@/app/services/evaluateFhirDataService";
+import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
+
+const BundleWithPatient = _BundleWithPatient as Bundle;
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Identifier", () => {
@@ -377,5 +385,198 @@ Home: 123-456-6909`,
       const actual = censorGender(expected);
       expect(actual).toEqual("");
     });
+  });
+
+  describe("Calculate Patient Age", () => {
+    it("when no date is given, should return patient age when DOB is available", () => {
+      // Fixed "today" for testing purposes
+      jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
+
+      const patientAge = calculatePatientAge(
+        BundleWithPatient as unknown as Bundle,
+      );
+
+      expect(patientAge).toEqual({ years: 146, months: 9, days: 16 });
+
+      // Return to real time
+      jest.useRealTimers();
+    });
+
+    it("should return nothing when DOB is unavailable", () => {
+      const patientAge = calculatePatientAge(undefined as any);
+
+      expect(patientAge).toEqual(undefined);
+    });
+
+    it("when date is given, should return age at given date", () => {
+      const givenDate = "2020-01-01";
+
+      const patientAge = calculatePatientAge(
+        BundleWithPatient as unknown as Bundle,
+        givenDate,
+      );
+
+      expect(patientAge).toEqual({ years: 142, months: 7, days: 7 });
+    });
+
+    it("should return a value that can display only in days", () => {
+      const patientAge = calculatePatientAge(
+        BundleWithPatient as unknown as Bundle,
+        "1877-05-30",
+      );
+
+      const formattedPatientAge = formatAge(patientAge);
+
+      expect(formattedPatientAge).toEqual("5 days");
+    });
+  });
+
+  describe("Calculate Age at Death", () => {
+    it("should return age at death when DOD is given", () => {
+      const patientAgeAtDeath = calculatePatientAgeAtDeath(
+        BundleWithDeceasedPatient as unknown as Bundle,
+      );
+
+      expect(patientAgeAtDeath).toEqual({ years: 4, months: 9, days: 26 });
+    });
+
+    it("should have a defined Age at Death, and not have a defined Age at Encounter when Date of Death is given", () => {
+      jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
+      const expectedAge = undefined;
+
+      const patientAge = calculatePatientAge(
+        BundleWithDeceasedPatient as unknown as Bundle,
+      );
+
+      const patientAgeAtDeath = calculatePatientAgeAtDeath(
+        BundleWithDeceasedPatient as unknown as Bundle,
+      );
+
+      expect(patientAgeAtDeath).toEqual({ years: 4, months: 9, days: 26 });
+      expect(patientAge).toEqual(expectedAge);
+
+      // Return to real time
+      jest.useRealTimers();
+    });
+
+    it("should return age at death in months/days when age is under 2 years", () => {
+      const patientWithDeathDate = {
+        ...BundleWithDeceasedPatient,
+        entry: [
+          {
+            ...BundleWithDeceasedPatient.entry[0],
+            resource: {
+              ...BundleWithDeceasedPatient.entry[0].resource,
+              birthDate: "1818-01-27",
+              deceasedDate: "1819-02-01",
+            },
+          },
+        ],
+      } as unknown as Bundle;
+
+      const patientAgeAtDeath =
+        calculatePatientAgeAtDeath(patientWithDeathDate);
+
+      const formattedPatientAgeAtDeath = formatAge(patientAgeAtDeath);
+
+      const expectedAgeAtDeath = "12 months, 5 days";
+
+      expect(formattedPatientAgeAtDeath).toEqual(expectedAgeAtDeath);
+    });
+  });
+
+  describe("Create Patient Age Data Prop", () => {
+    it("should return an undefined age if there is a death date", () => {
+      const patientAgeProp = createPatientAgeDataProp(
+        BundleWithDeceasedPatient as unknown as Bundle,
+      );
+      expect(patientAgeProp.value).toEqual(undefined);
+    });
+
+    it("should return the patient age at the encounter start date", () => {
+      const patientBundleWithEncounter: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          ...BundleWithPatient.entry!,
+          {
+            resource: {
+              class: {
+                code: "testValue",
+              },
+              status: "unknown",
+              resourceType: "Encounter",
+              id: "123456789",
+              period: {
+                start: "1924-03-01",
+                end: "1924-03-12",
+              },
+            },
+          },
+        ],
+      };
+
+      const patientAgeProp = createPatientAgeDataProp(
+        patientBundleWithEncounter,
+      );
+
+      expect(patientAgeProp.value).toEqual("46 years");
+    });
+
+    it("should use the encounter end date if the start date does not exist and the end date is in the past.", () => {
+      const patientBundleWithEncounter: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          ...BundleWithPatient.entry!,
+          {
+            resource: {
+              class: {
+                code: "testValue",
+              },
+              status: "unknown",
+              resourceType: "Encounter",
+              id: "123456789",
+              period: {
+                end: "1920-03-12",
+              },
+            },
+          },
+        ],
+      };
+
+      const patientAgeProp = createPatientAgeDataProp(
+        patientBundleWithEncounter,
+      );
+
+      expect(patientAgeProp.value).toEqual("42 years");
+    });
+
+    it("should use the current date if there is no encounter date.", () => {
+      jest.useFakeTimers().setSystemTime(new Date("1924-03-12"));
+      const patientAgeProp = createPatientAgeDataProp(BundleWithPatient);
+
+      expect(patientAgeProp.value).toEqual("46 years");
+    });
+  });
+
+  it("should have a defined Age at Encounter, and not have a defined Age at Death when Date of Death is not given", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
+
+    const expectedAgeAtDeath = undefined;
+
+    const patientAge = calculatePatientAge(
+      BundleWithPatient as unknown as Bundle,
+    );
+
+    const patientAgeAtDeath = calculatePatientAgeAtDeath(
+      BundleWithPatient as unknown as Bundle,
+    );
+
+    expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
+    expect(patientAge).toEqual({ years: 146, months: 9, days: 16 });
+
+    // Return to real time
+    jest.useRealTimers();
   });
 });
