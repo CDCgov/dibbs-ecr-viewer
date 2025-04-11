@@ -447,7 +447,10 @@ Home: 123-456-6909`,
         patientBundleWithEncounter,
       );
 
-      expect(patientAgeProp.value).toEqual("46 years");
+      expect(patientAgeProp).toEqual({
+        title: "Age at Encounter",
+        value: "46 years",
+      });
     });
 
     it("should use the encounter end date if the start date does not exist and the end date is in the past.", () => {
@@ -476,14 +479,86 @@ Home: 123-456-6909`,
         patientBundleWithEncounter,
       );
 
-      expect(patientAgeProp.value).toEqual("42 years");
+      expect(patientAgeProp).toEqual({
+        title: "Age at Encounter",
+        value: "42 years",
+        toolTip:
+          "Age at end date of encounter. Start date of encounter is not available.",
+      });
     });
 
-    it("should use the current date if there is no encounter date.", () => {
-      jest.useFakeTimers().setSystemTime(new Date("1924-03-12"));
-      const patientAgeProp = createPatientAgeDataProp(BundleWithPatient);
+    it("should use the eCR created date if the start date does not exist and the end date is in the future.", () => {
+      const patientBundleWithEncounter: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          ...BundleWithPatient.entry!,
+          {
+            resource: {
+              resourceType: "Composition",
+              author: [{}],
+              date: "1924-03-12",
+              status: "final",
+              title: "test",
+              type: {},
+            },
+          },
+          {
+            resource: {
+              class: {
+                code: "testValue",
+              },
+              status: "unknown",
+              resourceType: "Encounter",
+              id: "123456789",
+              period: {
+                end: "2999-03-12",
+              },
+            },
+          },
+        ],
+      };
 
-      expect(patientAgeProp.value).toEqual("46 years");
+      const patientAgeProp = createPatientAgeDataProp(
+        patientBundleWithEncounter,
+      );
+
+      expect(patientAgeProp).toEqual({
+        title: "Age at Encounter",
+        value: "46 years",
+        toolTip:
+          "Using the date eCR was created as a proxy for date of encounter. No encounter start date and encounter end date is in the future.",
+      });
+    });
+
+    it("should use the eCR created date if there is no encounter date.", () => {
+      const patientBundleWithCreatedDate: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          ...BundleWithPatient.entry!,
+          {
+            resource: {
+              resourceType: "Composition",
+              author: [{}],
+              date: "1924-03-12",
+              status: "final",
+              title: "test",
+              type: {},
+            },
+          },
+        ],
+      };
+      const patientAgeProp = createPatientAgeDataProp(
+        patientBundleWithCreatedDate,
+      );
+
+      expect(patientAgeProp).toEqual({
+        title: "Age at Encounter",
+        value: "46 years",
+        toolTip:
+          "Using the date eCR was created as a proxy for date of encounter. No encounter date available.",
+      });
     });
   });
 });

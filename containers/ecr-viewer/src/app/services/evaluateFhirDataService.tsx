@@ -699,7 +699,7 @@ export const createPatientAgeDataProp = (
   );
   const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
 
-  let title = "Current Age";
+  let title = "Age at Encounter";
   let toolTip;
   let value;
 
@@ -723,7 +723,6 @@ export const createPatientAgeDataProp = (
 
   // Handle encounter start date
   if (encounterPeriod?.start) {
-    title = "Age at Encounter";
     value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.start));
     return { title, toolTip, value };
   }
@@ -733,15 +732,19 @@ export const createPatientAgeDataProp = (
     const encounterEnd = DateTime.fromJSDate(new Date(encounterPeriod.end));
 
     if (encounterEnd <= DateTime.now()) {
-      title = "Age at Encounter";
       toolTip =
         "Age at end date of encounter. Start date of encounter is not available.";
       value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.end));
     } else {
-      value = formatAge(calculatePatientAge(fhirBundle));
+      value = formatAge(
+        calculatePatientAge(
+          fhirBundle,
+          evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
+        ),
+      );
       if (value) {
         toolTip =
-          "Using the date eCR was received as a proxy for date of encounter. No encounter start date and encounter end date is in the future.";
+          "Using the date eCR was created as a proxy for date of encounter. No encounter start date and encounter end date is in the future.";
       }
     }
     return { title, toolTip, value };
