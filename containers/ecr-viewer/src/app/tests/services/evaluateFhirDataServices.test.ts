@@ -3,7 +3,7 @@ import { Bundle } from "fhir/r4";
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
-import BundleWithPatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
 import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluateEncounterId,
@@ -155,7 +155,7 @@ Home: 123-456-6909`,
     });
     it("should return all 3 of the addresses", () => {
       const actual = evaluatePatientAddress(
-        BundleWithPatientMultiple as unknown as Bundle,
+        BundlePatientMultiple as unknown as Bundle,
       );
       expect(actual).toEqual(
         "Home:\n" +
@@ -183,7 +183,7 @@ Home: 123-456-6909`,
     });
     it("should return all 2 of the names", () => {
       const actual = evaluatePatientName(
-        BundleWithPatientMultiple as unknown as Bundle,
+        BundlePatientMultiple as unknown as Bundle,
         false,
       );
       expect(actual).toEqual(
@@ -192,7 +192,7 @@ Home: 123-456-6909`,
     });
     it("should only return the official name for the banner", () => {
       const actual = evaluatePatientName(
-        BundleWithPatientMultiple as unknown as Bundle,
+        BundlePatientMultiple as unknown as Bundle,
         true,
       );
       expect(actual).toEqual("Anakin Skywalker");
@@ -214,7 +214,7 @@ Home: 123-456-6909`,
     });
     it("should empty string because there is no use, intake, or comment", () => {
       const actual = evaluateAlcoholUse(
-        BundleWithPatientMultiple as unknown as Bundle,
+        BundlePatientMultiple as unknown as Bundle,
       );
       expect(actual).toEqual("");
     });
