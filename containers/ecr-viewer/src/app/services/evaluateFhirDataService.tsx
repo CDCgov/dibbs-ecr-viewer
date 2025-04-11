@@ -149,10 +149,8 @@ export interface Age {
 /**
  * Calculates the patient's age at a specific point in time or the current date.
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param [givenDate] - Optional date to calculate age at, overrides encounter dates
- * @returns The patient's age in years, or undefined if:
- *   - Patient has a recorded death date
- *   - Patient has no birth date
+ * @param [givenDate] - Optional date to calculate age at.
+ * @returns The patient's age in years, or undefined if patient has no birth date.
  */
 export const calculatePatientAge = (
   fhirBundle: Bundle,
@@ -169,42 +167,11 @@ export const calculatePatientAge = (
 
   // If date is provided by caller, use that.
   if (givenDate) {
-    return calculateYearsFrom(
-      DateTime.fromJSDate(new Date(givenDate)),
-      patientDOB,
-    );
-  }
-
-  // If a death date is available, return undefined.
-  const deathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
-  if (deathDate) {
-    return undefined;
+    return calcuateAge(DateTime.fromJSDate(new Date(givenDate)), patientDOB);
   }
 
   // Default to current date if no encounter date is available
-  return calculateYearsFrom(DateTime.now(), patientDOB);
-};
-
-/**
- * Calculates Patient Age at Death if DOB and DOD exist, otherwise returns undefined
- * @param fhirBundle - The FHIR bundle containing patient information.
- * @returns - The age of the patient at death in years/months/days, or undefined if date of birth or date of death is not available.
- */
-export const calculatePatientAgeAtDeath = (
-  fhirBundle: Bundle,
-): Age | undefined => {
-  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
-
-  const patientDODString = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
-
-  if (patientDOBString && patientDODString) {
-    const laterDate = DateTime.fromJSDate(new Date(patientDODString));
-    const earlierDate = DateTime.fromJSDate(new Date(patientDOBString));
-
-    return calculateYearsFrom(laterDate, earlierDate);
-  } else {
-    return undefined;
-  }
+  return calcuateAge(DateTime.now(), patientDOB);
 };
 
 /**
@@ -213,10 +180,7 @@ export const calculatePatientAgeAtDeath = (
  * @param earlierDate DateTime earlier in time
  * @returns An `Age`
  */
-const calculateYearsFrom = (
-  laterDate: DateTime,
-  earlierDate: DateTime,
-): Age => {
+const calcuateAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
   const { years, months, days } = laterDate
     .diff(earlierDate, ["years", "months", "days"])
     .toObject();
@@ -234,16 +198,12 @@ const calculateYearsFrom = (
  * @returns The vital status of the patient, either `Alive`, `Deceased`, or `""` (if not found)
  */
 export const evaluatePatientVitalStatus = (fhirBundle: Bundle) => {
-  const isPatientDeceased = evaluateOne(
-    fhirBundle,
-    fhirPathMappings.patientVitalStatus,
-  );
-
-  if (isPatientDeceased === undefined) {
+  const isDeceased = isPatientDeceased(fhirBundle);
+  if (isDeceased === undefined) {
     return "";
+  } else {
+    return isDeceased === true ? "Deceased" : "Alive";
   }
-
-  return isPatientDeceased ? "Deceased" : "Alive";
 };
 
 /**
@@ -349,10 +309,6 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       value: evaluatePatientDOB(fhirBundle),
     },
     createPatientAgeDataProp(fhirBundle),
-    {
-      title: "Age at Death",
-      value: formatAge(calculatePatientAgeAtDeath(fhirBundle)),
-    },
     {
       title: "Vital Status",
       value: evaluatePatientVitalStatus(fhirBundle),
@@ -730,7 +686,7 @@ export const censorGender = (gender: string | undefined) => {
  * 1) If the patient has a death date, it returns an empty object.
  * 2) If the encounter has a start date, it calculates the age at that date.
  * 3) If the encounter has an end date and it is in the past, it calculates the age at that end date.
- * 4) If there are no encounter dates, it calculates the current age.
+ * 4) If there are no encounter dates, it calculates the age when eCr was created, as a proxy for encounter date.
  * @param fhirBundle - The FHIR bundle containing patient data.
  * @returns A DisplayDataProps object with title, tooltip, and value for patient age.
  */
@@ -741,14 +697,28 @@ export const createPatientAgeDataProp = (
     fhirBundle,
     fhirPathMappings.encounterPeriod,
   );
-  const hasDeathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
+
   let title = "Current Age";
   let toolTip;
   let value;
 
   // If patient has death date, return empty object
-  if (hasDeathDate) {
-    return { title, toolTip, value };
+  if (isPatientDeceased(fhirBundle)) {
+    title = "Age at Death";
+    const patientDODString = evaluateOne(
+      fhirBundle,
+      fhirPathMappings.patientDOD,
+    );
+    if (patientDOBString && patientDODString) {
+      value = formatAge(calculatePatientAge(fhirBundle, patientDODString));
+    }
+
+    return {
+      title,
+      value,
+      toolTip,
+    };
   }
 
   // Handle encounter start date
@@ -771,17 +741,37 @@ export const createPatientAgeDataProp = (
       value = formatAge(calculatePatientAge(fhirBundle));
       if (value) {
         toolTip =
-          "Age at current date. No encounter start date and encounter end date is in the future.";
+          "Using the date eCR was received as a proxy for date of encounter. No encounter start date and encounter end date is in the future.";
       }
     }
     return { title, toolTip, value };
   }
 
   // Handle no encounter dates
-  value = formatAge(calculatePatientAge(fhirBundle));
+  value = formatAge(
+    calculatePatientAge(
+      fhirBundle,
+      evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
+    ),
+  );
   if (value) {
-    toolTip = "Age at current date. No encounter date available.";
+    toolTip =
+      "Using the date eCR was created as a proxy for date of encounter. No encounter date available.";
   }
 
   return { title, toolTip, value };
+};
+
+/***
+ * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. If both are `undefined`
+ * return `undefined`.
+ */
+const isPatientDeceased = (fhirBundle: Bundle) => {
+  const vitalStatus = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.patientVitalStatus,
+  );
+  const dod = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+
+  return dod ? true : vitalStatus;
 };

@@ -1,10 +1,9 @@
 import { Bundle } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
-import BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
-import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import * as _BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
+import BundleWithPatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
 import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluateEncounterId,
@@ -21,7 +20,6 @@ import {
   evaluatePatientVitalStatus,
   censorGender,
   calculatePatientAge,
-  calculatePatientAgeAtDeath,
   createPatientAgeDataProp,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
@@ -29,14 +27,12 @@ import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
+const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Identifier", () => {
     it("should return the Identifier value", () => {
-      const actual = evaluateValue(
-        BundlePatient as unknown as Bundle,
-        mappings.patientIds,
-      );
+      const actual = evaluateValue(BundleWithPatient, mappings.patientIds);
 
       expect(actual).toEqual("1234567890");
     });
@@ -44,22 +40,20 @@ describe("evaluateFhirDataServices tests", () => {
 
   describe("Evaluate Patient Race", () => {
     it("should return race category and extension if available", () => {
-      const actual = evaluatePatientRace(BundlePatient as unknown as Bundle);
+      const actual = evaluatePatientRace(BundleWithPatient);
       expect(actual).toEqual("Black or African American\nAfrican");
     });
   });
 
   describe("Evaluate Patient Ethnicity", () => {
     it("should return ethnicity category and extension if available", () => {
-      const actual = evaluatePatientEthnicity(
-        BundlePatient as unknown as Bundle,
-      );
+      const actual = evaluatePatientEthnicity(BundleWithPatient);
       expect(actual).toEqual("Hispanic or Latino\nWhite");
     });
   });
 
   it("should return tribal affiliation if available", () => {
-    const actual = evaluateDemographicsData(BundlePatient as unknown as Bundle);
+    const actual = evaluateDemographicsData(BundleWithPatient);
     const ext = actual.availableData.filter(
       (d) => d.title === "Tribal Affiliation",
     );
@@ -70,7 +64,7 @@ describe("evaluateFhirDataServices tests", () => {
   });
 
   it("should return parent/guardian if available", () => {
-    const actual = evaluateDemographicsData(BundlePatient as unknown as Bundle);
+    const actual = evaluateDemographicsData(BundleWithPatient);
     const ext = actual.availableData.filter(
       (d) => d.title === "Parent/Guardian",
     );
@@ -156,12 +150,12 @@ Home: 123-456-6909`,
 
   describe("Evaluate Patient Address", () => {
     it("should return the 1 address", () => {
-      const actual = evaluatePatientAddress(BundlePatient as unknown as Bundle);
+      const actual = evaluatePatientAddress(BundleWithPatient);
       expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
     });
     it("should return all 3 of the addresses", () => {
       const actual = evaluatePatientAddress(
-        BundlePatientMultiple as unknown as Bundle,
+        BundleWithPatientMultiple as unknown as Bundle,
       );
       expect(actual).toEqual(
         "Home:\n" +
@@ -184,15 +178,12 @@ Home: 123-456-6909`,
 
   describe("Evaluate Patient Name", () => {
     it("should return the 1 name", () => {
-      const actual = evaluatePatientName(
-        BundlePatient as unknown as Bundle,
-        false,
-      );
+      const actual = evaluatePatientName(BundleWithPatient, false);
       expect(actual).toEqual("Han Solo");
     });
     it("should return all 2 of the names", () => {
       const actual = evaluatePatientName(
-        BundlePatientMultiple as unknown as Bundle,
+        BundleWithPatientMultiple as unknown as Bundle,
         false,
       );
       expect(actual).toEqual(
@@ -201,23 +192,20 @@ Home: 123-456-6909`,
     });
     it("should only return the official name for the banner", () => {
       const actual = evaluatePatientName(
-        BundlePatientMultiple as unknown as Bundle,
+        BundleWithPatientMultiple as unknown as Bundle,
         true,
       );
       expect(actual).toEqual("Anakin Skywalker");
     });
     it("should only return the official name for the banner", () => {
-      const actual = evaluatePatientName(
-        BundlePatient as unknown as Bundle,
-        true,
-      );
+      const actual = evaluatePatientName(BundleWithPatient, true);
       expect(actual).toEqual("Han Solo");
     });
   });
 
   describe("Evaluate Alcohol Use", () => {
     it("should return the use, intake comment", () => {
-      const actual = evaluateAlcoholUse(BundlePatient as unknown as Bundle);
+      const actual = evaluateAlcoholUse(BundleWithPatient);
       expect(actual).toEqual(
         "Use: Current drinker of alcohol (finding)\n" +
           "Intake (standard drinks/week): .29/d\n" +
@@ -226,7 +214,7 @@ Home: 123-456-6909`,
     });
     it("should empty string because there is no use, intake, or comment", () => {
       const actual = evaluateAlcoholUse(
-        BundlePatientMultiple as unknown as Bundle,
+        BundleWithPatientMultiple as unknown as Bundle,
       );
       expect(actual).toEqual("");
     });
@@ -248,9 +236,7 @@ Home: 123-456-6909`,
     }
 
     it("should return an empty string when no `deceasedBoolean` value is present", () => {
-      const actual = evaluatePatientVitalStatus(
-        BundlePatient as unknown as Bundle,
-      );
+      const actual = evaluatePatientVitalStatus(BundleWithPatient);
       expect(actual).toEqual("");
     });
 
@@ -271,9 +257,7 @@ Home: 123-456-6909`,
 
   describe("Evaluate Patient language", () => {
     it("Should display language, proficiency, and mode", () => {
-      const actual = evaluatePatientLanguage(
-        BundlePatient as unknown as Bundle,
-      );
+      const actual = evaluatePatientLanguage(BundleWithPatient);
 
       expect(actual).toEqual("English\nGood\nExpressed spoken");
     });
@@ -392,9 +376,7 @@ Home: 123-456-6909`,
       // Fixed "today" for testing purposes
       jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
 
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-      );
+      const patientAge = calculatePatientAge(BundleWithPatient);
 
       expect(patientAge).toEqual({ years: 146, months: 9, days: 16 });
 
@@ -411,19 +393,13 @@ Home: 123-456-6909`,
     it("when date is given, should return age at given date", () => {
       const givenDate = "2020-01-01";
 
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        givenDate,
-      );
+      const patientAge = calculatePatientAge(BundleWithPatient, givenDate);
 
       expect(patientAge).toEqual({ years: 142, months: 7, days: 7 });
     });
 
     it("should return a value that can display only in days", () => {
-      const patientAge = calculatePatientAge(
-        BundleWithPatient as unknown as Bundle,
-        "1877-05-30",
-      );
+      const patientAge = calculatePatientAge(BundleWithPatient, "1877-05-30");
 
       const formattedPatientAge = formatAge(patientAge);
 
@@ -431,66 +407,17 @@ Home: 123-456-6909`,
     });
   });
 
-  describe("Calculate Age at Death", () => {
-    it("should return age at death when DOD is given", () => {
-      const patientAgeAtDeath = calculatePatientAgeAtDeath(
-        BundleWithDeceasedPatient as unknown as Bundle,
-      );
-
-      expect(patientAgeAtDeath).toEqual({ years: 4, months: 9, days: 26 });
-    });
-
-    it("should have a defined Age at Death, and not have a defined Age at Encounter when Date of Death is given", () => {
-      jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
-      const expectedAge = undefined;
-
-      const patientAge = calculatePatientAge(
-        BundleWithDeceasedPatient as unknown as Bundle,
-      );
-
-      const patientAgeAtDeath = calculatePatientAgeAtDeath(
-        BundleWithDeceasedPatient as unknown as Bundle,
-      );
-
-      expect(patientAgeAtDeath).toEqual({ years: 4, months: 9, days: 26 });
-      expect(patientAge).toEqual(expectedAge);
-
-      // Return to real time
-      jest.useRealTimers();
-    });
-
-    it("should return age at death in months/days when age is under 2 years", () => {
-      const patientWithDeathDate = {
-        ...BundleWithDeceasedPatient,
-        entry: [
-          {
-            ...BundleWithDeceasedPatient.entry[0],
-            resource: {
-              ...BundleWithDeceasedPatient.entry[0].resource,
-              birthDate: "1818-01-27",
-              deceasedDate: "1819-02-01",
-            },
-          },
-        ],
-      } as unknown as Bundle;
-
-      const patientAgeAtDeath =
-        calculatePatientAgeAtDeath(patientWithDeathDate);
-
-      const formattedPatientAgeAtDeath = formatAge(patientAgeAtDeath);
-
-      const expectedAgeAtDeath = "12 months, 5 days";
-
-      expect(formattedPatientAgeAtDeath).toEqual(expectedAgeAtDeath);
-    });
-  });
-
   describe("Create Patient Age Data Prop", () => {
-    it("should return an undefined age if there is a death date", () => {
+    it("should return Age at Death if there is a date of death", () => {
       const patientAgeProp = createPatientAgeDataProp(
-        BundleWithDeceasedPatient as unknown as Bundle,
+        BundleWithDeceasedPatient,
       );
-      expect(patientAgeProp.value).toEqual(undefined);
+      expect(patientAgeProp).toEqual({
+        title: "Age at Death",
+        value: "4 years",
+        toolTip: undefined,
+      });
+      expect;
     });
 
     it("should return the patient age at the encounter start date", () => {
@@ -558,25 +485,5 @@ Home: 123-456-6909`,
 
       expect(patientAgeProp.value).toEqual("46 years");
     });
-  });
-
-  it("should have a defined Age at Encounter, and not have a defined Age at Death when Date of Death is not given", () => {
-    jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
-
-    const expectedAgeAtDeath = undefined;
-
-    const patientAge = calculatePatientAge(
-      BundleWithPatient as unknown as Bundle,
-    );
-
-    const patientAgeAtDeath = calculatePatientAgeAtDeath(
-      BundleWithPatient as unknown as Bundle,
-    );
-
-    expect(patientAgeAtDeath).toEqual(expectedAgeAtDeath);
-    expect(patientAge).toEqual({ years: 146, months: 9, days: 16 });
-
-    // Return to real time
-    jest.useRealTimers();
   });
 });
