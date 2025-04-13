@@ -101,7 +101,7 @@
     "jest-extended": "^4.0.2",
     "jest-fail-on-console": "^3.3.1",
     "jest-fetch-mock": "^3.0.3",
-    "lighthouse": "^12.4.0",
+    "lighthouse": "^12.5.1",
     "playwright-lighthouse": "^4.0.0",
     "postcss": "^8.4.38",
     "prettier": "3.1.0",
