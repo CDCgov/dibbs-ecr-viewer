@@ -339,8 +339,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
  */
 const evaluateEncounterDate = (fhirBundle: Bundle) => {
   return formatStartEndDateTime(
-    evaluateOne(fhirBundle, fhirPathMappings.encounterStartDate),
-    evaluateOne(fhirBundle, fhirPathMappings.encounterEndDate),
+    evaluateOne(fhirBundle, fhirPathMappings.encounterPeriod),
   );
 };
 
