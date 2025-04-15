@@ -77,3 +77,5 @@ services:
     environment:
       - CONFIG_NAME=${CONFIG_NAME}
       - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
+    extra_hosts:
+      - host.docker.internal:host-gateway

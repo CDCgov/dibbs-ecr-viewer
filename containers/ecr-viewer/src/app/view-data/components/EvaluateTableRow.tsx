@@ -38,7 +38,7 @@ export const EvaluateTableRow = ({
     <>
       <tr>
         {rowCellsData.map(({ data, hidden }, index) => (
-          <td key={`row-data-${index}`} className="text-top">
+          <td key={`row-data-${index}`} className="text-top text-pre-line">
             {data ? (
               hidden ? (
                 <Button

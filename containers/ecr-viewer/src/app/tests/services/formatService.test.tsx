@@ -14,6 +14,8 @@ import {
   formatPatientContactList,
   formatCodeableConcept,
   formatAge,
+  formatQuantity,
+  formatRange,
 } from "@/app/services/formatService";
 
 describe("FormatService tests", () => {
@@ -658,6 +660,55 @@ describe("FormatService tests", () => {
 
       const actual = formatCodeableConcept(codeableConcept);
       expect(actual).toEqual(codeValue);
+    });
+  });
+
+  describe("formatQuantity", () => {
+    it("should handle missing data", () => {
+      expect(formatQuantity({})).toBeUndefined();
+    });
+
+    it("should handle missing unit", () => {
+      expect(formatQuantity({ value: 1.234 })).toBe("1.234");
+    });
+
+    it("should handle percent unit", () => {
+      expect(formatQuantity({ value: 1.234, unit: "%" })).toBe("1.234%");
+    });
+
+    it("should handle mapped unit", () => {
+      expect(formatQuantity({ value: 1.234, unit: "[lb_av]" })).toBe(
+        "1.234 lb",
+      );
+    });
+
+    it("should handle regular unit", () => {
+      expect(formatQuantity({ value: 1.234, unit: "mmol/L" })).toBe(
+        "1.234 mmol/L",
+      );
+    });
+  });
+
+  describe("formatRange", () => {
+    it("should handle missing data", () => {
+      expect(formatRange({})).toBeUndefined();
+    });
+
+    it("should low and high", () => {
+      expect(
+        formatRange({
+          low: { value: 1.234, unit: "%" },
+          high: { value: 2, unit: "[lb_av]" },
+        }),
+      ).toBe("1.234% - 2 lb");
+    });
+
+    it("should low only", () => {
+      expect(formatRange({ low: { value: 1.234 } })).toBe(">=1.234");
+    });
+
+    it("should high only", () => {
+      expect(formatRange({ high: { value: 1.234 } })).toBe("<=1.234");
     });
   });
 });
