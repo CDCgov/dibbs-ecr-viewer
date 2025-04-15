@@ -131,35 +131,37 @@ export const formatDate = (dateString?: string): string | undefined => {
   }
 };
 
+interface Period {
+  start?: string;
+  end?: string;
+}
+
 /**
  * Formats the provided start and end date-time strings and returns a formatted string
  * with both the start and end times. Each time is labeled and separated by a carriage return
  * and newline for clarity in display or further processing.
- * @param startDateTime - The start date-time string to be formatted.
- * @param endDateTime - The end date-time string to be formatted.
+ * @param root0 - An object containing the start and end date-time strings.
+ * @param root0.start - The start date-time string to be formatted.
+ * @param root0.end - The end date-time string to be formatted.
  * @returns A string with the formatted start and end times, each on a new line.
  */
-export const formatStartEndDateTime = (
-  startDateTime: string | undefined,
-  endDateTime: string | undefined,
-) => formatStartEnd(startDateTime, endDateTime, formatDateTime);
+export const formatStartEndDateTime = ({ start, end }: Period = {}) =>
+  formatStartEnd({ start, end }, formatDateTime);
 
 /**
  * Formats the provided start and end date strings and returns a formatted string
  * with both the start and end dates. Each date is labeled and separated by a carriage return
  * and newline for clarity in display or further processing.
- * @param startDate - The start date-time string to be formatted.
- * @param endDate - The end date-time string to be formatted.
+ * @param root0 - An object containing the start and end date strings.
+ * @param root0.start - The start date-time string to be formatted.
+ * @param root0.end - The end date-time string to be formatted.
  * @returns A string with the formatted start and end times, each on a new line.
  */
-export const formatStartEndDate = (
-  startDate: string | undefined,
-  endDate: string | undefined,
-) => formatStartEnd(startDate, endDate, formatDate);
+export const formatStartEndDate = ({ start, end }: Period = {}) =>
+  formatStartEnd({ start, end }, formatDate);
 
 const formatStartEnd = (
-  start: string | undefined,
-  end: string | undefined,
+  { start, end }: Period = {},
   formatFn: (dt: string | undefined) => string | undefined,
 ) => {
   const textArray: String[] = [];
