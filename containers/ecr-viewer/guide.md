@@ -129,9 +129,7 @@ These are variables that have been retired and no longer have a use in the app. 
 
 Data can be added to the eCR Viewer as a step in Rhapsody.
 
-```js
-Placeholder script
-```
+Rhapsody documentation and an example route can be found [here](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/examples/rhapsody).
 
 ### From API
 
@@ -144,4 +142,4 @@ curl --location '{URL}/ecr-viewer/api/process-zip' \
 
 ## Database Setup
 
-Database setup, migration, and updates are handled at app startup by [Kysely](https://kysely.dev/docs/migrations). There is no need to run any other scripts manually.
+Database setup, migration, and updates are handled by [Kysely](https://kysely.dev/docs/migrations) but must be triggered manually. Migrations are run by executing the command `npm run db:migrate:up` on the host that is running the eCR Viewer. If the latest migration has not been run the eCR Viewer will log an error and exit on startup.
