@@ -101,7 +101,6 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     }
   };
 
-  // const eRSDTextList: ERSDWarning[] = [];
   const fhirEICRProcessingStatus = evaluateValue(
     fhirBundle,
     fhirPathMappings.eICRProcessingStatus
@@ -159,52 +158,6 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
         : [];
     })()
   : [];
-
-  // if (fhirEICRProcessingStatus && fhirEICRProcessingStatus !== "RRVS19" && fhirEICRProcessingStatusReasonObs) {
-  //   const warningCode =
-  //     fhirEICRProcessingStatusReasonObs.valueCodeableConcept?.coding?.[0].code;
-  //   const warningName =
-  //     fhirEICRProcessingStatusReasonObs.valueCodeableConcept?.coding?.[0]
-  //       .display ||
-  //     eicrProcessingReasonMap[warningCode ?? ""] ||
-  //     "";
-
-  //   let versionUsed;
-  //   let versionExpected;
-
-  //   (fhirEICRProcessingStatusReasonObs.component ?? []).forEach(
-  //     (component) => {
-  //       const detailVal = component.valueString;
-  //       const detailCode = component.code?.coding?.[0]?.code;
-  //       const detailDisplay = component.code?.coding?.[0]?.display;
-
-  //       if (!detailCode) return;
-
-  //       if (
-  //         ReasonDetailMap[warningCode as keyof typeof ReasonDetailMap] ===
-  //         detailCode
-  //       ) {
-  //         versionUsed = detailDisplay
-  //           ? `${detailDisplay}: ${detailVal}`
-  //           : detailVal;
-  //       } else if (detailCode === "RRVS33") {
-  //         versionExpected = detailVal;
-  //       }
-  //     }
-  //   );
-
-  //   if (warningName || versionUsed || versionExpected || warningCode) {
-  //     eRSDTextList.push({
-  //       warning: warningName,
-  //       versionUsed: versionUsed ?? "No data",
-  //       expectedVersion: versionExpected ?? "No data",
-  //       suggestedSolution: 
-  //         ersdWarningsSuggestedSolutionsMap[
-  //           warningCode as keyof typeof ReasonDetailMap
-  //         ] ?? "No data",
-  //     });
-  //   }
-  // };
 
   const eicrDetails: DisplayDataProps[] = [
     {
