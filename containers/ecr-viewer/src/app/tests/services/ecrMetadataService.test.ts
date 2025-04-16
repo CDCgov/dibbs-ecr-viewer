@@ -3,6 +3,7 @@ import { Bundle } from "fhir/r4";
 import BundleWithEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
+import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 
 describe("Evaluate Ecr Metadata", () => {
@@ -92,14 +93,19 @@ describe("Evaluate Ecr Metadata", () => {
     expect(actual.eRSDWarnings).toEqual([
       {
         warning:
-          "Sending organization is using an outdated eRSD (RCTC) version",
-        versionUsed: "2020-06-23",
+          "The eICR was processed with the warning of: outdated eRSD (RCTC) version.",
+        versionUsed: "Outdated eRSD (RCTC) Version Detail: 3/29/2022",
         expectedVersion:
-          "Sending organization should be using one of the following: 2023-10-06, 1.2.2.0, 3.x.x.x.",
+          'The expected eRSD (RCTC) version should be one of the following: ["2024-06-28","1.2.4.0","3.x.x","2024-04-05"] ',
         suggestedSolution:
           "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
       },
     ]);
+  });
+  it("if processed with no warnings, should have empty eRSDwarnings", () => {
+    const actual = evaluateEcrMetadata(sample_ecr as unknown as Bundle);
+
+    expect(actual.eRSDWarnings).toEqual([]);
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
