@@ -76,21 +76,21 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       }
 
       condition.performer?.forEach((performer) =>
-        reportableConditionsList[name][trigger].add(performer.display)
+        reportableConditionsList[name][trigger].add(performer.display),
       );
     });
   }
 
   const custodianRef = evaluateOne(
     fhirBundle,
-    fhirPathMappings.eicrCustodianRef
+    fhirPathMappings.eicrCustodianRef,
   );
   const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
   const eicrReleaseVersion = (fhirBundle: Bundle) => {
     const releaseVersion: string = evaluateValue(
       fhirBundle,
-      fhirPathMappings.eicrReleaseVersion
+      fhirPathMappings.eicrReleaseVersion,
     );
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
@@ -103,61 +103,62 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
   const fhirEICRProcessingStatus = evaluateValue(
     fhirBundle,
-    fhirPathMappings.eICRProcessingStatus
+    fhirPathMappings.eICRProcessingStatus,
   );
   const fhirEICRProcessingStatusReasonObs = evaluateOne(
     fhirBundle,
-    fhirPathMappings.eICRProcessingStatusReason
+    fhirPathMappings.eICRProcessingStatusReason,
   );
 
   const eRSDTextList: ERSDWarning[] =
     fhirEICRProcessingStatus &&
     fhirEICRProcessingStatus !== "RRVS19" &&
     fhirEICRProcessingStatusReasonObs
-  ? (() => {
-      const coding =
-        fhirEICRProcessingStatusReasonObs.valueCodeableConcept?.coding?.[0];
-      const warningCode = coding?.code;
-      const warningName =
-        coding?.display || eicrProcessingReasonMap[warningCode ?? ""] || "";
+      ? (() => {
+          const coding =
+            fhirEICRProcessingStatusReasonObs.valueCodeableConcept?.coding?.[0];
+          const warningCode = coding?.code;
+          const warningName =
+            coding?.display || eicrProcessingReasonMap[warningCode ?? ""] || "";
 
-      let versionUsed: string | undefined;
-      let versionExpected: string | undefined;
+          let versionUsed: string | undefined;
+          let versionExpected: string | undefined;
 
-      (fhirEICRProcessingStatusReasonObs.component ?? []).forEach(
-        (component) => {
-          const detailVal = component.valueString;
-          const detailCode = component.code?.coding?.[0]?.code;
-          const detailDisplay = component.code?.coding?.[0]?.display;
+          (fhirEICRProcessingStatusReasonObs.component ?? []).forEach(
+            (component) => {
+              const detailVal = component.valueString;
+              const detailCode = component.code?.coding?.[0]?.code;
+              const detailDisplay = component.code?.coding?.[0]?.display;
 
-          if (!detailCode) return;
+              if (!detailCode) return;
 
-          if (
-            ReasonDetailMap[warningCode as keyof typeof ReasonDetailMap] ===
-            detailCode
-          ) {
-            versionUsed = detailDisplay
-              ? `${detailDisplay}: ${detailVal}`
-              : detailVal;
-          } else if (detailCode === "RRVS33") {
-            versionExpected = detailVal;
-          }
-        }
-      );
-
-      return warningName || versionUsed || versionExpected || warningCode
-        ? [
-            {
-              warning: warningName,
-              versionUsed: versionUsed ?? "No data",
-              expectedVersion: versionExpected ?? "No data",
-              suggestedSolution:
-                ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ?? "No suggested solution found",
+              if (
+                ReasonDetailMap[warningCode as keyof typeof ReasonDetailMap] ===
+                detailCode
+              ) {
+                versionUsed = detailDisplay
+                  ? `${detailDisplay}: ${detailVal}`
+                  : detailVal;
+              } else if (detailCode === "RRVS33") {
+                versionExpected = detailVal;
+              }
             },
-          ]
-        : [];
-    })()
-  : [];
+          );
+
+          return warningName || versionUsed || versionExpected || warningCode
+            ? [
+                {
+                  warning: warningName,
+                  versionUsed: versionUsed ?? "No data",
+                  expectedVersion: versionExpected ?? "No data",
+                  suggestedSolution:
+                    ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ??
+                    "No suggested solution found",
+                },
+              ]
+            : [];
+        })()
+      : [];
 
   const eicrDetails: DisplayDataProps[] = [
     {
@@ -169,7 +170,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     {
       title: "Date/Time eCR Created",
       value: formatDateTime(
-        evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated)
+        evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
       ),
     },
     {
@@ -213,7 +214,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     rrDetails: reportableConditionsList,
     eRSDWarnings: eRSDTextList,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details)
+      evaluateData(details),
     ),
   };
 };

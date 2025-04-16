@@ -32,5 +32,5 @@ export const ersdWarningsSuggestedSolutionsMap: Record<string, string> = {
 export enum ReasonDetailMap {
   RRVS29 = "RRVS31", // Outdated eRSD Version --> Outdated eRSD Version Detail
   RRVS34 = "RRVS35", // Malformed eRSD Version --> Malformed eRSD Version Detail
-  RRVS30 = "RRVS32" // Inactive eRSD Code --> Inactive eRSD Code Detail
-};
+  RRVS30 = "RRVS32", // Inactive eRSD Code --> Inactive eRSD Code Detail
+}
