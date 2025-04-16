@@ -1,5 +1,9 @@
-
-// TODO: Add resources/links
+/* 
+EICR Processing Status Value Sets
+EICR Processing Status: https://phinvads.cdc.gov/vads/ViewValueSet.action?oid=2.16.840.1.113883.10.20.15.2.5.8
+EICR Processing Status Reason: https://phinvads.cdc.gov/vads/ViewValueSet.action?oid=2.16.840.1.113883.10.20.15.2.5.7
+EICR Processing Status Reason Detail: https://phinvads.cdc.gov/vads/ViewValueSet.action?oid=2.16.840.1.113883.10.20.15.2.5.10
+*/
 
 export const eicrProcessingReasonMap: Record<string, string> = {
   RRVS23:
@@ -17,6 +21,7 @@ export const eicrProcessingReasonMap: Record<string, string> = {
   RRVS29: "Outdated eRSD (RCTC) Version",
 };
 
+// Note: Only have these suggested solutions currently. Long-term, we will figure out suggested solutions for the other warning reasons with APHL
 export const ersdWarningsSuggestedSolutionsMap: Record<string, string> = {
   RRVS34:
     "The trigger code version your organization is using could not be determined. The trigger codes may be out date. Please have your EHR administrators update the version format for complete eCR functioning.",

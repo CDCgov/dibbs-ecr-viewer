@@ -152,7 +152,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
               versionUsed: versionUsed ?? "No data",
               expectedVersion: versionExpected ?? "No data",
               suggestedSolution:
-                ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ?? "No data",
+                ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ?? "No suggested solution found",
             },
           ]
         : [];
