@@ -350,7 +350,7 @@ def test_upload_bundle_to_fhir_server_partial_success_500(
         bundle["entry"].append(single_resource)
 
     my_count = len(bundle.get("entry"))
-    assert my_count == 518
+    assert my_count == 519
     test_request = {
         "bundle": bundle,
         "cred_manager": "azure",
