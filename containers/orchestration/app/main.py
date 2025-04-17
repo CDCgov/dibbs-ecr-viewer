@@ -302,7 +302,7 @@ async def apply_workflow_to_message(
             processing_config = load_processing_config(config_file_name)
             wf_span.add_event("config loaded successfully")
         except FileNotFoundError as error:
-            response = Response(
+            return Response(
                 content=json.dumps(
                     {
                         "message": error.__str__(),
@@ -311,11 +311,6 @@ async def apply_workflow_to_message(
                 ),
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
-            wf_span.record_exception(FileNotFoundError)
-            wf_span.set_status(
-                StatusCode(2), "Could not load config: " + error.__str__()
-            )
-            return response
 
         # Compile the input to the other service endpoints and call them
         api_input = {
