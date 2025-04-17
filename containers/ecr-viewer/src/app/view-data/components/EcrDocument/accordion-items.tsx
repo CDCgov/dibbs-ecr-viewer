@@ -109,7 +109,7 @@ export const getEcrDocumentAccordionItems = (
     {
       title: "Clinical Info",
       content: Object.values(clinicalData).some(
-        (section) => section.availableData.length > 0
+        (section) => section.availableData.length > 0,
       ) ? (
         <ClinicalInfo
           clinicalNotes={clinicalData.clinicalNotes.availableData}
@@ -148,7 +148,7 @@ export const getEcrDocumentAccordionItems = (
           Object.keys(ecrMetadata.eRSDWarnings).length > 0 ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
-            (authorDetails) => authorDetails.availableData.length > 0
+            (authorDetails) => authorDetails.availableData.length > 0,
           ) ||
           ecrMetadata.ecrCustodianDetails.availableData.length > 0 ? (
             <EcrMetadata
@@ -199,7 +199,7 @@ export const getEcrDocumentAccordionItems = (
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,
               ]}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails.map(
-                (authorDetails) => authorDetails.unavailableData
+                (authorDetails) => authorDetails.unavailableData,
               )}
             />
           ) : (
