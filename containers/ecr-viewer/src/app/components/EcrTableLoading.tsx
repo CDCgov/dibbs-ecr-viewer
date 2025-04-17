@@ -6,7 +6,7 @@ import { range } from "@/app/utils/data-utils";
  */
 export const EcrTableLoading = () => {
   return (
-    <tbody>
+    <tbody data-testid="loading-table">
       {range(10).map((i) => {
         return (
           <BlobRow key={i} themeColor={i % 2 === 0 ? "gray" : "dark-gray"} />

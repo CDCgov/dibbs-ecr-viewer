@@ -160,6 +160,49 @@ test.describe("ecr library page", () => {
     });
   });
 
+  test("eCR sorting", async ({ page }) => {
+    await page.goto("/ecr-viewer");
+
+    for (const [header, colIndex] of [
+      ["Patient", "1"],
+      ["Received Date", "2"],
+      ["Encounter Date", "3"],
+    ]) {
+      const headerButton = page.getByRole("button", {
+        name: header,
+        exact: true,
+      });
+
+      await headerButton.click();
+      await expect(page.getByTestId("loading-table")).toBeVisible();
+      await expect(page.getByText("Yoda")).toBeVisible();
+      await expect(
+        page.getByRole("columnheader", { name: header }),
+      ).toHaveAttribute("aria-sort", "ascending");
+      const ascContents = await Promise.all(
+        (await page.locator(`tr > td:nth-child(${colIndex})`).all()).map((td) =>
+          td.innerText(),
+        ),
+      );
+
+      await headerButton.click();
+      await expect(page.getByTestId("loading-table")).toBeVisible();
+      await expect(page.getByText("Yoda")).toBeVisible();
+      await expect(
+        page.getByRole("columnheader", { name: header }),
+      ).toHaveAttribute("aria-sort", "descending");
+      const descContents = await Promise.all(
+        (await page.locator(`tr > td:nth-child(${colIndex})`).all()).map((td) =>
+          td.innerText(),
+        ),
+      );
+
+      ascContents.forEach((ascContent, i) => {
+        expect(ascContent).toBe(descContents.at(-1 * (i + 1)));
+      });
+    }
+  });
+
   test.describe("eCR grouping", () => {
     test("expanding group", async ({ page }) => {
       await page.goto("/ecr-viewer");
@@ -170,6 +213,12 @@ test.describe("ecr library page", () => {
       await expect(
         (await page.getByRole("row", { level: 2 }).all()).length,
       ).toEqual(2);
+
+      // collapse it back down
+      await page.getByRole("button", { name: "Hide Related eCRs" }).click();
+      await expect(
+        (await page.getByRole("row", { level: 2 }).all()).length,
+      ).toEqual(0);
     });
   });
 });
