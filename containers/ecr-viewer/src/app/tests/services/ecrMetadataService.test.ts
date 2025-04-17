@@ -90,22 +90,22 @@ describe("Evaluate Ecr Metadata", () => {
       BundleWithEcrMetadata as unknown as Bundle,
     );
 
-    expect(actual.eRSDWarnings).toEqual([
+    expect(actual.eRSDWarnings).toEqual(
       {
         warning:
           "The eICR was processed with the warning of: outdated eRSD (RCTC) version.",
         versionUsed: "Outdated eRSD (RCTC) Version Detail: 3/29/2022",
-        expectedVersion:
+        versionExpected:
           'The expected eRSD (RCTC) version should be one of the following: ["2024-06-28","1.2.4.0","3.x.x","2024-04-05"] ',
         suggestedSolution:
           "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
-      },
-    ]);
+      }
+    );
   });
   it("if processed with no warnings, should have empty eRSDwarnings", () => {
     const actual = evaluateEcrMetadata(sample_ecr as unknown as Bundle);
 
-    expect(actual.eRSDWarnings).toEqual([]);
+    expect(actual.eRSDWarnings).toEqual({});
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(

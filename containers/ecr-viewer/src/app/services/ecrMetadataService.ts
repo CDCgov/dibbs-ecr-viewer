@@ -1,6 +1,6 @@
 import { Bundle, Organization } from "fhir/r4";
 
-import { CompleteData, evaluateData } from "@/app/utils/data-utils";
+import { CompleteData, evaluateData, noData } from "@/app/utils/data-utils";
 import {
   eicrProcessingReasonMap,
   ersdWarningsSuggestedSolutionsMap,
@@ -36,14 +36,14 @@ interface EcrMetadata {
   ecrCustodianDetails: CompleteData;
   rrDetails: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
-  eRSDWarnings: ERSDWarning[];
+  eRSDWarnings: ERSDWarning;
 }
 
 export interface ERSDWarning {
-  warning: string;
-  versionUsed: string;
-  expectedVersion: string;
-  suggestedSolution: string;
+  warning?: string;
+  versionUsed?: string;
+  versionExpected?: string;
+  suggestedSolution?: string;
 }
 
 /**
@@ -110,7 +110,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     fhirPathMappings.eICRProcessingStatusReason,
   );
 
-  const eRSDTextList: ERSDWarning[] =
+  const eRSDTextList: ERSDWarning =
     fhirEICRProcessingStatus &&
     fhirEICRProcessingStatus !== "RRVS19" &&
     fhirEICRProcessingStatusReasonObs
@@ -144,21 +144,17 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
               }
             },
           );
-
           return warningName || versionUsed || versionExpected || warningCode
-            ? [
-                {
-                  warning: warningName,
-                  versionUsed: versionUsed ?? "No data",
-                  expectedVersion: versionExpected ?? "No data",
-                  suggestedSolution:
-                    ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ??
-                    "No suggested solution found",
-                },
-              ]
-            : [];
+            ? {
+                warning: warningName,
+                versionUsed,
+                versionExpected,
+                suggestedSolution:
+                  ersdWarningsSuggestedSolutionsMap[warningCode ?? ""],
+              }
+            : {};
         })()
-      : [];
+      : {};
 
   const eicrDetails: DisplayDataProps[] = [
     {

@@ -17,7 +17,7 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDWarnings: ERSDWarning[];
+  eRSDWarnings: ERSDWarning;
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
@@ -44,7 +44,7 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {eRSDWarnings?.length > 0 && (
+        {Object.keys(eRSDWarnings).length > 0 && (
           <div>
             <Table
               bordered={false}
@@ -66,19 +66,16 @@ const EcrMetadata = ({
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(eRSDWarnings) &&
-                  eRSDWarnings.map((warningItem, index) => (
-                    <tr key={index}>
-                      <td className="padding-105">{warningItem.warning}</td>
-                      <td className="padding-105">{warningItem.versionUsed}</td>
-                      <td className="padding-105">
-                        {warningItem.expectedVersion}
-                      </td>
-                      <td className="padding-105">
-                        {warningItem.suggestedSolution}
-                      </td>
-                    </tr>
-                  ))}
+                <tr>
+                  <td className="padding-105">{eRSDWarnings.warning}</td>
+                  <td className="padding-105">{eRSDWarnings.versionUsed}</td>
+                  <td className="padding-105">
+                    {eRSDWarnings.versionExpected}
+                  </td>
+                  <td className="padding-105">
+                    {eRSDWarnings.suggestedSolution}
+                  </td>
+                </tr>
               </tbody>
             </Table>
             <div className="section__line_gray"></div>
