@@ -72,7 +72,7 @@ jobs:
             APP_VERSION: ${{ steps.meta.outputs.version }}
 
   # Create updated container docs for the latest release
-  generate-and-update-container-docs:
+  generate-and-update-python-container-docs:
     needs:
       - list-containers
       - build-containers-for-release
@@ -135,10 +135,33 @@ jobs:
           name: container-docs-${{ matrix.container }}
           path: ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers
 
+  generate-and-update-ecr-viewer-container-docs:
+    needs:
+      - build-containers-for-release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+      - name: Update Container Documentation
+        env:
+          APP_VERSION: ${{ needs.build-containers-for-release.outputs.version }}
+        run: |
+          cd $GITHUB_WORKSPACE/containers/ecr-viewer
+          npm ci
+          npm run docs -- --out $GITHUB_WORKSPACE/docs/${{ needs.build-containers-for-release.outputs.version }}/containers/ecr-viewer
+      - uses: actions/upload-artifact@v4
+        with:
+          name: container-docs-ecr-viewer
+          path: ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+
   commit-docs:
     needs:
       - build-containers-for-release
-      - generate-and-update-container-docs
+      - generate-and-update-python-container-docs
+      - generate-and-update-ecr-viewer-container-docs
     permissions:
       contents: write
     runs-on: ubuntu-latest

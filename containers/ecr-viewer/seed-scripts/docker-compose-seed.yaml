@@ -58,8 +58,6 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     environment:
-      - OTEL_TRACES_EXPORTER=none
-      - OTEL_METRICS_EXPORTER=none
       - ECR_VIEWER_URL=http://host.docker.internal:3000/ecr-viewer
     healthcheck:
       test: ["CMD", "curl", "-f", "http://orchestration-service:8080/"]
@@ -79,3 +77,5 @@ services:
     environment:
       - CONFIG_NAME=${CONFIG_NAME}
       - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
+    extra_hosts:
+      - host.docker.internal:host-gateway

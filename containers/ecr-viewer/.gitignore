@@ -16,3 +16,5 @@ seed-scripts/baseECR/CO
 /playwright/.cache/
 
 tsconfig.tsbuildinfo
+
+docs

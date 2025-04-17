@@ -19,10 +19,7 @@ export interface ColumnInfoInput {
   value?: string;
   className?: string;
   hiddenBaseText?: string;
-  // Generics could be used here instead but we don't want to have to provide it
-  // when this property is optional. Using `any` avoids that issue.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  applyToValue?: (value: any) => any;
+  applyToValue?: (value: string) => ReactNode;
 }
 
 interface TableProps {
@@ -157,33 +154,11 @@ const evaluateTableRowData = (
   mappings: Mapping,
   entry: Element,
 ) => {
-  let hiddenRow: ReactNode = null;
-  const rowCellsData = columns.map((column) => {
-    let data: ReactNode;
-    let hidden = false;
-    if (column?.value) {
-      data = column.value;
-    }
-
-    if (!column?.value && column?.infoPath) {
-      data = splitStringWith(
-        evaluateValue(entry, mappings[column.infoPath]),
-        "<br/>",
-      );
-    }
-
-    if (data && column.applyToValue) {
-      data = column.applyToValue(data);
-    }
-
-    if (data && column.hiddenBaseText) {
-      hiddenRow = data;
-      hidden = true;
-      data = column.hiddenBaseText;
-    }
-
-    return { data, hidden };
-  });
+  const rowCellsData = columns.map((column) =>
+    evaluateTableRowCell(column, entry, mappings),
+  );
+  const hiddenRow = rowCellsData.find(({ hiddenRow }) => !!hiddenRow)
+    ?.hiddenRow;
 
   // This row is entirely empty, skip it
   if (rowCellsData.every(({ data }) => !data))
@@ -192,25 +167,48 @@ const evaluateTableRowData = (
   return { rowCellsData, hiddenRow };
 };
 
-const splitStringWith = (
-  input: string,
-  splitter: string,
-): (string | JSX.Element)[] | string => {
-  // Split the input string by <br/> tag
-  const parts = input.split(splitter);
-
-  // If there is no <br/> in the input string, return the string as a single element array
-  if (parts.length === 1) {
-    return input;
+/**
+ * Evaluate data for a column and entry
+ * @param column column descriptor
+ * @param entry fhir data to extract value from
+ * @param mappings mappings to use in evaluating data
+ * @returns data, hidden status, and hiddenRow
+ */
+export const evaluateTableRowCell = (
+  column: ColumnInfoInput,
+  entry: Element,
+  mappings: Mapping,
+) => {
+  let strData: string;
+  let hiddenRow: ReactNode = null;
+  let hidden = false;
+  if (column?.value) {
+    strData = column.value;
+  } else if (column?.infoPath) {
+    strData = evaluateValue(entry, mappings[column.infoPath]).replaceAll(
+      "<br/>",
+      "\n",
+    );
+  } else {
+    throw new Error(
+      `No value or infoPath provided to EvaluateTable column: ${JSON.stringify(
+        column,
+      )}`,
+    );
   }
 
-  // Create an array with strings and JSX <br /> elements
-  const result: (string | JSX.Element)[] = [];
-  parts.forEach((part, index) => {
-    result.push(<p key={`${part}-${index}`}>{part}</p>);
-  });
+  let data: ReactNode = strData;
+  if (strData && column.applyToValue) {
+    data = column.applyToValue(strData);
+  }
 
-  return result;
+  if (data && column.hiddenBaseText) {
+    hiddenRow = data;
+    hidden = true;
+    data = column.hiddenBaseText;
+  }
+
+  return { data, hidden, hiddenRow };
 };
 
 export default EvaluateTable;
