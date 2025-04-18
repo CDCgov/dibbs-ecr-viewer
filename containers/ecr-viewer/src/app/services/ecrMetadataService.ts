@@ -4,7 +4,6 @@ import { CompleteData, evaluateData, noData } from "@/app/utils/data-utils";
 import {
   eicrProcessingReasonMap,
   ersdWarningsSuggestedSolutionsMap,
-  ReasonDetailMap,
 } from "@/app/utils/eicr-processing-utils";
 import {
   evaluateAll,
@@ -135,15 +134,12 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
         if (!detailCode) return;
 
-        if (
-          ReasonDetailMap[warningCode as keyof typeof ReasonDetailMap] ===
-          detailCode
-        ) {
+        if (detailCode === "RRVS33") {
+          versionExpected = detailVal;
+        } else {
           versionUsed = detailDisplay
             ? `${detailDisplay}: ${detailVal}`
             : detailVal;
-        } else if (detailCode === "RRVS33") {
-          versionExpected = detailVal;
         }
       }
     );
