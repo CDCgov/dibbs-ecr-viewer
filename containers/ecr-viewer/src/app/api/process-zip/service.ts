@@ -96,9 +96,10 @@ const saveToSource = (
 /**
  * Save the zip via orchestration
  * @param file - the file to send to orchestration
+ * @param returnBundle - whether to return the fhir bundle (default false)
  * @returns An object containing the status and message.
  */
-export const processZip = async (file: File) => {
+export const processZip = async (file: File, returnBundle: boolean = false) => {
   let orchestrationResp: BundleInfo;
   try {
     orchestrationResp = await getOrchestrationResponse(file);
@@ -110,5 +111,14 @@ export const processZip = async (file: File) => {
       status: 500,
     };
   }
-  return await saveToSource(orchestrationResp.ecr, orchestrationResp.metadata);
+  const res = await saveToSource(
+    orchestrationResp.ecr,
+    orchestrationResp.metadata,
+  );
+
+  if (returnBundle) {
+    return { ...res, bundle: orchestrationResp.ecr };
+  } else {
+    return res;
+  }
 };
