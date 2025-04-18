@@ -90,13 +90,13 @@ export const formatDateTime = (dateTimeString: string | undefined): string => {
     minute: "2-digit",
     timeZoneName: "short",
   };
-  const formatted = (date as unknown as Date)
+  let formatted = (date as unknown as Date)
     .toLocaleDateString("en-Us", options)
     .replace(",", "");
 
   // Not actually time zoned
   if (!hasTimeZoneString(dateTimeString)) {
-    return formatted.slice(0, formatted.lastIndexOf(" ")); // lop off " EDT"
+    formatted = formatted.slice(0, formatted.lastIndexOf(" ")); // lop off " EDT"
   }
 
   // encourage word wrapping between date and time instead of wherever
@@ -198,7 +198,7 @@ export const formatPeriodDateTime = ({ start, end }: Period = {}) =>
  * @param root0.end - The end date-time string to be formatted.
  * @returns A string with the formatted start and end times, each on a new line.
  */
-export const formatPeriodDate = ({ start, end }: Period = {}) =>
+export const formatPeriodDate = ({ start, end }: Period = {}): string =>
   formatPeriod({ start, end }, formatDate);
 
 const formatPeriod = (
@@ -207,7 +207,7 @@ const formatPeriod = (
 ) => {
   const stDt = formatFn(start);
   const endDt = formatFn(end);
-  if (!stDt && !endDt) return;
+  if (!stDt && !endDt) return "";
 
-  return `${stDt ?? "Unknown"} - ${endDt ?? "Present"}`;
+  return `${stDt || "Unknown"} - ${endDt || "Present"}`;
 };
