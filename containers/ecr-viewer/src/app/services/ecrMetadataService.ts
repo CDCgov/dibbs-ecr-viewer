@@ -136,15 +136,14 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
       if (!detailCode) return;
 
-        if (detailCode === "RRVS33") {
-          versionExpected = detailVal;
-        } else {
-          versionUsed = detailDisplay
-            ? `${detailDisplay}: ${detailVal}`
-            : detailVal;
-        }
+      if (detailCode === "RRVS33") {
+        versionExpected = detailVal;
+      } else {
+        versionUsed = detailDisplay
+          ? `${detailDisplay}: ${detailVal}`
+          : detailVal;
       }
-    );
+    });
     return warningName || versionUsed || versionExpected || warningCode
       ? {
           warning: warningName ?? noData,
