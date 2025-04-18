@@ -1,4 +1,4 @@
-import { Bundle, Organization } from "fhir/r4";
+import { Bundle, Observation, Organization } from "fhir/r4";
 
 import { CompleteData, evaluateData, noData } from "@/app/utils/data-utils";
 import {
@@ -110,52 +110,56 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     fhirPathMappings.eICRProcessingStatusReason,
   );
 
-  const eRSDTextList: ERSDWarning =
-    fhirEICRProcessingStatus &&
-    fhirEICRProcessingStatus !== "RRVS19" &&
-    fhirEICRProcessingStatusReasonObs
-      ? (() => {
-          const coding =
-            fhirEICRProcessingStatusReasonObs.valueCodeableConcept?.coding?.[0];
-          const warningCode = coding?.code;
-          const warningName =
-            coding?.display || eicrProcessingReasonMap[warningCode ?? ""] || "";
+  function geteRSDTextList(
+    processingStatus: string | undefined,
+    reasonObs: Observation | undefined
+  ): ERSDWarning {
+    if (!processingStatus || processingStatus === "RRVS19" || !reasonObs) {
+      return {};
+    }
 
-          let versionUsed: string | undefined;
-          let versionExpected: string | undefined;
+    const coding =
+      reasonObs.valueCodeableConcept?.coding?.[0];
+    const warningCode = coding?.code;
+    const warningName =
+      coding?.display || eicrProcessingReasonMap[warningCode ?? ""] || "";
 
-          (fhirEICRProcessingStatusReasonObs.component ?? []).forEach(
-            (component) => {
-              const detailVal = component.valueString;
-              const detailCode = component.code?.coding?.[0]?.code;
-              const detailDisplay = component.code?.coding?.[0]?.display;
+    let versionUsed: string | undefined;
+    let versionExpected: string | undefined;
 
-              if (!detailCode) return;
+    (reasonObs.component ?? []).forEach(
+      (component) => {
+        const detailVal = component.valueString;
+        const detailCode = component.code?.coding?.[0]?.code;
+        const detailDisplay = component.code?.coding?.[0]?.display;
 
-              if (
-                ReasonDetailMap[warningCode as keyof typeof ReasonDetailMap] ===
-                detailCode
-              ) {
-                versionUsed = detailDisplay
-                  ? `${detailDisplay}: ${detailVal}`
-                  : detailVal;
-              } else if (detailCode === "RRVS33") {
-                versionExpected = detailVal;
-              }
-            },
-          );
-          return warningName || versionUsed || versionExpected || warningCode
-            ? {
-                warning: warningName ?? noData,
-                versionUsed: versionUsed ? versionUsed : noData,
-                versionExpected: versionExpected ? versionExpected : noData,
-                suggestedSolution:
-                  ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ??
-                  noData,
-              }
-            : {};
-        })()
+        if (!detailCode) return;
+
+        if (
+          ReasonDetailMap[warningCode as keyof typeof ReasonDetailMap] ===
+          detailCode
+        ) {
+          versionUsed = detailDisplay
+            ? `${detailDisplay}: ${detailVal}`
+            : detailVal;
+        } else if (detailCode === "RRVS33") {
+          versionExpected = detailVal;
+        }
+      }
+    );
+    return warningName || versionUsed || versionExpected || warningCode
+      ? {
+          warning: warningName ?? noData,
+          versionUsed: versionUsed ? versionUsed : noData,
+          versionExpected: versionExpected ? versionExpected : noData,
+          suggestedSolution:
+            ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ?? noData,
+        }
       : {};
+  };
+
+  const eRSDTextList: ERSDWarning = geteRSDTextList(fhirEICRProcessingStatus, fhirEICRProcessingStatusReasonObs);
+
   const eicrDetails: DisplayDataProps[] = [
     {
       title: "eICR ID",
