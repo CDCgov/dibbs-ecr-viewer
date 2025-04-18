@@ -49,7 +49,6 @@ const EcrMetadata = ({
   eCRCustodianDetails,
   eicrAuthorDetails,
 }: EcrMetadataProps) => {
-  console
   return (
     <AccordionSection>
       <AccordionSubSection title="RR Details">
@@ -63,7 +62,6 @@ const EcrMetadata = ({
             {eRSDWarnings}
           </div>
         ) : (
-          typeof eRSDWarnings === "object" &&
           Object.keys(eRSDWarnings).length > 0 && (
             <div>
               <Table
