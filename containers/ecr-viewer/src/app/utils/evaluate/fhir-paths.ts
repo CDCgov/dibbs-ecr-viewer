@@ -56,7 +56,9 @@ export type PathTypes = {
   patientTribalAffiliation: ValueX;
   patientEmergencyContact: PatientContact;
   patientGuardian: RelatedPerson;
-  patientCurrentJobTitle: ValueX;
+  patientOccupation: Observation;
+  patientOccupationHistory: Observation;
+  patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
   patientPregnancyStatus: ValueX;
@@ -237,9 +239,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Social History
-  patientCurrentJobTitle: {
-    type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob').where(effectivePeriod.end.exists().not()).value",
+  patientOccupation: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork')",
+  },
+  patientOccupationHistory: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob')",
+  },
+  patientEmploymentStatus: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '74165-2').where(category.coding.code = 'social-history')",
   },
   patientTobaccoUse: {
     type: "ValueX",
@@ -400,6 +410,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "effectiveDateTime",
   },
 
+  // Generic helpers
   resolve: {
     type: "unknown",
     path: "Bundle.entry.resource.where(resourceType = %resourceType).where(id = %id)",

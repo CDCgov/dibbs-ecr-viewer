@@ -100,7 +100,6 @@ export const evaluateAllAndCheck = <Result>(
   context?: Context,
 ): Result[] => {
   if (!fhirData) return [];
-  // Since the bundle does not have an ID, prefer to just use "bundle" instead
   const fhirDataIdentifier: string =
     (isBundle(fhirData)
       ? fhirData?.entry?.[0]?.fullUrl
@@ -224,6 +223,9 @@ export const evaluateValue = (
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
   const originalValue =
     evaluateOneAndCheck<ValueX>(entry, fhirPath, type) || "";
+
+  typeof path === "string" &&
+    console.log({ entry, path, fhirPath, type, originalValue });
 
   if (
     typeof originalValue === "string" ||

@@ -21,11 +21,16 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import {
+  DataDisplay,
+  DisplayDataProps,
+} from "@/app/view-data/components/DataDisplay";
+import { ExpandCollapseAccordion } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 import {
   formatDate,
+  formatPeriodDate,
   formatStartEndDate,
   formatStartEndDateTime,
 } from "./formatDateService";
@@ -39,6 +44,7 @@ import {
   formatPatientContactList,
   formatAge,
   formatPhoneNumber,
+  sortByPeriod,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import { evaluateTravelHistoryTable } from "./socialHistoryService";
@@ -238,6 +244,96 @@ export const evaluateAlcoholUse = (fhirBundle: Bundle) => {
     .join("\n"); // Joins the remaining lines with newlines
 };
 
+const evaluateOccupation = (fhirBundle: Bundle) => {
+  const occupationObs = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.patientOccupation,
+  );
+  const employmentObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.patientEmploymentStatus,
+  );
+  if (!occupationObs && employmentObs.length === 0) return;
+
+  const occTitle = formatCodeableConcept(occupationObs?.valueCodeableConcept);
+  const occDates = formatPeriodDate(occupationObs?.effectivePeriod);
+  const usualIndustryComp = occupationObs?.component?.find(
+    (c) => c?.code.coding?.[0].code === "21844-6",
+  );
+  const usualIndustry = formatCodeableConcept(
+    usualIndustryComp?.valueCodeableConcept,
+  );
+
+  sortByPeriod(employmentObs, (obs) => obs.effectivePeriod);
+  const employmentStatus = formatCodeableConcept(
+    employmentObs?.[0]?.valueCodeableConcept,
+  );
+
+  return [
+    occTitle,
+    usualIndustry && `Industry: ${usualIndustry}`,
+    employmentStatus && `Status: ${employmentStatus}`,
+    occDates && `Dates: ${occDates}`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+};
+
+const evaluateOccupationHistory = (fhirBundle: Bundle) => {
+  const jobObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.patientOccupationHistory,
+  );
+  if (jobObs.length === 0) return;
+
+  return (
+    <ExpandCollapseAccordion
+      descriptor="employment details"
+      items={jobObs.map((obs) => {
+        const getComponentValue = (code: string, path: string) => {
+          const component =
+            obs.component?.find((c) => c.code?.coding?.[0].code === code) || {};
+          return evaluateValue(component, path);
+        };
+
+        const content = (
+          <>
+            <DataDisplay
+              item={{
+                title: "Dates",
+                value: formatPeriodDate(obs.effectivePeriod),
+              }}
+            />
+            <DataDisplay
+              item={{
+                title: "Industry",
+                value: getComponentValue("86188-0", "valueCodeableConcept"),
+              }}
+            />
+            <DataDisplay
+              item={{ title: "Workplace Information", value: "test" }}
+            />
+            <DataDisplay
+              item={{
+                title: "Hazard",
+                value: getComponentValue("87729-0", "valueString"),
+              }}
+            />
+          </>
+        );
+
+        return {
+          title: formatCodeableConcept(obs.valueCodeableConcept),
+          expanded: true, // TODO: change to false
+          content,
+          id: obs.id || `${Math.random()}`,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
+};
+
 /**
  * Evaluates social data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing social data.
@@ -275,7 +371,11 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     },
     {
       title: "Occupation",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientCurrentJobTitle),
+      value: evaluateOccupation(fhirBundle),
+    },
+    {
+      title: "Occupation History",
+      value: evaluateOccupationHistory(fhirBundle),
     },
     {
       title: "Religious Affiliation",
