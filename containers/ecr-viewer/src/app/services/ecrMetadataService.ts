@@ -146,16 +146,15 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
           );
           return warningName || versionUsed || versionExpected || warningCode
             ? {
-                warning: warningName,
-                versionUsed,
-                versionExpected,
+                warning: warningName ?? noData,
+                versionUsed: versionUsed ? versionUsed : noData,
+                versionExpected: versionExpected ? versionExpected : noData,
                 suggestedSolution:
-                  ersdWarningsSuggestedSolutionsMap[warningCode ?? ""],
+                  ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ?? noData,
               }
             : {};
         })()
       : {};
-
   const eicrDetails: DisplayDataProps[] = [
     {
       title: "eICR ID",
