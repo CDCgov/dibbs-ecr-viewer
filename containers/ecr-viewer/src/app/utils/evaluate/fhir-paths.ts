@@ -410,7 +410,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "effectiveDateTime",
   },
 
-  // Generic helpers
   resolve: {
     type: "unknown",
     path: "Bundle.entry.resource.where(resourceType = %resourceType).where(id = %id)",

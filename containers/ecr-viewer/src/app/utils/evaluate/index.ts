@@ -224,9 +224,6 @@ export const evaluateValue = (
   const originalValue =
     evaluateOneAndCheck<ValueX>(entry, fhirPath, type) || "";
 
-  typeof path === "string" &&
-    console.log({ entry, path, fhirPath, type, originalValue });
-
   if (
     typeof originalValue === "string" ||
     typeof originalValue === "number" ||
