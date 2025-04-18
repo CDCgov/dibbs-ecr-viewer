@@ -262,7 +262,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   eICR Identifier
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   1dd10047-2207-4eac-a993-0f706c88be5d
                 </div>
@@ -281,7 +281,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   Date/Time eCR Created
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   2022-05-14T12:56:38Z
                 </div>
@@ -300,7 +300,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   eICR Release Version
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   R1.1 (2016-12-01)
                 </div>
@@ -319,7 +319,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   EHR Software Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Epic - Version 10.1
                 </div>
@@ -338,7 +338,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   EHR Manufacturer Model Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Epic - Version 10.1
                 </div>
@@ -371,7 +371,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   Author Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Dr. R2D2
                 </div>
@@ -390,7 +390,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   Author Address
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   1 Droid st
                 </div>
@@ -409,7 +409,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   Author Contact
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   (555)555-5555
                 </div>
@@ -428,7 +428,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   Author Facility Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Echo Base Medical Facility
                 </div>
@@ -447,7 +447,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   Author Facility Address
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   5555 Echo Base Drive
 Echo Base, CA
@@ -468,7 +468,7 @@ Echo Base, CA
                   Author Facility Contact
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   555-555-5555
                 </div>
@@ -524,7 +524,7 @@ Echo Base, CA
                   Custodian ID
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   112233445566
                 </div>
@@ -543,7 +543,7 @@ Echo Base, CA
                   Custodian Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Hoth University Medical Center
                 </div>
@@ -562,7 +562,7 @@ Echo Base, CA
                   Custodian Address
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   5555 Snowy Ave
 Snowtown, TN
@@ -583,7 +583,7 @@ Snowtown, TN
                   Custodian Contact
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Work 1-555-555-5555
                 </div>

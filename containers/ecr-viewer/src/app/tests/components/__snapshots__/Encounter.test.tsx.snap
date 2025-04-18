@@ -33,7 +33,7 @@ exports[`Encounter should match snapshot 1`] = `
                   Encounter Type
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Ambulatory
                 </div>
@@ -52,7 +52,7 @@ exports[`Encounter should match snapshot 1`] = `
                   Encounter ID
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   123456789
                 </div>
@@ -147,7 +147,7 @@ exports[`Encounter should match snapshot 1`] = `
                   Facility Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Hoth Medical
                 </div>
@@ -166,7 +166,7 @@ exports[`Encounter should match snapshot 1`] = `
                   Facility Address
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   50 Snowy Drive
 Echo Base, MA 00123
@@ -186,7 +186,7 @@ Echo Base, MA 00123
                   Facility Contact Address
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   50 Snowy Drive
 Echo Base, MA 00123
@@ -206,7 +206,7 @@ Echo Base, MA 00123
                   Facility Type
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Healthcare Provider
                 </div>
@@ -225,7 +225,7 @@ Echo Base, MA 00123
                   Facility ID
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   112233445566
                 </div>
@@ -281,7 +281,7 @@ Echo Base, MA 00123
                   Provider Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   test provider name
                 </div>
@@ -300,7 +300,7 @@ Echo Base, MA 00123
                   Provider Contact
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   test provider contact
                 </div>

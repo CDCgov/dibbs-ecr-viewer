@@ -165,7 +165,7 @@ exports[`LabInfo when labResults is LabReportElementData[] should match snapshot
                   Lab Address
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   501 S. Sand Street
 Mos Eisley, CO
@@ -186,7 +186,7 @@ Mos Eisley, CO
                   Number of Results
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   2
                 </div>
@@ -366,7 +366,7 @@ Mos Eisley, CO
                       Analysis Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       09/28/2000 5:00 PM EDT
                     </div>
@@ -385,7 +385,7 @@ Mos Eisley, CO
                       Collection Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       02/04/2000 3:51 PM EST
                     </div>
@@ -404,7 +404,7 @@ Mos Eisley, CO
                       Received Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       02/04/2000 3:51 PM EST
                     </div>
@@ -423,7 +423,7 @@ Mos Eisley, CO
                       Specimen (Source)
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       Stool
                     </div>
@@ -442,7 +442,7 @@ Mos Eisley, CO
                       Anatomical Location/Laterality
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       STOOL SPECIMEN / Unknown
                     </div>
@@ -461,7 +461,7 @@ Mos Eisley, CO
                       Collection Method/Volume
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -484,7 +484,7 @@ Mos Eisley, CO
                       Resulting Agency Comment
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -507,7 +507,7 @@ Mos Eisley, CO
                       Authorizing Provider
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       Darth Test MD
                     </div>
@@ -526,7 +526,7 @@ Mos Eisley, CO
                       Result Type
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       MICROBIOLOGY - GENERAL ORDERABLES
                     </div>
@@ -545,7 +545,7 @@ Mos Eisley, CO
                       Narrative
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -691,7 +691,7 @@ Mos Eisley, CO
                       Analysis Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       09/28/2000 4:59 PM EDT
                     </div>
@@ -710,7 +710,7 @@ Mos Eisley, CO
                       Collection Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       02/04/2000 3:51 PM EST
                     </div>
@@ -729,7 +729,7 @@ Mos Eisley, CO
                       Received Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       02/04/2000 3:51 PM EST
                     </div>
@@ -748,7 +748,7 @@ Mos Eisley, CO
                       Specimen (Source)
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       Stool
                     </div>
@@ -767,7 +767,7 @@ Mos Eisley, CO
                       Anatomical Location/Laterality
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       STOOL SPECIMEN / Unknown
                     </div>
@@ -786,7 +786,7 @@ Mos Eisley, CO
                       Collection Method/Volume
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -809,7 +809,7 @@ Mos Eisley, CO
                       Resulting Agency Comment
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -832,7 +832,7 @@ Mos Eisley, CO
                       Authorizing Provider
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       Darth Test MD
                     </div>
@@ -851,7 +851,7 @@ Mos Eisley, CO
                       Result Type
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       MICROBIOLOGY - GENERAL ORDERABLES
                     </div>
@@ -870,7 +870,7 @@ Mos Eisley, CO
                       Narrative
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -909,7 +909,7 @@ Mos Eisley, CO
                   Lab Performing Name
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Coruscant Medical
                 </div>
@@ -928,7 +928,7 @@ Mos Eisley, CO
                   Lab Address
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Apt 37
 555 Medical Drive
@@ -950,7 +950,7 @@ Coruscant, MA
                   Number of Results
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   1
                 </div>
@@ -1256,7 +1256,7 @@ Coruscant, MA
                       Analysis Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -1279,7 +1279,7 @@ Coruscant, MA
                       Collection Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       05/05/1824 11:58 AM GMT-4:56:02
                     </div>
@@ -1298,7 +1298,7 @@ Coruscant, MA
                       Received Time
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       02/03/2000 2:46 PM EST
                     </div>
@@ -1317,7 +1317,7 @@ Coruscant, MA
                       Specimen (Source)
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       Blood
                     </div>
@@ -1336,7 +1336,7 @@ Coruscant, MA
                       Anatomical Location/Laterality
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <span
                         class="no-data text-italic text-base"
@@ -1359,7 +1359,7 @@ Coruscant, MA
                       Collection Method/Volume
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       Collection / Unknown
                     </div>
@@ -1378,7 +1378,7 @@ Coruscant, MA
                       Resulting Agency Comment
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <p>
                         testing comment
@@ -1399,7 +1399,7 @@ Coruscant, MA
                       Authorizing Provider
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       Jar Jar Bink MD
                     </div>
@@ -1418,7 +1418,7 @@ Coruscant, MA
                       Result Type
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       LAB GENETIC TESTING
                     </div>
@@ -1437,7 +1437,7 @@ Coruscant, MA
                       Narrative
                     </div>
                     <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                      class="grid-col text-pre-line p-list lab-text-content maxw7"
                     >
                       <p>
                         Gungan Swamp Lab - 04/18/1497 2:57 PM CDT

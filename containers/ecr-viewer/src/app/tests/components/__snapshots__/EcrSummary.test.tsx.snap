@@ -28,7 +28,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
               Patient Name
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               Han Solo
             </div>
@@ -47,7 +47,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
               DOB
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               04/15/1900
             </div>
@@ -66,7 +66,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
               Sex
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               male
             </div>
@@ -85,7 +85,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
               Race
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               White
             </div>
@@ -104,7 +104,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
               Ethnicity
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               Not Hispanic or Latino
             </div>
@@ -123,7 +123,7 @@ exports[`EcrSummary tests EcrSummary should match snapshot 1`] = `
               Patient Address
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               1050 Millennium Falcon ST
 Space, CA
@@ -144,7 +144,7 @@ Space, CA
               Patient Contact
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               Home 555-555-55555
 HANSOLOFAKEEMAIL@EXAMPLE.COM
@@ -178,7 +178,7 @@ HANSOLOFAKEEMAIL@EXAMPLE.COM
               Facility Name
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               Millennium Falcon Med Bay
             </div>
@@ -197,7 +197,7 @@ HANSOLOFAKEEMAIL@EXAMPLE.COM
               Facility Contact
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               555-555-5555
             </div>
@@ -216,7 +216,7 @@ HANSOLOFAKEEMAIL@EXAMPLE.COM
               Encounter Date/Time
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               Start: 05/13/2000 7:25 AM UTC
 End: 05/13/2000 9:57 AM UTC
@@ -236,7 +236,7 @@ End: 05/13/2000 9:57 AM UTC
               Encounter Type
             </div>
             <div
-              class="grid-col maxw7 text-pre-line p-list"
+              class="grid-col text-pre-line p-list maxw7"
             >
               Emergency
             </div>
@@ -301,7 +301,7 @@ End: 05/13/2000 9:57 AM UTC
                   RCKMS Rule Summary
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   covid summary
                 </div>

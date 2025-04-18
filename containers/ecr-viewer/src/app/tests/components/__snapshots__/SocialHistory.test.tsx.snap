@@ -33,7 +33,7 @@ exports[`SocialHistory should match snapshot 1`] = `
                   Occupation
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Nursing, psychiatric, and home health aides
                 </div>
@@ -52,7 +52,7 @@ exports[`SocialHistory should match snapshot 1`] = `
                   Tobacco Use
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Tobacco smoking consumption unknown
                 </div>
@@ -71,7 +71,7 @@ exports[`SocialHistory should match snapshot 1`] = `
                   Homeless Status
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   unsatisfactory living conditions (finding)
                 </div>
@@ -90,7 +90,7 @@ exports[`SocialHistory should match snapshot 1`] = `
                   Occupation
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Nursing, psychiatric, and home health aides
                 </div>
@@ -109,7 +109,7 @@ exports[`SocialHistory should match snapshot 1`] = `
                   Sexual Orientation
                 </div>
                 <div
-                  class="grid-col maxw7 text-pre-line p-list"
+                  class="grid-col text-pre-line p-list maxw7"
                 >
                   Do not know
                 </div>
