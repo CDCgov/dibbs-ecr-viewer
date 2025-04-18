@@ -246,7 +246,12 @@ export const evaluateAlcoholUse = (fhirBundle: Bundle) => {
     .join("\n"); // Joins the remaining lines with newlines
 };
 
-const evaluateOccupation = (fhirBundle: Bundle) => {
+/**
+ * Evaluates occupation information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns An array of evaluated and formatted occupation data.
+ */
+export const evaluateOccupation = (fhirBundle: Bundle) => {
   const occupationObs = evaluateOne(
     fhirBundle,
     fhirPathMappings.patientOccupation,
@@ -281,7 +286,12 @@ const evaluateOccupation = (fhirBundle: Bundle) => {
     .join("\n\n");
 };
 
-const evaluateOccupationHistory = (fhirBundle: Bundle) => {
+/**
+ * Evaluates occupation history information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns An array of evaluated and formatted occupation history data.
+ */
+export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
   const jobObs = evaluateAll(
     fhirBundle,
     fhirPathMappings.patientOccupationHistory,

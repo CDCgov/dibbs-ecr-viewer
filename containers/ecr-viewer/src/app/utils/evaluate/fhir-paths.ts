@@ -249,7 +249,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientEmploymentStatus: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '74165-2').where(category.coding.code = 'social-history')",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '74165-2')",
   },
   patientTobaccoUse: {
     type: "ValueX",

@@ -21,6 +21,7 @@ import {
   censorGender,
   calculatePatientAge,
   createPatientAgeDataProp,
+  evaluateOccupation,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -217,6 +218,211 @@ Home: 123-456-6909`,
         BundlePatientMultiple as unknown as Bundle,
       );
       expect(actual).toEqual("");
+    });
+  });
+
+  describe("Evaluate Occupation", () => {
+    it("should return empty when no employment status or usual occupation", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [],
+      };
+
+      expect(evaluateOccupation(bundle)).toBeUndefined();
+    });
+
+    it("should return employment status when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "74165-2",
+                  },
+                ],
+              },
+              valueCodeableConcept: {
+                text: "EmploymentStatus",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Status: EmploymentStatus");
+    });
+
+    it("should return occupation when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              valueCodeableConcept: {
+                text: "Occupation",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Occupation");
+    });
+
+    it("should return industry when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              component: [
+                {
+                  code: {
+                    coding: [{ code: "21844-6" }],
+                  },
+                  valueCodeableConcept: {
+                    text: "i'm an industry",
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Industry: i'm an industry");
+    });
+
+    it("should return dates when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Dates: 01/04/2020 - Present");
+    });
+
+    it("should all together now", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "74165-2",
+                  },
+                ],
+              },
+              valueCodeableConcept: {
+                text: "EmploymentStatus",
+              },
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [{ code: "21844-6" }],
+                  },
+                  valueCodeableConcept: {
+                    text: "i'm an industry",
+                  },
+                },
+              ],
+              valueCodeableConcept: {
+                text: "Occupation",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual(
+        "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present",
+      );
     });
   });
 
