@@ -398,7 +398,7 @@ const evaluateOccupationHistory = (fhirBundle: Bundle) => {
               </span>
             </div>
           ),
-          expanded: true, // TODO: change to false
+          expanded: false,
           content,
           id: obs.id || `${Math.random()}`,
           headingLevel: "h5",
