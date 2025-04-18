@@ -40,10 +40,10 @@ interface EcrMetadata {
 }
 
 export interface ERSDWarning {
-  warning?: string;
-  versionUsed?: string;
-  versionExpected?: string;
-  suggestedSolution?: string;
+  warning?: string | JSX.Element;
+  versionUsed?: string | JSX.Element;
+  versionExpected?: string | JSX.Element;
+  suggestedSolution?: string | JSX.Element;
 }
 
 /**
