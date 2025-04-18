@@ -1,6 +1,11 @@
 import { Bundle, Observation, Organization } from "fhir/r4";
 
-import { CompleteData, noData, evaluateData, RenderableNode } from "@/app/utils/data-utils";
+import {
+  CompleteData,
+  noData,
+  evaluateData,
+  RenderableNode,
+} from "@/app/utils/data-utils";
 import {
   eicrProcessingReasonMap,
   ersdWarningsSuggestedSolutionsMap,
@@ -24,7 +29,6 @@ import {
   formatName,
 } from "./formatService";
 import { getReportabilitySummaries } from "./reportabilityService";
-
 
 export interface ReportableConditions {
   [condition: string]: {
