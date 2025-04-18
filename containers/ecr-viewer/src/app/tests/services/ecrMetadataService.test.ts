@@ -108,7 +108,9 @@ describe("Evaluate Ecr Metadata", () => {
     expect(actual.eRSDWarnings).toEqual({});
   });
   it("if processed with eRSDwarning but no details, should show partial info", () => {
-    const actual = evaluateEcrMetadata(BundleErsdWarningNoDetail as unknown as Bundle);
+    const actual = evaluateEcrMetadata(
+      BundleErsdWarningNoDetail as unknown as Bundle,
+    );
 
     expect(actual.eRSDWarnings).toEqual({
       warning:
@@ -117,7 +119,7 @@ describe("Evaluate Ecr Metadata", () => {
       versionExpected: noData,
       suggestedSolution: noData,
     });
-  })
+  });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
