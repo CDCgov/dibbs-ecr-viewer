@@ -175,13 +175,12 @@
             }
           ]
         },
-        "component": [
-        ]
+        "component": []
       },
       "request": {
         "method": "PUT",
         "url": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
       }
     }
-    ]
+  ]
 }
