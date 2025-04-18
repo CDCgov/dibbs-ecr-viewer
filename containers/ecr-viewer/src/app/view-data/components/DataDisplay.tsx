@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import classNames from "classnames";
 
@@ -7,12 +7,14 @@ import { FieldValue } from "./FieldValue";
 import { ToolTipElement } from "./ToolTipElement";
 
 export interface DisplayDataProps {
-  title?: string;
+  title?: ReactNode;
   className?: string;
   toolTip?: string;
-  value?: React.ReactNode;
+  value?: ReactNode;
   dividerLine?: boolean;
   table?: boolean;
+  fullWidthContent?: boolean;
+  titleNormal?: boolean;
 }
 
 /**
@@ -23,11 +25,7 @@ export interface DisplayDataProps {
  * @param [props.themeColor] - Color to use for theming (default="gray").
  * @returns - A React element representing the display of data.
  */
-export const DataDisplay: React.FC<{
-  item: DisplayDataProps;
-  className?: string;
-  themeColor?: string;
-}> = ({
+export const DataDisplay = ({
   item,
   className,
   themeColor = "gray",
@@ -42,15 +40,25 @@ export const DataDisplay: React.FC<{
       : item.dividerLine;
   return (
     <div>
-      <div className="grid-row">
-        <div className="data-title padding-right-1">
+      <div
+        className={classNames("grid-row", {
+          "flex-column": item.fullWidthContent,
+        })}
+      >
+        <div
+          className={classNames(
+            { "text-normal": item.titleNormal },
+            "data-title padding-right-1",
+          )}
+        >
           <ToolTipElement toolTip={item.toolTip}>{item.title}</ToolTipElement>
         </div>
         <div
           className={classNames(
-            "grid-col maxw7 text-pre-line p-list",
+            "grid-col text-pre-line p-list",
             className,
             item.className ? item.className : "",
+            item.fullWidthContent ? "width-full" : "maxw7",
           )}
         >
           <FieldValue>{item.value}</FieldValue>

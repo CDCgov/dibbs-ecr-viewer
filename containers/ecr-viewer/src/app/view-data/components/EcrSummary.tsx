@@ -48,8 +48,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
         expanded: snomed === condition.snomed || conditionSummary.length === 1,
         content: (
           <>
-            {condition.conditionDetails.map((item) => (
-              <DataDisplay item={item} key={item.title} />
+            {condition.conditionDetails.map((item, i) => (
+              <DataDisplay item={item} key={`condition-${i}`} />
             ))}
             <h5
               className="text-bold margin-top-0 margin-bottom-1"
@@ -59,14 +59,14 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
             </h5>
             {condition.immunizationDetails.length > 0 && (
               <div className="margin-top-0">
-                {condition.immunizationDetails.map((item, index) => (
-                  <DataTableDisplay item={item} key={index} />
+                {condition.immunizationDetails.map((item, i) => (
+                  <DataTableDisplay item={item} key={`imx-${i}`} />
                 ))}
               </div>
             )}
             <div className="margin-top-0">
-              {condition.clinicalDetails.map((item, index) => (
-                <DataTableDisplay item={item} key={`${item.title}-${index}`} />
+              {condition.clinicalDetails.map((item, i) => (
+                <DataTableDisplay item={item} key={`detail-${i}`} />
               ))}
             </div>
             <h5
@@ -98,8 +98,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           Patient Summary
         </h3>
         <div className="usa-summary-box__text">
-          {patientDetails.map((item) => (
-            <DataDisplay item={item} key={item.title} themeColor="blue" />
+          {patientDetails.map((item, i) => (
+            <DataDisplay item={item} key={`pat-${i}`} themeColor="blue" />
           ))}
         </div>
       </div>
@@ -111,8 +111,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           Encounter Summary
         </h3>
         <div className="usa-summary-box__text">
-          {encounterDetails.map((item) => (
-            <DataDisplay item={item} key={item.title} themeColor="blue" />
+          {encounterDetails.map((item, i) => (
+            <DataDisplay item={item} key={`enc-${i}`} themeColor="blue" />
           ))}
         </div>
       </div>

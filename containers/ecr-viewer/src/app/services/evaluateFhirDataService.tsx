@@ -9,6 +9,7 @@ import {
   Organization,
   Practitioner,
   PractitionerRole,
+  RelatedPerson,
 } from "fhir/r4";
 import { DateTime } from "luxon";
 
@@ -45,6 +46,7 @@ import {
   formatAge,
   formatPhoneNumber,
   sortByPeriod,
+  formatCurrentAddress,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import { evaluateTravelHistoryTable } from "./socialHistoryService";
@@ -286,15 +288,75 @@ const evaluateOccupationHistory = (fhirBundle: Bundle) => {
   );
   if (jobObs.length === 0) return;
 
+  sortByPeriod(jobObs, (o) => o.effectivePeriod);
+
   return (
     <ExpandCollapseAccordion
       descriptor="employment details"
       items={jobObs.map((obs) => {
-        const getComponentValue = (code: string, path: string) => {
-          const component =
-            obs.component?.find((c) => c.code?.coding?.[0].code === code) || {};
-          return evaluateValue(component, path);
+        const getComponentValue = (code: string) => {
+          return (
+            evaluateValue(
+              obs,
+              `component.where(code.coding.code = '${code}').value`,
+            ) || noData
+          );
         };
+
+        const employerRef = evaluateValue(obs, "employer");
+        const employer = evaluateReference<RelatedPerson | Organization>(
+          fhirBundle,
+          employerRef,
+        );
+
+        const workplaceInfo = [
+          {
+            title: "Address",
+            value: formatCurrentAddress(employer?.address) || noData,
+          },
+          {
+            title: "Schedule",
+            value: getComponentValue("74159-5"),
+          },
+          {
+            title: "Hours",
+            value: getComponentValue("87512-0"),
+          },
+          {
+            title: "Days",
+            value: getComponentValue("74160-3"),
+          },
+          {
+            title: "Duties",
+            value: getComponentValue("63761-1"),
+          },
+          {
+            title: "Pay Grade",
+            value: getComponentValue("87707-6"),
+          },
+          {
+            title: "Employment Type",
+            value: getComponentValue("85104-8"),
+          },
+        ];
+
+        const isWorkplaceContent = workplaceInfo.some(
+          ({ value }) => value !== noData,
+        );
+
+        const workplaceContent = isWorkplaceContent
+          ? workplaceInfo.map(({ title, value }, i) => (
+              <DataDisplay
+                key={`wi-${i}`}
+                item={{
+                  title,
+                  value,
+                  dividerLine: false,
+                  titleNormal: true,
+                }}
+              />
+            ))
+          : noData;
 
         const content = (
           <>
@@ -307,23 +369,35 @@ const evaluateOccupationHistory = (fhirBundle: Bundle) => {
             <DataDisplay
               item={{
                 title: "Industry",
-                value: getComponentValue("86188-0", "valueCodeableConcept"),
+                value: getComponentValue("86188-0"),
               }}
             />
             <DataDisplay
-              item={{ title: "Workplace Information", value: "test" }}
+              item={{
+                title: "Workplace Information",
+                value: workplaceContent,
+                fullWidthContent: isWorkplaceContent,
+              }}
             />
             <DataDisplay
               item={{
                 title: "Hazard",
-                value: getComponentValue("87729-0", "valueString"),
+                value: getComponentValue("87729-0"),
+                dividerLine: false,
               }}
             />
           </>
         );
 
         return {
-          title: formatCodeableConcept(obs.valueCodeableConcept),
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span>{formatCodeableConcept(obs.valueCodeableConcept)}</span>
+              <span className="font-size-xs text-base">
+                {!!obs.effectivePeriod?.end ? "Past" : "Current"} Employment
+              </span>
+            </div>
+          ),
           expanded: true, // TODO: change to false
           content,
           id: obs.id || `${Math.random()}`,
@@ -376,6 +450,7 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     {
       title: "Occupation History",
       value: evaluateOccupationHistory(fhirBundle),
+      fullWidthContent: true,
     },
     {
       title: "Religious Affiliation",
