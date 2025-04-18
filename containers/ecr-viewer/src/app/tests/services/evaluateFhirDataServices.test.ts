@@ -22,6 +22,7 @@ import {
   calculatePatientAge,
   createPatientAgeDataProp,
   evaluateOccupation,
+  evaluateOccupationHistory,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -423,6 +424,100 @@ Home: 123-456-6909`,
       expect(evaluateOccupation(bundle)).toEqual(
         "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present",
       );
+    });
+  });
+
+  describe("Evaluate Occupation History", () => {
+    it("should return empty when no jobs", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toBeUndefined();
+    });
+
+    it("should match snapshot", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              extension: [
+                {
+                  url: "http://hl7.org/fhir/us/odh/StructureDefinition/odh-Employer-extension",
+                  valueReference: { reference: "Organization/1234" },
+                },
+              ],
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Organization",
+              id: "1234",
+              address: [
+                {
+                  line: ["123 test st"],
+                  city: "Nowhereville",
+                  state: "KS",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      // TODO: handle Reference on evaluateValue
+      // add all items to test
+      // one with no workplace info
+      // one with some workplace info
+      // one with all workplace info
+      // make sure sort works
+
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
     });
   });
 

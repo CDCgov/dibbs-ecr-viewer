@@ -313,7 +313,10 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
           );
         };
 
-        const employerRef = evaluateValue(obs, "employer");
+        const employerRef = evaluateValue(
+          obs,
+          "extension.where(url = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-Employer-extension').value",
+        );
         const employer = evaluateReference<RelatedPerson | Organization>(
           fhirBundle,
           employerRef,

@@ -33,3 +33,69 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
   }
 />
 `;
+
+exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot 1`] = `
+<ExpandCollapseAccordion
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="no-data text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "0.3435880427527014",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
