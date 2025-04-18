@@ -1,10 +1,12 @@
 import { Bundle } from "fhir/r4";
 
 import BundleWithEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import BundleErsdWarningNoDetail from "../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
 import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
+import { noData } from "@/app/utils/data-utils";
 
 describe("Evaluate Ecr Metadata", () => {
   it("should have no available data where there is no data", () => {
@@ -105,6 +107,17 @@ describe("Evaluate Ecr Metadata", () => {
 
     expect(actual.eRSDWarnings).toEqual({});
   });
+  it("if processed with eRSDwarning but no details, should show partial info", () => {
+    const actual = evaluateEcrMetadata(BundleErsdWarningNoDetail as unknown as Bundle);
+
+    expect(actual.eRSDWarnings).toEqual({
+      warning:
+        "eICR was processed with the warning of: content or format issues.",
+      versionUsed: noData,
+      versionExpected: noData,
+      suggestedSolution: noData,
+    });
+  })
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
