@@ -13,6 +13,7 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import { eICRProcessingSuccessMsg } from "@/app/view-data/components/EcrMetadata";
 
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
@@ -23,6 +24,7 @@ import {
   formatName,
 } from "./formatService";
 import { getReportabilitySummaries } from "./reportabilityService";
+
 
 export interface ReportableConditions {
   [condition: string]: {
@@ -35,7 +37,7 @@ interface EcrMetadata {
   ecrCustodianDetails: CompleteData;
   rrDetails: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
-  eRSDWarnings: ERSDWarning;
+  eRSDWarnings: ERSDWarning | JSX.Element;
 }
 
 export interface ERSDWarning {
@@ -112,8 +114,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   function geteRSDTextList(
     processingStatus: string | undefined,
     reasonObs: Observation | undefined,
-  ): ERSDWarning {
-    if (!processingStatus || processingStatus === "RRVS19" || !reasonObs) {
+  ): ERSDWarning | JSX.Element {
+    if (processingStatus === "RRVS19") {
+      return eICRProcessingSuccessMsg;
+    } else if (!processingStatus || !reasonObs) {
       return {};
     }
 
@@ -152,7 +156,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       : {};
   }
 
-  const eRSDTextList: ERSDWarning = geteRSDTextList(
+  const eRSDTextList: ERSDWarning | JSX.Element = geteRSDTextList(
     fhirEICRProcessingStatus,
     fhirEICRProcessingStatusReasonObs,
   );

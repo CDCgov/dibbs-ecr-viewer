@@ -17,10 +17,20 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDWarnings: ERSDWarning;
+  eRSDWarnings: ERSDWarning | JSX.Element;
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
+
+const eRSDWarningsTooltip = (
+  <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">
+    eRSD Warnings
+  </ToolTipElement>
+);
+
+export const eICRProcessingSuccessMsg = (
+  <p className="text-italic text-base padding-bottom-0">eICR processed</p>
+);
 
 /**
  * Functional component for displaying eCR metadata.
@@ -39,48 +49,59 @@ const EcrMetadata = ({
   eCRCustodianDetails,
   eicrAuthorDetails,
 }: EcrMetadataProps) => {
+  console
   return (
     <AccordionSection>
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {Object.keys(eRSDWarnings).length > 0 && (
+        {React.isValidElement(eRSDWarnings) ? (
           <div>
-            <Table
-              bordered={false}
-              className="ersd-table fixed-table border-top border-left border-right border-bottom"
-              fixed={true}
-              fullWidth={true}
-            >
-              <caption>
-                <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">
-                  eRSD Warnings
-                </ToolTipElement>
-              </caption>
-              <thead>
-                <tr>
-                  <th>Warning</th>
-                  <th>Version in Use</th>
-                  <th>Expected Version</th>
-                  <th>Suggested Solution</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="padding-105">{eRSDWarnings.warning}</td>
-                  <td className="padding-105">{eRSDWarnings.versionUsed}</td>
-                  <td className="padding-105">
-                    {eRSDWarnings.versionExpected}
-                  </td>
-                  <td className="padding-105">
-                    {eRSDWarnings.suggestedSolution}
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-            <div className="section__line_gray"></div>
+            <div className="header-data-title">
+              {eRSDWarningsTooltip}
+            </div>
+            {eRSDWarnings}
           </div>
+        ) : (
+          typeof eRSDWarnings === "object" &&
+          Object.keys(eRSDWarnings).length > 0 && (
+            <div>
+              <Table
+                bordered={false}
+                className="ersd-table fixed-table border-top border-left border-right border-bottom"
+                fixed={true}
+                fullWidth={true}
+              >
+                <caption>{eRSDWarningsTooltip}</caption>
+                <thead>
+                  <tr>
+                    <th>Warning</th>
+                    <th>Version in Use</th>
+                    <th>Expected Version</th>
+                    <th>Suggested Solution</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="padding-105">
+                      {(eRSDWarnings as ERSDWarning).warning}
+                    </td>
+                    <td className="padding-105">
+                      {(eRSDWarnings as ERSDWarning).versionUsed}
+                    </td>
+                    <td className="padding-105">
+                      {(eRSDWarnings as ERSDWarning).versionExpected}
+                    </td>
+                    <td className="padding-105">
+                      {(eRSDWarnings as ERSDWarning).suggestedSolution}
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+            </div>
+          )
         )}
+        <div className="section__line_gray"></div>
       </AccordionSubSection>
 
       <AccordionSubSection title="eICR Details">
@@ -125,7 +146,7 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
     return (
       <div>
         <h5 className="header-data-title">Reportability Summary</h5>
-        <p className="no-data text-italic text-base padding-bottom-0">
+        <p className="text-italic text-base padding-bottom-0">
           No reportable condition found
         </p>
       </div>

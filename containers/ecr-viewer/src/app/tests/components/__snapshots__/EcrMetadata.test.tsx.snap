@@ -234,10 +234,10 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   </tr>
                 </tbody>
               </table>
-              <div
-                class="section__line_gray"
-              />
             </div>
+            <div
+              class="section__line_gray"
+            />
           </div>
         </div>
         <div

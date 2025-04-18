@@ -4,9 +4,11 @@ import BundleWithEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMet
 import BundleErsdWarningNoDetail from "../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
+import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
 import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import { noData } from "@/app/utils/data-utils";
+import { eICRProcessingSuccessMsg } from "@/app/view-data/components/EcrMetadata";
 
 describe("Evaluate Ecr Metadata", () => {
   it("should have no available data where there is no data", () => {
@@ -102,10 +104,10 @@ describe("Evaluate Ecr Metadata", () => {
         "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
     });
   });
-  it("if processed with no warnings, should have empty eRSDwarnings", () => {
+  it("if processed with no warnings, should have success message", () => {
     const actual = evaluateEcrMetadata(sample_ecr as unknown as Bundle);
 
-    expect(actual.eRSDWarnings).toEqual({});
+    expect(actual.eRSDWarnings).toEqual(eICRProcessingSuccessMsg);
   });
   it("if processed with eRSDwarning but no details, should show partial info", () => {
     const actual = evaluateEcrMetadata(
@@ -119,6 +121,11 @@ describe("Evaluate Ecr Metadata", () => {
       versionExpected: noData,
       suggestedSolution: noData,
     });
+  });
+  it("if no eICR Processing Status, should return empty object", () => {
+    const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle)
+
+    expect(actual.eRSDWarnings).toEqual({});
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
