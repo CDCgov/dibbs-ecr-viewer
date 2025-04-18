@@ -12,9 +12,7 @@ export interface CompleteData {
 
 export type RenderableNode = string | React.JSX.Element;
 
-export const noData = (
-  <span className="text-italic text-base">No data</span>
-);
+export const noData = <span className="text-italic text-base">No data</span>;
 
 /**
  * Evaluates the provided display data to determine availability.

@@ -123,7 +123,7 @@ describe("Evaluate Ecr Metadata", () => {
     });
   });
   it("if no eICR Processing Status, should return empty object", () => {
-    const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle)
+    const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle);
 
     expect(actual.eRSDWarnings).toEqual({});
   });

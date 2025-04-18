@@ -56,9 +56,7 @@ const EcrMetadata = ({
         <div className="section__line_gray" />
         {React.isValidElement(eRSDWarnings) ? (
           <div>
-            <div className="header-data-title">
-              {eRSDWarningsTooltip}
-            </div>
+            <div className="header-data-title">{eRSDWarningsTooltip}</div>
             {eRSDWarnings}
           </div>
         ) : (
