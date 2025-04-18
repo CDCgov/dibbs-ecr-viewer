@@ -31,6 +31,8 @@ autolabeler:
   - label: "chore"
     title:
       - '/chore(\(.*\))?:/i'
+      - '/test(\(.*\))?:/i'
+      - '/refactor(\(.*\))?:/i'
   - label: "feature"
     title:
       - '/feat(\(.*\))?:/i'
