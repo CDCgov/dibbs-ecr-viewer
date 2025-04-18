@@ -1,6 +1,6 @@
 import { Bundle, Observation, Organization } from "fhir/r4";
 
-import { CompleteData, evaluateData, noData } from "@/app/utils/data-utils";
+import { CompleteData, noData, evaluateData, RenderableNode } from "@/app/utils/data-utils";
 import {
   eicrProcessingReasonMap,
   ersdWarningsSuggestedSolutionsMap,
@@ -39,10 +39,10 @@ interface EcrMetadata {
 }
 
 export interface ERSDWarning {
-  warning?: string | JSX.Element;
-  versionUsed?: string | JSX.Element;
-  versionExpected?: string | JSX.Element;
-  suggestedSolution?: string | JSX.Element;
+  warning?: RenderableNode;
+  versionUsed?: RenderableNode;
+  versionExpected?: RenderableNode;
+  suggestedSolution?: RenderableNode;
 }
 
 /**

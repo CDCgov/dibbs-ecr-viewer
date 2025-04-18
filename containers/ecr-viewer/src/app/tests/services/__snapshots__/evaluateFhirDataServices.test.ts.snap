@@ -11,14 +11,14 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
           {
             "Dates": {
               "value": <span
-                className="no-data text-italic text-base"
+                className="text-italic text-base"
               >
                 No data
               </span>,
             },
             "Name": {
               "value": <span
-                className="no-data text-italic text-base"
+                className="text-italic text-base"
               >
                 No data
               </span>,

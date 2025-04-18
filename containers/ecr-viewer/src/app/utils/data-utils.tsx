@@ -13,7 +13,7 @@ export interface CompleteData {
 export type RenderableNode = string | React.JSX.Element;
 
 export const noData = (
-  <span className="no-data text-italic text-base">No data</span>
+  <span className="text-italic text-base">No data</span>
 );
 
 /**
