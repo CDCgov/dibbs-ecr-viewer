@@ -94,7 +94,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsdoc": "^50.6.6",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-unused-imports": "^3.1.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "get-port": "^5.1.0",
     "jest": "^29.7.0",
     "jest-axe": "^8.0.0",
