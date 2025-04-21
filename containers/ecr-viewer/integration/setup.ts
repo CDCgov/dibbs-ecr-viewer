@@ -7,6 +7,7 @@ const {
  */
 module.exports = async function () {
   let attempts = 10;
+
   while (attempts > 0) {
     attempts -= 1;
 

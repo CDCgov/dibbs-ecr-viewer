@@ -1,83 +1,101 @@
-// Kysely ORM Connection Client
-
 import { Kysely } from "kysely";
+
+import { getDbUtils, DbUtils } from "@/app/data/db/utils";
 
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
 import { Common } from "./types/common";
 
-// Dialect to communicate with the database, interface to define its structure.
+// Cache for the validated database connection
+let validatedDb: Kysely<any> | null = null;
 
-let db: unknown;
-
-/**
- * Get the current database dialect
- * @returns string describing dialect
- */
-export const dbDialect = () => {
-  return process.env.METADATA_DATABASE_TYPE;
-};
+// Cache DbUtils to avoid repeated instantiation
+let dbUtils: DbUtils | null = null;
 
 /**
- * Get the current database schema
- * @returns string describing schema
+ * Gets the cached DbUtils instance.
+ * @returns The cached DbUtils instance.
  */
-export const dbSchema = () => {
-  return process.env.METADATA_DATABASE_SCHEMA;
-};
-
-/**
- * Get the current database namespace (schema)
- * @returns string describing namespace
- */
-export const dbNamespace = () => {
-  // use a different schema in testing so seed data doesn't get wiped out
-  return process.env.TEST_TYPE === "integration"
-    ? "test_ev_schema"
-    : "ecr_viewer";
-};
-
-/**
- * Get the database global.
- * @returns global db
- */
-export const getDb = <T>() => {
-  if (db) {
-    return db as Kysely<T>;
+function getCachedDbUtils(): DbUtils {
+  if (!dbUtils) {
+    dbUtils = getDbUtils();
   }
+  return dbUtils;
+}
 
-  const db_type = dbDialect();
-  switch (db_type) {
+/**
+ * Establishes an unvalidated database connection.
+ * @returns A new Kysely instance without schema validation.
+ * @throws Error if the dialect is unsupported.
+ * @template T The type of the database schema.
+ */
+export function getUnvalidatedDb<T>(): Kysely<T> {
+  const { dialect, namespace } = getCachedDbUtils().getDbConfig();
+
+  let db: Kysely<T>;
+  switch (dialect) {
     case "sqlserver":
-      db = new Kysely(sqlserver);
+      db = new Kysely<T>(sqlserver);
       break;
     case "postgres":
-      db = new Kysely(postgres);
+      db = new Kysely<T>(postgres);
       break;
     default:
-      throw new Error(`unknown db type: ${db_type}`);
+      throw new Error(`Unsupported dialect: ${dialect}`);
   }
 
-  db = (db as Kysely<T>).withSchema(dbNamespace());
-
-  return db as Kysely<T>;
-};
+  return db.withSchema(namespace);
+}
 
 /**
- * Performs a health check on the metadata database connection.
- * @returns The status of the metadata db connection or undefined if missing environment values.
+ * Gets a validated database connection, throwing if schema is invalid.
+ * @returns A validated Kysely instance.
+ * @throws Error if the database schema is invalid or if the connection fails.
+ * @template T The type of the database schema.
  */
-export const metadataDatabaseHealthCheck = async () => {
+export async function getDb<T>(): Promise<Kysely<T>> {
+  if (validatedDb) {
+    return validatedDb as Kysely<T>;
+  }
+
+  const db = getUnvalidatedDb<T>();
+  const isValid = await getCachedDbUtils().dbIsValid(db);
+  if (!isValid) {
+    await db.destroy();
+    throw new Error("Database schema is invalid: pending migrations detected");
+  }
+
+  validatedDb = db;
+  return db;
+}
+
+/**
+ * Performs a health check on the database connection.
+ */
+export async function metadataDatabaseHealthCheck(): Promise<string | undefined> {
   if (!process.env.METADATA_DATABASE_TYPE) {
     return undefined;
   }
+
+  let db: Kysely<Common> | null = null;
   try {
-    await getDb<Common>()
-      .connection()
-      .execute(async (_db) => {});
+    db = getUnvalidatedDb<Common>();
+    await db.connection().execute(async () => {});
     return "UP";
-  } catch (error: unknown) {
-    console.error(error);
+  } catch (error) {
+    console.error("Database health check failed:", error);
     return "DOWN";
+  } finally {
+    if (db) {
+      await db.destroy();
+    }
   }
-};
+}
+
+/**
+ * Resets the cached database connection (useful for tests).
+ */
+export function resetDbCache(): void {
+  validatedDb = null;
+  dbUtils = null; // Reset cached utils as well
+}

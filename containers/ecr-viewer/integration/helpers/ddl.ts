@@ -1,25 +1,21 @@
-import { dbNamespace, getDb } from "@/app/api/services/database";
+import { getUnvalidatedDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 
-// Only used in testing, so this is safe to manipulate ENV
-const extdb = () => {
-  process.env.METADATA_DATABASE_SCHEMA = "extended";
-  return getDb<Extended>();
-};
-const coredb = () => {
-  process.env.METADATA_DATABASE_SCHEMA = "core";
-  return getDb<Core>();
-};
+// Use unvalidated database connections for schema operations
+const extdb = () => getUnvalidatedDb<Extended>();
+const coredb = () => getUnvalidatedDb<Core>();
+const commondb = () => getUnvalidatedDb<Common>();
 
+/**
+ * Builds the common schema tables
+ */
 const buildCommon = async () => {
-  const db = getDb<Common>();
-  // schema creation is in a try catch since it fails if it already exists
-  // and `if exists` isn't supported by sql server
+  const db = commondb();
   try {
-    await db.schema.createSchema(dbNamespace()).execute();
+    await db.schema.createSchema("common").execute();
   } catch {}
   await db.schema
     .createTable("ecr_data")
@@ -28,7 +24,7 @@ const buildCommon = async () => {
     .addColumn("eicr_version_number", "varchar(50)")
     .addColumn("fhir_reference_link", "varchar(255)")
     .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
-      cb.notNull().defaultTo(getSql("now")),
+      cb.notNull().defaultTo(getSql("now"))
     )
     .execute();
   await db.schema
@@ -46,20 +42,21 @@ const buildCommon = async () => {
 };
 
 /**
- * Drops the common schema from a test database
+ * Drops the common schema tables
  */
 const dropCommon = async () => {
-  const db = getDb<Common>();
+  const db = commondb();
   await db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
   await db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
   await db.schema.dropTable("ecr_data").ifExists().execute();
+  await db.schema.dropSchema("common").ifExists().execute();
 };
 
 /**
- * Clears the common schema from a test database
+ * Clears the common schema tables
  */
 const clearCommon = async () => {
-  const db = getDb<Common>();
+  const db = commondb();
   await db.deleteFrom("ecr_rr_rule_summaries").execute();
   await db.deleteFrom("ecr_rr_conditions").execute();
   await db.deleteFrom("ecr_data").execute();
@@ -170,12 +167,11 @@ export const clearExtended = async () => {
  * Builds the core schema to a test database
  */
 export const buildCore = async () => {
-  await dropCore(); // make sure we're starting from scratch
+  await dropCore();
   await buildCommon();
-
   await coredb()
     .schema.alterTable("ecr_data")
-    .addColumn("data_source", "varchar(2)", (cb) => cb.notNull()) // S3 or DB
+    .addColumn("data_source", "varchar(2)", (cb) => cb.notNull())
     .addColumn("patient_name_first", "varchar(100)")
     .addColumn("patient_name_last", "varchar(100)")
     .addColumn("patient_birth_date", "date")

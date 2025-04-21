@@ -1,444 +1,363 @@
-import { dbNamespace, getDb } from "@/app/api/services/database";
-import { getSql } from "@/app/api/services/dialects/common";
+/**
+ * @jest-environment node
+ */
+
+
 import { getDbUtils } from "@/app/data/db/utils";
-import { migrateUp } from "@/app/data/db/utils/migrate";
+import { buildCore, dropCore } from "../../../helpers/ddl";
 
-const db = getDb();
-const schema = dbNamespace();
-const utils = getDbUtils();
+describe("Common Schema Migration Tests", () => {
+  let utils;
 
-describe("Common Schema: ", () => {
   beforeAll(async () => {
-    await migrateUp();
+    await buildCore(); // Build the core schema
+    utils = getDbUtils();
   });
+
   afterAll(async () => {
-    await db.destroy();
+    await dropCore(); // Drop the core schema
   });
 
-  it("has a schema", async () => {
-    expect(await utils.schemaExistsByName(db, schema)).toBe(true);
+  // Schema-level tests
+  describe("Schema", () => {
+    it("should exist with name 'common'", async () => {
+      const exists = await utils.schemaExistsByName(db, schema);
+      expect(exists).toBe(true);
+    });
   });
 
-  describe("ecr_data table", () => {
-    it("exists", async () => {
-      expect(await utils.tableExistsByName(db, schema, "ecr_data")).toBe(true);
+  // ecr_data table tests
+  describe("Table: ecr_data", () => {
+    let table;
+
+    beforeAll(async () => {
+      table = await utils.getTable(db, schema, "ecr_data");
     });
 
-    describe("eicr_id column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(db, schema, "ecr_data", "eicr_id"),
-        ).toBe(true);
+    it("should exist in the 'common' schema", () => {
+      expect(table).toBeDefined();
+    });
+
+    describe("Column: eicr_id", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "eicr_id");
       });
-      it("is a primary key", async () => {
-        const column = await utils.getColumn(db, schema, "ecr_data", "eicr_id");
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be the primary key", () => {
         expect(column?.isPrimaryKey()).toBe(true);
       });
-      it("is a varchar(200)", async () => {
-        const column = await utils.getColumn(db, schema, "ecr_data", "eicr_id");
+
+      it("should be of type varchar(200)", () => {
         expect(column?.type).toBe("varchar(200)");
       });
     });
 
-    describe("set_id column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(db, schema, "ecr_data", "set_id"),
-        ).toBe(true);
+    describe("Column: set_id", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "set_id");
       });
-      it("is a varchar(255)", async () => {
-        const column = await utils.getColumn(db, schema, "ecr_data", "set_id");
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type varchar(255)", () => {
         expect(column?.type).toBe("varchar(255)");
       });
     });
 
-    describe("eicr_version_number column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_data",
-            "eicr_version_number",
-          ),
-        ).toBe(true);
+    describe("Column: eicr_version_number", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "eicr_version_number");
       });
-      it("is a varchar(50)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "eicr_version_number",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type varchar(50)", () => {
         expect(column?.type).toBe("varchar(50)");
       });
     });
 
-    describe("data_source column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(db, schema, "ecr_data", "data_source"),
-        ).toBe(true);
+    describe("Column: data_source", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "data_source");
       });
-      it("is a varchar(20)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "data_source",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type varchar(20)", () => {
         expect(column?.type).toBe("varchar(20)");
       });
     });
 
-    describe("fhir_reference_link column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_data",
-            "fhir_reference_link",
-          ),
-        ).toBe(true);
+    describe("Column: fhir_reference_link", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "fhir_reference_link");
       });
-      it("is a varchar(500)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "fhir_reference_link",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type varchar(500)", () => {
         expect(column?.type).toBe("varchar(500)");
       });
     });
-    describe("patient_name_first column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_data",
-            "patient_name_first",
-          ),
-        ).toBe(true);
+
+    describe("Column: patient_name_first", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "patient_name_first");
       });
-      it("is a varchar(100)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "patient_name_first",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type varchar(100)", () => {
         expect(column?.type).toBe("varchar(100)");
       });
     });
-    describe("patient_name_last column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_dat",
-            "patient_name_last",
-          ),
-        ).toBe(true);
+
+    describe("Column: patient_name_last", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "patient_name_last");
       });
-      it("is a varchar(100)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "patient_name_last",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type varchar(100)", () => {
         expect(column?.type).toBe("varchar(100)");
       });
     });
-    describe("date_created column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_data",
-            "date_created",
-          ),
-        ).toBe(true);
+
+    describe("Column: date_created", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "date_created");
       });
-      it("is a timestamp", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "date_created",
-        );
-        expect(column?.type).toBe(getSql("datetimeTzType"));
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
       });
-      it("is not nullable", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "date_created",
-        );
+
+      it("should be of type timestamp with time zone", () => {
+        expect(column?.type).toBe(getSql("datetimeTzType")); // Handles dialect-specific type
+      });
+
+      it("should not be nullable", () => {
         expect(column?.isNullable()).toBe(false);
       });
-      it("defaults to now", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "date_created",
-        );
+
+      it("should default to current timestamp", () => {
         expect(column?.defaultValue).toBe(getSql("now"));
       });
     });
-    describe("report_date column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(db, schema, "ecr_data", "report_date"),
-        ).toBe(true);
+
+    describe("Column: report_date", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "report_date");
       });
-      it("is a date", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_data",
-          "report_date",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type date", () => {
         expect(column?.type).toBe("DATE");
       });
     });
   });
 
-  describe("ecr_rr_conditions table", () => {
-    it("exists", async () => {
-      expect(
-        await utils.tableExistsByName(db, schema, "ecr_rr_conditions"),
-      ).toBe(true);
+  // ecr_rr_conditions table tests
+  describe("Table: ecr_rr_conditions", () => {
+    let table;
+
+    beforeAll(async () => {
+      table = await utils.getTable(db, schema, "ecr_rr_conditions");
     });
 
-    describe("uuid column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_rr_conditions",
-            "uuid",
-          ),
-        ).toBe(true);
+    it("should exist in the 'common' schema", () => {
+      expect(table).toBeDefined();
+    });
+
+    describe("Column: uuid", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "uuid");
       });
-      it("is a primary key", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_conditions",
-          "uuid",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be the primary key", () => {
         expect(column?.isPrimaryKey()).toBe(true);
       });
-      it("is a varchar(200)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_conditions",
-          "uuid",
-        );
+
+      it("should be of type varchar(200)", () => {
         expect(column?.type).toBe("varchar(200)");
       });
     });
 
-    describe("eicr_id column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_rr_conditions",
-            "eicr_id",
-          ),
-        ).toBe(true);
+    describe("Column: eicr_id", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "eicr_id");
       });
-      it("is not nullable", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_conditions",
-          "eicr_id",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should not be nullable", () => {
         expect(column?.isNullable()).toBe(false);
       });
-      it("is a foreign key", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_conditions",
-          "eicr_id",
-        );
+
+      it("should be a foreign key referencing ecr_data.eicr_id", () => {
         expect(column?.isForeignKey()).toBe(true);
-      });
-      it("references ecr_data.eicr_id", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_conditions",
-          "eicr_id",
-        );
         expect(column?.foreignKey).toBe("ecr_data.eicr_id");
       });
-      it("is a varchar(200)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_conditions",
-          "eicr_id",
-        );
+
+      it("should be of type varchar(200)", () => {
         expect(column?.type).toBe("varchar(200)");
       });
     });
 
-    describe("condition column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_rr_conditions",
-            "condition",
-          ),
-        ).toBe(true);
+    describe("Column: condition", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "condition");
       });
-      it("is a maxVarchar", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_conditions",
-          "condition",
-        );
-        expect(column?.type).toBe(getSql("maxVarchar"));
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type text or varchar(max)", () => {
+        expect(column?.type).toBe(getSql("maxVarchar")); // Dialect-specific max varchar
       });
     });
   });
-  describe("ecr_rr_rule_summaries table", () => {
-    it("exists", async () => {
-      expect(
-        await utils.tableExistsByName(db, schema, "ecr_rr_rule_summaries"),
-      ).toBe(true);
+
+  // ecr_rr_rule_summaries table tests
+  describe("Table: ecr_rr_rule_summaries", () => {
+    let table;
+
+    beforeAll(async () => {
+      table = await utils.getTable(db, schema, "ecr_rr_rule_summaries");
     });
 
-    describe("uuid column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_rr_rule_summaries",
-            "uuid",
-          ),
-        ).toBe(true);
+    it("should exist in the 'common' schema", () => {
+      expect(table).toBeDefined();
+    });
+
+    describe("Column: uuid", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "uuid");
       });
-      it("is a primary key", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_rule_summaries",
-          "uuid",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be the primary key", () => {
         expect(column?.isPrimaryKey()).toBe(true);
       });
-      it("is a varchar(200)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_rule_summaries",
-          "uuid",
-        );
+
+      it("should be of type varchar(200)", () => {
         expect(column?.type).toBe("varchar(200)");
       });
     });
 
-    describe("ecr_rr_conditions_id column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_rr_rule_summaries",
-            "ecr_rr_conditions_id",
-          ),
-        ).toBe(true);
+    describe("Column: ecr_rr_conditions_id", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "ecr_rr_conditions_id");
       });
-      it("is not nullable", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_rule_summaries",
-          "ecr_rr_conditions_id",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should not be nullable", () => {
         expect(column?.isNullable()).toBe(false);
       });
-      it("is a foreign key", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_rule_summaries",
-          "ecr_rr_conditions_id",
-        );
+
+      it("should be a foreign key referencing ecr_rr_conditions.uuid", () => {
         expect(column?.isForeignKey()).toBe(true);
-      });
-      it("references ecr_rr_conditions.uuid", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_rule_summaries",
-          "ecr_rr_conditions_id",
-        );
         expect(column?.foreignKey).toBe("ecr_rr_conditions.uuid");
       });
-      it("is a varchar(200)", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_rule_summaries",
-          "ecr_rr_conditions_id",
-        );
+
+      it("should be of type varchar(200)", () => {
         expect(column?.type).toBe("varchar(200)");
       });
     });
 
-    describe("rule_summary column", () => {
-      it("exists", async () => {
-        expect(
-          await utils.columnExistsByName(
-            db,
-            schema,
-            "ecr_rr_rule_summaries",
-            "rule_summary",
-          ),
-        ).toBe(true);
+    describe("Column: rule_summary", () => {
+      let column;
+
+      beforeAll(() => {
+        column = table?.columns.find((c) => c.name === "rule_summary");
       });
-      it("is a maxVarchar", async () => {
-        const column = await utils.getColumn(
-          db,
-          schema,
-          "ecr_rr_rule_summaries",
-          "rule_summary",
-        );
+
+      it("should exist", () => {
+        expect(column).toBeDefined();
+      });
+
+      it("should be of type text or varchar(max)", () => {
         expect(column?.type).toBe(getSql("maxVarchar"));
       });
     });
   });
-  describe("Migration Status: ", () => {
-    it("has two migrations applied", async () => {
-      const migrationNames = await getDbUtils().getMigrations(db);
-      expect(migrationNames.length).toBe(2);
+
+  // Migration status tests
+  describe("Migration Status", () => {
+    let migrations;
+
+    beforeAll(async () => {
+      migrations = await utils.getMigrations(db); // Assuming getMigrations returns executed migration names
     });
 
-    it("has the correct migrations applied", async () => {
-      const migrationNames = getDbUtils().getMigrations(db);
-      expect(migrationNames).toContain("19700101000000_initial");
-      expect(migrationNames).toContain("19700101000001_initial");
+    it("should have exactly two migrations applied", () => {
+      expect(migrations.length).toBe(2);
+    });
+
+    it("should have applied the correct migrations", () => {
+      expect(migrations).toContain("19700101000000_initial");
+      expect(migrations).toContain("19700101000001_initial");
     });
   });
 });

@@ -14,8 +14,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     return;
   }
 
-  // Install uuid-ossp extension (Postgres-specific)
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
+  if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+    // Install uuid-ossp extension (Postgres-specific)
+    await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
+  }
 
   const coreCheck = await db
     .selectFrom("ecr_viewer.ecr_data")

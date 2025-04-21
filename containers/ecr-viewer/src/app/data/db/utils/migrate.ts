@@ -4,58 +4,51 @@ import { fileURLToPath } from "url";
 
 import { Kysely, Migrator } from "kysely";
 
-import { getDb, dbSchema } from "@/app/api/services/database";
-import { getMigrations } from "@/app/data/db/dialects/postgres/utils";
-
+import { getUnvalidatedDb } from "./database";
 import { MultiDirectoryMigrationProvider } from "./multiDirectoryMigrationProvider";
+import { getDbUtils } from "./utils";
 
 // Empty interface used only in migrations
 interface Database {}
 
 /**
- * Sets up migration environment and handles database operations
- * @param operation
+ * Sets up migration environment and executes the provided operation.
+ * @param operation Function to execute with database and migration directories.
  */
 async function withMigrationEnv(
   operation: (params: {
     db: Kysely<Database>;
     migrationDirs: string[];
-  }) => Promise<void>,
+  }) => Promise<void>
 ): Promise<void> {
-  const schema = dbSchema();
-  if (!schema || (schema !== "core" && schema !== "extended")) {
-    console.warn("No database supported by config. Skipping migration.");
-    return;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = getDb() as Kysely<any>;
+  const { schema } = getDbUtils().getDbConfig();
+  const db = getUnvalidatedDb<Database>();
 
   try {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const commonDir = path.join(__dirname, `../schemas/common`);
+    const commonDir = path.join(__dirname, "../schemas/common");
     const schemaDir = path.join(__dirname, `../schemas/${schema}`);
 
     await operation({ db, migrationDirs: [commonDir, schemaDir] });
   } catch (error) {
-    throw new Error("Migration failed: " + error);
+    throw new Error(`Migration operation failed: ${error}`);
   } finally {
     await db.destroy();
   }
 }
 
 /**
- * Executes a specific migration operation
- * @param db
- * @param migrationDirs
- * @param command
- * @param target
+ * Executes a migration operation (up or down).
+ * @param db Kysely instance.
+ * @param migrationDirs Directories containing migration files.
+ * @param command "up" or "down".
+ * @param target Optional migration name to migrate to.
  */
 async function executeMigration(
   db: Kysely<Database>,
   migrationDirs: string[],
   command: "up" | "down",
-  target?: string,
+  target?: string
 ): Promise<void> {
   const migrator = new Migrator({
     db,
@@ -65,20 +58,14 @@ async function executeMigration(
   let result;
   if (command === "up") {
     result = await migrator.migrateToLatest();
-    console.log(
-      "Migrations applied:",
-      result.results || "No migrations to apply",
-    );
+    console.log("Migrations applied:", result.results || "No migrations to apply");
   } else {
     if (target) {
       result = await migrator.migrateTo(target);
-      console.log(`Migrated to ${target}`, result.results || "No changes");
+      console.log(`Migrated to ${target}:`, result.results || "No changes");
     } else {
       result = await migrator.migrateDown();
-      console.log(
-        "Migration rolled back:",
-        result.results || "No migrations to roll back",
-      );
+      console.log("Migration rolled back:", result.results || "No migrations to roll back");
     }
   }
 
@@ -88,21 +75,19 @@ async function executeMigration(
 }
 
 /**
- * Applies all pending migrations
+ * Applies all pending migrations.
  */
 export async function migrateUp(): Promise<void> {
   await withMigrationEnv(({ db, migrationDirs }) =>
-    executeMigration(db, migrationDirs, "up"),
+    executeMigration(db, migrationDirs, "up")
   );
 }
 
 /**
- * Reverts migrations
+ * Reverts migrations.
  * @param migrationNames Optional array of migration names to revert. If empty, reverts the most recent migration.
  */
-export async function migrateDown(
-  migrationNames: string[] = [],
-): Promise<void> {
+export async function migrateDown(migrationNames: string[] = []): Promise<void> {
   await withMigrationEnv(async ({ db, migrationDirs }) => {
     if (migrationNames.length === 0) {
       await executeMigration(db, migrationDirs, "down");
@@ -112,27 +97,4 @@ export async function migrateDown(
       }
     }
   });
-}
-/**
- * Checks if there are any pending migrations
- * @returns True if there are pending migrations, false otherwise
- */
-export async function hasPendingMigrations(): Promise<boolean> {
-  let hasPending = true;
-
-  await withMigrationEnv(async ({ db, migrationDirs }) => {
-    const migrator = new Migrator({
-      db,
-      provider: new MultiDirectoryMigrationProvider(migrationDirs, fs, path),
-    });
-
-    const executedMigrations = await getMigrations(db);
-    const allMigrations = await migrator.getMigrations();
-    const pendingMigrations = allMigrations.filter(
-      (migration) => !executedMigrations.includes(migration.name),
-    );
-    hasPending = pendingMigrations.length > 0;
-  });
-
-  return hasPending;
 }
