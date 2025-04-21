@@ -1,13 +1,14 @@
 import { Kysely } from "kysely";
 
-import { getDbUtils, DbUtils } from "@/app/data/db/utils";
+import { DbUtils, getDbUtils, dbDialect, dbNamespace } from "@/app/data/db/utils";
+export { getDbUtils, dbDialect, dbNamespace, dbSchema } from "@/app/data/db/utils";
 
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
 import { Common } from "./types/common";
 
 // Cache for the validated database connection
-let validatedDb: Kysely<any> | null = null;
+let validatedDb: Kysely<unknown> | null = null;
 
 // Cache DbUtils to avoid repeated instantiation
 let dbUtils: DbUtils | null = null;
@@ -22,33 +23,6 @@ function getCachedDbUtils(): DbUtils {
   }
   return dbUtils;
 }
-
-/**
- * Get the current database dialect
- * @returns string describing dialect
- */
-export const dbDialect = () => {
-  return process.env.METADATA_DATABASE_TYPE;
-};
-
-/**
- * Get the current database namespace (schema)
- * @returns string describing namespace
- */
-export const dbNamespace = () => {
-  // use a different schema in testing so seed data doesn't get wiped out
-  return process.env.TEST_TYPE === "integration"
-    ? "test_ev_schema"
-    : "ecr_viewer";
-};
-
-/**
- * Get the current database schema
- * @returns string describing schema
- */
-export const dbSchema = () => {
-  return process.env.METADATA_DATABASE_SCHEMA;
-};
 
 /**
  * Establishes an unvalidated database connection.

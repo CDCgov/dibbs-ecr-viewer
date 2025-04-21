@@ -1,36 +1,30 @@
-import { promises as fs } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { resolve } from "path";
 
-import { Kysely, Migrator } from "kysely";
+import {
+  Kysely,
+  Migrator,
+  NO_MIGRATIONS,
+  MigrationInfo,
+} from "kysely";
+import { TSFileMigrationProvider } from 'kysely-ctl'
 
 import { dbSchema, getUnvalidatedDb } from "@/app/api/services/database";
 
-import { MultiDirectoryMigrationProvider } from "./multiDirectoryMigrationProvider";
-
-
 // Empty interface used only in migrations
-interface Database {}
+export interface NoSchema {}
 
 /**
  * Sets up migration environment and executes the provided operation.
  * @param operation Function to execute with database and migration directories.
+ * @returns result of `operation`
  */
-async function withMigrationEnv(
-  operation: (params: {
-    db: Kysely<Database>;
-    migrationDirs: string[];
-  }) => Promise<void>,
-): Promise<void> {
-  const schema = dbSchema();
-  const db = getUnvalidatedDb<Database>();
+async function withUnValidatedDb<T>(
+  operation: (db: Kysely<NoSchema>) => Promise<T>,
+): Promise<T> {
+  const db = getUnvalidatedDb<NoSchema>();
 
   try {
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const commonDir = path.join(__dirname, "../schemas/common");
-    const schemaDir = path.join(__dirname, `../schemas/${schema}`);
-
-    await operation({ db, migrationDirs: [commonDir, schemaDir] });
+    return await operation(db);
   } catch (error) {
     throw new Error(`Migration operation failed: ${error}`);
   } finally {
@@ -38,46 +32,69 @@ async function withMigrationEnv(
   }
 }
 
+const getMigrators = (db: Kysely<NoSchema>) => {
+  const commonMigrator = new Migrator({
+    db,
+    provider: new TSFileMigrationProvider({
+      migrationFolder: resolve("src/app/data/db/schemas/common"),
+    }),
+  });
+  const schemaMigrator = new Migrator({
+    db,
+    provider: new TSFileMigrationProvider({
+      migrationFolder: resolve(`src/app/data/db/schemas/${dbSchema()}`),
+    }),
+  });
+  return { commonMigrator, schemaMigrator };
+};
+
 /**
  * Executes a migration operation (up or down).
  * @param db Kysely instance.
- * @param migrationDirs Directories containing migration files.
  * @param command "up" or "down".
  * @param target Optional migration name to migrate to.
  */
 async function executeMigration(
-  db: Kysely<Database>,
-  migrationDirs: string[],
+  db: Kysely<NoSchema>,
   command: "up" | "down",
   target?: string,
 ): Promise<void> {
-  const migrator = new Migrator({
-    db,
-    provider: new MultiDirectoryMigrationProvider(migrationDirs, fs, path),
-  });
+  const { commonMigrator, schemaMigrator } = getMigrators(db);
 
-  let result;
   if (command === "up") {
-    result = await migrator.migrateToLatest();
-    console.log(
-      "Migrations applied:",
-      result.results || "No migrations to apply",
-    );
-  } else {
-    if (target) {
-      result = await migrator.migrateTo(target);
-      console.log(`Migrated to ${target}:`, result.results || "No changes");
-    } else {
-      result = await migrator.migrateDown();
+    for (const migrator of [commonMigrator, schemaMigrator]) {
+      const result = await migrator.migrateToLatest();
       console.log(
-        "Migration rolled back:",
-        result.results || "No migrations to roll back",
+        "Migrations applied:",
+        result.results || "No migrations to apply",
       );
-    }
-  }
 
-  if (result.error) {
-    throw result.error;
+      if (result.error) {
+        throw result.error;
+      }
+    }
+  } else if (command === "down") {
+    for (const migrator of [schemaMigrator, commonMigrator]) {
+      let result;
+      if (target) {
+        result = await migrator.migrateTo(
+          target === "all" ? NO_MIGRATIONS : target,
+        );
+        console.log(`Migrated to ${target}:`, result.results || "No changes");
+      } else {
+        result = await migrator.migrateDown();
+        console.log(
+          "Migration rolled back:",
+          result.results || "No migrations to roll back",
+        );
+      }
+
+      if (result.error) {
+        throw result.error;
+      }
+    }
+  } else {
+    throw new Error(`Unknown migration command: ${command}`);
   }
 }
 
@@ -85,25 +102,32 @@ async function executeMigration(
  * Applies all pending migrations.
  */
 export async function migrateUp(): Promise<void> {
-  await withMigrationEnv(({ db, migrationDirs }) =>
-    executeMigration(db, migrationDirs, "up"),
-  );
+  await withUnValidatedDb((db) => executeMigration(db, "up"));
 }
 
 /**
  * Reverts migrations.
- * @param migrationNames Optional array of migration names to revert. If empty, reverts the most recent migration.
+ * @param migrationTarget Optional name of migration to migrate down to (exclusive). If empty, reverts the most recent migration. To migrate all the way down, use argument "all"
  */
-export async function migrateDown(
-  migrationNames: string[] = [],
-): Promise<void> {
-  await withMigrationEnv(async ({ db, migrationDirs }) => {
-    if (migrationNames.length === 0) {
-      await executeMigration(db, migrationDirs, "down");
-    } else {
-      for (const migrationName of migrationNames) {
-        await executeMigration(db, migrationDirs, "down", migrationName);
-      }
-    }
+export async function migrateDown(migrationTarget?: string): Promise<void> {
+  await withUnValidatedDb(async (db) => {
+    await executeMigration(db, "down", migrationTarget);
   });
+}
+
+/**
+ * Get migration info for all migrations
+ * @returns list of migrations
+ */
+export async function getMigrations(): Promise<readonly MigrationInfo[]> {
+  return await withUnValidatedDb(
+    async (db): Promise<readonly MigrationInfo[]> => {
+      const { commonMigrator, schemaMigrator } = getMigrators(db);
+
+      const commonMigrations = await commonMigrator.getMigrations();
+      const schemaMigrations = await schemaMigrator.getMigrations();
+
+      return [...commonMigrations, ...schemaMigrations];
+    },
+  );
 }

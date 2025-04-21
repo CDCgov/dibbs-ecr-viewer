@@ -9,10 +9,10 @@ async function main() {
       await migrateUp();
       console.log("All pending migrations have been applied successfully.");
     } else if (command === "down") {
-      await migrateDown(args.length > 0 ? args : undefined);
+      await migrateDown(args.length > 0 ? args[0] : undefined);
       console.log(
-        `Migration(s) rolled back successfully. Reverted: ${
-          args.length > 0 ? args.join(", ") : "latest"
+        `Migration(s) rolled back successfully. Reverted to: ${
+          args.length > 0 ? args[1] : "migration before latest"
         }`,
       );
     } else {
@@ -20,12 +20,12 @@ async function main() {
       console.log("Commands:");
       console.log("  up              Apply all pending migrations");
       console.log(
-        "  down [names...] Roll back specific migrations or the most recent one if no names provided",
+        "  down [target | all] Roll back to a specific migration or all migrations",
       );
       process.exit(1);
     }
-  } catch (error) {
-    console.error("Migration failed:", error.message);
+  } catch (error: unknown) {
+    console.error("Migration failed: ", error);
     process.exit(1);
   }
 }

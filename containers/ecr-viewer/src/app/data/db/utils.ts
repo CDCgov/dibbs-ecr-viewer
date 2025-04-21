@@ -1,13 +1,8 @@
-import { promises as fs } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-import { Kysely, Migrator, TableMetadata, ColumnMetadata } from "kysely";
-
-import { dbSchema } from "@/app/api/services/database";
+import { Kysely, TableMetadata, ColumnMetadata } from "kysely";
 
 import * as postgresUtils from "./dialects/postgres/utils";
 import * as sqlServerUtils from "./dialects/sqlserver/utils";
+import { getMigrations } from "./utils/migrate";
 
 type DialectType = "sqlserver" | "postgres";
 type SchemaType = "core" | "extended";
@@ -19,11 +14,9 @@ export interface DatabaseConfig {
 }
 
 export interface DbUtils {
-  dbIsValid(db: Kysely<any>): Promise<boolean>;
-  resetDbCache(): void;
-  metadataDatabaseHealthCheck(): Promise<string | undefined>;
-  hasPendingMigrations(db: Kysely<any>): Promise<boolean>;
-  getExecutedMigrations(db: Kysely<any>): Promise<string[]>;
+  dbIsValid(): Promise<boolean>;
+  hasPendingMigrations(): Promise<boolean>;
+  getExecutedMigrations(): Promise<string[]>;
   getSchemas(db: Kysely<any>): Promise<string[]>;
   getSchema(db: Kysely<any>, schemaName: string): Promise<TableMetadata[]>;
   schemaExistsByName(db: Kysely<any>, schemaName: string): Promise<boolean>;
@@ -57,17 +50,33 @@ export interface DbUtils {
   ): Promise<boolean>;
 }
 
+
 /**
- * Gets migration directories based on the current schema.
- * @returns Array of migration directories.
+ * Get the current database dialect
+ * @returns string describing dialect
  */
-function getMigrationDirs(): string[] {
-  const schema = dbSchema();
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const commonDir = path.join(__dirname, "./schemas/common");
-  const schemaDir = path.join(__dirname, `./schemas/${schema}`);
-  return [commonDir, schemaDir];
-}
+export const dbDialect = () => {
+  return process.env.METADATA_DATABASE_TYPE;
+};
+
+/**
+ * Get the current database namespace (schema)
+ * @returns string describing namespace
+ */
+export const dbNamespace = () => {
+  // use a different schema in testing so seed data doesn't get wiped out
+  return process.env.TEST_TYPE === "integration"
+    ? "test_ev_schema"
+    : "ecr_viewer";
+};
+
+/**
+ * Get the current database schema
+ * @returns string describing schema
+ */
+export const dbSchema = () => {
+  return process.env.METADATA_DATABASE_SCHEMA;
+};
 
 /**
  * Gets the database utility functions for the current dialect.
@@ -79,60 +88,23 @@ export function getDbUtils(): DbUtils {
   const dialectUtils = dialect === "postgres" ? postgresUtils : sqlServerUtils;
 
   return {
-    async dbIsValid(db: Kysely<any>): Promise<boolean> {
-      return !(await this.hasPendingMigrations(db));
+    async dbIsValid(): Promise<boolean> {
+      return !(await this.hasPendingMigrations());
     },
 
-    resetDbCache(): void {
-      // Placeholder; implement in database.ts if needed
-    },
-
-    async metadataDatabaseHealthCheck(): Promise<string | undefined> {
-      // Placeholder; implement in database.ts if needed
-      return undefined;
-    },
-
-    async hasPendingMigrations(db: Kysely<any>): Promise<boolean> {
-      const migrator = new Migrator({
-        db,
-        provider: new MultiDirectoryMigrationProvider(
-          getMigrationDirs(),
-          fs,
-          path,
-        ),
-      });
-
-      const allMigrations = await migrator.getMigrations();
+    async hasPendingMigrations(): Promise<boolean> {
+      const allMigrations = await getMigrations();
       const executedMigrations = allMigrations
         .filter((m) => m.executedAt)
         .map((m) => m.name);
-      const pendingMigrations = allMigrations.filter(
-        (m) => !executedMigrations.includes(m.name),
-      );
-      return pendingMigrations.length > 0;
+      return executedMigrations.length < allMigrations.length;
     },
 
-    async getExecutedMigrations(db: Kysely<any>): Promise<string[]> {
-      const migrator = new Migrator({
-        db,
-        provider: new MultiDirectoryMigrationProvider(
-          getMigrationDirs(),
-          fs,
-          path,
-        ),
-      });
-      const migrations = await migrator.getMigrations();
+    async getExecutedMigrations(): Promise<string[]> {
+      const migrations = await getMigrations();
       return migrations.filter((m) => m.executedAt).map((m) => m.name);
     },
 
-    getSchemas: dialectUtils.getSchemas,
-    getSchema: dialectUtils.getSchema,
-    schemaExistsByName: dialectUtils.schemaExistsByName,
-    getTables: dialectUtils.getTables,
-    getTable: dialectUtils.getTable,
-    tableExistsByName: dialectUtils.tableExistsByName,
-    getColumns: dialectUtils.getColumns,
-    getColumn: dialectUtils.getColumn,
-    columnExistsByName: dialectUtils.columnExistsByName,
+    ...dialectUtils,
   };
 }

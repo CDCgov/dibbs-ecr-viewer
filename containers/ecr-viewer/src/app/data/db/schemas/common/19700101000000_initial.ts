@@ -1,9 +1,7 @@
-// import { Kysely } from "kysely";
 import { Kysely } from "kysely";
 
-import { dbNamespace } from "@/app/api/services/database";
-import { getSql } from "@/app/api/services/dialects/common";
-import { getDbUtils } from "@/app/data/db/utils";
+import { getSql } from "../../../../api/services/dialects/common";
+import { dbNamespace, getDbUtils } from "../../utils";
 
 const schema = dbNamespace();
 const dbUtils = getDbUtils();
