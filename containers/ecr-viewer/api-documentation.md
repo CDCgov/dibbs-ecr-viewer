@@ -4,7 +4,7 @@
 
 Display an eCR
 
-**URL** : `/view-data?id=:id&snomed-code=:snomed&auth=:auth`
+**URL** : `/ecr-viewer/view-data?id=:id&snomed-code=:snomed&auth=:auth`
 
 **URL Parameters** :
 
@@ -50,7 +50,7 @@ Display an eCR
 
 Process a zip file containing an eCR/RR pair
 
-**URL** : `/process-zip`
+**URL** : `/ecr-viewer/api/process-zip`
 
 **POST Form Fields** :
 
@@ -62,6 +62,16 @@ Process a zip file containing an eCR/RR pair
 **Auth required** : Coming Soon
 
 **Permissions required** : None
+
+### Example
+
+Process an eCR (e.g. `seed-scripts/baseECR/star-wars/yoda-zika-v1-positive`) and have the processed FHIR bundle returned.
+
+```sh
+curl --location '<DIBBS_URL>/ecr-viewer/api/process-zip' \
+--form 'upload_file=@"<PATH_TO_ECR_ZIP_FILE>";type=application/zip' \
+--form 'return_fhir_bundle=true'
+```
 
 ### Success Response
 
