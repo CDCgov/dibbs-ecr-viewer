@@ -31,7 +31,9 @@ export type ValueX =
   | string
   | CodeableConcept
   | Coding
-  | Quantity;
+  | Quantity
+  | Reference
+  | ObservationReferenceRange;
 
 /**
  * Mapping from the FHIR path key to the expected type upon valuation.

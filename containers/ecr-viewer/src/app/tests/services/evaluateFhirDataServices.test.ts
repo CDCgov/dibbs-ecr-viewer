@@ -438,7 +438,7 @@ Home: 123-456-6909`,
       expect(evaluateOccupationHistory(bundle)).toBeUndefined();
     });
 
-    it("should match snapshot", () => {
+    it("should match snapshot when all fields present", () => {
       const bundle: Bundle = {
         resourceType: "Bundle",
         type: "document",
@@ -446,6 +446,7 @@ Home: 123-456-6909`,
           {
             resource: {
               resourceType: "Observation",
+              id: "12345",
               status: "final",
               meta: {
                 profile: [
@@ -491,6 +492,78 @@ Home: 123-456-6909`,
                   },
                   valueString: "~hazard~",
                 },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "74159-5",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~schedule~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87512-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~hours~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "74160-3",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~days~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "63761-1",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~duties~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87707-6",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~pay grade~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "85104-8",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~employment type~",
+                  },
+                },
               ],
             },
           },
@@ -510,12 +583,158 @@ Home: 123-456-6909`,
         ],
       };
 
-      // TODO: handle Reference on evaluateValue
-      // add all items to test
-      // one with no workplace info
-      // one with some workplace info
-      // one with all workplace info
-      // make sure sort works
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+    });
+    it("should match snapshot when no workplace info", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Organization",
+              id: "1234",
+              address: [
+                {
+                  line: ["123 test st"],
+                  city: "Nowhereville",
+                  state: "KS",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+    });
+
+    it("should match snapshot when partial info", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87707-6",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~pay grade~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "85104-8",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~employment type~",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Organization",
+              id: "1234",
+              address: [
+                {
+                  line: ["123 test st"],
+                  city: "Nowhereville",
+                  state: "KS",
+                },
+              ],
+            },
+          },
+        ],
+      };
 
       expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
     });

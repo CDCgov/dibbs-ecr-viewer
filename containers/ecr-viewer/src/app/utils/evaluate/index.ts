@@ -8,6 +8,7 @@ import {
   FhirResource,
   ObservationReferenceRange,
   Quantity,
+  Reference,
   Resource,
 } from "fhir/r4";
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
@@ -53,9 +54,13 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
   if (actualType === "object") {
     const nodeInfo = (result as { __path__: NodeInfo })?.__path__;
     if (expectedType === "ValueX") {
-      valid = ["CodeableConcept", "Coding", "Quantity"].includes(
-        nodeInfo.fhirNodeDataType,
-      );
+      valid = [
+        "CodeableConcept",
+        "Coding",
+        "Quantity",
+        "Reference",
+        "Observation.referenceRange",
+      ].includes(nodeInfo.fhirNodeDataType);
     } else if (
       expectedType === "Coding" &&
       nodeInfo.path === "Coding.entries.eRSDwarnings"
@@ -237,25 +242,33 @@ export const evaluateValue = (
   const originalValuePath = (originalValue as { __path__: NodeInfo })?.__path__
     ?.path;
 
-  if (originalValuePath === "Quantity") {
-    const data: Quantity = originalValue;
-    value = formatQuantity(data) || "";
-  } else if (originalValuePath === "CodeableConcept") {
-    const data: CodeableConcept = originalValue;
-    value = formatCodeableConcept(data) ?? "";
-  } else if (originalValuePath === "Coding") {
-    const data: Coding = originalValue;
-    value = data?.display || data?.code || "";
-  } else if (originalValuePath === "Observation.referenceRange") {
-    const data: ObservationReferenceRange = originalValue;
-    const range = formatRange(data);
-    value = range || data.text || "";
+  if (isQuantity(originalValue, originalValuePath)) {
+    value = formatQuantity(originalValue) || "";
+  } else if (isCodeableConcept(originalValue, originalValuePath)) {
+    value = formatCodeableConcept(originalValue) ?? "";
+  } else if (isCoding(originalValue, originalValuePath)) {
+    value = originalValue?.display || originalValue?.code || "";
+  } else if (isObservationReferenceRange(originalValue, originalValuePath)) {
+    const range = formatRange(originalValue);
+    value = range || originalValue.text || "";
+  } else if (isReference(originalValue, originalValuePath)) {
+    value = originalValue?.reference || "";
   } else if (typeof originalValue === "object") {
-    console.log(`Not implemented for ${originalValuePath}`);
+    console.error(`Not implemented for ${originalValuePath}`);
   }
 
   return value.trim();
 };
+
+const isQuantity = (v: object, p: string): v is Quantity => p === "Quantity";
+const isCodeableConcept = (v: object, p: string): v is CodeableConcept =>
+  p === "CodeableConcept";
+const isCoding = (v: object, p: string): v is Coding => p === "Coding";
+const isObservationReferenceRange = (
+  v: object,
+  p: string,
+): v is ObservationReferenceRange => p === "Observation.referenceRange";
+const isReference = (v: object, p: string): v is Reference => p === "Reference";
 
 /**
  * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource
