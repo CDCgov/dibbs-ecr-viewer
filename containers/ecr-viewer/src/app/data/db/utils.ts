@@ -4,10 +4,10 @@ import { fileURLToPath } from "url";
 
 import { Kysely, Migrator, TableMetadata, ColumnMetadata } from "kysely";
 
+import { dbSchema } from "@/app/api/services/database";
 
 import * as postgresUtils from "./dialects/postgres/utils";
 import * as sqlServerUtils from "./dialects/sqlserver/utils";
-import { dbSchema } from "@/app/api/services/database";
 
 type DialectType = "sqlserver" | "postgres";
 type SchemaType = "core" | "extended";

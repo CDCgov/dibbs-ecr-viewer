@@ -8,8 +8,6 @@ import { dbSchema, getUnvalidatedDb } from "@/app/api/services/database";
 
 import { MultiDirectoryMigrationProvider } from "./multiDirectoryMigrationProvider";
 
-import { getDbUtils } from "./";
-
 
 // Empty interface used only in migrations
 interface Database {}

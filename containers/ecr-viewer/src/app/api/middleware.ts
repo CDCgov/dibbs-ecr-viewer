@@ -4,7 +4,6 @@ import { getDbUtils } from "@/app/data/db/utils";
 
 import { getUnvalidatedDb } from "./services/database";
 
-
 /**
  *
  * @param handler
