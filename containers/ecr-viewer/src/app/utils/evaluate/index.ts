@@ -260,6 +260,7 @@ export const evaluateValue = (
   return value.trim();
 };
 
+// check/narrow the type of the value object
 const isQuantity = (v: object, p: string): v is Quantity => p === "Quantity";
 const isCodeableConcept = (v: object, p: string): v is CodeableConcept =>
   p === "CodeableConcept";

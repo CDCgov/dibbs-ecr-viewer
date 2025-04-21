@@ -585,6 +585,7 @@ Home: 123-456-6909`,
 
       expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
     });
+
     it("should match snapshot when no workplace info", () => {
       const bundle: Bundle = {
         resourceType: "Bundle",
@@ -729,6 +730,156 @@ Home: 123-456-6909`,
                   line: ["123 test st"],
                   city: "Nowhereville",
                   state: "KS",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+    });
+
+    it("should match snapshot when multiple jobs and sort correctly", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2018-01-04",
+                end: "2022-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2015-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
                 },
               ],
             },
