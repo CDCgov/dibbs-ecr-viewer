@@ -36,6 +36,19 @@ describe("POST Process Zip", () => {
     expect(await response.json()).toEqual({ message: "ok" });
   });
 
+  it("should return a 200 response when valid zip file and return fhir bundle flag provided", async () => {
+    const formData = new FormData();
+    formData.append("upload_file", mockFile);
+    formData.append("return_fhir_bundle", "True");
+    const request = createRequest(formData);
+    (processZip as jest.Mock).mockReturnValue({ message: "ok", status: 200 });
+
+    const response = await POST(request);
+
+    expect(response.status).toEqual(200);
+    expect(await response.json()).toEqual({ message: "ok" });
+  });
+
   it("should return a 400 response when file is not a zip", async () => {
     const invalidFile = new File(["content"], "test.txt", {
       type: "text/plain",
