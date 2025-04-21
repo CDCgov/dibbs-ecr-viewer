@@ -55,10 +55,12 @@ export const DataDisplay = ({
         </div>
         <div
           className={classNames(
-            "grid-col text-pre-line p-list",
+            "grid-col",
+            item.fullWidthContent ? "width-full" : "maxw7",
+            "text-pre-line",
+            "p-list",
             className,
             item.className ? item.className : "",
-            item.fullWidthContent ? "width-full" : "maxw7",
           )}
         >
           <FieldValue>{item.value}</FieldValue>

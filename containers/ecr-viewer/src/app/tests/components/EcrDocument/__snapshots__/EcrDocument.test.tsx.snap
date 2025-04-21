@@ -234,7 +234,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Patient Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -253,7 +253,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           DOB
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -272,7 +272,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Age at Encounter
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -291,7 +291,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Vital Status
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -310,7 +310,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Date of Death
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -329,7 +329,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Sex
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -348,7 +348,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Race
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -367,7 +367,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Ethnicity
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -386,7 +386,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Tribal Affiliation
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -405,7 +405,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Preferred Language
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -424,7 +424,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Patient Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -443,7 +443,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           County
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -462,7 +462,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Country
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -481,7 +481,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Contact
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -500,7 +500,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Parent/Guardian
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -519,7 +519,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Emergency Contact
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -559,7 +559,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           </span>
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -591,7 +591,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Tobacco Use
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -610,7 +610,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Travel History
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -629,7 +629,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Homeless Status
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -648,7 +648,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Pregnancy Status
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -667,7 +667,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Alcohol Use
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -686,7 +686,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Sexual Orientation
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -705,7 +705,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Occupation
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -724,7 +724,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Occupation History
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base width-full"
+                          class="grid-col width-full text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -743,7 +743,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Religious Affiliation
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -762,7 +762,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Marital Status
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -794,7 +794,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Encounter Date/Time
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -813,7 +813,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Encounter Type
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -832,7 +832,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Encounter ID
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -851,7 +851,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Encounter Diagnosis
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -870,7 +870,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Encounter Care Team
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -902,7 +902,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Facility Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -921,7 +921,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Facility Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -940,7 +940,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Facility Contact Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -959,7 +959,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Facility Contact
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -978,7 +978,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Facility Type
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -997,7 +997,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Facility ID
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1050,7 +1050,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           </span>
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1082,7 +1082,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Provider Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1101,7 +1101,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Provider Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1120,7 +1120,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Provider Contact
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1139,7 +1139,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Provider Facility Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1158,7 +1158,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Provider Facility Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1177,7 +1177,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Provider ID
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1209,7 +1209,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Reason for Visit
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1228,7 +1228,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Problems List
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1260,7 +1260,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Vital Signs
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1292,7 +1292,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Immunization History
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1324,7 +1324,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Procedures
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1343,7 +1343,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Planned Procedures
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1362,7 +1362,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Plan of Treatment
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1381,7 +1381,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Administered Medications
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1400,7 +1400,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Care Team
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1453,7 +1453,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           </span>
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1472,7 +1472,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Date/Time eCR Created
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1491,7 +1491,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           eICR Release Version
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1510,7 +1510,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           EHR Manufacturer Model Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1529,7 +1529,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           EHR Software Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1548,7 +1548,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           eRSD Warnings
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1567,7 +1567,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Custodian ID
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1586,7 +1586,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Custodian Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1605,7 +1605,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Custodian Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1624,7 +1624,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Custodian Contact
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1656,7 +1656,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Author Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1675,7 +1675,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Author Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1694,7 +1694,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Author Contact
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1713,7 +1713,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Author Facility Name
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1732,7 +1732,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Author Facility Address
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1751,7 +1751,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Author Facility Contact
                         </div>
                         <div
-                          class="grid-col text-pre-line p-list text-italic text-base maxw7"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
