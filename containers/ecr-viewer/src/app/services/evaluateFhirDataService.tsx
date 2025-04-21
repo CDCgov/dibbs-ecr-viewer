@@ -353,11 +353,11 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
           },
         ];
 
-        const isWorkplaceContent = workplaceInfo.some(
+        const hasWorkplaceContent = workplaceInfo.some(
           ({ value }) => value !== noData,
         );
 
-        const workplaceContent = isWorkplaceContent
+        const workplaceContent = hasWorkplaceContent
           ? workplaceInfo.map(({ title, value }, i) => (
               <DataDisplay
                 key={`wi-${i}`}
@@ -389,7 +389,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
               item={{
                 title: "Workplace Information",
                 value: workplaceContent,
-                fullWidthContent: isWorkplaceContent,
+                fullWidthContent: hasWorkplaceContent,
               }}
             />
             <DataDisplay

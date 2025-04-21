@@ -795,7 +795,7 @@ Home: 123-456-6909`,
           {
             resource: {
               resourceType: "Observation",
-              id: "12345",
+              id: "12346",
               status: "final",
               meta: {
                 profile: [
@@ -841,7 +841,7 @@ Home: 123-456-6909`,
           {
             resource: {
               resourceType: "Observation",
-              id: "12345",
+              id: "12347",
               status: "final",
               meta: {
                 profile: [
