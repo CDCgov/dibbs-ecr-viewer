@@ -4,9 +4,12 @@ import { fileURLToPath } from "url";
 
 import { Kysely, Migrator } from "kysely";
 
-import { getUnvalidatedDb } from "./database";
+import { dbSchema, getUnvalidatedDb } from "@/app/api/services/database";
+
 import { MultiDirectoryMigrationProvider } from "./multiDirectoryMigrationProvider";
-import { getDbUtils } from "./utils";
+
+import { getDbUtils } from "./";
+
 
 // Empty interface used only in migrations
 interface Database {}
@@ -19,9 +22,9 @@ async function withMigrationEnv(
   operation: (params: {
     db: Kysely<Database>;
     migrationDirs: string[];
-  }) => Promise<void>
+  }) => Promise<void>,
 ): Promise<void> {
-  const { schema } = getDbUtils().getDbConfig();
+  const schema = dbSchema();
   const db = getUnvalidatedDb<Database>();
 
   try {
@@ -48,7 +51,7 @@ async function executeMigration(
   db: Kysely<Database>,
   migrationDirs: string[],
   command: "up" | "down",
-  target?: string
+  target?: string,
 ): Promise<void> {
   const migrator = new Migrator({
     db,
@@ -58,14 +61,20 @@ async function executeMigration(
   let result;
   if (command === "up") {
     result = await migrator.migrateToLatest();
-    console.log("Migrations applied:", result.results || "No migrations to apply");
+    console.log(
+      "Migrations applied:",
+      result.results || "No migrations to apply",
+    );
   } else {
     if (target) {
       result = await migrator.migrateTo(target);
       console.log(`Migrated to ${target}:`, result.results || "No changes");
     } else {
       result = await migrator.migrateDown();
-      console.log("Migration rolled back:", result.results || "No migrations to roll back");
+      console.log(
+        "Migration rolled back:",
+        result.results || "No migrations to roll back",
+      );
     }
   }
 
@@ -79,7 +88,7 @@ async function executeMigration(
  */
 export async function migrateUp(): Promise<void> {
   await withMigrationEnv(({ db, migrationDirs }) =>
-    executeMigration(db, migrationDirs, "up")
+    executeMigration(db, migrationDirs, "up"),
   );
 }
 
@@ -87,7 +96,9 @@ export async function migrateUp(): Promise<void> {
  * Reverts migrations.
  * @param migrationNames Optional array of migration names to revert. If empty, reverts the most recent migration.
  */
-export async function migrateDown(migrationNames: string[] = []): Promise<void> {
+export async function migrateDown(
+  migrationNames: string[] = [],
+): Promise<void> {
   await withMigrationEnv(async ({ db, migrationDirs }) => {
     if (migrationNames.length === 0) {
       await executeMigration(db, migrationDirs, "down");

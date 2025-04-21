@@ -24,7 +24,7 @@ const buildCommon = async () => {
     .addColumn("eicr_version_number", "varchar(50)")
     .addColumn("fhir_reference_link", "varchar(255)")
     .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
-      cb.notNull().defaultTo(getSql("now"))
+      cb.notNull().defaultTo(getSql("now")),
     )
     .execute();
   await db.schema

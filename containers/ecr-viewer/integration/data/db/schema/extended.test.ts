@@ -2,12 +2,12 @@
  * @jest-environment node
  */
 
-import { getDbUtils } from "@/app/data/db/utils";
 import { buildCore, dropCore } from "../../../helpers/ddl";
+import { getDbUtils } from "@/app/data/db/utils";
 
 describe("Extended Schema Migration Tests", () => {
   let utils;
- 
+
   beforeAll(async () => {
     await buildCore(); // Build the core schema
     utils = getDbUtils();
@@ -301,7 +301,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "tribal_enrollment_status");
+        column = table?.columns.find(
+          (c) => c.name === "tribal_enrollment_status",
+        );
       });
 
       it("should exist", () => {
@@ -1125,7 +1127,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_qualitative");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_qualitative",
+        );
       });
 
       it("should exist", () => {
@@ -1141,7 +1145,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_quantitative");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_quantitative",
+        );
       });
 
       it("should exist", () => {
@@ -1189,7 +1195,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_code_display");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_code_display",
+        );
       });
 
       it("should exist", () => {
@@ -1205,7 +1213,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_code_system");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_code_system",
+        );
       });
 
       it("should exist", () => {
@@ -1221,7 +1231,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_interpretation");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_interpretation",
+        );
       });
 
       it("should exist", () => {
@@ -1237,7 +1249,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_interpretation_code");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_interpretation_code",
+        );
       });
 
       it("should exist", () => {
@@ -1253,7 +1267,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_interpretation_system");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_interpretation_system",
+        );
       });
 
       it("should exist", () => {
@@ -1269,7 +1285,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_reference_range_low_value");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_reference_range_low_value",
+        );
       });
 
       it("should exist", () => {
@@ -1285,7 +1303,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_reference_range_low_units");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_reference_range_low_units",
+        );
       });
 
       it("should exist", () => {
@@ -1301,7 +1321,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_reference_range_high_value");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_reference_range_high_value",
+        );
       });
 
       it("should exist", () => {
@@ -1317,7 +1339,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "test_result_reference_range_high_units");
+        column = table?.columns.find(
+          (c) => c.name === "test_result_reference_range_high_units",
+        );
       });
 
       it("should exist", () => {
@@ -1349,7 +1373,9 @@ describe("Extended Schema Migration Tests", () => {
       let column;
 
       beforeAll(() => {
-        column = table?.columns.find((c) => c.name === "specimen_collection_date");
+        column = table?.columns.find(
+          (c) => c.name === "specimen_collection_date",
+        );
       });
 
       it("should exist", () => {

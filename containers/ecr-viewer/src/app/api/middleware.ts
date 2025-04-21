@@ -1,14 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getUnvalidatedDb } from "@/app/api/services/database";
+import { getDbUtils } from "@/app/data/db/utils";
 
-import { getDbUtils } from "../data/db/utils";
+import { getUnvalidatedDb } from "./services/database";
+
 
 /**
  *
  * @param handler
  */
-export function withMigrationCheck(handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) {
+export function withMigrationCheck(
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>,
+) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const db = getUnvalidatedDb<any>();
     try {
@@ -19,7 +22,9 @@ export function withMigrationCheck(handler: (req: NextApiRequest, res: NextApiRe
       }
       await handler(req, res);
     } catch (error) {
-      res.status(500).json({ error: `Migration check failed: ${error.message}` });
+      res
+        .status(500)
+        .json({ error: `Migration check failed: ${error.message}` });
     } finally {
       await db.destroy();
     }

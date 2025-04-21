@@ -24,14 +24,40 @@ function getCachedDbUtils(): DbUtils {
 }
 
 /**
+ * Get the current database dialect
+ * @returns string describing dialect
+ */
+export const dbDialect = () => {
+  return process.env.METADATA_DATABASE_TYPE;
+};
+
+/**
+ * Get the current database namespace (schema)
+ * @returns string describing namespace
+ */
+export const dbNamespace = () => {
+  // use a different schema in testing so seed data doesn't get wiped out
+  return process.env.TEST_TYPE === "integration"
+    ? "test_ev_schema"
+    : "ecr_viewer";
+};
+
+/**
+ * Get the current database schema
+ * @returns string describing schema
+ */
+export const dbSchema = () => {
+  return process.env.METADATA_DATABASE_SCHEMA;
+};
+
+/**
  * Establishes an unvalidated database connection.
  * @returns A new Kysely instance without schema validation.
  * @throws Error if the dialect is unsupported.
  * @template T The type of the database schema.
  */
 export function getUnvalidatedDb<T>(): Kysely<T> {
-  const { dialect, namespace } = getCachedDbUtils().getDbConfig();
-
+  const dialect = dbDialect();
   let db: Kysely<T>;
   switch (dialect) {
     case "sqlserver":
@@ -44,7 +70,7 @@ export function getUnvalidatedDb<T>(): Kysely<T> {
       throw new Error(`Unsupported dialect: ${dialect}`);
   }
 
-  return db.withSchema(namespace);
+  return db.withSchema(dbNamespace());
 }
 
 /**
@@ -71,8 +97,11 @@ export async function getDb<T>(): Promise<Kysely<T>> {
 
 /**
  * Performs a health check on the database connection.
+ * @returns The status of the database connection: "UP" or "DOWN".
  */
-export async function metadataDatabaseHealthCheck(): Promise<string | undefined> {
+export async function metadataDatabaseHealthCheck(): Promise<
+  string | undefined
+> {
   if (!process.env.METADATA_DATABASE_TYPE) {
     return undefined;
   }

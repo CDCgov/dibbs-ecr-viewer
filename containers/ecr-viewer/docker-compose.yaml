@@ -51,7 +51,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass  # Keep if needed
+      - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass # Keep if needed
       - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
@@ -95,7 +95,7 @@ services:
       - AWS_SQLSERVER_DUAL
       - AZURE_SQLSERVER_DUAL
       - GCP_SQLSERVER_DUAL
-    
+
   aws-storage:
     image: gresau/localstack-persist:3
     ports:

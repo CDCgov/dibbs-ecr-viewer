@@ -2,9 +2,8 @@
  * @jest-environment node
  */
 
-
-import { getDbUtils } from "@/app/data/db/utils";
 import { buildCore, dropCore } from "../../../helpers/ddl";
+import { getDbUtils } from "@/app/data/db/utils";
 
 describe("Common Schema Migration Tests", () => {
   let utils;
