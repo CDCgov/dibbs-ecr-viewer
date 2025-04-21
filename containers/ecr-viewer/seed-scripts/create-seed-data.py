@@ -1,5 +1,6 @@
 import argparse
 import io
+import json
 import os
 import zipfile
 
@@ -59,8 +60,9 @@ def _process_files():
             zip_buffer = zip_folder(folder_path)
 
             files = [("upload_file", (f"{folder}.zip", zip_buffer, "application/zip"))]
-            print(files)
-            request = grequests.post(UPLOAD_URL, files=files)
+            request = grequests.post(
+                UPLOAD_URL, files=files, data={"return_fhir_bundle": True}
+            )
 
             requests.append(request)
             folder_paths.append(folder_path)
@@ -83,9 +85,20 @@ def _process_files():
         if response.status_code != 200:
             failed.append(folder_path)
             print(
-                f"Received response {n} of {num_requests} - Failed to upload {folder_path}. Status: {response.status_code}"
+                f"Received response {n} of {num_requests} - Failed to upload {folder_path}. Status: {response.status_code}. Body: {json.dumps(response.json())}"
             )
         else:
+            response_json = response.json()
+            if "bundle" in response_json:
+                with open(
+                    os.path.join(folder_path, "bundle.json"),
+                    "w",
+                ) as fhir_file:
+                    json.dump(
+                        response_json["bundle"],
+                        fhir_file,
+                        indent=4,
+                    )
             print(
                 f"Received response {n} of {num_requests} - Successfully uploaded {folder_path}"
             )

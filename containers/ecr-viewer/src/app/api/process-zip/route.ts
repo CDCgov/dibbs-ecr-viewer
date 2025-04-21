@@ -9,6 +9,10 @@ const schema = z.object({
     .refine((file) => file.type === "application/zip", {
       message: "File must be a zip",
     }),
+  return_fhir_bundle: z
+    .string()
+    .optional()
+    .transform((v) => v?.toLowerCase()),
 });
 
 /**
@@ -19,8 +23,11 @@ const schema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = schema.parse(Object.fromEntries(await request.formData()));
-    const { message, status } = await processZip(body.upload_file);
-    return NextResponse.json({ message }, { status });
+    const { status, ...payload } = await processZip(
+      body.upload_file,
+      body.return_fhir_bundle === "true",
+    );
+    return NextResponse.json(payload, { status });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
