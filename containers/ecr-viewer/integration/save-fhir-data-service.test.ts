@@ -201,7 +201,7 @@ describe("save metadata", () => {
         },
       );
 
-      const res = await (await getDb<Extended>())
+      const res = await getDb<Extended>()
         .selectFrom("ecr_data")
         .selectAll()
         .where("ecr_data.eicr_id", "=", "1-2-3-4-3-2")
@@ -227,7 +227,7 @@ describe("save metadata", () => {
         },
       );
 
-      const res = await (await getDb<Extended>())
+      const res = await getDb<Extended>()
         .selectFrom("ecr_data")
         .selectAll()
         .where("ecr_data.eicr_id", "=", "1-2-3-4-5-6")
@@ -357,7 +357,7 @@ describe("save metadata", () => {
         },
       );
 
-      const res = await (await getDb<Core>())
+      const res = await getDb<Core>()
         .selectFrom("ecr_data")
         .selectAll()
         .where("ecr_data.eicr_id", "=", "1-2-3-4-3-2")
@@ -383,7 +383,7 @@ describe("save metadata", () => {
         },
       );
 
-      const res = await (await getDb<Core>())
+      const res = await getDb<Core>()
         .selectFrom("ecr_data")
         .selectAll()
         .where("ecr_data.eicr_id", "=", "1-2-3-4-5-6")

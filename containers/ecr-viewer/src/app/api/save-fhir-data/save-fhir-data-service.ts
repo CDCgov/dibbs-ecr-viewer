@@ -107,55 +107,57 @@ export const saveFhirMetadata = async (
     }
 
     // Start transaction
-    return await (await getDb<Core>()).transaction().execute(async (trx) => {
-      // check ecr doesn't already exist
-      const res = await trx
-        .selectFrom("ecr_data")
-        .select((eb) => eb.fn.countAll().as("num_ecr"))
-        .where("ecr_data.eicr_id", "=", ecrId)
-        .executeTakeFirst();
-      if (res && Number(res.num_ecr) > 0) {
+    return await getDb<Core>()
+      .transaction()
+      .execute(async (trx) => {
+        // check ecr doesn't already exist
+        const res = await trx
+          .selectFrom("ecr_data")
+          .select((eb) => eb.fn.countAll().as("num_ecr"))
+          .where("ecr_data.eicr_id", "=", ecrId)
+          .executeTakeFirst();
+        if (res && Number(res.num_ecr) > 0) {
+          return {
+            message: `eCR already loaded: ${ecrId}`,
+            status: 409,
+          };
+        }
+
+        // Insert main ECR metadata
+        if (metadataType === "core") {
+          await saveCoreMetadata(trx, metadata as BundleMetadata, ecrId);
+        } else if (metadataType === "extended") {
+          await saveExtendedMetadata(
+            trx as unknown as Transaction<Extended>,
+            metadata as BundleExtendedMetadata,
+            ecrId,
+          );
+        } else {
+          return {
+            message: "Unknown metadataType: " + metadataType,
+            status: 400,
+          };
+        }
+
+        // The actual type here is a beast, but we know that this mapping is functionally sound
+        await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+
+        // Make sure the fhir data also saves
+        const fhirDataResponse = await fhirDataPromise;
+        if (fhirDataResponse.status !== 200) {
+          rollBackFhirData = false;
+          throw new Error(
+            `Failed to save fhir data - rolling back metadata: ${JSON.stringify(
+              fhirDataResponse,
+            )}`,
+          );
+        }
+
         return {
-          message: `eCR already loaded: ${ecrId}`,
-          status: 409,
+          message: "Success. Saved metadata to database.",
+          status: 200,
         };
-      }
-
-      // Insert main ECR metadata
-      if (metadataType === "core") {
-        await saveCoreMetadata(trx, metadata as BundleMetadata, ecrId);
-      } else if (metadataType === "extended") {
-        await saveExtendedMetadata(
-          trx as unknown as Transaction<Extended>,
-          metadata as BundleExtendedMetadata,
-          ecrId,
-        );
-      } else {
-        return {
-          message: "Unknown metadataType: " + metadataType,
-          status: 400,
-        };
-      }
-
-      // The actual type here is a beast, but we know that this mapping is functionally sound
-      await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
-
-      // Make sure the fhir data also saves
-      const fhirDataResponse = await fhirDataPromise;
-      if (fhirDataResponse.status !== 200) {
-        rollBackFhirData = false;
-        throw new Error(
-          `Failed to save fhir data - rolling back metadata: ${JSON.stringify(
-            fhirDataResponse,
-          )}`,
-        );
-      }
-
-      return {
-        message: "Success. Saved metadata to database.",
-        status: 200,
-      };
-    });
+      });
   } catch (error: unknown) {
     const message = "Failed to insert metadata to database.";
     console.error({ message, error, ecrId });

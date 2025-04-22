@@ -14,7 +14,7 @@ import { dbDialect } from "@/app/data/db/utils/db-config";
 export async function createEcrCondition(
   condition: NewECRConditions,
 ): Promise<void> {
-  await (await getDb<Common>())
+  await getDb<Common>()
     .insertInto("ecr_rr_conditions")
     .values(condition)
     .execute();
@@ -28,7 +28,7 @@ export async function createEcrCondition(
 export async function createEcrRule(
   rule_summary: NewECRRuleSummaries,
 ): Promise<void> {
-  await (await getDb<Common>())
+  await await getDb<Common>()
     .insertInto("ecr_rr_rule_summaries")
     .values(rule_summary)
     .execute();

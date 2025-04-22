@@ -7,5 +7,5 @@ import { NewCoreECR, Core } from "@/app/api/services/types/core";
  * @returns promise
  */
 export async function createCoreEcr(ecr: NewCoreECR): Promise<void> {
-  await (await getDb<Core>()).insertInto("ecr_data").values(ecr).execute();
+  await getDb<Core>().insertInto("ecr_data").values(ecr).execute();
 }
