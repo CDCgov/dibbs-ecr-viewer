@@ -28,10 +28,9 @@ import { createEcrCondition, createEcrRule } from "./helpers/common";
 import { createCoreEcr } from "./helpers/core";
 import {
   buildExtended,
-  dropExtended,
   clearExtended,
   buildCore,
-  dropCore,
+  dropExisting,
   clearCore,
 } from "./helpers/ddl";
 import { createExtendedEcr } from "./helpers/extended";
@@ -196,12 +195,11 @@ describe("listEcrDataService", () => {
 
   describe("listCoreEcrData", () => {
     beforeAll(async () => {
-      process.env.METADATA_DATABASE_SCHEMA = "core";
       await buildCore();
     });
 
     afterAll(async () => {
-      await dropCore();
+      await dropExisting();
     });
 
     beforeEach(async () => {
@@ -313,12 +311,11 @@ describe("listEcrDataService", () => {
 
   describe("listExtendedEcrData", () => {
     beforeAll(async () => {
-      process.env.METADATA_DATABASE_SCHEMA = "extended";
       await buildExtended();
     });
 
     afterAll(async () => {
-      await dropExtended();
+      await dropExisting();
     });
 
     beforeEach(async () => {
@@ -393,13 +390,12 @@ describe("listEcrDataService", () => {
 
   describe("get total core ecr count", () => {
     beforeAll(async () => {
-      process.env.METADATA_DATABASE_SCHEMA = "core";
       await buildCore();
       await createCoreEcr(coreTemplate);
       await createCoreEcr({ ...coreTemplate, ...relatedEcr });
     });
     afterAll(async () => {
-      await dropCore();
+      await dropExisting();
     });
 
     it("should call db to get all ecrs", async () => {
@@ -428,13 +424,12 @@ describe("listEcrDataService", () => {
 
   describe("get total extended ecr count", () => {
     beforeAll(async () => {
-      process.env.METADATA_DATABASE_SCHEMA = "extended";
       await buildExtended();
       await createExtendedEcr(extendedTemplate);
       await createExtendedEcr({ ...extendedTemplate, ...relatedEcr });
     });
     afterAll(async () => {
-      await dropExtended();
+      await dropExisting();
     });
 
     it("should call db to get all ecrs", async () => {

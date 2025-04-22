@@ -8,6 +8,7 @@ import {
   BundleExtendedMetadata,
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
+import { dbDialect, dbSchema } from "@/app/api/services/database";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -33,8 +34,8 @@ interface BundleInfo {
  * @returns name of the orchestration config
  */
 const getOrchestrationConfigName = () => {
-  if (!!process.env.METADATA_DATABASE_TYPE) {
-    if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
+  if (!!dbDialect()) {
+    if (dbSchema() === "extended") {
       return "bundle-metadata-extended.json";
     } else {
       return "bundle-metadata-core.json";

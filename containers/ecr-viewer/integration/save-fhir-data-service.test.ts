@@ -17,8 +17,7 @@ import {
   buildExtended,
   clearCore,
   clearExtended,
-  dropCore,
-  dropExtended,
+  dropExisting,
 } from "./helpers/ddl";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
@@ -113,7 +112,7 @@ describe("save metadata", () => {
     });
 
     afterAll(async () => {
-      await dropExtended();
+      await dropExisting();
     });
 
     afterEach(async () => {
@@ -263,7 +262,7 @@ describe("save metadata", () => {
     });
 
     afterAll(async () => {
-      await dropCore();
+      await dropExisting();
     });
 
     afterEach(async () => {

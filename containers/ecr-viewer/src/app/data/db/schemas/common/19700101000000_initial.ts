@@ -11,7 +11,6 @@ import { AnyDb } from "@/app/data/db/utils/types";
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
-  console.log("Initializing common");
   const schemaExists = await schemaExistsByName(db, schema);
 
   try {

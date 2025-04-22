@@ -5,7 +5,7 @@
 import { getAllConditions } from "@/app/data/conditions";
 
 import { createEcrCondition } from "./helpers/common";
-import { buildCore, dropCore } from "./helpers/ddl";
+import { buildCore, dropExisting } from "./helpers/ddl";
 
 describe("Conditions service", () => {
   beforeAll(async () => {
@@ -23,7 +23,7 @@ describe("Conditions service", () => {
   });
 
   afterAll(async () => {
-    await dropCore();
+    await dropExisting();
   });
 
   it("Should retrieve all unique conditions", async () => {

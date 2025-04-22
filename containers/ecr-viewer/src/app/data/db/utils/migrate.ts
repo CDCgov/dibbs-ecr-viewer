@@ -35,16 +35,11 @@ async function executeMigration(
   const migrator = getMigrator();
 
   if (command === "up") {
-    console.log({ migrator });
+    ({ migrator });
     const result = await migrator.migrateToLatest();
     if (result.error) {
       throw result.error;
     }
-
-    console.log(
-      "Migrations applied:",
-      result.results || "No migrations to apply",
-    );
   } else if (command === "down") {
     let result;
     if (target) {
@@ -58,11 +53,6 @@ async function executeMigration(
     if (result.error) {
       throw result.error;
     }
-
-    console.log(
-      "Migration rolled back:",
-      result.results || "No migrations to roll back",
-    );
   } else {
     throw new Error(`Unknown migration command: ${command}`);
   }

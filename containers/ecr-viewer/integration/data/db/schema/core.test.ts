@@ -4,7 +4,7 @@
 
 import { ColumnMetadata, MigrationInfo, TableMetadata } from "kysely";
 
-import { buildCore, dropCore } from "../../../helpers/ddl";
+import { buildCore, dropExisting } from "../../../helpers/ddl";
 import { dbNamespace, getDbRaw } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { schemaExistsByName, getTable } from "@/app/data/db/utils/db";
@@ -19,7 +19,7 @@ describe("Common Schema Migration Tests", () => {
   });
 
   afterAll(async () => {
-    await dropCore(); // Drop the core schema
+    await dropExisting(); // Drop the core schema
   });
 
   // Schema-level tests

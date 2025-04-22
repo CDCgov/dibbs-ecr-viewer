@@ -11,7 +11,6 @@ import { AnyDb } from "@/app/data/db/utils/types";
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
-  console.log("migrating core");
   if (dbSchema() === "extended") {
     console.log("Extended schema detected. Skipping core migration.");
     return;
