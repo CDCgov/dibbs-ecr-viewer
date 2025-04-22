@@ -6,6 +6,8 @@ import {
   ContactPoint,
   HumanName,
   PatientContact,
+  Quantity,
+  Range,
   RelatedPerson,
 } from "fhir/r4";
 
@@ -323,6 +325,51 @@ export const formatCodeableConcept = (
   }
 
   return undefined;
+};
+
+// Map from computer to human readable units
+const UNIT_MAP = new Map([
+  ["[lb_av]", "lb"],
+  ["[in_i]", "in"],
+  ["[in_us]", "in"],
+]);
+
+/**
+ * Takes a quantity and formats it into a string. Handles spacing of units and re-maps
+ * certain robot-looking units into human-looking units
+ * @param data the Quantity to format
+ * @returns formatted string
+ */
+export const formatQuantity = (
+  data: Quantity | undefined,
+): string | undefined => {
+  if (!data || !data.value) return;
+  let unit = data.unit || "";
+  unit = UNIT_MAP.get(unit) || unit;
+  const firstLetterRegex = /^[a-z]/i;
+  if (unit?.match(firstLetterRegex)) {
+    unit = " " + unit;
+  }
+  return `${data.value ?? ""}${unit}`;
+};
+
+/**
+ * Takes a range and formats it into a string. Handles spacing of units and re-maps
+ * certain robot-looking units into human-looking units
+ * @param data the Range to format
+ * @returns formatted string
+ */
+export const formatRange = (data: Range | undefined): string | undefined => {
+  if (!data) return;
+  const low = formatQuantity(data.low);
+  const high = formatQuantity(data.high);
+  if (low && high) {
+    return `${low} - ${high}`;
+  } else if (low) {
+    return `>=${low}`;
+  } else if (high) {
+    return `<=${high}`;
+  }
 };
 
 /**

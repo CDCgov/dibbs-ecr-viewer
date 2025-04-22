@@ -2,6 +2,8 @@ name: ecr-viewer
 
 services:
   ecr-viewer:
+    ports:
+      - "3000:3000"
     build:
       context: ./
       dockerfile: Dockerfile
@@ -28,7 +30,7 @@ services:
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
       # GCP
-      - 'GCP_KEY=${GCP_KEY:-{ "client_email": "ecr@example.com", "private_key": "1234" }}'
+      - 'GCP_CREDENTIALS=${GCP_CREDENTIALS:-{ "client_email": "ecr@example.com", "private_key": "1234" }}'
       - GCP_PROJECT_ID=${GCP_PROJECT_ID:-proj}
       - GCP_API_ENDPOINT=${GCP_API_ENDPOINT:-http://localhost:10001/}
       # Orchestration
@@ -40,9 +42,6 @@ services:
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-ecr-viewer}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
       - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
-      # Open Telemetry
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4318/v1/metrics
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces
     profiles:
       - ecr-viewer
 

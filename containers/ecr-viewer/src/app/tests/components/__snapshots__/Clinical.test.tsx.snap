@@ -227,35 +227,35 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                     <tbody>
                       <tr>
                         <td
-                          class="text-top"
+                          class="text-top text-pre-line"
                         >
                           HC INFECTIOUS DISEASE PATHOGEN SPECIFIC RNA SARS-COV-2/INF A&B/RSV UPPER RESP SPEC DETECTED OR NOT
                         </td>
                         <td
-                          class="text-top"
+                          class="text-top text-pre-line"
                         >
                           06/24/2022
 12:50 PM EDT
                         </td>
                         <td
-                          class="text-top"
+                          class="text-top text-pre-line"
                         >
                           Struck by nonvenomous lizards, sequela
                         </td>
                       </tr>
                       <tr>
                         <td
-                          class="text-top"
+                          class="text-top text-pre-line"
                         >
                           LOINC codes are better
                         </td>
                         <td
-                          class="text-top"
+                          class="text-top text-pre-line"
                         >
                           06/16/2022
                         </td>
                         <td
-                          class="text-top"
+                          class="text-top text-pre-line"
                         >
                           Routine general medical examination at a health care facility
                         </td>

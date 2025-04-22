@@ -14,9 +14,11 @@ import {
   Identifier,
   Immunization,
   Observation,
+  ObservationReferenceRange,
   Organization,
   PatientCommunication,
   PatientContact,
+  Period,
   Procedure,
   Quantity,
   Reference,
@@ -73,8 +75,7 @@ export type PathTypes = {
   ehrManufacturerModel: string;
   eRSDwarnings: Coding;
   compositionAuthorRefs: Reference;
-  encounterEndDate: string;
-  encounterStartDate: string;
+  encounterPeriod: Period;
   encounterDiagnosis: EncounterDiagnosis;
   encounterType: string;
   encounterID: Identifier;
@@ -130,7 +131,7 @@ export type PathTypes = {
   observationReferenceValue: string;
   observationComponent: string;
   observationValue: string;
-  observationReferenceRange: string;
+  observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
   observationNote: string;
   observationOrganism: string;
@@ -316,13 +317,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Encounter Info
-  encounterEndDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period.end",
-  },
-  encounterStartDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
+  encounterPeriod: {
+    type: "Period",
+    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period",
   },
   encounterDiagnosis: {
     type: "EncounterDiagnosis",
@@ -536,7 +533,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",
   },
-  observationReferenceRange: { type: "string", path: "referenceRange.text" },
+  observationReferenceRange: {
+    type: "ObservationReferenceRange",
+    path: "referenceRange",
+  },
   observationDeviceReference: { type: "string", path: "device.reference" },
   observationNote: { type: "string", path: "note.text" },
   observationOrganism: { type: "string", path: "code.coding.display.first()" },

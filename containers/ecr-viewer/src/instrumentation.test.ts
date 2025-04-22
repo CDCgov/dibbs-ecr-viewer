@@ -4,8 +4,6 @@
 
 import { setupConfigurationVariables } from "./instrumentation";
 
-jest.mock("./app/services/instrumentation", () => jest.fn());
-
 describe("register and and setupConfigurationVariables", () => {
   const originalEnv = process.env;
 

@@ -1,0 +1,63 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+categories:
+  - title: Breaking Changes 🛠
+    labels:
+      - breaking
+  - title: 🏕 Features
+    labels:
+      - feature
+  - title: Fixes 🔧
+    labels:
+      - fix
+  - title: Other Changes
+    labels:
+      - chore
+change-template: "- $TITLE (#$NUMBER)"
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+autolabeler:
+  - label: "build"
+    title:
+      - '/build(\(.*\))?:/i'
+  - label: "ci"
+    title:
+      - '/ci(\(.*\))?:/i'
+  - label: "documentation"
+    title:
+      - '/docs(\(.*\))?:/i'
+  - label: "fix"
+    title:
+      - '/fix(\(.*\))?:/i'
+  - label: "chore"
+    title:
+      - '/chore(\(.*\))?:/i'
+      - '/test(\(.*\))?:/i'
+      - '/refactor(\(.*\))?:/i'
+  - label: "feature"
+    title:
+      - '/feat(\(.*\))?:/i'
+  - label: "breaking"
+    title:
+      - "/.*!:/i"
+replacers:
+  - search: '/(fix|chore|feat)(\(.*\))?(!)?:/gi' # Replace any supported starting tag and scope with empty string
+    replace: ""
+exclude-labels:
+  - "documentation"
+  - "ci"
+  - "build"
+version-resolver:
+  major:
+    labels:
+      - "breaking"
+  minor:
+    labels:
+      - "feature"
+  patch:
+    labels:
+      - "fix"
+      - "chore"
+  default: patch
+template: |
+  <!-- Optional: add a release summary here -->
+  $CHANGES
