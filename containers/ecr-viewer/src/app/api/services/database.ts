@@ -1,11 +1,5 @@
 import { Kysely } from "kysely";
 
-export {
-  dbDialect,
-  dbNamespace,
-  dbSchema,
-} from "@/app/data/db/utils/db-config";
-
 import { dbDialect, dbNamespace } from "@/app/data/db/utils/db-config";
 import { AnyDb } from "@/app/data/db/utils/types";
 

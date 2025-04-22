@@ -1,6 +1,7 @@
-import { dbSchema, getDb } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { Common } from "@/app/api/services/types/common";
 import { Extended } from "@/app/api/services/types/extended";
+import { dbSchema } from "@/app/data/db/utils/db-config";
 import { migrateDown, migrateUp } from "@/app/data/db/utils/migrate";
 
 // Use unvalidated database connections for schema operations

@@ -5,9 +5,10 @@
 import { ColumnMetadata, MigrationInfo, TableMetadata } from "kysely";
 
 import { buildExtended, dropExisting } from "../../../helpers/ddl";
-import { dbNamespace, getDbRaw } from "@/app/api/services/database";
+import { getDbRaw } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { schemaExistsByName, getTable } from "@/app/data/db/utils/db";
+import { dbNamespace } from "@/app/data/db/utils/db-config";
 import { getMigrations } from "@/app/data/db/utils/migrate";
 
 describe("Extended Schema Migration Tests", () => {

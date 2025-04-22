@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { Bundle } from "fhir/r4";
 import { Kysely, Transaction } from "kysely";
 
-import { dbSchema, getDb } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
@@ -14,6 +14,7 @@ import {
 } from "@/app/data/blobStorage/azureClient";
 import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
 import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
+import { dbSchema } from "@/app/data/db/utils/db-config";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 

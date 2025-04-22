@@ -1,10 +1,11 @@
 import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
 
-import { dbSchema, getDb } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { Common, ecr_data } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
+import { dbSchema } from "@/app/data/db/utils/db-config";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
