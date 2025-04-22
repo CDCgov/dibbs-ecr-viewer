@@ -27,13 +27,7 @@ import {
 
 import { createEcrCondition, createEcrRule } from "./helpers/common";
 import { createCoreEcr } from "./helpers/core";
-import {
-  buildExtended,
-  clearExtended,
-  buildCore,
-  dropExisting,
-  clearCore,
-} from "./helpers/ddl";
+import { buildExtended, buildCore, dropExisting } from "./helpers/ddl";
 import { createExtendedEcr } from "./helpers/extended";
 
 const testDateRange = {
@@ -203,27 +197,7 @@ describe("listEcrDataService", () => {
       await dropExisting();
     });
 
-    beforeEach(async () => {
-      await createCoreEcr(coreTemplate);
-      await createCoreEcr({ ...coreTemplate, ...relatedEcr });
-      await createEcrCondition({
-        uuid: "12345",
-        eicr_id: "12345",
-        condition: "Condition1",
-      });
-      await createEcrRule({
-        uuid: "12345",
-        ecr_rr_conditions_id: "12345",
-        rule_summary: "Rule1",
-      });
-    });
-
-    afterEach(async () => {
-      await clearCore();
-    });
-
     it("should return empty array when no data is found", async () => {
-      await clearCore();
       const startIndex = 0;
       const itemsPerPage = 25;
       const columnName = "date_created";
@@ -241,6 +215,19 @@ describe("listEcrDataService", () => {
     });
 
     it("should return data when found", async () => {
+      await createCoreEcr(coreTemplate);
+      await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+      await createEcrCondition({
+        uuid: "12345",
+        eicr_id: "12345",
+        condition: "Condition1",
+      });
+      await createEcrRule({
+        uuid: "12345",
+        ecr_rr_conditions_id: "12345",
+        rule_summary: "Rule1",
+      });
+
       const startIndex = 0;
       const itemsPerPage = 25;
       const columnName = "date_created";
@@ -276,38 +263,6 @@ describe("listEcrDataService", () => {
         },
       ]);
     });
-
-    it("should get data from the fhir_metadata table", async () => {
-      const startIndex = 0;
-      const itemsPerPage = 25;
-      const columnName = "date_created";
-      const direction = "DESC";
-      const actual: EcrDisplay[] = await listEcrData(
-        startIndex,
-        itemsPerPage,
-        columnName,
-        direction,
-        testDateRange,
-      );
-      expect(actual).toStrictEqual([
-        {
-          date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
-          ecrId: "12345",
-          patient_date_of_birth: "12/01/2024",
-          patient_first_name: "Billy",
-          patient_last_name: "Bob",
-          patient_report_date:
-            dbDialect() === "sqlserver"
-              ? "12/01/2024 7:00\u00A0PM\u00A0EST"
-              : "12/02/2024 12:00\u00A0AM\u00A0EST",
-          reportable_conditions: ["Condition1"],
-          rule_summaries: ["Rule1"],
-          eicr_set_id: "123",
-          eicr_version_number: "2",
-          related_ecrs: [{ ...relatedEcr, set_id: "123" }],
-        },
-      ]);
-    });
   });
 
   describe("listExtendedEcrData", () => {
@@ -319,27 +274,7 @@ describe("listEcrDataService", () => {
       await dropExisting();
     });
 
-    beforeEach(async () => {
-      await createExtendedEcr(extendedTemplate);
-      await createExtendedEcr({ ...extendedTemplate, ...relatedEcr });
-      await createEcrCondition({
-        uuid: "12345",
-        eicr_id: "12345",
-        condition: "Condition1",
-      });
-      await createEcrRule({
-        uuid: "12345",
-        ecr_rr_conditions_id: "12345",
-        rule_summary: "Rule1",
-      });
-    });
-
-    afterEach(async () => {
-      await clearExtended();
-    });
-
     it("should return empty array when no data is found", async () => {
-      await clearExtended();
       const startIndex = 0;
       const itemsPerPage = 25;
       const columnName = "date_created";
@@ -357,6 +292,19 @@ describe("listEcrDataService", () => {
     });
 
     it("should return data when found", async () => {
+      await createExtendedEcr(extendedTemplate);
+      await createExtendedEcr({ ...extendedTemplate, ...relatedEcr });
+      await createEcrCondition({
+        uuid: "12345",
+        eicr_id: "12345",
+        condition: "Condition1",
+      });
+      await createEcrRule({
+        uuid: "12345",
+        ecr_rr_conditions_id: "12345",
+        rule_summary: "Rule1",
+      });
+
       // Act
       const result = await listEcrData(
         0,
