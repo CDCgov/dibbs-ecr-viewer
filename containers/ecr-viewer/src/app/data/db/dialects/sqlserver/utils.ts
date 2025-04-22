@@ -8,22 +8,11 @@ interface MigrationRow {
 /**
  *
  * @param kysely - the Kysely instance
- * @returns all schemas in the database
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getSchemas(kysely: Kysely<any>) {
-  const schemas = await kysely.selectFrom("sys.schemas").selectAll().execute();
-  return schemas.map((schemaRecord) => schemaRecord.schema_name);
-}
-
-/**
- *
- * @param kysely - the Kysely instance
  * @param schemaName - the name of the schema to return
  * @returns the schema information if it exists, undefined otherwise
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getSchema(kysely: Kysely<any>, schemaName: string) {
+async function getSchema(kysely: Kysely<any>, schemaName: string) {
   return await kysely
     .selectFrom("sys.schemas")
     .selectAll()

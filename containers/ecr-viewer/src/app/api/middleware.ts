@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getDbUtils } from "@/app/data/db/utils/db";
+import { NoSchema, hasPendingMigrations } from "@/app/data/db/utils/migrate";
 
 import { getUnvalidatedDb } from "./services/database";
 
@@ -13,9 +13,9 @@ export function withMigrationCheck(
   handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>,
 ) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    const db = getUnvalidatedDb<any>();
+    const db = getUnvalidatedDb<NoSchema>();
     try {
-      const hasPending = await getDbUtils().hasPendingMigrations(db);
+      const hasPending = await hasPendingMigrations();
       if (hasPending) {
         res.status(422).json({ error: "Database needs migration" });
         return;

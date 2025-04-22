@@ -153,11 +153,6 @@ export async function hasPendingMigrations(): Promise<boolean> {
   return executedMigrations.length < allMigrations.length;
 }
 
-async function getExecutedMigrations(): Promise<string[]> {
-  const migrations = await getMigrations();
-  return migrations.filter((m) => m.executedAt).map((m) => m.name);
-}
-
 class EcrViewerMigrationProvider implements MigrationProvider {
   readonly #props: EcrViewerMigrationProviderProps;
 

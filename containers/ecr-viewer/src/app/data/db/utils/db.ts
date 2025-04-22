@@ -3,6 +3,8 @@ import { Kysely, TableMetadata, ColumnMetadata } from "kysely";
 import * as postgresUtils from "@/app/data/db/dialects/postgres/utils";
 import * as sqlServerUtils from "@/app/data/db/dialects/sqlserver/utils";
 
+import { NoSchema } from "./migrate";
+
 type DialectType = "sqlserver" | "postgres";
 type SchemaType = "core" | "extended";
 
@@ -13,33 +15,34 @@ export interface DatabaseConfig {
 }
 
 export interface DbUtils {
-  getSchemas(db: Kysely<any>): Promise<string[]>;
-  getSchema(db: Kysely<any>, schemaName: string): Promise<TableMetadata[]>;
-  schemaExistsByName(db: Kysely<any>, schemaName: string): Promise<boolean>;
-  getTables(db: Kysely<any>, schemaName: string): Promise<string[]>;
+  schemaExistsByName(
+    db: Kysely<NoSchema>,
+    schemaName: string,
+  ): Promise<boolean>;
+  getTables(db: Kysely<NoSchema>, schemaName: string): Promise<string[]>;
   getTable(
-    db: Kysely<any>,
+    db: Kysely<NoSchema>,
     schemaName: string,
     tableName: string,
   ): Promise<TableMetadata>;
   tableExistsByName(
-    db: Kysely<any>,
+    db: Kysely<NoSchema>,
     schemaName: string,
     tableName: string,
   ): Promise<boolean>;
   getColumns(
-    db: Kysely<any>,
+    db: Kysely<NoSchema>,
     schemaName: string,
     tableName: string,
   ): Promise<ColumnMetadata[]>;
   getColumn(
-    db: Kysely<any>,
+    db: Kysely<NoSchema>,
     schemaName: string,
     tableName: string,
     columnName: string,
   ): Promise<ColumnMetadata>;
   columnExistsByName(
-    db: Kysely<any>,
+    db: Kysely<NoSchema>,
     schemaName: string,
     tableName: string,
     columnName: string,
