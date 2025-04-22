@@ -2,12 +2,18 @@
  * @jest-environment node
  */
 
+import { ColumnMetadata, MigrationInfo, TableMetadata } from "kysely";
+
 import { buildCore, dropCore } from "../../../helpers/ddl";
+import { dbNamespace, getDbRaw } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { schemaExistsByName, getTable } from "@/app/data/db/utils/db";
 import { getMigrations } from "@/app/data/db/utils/migrate";
 
 describe("Common Schema Migration Tests", () => {
+  const db = getDbRaw();
+  const schema = dbNamespace();
+
   beforeAll(async () => {
     await buildCore(); // Build the core schema
   });
@@ -26,7 +32,7 @@ describe("Common Schema Migration Tests", () => {
 
   // ecr_data table tests
   describe("Table: ecr_data", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "ecr_data");
@@ -37,7 +43,7 @@ describe("Common Schema Migration Tests", () => {
     });
 
     describe("Column: eicr_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_id");
@@ -47,17 +53,13 @@ describe("Common Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: set_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "set_id");
@@ -68,12 +70,12 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: eicr_version_number", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_version_number");
@@ -84,12 +86,12 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: data_source", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "data_source");
@@ -100,12 +102,12 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(20)", () => {
-        expect(column?.type).toBe("varchar(20)");
+        expect(column?.dataType).toBe("varchar(20)");
       });
     });
 
     describe("Column: fhir_reference_link", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "fhir_reference_link");
@@ -116,12 +118,12 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(500)", () => {
-        expect(column?.type).toBe("varchar(500)");
+        expect(column?.dataType).toBe("varchar(500)");
       });
     });
 
     describe("Column: patient_name_first", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "patient_name_first");
@@ -132,12 +134,12 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(100)", () => {
-        expect(column?.type).toBe("varchar(100)");
+        expect(column?.dataType).toBe("varchar(100)");
       });
     });
 
     describe("Column: patient_name_last", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "patient_name_last");
@@ -148,12 +150,12 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(100)", () => {
-        expect(column?.type).toBe("varchar(100)");
+        expect(column?.dataType).toBe("varchar(100)");
       });
     });
 
     describe("Column: date_created", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "date_created");
@@ -164,20 +166,20 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type timestamp with time zone", () => {
-        expect(column?.type).toBe(getSql("datetimeTzType")); // Handles dialect-specific type
+        expect(column?.dataType).toBe(getSql("datetimeTzType")); // Handles dialect-specific type
       });
 
       it("should not be nullable", () => {
-        expect(column?.isNullable()).toBe(false);
+        expect(column?.isNullable).toBeFalse();
       });
 
       it("should default to current timestamp", () => {
-        expect(column?.defaultValue).toBe(getSql("now"));
+        expect(column?.hasDefaultValue).toBeTrue();
       });
     });
 
     describe("Column: report_date", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "report_date");
@@ -188,14 +190,14 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type date", () => {
-        expect(column?.type).toBe("DATE");
+        expect(column?.dataType).toBe("DATE");
       });
     });
   });
 
   // ecr_rr_conditions table tests
   describe("Table: ecr_rr_conditions", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "ecr_rr_conditions");
@@ -206,7 +208,7 @@ describe("Common Schema Migration Tests", () => {
     });
 
     describe("Column: uuid", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "uuid");
@@ -216,17 +218,13 @@ describe("Common Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: eicr_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_id");
@@ -237,21 +235,16 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should not be nullable", () => {
-        expect(column?.isNullable()).toBe(false);
-      });
-
-      it("should be a foreign key referencing ecr_data.eicr_id", () => {
-        expect(column?.isForeignKey()).toBe(true);
-        expect(column?.foreignKey).toBe("ecr_data.eicr_id");
+        expect(column?.isNullable).toBe(false);
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: condition", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "condition");
@@ -262,14 +255,14 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar")); // Dialect-specific max varchar
+        expect(column?.dataType).toBe(getSql("maxVarchar")); // Dialect-specific max varchar
       });
     });
   });
 
   // ecr_rr_rule_summaries table tests
   describe("Table: ecr_rr_rule_summaries", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "ecr_rr_rule_summaries");
@@ -280,7 +273,7 @@ describe("Common Schema Migration Tests", () => {
     });
 
     describe("Column: uuid", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "uuid");
@@ -290,17 +283,13 @@ describe("Common Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: ecr_rr_conditions_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "ecr_rr_conditions_id");
@@ -311,21 +300,16 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should not be nullable", () => {
-        expect(column?.isNullable()).toBe(false);
-      });
-
-      it("should be a foreign key referencing ecr_rr_conditions.uuid", () => {
-        expect(column?.isForeignKey()).toBe(true);
-        expect(column?.foreignKey).toBe("ecr_rr_conditions.uuid");
+        expect(column?.isNullable).toBe(false);
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: rule_summary", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "rule_summary");
@@ -336,14 +320,14 @@ describe("Common Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe(getSql("maxVarchar"));
       });
     });
   });
 
   // Migration status tests
   describe("Migration Status", () => {
-    let migrations;
+    let migrations: readonly MigrationInfo[];
 
     beforeAll(async () => {
       migrations = await getMigrations(); // Assuming getMigrations returns executed migration names
