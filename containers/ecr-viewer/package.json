@@ -45,7 +45,6 @@
     "jose": "5.2.2",
     "js-cookie": "^3.0.5",
     "kysely": "^0.27.6",
-    "kysely-ctl": "^0.12.2",
     "luxon": "^3.5.0",
     "motion": "^12.6.2",
     "mssql": "^11.0.1",
@@ -54,7 +53,6 @@
     "next-router-mock": "^0.9.13",
     "node-html-parser": "^7.0.1",
     "pg": "^8.14.1",
-    "pg-promise": "^11.6.0",
     "postcss-discard-comments": "^7.0.3",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^10.1.5",
@@ -111,7 +109,6 @@
     "postcss": "^8.4.38",
     "prettier": "3.1.0",
     "sass": "^1.69.5",
-    "ts-node": "^10.9.2",
     "typedoc": "^0.28.1",
     "typedoc-plugin-mermaid": "^1.12.0",
     "typescript": "^5.8.2"
