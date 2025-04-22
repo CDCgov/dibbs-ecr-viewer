@@ -3,13 +3,13 @@ import { Kysely } from "kysely";
 import { getSql } from "@/app/api/services/dialects/common";
 import { getDbUtils } from "@/app/data/db/utils/db";
 import { dbNamespace } from "@/app/data/db/utils/db-config";
-import { NoSchema } from "@/app/data/db/utils/migrate";
+import { AnyDb } from "@/app/data/db/utils/types";
 
 /**
  * Common schema initialization.
  * @param db - the database connection
  */
-export async function up(db: Kysely<NoSchema>): Promise<void> {
+export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const dbUtils = getDbUtils();
   console.log("Initializing common");
@@ -64,12 +64,11 @@ export async function up(db: Kysely<NoSchema>): Promise<void> {
  * Common schema initialization.
  * @param db - the database connection
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function down(db: Kysely<any>): Promise<void> {
+export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
 
   await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
-  await _db.schema.dropTable(".ecr_rr_conditions").ifExists().execute();
-  await _db.schema.dropTable(".ecr_data").ifExists().execute();
+  await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
+  await _db.schema.dropTable("ecr_data").ifExists().execute();
   await db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }

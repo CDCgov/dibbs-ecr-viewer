@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { NoSchema, hasPendingMigrations } from "@/app/data/db/utils/migrate";
+import { hasPendingMigrations } from "@/app/data/db/utils/migrate";
+import { AnyDb } from "@/app/data/db/utils/types";
 
 import { getUnvalidatedDb } from "./services/database";
 
@@ -13,7 +14,7 @@ export function withMigrationCheck(
   handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>,
 ) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    const db = getUnvalidatedDb<NoSchema>();
+    const db = getUnvalidatedDb<AnyDb>();
     try {
       const hasPending = await hasPendingMigrations();
       if (hasPending) {

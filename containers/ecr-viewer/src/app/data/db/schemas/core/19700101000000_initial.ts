@@ -2,13 +2,13 @@ import { Kysely, sql } from "kysely";
 
 import { getSql } from "@/app/api/services/dialects/common";
 import { dbSchema } from "@/app/data/db/utils/db-config";
+import { AnyDb } from "@/app/data/db/utils/types";
 
 /**
  * Based on ecr-viewer/sql/core.sql.
  * @param db - the database connection
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function up(db: Kysely<any>): Promise<void> {
+export async function up(db: Kysely<AnyDb>): Promise<void> {
   console.log("migrating core");
   if (dbSchema() === "extended") {
     console.log("Extended schema detected. Skipping core migration.");
@@ -47,8 +47,7 @@ export async function up(db: Kysely<any>): Promise<void> {
  * database-agnostic.
  * @param db - the database connection
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function down(db: Kysely<any>): Promise<void> {
+export async function down(db: Kysely<AnyDb>): Promise<void> {
   await db.schema
     .dropTable("ecr_viewer.ecr_rr_rule_summaries")
     .ifExists()

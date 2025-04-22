@@ -13,9 +13,6 @@ import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
 import { Common } from "./types/common";
 
-type DialectType = "sqlserver" | "postgres";
-type SchemaType = "core" | "extended";
-
 // Cache for the validated database connection
 let validatedDb: unknown;
 

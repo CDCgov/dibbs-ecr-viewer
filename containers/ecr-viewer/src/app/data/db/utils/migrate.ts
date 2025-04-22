@@ -13,9 +13,7 @@ import coreMigrations from "@/app/data/db/schemas/core";
 import extendedMigrations from "@/app/data/db/schemas/extended";
 
 import { dbSchema } from "./db-config";
-
-// Empty interface used only in migrations
-export interface NoSchema {}
+import { AnyDb } from "./types";
 
 /**
  * Sets up migration environment and executes the provided operation.
@@ -23,9 +21,9 @@ export interface NoSchema {}
  * @returns result of `operation`
  */
 async function withUnValidatedDb<T>(
-  operation: (db: Kysely<NoSchema>) => Promise<T>,
+  operation: (db: Kysely<AnyDb>) => Promise<T>,
 ): Promise<T> {
-  const db = getUnvalidatedDb<NoSchema>();
+  const db = getUnvalidatedDb<AnyDb>();
 
   try {
     return await operation(db);
@@ -34,7 +32,7 @@ async function withUnValidatedDb<T>(
   }
 }
 
-const getMigrators = (db: Kysely<NoSchema>) => {
+const getMigrators = (db: Kysely<AnyDb>) => {
   const commonMigrator = new Migrator({
     db,
     provider: new EcrViewerMigrationProvider({
@@ -57,7 +55,7 @@ const getMigrators = (db: Kysely<NoSchema>) => {
  * @param target Optional migration name to migrate to.
  */
 async function executeMigration(
-  db: Kysely<NoSchema>,
+  db: Kysely<AnyDb>,
   command: "up" | "down",
   target?: string,
 ): Promise<void> {
