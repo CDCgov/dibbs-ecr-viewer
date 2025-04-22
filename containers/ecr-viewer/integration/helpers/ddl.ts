@@ -13,7 +13,9 @@ const commondb = () => getDb<Common>();
  */
 export const dropExisting = async () => {
   if (dbSchema()) {
-    migrateDown("all");
+    try {
+      migrateDown("all");
+    } catch (e: unknown) {}
   }
 };
 
@@ -31,6 +33,7 @@ const clearCommon = async () => {
  * Builds the extended schema to a test database
  */
 export const buildExtended = async () => {
+  await dropExisting();
   process.env.METADATA_DATABASE_SCHEMA = "extended";
   await migrateUp();
 };
@@ -48,6 +51,7 @@ export const clearExtended = async () => {
  * Builds the core schema to a test database
  */
 export const buildCore = async () => {
+  await dropExisting();
   process.env.METADATA_DATABASE_SCHEMA = "core";
   await migrateUp();
 };
