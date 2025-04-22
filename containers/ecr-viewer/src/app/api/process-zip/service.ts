@@ -8,7 +8,7 @@ import {
   BundleExtendedMetadata,
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
-import { dbDialect, dbSchema } from "@/app/api/services/database";
+import { dbDialect, dbSchema } from "@/app/data/db/utils/db-config";
 
 interface OrchestrationRawResponse {
   message: string;
