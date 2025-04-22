@@ -1,14 +1,18 @@
-import { resolve } from "path";
-
 import {
   Kysely,
   Migrator,
   NO_MIGRATIONS,
   MigrationInfo,
+  MigrationProvider,
+  Migration,
 } from "kysely";
-import { TSFileMigrationProvider } from 'kysely-ctl'
 
-import { dbSchema, getUnvalidatedDb } from "@/app/api/services/database";
+import { getUnvalidatedDb } from "@/app/api/services/database";
+import commonMigrations from "@/app/data/db/schemas/common";
+import coreMigrations from "@/app/data/db/schemas/core";
+import extendedMigrations from "@/app/data/db/schemas/extended";
+
+import { dbSchema } from "./db-config";
 
 // Empty interface used only in migrations
 export interface NoSchema {}
@@ -35,14 +39,14 @@ async function withUnValidatedDb<T>(
 const getMigrators = (db: Kysely<NoSchema>) => {
   const commonMigrator = new Migrator({
     db,
-    provider: new TSFileMigrationProvider({
-      migrationFolder: resolve("src/app/data/db/schemas/common"),
+    provider: new EcrViewerMigrationProvider({
+      schema: "common",
     }),
   });
   const schemaMigrator = new Migrator({
     db,
-    provider: new TSFileMigrationProvider({
-      migrationFolder: resolve(`src/app/data/db/schemas/${dbSchema()}`),
+    provider: new EcrViewerMigrationProvider({
+      schema: dbSchema()!,
     }),
   });
   return { commonMigrator, schemaMigrator };
@@ -130,4 +134,53 @@ export async function getMigrations(): Promise<readonly MigrationInfo[]> {
       return [...commonMigrations, ...schemaMigrations];
     },
   );
+}
+
+async function dbIsValid(): Promise<boolean> {
+  return !(await hasPendingMigrations());
+}
+
+/**
+ *
+ */
+export async function hasPendingMigrations(): Promise<boolean> {
+  const allMigrations = await getMigrations();
+  const executedMigrations = allMigrations
+    .filter((m) => m.executedAt)
+    .map((m) => m.name);
+  return executedMigrations.length < allMigrations.length;
+}
+
+async function getExecutedMigrations(): Promise<string[]> {
+  const migrations = await getMigrations();
+  return migrations.filter((m) => m.executedAt).map((m) => m.name);
+}
+
+class EcrViewerMigrationProvider implements MigrationProvider {
+  readonly #props: EcrViewerMigrationProviderProps;
+
+  constructor(props: EcrViewerMigrationProviderProps) {
+    this.#props = props;
+  }
+
+  async getMigrations(): Promise<Record<string, Migration>> {
+    switch (this.#props.schema) {
+      case "common": {
+        return commonMigrations;
+      }
+      case "core": {
+        return coreMigrations;
+      }
+      case "extended": {
+        return extendedMigrations;
+      }
+      default: {
+        throw new Error(`Unknown migration schema: ${this.#props.schema}`);
+      }
+    }
+  }
+}
+
+export interface EcrViewerMigrationProviderProps {
+  schema: string;
 }

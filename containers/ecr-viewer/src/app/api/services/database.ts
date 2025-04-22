@@ -1,11 +1,16 @@
 import { Kysely } from "kysely";
 
-import { DbUtils, getDbUtils, dbDialect, dbNamespace } from "@/app/data/db/utils";
-export { getDbUtils, dbDialect, dbNamespace, dbSchema } from "@/app/data/db/utils";
+import { dbDialect, dbNamespace } from "@/app/data/db/utils/db-config";
+export {
+  dbDialect,
+  dbNamespace,
+  dbSchema,
+} from "@/app/data/db/utils/db-config";
 
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
 import { Common } from "./types/common";
+import { DbUtils, getDbUtils } from "@/app/data/db/utils/db";
 
 // Cache for the validated database connection
 let validatedDb: Kysely<unknown> | null = null;

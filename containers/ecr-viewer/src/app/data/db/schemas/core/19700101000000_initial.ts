@@ -1,7 +1,7 @@
 import { Kysely, sql } from "kysely";
 
-import { getSql } from "../../../../api/services/dialects/common";
-import { dbSchema } from "../../utils";
+import { getSql } from "@/app/api/services/dialects/common";
+import { dbSchema } from "@/app/data/db/utils/db-config";
 
 /**
  * Based on ecr-viewer/sql/core.sql.

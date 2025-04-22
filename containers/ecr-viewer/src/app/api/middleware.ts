@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getDbUtils } from "@/app/data/db/utils";
+import { getDbUtils } from "@/app/data/db/utils/db";
 
 import { getUnvalidatedDb } from "./services/database";
 

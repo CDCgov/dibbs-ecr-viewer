@@ -3,7 +3,7 @@
  */
 
 import { buildCore, dropCore } from "../../../helpers/ddl";
-import { getDbUtils } from "@/app/data/db/utils";
+import { getDbUtils } from "@/app/data/db/utils/db";
 
 describe("Common Schema Migration Tests", () => {
   let utils;
