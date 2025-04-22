@@ -29,8 +29,6 @@ async function withUnValidatedDb<T>(
 
   try {
     return await operation(db);
-  } catch (error) {
-    throw new Error(`Migration operation failed: ${error}`);
   } finally {
     await db.destroy();
   }
@@ -67,15 +65,16 @@ async function executeMigration(
 
   if (command === "up") {
     for (const migrator of [commonMigrator, schemaMigrator]) {
+      console.log({ migrator });
       const result = await migrator.migrateToLatest();
+      if (result.error) {
+        throw result.error;
+      }
+
       console.log(
         "Migrations applied:",
         result.results || "No migrations to apply",
       );
-
-      if (result.error) {
-        throw result.error;
-      }
     }
   } else if (command === "down") {
     for (const migrator of [schemaMigrator, commonMigrator]) {
@@ -84,18 +83,18 @@ async function executeMigration(
         result = await migrator.migrateTo(
           target === "all" ? NO_MIGRATIONS : target,
         );
-        console.log(`Migrated to ${target}:`, result.results || "No changes");
       } else {
         result = await migrator.migrateDown();
-        console.log(
-          "Migration rolled back:",
-          result.results || "No migrations to roll back",
-        );
       }
 
       if (result.error) {
         throw result.error;
       }
+
+      console.log(
+        "Migration rolled back:",
+        result.results || "No migrations to roll back",
+      );
     }
   } else {
     throw new Error(`Unknown migration command: ${command}`);
@@ -136,7 +135,10 @@ export async function getMigrations(): Promise<readonly MigrationInfo[]> {
   );
 }
 
-async function dbIsValid(): Promise<boolean> {
+/**
+ *
+ */
+export async function dbIsValid(): Promise<boolean> {
   return !(await hasPendingMigrations());
 }
 

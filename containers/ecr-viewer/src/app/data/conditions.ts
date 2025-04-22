@@ -7,7 +7,7 @@ import { Common } from "@/app/api/services/types/common";
  */
 export const getAllConditions = async (): Promise<string[]> => {
   try {
-    const result = await getDb<Common>()
+    const result = await (await getDb<Common>())
       .selectFrom("ecr_rr_conditions")
       .select("condition")
       .distinct()

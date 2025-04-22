@@ -7,27 +7,14 @@ export {
   dbSchema,
 } from "@/app/data/db/utils/db-config";
 
+import { dbIsValid } from "@/app/data/db/utils/migrate";
+
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
 import { Common } from "./types/common";
-import { DbUtils, getDbUtils } from "@/app/data/db/utils/db";
 
 // Cache for the validated database connection
-let validatedDb: Kysely<unknown> | null = null;
-
-// Cache DbUtils to avoid repeated instantiation
-let dbUtils: DbUtils | null = null;
-
-/**
- * Gets the cached DbUtils instance.
- * @returns The cached DbUtils instance.
- */
-function getCachedDbUtils(): DbUtils {
-  if (!dbUtils) {
-    dbUtils = getDbUtils();
-  }
-  return dbUtils;
-}
+let validatedDb: unknown;
 
 /**
  * Establishes an unvalidated database connection.
@@ -49,7 +36,7 @@ export function getUnvalidatedDb<T>(): Kysely<T> {
       throw new Error(`Unsupported dialect: ${dialect}`);
   }
 
-  return db.withSchema(dbNamespace());
+  return db;
 }
 
 /**
@@ -64,14 +51,14 @@ export async function getDb<T>(): Promise<Kysely<T>> {
   }
 
   const db = getUnvalidatedDb<T>();
-  const isValid = await getCachedDbUtils().dbIsValid(db);
+  const isValid = await dbIsValid();
   if (!isValid) {
     await db.destroy();
     throw new Error("Database schema is invalid: pending migrations detected");
   }
 
-  validatedDb = db;
-  return db;
+  validatedDb = db.withSchema(dbNamespace());
+  return validatedDb as Kysely<T>;
 }
 
 /**

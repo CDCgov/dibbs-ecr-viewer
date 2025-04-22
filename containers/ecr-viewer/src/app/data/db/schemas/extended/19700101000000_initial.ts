@@ -2,14 +2,14 @@ import { Kysely } from "kysely";
 
 import { getSql } from "@/app/api/services/dialects/common";
 import { dbSchema } from "@/app/data/db/utils/db-config";
+import { NoSchema } from "@/app/data/db/utils/migrate";
 
 /**
  * Based on ecr-viewer/sql/extended.sql.
  * @param db - the database connection
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function up(db: Kysely<any>): Promise<void> {
-  // Kysely requires <any>
+export async function up(db: Kysely<NoSchema>): Promise<void> {
+  console.log("initializing extended");
 
   if (dbSchema() === "core") {
     console.log("Core schema detected. Skipping extended migration.");

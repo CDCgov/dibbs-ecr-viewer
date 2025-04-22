@@ -9,6 +9,7 @@ import { dbSchema } from "@/app/data/db/utils/db-config";
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
+  console.log("migrating core");
   if (dbSchema() === "extended") {
     console.log("Extended schema detected. Skipping core migration.");
     return;

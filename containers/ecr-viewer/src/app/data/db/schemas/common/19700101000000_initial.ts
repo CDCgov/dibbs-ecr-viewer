@@ -3,17 +3,16 @@ import { Kysely } from "kysely";
 import { getSql } from "@/app/api/services/dialects/common";
 import { getDbUtils } from "@/app/data/db/utils/db";
 import { dbNamespace } from "@/app/data/db/utils/db-config";
-
-const schema = dbNamespace();
-const dbUtils = getDbUtils();
+import { NoSchema } from "@/app/data/db/utils/migrate";
 
 /**
  * Common schema initialization.
  * @param db - the database connection
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function up(db: Kysely<any>): Promise<void> {
-  // Kysely requires <any>
+export async function up(db: Kysely<NoSchema>): Promise<void> {
+  const schema = dbNamespace();
+  const dbUtils = getDbUtils();
+  console.log("Initializing common");
   const schemaExists = await dbUtils.schemaExistsByName(db, schema);
 
   try {
@@ -31,9 +30,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     "ecr_rr_rule_summaries",
   ].every((table) => tables.includes(table));
 
+  const _db = db.withSchema(schema);
+
   if (!tablesExist) {
-    await db.schema
-      .createTable(schema + ".ecr_data")
+    await _db.schema
+      .createTable("ecr_data")
       .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
       .addColumn("set_id", "varchar(255)")
       .addColumn("eicr_version_number", "varchar(50)")
@@ -43,15 +44,15 @@ export async function up(db: Kysely<any>): Promise<void> {
       )
       .execute();
 
-    await db.schema
-      .createTable(schema + ".ecr_rr_conditions")
+    await _db.schema
+      .createTable("ecr_rr_conditions")
       .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
       .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
       .addColumn("condition", getSql("maxVarchar"))
       .execute();
 
-    await db.schema
-      .createTable(schema + ".ecr_rr_rule_summaries")
+    await _db.schema
+      .createTable("ecr_rr_rule_summaries")
       .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
       .addColumn("ecr_rr_conditions_id", "varchar(200)")
       .addColumn("rule_summary", getSql("maxVarchar"))
@@ -65,17 +66,10 @@ export async function up(db: Kysely<any>): Promise<void> {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema
-    .dropTable(schema + ".ecr_rr_rule_summaries")
-    .ifExists()
-    .execute();
-  await db.schema
-    .dropTable(schema + ".ecr_rr_conditions")
-    .ifExists()
-    .execute();
-  await db.schema
-    .dropTable(schema + ".ecr_data")
-    .ifExists()
-    .execute();
+  const _db = db.withSchema(dbNamespace());
+
+  await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
+  await _db.schema.dropTable(".ecr_rr_conditions").ifExists().execute();
+  await _db.schema.dropTable(".ecr_data").ifExists().execute();
   await db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }
