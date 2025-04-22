@@ -1,5 +1,4 @@
 import {
-  Kysely,
   Migrator,
   NO_MIGRATIONS,
   MigrationInfo,
@@ -7,32 +6,15 @@ import {
   Migration,
 } from "kysely";
 
-import { getUnvalidatedDb } from "@/app/api/services/database";
+import { getDbRaw } from "@/app/api/services/database";
 import commonMigrations from "@/app/data/db/schemas/common";
 import coreMigrations from "@/app/data/db/schemas/core";
 import extendedMigrations from "@/app/data/db/schemas/extended";
 
 import { dbSchema } from "./db-config";
-import { AnyDb } from "./types";
 
-/**
- * Sets up migration environment and executes the provided operation.
- * @param operation Function to execute with database and migration directories.
- * @returns result of `operation`
- */
-async function withUnValidatedDb<T>(
-  operation: (db: Kysely<AnyDb>) => Promise<T>,
-): Promise<T> {
-  const db = getUnvalidatedDb<AnyDb>();
-
-  try {
-    return await operation(db);
-  } finally {
-    await db.destroy();
-  }
-}
-
-const getMigrator = (db: Kysely<AnyDb>) => {
+const getMigrator = () => {
+  const db = getDbRaw();
   return new Migrator({
     db,
     provider: new EcrViewerMigrationProvider({
@@ -43,16 +25,14 @@ const getMigrator = (db: Kysely<AnyDb>) => {
 
 /**
  * Executes a migration operation (up or down).
- * @param db Kysely instance.
  * @param command "up" or "down".
  * @param target Optional migration name to migrate to.
  */
 async function executeMigration(
-  db: Kysely<AnyDb>,
   command: "up" | "down",
   target?: string,
 ): Promise<void> {
-  const migrator = getMigrator(db);
+  const migrator = getMigrator();
 
   if (command === "up") {
     console.log({ migrator });
@@ -92,7 +72,7 @@ async function executeMigration(
  * Applies all pending migrations.
  */
 export async function migrateUp(): Promise<void> {
-  await withUnValidatedDb((db) => executeMigration(db, "up"));
+  await executeMigration("up");
 }
 
 /**
@@ -100,9 +80,7 @@ export async function migrateUp(): Promise<void> {
  * @param migrationTarget Optional name of migration to migrate down to (exclusive). If empty, reverts the most recent migration. To migrate all the way down, use argument "all"
  */
 export async function migrateDown(migrationTarget?: string): Promise<void> {
-  await withUnValidatedDb(async (db) => {
-    await executeMigration(db, "down", migrationTarget);
-  });
+  await executeMigration("down", migrationTarget);
 }
 
 /**
@@ -110,13 +88,8 @@ export async function migrateDown(migrationTarget?: string): Promise<void> {
  * @returns list of migrations
  */
 export async function getMigrations(): Promise<readonly MigrationInfo[]> {
-  return await withUnValidatedDb(
-    async (db): Promise<readonly MigrationInfo[]> => {
-      const migrator = getMigrator(db);
-
-      return await migrator.getMigrations();
-    },
-  );
+  const migrator = getMigrator();
+  return await migrator.getMigrations();
 }
 
 /**

@@ -1,13 +1,13 @@
-import { getUnvalidatedDb } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
 import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
 
 // Use unvalidated database connections for schema operations
-const extdb = () => getUnvalidatedDb<Extended>();
-const coredb = () => getUnvalidatedDb<Core>();
-const commondb = () => getUnvalidatedDb<Common>();
+const extdb = () => getDb<Extended>();
+const coredb = () => getDb<Core>();
+const commondb = () => getDb<Common>();
 
 /**
  * Builds the common schema tables

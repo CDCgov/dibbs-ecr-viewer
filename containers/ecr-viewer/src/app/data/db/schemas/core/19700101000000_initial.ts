@@ -2,6 +2,7 @@ import { Kysely, sql } from "kysely";
 
 import { getSql } from "@/app/api/services/dialects/common";
 import { getTable } from "@/app/data/db/utils/db";
+import { dbNamespace } from "@/app/data/db/utils/db-config";
 import { dbSchema } from "@/app/data/db/utils/db-config";
 import { AnyDb } from "@/app/data/db/utils/types";
 
@@ -21,7 +22,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
   }
 
-  const table = await getTable(db, "ecr_viewer", "ecr_data");
+  const table = await getTable(db, dbNamespace(), "ecr_data");
   const coreCheck =
     !!table && table.columns.some((c) => c.name === "patient_name_first");
 
@@ -30,8 +31,10 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     return;
   }
 
-  await db.schema
-    .alterTable("ecr_viewer.ecr_data")
+  const _db = db.withSchema(dbNamespace());
+
+  await _db.schema
+    .alterTable("ecr_data")
     .addColumn("data_source", "varchar(2)", (cb) => cb.notNull()) // S3 or DB
     .addColumn("patient_name_first", "varchar(100)")
     .addColumn("patient_name_last", "varchar(100)")
@@ -48,14 +51,9 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  * @param db - the database connection
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
-  await db.schema
-    .dropTable("ecr_viewer.ecr_rr_rule_summaries")
-    .ifExists()
-    .execute();
-  await db.schema
-    .dropTable("ecr_viewer.ecr_rr_conditions")
-    .ifExists()
-    .execute();
-  await db.schema.dropTable("ecr_viewer.ecr_data").ifExists().execute();
-  await db.schema.dropSchema("ecr_viewer").ifExists().execute();
+  const _db = db.withSchema(dbNamespace());
+  await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
+  await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
+  await _db.schema.dropTable("ecr_data").ifExists().execute();
+  await _db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }

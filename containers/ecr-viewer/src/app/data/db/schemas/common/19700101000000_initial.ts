@@ -65,9 +65,8 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
-
   await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
   await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
   await _db.schema.dropTable("ecr_data").ifExists().execute();
-  await db.schema.dropSchema(dbNamespace()).ifExists().execute();
+  await _db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }

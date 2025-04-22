@@ -12,7 +12,9 @@ export const getTables = async (
   db: Kysely<AnyDb>,
   schemaName: string,
 ): Promise<string[]> => {
+  console.log("getting tables!");
   const tables = await db.introspection.getTables();
+  console.log({ tables });
   return tables
     .filter(({ schema }) => {
       schema === schemaName;
