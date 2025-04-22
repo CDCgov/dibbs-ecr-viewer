@@ -4,9 +4,9 @@
 
 import { ColumnMetadata, MigrationInfo, TableMetadata } from "kysely";
 
+import { dateTimeType, dateTimeTypeTz } from "../../../helpers/common";
 import { buildExtended, dropExisting } from "../../../helpers/ddl";
 import { getDbRaw } from "@/app/api/services/database";
-import { getSql } from "@/app/api/services/dialects/common";
 import { schemaExistsByName, getTable } from "@/app/data/db/utils/db";
 import { dbNamespace } from "@/app/data/db/utils/db-config";
 import { getMigrations } from "@/app/data/db/utils/migrate";
@@ -473,7 +473,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type datetime", () => {
-        expect(column?.dataType).toBe(getSql("datetimeType"));
+        expect(column?.dataType).toBe(dateTimeType());
       });
     });
 
@@ -569,7 +569,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type datetime", () => {
-        expect(column?.dataType).toBe(getSql("datetimeType"));
+        expect(column?.dataType).toBe(dateTimeType());
       });
     });
 
@@ -585,7 +585,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type datetime", () => {
-        expect(column?.dataType).toBe(getSql("datetimeType"));
+        expect(column?.dataType).toBe(dateTimeType());
       });
     });
 
@@ -633,7 +633,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type timestamp with time zone", () => {
-        expect(column?.dataType).toBe(getSql("datetimeTzType"));
+        expect(column?.dataType).toBe(dateTimeTypeTz());
       });
 
       it("should not be nullable", () => {
@@ -830,7 +830,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type timestamp with time zone", () => {
-        expect(column?.dataType).toBe(getSql("datetimeTzType"));
+        expect(column?.dataType).toBe(dateTimeTypeTz());
       });
     });
 
@@ -846,7 +846,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type timestamp with time zone", () => {
-        expect(column?.dataType).toBe(getSql("datetimeTzType"));
+        expect(column?.dataType).toBe(dateTimeTypeTz());
       });
     });
 
