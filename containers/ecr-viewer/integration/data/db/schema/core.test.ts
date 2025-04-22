@@ -3,14 +3,13 @@
  */
 
 import { buildCore, dropCore } from "../../../helpers/ddl";
-import { getDbUtils } from "@/app/data/db/utils/db";
+import { getSql } from "@/app/api/services/dialects/common";
+import { schemaExistsByName, getTable } from "@/app/data/db/utils/db";
+import { getMigrations } from "@/app/data/db/utils/migrate";
 
 describe("Common Schema Migration Tests", () => {
-  let utils;
-
   beforeAll(async () => {
     await buildCore(); // Build the core schema
-    utils = getDbUtils();
   });
 
   afterAll(async () => {
@@ -20,7 +19,7 @@ describe("Common Schema Migration Tests", () => {
   // Schema-level tests
   describe("Schema", () => {
     it("should exist with name 'common'", async () => {
-      const exists = await utils.schemaExistsByName(db, schema);
+      const exists = await schemaExistsByName(db, schema);
       expect(exists).toBe(true);
     });
   });
@@ -30,7 +29,7 @@ describe("Common Schema Migration Tests", () => {
     let table;
 
     beforeAll(async () => {
-      table = await utils.getTable(db, schema, "ecr_data");
+      table = await getTable(db, schema, "ecr_data");
     });
 
     it("should exist in the 'common' schema", () => {
@@ -199,7 +198,7 @@ describe("Common Schema Migration Tests", () => {
     let table;
 
     beforeAll(async () => {
-      table = await utils.getTable(db, schema, "ecr_rr_conditions");
+      table = await getTable(db, schema, "ecr_rr_conditions");
     });
 
     it("should exist in the 'common' schema", () => {
@@ -273,7 +272,7 @@ describe("Common Schema Migration Tests", () => {
     let table;
 
     beforeAll(async () => {
-      table = await utils.getTable(db, schema, "ecr_rr_rule_summaries");
+      table = await getTable(db, schema, "ecr_rr_rule_summaries");
     });
 
     it("should exist in the 'common' schema", () => {
@@ -347,7 +346,7 @@ describe("Common Schema Migration Tests", () => {
     let migrations;
 
     beforeAll(async () => {
-      migrations = await utils.getMigrations(db); // Assuming getMigrations returns executed migration names
+      migrations = await getMigrations(); // Assuming getMigrations returns executed migration names
     });
 
     it("should have exactly two migrations applied", () => {

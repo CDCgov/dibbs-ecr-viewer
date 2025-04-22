@@ -1,56 +1,53 @@
-import { Kysely, TableMetadata, ColumnMetadata } from "kysely";
-
-import * as postgresUtils from "@/app/data/db/dialects/postgres/utils";
-import * as sqlServerUtils from "@/app/data/db/dialects/sqlserver/utils";
+import { Kysely, TableMetadata } from "kysely";
 
 import { AnyDb } from "./types";
 
-export interface DbUtils {
-  schemaExistsByName(db: Kysely<AnyDb>, schemaName: string): Promise<boolean>;
-  getTables(db: Kysely<AnyDb>, schemaName: string): Promise<string[]>;
-  getTable(
-    db: Kysely<AnyDb>,
-    schemaName: string,
-    tableName: string,
-  ): Promise<TableMetadata>;
-  tableExistsByName(
-    db: Kysely<AnyDb>,
-    schemaName: string,
-    tableName: string,
-  ): Promise<boolean>;
-  getColumns(
-    db: Kysely<AnyDb>,
-    schemaName: string,
-    tableName: string,
-  ): Promise<ColumnMetadata[]>;
-  getColumn(
-    db: Kysely<AnyDb>,
-    schemaName: string,
-    tableName: string,
-    columnName: string,
-  ): Promise<ColumnMetadata>;
-  columnExistsByName(
-    db: Kysely<AnyDb>,
-    schemaName: string,
-    tableName: string,
-    columnName: string,
-  ): Promise<boolean>;
-}
-
 /**
  * get table metadata
- * @param _db a database
+ * @param db a database
+ * @param schemaName name of the schema that we want to get tables from
+ * @returns an array of table names
  */
-export const getTables = (_db: Kysely<AnyDb>) => {};
+export const getTables = async (
+  db: Kysely<AnyDb>,
+  schemaName: string,
+): Promise<string[]> => {
+  const tables = await db.introspection.getTables();
+  return tables
+    .filter(({ schema }) => {
+      schema === schemaName;
+    })
+    .map(({ name }) => name);
+};
 
 /**
- * Gets the database utility functions for the current dialect.
- * @returns DbUtils instance for the specified dialect.
- * @throws Error if dialect is not supported or not set.
+ * Looks up a schema by name and returns if it exists
+ * @param db a database
+ * @param schemaName the schema that you want to look up
+ * @returns whether that schema exists
  */
-export function getDbUtils(): DbUtils {
-  const dialect = process.env.METADATA_DATABASE_TYPE;
-  const dialectUtils = dialect === "postgres" ? postgresUtils : sqlServerUtils;
+export const schemaExistsByName = async (
+  db: Kysely<AnyDb>,
+  schemaName: string,
+): Promise<boolean> => {
+  const schemas = await db.introspection.getSchemas();
+  return schemas.some(({ name }) => name === schemaName);
+};
 
-  return dialectUtils;
-}
+/**
+ * Gets metadata for a table from the database
+ * @param db a database
+ * @param schemaName the name of the schema that contains the table
+ * @param tableName the name of the table you want to look up
+ * @returns the table metadata
+ */
+export const getTable = async (
+  db: Kysely<AnyDb>,
+  schemaName: string,
+  tableName: string,
+): Promise<TableMetadata | undefined> => {
+  const tables = await db.introspection.getTables();
+  return tables.find(
+    ({ name, schema }) => name === tableName && schema === schemaName,
+  );
+};

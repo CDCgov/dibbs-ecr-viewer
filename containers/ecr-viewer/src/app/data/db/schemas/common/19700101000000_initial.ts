@@ -1,7 +1,7 @@
 import { Kysely } from "kysely";
 
 import { getSql } from "@/app/api/services/dialects/common";
-import { getDbUtils } from "@/app/data/db/utils/db";
+import { schemaExistsByName, getTables } from "@/app/data/db/utils/db";
 import { dbNamespace } from "@/app/data/db/utils/db-config";
 import { AnyDb } from "@/app/data/db/utils/types";
 
@@ -11,9 +11,8 @@ import { AnyDb } from "@/app/data/db/utils/types";
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
-  const dbUtils = getDbUtils();
   console.log("Initializing common");
-  const schemaExists = await dbUtils.schemaExistsByName(db, schema);
+  const schemaExists = await schemaExistsByName(db, schema);
 
   try {
     if (!schemaExists) {
@@ -23,7 +22,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     throw new Error("Failed to create schema or already exists: " + error);
   }
 
-  const tables = await dbUtils.getTables(db, schema);
+  const tables = await getTables(db, schema);
   const tablesExist = [
     "ecr_data",
     "ecr_rr_conditions",
