@@ -4,7 +4,8 @@ import { migrateUp } from "@/app/data/db/utils/migrate";
 
 /**
  *
- * @param req
+ * @param req The `NextRequest` initiating the migration
+ * @returns A `NextResponse` indicating whether the migration was successful
  */
 export async function POST(req: NextRequest) {
   try {

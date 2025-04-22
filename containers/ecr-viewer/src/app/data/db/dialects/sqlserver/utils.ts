@@ -12,7 +12,8 @@ interface MigrationRow {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getSchemas(kysely: Kysely<any>) {
-  return await kysely.selectFrom("sys.schemas").selectAll().execute();
+  const schemas = await kysely.selectFrom("sys.schemas").selectAll().execute();
+  return schemas.map((schemaRecord) => schemaRecord.schema_name);
 }
 
 /**

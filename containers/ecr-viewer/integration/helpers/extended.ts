@@ -7,5 +7,5 @@ import { NewExtendedECR, Extended } from "@/app/api/services/types/extended";
  * @returns promise
  */
 export async function createExtendedEcr(ecr: NewExtendedECR): Promise<void> {
-  await getDb<Extended>().insertInto("ecr_data").values(ecr).execute();
+  await (await getDb<Extended>()).insertInto("ecr_data").values(ecr).execute();
 }

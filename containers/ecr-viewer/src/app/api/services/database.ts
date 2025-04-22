@@ -1,12 +1,12 @@
 import { Kysely } from "kysely";
 
-import { dbDialect, dbNamespace } from "@/app/data/db/utils/db-config";
 export {
   dbDialect,
   dbNamespace,
   dbSchema,
 } from "@/app/data/db/utils/db-config";
 
+import { dbDialect, dbNamespace } from "@/app/data/db/utils/db-config";
 import { dbIsValid } from "@/app/data/db/utils/migrate";
 
 import { dialect as postgres } from "./dialects/postgres";
@@ -92,5 +92,5 @@ export async function metadataDatabaseHealthCheck(): Promise<
  */
 export function resetDbCache(): void {
   validatedDb = null;
-  dbUtils = null; // Reset cached utils as well
+  // dbUtils = null; // Reset cached utils as well
 }

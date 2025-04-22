@@ -136,14 +136,14 @@ export async function getMigrations(): Promise<readonly MigrationInfo[]> {
 }
 
 /**
- *
+ * @returns true if there are no pending migrations
  */
 export async function dbIsValid(): Promise<boolean> {
   return !(await hasPendingMigrations());
 }
 
 /**
- *
+ * @returns true if there are pending migrations
  */
 export async function hasPendingMigrations(): Promise<boolean> {
   const allMigrations = await getMigrations();

@@ -12,10 +12,12 @@ interface MigrationRow {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getSchemas(kysely: Kysely<any>) {
-  return await kysely
+  const schemas = await kysely
     .selectFrom("information_schema.schemata")
     .selectAll()
     .execute();
+
+  return schemas.map((schemaRecord) => schemaRecord.schema_name);
 }
 /**
  *
