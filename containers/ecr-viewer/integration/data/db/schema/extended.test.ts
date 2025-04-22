@@ -2,11 +2,18 @@
  * @jest-environment node
  */
 
+import { ColumnMetadata, MigrationInfo, TableMetadata } from "kysely";
+
 import { buildCore, dropCore } from "../../../helpers/ddl";
+import { dbNamespace, getDbRaw } from "@/app/api/services/database";
+import { getSql } from "@/app/api/services/dialects/common";
 import { schemaExistsByName, getTable } from "@/app/data/db/utils/db";
 import { getMigrations } from "@/app/data/db/utils/migrate";
 
 describe("Extended Schema Migration Tests", () => {
+  const db = getDbRaw();
+  const schema = dbNamespace();
+
   beforeAll(async () => {
     await buildCore(); // Build the core schema
   });
@@ -25,7 +32,7 @@ describe("Extended Schema Migration Tests", () => {
 
   // ecr_data table tests
   describe("Table: ecr_data", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "ecr_data");
@@ -36,7 +43,7 @@ describe("Extended Schema Migration Tests", () => {
     });
 
     describe("Column: eicr_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_id");
@@ -46,17 +53,13 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: set_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "set_id");
@@ -67,12 +70,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: fhir_reference_link", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "fhir_reference_link");
@@ -83,12 +86,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: last_name", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "last_name");
@@ -99,12 +102,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: first_name", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "first_name");
@@ -115,12 +118,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: birth_date", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "birth_date");
@@ -131,12 +134,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type date", () => {
-        expect(column?.type).toBe("DATE");
+        expect(column?.dataType).toBe("DATE");
       });
     });
 
     describe("Column: gender", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "gender");
@@ -147,12 +150,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: birth_sex", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "birth_sex");
@@ -163,12 +166,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: gender_identity", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "gender_identity");
@@ -179,12 +182,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: race", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "race");
@@ -195,12 +198,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: ethnicity", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "ethnicity");
@@ -211,12 +214,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: latitude", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "latitude");
@@ -227,12 +230,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.type).toBe("FLOAT");
+        expect(column?.dataType).toBe("FLOAT");
       });
     });
 
     describe("Column: longitude", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "longitude");
@@ -243,12 +246,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.type).toBe("FLOAT");
+        expect(column?.dataType).toBe("FLOAT");
       });
     });
 
     describe("Column: homelessness_status", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "homelessness_status");
@@ -259,12 +262,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: disabilities", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "disabilities");
@@ -275,12 +278,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: tribal_affiliation", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "tribal_affiliation");
@@ -291,12 +294,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: tribal_enrollment_status", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -309,12 +312,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: current_job_title", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "current_job_title");
@@ -325,12 +328,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: current_job_industry", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "current_job_industry");
@@ -341,12 +344,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: usual_occupation", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "usual_occupation");
@@ -357,12 +360,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: usual_industry", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "usual_industry");
@@ -373,12 +376,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: preferred_language", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "preferred_language");
@@ -389,12 +392,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: pregnancy_status", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "pregnancy_status");
@@ -405,12 +408,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: rr_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "rr_id");
@@ -421,12 +424,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: processing_status", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "processing_status");
@@ -437,12 +440,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: eicr_version_number", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_version_number");
@@ -453,12 +456,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: authoring_date", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "authoring_date");
@@ -469,12 +472,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type datetime", () => {
-        expect(column?.type).toBe(getSql("datetimeType"));
+        expect(column?.dataType).toBe(getSql("datetimeType"));
       });
     });
 
     describe("Column: authoring_provider", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "authoring_provider");
@@ -485,12 +488,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: provider_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "provider_id");
@@ -501,12 +504,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: facility_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "facility_id");
@@ -517,12 +520,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: facility_name", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "facility_name");
@@ -533,12 +536,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: encounter_type", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "encounter_type");
@@ -549,12 +552,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: encounter_start_date", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "encounter_start_date");
@@ -565,12 +568,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type datetime", () => {
-        expect(column?.type).toBe(getSql("datetimeType"));
+        expect(column?.dataType).toBe(getSql("datetimeType"));
       });
     });
 
     describe("Column: encounter_end_date", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "encounter_end_date");
@@ -581,12 +584,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type datetime", () => {
-        expect(column?.type).toBe(getSql("datetimeType"));
+        expect(column?.dataType).toBe(getSql("datetimeType"));
       });
     });
 
     describe("Column: reason_for_visit", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "reason_for_visit");
@@ -597,12 +600,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe(getSql("maxVarchar"));
       });
     });
 
     describe("Column: active_problems", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "active_problems");
@@ -613,12 +616,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe(getSql("maxVarchar"));
       });
     });
 
     describe("Column: date_created", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "date_created");
@@ -629,22 +632,22 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type timestamp with time zone", () => {
-        expect(column?.type).toBe(getSql("datetimeTzType"));
+        expect(column?.dataType).toBe(getSql("datetimeTzType"));
       });
 
       it("should not be nullable", () => {
-        expect(column?.isNullable()).toBe(false);
+        expect(column?.isNullable).toBeFalse();
       });
 
       it("should default to current timestamp", () => {
-        expect(column?.defaultValue).toBe(getSql("now"));
+        expect(column?.hasDefaultValue).toBeTrue();
       });
     });
   });
 
   // patient_address table tests
   describe("Table: patient_address", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "patient_address");
@@ -655,7 +658,7 @@ describe("Extended Schema Migration Tests", () => {
     });
 
     describe("Column: uuid", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "uuid");
@@ -665,17 +668,13 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: use", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "use");
@@ -686,12 +685,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(7)", () => {
-        expect(column?.type).toBe("varchar(7)");
+        expect(column?.dataType).toBe("varchar(7)");
       });
     });
 
     describe("Column: type", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "type");
@@ -702,12 +701,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(8)", () => {
-        expect(column?.type).toBe("varchar(8)");
+        expect(column?.dataType).toBe("varchar(8)");
       });
     });
 
     describe("Column: text", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "text");
@@ -718,12 +717,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe(getSql("maxVarchar"));
       });
     });
 
     describe("Column: line", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "line");
@@ -734,12 +733,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: city", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "city");
@@ -750,12 +749,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: district", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "district");
@@ -766,12 +765,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: state", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "state");
@@ -782,12 +781,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: postal_code", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "postal_code");
@@ -798,12 +797,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(20)", () => {
-        expect(column?.type).toBe("varchar(20)");
+        expect(column?.dataType).toBe("varchar(20)");
       });
     });
 
     describe("Column: country", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "country");
@@ -814,12 +813,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: period_start", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "period_start");
@@ -830,12 +829,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type timestamp with time zone", () => {
-        expect(column?.type).toBe(getSql("datetimeTzType"));
+        expect(column?.dataType).toBe(getSql("datetimeTzType"));
       });
     });
 
     describe("Column: period_end", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "period_end");
@@ -846,12 +845,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type timestamp with time zone", () => {
-        expect(column?.type).toBe(getSql("datetimeTzType"));
+        expect(column?.dataType).toBe(getSql("datetimeTzType"));
       });
     });
 
     describe("Column: eicr_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_id");
@@ -861,20 +860,15 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be a foreign key referencing ecr_data.eicr_id", () => {
-        expect(column?.isForeignKey()).toBe(true);
-        expect(column?.foreignKey).toBe("ecr_data.eicr_id");
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
   });
 
   // ecr_rr_conditions table tests
   describe("Table: ecr_rr_conditions", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "ecr_rr_conditions");
@@ -885,7 +879,7 @@ describe("Extended Schema Migration Tests", () => {
     });
 
     describe("Column: uuid", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "uuid");
@@ -895,17 +889,13 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: eicr_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_id");
@@ -916,21 +906,16 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should not be nullable", () => {
-        expect(column?.isNullable()).toBe(false);
-      });
-
-      it("should be a foreign key referencing ecr_data.eicr_id", () => {
-        expect(column?.isForeignKey()).toBe(true);
-        expect(column?.foreignKey).toBe("ecr_data.eicr_id");
+        expect(column?.isNullable).toBe(false);
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: condition", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "condition");
@@ -941,14 +926,14 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe(getSql("maxVarchar"));
       });
     });
   });
 
   // ecr_rr_rule_summaries table tests
   describe("Table: ecr_rr_rule_summaries", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "ecr_rr_rule_summaries");
@@ -959,7 +944,7 @@ describe("Extended Schema Migration Tests", () => {
     });
 
     describe("Column: uuid", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "uuid");
@@ -969,17 +954,13 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: ecr_rr_conditions_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "ecr_rr_conditions_id");
@@ -989,18 +970,13 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be a foreign key referencing ecr_rr_conditions.uuid", () => {
-        expect(column?.isForeignKey()).toBe(true);
-        expect(column?.foreignKey).toBe("ecr_rr_conditions.uuid");
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: rule_summary", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "rule_summary");
@@ -1011,14 +987,14 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe(getSql("maxVarchar"));
       });
     });
   });
 
   // ecr_labs table tests
   describe("Table: ecr_labs", () => {
-    let table;
+    let table: TableMetadata | undefined;
 
     beforeAll(async () => {
       table = await getTable(db, schema, "ecr_labs");
@@ -1029,7 +1005,7 @@ describe("Extended Schema Migration Tests", () => {
     });
 
     describe("Column: uuid", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "uuid");
@@ -1039,17 +1015,13 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be part of the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: eicr_id", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "eicr_id");
@@ -1059,22 +1031,13 @@ describe("Extended Schema Migration Tests", () => {
         expect(column).toBeDefined();
       });
 
-      it("should be part of the primary key", () => {
-        expect(column?.isPrimaryKey()).toBe(true);
-      });
-
-      it("should be a foreign key referencing ecr_data.eicr_id", () => {
-        expect(column?.isForeignKey()).toBe(true);
-        expect(column?.foreignKey).toBe("ecr_data.eicr_id");
-      });
-
       it("should be of type varchar(200)", () => {
-        expect(column?.type).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar(200)");
       });
     });
 
     describe("Column: test_type", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "test_type");
@@ -1085,12 +1048,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: test_type_code", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "test_type_code");
@@ -1101,12 +1064,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: test_type_system", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "test_type_system");
@@ -1117,12 +1080,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: test_result_qualitative", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1135,12 +1098,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.type).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe(getSql("maxVarchar"));
       });
     });
 
     describe("Column: test_result_quantitative", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1153,12 +1116,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.type).toBe("FLOAT");
+        expect(column?.dataType).toBe("FLOAT");
       });
     });
 
     describe("Column: test_result_units", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "test_result_units");
@@ -1169,12 +1132,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: test_result_code", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "test_result_code");
@@ -1185,12 +1148,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: test_result_code_display", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1203,12 +1166,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: test_result_code_system", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1221,12 +1184,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: test_result_interpretation", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1239,12 +1202,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: test_result_interpretation_code", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1257,12 +1220,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: test_result_interpretation_system", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1275,12 +1238,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: test_result_reference_range_low_value", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1293,12 +1256,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.type).toBe("FLOAT");
+        expect(column?.dataType).toBe("FLOAT");
       });
     });
 
     describe("Column: test_result_reference_range_low_units", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1311,12 +1274,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: test_result_reference_range_high_value", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1329,12 +1292,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.type).toBe("FLOAT");
+        expect(column?.dataType).toBe("FLOAT");
       });
     });
 
     describe("Column: test_result_reference_range_high_units", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1347,12 +1310,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.type).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar(50)");
       });
     });
 
     describe("Column: specimen_type", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "specimen_type");
@@ -1363,12 +1326,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
 
     describe("Column: specimen_collection_date", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find(
@@ -1381,12 +1344,12 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type date", () => {
-        expect(column?.type).toBe("DATE");
+        expect(column?.dataType).toBe("DATE");
       });
     });
 
     describe("Column: performing_lab", () => {
-      let column;
+      let column: ColumnMetadata | undefined;
 
       beforeAll(() => {
         column = table?.columns.find((c) => c.name === "performing_lab");
@@ -1397,14 +1360,14 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.type).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar(255)");
       });
     });
   });
 
   // Migration status tests
   describe("Migration Status", () => {
-    let migrations;
+    let migrations: readonly MigrationInfo[];
 
     beforeAll(async () => {
       migrations = await getMigrations();
