@@ -28,9 +28,7 @@
     "test:e2e:integrated": "playwright test ./e2e/integrated",
     "clear-local": "docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile \"*\" down -v",
     "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit'",
-    "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'",
-    "db:migrate:up": "npx @dotenvx/dotenvx run -f .env.local -- ts-node ./app/data/db/utils/migrate.ts up",
-    "db:migrate:down": "npx @dotenvx/dotenvx run -f .env.local -- ts-node ./app/data/db/utils/migrate.ts down"
+    "convert-seed-data:build": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit --build'"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.772.0",

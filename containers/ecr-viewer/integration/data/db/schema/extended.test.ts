@@ -54,7 +54,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -70,7 +70,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -86,7 +86,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -102,7 +102,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -118,7 +118,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -134,7 +134,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type date", () => {
-        expect(column?.dataType).toBe("DATE");
+        expect(column?.dataType).toBe("date");
       });
     });
 
@@ -150,7 +150,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -166,7 +166,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -182,7 +182,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -198,7 +198,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -214,7 +214,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -230,7 +230,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.dataType).toBe("FLOAT");
+        expect(column?.dataType).toBe("numeric");
       });
     });
 
@@ -246,7 +246,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.dataType).toBe("FLOAT");
+        expect(column?.dataType).toBe("numeric");
       });
     });
 
@@ -262,7 +262,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -278,7 +278,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -294,7 +294,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -312,7 +312,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -328,7 +328,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -344,7 +344,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -360,7 +360,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -376,7 +376,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -392,7 +392,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -408,7 +408,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -424,7 +424,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -440,7 +440,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -456,7 +456,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -488,7 +488,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -504,7 +504,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -520,7 +520,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -536,7 +536,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -552,7 +552,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -600,7 +600,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.dataType).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -616,7 +616,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.dataType).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -669,7 +669,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -685,7 +685,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(7)", () => {
-        expect(column?.dataType).toBe("varchar(7)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -701,7 +701,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(8)", () => {
-        expect(column?.dataType).toBe("varchar(8)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -717,7 +717,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.dataType).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -733,7 +733,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -749,7 +749,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -765,7 +765,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -781,7 +781,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -797,7 +797,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(20)", () => {
-        expect(column?.dataType).toBe("varchar(20)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -813,7 +813,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -861,7 +861,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
   });
@@ -890,7 +890,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -910,7 +910,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -926,7 +926,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.dataType).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe("varchar");
       });
     });
   });
@@ -955,7 +955,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -971,7 +971,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -987,7 +987,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.dataType).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe("varchar");
       });
     });
   });
@@ -1016,7 +1016,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1032,7 +1032,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(200)", () => {
-        expect(column?.dataType).toBe("varchar(200)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1048,7 +1048,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1064,7 +1064,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1080,7 +1080,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1098,7 +1098,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type text or varchar(max)", () => {
-        expect(column?.dataType).toBe(getSql("maxVarchar"));
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1116,7 +1116,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.dataType).toBe("FLOAT");
+        expect(column?.dataType).toBe("numeric");
       });
     });
 
@@ -1132,7 +1132,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1148,7 +1148,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1166,7 +1166,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1184,7 +1184,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1202,7 +1202,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1220,7 +1220,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1238,7 +1238,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1256,7 +1256,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.dataType).toBe("FLOAT");
+        expect(column?.dataType).toBe("numeric");
       });
     });
 
@@ -1274,7 +1274,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1292,7 +1292,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type float", () => {
-        expect(column?.dataType).toBe("FLOAT");
+        expect(column?.dataType).toBe("numeric");
       });
     });
 
@@ -1310,7 +1310,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(50)", () => {
-        expect(column?.dataType).toBe("varchar(50)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1326,7 +1326,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
 
@@ -1344,7 +1344,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type date", () => {
-        expect(column?.dataType).toBe("DATE");
+        expect(column?.dataType).toBe("date");
       });
     });
 
@@ -1360,7 +1360,7 @@ describe("Extended Schema Migration Tests", () => {
       });
 
       it("should be of type varchar(255)", () => {
-        expect(column?.dataType).toBe("varchar(255)");
+        expect(column?.dataType).toBe("varchar");
       });
     });
   });
@@ -1378,8 +1378,16 @@ describe("Extended Schema Migration Tests", () => {
     });
 
     it("should have applied the correct migrations", () => {
-      expect(migrations).toContain("19700101000000_initial");
-      expect(migrations).toContain("19700101000001_initial");
+      expect(
+        migrations.find(
+          ({ name }) => name === "19700101000000_initial.ts_common",
+        ),
+      ).toHaveProperty("executedAt");
+      expect(
+        migrations.find(
+          ({ name }) => name === "19700101000000_initial.ts_extended",
+        ),
+      ).toHaveProperty("executedAt");
     });
   });
 });

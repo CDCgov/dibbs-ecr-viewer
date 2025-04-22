@@ -56,7 +56,7 @@ export const getDb = <T>() => {
 export async function metadataDatabaseHealthCheck(): Promise<
   string | undefined
 > {
-  if (!process.env.METADATA_DATABASE_TYPE) {
+  if (!dbDialect()) {
     return undefined;
   }
 

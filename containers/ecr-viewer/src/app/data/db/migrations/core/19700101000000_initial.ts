@@ -1,4 +1,4 @@
-import { Kysely, sql } from "kysely";
+import { Kysely } from "kysely";
 
 import { getSql } from "@/app/api/services/dialects/common";
 import { getTable } from "@/app/data/db/utils/db";
@@ -14,11 +14,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
   if (dbSchema() === "extended") {
     console.log("Extended schema detected. Skipping core migration.");
     return;
-  }
-
-  if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-    // Install uuid-ossp extension (Postgres-specific)
-    await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
   }
 
   const table = await getTable(db, dbNamespace(), "ecr_data");
@@ -38,7 +33,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     .addColumn("patient_name_first", "varchar(100)")
     .addColumn("patient_name_last", "varchar(100)")
     .addColumn("patient_birth_date", getSql("datetimeType"))
-    .addColumn("report_date", getSql("datetimeType"), (cb) => cb.notNull())
+    .addColumn("report_date", "date", (cb) => cb.notNull())
     .execute();
 }
 

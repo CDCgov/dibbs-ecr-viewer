@@ -7,9 +7,9 @@ import {
 } from "kysely";
 
 import { getDbRaw } from "@/app/api/services/database";
-import commonMigrations from "@/app/data/db/schemas/common";
-import coreMigrations from "@/app/data/db/schemas/core";
-import extendedMigrations from "@/app/data/db/schemas/extended";
+import commonMigrations from "@/app/data/db/migrations/common";
+import coreMigrations from "@/app/data/db/migrations/core";
+import extendedMigrations from "@/app/data/db/migrations/extended";
 
 import { dbSchema } from "./db-config";
 
@@ -34,14 +34,10 @@ async function executeMigration(
 ): Promise<void> {
   const migrator = getMigrator();
 
+  let result;
   if (command === "up") {
-    ({ migrator });
-    const result = await migrator.migrateToLatest();
-    if (result.error) {
-      throw result.error;
-    }
+    result = await migrator.migrateToLatest();
   } else if (command === "down") {
-    let result;
     if (target) {
       result = await migrator.migrateTo(
         target === "all" ? NO_MIGRATIONS : target,
@@ -49,12 +45,12 @@ async function executeMigration(
     } else {
       result = await migrator.migrateDown();
     }
-
-    if (result.error) {
-      throw result.error;
-    }
   } else {
     throw new Error(`Unknown migration command: ${command}`);
+  }
+
+  if (result.error) {
+    throw result.error;
   }
 }
 
