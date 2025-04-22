@@ -32,20 +32,13 @@ async function withUnValidatedDb<T>(
   }
 }
 
-const getMigrators = (db: Kysely<AnyDb>) => {
-  const commonMigrator = new Migrator({
-    db,
-    provider: new EcrViewerMigrationProvider({
-      schema: "common",
-    }),
-  });
-  const schemaMigrator = new Migrator({
+const getMigrator = (db: Kysely<AnyDb>) => {
+  return new Migrator({
     db,
     provider: new EcrViewerMigrationProvider({
       schema: dbSchema()!,
     }),
   });
-  return { commonMigrator, schemaMigrator };
 };
 
 /**
@@ -59,41 +52,37 @@ async function executeMigration(
   command: "up" | "down",
   target?: string,
 ): Promise<void> {
-  const { commonMigrator, schemaMigrator } = getMigrators(db);
+  const migrator = getMigrator(db);
 
   if (command === "up") {
-    for (const migrator of [commonMigrator, schemaMigrator]) {
-      console.log({ migrator });
-      const result = await migrator.migrateToLatest();
-      if (result.error) {
-        throw result.error;
-      }
-
-      console.log(
-        "Migrations applied:",
-        result.results || "No migrations to apply",
-      );
+    console.log({ migrator });
+    const result = await migrator.migrateToLatest();
+    if (result.error) {
+      throw result.error;
     }
+
+    console.log(
+      "Migrations applied:",
+      result.results || "No migrations to apply",
+    );
   } else if (command === "down") {
-    for (const migrator of [schemaMigrator, commonMigrator]) {
-      let result;
-      if (target) {
-        result = await migrator.migrateTo(
-          target === "all" ? NO_MIGRATIONS : target,
-        );
-      } else {
-        result = await migrator.migrateDown();
-      }
-
-      if (result.error) {
-        throw result.error;
-      }
-
-      console.log(
-        "Migration rolled back:",
-        result.results || "No migrations to roll back",
+    let result;
+    if (target) {
+      result = await migrator.migrateTo(
+        target === "all" ? NO_MIGRATIONS : target,
       );
+    } else {
+      result = await migrator.migrateDown();
     }
+
+    if (result.error) {
+      throw result.error;
+    }
+
+    console.log(
+      "Migration rolled back:",
+      result.results || "No migrations to roll back",
+    );
   } else {
     throw new Error(`Unknown migration command: ${command}`);
   }
@@ -123,12 +112,9 @@ export async function migrateDown(migrationTarget?: string): Promise<void> {
 export async function getMigrations(): Promise<readonly MigrationInfo[]> {
   return await withUnValidatedDb(
     async (db): Promise<readonly MigrationInfo[]> => {
-      const { commonMigrator, schemaMigrator } = getMigrators(db);
+      const migrator = getMigrator(db);
 
-      const commonMigrations = await commonMigrator.getMigrations();
-      const schemaMigrations = await schemaMigrator.getMigrations();
-
-      return [...commonMigrations, ...schemaMigrations];
+      return await migrator.getMigrations();
     },
   );
 }
@@ -151,6 +137,16 @@ export async function hasPendingMigrations(): Promise<boolean> {
   return executedMigrations.length < allMigrations.length;
 }
 
+const addKeyPostfix = <T>(obj: Record<string, T>, postfix: string) => {
+  return Object.entries(obj).reduce(
+    (acc, [k, v]) => {
+      acc[`${k}_${postfix}`] = v as T;
+      return acc;
+    },
+    {} as Record<string, T>,
+  );
+};
+
 class EcrViewerMigrationProvider implements MigrationProvider {
   readonly #props: EcrViewerMigrationProviderProps;
 
@@ -159,20 +155,33 @@ class EcrViewerMigrationProvider implements MigrationProvider {
   }
 
   async getMigrations(): Promise<Record<string, Migration>> {
+    // must alphabetically be first
+    const migrations = addKeyPostfix(commonMigrations, "common") as Record<
+      string,
+      Migration
+    >;
+
+    let schemaMigrations;
     switch (this.#props.schema) {
-      case "common": {
-        return commonMigrations;
-      }
       case "core": {
-        return coreMigrations;
+        schemaMigrations = coreMigrations as Record<string, Migration>;
+        break;
       }
       case "extended": {
-        return extendedMigrations;
+        schemaMigrations = extendedMigrations as Record<string, Migration>;
+        break;
       }
       default: {
         throw new Error(`Unknown migration schema: ${this.#props.schema}`);
       }
     }
+
+    schemaMigrations = addKeyPostfix(schemaMigrations, this.#props.schema);
+    for (const [k, v] of Object.entries(schemaMigrations)) {
+      migrations[k] = v as Migration;
+    }
+
+    return migrations;
   }
 }
 

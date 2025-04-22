@@ -42,6 +42,7 @@ def _process_files():
 
     subfolders = subfolders_raw.split(",")
 
+    print("Requesting db migration...")
     rs = grequests.map([grequests.post(MIGRATION_URL)])
     assert rs[0].status_code == 200
 

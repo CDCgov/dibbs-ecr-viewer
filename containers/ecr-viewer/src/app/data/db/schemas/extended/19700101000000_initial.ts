@@ -1,6 +1,7 @@
 import { Kysely } from "kysely";
 
 import { getSql } from "@/app/api/services/dialects/common";
+import { getTable } from "@/app/data/db/utils/db";
 import { dbSchema } from "@/app/data/db/utils/db-config";
 import { AnyDb } from "@/app/data/db/utils/types";
 
@@ -16,12 +17,11 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     return;
   }
 
-  const extendedCheck = await db
-    .selectFrom("ecr_viewer.ecr_data")
-    .select("patient_name_first")
-    .executeTakeFirst();
+  const table = await getTable(db, "ecr_viewer", "ecr_data");
+  const extendedCheck =
+    !!table && table.columns.some((c) => c.name === "patient_first_name");
 
-  if (!extendedCheck) {
+  if (extendedCheck) {
     console.log("Extended migration already run. Skipping table creation.");
     return;
   }
