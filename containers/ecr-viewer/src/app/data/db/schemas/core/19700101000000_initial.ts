@@ -1,6 +1,7 @@
 import { Kysely, sql } from "kysely";
 
 import { getSql } from "@/app/api/services/dialects/common";
+import { getTable } from "@/app/data/db/utils/db";
 import { dbSchema } from "@/app/data/db/utils/db-config";
 import { AnyDb } from "@/app/data/db/utils/types";
 
@@ -20,12 +21,11 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
   }
 
-  const coreCheck = await db
-    .selectFrom("ecr_viewer.ecr_data")
-    .select("patient_name_first")
-    .executeTakeFirst();
+  const table = await getTable(db, "ecr_viewer", "ecr_data");
+  const coreCheck =
+    !!table && table.columns.some((c) => c.name === "patient_name_first");
 
-  if (!coreCheck) {
+  if (coreCheck) {
     console.log("Core migration already run. Skipping table creation.");
     return;
   }

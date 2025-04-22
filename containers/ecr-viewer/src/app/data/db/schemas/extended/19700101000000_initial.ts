@@ -19,7 +19,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   const table = await getTable(db, "ecr_viewer", "ecr_data");
   const extendedCheck =
-    !!table && table.columns.some((c) => c.name === "patient_first_name");
+    !!table && table.columns.some((c) => c.name === "first_name");
 
   if (extendedCheck) {
     console.log("Extended migration already run. Skipping table creation.");
