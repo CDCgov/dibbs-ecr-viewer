@@ -1,4 +1,4 @@
-# eCR Viewer API Documentatino
+# eCR Viewer API Documentation
 
 ## View eCR
 
