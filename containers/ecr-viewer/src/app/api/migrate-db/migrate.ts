@@ -7,11 +7,11 @@ import {
 } from "kysely";
 
 import { getDbRaw } from "@/app/api/services/database";
-import commonMigrations from "@/app/data/db/migrations/common";
-import coreMigrations from "@/app/data/db/migrations/core";
-import extendedMigrations from "@/app/data/db/migrations/extended";
+import { dbSchema } from "@/app/api/services/utils/db-config";
 
-import { dbSchema } from "./db-config";
+import commonMigrations from "./migrations/common";
+import coreMigrations from "./migrations/core";
+import extendedMigrations from "./migrations/extended";
 
 const getMigrator = () => {
   const db = getDbRaw();

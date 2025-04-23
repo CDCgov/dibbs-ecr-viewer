@@ -1,6 +1,6 @@
 import { Kysely, TableMetadata } from "kysely";
 
-import { AnyDb } from "./types";
+import { AnyDb } from "@/app/api/services/database";
 
 /**
  * get table metadata

@@ -1,9 +1,12 @@
 import { Kysely, sql } from "kysely";
 
+import { AnyDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
-import { schemaExistsByName, getTables } from "@/app/data/db/utils/db";
-import { dbDialect, dbNamespace } from "@/app/data/db/utils/db-config";
-import { AnyDb } from "@/app/data/db/utils/types";
+import { dbDialect, dbNamespace } from "@/app/api/services/utils/db-config";
+import {
+  schemaExistsByName,
+  getTables,
+} from "@/app/api/services/utils/db-metadata";
 
 /**
  * Common schema initialization.

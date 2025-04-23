@@ -1,11 +1,14 @@
 import { Kysely } from "kysely";
 
-import { dbDialect, dbNamespace } from "@/app/data/db/utils/db-config";
-import { AnyDb } from "@/app/data/db/utils/types";
-
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
 import { Common } from "./types/common";
+import { dbDialect, dbNamespace } from "./utils/db-config";
+
+// When working with migrations, we don't know anything about the
+// state of the database, so need to use the any type.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyDb = any;
 
 let cachedDb: unknown;
 

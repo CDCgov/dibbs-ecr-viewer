@@ -4,7 +4,7 @@ import {
   NewECRConditions,
   NewECRRuleSummaries,
 } from "@/app/api/services/types/common";
-import { dbDialect } from "@/app/data/db/utils/db-config";
+import { dbDialect } from "@/app/api/services/utils/db-config";
 
 /**
  * Creates an eCR condition object

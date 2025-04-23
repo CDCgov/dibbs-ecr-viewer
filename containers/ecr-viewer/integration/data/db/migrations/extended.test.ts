@@ -6,10 +6,13 @@ import { ColumnMetadata, MigrationInfo, TableMetadata } from "kysely";
 
 import { dateTimeType, dateTimeTypeTz } from "../../../helpers/common";
 import { buildExtended, dropExisting } from "../../../helpers/ddl";
+import { getMigrations } from "@/app/api/migrate-db/migrate";
 import { getDbRaw } from "@/app/api/services/database";
-import { schemaExistsByName, getTable } from "@/app/data/db/utils/db";
-import { dbNamespace } from "@/app/data/db/utils/db-config";
-import { getMigrations } from "@/app/data/db/utils/migrate";
+import { dbNamespace } from "@/app/api/services/utils/db-config";
+import {
+  schemaExistsByName,
+  getTable,
+} from "@/app/api/services/utils/db-metadata";
 
 describe("Extended Schema Migration Tests", () => {
   const db = getDbRaw();

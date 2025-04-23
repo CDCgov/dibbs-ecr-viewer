@@ -1,4 +1,4 @@
-import { hasPendingMigrations } from "@/app/data/db/utils/migrate";
+import { hasPendingMigrations } from "@/app/api/migrate-db/migrate";
 
 // Configuration does not require a database so we don't need to check for pending migrations
 if (!!process.env.METADATA_DATABASE_TYPE) {

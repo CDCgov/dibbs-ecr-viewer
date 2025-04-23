@@ -10,7 +10,7 @@ import {
 
 import { getDb } from "@/app/api/services/database";
 import { Core, NewCoreECR } from "@/app/api/services/types/core";
-import { dbDialect, dbNamespace } from "@/app/data/db/utils/db-config";
+import { dbDialect, dbNamespace } from "@/app/api/services/utils/db-config";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   CoreMetadataModel,

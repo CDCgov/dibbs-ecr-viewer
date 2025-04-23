@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { migrateUp } from "@/app/data/db/utils/migrate";
+import { migrateUp } from "./migrate";
 
 /**
  *

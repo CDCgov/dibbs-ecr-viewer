@@ -7,6 +7,7 @@ import { getDb } from "@/app/api/services/database";
 import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
+import { dbSchema } from "@/app/api/services/utils/db-config";
 import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
 import {
   deleteFromAzure,
@@ -14,7 +15,6 @@ import {
 } from "@/app/data/blobStorage/azureClient";
 import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
 import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
-import { dbSchema } from "@/app/data/db/utils/db-config";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
