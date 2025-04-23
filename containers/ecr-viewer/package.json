@@ -25,6 +25,7 @@
     "test:integration:sqlserver": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'METADATA_DATABASE_TYPE=sqlserver TEST_TYPE=integration TZ=America/New_York jest --runInBand --detectOpenHandles'",
     "test:e2e:install": "playwright install --with-deps",
     "test:e2e": "playwright test ./e2e/dual",
+    "test:e2e:migrations": "playwright test ./e2e/migrations.spec.ts --project chromium",
     "test:e2e:integrated": "playwright test ./e2e/integrated",
     "clear-local": "docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile \"*\" down -v",
     "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit'",
