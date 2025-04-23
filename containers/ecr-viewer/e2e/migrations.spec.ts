@@ -3,6 +3,14 @@ import { test, expect } from "@playwright/test";
 
 import { logInToKeycloak } from "./dual/utils";
 
+const toForm = (obj: Record<string, string>) => {
+  const form = new FormData();
+  for (const [k, v] of Object.entries(obj)) {
+    form.append(k, v);
+  }
+  return form;
+};
+
 test.describe("migrations", () => {
   test.beforeEach(logInToKeycloak);
 
@@ -17,21 +25,32 @@ test.describe("migrations", () => {
     ).toBeVisible();
     await expect(page.getByText("eCR Library")).not.toBeVisible();
 
-    const noConfirm = await request.post(`/ecr-viewer/api/migrate-db`);
-    expect(noConfirm.ok()).toBeFalsy();
-    expect(await noConfirm.json()).toEqual(
+    const noSecret = await request.post(`/ecr-viewer/api/migrate-db`);
+    expect(await noSecret.json()).toEqual(
       expect.objectContaining({
-        message: "Request did not have confirm=yes param, rejecting request",
+        message: "Validation error",
       }),
     );
+    expect(noSecret.ok()).toBeFalsy();
 
-    const confirm = await request.post(
-      `/ecr-viewer/api/migrate-db?confirm=yes`,
+    const wrongSecret = await request.post(`/ecr-viewer/api/migrate-db`, {
+      form: toForm({ migration_secret: "nope" }),
+    });
+    expect(await wrongSecret.json()).toEqual(
+      expect.objectContaining({
+        message:
+          "Request did not have expected migration secret. See server logs for expected value",
+      }),
     );
-    expect(confirm.ok()).toBeTruthy();
-    expect(await confirm.json()).toEqual(
+    expect(wrongSecret.ok()).toBeFalsy();
+
+    const up = await request.post(`/ecr-viewer/api/migrate-db`, {
+      form: toForm({ migration_secret: "test" }),
+    });
+    expect(await up.json()).toEqual(
       expect.objectContaining({ message: "success" }),
     );
+    expect(up.ok()).toBeTruthy();
 
     await page.goto("/ecr-viewer");
     await expect(
@@ -39,13 +58,13 @@ test.describe("migrations", () => {
     ).not.toBeVisible();
     await expect(page.getByText("eCR Library")).toBeVisible();
 
-    const down = await request.post(
-      `/ecr-viewer/api/migrate-db?confirm=yes&direction=down`,
-    );
-    expect(down.ok()).toBeTruthy();
+    const down = await request.post(`/ecr-viewer/api/migrate-db`, {
+      form: toForm({ migration_secret: "test", direction: "down" }),
+    });
     expect(await down.json()).toEqual(
       expect.objectContaining({ message: "success" }),
     );
+    expect(down.ok()).toBeTruthy();
 
     await page.goto("/ecr-viewer");
     await expect(

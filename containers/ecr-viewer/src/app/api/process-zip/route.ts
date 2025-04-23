@@ -29,12 +29,16 @@ export async function POST(request: NextRequest) {
     );
     return NextResponse.json(payload, { status });
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof z.ZodError || error instanceof TypeError) {
       return NextResponse.json(
-        { message: "Validation error", errors: error.errors },
+        {
+          message: "Validation error",
+          errors: error instanceof z.ZodError ? error.errors : "No form found",
+        },
         { status: 400 },
       );
     }
+
     console.error(error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }

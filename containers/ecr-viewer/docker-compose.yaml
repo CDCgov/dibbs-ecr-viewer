@@ -12,9 +12,10 @@ services:
     network_mode: host
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
-      - NBS_PUB_KEY=${NBS_PUB_KEY:-}
+      - NBS_PUB_KEY
       # METADATA DATABASE
       - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
+      - METADATA_DATABASE_MIGRATION_SECRET
       # SQL Server - backwards compat
       - SQL_SERVER_USER
       - SQL_SERVER_PASSWORD

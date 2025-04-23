@@ -230,5 +230,9 @@ namespace NodeJS {
      * @description Database type for metadata storage. This value is set by CONFIG_NAME.
      */
     METADATA_DATABASE_TYPE?: "postgres" | "sqlserver";
+    /**
+     * @description Secret needed to apply migrations via the `migrate-db` api route. If not set, a random UUID will be assigned by the application and logged to the server.
+     */
+    METADATA_DATABASE_MIGRATION_SECRET?: string;
   }
 }

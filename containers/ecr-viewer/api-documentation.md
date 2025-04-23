@@ -104,9 +104,9 @@ the state of the application. It can also be used to revert migrations and retur
 
 **URL** : `/ecr-viewer/api/migrate-db`
 
-**URL Parameters** :
+**POST Form Fields** :
 
-- `confirm=yes` confirm that you really want to migrate the database.
+- `migration_scret=[secret string]` confirmt that you have permission to perform migrations. The secret is logged to the server and can optionally be set to a known value via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable.
 - `direction=[up|down]` Optional. By default an `up` migration to the latest state will be applied. If `down` is passed, the database will be migrated downward one step at a time. This means it may take multiple calls to the database to revert back to the desired state.
 
 **Method** : `POST`
@@ -120,13 +120,16 @@ the state of the application. It can also be used to revert migrations and retur
 Migrate a DB to the latest state.
 
 ```sh
-curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db?confirm=yes'
+curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
+--form 'migration_secret=2889aa35-39d4-4bf3-a69b-aec69be1dbba'
 ```
 
 Roll back a DB migration one step.
 
 ```sh
-curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db?confirm=yes&direction=down'
+curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
+--form 'migration_secret=2889aa35-39d4-4bf3-a69b-aec69be1dbba' \
+--form 'direction=down'
 ```
 
 ### Success Response
