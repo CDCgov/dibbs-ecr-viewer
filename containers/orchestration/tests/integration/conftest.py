@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import pytest
+import requests
 from dotenv import load_dotenv
 from testcontainers.compose import DockerCompose
 
@@ -28,6 +29,10 @@ def setup(request):
     for port_number in port_number_strings:
         port = os.getenv(port_number)
         orchestration_service.wait_for(f"http://0.0.0.0:{port}")
+
+    # migrate db
+    rs = requests.post(os.getenv("ECR_VIEWER_URL") + "/api/migrate-db?confirm=yes")
+    assert rs.status_code == 200
 
     print("Orchestration etc. services ready to test!")
 
