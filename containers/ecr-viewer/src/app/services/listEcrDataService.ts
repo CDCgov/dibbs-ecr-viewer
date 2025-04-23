@@ -405,9 +405,7 @@ const getTotalCoreEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await (
-    await getDb<Core>()
-  )
+  const result = await getDb<Core>()
     .selectFrom("ecr_data")
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
@@ -423,9 +421,7 @@ const getTotalExtendedEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  const result = await (
-    await getDb<Extended>()
-  )
+  const result = await getDb<Extended>()
     .selectFrom("ecr_data")
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>

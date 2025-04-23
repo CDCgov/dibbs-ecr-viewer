@@ -65,7 +65,6 @@ const getCoreWhere = async (
   const start = `select from "${dbNamespace()}"."ecr_data" where `;
   return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };
 };
-// Tests rewritten to fit Kysely in following commit
 
 beforeAll(async () => {
   await buildCore();

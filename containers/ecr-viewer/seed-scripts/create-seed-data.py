@@ -5,6 +5,7 @@ import os
 import zipfile
 
 import grequests
+import requests as rqsts
 
 UPLOAD_URL = "http://host.docker.internal:3000/ecr-viewer/api/process-zip"
 MIGRATION_URL = "http://host.docker.internal:3000/ecr-viewer/api/migrate-db?confirm=yes"
@@ -43,8 +44,8 @@ def _process_files():
     subfolders = subfolders_raw.split(",")
 
     print("Requesting db migration...")
-    rs = grequests.map([grequests.post(MIGRATION_URL)])
-    assert rs[0].status_code == 200
+    rs = rqsts.post(MIGRATION_URL)
+    assert rs.status_code == 200
 
     requests = []
     folder_paths = []

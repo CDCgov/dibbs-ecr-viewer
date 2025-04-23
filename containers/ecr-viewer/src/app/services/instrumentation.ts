@@ -5,8 +5,7 @@ if (!!process.env.METADATA_DATABASE_TYPE) {
   hasPendingMigrations().then((hasPending: boolean) => {
     if (hasPending) {
       console.error(
-        // TODO add the route instructions ehre
-        "Pending migrations detected. Please run the migration command.",
+        "Pending migrations detected. Please submit a POST request to `/ecr-viewer/api/migrate-db?confirm=yes` to migrate the database to the expected state.",
       );
     }
   });

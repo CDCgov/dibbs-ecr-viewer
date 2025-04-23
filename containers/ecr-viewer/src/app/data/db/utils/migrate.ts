@@ -24,30 +24,11 @@ const getMigrator = () => {
 };
 
 /**
- * Executes a migration operation (up or down).
- * @param command "up" or "down".
- * @param target Optional migration name to migrate to.
+ * Applies all pending migrations.
  */
-async function executeMigration(
-  command: "up" | "down",
-  target?: string,
-): Promise<void> {
+export async function migrateUp(): Promise<void> {
   const migrator = getMigrator();
-
-  let result;
-  if (command === "up") {
-    result = await migrator.migrateToLatest();
-  } else if (command === "down") {
-    if (target) {
-      result = await migrator.migrateTo(
-        target === "all" ? NO_MIGRATIONS : target,
-      );
-    } else {
-      result = await migrator.migrateDown();
-    }
-  } else {
-    throw new Error(`Unknown migration command: ${command}`);
-  }
+  const result = await migrator.migrateToLatest();
 
   if (result.error) {
     throw result.error;
@@ -55,18 +36,24 @@ async function executeMigration(
 }
 
 /**
- * Applies all pending migrations.
- */
-export async function migrateUp(): Promise<void> {
-  await executeMigration("up");
-}
-
-/**
  * Reverts migrations.
  * @param migrationTarget Optional name of migration to migrate down to (exclusive). If empty, reverts the most recent migration. To migrate all the way down, use argument "all"
  */
 export async function migrateDown(migrationTarget?: string): Promise<void> {
-  await executeMigration("down", migrationTarget);
+  const migrator = getMigrator();
+
+  let result;
+  if (migrationTarget) {
+    result = await migrator.migrateTo(
+      migrationTarget === "all" ? NO_MIGRATIONS : migrationTarget,
+    );
+  } else {
+    result = await migrator.migrateDown();
+  }
+
+  if (result.error) {
+    throw result.error;
+  }
 }
 
 /**
@@ -96,6 +83,7 @@ export async function hasPendingMigrations(): Promise<boolean> {
   return executedMigrations.length < allMigrations.length;
 }
 
+// helper to add a postfix to each key in the record
 const addKeyPostfix = <T>(obj: Record<string, T>, postfix: string) => {
   return Object.entries(obj).reduce(
     (acc, [k, v]) => {
@@ -106,6 +94,10 @@ const addKeyPostfix = <T>(obj: Record<string, T>, postfix: string) => {
   );
 };
 
+// Custom migration provider that selects the correct imported migrations
+// based on the schema and makes sure the migrations are named appropriately.
+// NOTE: migrations are run in alphanumeric sort order, so make sure that
+// migrations to common are run before schema migrations of the same file name
 class EcrViewerMigrationProvider implements MigrationProvider {
   readonly #props: EcrViewerMigrationProviderProps;
 

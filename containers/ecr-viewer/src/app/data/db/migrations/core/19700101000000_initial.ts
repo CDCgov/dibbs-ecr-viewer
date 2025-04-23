@@ -11,8 +11,8 @@ import { AnyDb } from "@/app/data/db/utils/types";
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
-  if (dbSchema() === "extended") {
-    console.log("Extended schema detected. Skipping core migration.");
+  if (dbSchema() !== "core") {
+    console.log(`${dbSchema()} schema detected. Skipping core migration.`);
     return;
   }
 
@@ -46,8 +46,12 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
-  await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
-  await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
-  await _db.schema.dropTable("ecr_data").ifExists().execute();
-  await _db.schema.dropSchema(dbNamespace()).ifExists().execute();
+  await _db.schema
+    .alterTable("ecr_data")
+    .dropColumn("data_source")
+    .dropColumn("patient_name_first")
+    .dropColumn("patient_name_last")
+    .dropColumn("patient_birth_date")
+    .dropColumn("report_date")
+    .execute();
 }

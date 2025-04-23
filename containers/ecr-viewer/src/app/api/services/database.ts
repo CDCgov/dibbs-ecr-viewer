@@ -54,13 +54,13 @@ export async function metadataDatabaseHealthCheck(): Promise<
     return undefined;
   }
 
-  let db: Kysely<Common> | null = null;
   try {
-    db = getDb<Common>();
-    await db.connection().execute(async () => {});
+    await getDb<Common>()
+      .connection()
+      .execute(async () => {});
     return "UP";
-  } catch (error) {
-    console.error("Database health check failed:", error);
+  } catch (error: unknown) {
+    console.error("Database health check failed: ", error);
     return "DOWN";
   }
 }

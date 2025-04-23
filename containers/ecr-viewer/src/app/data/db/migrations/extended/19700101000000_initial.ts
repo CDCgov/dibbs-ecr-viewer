@@ -11,8 +11,8 @@ import { AnyDb } from "@/app/data/db/utils/types";
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
-  if (dbSchema() === "core") {
-    console.log("Core schema detected. Skipping extended migration.");
+  if (dbSchema() !== "extended") {
+    console.log(`${dbSchema()} schema detected. Skipping extended migration.`);
     return;
   }
 
@@ -116,9 +116,40 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
   await _db.schema.dropTable("ecr_labs").ifExists().execute();
-  await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
-  await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
   await _db.schema.dropTable("patient_address").ifExists().execute();
-  await _db.schema.dropTable("ecr_data").ifExists().execute();
-  await _db.schema.dropSchema(dbNamespace()).ifExists().execute();
+  await _db.schema
+    .alterTable("ecr_data")
+    .dropColumn("last_name")
+    .dropColumn("first_name")
+    .dropColumn("birth_date")
+    .dropColumn("gender")
+    .dropColumn("birth_sex")
+    .dropColumn("gender_identity")
+    .dropColumn("race")
+    .dropColumn("ethnicity")
+    .dropColumn("latitude")
+    .dropColumn("longitude")
+    .dropColumn("homelessness_status")
+    .dropColumn("disabilities")
+    .dropColumn("tribal_affiliation")
+    .dropColumn("tribal_enrollment_status")
+    .dropColumn("current_job_title")
+    .dropColumn("current_job_industry")
+    .dropColumn("usual_occupation")
+    .dropColumn("usual_industry")
+    .dropColumn("preferred_language")
+    .dropColumn("pregnancy_status")
+    .dropColumn("rr_id")
+    .dropColumn("processing_status")
+    .dropColumn("authoring_date")
+    .dropColumn("authoring_provider")
+    .dropColumn("provider_id")
+    .dropColumn("facility_id")
+    .dropColumn("facility_name")
+    .dropColumn("encounter_type")
+    .dropColumn("encounter_start_date")
+    .dropColumn("encounter_end_date")
+    .dropColumn("reason_for_visit")
+    .dropColumn("active_problems")
+    .execute();
 }

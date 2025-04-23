@@ -4,10 +4,6 @@ import { Extended } from "@/app/api/services/types/extended";
 import { dbSchema } from "@/app/data/db/utils/db-config";
 import { migrateDown, migrateUp } from "@/app/data/db/utils/migrate";
 
-// Use unvalidated database connections for schema operations
-const extdb = () => getDb<Extended>();
-const commondb = () => getDb<Common>();
-
 /**
  * Drops the common schema tables
  */
@@ -23,7 +19,7 @@ export const dropExisting = async () => {
  * Clears the common schema tables
  */
 const clearCommon = async () => {
-  const db = commondb();
+  const db = getDb<Common>();
   await db.deleteFrom("ecr_rr_rule_summaries").execute();
   await db.deleteFrom("ecr_rr_conditions").execute();
   await db.deleteFrom("ecr_data").execute();
@@ -42,8 +38,9 @@ export const buildExtended = async () => {
  * Clears the extended schema tables on a test database
  */
 export const clearExtended = async () => {
-  await extdb().deleteFrom("patient_address").execute();
-  await extdb().deleteFrom("ecr_labs").execute();
+  const db = getDb<Extended>();
+  await db.deleteFrom("patient_address").execute();
+  await db.deleteFrom("ecr_labs").execute();
   await clearCommon();
 };
 

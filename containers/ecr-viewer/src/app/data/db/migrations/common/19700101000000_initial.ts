@@ -33,9 +33,9 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     "ecr_rr_rule_summaries",
   ].every((table) => tables.includes(table));
 
-  const _db = db.withSchema(schema);
-
   if (!tablesExist) {
+    const _db = db.withSchema(schema);
+
     await _db.schema
       .createTable("ecr_data")
       .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())

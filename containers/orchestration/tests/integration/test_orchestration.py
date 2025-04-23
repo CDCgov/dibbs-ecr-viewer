@@ -11,21 +11,6 @@ from starlette.testclient import TestClient
 from app.config import get_settings
 from app.main import app
 
-# @pytest.fixture
-# def clean_up_db():
-#     """
-#     Removes the test data that is inserted during testing to ensure idempotency.
-#     """
-#     connection_string = os.environ.get("DATABASE_URL").replace("@db", "@localhost")
-#     dbconn = psycopg2.connect(connection_string)
-#     cursor = dbconn.cursor()
-#     query = "DELETE FROM fhir;"
-#     cursor.execute(query)
-#     dbconn.commit()
-#     cursor.close()
-#     dbconn.close()
-
-
 get_settings()
 
 ORCHESTRATION_URL = "http://localhost:8080"
