@@ -28,7 +28,7 @@ describe("Common Schema Migration Tests", () => {
 
   // Schema-level tests
   describe("Schema", () => {
-    it("should exist with name 'common'", async () => {
+    it("should exist", async () => {
       const exists = await schemaExistsByName(db, schema);
       expect(exists).toBe(true);
     });

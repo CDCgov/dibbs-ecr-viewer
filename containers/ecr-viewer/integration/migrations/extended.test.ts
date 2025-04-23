@@ -28,7 +28,7 @@ describe("Extended Schema Migration Tests", () => {
 
   // Schema-level tests
   describe("Schema", () => {
-    it("should exist with name 'extended'", async () => {
+    it("should exist", async () => {
       const exists = await schemaExistsByName(db, schema);
       expect(exists).toBe(true);
     });
