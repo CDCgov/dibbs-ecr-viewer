@@ -76,4 +76,16 @@ export const GenericError = ({ children }: { children?: React.ReactNode }) => (
   </ErrorPage>
 );
 
+/**
+ * @returns The metadata db invalid error page JSX component.
+ */
+export const MetadataDbInvalid = () => (
+  <ErrorPage title="eCR Viewer setup is incomplete">
+    <p>
+      The database backing this page isn't fully set up. Reach out to your eCR
+      Viewer admin to complete setup.
+    </p>
+  </ErrorPage>
+);
+
 export default ErrorPage;

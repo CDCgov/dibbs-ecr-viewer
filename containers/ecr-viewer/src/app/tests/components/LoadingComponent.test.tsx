@@ -8,6 +8,9 @@ import { EcrLoadingSkeleton } from "@/app/view-data/components/LoadingComponent"
 jest.mock("../../components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
 }));
+jest.mock("next/navigation", () => ({
+  usePathname: jest.fn().mockReturnValue("/view-data"),
+}));
 
 describe("Snapshot test for EcrLoadingSkeleton", () => {
   let container: HTMLElement;
