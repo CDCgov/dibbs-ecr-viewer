@@ -97,15 +97,15 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
+beforeAll(async () => {
+  await buildExtended();
+});
+
+afterAll(async () => {
+  await dropExisting();
+});
+
 describe("saveFhirData - extended", () => {
-  beforeAll(async () => {
-    await buildExtended();
-  });
-
-  afterAll(async () => {
-    await dropExisting();
-  });
-
   afterEach(async () => {
     await clearExtended();
   });

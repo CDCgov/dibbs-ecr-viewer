@@ -14,17 +14,17 @@ import {
   getTable,
 } from "@/app/api/services/utils/db-metadata";
 
+beforeAll(async () => {
+  await buildCore(); // Build the core schema
+});
+
+afterAll(async () => {
+  await dropExisting(); // Drop the core schema
+});
+
 describe("Common Schema Migration Tests", () => {
   const db = getDbRaw();
   const schema = dbNamespace();
-
-  beforeAll(async () => {
-    await buildCore(); // Build the core schema
-  });
-
-  afterAll(async () => {
-    await dropExisting(); // Drop the core schema
-  });
 
   // Schema-level tests
   describe("Schema", () => {

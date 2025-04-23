@@ -28,7 +28,7 @@ export async function createEcrCondition(
 export async function createEcrRule(
   rule_summary: NewECRRuleSummaries,
 ): Promise<void> {
-  await await getDb<Common>()
+  await getDb<Common>()
     .insertInto("ecr_rr_rule_summaries")
     .values(rule_summary)
     .execute();

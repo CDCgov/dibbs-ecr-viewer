@@ -7,9 +7,16 @@ import { getAllConditions } from "@/app/data/conditions";
 import { createEcrCondition } from "./helpers/common";
 import { buildCore, dropExisting } from "./helpers/ddl";
 
+beforeAll(async () => {
+  await buildCore();
+});
+
+afterAll(async () => {
+  await dropExisting();
+});
+
 describe("Conditions service", () => {
-  beforeAll(async () => {
-    await buildCore();
+  it("Should retrieve all unique conditions", async () => {
     await createEcrCondition({
       eicr_id: "12345",
       uuid: "12345",
@@ -20,13 +27,7 @@ describe("Conditions service", () => {
       uuid: "54321",
       condition: "condition2",
     });
-  });
 
-  afterAll(async () => {
-    await dropExisting();
-  });
-
-  it("Should retrieve all unique conditions", async () => {
     const conditions = await getAllConditions();
     expect(conditions).toStrictEqual(["condition1", "condition2"]);
   });
