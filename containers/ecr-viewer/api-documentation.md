@@ -96,3 +96,51 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-zip' \
 **Code** : `409 CONFLICT`
 
 **Content** : `message` with details on error
+
+## Migrate Metadata Database
+
+Migrate the metadata database if needed. Typically, this is done to bring the database up to date with
+the state of the application. It can also be used to revert migrations and return the database to a prior state.
+
+**URL** : `/ecr-viewer/api/migrate-db`
+
+**URL Parameters** :
+
+- `confirm=yes` confirm that you really want to migrate the database.
+- `direction=[up|down]` Optional. By default an `up` migration to the latest state will be applied. If `down` is passed, the database will be migrated downward one step at a time. This means it may take multiple calls to the database to revert back to the desired state.
+
+**Method** : `POST`
+
+**Auth required** : Coming Soon
+
+**Permissions required** : None
+
+### Example
+
+Migrate a DB to the latest state.
+
+```sh
+curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db?confirm=yes'
+```
+
+Roll back a DB migration one step.
+
+```sh
+curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db?confirm=yes&direction=down'
+```
+
+### Success Response
+
+**Condition** : migration was succesfully applied.
+
+**Code** : `200 OK`
+
+**Content** : `message`
+
+### Error Responses
+
+**Condition** : URL parameters were invalid
+
+**Code** : `400`
+
+**Content** : `message` with details on error

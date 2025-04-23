@@ -7,7 +7,7 @@ import {
 } from "kysely";
 
 import { getDbRaw } from "@/app/api/services/database";
-import { dbSchema } from "@/app/api/services/utils/db-config";
+import { dbNamespace, dbSchema } from "@/app/api/services/utils/db-config";
 
 import commonMigrations from "./migrations/common";
 import coreMigrations from "./migrations/core";
@@ -17,6 +17,8 @@ const getMigrator = () => {
   const db = getDbRaw();
   return new Migrator({
     db,
+    migrationTableName: `${dbNamespace()}_schema_migration`,
+    migrationLockTableName: `${dbNamespace()}_schema_migration_lock`,
     provider: new EcrViewerMigrationProvider({
       schema: dbSchema()!,
     }),
