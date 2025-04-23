@@ -82,7 +82,7 @@ export async function hasPendingMigrations(): Promise<boolean> {
   const executedMigrations = allMigrations
     .filter((m) => m.executedAt)
     .map((m) => m.name);
-  return executedMigrations.length < allMigrations.length;
+  return executedMigrations.length !== allMigrations.length;
 }
 
 // helper to add a postfix to each key in the record

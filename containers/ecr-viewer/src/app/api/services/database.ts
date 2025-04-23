@@ -48,11 +48,12 @@ export const getDb = <T>() => {
 
 /**
  * Performs a health check on the database connection.
+ * @param silent Optionally silence the console errors if database not healthy
  * @returns The status of the database connection: "UP" or "DOWN".
  */
-export async function metadataDatabaseHealthCheck(): Promise<
-  string | undefined
-> {
+export async function metadataDatabaseHealthCheck(
+  silent: boolean = false,
+): Promise<string | undefined> {
   if (!dbDialect()) {
     return undefined;
   }
@@ -63,7 +64,30 @@ export async function metadataDatabaseHealthCheck(): Promise<
       .execute(async () => {});
     return "UP";
   } catch (error: unknown) {
-    console.error("Database health check failed: ", error);
+    !silent && console.error("Database health check failed: ", error);
     return "DOWN";
   }
+}
+
+/**
+ * @returns whether the database is up or undefined if no database
+ */
+export async function waitForMetadataDatabase(): Promise<boolean | undefined> {
+  if (!dbDialect()) {
+    return undefined;
+  }
+
+  let attempts = 10;
+
+  while (attempts > 0) {
+    attempts -= 1;
+
+    const status = await metadataDatabaseHealthCheck(true);
+    if (status === "UP") return true;
+
+    // sleep for 2 seconds
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+
+  return false;
 }
