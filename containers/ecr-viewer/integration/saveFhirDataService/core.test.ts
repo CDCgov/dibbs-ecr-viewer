@@ -2,13 +2,12 @@
  * @jest-environment node
  */
 
+import { buildCore, clearCore, dropExisting } from "../helpers/ddl";
 import { saveFhirMetadata } from "@/app/api/save-fhir-data/save-fhir-data-service";
 import { BundleMetadata } from "@/app/api/save-fhir-data/types";
 import { getDb } from "@/app/api/services/database";
 import { Core } from "@/app/api/services/types/core";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
-
-import { buildCore, clearCore, dropExisting } from "./helpers/ddl";
 
 const baseCoreMetadata: BundleMetadata = {
   last_name: "lname",
@@ -32,7 +31,7 @@ afterAll(async () => {
   await dropExisting();
 });
 
-describe("core", () => {
+describe("saveFhirData - core", () => {
   afterEach(async () => {
     await clearCore();
   });

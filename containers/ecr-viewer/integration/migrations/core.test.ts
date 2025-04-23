@@ -4,8 +4,8 @@
 
 import { ColumnMetadata, MigrationInfo, TableMetadata } from "kysely";
 
-import { dateTimeTypeTz } from "../../../helpers/common";
-import { buildCore, dropExisting } from "../../../helpers/ddl";
+import { dateTimeTypeTz } from "../helpers/common";
+import { buildCore, dropExisting } from "../helpers/ddl";
 import { getMigrations } from "@/app/api/migrate-db/migrate";
 import { getDbRaw } from "@/app/api/services/database";
 import { dbNamespace } from "@/app/api/services/utils/db-config";

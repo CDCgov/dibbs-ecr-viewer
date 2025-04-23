@@ -2,13 +2,12 @@
  * @jest-environment node
  */
 
+import { buildExtended, clearExtended, dropExisting } from "../helpers/ddl";
 import { saveFhirMetadata } from "@/app/api/save-fhir-data/save-fhir-data-service";
 import { BundleExtendedMetadata } from "@/app/api/save-fhir-data/types";
 import { getDb } from "@/app/api/services/database";
 import { Extended } from "@/app/api/services/types/extended";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
-
-import { buildExtended, clearExtended, dropExisting } from "./helpers/ddl";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
   patient_id: "12345",
@@ -98,7 +97,7 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
-describe("extended", () => {
+describe("saveFhirData - extended", () => {
   beforeAll(async () => {
     await buildExtended();
   });
