@@ -1,7 +1,7 @@
 import { getDb } from "@/app/api/services/database";
 import {
   Core,
-  NewECR,
+  NewCoreECR,
   NewECRConditions,
   NewECRRuleSummaries,
 } from "@/app/api/services/types/core";
@@ -12,7 +12,7 @@ import { dbDialect } from "@/app/api/services/utils/db-config";
  * @param ecr - the NewECR to be persisted
  * @returns promise
  */
-export async function createCoreEcr(ecr: NewECR): Promise<void> {
+export async function createCoreEcr(ecr: NewCoreECR): Promise<void> {
   await getDb<Core>().insertInto("ecr_data").values(ecr).execute();
 }
 

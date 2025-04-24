@@ -1,10 +1,4 @@
-import {
-  ColumnType,
-  Generated,
-  Insertable,
-  Selectable,
-  Updateable,
-} from "kysely";
+import { ColumnType, Generated, Insertable, Selectable } from "kysely";
 
 import { Core, ecr_data } from "./core";
 
@@ -85,15 +79,12 @@ export interface ecr_labs {
 
 export type ExtendedECR = Selectable<extended_ecr_data>;
 export type NewExtendedECR = Insertable<extended_ecr_data>;
-export type ExtendedECRUpdate = Updateable<extended_ecr_data>;
 
 export type PatientAddress = Selectable<patient_address>;
 export type NewPatientAddress = Insertable<patient_address>;
-export type PatientAddressUpdate = Updateable<patient_address>;
 
 export type ECRLabs = Selectable<ecr_labs>;
 export type NewECRLabs = Insertable<ecr_labs>;
-export type ECRLabsUpdate = Updateable<ecr_labs>;
 
 export interface Extended extends Core {
   ecr_data: extended_ecr_data;

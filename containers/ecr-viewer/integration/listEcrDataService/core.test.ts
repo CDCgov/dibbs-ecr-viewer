@@ -15,7 +15,7 @@ import {
 } from "../helpers/core";
 import { buildCore, dropExisting, clearCore } from "../helpers/ddl";
 import { getDb } from "@/app/api/services/database";
-import { Core, NewECR } from "@/app/api/services/types/core";
+import { Core, NewCoreECR } from "@/app/api/services/types/core";
 import { dbDialect, dbNamespace } from "@/app/api/services/utils/db-config";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
@@ -35,7 +35,7 @@ const testDateRange = {
   endDate: new Date("12-03-2024"),
 };
 
-const coreTemplate: NewECR = {
+const coreTemplate: NewCoreECR = {
   eicr_id: "12345",
   set_id: "123",
   fhir_reference_link: "",
