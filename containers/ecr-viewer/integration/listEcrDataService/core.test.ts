@@ -16,7 +16,7 @@ import {
 import { buildCore, dropExisting, clearCore } from "../helpers/ddl";
 import { getDb } from "@/app/api/services/database";
 import { Core, NewCoreECR } from "@/app/api/services/types/core";
-import { dbDialect, dbNamespace } from "@/app/api/services/utils/db-config";
+import { dbNamespace } from "@/app/api/services/utils/db-config";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   MetadataModel,
@@ -201,10 +201,7 @@ describe("listEcrData - core", () => {
         patient_date_of_birth: "12/01/2024",
         patient_first_name: "Billy",
         patient_last_name: "Bob",
-        patient_report_date:
-          dbDialect() === "sqlserver"
-            ? "12/01/2024 7:00\u00A0PM\u00A0EST"
-            : "12/02/2024 7:00\u00A0AM\u00A0EST",
+        patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
         rule_summaries: ["Rule1"],
         eicr_set_id: "123",
