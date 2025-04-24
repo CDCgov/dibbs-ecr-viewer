@@ -115,7 +115,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     fhirPathMappings.eICRProcessingStatusReason,
   );
 
-  function geteRSDTextList(
+  function geteRSDWarning(
     processingStatus: string | undefined,
     reasonObs: Observation | undefined,
   ): ERSDWarning | JSX.Element {
@@ -126,14 +126,14 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     }
 
     const coding = reasonObs.valueCodeableConcept?.coding?.[0];
-    const warningCode = coding?.code;
+    const warningCode = coding?.code ?? "";
     const warningName =
-      coding?.display || eicrProcessingReasonMap[warningCode ?? ""] || "";
+      coding?.display || eicrProcessingReasonMap[warningCode] || "";
 
     let versionUsed: string | undefined;
     let versionExpected: string | undefined;
 
-    (reasonObs.component ?? []).forEach((component) => {
+    reasonObs.component?.forEach((component) => {
       const detailVal = component.valueString;
       const detailCode = component.code?.coding?.[0]?.code;
       const detailDisplay = component.code?.coding?.[0]?.display;
@@ -151,17 +151,17 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     return warningName || versionUsed || versionExpected || warningCode
       ? {
           warning: warningName ?? noData,
-          versionUsed: versionUsed ? versionUsed : noData,
-          versionExpected: versionExpected ? versionExpected : noData,
+          versionUsed: versionUsed || noData,
+          versionExpected: versionExpected || noData,
           suggestedSolution:
-            ersdWarningsSuggestedSolutionsMap[warningCode ?? ""] ?? noData,
+            ersdWarningsSuggestedSolutionsMap[warningCode] ?? noData,
         }
       : {};
   }
 
-  const eRSDTextList: ERSDWarning | JSX.Element = geteRSDTextList(
+  const eRSDWarning: ERSDWarning | JSX.Element = geteRSDWarning(
     fhirEICRProcessingStatus,
-    fhirEICRProcessingStatusReasonObs,
+    fhirEICRProcessingStatusReasonObs
   );
 
   const eicrDetails: DisplayDataProps[] = [
@@ -216,9 +216,9 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
     rrDetails: reportableConditionsList,
-    eRSDWarnings: eRSDTextList,
+    eRSDWarnings: eRSDWarning,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details),
+      evaluateData(details)
     ),
   };
 };
