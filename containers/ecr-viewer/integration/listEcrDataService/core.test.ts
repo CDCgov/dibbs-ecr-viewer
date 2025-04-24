@@ -152,10 +152,6 @@ describe("process Metadata", () => {
 });
 
 describe("listEcrData - core", () => {
-  beforeAll(async () => {
-    await clearCore();
-  });
-
   it("should return empty array when no data is found", async () => {
     const startIndex = 0;
     const itemsPerPage = 25;
@@ -303,20 +299,23 @@ describe("generate search statement", () => {
 
 describe("generate filter conditions statement", () => {
   it("should add conditions in the filter statement", async () => {
+    const conditions = ["Condition1", "Condition2"];
     const { sql, params } = await getWhere((eb) =>
-      generateFilterConditionsStatement(eb, ["Anthrax (disorder)"]),
+      generateFilterConditionsStatement(eb, conditions),
     );
+
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and "erc_sub"."condition" ilike $1))',
+        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2)))',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @1))',
+        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
       );
     }
-    expect(params).toStrictEqual(["%Anthrax (disorder)%"]);
+    expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
   });
+
   it("should only look for eCRs with no conditions when de-selecting all conditions on filter", async () => {
     const { sql, params } = await getWhere((eb) =>
       generateFilterConditionsStatement(eb, [""]),
@@ -333,6 +332,19 @@ describe("generate filter conditions statement", () => {
 
     expect(params).toStrictEqual([]);
   });
+
+  it("should return TRUE if no conditions are provided", async () => {
+    const { sql, params } = await getWhere((eb) =>
+      generateFilterConditionsStatement(eb),
+    );
+    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+      expect(sql).toEqual("$1 = $2");
+    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+      expect(sql).toEqual("@1 = @2");
+    }
+    expect(params).toStrictEqual([true, true]);
+  });
+
   it("should add date range in the filter statement", async () => {
     const { sql, params } = await getWhere((eb) =>
       generateFilterDateStatement(eb, testDateRange),
@@ -352,6 +364,7 @@ describe("generate filter conditions statement", () => {
       testDateRange.endDate,
     ]);
   });
+
   it("should display all conditions in date range by default if no filter has been added", async () => {
     const { sql, params } = await getWhere((eb) =>
       generateWhereStatement(eb, testDateRange, "", undefined),
@@ -446,94 +459,3 @@ describe("generate where statement", () => {
     ]);
   });
 });
-
-describe("generate Kysely search statement", () => {
-  it("should return an OR condition for search term", async () => {
-    const { sql, params } = await getWhere((eb) =>
-      generateSearchStatement(eb, "John"),
-    );
-
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2)',
-      );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2)',
-      );
-    }
-    expect(params).toStrictEqual(["%John%", "%John%"]);
-  });
-
-  it("should return TRUE if no search term is provided", async () => {
-    const { sql, params } = await getWhere((eb) => generateSearchStatement(eb));
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual("$1 = $2");
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual("@1 = @2");
-    }
-    expect(params).toStrictEqual([true, true]);
-  });
-});
-
-describe("generate Kysely filter conditions statement", () => {
-  it("should generate an EXISTS subquery when conditions are provided", async () => {
-    const conditions = ["Condition1", "Condition2"];
-    const { sql, params } = await getWhere((eb) =>
-      generateFilterConditionsStatement(eb, conditions),
-    );
-
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2)))',
-      );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
-      );
-    }
-    expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
-  });
-
-  it("should return TRUE if no conditions are provided", async () => {
-    const { sql, params } = await getWhere((eb) =>
-      generateFilterConditionsStatement(eb),
-    );
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual("$1 = $2");
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual("@1 = @2");
-    }
-    expect(params).toStrictEqual([true, true]);
-  });
-});
-
-describe("generate Kysely where statement", () => {
-  it("should return a valid WHERE clause with all conditions", async () => {
-    const { sql, params } = await getWhere((eb) =>
-      generateWhereStatement(eb, testDateRange, "John Doe", [
-        "Condition1",
-        "Condition2",
-      ]),
-    );
-
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2) and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $5 or "erc_sub"."condition" ilike $6))))',
-      );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2) and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @5 or "erc_sub"."condition" like @6))))',
-      );
-    }
-    expect(params).toStrictEqual([
-      "%John Doe%",
-      "%John Doe%",
-      testDateRange.startDate,
-      testDateRange.endDate,
-      "%Condition1%",
-      "%Condition2%",
-    ]);
-  });
-});
-// });
