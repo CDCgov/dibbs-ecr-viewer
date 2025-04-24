@@ -6,7 +6,10 @@ import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
-import { ERSDWarning, evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
+import {
+  ERSDWarning,
+  evaluateEcrMetadata,
+} from "@/app/services/ecrMetadataService";
 import { noData } from "@/app/utils/data-utils";
 import { eICRProcessingSuccessMsg } from "@/app/view-data/components/EcrMetadata";
 
@@ -206,11 +209,11 @@ describe("Evaluate Ecr Metadata", () => {
       ],
     };
     const actual = evaluateEcrMetadata(
-      BundleErsdWarningNoReason as unknown as Bundle
+      BundleErsdWarningNoReason as unknown as Bundle,
     );
-    console.log(actual.eRSDWarning)
+    console.log(actual.eRSDWarning);
     expect((actual.eRSDWarning as ERSDWarning).warning).toEqual(
-      "eICR processed with a warning or error (unknown)"
+      "eICR processed with a warning or error (unknown)",
     );
     expect((actual.eRSDWarning as ERSDWarning).versionUsed).toEqual(noData);
   });

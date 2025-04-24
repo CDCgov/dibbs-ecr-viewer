@@ -168,7 +168,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
   const eRSDWarning: ERSDWarning | JSX.Element = geteRSDWarning(
     fhirEICRProcessingStatus,
-    fhirEICRProcessingStatusReasonObs
+    fhirEICRProcessingStatusReasonObs,
   );
 
   const eicrDetails: DisplayDataProps[] = [
@@ -225,7 +225,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     rrDetails: reportableConditionsList,
     eRSDWarning,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details)
+      evaluateData(details),
     ),
   };
 };
