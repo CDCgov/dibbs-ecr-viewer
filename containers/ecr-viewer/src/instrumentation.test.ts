@@ -19,13 +19,23 @@ describe("register and and setupConfigurationVariables", () => {
     expect(process.env.SOURCE).toBe("s3");
   });
 
+  it("should respect METADATA_DATABASE_SCHEMA configuration variable if set", async () => {
+    process.env.CONFIG_NAME = "AWS_PG_NON_INTEGRATED";
+    process.env.METADATA_DATABASE_SCHEMA = "core";
+    await register();
+
+    expect(process.env.SOURCE).toBe("s3");
+    expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
+    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
+  });
+
   it("should set AWS_PG_NON_INTEGRATED configuration variables", async () => {
     process.env.CONFIG_NAME = "AWS_PG_NON_INTEGRATED";
     await register();
 
     expect(process.env.SOURCE).toBe("s3");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
-    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
+    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
   });
 
   it("should set AWS_SQLSERVER_NON_INTEGRATED configuration variables", async () => {
@@ -43,7 +53,7 @@ describe("register and and setupConfigurationVariables", () => {
 
     expect(process.env.SOURCE).toBe("s3");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
-    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
+    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
   });
 
   it("should set AWS_SQLSERVER_DUAL configuration variables", async () => {
@@ -68,7 +78,7 @@ describe("register and and setupConfigurationVariables", () => {
 
     expect(process.env.SOURCE).toBe("azure");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
-    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
+    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
   });
 
   it("should set AZURE_SQLSERVER_NON_INTEGRATED configuration variables", async () => {
@@ -86,7 +96,7 @@ describe("register and and setupConfigurationVariables", () => {
 
     expect(process.env.SOURCE).toBe("azure");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
-    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
+    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
   });
 
   it("should set AZURE_SQLSERVER_DUAL configuration variables", async () => {
@@ -111,7 +121,7 @@ describe("register and and setupConfigurationVariables", () => {
 
     expect(process.env.SOURCE).toBe("gcp");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
-    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
+    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
   });
 
   it("should set GCP_SQLSERVER_NON_INTEGRATED configuration variables", async () => {
@@ -129,7 +139,7 @@ describe("register and and setupConfigurationVariables", () => {
 
     expect(process.env.SOURCE).toBe("gcp");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
-    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("core");
+    expect(process.env.METADATA_DATABASE_SCHEMA).toBe("extended");
   });
 
   it("should set GCP_SQLSERVER_DUAL configuration variables", async () => {
