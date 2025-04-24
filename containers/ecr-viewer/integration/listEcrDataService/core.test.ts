@@ -12,7 +12,7 @@ import {
   createCoreEcr,
   createEcrCondition,
   createEcrRule,
-} from "../helpers/common";
+} from "../helpers/core";
 import { buildCore, dropExisting, clearCore } from "../helpers/ddl";
 import { getDb } from "@/app/api/services/database";
 import { Core, NewECR } from "@/app/api/services/types/core";

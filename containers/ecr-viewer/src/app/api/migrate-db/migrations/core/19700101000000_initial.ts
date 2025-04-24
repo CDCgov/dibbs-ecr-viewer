@@ -45,10 +45,10 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
       .addColumn("set_id", "varchar(255)")
       .addColumn("eicr_version_number", "varchar(50)")
       .addColumn("fhir_reference_link", "varchar(255)")
-      .addColumn("first_name", "varchar(100)")
-      .addColumn("last_name", "varchar(100)")
-      .addColumn("birth_date", getSql("datetimeType"))
-      .addColumn("encounter_start_date", "date", (cb) => cb.notNull())
+      .addColumn("last_name", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("first_name", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("birth_date", "date", (cb) => cb.notNull())
+      .addColumn("encounter_start_date", getSql("datetimeType"))
       .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
         cb.notNull().defaultTo(getSql("now")),
       )
