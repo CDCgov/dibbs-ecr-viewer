@@ -77,6 +77,11 @@ html {
   flex: 0 1 auto;
   width: 190px;
   font-weight: bold;
+
+  // .data-title takes precedence over text-normal by default
+  &.text-normal {
+    font-weight: revert;
+  }
 }
 .table-header {
   background-color: #f0f0f0 !important;
