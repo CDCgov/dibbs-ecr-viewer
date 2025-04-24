@@ -204,7 +204,7 @@ def test_previous_response_mapping_for_ecr_viewer(setup, clean_up_db):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "non-integrated-extended.json",
+            "config_file_name": "non-integrated-core.json",
         }
         files = {"upload_file": ("file.zip", file)}
         orchestration_response = httpx.post(

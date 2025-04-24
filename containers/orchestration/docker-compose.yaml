@@ -26,6 +26,7 @@ services:
     profiles: ["", "azure", "aws", "sqlserver"]
     environment:
       - CONFIG_NAME=AZURE_PG_NON_INTEGRATED
+      - METADATA_DATABASE_SCHEMA=core
   orchestration-service:
     platform: linux/amd64
     build:
