@@ -151,7 +151,7 @@ describe("process Metadata", () => {
   });
 });
 
-describe("listEcrData", () => {
+describe("listEcrData - core", () => {
   beforeAll(async () => {
     await clearCore();
   });

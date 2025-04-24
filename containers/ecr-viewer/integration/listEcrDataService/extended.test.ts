@@ -71,7 +71,7 @@ afterAll(async () => {
   await dropExisting();
 });
 
-describe("listExtendedEcrData", () => {
+describe("listEcrData - extended", () => {
   it("should return empty array when no data is found", async () => {
     const startIndex = 0;
     const itemsPerPage = 25;
