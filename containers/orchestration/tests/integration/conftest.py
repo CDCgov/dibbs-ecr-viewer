@@ -31,7 +31,10 @@ def setup(request):
         orchestration_service.wait_for(f"http://0.0.0.0:{port}")
 
     # migrate db
-    rs = requests.post(os.getenv("ecr_viewer_url") + "/api/migrate-db?confirm=yes")
+    rs = requests.post(
+        os.getenv("ecr_viewer_url") + "/api/migrate-db",
+        data={"migration_secret": "test"},
+    )
     assert rs.status_code == 200
 
     print("Orchestration etc. services ready to test!")
