@@ -6,7 +6,7 @@ import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
-import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
+import { ERSDWarning, evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import { noData } from "@/app/utils/data-utils";
 import { eICRProcessingSuccessMsg } from "@/app/view-data/components/EcrMetadata";
 
@@ -126,6 +126,93 @@ describe("Evaluate Ecr Metadata", () => {
     const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle);
 
     expect(actual.eRSDWarnings).toEqual({});
+  });
+  it("if there's a non-success processing status but no reason obs, should return empty object", () => {
+    const BundleErsdWarningNoReason: Bundle = {
+      resourceType: "Bundle",
+      type: "batch",
+      entry: [
+        {
+          fullUrl: "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+          resource: {
+            resourceType: "Composition",
+            id: "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+            status: "final",
+            title: "Dummy title",
+            type: {},
+            date: "2000-02-04T09:01:22-05:00",
+            section: [
+              {
+                extension: [
+                  {
+                    url: "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension",
+                    extension: [
+                      {
+                        url: "eICRProcessingStatus",
+                        valueReference: {
+                          reference:
+                            "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a",
+                          display: "eICR was processed - with a warning",
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+            author: [
+              {
+                reference:
+                  "PractitionerRole/b18c20c1-123b-fd12-71cf-9dd0abae8ced",
+              },
+              {
+                reference: "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05",
+              },
+            ],
+          },
+          request: {
+            method: "PUT",
+            url: "Composition/2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+          },
+        },
+        {
+          fullUrl: "urn:uuid:1f41508f-a752-fb3a-9091-7473d7d3b40a",
+          resource: {
+            resourceType: "Observation",
+            id: "1f41508f-a752-fb3a-9091-7473d7d3b40a",
+            meta: {
+              profile: [
+                "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation",
+              ],
+            },
+            identifier: [
+              {
+                system: "urn:ietf:rfc:3986",
+                value: "urn:uuid:39d966b9-8a3a-4024-93d8-138e97d5898a",
+              },
+            ],
+            status: "final",
+            code: {
+              coding: [
+                {
+                  code: "RRVS20",
+                  system: "urn:oid:2.16.840.1.114222.4.5.274",
+                  display: "eICR was processed - with a warning",
+                },
+              ],
+            },
+          },
+        },
+      ],
+    };
+    const actual = evaluateEcrMetadata(
+      BundleErsdWarningNoReason as unknown as Bundle
+    );
+    console.log(actual.eRSDWarnings)
+    expect((actual.eRSDWarnings as ERSDWarning).warning).toEqual(
+      "eICR processed with a warning or error (unknown)"
+    );
+    expect((actual.eRSDWarnings as ERSDWarning).versionUsed).toEqual(noData);
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(

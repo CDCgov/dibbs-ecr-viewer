@@ -121,11 +121,18 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   ): ERSDWarning | JSX.Element {
     if (processingStatus === "RRVS19") {
       return eICRProcessingSuccessMsg;
-    } else if (!processingStatus || !reasonObs) {
+    } else if (processingStatus && !reasonObs) {
+      return {
+        warning: "eICR processed with a warning or error (unknown)",
+        versionUsed: noData,
+        versionExpected: noData,
+        suggestedSolution: noData,
+      };
+    } else if (!processingStatus && !reasonObs) {
       return {};
     }
 
-    const coding = reasonObs.valueCodeableConcept?.coding?.[0];
+    const coding = reasonObs?.valueCodeableConcept?.coding?.[0];
     const warningCode = coding?.code ?? "";
     const warningName =
       coding?.display || eicrProcessingReasonMap[warningCode] || "";
@@ -133,7 +140,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     let versionUsed: string | undefined;
     let versionExpected: string | undefined;
 
-    reasonObs.component?.forEach((component) => {
+    reasonObs?.component?.forEach((component) => {
       const detailVal = component.valueString;
       const detailCode = component.code?.coding?.[0]?.code;
       const detailDisplay = component.code?.coding?.[0]?.display;
