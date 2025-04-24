@@ -204,7 +204,7 @@ describe("listEcrData - core", () => {
         patient_report_date:
           dbDialect() === "sqlserver"
             ? "12/01/2024 7:00\u00A0PM\u00A0EST"
-            : "12/02/2024 12:00\u00A0AM\u00A0EST",
+            : "12/02/2024 7:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
         rule_summaries: ["Rule1"],
         eicr_set_id: "123",
