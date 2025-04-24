@@ -121,14 +121,14 @@ Migrate a DB to the latest state.
 
 ```sh
 curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
---form 'migration_secret=2889aa35-39d4-4bf3-a69b-aec69be1dbba'
+--form 'migration_secret=<your migration secret>'
 ```
 
 Roll back a DB migration one step.
 
 ```sh
 curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
---form 'migration_secret=2889aa35-39d4-4bf3-a69b-aec69be1dbba' \
+--form 'migration_secret=<your migration secret>' \
 --form 'direction=down'
 ```
 
