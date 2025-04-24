@@ -13,7 +13,7 @@ test.describe("keycloak", () => {
     await page.getByRole("textbox", { name: "password" }).fill("pw");
     await page.getByRole("button", { name: "Sign in" }).click();
 
-    expect(page.getByText("eCR Library"));
+    await expect(page.getByText("eCR Library")).toBeVisible();
   });
 
   test("should require a login on main page even if valid auth token provided", async ({

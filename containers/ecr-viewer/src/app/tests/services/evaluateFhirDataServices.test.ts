@@ -21,6 +21,8 @@ import {
   censorGender,
   calculatePatientAge,
   createPatientAgeDataProp,
+  evaluateOccupation,
+  evaluateOccupationHistory,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -217,6 +219,675 @@ Home: 123-456-6909`,
         BundlePatientMultiple as unknown as Bundle,
       );
       expect(actual).toEqual("");
+    });
+  });
+
+  describe("Evaluate Occupation", () => {
+    it("should return empty when no employment status or usual occupation", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [],
+      };
+
+      expect(evaluateOccupation(bundle)).toBeUndefined();
+    });
+
+    it("should return employment status when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "74165-2",
+                  },
+                ],
+              },
+              valueCodeableConcept: {
+                text: "EmploymentStatus",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Status: EmploymentStatus");
+    });
+
+    it("should return occupation when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              valueCodeableConcept: {
+                text: "Occupation",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Occupation");
+    });
+
+    it("should return industry when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              component: [
+                {
+                  code: {
+                    coding: [{ code: "21844-6" }],
+                  },
+                  valueCodeableConcept: {
+                    text: "i'm an industry",
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Industry: i'm an industry");
+    });
+
+    it("should return dates when provided", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual("Dates: 01/04/2020 - Present");
+    });
+
+    it("should all together now", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "74165-2",
+                  },
+                ],
+              },
+              valueCodeableConcept: {
+                text: "EmploymentStatus",
+              },
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "21843-8",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [{ code: "21844-6" }],
+                  },
+                  valueCodeableConcept: {
+                    text: "i'm an industry",
+                  },
+                },
+              ],
+              valueCodeableConcept: {
+                text: "Occupation",
+              },
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupation(bundle)).toEqual(
+        "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present",
+      );
+    });
+  });
+
+  describe("Evaluate Occupation History", () => {
+    it("should return empty when no jobs", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toBeUndefined();
+    });
+
+    it("should match snapshot when all fields present", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              extension: [
+                {
+                  url: "http://hl7.org/fhir/us/odh/StructureDefinition/odh-Employer-extension",
+                  valueReference: { reference: "Organization/1234" },
+                },
+              ],
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "74159-5",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~schedule~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87512-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~hours~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "74160-3",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~days~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "63761-1",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~duties~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87707-6",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~pay grade~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "85104-8",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~employment type~",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Organization",
+              id: "1234",
+              address: [
+                {
+                  line: ["123 test st"],
+                  city: "Nowhereville",
+                  state: "KS",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+    });
+
+    it("should match snapshot when no workplace info", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Organization",
+              id: "1234",
+              address: [
+                {
+                  line: ["123 test st"],
+                  city: "Nowhereville",
+                  state: "KS",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+    });
+
+    it("should match snapshot when partial info", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87707-6",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~pay grade~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "85104-8",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~employment type~",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Organization",
+              id: "1234",
+              address: [
+                {
+                  line: ["123 test st"],
+                  city: "Nowhereville",
+                  state: "KS",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+    });
+
+    it("should match snapshot when multiple jobs and sort correctly", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12345",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2018-01-04",
+                end: "2022-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12346",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2020-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "12347",
+              status: "final",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                ],
+              },
+              code: {
+                coding: [
+                  {
+                    code: "11341-5",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2015-01-04",
+              },
+              component: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "86188-0",
+                      },
+                    ],
+                  },
+                  valueCodeableConcept: {
+                    text: "~industry~",
+                  },
+                },
+                {
+                  code: {
+                    coding: [
+                      {
+                        code: "87729-0",
+                      },
+                    ],
+                  },
+                  valueString: "~hazard~",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
     });
   });
 
