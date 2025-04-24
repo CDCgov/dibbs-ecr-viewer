@@ -8,12 +8,9 @@ import {
   AccordionSection,
   AccordionSubSection,
 } from "@/app/view-data/component-utils";
-import {
-  DataTableDisplay,
-  DisplayDataProps,
-} from "@/app/view-data/components/DataDisplay";
 
-import LabResultDetail from "./LabResultDetail";
+import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
+import { ExpandCollapseAccordion } from "./ExpandCollapseAccordion";
 
 interface LabInfoProps {
   labResults: DisplayDataProps[] | LabReportElementData[];
@@ -46,6 +43,29 @@ const HtmlLabResult = ({ labResult }: { labResult: DisplayDataProps }) => {
       <div data-testid="lab-results">
         <DataTableDisplay item={labResult} />
       </div>
+    </AccordionSubSection>
+  );
+};
+
+const LabResultDetail = ({
+  labResult,
+}: {
+  labResult: LabReportElementData;
+}) => {
+  const labName = `Lab Results from ${
+    labResult?.organizationDisplayDataProps?.[0]?.value ||
+    "Unknown Organization"
+  }`;
+
+  return (
+    <AccordionSubSection title={labName}>
+      {labResult?.organizationDisplayDataProps?.map((item, index) => {
+        if (item.value) return <DataDisplay item={item} key={index} />;
+      })}
+      <ExpandCollapseAccordion
+        items={labResult.diagnosticReportDataItems}
+        descriptor="labs"
+      />
     </AccordionSubSection>
   );
 };

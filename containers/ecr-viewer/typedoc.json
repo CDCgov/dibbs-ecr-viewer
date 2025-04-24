@@ -1,0 +1,29 @@
+{
+  "categoryOrder": [
+    "Base Required",
+    "Authentication - Standalone",
+    "Authentication - NBS",
+    "eCR Storage - AWS",
+    "eCR Storage - AZURE",
+    "eCR Storage - GCP",
+    "eCR Library Metadata"
+  ],
+  "projectDocuments": ["guide.md"],
+  "entryPoints": ["environment.d.ts"],
+  "out": "./docs",
+  "highlightLanguages": [
+    "bash",
+    "console",
+    "css",
+    "html",
+    "javascript",
+    "json",
+    "jsonc",
+    "json5",
+    "mermaid",
+    "yaml",
+    "tsx",
+    "typescript"
+  ],
+  "plugin": ["typedoc-plugin-mermaid"]
+}

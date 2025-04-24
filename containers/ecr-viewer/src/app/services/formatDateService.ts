@@ -90,13 +90,13 @@ export const formatDateTime = (dateTimeString: string | undefined): string => {
     minute: "2-digit",
     timeZoneName: "short",
   };
-  const formatted = (date as unknown as Date)
+  let formatted = (date as unknown as Date)
     .toLocaleDateString("en-Us", options)
     .replace(",", "");
 
   // Not actually time zoned
   if (!hasTimeZoneString(dateTimeString)) {
-    return formatted.slice(0, formatted.lastIndexOf(" ")); // lop off " EDT"
+    formatted = formatted.slice(0, formatted.lastIndexOf(" ")); // lop off " EDT"
   }
 
   // encourage word wrapping between date and time instead of wherever
@@ -131,35 +131,37 @@ export const formatDate = (dateString?: string): string | undefined => {
   }
 };
 
+interface Period {
+  start?: string;
+  end?: string;
+}
+
 /**
  * Formats the provided start and end date-time strings and returns a formatted string
  * with both the start and end times. Each time is labeled and separated by a carriage return
  * and newline for clarity in display or further processing.
- * @param startDateTime - The start date-time string to be formatted.
- * @param endDateTime - The end date-time string to be formatted.
+ * @param root0 - An object containing the start and end date-time strings.
+ * @param root0.start - The start date-time string to be formatted.
+ * @param root0.end - The end date-time string to be formatted.
  * @returns A string with the formatted start and end times, each on a new line.
  */
-export const formatStartEndDateTime = (
-  startDateTime: string | undefined,
-  endDateTime: string | undefined,
-) => formatStartEnd(startDateTime, endDateTime, formatDateTime);
+export const formatStartEndDateTime = ({ start, end }: Period = {}) =>
+  formatStartEnd({ start, end }, formatDateTime);
 
 /**
  * Formats the provided start and end date strings and returns a formatted string
  * with both the start and end dates. Each date is labeled and separated by a carriage return
  * and newline for clarity in display or further processing.
- * @param startDate - The start date-time string to be formatted.
- * @param endDate - The end date-time string to be formatted.
+ * @param root0 - An object containing the start and end date strings.
+ * @param root0.start - The start date-time string to be formatted.
+ * @param root0.end - The end date-time string to be formatted.
  * @returns A string with the formatted start and end times, each on a new line.
  */
-export const formatStartEndDate = (
-  startDate: string | undefined,
-  endDate: string | undefined,
-) => formatStartEnd(startDate, endDate, formatDate);
+export const formatStartEndDate = ({ start, end }: Period = {}) =>
+  formatStartEnd({ start, end }, formatDate);
 
 const formatStartEnd = (
-  start: string | undefined,
-  end: string | undefined,
+  { start, end }: Period = {},
   formatFn: (dt: string | undefined) => string | undefined,
 ) => {
   const textArray: String[] = [];
@@ -175,4 +177,37 @@ const formatStartEnd = (
   }
 
   return textArray.join("\n");
+};
+
+/**
+ * Formats the provided start and end date-time strings and returns a formatted string
+ * with both the start and end times. The date-times are returned as `<start>|Unknown - <end>|Present`.
+ * @param root0 - An object containing the start and end date-time strings.
+ * @param root0.start - The start date-time string to be formatted.
+ * @param root0.end - The end date-time string to be formatted.
+ * @returns A string with the formatted start and end times, each on a new line.
+ */
+export const formatPeriodDateTime = ({ start, end }: Period = {}) =>
+  formatPeriod({ start, end }, formatDateTime);
+
+/**
+ * Formats the provided start and end date strings and returns a formatted string
+ * with both the start and end dates.  The dates are returned as `<start>|Unknown - <end>|Present`.
+ * @param root0 - An object containing the start and end date strings.
+ * @param root0.start - The start date-time string to be formatted.
+ * @param root0.end - The end date-time string to be formatted.
+ * @returns A string with the formatted start and end times, each on a new line.
+ */
+export const formatPeriodDate = ({ start, end }: Period = {}): string =>
+  formatPeriod({ start, end }, formatDate);
+
+const formatPeriod = (
+  { start, end }: Period = {},
+  formatFn: (dt: string | undefined) => string | undefined,
+) => {
+  const stDt = formatFn(start);
+  const endDt = formatFn(end);
+  if (!stDt && !endDt) return "";
+
+  return `${stDt || "Unknown"} - ${endDt || "Present"}`;
 };

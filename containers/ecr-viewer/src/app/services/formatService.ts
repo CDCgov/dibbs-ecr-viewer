@@ -6,6 +6,9 @@ import {
   ContactPoint,
   HumanName,
   PatientContact,
+  Period,
+  Quantity,
+  Range,
   RelatedPerson,
 } from "fhir/r4";
 
@@ -16,7 +19,7 @@ import {
 } from "@/app/utils/format-utils";
 
 import { Age } from "./evaluateFhirDataService";
-import { formatDate } from "./formatDateService";
+import { formatPeriodDate } from "./formatDateService";
 
 /**
  * Formats a person's name: <use>: <prefix> <given> <family> <suffix>.
@@ -91,19 +94,12 @@ export const formatAddress = (
     ...config,
   };
 
-  const formatDateLine = () => {
-    const stDt = formatDate(period?.start);
-    const endDt = formatDate(period?.end);
-    if (!stDt && !endDt) return false;
-    return `Dates: ${stDt ?? "Unknown"} - ${endDt ?? "Present"}`;
-  };
-
   return [
     includeUse && use && toSentenceCase(use) + ":",
     (line?.map(toTitleCase) || []).filter(Boolean).join("\n"),
     [toTitleCase(city), state].filter(Boolean).join(", "),
     [postalCode, country].filter(Boolean).join(", "),
-    includePeriod && formatDateLine(),
+    includePeriod && period && `Dates: ${formatPeriodDate(period)}`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -130,6 +126,42 @@ export const formatAddressList = (
   } else {
     return formatAddress(addresses);
   }
+};
+
+/**
+ * Sort an array of items from most recent to least recent in place
+ * Un-ended periods first, then reverse chronological by end date with start date as tie break
+ * @param items list of items to sort
+ * @param periodGetter function to get the period from an item
+ */
+export const sortByPeriod = <T>(
+  items: T[],
+  periodGetter: (item: T) => Period | undefined,
+) => {
+  items.sort((a, b) => {
+    const aPeriod = periodGetter(a);
+    const bPeriod = periodGetter(b);
+    const aEnd = aPeriod?.end || "";
+    const aStart = aPeriod?.start || "";
+    const bEnd = bPeriod?.end || "";
+    const bStart = bPeriod?.start || "";
+
+    if (!aEnd) {
+      if (!bEnd) {
+        return aStart > bStart ? -1 : 1;
+      } else {
+        return -1;
+      }
+    } else if (!bEnd) {
+      return 1;
+    } else {
+      if (aEnd === bEnd) {
+        return aStart > bStart ? -1 : 1;
+      } else {
+        return aEnd > bEnd ? -1 : 1;
+      }
+    }
+  });
 };
 
 /**
@@ -323,6 +355,51 @@ export const formatCodeableConcept = (
   }
 
   return undefined;
+};
+
+// Map from computer to human readable units
+const UNIT_MAP = new Map([
+  ["[lb_av]", "lb"],
+  ["[in_i]", "in"],
+  ["[in_us]", "in"],
+]);
+
+/**
+ * Takes a quantity and formats it into a string. Handles spacing of units and re-maps
+ * certain robot-looking units into human-looking units
+ * @param data the Quantity to format
+ * @returns formatted string
+ */
+export const formatQuantity = (
+  data: Quantity | undefined,
+): string | undefined => {
+  if (!data || !data.value) return;
+  let unit = data.unit || "";
+  unit = UNIT_MAP.get(unit) || unit;
+  const firstLetterRegex = /^[a-z]/i;
+  if (unit?.match(firstLetterRegex)) {
+    unit = " " + unit;
+  }
+  return `${data.value ?? ""}${unit}`;
+};
+
+/**
+ * Takes a range and formats it into a string. Handles spacing of units and re-maps
+ * certain robot-looking units into human-looking units
+ * @param data the Range to format
+ * @returns formatted string
+ */
+export const formatRange = (data: Range | undefined): string | undefined => {
+  if (!data) return;
+  const low = formatQuantity(data.low);
+  const high = formatQuantity(data.high);
+  if (low && high) {
+    return `${low} - ${high}`;
+  } else if (low) {
+    return `>=${low}`;
+  } else if (high) {
+    return `<=${high}`;
+  }
 };
 
 /**

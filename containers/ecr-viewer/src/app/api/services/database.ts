@@ -1,56 +1,27 @@
-// Kysely ORM Connection Client
-
 import { Kysely } from "kysely";
 
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
-import { Core } from "./types/core";
+import { dbDialect, dbNamespace } from "./utils/db-config";
 
-// Dialect to communicate with the database, interface to define its structure.
+// When working with migrations, we don't know anything about the
+// state of the database, so need to use the any type.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyDb = any;
 
-let db: unknown;
-
-/**
- * Get the current database dialect
- * @returns string describing dialect
- */
-export const dbDialect = () => {
-  return process.env.METADATA_DATABASE_TYPE;
-};
+let cachedDb: unknown;
 
 /**
- * Get the current database schema
- * @returns string describing schema
- */
-export const dbSchema = () => {
-  const schema = process.env.METADATA_DATABASE_SCHEMA;
-  if (!["core", "extended"].includes(schema!)) {
-    throw new Error(`Unknown database schema: ${schema}`);
-  }
-  return schema;
-};
-
-/**
- * Get the current database namespace (schema)
- * @returns string describing namespace
- */
-export const dbNamespace = () => {
-  // use a different schema in testing so seed data doesn't get wiped out
-  return process.env.TEST_TYPE === "integration"
-    ? "test_ev_schema"
-    : "ecr_viewer";
-};
-
-/**
- * Get the database global.
+ * Get the database global without a schema or types attached.
  * @returns global db
  */
-export const getDb = <T>() => {
-  if (db) {
-    return db as Kysely<T>;
+export const getDbRaw = (): Kysely<AnyDb> => {
+  if (cachedDb) {
+    return cachedDb as Kysely<AnyDb>;
   }
 
   const db_type = dbDialect();
+  let db;
   switch (db_type) {
     case "sqlserver":
       db = new Kysely(sqlserver);
@@ -62,26 +33,60 @@ export const getDb = <T>() => {
       throw new Error(`unknown db type: ${db_type}`);
   }
 
-  db = (db as Kysely<T>).withSchema(dbNamespace());
-
-  return db as Kysely<T>;
+  cachedDb = db;
+  return db as Kysely<AnyDb>;
 };
 
 /**
- * Performs a health check on the metadata database connection.
- * @returns The status of the metadata db connection or undefined if missing environment values.
+ * Get the database global.
+ * @returns global db
  */
-export const metadataDatabaseHealthCheck = async () => {
-  if (!process.env.METADATA_DATABASE_TYPE) {
+export const getDb = <T>() => {
+  return getDbRaw().withSchema(dbNamespace()) as Kysely<T>;
+};
+
+/**
+ * Performs a health check on the database connection.
+ * @param silent Optionally silence the console errors if database not healthy
+ * @returns The status of the database connection: "UP" or "DOWN".
+ */
+export async function metadataDatabaseHealthCheck(
+  silent: boolean = false,
+): Promise<string | undefined> {
+  if (!dbDialect()) {
     return undefined;
   }
+
   try {
     await getDb<Core>()
       .connection()
-      .execute(async (_db) => {});
+      .execute(async () => {});
     return "UP";
   } catch (error: unknown) {
-    console.error(error);
+    !silent && console.error("Database health check failed: ", error);
     return "DOWN";
   }
-};
+}
+
+/**
+ * @returns whether the database is up or undefined if no database
+ */
+export async function waitForMetadataDatabase(): Promise<boolean | undefined> {
+  if (!dbDialect()) {
+    return undefined;
+  }
+
+  let attempts = 10;
+
+  while (attempts > 0) {
+    attempts -= 1;
+
+    const status = await metadataDatabaseHealthCheck(true);
+    if (status === "UP") return true;
+
+    // sleep for 2 seconds
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+
+  return false;
+}

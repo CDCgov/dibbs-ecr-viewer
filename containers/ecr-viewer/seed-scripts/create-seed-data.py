@@ -1,151 +1,121 @@
 import argparse
+import io
 import json
 import os
+import zipfile
 
 import grequests
+import requests as rqsts
 
-URL = "http://orchestration-service:8080"
+UPLOAD_URL = "http://host.docker.internal:3000/ecr-viewer/api/process-zip"
+MIGRATION_URL = "http://host.docker.internal:3000/ecr-viewer/api/migrate-db"
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def _get_args():
     parser = argparse.ArgumentParser(
-        prog="Create Seed Data",
-        description="Convert eICR and RR files to FHIR bundles and insert them into the database.",
-        epilog="For each directory in baseECR the script will look for a `CDA_eICR.xml` and `CDA_RR.xml` file. If they are found, it will convert them into a FHIR bundle (saved as `bundle.json`) and insert that into the database using the Orchestration service.",
-    )
-    parser.add_argument(
-        "-s",
-        "--skip_convert",
-        action="store_true",
-        help="If this is set, if `bundle.json` already exists, the script will not look for `CDA_eICR.xml` and `CDA_RR.xml` files to convert them again, and use the existing `bundle.json`.",
+        description="Zip subfolders and upload them to the ECR Viewer API.",
     )
     return parser.parse_args()
 
 
-def _process_files(args):
-    """
-    Convert eICR and RR into FHIR bundles using the FHIR converter.
+def zip_folder(folder_path):
+    """Zips the given folder into an in-memory ZIP file."""
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, folder_path)
+                zip_file.write(file_path, arcname=arcname)
+    zip_buffer.seek(0)  # Move to the beginning of the buffer
+    return zip_buffer
 
-    :return: A list of fhir bundles
-    """
-    print("Converting files...")
+
+def _process_files():
+    """Zips subfolders and sends them to the API."""
+    print("Processing subfolders...")
+
     subfolders_raw = os.getenv("SEED_DATA_DIRECTORIES")
+    if not subfolders_raw:
+        print("No subfolders found in SEED_DATA_DIRECTORIES.")
+        return
+
     subfolders = subfolders_raw.split(",")
 
-    # Holds all of the rquests we are going to make
+    print("Requesting db migration...")
+    rs = rqsts.post(MIGRATION_URL, data={"migration_secret": "test"})
+    assert rs.status_code == 200, f"{rs.json()}"
+
     requests = []
     folder_paths = []
-    configName = "integrated.json"
-    config = os.getenv("CONFIG_NAME") or ""
-    if "_SQLSERVER_" in config:
-        configName = "non-integrated-extended.json"
-    elif "_PG_" in config:
-        configName = "non-integrated-core.json"
-
-    def _process_eicrs(subfolder, folder, folder_path, payload):
-        r = grequests.post(f"{URL}/process-message", json=payload)
-        requests.append(r)
-        folder_paths.append(folder_path)
-
-    # Iterate over the subfolders to collect requests
     for subfolder in subfolders:
         subfolder_path = os.path.join(BASEDIR, "baseECR", subfolder)
 
-        # Check if the subfolder exists and is a directory
         if not os.path.isdir(subfolder_path):
-            print(f"{subfolder_path} is not a valid directory.")
+            print(f"Skipping: {subfolder_path} is not a valid directory.")
             continue
 
-        # Now iterate through the folders inside each subfolder
         for folder in os.listdir(subfolder_path):
             folder_path = os.path.join(subfolder_path, folder)
-
-            # Check if it's a directory
             if not os.path.isdir(folder_path):
                 continue
 
-            if os.path.exists(os.path.join(folder_path, "bundle.json")) and (
-                args.skip_convert
-                or not os.path.exists(os.path.join(folder_path, "CDA_eICR.xml"))
-            ):
-                # Just upload the bundle
-                with open(os.path.join(folder_path, "bundle.json")) as fhir_file:
-                    payload = {
-                        "message_type": "fhir",
-                        "data_type": "fhir",
-                        "config_file_name": "save-bundle-to-ecr-viewer.json",
-                        "message": json.load(fhir_file),
-                    }
-                    _process_eicrs(subfolder, folder, folder_path, payload)
+            print(f"Zipping and uploading: {folder_path}")
 
-            # If we are not just inserting the bundle, check for the necessary files
-            elif os.path.exists(os.path.join(folder_path, "CDA_eICR.xml")):
-                # Get the RR data if available
-                rr_data = None
-                if os.path.exists(os.path.join(folder_path, "CDA_RR.xml")):
-                    with (
-                        open(os.path.join(folder_path, "CDA_RR.xml")) as rr_file,
-                    ):
-                        rr_data = rr_file.read()
+            zip_buffer = zip_folder(folder_path)
 
-                # Open the necessary files in the folder
-                with (
-                    open(os.path.join(folder_path, "CDA_eICR.xml")) as eicr_file,
-                ):
-                    payload = {
-                        "message_type": "ecr",
-                        "data_type": "ecr",
-                        "config_file_name": configName,
-                        "message": eicr_file.read(),
-                        "rr_data": rr_data,
-                    }
+            files = [("upload_file", (f"{folder}.zip", zip_buffer, "application/zip"))]
+            request = grequests.post(
+                UPLOAD_URL, files=files, data={"return_fhir_bundle": True}
+            )
 
-                    _process_eicrs(subfolder, folder, folder_path, payload)
-            # If neither `bundle.json` nor `CDA_eICR.xml` exists, skip processing
-            else:
-                print(
-                    f"Neither `bundle.json` nor `CDA_eICR.xml` found in {folder_path}. Skipping."
-                )
-                continue
+            requests.append(request)
+            folder_paths.append(folder_path)
 
-    # Asynchronously send our collected requests
+    print(f"Sending {len(requests)} ZIP files...")
+
+    # Send requests asynchronously
     n = 0
     failed = []
     num_requests = len(requests)
-    print(f"Starting conversion and load of {num_requests} requests")
     for index, response in grequests.imap_enumerated(requests, size=8):
         n += 1
-        print(f"Received response {n} of {num_requests}")
         folder_path = folder_paths[index]
-        responses_json = response.json()
+        if response is None:
+            failed.append(folder_path)
+            print(
+                f"Received response {n} of {num_requests} - Failed to upload {folder_path}: No response received"
+            )
+            continue
         if response.status_code != 200:
             failed.append(folder_path)
-            print(f"Failed to convert {folder_path}.\nResponse:\n{responses_json}")
-            continue
-
-        if "responses" in responses_json.get("processed_values", {}):
-            for response in responses_json["processed_values"]["responses"]:
-                if "stamped_ecr" in response:
-                    with open(
-                        os.path.join(folder_path, "bundle.json"),
-                        "w",
-                    ) as fhir_file:
-                        json.dump(
-                            response["stamped_ecr"]["extended_bundle"],
-                            fhir_file,
-                            indent=4,
-                        )
-        print(f"Converted {folder_path} successfully.")
+            print(
+                f"Received response {n} of {num_requests} - Failed to upload {folder_path}. Status: {response.status_code}. Body: {json.dumps(response.json())}"
+            )
+        else:
+            response_json = response.json()
+            if "bundle" in response_json:
+                with open(
+                    os.path.join(folder_path, "bundle.json"),
+                    "w",
+                ) as fhir_file:
+                    json.dump(
+                        response_json["bundle"],
+                        fhir_file,
+                        indent=4,
+                    )
+            print(
+                f"Received response {n} of {num_requests} - Successfully uploaded {folder_path}"
+            )
 
     print(
         f"Conversion complete: {n} records attempted and {len(failed)} failed : {failed}"
     )
-
-    if len(failed) > 0:
+    if failed:
         exit(1)
 
 
 if __name__ == "__main__":
     args = _get_args()
-    _process_files(args)
+    _process_files()
