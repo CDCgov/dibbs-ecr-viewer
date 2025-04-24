@@ -13,6 +13,11 @@ const schema = z.object({
   direction: z.string().default("up"),
 });
 
+interface MigrationResponse {
+  message: string;
+  erorors?: string[];
+}
+
 /**
  * Migrate the database
  * @param request The `NextRequest` initiating the migration. form body `migration_secret` must
@@ -22,7 +27,9 @@ const schema = z.object({
  * possible you might need to run down multiple times to get back to the desired state
  * @returns A `NextResponse` indicating whether the migration was successful
  */
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+): Promise<NextResponse<MigrationResponse>> {
   if (!process.env.METADATA_DATABASE_MIGRATION_SECRET) {
     console.error("No migration secret found!");
     return NextResponse.json(
@@ -31,9 +38,20 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Parse out the form from the request
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return NextResponse.json(
+      { message: "Validation error", errors: ["No form found"] },
+      { status: 400 },
+    );
+  }
+
   try {
     const { migration_secret, direction } = schema.parse(
-      Object.fromEntries(await request.formData()),
+      Object.fromEntries(formData),
     );
     if (migration_secret !== process.env.METADATA_DATABASE_MIGRATION_SECRET) {
       console.log(
@@ -63,18 +81,18 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ message: "success" }, { status: 200 });
   } catch (error: unknown) {
-    if (error instanceof z.ZodError || error instanceof TypeError) {
+    if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
           message: "Validation error",
-          errors: error instanceof z.ZodError ? error.errors : "No form found",
+          errors: error.errors,
         },
         { status: 400 },
       );
     }
 
-    const message = "Migration failed due to internal server error";
-    console.error({ message, error, errorType: typeof error });
+    const message = "Internal Server Error";
+    console.error({ message, error });
     return NextResponse.json({ message }, { status: 500 });
   }
 }
