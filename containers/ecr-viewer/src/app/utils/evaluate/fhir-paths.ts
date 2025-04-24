@@ -31,7 +31,9 @@ export type ValueX =
   | string
   | CodeableConcept
   | Coding
-  | Quantity;
+  | Quantity
+  | Reference
+  | ObservationReferenceRange;
 
 /**
  * Mapping from the FHIR path key to the expected type upon valuation.
@@ -56,7 +58,9 @@ export type PathTypes = {
   patientTribalAffiliation: ValueX;
   patientEmergencyContact: PatientContact;
   patientGuardian: RelatedPerson;
-  patientCurrentJobTitle: ValueX;
+  patientOccupation: Observation;
+  patientOccupationHistory: Observation;
+  patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
   patientPregnancyStatus: ValueX;
@@ -238,9 +242,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Social History
-  patientCurrentJobTitle: {
-    type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob').where(effectivePeriod.end.exists().not()).value",
+  patientOccupation: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork')",
+  },
+  patientOccupationHistory: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob')",
+  },
+  patientEmploymentStatus: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '74165-2')",
   },
   patientTobaccoUse: {
     type: "ValueX",

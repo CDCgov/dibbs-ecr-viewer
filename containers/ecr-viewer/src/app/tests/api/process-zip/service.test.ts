@@ -41,7 +41,7 @@ describe("processZip", () => {
 
     const response = await processZip(mockFile);
 
-    expect(response).toEqual({ status: 200, message: "Success" });
+    expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
       mockEcr,
       "123",
@@ -66,7 +66,31 @@ describe("processZip", () => {
 
     const response = await processZip(mockFile);
 
-    expect(response).toEqual({ status: 200, message: "Success" });
+    expect(response).toStrictEqual({ status: 200, message: "Success" });
+    expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
+  });
+
+  it("should return fhir bundle when requested", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      status: 200,
+      json: jest.fn().mockResolvedValue({
+        processed_values: {
+          responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+        },
+      }),
+    });
+    (saveFhirData as jest.Mock).mockResolvedValue({
+      status: 200,
+      message: "Success",
+    });
+
+    const response = await processZip(mockFile, true);
+
+    expect(response).toStrictEqual({
+      status: 200,
+      message: "Success",
+      bundle: mockEcr,
+    });
     expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
   });
 

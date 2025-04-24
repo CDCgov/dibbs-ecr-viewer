@@ -3,27 +3,29 @@ import React, { useId, useState } from "react";
 
 import classNames from "classnames";
 
-import { LabReportElementData } from "@/app/services/labsService";
-import { AccordionSubSection } from "@/app/view-data/component-utils";
-import Accordion from "@/app/view-data/components/AccordionControlled";
-import { DataDisplay } from "@/app/view-data/components/DataDisplay";
-import { ExpandCollapseButtons } from "@/app/view-data/components/ExpandCollapseButtons";
+import { AccordionItem } from "@/app/view-data/types";
+
+import Accordion from "./AccordionControlled";
+import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
 
 /**
- * Helper component for building lab result accordions
- * @param props React props
- * @param props.labResult Lab report data
- * @returns Lab result details component
+ * Accordion where expand all/collapse all buttons are added above items
+ * @param props react props
+ * @param props.items accordion items to display
+ * @param props.descriptor desciptor for expand/collapse button labels
+ * @returns expandable/collapsable accordion
  */
-const LabResultDetail = ({
-  labResult,
+export const ExpandCollapseAccordion = ({
+  items,
+  descriptor,
 }: {
-  labResult: LabReportElementData;
+  items: AccordionItem[];
+  descriptor: string;
 }) => {
   const id = useId();
 
   // Make sure each accordion's items actually have unique IDs across the app
-  const uniqueIdItems = labResult.diagnosticReportDataItems.map((item, i) => ({
+  const uniqueIdItems = items.map((item, i) => ({
     ...item,
     id: `${item.id}-${id}-${i}`,
     className: classNames("side-nav-ignore", item.className),
@@ -42,16 +44,8 @@ const LabResultDetail = ({
     setAccordionItems(nextItems);
   };
 
-  const labName = `Lab Results from ${
-    labResult?.organizationDisplayDataProps?.[0]?.value ||
-    "Unknown Organization"
-  }`;
-
   return (
-    <AccordionSubSection title={labName}>
-      {labResult?.organizationDisplayDataProps?.map((item, index) => {
-        if (item.value) return <DataDisplay item={item} key={index} />;
-      })}
+    <>
       <div className="display-flex">
         <div className="margin-left-auto padding-top-1">
           <ExpandCollapseButtons
@@ -65,7 +59,7 @@ const LabResultDetail = ({
                 accordionItems.map((item) => ({ ...item, expanded: false })),
               )
             }
-            descriptor="labs"
+            descriptor={descriptor}
           />
         </div>
       </div>
@@ -74,8 +68,6 @@ const LabResultDetail = ({
         items={accordionItems}
         toggleItem={handleToggle}
       />
-    </AccordionSubSection>
+    </>
   );
 };
-
-export default LabResultDetail;

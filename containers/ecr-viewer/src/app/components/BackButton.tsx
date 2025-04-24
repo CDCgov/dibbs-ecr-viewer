@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import classNames from "classnames";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { retrieveFromSessionStorage } from "@/app/utils/storage-utils";
 
@@ -24,13 +25,15 @@ interface BackButtonProps {
 export const BackButton = ({ className, iconClassName }: BackButtonProps) => {
   const [savedUrlParams, setSavedUrlParams] = useState<string | null>(null);
   const isLoggedIn = useIsLoggedInUser();
+  const pathname = usePathname();
 
   useEffect(() => {
     setSavedUrlParams(retrieveFromSessionStorage("urlParams") as string | null);
   }, []);
 
   return (
-    isLoggedIn && (
+    isLoggedIn &&
+    pathname !== "/" && (
       <Link
         href={savedUrlParams ? `/?${savedUrlParams}` : "/"}
         className={classNames("display-inline-block", className)}

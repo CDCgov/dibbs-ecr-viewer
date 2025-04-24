@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { DEFAULT_ITEMS_PER_PAGE } from "@/app/constants";
 import HomePage from "@/app/page";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
@@ -12,7 +13,8 @@ jest.mock("../services/listEcrDataService", () => {
     getTotalEcrCount: jest.fn().mockResolvedValue(0),
   };
 });
-jest.mock("../../app/api/services/database");
+jest.mock("../api/services/database");
+jest.mock("../api/migrate-db/migrate");
 jest.mock("../data/conditions");
 jest.mock("../components/Filters");
 jest.mock("../components/LibrarySearch");
@@ -30,6 +32,9 @@ jest.mock("../utils/auth-utils", () => ({
 }));
 
 describe("Home Page", () => {
+  beforeEach(() => {
+    (dbIsValid as jest.Mock).mockResolvedValue(true);
+  });
   afterEach(() => {
     process.env.METADATA_DATABASE_TYPE = "postgres";
     jest.clearAllMocks();
@@ -44,9 +49,21 @@ describe("Home Page", () => {
     expect(getTotalEcrCount).toHaveBeenCalledOnce();
     expect(notFound).not.toHaveBeenCalled();
   });
+  it("yes metadata database, but not set up, should show error page", async () => {
+    (dbIsValid as jest.Mock).mockResolvedValue(false);
+    render(await HomePage({ searchParams: {} }));
+    expect(getTotalEcrCount).not.toHaveBeenCalled();
+    expect(notFound).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("eCR Viewer setup is incomplete"),
+    ).toBeInTheDocument();
+  });
 });
 
 describe("Reading query params on home page", () => {
+  beforeEach(() => {
+    (dbIsValid as jest.Mock).mockResolvedValue(true);
+  });
   it("should call returnParamDates with the correct dateRange from query params", async () => {
     const mockDateRange = "last-7-days";
     const searchParams = { dateRange: mockDateRange };
