@@ -2,8 +2,7 @@ import { Kysely } from "kysely";
 
 import { AnyDb } from "@/app/api/services/database";
 import { getSql } from "@/app/api/services/dialects/common";
-import { dbNamespace } from "@/app/api/services/utils/db-config";
-import { dbSchema } from "@/app/api/services/utils/db-config";
+import { dbNamespace, dbSchema } from "@/app/api/services/utils/db-config";
 import { getTable } from "@/app/api/services/utils/db-metadata";
 
 /**
