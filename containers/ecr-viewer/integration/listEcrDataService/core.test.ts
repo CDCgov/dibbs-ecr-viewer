@@ -263,11 +263,11 @@ describe("generate search statement", () => {
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."patient_name_first" ilike $1 or "test_ev_schema"."ecr_data"."patient_name_last" ilike $2)',
+        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2)',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."patient_name_first" like @1 or "test_ev_schema"."ecr_data"."patient_name_last" like @2)',
+        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2)',
       );
     }
     expect(params).toStrictEqual(["%Dan%", "%Dan%"]);
@@ -278,11 +278,11 @@ describe("generate search statement", () => {
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."patient_name_first" ilike $1 or "test_ev_schema"."ecr_data"."patient_name_last" ilike $2)',
+        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2)',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."patient_name_first" like @1 or "test_ev_schema"."ecr_data"."patient_name_last" like @2)',
+        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2)',
       );
     }
 
@@ -384,11 +384,11 @@ describe("generate where statement", () => {
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."patient_name_first" ilike $1 or "test_ev_schema"."ecr_data"."patient_name_last" ilike $2) and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and "erc_sub"."condition" ilike $5)))',
+        '(("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2) and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and "erc_sub"."condition" ilike $5)))',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."patient_name_first" like @1 or "test_ev_schema"."ecr_data"."patient_name_last" like @2) and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @5)))',
+        '(("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2) and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and "erc_sub"."condition" like @5)))',
       );
     }
 
@@ -406,11 +406,11 @@ describe("generate where statement", () => {
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."patient_name_first" ilike $1 or "test_ev_schema"."ecr_data"."patient_name_last" ilike $2) and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and $5 = $6)',
+        '(("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2) and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and $5 = $6)',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."patient_name_first" like @1 or "test_ev_schema"."ecr_data"."patient_name_last" like @2) and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and @5 = @6)',
+        '(("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2) and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and @5 = @6)',
       );
     }
 
@@ -455,11 +455,11 @@ describe("generate Kysely search statement", () => {
 
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."patient_name_first" ilike $1 or "test_ev_schema"."ecr_data"."patient_name_last" ilike $2)',
+        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2)',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."patient_name_first" like @1 or "test_ev_schema"."ecr_data"."patient_name_last" like @2)',
+        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2)',
       );
     }
     expect(params).toStrictEqual(["%John%", "%John%"]);
@@ -519,11 +519,11 @@ describe("generate Kysely where statement", () => {
 
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."patient_name_first" ilike $1 or "test_ev_schema"."ecr_data"."patient_name_last" ilike $2) and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $5 or "erc_sub"."condition" ilike $6))))',
+        '(("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2) and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $5 or "erc_sub"."condition" ilike $6))))',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '(("test_ev_schema"."ecr_data"."patient_name_first" like @1 or "test_ev_schema"."ecr_data"."patient_name_last" like @2) and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @5 or "erc_sub"."condition" like @6))))',
+        '(("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2) and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @5 or "erc_sub"."condition" like @6))))',
       );
     }
     expect(params).toStrictEqual([
