@@ -12,9 +12,10 @@ services:
     network_mode: host
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
-      - NBS_PUB_KEY=${NBS_PUB_KEY:-}
+      - NBS_PUB_KEY
       # METADATA DATABASE
       - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
+      - METADATA_DATABASE_MIGRATION_SECRET
       # SQL Server - backwards compat
       - SQL_SERVER_USER
       - SQL_SERVER_PASSWORD
@@ -50,9 +51,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./seed-scripts/sql/01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
-      - ./sql/core.sql:/docker-entrypoint-initdb.d/core.sql
-      - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass
+      - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass # Keep if needed
       - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
@@ -79,15 +78,13 @@ services:
       - MSSQL_SA_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
     ports:
       - "1433:1433"
-    volumes:
-      - ./sql/entrypoint.sh:/var/opt/mssql/scripts/entrypoint.sh
-      - ./sql/extended.sql:/var/opt/mssql/scripts/extended.sql
-    entrypoint: /bin/bash -c "/var/opt/mssql/scripts/entrypoint.sh"
+    # volumes:
+    #   # No volumes needed unless you add persistent storage
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          'opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Password1! -Q "SELECT * FROM sys.tables where name=''ECR_DATA''" -C | grep -q "(0 rows affected)" && exit 1 || exit 0',
+          'opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${SQL_SERVER_PASSWORD:-Password1!}" -Q "SELECT 1" -C || exit 1',
         ]
       interval: 20s
       retries: 5

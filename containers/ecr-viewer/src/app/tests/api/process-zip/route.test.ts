@@ -83,11 +83,27 @@ describe("POST Process Zip", () => {
     expect(jsonResponse.errors).toBeDefined();
   });
 
+  it("should return a 400 response when required no form sent", async () => {
+    const response = await POST(
+      new NextRequest("localhost:3000/ecr-viewer/api/process-zip"),
+    );
+
+    expect(response.status).toEqual(400);
+    const jsonResponse = await response.json();
+    expect(jsonResponse.message).toEqual("Validation error");
+    expect(jsonResponse.errors).toBeDefined();
+  });
+
   it("should return a 500 response when an unexpected error occurs", async () => {
+    const formData = new FormData();
+    formData.append("upload_file", mockFile);
+    const request = createRequest(formData);
+    (processZip as jest.Mock).mockRejectedValue(new Error("oh no!"));
+
     jest.spyOn(console, "error").mockImplementation();
-    const response = await POST(undefined as unknown as NextRequest);
+    const response = await POST(request);
 
     expect(response.status).toEqual(500);
-    expect(await response.json()).toEqual({ message: "Server error" });
+    expect(await response.json()).toEqual({ message: "Internal Server Error" });
   });
 });

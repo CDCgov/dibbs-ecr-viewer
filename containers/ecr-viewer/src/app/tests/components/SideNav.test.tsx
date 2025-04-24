@@ -10,6 +10,9 @@ import SideNav, {
 jest.mock("../../components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
 }));
+jest.mock("next/navigation", () => ({
+  usePathname: jest.fn().mockReturnValue("/view-data"),
+}));
 
 describe("SectionConfig", () => {
   beforeEach(() => {

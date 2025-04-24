@@ -3,10 +3,11 @@ import { randomUUID } from "crypto";
 import { Bundle } from "fhir/r4";
 import { Kysely, Transaction } from "kysely";
 
-import { dbSchema, getDb } from "@/app/api/services/database";
+import { getDb } from "@/app/api/services/database";
 import { Common } from "@/app/api/services/types/common";
 import { Core } from "@/app/api/services/types/core";
 import { Extended } from "@/app/api/services/types/extended";
+import { dbSchema } from "@/app/api/services/utils/db-config";
 import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
 import {
   deleteFromAzure,
