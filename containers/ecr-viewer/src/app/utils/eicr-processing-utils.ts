@@ -22,7 +22,7 @@ export const eicrProcessingReasonMap: Record<string, string> = {
 };
 
 // Note: Only have these suggested solutions currently. Long-term, we will figure out suggested solutions for the other warning reasons with APHL
-export const ersdWarningsSuggestedSolutionsMap: Record<string, string> = {
+export const ersdWarningSuggestedSolutionsMap: Record<string, string> = {
   RRVS34:
     "The trigger code version your organization is using could not be determined. The trigger codes may be out date. Please have your EHR administrators update the version format for complete eCR functioning.",
   RRVS29:

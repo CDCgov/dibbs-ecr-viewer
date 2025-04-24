@@ -17,12 +17,12 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDWarnings: ERSDWarning | JSX.Element;
+  eRSDWarning: ERSDWarning | JSX.Element;
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
 
-const eRSDWarningsTooltip = (
+const eRSDWarningTooltip = (
   <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">
     eRSD Warnings
   </ToolTipElement>
@@ -37,7 +37,7 @@ export const eICRProcessingSuccessMsg = (
  * @param props - Props containing eCR metadata.
  * @param props.rrDetails - The reportable conditions details.
  * @param props.eicrDetails - The eICR details.
- * @param props.eRSDWarnings - The eRSD warnings.
+ * @param props.eRSDWarning - The eRSD warnings.
  * @param props.eCRCustodianDetails - The eCR custodian details.
  * @param props.eicrAuthorDetails - The eICR author details.
  * @returns The JSX element representing the eCR metadata.
@@ -45,7 +45,7 @@ export const eICRProcessingSuccessMsg = (
 const EcrMetadata = ({
   rrDetails,
   eicrDetails,
-  eRSDWarnings,
+  eRSDWarning,
   eCRCustodianDetails,
   eicrAuthorDetails,
 }: EcrMetadataProps) => {
@@ -54,13 +54,13 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {React.isValidElement(eRSDWarnings) ? (
+        {React.isValidElement(eRSDWarning) ? (
           <div>
-            <div className="header-data-title">{eRSDWarningsTooltip}</div>
-            {eRSDWarnings}
+            <div className="header-data-title">{eRSDWarningTooltip}</div>
+            {eRSDWarning}
           </div>
         ) : (
-          Object.keys(eRSDWarnings).length > 0 && (
+          Object.keys(eRSDWarning).length > 0 && (
             <div>
               <Table
                 bordered={false}
@@ -68,7 +68,7 @@ const EcrMetadata = ({
                 fixed={true}
                 fullWidth={true}
               >
-                <caption>{eRSDWarningsTooltip}</caption>
+                <caption>{eRSDWarningTooltip}</caption>
                 <thead>
                   <tr>
                     <th>Warning</th>
@@ -80,16 +80,16 @@ const EcrMetadata = ({
                 <tbody>
                   <tr>
                     <td className="padding-105">
-                      {(eRSDWarnings as ERSDWarning).warning}
+                      {(eRSDWarning as ERSDWarning).warning}
                     </td>
                     <td className="padding-105">
-                      {(eRSDWarnings as ERSDWarning).versionUsed}
+                      {(eRSDWarning as ERSDWarning).versionUsed}
                     </td>
                     <td className="padding-105">
-                      {(eRSDWarnings as ERSDWarning).versionExpected}
+                      {(eRSDWarning as ERSDWarning).versionExpected}
                     </td>
                     <td className="padding-105">
-                      {(eRSDWarnings as ERSDWarning).suggestedSolution}
+                      {(eRSDWarning as ERSDWarning).suggestedSolution}
                     </td>
                   </tr>
                 </tbody>

@@ -145,8 +145,8 @@ export const getEcrDocumentAccordionItems = (
       content: (
         <>
           {Object.keys(ecrMetadata.rrDetails).length > 0 ||
-          React.isValidElement(ecrMetadata.eRSDWarnings) ||
-          Object.keys(ecrMetadata.eRSDWarnings).length > 0 ||
+          React.isValidElement(ecrMetadata.eRSDWarning) ||
+          Object.keys(ecrMetadata.eRSDWarning).length > 0 ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
             (authorDetails) => authorDetails.availableData.length > 0,
@@ -158,7 +158,7 @@ export const getEcrDocumentAccordionItems = (
                 ecrMetadata.ecrCustodianDetails.availableData
               }
               rrDetails={ecrMetadata.rrDetails}
-              eRSDWarnings={ecrMetadata.eRSDWarnings}
+              eRSDWarning={ecrMetadata.eRSDWarning}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
                 .filter((details) => details.availableData.length > 0)
                 .map((details) => details.availableData)}
@@ -194,8 +194,8 @@ export const getEcrDocumentAccordionItems = (
               clinicalNotesData={clinicalData.clinicalNotes.unavailableData}
               ecrMetadataUnavailableData={[
                 ...ecrMetadata.eicrDetails.unavailableData,
-                ...(!React.isValidElement(ecrMetadata.eRSDWarnings) &&
-                Object.keys(ecrMetadata.eRSDWarnings).length === 0
+                ...(!React.isValidElement(ecrMetadata.eRSDWarning) &&
+                Object.keys(ecrMetadata.eRSDWarning).length === 0
                   ? [{ title: "eRSD Warnings", value: "" }]
                   : []),
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,

@@ -42,7 +42,7 @@ const eicrDetails: DisplayDataProps[] = [
   { title: "EHR Manufacturer Model Name", value: "Epic - Version 10.1" },
 ];
 
-const eRSDWarnings: ERSDWarning = {
+const eRSDWarning: ERSDWarning = {
   warning: "Sending organization is using an malformed eRSD (RCTC) version",
   versionUsed: "2020-06-23",
   versionExpected:
@@ -114,7 +114,7 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={rrConditionsList}
-        eRSDWarnings={eRSDWarnings}
+        eRSDWarning={eRSDWarning}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
       />,
@@ -126,7 +126,7 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={rrConditionsList}
-        eRSDWarnings={eRSDWarnings}
+        eRSDWarning={eRSDWarning}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
       />,
@@ -140,7 +140,7 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={emptyRrDetails}
-        eRSDWarnings={eRSDWarnings}
+        eRSDWarning={eRSDWarning}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
       />,

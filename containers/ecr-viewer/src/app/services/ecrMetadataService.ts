@@ -8,7 +8,7 @@ import {
 } from "@/app/utils/data-utils";
 import {
   eicrProcessingReasonMap,
-  ersdWarningsSuggestedSolutionsMap,
+  ersdWarningSuggestedSolutionsMap,
 } from "@/app/utils/eicr-processing-utils";
 import {
   evaluateAll,
@@ -41,7 +41,7 @@ interface EcrMetadata {
   ecrCustodianDetails: CompleteData;
   rrDetails: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
-  eRSDWarnings: ERSDWarning | JSX.Element;
+  eRSDWarning: ERSDWarning | JSX.Element;
 }
 
 export interface ERSDWarning {
@@ -161,7 +161,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
           versionUsed: versionUsed || noData,
           versionExpected: versionExpected || noData,
           suggestedSolution:
-            ersdWarningsSuggestedSolutionsMap[warningCode] ?? noData,
+            ersdWarningSuggestedSolutionsMap[warningCode] ?? noData,
         }
       : {};
   }
@@ -223,7 +223,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
     rrDetails: reportableConditionsList,
-    eRSDWarnings: eRSDWarning,
+    eRSDWarning,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
       evaluateData(details)
     ),
