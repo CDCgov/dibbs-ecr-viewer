@@ -2,6 +2,7 @@ import { Kysely } from "kysely";
 
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
+import { Core } from "./types/core";
 import { dbDialect, dbNamespace } from "./utils/db-config";
 
 // When working with migrations, we don't know anything about the

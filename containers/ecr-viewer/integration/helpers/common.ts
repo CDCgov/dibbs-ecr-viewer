@@ -4,7 +4,7 @@ import {
   NewECR,
   NewECRConditions,
   NewECRRuleSummaries,
-} from "@/app/api/services/types/common";
+} from "@/app/api/services/types/core";
 import { dbDialect } from "@/app/api/services/utils/db-config";
 
 /**

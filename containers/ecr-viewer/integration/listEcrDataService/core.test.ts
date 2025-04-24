@@ -8,21 +8,24 @@ import {
   SqlBool,
 } from "kysely";
 
-import { createEcrCondition, createEcrRule } from "../helpers/common";
-import { createCoreEcr } from "../helpers/core";
+import {
+  createCoreEcr,
+  createEcrCondition,
+  createEcrRule,
+} from "../helpers/common";
 import { buildCore, dropExisting, clearCore } from "../helpers/ddl";
 import { getDb } from "@/app/api/services/database";
-import { Core, NewCoreECR } from "@/app/api/services/types/core";
+import { Core, NewECR } from "@/app/api/services/types/core";
 import { dbDialect, dbNamespace } from "@/app/api/services/utils/db-config";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
-  CoreMetadataModel,
+  MetadataModel,
   EcrDisplay,
   generateFilterConditionsStatement,
-  generateCoreSearchStatement,
-  generateCoreWhereStatement,
+  generateSearchStatement,
+  generateWhereStatement,
   getTotalEcrCount,
-  processCoreMetadata,
+  processMetadata,
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
@@ -32,17 +35,16 @@ const testDateRange = {
   endDate: new Date("12-03-2024"),
 };
 
-const coreTemplate: NewCoreECR = {
+const coreTemplate: NewECR = {
   eicr_id: "12345",
   set_id: "123",
-  data_source: "DB",
   fhir_reference_link: "",
   eicr_version_number: "2",
-  patient_name_first: "Billy",
-  patient_name_last: "Bob",
-  patient_birth_date: "2024-12-01",
+  first_name: "Billy",
+  last_name: "Bob",
+  birth_date: "2024-12-01",
   date_created: new Date("2024-12-02T12:00:00Z"),
-  report_date: new Date("2024-12-02T12:00:00Z"),
+  encounter_start_date: new Date("2024-12-02T12:00:00Z"),
 };
 
 // prior version of ecr
@@ -52,7 +54,7 @@ const relatedEcr = {
   date_created: new Date("2024-12-01T11:00:00Z"),
 };
 
-const getCoreWhere = async (
+const getWhere = async (
   ebCallBack: (
     eb: ExpressionBuilder<Core, "ecr_data">,
   ) =>
@@ -75,7 +77,7 @@ afterAll(async () => {
 
 describe("process Metadata", () => {
   it("should return an empty array when responseBody is empty", () => {
-    const result = processCoreMetadata([]);
+    const result = processMetadata([]);
     expect(result).toEqual([]);
   });
 
@@ -84,17 +86,16 @@ describe("process Metadata", () => {
     const date2 = new Date();
     const date3 = new Date();
 
-    const responseBody: CoreMetadataModel[] = [
+    const responseBody: MetadataModel[] = [
       {
         eicr_id: "ecr1",
         date_created: date1,
-        patient_name_first: "Test",
-        patient_name_last: "Person",
-        patient_birth_date: date2,
-        report_date: date3,
+        first_name: "Test",
+        last_name: "Person",
+        birth_date: date2,
+        encounter_start_date: date3,
         conditions: ["Long"],
         rule_summaries: ["Longer"],
-        data_source: "DB",
         set_id: "123",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -102,13 +103,12 @@ describe("process Metadata", () => {
       {
         eicr_id: "ecr2",
         date_created: date1,
-        patient_name_first: "Another",
-        patient_name_last: "Test",
-        patient_birth_date: date2,
-        report_date: date3,
+        first_name: "Another",
+        last_name: "Test",
+        birth_date: date2,
+        encounter_start_date: date3,
         conditions: ["Stuff"],
         rule_summaries: ["Other stuff", "Even more stuff"],
-        data_source: "DB",
         set_id: "124",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -146,12 +146,12 @@ describe("process Metadata", () => {
         related_ecrs: [],
       },
     ];
-    const result = processCoreMetadata(responseBody);
+    const result = processMetadata(responseBody);
     expect(result).toEqual(expected);
   });
 });
 
-describe("listCoreEcrData", () => {
+describe("listEcrData", () => {
   beforeAll(async () => {
     await clearCore();
   });
@@ -258,8 +258,8 @@ describe("get total core ecr count", () => {
 
 describe("generate search statement", () => {
   it("should use the search term in the search statement", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreSearchStatement(eb, "Dan"),
+    const { sql, params } = await getWhere((eb) =>
+      generateSearchStatement(eb, "Dan"),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -273,8 +273,8 @@ describe("generate search statement", () => {
     expect(params).toStrictEqual(["%Dan%", "%Dan%"]);
   });
   it("should escape characters when an apostrophe is added", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreSearchStatement(eb, "O'Riley"),
+    const { sql, params } = await getWhere((eb) =>
+      generateSearchStatement(eb, "O'Riley"),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -289,8 +289,8 @@ describe("generate search statement", () => {
     expect(params).toStrictEqual(["%O'Riley%", "%O'Riley%"]);
   });
   it("should only generate true statements when no search is provided", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreSearchStatement(eb, ""),
+    const { sql, params } = await getWhere((eb) =>
+      generateSearchStatement(eb, ""),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual("$1 = $2");
@@ -303,7 +303,7 @@ describe("generate search statement", () => {
 
 describe("generate filter conditions statement", () => {
   it("should add conditions in the filter statement", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
+    const { sql, params } = await getWhere((eb) =>
       generateFilterConditionsStatement(eb, ["Anthrax (disorder)"]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -318,7 +318,7 @@ describe("generate filter conditions statement", () => {
     expect(params).toStrictEqual(["%Anthrax (disorder)%"]);
   });
   it("should only look for eCRs with no conditions when de-selecting all conditions on filter", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
+    const { sql, params } = await getWhere((eb) =>
       generateFilterConditionsStatement(eb, [""]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -334,7 +334,7 @@ describe("generate filter conditions statement", () => {
     expect(params).toStrictEqual([]);
   });
   it("should add date range in the filter statement", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
+    const { sql, params } = await getWhere((eb) =>
       generateFilterDateStatement(eb, testDateRange),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -353,8 +353,8 @@ describe("generate filter conditions statement", () => {
     ]);
   });
   it("should display all conditions in date range by default if no filter has been added", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreWhereStatement(eb, testDateRange, "", undefined),
+    const { sql, params } = await getWhere((eb) =>
+      generateWhereStatement(eb, testDateRange, "", undefined),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -379,10 +379,8 @@ describe("generate filter conditions statement", () => {
 
 describe("generate where statement", () => {
   it("should generate where statement using search and filter statements", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreWhereStatement(eb, testDateRange, "blah", [
-        "Anthrax (disorder)",
-      ]),
+    const { sql, params } = await getWhere((eb) =>
+      generateWhereStatement(eb, testDateRange, "blah", ["Anthrax (disorder)"]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -403,8 +401,8 @@ describe("generate where statement", () => {
     ]);
   });
   it("should generate where statement using search statement (no conditions filter provided)", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreWhereStatement(eb, testDateRange, "blah", undefined),
+    const { sql, params } = await getWhere((eb) =>
+      generateWhereStatement(eb, testDateRange, "blah", undefined),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -426,8 +424,8 @@ describe("generate where statement", () => {
     ]);
   });
   it("should generate where statement using filter conditions statement (no search provided)", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreWhereStatement(eb, testDateRange, "", ["Anthrax (disorder)"]),
+    const { sql, params } = await getWhere((eb) =>
+      generateWhereStatement(eb, testDateRange, "", ["Anthrax (disorder)"]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -451,8 +449,8 @@ describe("generate where statement", () => {
 
 describe("generate Kysely search statement", () => {
   it("should return an OR condition for search term", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreSearchStatement(eb, "John"),
+    const { sql, params } = await getWhere((eb) =>
+      generateSearchStatement(eb, "John"),
     );
 
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -468,9 +466,7 @@ describe("generate Kysely search statement", () => {
   });
 
   it("should return TRUE if no search term is provided", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreSearchStatement(eb),
-    );
+    const { sql, params } = await getWhere((eb) => generateSearchStatement(eb));
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual("$1 = $2");
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
@@ -483,7 +479,7 @@ describe("generate Kysely search statement", () => {
 describe("generate Kysely filter conditions statement", () => {
   it("should generate an EXISTS subquery when conditions are provided", async () => {
     const conditions = ["Condition1", "Condition2"];
-    const { sql, params } = await getCoreWhere((eb) =>
+    const { sql, params } = await getWhere((eb) =>
       generateFilterConditionsStatement(eb, conditions),
     );
 
@@ -500,7 +496,7 @@ describe("generate Kysely filter conditions statement", () => {
   });
 
   it("should return TRUE if no conditions are provided", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
+    const { sql, params } = await getWhere((eb) =>
       generateFilterConditionsStatement(eb),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -514,8 +510,8 @@ describe("generate Kysely filter conditions statement", () => {
 
 describe("generate Kysely where statement", () => {
   it("should return a valid WHERE clause with all conditions", async () => {
-    const { sql, params } = await getCoreWhere((eb) =>
-      generateCoreWhereStatement(eb, testDateRange, "John Doe", [
+    const { sql, params } = await getWhere((eb) =>
+      generateWhereStatement(eb, testDateRange, "John Doe", [
         "Condition1",
         "Condition2",
       ]),
