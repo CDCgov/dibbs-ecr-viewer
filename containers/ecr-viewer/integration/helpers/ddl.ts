@@ -22,7 +22,7 @@ export const buildCore = async () => {
 };
 
 /**
- * Clears the common schema tables
+ * Clears the core schema tables
  */
 export const clearCore = async () => {
   const db = getDb<Core>();
