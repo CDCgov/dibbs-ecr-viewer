@@ -26,7 +26,7 @@ describe("register and and setupConfigurationVariables", () => {
   it("should respect METADATA_DATABASE_SCHEMA configuration variable if set", async () => {
     process.env.CONFIG_NAME = "AWS_PG_NON_INTEGRATED";
     process.env.METADATA_DATABASE_SCHEMA = "core";
-    await register();
+    setupConfigurationVariables();
 
     expect(process.env.SOURCE).toBe("s3");
     expect(process.env.METADATA_DATABASE_TYPE).toBe("postgres");
