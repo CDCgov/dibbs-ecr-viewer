@@ -1,4 +1,11 @@
-import { formatDate, formatDateTime } from "@/app/services/formatDateService";
+import {
+  formatDate,
+  formatDateTime,
+  formatPeriodDate,
+  formatPeriodDateTime,
+  formatStartEndDate,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
 
 describe("FormatDateService tests", () => {
   describe("formatDateTime", () => {
@@ -13,6 +20,14 @@ describe("FormatDateService tests", () => {
     it("Given an ISO date time string with a UTC offset, should return the correct formatted date and time", () => {
       const inputDate = "2022-12-23T14:59:44-08:00";
       const expectedDate = "12/23/2022 5:59\u00A0PM\u00A0EST";
+
+      const result = formatDateTime(inputDate);
+      expect(result).toEqual(expectedDate);
+    });
+
+    it("Given an ISO date time string with no offset, should return the correct formatted date and time", () => {
+      const inputDate = "2022-12-23T14:59:44";
+      const expectedDate = "12/23/2022 2:59\u00A0PM";
 
       const result = formatDateTime(inputDate);
       expect(result).toEqual(expectedDate);
@@ -114,6 +129,68 @@ describe("FormatDateService tests", () => {
 
       const result = formatDate(inputDate);
       expect(result).toEqual(expectedDate);
+    });
+  });
+
+  describe("formatStartEnd", () => {
+    const dt = "2023-01-04T12:34";
+    it("should return nothing when given nothing", () => {
+      expect(formatStartEndDate({})).toEqual("");
+      expect(formatStartEndDateTime({})).toEqual("");
+    });
+
+    it("should return start when given start", () => {
+      expect(formatStartEndDate({ start: dt })).toEqual("Start: 01/04/2023");
+      expect(formatStartEndDateTime({ start: dt })).toEqual(
+        "Start: 01/04/2023 12:34\u00A0PM",
+      );
+    });
+
+    it("should return end when given end", () => {
+      expect(formatStartEndDate({ end: dt })).toEqual("End: 01/04/2023");
+      expect(formatStartEndDateTime({ end: dt })).toEqual(
+        "End: 01/04/2023 12:34\u00A0PM",
+      );
+    });
+
+    it("should return start and end when given both", () => {
+      expect(formatStartEndDate({ start: dt, end: dt })).toEqual(
+        "Start: 01/04/2023\nEnd: 01/04/2023",
+      );
+      expect(formatStartEndDateTime({ start: dt, end: dt })).toEqual(
+        "Start: 01/04/2023 12:34\u00A0PM\nEnd: 01/04/2023 12:34\u00A0PM",
+      );
+    });
+  });
+
+  describe("formatPeriod", () => {
+    const dt = "2023-01-04T12:34";
+    it("should return nothing when given nothing", () => {
+      expect(formatPeriodDate({})).toEqual("");
+      expect(formatPeriodDateTime({})).toEqual("");
+    });
+
+    it("should return start when given start", () => {
+      expect(formatPeriodDate({ start: dt })).toEqual("01/04/2023 - Present");
+      expect(formatPeriodDateTime({ start: dt })).toEqual(
+        "01/04/2023 12:34\u00A0PM - Present",
+      );
+    });
+
+    it("should return end when given end", () => {
+      expect(formatPeriodDate({ end: dt })).toEqual("Unknown - 01/04/2023");
+      expect(formatPeriodDateTime({ end: dt })).toEqual(
+        "Unknown - 01/04/2023 12:34\u00A0PM",
+      );
+    });
+
+    it("should return start and end when given both", () => {
+      expect(formatPeriodDate({ start: dt, end: dt })).toEqual(
+        "01/04/2023 - 01/04/2023",
+      );
+      expect(formatPeriodDateTime({ start: dt, end: dt })).toEqual(
+        "01/04/2023 12:34\u00A0PM - 01/04/2023 12:34\u00A0PM",
+      );
     });
   });
 });
