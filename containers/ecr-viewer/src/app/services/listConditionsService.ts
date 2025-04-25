@@ -1,5 +1,5 @@
-import { getDb } from "@/app/api/services/database";
-import { Core } from "@/app/api/services/types/core";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.

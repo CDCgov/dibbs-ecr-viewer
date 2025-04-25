@@ -1,11 +1,11 @@
-import { getDb } from "@/app/api/services/database";
+import { getDb } from "@/app/data/metadataDb/database";
 import {
   Core,
   NewCoreECR,
   NewECRConditions,
   NewECRRuleSummaries,
-} from "@/app/api/services/types/core";
-import { dbDialect } from "@/app/api/services/utils/db-config";
+} from "@/app/data/metadataDb/types/core";
+import { dbDialect } from "@/app/data/metadataDb/utils/db-config";
 
 /**
  * Creates an eICR object

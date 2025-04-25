@@ -5,14 +5,14 @@ import { S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobServiceClient } from "@azure/storage-blob";
 import { ApiError } from "@google-cloud/storage";
 
-import {
-  get_azure,
-  get_fhir_data,
-  get_s3,
-} from "@/app/api/fhir-data/fhir-data-service";
-import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "@/app/api/utils";
+import { get_azure, get_fhir_data, get_s3 } from "@/app/api/fhir-data/service";
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
+import {
+  AZURE_SOURCE,
+  GCP_SOURCE,
+  S3_SOURCE,
+} from "@/app/data/blobStorage/utils";
 
 jest.mock("../../../data/blobStorage/s3Client");
 jest.mock("../../../data/blobStorage/gcpClient", () => ({

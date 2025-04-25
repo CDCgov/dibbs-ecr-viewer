@@ -7,8 +7,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 
-import { S3_SOURCE } from "@/app/api/utils";
-
+import { S3_SOURCE } from "./utils";
 import {
   BlobResponse,
   DELETE_FAILURE,

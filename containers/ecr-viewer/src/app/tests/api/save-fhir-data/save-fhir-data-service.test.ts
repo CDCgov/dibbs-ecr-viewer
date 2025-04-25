@@ -3,7 +3,7 @@
  */
 import { Bundle } from "fhir/r4";
 
-import { saveFhirData } from "@/app/api/save-fhir-data/save-fhir-data-service";
+import { saveFhirData } from "@/app/api/save-fhir-data/service";
 import { saveToAzure } from "@/app/data/blobStorage/azureClient";
 import { saveToGCP } from "@/app/data/blobStorage/gcpClient";
 import { saveToS3 } from "@/app/data/blobStorage/s3Client";

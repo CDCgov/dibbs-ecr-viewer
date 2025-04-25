@@ -1,4 +1,8 @@
-import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
+import {
+  AZURE_SOURCE,
+  GCP_SOURCE,
+  S3_SOURCE,
+} from "./app/data/blobStorage/utils";
 
 /**
  * The register function will be callled once when nextjs server is instantiated

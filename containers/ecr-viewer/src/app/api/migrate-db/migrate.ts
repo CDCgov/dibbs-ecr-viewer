@@ -6,8 +6,8 @@ import {
   Migration,
 } from "kysely";
 
-import { getDbRaw } from "@/app/api/services/database";
-import { dbNamespace, dbSchema } from "@/app/api/services/utils/db-config";
+import { getDbRaw } from "@/app/data/metadataDb/database";
+import { dbNamespace, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
 import coreMigrations from "./migrations/core";
 import extendedMigrations from "./migrations/extended";
