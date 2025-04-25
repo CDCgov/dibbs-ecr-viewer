@@ -1,9 +1,9 @@
 import { Kysely } from "kysely";
 
-import { AnyDb } from "@/app/api/services/database";
-import { getSql } from "@/app/api/services/dialects/common";
-import { dbNamespace, dbSchema } from "@/app/api/services/utils/db-config";
-import { getTable } from "@/app/api/services/utils/db-metadata";
+import { AnyDb } from "@/app/data/metadataDb/database";
+import { getSql } from "@/app/data/metadataDb/dialects/common";
+import { dbNamespace, dbSchema } from "@/app/data/metadataDb/utils/db-config";
+import { getTable } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
  * Based on ecr-viewer/sql/extended.sql.

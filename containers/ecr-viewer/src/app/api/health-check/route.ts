@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
-import { metadataDatabaseHealthCheck } from "@/app/api/services/database";
 import { azureBlobStorageHealthCheck } from "@/app/data/blobStorage/azureClient";
 import { gcpHealthCheck } from "@/app/data/blobStorage/gcpClient";
 import { s3HealthCheck } from "@/app/data/blobStorage/s3Client";
+import { metadataDatabaseHealthCheck } from "@/app/data/metadataDb/database";
 
 export const revalidate = 10;
 
