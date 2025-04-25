@@ -79,6 +79,38 @@ def test_get_value_sets_for_condition(mock_db):
     assert response.json() == expected_result
 
 
+def test_get_conditions(mock_db):
+    mocked_db_response = [
+        (1, "12345", "Anthrax", "Anthrax (disorder)", "Zoonotic diseases"),
+        (
+            2,
+            "772150003",
+            "COVID-19",
+            "Disease caused by COVID",
+            "Respiratory Conditions (infectious)",
+        ),
+    ]
+    mock_db.fetchall.return_value = mocked_db_response
+    response = client.get("/get-conditions")
+    expected_result = [
+        {
+            "id": 1,
+            "code": "12345",
+            "condition_name": "Anthrax",
+            "concept_name": "Anthrax (disorder)",
+            "condition_category": "Zoonotic diseases",
+        },
+        {
+            "id": 2,
+            "code": "772150003",
+            "condition_name": "COVID-19",
+            "concept_name": "Disease caused by COVID",
+            "condition_category": "Respiratory Conditions (infectious)",
+        },
+    ]
+    assert response.json() == expected_result
+
+
 # Note: This function is defined in utils, but we mock it in the namespace
 # coming from main because that's where the endpoint is invoking it from
 @patch("app.main.get_concepts_list_tes")

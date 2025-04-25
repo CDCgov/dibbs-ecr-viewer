@@ -142,3 +142,47 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
             resource["valueCodeableConcept"]["text"] = fallback_display
 
     return resource
+
+
+def get_conditions_list_tes() -> list[dict]:
+    """
+    Get all conditions in the tes database
+
+    :return: A list of dictionaries with the concept name, condition name, condition, category, and code.
+    """
+
+    query = """
+    SELECT
+        cnd.id as id,
+        cnd.code as code,
+        cnd.name as condition_name,
+        cpt.name as concept_name,
+        cnd.category as condition_category
+    FROM "condition" cnd
+    LEFT JOIN concept cpt ON cnd.code = cpt.code
+    """
+
+    # Connect to the SQLite database, execute sql query, then close
+    try:
+        with sqlite3.connect(_TES_DB_URL) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+
+            # We know it's not an actual error because we didn't get kicked to
+            # except, so just return the lack of results
+            if not result:
+                return []
+
+        return [
+            {
+                "id": row[0],
+                "code": row[1],
+                "condition_name": row[2],
+                "concept_name": row[3],
+                "condition_category": row[4],
+            }
+            for row in result
+        ]
+    except sqlite3.Error as e:
+        return {"error": f"An SQL error occurred: {str(e)}"}

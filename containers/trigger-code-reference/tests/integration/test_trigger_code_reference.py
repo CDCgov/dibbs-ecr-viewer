@@ -3,6 +3,7 @@ import pytest
 
 TCR_URL = "http://0.0.0.0:8080"
 STAMP_ENDPOINT = TCR_URL + "/stamp-condition-extensions"
+CONDITIONS_ENDPOINT = TCR_URL + "/get-conditions"
 
 
 @pytest.fixture
@@ -63,3 +64,25 @@ def test_tcr_stamping(setup, fhir_bundle):
     assert len(stamped_resources) == len(expected_stamped_ids)
     for rid in stamped_resources:
         assert rid in expected_stamped_ids
+
+
+@pytest.mark.integration
+def test_get_conditions(setup):
+    resp = httpx.get(CONDITIONS_ENDPOINT)
+    assert resp.status_code == 200
+
+    # sanity check conditions
+    conditions = resp.json()
+    num_conditions = len(conditions)
+    assert num_conditions > 200
+
+    # category mapping generally worked
+    with_cat = [c for c in conditions if c.condition_category is not None]
+    assert num_conditions - len(with_cat) < 10
+
+    cat_cond = with_cat[0]
+    assert "id" in cat_cond
+    assert "code" in cat_cond
+    assert "condition_name" in cat_cond
+    assert "concept_name" in cat_cond
+    assert "condition_category" in cat_cond
