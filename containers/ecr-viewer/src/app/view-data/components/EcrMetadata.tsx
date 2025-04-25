@@ -59,7 +59,8 @@ const EcrMetadata = ({
             <div className="header-data-title">{eRSDWarningTooltip}</div>
             {eICRProcessingSuccessMsg}
           </div>
-        ) : (typeof eRSDWarning === 'object' &&
+        ) : (
+          typeof eRSDWarning === "object" &&
           Object.keys(eRSDWarning).length > 0 && (
             <div>
               <Table
@@ -79,12 +80,8 @@ const EcrMetadata = ({
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="padding-105">
-                      {eRSDWarning.warning}
-                    </td>
-                    <td className="padding-105">
-                      {eRSDWarning.versionUsed}
-                    </td>
+                    <td className="padding-105">{eRSDWarning.warning}</td>
+                    <td className="padding-105">{eRSDWarning.versionUsed}</td>
                     <td className="padding-105">
                       {eRSDWarning.versionExpected}
                     </td>
