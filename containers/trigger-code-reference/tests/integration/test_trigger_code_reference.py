@@ -73,6 +73,7 @@ def test_get_conditions(setup):
 
     # sanity check conditions
     conditions = resp.json()
+    print(conditions)
     num_conditions = len(conditions)
     assert num_conditions > 200
 
