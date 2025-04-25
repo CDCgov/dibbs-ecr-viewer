@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { createEcrCondition, createEcrRule } from "../helpers/common";
+import { createEcrCondition, createEcrRule } from "../helpers/core";
 import { buildExtended, dropExisting, clearExtended } from "../helpers/ddl";
 import { createExtendedEcr } from "../helpers/extended";
 import { NewExtendedECR } from "@/app/api/services/types/extended";
@@ -71,7 +71,7 @@ afterAll(async () => {
   await dropExisting();
 });
 
-describe("listExtendedEcrData", () => {
+describe("listEcrData - extended", () => {
   it("should return empty array when no data is found", async () => {
     const startIndex = 0;
     const itemsPerPage = 25;

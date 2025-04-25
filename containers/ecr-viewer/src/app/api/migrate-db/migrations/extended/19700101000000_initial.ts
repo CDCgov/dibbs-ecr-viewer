@@ -17,7 +17,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   const table = await getTable(db, dbNamespace(), "ecr_data");
   const extendedCheck =
-    !!table && table.columns.some((c) => c.name === "first_name");
+    !!table && table.columns.some((c) => c.name === "gender");
 
   if (extendedCheck) {
     console.log("Extended migration already run. Skipping table creation.");
@@ -28,9 +28,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   await _db.schema
     .alterTable("ecr_data")
-    .addColumn("last_name", "varchar(255)", (cb) => cb.notNull())
-    .addColumn("first_name", "varchar(255)", (cb) => cb.notNull())
-    .addColumn("birth_date", "date", (cb) => cb.notNull())
     .addColumn("gender", "varchar(100)")
     .addColumn("birth_sex", "varchar(255)")
     .addColumn("gender_identity", "varchar(255)")
@@ -56,7 +53,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     .addColumn("facility_id", "varchar(255)")
     .addColumn("facility_name", "varchar(255)")
     .addColumn("encounter_type", "varchar(255)")
-    .addColumn("encounter_start_date", getSql("datetimeType"))
     .addColumn("encounter_end_date", getSql("datetimeType"))
     .addColumn("reason_for_visit", getSql("maxVarchar"))
     .addColumn("active_problems", getSql("maxVarchar"))
@@ -118,9 +114,6 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
   await _db.schema.dropTable("patient_address").ifExists().execute();
   await _db.schema
     .alterTable("ecr_data")
-    .dropColumn("last_name")
-    .dropColumn("first_name")
-    .dropColumn("birth_date")
     .dropColumn("gender")
     .dropColumn("birth_sex")
     .dropColumn("gender_identity")
@@ -146,7 +139,6 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
     .dropColumn("facility_id")
     .dropColumn("facility_name")
     .dropColumn("encounter_type")
-    .dropColumn("encounter_start_date")
     .dropColumn("encounter_end_date")
     .dropColumn("reason_for_visit")
     .dropColumn("active_problems")

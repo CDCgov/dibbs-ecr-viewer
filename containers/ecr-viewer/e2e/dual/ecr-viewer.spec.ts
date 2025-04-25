@@ -80,6 +80,9 @@ test.describe("viewer page", () => {
     test("scrolling through highlights links appropriately", async ({
       page,
     }) => {
+      // some browsers struggle with the small scroll iteration here
+      test.slow();
+
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 

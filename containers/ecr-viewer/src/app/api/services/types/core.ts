@@ -1,21 +1,40 @@
-import { ColumnType, Insertable, Selectable, Updateable } from "kysely";
+import { ColumnType, Generated, Insertable, Selectable } from "kysely";
 
-import { Common, ecr_data } from "./common";
-
-export interface core_ecr_data extends ecr_data {
-  data_source: "DB" | "S3";
-
-  patient_name_first: string;
-  patient_name_last: string;
-  patient_birth_date: ColumnType<Date, string>;
-
-  report_date: Date;
+export interface ecr_data {
+  eicr_id: Generated<string>;
+  set_id: string;
+  eicr_version_number: string | undefined;
+  fhir_reference_link: string | undefined;
+  date_created: Generated<Date>;
+  last_name: string | undefined;
+  first_name: string | undefined;
+  birth_date: ColumnType<Date, string> | undefined;
+  encounter_start_date: Date | undefined;
 }
 
-export type CoreECR = Selectable<core_ecr_data>;
-export type NewCoreECR = Insertable<core_ecr_data>;
-export type CoreECRUpdate = Updateable<core_ecr_data>;
+export interface ecr_rr_conditions {
+  uuid: Generated<string>;
+  eicr_id: string;
+  condition: string;
+}
 
-export interface Core extends Common {
-  ecr_data: core_ecr_data;
+export interface ecr_rr_rule_summaries {
+  uuid: Generated<string>;
+  ecr_rr_conditions_id: string;
+  rule_summary: string;
+}
+
+export type CoreECR = Selectable<ecr_data>;
+export type NewCoreECR = Insertable<ecr_data>;
+
+export type ECRConditions = Selectable<ecr_rr_conditions>;
+export type NewECRConditions = Insertable<ecr_rr_conditions>;
+
+export type ECRRuleSummaries = Selectable<ecr_rr_rule_summaries>;
+export type NewECRRuleSummaries = Insertable<ecr_rr_rule_summaries>;
+
+export interface Core {
+  ecr_data: ecr_data;
+  ecr_rr_conditions: ecr_rr_conditions;
+  ecr_rr_rule_summaries: ecr_rr_rule_summaries;
 }
