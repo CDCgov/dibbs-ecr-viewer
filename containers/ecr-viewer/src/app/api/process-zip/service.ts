@@ -3,12 +3,12 @@ import { Bundle } from "fhir/r4";
 import {
   saveFhirData,
   saveWithMetadata,
-} from "@/app/api/save-fhir-data/save-fhir-data-service";
+} from "@/app/api/save-fhir-data/service";
 import {
   BundleExtendedMetadata,
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
-import { dbDialect, dbSchema } from "@/app/api/services/utils/db-config";
+import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
 interface OrchestrationRawResponse {
   message: string;

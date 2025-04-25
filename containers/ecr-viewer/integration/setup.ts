@@ -1,4 +1,6 @@
-const { waitForMetadataDatabase } = require("../src/app/api/services/database");
+const {
+  waitForMetadataDatabase,
+} = require("../src/app/data/metadataDb/database");
 
 /**
  * Wait for the metadata database to be ready for testing

@@ -13,7 +13,7 @@ import Filters from "./components/Filters";
 import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { INITIAL_HEADERS } from "./constants";
-import { getAllConditions } from "./data/conditions";
+import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";

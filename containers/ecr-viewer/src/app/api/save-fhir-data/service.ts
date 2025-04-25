@@ -3,17 +3,21 @@ import { randomUUID } from "crypto";
 import { Bundle } from "fhir/r4";
 import { Kysely, Transaction } from "kysely";
 
-import { getDb } from "@/app/api/services/database";
-import { Core } from "@/app/api/services/types/core";
-import { Extended } from "@/app/api/services/types/extended";
-import { dbSchema } from "@/app/api/services/utils/db-config";
-import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
 import {
   deleteFromAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
 import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
 import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
+import {
+  S3_SOURCE,
+  AZURE_SOURCE,
+  GCP_SOURCE,
+} from "@/app/data/blobStorage/utils";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
+import { Extended } from "@/app/data/metadataDb/types/extended";
+import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
