@@ -153,7 +153,6 @@ def get_conditions_list_tes() -> list[dict]:
 
     query = """
     SELECT
-        cnd.id as id,
         cnd.code as code,
         cnd.name as condition_name,
         cpt.name as concept_name,
@@ -176,11 +175,10 @@ def get_conditions_list_tes() -> list[dict]:
 
         return [
             {
-                "id": row[0],
-                "code": row[1],
-                "condition_name": row[2],
-                "concept_name": row[3],
-                "condition_category": row[4],
+                "code": row[0],
+                "condition_name": row[1],
+                "concept_name": row[2],
+                "condition_category": row[3],
             }
             for row in result
         ]

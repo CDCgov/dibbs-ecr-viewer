@@ -81,9 +81,8 @@ def test_get_value_sets_for_condition(mock_db):
 
 def test_get_conditions(mock_db):
     mocked_db_response = [
-        (1, "12345", "Anthrax", "Anthrax (disorder)", "Zoonotic diseases"),
+        ("12345", "Anthrax", "Anthrax (disorder)", "Zoonotic diseases"),
         (
-            2,
             "772150003",
             "COVID-19",
             "Disease caused by COVID",
@@ -94,14 +93,12 @@ def test_get_conditions(mock_db):
     response = client.get("/get-conditions")
     expected_result = [
         {
-            "id": 1,
             "code": "12345",
             "condition_name": "Anthrax",
             "concept_name": "Anthrax (disorder)",
             "condition_category": "Zoonotic diseases",
         },
         {
-            "id": 2,
             "code": "772150003",
             "condition_name": "COVID-19",
             "concept_name": "Disease caused by COVID",
