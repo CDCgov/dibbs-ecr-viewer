@@ -18,7 +18,6 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import { eICRProcessingSuccessMsg } from "@/app/view-data/components/EcrMetadata";
 
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { formatDateTime } from "./formatDateService";
@@ -41,7 +40,7 @@ interface EcrMetadata {
   ecrCustodianDetails: CompleteData;
   rrDetails: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
-  eRSDWarning: ERSDWarning | JSX.Element;
+  eRSDWarning: ERSDWarning | undefined;
 }
 
 export interface ERSDWarning {
@@ -118,9 +117,9 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   function geteRSDWarning(
     processingStatus: string | undefined,
     reasonObs: Observation | undefined,
-  ): ERSDWarning | JSX.Element {
+  ): ERSDWarning | undefined {
     if (processingStatus === "RRVS19") {
-      return eICRProcessingSuccessMsg;
+      return;
     } else if (processingStatus && !reasonObs) {
       return {
         warning: "eICR processed with a warning or error (unknown)",
@@ -166,7 +165,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       : {};
   }
 
-  const eRSDWarning: ERSDWarning | JSX.Element = geteRSDWarning(
+  const eRSDWarning: ERSDWarning | undefined = geteRSDWarning(
     fhirEICRProcessingStatus,
     fhirEICRProcessingStatusReasonObs
   );

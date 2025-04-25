@@ -8,7 +8,6 @@ import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
 import { ERSDWarning, evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import { noData } from "@/app/utils/data-utils";
-import { eICRProcessingSuccessMsg } from "@/app/view-data/components/EcrMetadata";
 
 describe("Evaluate Ecr Metadata", () => {
   it("should have no available data where there is no data", () => {
@@ -104,10 +103,10 @@ describe("Evaluate Ecr Metadata", () => {
         "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
     });
   });
-  it("if processed with no warning/error, should have success message", () => {
+  it("if processed with no warning/error, should be undefined", () => {
     const actual = evaluateEcrMetadata(sample_ecr as unknown as Bundle);
 
-    expect(actual.eRSDWarning).toEqual(eICRProcessingSuccessMsg);
+    expect(actual.eRSDWarning).toEqual(undefined);
   });
   it("if processed with eRSDwarning but no details, should show partial info", () => {
     const actual = evaluateEcrMetadata(

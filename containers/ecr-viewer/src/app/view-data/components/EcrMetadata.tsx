@@ -17,7 +17,7 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDWarning: ERSDWarning | JSX.Element;
+  eRSDWarning: ERSDWarning | undefined;
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
@@ -54,12 +54,12 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {React.isValidElement(eRSDWarning) ? (
+        {!eRSDWarning ? (
           <div>
             <div className="header-data-title">{eRSDWarningTooltip}</div>
-            {eRSDWarning}
+            {eICRProcessingSuccessMsg}
           </div>
-        ) : (
+        ) : (typeof eRSDWarning === 'object' &&
           Object.keys(eRSDWarning).length > 0 && (
             <div>
               <Table
@@ -80,16 +80,16 @@ const EcrMetadata = ({
                 <tbody>
                   <tr>
                     <td className="padding-105">
-                      {(eRSDWarning as ERSDWarning).warning}
+                      {eRSDWarning.warning}
                     </td>
                     <td className="padding-105">
-                      {(eRSDWarning as ERSDWarning).versionUsed}
+                      {eRSDWarning.versionUsed}
                     </td>
                     <td className="padding-105">
-                      {(eRSDWarning as ERSDWarning).versionExpected}
+                      {eRSDWarning.versionExpected}
                     </td>
                     <td className="padding-105">
-                      {(eRSDWarning as ERSDWarning).suggestedSolution}
+                      {eRSDWarning.suggestedSolution}
                     </td>
                   </tr>
                 </tbody>
