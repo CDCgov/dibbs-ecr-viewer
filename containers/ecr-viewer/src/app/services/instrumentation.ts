@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { hasPendingMigrations } from "@/app/api/migrate-db/migrate";
-import { waitForMetadataDatabase } from "@/app/api/services/database";
+import { waitForMetadataDatabase } from "@/app/data/metadataDb/database";
 
 // Configuration does not require a database so we don't need to check for pending migrations
 if (!!process.env.METADATA_DATABASE_TYPE) {

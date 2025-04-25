@@ -14,9 +14,9 @@ import {
   createEcrRule,
 } from "../helpers/core";
 import { buildCore, dropExisting, clearCore } from "../helpers/ddl";
-import { getDb } from "@/app/api/services/database";
-import { Core, NewCoreECR } from "@/app/api/services/types/core";
-import { dbNamespace } from "@/app/api/services/utils/db-config";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core, NewCoreECR } from "@/app/data/metadataDb/types/core";
+import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   MetadataModel,

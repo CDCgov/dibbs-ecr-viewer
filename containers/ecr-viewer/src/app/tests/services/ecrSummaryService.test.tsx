@@ -12,8 +12,8 @@ import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryPatientDetails,
   evaluateEcrSummaryRelevantClinicalDetails,
+  evaluateEcrSummaryRelevantLabResults,
 } from "@/app/services/ecrSummaryService";
-import { evaluateEcrSummaryRelevantLabResults } from "@/app/services/ecrSummaryService";
 
 describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Clinical Details", () => {

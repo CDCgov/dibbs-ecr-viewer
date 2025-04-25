@@ -1,8 +1,8 @@
 import { migrateDown, migrateUp } from "@/app/api/migrate-db/migrate";
-import { getDb } from "@/app/api/services/database";
-import { Core } from "@/app/api/services/types/core";
-import { Extended } from "@/app/api/services/types/extended";
-import { dbSchema } from "@/app/api/services/utils/db-config";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
+import { Extended } from "@/app/data/metadataDb/types/extended";
+import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
 /**
  * Drops the common schema tables

@@ -5,7 +5,7 @@
 import { createEcrCondition, createEcrRule } from "../helpers/core";
 import { buildExtended, dropExisting, clearExtended } from "../helpers/ddl";
 import { createExtendedEcr } from "../helpers/extended";
-import { NewExtendedECR } from "@/app/api/services/types/extended";
+import { NewExtendedECR } from "@/app/data/metadataDb/types/extended";
 import {
   getTotalEcrCount,
   listEcrData,
