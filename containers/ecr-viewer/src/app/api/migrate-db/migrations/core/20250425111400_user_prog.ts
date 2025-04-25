@@ -26,14 +26,14 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
       .addColumn("name", "varchar(200)")
       .addColumn("date_of_last_login", getSql("datetimeTzType"))
       .addColumn("user_type", "varchar(12)", (cb) => cb.notNull())
-      .addColumn("user_status", "varchar(12)", (cb) =>
+      .addColumn("status", "varchar(12)", (cb) =>
         cb.notNull().defaultTo("active"),
       )
       .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
         cb.notNull().defaultTo(getSql("now")),
       )
       .addColumn("author_uuid", "varchar(200)", (cb) =>
-        cb.references("user.uuid"),
+        cb.notNull().references("user.uuid"),
       )
       .execute();
 
