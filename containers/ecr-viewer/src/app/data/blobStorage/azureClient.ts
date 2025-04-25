@@ -1,7 +1,7 @@
 import { BlobServiceClient } from "@azure/storage-blob";
 
-import { AZURE_SOURCE } from "./utils";
 import {
+  AZURE_SOURCE,
   BlobResponse,
   DELETE_FAILURE,
   DELETE_MISCONFIGURED,

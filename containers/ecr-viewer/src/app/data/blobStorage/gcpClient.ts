@@ -1,7 +1,7 @@
 import { Storage } from "@google-cloud/storage";
 
-import { GCP_SOURCE } from "./utils";
 import {
+  GCP_SOURCE,
   BlobResponse,
   DELETE_FAILURE,
   DELETE_MISCONFIGURED,
