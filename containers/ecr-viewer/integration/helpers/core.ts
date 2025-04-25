@@ -5,7 +5,6 @@ import {
   NewECRConditions,
   NewECRRuleSummaries,
 } from "@/app/api/services/types/core";
-import { dbDialect } from "@/app/api/services/utils/db-config";
 
 /**
  * Creates an eICR object
@@ -43,15 +42,3 @@ export async function createEcrRule(
     .values(rule_summary)
     .execute();
 }
-
-/**
- * @returns dialect-mapped date time type
- */
-export const dateTimeType = () =>
-  dbDialect() === "postgres" ? "timestamp" : "datetime";
-
-/**
- * @returns dialect-mapped date time with tz type
- */
-export const dateTimeTypeTz = () =>
-  dbDialect() === "postgres" ? "timestamptz" : "datetimeoffset";
