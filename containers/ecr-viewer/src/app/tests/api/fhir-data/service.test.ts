@@ -24,8 +24,8 @@ jest.mock("@azure/storage-blob", () => ({
   },
 }));
 
-jest.mock("../../../api/utils", () => {
-  const originalModule = jest.requireActual("../../../api/utils");
+jest.mock("../../../data/blobStorage/utils", () => {
+  const originalModule = jest.requireActual("../../../data/blobStorage/utils");
   return {
     ...originalModule,
     streamToJson: (body: string) => body,

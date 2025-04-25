@@ -13,7 +13,7 @@ jest.mock("../view-data/components/LoadingComponent", () => ({
   EcrLoadingSkeleton: () => <div>Loading...</div>,
 }));
 
-jest.mock("../api/fhir-data/fhir-data-service", () => ({
+jest.mock("../api/fhir-data/service", () => ({
   get_fhir_data: jest.fn(),
 }));
 jest.mock("../components/AuthSessionProvider", () => ({

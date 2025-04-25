@@ -11,7 +11,7 @@ import { saveToS3 } from "@/app/data/blobStorage/s3Client";
 jest.mock("../../../../app/data/blobStorage/azureClient");
 jest.mock("../../../../app/data/blobStorage/gcpClient");
 jest.mock("../../../../app/data/blobStorage/s3Client");
-jest.mock("../../../../app/api/services/database");
+jest.mock("../../../../app/data/metadataDb/database");
 
 describe("saveFhirData", () => {
   const fhirBundle: Bundle = { resourceType: "Bundle", type: "batch" };

@@ -9,8 +9,8 @@ import {
 } from "@/app/api/save-fhir-data/service";
 import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 
-jest.mock("../../../api/save-fhir-data/save-fhir-data-service");
-jest.mock("../../../api/services/database");
+jest.mock("../../../api/save-fhir-data/service");
+jest.mock("../../../data/metadataDb/database");
 
 describe("processZip", () => {
   const mockFile = new File(["content"], "test.zip");
