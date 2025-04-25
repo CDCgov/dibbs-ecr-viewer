@@ -1,5 +1,5 @@
 import { getDb } from "@/app/api/services/database";
-import { Common } from "@/app/api/services/types/common";
+import { Core } from "@/app/api/services/types/core";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.
@@ -7,7 +7,7 @@ import { Common } from "@/app/api/services/types/common";
  */
 export const getAllConditions = async (): Promise<string[]> => {
   try {
-    const result = await getDb<Common>()
+    const result = await getDb<Core>()
       .selectFrom("ecr_rr_conditions")
       .select("condition")
       .distinct()
