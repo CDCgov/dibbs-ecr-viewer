@@ -6,6 +6,10 @@ Running the `seed_tes_data.py` script will create and populate the `tes.db` SQLi
 
 Before you can run the seed script, you'll need to acquire a TES API key. Make a TES account [here](https://tes.tools.aimsplatform.org/) and the `API-KEY` menu will be available to you once you log in.
 
+## Update the RCKMS Condition Codes
+
+When updating the TES database, ensure you also have the latest data on condition categories from the [RCKMS site](https://www.rckms.org/content-repository/).
+
 ## Running the script
 
 1. Get set up to run the TCRS locally ([see here](../README.md#running-from-python-source-code))
