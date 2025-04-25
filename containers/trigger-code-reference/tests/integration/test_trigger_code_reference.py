@@ -82,8 +82,10 @@ def test_get_conditions(setup):
     assert num_conditions - len(with_cat) < 10
 
     cat_cond = with_cat[0]
-    assert "id" in cat_cond
-    assert "code" in cat_cond
-    assert "condition_name" in cat_cond
-    assert "concept_name" in cat_cond
-    assert "condition_category" in cat_cond
+    assert "id" in cat_cond and type(cat_cond["id"]) is int
+    assert "code" in cat_cond and type(cat_cond["code"]) is str
+    assert "condition_name" in cat_cond and type(cat_cond["condition_name"]) is str
+    assert "concept_name" in cat_cond and type(cat_cond["concept_name"]) is str
+    assert (
+        "condition_category" in cat_cond and type(cat_cond["condition_category"]) is str
+    )
