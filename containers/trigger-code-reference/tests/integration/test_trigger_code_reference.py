@@ -78,7 +78,7 @@ def test_get_conditions(setup):
     assert num_conditions > 200
 
     # category mapping generally worked
-    with_cat = [c for c in conditions if c.condition_category is not None]
+    with_cat = [c for c in conditions if c["condition_category"] is not None]
     assert num_conditions - len(with_cat) < 10
 
     cat_cond = with_cat[0]
