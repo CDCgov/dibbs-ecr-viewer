@@ -71,7 +71,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 }
 
 /**
- * Common schema initialization.
+ * Core schema tear down
  * @param db - the database connection
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
