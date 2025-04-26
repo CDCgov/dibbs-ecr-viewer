@@ -3,7 +3,7 @@ import React from "react";
 import { Table } from "@trussworks/react-uswds";
 
 import {
-  ERSDWarning,
+  ERSDInfo,
   ReportableConditions,
 } from "@/app/services/ecrMetadataService";
 import {
@@ -17,7 +17,7 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDWarning: ERSDWarning | undefined;
+  eRSDWarning: ERSDInfo;
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
@@ -54,13 +54,15 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {!eRSDWarning ? (
+        {/* // TODO ANGELA rename eRSDWarning */}
+        {eRSDWarning.success ? (
           <div>
             <div className="header-data-title">{eRSDWarningTooltip}</div>
             {eICRProcessingSuccessMsg}
           </div>
-        ) : (typeof eRSDWarning === 'object' &&
-          Object.keys(eRSDWarning).length > 0 && (
+        ) : (
+          typeof eRSDWarning.eRSDWarning === "object" &&
+          Object.keys(eRSDWarning.eRSDWarning).length > 0 && (
             <div>
               <Table
                 bordered={false}
@@ -80,16 +82,16 @@ const EcrMetadata = ({
                 <tbody>
                   <tr>
                     <td className="padding-105">
-                      {eRSDWarning.warning}
+                      {eRSDWarning.eRSDWarning.warning}
                     </td>
                     <td className="padding-105">
-                      {eRSDWarning.versionUsed}
+                      {eRSDWarning.eRSDWarning.versionUsed}
                     </td>
                     <td className="padding-105">
-                      {eRSDWarning.versionExpected}
+                      {eRSDWarning.eRSDWarning.versionExpected}
                     </td>
                     <td className="padding-105">
-                      {eRSDWarning.suggestedSolution}
+                      {eRSDWarning.eRSDWarning.suggestedSolution}
                     </td>
                   </tr>
                 </tbody>

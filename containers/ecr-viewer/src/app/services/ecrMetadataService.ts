@@ -40,7 +40,12 @@ interface EcrMetadata {
   ecrCustodianDetails: CompleteData;
   rrDetails: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
-  eRSDWarning: ERSDWarning | undefined;
+  eRSDWarning: ERSDInfo; // TODO ANGELA: rename eRSDWarning to eRSDInfo?
+}
+
+export interface ERSDInfo {
+  success: boolean;
+  eRSDWarning?: ERSDWarning;
 }
 
 export interface ERSDWarning {
@@ -117,18 +122,21 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   function geteRSDWarning(
     processingStatus: string | undefined,
     reasonObs: Observation | undefined,
-  ): ERSDWarning | undefined {
+  ): ERSDInfo {
     if (processingStatus === "RRVS19") {
-      return;
+      return {success: true};
     } else if (processingStatus && !reasonObs) {
       return {
-        warning: "eICR processed with a warning or error (unknown)",
-        versionUsed: noData,
-        versionExpected: noData,
-        suggestedSolution: noData,
+        success: false,
+        eRSDWarning: {
+          warning: "eICR processed with a warning or error (unknown)",
+          versionUsed: noData,
+          versionExpected: noData,
+          suggestedSolution: noData,
+        }
       };
     } else if (!processingStatus && !reasonObs) {
-      return {};
+      return {success: false};
     }
 
     const coding = reasonObs?.valueCodeableConcept?.coding?.[0];
@@ -156,16 +164,20 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     });
     return warningName || versionUsed || versionExpected || warningCode
       ? {
-          warning: warningName ?? noData,
-          versionUsed: versionUsed || noData,
-          versionExpected: versionExpected || noData,
-          suggestedSolution:
-            ersdWarningSuggestedSolutionsMap[warningCode] ?? noData,
+          success: false,
+          eRSDWarning: {
+            warning: warningName ?? noData,
+            versionUsed: versionUsed || noData,
+            versionExpected: versionExpected || noData,
+            suggestedSolution:
+              ersdWarningSuggestedSolutionsMap[warningCode] ?? noData,
+          },
         }
-      : {};
+      : { success: false };
   }
 
-  const eRSDWarning: ERSDWarning | undefined = geteRSDWarning(
+  // TODO ANGELA: rename to eRSDInfo?
+  const eRSDWarning: ERSDInfo = geteRSDWarning(
     fhirEICRProcessingStatus,
     fhirEICRProcessingStatusReasonObs,
   );
@@ -222,7 +234,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
     rrDetails: reportableConditionsList,
-    eRSDWarning,
+    eRSDWarning, // TODO ANGELA: If rename above, need to rename this as well
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
       evaluateData(details),
     ),

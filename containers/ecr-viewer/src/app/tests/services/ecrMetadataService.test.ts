@@ -97,19 +97,22 @@ describe("Evaluate Ecr Metadata", () => {
     );
 
     expect(actual.eRSDWarning).toEqual({
-      warning:
-        "The eICR was processed with the warning of: outdated eRSD (RCTC) version.",
-      versionUsed: "Outdated eRSD (RCTC) Version Detail: 3/29/2022",
-      versionExpected:
-        'The expected eRSD (RCTC) version should be one of the following: ["2024-06-28","1.2.4.0","3.x.x","2024-04-05"] ',
-      suggestedSolution:
-        "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
+      success: false,
+      eRSDWarning: {
+        warning:
+          "The eICR was processed with the warning of: outdated eRSD (RCTC) version.",
+        versionUsed: "Outdated eRSD (RCTC) Version Detail: 3/29/2022",
+        versionExpected:
+          'The expected eRSD (RCTC) version should be one of the following: ["2024-06-28","1.2.4.0","3.x.x","2024-04-05"] ',
+        suggestedSolution:
+          "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
+      }
     });
   });
-  it("if processed with no warning/error, should be undefined", () => {
+  it("if processed with no warning/error, should return success = true", () => {
     const actual = evaluateEcrMetadata(sample_ecr as unknown as Bundle);
 
-    expect(actual.eRSDWarning).toEqual(undefined);
+    expect(actual.eRSDWarning).toEqual({success: true});
   });
   it("if processed with eRSDwarning but no details, should show partial info", () => {
     const actual = evaluateEcrMetadata(
@@ -117,17 +120,20 @@ describe("Evaluate Ecr Metadata", () => {
     );
 
     expect(actual.eRSDWarning).toEqual({
-      warning:
-        "eICR was processed with the warning of: content or format issues.",
-      versionUsed: noData,
-      versionExpected: noData,
-      suggestedSolution: noData,
+      success: false,
+      eRSDWarning: {
+        warning:
+          "eICR was processed with the warning of: content or format issues.",
+        versionUsed: noData,
+        versionExpected: noData,
+        suggestedSolution: noData,
+      }
     });
   });
   it("if no eICR Processing Status, should return empty object", () => {
     const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle);
 
-    expect(actual.eRSDWarning).toEqual({});
+    expect(actual.eRSDWarning).toEqual({success: false});
   });
   it("if there's a non-success processing status but no reason obs, should return empty object", () => {
     const BundleErsdWarningNoReason: Bundle = {
@@ -210,11 +216,10 @@ describe("Evaluate Ecr Metadata", () => {
     const actual = evaluateEcrMetadata(
       BundleErsdWarningNoReason as unknown as Bundle,
     );
-    console.log(actual.eRSDWarning);
-    expect((actual.eRSDWarning as ERSDWarning).warning).toEqual(
+    expect((actual.eRSDWarning.eRSDWarning as ERSDWarning).warning).toEqual(
       "eICR processed with a warning or error (unknown)",
     );
-    expect((actual.eRSDWarning as ERSDWarning).versionUsed).toEqual(noData);
+    expect((actual.eRSDWarning.eRSDWarning as ERSDWarning).versionUsed).toEqual(noData);
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
