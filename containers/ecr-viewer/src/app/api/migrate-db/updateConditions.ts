@@ -27,11 +27,29 @@ const getOrchestrationResponse = async (): Promise<
 };
 
 const upsertConditions = async (conditions: OrchestrationConditions[]) => {
+  const db = getDb<Core>();
+  const currentConditions = await db
+    .selectFrom("condition_reference")
+    .select("code")
+    .execute();
+  const conditionSet = new Set(currentConditions.map(({ code }) => code));
   await getDb<Core>()
     .transaction()
     .execute(async (db) => {
       for (const condition of conditions) {
-        try {
+        const { concept_name, condition_name, code, condition_category } =
+          condition;
+        if (conditionSet.has(code)) {
+          await db
+            .updateTable("condition_reference")
+            .set({
+              condition_name,
+              concept_name,
+              condition_category,
+            })
+            .where("code", "=", code)
+            .execute();
+        } else {
           await db
             .insertInto("condition_reference")
             .columns([
@@ -41,18 +59,6 @@ const upsertConditions = async (conditions: OrchestrationConditions[]) => {
               "condition_category",
             ])
             .values(condition)
-            .execute();
-        } catch {
-          const { concept_name, condition_name, code, condition_category } =
-            condition;
-          await db
-            .updateTable("condition_reference")
-            .set({
-              condition_name,
-              concept_name,
-              condition_category,
-            })
-            .where("code", "=", code)
             .execute();
         }
       }
@@ -64,8 +70,8 @@ const upsertConditions = async (conditions: OrchestrationConditions[]) => {
  * @returns promise
  */
 export const updateConditions = async (): Promise<void> => {
+  const conditions = await getOrchestrationResponse();
   try {
-    const conditions = await getOrchestrationResponse();
     await upsertConditions(conditions);
   } catch (error: unknown) {
     const message = "Failed to process orchestration response";
