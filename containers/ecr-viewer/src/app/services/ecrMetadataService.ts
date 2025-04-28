@@ -49,7 +49,7 @@ export interface ERSDInfo {
 }
 
 export interface ERSDWarning {
-  warning?: RenderableNode;
+  warning: string;
   versionUsed?: RenderableNode;
   versionExpected?: RenderableNode;
   suggestedSolution?: RenderableNode;
