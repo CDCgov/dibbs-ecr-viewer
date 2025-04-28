@@ -15,6 +15,14 @@ interface OrchestrationConditions {
 const getOrchestrationResponse = async (): Promise<
   OrchestrationConditions[]
 > => {
+  const healthCheck = await fetch(process.env.ORCHESTRATION_URL);
+  if (healthCheck.status !== 200) {
+    console.warn(
+      "Orchestration service is down. Skipping updating conditions.",
+    );
+    return [];
+  }
+
   const response = await fetch(`${process.env.ORCHESTRATION_URL}/conditions`);
 
   if (response.status !== 200) {
