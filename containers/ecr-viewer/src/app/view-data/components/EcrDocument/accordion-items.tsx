@@ -145,9 +145,7 @@ export const getEcrDocumentAccordionItems = (
       content: (
         <>
           {Object.keys(ecrMetadata.rrDetails).length > 0 ||
-          (ecrMetadata.eRSDProcessingInfo && 
-          (ecrMetadata.eRSDProcessingInfo.success ||
-          ecrMetadata.eRSDProcessingInfo.eRSDWarning)) ||
+          ecrMetadata.eRSDProcessingInfo ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
             (authorDetails) => authorDetails.availableData.length > 0,

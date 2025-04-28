@@ -55,10 +55,11 @@ export interface ERSDWarning {
   suggestedSolution?: RenderableNode;
 }
 
+const unknownWarningText = "eICR processed with a warning or error (unknown)";
 export const unknownWarning: ERSDInfo = {
   success: false,
   eRSDWarning: {
-    warning: "eICR processed with a warning or error (unknown)",
+    warning: unknownWarningText,
     versionUsed: noData,
     versionExpected: noData,
     suggestedSolution: noData,
@@ -169,11 +170,11 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       ? {
           success: false,
           eRSDWarning: {
-            warning: warningName ?? noData,
+            warning: warningName || unknownWarningText,
             versionUsed: versionUsed || noData,
             versionExpected: versionExpected || noData,
             suggestedSolution:
-              ersdWarningSuggestedSolutionsMap[warningCode] ?? noData,
+              ersdWarningSuggestedSolutionsMap[warningCode] || noData,
           },
         }
       : unknownWarning;
