@@ -17,7 +17,7 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDWarning: ERSDInfo;
+  eRSDProcessingInfo: ERSDInfo;
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
@@ -37,7 +37,7 @@ export const eICRProcessingSuccessMsg = (
  * @param props - Props containing eCR metadata.
  * @param props.rrDetails - The reportable conditions details.
  * @param props.eicrDetails - The eICR details.
- * @param props.eRSDWarning - The eRSD warnings.
+ * @param props.eRSDProcessingInfo - The eICR processing success status & eRSD warning.
  * @param props.eCRCustodianDetails - The eCR custodian details.
  * @param props.eicrAuthorDetails - The eICR author details.
  * @returns The JSX element representing the eCR metadata.
@@ -45,7 +45,7 @@ export const eICRProcessingSuccessMsg = (
 const EcrMetadata = ({
   rrDetails,
   eicrDetails,
-  eRSDWarning,
+  eRSDProcessingInfo,
   eCRCustodianDetails,
   eicrAuthorDetails,
 }: EcrMetadataProps) => {
@@ -54,15 +54,14 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {/* // TODO ANGELA rename eRSDWarning */}
-        {eRSDWarning.success ? (
+        {eRSDProcessingInfo.success ? (
           <div>
             <div className="header-data-title">{eRSDWarningTooltip}</div>
             {eICRProcessingSuccessMsg}
           </div>
         ) : (
-          typeof eRSDWarning.eRSDWarning === "object" &&
-          Object.keys(eRSDWarning.eRSDWarning).length > 0 && (
+          eRSDProcessingInfo.eRSDWarning &&
+          Object.keys(eRSDProcessingInfo.eRSDWarning).length > 0 && (
             <div>
               <Table
                 bordered={false}
@@ -82,16 +81,16 @@ const EcrMetadata = ({
                 <tbody>
                   <tr>
                     <td className="padding-105">
-                      {eRSDWarning.eRSDWarning.warning}
+                      {eRSDProcessingInfo.eRSDWarning.warning}
                     </td>
                     <td className="padding-105">
-                      {eRSDWarning.eRSDWarning.versionUsed}
+                      {eRSDProcessingInfo.eRSDWarning.versionUsed}
                     </td>
                     <td className="padding-105">
-                      {eRSDWarning.eRSDWarning.versionExpected}
+                      {eRSDProcessingInfo.eRSDWarning.versionExpected}
                     </td>
                     <td className="padding-105">
-                      {eRSDWarning.eRSDWarning.suggestedSolution}
+                      {eRSDProcessingInfo.eRSDWarning.suggestedSolution}
                     </td>
                   </tr>
                 </tbody>

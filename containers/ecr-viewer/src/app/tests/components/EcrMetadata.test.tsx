@@ -42,7 +42,7 @@ const eicrDetails: DisplayDataProps[] = [
   { title: "EHR Manufacturer Model Name", value: "Epic - Version 10.1" },
 ];
 
-const eRSDWarning: ERSDInfo = {
+const eRSDProcessingInfo: ERSDInfo = {
   success: false,
   eRSDWarning: {
     warning: "Sending organization is using an malformed eRSD (RCTC) version",
@@ -51,7 +51,7 @@ const eRSDWarning: ERSDInfo = {
       "Sending organization should be using one of the following: 2023-10-06, 1.2.2.0, 3.x.x.x.",
     suggestedSolution:
       "The trigger code version your organization is using could not be determined. The trigger codes may be out date. Please have your EHR administrators update the version format for complete eCR functioning.",
-  }
+  },
 };
 
 const ecrCustodianDetails: DisplayDataProps[] = [
@@ -117,10 +117,10 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={rrConditionsList}
-        eRSDWarning={eRSDWarning}
+        eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />,
+      />
     );
     expect(container).toMatchSnapshot();
   });
@@ -129,10 +129,10 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={rrConditionsList}
-        eRSDWarning={eRSDWarning}
+        eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />,
+      />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -143,10 +143,10 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={emptyRrDetails}
-        eRSDWarning={eRSDWarning}
+        eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />,
+      />
     );
     expect(
       screen.getByText("Reportability Summary", { selector: "h5" }),

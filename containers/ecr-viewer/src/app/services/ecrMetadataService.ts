@@ -40,7 +40,7 @@ interface EcrMetadata {
   ecrCustodianDetails: CompleteData;
   rrDetails: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
-  eRSDWarning: ERSDInfo; // TODO ANGELA: rename eRSDWarning to eRSDInfo?
+  eRSDProcessingInfo: ERSDInfo;
 }
 
 export interface ERSDInfo {
@@ -119,7 +119,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     fhirPathMappings.eICRProcessingStatusReason,
   );
 
-  function geteRSDWarning(
+  function geteRSDInfo(
     processingStatus: string | undefined,
     reasonObs: Observation | undefined,
   ): ERSDInfo {
@@ -176,8 +176,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       : { success: false };
   }
 
-  // TODO ANGELA: rename to eRSDInfo?
-  const eRSDWarning: ERSDInfo = geteRSDWarning(
+  const eRSDProcessingInfo: ERSDInfo = geteRSDInfo(
     fhirEICRProcessingStatus,
     fhirEICRProcessingStatusReasonObs,
   );
@@ -234,9 +233,9 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
     rrDetails: reportableConditionsList,
-    eRSDWarning, // TODO ANGELA: If rename above, need to rename this as well
+    eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details),
+      evaluateData(details)
     ),
   };
 };

@@ -109,7 +109,7 @@ export const getEcrDocumentAccordionItems = (
     {
       title: "Clinical Info",
       content: Object.values(clinicalData).some(
-        (section) => section.availableData.length > 0,
+        (section) => section.availableData.length > 0
       ) ? (
         <ClinicalInfo
           clinicalNotes={clinicalData.clinicalNotes.availableData}
@@ -145,13 +145,13 @@ export const getEcrDocumentAccordionItems = (
       content: (
         <>
           {Object.keys(ecrMetadata.rrDetails).length > 0 ||
-          // TODO ANGELA: success
-          ecrMetadata.eRSDWarning.success || 
-          ( ecrMetadata.eRSDWarning.eRSDWarning &&
-          Object.keys(ecrMetadata.eRSDWarning.eRSDWarning).length > 0) ||
+          ecrMetadata.eRSDProcessingInfo.success ||
+          (ecrMetadata.eRSDProcessingInfo.eRSDWarning &&
+            Object.keys(ecrMetadata.eRSDProcessingInfo.eRSDWarning).length >
+              0) ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
-            (authorDetails) => authorDetails.availableData.length > 0,
+            (authorDetails) => authorDetails.availableData.length > 0
           ) ||
           ecrMetadata.ecrCustodianDetails.availableData.length > 0 ? (
             <EcrMetadata
@@ -160,7 +160,7 @@ export const getEcrDocumentAccordionItems = (
                 ecrMetadata.ecrCustodianDetails.availableData
               }
               rrDetails={ecrMetadata.rrDetails}
-              eRSDWarning={ecrMetadata.eRSDWarning} 
+              eRSDProcessingInfo={ecrMetadata.eRSDProcessingInfo}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
                 .filter((details) => details.availableData.length > 0)
                 .map((details) => details.availableData)}
@@ -196,14 +196,14 @@ export const getEcrDocumentAccordionItems = (
               clinicalNotesData={clinicalData.clinicalNotes.unavailableData}
               ecrMetadataUnavailableData={[
                 ...ecrMetadata.eicrDetails.unavailableData,
-                // TODO ANGELA: no ersd processing info
-                ...(!ecrMetadata.eRSDWarning.success && !ecrMetadata.eRSDWarning.eRSDWarning
+                ...(!ecrMetadata.eRSDProcessingInfo.success &&
+                !ecrMetadata.eRSDProcessingInfo.eRSDWarning
                   ? [{ title: "eRSD Warnings", value: "" }]
                   : []),
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,
               ]}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails.map(
-                (authorDetails) => authorDetails.unavailableData,
+                (authorDetails) => authorDetails.unavailableData
               )}
             />
           ) : (
