@@ -135,7 +135,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   ): ERSDInfo | undefined {
 
     if (processingStatus === "RRVS19") {
-      return {success: true};
+      return { success: true };
     } else if (processingStatus && !reasonObs) {
       return unknownWarning;
     } else if (!processingStatus && !reasonObs) {
