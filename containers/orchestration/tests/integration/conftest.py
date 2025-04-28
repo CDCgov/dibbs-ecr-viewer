@@ -35,7 +35,7 @@ def setup(request):
     # migrate db
     rs = requests.post(
         os.getenv("ecr_viewer_url") + "/api/migrate-db",
-        data={"migration_secret": "test"},
+        data={"migration_secret": "test", "skip_condition_update": "true"},
     )
     assert rs.status_code == 200
 
