@@ -1,30 +1,62 @@
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
+
+interface OrchestrationConditions {
+  condition_category: string;
+  condition_name: string;
+  concept_name: string;
+  code: string;
+}
+
 /**
  * Make a request to orchestration /process-zip endpoint
- * @param file - the file to send to orchestration
  * @returns orchestration response
  */
-const getOrchestrationResponse = async (): Promise<BundleInfo> => {
-  const formData = new FormData();
-  formData.append("include_error_types", "[errors]");
-  formData.append("config_file_name", "list-conditions-config.json");
-
-  const response = await fetch(
-    `${process.env.ORCHESTRATION_URL}/process-message`,
-    {
-      method: "post",
-      body: formData,
-    },
-  );
+const getOrchestrationResponse = async (): Promise<
+  OrchestrationConditions[]
+> => {
+  const response = await fetch(`${process.env.ORCHESTRATION_URL}/conditions`);
 
   if (response.status !== 200) {
-    console.error(await response.json());
-    throw "Error thrown from orchestration";
+    console.error(await response.text());
+    throw "Error thrown from orchestration while fetching conditions";
   } else {
-    const resp: OrchestrationRawResponse = await response.json();
-    return {
-      ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
-      metadata:
-        resp.processed_values.responses?.[1]?.metadata_values.parsed_values,
-    };
+    const resp = await response.json();
+    return resp.conditions;
+  }
+};
+
+const upsertConditions = async (conditions: OrchestrationConditions[]) => {
+  await getDb<Core>()
+    .transaction()
+    .execute(async (db) => {
+      for (const condition of conditions) {
+        await db
+          .insertInto("condition_reference")
+          .columns([
+            "code",
+            "concept_name",
+            "condition_name",
+            "condition_category",
+          ])
+          .values(condition)
+          .onConflict((cb) => cb.column("code").doUpdateSet(condition))
+          .execute();
+      }
+    });
+};
+
+/**
+ * Update the conditions reference table in the db
+ * @returns promise
+ */
+export const updateConditions = async (): Promise<void> => {
+  try {
+    const conditions = await getOrchestrationResponse();
+    await upsertConditions(conditions);
+  } catch (error: unknown) {
+    const message = "Failed to process orchestration response";
+    console.error({ message, error });
+    throw new Error(message);
   }
 };

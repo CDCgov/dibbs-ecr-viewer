@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { migrateDown, migrateUp } from "./migrate";
+import { updateConditions } from "./updateConditions";
 
 const schema = z.object({
   migration_secret: z.string({
@@ -70,6 +71,7 @@ export async function POST(
       await migrateDown();
     } else if (direction === "up") {
       await migrateUp();
+      await updateConditions();
     } else {
       return NextResponse.json(
         {
