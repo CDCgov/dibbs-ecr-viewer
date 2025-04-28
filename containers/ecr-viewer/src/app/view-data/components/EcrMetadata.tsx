@@ -62,7 +62,7 @@ const EcrMetadata = ({
             <div>
               <Table
                 bordered={false}
-                className="ersd-table fixed-table border-top border-left border-right border-bottom"
+                className="fixed-table border-top border-left border-right border-bottom"
                 fixed={true}
                 fullWidth={true}
               >
