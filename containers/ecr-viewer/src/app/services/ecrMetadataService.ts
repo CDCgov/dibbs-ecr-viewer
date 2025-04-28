@@ -130,15 +130,15 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
         versionUsed: noData,
         versionExpected: noData,
         suggestedSolution: noData,
-      }
+      },
     };
 
     if (processingStatus === "RRVS19") {
-      return {success: true};
+      return { success: true };
     } else if (processingStatus && !reasonObs) {
       return unknownWarning;
     } else if (!processingStatus && !reasonObs) {
-      return {success: undefined};
+      return { success: undefined };
     }
 
     const coding = reasonObs?.valueCodeableConcept?.coding?.[0];
