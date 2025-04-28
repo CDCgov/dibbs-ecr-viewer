@@ -120,7 +120,7 @@ describe("ECR Metadata", () => {
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     expect(container).toMatchSnapshot();
   });
@@ -132,7 +132,7 @@ describe("ECR Metadata", () => {
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -146,7 +146,7 @@ describe("ECR Metadata", () => {
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     expect(
       screen.getByText("Reportability Summary", { selector: "h5" }),

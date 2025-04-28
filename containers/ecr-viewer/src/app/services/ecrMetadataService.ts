@@ -124,7 +124,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     reasonObs: Observation | undefined,
   ): ERSDInfo {
     if (processingStatus === "RRVS19") {
-      return {success: true};
+      return { success: true };
     } else if (processingStatus && !reasonObs) {
       return {
         success: false,
@@ -133,10 +133,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
           versionUsed: noData,
           versionExpected: noData,
           suggestedSolution: noData,
-        }
+        },
       };
     } else if (!processingStatus && !reasonObs) {
-      return {success: false};
+      return { success: false };
     }
 
     const coding = reasonObs?.valueCodeableConcept?.coding?.[0];
@@ -235,7 +235,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     rrDetails: reportableConditionsList,
     eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details)
+      evaluateData(details),
     ),
   };
 };
