@@ -31,17 +31,30 @@ const upsertConditions = async (conditions: OrchestrationConditions[]) => {
     .transaction()
     .execute(async (db) => {
       for (const condition of conditions) {
-        await db
-          .insertInto("condition_reference")
-          .columns([
-            "code",
-            "concept_name",
-            "condition_name",
-            "condition_category",
-          ])
-          .values(condition)
-          .onConflict((cb) => cb.doUpdateSet(condition))
-          .execute();
+        try {
+          await db
+            .insertInto("condition_reference")
+            .columns([
+              "code",
+              "concept_name",
+              "condition_name",
+              "condition_category",
+            ])
+            .values(condition)
+            .execute();
+        } catch {
+          const { concept_name, condition_name, code, condition_category } =
+            condition;
+          await db
+            .updateTable("condition_reference")
+            .set({
+              condition_name,
+              concept_name,
+              condition_category,
+            })
+            .where("code", "=", code)
+            .execute();
+        }
       }
     });
 };
