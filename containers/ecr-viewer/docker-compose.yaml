@@ -15,6 +15,7 @@ services:
       - NBS_PUB_KEY
       # METADATA DATABASE
       - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
+      - METADATA_DATABASE_SCHEMA
       - METADATA_DATABASE_MIGRATION_SECRET
       # SQL Server - backwards compat
       - SQL_SERVER_USER
