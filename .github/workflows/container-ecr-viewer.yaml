@@ -82,7 +82,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: ["AWS_SQLSERVER_NON_INTEGRATED", "AZURE_PG_NON_INTEGRATED"]
+        include:
+          - config: AWS_SQLSERVER_NON_INTEGRATED
+            schema: extended
+          - config: AZURE_PG_NON_INTEGRATED
+            schema: core
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -104,6 +108,11 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config }}/' .env.local
+
+      - name: Set METADATA_DATABASE_SCHEMA to ${{ matrix.schema }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          echo "METADATA_DATABASE_SCHEMA=${{ matrix.schema }}" >> .env.local
 
       - name: Run seed data conversion
         run: npm run convert-seed-data

@@ -221,8 +221,7 @@ namespace NodeJS {
      */
     SOURCE: "s3" | "azure" | "gcp";
     /**
-     * @ignore
-     * @description Database schema to use for metadata storage. Core has a small subset of Extended. This value is set by CONFIG_NAME.
+     * @description Database schema to use for metadata storage. Core has a small subset of Extended. Default value is "extended".
      */
     METADATA_DATABASE_SCHEMA?: "core" | "extended";
     /**
