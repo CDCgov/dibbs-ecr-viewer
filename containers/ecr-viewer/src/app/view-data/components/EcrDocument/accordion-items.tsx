@@ -2,7 +2,7 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
+import { ERSDInfo, evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import {
   evaluateDemographicsData,
   evaluateSocialData,
@@ -145,8 +145,9 @@ export const getEcrDocumentAccordionItems = (
       content: (
         <>
           {Object.keys(ecrMetadata.rrDetails).length > 0 ||
-          ecrMetadata.eRSDProcessingInfo.success ||
-          ecrMetadata.eRSDProcessingInfo.eRSDWarning ||
+          (ecrMetadata.eRSDProcessingInfo && 
+          (ecrMetadata.eRSDProcessingInfo.success ||
+          ecrMetadata.eRSDProcessingInfo.eRSDWarning)) ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
             (authorDetails) => authorDetails.availableData.length > 0,
@@ -158,7 +159,7 @@ export const getEcrDocumentAccordionItems = (
                 ecrMetadata.ecrCustodianDetails.availableData
               }
               rrDetails={ecrMetadata.rrDetails}
-              eRSDProcessingInfo={ecrMetadata.eRSDProcessingInfo}
+              eRSDProcessingInfo={ecrMetadata.eRSDProcessingInfo as ERSDInfo}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
                 .filter((details) => details.availableData.length > 0)
                 .map((details) => details.availableData)}
@@ -194,7 +195,7 @@ export const getEcrDocumentAccordionItems = (
               clinicalNotesData={clinicalData.clinicalNotes.unavailableData}
               ecrMetadataUnavailableData={[
                 ...ecrMetadata.eicrDetails.unavailableData,
-                ...(ecrMetadata.eRSDProcessingInfo.success === undefined
+                ...(!ecrMetadata.eRSDProcessingInfo
                   ? [{ title: "eRSD Warnings", value: "" }]
                   : []),
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,

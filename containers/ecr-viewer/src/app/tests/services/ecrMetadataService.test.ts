@@ -7,8 +7,8 @@ import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultip
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
 import {
-  ERSDWarning,
   evaluateEcrMetadata,
+  unknownWarning,
 } from "@/app/services/ecrMetadataService";
 import { noData } from "@/app/utils/data-utils";
 
@@ -109,7 +109,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
     });
   });
-  it("if processed with no warning/error, should return success = true", () => {
+  it("if processed with no warning/error, should return success", () => {
     const actual = evaluateEcrMetadata(sample_ecr as unknown as Bundle);
 
     expect(actual.eRSDProcessingInfo).toEqual({ success: true });
@@ -130,12 +130,12 @@ describe("Evaluate Ecr Metadata", () => {
       },
     });
   });
-  it("if no eICR Processing Status, should return empty object", () => {
+  it("if no eICR Processing Status, should return undefined", () => {
     const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle);
 
-    expect(actual.eRSDProcessingInfo).toEqual({ success: undefined });
+    expect(actual.eRSDProcessingInfo).toEqual(undefined);
   });
-  it("if there's a non-success processing status but no reason obs, should return empty object", () => {
+  it("if there's a non-success processing status but no reason obs, should return unknown warning", () => {
     const BundleErsdWarningNoReason: Bundle = {
       resourceType: "Bundle",
       type: "batch",
@@ -216,12 +216,9 @@ describe("Evaluate Ecr Metadata", () => {
     const actual = evaluateEcrMetadata(
       BundleErsdWarningNoReason as unknown as Bundle,
     );
-    expect(
-      (actual.eRSDProcessingInfo.eRSDWarning as ERSDWarning).warning,
-    ).toEqual("eICR processed with a warning or error (unknown)");
-    expect(
-      (actual.eRSDProcessingInfo.eRSDWarning as ERSDWarning).versionUsed,
-    ).toEqual(noData);
+    expect(actual.eRSDProcessingInfo).toEqual(
+      unknownWarning
+    );
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
