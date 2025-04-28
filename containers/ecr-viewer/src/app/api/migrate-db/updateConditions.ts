@@ -40,7 +40,7 @@ const upsertConditions = async (conditions: OrchestrationConditions[]) => {
             "condition_category",
           ])
           .values(condition)
-          .onConflict((cb) => cb.column("code").doUpdateSet(condition))
+          .onConflict((cb) => cb.doUpdateSet(condition))
           .execute();
       }
     });
