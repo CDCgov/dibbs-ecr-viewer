@@ -237,7 +237,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     rrDetails: reportableConditionsList,
     eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details)
+      evaluateData(details),
     ),
   };
 };

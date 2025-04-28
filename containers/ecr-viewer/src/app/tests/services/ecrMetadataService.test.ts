@@ -217,10 +217,10 @@ describe("Evaluate Ecr Metadata", () => {
       BundleErsdWarningNoReason as unknown as Bundle,
     );
     expect(
-      (actual.eRSDProcessingInfo.eRSDWarning as ERSDWarning).warning
+      (actual.eRSDProcessingInfo.eRSDWarning as ERSDWarning).warning,
     ).toEqual("eICR processed with a warning or error (unknown)");
     expect(
-      (actual.eRSDProcessingInfo.eRSDWarning as ERSDWarning).versionUsed
+      (actual.eRSDProcessingInfo.eRSDWarning as ERSDWarning).versionUsed,
     ).toEqual(noData);
   });
   it("should have one author", () => {
