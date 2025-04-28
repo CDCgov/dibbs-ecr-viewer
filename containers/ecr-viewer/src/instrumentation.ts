@@ -40,9 +40,9 @@ export function setupConfigurationVariables() {
 
   if (process.env.CONFIG_NAME?.includes("_PG_")) {
     process.env.METADATA_DATABASE_TYPE = "postgres";
-    process.env.METADATA_DATABASE_SCHEMA = "core";
+    process.env.METADATA_DATABASE_SCHEMA ||= "extended";
   } else if (process.env.CONFIG_NAME?.includes("_SQLSERVER_")) {
     process.env.METADATA_DATABASE_TYPE = "sqlserver";
-    process.env.METADATA_DATABASE_SCHEMA = "extended";
+    process.env.METADATA_DATABASE_SCHEMA ||= "extended";
   }
 }
