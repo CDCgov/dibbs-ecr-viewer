@@ -402,7 +402,7 @@ def _filter_failed_responses(responses):
 
 
 @app.get("/conditions", status_code=200, responses=sample_list_conditions_response)
-async def get_conditions_endpoint() -> ListConditionsResponse:
+async def list_conditions_endpoint() -> ListConditionsResponse:
     """
     This endpoint gets a list of all of the conditions known to the trigger
     reference service
