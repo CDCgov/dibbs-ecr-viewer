@@ -3,18 +3,21 @@ import { randomUUID } from "crypto";
 import { Bundle } from "fhir/r4";
 import { Kysely, Transaction } from "kysely";
 
-import { getDb } from "@/app/api/services/database";
-import { Common } from "@/app/api/services/types/common";
-import { Core } from "@/app/api/services/types/core";
-import { Extended } from "@/app/api/services/types/extended";
-import { dbSchema } from "@/app/api/services/utils/db-config";
-import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
 import {
   deleteFromAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
 import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
 import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
+import {
+  S3_SOURCE,
+  AZURE_SOURCE,
+  GCP_SOURCE,
+} from "@/app/data/blobStorage/utils";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
+import { Extended } from "@/app/data/metadataDb/types/extended";
+import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
@@ -140,7 +143,7 @@ export const saveFhirMetadata = async (
         }
 
         // The actual type here is a beast, but we know that this mapping is functionally sound
-        await saveRR(trx as unknown as Kysely<Common>, metadata, ecrId);
+        await saveRR(trx as unknown as Kysely<Core>, metadata, ecrId);
 
         // Make sure the fhir data also saves
         const fhirDataResponse = await fhirDataPromise;
@@ -190,7 +193,7 @@ const saveExtendedMetadata = async (
     .insertInto("ecr_data")
     .values({
       eicr_id: ecrId,
-      set_id: metadata.eicr_set_id,
+      set_id: metadata.eicr_set_id || ecrId,
       last_name: metadata.last_name,
       first_name: metadata.first_name,
       birth_date: metadata.birth_date,
@@ -284,12 +287,11 @@ const saveCoreMetadata = async (
     .insertInto("ecr_data")
     .values({
       eicr_id: ecrId,
-      set_id: metadata.eicr_set_id,
-      patient_name_last: metadata.last_name,
-      patient_name_first: metadata.first_name,
-      patient_birth_date: metadata.birth_date,
-      data_source: "DB",
-      report_date: new Date(metadata.report_date),
+      set_id: metadata.eicr_set_id || ecrId,
+      last_name: metadata.last_name,
+      first_name: metadata.first_name,
+      birth_date: metadata.birth_date,
+      encounter_start_date: new Date(metadata.report_date),
       eicr_version_number: metadata.eicr_version_number,
     })
     .execute();
@@ -297,7 +299,7 @@ const saveCoreMetadata = async (
 
 // Helper to save RR to the database (common across schemas)
 const saveRR = async (
-  trx: Kysely<Common>,
+  trx: Kysely<Core>,
   metadata: BundleMetadata | BundleExtendedMetadata,
   ecrId: string,
 ) => {

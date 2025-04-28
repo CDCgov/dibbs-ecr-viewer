@@ -3,13 +3,13 @@
  */
 import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
 
-import { AZURE_SOURCE, S3_SOURCE } from "@/app/api/utils";
 import {
   azureBlobContainerClient,
   azureBlobStorageHealthCheck,
   deleteFromAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
+import { AZURE_SOURCE, S3_SOURCE } from "@/app/data/blobStorage/utils";
 
 jest.mock("@azure/storage-blob");
 

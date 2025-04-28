@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 
-import { getAllConditions } from "@/app/data/conditions";
+import { getAllConditions } from "@/app/services/listConditionsService";
 
-import { createEcrCondition } from "./helpers/common";
+import { createEcrCondition } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
 
 beforeAll(async () => {

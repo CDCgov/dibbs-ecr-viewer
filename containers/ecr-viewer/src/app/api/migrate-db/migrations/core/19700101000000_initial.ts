@@ -1,56 +1,83 @@
-import { Kysely } from "kysely";
+import { Kysely, sql } from "kysely";
 
-import { AnyDb } from "@/app/api/services/database";
-import { getSql } from "@/app/api/services/dialects/common";
-import { dbNamespace, dbSchema } from "@/app/api/services/utils/db-config";
-import { getTable } from "@/app/api/services/utils/db-metadata";
+import { AnyDb } from "@/app/data/metadataDb/database";
+import { getSql } from "@/app/data/metadataDb/dialects/common";
+import { dbDialect, dbNamespace } from "@/app/data/metadataDb/utils/db-config";
+import {
+  schemaExistsByName,
+  getTables,
+} from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
- * Based on ecr-viewer/sql/core.sql.
+ * Core schema initialization.
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
-  if (dbSchema() !== "core") {
-    console.log(`${dbSchema()} schema detected. Skipping core migration.`);
-    return;
+  const schema = dbNamespace();
+  const schemaExists = await schemaExistsByName(db, schema);
+
+  try {
+    if (!schemaExists) {
+      await db.schema.createSchema(schema).execute(); // first instance of schema mutation
+    }
+  } catch (error) {
+    throw new Error("Failed to create schema or already exists: " + error);
   }
 
-  const table = await getTable(db, dbNamespace(), "ecr_data");
-  const coreCheck =
-    !!table && table.columns.some((c) => c.name === "patient_name_first");
-
-  if (coreCheck) {
-    console.log("Core migration already run. Skipping table creation.");
-    return;
+  if (dbDialect() === "postgres") {
+    // Install uuid-ossp extension (Postgres-specific)
+    await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
   }
 
-  const _db = db.withSchema(dbNamespace());
+  const tables = await getTables(db, schema);
+  const tablesExist = [
+    "ecr_data",
+    "ecr_rr_conditions",
+    "ecr_rr_rule_summaries",
+  ].every((table) => tables.includes(table));
 
-  await _db.schema
-    .alterTable("ecr_data")
-    .addColumn("data_source", "varchar(2)", (cb) => cb.notNull()) // S3 or DB
-    .addColumn("patient_name_first", "varchar(100)")
-    .addColumn("patient_name_last", "varchar(100)")
-    .addColumn("patient_birth_date", getSql("datetimeType"))
-    .addColumn("report_date", "date", (cb) => cb.notNull())
-    .execute();
+  if (!tablesExist) {
+    const _db = db.withSchema(schema);
+
+    await _db.schema
+      .createTable("ecr_data")
+      .addColumn("eicr_id", "varchar(200)", (cb) => cb.primaryKey())
+      .addColumn("set_id", "varchar(255)")
+      .addColumn("eicr_version_number", "varchar(50)")
+      .addColumn("fhir_reference_link", "varchar(255)")
+      .addColumn("last_name", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("first_name", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("birth_date", "date", (cb) => cb.notNull())
+      .addColumn("encounter_start_date", getSql("datetimeType"))
+      .addColumn("date_created", getSql("datetimeTzType"), (cb) =>
+        cb.notNull().defaultTo(getSql("now")),
+      )
+      .execute();
+
+    await _db.schema
+      .createTable("ecr_rr_conditions")
+      .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
+      .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("condition", getSql("maxVarchar"))
+      .execute();
+
+    await _db.schema
+      .createTable("ecr_rr_rule_summaries")
+      .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
+      .addColumn("ecr_rr_conditions_id", "varchar(200)")
+      .addColumn("rule_summary", getSql("maxVarchar"))
+      .execute();
+  }
 }
 
 /**
- * Based on ecr-viewer/sql/core.sql.
- * Core schema tear down. This version is hard-coded to the
- * original postgres implementation. Future versions will be
- * database-agnostic.
+ * Core schema tear down
  * @param db - the database connection
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
-  await _db.schema
-    .alterTable("ecr_data")
-    .dropColumn("data_source")
-    .dropColumn("patient_name_first")
-    .dropColumn("patient_name_last")
-    .dropColumn("patient_birth_date")
-    .dropColumn("report_date")
-    .execute();
+  await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
+  await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
+  await _db.schema.dropTable("ecr_data").ifExists().execute();
+  await _db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }

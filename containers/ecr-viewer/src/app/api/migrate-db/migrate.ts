@@ -6,10 +6,9 @@ import {
   Migration,
 } from "kysely";
 
-import { getDbRaw } from "@/app/api/services/database";
-import { dbNamespace, dbSchema } from "@/app/api/services/utils/db-config";
+import { getDbRaw } from "@/app/data/metadataDb/database";
+import { dbNamespace, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
-import commonMigrations from "./migrations/common";
 import coreMigrations from "./migrations/core";
 import extendedMigrations from "./migrations/extended";
 
@@ -109,29 +108,18 @@ class EcrViewerMigrationProvider implements MigrationProvider {
 
   async getMigrations(): Promise<Record<string, Migration>> {
     // must alphabetically be first
-    const migrations = addKeyPostfix(commonMigrations, "common") as Record<
+    const migrations = addKeyPostfix(coreMigrations, "core") as Record<
       string,
       Migration
     >;
 
-    let schemaMigrations;
-    switch (this.#props.schema) {
-      case "core": {
-        schemaMigrations = coreMigrations as Record<string, Migration>;
-        break;
-      }
-      case "extended": {
-        schemaMigrations = extendedMigrations as Record<string, Migration>;
-        break;
-      }
-      default: {
-        throw new Error(`Unknown migration schema: ${this.#props.schema}`);
-      }
-    }
+    if (this.#props.schema === "extended") {
+      let schemaMigrations = extendedMigrations as Record<string, Migration>;
 
-    schemaMigrations = addKeyPostfix(schemaMigrations, this.#props.schema);
-    for (const [k, v] of Object.entries(schemaMigrations)) {
-      migrations[k] = v as Migration;
+      schemaMigrations = addKeyPostfix(schemaMigrations, this.#props.schema);
+      for (const [k, v] of Object.entries(schemaMigrations)) {
+        migrations[k] = v as Migration;
+      }
     }
 
     return migrations;
