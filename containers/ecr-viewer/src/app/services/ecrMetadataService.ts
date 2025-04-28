@@ -134,7 +134,6 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     processingStatus: string | undefined,
     reasonObs: Observation | undefined,
   ): ERSDInfo | undefined {
-
     if (processingStatus === "RRVS19") {
       return { success: true };
     } else if (processingStatus && !reasonObs) {

@@ -216,9 +216,7 @@ describe("Evaluate Ecr Metadata", () => {
     const actual = evaluateEcrMetadata(
       BundleErsdWarningNoReason as unknown as Bundle,
     );
-    expect(actual.eRSDProcessingInfo).toEqual(
-      unknownWarning
-    );
+    expect(actual.eRSDProcessingInfo).toEqual(unknownWarning);
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(
