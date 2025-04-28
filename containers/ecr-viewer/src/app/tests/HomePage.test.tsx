@@ -13,9 +13,9 @@ jest.mock("../services/listEcrDataService", () => {
     getTotalEcrCount: jest.fn().mockResolvedValue(0),
   };
 });
-jest.mock("../api/services/database");
+jest.mock("../data/metadataDb/database");
 jest.mock("../api/migrate-db/migrate");
-jest.mock("../data/conditions");
+jest.mock("../services/listConditionsService");
 jest.mock("../components/Filters");
 jest.mock("../components/LibrarySearch");
 jest.mock("../utils/date-utils.ts");

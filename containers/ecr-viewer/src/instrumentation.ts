@@ -1,4 +1,8 @@
-import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
+import {
+  AZURE_SOURCE,
+  GCP_SOURCE,
+  S3_SOURCE,
+} from "./app/data/blobStorage/utils";
 
 /**
  * The register function will be callled once when nextjs server is instantiated
@@ -36,9 +40,9 @@ export function setupConfigurationVariables() {
 
   if (process.env.CONFIG_NAME?.includes("_PG_")) {
     process.env.METADATA_DATABASE_TYPE = "postgres";
-    process.env.METADATA_DATABASE_SCHEMA = "core";
+    process.env.METADATA_DATABASE_SCHEMA ||= "extended";
   } else if (process.env.CONFIG_NAME?.includes("_SQLSERVER_")) {
     process.env.METADATA_DATABASE_TYPE = "sqlserver";
-    process.env.METADATA_DATABASE_SCHEMA = "extended";
+    process.env.METADATA_DATABASE_SCHEMA ||= "extended";
   }
 }

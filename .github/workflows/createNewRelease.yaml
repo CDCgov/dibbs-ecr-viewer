@@ -171,7 +171,7 @@ jobs:
           ref: docs
 
       - name: Download container docs from artifacts
-        uses: actions/download-artifact@v4.2.1
+        uses: actions/download-artifact@v4.3.0
         with:
           pattern: container-docs-*
           merge-multiple: true

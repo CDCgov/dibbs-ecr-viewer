@@ -3,11 +3,11 @@
  */
 
 import { buildExtended, clearExtended, dropExisting } from "../helpers/ddl";
-import { saveFhirMetadata } from "@/app/api/save-fhir-data/save-fhir-data-service";
+import { saveFhirMetadata } from "@/app/api/save-fhir-data/service";
 import { BundleExtendedMetadata } from "@/app/api/save-fhir-data/types";
-import { getDb } from "@/app/api/services/database";
-import { Extended } from "@/app/api/services/types/extended";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Extended } from "@/app/data/metadataDb/types/extended";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
   patient_id: "12345",

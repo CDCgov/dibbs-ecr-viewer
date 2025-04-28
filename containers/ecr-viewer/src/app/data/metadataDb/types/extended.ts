@@ -1,17 +1,8 @@
-import {
-  ColumnType,
-  Generated,
-  Insertable,
-  Selectable,
-  Updateable,
-} from "kysely";
+import { ColumnType, Generated, Insertable, Selectable } from "kysely";
 
-import { Common, ecr_data } from "./common";
+import { Core, ecr_data } from "./core";
 
 export interface extended_ecr_data extends ecr_data {
-  last_name: string | undefined;
-  first_name: string | undefined;
-  birth_date: ColumnType<Date, string> | undefined;
   gender: string | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
@@ -38,7 +29,6 @@ export interface extended_ecr_data extends ecr_data {
   facility_id: string | undefined;
   facility_name: string | undefined;
   encounter_type: string | undefined;
-  encounter_start_date: Date | undefined;
   encounter_end_date: Date | undefined;
   reason_for_visit: string | undefined;
   active_problems: string | undefined;
@@ -89,17 +79,14 @@ export interface ecr_labs {
 
 export type ExtendedECR = Selectable<extended_ecr_data>;
 export type NewExtendedECR = Insertable<extended_ecr_data>;
-export type ExtendedECRUpdate = Updateable<extended_ecr_data>;
 
 export type PatientAddress = Selectable<patient_address>;
 export type NewPatientAddress = Insertable<patient_address>;
-export type PatientAddressUpdate = Updateable<patient_address>;
 
 export type ECRLabs = Selectable<ecr_labs>;
 export type NewECRLabs = Insertable<ecr_labs>;
-export type ECRLabsUpdate = Updateable<ecr_labs>;
 
-export interface Extended extends Common {
+export interface Extended extends Core {
   ecr_data: extended_ecr_data;
   patient_address: patient_address;
   ecr_labs: ecr_labs;
