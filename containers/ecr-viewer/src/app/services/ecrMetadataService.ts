@@ -44,7 +44,7 @@ interface EcrMetadata {
 }
 
 export interface ERSDInfo {
-  success: boolean;
+  success: boolean | undefined;
   eRSDWarning?: ERSDWarning;
 }
 
@@ -123,20 +123,22 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     processingStatus: string | undefined,
     reasonObs: Observation | undefined,
   ): ERSDInfo {
+    const unknownWarning: ERSDInfo = {
+      success: false,
+      eRSDWarning: {
+        warning: "eICR processed with a warning or error (unknown)",
+        versionUsed: noData,
+        versionExpected: noData,
+        suggestedSolution: noData,
+      }
+    };
+
     if (processingStatus === "RRVS19") {
       return {success: true};
     } else if (processingStatus && !reasonObs) {
-      return {
-        success: false,
-        eRSDWarning: {
-          warning: "eICR processed with a warning or error (unknown)",
-          versionUsed: noData,
-          versionExpected: noData,
-          suggestedSolution: noData,
-        }
-      };
+      return unknownWarning;
     } else if (!processingStatus && !reasonObs) {
-      return {success: false};
+      return {success: undefined};
     }
 
     const coding = reasonObs?.valueCodeableConcept?.coding?.[0];
@@ -173,7 +175,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
               ersdWarningSuggestedSolutionsMap[warningCode] ?? noData,
           },
         }
-      : { success: false };
+      : unknownWarning;
   }
 
   const eRSDProcessingInfo: ERSDInfo = geteRSDInfo(

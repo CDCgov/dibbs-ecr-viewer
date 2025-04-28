@@ -133,7 +133,7 @@ describe("Evaluate Ecr Metadata", () => {
   it("if no eICR Processing Status, should return empty object", () => {
     const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle);
 
-    expect(actual.eRSDProcessingInfo).toEqual({ success: false });
+    expect(actual.eRSDProcessingInfo).toEqual({ success: undefined });
   });
   it("if there's a non-success processing status but no reason obs, should return empty object", () => {
     const BundleErsdWarningNoReason: Bundle = {

@@ -146,9 +146,7 @@ export const getEcrDocumentAccordionItems = (
         <>
           {Object.keys(ecrMetadata.rrDetails).length > 0 ||
           ecrMetadata.eRSDProcessingInfo.success ||
-          (ecrMetadata.eRSDProcessingInfo.eRSDWarning &&
-            Object.keys(ecrMetadata.eRSDProcessingInfo.eRSDWarning).length >
-              0) ||
+          ecrMetadata.eRSDProcessingInfo.eRSDWarning ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
             (authorDetails) => authorDetails.availableData.length > 0
@@ -196,8 +194,7 @@ export const getEcrDocumentAccordionItems = (
               clinicalNotesData={clinicalData.clinicalNotes.unavailableData}
               ecrMetadataUnavailableData={[
                 ...ecrMetadata.eicrDetails.unavailableData,
-                ...(!ecrMetadata.eRSDProcessingInfo.success &&
-                !ecrMetadata.eRSDProcessingInfo.eRSDWarning
+                ...(ecrMetadata.eRSDProcessingInfo.success === undefined
                   ? [{ title: "eRSD Warnings", value: "" }]
                   : []),
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,

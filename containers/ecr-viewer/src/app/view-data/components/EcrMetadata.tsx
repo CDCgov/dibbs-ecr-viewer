@@ -28,10 +28,6 @@ const eRSDWarningTooltip = (
   </ToolTipElement>
 );
 
-export const eICRProcessingSuccessMsg = (
-  <p className="text-italic text-base padding-bottom-0">eICR processed</p>
-);
-
 /**
  * Functional component for displaying eCR metadata.
  * @param props - Props containing eCR metadata.
@@ -57,11 +53,12 @@ const EcrMetadata = ({
         {eRSDProcessingInfo.success ? (
           <div>
             <div className="header-data-title">{eRSDWarningTooltip}</div>
-            {eICRProcessingSuccessMsg}
+            <p className="text-italic text-base padding-bottom-0">
+              eICR processed
+            </p>
           </div>
         ) : (
-          eRSDProcessingInfo.eRSDWarning &&
-          Object.keys(eRSDProcessingInfo.eRSDWarning).length > 0 && (
+          eRSDProcessingInfo.eRSDWarning && (
             <div>
               <Table
                 bordered={false}
