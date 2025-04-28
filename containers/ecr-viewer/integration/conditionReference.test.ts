@@ -119,7 +119,7 @@ describe("condition_reference table", () => {
     await clearCore();
   });
 
-  it("should do update flow", async () => {
+  it("should do upsert flow", async () => {
     (fetch as jest.Mock).mockResolvedValue({
       status: 200,
       json: jest.fn().mockResolvedValue({ conditions: [condition1] }),
