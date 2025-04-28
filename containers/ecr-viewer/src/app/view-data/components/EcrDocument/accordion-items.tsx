@@ -2,7 +2,10 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import { ERSDInfo, evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
+import {
+  ERSDInfo,
+  evaluateEcrMetadata,
+} from "@/app/services/ecrMetadataService";
 import {
   evaluateDemographicsData,
   evaluateSocialData,
@@ -145,9 +148,9 @@ export const getEcrDocumentAccordionItems = (
       content: (
         <>
           {Object.keys(ecrMetadata.rrDetails).length > 0 ||
-          (ecrMetadata.eRSDProcessingInfo && 
-          (ecrMetadata.eRSDProcessingInfo.success ||
-          ecrMetadata.eRSDProcessingInfo.eRSDWarning)) ||
+          (ecrMetadata.eRSDProcessingInfo &&
+            (ecrMetadata.eRSDProcessingInfo.success ||
+              ecrMetadata.eRSDProcessingInfo.eRSDWarning)) ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
             (authorDetails) => authorDetails.availableData.length > 0,
