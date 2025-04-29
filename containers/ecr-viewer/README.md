@@ -2,7 +2,7 @@
 
 **If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guide.md)**
 
-If you're looking to contribute to development on the eCR Viewer, you're in the right place. 
+If you're looking to contribute to development on the eCR Viewer, you're in the right place.
 
 ## Introduction
 
