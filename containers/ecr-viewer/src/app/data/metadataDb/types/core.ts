@@ -72,6 +72,17 @@ export interface user_program_area {
 export type UserProgramArea = Selectable<user_program_area>;
 export type NewUserProgramArea = Insertable<user_program_area>;
 
+export interface condition_reference {
+  code: string;
+  concept_name: string | null;
+  condition_name: string;
+  condition_category: string | null;
+  program_area_uuid: string | null;
+}
+
+export type UserConditionReference = Selectable<condition_reference>;
+export type NewUserConditionReference = Insertable<condition_reference>;
+
 export interface Core {
   ecr_data: ecr_data;
   ecr_rr_conditions: ecr_rr_conditions;
@@ -79,4 +90,5 @@ export interface Core {
   user: user;
   program_area: program_area;
   user_program_area: user_program_area;
+  condition_reference: condition_reference;
 }

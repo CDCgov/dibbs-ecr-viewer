@@ -1,0 +1,21 @@
+{
+  "description": "Success",
+  "content": {
+    "application/json": {
+      "examples": {
+        "success": {
+          "value": {
+            "conditions": [
+              {
+                "condition_name": "condition",
+                "code": "123",
+                "condition_category": "category",
+                "concept_name": "concept"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import csv
 import os
 import string
 import sys
@@ -28,6 +29,17 @@ _DEBUG = True  # Set this to True if you'd like to see DB migration output
 
 _engine = create_engine(_DB_URL, echo=_DEBUG)
 SQLModel.metadata.create_all(_engine)
+
+# KLUDGE
+# The condition categories seem to only currently be published in the excel sheet
+# we copy down into assets as a csv. We want this in our service, so we are currently
+# joining in this data source. Hopefully someday TES ships these categories.
+_RCKMS_CONDITION_CATEGORIES = {}
+with open("../assets/RCKMS Condition Codes.csv", newline="") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        # {code: condition}
+        _RCKMS_CONDITION_CATEGORIES[row[2].strip()] = row[1].strip()
 
 
 def _get_engine():
@@ -89,12 +101,32 @@ def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]])
                         )
 
                 coding = _get_coding(valueSet)
+                category = _RCKMS_CONDITION_CATEGORIES.get(coding.code)
+
+                # Try to determine the category from the constituent concepts
+                if category is None:
+                    for concept in concepts:
+                        if concept.code not in _RCKMS_CONDITION_CATEGORIES:
+                            continue
+
+                        if (
+                            category is not None
+                            and _RCKMS_CONDITION_CATEGORIES[concept.code] != category
+                        ):
+                            category = None
+                            print(
+                                f"code found twice! {concept.code}  {category} {_RCKMS_CONDITION_CATEGORIES[concept.code]}. Bailing out."
+                            )
+                            break
+
+                        category = _RCKMS_CONDITION_CATEGORIES[concept.code]
 
                 condition = Condition(
                     name=valueSet.title,
                     code=coding.code,
                     system=coding.system,
                     version=valueSet.version,
+                    category=category,
                     concepts=list(concepts),
                 )
 

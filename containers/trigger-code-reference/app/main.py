@@ -8,6 +8,7 @@ from app.base_service import BaseService
 from app.db import (
     add_human_readable_reportable_condition_name_tes,
     get_concepts_list_tes,
+    get_conditions_list_tes,
 )
 from app.models import InsertConditionInput
 from app.utils import (
@@ -177,6 +178,22 @@ async def get_value_sets_for_condition(
         concepts_list = get_concepts_list_tes(clean_snomed_code)
         values = get_concepts_dict(concepts_list, filter_concepts)
     return values
+
+
+get_conditions_response_examples_raw = read_json_from_assets(
+    "sample_get_conditions_responses.json"
+)
+get_conditions_response_examples = {200: get_conditions_response_examples_raw}
+
+
+@app.get("/get-conditions", status_code=200, responses=get_value_sets_response_examples)
+async def get_conditions() -> Response:
+    """
+    Get all conditions in the trigger code reference service.
+
+    :return: An HTTP Response containing the conditions.
+    """
+    return get_conditions_list_tes()
 
 
 # This block is only executed if the script is run directly, for local development and debugging.
