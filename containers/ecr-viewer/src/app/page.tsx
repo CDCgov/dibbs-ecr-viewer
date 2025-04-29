@@ -15,6 +15,7 @@ import LibrarySearch from "./components/LibrarySearch";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
+import { getLoggedInUser } from "./services/userService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
 
@@ -55,9 +56,12 @@ const HomePage = async ({
 
   const allConditions = await getAllConditions();
 
+  const user = await getLoggedInUser();
+
   return (
     <div className="display-flex flex-column height-viewport">
       <Header />
+      <p>Hi, {user?.name}</p>
       <main className="overflow-auto height-full">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
           <h2 className="margin-bottom-0 text-bold font-sans-xl">

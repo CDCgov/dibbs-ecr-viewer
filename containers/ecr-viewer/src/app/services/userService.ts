@@ -31,9 +31,12 @@ const getUserByEmail = async (
  */
 export const getLoggedInUser = cache(async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
+  console.log({ email, name });
   if (!email) return;
+
   // Update the user's name to match the IDP
   !!name && (await updateUserQuery(email, { name }));
+
   return await getUserByEmail(email);
 });
 
@@ -57,26 +60,9 @@ export const createUser = async (
     throw new Error("Standard user cannot create new users");
   }
 
-  const user = await getUserByEmail(email);
-  if (!!user) {
-    if (user.status === "active") {
-      throw new Error("User already exists and is active");
-    } else {
-      await updateUserByEmail(email, { status: "active", user_type });
-      return user.uuid;
-    }
-  }
-
   const uuid = randomUUID();
-  const newUser: NewUser = {
-    uuid,
-    email,
-    user_type,
-    author_uuid: creatingUser.uuid,
-  };
-
   try {
-    await getDb<Core>().insertInto("user").values(newUser).execute();
+    await createUserQuery(email, user_type, uuid, creatingUser.uuid);
   } catch (error: unknown) {
     const message = "Failed to create new user";
     console.error({ message, error });
@@ -95,22 +81,16 @@ export const createUser = async (
 export const createInitialAdminUser = async (
   email: string,
 ): Promise<string | undefined> => {
-  const users = await listActiveUsersSelect();
+  const users = await listActiveUsersQuery();
   if (users.some(({ user_type }) => user_type === "admin")) {
     console.warn("Active admin user already exists. Skipping user creation.");
     return;
   }
 
   const uuid = randomUUID();
-  const newUser: NewUser = {
-    uuid,
-    email,
-    user_type: "admin",
-    author_uuid: uuid,
-  };
 
   try {
-    await getDb<Core>().insertInto("user").values(newUser).execute();
+    await createUserQuery(email, "admin", uuid, uuid);
   } catch (error: unknown) {
     const message = "Failed to create initial admin user";
     console.error({ message, error });
@@ -118,6 +98,32 @@ export const createInitialAdminUser = async (
   }
 
   return uuid;
+};
+
+const createUserQuery = async (
+  email: string,
+  user_type: "admin" | "standard",
+  uuid: string,
+  author_uuid: string,
+) => {
+  const user = await getUserByEmail(email);
+  if (!!user) {
+    if (user.status === "active") {
+      throw new Error("User already exists and is active");
+    } else {
+      await updateUserByEmail(email, { status: "active", user_type });
+      return user.uuid;
+    }
+  }
+
+  const newUser: NewUser = {
+    uuid,
+    email,
+    user_type,
+    author_uuid,
+  };
+
+  await getDb<Core>().insertInto("user").values(newUser).execute();
 };
 
 /**
@@ -189,7 +195,7 @@ export const listUsers = async (): Promise<User[]> => {
   }
 
   try {
-    return await listActiveUsersSelect();
+    return await listActiveUsersQuery();
   } catch (error: unknown) {
     const message = "Failed to list users";
     console.error({ message, error });
@@ -197,7 +203,7 @@ export const listUsers = async (): Promise<User[]> => {
   }
 };
 
-const listActiveUsersSelect = async () => {
+const listActiveUsersQuery = async () => {
   return await getDb<Core>()
     .selectFrom("user")
     .selectAll()
