@@ -35,6 +35,10 @@ jest.mock("../src/app/utils/auth-utils", () => ({
 
 describe("user service", () => {
   it("should create initial admin user", async () => {
+    let warning;
+    jest.spyOn(console, "warn").mockImplementation((...args) => {
+      warning = args;
+    });
     const id = await createInitialAdminUser(adminEmail);
     expect(id).toMatch(UUID_REGEX);
 
@@ -57,6 +61,8 @@ describe("user service", () => {
     // adding again with same email should do nothing
     const notId = await createInitialAdminUser(adminEmail);
     expect(notId).toBeUndefined();
+    // TODO: test we get the warning we expect
+    expect(warning).toContain([{ message: "something" }]);
 
     // adding with different email should do nothing
     const alsoNotId = await createInitialAdminUser("other@admin.com");
@@ -65,8 +71,8 @@ describe("user service", () => {
     // admin deletes themself
     await deleteUser(adminEmail);
 
-    const noUsers = await listUsers();
-    expect(noUsers).toBeArrayOfSize(0);
+    // Current user isn't an admin any more!
+    await expect(listUsers()).rejects.toThrow();
 
     //admin re-adds themself, gets same id
     const newId = await createInitialAdminUser(adminEmail);
@@ -145,6 +151,27 @@ describe("user service", () => {
         name: "Olga Nunes",
         date_of_last_login: null,
         user_type: "standard",
+        status: "active",
+        author_uuid: expect.any(String),
+        date_created: expect.any(Date),
+      },
+    ]);
+  });
+
+  it("should delete a user", async () => {
+    // standard user created in prior test
+    await deleteUser(userEmail);
+
+    // see standard user listed with name
+    const users = await listUsers();
+    expect(users).toBeArrayOfSize(1);
+    expect(users).toStrictEqual([
+      {
+        uuid: expect.any(String),
+        email: adminEmail,
+        name: adminName,
+        date_of_last_login: null,
+        user_type: "admin",
         status: "active",
         author_uuid: expect.any(String),
         date_created: expect.any(Date),

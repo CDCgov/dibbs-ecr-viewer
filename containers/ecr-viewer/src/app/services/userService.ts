@@ -31,7 +31,6 @@ const getUserByEmail = async (
  */
 export const getLoggedInUser = cache(async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
-  console.log({ email, name });
   if (!email) return;
 
   // Update the user's name to match the IDP
@@ -60,16 +59,14 @@ export const createUser = async (
     throw new Error("Standard user cannot create new users");
   }
 
-  const uuid = randomUUID();
   try {
-    await createUserQuery(email, user_type, uuid, creatingUser.uuid);
+    const uuid = randomUUID();
+    return await createUserQuery(email, user_type, uuid, creatingUser.uuid);
   } catch (error: unknown) {
     const message = "Failed to create new user";
     console.error({ message, error });
     throw new Error(message);
   }
-
-  return uuid;
 };
 
 /**
@@ -87,17 +84,14 @@ export const createInitialAdminUser = async (
     return;
   }
 
-  const uuid = randomUUID();
-
   try {
-    await createUserQuery(email, "admin", uuid, uuid);
+    const uuid = randomUUID();
+    return await createUserQuery(email, "admin", uuid, uuid);
   } catch (error: unknown) {
     const message = "Failed to create initial admin user";
     console.error({ message, error });
     throw new Error(message);
   }
-
-  return uuid;
 };
 
 const createUserQuery = async (
@@ -111,7 +105,7 @@ const createUserQuery = async (
     if (user.status === "active") {
       throw new Error("User already exists and is active");
     } else {
-      await updateUserByEmail(email, { status: "active", user_type });
+      await updateUserQuery(email, { status: "active", user_type });
       return user.uuid;
     }
   }
@@ -124,6 +118,7 @@ const createUserQuery = async (
   };
 
   await getDb<Core>().insertInto("user").values(newUser).execute();
+  return uuid;
 };
 
 /**
