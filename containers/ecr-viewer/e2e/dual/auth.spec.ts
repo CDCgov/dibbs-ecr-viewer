@@ -21,7 +21,7 @@ test.describe("keycloak", () => {
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
-    await expect(page.getByText("Sign in")).toBeVisible();
+    await expect(page.getByText("You need to sign in")).toBeVisible();
   });
 
   test("should require a login on main page even if valid auth token provided", async ({
