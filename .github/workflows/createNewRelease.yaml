@@ -175,13 +175,14 @@ jobs:
         with:
           pattern: container-docs-*
           merge-multiple: true
-          path: ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+          path: ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers
 
-      - name: Copy to latest folder
+      - name: Copy to latest folder - copy ecr-viewer docs to main deployment folder
         run: |
-          rm -rf ./docs/latest
-          mkdir -p ./docs/latest/containers
-          cp -r ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers/* ./docs/latest/containers
+          rm -rf ./all-docs/latest
+          mkdir -p ./all-docs/latest/containers
+          cp -r ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers/* ./all-docs/latest/containers
+          cp -r ./all-docs/latest/containers/ecr-viewer ./docs/
 
       - name: Commit New Documentation
         uses: EndBug/add-and-commit@v9
