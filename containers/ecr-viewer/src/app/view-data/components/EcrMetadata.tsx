@@ -24,7 +24,7 @@ interface EcrMetadataProps {
 
 const eRSDWarningTooltip = (
   <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">
-    eRSD Warnings
+    eICR Processing Info
   </ToolTipElement>
 );
 

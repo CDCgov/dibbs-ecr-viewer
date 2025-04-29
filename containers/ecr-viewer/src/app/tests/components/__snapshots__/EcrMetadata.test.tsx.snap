@@ -179,7 +179,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                       tabindex="0"
                       title=""
                     >
-                      eRSD Warnings
+                      eICR Processing Info
                     </div>
                     <span
                       aria-hidden="true"
