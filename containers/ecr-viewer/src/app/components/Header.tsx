@@ -2,6 +2,8 @@ import React from "react";
 
 import Link from "next/link";
 
+import { SignOutButton } from "./SignOutButton";
+
 /**
  * Header component for the ECR Viewer project.
  * This component renders the header section of the application, including the
@@ -11,7 +13,10 @@ import Link from "next/link";
  */
 const Header: React.FC = () => (
   <header className="usa-header usa-header--basic">
-    <div className="usa-nav-container">
+    <div
+      className="usa-nav-container flex-row flex-align-center flex-justify"
+      style={{ maxWidth: "none" }}
+    >
       <div className="usa-navbar">
         <div className="usa-logo">
           <h1>
@@ -21,6 +26,7 @@ const Header: React.FC = () => (
           </h1>
         </div>
       </div>
+      <SignOutButton />
     </div>
   </header>
 );
