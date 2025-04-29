@@ -31,9 +31,12 @@ const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
 
 /**
- *
- * @param email
- * @param user_type
+ * Create a user with the given email and user type. The currently logged in user
+ * must be an admin and not actively exist, otherwise an error will be throw. If
+ * exists, but is not active. They will be reactivated with the user type passed.
+ * @param email Email of the user to add
+ * @param user_type Type of user to create ("admiin" or "standard")
+ * @returns UUID of the created user
  */
 export const createUser = async (
   email: string,
@@ -42,6 +45,16 @@ export const createUser = async (
   const creatingUser = await getLoggedInUser();
   if (!isAdmin(creatingUser)) {
     throw new Error("Standard user cannot create new users");
+  }
+
+  const user = await getUserByEmail(email);
+  if (!!user) {
+    if (user.status === "active") {
+      throw new Error("User already exists and is active");
+    } else {
+      await updateUserByEmail(email, { status: "active", user_type });
+      return user.uuid;
+    }
   }
 
   const uuid = randomUUID();
@@ -64,8 +77,9 @@ export const createUser = async (
 };
 
 /**
- *
- * @param email
+ * Delete user with the given email. The deleting user must be an admin. A
+ * user can indeed delete themselves.
+ * @param email Email of the user to delete
  */
 export const deleteUser = async (email: string): Promise<void> => {
   const deletingUser = await getLoggedInUser();
@@ -87,7 +101,8 @@ export const deleteUser = async (email: string): Promise<void> => {
 };
 
 /**
- *
+ * List all active users. The logged in user must be an admin.
+ * @returns list of all active users
  */
 export const listUsers = async (): Promise<User[]> => {
   const listingUser = await getLoggedInUser();
@@ -109,13 +124,13 @@ export const listUsers = async (): Promise<User[]> => {
 };
 
 /**
- *
- * @param email
- * @param updates
+ * Update a user with the the given email.
+ * @param email (current) email of the user to update
+ * @param updates mutable fields to update in their record. UUID fields should not be updated.
  */
 export const updateUserByEmail = async (
   email: string,
-  updates: UserUpdate,
+  updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ): Promise<void> => {
   const updatingUser = await getLoggedInUser();
   if (!isAdmin(updatingUser)) {
