@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -22,10 +23,19 @@ const getUserByEmail = async (
     .executeTakeFirst();
 };
 
-const getLoggedInUser = async () => {
-  const { email } = (await getLoggedInUserSession()) || {};
+/**
+ * Get the db User object for the currently logged in user.
+ *
+ * Cached so once we start using this and other crud in UI
+ * we re-use the db call.
+ */
+export const getLoggedInUser = cache(async () => {
+  const { email, name } = (await getLoggedInUserSession()) || {};
+  if (!email) return;
+  // Update the user's name to match the IDP
+  !!name && (await updateUserQuery(email, { name }));
   return await getUserByEmail(email);
-};
+});
 
 const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
@@ -77,6 +87,74 @@ export const createUser = async (
 };
 
 /**
+ * Create an initial admin user with the given email. If any active
+ * admin already exists, this will do nothing.
+ * @param email Email of the user to add
+ * @returns UUID of the created user
+ */
+export const createInitialAdminUser = async (
+  email: string,
+): Promise<string | undefined> => {
+  const users = await listActiveUsersSelect();
+  if (users.some(({ user_type }) => user_type === "admin")) {
+    console.warn("Active admin user already exists. Skipping user creation.");
+    return;
+  }
+
+  const uuid = randomUUID();
+  const newUser: NewUser = {
+    uuid,
+    email,
+    user_type: "admin",
+    author_uuid: uuid,
+  };
+
+  try {
+    await getDb<Core>().insertInto("user").values(newUser).execute();
+  } catch (error: unknown) {
+    const message = "Failed to create initial admin user";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+
+  return uuid;
+};
+
+/**
+ * Update a user with the the given email.
+ * @param email (current) email of the user to update
+ * @param updates objecct with fields to update in their record. UUID fields should not be updated.
+ */
+export const updateUserByEmail = async (
+  email: string,
+  updates: Omit<UserUpdate, "uuid" | "author_uuid">,
+): Promise<void> => {
+  const updatingUser = await getLoggedInUser();
+  if (!isAdmin(updatingUser)) {
+    throw new Error("Standard user cannot update users");
+  }
+
+  try {
+    await updateUserQuery(email, updates);
+  } catch (error: unknown) {
+    const message = "Failed to update user";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+};
+
+const updateUserQuery = async (
+  email: string,
+  updates: Omit<UserUpdate, "uuid" | "author_uuid">,
+) => {
+  await getDb<Core>()
+    .updateTable("user")
+    .set(updates)
+    .where("email", "=", email)
+    .execute();
+};
+
+/**
  * Delete user with the given email. The deleting user must be an admin. A
  * user can indeed delete themselves.
  * @param email Email of the user to delete
@@ -111,11 +189,7 @@ export const listUsers = async (): Promise<User[]> => {
   }
 
   try {
-    return await getDb<Core>()
-      .selectFrom("user")
-      .selectAll()
-      .where("status", "=", "active")
-      .execute();
+    return await listActiveUsersSelect();
   } catch (error: unknown) {
     const message = "Failed to list users";
     console.error({ message, error });
@@ -123,29 +197,10 @@ export const listUsers = async (): Promise<User[]> => {
   }
 };
 
-/**
- * Update a user with the the given email.
- * @param email (current) email of the user to update
- * @param updates objecct with fields to update in their record. UUID fields should not be updated.
- */
-export const updateUserByEmail = async (
-  email: string,
-  updates: Omit<UserUpdate, "uuid" | "author_uuid">,
-): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
-
-  try {
-    await getDb<Core>()
-      .updateTable("user")
-      .set(updates)
-      .where("email", "=", email)
-      .execute();
-  } catch (error: unknown) {
-    const message = "Failed to update user";
-    console.error({ message, error });
-    throw new Error(message);
-  }
+const listActiveUsersSelect = async () => {
+  return await getDb<Core>()
+    .selectFrom("user")
+    .selectAll()
+    .where("status", "=", "active")
+    .execute();
 };
