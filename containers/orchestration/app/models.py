@@ -119,7 +119,7 @@ class ListConfigsResponse(BaseModel):
 
 class ListConditionsResponse(BaseModel):
     """
-    The config for responses from the /configs endpoint.
+    The config for responses from the /conditions endpoint.
     """
 
     conditions: list[dict] = Field(

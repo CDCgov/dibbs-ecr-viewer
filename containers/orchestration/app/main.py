@@ -405,7 +405,7 @@ def _filter_failed_responses(responses):
 async def list_conditions_endpoint() -> ListConditionsResponse:
     """
     This endpoint gets a list of all of the conditions known to the trigger
-    reference service
+    code reference service
     """
     tcr_url = format_service_url(
         SERVICE_URLS["trigger_code_reference"], "/get-conditions"
