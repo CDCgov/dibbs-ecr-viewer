@@ -126,7 +126,7 @@ export const listUsers = async (): Promise<User[]> => {
 /**
  * Update a user with the the given email.
  * @param email (current) email of the user to update
- * @param updates mutable fields to update in their record. UUID fields should not be updated.
+ * @param updates objecct with fields to update in their record. UUID fields should not be updated.
  */
 export const updateUserByEmail = async (
   email: string,
