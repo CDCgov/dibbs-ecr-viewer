@@ -5,6 +5,10 @@ import { logInToKeycloak } from "./dual/utils";
 
 const toForm = (obj: Record<string, string>) => {
   const form = new FormData();
+  // for this spec, we always skip conditions to avoid requiring
+  // orchestration service (not worth it at this time, this could change
+  // down the road)
+  form.append("skip_condition_update", "true");
   for (const [k, v] of Object.entries(obj)) {
     form.append(k, v);
   }

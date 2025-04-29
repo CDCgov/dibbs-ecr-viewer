@@ -100,7 +100,7 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-zip' \
 ## Migrate Metadata Database
 
 Migrate the metadata database if needed. Typically, this is done to bring the database up to date with
-the state of the application. It can also be used to revert migrations and return the database to a prior state.
+the state of the application, including updating the conditions used in the viewer to match the Trigger Code Reference Service. It can also be used to revert migrations and return the database to a prior state.
 
 **URL** : `/ecr-viewer/api/migrate-db`
 
@@ -108,6 +108,7 @@ the state of the application. It can also be used to revert migrations and retur
 
 - `migration_secret=[secret string]` confirm that you have permission to perform migrations. The secret is logged to the server and can optionally be set to a known value via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable.
 - `direction=[up|down]` Optional. By default an `up` migration to the latest state will be applied. If `down` is passed, the database will be migrated downward one step at a time. This means it may take multiple calls to the database to revert back to the desired state.
+- `skip_condition_update=[true|false]` Optional. By default, when migrating up, the conditions reference data will be updated from the Trigger Code Reference Service. Conditions are never deleted, but names or categories could be updated if new data is available. To skip this update, pass the string `"true"` to this field.
 
 **Method** : `POST`
 

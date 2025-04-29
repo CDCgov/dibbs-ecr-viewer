@@ -29,6 +29,7 @@ export const clearCore = async () => {
   await db.deleteFrom("ecr_rr_rule_summaries").execute();
   await db.deleteFrom("ecr_rr_conditions").execute();
   await db.deleteFrom("ecr_data").execute();
+  await db.deleteFrom("condition_reference").execute();
   await db.deleteFrom("user_program_area").execute();
   await db.deleteFrom("program_area").execute();
   await db.deleteFrom("user").execute();

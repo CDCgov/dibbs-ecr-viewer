@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { migrateDown, migrateUp } from "./migrate";
+import { updateConditions } from "./updateConditions";
 
 const schema = z.object({
   migration_secret: z.string({
@@ -11,6 +12,10 @@ const schema = z.object({
     }),
   }),
   direction: z.string().default("up"),
+  skip_condition_update: z
+    .string()
+    .optional()
+    .transform((v) => v?.toLowerCase()),
 });
 
 interface MigrationResponse {
@@ -50,7 +55,7 @@ export async function POST(
   }
 
   try {
-    const { migration_secret, direction } = schema.parse(
+    const { migration_secret, direction, skip_condition_update } = schema.parse(
       Object.fromEntries(formData),
     );
     if (migration_secret !== process.env.METADATA_DATABASE_MIGRATION_SECRET) {
@@ -70,6 +75,7 @@ export async function POST(
       await migrateDown();
     } else if (direction === "up") {
       await migrateUp();
+      skip_condition_update !== "true" && (await updateConditions());
     } else {
       return NextResponse.json(
         {
