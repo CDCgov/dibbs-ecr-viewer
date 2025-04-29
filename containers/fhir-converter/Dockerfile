@@ -1,8 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Download FHIR-Converter
-# TODO ANGELA: Remove #496
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch angela/461-bug-eicr-processing --depth 1 /build/FHIR-Converter
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-2 --depth 1 /build/FHIR-Converter
 
 WORKDIR /build/FHIR-Converter
 
