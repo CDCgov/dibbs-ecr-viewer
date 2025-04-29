@@ -145,7 +145,9 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     const coding = reasonObs?.valueCodeableConcept?.coding?.[0];
     const warningCode = coding?.code ?? "";
     const warningName =
-      coding?.display || eicrProcessingReasonMap[warningCode] || unknownWarningText;
+      coding?.display ||
+      eicrProcessingReasonMap[warningCode] ||
+      unknownWarningText;
 
     let versionUsed: string | undefined;
     let versionExpected: string | undefined;
@@ -174,7 +176,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
         suggestedSolution:
           ersdWarningSuggestedSolutionsMap[warningCode] || noData,
       },
-    }
+    };
   }
 
   const eRSDProcessingInfo: ERSDInfo | undefined = geteRSDInfo(
