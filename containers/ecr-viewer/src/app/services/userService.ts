@@ -43,6 +43,21 @@ const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
 
 /**
+ * Check the currently logged in user is an admin and return them. Throws
+ * an error if the currently logged in user isn't an admin.
+ * @param actionDesc description of the action that only admins can do
+ * @returns admin user
+ */
+export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
+  const loggedInUser = await getLoggedInUser();
+  if (!isAdmin(loggedInUser)) {
+    throw new Error(`Standard user cannot ${actionDesc}`);
+  }
+
+  return loggedInUser;
+};
+
+/**
  * Create a user with the given email and user type. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be throw. If
  * exists, but is not active. They will be reactivated with the user type passed.
@@ -54,10 +69,7 @@ export const createUser = async (
   email: string,
   user_type: "admin" | "standard",
 ): Promise<string> => {
-  const creatingUser = await getLoggedInUser();
-  if (!isAdmin(creatingUser)) {
-    throw new Error("Standard user cannot create new users");
-  }
+  const creatingUser = await getCheckAdmin("create new users");
 
   try {
     const uuid = randomUUID();
@@ -130,10 +142,7 @@ export const updateUserByEmail = async (
   email: string,
   updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
+  await getCheckAdmin("update users");
 
   try {
     await updateUserQuery(email, updates);
@@ -161,10 +170,7 @@ const updateUserQuery = async (
  * @param email Email of the user to delete
  */
 export const deleteUser = async (email: string): Promise<void> => {
-  const deletingUser = await getLoggedInUser();
-  if (!isAdmin(deletingUser)) {
-    throw new Error("Standard user cannot delete users");
-  }
+  await getCheckAdmin("delete users");
 
   try {
     await getDb<Core>()
@@ -184,10 +190,7 @@ export const deleteUser = async (email: string): Promise<void> => {
  * @returns list of all active users
  */
 export const listUsers = async (): Promise<User[]> => {
-  const listingUser = await getLoggedInUser();
-  if (!isAdmin(listingUser)) {
-    throw new Error("Standard user cannot list users");
-  }
+  await getCheckAdmin("list users");
 
   try {
     return await listActiveUsersQuery();
