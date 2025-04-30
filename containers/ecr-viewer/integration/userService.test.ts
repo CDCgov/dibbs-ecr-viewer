@@ -163,7 +163,7 @@ describe("user service", () => {
     // standard user created in prior test
     await deleteUser(userEmail);
 
-    // see standard user listed with name
+    // see only admin user listed
     const users = await listUsers();
     expect(users).toBeArrayOfSize(1);
     expect(users).toStrictEqual([
