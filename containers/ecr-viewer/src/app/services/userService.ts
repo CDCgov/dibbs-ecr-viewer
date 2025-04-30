@@ -44,7 +44,7 @@ const isAdmin = (user: User | undefined): user is User =>
 
 /**
  * Create a user with the given email and user type. The currently logged in user
- * must be an admin and not actively exist, otherwise an error will be throw. If
+ * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
  * @param email Email of the user to add
  * @param user_type Type of user to create ("admiin" or "standard")
@@ -167,11 +167,7 @@ export const deleteUser = async (email: string): Promise<void> => {
   }
 
   try {
-    await getDb<Core>()
-      .updateTable("user")
-      .set({ status: "deleted" })
-      .where("email", "=", email)
-      .execute();
+    await updateUserQuery(email, { status: "deleted" });
   } catch (error: unknown) {
     const message = "Failed to delete user";
     console.error({ message, error });
