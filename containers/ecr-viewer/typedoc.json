@@ -25,5 +25,6 @@
     "tsx",
     "typescript"
   ],
-  "plugin": ["typedoc-plugin-mermaid"]
+  "plugin": ["typedoc-plugin-mermaid"],
+  "name": "eCR Viewer"
 }

@@ -1,0 +1,20 @@
+{
+  "description": "Success",
+  "content": {
+    "application/json": {
+      "examples": {
+        "Conditions retrieval": {
+          "summary": "Get all conditions",
+          "value": [
+            {
+              "code": "12345",
+              "condition_name": "Anthrax",
+              "concept_name": "Anthrax (disorder)",
+              "condition_category": "Zoonotic Diseases"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

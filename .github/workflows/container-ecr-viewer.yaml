@@ -82,7 +82,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: ["AWS_SQLSERVER_NON_INTEGRATED", "AZURE_PG_NON_INTEGRATED"]
+        include:
+          - config: AWS_SQLSERVER_NON_INTEGRATED
+            schema: extended
+          - config: AZURE_PG_NON_INTEGRATED
+            schema: core
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -104,6 +108,11 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config }}/' .env.local
+
+      - name: Set METADATA_DATABASE_SCHEMA to ${{ matrix.schema }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          echo "METADATA_DATABASE_SCHEMA=${{ matrix.schema }}" >> .env.local
 
       - name: Run seed data conversion
         run: npm run convert-seed-data
@@ -134,6 +143,26 @@ jobs:
         run: |
           npm run setup-local-env
           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
+
+      - name: Run local docker and wait for it to be ready
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+
+      - name: Run Playwright tests - Migrations
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:e2e:migrations
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
+
+      - name: Upload playwright report - Migrations
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-migrations
+          path: containers/${{env.CONTAINER}}/playwright-report/
+          retention-days: 5
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}

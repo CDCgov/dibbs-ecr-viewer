@@ -3,15 +3,17 @@ import React, { Suspense } from "react";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { dbIsValid } from "./api/migrate-db/migrate";
 import EcrPaginationWrapper from "./components/EcrPaginationWrapper";
 import EcrTableContent from "./components/EcrTableContent";
 import { EcrTableHeader } from "./components/EcrTableHeader";
 import { EcrTableLoading } from "./components/EcrTableLoading";
+import { MetadataDbInvalid } from "./components/ErrorPage";
 import Filters from "./components/Filters";
 import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { INITIAL_HEADERS } from "./constants";
-import { getAllConditions } from "./data/conditions";
+import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
@@ -29,6 +31,8 @@ const HomePage = async ({
 }) => {
   if (!process.env.METADATA_DATABASE_TYPE) {
     notFound();
+  } else if (!(await dbIsValid())) {
+    return <MetadataDbInvalid />;
   }
 
   const cookieStore = cookies();

@@ -2,7 +2,7 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 
-import { get_fhir_data } from "@/app/api/fhir-data/fhir-data-service";
+import { get_fhir_data } from "@/app/api/fhir-data/service";
 import ECRViewerPage from "@/app/view-data/page";
 
 jest.mock("../view-data/component-utils", () => ({
@@ -13,7 +13,7 @@ jest.mock("../view-data/components/LoadingComponent", () => ({
   EcrLoadingSkeleton: () => <div>Loading...</div>,
 }));
 
-jest.mock("../api/fhir-data/fhir-data-service", () => ({
+jest.mock("../api/fhir-data/service", () => ({
   get_fhir_data: jest.fn(),
 }));
 jest.mock("../components/AuthSessionProvider", () => ({

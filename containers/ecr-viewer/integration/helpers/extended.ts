@@ -1,5 +1,5 @@
-import { getDb } from "@/app/api/services/database";
-import { NewExtendedECR, Extended } from "@/app/api/services/types/extended";
+import { getDb } from "@/app/data/metadataDb/database";
+import { NewExtendedECR, Extended } from "@/app/data/metadataDb/types/extended";
 
 /**
  * Creates an eICR object

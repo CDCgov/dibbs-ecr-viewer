@@ -35,7 +35,7 @@ const ErrorPage = ({
         <div className="text-semibold font-sans-md margin-top-1">
           {subTitle}
         </div>
-        <div className="bg-info-lighter border border-info-light radius-md font-sans-md line-height-sans-4 padding-3 margin-top-2 width-tablet">
+        <div className="bg-info-lighter border border-info-light radius-md font-sans-md line-height-sans-4 padding-3 margin-top-2 width-tablet error-message-content">
           {children}
         </div>
         <BackButton className="margin-top-3 font-sans-md text-primary" />
@@ -72,6 +72,18 @@ export const GenericError = ({ children }: { children?: React.ReactNode }) => (
     <p>
       If the problem persists, please reach out to your eCR coordinator to
       troubleshoot the issue with the DIBBs team.
+    </p>
+  </ErrorPage>
+);
+
+/**
+ * @returns The metadata db invalid error page JSX component.
+ */
+export const MetadataDbInvalid = () => (
+  <ErrorPage title="eCR Viewer setup is incomplete">
+    <p>
+      The database backing this page isn't fully set up. Reach out to your eCR
+      Viewer admin to complete setup.
     </p>
   </ErrorPage>
 );

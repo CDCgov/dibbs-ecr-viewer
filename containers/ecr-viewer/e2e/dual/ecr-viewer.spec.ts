@@ -80,6 +80,9 @@ test.describe("viewer page", () => {
     test("scrolling through highlights links appropriately", async ({
       page,
     }) => {
+      // some browsers struggle with the small scroll iteration here
+      test.slow();
+
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
@@ -87,7 +90,7 @@ test.describe("viewer page", () => {
       const numLinks = (await navLinks.all()).length;
       let navIndex = 1; // skip "back to library" link
       while (navIndex < numLinks) {
-        await page.mouse.wheel(0, 10);
+        await page.mouse.wheel(0, 12);
 
         const className = await navLinks.nth(navIndex)?.getAttribute("class");
         if (className === "usa-current") {

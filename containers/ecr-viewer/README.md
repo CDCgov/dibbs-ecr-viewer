@@ -1,6 +1,8 @@
 # Getting Started with DIBBs eCR Viewer
 
-If you're looking to contribute to development on the eCR Viewer, you're in the right place. If you're trying to run a deployment of the Viewer instead, please refer to our [guide.md](./guide.md)
+**If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guide.md)**
+
+If you're looking to contribute to development on the eCR Viewer, you're in the right place.
 
 ## Introduction
 

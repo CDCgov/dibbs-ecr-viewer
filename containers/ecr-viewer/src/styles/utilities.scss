@@ -5,6 +5,13 @@
 // These typically expand the builtin set provided by uswds, so use
 // those first, then if needed add one following their naming conventions.
 
+// ==== font size ==== //
+// https://designsystem.digital.gov/utilities/font-size-and-family/ for t-shirt sizing map
+
+.font-size-xs {
+  font-size: 1rem;
+}
+
 // ==== gap ==== //
 
 .gap-05 {

@@ -26,3 +26,9 @@ upload_config_response_examples = {
 # /configs/{processing_config_name} endpoint #
 raw_get_config_response = read_json_from_assets("sample_get_config_response.json")
 sample_get_config_response = {200: raw_get_config_response}
+
+# /conditions endpoint #
+raw_list_conditions_response = read_json_from_assets(
+    "sample_list_conditions_response.json"
+)
+sample_list_conditions_response = {200: raw_list_conditions_response}

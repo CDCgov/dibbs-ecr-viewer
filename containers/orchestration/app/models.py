@@ -117,6 +117,16 @@ class ListConfigsResponse(BaseModel):
     )
 
 
+class ListConditionsResponse(BaseModel):
+    """
+    The config for responses from the /conditions endpoint.
+    """
+
+    conditions: list[dict] = Field(
+        description="The conditions that are known to the trigger reference service."
+    )
+
+
 class WorkflowServiceStepModel(BaseModel):
     service: str
     endpoint: str

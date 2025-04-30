@@ -3,11 +3,12 @@ import { Bundle } from "fhir/r4";
 import {
   saveFhirData,
   saveWithMetadata,
-} from "@/app/api/save-fhir-data/save-fhir-data-service";
+} from "@/app/api/save-fhir-data/service";
 import {
   BundleExtendedMetadata,
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
+import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -33,8 +34,8 @@ interface BundleInfo {
  * @returns name of the orchestration config
  */
 const getOrchestrationConfigName = () => {
-  if (!!process.env.METADATA_DATABASE_TYPE) {
-    if (process.env.METADATA_DATABASE_SCHEMA === "extended") {
+  if (!!dbDialect()) {
+    if (dbSchema() === "extended") {
       return "bundle-metadata-extended.json";
     } else {
       return "bundle-metadata-core.json";
@@ -63,7 +64,7 @@ const getOrchestrationResponse = async (file: File): Promise<BundleInfo> => {
   });
 
   if (response.status !== 200) {
-    console.error(await response.json());
+    console.error(await response.text());
     throw "Error thrown from orchestration";
   } else {
     const resp: OrchestrationRawResponse = await response.json();
