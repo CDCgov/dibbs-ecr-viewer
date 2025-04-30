@@ -92,7 +92,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           <span
-            class="text-italic text-base"
+            class="no-data text-italic text-base"
           >
             No data
           </span>
@@ -106,7 +106,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           <span
-            class="text-italic text-base"
+            class="no-data text-italic text-base"
           >
             No data
           </span>
@@ -132,7 +132,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           <span
-            class="text-italic text-base"
+            class="no-data text-italic text-base"
           >
             No data
           </span>
@@ -148,7 +148,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           <span
-            class="text-italic text-base"
+            class="no-data text-italic text-base"
           >
             No data
           </span>
@@ -162,7 +162,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           <span
-            class="text-italic text-base"
+            class="no-data text-italic text-base"
           >
             No data
           </span>
@@ -188,7 +188,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           <span
-            class="text-italic text-base"
+            class="no-data text-italic text-base"
           >
             No data
           </span>

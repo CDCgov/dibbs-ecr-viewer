@@ -64,7 +64,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         <span
-          class="text-italic text-base"
+          class="no-data text-italic text-base"
         >
           No data
         </span>
@@ -2446,7 +2446,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         <span
-          class="text-italic text-base"
+          class="no-data text-italic text-base"
         >
           No data
         </span>
@@ -5018,7 +5018,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <span
-          class="text-italic text-base"
+          class="no-data text-italic text-base"
         >
           No data
         </span>

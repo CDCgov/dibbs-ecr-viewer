@@ -3,7 +3,7 @@ import React from "react";
 import { Table } from "@trussworks/react-uswds";
 
 import {
-  ERSDInfo,
+  ERSDWarning,
   ReportableConditions,
 } from "@/app/services/ecrMetadataService";
 import {
@@ -17,23 +17,17 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDProcessingInfo: ERSDInfo;
+  eRSDWarnings: ERSDWarning[];
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
-
-const eRSDWarningTooltip = (
-  <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">
-    eICR Processing Info
-  </ToolTipElement>
-);
 
 /**
  * Functional component for displaying eCR metadata.
  * @param props - Props containing eCR metadata.
  * @param props.rrDetails - The reportable conditions details.
  * @param props.eicrDetails - The eICR details.
- * @param props.eRSDProcessingInfo - The eICR processing success status & eRSD warning.
+ * @param props.eRSDWarnings - The eRSD warnings.
  * @param props.eCRCustodianDetails - The eCR custodian details.
  * @param props.eicrAuthorDetails - The eICR author details.
  * @returns The JSX element representing the eCR metadata.
@@ -41,7 +35,7 @@ const eRSDWarningTooltip = (
 const EcrMetadata = ({
   rrDetails,
   eicrDetails,
-  eRSDProcessingInfo,
+  eRSDWarnings,
   eCRCustodianDetails,
   eicrAuthorDetails,
 }: EcrMetadataProps) => {
@@ -50,52 +44,46 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {eRSDProcessingInfo.success ? (
+        {eRSDWarnings?.length > 0 && (
           <div>
-            <div className="header-data-title">{eRSDWarningTooltip}</div>
-            <p className="text-italic text-base padding-bottom-0">
-              eICR processed
-            </p>
+            <Table
+              bordered={false}
+              className="ersd-table fixed-table border-top border-left border-right border-bottom"
+              fixed={true}
+              fullWidth={true}
+            >
+              <caption>
+                <ToolTipElement toolTip="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.">
+                  eRSD Warnings
+                </ToolTipElement>
+              </caption>
+              <thead>
+                <tr>
+                  <th>Warning</th>
+                  <th>Version in Use</th>
+                  <th>Expected Version</th>
+                  <th>Suggested Solution</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.isArray(eRSDWarnings) &&
+                  eRSDWarnings.map((warningItem, index) => (
+                    <tr key={index}>
+                      <td className="padding-105">{warningItem.warning}</td>
+                      <td className="padding-105">{warningItem.versionUsed}</td>
+                      <td className="padding-105">
+                        {warningItem.expectedVersion}
+                      </td>
+                      <td className="padding-105">
+                        {warningItem.suggestedSolution}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+            <div className="section__line_gray"></div>
           </div>
-        ) : (
-          eRSDProcessingInfo.eRSDWarning && (
-            <div>
-              <Table
-                bordered={false}
-                className="fixed-table border-top border-left border-right border-bottom"
-                fixed={true}
-                fullWidth={true}
-              >
-                <caption>{eRSDWarningTooltip}</caption>
-                <thead>
-                  <tr>
-                    <th>Warning</th>
-                    <th>Version in Use</th>
-                    <th>Expected Version</th>
-                    <th>Suggested Solution</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="padding-105">
-                      {eRSDProcessingInfo.eRSDWarning.warning}
-                    </td>
-                    <td className="padding-105">
-                      {eRSDProcessingInfo.eRSDWarning.versionUsed}
-                    </td>
-                    <td className="padding-105">
-                      {eRSDProcessingInfo.eRSDWarning.versionExpected}
-                    </td>
-                    <td className="padding-105">
-                      {eRSDProcessingInfo.eRSDWarning.suggestedSolution}
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </div>
-          )
         )}
-        <div className="section__line_gray"></div>
       </AccordionSubSection>
 
       <AccordionSubSection title="eICR Details">
@@ -140,7 +128,7 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
     return (
       <div>
         <h5 className="header-data-title">Reportability Summary</h5>
-        <p className="text-italic text-base padding-bottom-0">
+        <p className="no-data text-italic text-base padding-bottom-0">
           No reportable condition found
         </p>
       </div>

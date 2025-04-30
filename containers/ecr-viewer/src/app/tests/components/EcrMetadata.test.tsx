@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 
 import {
-  ERSDInfo,
+  ERSDWarning,
   ReportableConditions,
 } from "@/app/services/ecrMetadataService";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -42,17 +42,16 @@ const eicrDetails: DisplayDataProps[] = [
   { title: "EHR Manufacturer Model Name", value: "Epic - Version 10.1" },
 ];
 
-const eRSDProcessingInfo: ERSDInfo = {
-  success: false,
-  eRSDWarning: {
+const eRSDWarnings: ERSDWarning[] = [
+  {
     warning: "Sending organization is using an malformed eRSD (RCTC) version",
     versionUsed: "2020-06-23",
-    versionExpected:
+    expectedVersion:
       "Sending organization should be using one of the following: 2023-10-06, 1.2.2.0, 3.x.x.x.",
     suggestedSolution:
       "The trigger code version your organization is using could not be determined. The trigger codes may be out date. Please have your EHR administrators update the version format for complete eCR functioning.",
   },
-};
+];
 
 const ecrCustodianDetails: DisplayDataProps[] = [
   {
@@ -117,7 +116,7 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={rrConditionsList}
-        eRSDProcessingInfo={eRSDProcessingInfo}
+        eRSDWarnings={eRSDWarnings}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
       />,
@@ -129,7 +128,7 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={rrConditionsList}
-        eRSDProcessingInfo={eRSDProcessingInfo}
+        eRSDWarnings={eRSDWarnings}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
       />,
@@ -143,7 +142,7 @@ describe("ECR Metadata", () => {
       <EcrMetadata
         eicrDetails={eicrDetails}
         rrDetails={emptyRrDetails}
-        eRSDProcessingInfo={eRSDProcessingInfo}
+        eRSDWarnings={eRSDWarnings}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
       />,

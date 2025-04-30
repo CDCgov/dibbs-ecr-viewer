@@ -11,14 +11,14 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
           {
             "Dates": {
               "value": <span
-                className="text-italic text-base"
+                className="no-data text-italic text-base"
               >
                 No data
               </span>,
             },
             "Name": {
               "value": <span
-                className="text-italic text-base"
+                className="no-data text-italic text-base"
               >
                 No data
               </span>,
@@ -197,7 +197,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                 "fullWidthContent": false,
                 "title": "Workplace Information",
                 "value": <span
-                  className="text-italic text-base"
+                  className="no-data text-italic text-base"
                 >
                   No data
                 </span>,
@@ -253,7 +253,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                 "fullWidthContent": false,
                 "title": "Workplace Information",
                 "value": <span
-                  className="text-italic text-base"
+                  className="no-data text-italic text-base"
                 >
                   No data
                 </span>,
@@ -309,7 +309,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                 "fullWidthContent": false,
                 "title": "Workplace Information",
                 "value": <span
-                  className="text-italic text-base"
+                  className="no-data text-italic text-base"
                 >
                   No data
                 </span>,
@@ -375,7 +375,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                 "fullWidthContent": false,
                 "title": "Workplace Information",
                 "value": <span
-                  className="text-italic text-base"
+                  className="no-data text-italic text-base"
                 >
                   No data
                 </span>,
@@ -448,7 +448,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                         "title": "Address",
                         "titleNormal": true,
                         "value": <span
-                          className="text-italic text-base"
+                          className="no-data text-italic text-base"
                         >
                           No data
                         </span>,
@@ -462,7 +462,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                         "title": "Schedule",
                         "titleNormal": true,
                         "value": <span
-                          className="text-italic text-base"
+                          className="no-data text-italic text-base"
                         >
                           No data
                         </span>,
@@ -476,7 +476,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                         "title": "Hours",
                         "titleNormal": true,
                         "value": <span
-                          className="text-italic text-base"
+                          className="no-data text-italic text-base"
                         >
                           No data
                         </span>,
@@ -490,7 +490,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                         "title": "Days",
                         "titleNormal": true,
                         "value": <span
-                          className="text-italic text-base"
+                          className="no-data text-italic text-base"
                         >
                           No data
                         </span>,
@@ -504,7 +504,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                         "title": "Duties",
                         "titleNormal": true,
                         "value": <span
-                          className="text-italic text-base"
+                          className="no-data text-italic text-base"
                         >
                           No data
                         </span>,
@@ -541,7 +541,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
                 "dividerLine": false,
                 "title": "Hazard",
                 "value": <span
-                  className="text-italic text-base"
+                  className="no-data text-italic text-base"
                 >
                   No data
                 </span>,

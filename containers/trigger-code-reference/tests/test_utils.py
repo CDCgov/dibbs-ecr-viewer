@@ -244,10 +244,6 @@ def test_add_human_readable_reportable_condition_name(mock_get_condition_name):
         e.get("resource")
         for e in message.get("entry", [])
         if e.get("resource").get("resourceType") == "Observation"
-        and any(
-            coding.get("display") == "Condition"
-            for coding in e.get("resource", {}).get("code", {}).get("coding", [])
-        )
     ][0]
 
     expected_condition_name = "Cyclosporiasis"

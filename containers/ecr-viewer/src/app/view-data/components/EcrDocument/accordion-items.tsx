@@ -2,10 +2,7 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import {
-  ERSDInfo,
-  evaluateEcrMetadata,
-} from "@/app/services/ecrMetadataService";
+import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import {
   evaluateDemographicsData,
   evaluateSocialData,
@@ -61,6 +58,7 @@ export const getEcrDocumentAccordionItems = (
       clinicalData.clinicalNotes.unavailableData,
       ...ecrMetadata.eicrDetails.unavailableData,
       ...ecrMetadata.ecrCustodianDetails.unavailableData,
+      ecrMetadata.eRSDWarnings,
       ecrMetadata.eicrAuthorDetails.map((details) => details.unavailableData),
     ];
     return unavailableDataArrays.some(
@@ -148,7 +146,7 @@ export const getEcrDocumentAccordionItems = (
       content: (
         <>
           {Object.keys(ecrMetadata.rrDetails).length > 0 ||
-          ecrMetadata.eRSDProcessingInfo ||
+          ecrMetadata.eRSDWarnings.length > 0 ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
             (authorDetails) => authorDetails.availableData.length > 0,
@@ -160,7 +158,7 @@ export const getEcrDocumentAccordionItems = (
                 ecrMetadata.ecrCustodianDetails.availableData
               }
               rrDetails={ecrMetadata.rrDetails}
-              eRSDProcessingInfo={ecrMetadata.eRSDProcessingInfo as ERSDInfo}
+              eRSDWarnings={ecrMetadata.eRSDWarnings}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
                 .filter((details) => details.availableData.length > 0)
                 .map((details) => details.availableData)}
@@ -196,8 +194,8 @@ export const getEcrDocumentAccordionItems = (
               clinicalNotesData={clinicalData.clinicalNotes.unavailableData}
               ecrMetadataUnavailableData={[
                 ...ecrMetadata.eicrDetails.unavailableData,
-                ...(!ecrMetadata.eRSDProcessingInfo
-                  ? [{ title: "eICR Processing Info", value: "" }]
+                ...(ecrMetadata.eRSDWarnings.length === 0
+                  ? [{ title: "eRSD Warnings", value: "" }]
                   : []),
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,
               ]}

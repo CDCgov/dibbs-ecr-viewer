@@ -469,13 +469,16 @@ describe("LabsService tests", () => {
 
       it("returns NoData if none are found for field name", () => {
         const invalidFieldName = "foobar";
+        const expectedNoData = (
+          <span className="no-data text-italic text-base">No data</span>
+        );
 
         const result = returnFieldValueFromLabHtmlString(
           labReportNormalJsonObject,
           invalidFieldName,
         );
 
-        expect(result).toStrictEqual(noData);
+        expect(result).toStrictEqual(expectedNoData);
       });
     });
 

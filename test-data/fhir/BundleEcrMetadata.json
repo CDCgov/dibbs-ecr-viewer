@@ -47,15 +47,38 @@
               },
               {
                 "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension",
-                "extension": [
-                  {
-                    "url": "eICRProcessingStatus",
-                    "valueReference": {
-                      "reference": "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a",
-                      "display": "eICR was processed - with a warning"
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "entries": [
+                        {
+                          "eRSDwarnings": [
+                            {
+                              "id": "e39d6ae2-8c6e-4638-9b33-412996586f42",
+                              "code": "RRVS29",
+                              "display": "The eICR was processed with the warning of: outdated eRSD (RCTC) version.",
+                              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+                            },
+                            {
+                              "id": "80f7b4ff-4d96-46ef-ae8f-af1f9c1f206c",
+                              "value": "2022-11-01",
+                              "code": "RRVS31",
+                              "display": "Outdated eRSD (RCTC) Version Detail",
+                              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+                            },
+                            {
+                              "id": "80f7b4ff-4d96-46ef-ae8f-af1f9c1f206c",
+                              "value": "The expected eRSD (RCTC) version should be one of the following: 2024-04-05,1.2.3.0,3.x.x",
+                              "code": "RRVS33",
+                              "display": "Expected eRSD (RCTC) Version Detail",
+                              "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000"
+                            }
+                          ]
+                        }
+                      ]
                     }
-                  }
-                ]
+                  ]
+                }
               }
             ],
             "code": {
@@ -116,110 +139,6 @@
         "meta": {
           "source": "ecr"
         }
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:1f41508f-a752-fb3a-9091-7473d7d3b40a",
-      "resource": {
-        "resourceType": "Observation",
-        "id": "1f41508f-a752-fb3a-9091-7473d7d3b40a",
-        "meta": {
-          "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation"
-          ]
-        },
-        "identifier": [
-          {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:uuid:39d966b9-8a3a-4024-93d8-138e97d5898a"
-          }
-        ],
-        "status": "final",
-        "code": {
-          "coding": [
-            {
-              "code": "RRVS20",
-              "system": "urn:oid:2.16.840.1.114222.4.5.274",
-              "display": "eICR was processed - with a warning"
-            }
-          ]
-        },
-        "hasMember": [
-          {
-            "reference": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
-          }
-        ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a"
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:c53c48e6-db9a-3523-7d00-c52fbbd3f7ea",
-      "resource": {
-        "resourceType": "Observation",
-        "id": "c53c48e6-db9a-3523-7d00-c52fbbd3f7ea",
-        "meta": {
-          "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-reason-observation"
-          ]
-        },
-        "identifier": [
-          {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:uuid:e39d6ae2-8c6e-4638-9b33-412996586f42"
-          }
-        ],
-        "status": "final",
-        "code": {
-          "coding": [
-            {
-              "code": "RR6",
-              "system": "urn:oid:2.16.840.1.114222.4.5.232",
-              "display": "eICR processing status reason"
-            }
-          ]
-        },
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "RRVS29",
-              "system": "urn:oid:2.16.840.1.114222.4.5.274",
-              "display": "The eICR was processed with the warning of: outdated eRSD (RCTC) version."
-            }
-          ]
-        },
-        "component": [
-          {
-            "code": {
-              "coding": [
-                {
-                  "code": "RRVS31",
-                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
-                  "display": "Outdated eRSD (RCTC) Version Detail"
-                }
-              ]
-            },
-            "valueString": "3/29/2022"
-          },
-          {
-            "code": {
-              "coding": [
-                {
-                  "code": "RRVS33",
-                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
-                  "display": "Expected eRSD (RCTC) Version Detail"
-                }
-              ]
-            },
-            "valueString": "The expected eRSD (RCTC) version should be one of the following: [\"2024-06-28\",\"1.2.4.0\",\"3.x.x\",\"2024-04-05\"] "
-          }
-        ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
       }
     },
     {

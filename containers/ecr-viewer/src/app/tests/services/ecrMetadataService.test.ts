@@ -1,16 +1,9 @@
 import { Bundle } from "fhir/r4";
 
 import BundleWithEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import BundleErsdWarningNoDetail from "../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
 import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
-import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
-import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
-import {
-  evaluateEcrMetadata,
-  unknownWarning,
-} from "@/app/services/ecrMetadataService";
-import { noData } from "@/app/utils/data-utils";
+import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 
 describe("Evaluate Ecr Metadata", () => {
   it("should have no available data where there is no data", () => {
@@ -91,132 +84,22 @@ describe("Evaluate Ecr Metadata", () => {
       },
     });
   });
-  it("should have an eRSD Warning", () => {
+  it("should have eRSDwarnings", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
     );
 
-    expect(actual.eRSDProcessingInfo).toEqual({
-      success: false,
-      eRSDWarning: {
+    expect(actual.eRSDWarnings).toEqual([
+      {
         warning:
-          "The eICR was processed with the warning of: outdated eRSD (RCTC) version.",
-        versionUsed: "Outdated eRSD (RCTC) Version Detail: 3/29/2022",
-        versionExpected:
-          'The expected eRSD (RCTC) version should be one of the following: ["2024-06-28","1.2.4.0","3.x.x","2024-04-05"] ',
+          "Sending organization is using an outdated eRSD (RCTC) version",
+        versionUsed: "2020-06-23",
+        expectedVersion:
+          "Sending organization should be using one of the following: 2023-10-06, 1.2.2.0, 3.x.x.x.",
         suggestedSolution:
           "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
       },
-    });
-  });
-  it("if processed with no warning/error, should return success", () => {
-    const actual = evaluateEcrMetadata(sample_ecr as unknown as Bundle);
-
-    expect(actual.eRSDProcessingInfo).toEqual({ success: true });
-  });
-  it("if processed with eRSDwarning but no details, should show partial info", () => {
-    const actual = evaluateEcrMetadata(
-      BundleErsdWarningNoDetail as unknown as Bundle,
-    );
-
-    expect(actual.eRSDProcessingInfo).toEqual({
-      success: false,
-      eRSDWarning: {
-        warning:
-          "eICR was processed with the warning of: content or format issues.",
-        versionUsed: noData,
-        versionExpected: noData,
-        suggestedSolution: noData,
-      },
-    });
-  });
-  it("if no eICR Processing Status, should return undefined", () => {
-    const actual = evaluateEcrMetadata(BundlePatient as unknown as Bundle);
-
-    expect(actual.eRSDProcessingInfo).toEqual(undefined);
-  });
-  it("if there's a non-success processing status but no reason obs, should return unknown warning", () => {
-    const BundleErsdWarningNoReason: Bundle = {
-      resourceType: "Bundle",
-      type: "batch",
-      entry: [
-        {
-          fullUrl: "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
-          resource: {
-            resourceType: "Composition",
-            id: "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
-            status: "final",
-            title: "Dummy title",
-            type: {},
-            date: "2000-02-04T09:01:22-05:00",
-            section: [
-              {
-                extension: [
-                  {
-                    url: "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension",
-                    extension: [
-                      {
-                        url: "eICRProcessingStatus",
-                        valueReference: {
-                          reference:
-                            "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a",
-                          display: "eICR was processed - with a warning",
-                        },
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-            author: [
-              {
-                reference:
-                  "PractitionerRole/b18c20c1-123b-fd12-71cf-9dd0abae8ced",
-              },
-              {
-                reference: "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05",
-              },
-            ],
-          },
-          request: {
-            method: "PUT",
-            url: "Composition/2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
-          },
-        },
-        {
-          fullUrl: "urn:uuid:1f41508f-a752-fb3a-9091-7473d7d3b40a",
-          resource: {
-            resourceType: "Observation",
-            id: "1f41508f-a752-fb3a-9091-7473d7d3b40a",
-            meta: {
-              profile: [
-                "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation",
-              ],
-            },
-            identifier: [
-              {
-                system: "urn:ietf:rfc:3986",
-                value: "urn:uuid:39d966b9-8a3a-4024-93d8-138e97d5898a",
-              },
-            ],
-            status: "final",
-            code: {
-              coding: [
-                {
-                  code: "RRVS20",
-                  system: "urn:oid:2.16.840.1.114222.4.5.274",
-                  display: "eICR was processed - with a warning",
-                },
-              ],
-            },
-          },
-        },
-      ],
-    };
-    const actual = evaluateEcrMetadata(
-      BundleErsdWarningNoReason as unknown as Bundle,
-    );
-    expect(actual.eRSDProcessingInfo).toEqual(unknownWarning);
+    ]);
   });
   it("should have one author", () => {
     const actual = evaluateEcrMetadata(

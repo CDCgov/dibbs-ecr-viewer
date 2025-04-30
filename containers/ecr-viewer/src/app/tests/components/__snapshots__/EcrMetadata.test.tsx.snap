@@ -164,7 +164,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
             />
             <div>
               <table
-                class="usa-table usa-table--borderless width-full _fixed_1khz6_1 fixed-table border-top border-left border-right border-bottom"
+                class="usa-table usa-table--borderless width-full _fixed_1khz6_1 ersd-table fixed-table border-top border-left border-right border-bottom"
                 data-testid="table"
               >
                 <caption>
@@ -179,7 +179,7 @@ exports[`ECR Metadata should match snapshot 1`] = `
                       tabindex="0"
                       title=""
                     >
-                      eICR Processing Info
+                      eRSD Warnings
                     </div>
                     <span
                       aria-hidden="true"
@@ -234,10 +234,10 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   </tr>
                 </tbody>
               </table>
+              <div
+                class="section__line_gray"
+              />
             </div>
-            <div
-              class="section__line_gray"
-            />
           </div>
         </div>
         <div
