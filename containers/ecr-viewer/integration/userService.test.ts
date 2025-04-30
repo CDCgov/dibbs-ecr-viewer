@@ -35,7 +35,7 @@ jest.mock("../src/app/utils/auth-utils", () => ({
 
 describe("user service", () => {
   it("should create initial admin user", async () => {
-    let warning;
+    let warning: string[] = [];
     jest.spyOn(console, "warn").mockImplementation((...args) => {
       warning = args;
     });
@@ -61,12 +61,13 @@ describe("user service", () => {
     // adding again with same email should do nothing
     const notId = await createInitialAdminUser(adminEmail);
     expect(notId).toBeUndefined();
-    // TODO: test we get the warning we expect
-    expect(warning).toContain([{ message: "something" }]);
+    expect(warning[0]).toContain("Active admin user already exists");
+    warning = [];
 
     // adding with different email should do nothing
     const alsoNotId = await createInitialAdminUser("other@admin.com");
     expect(alsoNotId).toBeUndefined();
+    expect(warning[0]).toContain("Active admin user already exists");
 
     // admin deletes themself
     await deleteUser(adminEmail);

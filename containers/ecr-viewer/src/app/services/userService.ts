@@ -203,5 +203,6 @@ const listActiveUsersQuery = async () => {
     .selectFrom("user")
     .selectAll()
     .where("status", "=", "active")
+    .orderBy("email")
     .execute();
 };
