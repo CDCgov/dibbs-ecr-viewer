@@ -248,15 +248,15 @@
                   },
                   {
                     "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "code": "RRVS19",
-                          "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                    "extension": [
+                      {
+                        "url": "eICRProcessingStatus",
+                        "valueReference": {
+                          "reference": "Observation/17d188a8-6578-a7b1-9d22-2c28435682ed",
                           "display": "eICR processed"
                         }
-                      ]
-                    }
+                      }
+                    ]
                   }
                 ],
                 "code": {
@@ -417,6 +417,38 @@
           "request": {
             "method": "PUT",
             "url": "Location/28393170-2e3d-f2c9-1417-e8af74097d3e"
+          }
+        },
+        {
+          "fullUrl": "urn:uuid:17d188a8-6578-a7b1-9d22-2c28435682ed",
+          "resource": {
+            "resourceType": "Observation",
+            "id": "17d188a8-6578-a7b1-9d22-2c28435682ed",
+            "meta": {
+              "profile": [
+                "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation"
+              ]
+            },
+            "identifier": [
+              {
+                "system": "urn:ietf:rfc:3986",
+                "value": "urn:uuid:39d966b9-8a3a-4024-93d8-138e97d5898a"
+              }
+            ],
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "code": "RRVS19",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "eICR processed"
+                }
+              ]
+            }
+          },
+          "request": {
+            "method": "PUT",
+            "url": "Observation/17d188a8-6578-a7b1-9d22-2c28435682ed"
           }
         },
         {
