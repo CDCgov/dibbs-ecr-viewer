@@ -155,4 +155,18 @@ describe("ECR Metadata", () => {
       screen.getByText("No reportable condition found"),
     ).toBeInTheDocument();
   });
+  it("should not render eRSD Processing Info section if no eRSD Processing Info is available", () => {
+    render(
+      <EcrMetadata
+        eicrDetails={eicrDetails}
+        rrDetails={rrConditionsList}
+        eRSDProcessingInfo={undefined}
+        eCRCustodianDetails={ecrCustodianDetails}
+        eicrAuthorDetails={eicrAuthorDetails}
+      />
+    );
+    expect(
+      screen.queryByText("Warning")
+    ).not.toBeInTheDocument()
+  });
 });
