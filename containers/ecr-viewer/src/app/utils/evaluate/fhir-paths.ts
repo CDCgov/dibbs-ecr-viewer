@@ -375,6 +375,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
   },
 
+  // hospitalAdmissionDiagnosis: {
+  //
+  // }
+
   compositionEncounterRef: {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",

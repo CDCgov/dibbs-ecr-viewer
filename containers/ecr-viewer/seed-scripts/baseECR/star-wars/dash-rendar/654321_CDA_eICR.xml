@@ -1,0 +1,870 @@
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:cda="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc"
+  xmlns:voc="http://www.lantanagroup.com/voc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:hl7-org:v3 ../../schema/infrastructure/cda/CDA_SDTC.xsd">
+  <realmCode code="US" />
+  <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3" />
+  <templateId root="2.16.840.1.113883.10.20.22.1.1" />
+  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.1.1" />
+  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2" />
+  <id root="999-86a8-4a9a-aec6-b615921178df" />
+  <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+    displayName="Public Health Case Report" />
+  <title>Initial Public Health Case Report</title>
+  <effectiveTime value="20250205084339+0000" />
+  <confidentialityCode code="R" codeSystem="2.16.840.1.113883.5.25" displayName="Restricted" />
+  <languageCode code="en-US" />
+  <setId extension="iamfakesetid"
+    root="1.2.840.114350.1.13.380.3.7.1.1" />
+  <versionNumber value="1" />
+
+  <!-- Patient Information -->
+  <recordTarget>
+    <patientRole>
+      <id extension="PT-234798" root="2.16.840.1.113883.19.5" />
+      <id extension="555555585" root="2.16.840.1.113883.4.1" />
+      <id extension="CHAN-MOTH-001" root="2.16.840.1.113883.4.2" />
+      <addr use="H">
+        <streetAddressLine>500 Republica, Suite 456</streetAddressLine>
+        <city>Senate District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-500</postalCode>
+        <country>Coruscant</country>
+      </addr>
+      <telecom use="HP" value="tel:+1-555-555-5585" />
+      <telecom use="WP" value="mailto:mon.mothma@senate.gr" />
+      <patient>
+        <name use="L">
+          <given>Dash</given>
+          <family>Rendar</family>
+        </name>
+        <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1"
+          displayName="Female" />
+        <birthTime value="19551001" />
+        <sdtc:deceasedInd value="false" />
+        <maritalStatusCode code="M" displayName="Married"
+          codeSystem="2.16.840.1.113883.1.11.12212"
+          codeSystemName="MaritalStatusCode" />
+        <raceCode code="2106-3" codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC" displayName="White" />
+        <ethnicGroupCode code="2186-5" codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC"
+          displayName="Not Hispanic or Latino" />
+        <languageCommunication>
+          <languageCode code="en" />
+          <preferenceInd value="true" />
+          <proficiencyLevelCode code="E" codeSystem="2.16.840.1.113883.1.11.12199"
+            displayName="Excellent" />
+        </languageCommunication>
+      </patient>
+    </patientRole>
+  </recordTarget>
+
+  <!-- Author Information -->
+  <author>
+    <time value="20250205084339+0000" />
+    <assignedAuthor>
+      <id root="2.16.840.1.113883.3.72.5.20" />
+      <code code="163WX0200X" codeSystem="2.16.840.1.113883.6.101"
+        displayName="Registered Nurse" />
+      <addr use="WP">
+        <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+        <city>Senate District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-500</postalCode>
+        <country>Coruscant</country>
+      </addr>
+      <telecom use="WP" value="tel:555-777-0123" />
+      <assignedAuthoringDevice>
+        <manufacturerModelName displayName="Grand Republic Medical Systems" />
+        <softwareName>GR-EHR-50.2.1</softwareName>
+      </assignedAuthoringDevice>
+    </assignedAuthor>
+  </author>
+
+  <!-- Legal Authenticator -->
+  <legalAuthenticator>
+    <time value="20250205084339+0000" />
+    <signatureCode code="S" />
+    <assignedEntity>
+      <id extension="987654321" root="2.16.840.1.113883.4.6" />
+      <addr use="WP">
+        <streetAddressLine>200 Corusca Street</streetAddressLine>
+        <city>Senate District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-500</postalCode>
+        <country>Coruscant</country>
+      </addr>
+      <telecom use="WP" value="tel:555-777-0123" />
+      <assignedPerson>
+        <name>
+          <prefix>Dr.</prefix>
+          <given>Royce</given>
+          <family>Hemlock</family>
+          <suffix>MD, GCS</suffix>
+        </name>
+      </assignedPerson>
+    </assignedEntity>
+  </legalAuthenticator>
+
+  <!-- Custodian -->
+  <custodian>
+    <assignedCustodian>
+      <representedCustodianOrganization>
+        <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+        <name>Grand Republic Medical Facility Clinic</name>
+        <telecom use="WP" value="tel:555-777-0123" />
+        <addr use="WP">
+          <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+          <city>Senate District</city>
+          <state>Galactic City</state>
+          <postalCode>GC-500</postalCode>
+          <country>Coruscant</country>
+        </addr>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+
+  <!-- Emergency Contact -->
+  <participant typeCode="IND">
+    <time nullFlavor="UNK" />
+    <associatedEntity classCode="ECON">
+      <id root="2.16.840.1.113883.19.5.9999.456" />
+      <addr use="H">
+        <streetAddressLine>500 Republica, Suite 460</streetAddressLine>
+        <city>Senate District</city>
+        <state>Galactic City</state>
+        <postalCode>GC-500</postalCode>
+        <country>Coruscant</country>
+      </addr>
+      <telecom value="tel:+1-555-555-8858" use="MC" />
+      <associatedPerson>
+        <name use="L">
+          <prefix>Mr</prefix>
+          <given>Perrin</given>
+          <family>Fertha</family>
+        </name>
+      </associatedPerson>
+    </associatedEntity>
+  </participant>
+
+  <!-- Encounter Information -->
+  <componentOf>
+    <encompassingEncounter>
+      <id extension="GRMF-20250205-001" root="2.16.840.1.113883.19" />
+      <code code="AMB" codeSystem="2.16.840.1.113883.5.4"
+        codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory" />
+      <effectiveTime>
+        <low value="20250205" />
+        <high value="20250205" />
+      </effectiveTime>
+      <responsibleParty>
+        <assignedEntity>
+          <id extension="987654321" root="2.16.840.1.113883.4.6" />
+          <addr use="WP">
+            <streetAddressLine>200 Corusca Street</streetAddressLine>
+            <city>Senate District</city>
+            <state>Galactic City</state>
+            <postalCode>GC-500</postalCode>
+            <country>Coruscant</country>
+          </addr>
+          <telecom use="WP" value="tel:555-777-0123" />
+          <assignedPerson>
+            <name>
+              <prefix>Dr.</prefix>
+              <given>Royce</given>
+              <family>Hemlock</family>
+              <suffix>MD, GCS</suffix>
+            </name>
+          </assignedPerson>
+          <representedOrganization>
+            <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+            <name>Grand Republic Medical Facility Clinic</name>
+            <addr use="WP">
+              <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+              <city>Senate District</city>
+              <state>Galactic City</state>
+              <postalCode>GC-500</postalCode>
+              <country>Coruscant</country>
+            </addr>
+          </representedOrganization>
+        </assignedEntity>
+      </responsibleParty>
+      <location>
+        <healthCareFacility>
+          <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+          <code code="OF" codeSystem="2.16.840.1.113883.5.111"
+            codeSystemName="HL7RoleCode" displayName="Outpatient Facility" />
+          <location>
+            <addr use="WP">
+              <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+              <city>Senate District</city>
+              <state>Galactic City</state>
+              <postalCode>GC-500</postalCode>
+              <country>Coruscant</country>
+            </addr>
+          </location>
+          <serviceProviderOrganization>
+            <name>Grand Republic Medical Facility Clinic</name>
+            <telecom use="WP" value="tel:555-777-0123" />
+            <addr use="WP">
+              <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+              <city>Senate District</city>
+              <state>Galactic City</state>
+              <postalCode>GC-500</postalCode>
+              <country>Coruscant</country>
+            </addr>
+          </serviceProviderOrganization>
+        </healthCareFacility>
+      </location>
+    </encompassingEncounter>
+  </componentOf>
+
+  <!-- Clinical Content -->
+  <!-- Continuing from previous structuredBody opening -->
+  <component>
+    <structuredBody>
+      <!-- 1. Encounters Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.22" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.22" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <id root="a392ac71-f6ec-4811-b299-432ae6b316e2" />
+          <effectiveTime value="20250205085919" />
+          <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="History of encounters" />
+          <title>Encounters</title>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Encounter</th>
+                  <th>Date(s)</th>
+                  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ID="id_fd7ee2ec-4d8e-4169-aeb6-836731cc7201_ref">
+                  <td>Office outpatient visit 15 minutes</td>
+                  <td>02/05/2025</td>
+                  <td>Grand Republic Medical Facility Clinic</td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <encounter classCode="ENC" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.49" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.49" />
+              <id root="fd7ee2ec-4d8e-4169-aeb6-836731cc7201" />
+              <code code="99213" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4"
+                displayName="Office outpatient visit 15 minutes" />
+              <effectiveTime value="20250205" />
+            </encounter>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Admission Diagnosis -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.43" extension="2015-08-01"/>
+          <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital Admission Diagnosis">
+            <translation code="42347-5" codeSystem="2.16.840.1.113883.6.1" displayName="Admission Diagnosis"></translation>
+          </code>
+          <title>HOSPITAL ADMISSION DIAGNOSIS</title>
+          <text>Khovid19</text>
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.34" extension="2015-08-01" />
+              <id root="5a784260-6856-4f38-9638-80c751aff2fb" />
+              <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Hospital Admission Diagnosis" />
+              <statusCode code="active" />
+              <effectiveTime>
+                <low value="20090303" />
+              </effectiveTime>
+              <entryRelationship typeCode="SUBJ" inversionInd="false">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                  <id root="ab1791b0-5c71-11e3-9c78-0800200c9a67" />
+                  <code code="64572001" displayName="Condition"
+                        codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                    <translation code="409586006" displayName="Complaint"
+                                 codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                  </code>
+                  <text>Potential exposure to SARS-CoV-2</text>
+                  <statusCode code="completed" />
+                  <effectiveTime>
+                    <low value="20250205" />
+                  </effectiveTime>
+                  <value xsi:type="CD" code="840539006"
+                         displayName="Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+                         codeSystem="2.16.840.1.113883.6.96" />
+
+                  <!-- Added entryRelationship for Infectious Disease Encounter -->
+                  <entryRelationship typeCode="REFR">
+                    <observation classCode="OBS" moodCode="EVN">
+                      <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                      <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                      <id root="4adc1020-7b14-11ee-b962-0242ac120002" />
+                      <code code="186747009"
+                            codeSystem="2.16.840.1.113883.6.96"
+                            codeSystemName="SNOMED CT"
+                            displayName="Patient encountered problem - Infectious disease">
+                        <translation code="V01.79"
+                                     codeSystem="2.16.840.1.113883.6.103"
+                                     codeSystemName="ICD-9-CM"
+                                     displayName="Contact with and (suspected) exposure to other viral diseases" />
+                        <translation code="Z20.828"
+                                     codeSystem="2.16.840.1.113883.6.90"
+                                     codeSystemName="ICD-10-CM"
+                                     displayName="Contact with and (suspected) exposure to other viral communicable diseases" />
+                      </code>
+                      <statusCode code="completed" />
+                      <effectiveTime>
+                        <low value="20250205" />
+                      </effectiveTime>
+                      <value xsi:type="CD" code="186747009"
+                             codeSystem="2.16.840.1.113883.6.96"
+                             displayName="Patient encountered problem - Infectious disease" />
+                      <author>
+                        <time value="20250205084339+0000" />
+                        <assignedAuthor>
+                          <id extension="987654321" root="2.16.840.1.113883.4.6" />
+                          <addr use="WP">
+                            <streetAddressLine>200 Corusca Street</streetAddressLine>
+                            <city>Senate District</city>
+                            <state>Galactic City</state>
+                            <postalCode>GC-500</postalCode>
+                            <country>Coruscant</country>
+                          </addr>
+                          <telecom use="WP" value="tel:555-777-0123" />
+                          <assignedPerson>
+                            <name>
+                              <prefix>Dr.</prefix>
+                              <given>Royce</given>
+                              <family>Hemlock</family>
+                              <suffix>MD, GCS</suffix>
+                            </name>
+                          </assignedPerson>
+                          <representedOrganization>
+                            <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+                            <name>Grand Republic Medical Facility Clinic</name>
+                            <telecom use="WP" value="tel:555-777-0123" />
+                            <addr use="WP">
+                              <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+                              <city>Senate District</city>
+                              <state>Galactic City</state>
+                              <postalCode>GC-500</postalCode>
+                              <country>Coruscant</country>
+                            </addr>
+                          </representedOrganization>
+                        </assignedAuthor>
+                      </author>
+                    </observation>
+                  </entryRelationship>
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Discharge Diagnosis -->
+      <component>
+        <section>
+          <!-- Discharge Diagnosis Section Template Id -->
+          <templateId root="2.16.840.1.113883.10.20.22.2.24" extension="2015-08-01" />
+          <code code="11535-2" displayName="Hospital Discharge Diagnosis"
+                codeSystem="2.16.840.1.113883.6.1"
+                codeSystemName="LOINC">
+            <translation code="78375-3" displayName="Discharge Diagnosis"
+                         codeSystem="2.16.840.1.113883.6.1"
+                         codeSystemName="LOINC"></translation>
+          </code>
+          <title>Discharge Diagnosis</title>
+          <text>Diverticula of intestine</text>
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <!-- Hospital discharge Diagnosis act -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.33" extension="2015-08-01"/>
+              <id root="5a784260-6856-4f38-9638-80c751aff2fb" />
+              <code code="11535-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="HOSPITAL DISCHARGE DIAGNOSIS" />
+              <statusCode code="active" />
+              <effectiveTime>
+                <low value="201209091904-0400" />
+              </effectiveTime>
+              <entryRelationship typeCode="SUBJ" inversionInd="false">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                  <id root="ab1791b0-5c71-11e3-9c78-0800200c9a67" />
+                  <code code="64572001" displayName="Condition"
+                        codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                    <translation code="409586006" displayName="Complaint"
+                                 codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                  </code>
+                  <text>Potential exposure to SARS-CoV-2</text>
+                  <statusCode code="completed" />
+                  <effectiveTime>
+                    <low value="20250205" />
+                  </effectiveTime>
+                  <value xsi:type="CD" code="840539006"
+                         displayName="Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+                         codeSystem="2.16.840.1.113883.6.96" />
+
+                  <!-- Added entryRelationship for Infectious Disease Encounter -->
+                  <entryRelationship typeCode="REFR">
+                    <observation classCode="OBS" moodCode="EVN">
+                      <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                      <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                      <id root="4adc1020-7b14-11ee-b962-0242ac120002" />
+                      <code code="186747009"
+                            codeSystem="2.16.840.1.113883.6.96"
+                            codeSystemName="SNOMED CT"
+                            displayName="Patient encountered problem - Infectious disease">
+                        <translation code="V01.79"
+                                     codeSystem="2.16.840.1.113883.6.103"
+                                     codeSystemName="ICD-9-CM"
+                                     displayName="Contact with and (suspected) exposure to other viral diseases" />
+                        <translation code="Z20.828"
+                                     codeSystem="2.16.840.1.113883.6.90"
+                                     codeSystemName="ICD-10-CM"
+                                     displayName="Contact with and (suspected) exposure to other viral communicable diseases" />
+                      </code>
+                      <statusCode code="completed" />
+                      <effectiveTime>
+                        <low value="20250205" />
+                      </effectiveTime>
+                      <value xsi:type="CD" code="186747009"
+                             codeSystem="2.16.840.1.113883.6.96"
+                             displayName="Patient encountered problem - Infectious disease" />
+                      <author>
+                        <time value="20250205084339+0000" />
+                        <assignedAuthor>
+                          <id extension="987654321" root="2.16.840.1.113883.4.6" />
+                          <addr use="WP">
+                            <streetAddressLine>200 Corusca Street</streetAddressLine>
+                            <city>Senate District</city>
+                            <state>Galactic City</state>
+                            <postalCode>GC-500</postalCode>
+                            <country>Coruscant</country>
+                          </addr>
+                          <telecom use="WP" value="tel:555-777-0123" />
+                          <assignedPerson>
+                            <name>
+                              <prefix>Dr.</prefix>
+                              <given>Royce</given>
+                              <family>Hemlock</family>
+                              <suffix>MD, GCS</suffix>
+                            </name>
+                          </assignedPerson>
+                          <representedOrganization>
+                            <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+                            <name>Grand Republic Medical Facility Clinic</name>
+                            <telecom use="WP" value="tel:555-777-0123" />
+                            <addr use="WP">
+                              <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+                              <city>Senate District</city>
+                              <state>Galactic City</state>
+                              <postalCode>GC-500</postalCode>
+                              <country>Coruscant</country>
+                            </addr>
+                          </representedOrganization>
+                        </assignedAuthor>
+                      </author>
+                    </observation>
+                  </entryRelationship>
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+
+      <!-- 2. History of Present Illness Section -->
+      <component>
+        <section>
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.4" />
+          <id root="b47c4891-d48f-42c3-9f92-54c3c7d66d42" />
+          <effectiveTime value="20250205085919" />
+          <code code="10164-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="History of Present Illness" />
+          <title>History of Present Illness</title>
+          <text>Patient presents with concerns about potential viral exposure.</text>
+        </section>
+      </component>
+
+      <!-- 3. Medications Administered Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.38" />
+          <templateId extension="2014-06-09" root="2.16.840.1.113883.10.20.22.2.38" />
+          <id root="c5638e31-8485-4cef-b860-7275b8267a93" />
+          <effectiveTime value="20250205085919" />
+          <code code="29549-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Medications Administered" />
+          <title>Medications Administered</title>
+          <text>No medications administered during this encounter.</text>
+        </section>
+      </component>
+
+      <!-- 4. Problems Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.5.1" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.5.1" />
+          <id root="d89f2c46-1824-4ff7-9f55-8498c3b7aa54" />
+          <effectiveTime value="20250206041023" />
+          <code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Problem List" />
+          <title>Problems</title>
+          <text>
+            <paragraph>Potential exposure to SARS-CoV-2 with confirmed infectious disease encounter</paragraph>
+          </text>
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" />
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" extension="2015-08-01" />
+              <id root="ab1791b0-5c71-11e3-9c78-0800200c9a66" />
+              <code code="CONC" codeSystem="2.16.840.1.113883.5.6" />
+              <statusCode code="active" />
+              <effectiveTime>
+                <low value="20250205" />
+              </effectiveTime>
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                  <id root="ab1791b0-5c71-11e3-9c78-0800200c9a67" />
+                  <code code="64572001" displayName="Condition"
+                    codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                    <translation code="409586006" displayName="Complaint"
+                      codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                  </code>
+                  <text>Potential exposure to SARS-CoV-2</text>
+                  <statusCode code="completed" />
+                  <effectiveTime>
+                    <low value="20250205" />
+                  </effectiveTime>
+                  <value xsi:type="CD" code="840539006"
+                    displayName="Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+                    codeSystem="2.16.840.1.113883.6.96" />
+
+                  <!-- Added entryRelationship for Infectious Disease Encounter -->
+                  <entryRelationship typeCode="REFR">
+                    <observation classCode="OBS" moodCode="EVN">
+                      <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                      <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01" />
+                      <id root="4adc1020-7b14-11ee-b962-0242ac120002" />
+                      <code code="186747009"
+                        codeSystem="2.16.840.1.113883.6.96"
+                        codeSystemName="SNOMED CT"
+                        displayName="Patient encountered problem - Infectious disease">
+                        <translation code="V01.79"
+                          codeSystem="2.16.840.1.113883.6.103"
+                          codeSystemName="ICD-9-CM"
+                          displayName="Contact with and (suspected) exposure to other viral diseases" />
+                        <translation code="Z20.828"
+                          codeSystem="2.16.840.1.113883.6.90"
+                          codeSystemName="ICD-10-CM"
+                          displayName="Contact with and (suspected) exposure to other viral communicable diseases" />
+                      </code>
+                      <statusCode code="completed" />
+                      <effectiveTime>
+                        <low value="20250205" />
+                      </effectiveTime>
+                      <value xsi:type="CD" code="186747009"
+                        codeSystem="2.16.840.1.113883.6.96"
+                        displayName="Patient encountered problem - Infectious disease" />
+                      <author>
+                        <time value="20250205084339+0000" />
+                        <assignedAuthor>
+                          <id extension="987654321" root="2.16.840.1.113883.4.6" />
+                          <addr use="WP">
+                            <streetAddressLine>200 Corusca Street</streetAddressLine>
+                            <city>Senate District</city>
+                            <state>Galactic City</state>
+                            <postalCode>GC-500</postalCode>
+                            <country>Coruscant</country>
+                          </addr>
+                          <telecom use="WP" value="tel:555-777-0123" />
+                          <assignedPerson>
+                            <name>
+                              <prefix>Dr.</prefix>
+                              <given>Royce</given>
+                              <family>Hemlock</family>
+                              <suffix>MD, GCS</suffix>
+                            </name>
+                          </assignedPerson>
+                          <representedOrganization>
+                            <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+                            <name>Grand Republic Medical Facility Clinic</name>
+                            <telecom use="WP" value="tel:555-777-0123" />
+                            <addr use="WP">
+                              <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+                              <city>Senate District</city>
+                              <state>Galactic City</state>
+                              <postalCode>GC-500</postalCode>
+                              <country>Coruscant</country>
+                            </addr>
+                          </representedOrganization>
+                        </assignedAuthor>
+                      </author>
+                    </observation>
+                  </entryRelationship>
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+      <!-- 5. Reason for Visit Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.12" />
+          <id root="e1f39764-3c92-4b8e-a5d6-7890f456b123" />
+          <effectiveTime value="20250205085919" />
+          <code code="29299-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Reason for Visit" />
+          <title>Reason for Visit</title>
+          <text>
+            <paragraph>COVID-19 screening due to potential exposure</paragraph>
+          </text>
+        </section>
+      </component>
+
+      <!-- 6. Results Section (with trigger codes) -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.3" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.3.1" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3.1" />
+          <id root="f2d48b52-5a31-4bf7-9cd8-912e3f678d45" />
+          <effectiveTime value="20250205085919" />
+          <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Relevant diagnostic tests and/or laboratory data" />
+          <title>Results</title>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Test</th>
+                  <th>Result</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ID="id_9890e2c3-019a-4168-8403-a0a069994440_ref">
+                  <td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with
+                    probe detection</td>
+                  <td>Detected</td>
+                  <td>02/05/2025</td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <organizer classCode="BATTERY" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
+              <id root="2047cca3-559f-45da-8775-406538fa4815" />
+              <code code="94310-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                displayName="SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection" />
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="20250205" />
+                <high value="20250205" />
+              </effectiveTime>
+              <component>
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
+                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
+                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
+                  <id root="9890e2c3-019a-4168-8403-a0a069994440" />
+                  <code code="94310-0" codeSystem="2.16.840.1.113883.6.1"
+                    codeSystemName="LOINC"
+                    displayName="SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection"
+                    sdtc:valueSet="2.16.840.1.114222.4.11.7508"
+                    sdtc:valueSetVersion="20200429" xsi:type="CD" />
+                  <statusCode code="completed" />
+                  <effectiveTime value="20250205" />
+                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT" displayName="Detected (qualifier value)"
+                    xsi:type="CD" />
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+        </section>
+      </component>
+
+      <!-- 7. Social History Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.17" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.17" />
+          <id root="g3e59c63-6b40-4d28-ae79-023f4789e567" />
+          <code code="29762-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="Social History" />
+          <title>Social History</title>
+          <text>
+            <table>
+              <thead>
+                <tr>
+                  <th>Social History Element</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Occupation</td>
+                  <td>Senator</td>
+                  <td>20250206</td>
+                </tr>
+                <tr>
+                  <td>Pregnancy Status</td>
+                  <td>No</td>
+                  <td>20250206</td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry>
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.38" />
+              <id root="4ff79772-5755-4deb-8992-ab827c731c6a" />
+              <code code="364703007" codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT" displayName="Employment detail">
+                <!-- Adding LOINC translation -->
+                <translation code="11295-3" codeSystem="2.16.840.1.113883.6.1"
+                  codeSystemName="LOINC" displayName="Occupation history" />
+              </code>
+              <statusCode code="completed" />
+              <effectiveTime value="20250206032811" />
+              <value code="410001" codeSystem="2.16.840.1.113883.6.96"
+                displayName="Senator" xsi:type="CD" />
+            </observation>
+          </entry>
+          <entry>
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.38" />
+              <id root="82f61228-21bc-4c0e-8491-d68bf0207d2f" />
+              <code code="442311008" codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT" displayName="Pregnancy status">
+                <translation code="82810-3" codeSystem="2.16.840.1.113883.6.1"
+                  codeSystemName="LOINC" displayName="Pregnancy status" />
+              </code>
+              <statusCode code="completed" />
+              <effectiveTime value="20250206032811" />
+              <value code="60001007" codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT" displayName="Not pregnant" xsi:type="CD" />
+            </observation>
+          </entry>
+        </section>
+      </component>
+
+      <!-- 8. Immunizations Section (optional but recommended) -->
+      <component>
+        <section>
+          <id root="h4f60d74-7c51-5e39-bf8a-134g5890f678" />
+          <effectiveTime value="20250205223659" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.1" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.2.1" />
+          <code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="History of immunizations" />
+          <title>Immunizations</title>
+          <text>
+            <table border="1" width="100%">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Administration Dates</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><content ID="immunization1Name" />SARS-CoV-2 (COVID-19) vaccine, mRNA-LNP,
+                    spike protein</td>
+                  <td>Jan 2025</td>
+                  <td>Completed</td>
+                </tr>
+              </tbody>
+            </table>
+          </text>
+          <entry>
+            <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.52" />
+              <id root="e6f1ba43-c0ed-4b9b-9f12-f435d8ad8f92" />
+              <text mediaType="text/xml">
+                <reference value="#immunization1" />
+              </text>
+              <statusCode code="completed" />
+              <effectiveTime value="20250115" />
+              <routeCode code="C28161" codeSystem="2.16.840.1.113883.3.26.1.1"
+                codeSystemName="National Cancer Institute (NCI) Thesaurus"
+                displayName="Intramuscular injection" />
+              <doseQuantity unit="ug" value="30" />
+              <consumable>
+                <manufacturedProduct classCode="MANU">
+                  <templateId extension="2014-06-09" root="2.16.840.1.113883.10.20.22.4.54" />
+                  <manufacturedMaterial>
+                    <code code="207" codeSystem="2.16.840.1.113883.12.292"
+                      codeSystemName="CVX"
+                      displayName="SARS-COV-2 (COVID-19) vaccine, mRNA, spike protein, LNP, preservative free, 30 mcg/0.3mL dose" />
+                    <lotNumberText>GR789456</lotNumberText>
+                  </manufacturedMaterial>
+                  <manufacturerOrganization>
+                    <name>Grand Republic Medical Systems</name>
+                  </manufacturerOrganization>
+                </manufacturedProduct>
+              </consumable>
+              <performer>
+                <assignedEntity>
+                  <id extension="987654321" root="2.16.840.1.113883.4.6" />
+                  <addr use="WP">
+                    <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+                    <city>Senate District</city>
+                    <state>Galactic City</state>
+                    <postalCode>GC-500</postalCode>
+                    <country>Coruscant</country>
+                  </addr>
+                  <telecom use="WP" value="tel:555-777-0123" />
+                  <assignedPerson>
+                    <name>
+                      <prefix>Dr.</prefix>
+                      <given>Royce</given>
+                      <family>Hemlock</family>
+                      <suffix>MD, GCS</suffix>
+                    </name>
+                  </assignedPerson>
+                  <representedOrganization>
+                    <id root="2.16.840.1.113883.19.5.9999.1394" />
+                    <name>Grand Republic Medical Facility Clinic</name>
+                    <telecom use="WP" value="tel:555-777-0123" />
+                    <addr use="WP">
+                      <streetAddressLine>500 Republica Medical Plaza, Suite 1000 Drive</streetAddressLine>
+                      <city>Senate District</city>
+                      <state>Galactic City</state>
+                      <postalCode>GC-500</postalCode>
+                      <country>Coruscant</country>
+                    </addr>
+                  </representedOrganization>
+                </assignedEntity>
+              </performer>
+            </substanceAdministration>
+          </entry>
+        </section>
+      </component>
+
+    </structuredBody>
+  </component>
+</ClinicalDocument>
