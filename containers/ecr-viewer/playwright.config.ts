@@ -5,8 +5,8 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir:
-    process.env.CONFIG_NAME.endsWith("DUAL") ||
-    process.env.CONFIG_NAME.endsWith("NON_INTEGRATED")
+    process.env.CONFIG_NAME?.endsWith("DUAL") ||
+    process.env.CONFIG_NAME?.endsWith("NON_INTEGRATED")
       ? "./e2e/dual"
       : "./e2e/integrated",
   globalSetup: require.resolve("./e2e/global-setup"),
@@ -41,13 +41,13 @@ export default defineConfig({
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
-      testIgnore: /lighthouse.spec.ts/,
+      testIgnore: [/lighthouse.spec.ts/, /migrations.spect.ts/],
     },
 
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
-      testIgnore: /lighthouse.spec.ts/,
+      testIgnore: [/lighthouse.spec.ts/, /migrations.spect.ts/],
     },
   ],
   webServer: {
