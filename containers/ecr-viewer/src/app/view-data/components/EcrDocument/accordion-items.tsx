@@ -160,7 +160,7 @@ export const getEcrDocumentAccordionItems = (
                 ecrMetadata.ecrCustodianDetails.availableData
               }
               rrDetails={ecrMetadata.rrDetails}
-              eRSDProcessingInfo={ecrMetadata.eRSDProcessingInfo as ERSDInfo}
+              eRSDProcessingInfo={ecrMetadata.eRSDProcessingInfo}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
                 .filter((details) => details.availableData.length > 0)
                 .map((details) => details.availableData)}
