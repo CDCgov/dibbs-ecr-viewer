@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import pytest
+import requests
 from dotenv import load_dotenv
 from testcontainers.compose import DockerCompose
 
@@ -12,7 +13,9 @@ def setup(request):
     path = Path(__file__).resolve().parent.parent.parent
     load_dotenv(dotenv_path=os.path.join(path, ".env"))
     compose_file_name = os.path.join(path, "docker-compose.yaml")
-    orchestration_service = DockerCompose(path, compose_file_name=compose_file_name)
+    orchestration_service = DockerCompose(
+        path, compose_file_name=compose_file_name, build=True
+    )
 
     orchestration_service.start()
 
@@ -28,6 +31,13 @@ def setup(request):
     for port_number in port_number_strings:
         port = os.getenv(port_number)
         orchestration_service.wait_for(f"http://0.0.0.0:{port}")
+
+    # migrate db
+    rs = requests.post(
+        os.getenv("ecr_viewer_url") + "/api/migrate-db",
+        data={"migration_secret": "test", "skip_condition_update": "true"},
+    )
+    assert rs.status_code == 200
 
     print("Orchestration etc. services ready to test!")
 

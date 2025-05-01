@@ -6,13 +6,19 @@ import {
   Coding,
   Element,
   FhirResource,
+  ObservationReferenceRange,
   Quantity,
+  Reference,
   Resource,
 } from "fhir/r4";
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
-import { formatCodeableConcept } from "@/app/services/formatService";
+import {
+  formatCodeableConcept,
+  formatQuantity,
+  formatRange,
+} from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
@@ -48,14 +54,13 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
   if (actualType === "object") {
     const nodeInfo = (result as { __path__: NodeInfo })?.__path__;
     if (expectedType === "ValueX") {
-      valid = ["CodeableConcept", "Coding", "Quantity"].includes(
-        nodeInfo.fhirNodeDataType,
-      );
-    } else if (
-      expectedType === "Coding" &&
-      nodeInfo.path === "Coding.entries.eRSDwarnings"
-    ) {
-      // TODO #461: Remove this hard coded corner case
+      valid = [
+        "CodeableConcept",
+        "Coding",
+        "Quantity",
+        "Reference",
+        "Observation.referenceRange",
+      ].includes(nodeInfo.fhirNodeDataType);
     } else {
       valid =
         expectedType.toLowerCase() ===
@@ -95,7 +100,6 @@ export const evaluateAllAndCheck = <Result>(
   context?: Context,
 ): Result[] => {
   if (!fhirData) return [];
-  // Since the bundle does not have an ID, prefer to just use "bundle" instead
   const fhirDataIdentifier: string =
     (isBundle(fhirData)
       ? fhirData?.entry?.[0]?.fullUrl
@@ -198,13 +202,6 @@ export const evaluateOne = <K extends keyof PathTypes>(
   );
 };
 
-// Map from computer to human readable units
-const UNIT_MAP = new Map([
-  ["[lb_av]", "lb"],
-  ["[in_i]", "in"],
-  ["[in_us]", "in"],
-]);
-
 /**
  * Evaluates the FHIR path and formats it as an appropriate string value (may be empty). Supports
  * choice elements (e.g. using `.value` in path to get valueString or valueCoding) or
@@ -240,27 +237,34 @@ export const evaluateValue = (
   const originalValuePath = (originalValue as { __path__: NodeInfo })?.__path__
     ?.path;
 
-  if (originalValuePath === "Quantity") {
-    const data: Quantity = originalValue;
-    let unit = data.unit || "";
-    unit = UNIT_MAP.get(unit) || unit;
-    const firstLetterRegex = /^[a-z]/i;
-    if (unit?.match(firstLetterRegex)) {
-      unit = " " + unit;
-    }
-    value = `${data.value ?? ""}${unit}`;
-  } else if (originalValuePath === "CodeableConcept") {
-    const data: CodeableConcept = originalValue;
-    value = formatCodeableConcept(data) ?? "";
-  } else if (originalValuePath === "Coding") {
-    const data: Coding = originalValue;
-    value = data?.display || data?.code || "";
+  if (isQuantity(originalValue, originalValuePath)) {
+    value = formatQuantity(originalValue) || "";
+  } else if (isCodeableConcept(originalValue, originalValuePath)) {
+    value = formatCodeableConcept(originalValue) ?? "";
+  } else if (isCoding(originalValue, originalValuePath)) {
+    value = originalValue?.display || originalValue?.code || "";
+  } else if (isObservationReferenceRange(originalValue, originalValuePath)) {
+    const range = formatRange(originalValue);
+    value = range || originalValue.text || "";
+  } else if (isReference(originalValue, originalValuePath)) {
+    value = originalValue?.reference || "";
   } else if (typeof originalValue === "object") {
-    console.log(`Not implemented for ${originalValuePath}`);
+    console.error(`Not implemented for ${originalValuePath}`);
   }
 
   return value.trim();
 };
+
+// check/narrow the type of the value object
+const isQuantity = (v: object, p: string): v is Quantity => p === "Quantity";
+const isCodeableConcept = (v: object, p: string): v is CodeableConcept =>
+  p === "CodeableConcept";
+const isCoding = (v: object, p: string): v is Coding => p === "Coding";
+const isObservationReferenceRange = (
+  v: object,
+  p: string,
+): v is ObservationReferenceRange => p === "Observation.referenceRange";
+const isReference = (v: object, p: string): v is Reference => p === "Reference";
 
 /**
  * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource

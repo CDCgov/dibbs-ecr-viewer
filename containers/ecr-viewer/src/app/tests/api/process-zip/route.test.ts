@@ -7,7 +7,7 @@ import { POST } from "@/app/api/process-zip/route";
 import { processZip } from "@/app/api/process-zip/service";
 
 jest.mock("../../../api/process-zip/service");
-jest.mock("../../../api/services/database");
+jest.mock("../../../data/metadataDb/database");
 
 describe("POST Process Zip", () => {
   const mockFile = new File(["content"], "test.zip", {
@@ -27,6 +27,19 @@ describe("POST Process Zip", () => {
   it("should return a 200 response when valid zip file is provided", async () => {
     const formData = new FormData();
     formData.append("upload_file", mockFile);
+    const request = createRequest(formData);
+    (processZip as jest.Mock).mockReturnValue({ message: "ok", status: 200 });
+
+    const response = await POST(request);
+
+    expect(response.status).toEqual(200);
+    expect(await response.json()).toEqual({ message: "ok" });
+  });
+
+  it("should return a 200 response when valid zip file and return fhir bundle flag provided", async () => {
+    const formData = new FormData();
+    formData.append("upload_file", mockFile);
+    formData.append("return_fhir_bundle", "True");
     const request = createRequest(formData);
     (processZip as jest.Mock).mockReturnValue({ message: "ok", status: 200 });
 
@@ -70,11 +83,27 @@ describe("POST Process Zip", () => {
     expect(jsonResponse.errors).toBeDefined();
   });
 
+  it("should return a 400 response when required no form sent", async () => {
+    const response = await POST(
+      new NextRequest("localhost:3000/ecr-viewer/api/process-zip"),
+    );
+
+    expect(response.status).toEqual(400);
+    const jsonResponse = await response.json();
+    expect(jsonResponse.message).toEqual("Validation error");
+    expect(jsonResponse.errors).toBeDefined();
+  });
+
   it("should return a 500 response when an unexpected error occurs", async () => {
+    const formData = new FormData();
+    formData.append("upload_file", mockFile);
+    const request = createRequest(formData);
+    (processZip as jest.Mock).mockRejectedValue(new Error("oh no!"));
+
     jest.spyOn(console, "error").mockImplementation();
-    const response = await POST(undefined as unknown as NextRequest);
+    const response = await POST(request);
 
     expect(response.status).toEqual(500);
-    expect(await response.json()).toEqual({ message: "Server error" });
+    expect(await response.json()).toEqual({ message: "Internal Server Error" });
   });
 });

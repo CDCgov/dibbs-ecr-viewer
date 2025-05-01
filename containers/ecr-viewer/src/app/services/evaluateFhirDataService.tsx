@@ -9,6 +9,7 @@ import {
   Organization,
   Practitioner,
   PractitionerRole,
+  RelatedPerson,
 } from "fhir/r4";
 import { DateTime } from "luxon";
 
@@ -21,11 +22,16 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import {
+  DataDisplay,
+  DisplayDataProps,
+} from "@/app/view-data/components/DataDisplay";
+import { ExpandCollapseAccordion } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 import {
   formatDate,
+  formatPeriodDate,
   formatStartEndDate,
   formatStartEndDateTime,
 } from "./formatDateService";
@@ -39,6 +45,8 @@ import {
   formatPatientContactList,
   formatAge,
   formatPhoneNumber,
+  sortByPeriod,
+  formatCurrentAddress,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import { evaluateTravelHistoryTable } from "./socialHistoryService";
@@ -147,73 +155,31 @@ export interface Age {
 }
 
 /**
- * Calculates the age of a patient to a given date or today, unless DOD exists.
+ * Calculates the patient's age at a specific point in time or the current date.
  * @param fhirBundle - The FHIR bundle containing patient information.
- * @param [givenDate] - Optional. The target date to calculate the age. Defaults to the current date if not provided.
- * @returns - The exact age of the patient in years/months/days, or undefined if date of birth is not available or if date of death exists.
+ * @param [givenDate] - Optional date to calculate age at.
+ * @returns The patient's age in years, or undefined if patient has no birth date.
  */
 export const calculatePatientAge = (
   fhirBundle: Bundle,
   givenDate?: string,
 ): Age | undefined => {
-  const deathDate = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
 
-  // if a death date is available, don't calculate patient age
-  if (deathDate) {
+  // If no patient DOB is available, return undefined.
+  if (!patientDOBString) {
     return undefined;
   }
 
-  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
+  const patientDOB = DateTime.fromJSDate(new Date(patientDOBString));
 
-  // date is provided by caller, use that
-  if (patientDOBString && givenDate) {
-    return getPatientAge(
-      DateTime.fromJSDate(new Date(givenDate)),
-      DateTime.fromJSDate(new Date(patientDOBString)),
-    );
+  // If date is provided by caller, use that.
+  if (givenDate) {
+    return calcuateAge(DateTime.fromJSDate(new Date(givenDate)), patientDOB);
   }
 
-  // no date provided, use encounter or today's date
-  if (patientDOBString) {
-    const encounterStartDate = evaluateOne(
-      fhirBundle,
-      fhirPathMappings.encounterStartDate,
-    );
-
-    // use the encounter start date if one is available, otherwise we'll fall back to today's date
-    const laterDate = encounterStartDate
-      ? new Date(encounterStartDate)
-      : new Date();
-
-    return getPatientAge(
-      DateTime.fromJSDate(laterDate),
-      DateTime.fromJSDate(new Date(patientDOBString)),
-    );
-  }
-
-  return undefined;
-};
-
-/**
- * Calculates Patient Age at Death if DOB and DOD exist, otherwise returns undefined
- * @param fhirBundle - The FHIR bundle containing patient information.
- * @returns - The age of the patient at death in years/months/days, or undefined if date of birth or date of death is not available.
- */
-export const calculatePatientAgeAtDeath = (
-  fhirBundle: Bundle,
-): Age | undefined => {
-  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
-
-  const patientDODString = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
-
-  if (patientDOBString && patientDODString) {
-    const laterDate = DateTime.fromJSDate(new Date(patientDODString));
-    const earlierDate = DateTime.fromJSDate(new Date(patientDOBString));
-
-    return getPatientAge(laterDate, earlierDate);
-  } else {
-    return undefined;
-  }
+  // Default to current date if no encounter date is available
+  return calcuateAge(DateTime.now(), patientDOB);
 };
 
 /**
@@ -222,7 +188,7 @@ export const calculatePatientAgeAtDeath = (
  * @param earlierDate DateTime earlier in time
  * @returns An `Age`
  */
-const getPatientAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
+const calcuateAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
   const { years, months, days } = laterDate
     .diff(earlierDate, ["years", "months", "days"])
     .toObject();
@@ -240,16 +206,12 @@ const getPatientAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
  * @returns The vital status of the patient, either `Alive`, `Deceased`, or `""` (if not found)
  */
 export const evaluatePatientVitalStatus = (fhirBundle: Bundle) => {
-  const isPatientDeceased = evaluateOne(
-    fhirBundle,
-    fhirPathMappings.patientVitalStatus,
-  );
-
-  if (isPatientDeceased === undefined) {
+  const isDeceased = isPatientDeceased(fhirBundle);
+  if (isDeceased === undefined) {
     return "";
+  } else {
+    return isDeceased === true ? "Deceased" : "Alive";
   }
-
-  return isPatientDeceased ? "Deceased" : "Alive";
 };
 
 /**
@@ -282,6 +244,181 @@ export const evaluateAlcoholUse = (fhirBundle: Bundle) => {
   ]
     .filter(Boolean) // Removes null or undefined lines
     .join("\n"); // Joins the remaining lines with newlines
+};
+
+/**
+ * Evaluates occupation information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns An array of evaluated and formatted occupation data.
+ */
+export const evaluateOccupation = (fhirBundle: Bundle) => {
+  const occupationObs = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.patientOccupation,
+  );
+  const employmentObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.patientEmploymentStatus,
+  );
+  if (!occupationObs && employmentObs.length === 0) return;
+
+  const occTitle = formatCodeableConcept(occupationObs?.valueCodeableConcept);
+  const occDates = formatPeriodDate(occupationObs?.effectivePeriod);
+  const usualIndustryComp = occupationObs?.component?.find(
+    (c) => c?.code.coding?.[0].code === "21844-6",
+  );
+  const usualIndustry = formatCodeableConcept(
+    usualIndustryComp?.valueCodeableConcept,
+  );
+
+  sortByPeriod(employmentObs, (obs) => obs.effectivePeriod);
+  const employmentStatus = formatCodeableConcept(
+    employmentObs?.[0]?.valueCodeableConcept,
+  );
+
+  return [
+    occTitle,
+    usualIndustry && `Industry: ${usualIndustry}`,
+    employmentStatus && `Status: ${employmentStatus}`,
+    occDates && `Dates: ${occDates}`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+};
+
+/**
+ * Evaluates occupation history information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns An array of evaluated and formatted occupation history data.
+ */
+export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
+  const jobObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.patientOccupationHistory,
+  );
+  if (jobObs.length === 0) return;
+
+  sortByPeriod(jobObs, (o) => o.effectivePeriod);
+
+  return (
+    <ExpandCollapseAccordion
+      descriptor="employment details"
+      items={jobObs.map((obs) => {
+        const getComponentValue = (code: string) => {
+          return (
+            evaluateValue(
+              obs,
+              `component.where(code.coding.code = '${code}').value`,
+            ) || noData
+          );
+        };
+
+        const employerRef = evaluateValue(
+          obs,
+          "extension.where(url = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-Employer-extension').value",
+        );
+        const employer = evaluateReference<RelatedPerson | Organization>(
+          fhirBundle,
+          employerRef,
+        );
+
+        const workplaceInfo = [
+          {
+            title: "Address",
+            value: formatCurrentAddress(employer?.address) || noData,
+          },
+          {
+            title: "Schedule",
+            value: getComponentValue("74159-5"),
+          },
+          {
+            title: "Hours",
+            value: getComponentValue("87512-0"),
+          },
+          {
+            title: "Days",
+            value: getComponentValue("74160-3"),
+          },
+          {
+            title: "Duties",
+            value: getComponentValue("63761-1"),
+          },
+          {
+            title: "Pay Grade",
+            value: getComponentValue("87707-6"),
+          },
+          {
+            title: "Employment Type",
+            value: getComponentValue("85104-8"),
+          },
+        ];
+
+        const hasWorkplaceContent = workplaceInfo.some(
+          ({ value }) => value !== noData,
+        );
+
+        const workplaceContent = hasWorkplaceContent
+          ? workplaceInfo.map(({ title, value }, i) => (
+              <DataDisplay
+                key={`wi-${i}`}
+                item={{
+                  title,
+                  value,
+                  dividerLine: false,
+                  titleNormal: true,
+                }}
+              />
+            ))
+          : noData;
+
+        const content = (
+          <>
+            <DataDisplay
+              item={{
+                title: "Dates",
+                value: formatPeriodDate(obs.effectivePeriod),
+              }}
+            />
+            <DataDisplay
+              item={{
+                title: "Industry",
+                value: getComponentValue("86188-0"),
+              }}
+            />
+            <DataDisplay
+              item={{
+                title: "Workplace Information",
+                value: workplaceContent,
+                fullWidthContent: hasWorkplaceContent,
+              }}
+            />
+            <DataDisplay
+              item={{
+                title: "Hazard",
+                value: getComponentValue("87729-0"),
+                dividerLine: false,
+              }}
+            />
+          </>
+        );
+
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span>{formatCodeableConcept(obs.valueCodeableConcept)}</span>
+              <span className="font-size-xs text-base">
+                {!!obs.effectivePeriod?.end ? "Past" : "Current"} Employment
+              </span>
+            </div>
+          ),
+          expanded: false,
+          content,
+          id: obs.id || `${Math.random()}`,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
 };
 
 /**
@@ -321,7 +458,12 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     },
     {
       title: "Occupation",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientCurrentJobTitle),
+      value: evaluateOccupation(fhirBundle),
+    },
+    {
+      title: "Occupation History",
+      value: evaluateOccupationHistory(fhirBundle),
+      fullWidthContent: true,
     },
     {
       title: "Religious Affiliation",
@@ -354,14 +496,7 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       title: "DOB",
       value: evaluatePatientDOB(fhirBundle),
     },
-    {
-      title: "Current Age",
-      value: formatAge(calculatePatientAge(fhirBundle)),
-    },
-    {
-      title: "Age at Death",
-      value: formatAge(calculatePatientAgeAtDeath(fhirBundle)),
-    },
+    createPatientAgeDataProp(fhirBundle),
     {
       title: "Vital Status",
       value: evaluatePatientVitalStatus(fhirBundle),
@@ -445,8 +580,7 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
     {
       title: "Encounter Date/Time",
       value: formatStartEndDateTime(
-        evaluateOne(fhirBundle, fhirPathMappings.encounterStartDate),
-        evaluateOne(fhirBundle, fhirPathMappings.encounterEndDate),
+        evaluateOne(fhirBundle, fhirPathMappings.encounterPeriod),
       ),
     },
     {
@@ -586,7 +720,6 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
 
   const tables = participants.map((participant) => {
     const role = evaluateValue(participant, "type");
-    const { start, end } = participant.period ?? {};
     const participantRef = participant.individual?.reference;
 
     const { practitioner } = evaluatePractitionerRoleReference(
@@ -602,7 +735,7 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
         value: role || noData,
       },
       Dates: {
-        value: formatStartEndDate(start, end) || noData,
+        value: formatStartEndDate(participant.period) || noData,
       },
     } as HtmlTableJsonRow;
   });
@@ -734,4 +867,102 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
  */
 export const censorGender = (gender: string | undefined) => {
   return gender && ["Male", "Female"].includes(gender) ? gender : "";
+};
+
+/**
+ * Creates a DisplayDataProps object for patient age data based on the following:
+ * 1) If the patient has a death date, it returns an empty object.
+ * 2) If the encounter has a start date, it calculates the age at that date.
+ * 3) If the encounter has an end date and it is in the past, it calculates the age at that end date.
+ * 4) If there are no encounter dates, it calculates the age when eCr was created, as a proxy for encounter date.
+ * @param fhirBundle - The FHIR bundle containing patient data.
+ * @returns A DisplayDataProps object with title, tooltip, and value for patient age.
+ */
+export const createPatientAgeDataProp = (
+  fhirBundle: Bundle,
+): DisplayDataProps => {
+  const encounterPeriod = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.encounterPeriod,
+  );
+  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
+
+  let title = "Age at Encounter";
+  let toolTip;
+  let value;
+
+  // If patient has death date, return empty object
+  if (isPatientDeceased(fhirBundle)) {
+    title = "Age at Death";
+    const patientDODString = evaluateOne(
+      fhirBundle,
+      fhirPathMappings.patientDOD,
+    );
+    if (patientDOBString && patientDODString) {
+      value = formatAge(calculatePatientAge(fhirBundle, patientDODString));
+    }
+
+    return {
+      title,
+      value,
+      toolTip,
+    };
+  }
+
+  // Handle encounter start date
+  if (encounterPeriod?.start) {
+    value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.start));
+    return { title, toolTip, value };
+  }
+
+  // Handle encounter end date
+  if (encounterPeriod?.end) {
+    const encounterEnd = DateTime.fromJSDate(new Date(encounterPeriod.end));
+
+    if (encounterEnd <= DateTime.now()) {
+      toolTip =
+        "Age at end date of encounter. Start date of encounter is not available.";
+      value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.end));
+    } else {
+      value = formatAge(
+        calculatePatientAge(
+          fhirBundle,
+          evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
+        ),
+      );
+      if (value) {
+        toolTip =
+          "Using the date eCR was created as a proxy for date of encounter. No encounter start date and encounter end date is in the future.";
+      }
+    }
+    return { title, toolTip, value };
+  }
+
+  // Handle no encounter dates
+  value = formatAge(
+    calculatePatientAge(
+      fhirBundle,
+      evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
+    ),
+  );
+  if (value) {
+    toolTip =
+      "Using the date eCR was created as a proxy for date of encounter. No encounter date available.";
+  }
+
+  return { title, toolTip, value };
+};
+
+/***
+ * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. If both are `undefined`
+ * return `undefined`.
+ */
+const isPatientDeceased = (fhirBundle: Bundle) => {
+  const vitalStatus = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.patientVitalStatus,
+  );
+  const dod = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+
+  return dod ? true : vitalStatus;
 };

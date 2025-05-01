@@ -3,8 +3,15 @@ import { test, expect } from "@playwright/test";
 import { logIn, nbsAuthParam } from "../utils";
 
 test.describe("auth", () => {
-  test("should require a login on main page", async ({ page }) => {
+  test("should require a login on main page and allow sign out", async ({
+    page,
+  }) => {
     await logIn(page);
+    await expect(page.getByText("Sign Out")).toBeVisible();
+    await page.getByRole("button", { name: "Sign Out" }).click();
+
+    await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
+    await expect(page.getByText("You need to sign in")).toBeVisible();
   });
 
   test("should require a login on main page even if valid auth token provided", async ({
@@ -48,8 +55,9 @@ test.describe("auth", () => {
     );
     await page.getByText("Patient Name").first().waitFor();
 
-    // via nbs auth, cannot navigate to library
+    // via nbs auth, cannot navigate to library or sign out
     await expect(page.getByText("Back to eCR Library")).not.toBeVisible();
+    await expect(page.getByText("Sign Out")).not.toBeVisible();
     await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
     );

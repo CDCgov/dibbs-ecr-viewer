@@ -9,7 +9,8 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
       class="usa-header usa-header--basic"
     >
       <div
-        class="usa-nav-container"
+        class="usa-nav-container flex-row flex-align-center flex-justify"
+        style="max-width: none;"
       >
         <div
           class="usa-navbar"
@@ -26,6 +27,13 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
             </h1>
           </div>
         </div>
+        <button
+          class="usa-button flex-align-self-center"
+          data-testid="button"
+          type="button"
+        >
+          Sign Out
+        </button>
       </div>
     </header>
     <div

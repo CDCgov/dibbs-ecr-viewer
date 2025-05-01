@@ -1,30 +1,21 @@
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { containerDetector } from "@opentelemetry/resource-detector-container";
-import { envDetector, hostDetector } from "@opentelemetry/resources";
-import { Resource } from "@opentelemetry/resources";
-import { NodeSDK, tracing, metrics } from "@opentelemetry/sdk-node";
-import { SEMRESATTRS_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
+import { randomUUID } from "node:crypto";
 
-const sdk = new NodeSDK({
-  traceExporter: new OTLPTraceExporter(),
-  resource: new Resource({
-    [SEMRESATTRS_SERVICE_NAME]: "ecr-viewer",
-  }),
-  spanProcessors: [new tracing.SimpleSpanProcessor(new OTLPTraceExporter())],
-  instrumentations: [
-    getNodeAutoInstrumentations({
-      // disable fs instrumentation to reduce noise
-      "@opentelemetry/instrumentation-fs": {
-        enabled: false,
-      },
-    }),
-  ],
-  metricReader: new metrics.PeriodicExportingMetricReader({
-    exporter: new OTLPMetricExporter(),
-  }),
-  resourceDetectors: [containerDetector, envDetector, hostDetector],
-});
+import { hasPendingMigrations } from "@/app/api/migrate-db/migrate";
+import { waitForMetadataDatabase } from "@/app/data/metadataDb/database";
 
-sdk.start();
+// Configuration does not require a database so we don't need to check for pending migrations
+if (!!process.env.METADATA_DATABASE_TYPE) {
+  // Generate a secret for this ecr viewer server with a UUID required to use the
+  // `/ecr-viewer/api/migrate-db` endpoint (if not provided via env already)
+  process.env.METADATA_DATABASE_MIGRATION_SECRET ||= randomUUID();
+
+  waitForMetadataDatabase().then(() => {
+    hasPendingMigrations().then((hasPending: boolean) => {
+      if (hasPending) {
+        console.error(
+          `Pending migrations detected. Please submit a POST request to \`/ecr-viewer/api/migrate-db\` to migrate the database to the expected state. The body must contain a form with the field \`migration_secret=${process.env.METADATA_DATABASE_MIGRATION_SECRET}\``,
+        );
+      }
+    });
+  });
+}

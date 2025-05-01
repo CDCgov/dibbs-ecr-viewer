@@ -1,5 +1,9 @@
 # Getting Started with DIBBs eCR Viewer
 
+**If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guide.md)**
+
+If you're looking to contribute to development on the eCR Viewer, you're in the right place.
+
 ## Introduction
 
 The DIBBs eCR Viewer service offers a REST API for processing eCR FHIR messages into an HTML page that displays key information in a readable format and makes specific data fields easy to find.
@@ -19,7 +23,7 @@ To run the eCR Viewer with Docker, follow these steps.
 Docker version 20.10.21, build baeda1f
 ```
 
-2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/ecr-viewer:latest`.
+2. Download a copy of the Docker image from the DIBBs eCR Viewer repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/ecr-viewer:latest`.
 3. Run the service with `docker run -p 8080:8080 ecr-viewer:latest`.
 
 Congratulations, the eCR Viewer should now be running on `localhost:8080`!
@@ -30,10 +34,10 @@ We recommend running the eCR Viewer from a container, but if that isn't feasible
 
 ## Building the Docker Image
 
-To build the Docker image for the eCR Viewer from source instead of downloading it from the PHDI repository follow these steps.
+To build the Docker image for the eCR Viewer from source instead of downloading it from the DIBBs eCR Viewer repository follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+2. Clone the DIBBs eCR Viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
 4. Run `docker build -t ecr-viewer .`.
 
@@ -57,7 +61,7 @@ If you consistently encounter the error message `"ecr_viewer_db" does not exist`
 To run the eCR Viewer locally:
 
 1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+2. Clone the DIBBs eCR Viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
 4. Install all of the Node dependencies for the eCR Viewer with `npm install`.
 5. Setup your `.env.local` by running `npm run setup-local-env`.
@@ -138,63 +142,32 @@ Can be found in [api-documentation.md](api-documentation.md).
 
 # Architecture Diagram
 
-Note: The diagram omits infrastructure related to OpenTelemetry. OpenTelemetry enables logging and performance tracking; it is omitted for ease of viewing.
-
 ```mermaid
 flowchart LR
-
-  subgraph requests["Requests"]
+  subgraph api["API"]
     direction TB
     subgraph GET["fas:fa-download <code>GET</code>"]
-      hc["<code>/</code>\n(health check)"]
-      viewdata["<code>/view-data</code>\n(List View)"]
-      detail["<code>/view-data/id</code>\n(Detail View)"]
-
+      hc["<code>/api/health-check</code><br />(health check)"]
     end
     subgraph POST["fas:fa-upload <code>POST</code>"]
-      ecr["<code>/api/save-fhir-data</code>\n(Save ECR to source)"]
+      saveFhirData["<code>/api/process-zip</code><br />(Save eCR)"]
     end
   end
-
-
-  subgraph service[REST API Service]
+  subgraph pages["Pages"]
+    direction TB
+      view-data["<code>/view-data</code><br />(eCR Viewer)"]
+      ecr["<code>/</code><br />(eCR Library)"]
+  end
+  subgraph service[Cloud]
     direction TB
     subgraph mr["fab:fa-docker container"]
-      viewer["fab:fa-python <code>ecr-viewer<br>HTTP:3000/</code>"]
-	  postgres["fab:fa-python <code>postgres<br>HTTP:3000/</code>"]
+      viewer["fab:fa-node fab:fa-react <code>ecr-viewer<br>HTTP:3000/</code>"]
     end
-    subgraph aws["fab:fa-docker AWS"]
-      s3["fab:fa-python <code>S3</code>"]
-    end
-	mr <==> |<code>POST /save-fhir-data</code>| aws
-
+    blobStorage["fab:fa-file Blob Storage"]
+    postgres["fab:fa-database Database"]
+	mr <--> |eCR FHIR Data| blobStorage
+	mr <--> |eCR Metadata| postgres
   end
-
-  subgraph response["Responses"]
-    subgraph JSON["fa:fa-file-alt <code>JSON</code>"]
-      rsp-hc["fa:fa-file-code <code>OK</code> fa:fa-thumbs-up"]
-      fhirdata["fa:fa-file-code FHIR Data"]
-	  post-ecr["200"]
-    end
-  end
-
-hc -.-> mr -.-> rsp-hc
-viewdata --> mr --> fhirdata
-detail --> mr --> fhirdata
-ecr ===> mr ===> post-ecr
-```
-
-#### Application API
-
-```mermaid
-graph TD
-    A[ecr-viewer]
-    subgraph API Endpoints
-        direction TB
-        N[POST /save-fhir-data]
-    end
-    A --> M
-    A --> N
-    style A fill:#f9f,stroke:#333,stroke-width:4px,color:#000
-    style API Endpoints fill:#bfb,stroke:#333,stroke-width:2px
+  api <--> mr
+  pages <--> mr
 ```

@@ -14,9 +14,11 @@ import {
   Identifier,
   Immunization,
   Observation,
+  ObservationReferenceRange,
   Organization,
   PatientCommunication,
   PatientContact,
+  Period,
   Procedure,
   Quantity,
   Reference,
@@ -29,7 +31,9 @@ export type ValueX =
   | string
   | CodeableConcept
   | Coding
-  | Quantity;
+  | Quantity
+  | Reference
+  | ObservationReferenceRange;
 
 /**
  * Mapping from the FHIR path key to the expected type upon valuation.
@@ -54,7 +58,9 @@ export type PathTypes = {
   patientTribalAffiliation: ValueX;
   patientEmergencyContact: PatientContact;
   patientGuardian: RelatedPerson;
-  patientCurrentJobTitle: ValueX;
+  patientOccupation: Observation;
+  patientOccupationHistory: Observation;
+  patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
   patientPregnancyStatus: ValueX;
@@ -71,10 +77,10 @@ export type PathTypes = {
   dateTimeEcrCreated: string;
   ehrSoftware: ValueX;
   ehrManufacturerModel: string;
-  eRSDwarnings: Coding;
+  eICRProcessingStatus: string;
+  eICRProcessingStatusReason: Observation;
   compositionAuthorRefs: Reference;
-  encounterEndDate: string;
-  encounterStartDate: string;
+  encounterPeriod: Period;
   encounterDiagnosis: EncounterDiagnosis;
   encounterType: string;
   encounterID: Identifier;
@@ -130,7 +136,7 @@ export type PathTypes = {
   observationReferenceValue: string;
   observationComponent: string;
   observationValue: string;
-  observationReferenceRange: string;
+  observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
   observationNote: string;
   observationOrganism: string;
@@ -236,9 +242,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Social History
-  patientCurrentJobTitle: {
-    type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob').where(effectivePeriod.end.exists().not()).value",
+  patientOccupation: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork')",
+  },
+  patientOccupationHistory: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob')",
+  },
+  patientEmploymentStatus: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '74165-2')",
   },
   patientTobaccoUse: {
     type: "ValueX",
@@ -306,9 +320,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Device').where(property[0].type.coding.code = 'software').manufacturer",
   },
-  eRSDwarnings: {
-    type: "Coding",
-    path: "Bundle.entry.resource.where(resourceType =  'Composition').section.where(title = 'Reportability Response Information Section').extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension').valueCodeableConcept.coding.entries.eRSDwarnings",
+  eICRProcessingStatus: {
+    type: "string",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation').code.coding.code",
+  },
+  eICRProcessingStatusReason: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-reason-observation')",
   },
   compositionAuthorRefs: {
     type: "Reference",
@@ -316,13 +334,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Encounter Info
-  encounterEndDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period.end",
-  },
-  encounterStartDate: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
+  encounterPeriod: {
+    type: "Period",
+    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period",
   },
   encounterDiagnosis: {
     type: "EncounterDiagnosis",
@@ -536,7 +550,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",
   },
-  observationReferenceRange: { type: "string", path: "referenceRange.text" },
+  observationReferenceRange: {
+    type: "ObservationReferenceRange",
+    path: "referenceRange",
+  },
   observationDeviceReference: { type: "string", path: "device.reference" },
   observationNote: { type: "string", path: "note.text" },
   observationOrganism: { type: "string", path: "code.coding.display.first()" },

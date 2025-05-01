@@ -1,0 +1,28 @@
+name: Release Drafter
+
+on:
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+# pull_request event is required only for autolabeler
+#  pull_request:
+#    types: [opened, reopened, edited, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  update_release_draft:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-drafter.yaml
+          commitish: main
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -61,6 +61,7 @@ class Condition(SQLModel, table=True):
     code: str = Field(index=True)
     system: str
     version: str
+    category: str | None
 
     concepts: list["Concept"] = Relationship(
         back_populates="conditions", link_model=ConditionConceptLink

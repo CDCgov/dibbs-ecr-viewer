@@ -1,6 +1,15 @@
 import { BlobServiceClient } from "@azure/storage-blob";
 
-import { AZURE_SOURCE } from "@/app/api/utils";
+import {
+  AZURE_SOURCE,
+  BlobResponse,
+  DELETE_FAILURE,
+  DELETE_MISCONFIGURED,
+  DELETE_SUCCESS,
+  SAVE_FAILURE,
+  SAVE_MISCONFIGURED,
+  SAVE_SUCCESS,
+} from "./utils";
 
 /**
  * Connect to the Azure blob container.
@@ -42,5 +51,77 @@ export const azureBlobStorageHealthCheck = async () => {
   } catch (error: unknown) {
     console.error(error);
     return "DOWN";
+  }
+};
+
+/**
+ * Saves a blob to Azure Blob Storage.
+ * @param body - The string content to save as a blob.
+ * @param objectKey - The name of the blob.
+ * @returns An object containing the status and message.
+ */
+export const saveToAzure = async (
+  body: string,
+  objectKey: string,
+): Promise<BlobResponse> => {
+  const containerClient = azureBlobContainerClient();
+
+  if (!containerClient) {
+    return SAVE_MISCONFIGURED;
+  }
+
+  try {
+    const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
+
+    const response = await blockBlobClient.upload(body, body.length, {
+      blobHTTPHeaders: { blobContentType: "application/json" },
+    });
+
+    if (response._response.status !== 201) {
+      throw new Error(`HTTP Status Code: ${response._response.status}`);
+    }
+
+    return SAVE_SUCCESS;
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to save blob to Azure Blob Storage.",
+      error,
+      objectKey,
+    });
+    return SAVE_FAILURE;
+  }
+};
+
+/**
+ * Delete a blob from Azure Blob Storage.
+ * @param objectKey - The name of the blob.
+ * @returns An object containing the status and message.
+ */
+export const deleteFromAzure = async (
+  objectKey: string,
+): Promise<BlobResponse> => {
+  const containerClient = azureBlobContainerClient();
+
+  if (!containerClient) {
+    return DELETE_MISCONFIGURED;
+  }
+
+  try {
+    const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
+
+    const response = await blockBlobClient.deleteIfExists();
+
+    if (!response.succeeded) {
+      throw new Error(`HTTP Status Code: ${response._response.status}`);
+    }
+
+    return DELETE_SUCCESS;
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to save blob to Azure Blob Storage.",
+      error,
+      objectKey,
+    });
+    return DELETE_FAILURE;
   }
 };

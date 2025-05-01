@@ -269,26 +269,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          Current Age
-                        </div>
-                        <div
-                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
-                        >
-                          No data
-                        </div>
-                      </div>
-                      <div
-                        class="section__line_gray"
-                      />
-                    </div>
-                    <div>
-                      <div
-                        class="grid-row"
-                      >
-                        <div
-                          class="data-title padding-right-1"
-                        >
-                          Age at Death
+                          Age at Encounter
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
@@ -725,6 +706,25 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                        >
+                          No data
+                        </div>
+                      </div>
+                      <div
+                        class="section__line_gray"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row flex-column"
+                      >
+                        <div
+                          class="data-title padding-right-1"
+                        >
+                          Occupation History
+                        </div>
+                        <div
+                          class="grid-col width-full text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1545,7 +1545,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          eRSD Warnings
+                          eICR Processing Info
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"

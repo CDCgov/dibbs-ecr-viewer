@@ -1,17 +1,20 @@
 import { Bundle, Observation } from "fhir/r4";
 
 import { noData } from "@/app/utils/data-utils";
-import { evaluateAll, evaluateValue } from "@/app/utils/evaluate";
-import fhirPathMappings, {
-  FhirPathKeys,
-} from "@/app/utils/evaluate/fhir-paths";
-import { ColumnInfoInput } from "@/app/view-data/components/EvaluateTable";
+import { evaluateAll } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import {
+  ColumnInfoInput,
+  evaluateTableRowCell,
+} from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 import { formatDate } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 
-type TravelHistoryColumn = ColumnInfoInput & { infoPath: FhirPathKeys };
+type TravelHistoryColumn = Omit<ColumnInfoInput, "applyToValue"> & {
+  applyToValue?: (val: string) => string | undefined;
+};
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -66,16 +69,13 @@ const createTravelHistoryTables = (
       const row: HtmlTableJsonRow = {};
 
       // Populate the row by iterating over the columns
-      columns.forEach(({ columnName, infoPath, applyToValue }) => {
-        let value = evaluateValue(activity, fhirPathMappings[infoPath]);
-
-        // Apply transformation if needed
-        if (applyToValue) {
-          value = applyToValue(value) ?? "";
-        }
+      columns.forEach((column) => {
+        const value = evaluateTableRowCell(column, activity, fhirPathMappings);
+        // casting is fine because of constrained applyToValue type
+        const data = value.data as string | undefined;
 
         // Assign the value to the row
-        row[columnName] = { value: value || noData };
+        row[column.columnName] = { value: data || noData };
       });
 
       return row;

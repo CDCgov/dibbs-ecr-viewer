@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { S3_SOURCE, AZURE_SOURCE, GCP_SOURCE } from "@/app/api/utils";
+import {
+  S3_SOURCE,
+  AZURE_SOURCE,
+  GCP_SOURCE,
+} from "@/app/data/blobStorage/utils";
 
-import { saveFhirData, saveWithMetadata } from "./save-fhir-data-service";
+import { saveFhirData, saveWithMetadata } from "./service";
 
 /**
  * Handles POST requests and saves the FHIR Bundle to the database.

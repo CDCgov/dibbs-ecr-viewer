@@ -211,10 +211,9 @@ export const returnCareTeamTable = (
       };
 
       if (initialParticipant.period) {
-        const { start, end } = initialParticipant.period;
         mctp.period = {
           ...initialParticipant.period,
-          text: formatStartEndDate(start, end),
+          text: formatStartEndDate(initialParticipant.period),
         };
       }
 

@@ -83,17 +83,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - config_name: AWS_SQLSERVER_DUAL
+          - config: AWS_SQLSERVER_DUAL
             azure_ad: true
-          - config_name: AZURE_PG_DUAL
+            schema: extended
+          - config: AZURE_PG_DUAL
             azure_ad: false
-          - config_name: AWS_INTEGRATED
+            schema: core
+          - config: AWS_INTEGRATED
             azure_ad: false
 
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -101,24 +103,21 @@ jobs:
         with:
           node-version: ${{env.NODE_VERSION}}
 
-      - name: Install dependencies
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:install
-
       - name: Set up env vars
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           npm run setup-local-env
           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
-      - name: Set CONFIG_NAME to ${{ matrix.config_name }}
+      - name: Set CONFIG_NAME to ${{ matrix.config }}
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
-          sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config_name }}/' .env.local
+          sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config }}/' .env.local
+
+      - name: Set METADATA_DATABASE_SCHEMA to ${{ matrix.schema }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          echo "METADATA_DATABASE_SCHEMA=${{ matrix.schema }}" >> .env.local
 
       - name: Set up Azure AD
         if: ${{ matrix.azure_ad }}
@@ -130,6 +129,34 @@ jobs:
           sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
           echo "AZURE_AD_USER=${{ secrets.AZURE_AD_USER }}" >> .env.local
           echo "AZURE_AD_PASSWORD=${{ secrets.AZURE_AD_PASSWORD }}" >> .env.local
+
+      - name: Install dependencies
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:e2e:install
+
+      - name: Run local docker and wait for it to be ready
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+
+      - name: Run Playwright tests - Migrations
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:e2e:migrations
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
+
+      - name: Upload playwright report - Migrations
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-migrations
+          path: containers/${{env.CONTAINER}}/playwright-report/
+          retention-days: 5
 
       - name: Run seed data conversion
         working-directory: ./containers/${{env.CONTAINER}}

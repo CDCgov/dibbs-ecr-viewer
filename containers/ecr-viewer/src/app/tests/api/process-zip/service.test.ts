@@ -6,11 +6,11 @@ import { processZip } from "@/app/api/process-zip/service";
 import {
   saveFhirData,
   saveWithMetadata,
-} from "@/app/api/save-fhir-data/save-fhir-data-service";
-import { S3_SOURCE } from "@/app/api/utils";
+} from "@/app/api/save-fhir-data/service";
+import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 
-jest.mock("../../../api/save-fhir-data/save-fhir-data-service");
-jest.mock("../../../api/services/database");
+jest.mock("../../../api/save-fhir-data/service");
+jest.mock("../../../data/metadataDb/database");
 
 describe("processZip", () => {
   const mockFile = new File(["content"], "test.zip");
@@ -41,7 +41,7 @@ describe("processZip", () => {
 
     const response = await processZip(mockFile);
 
-    expect(response).toEqual({ status: 200, message: "Success" });
+    expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
       mockEcr,
       "123",
@@ -66,7 +66,31 @@ describe("processZip", () => {
 
     const response = await processZip(mockFile);
 
-    expect(response).toEqual({ status: 200, message: "Success" });
+    expect(response).toStrictEqual({ status: 200, message: "Success" });
+    expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
+  });
+
+  it("should return fhir bundle when requested", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      status: 200,
+      json: jest.fn().mockResolvedValue({
+        processed_values: {
+          responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+        },
+      }),
+    });
+    (saveFhirData as jest.Mock).mockResolvedValue({
+      status: 200,
+      message: "Success",
+    });
+
+    const response = await processZip(mockFile, true);
+
+    expect(response).toStrictEqual({
+      status: 200,
+      message: "Success",
+      bundle: mockEcr,
+    });
     expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
   });
 

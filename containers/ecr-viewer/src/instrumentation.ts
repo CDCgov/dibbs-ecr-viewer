@@ -1,4 +1,8 @@
-import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
+import {
+  AZURE_SOURCE,
+  GCP_SOURCE,
+  S3_SOURCE,
+} from "./app/data/blobStorage/utils";
 
 /**
  * The register function will be callled once when nextjs server is instantiated
@@ -6,12 +10,18 @@ import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "./app/api/utils";
 export async function register() {
   setupConfigurationVariables();
 
+  // Code with server side dependencies runs in here
   if (process.env.NEXT_RUNTIME === "nodejs") {
     await import("./app/services/instrumentation");
   }
 }
 
-function setupConfigurationVariables() {
+/**
+ * This function sets the configuration variables for the server based on the environment variables.
+ * It sets the `SOURCE` environment variable based on the first part of the `CONFIG_NAME` environment variable.
+ * It also sets the `METADATA_DATABASE_TYPE` and `METADATA_DATABASE_SCHEMA` environment variables based on the second part of the `CONFIG_NAME` environment variable.
+ */
+export function setupConfigurationVariables() {
   const sourceMap: {
     [key: string]: typeof process.env.SOURCE;
   } = {
@@ -30,9 +40,9 @@ function setupConfigurationVariables() {
 
   if (process.env.CONFIG_NAME?.includes("_PG_")) {
     process.env.METADATA_DATABASE_TYPE = "postgres";
-    process.env.METADATA_DATABASE_SCHEMA = "core";
+    process.env.METADATA_DATABASE_SCHEMA ||= "extended";
   } else if (process.env.CONFIG_NAME?.includes("_SQLSERVER_")) {
     process.env.METADATA_DATABASE_TYPE = "sqlserver";
-    process.env.METADATA_DATABASE_SCHEMA = "extended";
+    process.env.METADATA_DATABASE_SCHEMA ||= "extended";
   }
 }

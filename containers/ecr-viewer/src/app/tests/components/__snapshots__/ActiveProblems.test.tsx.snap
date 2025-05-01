@@ -40,22 +40,22 @@ exports[`Active Problems Table should match snapshot 1`] = `
     <tbody>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           Malignant neoplasm of lower-inner quadrant of left breast in female, estrogen receptor positive
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           12/14/2022
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           123 years
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <button
             aria-controls="hidden-comment-r:id"
@@ -84,29 +84,29 @@ exports[`Active Problems Table should match snapshot 1`] = `
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           Headache
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           152 years
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
@@ -114,25 +114,25 @@ exports[`Active Problems Table should match snapshot 1`] = `
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           Backache
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
-          08/19/2018 1:00 PM
+          08/19/2018 1:00 PM
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           141 years
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
@@ -140,29 +140,29 @@ exports[`Active Problems Table should match snapshot 1`] = `
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           Headache
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           1 year
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
@@ -170,25 +170,25 @@ exports[`Active Problems Table should match snapshot 1`] = `
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           Backache
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           06/28/1877
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           1 month, 3 days
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>

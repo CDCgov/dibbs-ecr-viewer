@@ -1,16 +1,28 @@
 import { render, screen } from "@testing-library/react";
+import { usePathname } from "next/navigation";
 
 import { useIsLoggedInUser } from "@/app/components/AuthSessionProvider";
 import { BackButton } from "@/app/components/BackButton";
 
 jest.mock("../../components/AuthSessionProvider");
+jest.mock("next/navigation", () => ({
+  usePathname: jest.fn().mockReturnValue("/somewhere"),
+}));
 
 describe("Back button", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
   it("should not appear user is not logged in (e.g. nbs auth)", () => {
     (useIsLoggedInUser as jest.Mock).mockReturnValue(false);
+
+    render(<BackButton />);
+
+    expect(screen.queryByText("Back to eCR Library")).not.toBeInTheDocument();
+  });
+
+  it("should not appear if already on library page", () => {
+    (usePathname as jest.Mock).mockReturnValue("/");
 
     render(<BackButton />);
 

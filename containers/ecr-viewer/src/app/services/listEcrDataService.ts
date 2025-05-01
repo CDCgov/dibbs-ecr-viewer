@@ -1,10 +1,8 @@
 import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
 
-import { dbSchema, getDb } from "@/app/api/services/database";
-import { getSql } from "@/app/api/services/dialects/common";
-import { Common, ecr_data } from "@/app/api/services/types/common";
-import { Core } from "@/app/api/services/types/core";
-import { Extended } from "@/app/api/services/types/extended";
+import { getDb } from "@/app/data/metadataDb/database";
+import { getSql } from "@/app/data/metadataDb/dialects/common";
+import { ecr_data, Core } from "@/app/data/metadataDb/types/core";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
@@ -16,7 +14,7 @@ export interface RelatedEcr {
   set_id: string;
 }
 
-interface CommonMetadataModel {
+export interface MetadataModel {
   eicr_id: string;
   conditions: string[];
   rule_summaries: string[];
@@ -24,24 +22,11 @@ interface CommonMetadataModel {
   date_created: Date;
   set_id: string | undefined;
   eicr_version_number: string | undefined;
-}
-
-export interface CoreMetadataModel extends CommonMetadataModel {
-  data_source: "DB" | "S3";
-  patient_name_first: string;
-  patient_name_last: string;
-  patient_birth_date: Date;
-  report_date: Date;
-}
-
-export interface ExtendedMetadataModel extends CommonMetadataModel {
-  // data_source: "DB" | "S3";
   first_name: string | undefined;
   last_name: string | undefined;
   birth_date: Date | undefined;
   encounter_start_date: Date | undefined;
 }
-
 export interface EcrDisplay {
   ecrId: string;
   patient_first_name: string;
@@ -75,38 +60,6 @@ export async function listEcrData(
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<EcrDisplay[]> {
-  let listFn: typeof listCoreEcrData;
-  switch (dbSchema()) {
-    case "core":
-      listFn = listCoreEcrData;
-      break;
-    case "extended":
-      listFn = listExtendedEcrData;
-      break;
-    default:
-      throw new Error(`Unsupported database schema: ${dbSchema()}`);
-  }
-
-  return listFn(
-    startIndex,
-    itemsPerPage,
-    sortColumn,
-    sortDirection,
-    filterDates,
-    searchTerm,
-    filterConditions,
-  );
-}
-
-async function listCoreEcrData(
-  startIndex: number,
-  itemsPerPage: number,
-  sortColumn: string,
-  sortDirection: string,
-  filterDates: DateRangePeriod,
-  searchTerm?: string,
-  filterConditions?: string[],
-): Promise<EcrDisplay[]> {
   const res = await getDb<Core>()
     .transaction()
     .execute(async (trx) => {
@@ -121,72 +74,7 @@ async function listCoreEcrData(
           ])
           .groupBy(["ecr_data.set_id"])
           .where((eb) =>
-            generateCoreWhereStatement(
-              eb,
-              filterDates,
-              searchTerm,
-              filterConditions,
-            ),
-          ),
-      );
-
-      const ecrQuery = mainQuery.with("ecrs", (db) =>
-        db
-          .selectFrom("ecr_sets")
-          .leftJoin("ecr_data", (join) =>
-            join
-              .onRef("ecr_data.set_id", "=", "ecr_sets.set_id")
-              .on("ecr_sets.max_version_number", "=", (eb) =>
-                eb.cast<number>("ecr_data.eicr_version_number", "integer"),
-              ),
-          )
-          .select([
-            "ecr_data.eicr_id",
-            "ecr_data.patient_name_first",
-            "ecr_data.patient_name_last",
-            "ecr_data.patient_birth_date",
-            "ecr_data.report_date",
-            "ecr_data.date_created",
-            "ecr_data.set_id",
-            "ecr_data.eicr_version_number",
-          ])
-          .orderBy(generateCoreSortStatement(sortColumn, sortDirection))
-          .offset(startIndex)
-          .fetch(itemsPerPage),
-      );
-
-      return await getMetaModelData<CoreMetadataModel>(
-        ecrQuery as unknown as Kysely<EcrsCte>,
-      );
-    });
-
-  return processCoreMetadata(res);
-}
-
-async function listExtendedEcrData(
-  startIndex: number,
-  itemsPerPage: number,
-  sortColumn: string,
-  sortDirection: string,
-  filterDates: DateRangePeriod,
-  searchTerm?: string,
-  filterConditions?: string[],
-): Promise<EcrDisplay[]> {
-  const res = await getDb<Extended>()
-    .transaction()
-    .execute(async (trx) => {
-      const mainQuery = trx.with("ecr_sets", (db) =>
-        db
-          .selectFrom("ecr_data")
-          .select(({ eb }) => [
-            "ecr_data.set_id",
-            eb.fn
-              .max(eb.cast<number>("ecr_data.eicr_version_number", "integer"))
-              .as("max_version_number"),
-          ])
-          .groupBy(["ecr_data.set_id"])
-          .where((eb) =>
-            generateExtendedWhereStatement(
+            generateWhereStatement(
               eb,
               filterDates,
               searchTerm,
@@ -215,23 +103,21 @@ async function listExtendedEcrData(
             "ecr_data.set_id",
             "ecr_data.eicr_version_number",
           ])
-          .orderBy(generateExtendedSortStatement(sortColumn, sortDirection))
+          .orderBy(generateSortStatement(sortColumn, sortDirection))
           .offset(startIndex)
           .fetch(itemsPerPage),
       );
 
-      return await getMetaModelData<ExtendedMetadataModel>(
-        ecrQuery as unknown as Kysely<EcrsCte>,
-      );
+      return await getMetaModelData(ecrQuery as unknown as Kysely<EcrsCte>);
     });
 
-  return processExtendedMetadata(res);
+  return processMetadata(res);
 }
 
 // The actual type of the CTE we create in both list fns is truly gnarly (and not exported)
 // So we cast everything to a Kysely<EcrsCte> which has the same functionality and types we need.
 // It's a bit gross, but it reduces the code repetition substantially
-interface EcrsCte extends Common {
+interface EcrsCte extends Core {
   ecrs: ecr_data;
   ecr_sets: { set_id: string; max_version_number: number };
 }
@@ -241,13 +127,13 @@ interface EcrsCte extends Common {
 // push this into the DB. Array/string aggregation functions are a mess across the SQLs
 // so this solution is a bit back to basics and lets JS handle the join (there's never much
 // data returned)
-const getMetaModelData = async <T extends CommonMetadataModel>(
+const getMetaModelData = async (
   mainQuery: Kysely<EcrsCte>,
-): Promise<T[]> => {
-  const rawEcrs = (await mainQuery
-    .selectFrom("ecrs")
-    .selectAll()
-    .execute()) as Omit<T, "conditions" | "rule_summaries" | "related_ecrs">[];
+): Promise<MetadataModel[]> => {
+  const rawEcrs: Omit<
+    MetadataModel,
+    "conditions" | "rule_summaries" | "related_ecrs"
+  >[] = await mainQuery.selectFrom("ecrs").selectAll().execute();
 
   const conditions = await mainQuery
     .selectFrom("ecrs")
@@ -270,7 +156,7 @@ const getMetaModelData = async <T extends CommonMetadataModel>(
 
   const related_ecrs = await mainQuery
     .selectFrom("ecr_sets")
-    .leftJoin("ecr_data", "ecr_sets.set_id", "ecr_data.set_id")
+    .innerJoin("ecr_data", "ecr_sets.set_id", "ecr_data.set_id")
     .select([
       "ecr_data.eicr_id",
       "ecr_data.set_id",
@@ -287,7 +173,7 @@ const getMetaModelData = async <T extends CommonMetadataModel>(
     )
     .execute();
 
-  const ecrs = rawEcrs.map((ecr) => {
+  const ecrs: MetadataModel[] = rawEcrs.map((ecr) => {
     return {
       ...ecr,
       conditions: conditions
@@ -303,60 +189,28 @@ const getMetaModelData = async <T extends CommonMetadataModel>(
         .map(({ rule_summary }) => rule_summary) as string[],
       related_ecrs: related_ecrs.filter(({ set_id }) => set_id === ecr.set_id),
     };
-  }) as T[];
+  });
 
   return ecrs;
 };
 
-// Helper to handle the common parts of the data
-const processCommonMetadata = <T extends CommonMetadataModel>(object: T) => {
-  return {
-    ecrId: object.eicr_id || "",
-    reportable_conditions: object.conditions || [],
-    rule_summaries: object.rule_summaries || [],
-    date_created: object.date_created
-      ? formatDateTime(object.date_created.toISOString())
-      : "",
-    eicr_set_id: object.set_id,
-    eicr_version_number: object.eicr_version_number,
-    related_ecrs: object.related_ecrs || [],
-  };
-};
-
 /**
- * Processes a list of eCR data retrieved from Postgres.
- * @param responseBody - The response body containing eCR data from Postgres.
- * @returns - The processed list of eCR IDs and dates.
+ * Process the returned metadata into a displayable version
+ * @param responseBody a returned row of data
+ * @returns displayable ecr data
  */
-export const processCoreMetadata = (
-  responseBody: CoreMetadataModel[],
-): EcrDisplay[] => {
+export const processMetadata = (responseBody: MetadataModel[]) => {
   return responseBody.map((object) => {
     return {
-      ...processCommonMetadata(object),
-      patient_first_name: object.patient_name_first || "",
-      patient_last_name: object.patient_name_last || "",
-      patient_date_of_birth: object.patient_birth_date
-        ? formatDate(object.patient_birth_date.toISOString())
+      ecrId: object.eicr_id || "",
+      reportable_conditions: object.conditions || [],
+      rule_summaries: object.rule_summaries || [],
+      date_created: object.date_created
+        ? formatDateTime(object.date_created.toISOString())
         : "",
-      patient_report_date: object.report_date
-        ? formatDateTime(object.report_date.toISOString())
-        : "",
-    };
-  });
-};
-
-/**
- * Processes a list of eCR data retrieved from Postgres.
- * @param responseBody - The response body containing eCR data from Postgres.
- * @returns - The processed list of eCR IDs and dates.
- */
-const processExtendedMetadata = (
-  responseBody: ExtendedMetadataModel[],
-): EcrDisplay[] => {
-  const res = responseBody.map((object) => {
-    const result = {
-      ...processCommonMetadata(object),
+      eicr_set_id: object.set_id,
+      eicr_version_number: object.eicr_version_number,
+      related_ecrs: object.related_ecrs || [],
       patient_first_name: object.first_name || "",
       patient_last_name: object.last_name || "",
       patient_date_of_birth: object.birth_date
@@ -366,11 +220,7 @@ const processExtendedMetadata = (
         ? formatDateTime(object.encounter_start_date.toISOString())
         : "",
     };
-
-    return result;
   });
-
-  return res;
 };
 
 /**
@@ -385,74 +235,15 @@ export const getTotalEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
-  switch (dbSchema()) {
-    case "core":
-      return getTotalCoreEcrCount(filterDates, searchTerm, filterConditions);
-    case "extended":
-      return getTotalExtendedEcrCount(
-        filterDates,
-        searchTerm,
-        filterConditions,
-      );
-    default:
-      throw new Error("Unsupported database type");
-  }
-};
-
-const getTotalCoreEcrCount = async (
-  filterDates: DateRangePeriod,
-  searchTerm?: string,
-  filterConditions?: string[],
-): Promise<number> => {
   const result = await getDb<Core>()
     .selectFrom("ecr_data")
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
-      generateCoreWhereStatement(eb, filterDates, searchTerm, filterConditions),
+      generateWhereStatement(eb, filterDates, searchTerm, filterConditions),
     )
     .executeTakeFirst();
 
   return Number(result?.count) || 0;
-};
-
-const getTotalExtendedEcrCount = async (
-  filterDates: DateRangePeriod,
-  searchTerm?: string,
-  filterConditions?: string[],
-): Promise<number> => {
-  const result = await getDb<Extended>()
-    .selectFrom("ecr_data")
-    .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
-    .where((eb) =>
-      generateExtendedWhereStatement(
-        eb,
-        filterDates,
-        searchTerm,
-        filterConditions,
-      ),
-    )
-    .executeTakeFirst();
-
-  return Number(result?.count) || 0;
-};
-
-/**
- * A custom type format for where statement
- * @param eb expression builder
- * @param filterDates - The date (range) to filter on
- * @param searchTerm - Optional search term used to filter
- * @param filterConditions - Optional array of reportable conditions used to filter
- * @returns expression wrapper for use in where
- */
-export const generateCoreWhereStatement = (
-  eb: ExpressionBuilder<Core, "ecr_data">,
-  filterDates: DateRangePeriod,
-  searchTerm?: string,
-  filterConditions?: string[],
-) => {
-  return generateCoreSearchStatement(eb, searchTerm)
-    .and(generateFilterDateStatement(eb, filterDates))
-    .and(generateFilterConditionsStatement(eb, filterConditions));
 };
 
 /**
@@ -461,39 +252,27 @@ export const generateCoreWhereStatement = (
  * @param filterDates - The date (range) to filter on
  * @param searchTerm - Optional search term used to filter
  * @param filterConditions - Optional array of reportable conditions used to filter
- * @returns - where statement for SQL Server
+ * @returns - expression wrapper for use in where
  */
-const generateExtendedWhereStatement = (
-  eb: ExpressionBuilder<Extended, "ecr_data">,
+export const generateWhereStatement = (
+  eb: ExpressionBuilder<Core, "ecr_data">,
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
 ) => {
-  return generateExtendedSearchStatement(eb, searchTerm)
+  return generateSearchStatement(eb, searchTerm)
     .and(generateFilterDateStatement(eb, filterDates))
     .and(generateFilterConditionsStatement(eb, filterConditions));
 };
 
 /**
- * A custom type format for search statement
- * @param eb expression builder
- * @param searchTerm - Optional search term used to filter
+ * Generate the search statement
+ * @param eb Kysely expression builder
+ * @param searchTerm The term to filter by
  * @returns expression wrapper for use in where
  */
-export const generateCoreSearchStatement = (
+export const generateSearchStatement = (
   eb: ExpressionBuilder<Core, "ecr_data">,
-  searchTerm?: string,
-) => {
-  if (!searchTerm) return trueStmt(eb); // No filtering needed
-
-  return eb.or([
-    eb("ecr_data.patient_name_first", getSql("like"), `%${searchTerm}%`),
-    eb("ecr_data.patient_name_last", getSql("like"), `%${searchTerm}%`),
-  ]);
-};
-
-const generateExtendedSearchStatement = (
-  eb: ExpressionBuilder<Extended, "ecr_data">,
   searchTerm?: string,
 ) => {
   if (!searchTerm) {
@@ -513,7 +292,7 @@ const generateExtendedSearchStatement = (
  * @returns expression wrapper for use in where
  */
 export const generateFilterConditionsStatement = (
-  eb: ExpressionBuilder<Common, "ecr_data">,
+  eb: ExpressionBuilder<Core, "ecr_data">,
   filterConditions?: string[] | undefined,
 ) => {
   if (!filterConditions || filterConditions.length === 0) return trueStmt(eb);
@@ -553,7 +332,7 @@ export const generateFilterConditionsStatement = (
  * @returns expression builder with date filters included
  */
 export const generateFilterDateStatement = (
-  eb: ExpressionBuilder<Common, "ecr_data">,
+  eb: ExpressionBuilder<Core, "ecr_data">,
   { startDate, endDate }: DateRangePeriod,
 ) => {
   return eb.and([
@@ -568,49 +347,10 @@ export const generateFilterDateStatement = (
  * @param direction - The direction to sort by
  * @returns custom type format object for use by kysely
  */
-export const generateCoreSortStatement = (
+export const generateSortStatement = (
   columnName: string,
   direction: string,
 ): OrderByExpression<Core, "ecr_data", {}>[] => {
-  // Valid columns and directions
-  const validColumns: { [key: string]: string } = {
-    patient: "patient",
-    date_created: "date_created",
-    report_date: "report_date",
-  };
-  const validDirections = ["ASC", "DESC"];
-
-  // Validation checks
-  columnName = validColumns[columnName] ?? "date_created";
-  if (!validDirections.includes(direction)) {
-    direction = "DESC";
-  }
-  direction = direction.toLowerCase();
-
-  if (columnName === "patient") {
-    return [
-      `patient_name_first ${direction}`,
-      `patient_name_last ${direction}`,
-    ] as OrderByExpression<Core, "ecr_data", {}>[];
-  }
-  // Default case for other columns
-  return [`${columnName} ${direction}`] as OrderByExpression<
-    Core,
-    "ecr_data",
-    {}
-  >[];
-};
-
-/**
- * A custom type format for sort statement
- * @param columnName - The column to sort by
- * @param direction - The direction to sort by
- * @returns custom type format object for use by kysely
- */
-export const generateExtendedSortStatement = (
-  columnName: string,
-  direction: string,
-): OrderByExpression<Extended, "ecr_data", {}>[] => {
   // Valid columns and directions
   const validColumns: { [key: string]: string } = {
     patient: "patient",
@@ -630,11 +370,11 @@ export const generateExtendedSortStatement = (
     return [
       `first_name ${direction}`,
       `last_name ${direction}`,
-    ] as OrderByExpression<Extended, "ecr_data", {}>[];
+    ] as OrderByExpression<Core, "ecr_data", {}>[];
   }
   // Default case for other columns
   return [`${columnName} ${direction}`] as OrderByExpression<
-    Extended,
+    Core,
     "ecr_data",
     {}
   >[];
@@ -645,5 +385,5 @@ export const generateExtendedSortStatement = (
  * @param eb expression builder
  * @returns a statement that will evaluate to true
  */
-const trueStmt = (eb: ExpressionBuilder<Common, "ecr_data">) =>
+const trueStmt = (eb: ExpressionBuilder<Core, "ecr_data">) =>
   eb(eb.val(true), "=", true);

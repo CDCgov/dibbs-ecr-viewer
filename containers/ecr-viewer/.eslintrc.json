@@ -33,6 +33,7 @@
     "@typescript-eslint/no-explicit-any": "error",
     "dot-notation": "error",
     "eqeqeq": "error",
+    "import/no-duplicates": "error",
     "import/order": [
       "error",
       {

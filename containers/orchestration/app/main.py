@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from typing import Annotated
 
+import requests
 from fastapi import (
     Body,
     File,
@@ -23,18 +24,20 @@ from app.config import get_settings
 from app.constants import (
     process_message_response_examples,
     sample_get_config_response,
+    sample_list_conditions_response,
     sample_list_configs_response,
     upload_config_response_examples,
 )
 from app.models import (
     GetConfigResponse,
+    ListConditionsResponse,
     ListConfigsResponse,
     OrchestrationRequest,
     OrchestrationResponse,
     ProcessingConfigModel,
     PutConfigResponse,
 )
-from app.services import call_apis
+from app.services import SERVICE_URLS, call_apis, format_service_url
 from app.utils import (
     _combine_response_bundles,
     _socket_response_is_valid,
@@ -302,7 +305,7 @@ async def apply_workflow_to_message(
             processing_config = load_processing_config(config_file_name)
             wf_span.add_event("config loaded successfully")
         except FileNotFoundError as error:
-            response = Response(
+            return Response(
                 content=json.dumps(
                     {
                         "message": error.__str__(),
@@ -311,11 +314,6 @@ async def apply_workflow_to_message(
                 ),
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
-            wf_span.record_exception(FileNotFoundError)
-            wf_span.set_status(
-                StatusCode(2), "Could not load config: " + error.__str__()
-            )
-            return response
 
         # Compile the input to the other service endpoints and call them
         api_input = {
@@ -401,6 +399,19 @@ def _filter_failed_responses(responses):
             failed_responses[key] = item.json()
 
     return failed_responses
+
+
+@app.get("/conditions", status_code=200, responses=sample_list_conditions_response)
+async def list_conditions_endpoint() -> ListConditionsResponse:
+    """
+    This endpoint gets a list of all of the conditions known to the trigger
+    code reference service
+    """
+    tcr_url = format_service_url(
+        SERVICE_URLS["trigger_code_reference"], "/get-conditions"
+    )
+    resp = requests.get(tcr_url)
+    return {"conditions": resp.json()}
 
 
 @app.get("/configs", responses=sample_list_configs_response)

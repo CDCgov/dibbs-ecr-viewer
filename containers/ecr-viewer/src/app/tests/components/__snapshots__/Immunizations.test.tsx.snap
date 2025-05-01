@@ -46,38 +46,38 @@ exports[`Immunizations Table should match snapshot 1`] = `
     <tbody>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           MENINGOCOCCAL CONJUGATE,MENACTRA                                        (PED/ADOL/ADULT)
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           11/16/2020
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
@@ -85,69 +85,69 @@ exports[`Immunizations Table should match snapshot 1`] = `
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           TDAP, (ADOL/ADULT)
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           11/10/2020 6:20 AM EST
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           1
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           369258741
         </td>
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           HEP A (ADULT) 2 DOSE
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           11/11/2011
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
@@ -155,38 +155,38 @@ exports[`Immunizations Table should match snapshot 1`] = `
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           DTAP-HIB-IPV (PENTACEL)
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           04/16/2010
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
@@ -194,38 +194,38 @@ exports[`Immunizations Table should match snapshot 1`] = `
       </tr>
       <tr>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           HEP B (PED,ADOLESCENT) 3 DOSE
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           03/21/1974
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>
         </td>
         <td
-          class="text-top"
+          class="text-top text-pre-line"
         >
           <span
-            class="no-data text-italic text-base"
+            class="text-italic text-base"
           >
             No data
           </span>

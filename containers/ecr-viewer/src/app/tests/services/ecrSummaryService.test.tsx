@@ -12,8 +12,8 @@ import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryPatientDetails,
   evaluateEcrSummaryRelevantClinicalDetails,
+  evaluateEcrSummaryRelevantLabResults,
 } from "@/app/services/ecrSummaryService";
-import { evaluateEcrSummaryRelevantLabResults } from "@/app/services/ecrSummaryService";
 
 describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Clinical Details", () => {
@@ -144,8 +144,8 @@ describe("ecrSummaryService Tests", () => {
         BundleEcrSummary as unknown as Bundle,
       );
       render(
-        actual[1].conditionDetails.map((detail) => (
-          <React.Fragment key={detail.title}>{detail.value}</React.Fragment>
+        actual[1].conditionDetails.map((detail, i) => (
+          <React.Fragment key={`${i}`}>{detail.value}</React.Fragment>
         )),
       );
 
