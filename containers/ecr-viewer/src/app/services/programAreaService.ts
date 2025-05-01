@@ -47,9 +47,9 @@ export const createProgramArea = async (
 };
 
 /**
- * Update a user with the the given email.
- * @param uuid (current) email of the user to update
- * @param updates objecct with fields to update in their record. UUID fields should not be updated.
+ * Update a program with the the given uuid.
+ * @param uuid (current) id of the program area to update
+ * @param updates object with fields to update in the record.
  * @param updates.name string of the new name for the program. Optional.
  * @param updates.conditions list of condition codes to associate with the program (must be full list). Optional.
  */

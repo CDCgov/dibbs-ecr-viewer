@@ -15,11 +15,9 @@ import { createInitialAdminUser } from "@/app/services/userService";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
 
-const adminEmail = "admin@admin.com";
-
 beforeAll(async () => {
   await buildCore();
-  await createInitialAdminUser(adminEmail);
+  await createInitialAdminUser("admin@admin.com");
   await getDb<Core>()
     .insertInto("condition_reference")
     .values({
