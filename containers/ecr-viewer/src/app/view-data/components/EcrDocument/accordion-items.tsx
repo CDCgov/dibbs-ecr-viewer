@@ -2,9 +2,7 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import {
-  evaluateEcrMetadata,
-} from "@/app/services/ecrMetadataService";
+import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import {
   evaluateDemographicsData,
   evaluateSocialData,
