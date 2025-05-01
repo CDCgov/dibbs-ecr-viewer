@@ -73,6 +73,13 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     },
   ];
 
+  const emergencyOutbreakInfo: DisplayDataProps[] = [
+    {
+      title: "Emergency Outbreak Info",
+      value: evaluateValue(fhirBundle, fhirPathMappings.emergencyOutbreakInfo),
+    },
+  ];
+
   const administeredMedication = evaluateAdministeredMedication(fhirBundle);
 
   const treatmentData: DisplayDataProps[] = [
@@ -122,6 +129,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     clinicalNotes: evaluateData(clinicalNotes),
     reasonForVisitDetails: evaluateData(reasonForVisitData),
     activeProblemsDetails: evaluateData(activeProblemsTableData),
+    emergencyOutbreakInfo: evaluateData(emergencyOutbreakInfo),
     treatmentData: evaluateData(treatmentData),
     vitalData: evaluateData(vitalData),
     immunizationsDetails: evaluateData(immunizationsData),

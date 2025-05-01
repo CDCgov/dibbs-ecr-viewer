@@ -12,6 +12,7 @@ import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 interface ClinicalProps {
   reasonForVisitDetails: DisplayDataProps[];
   activeProblemsDetails: DisplayDataProps[];
+  emergencyOutbreakInfo: DisplayDataProps[];
   vitalData: DisplayDataProps[];
   immunizationsDetails: DisplayDataProps[];
   treatmentData: DisplayDataProps[];
@@ -62,9 +63,11 @@ const ClinicalNotes = ({ details }: { details: DisplayDataProps[] }) => {
 const SymptomsAndProblems = ({
   symptoms,
   problems,
+  emergencyOutbreakInfo,
 }: {
   symptoms: DisplayDataProps[];
   problems: DisplayDataProps[];
+  emergencyOutbreakInfo: DisplayDataProps[];
 }) => {
   if (symptoms?.length > 0 || problems?.length > 0) {
     return (
@@ -79,6 +82,11 @@ const SymptomsAndProblems = ({
             details={problems}
             className="table-clinical-problems"
           />
+        </div>
+        <div data-testid="emrgency-outbreak-info">
+          {emergencyOutbreakInfo.map((item, index) => (
+            <DataDisplay item={item} key={index} />
+          ))}
         </div>
       </AccordionSubSection>
     );
@@ -138,6 +146,7 @@ const VitalDetails = ({ details }: { details: DisplayDataProps[] }) => {
  * @param props - Props containing clinical information.
  * @param props.reasonForVisitDetails - The details of the reason for visit.
  * @param props.activeProblemsDetails - The details of active problems.
+ * @param props.emergencyOutbreakInfo - The details of emergency outbreak information.
  * @param props.immunizationsDetails - The details of immunizations.
  * @param props.vitalData - The vital signs data.
  * @param props.treatmentData - The details of treatments.
@@ -147,6 +156,7 @@ const VitalDetails = ({ details }: { details: DisplayDataProps[] }) => {
 export const ClinicalInfo = ({
   reasonForVisitDetails,
   activeProblemsDetails,
+  emergencyOutbreakInfo,
   immunizationsDetails,
   vitalData,
   treatmentData,
@@ -158,6 +168,7 @@ export const ClinicalInfo = ({
       <SymptomsAndProblems
         symptoms={reasonForVisitDetails}
         problems={activeProblemsDetails}
+        emergencyOutbreakInfo={emergencyOutbreakInfo}
       />
       <TreatmentDetails details={treatmentData} />
       <ImmunizationsDetails details={immunizationsDetails} />
