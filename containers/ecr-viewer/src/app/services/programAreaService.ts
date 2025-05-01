@@ -2,7 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 
 import { getDb } from "@/app/data/metadataDb/database";
-import { Core } from "@/app/data/metadataDb/types/core";
+import { Core, ProgramArea } from "@/app/data/metadataDb/types/core";
 
 import { getCheckAdmin } from "./userService";
 
@@ -10,17 +10,34 @@ import { getCheckAdmin } from "./userService";
  * Create a program area with the given name. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be throw.
  * @param name Name of the program area to add. Must be unique.
+ * @param conditions list of condition codes to associate with the program area
  * @returns UUID of the created program area
  */
-export const createProgramArea = async (name: string): Promise<string> => {
+export const createProgramArea = async (
+  name: string,
+  conditions: string[],
+): Promise<string> => {
   const creatingUser = await getCheckAdmin("create program areas");
 
   try {
     const uuid = randomUUID();
     await getDb<Core>()
-      .insertInto("program_area")
-      .values({ uuid, author_uuid: creatingUser.uuid, name })
-      .execute();
+      .transaction()
+      .execute(async (db) => {
+        await db
+          .insertInto("program_area")
+          .values({ uuid, author_uuid: creatingUser.uuid, name })
+          .execute();
+
+        if (conditions.length > 0) {
+          await db
+            .updateTable("condition_reference")
+            .set({ program_area_uuid: uuid })
+            .where("code", "in", conditions)
+            .execute();
+        }
+      });
+
     return uuid;
   } catch (error: unknown) {
     const message = "Failed to create program area";
@@ -58,19 +75,19 @@ export const updateProgramArea = async (
           await db
             .updateTable("condition_reference")
             .set({ program_area_uuid: null })
-            .where("program_area_uuid", "=", "uuid")
+            .where("program_area_uuid", "=", uuid)
             .execute();
-          for (const condition of conditions) {
+          if (conditions.length > 0) {
             await db
               .updateTable("condition_reference")
               .set({ program_area_uuid: uuid })
-              .where("code", "=", condition)
+              .where("code", "in", conditions)
               .execute();
           }
         }
       });
   } catch (error: unknown) {
-    const message = "Failed to update user";
+    const message = "Failed to update program area";
     console.error({ message, error });
     throw new Error(message);
   }
@@ -103,29 +120,17 @@ export const deleteProgramArea = async (uuid: string): Promise<void> => {
 };
 
 /**
- * List all active users. The logged in user must be an admin.
- * @returns list of all active users
+ * List program areas. The logged in user must be an admin.
+ * @returns list of all program areas
  */
-// export const listUsers = async (): Promise<User[]> => {
-//   const listingUser = await getLoggedInUser();
-//   if (!isAdmin(listingUser)) {
-//     throw new Error("Standard user cannot list users");
-//   }
+export const listProgramAreas = async (): Promise<ProgramArea[]> => {
+  await getCheckAdmin("list program areas");
 
-//   try {
-//     return await listActiveUsersQuery();
-//   } catch (error: unknown) {
-//     const message = "Failed to list users";
-//     console.error({ message, error });
-//     throw new Error(message);
-//   }
-// };
-
-// const listActiveUsersQuery = async () => {
-//   return await getDb<Core>()
-//     .selectFrom("user")
-//     .selectAll()
-//     .where("status", "=", "active")
-//     .orderBy("email")
-//     .execute();
-// };
+  try {
+    return await getDb<Core>().selectFrom("program_area").selectAll().execute();
+  } catch (error: unknown) {
+    const message = "Failed to list program areas";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+};
