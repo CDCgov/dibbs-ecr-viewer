@@ -163,10 +163,8 @@ describe("ECR Metadata", () => {
         eRSDProcessingInfo={undefined}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
-    expect(
-      screen.queryByText("Warning")
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText("Warning")).not.toBeInTheDocument();
   });
 });
