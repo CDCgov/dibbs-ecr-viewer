@@ -3,7 +3,6 @@ import React from "react";
 import { Bundle } from "fhir/r4";
 
 import {
-  ERSDInfo,
   evaluateEcrMetadata,
 } from "@/app/services/ecrMetadataService";
 import {
