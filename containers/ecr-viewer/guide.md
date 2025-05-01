@@ -142,4 +142,9 @@ curl --location '{URL}/ecr-viewer/api/process-zip' \
 
 ## Database Setup
 
-Database setup, migration, and updates are handled by [Kysely](https://kysely.dev/docs/migrations) but must be triggered manually. Migrations are run by executing the command `npm run db:migrate:up` on the host that is running the eCR Viewer. If the latest migration has not been run the eCR Viewer will log an error and exit on startup.
+Database setup, migration, and updates are handled by [Kysely](https://kysely.dev/docs/migrations) but must be triggered manually. Migrations are run by calling the `/migrate-db` endpoint. If the latest migration has not been run the eCR Viewer will log an error and exit on startup. The migration secret is logged to the server and can optionally be set to a known value via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable.
+
+```bash
+curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
+--form 'migration_secret=<your migration secret>'
+```
