@@ -127,6 +127,7 @@ export type PathTypes = {
   procedureDate: string;
   procedureReason: string;
   diagnosticReports: DiagnosticReport;
+  diagnosticReportStatus: string;
   observations: Observation;
   labResultDiv: string;
   specimenCollectionTime: string;
@@ -142,6 +143,7 @@ export type PathTypes = {
   observationAntibiotic: string;
   observationOrganismMethod: string;
   observationSusceptibility: string;
+  observationResultStatus: string;
   organizations: Organization;
   patientTravelHistory: Observation;
   travelHistoryStartDate: string;
@@ -516,6 +518,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "DiagnosticReport",
     path: "Bundle.entry.resource.where(resourceType = 'DiagnosticReport')",
   },
+  diagnosticReportStatus: {
+    type: "string",
+    path: "extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding[0].display | status",
+  },
   observations: {
     type: "Observation",
     path: "Bundle.entry.resource.where(resourceType = 'Observation')",
@@ -561,6 +567,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "extension.where(url = 'methodCode originalText').valueString",
   },
   observationSusceptibility: { type: "string", path: "valueString" },
+  observationResultStatus: {
+    type: "string",
+    path: "extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding[0].display | status",
+  },
 
   // Organization
   organizations: {
