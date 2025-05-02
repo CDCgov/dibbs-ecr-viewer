@@ -13,7 +13,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
   const table = await getTable(db, dbNamespace(), "ecr_rr_conditions");
 
   const foreignKeyCheck =
-    !!table && table.columns.some((c) => c.name === "condition_id");
+    !!table && table.columns.some((c) => c.name === "condition_code");
 
   if (foreignKeyCheck) return;
 
@@ -33,7 +33,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
       BEGIN
         IF NEW.condition_code IS NULL THEN
           SELECT code INTO NEW.condition_code
-          FROM condition_reference
+          FROM ${sql.raw(schema)}.condition_reference
           WHERE condition_reference.condition_name = NEW.condition
           LIMIT 1;
         END IF;
@@ -44,25 +44,27 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
     await sql`
       CREATE TRIGGER trg_set_condition_code
-      BEFORE INSERT ON ecr_rr_conditions
+      BEFORE INSERT ON ${sql.raw(schema)}.ecr_rr_conditions
       FOR EACH ROW
       EXECUTE FUNCTION set_condition_code();
-      `.execute(_db);
+    `.execute(_db);
   } else if (dbDialect() === "sqlserver") {
     await sql`      
       CREATE TRIGGER trg_set_condition_code
-      ON ecr_rr_conditions
+      ON [${sql.raw(schema)}].[ecr_rr_conditions]
       INSTEAD OF INSERT
       AS
       BEGIN
-        INSERT INTO ecr_rr_conditions (uuid, eicr_id, condition, condition_id)
+        INSERT INTO [${sql.raw(
+          schema,
+        )}].[ecr_rr_conditions] (uuid, eicr_id, condition, condition_code)
         SELECT 
           i.uuid,
           i.eicr_id,
           i.condition,
-          COALESCE(i.condition_id, cr.code)
+          COALESCE(i.condition_code, cr.code)
         FROM inserted i
-        LEFT JOIN condition_reference cr
+        LEFT JOIN [${sql.raw(schema)}].[condition_reference] cr
           ON cr.condition_name = i.condition;
       END;
     `.execute(_db);
