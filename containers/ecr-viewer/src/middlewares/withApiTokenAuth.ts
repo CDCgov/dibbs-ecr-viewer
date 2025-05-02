@@ -23,7 +23,7 @@ export const withApiTokenAuth: MiddlewareFactory = (
   next: ChainableMiddleware,
 ) => {
   return async function (request: NextRequest) {
-    // User already authorized to view this page, skip main auth flow
+    // User already authorized to view this page, skip oidc token auth flow
     if (isNBSAuthed(request)) {
       return next(request);
     }
@@ -57,7 +57,6 @@ export const withApiTokenAuth: MiddlewareFactory = (
       const { keys } = await keyUriResp.json();
       providerCache.wellKnown = provider.wellKnown!;
       providerCache.key = createLocalJWKSet({ keys });
-      console.log({ oidcConfig, keys });
     }
 
     try {
@@ -80,7 +79,7 @@ export const withApiTokenAuth: MiddlewareFactory = (
  */
 export const isApiTokenAuthed = (request: NextRequest): boolean => {
   return (
-    !!request.nextUrl.pathname.startsWith(`/api/`) &&
+    request.nextUrl.pathname.startsWith(`/api/`) &&
     request.headers.get(API_AUTH_HEADER) === "true"
   );
 };
