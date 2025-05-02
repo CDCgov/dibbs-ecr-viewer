@@ -1,5 +1,5 @@
+import { DefaultAzureCredential } from "@azure/identity";
 import { Page, expect } from "@playwright/test";
-
 /**
  * Helper to lot into via keycloak and go to the viewer page
  * @param page page
@@ -12,18 +12,51 @@ const logInToKeycloak = async (page: Page) => {
   await page.getByRole("button", { name: "Sign in" }).click();
 };
 
+// Stores the token in the session storage and reloads the page
+const setSessionStorage = async (page: Page, tokens) => {
+  const cacheKeys = Object.keys(tokens);
+  for (const key of cacheKeys) {
+    const value = JSON.stringify(tokens[key]);
+    await page.context().addInitScript(
+      (arr) => {
+        window.sessionStorage.setItem(arr[0], arr[1]);
+      },
+      [key, value],
+    );
+  }
+  await page.reload();
+};
+
+let token;
 /**
  * Helper to lot into via Azure AD and go to the viewer page
  * @param page page
  */
 const logInToAd = async (page: Page) => {
-  // TODO: not implemented
-  await page
-    .getByLabel("Enter your email, phone, or Skype.")
-    .fill(process.env.AZURE_AD_USER!);
-  await page.getByRole("button", { name: "Next" }).click();
-  await page.getByLabel("Password").fill(process.env.AZURE_AD_PASSWORD!);
-  await page.getByRole("button", { name: "Sign In" }).click();
+  if (token) {
+    await setSessionStorage(page, token);
+  }
+  process.env.AZURE_CLIENT_ID = process.env.AUTH_CLIENT_ID;
+  process.env.AZURE_TENANT_ID = process.env.AUTH_ISSUER;
+  process.env.AZURE_CLIENT_SECRET = process.env.AUTH_CLIENT_SECRET;
+  const tokenCredential = new DefaultAzureCredential();
+  token = await tokenCredential.getToken(".default");
+  console.log({ token });
+
+  // const pca = new PublicClientApplication({auth: {
+  //   clientId: process.env.AUTH_CLIENT_ID!,
+  //   authority: `https://login.microsoftonline.com/${process.env.AUTH_ISSUER}`
+  // }});
+
+  // const usernamePasswordRequest = {
+  //   scopes: ['user.read', 'User.ReadBasic.All'],
+  //   username: 'b06be871-38e8-4ba7-bd74-01e91635629c',
+  //   password: process.env.AUTH_CLIENT_SECRET!,
+  // };
+  // await pca.acquireTokenByUsernamePassword(usernamePasswordRequest);
+  // tokenCache = pca.getTokenCache().getKVStore();
+
+  await setSessionStorage(page, token);
 };
 
 /**
