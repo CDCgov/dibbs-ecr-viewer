@@ -25,6 +25,7 @@ export interface ecr_rr_conditions {
   uuid: Generated<string>;
   eicr_id: string;
   condition: string;
+  condition_code: string | null;
 }
 
 export type ECRConditions = Selectable<ecr_rr_conditions>;
