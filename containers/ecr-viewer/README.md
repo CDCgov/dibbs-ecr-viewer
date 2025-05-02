@@ -74,7 +74,7 @@ The default IDP is keycloak for local development. The default user is `ecr-view
 
 ### Windows Setup
 
-The eCR Viewer is primailly deveoped on Mac silicon machines, See this [integreation testing wiki page](https://github.com/CDCgov/dibbs-ecr-viewer/wiki/Integration-Testing#running-integration-tests-locally-on-windows) for additional infomation for running on Windows machines.
+The eCR Viewer is primarily developed on Apple silicon machines, See this [integration testing wiki page](https://github.com/CDCgov/dibbs-ecr-viewer/wiki/Integration-Testing#running-integration-tests-locally-on-windows) for additional infomation for running on Windows machines.
 
 ### Updating Seed Data
 
