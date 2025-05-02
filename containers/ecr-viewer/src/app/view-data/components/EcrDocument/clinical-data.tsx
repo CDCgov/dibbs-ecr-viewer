@@ -76,7 +76,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
   const emergencyOutbreakInfo: DisplayDataProps[] = [
     {
       title: "Emergency Outbreak Info",
-      value: evaluateValue(fhirBundle, fhirPathMappings.emergencyOutbreakInfo),
+      value: evaluateOutbreakInfo(fhirBundle),
     },
   ];
 
@@ -445,4 +445,36 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
       fixed={false}
     />
   );
+};
+
+const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
+  const outbreakInfos = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.emergencyOutbreakInfo,
+  );
+
+  const value = outbreakInfos.reduce((acc, outbreakInfo) => {
+    const lines = [];
+    if (outbreakInfo.effectiveDateTime) {
+      lines.push(
+        "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
+      );
+    }
+    // Get the first display value from the coding array
+    for (const coding of outbreakInfo.code?.coding || []) {
+      if (coding.display) {
+        lines.push("Type: " + coding.display);
+        break;
+      }
+    }
+    const value = evaluateValue(outbreakInfo, fhirPathMappings.vitalSignValue);
+
+    if (value) {
+      lines.push("Result: " + value);
+    }
+
+    return lines.join("\n");
+  }, "");
+
+  return value;
 };
