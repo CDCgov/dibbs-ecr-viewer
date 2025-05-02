@@ -83,7 +83,7 @@ const SymptomsAndProblems = ({
             className="table-clinical-problems"
           />
         </div>
-        <div data-testid="emrgency-outbreak-info">
+        <div data-testid="emergency-outbreak-info">
           {emergencyOutbreakInfo.map((item, index) => (
             <DataDisplay item={item} key={index} />
           ))}

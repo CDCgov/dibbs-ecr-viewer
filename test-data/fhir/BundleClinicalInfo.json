@@ -582,6 +582,47 @@
         "method": "PUT",
         "url": "MedicationAdministration/367be6b3-75f2-2053-63e4-f0a6f1d6bff1"
       }
+    },
+    {
+      "fullUrl": "urn:uuid:26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:ab1791b0-5c71-11db-b0de-0800200c9a54"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "display": "Employee desk distance from mail sorter"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/f35db4f9-0d60-4d3d-ac02-75affb3f2059"
+        },
+        "valueQuantity": {
+          "value": 2,
+          "unit": "m"
+        },
+        "effectivePeriod": {
+          "start": "2020-11-01"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/26d05bcc-1b0f-fc8a-a85e-4c6c6512478f"
+      }
     }
   ]
 }
