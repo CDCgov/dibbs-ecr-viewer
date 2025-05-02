@@ -77,5 +77,10 @@ services:
     environment:
       - CONFIG_NAME=${CONFIG_NAME}
       - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
+      - AUTH_CLIENT_ID
+      - AUTH_CLIENT_SECRET
+      - AUTH_ISSUER
+      - AUTH_USER=${AUTH_USER:-ecr-viewer-admin}
+      - AUTH_PASSWORD=${AUTH_PASSWORD:-pw}
     extra_hosts:
       - host.docker.internal:host-gateway

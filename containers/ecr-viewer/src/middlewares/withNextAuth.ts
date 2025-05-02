@@ -5,6 +5,9 @@ import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
 
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
+import { isApiTokenAuthed } from "./withApiTokenAuth";
+import { isNBSAuthed } from "./withNbsAuth";
+
 /**
  * Middleware for handling next authorization
  * @param next Next middleware in the chain
@@ -12,10 +15,7 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
  */
 export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
-    if (
-      !!process.env.NBS_PUB_KEY &&
-      request.headers.get("x-nbs-authorized") === "true"
-    ) {
+    if (isNBSAuthed(request) || isApiTokenAuthed(request)) {
       // User already authorized to view this page, skip main auth flow
       return next(request);
     }
@@ -38,6 +38,16 @@ export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
       pages: { signIn: `/signin` },
     });
     if (response instanceof Response) {
+      // Redirect not helpful for api routes, just deny access
+      if (request.nextUrl.pathname.startsWith(`/api/`)) {
+        console.log({ response });
+        // TODO think about this more
+        return NextResponse.json(
+          { message: "API uses token authentication" },
+          { status: 401 },
+        );
+      }
+
       return response as NextResponse;
     } else {
       return next(request);

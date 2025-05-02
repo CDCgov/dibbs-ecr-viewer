@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
+const NBS_AUTH_HEADER = "x-nbs-authorized";
+
 /**
  * Middleware for handling NBS authorization
  * @param next Next middleware in the chain
@@ -17,14 +19,33 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
 
     // NBS auth can only be used for ecr viewer pages
     const { pathname } = request.nextUrl;
-    if (!pathname.endsWith(`/view-data`)) return next(request);
+    let key: string | undefined = undefined;
+    if (pathname.endsWith(`/view-data`)) {
+      key = process.env.NBS_PUB_KEY;
+    } else if (pathname.startsWith(`/api`)) {
+      key = process.env.NBS_API_PUB_KEY;
+    }
 
-    const isAuthorized = await checkIsAuthorized(request);
+    // No NBS auth to do here
+    if (!key) return next(request);
+
+    const isAuthorized = await checkIsAuthorized(request, key);
 
     // set the header on the request since we need to run nbs auth before next auth
-    request.headers.set("x-nbs-authorized", `${isAuthorized}`);
+    request.headers.set(NBS_AUTH_HEADER, `${isAuthorized}`);
     return next(request);
   };
+};
+
+/**
+ *
+ * @param request Request being processed
+ * @returns whether this request has already been auth'ed via NBS
+ */
+export const isNBSAuthed = (request: NextRequest): boolean => {
+  return (
+    !!process.env.NBS_PUB_KEY && request.headers.get(NBS_AUTH_HEADER) === "true"
+  );
 };
 
 /**
@@ -55,19 +76,17 @@ const setAuthCookie = (req: NextRequest) => {
  *   returns a JSON response indicating that authentication is required with a 401 status code.
  * @param req - The incoming Next.js request object, which includes the request cookies
  *   and URL information used for extracting the authentication token and determining the request path.
+ * @param key - The public key that should be used to verify the token
  * @returns - Whether the user is authorized.
  */
-const checkIsAuthorized = async (req: NextRequest) => {
+const checkIsAuthorized = async (req: NextRequest, key: string) => {
   const auth = req.cookies.get("auth-token")?.value;
 
   if (!auth) {
     return false;
   }
   try {
-    await jwtVerify(
-      auth,
-      await importSPKI(process.env.NBS_PUB_KEY as string, "RS256"),
-    );
+    await jwtVerify(auth, await importSPKI(key as string, "RS256"));
   } catch (e) {
     return false;
   }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withApiTokenAuth } from "./middlewares/withApiTokenAuth";
 import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
 import { withUrlParamChecks } from "./middlewares/withUrlParamChecks";
@@ -52,18 +53,24 @@ export const chainMiddleware = (
 /**
  * Composed middleware handlers
  */
-export default chainMiddleware([withNbsAuth, withNextAuth, withUrlParamChecks]);
+export default chainMiddleware([
+  withNbsAuth,
+  withApiTokenAuth,
+  withNextAuth,
+  withUrlParamChecks,
+]);
 
 export const config = {
   matcher: [
     /*
      * Run middleware on all request paths except these:
-     * - Api routes
+     * - Public API routes
+     * - Error pages
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - images (static files in public/images/ directory)
      */
-    "/((?!api|error|_next/static|_next/image|public|img|uswds|images).*)",
+    "/((?!api/health-check|api/auth|error|_next/static|_next/image|public|img|uswds|images).*)",
     /**
      * Fix issue where the pattern above was causing middleware
      * to not run on the homepage:
