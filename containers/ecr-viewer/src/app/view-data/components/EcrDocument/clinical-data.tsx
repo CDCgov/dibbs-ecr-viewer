@@ -459,7 +459,10 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
       lines.push(
         "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
       );
+    } else if (outbreakInfo.effectivePeriod) {
+      lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
     }
+
     // Get the first display value from the coding array
     for (const coding of outbreakInfo.code?.coding || []) {
       if (coding.display) {
