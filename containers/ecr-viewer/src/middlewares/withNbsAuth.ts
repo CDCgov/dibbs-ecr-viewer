@@ -18,7 +18,10 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
     if (!process.env.NBS_PUB_KEY && !process.env.NBS_API_PUB_KEY)
       return next(request);
 
+    console.log("have key");
+
     const nbsAuthResp = setAuthCookie(request);
+    console.log("set cookie");
     if (nbsAuthResp) return nbsAuthResp;
 
     // NBS auth can only be used for ecr viewer pages
@@ -29,11 +32,13 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
     } else if (pathname.includes(`/api/`)) {
       key = process.env.NBS_API_PUB_KEY;
     }
+    console.log({ pathname, key });
 
     // No NBS auth to do here
     if (!key) return next(request);
 
     const isAuthorized = await checkIsAuthorized(request, key);
+    console.log({ isAuthorized });
 
     // set the header on the request since we need to run nbs auth before next auth
     request.headers.set(NBS_AUTH_HEADER, `${isAuthorized}`);
@@ -48,7 +53,8 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
  */
 export const isNBSAuthed = (request: NextRequest): boolean => {
   return (
-    !!process.env.NBS_PUB_KEY && request.headers.get(NBS_AUTH_HEADER) === "true"
+    (!!process.env.NBS_PUB_KEY || !!process.env.NBS_API_PUB_KEY) &&
+    request.headers.get(NBS_AUTH_HEADER) === "true"
   );
 };
 
@@ -85,12 +91,13 @@ const setAuthCookie = (req: NextRequest) => {
  */
 const checkIsAuthorized = async (req: NextRequest, key: string) => {
   const auth = req.cookies.get("auth-token")?.value;
+  console.log({ auth });
 
   if (!auth) {
     return false;
   }
   try {
-    await jwtVerify(auth, await importSPKI(key as string, "RS256"));
+    await jwtVerify(auth, await importSPKI(key, "RS256"));
   } catch (e) {
     return false;
   }
