@@ -97,7 +97,7 @@ export type PathTypes = {
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
   vitalSignType: CodeableConcept;
-  vitalSignValue: ValueX;
+  value: ValueX;
   vitalSignDateTime: ValueX;
   resolve: unknown;
   activeProblems: Condition;
@@ -403,7 +403,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "CodeableConcept",
     path: "code",
   },
-  vitalSignValue: {
+  value: {
     type: "ValueX",
     path: "value",
   },
