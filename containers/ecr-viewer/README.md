@@ -84,7 +84,7 @@ Sample eICRs are included in `containers/ecr-viewer/seed-scripts/baseECR/`. If y
 2. Run `npm run convert-seed-data` to re-run the FHIR conversion of the seed eCRs
 3. Run `npm run local-dev` to re-run the eCR Viewer with the newly converted data.
 
-By default, the seed data in the `LA` subfolder converts. To convert other (or additional) subfolders, set the `SEED_DATA_DIRECTORIES` environment variable to a comma delimited list of subfolders (e.g. `LA,Dir2` or `Dir2`).
+By default, the seed data in the `star-wars` subfolder converts. To convert other (or additional) subfolders, set the `SEED_DATA_DIRECTORIES` environment variable to a comma delimited list of subfolders (e.g. `star-wars,Dir2` or `Dir2`).
 
 ### Developer Commands
 
