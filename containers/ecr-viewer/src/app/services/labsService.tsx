@@ -677,7 +677,7 @@ function getFormattedLabsContent(
       title: "Anatomical Location/Laterality",
       value: returnFieldValueFromLabHtmlString(
         labReportJson,
-        "Anatomical Location / Laterality"
+        "Anatomical Location / Laterality",
       ),
       className: "lab-text-content",
     },
@@ -685,7 +685,7 @@ function getFormattedLabsContent(
       title: "Collection Method/Volume",
       value: returnFieldValueFromLabHtmlString(
         labReportJson,
-        "Collection Method / Volume"
+        "Collection Method / Volume",
       ),
       className: "lab-text-content",
     },
@@ -693,7 +693,7 @@ function getFormattedLabsContent(
       title: "Resulting Agency Comment",
       value: returnFieldValueFromLabHtmlString(
         labReportJson,
-        "Resulting Agency Comment"
+        "Resulting Agency Comment",
       ),
       className: "lab-text-content",
     },
@@ -701,7 +701,7 @@ function getFormattedLabsContent(
       title: "Authorizing Provider",
       value: returnFieldValueFromLabHtmlString(
         labReportJson,
-        "Authorizing Provider"
+        "Authorizing Provider",
       ),
       className: "lab-text-content",
     },
@@ -712,7 +712,9 @@ function getFormattedLabsContent(
     },
     {
       title: "Result Status",
-      value: evaluateValue(report, fhirPathMappings.diagnosticReportStatus) || noData,
+      value:
+        evaluateValue(report, fhirPathMappings.diagnosticReportStatus) ||
+        noData,
       className: "lab-text-content",
     },
     {
