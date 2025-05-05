@@ -13,13 +13,18 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   await _db.schema
     .alterTable("ecr_rr_conditions")
-    .addForeignKeyConstraint("eicr_id_fk", ["eicr_id"], "ecr_data", ["eicr_id"])
+    .addForeignKeyConstraint(
+      "ecr_rr_conditions_fk_eicr_id",
+      ["eicr_id"],
+      "ecr_data",
+      ["eicr_id"],
+    )
     .execute();
 
   await _db.schema
     .alterTable("ecr_rr_rule_summaries")
     .addForeignKeyConstraint(
-      "ecr_rr_conditions_id_fk",
+      "ecr_rr_rule_summaries_fk_ecr_rr_conditions",
       ["ecr_rr_conditions_id"],
       "ecr_rr_conditions",
       ["uuid"],
@@ -35,10 +40,10 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
   await _db.schema
     .alterTable("ecr_rr_rule_summaries")
-    .dropConstraint("ecr_rr_conditions_id_fk")
+    .dropConstraint("ecr_rr_rule_summaries_fk_ecr_rr_conditions")
     .execute();
   await _db.schema
     .alterTable("ecr_rr_conditions")
-    .dropConstraint("eicr_id_fk")
+    .dropConstraint("ecr_rr_conditions_fk_eicr_id")
     .execute();
 }

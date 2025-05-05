@@ -57,7 +57,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     await _db.schema
       .createTable("ecr_rr_conditions")
       .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
-      .addColumn("eicr_id", "varchar(255)", (cb) => cb.notNull())
+      .addColumn("eicr_id", "varchar(200)", (cb) => cb.notNull())
       .addColumn("condition", getSql("maxVarchar"))
       .execute();
 
