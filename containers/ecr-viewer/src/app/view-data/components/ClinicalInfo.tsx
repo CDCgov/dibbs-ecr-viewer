@@ -69,7 +69,11 @@ const SymptomsAndProblems = ({
   problems: DisplayDataProps[];
   emergencyOutbreakInfo: DisplayDataProps[];
 }) => {
-  if (symptoms?.length > 0 || problems?.length > 0) {
+  if (
+    symptoms?.length > 0 ||
+    problems?.length > 0 ||
+    emergencyOutbreakInfo?.length > 0
+  ) {
     return (
       <AccordionSubSection title="Symptoms and Problems">
         <div data-testid="reason-for-visit">
