@@ -1,5 +1,3 @@
-// Adapted from 'next-auth' to work with chained middleware approadh
-
 import { createLocalJWKSet, createRemoteJWKSet, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,10 +8,9 @@ import { isNBSAuthed } from "./withNbsAuth";
 
 const API_AUTH_HEADER = "x-api-authorized";
 
-const emptyCache = { wellKnown: "", key: createLocalJWKSet({ keys: [] }) };
+const providerCache = { wellKnown: "", key: createLocalJWKSet({ keys: [] }) };
 
-const providerCache = { ...emptyCache };
-
+// update the public key info
 const updateProviderCache = async () => {
   const provider = providerMap[0];
   const oidcConfigResp = await fetch(provider.wellKnown!);
@@ -71,13 +68,11 @@ export const withApiTokenAuth: MiddlewareFactory = (
         clockTolerance: 15,
       });
       request.headers.set(API_AUTH_HEADER, "true");
-      return next(request);
     } catch {
-      return NextResponse.json(
-        { message: "API use requires authentication" },
-        { status: 401 },
-      );
+      request.headers.set(API_AUTH_HEADER, "false");
     }
+
+    return next(request);
   };
 };
 
