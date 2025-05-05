@@ -43,6 +43,7 @@ describe("user table", () => {
       })
       .execute();
 
+    jest.spyOn(console, "error").mockImplementation();
     // Violates pkey
     await expect(
       db
@@ -109,6 +110,8 @@ describe("program_area table", () => {
       name: "Different Disease",
       author_uuid: adminId,
     };
+
+    jest.spyOn(console, "error").mockImplementation();
 
     // Author FK doesn't exist yet
     await expect(
