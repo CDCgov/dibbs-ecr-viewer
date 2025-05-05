@@ -70,6 +70,8 @@ services:
     depends_on:
       orchestration-service:
         condition: service_healthy
+      keycloak:
+        condition: service_healthy
     ports:
       - "8081:8081"
     volumes:

@@ -1,6 +1,6 @@
 // Adapted from 'next-auth' to work with chained middleware approadh
 
-import { createLocalJWKSet, jwtVerify } from "jose";
+import { createLocalJWKSet, createRemoteJWKSet, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
 import { providerMap } from "@/app/api/auth/providers";
@@ -13,6 +13,16 @@ const API_AUTH_HEADER = "x-api-authorized";
 const emptyCache = { wellKnown: "", key: createLocalJWKSet({ keys: [] }) };
 
 const providerCache = { ...emptyCache };
+
+const updateProviderCache = async () => {
+  const provider = providerMap[0];
+  const oidcConfigResp = await fetch(provider.wellKnown!);
+  const oidcConfig = await oidcConfigResp.json();
+  providerCache.wellKnown = provider.wellKnown!;
+  providerCache.key = createRemoteJWKSet(new URL(oidcConfig?.jwks_uri));
+};
+
+updateProviderCache();
 
 /**
  * Middleware for handling next authorization
@@ -51,16 +61,13 @@ export const withApiTokenAuth: MiddlewareFactory = (
     // populate cache if needed
     const provider = providerMap[0];
     if (provider.wellKnown !== providerCache.wellKnown) {
-      const oidcConfigResp = await fetch(provider.wellKnown!);
-      const oidcConfig = await oidcConfigResp.json();
-      const keyUriResp = await fetch(oidcConfig?.jwks_uri);
-      const { keys } = await keyUriResp.json();
-      providerCache.wellKnown = provider.wellKnown!;
-      providerCache.key = createLocalJWKSet({ keys });
+      await updateProviderCache();
     }
 
     try {
-      await jwtVerify(authToken, providerCache.key);
+      await jwtVerify(authToken, providerCache.key, {
+        clockTolerance: 15,
+      });
       request.headers.set(API_AUTH_HEADER, `true`);
       return next(request);
     } catch {
