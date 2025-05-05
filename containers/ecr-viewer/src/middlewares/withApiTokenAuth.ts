@@ -22,8 +22,6 @@ const updateProviderCache = async () => {
   providerCache.key = createRemoteJWKSet(new URL(oidcConfig?.jwks_uri));
 };
 
-updateProviderCache();
-
 /**
  * Middleware for handling next authorization
  * @param next Next middleware in the chain

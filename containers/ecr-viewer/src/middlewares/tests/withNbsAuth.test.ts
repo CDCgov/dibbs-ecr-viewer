@@ -10,6 +10,7 @@ import { withNbsAuth } from "@/middlewares/withNbsAuth";
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),
   jwtVerify: jest.fn(() => true),
+  createLocalJWKSet: jest.fn(() => true),
 }));
 
 const middleware = chainMiddleware([withNbsAuth]);
