@@ -520,7 +520,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   diagnosticReportStatus: {
     type: "string",
-    path: "extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding[0].display | status",
+    path: "iif(extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding[0].display.exists(), extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding[0].display, status)",
   },
   observations: {
     type: "Observation",
@@ -569,7 +569,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   observationSusceptibility: { type: "string", path: "valueString" },
   observationResultStatus: {
     type: "string",
-    path: "extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding[0].display | status",
+    path: "iif(extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding[0].display.exists(), extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding[0].display, status)",
   },
 
   // Organization
