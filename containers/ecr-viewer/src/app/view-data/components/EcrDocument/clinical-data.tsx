@@ -428,7 +428,7 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
       infoPath: "vitalSignType",
       applyToValue: toSentenceCase,
     },
-    { columnName: "Result", infoPath: "vitalSignValue" },
+    { columnName: "Result", infoPath: "value" },
     {
       columnName: "Date/Time",
       infoPath: "vitalSignDateTime",
@@ -470,13 +470,13 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
         break;
       }
     }
-    const value = evaluateValue(outbreakInfo, fhirPathMappings.vitalSignValue);
+    const value = evaluateValue(outbreakInfo, fhirPathMappings.value);
 
     if (value) {
       lines.push("Result: " + value);
     }
 
-    return lines.join("\n");
+    return acc + lines.join("\n");
   }, "");
 
   return value;
