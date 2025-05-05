@@ -44,6 +44,7 @@ describe("user table", () => {
       .execute();
 
     jest.spyOn(console, "error").mockImplementation();
+
     // Violates pkey
     await expect(
       db
