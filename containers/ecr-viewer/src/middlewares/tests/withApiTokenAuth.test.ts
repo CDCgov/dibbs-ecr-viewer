@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { importSPKI, jwtVerify } from "jose";
+import { jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 
 import { chainMiddleware } from "@/middleware";
@@ -12,6 +12,16 @@ jest.mock("jose", () => ({
   jwtVerify: jest.fn(() => true),
   createLocalJWKSet: jest.fn(() => true),
   createRemoteJWKSet: jest.fn(),
+}));
+
+jest.mock("../../app/api/auth/providers", () => ({
+  providerMap: [
+    {
+      id: "keycloak",
+      name: "Keycloak",
+      wellKnown: "http://example.com",
+    },
+  ],
 }));
 
 const middleware = chainMiddleware([withApiTokenAuth]);
@@ -35,50 +45,73 @@ describe("API Token Auth Middleware", () => {
   });
 
   it("should authorize the api endpoints with auth", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest
+        .fn()
+        .mockResolvedValue({ jwks_uri: "http://url.to/somewhere" }),
+    }) as jest.Mock;
+
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/process-zip/",
     );
-    req.cookies.set("auth-token", "foobar");
+    req.headers.set("Authorization", "Bearer foobar");
 
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe("true");
-    expect(resp?.status).toBe(200);
-  });
-
-  it("should authorize the api endpoints with auth", async () => {
-    process.env.NBS_PUB_KEY = "FOOBAR";
-
-    const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/view-data?id=1234",
-    );
-    req.cookies.set("auth-token", "foobar");
-
-    const resp = await middleware(req);
-
     expect(jwtVerify).toHaveBeenCalled();
-    expect(importSPKI).toHaveBeenCalledWith("FOOBAR", "RS256");
-    expect(req?.headers.get("x-nbs-authorized")).toBe("true");
+    expect(req?.headers.get("x-api-authorized")).toBe("true");
     expect(resp?.status).toBe(200);
   });
 
-  it("should not do anything on a non-nbs auth'ed page", async () => {
+  it("should not do anything on a non-api auth'ed page", async () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer/");
-    req.cookies.set("auth-token", "foobar");
+    req.headers.set("Authorization", "Bearer foobar");
 
     // make sure passed in header is ignored
-    req.headers.set("x-nbs-authorized", "true");
+    req.headers.set("x-api-authorized", "true");
 
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
+    expect(req?.headers.get("x-api-authorized")).toBe(null);
     expect(resp?.status).toBe(200);
   });
 
   it("should not authorize with no token", async () => {
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/view-data?id=1234",
+      "https://www.example.com/ecr-viewer/api/process-zip",
     );
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
+    expect(req?.headers.get("x-api-authorized")).toBe("false");
+    expect(resp?.status).toBe(200);
+  });
+
+  it("should respect nbs auth status - true", async () => {
+    process.env.NBS_PUB_KEY = "hi there";
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer/api/process-zip",
+    );
+    req.headers.set("Authorization", "Bearer foobar");
+    req.headers.set("x-nbs-authorized", "true");
+    // make sure passed in header is ignored
+    req.headers.set("x-api-authorized", "true");
+
+    const resp = await middleware(req);
+    expect(jwtVerify).not.toHaveBeenCalled();
+    expect(req?.headers.get("x-api-authorized")).toBe(null);
+    expect(resp?.status).toBe(200);
+  });
+
+  it("should respect nbs auth status - false", async () => {
+    process.env.NBS_PUB_KEY = "hi there";
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer/api/process-zip",
+    );
+    req.headers.set("Authorization", "Bearer foobar");
+    req.headers.set("x-nbs-authorized", "false");
+    // make sure passed in header is ignored
+    req.headers.set("x-api-authorized", "false");
+
+    const resp = await middleware(req);
+    expect(jwtVerify).toHaveBeenCalled();
+    expect(req?.headers.get("x-api-authorized")).toBe("true");
     expect(resp?.status).toBe(200);
   });
 });

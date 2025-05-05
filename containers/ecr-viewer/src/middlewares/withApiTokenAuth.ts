@@ -40,7 +40,7 @@ export const withApiTokenAuth: MiddlewareFactory = (
     }
 
     // Token auth only available for api routes
-    if (!request.nextUrl.pathname.startsWith(`/api/`)) {
+    if (!request.nextUrl.pathname.includes(`/api/`)) {
       return next(request);
     }
 
@@ -48,6 +48,7 @@ export const withApiTokenAuth: MiddlewareFactory = (
     const [method, authToken] =
       request.headers.get("Authorization")?.split(" ") || [];
     if (method !== "Bearer" || !authToken) {
+      request.headers.set(API_AUTH_HEADER, "false");
       return next(request);
     }
 
@@ -69,7 +70,7 @@ export const withApiTokenAuth: MiddlewareFactory = (
       await jwtVerify(authToken, providerCache.key, {
         clockTolerance: 15,
       });
-      request.headers.set(API_AUTH_HEADER, `true`);
+      request.headers.set(API_AUTH_HEADER, "true");
       return next(request);
     } catch {
       return NextResponse.json(
