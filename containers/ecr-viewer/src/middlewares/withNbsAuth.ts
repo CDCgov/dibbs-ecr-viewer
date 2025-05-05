@@ -12,6 +12,9 @@ const NBS_AUTH_HEADER = "x-nbs-authorized";
  */
 export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
+    // make sure only internal values are valid
+    request.headers.delete(NBS_AUTH_HEADER);
+
     if (!process.env.NBS_PUB_KEY && !process.env.NBS_API_PUB_KEY)
       return next(request);
 

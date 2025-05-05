@@ -31,6 +31,9 @@ export const withApiTokenAuth: MiddlewareFactory = (
   next: ChainableMiddleware,
 ) => {
   return async function (request: NextRequest) {
+    // make sure only internal values are valid
+    request.headers.delete(API_AUTH_HEADER);
+
     // User already authorized to view this page, skip oidc token auth flow
     if (isNBSAuthed(request)) {
       return next(request);
@@ -84,7 +87,7 @@ export const withApiTokenAuth: MiddlewareFactory = (
  */
 export const isApiTokenAuthed = (request: NextRequest): boolean => {
   return (
-    request.nextUrl.pathname.startsWith(`/api/`) &&
+    request.nextUrl.pathname.includes(`/api/`) &&
     request.headers.get(API_AUTH_HEADER) === "true"
   );
 };

@@ -47,6 +47,16 @@ describe("Next Auth Middleware", () => {
     );
   });
 
+  it("should send a 401 when not authorized to api route", async () => {
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer/api/process-zip",
+      { method: "post" },
+    );
+
+    const resp = await middleware(req);
+    expect(resp?.status).toBe(401);
+  });
+
   it("should not redirect when authorized", async () => {
     (getToken as jest.Mock).mockResolvedValue("123");
     const req = new NextRequest("https://www.example.com/ecr-viewer");
@@ -90,6 +100,32 @@ describe("Next Auth Middleware", () => {
         "https://www.example.com/ecr-viewer/api/fhir-data/",
       );
       req.headers.set("x-nbs-authorized", "false");
+
+      const resp = await middleware(req);
+      expect(resp?.status).toBe(200);
+      expect(getToken).toHaveBeenCalled();
+    });
+  });
+
+  describe("when used in conjucntion with API token auth", () => {
+    it("should pass through if API authorized", async () => {
+      (getToken as jest.Mock).mockResolvedValue("123");
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/fhir-data/",
+      );
+      req.headers.set("x-api-authorized", "true");
+
+      const resp = await middleware(req);
+      expect(resp?.status).toBe(200);
+      expect(getToken).not.toHaveBeenCalled();
+    });
+
+    it("should delegate to next auth when not api token authorized", async () => {
+      (getToken as jest.Mock).mockResolvedValue("123");
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/fhir-data/",
+      );
+      req.headers.set("x-api-authorized", "false");
 
       const resp = await middleware(req);
       expect(resp?.status).toBe(200);

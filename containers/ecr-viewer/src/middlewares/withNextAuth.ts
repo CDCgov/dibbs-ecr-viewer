@@ -39,9 +39,7 @@ export const withNextAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
     });
     if (response instanceof Response) {
       // Redirect not helpful for api routes, just deny access
-      if (request.nextUrl.pathname.startsWith(`/api/`)) {
-        console.log({ response });
-        // TODO think about this more
+      if (request.nextUrl.pathname.includes(`/api/`)) {
         return NextResponse.json(
           { message: "API uses token authentication" },
           { status: 401 },
