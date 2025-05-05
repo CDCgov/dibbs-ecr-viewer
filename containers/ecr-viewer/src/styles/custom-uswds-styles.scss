@@ -43,16 +43,22 @@
     }
 
     .usa-nav-container {
-      max-width: 65rem;
       margin-left: 0px;
       padding: 0.5rem 1.5rem;
+
+      &::after {
+        content: none;
+      }
     }
   }
 
   .usa-nav-container {
-    max-width: 65rem;
     margin-left: 0px;
     padding: 0.5rem 1.5rem;
+
+    &::after {
+      content: none;
+    }
   }
 
   h1 {

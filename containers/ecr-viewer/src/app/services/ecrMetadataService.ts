@@ -1,6 +1,15 @@
-import { Bundle, Organization } from "fhir/r4";
+import { Bundle, Observation, Organization } from "fhir/r4";
 
-import { CompleteData, evaluateData } from "@/app/utils/data-utils";
+import {
+  CompleteData,
+  noData,
+  evaluateData,
+  RenderableNode,
+} from "@/app/utils/data-utils";
+import {
+  eicrProcessingReasonMap,
+  ersdWarningSuggestedSolutionsMap,
+} from "@/app/utils/eicr-processing-utils";
 import {
   evaluateAll,
   evaluateOne,
@@ -31,15 +40,31 @@ interface EcrMetadata {
   ecrCustodianDetails: CompleteData;
   rrDetails: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
-  eRSDWarnings: ERSDWarning[];
+  eRSDProcessingInfo: ERSDInfo | undefined;
+}
+
+export interface ERSDInfo {
+  success: boolean;
+  eRSDWarning?: ERSDWarning;
 }
 
 export interface ERSDWarning {
   warning: string;
-  versionUsed: string;
-  expectedVersion: string;
-  suggestedSolution: string;
+  versionUsed?: RenderableNode;
+  versionExpected?: RenderableNode;
+  suggestedSolution?: RenderableNode;
 }
+
+const unknownWarningText = "eICR processed with a warning or error (unknown)";
+export const unknownWarning: ERSDInfo = {
+  success: false,
+  eRSDWarning: {
+    warning: unknownWarningText,
+    versionUsed: noData,
+    versionExpected: noData,
+    suggestedSolution: noData,
+  },
+};
 
 /**
  * Evaluates eCR metadata from the FHIR bundle and formats it into structured data for display.
@@ -96,35 +121,68 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     }
   };
 
-  const fhirERSDWarnings = evaluateAll(
+  const fhirEICRProcessingStatus = evaluateValue(
     fhirBundle,
-    fhirPathMappings.eRSDwarnings,
+    fhirPathMappings.eICRProcessingStatus,
   );
-  const eRSDTextList: ERSDWarning[] = [];
+  const fhirEICRProcessingStatusReasonObs = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.eICRProcessingStatusReason,
+  );
 
-  for (const warning of fhirERSDWarnings) {
-    if (warning.code === "RRVS34") {
-      eRSDTextList.push({
-        warning:
-          "Sending organization is using an malformed eRSD (RCTC) version",
-        versionUsed: "2020-06-23",
-        expectedVersion:
-          "Sending organization should be using one of the following: 2023-10-06, 1.2.2.0, 3.x.x.x.",
-        suggestedSolution:
-          "The trigger code version your organization is using could not be determined. The trigger codes may be out date. Please have your EHR administrators update the version format for complete eCR functioning.",
-      });
-    } else if (warning.code === "RRVS29") {
-      eRSDTextList.push({
-        warning:
-          "Sending organization is using an outdated eRSD (RCTC) version",
-        versionUsed: "2020-06-23",
-        expectedVersion:
-          "Sending organization should be using one of the following: 2023-10-06, 1.2.2.0, 3.x.x.x.",
-        suggestedSolution:
-          "The trigger code version your organization is using is out-of-date. Please have your EHR administration install the current version for complete eCR functioning.",
-      });
+  function geteRSDInfo(
+    processingStatus: string | undefined,
+    reasonObs: Observation | undefined,
+  ): ERSDInfo | undefined {
+    if (processingStatus === "RRVS19") {
+      return { success: true };
+    } else if (processingStatus && !reasonObs) {
+      return unknownWarning;
+    } else if (!processingStatus && !reasonObs) {
+      return undefined;
     }
+
+    const coding = reasonObs?.valueCodeableConcept?.coding?.[0];
+    const warningCode = coding?.code ?? "";
+    const warningName =
+      coding?.display ||
+      eicrProcessingReasonMap[warningCode] ||
+      unknownWarningText;
+
+    let versionUsed: string | undefined;
+    let versionExpected: string | undefined;
+
+    reasonObs?.component?.forEach((component) => {
+      const detailVal = component.valueString;
+      const detailCode = component.code?.coding?.[0]?.code;
+      const detailDisplay = component.code?.coding?.[0]?.display;
+
+      if (!detailCode) return;
+
+      if (detailCode === "RRVS33") {
+        versionExpected = detailVal;
+      } else {
+        versionUsed = detailDisplay
+          ? `${detailDisplay}: ${detailVal}`
+          : detailVal;
+      }
+    });
+    return {
+      success: false,
+      eRSDWarning: {
+        warning: warningName,
+        versionUsed: versionUsed || noData,
+        versionExpected: versionExpected || noData,
+        suggestedSolution:
+          ersdWarningSuggestedSolutionsMap[warningCode] || noData,
+      },
+    };
   }
+
+  const eRSDProcessingInfo: ERSDInfo | undefined = geteRSDInfo(
+    fhirEICRProcessingStatus,
+    fhirEICRProcessingStatusReasonObs,
+  );
 
   const eicrDetails: DisplayDataProps[] = [
     {
@@ -178,7 +236,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
     rrDetails: reportableConditionsList,
-    eRSDWarnings: eRSDTextList,
+    eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
       evaluateData(details),
     ),

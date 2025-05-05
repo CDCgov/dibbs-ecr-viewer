@@ -1,6 +1,8 @@
 # Getting Started with DIBBs eCR Viewer
 
-If you're looking to contribute to development on the eCR Viewer, you're in the right place. If you're trying to run a deployment of the Viewer instead, please refer to our [guide.md](./guide.md)
+**If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guide.md)**
+
+If you're looking to contribute to development on the eCR Viewer, you're in the right place.
 
 ## Introduction
 
@@ -72,7 +74,7 @@ The default IDP is keycloak for local development. The default user is `ecr-view
 
 ### Windows Setup
 
-The eCR Viewer is primailly deveoped on Mac silicon machines, See this [integreation testing wiki page](https://github.com/CDCgov/dibbs-ecr-viewer/wiki/Integration-Testing#running-integration-tests-locally-on-windows) for additional infomation for running on Windows machines.
+The eCR Viewer is primarily developed on Apple silicon machines, See this [integration testing wiki page](https://github.com/CDCgov/dibbs-ecr-viewer/wiki/Integration-Testing#running-integration-tests-locally-on-windows) for additional infomation for running on Windows machines.
 
 ### Updating Seed Data
 
@@ -82,7 +84,7 @@ Sample eICRs are included in `containers/ecr-viewer/seed-scripts/baseECR/`. If y
 2. Run `npm run convert-seed-data` to re-run the FHIR conversion of the seed eCRs
 3. Run `npm run local-dev` to re-run the eCR Viewer with the newly converted data.
 
-By default, the seed data in the `LA` subfolder converts. To convert other (or additional) subfolders, set the `SEED_DATA_DIRECTORIES` environment variable to a comma delimited list of subfolders (e.g. `LA,Dir2` or `Dir2`).
+By default, the seed data in the `star-wars` subfolder converts. To convert other (or additional) subfolders, set the `SEED_DATA_DIRECTORIES` environment variable to a comma delimited list of subfolders (e.g. `star-wars,Dir2` or `Dir2`).
 
 ### Developer Commands
 

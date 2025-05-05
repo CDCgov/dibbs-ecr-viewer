@@ -77,7 +77,8 @@ export type PathTypes = {
   dateTimeEcrCreated: string;
   ehrSoftware: ValueX;
   ehrManufacturerModel: string;
-  eRSDwarnings: Coding;
+  eICRProcessingStatus: string;
+  eICRProcessingStatusReason: Observation;
   compositionAuthorRefs: Reference;
   encounterPeriod: Period;
   encounterDiagnosis: EncounterDiagnosis;
@@ -321,9 +322,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Device').where(property[0].type.coding.code = 'software').manufacturer",
   },
-  eRSDwarnings: {
-    type: "Coding",
-    path: "Bundle.entry.resource.where(resourceType =  'Composition').section.where(title = 'Reportability Response Information Section').extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension').valueCodeableConcept.coding.entries.eRSDwarnings",
+  eICRProcessingStatus: {
+    type: "string",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation').code.coding.code",
+  },
+  eICRProcessingStatusReason: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-reason-observation')",
   },
   compositionAuthorRefs: {
     type: "Reference",

@@ -64,7 +64,7 @@ const getOrchestrationResponse = async (file: File): Promise<BundleInfo> => {
   });
 
   if (response.status !== 200) {
-    console.error(await response.json());
+    console.error(await response.text());
     throw "Error thrown from orchestration";
   } else {
     const resp: OrchestrationRawResponse = await response.json();
