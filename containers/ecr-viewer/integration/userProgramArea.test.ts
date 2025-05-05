@@ -175,6 +175,8 @@ describe("user_program_area table", () => {
       program_area_uuid: progId,
     };
 
+    jest.spyOn(console, "error").mockImplementation();
+
     // Neither FK doesn't exist yet
     await expect(
       db.insertInto("user_program_area").values(userProg).execute(),

@@ -57,6 +57,8 @@ describe("condition_reference table", () => {
 
     await db.insertInto("condition_reference").values(condition1).execute();
 
+    jest.spyOn(console, "error").mockImplementation();
+
     // Violates pkey
     await expect(
       db
