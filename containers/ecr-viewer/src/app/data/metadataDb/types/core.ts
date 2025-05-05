@@ -1,7 +1,7 @@
 import { ColumnType, Generated, Insertable, Selectable } from "kysely";
 
 export interface ecr_data {
-  eicr_id: Generated<string>;
+  eicr_id: string;
   set_id: string;
   eicr_version_number: string | undefined;
   fhir_reference_link: string | undefined;
