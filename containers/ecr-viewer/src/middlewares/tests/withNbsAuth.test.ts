@@ -20,10 +20,12 @@ describe("NBS Auth Middleware", () => {
   beforeEach(() => {
     process.env.BASE_PATH = "ecr-viewer";
     process.env.NBS_PUB_KEY = "foo";
+    process.env.NBS_API_PUB_KEY = "foo";
     jest.resetAllMocks(); // Reset mocks before each test
   });
   afterEach(() => {
     delete process.env.NBS_PUB_KEY;
+    delete process.env.NBS_API_PUB_KEY;
     process.env.BASE_PATH = ORIG_BASE_PATH;
   });
 
@@ -44,13 +46,14 @@ describe("NBS Auth Middleware", () => {
     );
   });
 
-  it("should not authorize the api endpoints without auth", async () => {
+  it("should authorize the api endpoints with auth", async () => {
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/save-fhir-data/",
+      "https://www.example.com/ecr-viewer/api/process-zip/",
     );
+    req.cookies.set("auth-token", "foobar");
 
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
+    expect(req?.headers.get("x-nbs-authorized")).toBe("true");
     expect(resp?.status).toBe(200);
   });
 
@@ -66,10 +69,20 @@ describe("NBS Auth Middleware", () => {
 
     expect(jwtVerify).toHaveBeenCalled();
     expect(importSPKI).toHaveBeenCalledWith("FOOBAR", "RS256");
+    expect(req?.headers.get("x-nbs-authorized")).toBe("true");
     expect(resp?.status).toBe(200);
   });
 
-  it("should not authorize non api endpoints ", async () => {
+  it("should not do anything on a non-nbs auth'ed page", async () => {
+    const req = new NextRequest("https://www.example.com/ecr-viewer/");
+    req.cookies.set("auth-token", "foobar");
+
+    const resp = await middleware(req);
+    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
+    expect(resp?.status).toBe(200);
+  });
+
+  it("should not authorize with no token", async () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );

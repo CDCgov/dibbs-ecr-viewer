@@ -12,7 +12,8 @@ const NBS_AUTH_HEADER = "x-nbs-authorized";
  */
 export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
   return async function (request: NextRequest) {
-    if (!process.env.NBS_PUB_KEY) return next(request);
+    if (!process.env.NBS_PUB_KEY && !process.env.NBS_API_PUB_KEY)
+      return next(request);
 
     const nbsAuthResp = setAuthCookie(request);
     if (nbsAuthResp) return nbsAuthResp;
@@ -22,7 +23,7 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
     let key: string | undefined = undefined;
     if (pathname.endsWith(`/view-data`)) {
       key = process.env.NBS_PUB_KEY;
-    } else if (pathname.startsWith(`/api`)) {
+    } else if (pathname.includes(`/api/`)) {
       key = process.env.NBS_API_PUB_KEY;
     }
 
