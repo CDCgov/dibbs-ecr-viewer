@@ -1,12 +1,8 @@
 import { createLocalJWKSet, createRemoteJWKSet, jwtVerify } from "jose";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { providerMap } from "@/app/api/auth/providers";
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
-
-import { isNBSAuthed } from "./withNbsAuth";
-
-const API_AUTH_HEADER = "x-api-authorized";
 
 const providerCache = { wellKnown: "", key: createLocalJWKSet({ keys: [] }) };
 
@@ -22,17 +18,16 @@ const updateProviderCache = async () => {
 /**
  * Middleware for handling next authorization
  * @param next Next middleware in the chain
+ * @param end Early exit the chain
  * @returns a NextResponse
  */
 export const withApiTokenAuth: MiddlewareFactory = (
   next: ChainableMiddleware,
+  end: ChainableMiddleware,
 ) => {
   return async function (request: NextRequest) {
-    // make sure only internal values are valid
-    request.headers.delete(API_AUTH_HEADER);
-
-    // User already authorized to view this page, skip oidc token auth flow
-    if (isNBSAuthed(request)) {
+    // IDP Auth not actually set up, so bail out
+    if (!process.env.AUTH_PROVIDER) {
       return next(request);
     }
 
@@ -41,20 +36,11 @@ export const withApiTokenAuth: MiddlewareFactory = (
       return next(request);
     }
 
-    // Make sure we have a token, if not, maybe they'll auth with NextAuth
+    // Make sure we have a token, if not, bail out
     const [method, authToken] =
       request.headers.get("Authorization")?.split(" ") || [];
     if (method !== "Bearer" || !authToken) {
-      request.headers.set(API_AUTH_HEADER, "false");
       return next(request);
-    }
-
-    // Auth not actually set up or NBS didn't auth, so return 401
-    if (!process.env.AUTH_PROVIDER) {
-      return NextResponse.json(
-        { message: "Authentication required to use API" },
-        { status: 401 },
-      );
     }
 
     // populate cache if needed
@@ -67,23 +53,9 @@ export const withApiTokenAuth: MiddlewareFactory = (
       await jwtVerify(authToken, providerCache.key, {
         clockTolerance: 15,
       });
-      request.headers.set(API_AUTH_HEADER, "true");
+      return end(request);
     } catch {
-      request.headers.set(API_AUTH_HEADER, "false");
+      return next(request);
     }
-
-    return next(request);
   };
-};
-
-/**
- *
- * @param request Request being processed
- * @returns whether this request has already been auth'ed via NBS
- */
-export const isApiTokenAuthed = (request: NextRequest): boolean => {
-  return (
-    request.nextUrl.pathname.includes(`/api/`) &&
-    request.headers.get(API_AUTH_HEADER) === "true"
-  );
 };

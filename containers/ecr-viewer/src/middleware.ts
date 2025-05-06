@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { withApiTokenAuth } from "./middlewares/withApiTokenAuth";
 import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
+import { withUnauthorized } from "./middlewares/withUnauthorized";
 import { withUrlParamChecks } from "./middlewares/withUrlParamChecks";
 
 // https://reacthustle.com/blog/how-to-chain-multiple-middleware-functions-in-nextjs
@@ -13,7 +14,8 @@ export type ChainableMiddleware = (
 ) => Promise<NextResponse>;
 
 export type MiddlewareFactory = (
-  middleware: ChainableMiddleware,
+  next: ChainableMiddleware,
+  end: ChainableMiddleware,
 ) => ChainableMiddleware;
 
 /**
@@ -34,31 +36,38 @@ export type MiddlewareFactory = (
  * by earlier layers) will be properly passed on to the Next.js request
  * handlers: page components, server actions and route handlers.
  * @param functions - Middleware functions to run
+ * @param endFn - Middware function run at the end of the chain
  * @param index - driver of walking the chain - only used internally
  * @returns chain of middleware
  */
 export const chainMiddleware = (
   functions: MiddlewareFactory[] = [],
+  endFn: ChainableMiddleware,
   index = 0,
 ): ChainableMiddleware => {
   const current = functions[index];
   if (current) {
-    const next = chainMiddleware(functions, index + 1);
-    return current(next);
+    const next = chainMiddleware(functions, endFn, index + 1);
+    return current(next, endFn);
   }
 
-  return async (request) => NextResponse.next({ request });
+  return endFn;
 };
+
+// Sub-chain for auth, which early exits back to the main chain
+const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
+  chainMiddleware(
+    [withNbsAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
+    next,
+  );
 
 /**
  * Composed middleware handlers
  */
-export default chainMiddleware([
-  withNbsAuth,
-  withApiTokenAuth,
-  withNextAuth,
-  withUrlParamChecks,
-]);
+export default chainMiddleware(
+  [authMiddleware, withUrlParamChecks],
+  async (request) => NextResponse.next({ request }),
+);
 
 export const config = {
   matcher: [

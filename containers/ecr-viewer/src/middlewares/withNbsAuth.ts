@@ -3,14 +3,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
-const NBS_AUTH_HEADER = "x-nbs-authorized";
+export const NBS_AUTH_HEADER = "x-nbs-authorized";
 
 /**
  * Middleware for handling NBS authorization
  * @param next Next middleware in the chain
+ * @param end Early exit the chain
  * @returns a NextResponse
  */
-export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
+export const withNbsAuth: MiddlewareFactory = (
+  next: ChainableMiddleware,
+  end: ChainableMiddleware,
+) => {
   return async function (request: NextRequest) {
     // make sure only internal values are valid
     request.headers.delete(NBS_AUTH_HEADER);
@@ -39,23 +43,14 @@ export const withNbsAuth: MiddlewareFactory = (next: ChainableMiddleware) => {
 
     const isAuthorized = await checkIsAuthorized(request, key);
     console.log({ isAuthorized });
-
-    // set the header on the request since we need to run nbs auth before next auth
-    request.headers.set(NBS_AUTH_HEADER, `${isAuthorized}`);
-    return next(request);
+    if (isAuthorized) {
+      return end(request);
+    } else {
+      // set the header on the request to get more helpful error page if we never auth
+      request.headers.set(NBS_AUTH_HEADER, `${isAuthorized}`);
+      return next(request);
+    }
   };
-};
-
-/**
- *
- * @param request Request being processed
- * @returns whether this request has already been auth'ed via NBS
- */
-export const isNBSAuthed = (request: NextRequest): boolean => {
-  return (
-    (!!process.env.NBS_PUB_KEY || !!process.env.NBS_API_PUB_KEY) &&
-    request.headers.get(NBS_AUTH_HEADER) === "true"
-  );
 };
 
 /**
