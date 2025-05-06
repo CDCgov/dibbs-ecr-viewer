@@ -17,7 +17,6 @@ export const withUnauthorized: MiddlewareFactory = (
   end: ChainableMiddleware,
 ) => {
   return async function (request: NextRequest) {
-    console.log({ request });
     // punching a hole through for orchestration for the moment
     if (request.nextUrl.pathname.endsWith("/save-fhir-data")) {
       if (
