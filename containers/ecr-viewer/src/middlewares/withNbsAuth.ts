@@ -97,7 +97,7 @@ const checkIsAuthorized = async (req: NextRequest, key: string) => {
     return false;
   }
   try {
-    await jwtVerify(auth, await importSPKI(key, "RS256"));
+    await jwtVerify(auth, await importSPKI(key.trim(), "RS256"));
   } catch (e) {
     return false;
   }
