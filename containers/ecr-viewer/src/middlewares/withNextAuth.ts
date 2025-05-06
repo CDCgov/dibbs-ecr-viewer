@@ -25,12 +25,9 @@ export const withNextAuth: MiddlewareFactory = (
       pages: { signIn: `/signin` },
     });
     if (response instanceof Response) {
-      // Redirect not helpful for api routes, just deny access
+      // Redirect not helpful for api routes, pass on to unauthorized handler
       if (request.nextUrl.pathname.includes(`/api/`)) {
-        return NextResponse.json(
-          { message: "API uses token authentication" },
-          { status: 401 },
-        );
+        return next(request);
       }
 
       return response as NextResponse;
