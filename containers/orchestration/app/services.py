@@ -91,7 +91,7 @@ def post_request(url: str, payload: dict) -> Response:
     :param payload: The body of the Request object, as a dictionary.
     :return: A Response object from the posted endpoint.
     """
-    return requests.post(url, json=payload)
+    return requests.post(url, json=payload, headers={"x-orchestration": "true"})
 
 
 async def _send_websocket_dump(

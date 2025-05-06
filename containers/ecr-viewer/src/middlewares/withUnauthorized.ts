@@ -20,9 +20,11 @@ export const withUnauthorized: MiddlewareFactory = (
     console.log({ request });
     // punching a hole through for orchestration for the moment
     if (request.nextUrl.pathname.endsWith("/save-fhir-data")) {
-      const origin = request.headers.get("Origin");
       console.log({ origin, orch: process.env.ORCHESTRATION_URL });
-      if (origin === process.env.ORCHESTRATION_URL) {
+      if (
+        request.headers.get("x-orchestration") === "true" &&
+        request.headers.get("user-agent") === "python-requests/2.32.3"
+      ) {
         return end(request);
       }
     }
