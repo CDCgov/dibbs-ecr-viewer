@@ -109,6 +109,10 @@ Integrated eCR Viewer will rely on NBS to authenticate the user. The variables c
 
 Non-Integrated/Dual rely on an external authentication provider, like Azure AD, Entra, or Keycloak. The variables can be found in {@link EnvironmentVariables.Authentication}.
 
+##### Token Authentication for `api` routes
+
+Most `/ecr-viewer/api/` routes require authentication to be used. The exceptions are pubic routes such as the health check and authentication routes. If a user has a logged in browser session, they can use the developer console of that browser to emit authenticated post routes. More often, a machine will be making the post requests to upload data to the viewer. To enable this, we allow tokens to be sent on the `Authorization` header of request and used to authenticate the request.
+
 ### eCR Metadata Storage
 
 Non-Integrated/Dual require a database to store eCR metadata. The variables can be found in {@link EnvironmentVariables.EcrMetadataStorage}.
@@ -133,7 +137,7 @@ Rhapsody documentation and an example route can be found [here](https://github.c
 
 ### From API
 
-Data can be added directly via API requeset to eCR Viewer's /process-zip endpoint.
+Data can be added directly via API requeset to eCR Viewer's `/process-zip` endpoint. See the [API documentation](./api-documentation.md) for more details.
 
 ```bash
 curl --location '{URL}/ecr-viewer/api/process-zip' \
