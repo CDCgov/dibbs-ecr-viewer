@@ -76,7 +76,7 @@ describe("user service", () => {
     expect(warning[0]).toContain("Active admin user already exists");
 
     // admin deletes themself
-    await deleteUser(adminEmail);
+    await deleteUser(adminId!);
 
     // Current user isn't an admin any more!
     await expect(listUsers()).rejects.toThrow();
