@@ -40,7 +40,7 @@ const simpleResponse = {
 describe("get_fhir_data", () => {
   afterEach(() => {
     process.env.SOURCE = S3_SOURCE;
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   it("should return a 500 response when METADATA_DATABASE_TYPE is invalid", async () => {
