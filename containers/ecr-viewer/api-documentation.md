@@ -58,10 +58,6 @@ Process a zip file containing an eCR/RR pair
 
 **URL** : `/ecr-viewer/api/process-zip`
 
-**URL Parameters** :
-
-- `auth=[string]` where `auth` is the authentication token for the user. Only required if NBS_API_PUB_KEY is set and other auth not enabled.
-
 **POST Form Fields** :
 
 - `upload_file=[File]` where the file is a zip containing an eCR named `CDA_eICR.xml` and optionally a reportability response named `CDA_RR.xml`.
@@ -69,7 +65,7 @@ Process a zip file containing an eCR/RR pair
 
 **Method** : `POST`
 
-**Auth required** : Yes, via `auth` param or token passed via `Authorization` header
+**Auth required** : Yes, token passed via `Authorization` header
 
 **Permissions required** : None
 
@@ -114,10 +110,6 @@ the state of the application, including updating the conditions used in the view
 
 **URL** : `/ecr-viewer/api/migrate-db`
 
-**URL Parameters** :
-
-- `auth=[string]` where `auth` is the authentication token for the user. Only required if NBS_API_PUB_KEY is set and other auth not enabled.
-
 **POST Form Fields** :
 
 - `migration_secret=[secret string]` confirm that you have permission to perform migrations. The secret is logged to the server and can optionally be set to a known value via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable.
@@ -127,7 +119,7 @@ the state of the application, including updating the conditions used in the view
 
 **Method** : `POST`
 
-**Auth required** : Yes, via `auth` param or token passed via `Authorization` header
+**Auth required** : Yes, token passed via `Authorization` header
 
 **Permissions required** : None
 
