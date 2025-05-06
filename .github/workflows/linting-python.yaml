@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U pip
-          pip install ruff==0.9.6
+          pip install ruff==0.11.8
       - name: Run linter (ruff)
         run: |
           ruff check --output-format=github .

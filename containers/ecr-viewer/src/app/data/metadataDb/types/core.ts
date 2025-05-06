@@ -1,4 +1,10 @@
-import { ColumnType, Generated, Insertable, Selectable } from "kysely";
+import {
+  ColumnType,
+  Generated,
+  Insertable,
+  Selectable,
+  Updateable,
+} from "kysely";
 
 export interface ecr_data {
   eicr_id: string;
@@ -46,6 +52,7 @@ export interface user {
 
 export type User = Selectable<user>;
 export type NewUser = Insertable<user>;
+export type UserUpdate = Updateable<user>;
 
 export interface program_area {
   uuid: string;
