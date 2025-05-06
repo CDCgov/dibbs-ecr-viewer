@@ -21,31 +21,35 @@ export const withNbsAuth: MiddlewareFactory = (
     // make sure only internal values are valid
     request.headers.delete(NBS_AUTH_HEADER);
 
+    // always strip auth token
+    const nbsAuthResp = setAuthCookie(request);
+    if (nbsAuthResp) return nbsAuthResp;
+
     if (!process.env.NBS_PUB_KEY && !process.env.NBS_API_PUB_KEY)
       return next(request);
 
     // NBS auth can only be used for ecr viewer pages
     const { pathname } = request.nextUrl;
     let key: string | undefined = undefined;
+    let token: string | undefined = undefined;
     if (pathname.endsWith(`/view-data`)) {
       // Only allow auth param on view-data requests
-      const nbsAuthResp = setAuthCookie(request);
-      if (nbsAuthResp) return nbsAuthResp;
-
       key = process.env.NBS_PUB_KEY;
+      token = request.cookies.get("auth-token")?.value;
     } else if (pathname.includes(`/api/`)) {
       key = process.env.NBS_API_PUB_KEY;
     }
+    token ||= getTokenFromHeaders(request);
 
     // No NBS auth to do here
-    if (!key) return next(request);
+    if (!key || !token) return next(request);
 
-    const isAuthorized = await checkIsAuthorized(request, key);
-    if (isAuthorized) {
+    try {
+      await jwtVerify(token, await importSPKI(key.trim(), "RS256"));
       return end(request);
-    } else {
+    } catch (e) {
       // set the header on the request to get more helpful error page if we never auth
-      request.headers.set(NBS_AUTH_HEADER, `${isAuthorized}`);
+      request.headers.set(NBS_AUTH_HEADER, "false");
       return next(request);
     }
   };
@@ -71,28 +75,4 @@ const setAuthCookie = (req: NextRequest): NextResponse | null => {
     return response;
   }
   return null;
-};
-
-/**
- * Authorizes requests based on an authentication token provided in the request's cookies or headers.
- *   The function checks for the presence of an "auth-token" cookie or "Authorization" header and attempts to verify it
- *   using JWT verification with a public key. If the token is missing or invalid, the function
- *   returns a JSON response indicating that authentication is required with a 401 status code.
- * @param req - The incoming Next.js request object, which includes the request cookies
- *   and URL information used for extracting the authentication token and determining the request path.
- * @param key - The public key that should be used to verify the token
- * @returns - Whether the user is authorized.
- */
-const checkIsAuthorized = async (req: NextRequest, key: string) => {
-  const auth = req.cookies.get("auth-token")?.value || getTokenFromHeaders(req);
-
-  if (!auth) {
-    return false;
-  }
-  try {
-    await jwtVerify(auth, await importSPKI(key.trim(), "RS256"));
-  } catch (e) {
-    return false;
-  }
-  return true;
 };
