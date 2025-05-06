@@ -11,13 +11,18 @@ import {
   listProgramAreas,
   updateProgramArea,
 } from "@/app/services/programAreaService";
-import { createInitialAdminUser } from "@/app/services/userService";
+import {
+  createInitialAdminUser,
+  listUserProgramAreas,
+  updateUserProgramAreas,
+} from "@/app/services/userService";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
 
+let adminId;
 beforeAll(async () => {
   await buildCore();
-  await createInitialAdminUser("admin@admin.com");
+  adminId = await createInitialAdminUser("admin@admin.com");
   await getDb<Core>()
     .insertInto("condition_reference")
     .values({
@@ -61,18 +66,19 @@ jest.mock("../src/app/utils/auth-utils", () => ({
 }));
 
 describe("program area service", () => {
+  let progId;
   it("should create a program area", async () => {
     const progName = "Fun Times";
     const conditionCodes = ["123", "456"];
-    const id = await createProgramArea(progName, conditionCodes);
-    expect(id).toMatch(UUID_REGEX);
+    progId = await createProgramArea(progName, conditionCodes);
+    expect(progId).toMatch(UUID_REGEX);
 
     // see program area listed
     const programAreas = await listProgramAreas();
     expect(programAreas).toBeArrayOfSize(1);
     expect(programAreas).toStrictEqual([
       {
-        uuid: id,
+        uuid: progId,
         name: progName,
         author_uuid: expect.any(String),
         date_created: expect.any(Date),
@@ -84,7 +90,7 @@ describe("program area service", () => {
     for (const code of conditionCodes) {
       expect(conditions.find((c) => c.code === code)).toHaveProperty(
         "program_area_uuid",
-        id,
+        progId,
       );
     }
     expect(
@@ -122,6 +128,10 @@ describe("program area service", () => {
   });
 
   it("should delete a program area", async () => {
+    await updateUserProgramAreas(adminId!, [progId!]);
+    const beforeUserProgramAreas = await listUserProgramAreas(adminId!);
+    expect(beforeUserProgramAreas).toBeArrayOfSize(1);
+
     const beforeCreate = await listProgramAreas();
     const id = await createProgramArea("test", []);
     const afterCreate = await listProgramAreas();
@@ -133,5 +143,8 @@ describe("program area service", () => {
     expect(beforeCreate).toStrictEqual(afterDelete);
     expect(afterDelete).toBeArrayOfSize(3);
     expect(afterCreate).toBeArrayOfSize(4);
+
+    const afterUserProgramAreas = await listUserProgramAreas(adminId!);
+    expect(afterUserProgramAreas).toBeArrayOfSize(0);
   });
 });

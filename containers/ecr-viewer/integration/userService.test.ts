@@ -2,8 +2,7 @@
  * @jest-environment node
  */
 
-import { getDb } from "@/app/data/metadataDb/database";
-import { Core } from "@/app/data/metadataDb/types/core";
+import { createProgramArea } from "@/app/services/programAreaService";
 import {
   createInitialAdminUser,
   createUser,
@@ -168,20 +167,19 @@ describe("user service", () => {
   it("should update a user's program areas", async () => {
     // standard user created in prior test
     await updateUser(userId!, { name: "Olga Nunes" });
-    const prog = {
-      uuid: "234-12",
-      name: "Disease",
-      author_uuid: adminId!,
-    };
-    // TODO: update this to program area crud once merged
-    await getDb<Core>().insertInto("program_area").values(prog).execute();
+    const progId = await createProgramArea("Disease", []);
 
-    await updateUserProgramAreas(userId!, ["234-12"]);
+    await updateUserProgramAreas(userId!, [progId]);
 
     const progAreas = await listUserProgramAreas(userId!);
 
     expect(progAreas).toStrictEqual([
-      { ...prog, date_created: expect.any(Date) },
+      {
+        uuid: progId,
+        author_uuid: adminId!,
+        name: "Disease",
+        date_created: expect.any(Date),
+      },
     ]);
   });
 
