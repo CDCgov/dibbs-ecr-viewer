@@ -11,6 +11,12 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const _db = db.withSchema(schema);
 
+  // data type needs to match referenced column
+  await _db.schema
+    .alterTable("ecr_rr_conditions")
+    .alterColumn("eicr_id", (cb) => cb.setDataType("varchar(200)"))
+    .execute();
+
   await _db.schema
     .alterTable("ecr_rr_conditions")
     .addForeignKeyConstraint(
