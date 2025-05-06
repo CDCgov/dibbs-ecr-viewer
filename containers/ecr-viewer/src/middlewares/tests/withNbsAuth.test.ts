@@ -54,11 +54,10 @@ describe("NBS Auth Middleware", () => {
     req.cookies.set("auth-token", "foobar");
 
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe("true");
     expect(resp?.status).toBe(200);
   });
 
-  it("should authorize the api endpoints with auth", async () => {
+  it("should authorize the non-api endpoints with auth", async () => {
     process.env.NBS_PUB_KEY = "FOOBAR";
 
     const req = new NextRequest(
@@ -70,28 +69,38 @@ describe("NBS Auth Middleware", () => {
 
     expect(jwtVerify).toHaveBeenCalled();
     expect(importSPKI).toHaveBeenCalledWith("FOOBAR", "RS256");
-    expect(req?.headers.get("x-nbs-authorized")).toBe("true");
     expect(resp?.status).toBe(200);
   });
 
-  it("should not do anything on a non-nbs auth'ed page", async () => {
+  it("should not authorize on a non-nbs auth'ed page", async () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer/");
     req.cookies.set("auth-token", "foobar");
 
-    // make sure passed in header is ignored
-    req.headers.set("x-nbs-authorized", "true");
-
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
-    expect(resp?.status).toBe(200);
+    expect(resp?.status).toBe(307);
+    expect(resp?.headers.get("Location")).toBe(
+      "https://www.example.com/ecr-viewer/error/notfound",
+    );
   });
 
-  it("should not authorize with no token", async () => {
+  it("should not authorize gui route with no token", async () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
     const resp = await middleware(req);
     expect(req?.headers.get("x-nbs-authorized")).toBe("false");
-    expect(resp?.status).toBe(200);
+    expect(resp?.status).toBe(307);
+    expect(resp?.headers.get("Location")).toBe(
+      "https://www.example.com/ecr-viewer/error/auth",
+    );
+  });
+
+  it("should not authorize api route with no token", async () => {
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer/api/process-zip",
+    );
+    const resp = await middleware(req);
+    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
+    expect(resp?.status).toBe(401);
   });
 });

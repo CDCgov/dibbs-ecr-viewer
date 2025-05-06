@@ -1,6 +1,6 @@
 // Adapted from 'next-auth' to work with chained middleware approadh
 
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
 
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
@@ -25,7 +25,15 @@ export const withNextAuth: MiddlewareFactory = (
       pages: { signIn: `/signin` },
     });
     if (response instanceof Response) {
-      return next(request);
+      // Redirect not helpful for api routes, just deny access
+      if (request.nextUrl.pathname.includes(`/api/`)) {
+        return NextResponse.json(
+          { message: "API uses token authentication" },
+          { status: 401 },
+        );
+      }
+
+      return response as NextResponse;
     } else {
       return end(request);
     }

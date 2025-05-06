@@ -59,20 +59,28 @@ describe("API Token Auth Middleware", () => {
 
     const resp = await middleware(req);
     expect(jwtVerify).toHaveBeenCalled();
-    expect(req?.headers.get("x-api-authorized")).toBe("true");
     expect(resp?.status).toBe(200);
+  });
+
+  it("should not do anything with no auth provider set", async () => {
+    delete process.env.AUTH_PROVIDER;
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer/api/process-zip",
+    );
+    req.headers.set("Authorization", "Bearer foobar");
+
+    const resp = await middleware(req);
+    expect(jwtVerify).not.toHaveBeenCalled();
+    expect(resp?.status).not.toBe(200);
   });
 
   it("should not do anything on a non-api auth'ed page", async () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer/");
     req.headers.set("Authorization", "Bearer foobar");
 
-    // make sure passed in header is ignored
-    req.headers.set("x-api-authorized", "true");
-
     const resp = await middleware(req);
-    expect(req?.headers.get("x-api-authorized")).toBe(null);
-    expect(resp?.status).toBe(200);
+    expect(jwtVerify).not.toHaveBeenCalled();
+    expect(resp?.status).not.toBe(200);
   });
 
   it("should not authorize with no token", async () => {
@@ -80,39 +88,6 @@ describe("API Token Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/api/process-zip",
     );
     const resp = await middleware(req);
-    expect(req?.headers.get("x-api-authorized")).toBe("false");
-    expect(resp?.status).toBe(200);
-  });
-
-  it("should respect nbs auth status - true", async () => {
-    process.env.NBS_PUB_KEY = "hi there";
-    const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/process-zip",
-    );
-    req.headers.set("Authorization", "Bearer foobar");
-    req.headers.set("x-nbs-authorized", "true");
-    // make sure passed in header is ignored
-    req.headers.set("x-api-authorized", "true");
-
-    const resp = await middleware(req);
-    expect(jwtVerify).not.toHaveBeenCalled();
-    expect(req?.headers.get("x-api-authorized")).toBe(null);
-    expect(resp?.status).toBe(200);
-  });
-
-  it("should respect nbs auth status - false", async () => {
-    process.env.NBS_PUB_KEY = "hi there";
-    const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api/process-zip",
-    );
-    req.headers.set("Authorization", "Bearer foobar");
-    req.headers.set("x-nbs-authorized", "false");
-    // make sure passed in header is ignored
-    req.headers.set("x-api-authorized", "false");
-
-    const resp = await middleware(req);
-    expect(jwtVerify).toHaveBeenCalled();
-    expect(req?.headers.get("x-api-authorized")).toBe("true");
-    expect(resp?.status).toBe(200);
+    expect(resp?.status).not.toBe(200);
   });
 });
