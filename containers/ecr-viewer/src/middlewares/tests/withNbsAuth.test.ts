@@ -89,10 +89,10 @@ describe("NBS Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
+    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
     expect(resp?.status).toBe(307);
     expect(resp?.headers.get("Location")).toBe(
-      "https://www.example.com/ecr-viewer/error/auth",
+      "https://www.example.com/ecr-viewer/error/notfound",
     );
   });
 
@@ -101,7 +101,7 @@ describe("NBS Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/api/process-zip",
     );
     const resp = await middleware(req);
-    expect(req?.headers.get("x-nbs-authorized")).toBe("false");
+    expect(req?.headers.get("x-nbs-authorized")).toBe(null);
     expect(resp?.status).toBe(401);
   });
 });
