@@ -110,6 +110,12 @@ export const deleteProgramArea = async (uuid: string): Promise<void> => {
           .set({ program_area_uuid: null })
           .where("program_area_uuid", "=", uuid)
           .execute();
+
+        await db
+          .deleteFrom("user_program_area")
+          .where("program_area_uuid", "=", uuid)
+          .execute();
+
         await db.deleteFrom("program_area").where("uuid", "=", uuid).execute();
       });
   } catch (error: unknown) {
