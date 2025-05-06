@@ -36,18 +36,21 @@ export const getLoggedInUser = cache(async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
   if (!email) return;
 
-  // Update the user's name to match the IDP
-  !!name &&
-    (await getDb<Core>()
-      .updateTable("user")
-      .set({ name })
-      .where("email", "=", email)
-      .execute());
+  // Update the last log in and user's name to match the IDP
+  await getDb<Core>()
+    .updateTable("user")
+    .set({ date_of_last_login: new Date(), name })
+    .where("email", "=", email)
+    .execute();
 
   return await getUserByEmail(email);
 });
 
-const isAdmin = (user: User | undefined): user is User =>
+/**
+ * @param user User to check is an admin
+ * @returns true is the user both exists and is an admin, false otherwise
+ */
+export const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
 
 /**
