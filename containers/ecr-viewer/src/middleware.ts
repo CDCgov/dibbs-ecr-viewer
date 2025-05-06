@@ -18,6 +18,11 @@ export type MiddlewareFactory = (
   end: ChainableMiddleware,
 ) => ChainableMiddleware;
 
+// Function to exit all middleware processing with a successful continuation
+// of the request
+const exitMiddleware: ChainableMiddleware = async (request: NextRequest) =>
+  NextResponse.next({ request });
+
 /**
  * Helper to compose multiple MiddlewareFactory instances together.
  *
@@ -42,7 +47,7 @@ export type MiddlewareFactory = (
  */
 export const chainMiddleware = (
   functions: MiddlewareFactory[] = [],
-  endFn: ChainableMiddleware,
+  endFn: ChainableMiddleware = exitMiddleware,
   index = 0,
 ): ChainableMiddleware => {
   const current = functions[index];
@@ -64,10 +69,7 @@ const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
 /**
  * Composed middleware handlers
  */
-export default chainMiddleware(
-  [authMiddleware, withUrlParamChecks],
-  async (request) => NextResponse.next({ request }),
-);
+export default chainMiddleware([authMiddleware, withUrlParamChecks]);
 
 export const config = {
   matcher: [

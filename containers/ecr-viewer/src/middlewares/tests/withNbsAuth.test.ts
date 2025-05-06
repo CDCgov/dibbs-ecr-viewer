@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { chainMiddleware } from "@/middleware";
 import { withNbsAuth } from "@/middlewares/withNbsAuth";
+import { withUnauthorized } from "@/middlewares/withUnauthorized";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),
@@ -13,7 +14,7 @@ jest.mock("jose", () => ({
   createLocalJWKSet: jest.fn(() => true),
 }));
 
-const middleware = chainMiddleware([withNbsAuth]);
+const middleware = chainMiddleware([withNbsAuth, withUnauthorized]);
 
 describe("NBS Auth Middleware", () => {
   const ORIG_BASE_PATH = process.env.BASE_PATH;

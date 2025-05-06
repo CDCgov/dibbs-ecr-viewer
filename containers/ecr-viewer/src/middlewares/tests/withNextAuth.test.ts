@@ -6,6 +6,7 @@ import { getToken } from "next-auth/jwt";
 
 import { chainMiddleware } from "@/middleware";
 import { withNextAuth } from "@/middlewares/withNextAuth";
+import { withUnauthorized } from "@/middlewares/withUnauthorized";
 
 // Mock next-auth/jwt getToken
 jest.mock("next-auth/jwt", () => ({
@@ -14,7 +15,7 @@ jest.mock("next-auth/jwt", () => ({
 
 jest.mock("../../app/api/auth/auth");
 
-const middleware = chainMiddleware([withNextAuth]);
+const middleware = chainMiddleware([withNextAuth, withUnauthorized]);
 
 describe("Next Auth Middleware", () => {
   const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
