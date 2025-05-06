@@ -23,7 +23,7 @@ export const withUnauthorized: MiddlewareFactory = (
       console.log({ origin, orch: process.env.ORCHESTRATION_URL });
       if (
         request.headers.get("x-orchestration") === "true" &&
-        request.headers.get("user-agent") === "python-requests/2.32.3"
+        request.headers.get("user-agent")?.startsWith("python-requests/")
       ) {
         return end(request);
       }
