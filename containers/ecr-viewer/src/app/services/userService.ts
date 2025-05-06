@@ -77,10 +77,7 @@ export const createUser = async (
   email: string,
   user_type: "admin" | "standard",
 ): Promise<string> => {
-  const creatingUser = await getLoggedInUser();
-  if (!isAdmin(creatingUser)) {
-    throw new Error("Standard user cannot create new users");
-  }
+  const creatingUser = await getCheckAdmin("create new users");
 
   try {
     const uuid = randomUUID();
@@ -153,10 +150,7 @@ export const updateUser = async (
   uuid: string,
   updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
+  await getCheckAdmin("update users");
 
   try {
     await updateUserQuery(uuid, updates);
@@ -186,10 +180,7 @@ const updateUserQuery = async (
 export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
-  const listingUser = await getLoggedInUser();
-  if (!isAdmin(listingUser)) {
-    throw new Error("Standard user cannot list user program areas");
-  }
+  await getCheckAdmin("list user program areas");
 
   try {
     return await getDb<Core>()
@@ -216,10 +207,7 @@ export const updateUserProgramAreas = async (
   uuid: string,
   programAreaUuids: string[],
 ): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
+  await getCheckAdmin("update user program areas");
 
   try {
     await getDb<Core>()
@@ -253,10 +241,7 @@ const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
  * @param uuid Email of the user to delete
  */
 export const deleteUser = async (uuid: string): Promise<void> => {
-  const deletingUser = await getLoggedInUser();
-  if (!isAdmin(deletingUser)) {
-    throw new Error("Standard user cannot delete users");
-  }
+  await getCheckAdmin("delete users");
 
   try {
     await updateUserQuery(uuid, { status: "deleted" });
@@ -273,10 +258,7 @@ export const deleteUser = async (uuid: string): Promise<void> => {
  * @returns list of all active users
  */
 export const listUsers = async (): Promise<User[]> => {
-  const listingUser = await getLoggedInUser();
-  if (!isAdmin(listingUser)) {
-    throw new Error("Standard user cannot list users");
-  }
+  await getCheckAdmin("list users");
 
   try {
     return await listActiveUsersQuery();
