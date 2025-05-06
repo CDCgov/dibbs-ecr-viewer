@@ -9,14 +9,23 @@ import { NBS_AUTH_HEADER } from "./withNbsAuth";
 /**
  * Middleware for handling no prior auth succeeding
  * @param _next Next middleware in the chain
- * @param _end Early exit the chain
+ * @param end Early exit the chain
  * @returns a NextResponse
  */
 export const withUnauthorized: MiddlewareFactory = (
   _next: ChainableMiddleware,
-  _end: ChainableMiddleware,
+  end: ChainableMiddleware,
 ) => {
   return async function (request: NextRequest) {
+    // punching a hole through for orchestration for the moment
+    if (request.nextUrl.pathname.endsWith("/save-fhir-data")) {
+      const origin = request.headers.get("Origin");
+      console.log({ origin, orch: process.env.ORCHESTRATION_URL });
+      if (origin === process.env.ORCHESTRATION_URL) {
+        return end(request);
+      }
+    }
+
     // Redirect not helpful for api routes, just deny access
     if (request.nextUrl.pathname.includes(`/api/`)) {
       return NextResponse.json(

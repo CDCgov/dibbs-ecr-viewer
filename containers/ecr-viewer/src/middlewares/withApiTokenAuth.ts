@@ -38,15 +38,7 @@ export const withApiTokenAuth: MiddlewareFactory = (
 
     // Make sure we have a token, if not, bail out
     const authToken = getTokenFromHeaders(request);
-    if (!authToken) {
-      return next(request);
-      // punching a hole through for orchestration for the moment
-    } else if (request.nextUrl.pathname.endsWith("/save-fhir-data")) {
-      const origin = request.headers.get("Origin");
-      if (origin === process.env.ORCHESTRATION_URL) {
-        return end(request);
-      }
-    }
+    if (!authToken) return next(request);
 
     // populate cache if needed
     const provider = providerMap[0];
