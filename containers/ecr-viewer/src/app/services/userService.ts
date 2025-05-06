@@ -35,7 +35,12 @@ export const getLoggedInUser = cache(async () => {
   if (!email) return;
 
   // Update the user's name to match the IDP
-  !!name && (await updateUserQuery(email, { name }));
+  !!name &&
+    (await getDb<Core>()
+      .updateTable("user")
+      .set({ name })
+      .where("email", "=", email)
+      .execute());
 
   return await getUserByEmail(email);
 });
