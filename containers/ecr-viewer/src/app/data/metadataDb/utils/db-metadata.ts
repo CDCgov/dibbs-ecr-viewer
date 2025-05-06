@@ -14,9 +14,7 @@ export const getTables = async (
 ): Promise<string[]> => {
   const tables = await db.introspection.getTables();
   return tables
-    .filter(({ schema }) => {
-      schema === schemaName;
-    })
+    .filter(({ schema }) => schema === schemaName)
     .map(({ name }) => name);
 };
 

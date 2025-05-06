@@ -60,7 +60,11 @@ def _process_files():
     headers = {"Authorization": f"Bearer {token}"}
 
     print("Requesting db migration...")
-    rs = rqsts.post(MIGRATION_URL, data={"migration_secret": "test"}, headers=headers)
+    rs = rqsts.post(
+        MIGRATION_URL,
+        data={"migration_secret": "test", "init_admin_email": "ecr-viewer@admin.com"},
+        headers=headers,
+    )
     assert rs.status_code == 200, f"{rs.json()}"
 
     requests = []

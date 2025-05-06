@@ -9,6 +9,7 @@ const toForm = (obj: Record<string, string>) => {
   // orchestration service (not worth it at this time, this could change
   // down the road)
   form.append("skip_condition_update", "true");
+  form.append("init_admin_email", "ecr-viewer@admin.com"); // keycloak email
   for (const [k, v] of Object.entries(obj)) {
     form.append(k, v);
   }

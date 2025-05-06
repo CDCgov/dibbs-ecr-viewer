@@ -624,6 +624,7 @@
       "username": "ecr-viewer-admin",
       "firstName": "Ecr",
       "lastName": "Admin",
+      "email": "ecr-viewer@admin.com",
       "emailVerified": true,
       "createdTimestamp": 1732143781841,
       "enabled": true,
