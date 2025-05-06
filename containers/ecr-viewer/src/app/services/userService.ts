@@ -2,10 +2,13 @@ import "server-only";
 import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
+import { Kysely } from "kysely";
+
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   Core,
   NewUser,
+  ProgramArea,
   User,
   UserUpdate,
 } from "@/app/data/metadataDb/types/core";
@@ -34,7 +37,12 @@ export const getLoggedInUser = cache(async () => {
   if (!email) return;
 
   // Update the user's name to match the IDP
-  !!name && (await updateUserQuery(email, { name }));
+  !!name &&
+    (await getDb<Core>()
+      .updateTable("user")
+      .set({ name })
+      .where("email", "=", email)
+      .execute());
 
   return await getUserByEmail(email);
 });
@@ -59,7 +67,7 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
 
 /**
  * Create a user with the given email and user type. The currently logged in user
- * must be an admin and not actively exist, otherwise an error will be throw. If
+ * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
  * @param email Email of the user to add
  * @param user_type Type of user to create ("admiin" or "standard")
@@ -69,7 +77,10 @@ export const createUser = async (
   email: string,
   user_type: "admin" | "standard",
 ): Promise<string> => {
-  const creatingUser = await getCheckAdmin("create new users");
+  const creatingUser = await getLoggedInUser();
+  if (!isAdmin(creatingUser)) {
+    throw new Error("Standard user cannot create new users");
+  }
 
   try {
     const uuid = randomUUID();
@@ -117,7 +128,7 @@ const createUserQuery = async (
     if (user.status === "active") {
       throw new Error("User already exists and is active");
     } else {
-      await updateUserQuery(email, { status: "active", user_type });
+      await updateUserQuery(user.uuid, { status: "active", user_type });
       return user.uuid;
     }
   }
@@ -134,18 +145,21 @@ const createUserQuery = async (
 };
 
 /**
- * Update a user with the the given email.
- * @param email (current) email of the user to update
- * @param updates object with fields to update in their record. UUID fields should not be updated.
+ * Update a user with the the given id.
+ * @param uuid id of the user to update
+ * @param updates objecct with fields to update in their record. UUID fields should not be updated.
  */
-export const updateUserByEmail = async (
-  email: string,
+export const updateUser = async (
+  uuid: string,
   updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ): Promise<void> => {
-  await getCheckAdmin("update users");
+  const updatingUser = await getLoggedInUser();
+  if (!isAdmin(updatingUser)) {
+    throw new Error("Standard user cannot update users");
+  }
 
   try {
-    await updateUserQuery(email, updates);
+    await updateUserQuery(uuid, updates);
   } catch (error: unknown) {
     const message = "Failed to update user";
     console.error({ message, error });
@@ -154,30 +168,99 @@ export const updateUserByEmail = async (
 };
 
 const updateUserQuery = async (
-  email: string,
+  uuid: string,
   updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ) => {
   await getDb<Core>()
     .updateTable("user")
     .set(updates)
-    .where("email", "=", email)
+    .where("uuid", "=", uuid)
     .execute();
 };
 
 /**
- * Delete user with the given email. The deleting user must be an admin. A
- * user can indeed delete themselves.
- * @param email Email of the user to delete
+ * List the program areas a user is assigned to.
+ * @param uuid id of the user to update
+ * @returns list of program areas
  */
-export const deleteUser = async (email: string): Promise<void> => {
-  await getCheckAdmin("delete users");
+export const listUserProgramAreas = async (
+  uuid: string,
+): Promise<ProgramArea[]> => {
+  const listingUser = await getLoggedInUser();
+  if (!isAdmin(listingUser)) {
+    throw new Error("Standard user cannot list user program areas");
+  }
+
+  try {
+    return await getDb<Core>()
+      .selectFrom(["user_program_area", "program_area"])
+      .selectAll(["program_area"])
+      .where("user_uuid", "=", uuid)
+      .where(({ eb, ref }) =>
+        eb("user_program_area.program_area_uuid", "=", ref("uuid")),
+      )
+      .execute();
+  } catch (error: unknown) {
+    const message = "Failed to list user program areas";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+};
+
+/**
+ * Update a user with the the given id's program areas to the given set.
+ * @param uuid id of the user to update
+ * @param programAreaUuids UUIDs of program areas the user is assigned to.
+ */
+export const updateUserProgramAreas = async (
+  uuid: string,
+  programAreaUuids: string[],
+): Promise<void> => {
+  const updatingUser = await getLoggedInUser();
+  if (!isAdmin(updatingUser)) {
+    throw new Error("Standard user cannot update users");
+  }
 
   try {
     await getDb<Core>()
-      .updateTable("user")
-      .set({ status: "deleted" })
-      .where("email", "=", email)
-      .execute();
+      .transaction()
+      .execute(async (db) => {
+        await deleteUserProgramAreas(db, uuid);
+        for (const program_area_uuid of programAreaUuids) {
+          await db
+            .insertInto("user_program_area")
+            .values({ user_uuid: uuid, program_area_uuid })
+            .execute();
+        }
+      });
+  } catch (error: unknown) {
+    const message = "Failed to update user";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+};
+
+const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
+  await db
+    .deleteFrom("user_program_area")
+    .where("user_uuid", "=", uuid)
+    .execute();
+};
+
+/**
+ * Delete user with the given id. The deleting user must be an admin. A
+ * user can indeed delete themselves.
+ * @param uuid Email of the user to delete
+ */
+export const deleteUser = async (uuid: string): Promise<void> => {
+  const deletingUser = await getLoggedInUser();
+  if (!isAdmin(deletingUser)) {
+    throw new Error("Standard user cannot delete users");
+  }
+
+  try {
+    await updateUserQuery(uuid, { status: "deleted" });
+    await deleteUserProgramAreas(getDb<Core>(), uuid);
   } catch (error: unknown) {
     const message = "Failed to delete user";
     console.error({ message, error });
@@ -190,7 +273,10 @@ export const deleteUser = async (email: string): Promise<void> => {
  * @returns list of all active users
  */
 export const listUsers = async (): Promise<User[]> => {
-  await getCheckAdmin("list users");
+  const listingUser = await getLoggedInUser();
+  if (!isAdmin(listingUser)) {
+    throw new Error("Standard user cannot list users");
+  }
 
   try {
     return await listActiveUsersQuery();

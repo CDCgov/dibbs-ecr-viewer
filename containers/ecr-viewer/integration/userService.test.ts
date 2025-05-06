@@ -2,12 +2,16 @@
  * @jest-environment node
  */
 
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 import {
   createInitialAdminUser,
   createUser,
   deleteUser,
+  listUserProgramAreas,
   listUsers,
-  updateUserByEmail,
+  updateUser,
+  updateUserProgramAreas,
 } from "@/app/services/userService";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
@@ -34,26 +38,28 @@ jest.mock("../src/app/utils/auth-utils", () => ({
 }));
 
 describe("user service", () => {
+  let adminId;
+  let userId;
   it("should create initial admin user", async () => {
     let warning: string[] = [];
     jest.spyOn(console, "warn").mockImplementation((...args) => {
       warning = args;
     });
-    const id = await createInitialAdminUser(adminEmail);
-    expect(id).toMatch(UUID_REGEX);
+    adminId = await createInitialAdminUser(adminEmail);
+    expect(adminId).toMatch(UUID_REGEX);
 
     // see admin listed
     const users = await listUsers();
     expect(users).toBeArrayOfSize(1);
     expect(users).toStrictEqual([
       {
-        uuid: id,
+        uuid: adminId,
         email: adminEmail,
         name: adminName,
         date_of_last_login: null,
         user_type: "admin",
         status: "active",
-        author_uuid: id,
+        author_uuid: adminId,
         date_created: expect.any(Date),
       },
     ]);
@@ -70,27 +76,27 @@ describe("user service", () => {
     expect(warning[0]).toContain("Active admin user already exists");
 
     // admin deletes themself
-    await deleteUser(adminEmail);
+    await deleteUser(adminId!);
 
     // Current user isn't an admin any more!
     await expect(listUsers()).rejects.toThrow();
 
     //admin re-adds themself, gets same id
     const newId = await createInitialAdminUser(adminEmail);
-    expect(newId).toBe(id);
+    expect(newId).toBe(adminId);
 
     // see admin listed
     const afterUsers = await listUsers();
     expect(afterUsers).toBeArrayOfSize(1);
     expect(afterUsers).toStrictEqual([
       {
-        uuid: id,
+        uuid: adminId,
         email: adminEmail,
         name: adminName,
         date_of_last_login: null,
         user_type: "admin",
         status: "active",
-        author_uuid: id,
+        author_uuid: adminId,
         date_created: expect.any(Date),
       },
     ]);
@@ -98,8 +104,8 @@ describe("user service", () => {
 
   it("should create a standard user", async () => {
     // admin created in prior test
-    const id = await createUser(userEmail, "standard");
-    expect(id).toMatch(UUID_REGEX);
+    userId = await createUser(userEmail, "standard");
+    expect(userId).toMatch(UUID_REGEX);
 
     // see standard user listed
     const users = await listUsers();
@@ -112,17 +118,17 @@ describe("user service", () => {
         date_of_last_login: null,
         user_type: "admin",
         status: "active",
-        author_uuid: expect.any(String),
+        author_uuid: adminId!,
         date_created: expect.any(Date),
       },
       {
-        uuid: id,
+        uuid: userId,
         email: userEmail,
         name: null,
         date_of_last_login: null,
         user_type: "standard",
         status: "active",
-        author_uuid: expect.any(String),
+        author_uuid: adminId!,
         date_created: expect.any(Date),
       },
     ]);
@@ -130,53 +136,77 @@ describe("user service", () => {
 
   it("should update a user", async () => {
     // standard user created in prior test
-    await updateUserByEmail(userEmail, { name: "Olga Nunes" });
+    await updateUser(userId!, { name: "Olga Nunes" });
 
     // see standard user listed with name
     const users = await listUsers();
     expect(users).toBeArrayOfSize(2);
     expect(users).toStrictEqual([
       {
-        uuid: expect.any(String),
+        uuid: adminId!,
         email: adminEmail,
         name: adminName,
         date_of_last_login: null,
         user_type: "admin",
         status: "active",
-        author_uuid: expect.any(String),
+        author_uuid: adminId!,
         date_created: expect.any(Date),
       },
       {
-        uuid: expect.any(String),
+        uuid: userId!,
         email: userEmail,
         name: "Olga Nunes",
         date_of_last_login: null,
         user_type: "standard",
         status: "active",
-        author_uuid: expect.any(String),
+        author_uuid: adminId!,
         date_created: expect.any(Date),
       },
     ]);
   });
 
+  it("should update a user's program areas", async () => {
+    // standard user created in prior test
+    await updateUser(userId!, { name: "Olga Nunes" });
+    const prog = {
+      uuid: "234-12",
+      name: "Disease",
+      author_uuid: adminId!,
+    };
+    // TODO: update this to program area crud once merged
+    await getDb<Core>().insertInto("program_area").values(prog).execute();
+
+    await updateUserProgramAreas(userId!, ["234-12"]);
+
+    const progAreas = await listUserProgramAreas(userId!);
+
+    expect(progAreas).toStrictEqual([
+      { ...prog, date_created: expect.any(Date) },
+    ]);
+  });
+
   it("should delete a user", async () => {
     // standard user created in prior test
-    await deleteUser(userEmail);
+    await deleteUser(userId!);
 
-    // see standard user listed with name
+    // see only admin user listed
     const users = await listUsers();
     expect(users).toBeArrayOfSize(1);
     expect(users).toStrictEqual([
       {
-        uuid: expect.any(String),
+        uuid: adminId!,
         email: adminEmail,
         name: adminName,
         date_of_last_login: null,
         user_type: "admin",
         status: "active",
-        author_uuid: expect.any(String),
+        author_uuid: adminId!,
         date_created: expect.any(Date),
       },
     ]);
+
+    // should also delete program area assignments
+    const progAreas = await listUserProgramAreas(userId!);
+    expect(progAreas).toStrictEqual([]);
   });
 });
