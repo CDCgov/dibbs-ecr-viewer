@@ -128,13 +128,13 @@ describe("program area service", () => {
   });
 
   it("should delete a program area", async () => {
-    await updateUserProgramAreas(adminId!, [progId!]);
-    const beforeUserProgramAreas = await listUserProgramAreas(adminId!);
-    expect(beforeUserProgramAreas).toBeArrayOfSize(1);
-
     const beforeCreate = await listProgramAreas();
     const id = await createProgramArea("test", []);
     const afterCreate = await listProgramAreas();
+
+    await updateUserProgramAreas(adminId!, [id, progId!]);
+    const beforeUserProgramAreas = await listUserProgramAreas(adminId!);
+    expect(beforeUserProgramAreas).toBeArrayOfSize(2);
 
     await deleteProgramArea(id);
 
@@ -145,6 +145,9 @@ describe("program area service", () => {
     expect(afterCreate).toBeArrayOfSize(4);
 
     const afterUserProgramAreas = await listUserProgramAreas(adminId!);
-    expect(afterUserProgramAreas).toBeArrayOfSize(0);
+    expect(afterUserProgramAreas).toBeArrayOfSize(1);
+    expect(
+      afterUserProgramAreas.filter((p) => p.uuid === progId!),
+    ).toBeArrayOfSize(1);
   });
 });
