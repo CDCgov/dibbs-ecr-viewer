@@ -163,7 +163,6 @@ const updateUserQuery = async (
     .execute();
 };
 
-// TODO PR: should this be admin limited? can a user know their own program areas?
 /**
  * List the program areas a user is assigned to.
  * @param uuid id of the user to update
@@ -172,6 +171,11 @@ const updateUserQuery = async (
 export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
+  const listingUser = await getLoggedInUser();
+  if (!isAdmin(listingUser)) {
+    throw new Error("Standard user cannot list user program areas");
+  }
+
   try {
     return await getDb<Core>()
       .selectFrom(["user_program_area", "program_area"])
