@@ -2,6 +2,8 @@ import "server-only";
 import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
+import { Kysely } from "kysely";
+
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   Core,
@@ -204,10 +206,7 @@ export const updateUserProgramAreas = async (
     await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        await db
-          .deleteFrom("user_program_area")
-          .where("user_uuid", "=", uuid)
-          .execute();
+        await deleteUserProgramAreas(db, uuid);
         for (const program_area_uuid of programAreaUuids) {
           await db
             .insertInto("user_program_area")
@@ -220,6 +219,13 @@ export const updateUserProgramAreas = async (
     console.error({ message, error });
     throw new Error(message);
   }
+};
+
+const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
+  await db
+    .deleteFrom("user_program_area")
+    .where("user_uuid", "=", uuid)
+    .execute();
 };
 
 /**
@@ -235,7 +241,7 @@ export const deleteUser = async (uuid: string): Promise<void> => {
 
   try {
     await updateUserQuery(uuid, { status: "deleted" });
-    // TODO: delete program area assignments once that crud is added
+    await deleteUserProgramAreas(getDb<Core>(), uuid);
   } catch (error: unknown) {
     const message = "Failed to delete user";
     console.error({ message, error });
