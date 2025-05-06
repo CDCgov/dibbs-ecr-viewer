@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
 
+import { getTokenFromHeaders } from "./withApiTokenAuth";
+
 export const NBS_AUTH_HEADER = "x-nbs-authorized";
 
 /**
@@ -22,27 +24,23 @@ export const withNbsAuth: MiddlewareFactory = (
     if (!process.env.NBS_PUB_KEY && !process.env.NBS_API_PUB_KEY)
       return next(request);
 
-    console.log("have key");
-
-    const nbsAuthResp = setAuthCookie(request);
-    console.log("set cookie");
-    if (nbsAuthResp) return nbsAuthResp;
-
     // NBS auth can only be used for ecr viewer pages
     const { pathname } = request.nextUrl;
     let key: string | undefined = undefined;
     if (pathname.endsWith(`/view-data`)) {
+      // Only allow auth param on view-data requests
+      const nbsAuthResp = setAuthCookie(request);
+      if (nbsAuthResp) return nbsAuthResp;
+
       key = process.env.NBS_PUB_KEY;
     } else if (pathname.includes(`/api/`)) {
       key = process.env.NBS_API_PUB_KEY;
     }
-    console.log({ pathname, key });
 
     // No NBS auth to do here
     if (!key) return next(request);
 
     const isAuthorized = await checkIsAuthorized(request, key);
-    console.log({ isAuthorized });
     if (isAuthorized) {
       return end(request);
     } else {
@@ -55,14 +53,15 @@ export const withNbsAuth: MiddlewareFactory = (
 
 /**
  * Extracts an authentication token from the query parameters of a request and sets it as an HTTP-only
- * cookie on a response object.
+ * cookie on a response object. We move this to a cookie and redirect so that the user
+ * doesn't see the cookie in their url bar.
  * @param req - The incoming request object provided by Next.js, containing the URL from
  *   which the "auth" query parameter will be extracted.
  * @returns A Next.js response object configured to redirect the user and set the
  *   "auth-token" cookie if the "auth" parameter exists, or `null` if the
  *   "auth" parameter does not exist in the request.
  */
-const setAuthCookie = (req: NextRequest) => {
+const setAuthCookie = (req: NextRequest): NextResponse | null => {
   const url = req.nextUrl;
   const auth = url.searchParams.get("auth");
   if (auth) {
@@ -75,8 +74,8 @@ const setAuthCookie = (req: NextRequest) => {
 };
 
 /**
- * Authorizes requests based on an authentication token provided in the request's cookies.
- *   The function checks for the presence of an "auth-token" cookie and attempts to verify it
+ * Authorizes requests based on an authentication token provided in the request's cookies or headers.
+ *   The function checks for the presence of an "auth-token" cookie or "Authorization" header and attempts to verify it
  *   using JWT verification with a public key. If the token is missing or invalid, the function
  *   returns a JSON response indicating that authentication is required with a 401 status code.
  * @param req - The incoming Next.js request object, which includes the request cookies
@@ -85,8 +84,7 @@ const setAuthCookie = (req: NextRequest) => {
  * @returns - Whether the user is authorized.
  */
 const checkIsAuthorized = async (req: NextRequest, key: string) => {
-  const auth = req.cookies.get("auth-token")?.value;
-  console.log({ auth });
+  const auth = req.cookies.get("auth-token")?.value || getTokenFromHeaders(req);
 
   if (!auth) {
     return false;

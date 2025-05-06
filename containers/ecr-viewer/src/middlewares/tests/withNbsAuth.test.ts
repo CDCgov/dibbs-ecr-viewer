@@ -32,7 +32,7 @@ describe("NBS Auth Middleware", () => {
 
   it("should strip the auth query param and set the token", async () => {
     const req = new NextRequest(
-      "https://www.example.com/ecr-viewer/api?id=1234&auth=abcd",
+      "https://www.example.com/ecr-viewer/view-data?id=1234&auth=abcd",
     );
 
     const resp = await middleware(req);
@@ -43,7 +43,7 @@ describe("NBS Auth Middleware", () => {
       httpOnly: true,
     });
     expect(resp?.headers.get("location")).toBe(
-      "https://www.example.com/ecr-viewer/api?id=1234",
+      "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
   });
 
@@ -51,9 +51,10 @@ describe("NBS Auth Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/process-zip/",
     );
-    req.cookies.set("auth-token", "foobar");
+    req.headers.set("Authorization", "Bearer foobar");
 
     const resp = await middleware(req);
+    expect(jwtVerify).toHaveBeenCalled();
     expect(resp?.status).toBe(200);
   });
 

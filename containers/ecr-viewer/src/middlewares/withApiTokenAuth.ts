@@ -16,7 +16,7 @@ const updateProviderCache = async () => {
 };
 
 /**
- * Middleware for handling next authorization
+ * Middleware for handling authorization of api routes via token
  * @param next Next middleware in the chain
  * @param end Early exit the chain
  * @returns a NextResponse
@@ -37,11 +37,8 @@ export const withApiTokenAuth: MiddlewareFactory = (
     }
 
     // Make sure we have a token, if not, bail out
-    const [method, authToken] =
-      request.headers.get("Authorization")?.split(" ") || [];
-    if (method !== "Bearer" || !authToken) {
-      return next(request);
-    }
+    const authToken = getTokenFromHeaders(request);
+    if (!authToken) return next(request);
 
     // populate cache if needed
     const provider = providerMap[0];
@@ -58,4 +55,19 @@ export const withApiTokenAuth: MiddlewareFactory = (
       return next(request);
     }
   };
+};
+
+/**
+ * Get a bearer authorization token from the request headers
+ * @param request The api request
+ * @returns the token, if available
+ */
+export const getTokenFromHeaders = (
+  request: NextRequest,
+): string | undefined => {
+  const [method, authToken] =
+    request.headers.get("Authorization")?.split(" ") || [];
+  if (method === "Bearer" && !!authToken) {
+    return authToken;
+  }
 };
