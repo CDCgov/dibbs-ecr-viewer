@@ -18,7 +18,7 @@ describe("processZip", () => {
   const mockMetadata = { key: "value" };
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
     process.env.SOURCE = S3_SOURCE;
   });
 

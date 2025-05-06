@@ -17,6 +17,10 @@ afterAll(async () => {
   await dropExisting();
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const adminId = "1235";
 const adminUser = {
   uuid: adminId,

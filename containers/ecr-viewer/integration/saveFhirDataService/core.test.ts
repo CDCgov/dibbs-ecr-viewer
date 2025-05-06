@@ -30,6 +30,10 @@ afterAll(async () => {
   await dropExisting();
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("saveFhirData - core", () => {
   afterEach(async () => {
     await clearCore();

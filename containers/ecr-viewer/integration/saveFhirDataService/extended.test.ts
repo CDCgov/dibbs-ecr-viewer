@@ -104,6 +104,10 @@ afterAll(async () => {
   await dropExisting();
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("saveFhirData - extended", () => {
   afterEach(async () => {
     await clearExtended();
