@@ -19,6 +19,12 @@ const baseCoreMetadata: BundleMetadata = {
   rr: [],
   report_date: "12/20/2024",
 };
+const condition_reference = {
+  code: "123",
+  concept_name: "condition (disease)",
+  condition_name: "condition",
+  condition_category: "category",
+};
 
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
@@ -209,5 +215,52 @@ describe("saveFhirData - core", () => {
     expect(resp.message).toEqual("Unknown metadataType: unknown");
     expect(resp.status).toEqual(400);
     expect(rolledback).toBeFalse();
+  });
+
+  it("should reference the condition_code foreign key", async () => {
+    const metadata: BundleMetadata = {
+      ...baseCoreMetadata,
+      rr: [
+        {
+          condition: "flu",
+          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+        },
+      ],
+    };
+
+    const db = getDb<Core>();
+    await db
+      .insertInto("condition_reference")
+      .values({
+        code: "123",
+        concept_name: "condition (disease)",
+        condition_name: "flu",
+        condition_category: "category",
+      })
+      .execute();
+
+    let rolledback = false;
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "unknown" as "core", // appease typescript
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => {
+        rolledback = true;
+        return makePromiseResolveWithStatus(200);
+      },
+    );
+
+    const conditions = await db
+      .selectFrom("ecr_rr_conditions")
+      .selectAll()
+      .execute();
+
+    expect(resp.message).toEqual("Success. Saved metadata to database.");
+    expect(resp.status).toEqual(200);
+    expect(conditions).toHaveLength(1);
+    expect(conditions[0].condition_code).toEqual("123");
+
+    await clearCore();
   });
 });

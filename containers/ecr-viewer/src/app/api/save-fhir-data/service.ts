@@ -308,6 +308,19 @@ const saveRR = async (
   // Loop through each condition/rule object in rr array
   for (const rrItem of metadata.rr) {
     const rr_conditions_uuid = randomUUID();
+
+    const rr_code = await trx
+      .selectFrom("condition_reference")
+      .select("code")
+      .where("condition_name", "=", rrItem.condition)
+      .executeTakeFirst();
+
+    if (!rr_code) {
+      console.error(
+        `Condition ${rrItem.condition} not found in condition_reference table`,
+      );
+    }
+
     // Insert condition into ecr_rr_conditions
     await trx
       .insertInto("ecr_rr_conditions")
@@ -315,6 +328,7 @@ const saveRR = async (
         uuid: rr_conditions_uuid,
         eicr_id: ecrId,
         condition: rrItem.condition,
+        condition_code: rr_code?.code,
       })
       .execute();
     // Loop through the rule summaries array
