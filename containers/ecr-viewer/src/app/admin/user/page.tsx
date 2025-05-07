@@ -44,45 +44,47 @@ const UserAdminPage = async () => {
       </main>
 
       {/* HACKY, BUT USEFUL. KEEPING AROUND FOR THE MOMENT*/}
-      <div style={{ margin: "100px" }}>
-        <h2>Scratch functionality to test above</h2>
-        <form action={submitCreateUser}>
-          <label>
-            Email:
-            <input type="text" required={true} id="email" name="email" />
-          </label>
-          <fieldset>
-            <legend>User type:</legend>
-            <div>
-              <label>
-                Standard User
-                <input
-                  type="radio"
-                  name="user_type"
-                  required={true}
-                  defaultChecked={true}
-                  value="standard"
-                />
-              </label>
-              <label>
-                Admin User
-                <input
-                  type="radio"
-                  name="user_type"
-                  required={true}
-                  value="admin"
-                />
-              </label>
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend>
-              Select program areas: TODO: merge program area crud :(
-            </legend>
-          </fieldset>
-          <button type="submit">Add New User</button>
-        </form>
-      </div>
+      {process.env.NODE_ENV !== "production" && (
+        <div style={{ margin: "100px" }}>
+          <h2>Scratch functionality to test above</h2>
+          <form action={submitCreateUser}>
+            <label>
+              Email:
+              <input type="text" required={true} id="email" name="email" />
+            </label>
+            <fieldset>
+              <legend>User type:</legend>
+              <div>
+                <label>
+                  Standard User
+                  <input
+                    type="radio"
+                    name="user_type"
+                    required={true}
+                    defaultChecked={true}
+                    value="standard"
+                  />
+                </label>
+                <label>
+                  Admin User
+                  <input
+                    type="radio"
+                    name="user_type"
+                    required={true}
+                    value="admin"
+                  />
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>
+                Select program areas: TODO: merge program area crud :(
+              </legend>
+            </fieldset>
+            <button type="submit">Add New User</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
