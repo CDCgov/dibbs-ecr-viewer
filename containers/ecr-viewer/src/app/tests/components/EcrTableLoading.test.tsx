@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
 import router from "next-router-mock";
 
-import { EcrTableLoading } from "@/app/components/EcrTableLoading";
+import { EcrTableLoading } from "@/app/components/table/TableContentLoading";
 
 jest.mock("../../services/listEcrDataService");
 

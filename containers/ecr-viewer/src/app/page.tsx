@@ -4,14 +4,14 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { dbIsValid } from "./api/migrate-db/migrate";
-import EcrPaginationWrapper from "./components/EcrPaginationWrapper";
-import EcrTableContent from "./components/EcrTableContent";
-import { EcrTableHeader } from "./components/EcrTableHeader";
-import { EcrTableLoading } from "./components/EcrTableLoading";
 import { MetadataDbInvalid } from "./components/ErrorPage";
 import Filters from "./components/Filters";
 import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
+import { EcrTableLoading } from "./components/table/TableContentLoading";
+import EcrPaginationWrapper from "./components/table/ecr/EcrPaginationWrapper";
+import EcrTableContent from "./components/table/ecr/EcrTableContent";
+import { EcrTableHeader } from "./components/table/ecr/EcrTableHeader";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";

@@ -1,8 +1,8 @@
-import { Table } from "@trussworks/react-uswds";
 import { notFound } from "next/navigation";
 
-import EcrTableHeader, { TableHeader } from "@/app/components/EcrTableHeader";
 import Header from "@/app/components/Header";
+import { PaginatedSortableTable } from "@/app/components/table/PaginatedSortableTable";
+import { TableHeader } from "@/app/components/table/ecr/EcrTableHeader";
 import { formatDate } from "@/app/services/formatDateService";
 import {
   getLoggedInUser,
@@ -20,7 +20,10 @@ const UserAdminPage = async () => {
     notFound();
   }
 
-  const users = await listUsers();
+  const users = (await listUsers()).map((u) => ({
+    ...u,
+    date_of_last_login: formatDate(u.date_of_last_login?.toISOString()),
+  }));
 
   const tableHeaders: TableHeader[] = [
     {
@@ -38,14 +41,14 @@ const UserAdminPage = async () => {
       sortDirection: "",
     },
     {
-      id: "usertype",
+      id: "user_type",
       value: "User Type",
       className: "",
       dataSortable: true,
       sortDirection: "",
     },
     {
-      id: "lastlogin",
+      id: "date_of_last_login",
       value: "Last Logged In",
       className: "",
       dataSortable: true,
@@ -57,20 +60,7 @@ const UserAdminPage = async () => {
     <div className="display-flex flex-column height-viewport">
       <Header />
       <main>
-        <Table bordered={false}>
-          <EcrTableHeader headers={tableHeaders} disabled={false} />
-
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.uuid}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.user_type}</td>
-                <td>{formatDate(user.date_of_last_login?.toISOString())}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <PaginatedSortableTable initHeaders={tableHeaders} items={users} />
       </main>
     </div>
   );

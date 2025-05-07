@@ -4,10 +4,9 @@ import React, { ReactNode } from "react";
 import { Label, Select } from "@trussworks/react-uswds";
 import Cookies from "js-cookie";
 
+import { Pagination } from "@/app/components/Pagination";
 import { PAGE_SIZES } from "@/app/constants";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
-
-import { Pagination } from "./Pagination";
 
 interface EcrPaginationWrapperProps {
   totalCount: number;

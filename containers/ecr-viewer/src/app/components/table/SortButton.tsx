@@ -3,7 +3,7 @@ import React from "react";
 
 import { Button } from "@trussworks/react-uswds";
 
-import { ArrowDownward, ArrowUpward, SortArrow } from "./Icon";
+import { ArrowDownward, ArrowUpward, SortArrow } from "@/app/components/Icon";
 
 type SortButtonProps = {
   columnId: string;

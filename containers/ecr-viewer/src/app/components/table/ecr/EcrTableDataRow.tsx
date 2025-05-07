@@ -5,14 +5,13 @@ import { Button } from "@trussworks/react-uswds";
 import { motion } from "motion/react";
 import Link from "next/link";
 
+import { ExpandMore } from "@/app/components/Icon";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import { EcrDisplay, RelatedEcr } from "@/app/services/listEcrDataService";
 import { noData } from "@/app/utils/data-utils";
 import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
 import { saveToSessionStorage } from "@/app/utils/storage-utils";
-
-import { ExpandMore } from "./Icon";
 
 const transition = {
   type: "spring",
