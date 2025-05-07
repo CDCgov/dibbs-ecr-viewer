@@ -1,6 +1,11 @@
 // This file contains declarations which are used in high level components or which style
 // elements without a modifier to scope them to a specific component
 
+// ===== Variables ===== //
+
+$content-container-max-width: 80rem;
+$content-container-min-width: 40rem;
+
 // ==== Base element styles ===== //
 
 h2 {
@@ -28,6 +33,12 @@ td {
   display: flex;
   justify-content: center;
   overflow: visible;
+}
+
+.content-container {
+  width: 100%;
+  max-width: $content-container-max-width;
+  min-width: $content-container-min-width;
 }
 
 @keyframes shimmer {

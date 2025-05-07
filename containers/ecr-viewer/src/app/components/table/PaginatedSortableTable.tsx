@@ -2,9 +2,10 @@
 
 import { useState, ReactNode } from "react";
 
-import { Table } from "@trussworks/react-uswds";
+import { Label, Select, Table } from "@trussworks/react-uswds";
 
 import { Pagination } from "@/app/components/Pagination";
+import { PAGE_SIZES } from "@/app/constants";
 import { noData } from "@/app/utils/data-utils";
 
 import TableHeaderCell, { SortHandlerFn, TableHeader } from "./TableHeaderCell";
@@ -14,18 +15,21 @@ import TableHeaderCell, { SortHandlerFn, TableHeader } from "./TableHeaderCell";
  * @param root0
  * @param root0.items
  * @param root0.initHeaders
+ * @param root0.itemType
  */
 export const PaginatedSortableTable = <
   T extends { uuid: string; [k: string]: ReactNode },
 >({
   items,
+  itemType,
   initHeaders,
 }: {
   items: T[];
+  itemType: string;
   initHeaders: TableHeader<T>[];
 }) => {
   const [tableHeaders, setTableHeaders] = useState(initHeaders);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0]);
   const [page, setPage] = useState(1);
 
   const numItems = items.length;
@@ -33,6 +37,7 @@ export const PaginatedSortableTable = <
   const startIndex = numItems > 0 ? (page - 1) * itemsPerPage + 1 : 0;
   const endIndex = Math.min(page * itemsPerPage, numItems);
 
+  console.log({ numItems, totalPages, startIndex, endIndex });
   // maybe memo this?
   const sortColumn = tableHeaders.find(({ sortDirection }) => !!sortDirection);
   const sortedItems = [...items];
@@ -45,11 +50,11 @@ export const PaginatedSortableTable = <
 
   return (
     <div>
-      <Table bordered={false}>
+      <Table bordered={false} className="width-full">
         <SortableHeader headers={tableHeaders} setHeaders={setTableHeaders} />
 
         <tbody>
-          {sortedItems.slice(startIndex, endIndex).map((item) => (
+          {sortedItems.slice(startIndex - 1, endIndex).map((item) => (
             <tr key={item.uuid}>
               {initHeaders.map(({ id }) => (
                 <td key={id}>{item[id] || noData}</td>
@@ -58,14 +63,43 @@ export const PaginatedSortableTable = <
           ))}
         </tbody>
       </Table>
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        pathname=""
-        onClickPrevious={() => setPage(page - 1)}
-        onClickNext={() => setPage(page + 1)}
-        onClickPageNumber={(_e, p) => setPage(p)}
-      />
+      <div className="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center">
+        <div className="flex-1">
+          Showing {startIndex}-{endIndex} of {numItems} {itemType}
+        </div>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          pathname=""
+          onClickPrevious={() => setPage(page - 1)}
+          onClickNext={() => setPage(page + 1)}
+          onClickPageNumber={(_e, p) => setPage(p)}
+        />
+        <div className="display-flex flex-align-center flex-1 flex-justify-end">
+          <Label
+            htmlFor="input-select"
+            className="margin-top-0 margin-right-1025"
+          >
+            {itemType} per page
+          </Label>
+          <Select
+            id="input-select"
+            name="input-select"
+            value={itemsPerPage.toString()}
+            className="styled width-11075 margin-top-0"
+            onChange={(e) => {
+              const value = e.target.value;
+              setItemsPerPage(Number(value));
+            }}
+          >
+            {PAGE_SIZES.map((size) => (
+              <option value={size.toString()} key={size}>
+                {size}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </div>
     </div>
   );
 };

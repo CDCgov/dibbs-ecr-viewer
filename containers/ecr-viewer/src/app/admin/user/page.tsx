@@ -23,6 +23,7 @@ const UserAdminPage = async () => {
   const users = (await listUsers()).map((u) => ({
     ...u,
     date_of_last_login: formatDate(u.date_of_last_login?.toISOString()),
+    date_created: formatDate(u.date_created.toISOString()),
   }));
 
   const tableHeaders: TableHeader[] = [
@@ -59,8 +60,14 @@ const UserAdminPage = async () => {
   return (
     <div className="display-flex flex-column height-viewport">
       <Header />
-      <main>
-        <PaginatedSortableTable initHeaders={tableHeaders} items={users} />
+      <main className="main-container">
+        <div className="content-container">
+          <PaginatedSortableTable
+            initHeaders={tableHeaders}
+            items={users}
+            itemType="users"
+          />
+        </div>
       </main>
     </div>
   );
