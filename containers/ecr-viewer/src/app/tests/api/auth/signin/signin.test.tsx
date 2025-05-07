@@ -11,7 +11,7 @@ jest.mock("next-auth/react", () => ({
   SessionProvider: ({ children }: { children: unknown }) => <>{children}</>,
 }));
 
-jest.mock("../../../../api/auth/auth", () => ({
+jest.mock("../../../../api/auth/providers", () => ({
   providerMap: [
     {
       id: "keycloak",
