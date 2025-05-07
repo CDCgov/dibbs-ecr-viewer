@@ -26,6 +26,24 @@ const condition_reference = {
   condition_category: "category",
 };
 
+const adminId = "1235";
+const adminUser = {
+  uuid: adminId,
+  email: "admin@test.gov",
+  name: "Adam Admin",
+  date_of_last_login: new Date("2024-01-01"),
+  user_type: "admin",
+  status: "active",
+  author_uuid: adminId,
+};
+
+const progId = "234-12";
+const programArea = {
+  uuid: progId,
+  name: "Disease",
+  author_uuid: adminId,
+};
+
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
@@ -218,6 +236,7 @@ describe("saveFhirData - core", () => {
   });
 
   it("should reference the condition_code foreign key", async () => {
+    const db = getDb<Core>();
     const metadata: BundleMetadata = {
       ...baseCoreMetadata,
       rr: [
@@ -228,21 +247,28 @@ describe("saveFhirData - core", () => {
       ],
     };
 
-    const db = getDb<Core>();
+    // Insert minimal condition_reference data
+    await db.insertInto("user").values(adminUser).execute();
+    await db.insertInto("program_area").values(programArea).execute();
     await db
-      .insertInto("condition_reference")
-      .values({
-        code: "123",
-        concept_name: "condition (disease)",
-        condition_name: "flu",
-        condition_category: "category",
-      })
-      .execute();
+      .updateTable("condition_reference")
+      .set({ program_area_uuid: progId })
+      .where("code", "=", "123")
+      .execute(),
+      await db
+        .insertInto("condition_reference")
+        .values({
+          code: "123",
+          concept_name: "condition (disease)",
+          condition_name: "flu",
+          condition_category: "category",
+        })
+        .execute();
 
     let rolledback = false;
     const resp = await saveFhirMetadata(
       "1-2-3-4",
-      "unknown" as "core", // appease typescript
+      "core",
       metadata,
       makePromiseResolveWithStatus(200),
       () => {

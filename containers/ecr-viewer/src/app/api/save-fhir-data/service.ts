@@ -315,12 +315,6 @@ const saveRR = async (
       .where("condition_name", "=", rrItem.condition)
       .executeTakeFirst();
 
-    if (!rr_code) {
-      console.error(
-        `Condition ${rrItem.condition} not found in condition_reference table`,
-      );
-    }
-
     // Insert condition into ecr_rr_conditions
     await trx
       .insertInto("ecr_rr_conditions")

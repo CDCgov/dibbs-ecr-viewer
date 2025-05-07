@@ -1,7 +1,7 @@
-import { Kysely, sql } from "kysely";
+import { Kysely } from "kysely";
 
 import { AnyDb } from "@/app/data/metadataDb/database";
-import { dbNamespace, dbDialect } from "@/app/data/metadataDb/utils/db-config";
+import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 import { getTable } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
