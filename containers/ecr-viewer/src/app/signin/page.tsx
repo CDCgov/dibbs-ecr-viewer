@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import bgRedirect from "../../../assets/bg-redirect.svg";
-import { providerMap } from "@/app/api/auth/auth";
+import { providerMap } from "@/app/api/auth/providers";
 
 import { RedirectButton } from "./components/RedirectButton";
 

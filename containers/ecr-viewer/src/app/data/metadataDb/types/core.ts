@@ -7,14 +7,14 @@ import {
 } from "kysely";
 
 export interface ecr_data {
-  eicr_id: Generated<string>;
+  eicr_id: string;
   set_id: string;
   eicr_version_number: string | undefined;
   fhir_reference_link: string | undefined;
   date_created: Generated<Date>;
-  last_name: string | undefined;
-  first_name: string | undefined;
-  birth_date: ColumnType<Date, string> | undefined;
+  last_name: string;
+  first_name: string;
+  birth_date: ColumnType<Date, string>;
   encounter_start_date: Date | undefined;
 }
 

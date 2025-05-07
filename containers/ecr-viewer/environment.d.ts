@@ -48,11 +48,19 @@ namespace EnvironmentVariables {
     //#region auth_integrated
     /**
      * @category Authentication - Integrated
-     * @description Public key for NBS authentication. \n
+     * @description Public key for NBS authentication for viewer. \n
      * This public key should correspond to a private key that you generate and store within the NBS Configuration table.
      * To generate these keys, you can use [PuttyGen for Windows](https://learn.microsoft.com/en-us/viva/glint/setup/sftp-ssh-key-gen#create-an-ssh-key-pair-on-microsoft-windows) or [ssh-keygen for MacOS/Linux](https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
      */
     NBS_PUB_KEY?: string;
+
+    /**
+     * @category Authentication - Integrated
+     * @description Public key for NBS authentication for API Routes. \n
+     * This public key should correspond to a private key that you generate and use to create tokens when using the private api routes.
+     * To generate these keys, you can use [PuttyGen for Windows](https://learn.microsoft.com/en-us/viva/glint/setup/sftp-ssh-key-gen#create-an-ssh-key-pair-on-microsoft-windows) or [ssh-keygen for MacOS/Linux](https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
+     */
+    NBS_API_PUB_KEY?: string;
     //#endregion auth_integrated
   }
   /**

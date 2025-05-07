@@ -86,7 +86,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   usual_industry: "Space Exploration",
   preferred_language: "English",
   pregnancy_status: "Pregnant",
-  ecr_id: "234322",
   last_name: "Kenobi",
   first_name: "Obi-Wan",
   birth_date: "1970-01-01",
@@ -103,6 +102,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dropExisting();
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe("saveFhirData - extended", () => {
