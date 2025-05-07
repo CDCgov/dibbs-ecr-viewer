@@ -91,3 +91,13 @@ td {
     margin-block-end: 0.5em;
   }
 }
+
+$table-border-radius-md: 0.5rem;
+.table-radius-md {
+  th:first-of-type {
+    border-top-left-radius: $table-border-radius-md;
+  }
+  th:last-of-type {
+    border-top-right-radius: $table-border-radius-md;
+  }
+}

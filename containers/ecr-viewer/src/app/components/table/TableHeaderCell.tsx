@@ -25,15 +25,18 @@ export type SortHandlerFn = (
  * @param root0.column
  * @param root0.disabled
  * @param root0.handleSort
+ * @param root0.style
  */
 export const TableHeaderCell = <T,>({
   column,
   disabled,
   handleSort,
+  style,
 }: {
   column: TableHeader<T>;
   disabled: boolean;
   handleSort: SortHandlerFn;
+  style?: Record<string, string>;
 }) => {
   return (
     <th
@@ -41,6 +44,7 @@ export const TableHeaderCell = <T,>({
       role="columnheader"
       scope="col"
       className={column.className}
+      style={style}
       data-sortable={column.dataSortable}
       aria-sort={getAriaSortValue(column.sortDirection)}
     >

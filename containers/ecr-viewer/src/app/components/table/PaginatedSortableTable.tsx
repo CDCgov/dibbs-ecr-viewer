@@ -50,7 +50,7 @@ export const PaginatedSortableTable = <
 
   return (
     <div>
-      <Table bordered={false} className="width-full">
+      <Table bordered={false} className="width-full table-radius-md">
         <SortableHeader headers={tableHeaders} setHeaders={setTableHeaders} />
 
         <tbody>
@@ -63,7 +63,7 @@ export const PaginatedSortableTable = <
           ))}
         </tbody>
       </Table>
-      <div className="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center">
+      <div className="width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center">
         <div className="flex-1">
           Showing {startIndex}-{endIndex} of {numItems} {itemType}
         </div>
@@ -111,16 +111,17 @@ const SortableHeader = <T,>({
   headers: TableHeader<T>[];
   setHeaders: (h: TableHeader<T>[]) => void;
 }) => {
-  const handleSort: SortHandlerFn = (columnId, direction) =>
+  const handleSort: SortHandlerFn = (columnId, direction) => {
+    console.log({ columnId, direction });
     setHeaders(
       headers.map((h) => ({
         ...h,
         sortDirection: h.id === columnId ? direction : "",
       })),
     );
-
+  };
   return (
-    <thead className="position-sticky top-0">
+    <thead>
       <tr>
         {headers.map((column) => (
           <TableHeaderCell
@@ -128,6 +129,7 @@ const SortableHeader = <T,>({
             column={column}
             handleSort={handleSort}
             disabled={false}
+            style={{ paddingTop: "1.25rem" }}
           />
         ))}
       </tr>
