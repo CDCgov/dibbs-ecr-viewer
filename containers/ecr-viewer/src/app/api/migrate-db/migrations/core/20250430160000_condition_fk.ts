@@ -25,52 +25,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
       cb.references("condition_reference.code"),
     )
     .execute();
-
-  if (dbDialect() === "postgres") {
-    await sql`
-      CREATE OR REPLACE FUNCTION set_condition_code()
-      RETURNS TRIGGER AS $$
-      BEGIN
-        IF NEW.condition_code IS NULL THEN
-          SELECT code INTO NEW.condition_code
-          FROM ${sql.raw(schema)}.condition_reference
-          WHERE condition_reference.condition_name = NEW.condition
-          LIMIT 1;
-        END IF;
-        RETURN NEW;
-      END;
-      $$ LANGUAGE plpgsql;
-    `.execute(_db);
-
-    await sql`
-      CREATE TRIGGER trg_set_condition_code
-      BEFORE INSERT ON ${sql.raw(schema)}.ecr_rr_conditions
-      FOR EACH ROW
-      EXECUTE FUNCTION set_condition_code();
-    `.execute(_db);
-  } else if (dbDialect() === "sqlserver") {
-    await sql`      
-      CREATE TRIGGER trg_set_condition_code
-      ON [${sql.raw(schema)}].[ecr_rr_conditions]
-      INSTEAD OF INSERT
-      AS
-      BEGIN
-        INSERT INTO [${sql.raw(
-          schema,
-        )}].[ecr_rr_conditions] (uuid, eicr_id, condition, condition_code)
-        SELECT 
-          i.uuid,
-          i.eicr_id,
-          i.condition,
-          COALESCE(i.condition_code, cr.code)
-        FROM inserted i
-        LEFT JOIN [${sql.raw(schema)}].[condition_reference] cr
-          ON cr.condition_name = i.condition;
-      END;
-    `.execute(_db);
-  } else {
-    throw new Error("Unsupported database dialect for trigger creation.");
-  }
 }
 
 /**
