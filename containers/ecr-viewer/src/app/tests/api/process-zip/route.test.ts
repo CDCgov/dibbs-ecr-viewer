@@ -21,7 +21,7 @@ describe("POST Process Zip", () => {
   };
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   it("should return a 200 response when valid zip file is provided", async () => {
