@@ -38,5 +38,5 @@ export const INITIAL_HEADERS: TableHeader[] = [
   },
 ];
 
-export const PAGE_SIZES = [25, 50, 75, 100];
-export const DEFAULT_ITEMS_PER_PAGE = PAGE_SIZES[0];
+export const PAGE_SIZES = [10, 25, 50, 75, 100];
+export const DEFAULT_ITEMS_PER_PAGE = PAGE_SIZES[1];

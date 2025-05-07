@@ -49,7 +49,7 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
   const sortedItems = [...items];
   if (!!sortColumn) {
     sortedItems.sort((a, b) => {
-      const diff = (a[sortColumn.id] || "") < (b[sortColumn.id] || "") ? 1 : -1;
+      const diff = (a[sortColumn.id] || "") < (b[sortColumn.id] || "") ? -1 : 1;
       return sortColumn.sortDirection === "ASC" ? diff : diff * -1;
     });
   }
@@ -62,7 +62,7 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
         <tbody>
           {sortedItems.slice(startIndex, endIndex).map((item) => (
             <tr key={item.uuid}>
-              {initHeaders.map(({ id, formatter = (v) => `${v}` }) => (
+              {initHeaders.map(({ id, formatter = (v) => v }) => (
                 <td key={id}>{formatter(item[id], item) || noData}</td>
               ))}
             </tr>

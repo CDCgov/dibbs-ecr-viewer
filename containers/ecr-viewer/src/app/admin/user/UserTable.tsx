@@ -42,7 +42,7 @@ const tableHeaders: TableColumn<ListedUser>[] = [
     value: "Last Logged In",
     dataSortable: true,
     sortDirection: "",
-    formatter: (d: Date) => formatDateTime(d.toISOString()),
+    formatter: (d: Date | null) => formatDateTime(d?.toISOString()),
   },
 ];
 
