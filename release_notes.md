@@ -1,3 +1,27 @@
+# Notes 5/7/25
+## Release Summary
+This release adds support for automated database migrations for the non-integrated version of the Viewer. More information about these automated migrations is below.
+
+This release also adds a sign-out button to the application, and added [new docs](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html) to reference. It also adds basic user management tables to the application, which will be used in user permissions later.
+
+
+### 🚧 Required Infrastructure Changes 🚧
+
+There are two environment variable changes associated with the automated migrations. These changes are only required for users running the non-integrated Viewer.
+
+`METADATA_DATABASE_SCHEMA`: Optional. Possible values are "core" and "extended". Database schema to use for metadata storage. Core has a small subset of Extended. Default value is "extended".
+`METADATA_DATABASE_MIGRATION_SECRET` : Secret needed to apply migrations via the /migrate-db api route. If not set, a random UUID will be assigned by the application and logged to the server.
+
+
+## 📊 Automated Database Migrations 📊
+
+This release adds support for [Kysely automated database migrations](https://kysely.dev/docs/migrations). These add two quality-of-life improvements for implementers of the Viewer:
+1. If the eCR Viewer database isn't up to date with the latest migrations, the application will show an error message
+    i. This means you can't get into a state where the data schema version doesn't match the application version.
+2. Instead of running the SQL scripts manually, you'll call a new API endpoint that runs the migrations for you. See [API documentation here](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/containers/ecr-viewer/api-documentation.md#migrate-metadata-database).
+
+### 🏕 Notable Features
+
 # Notes 4/29/25
 ## Release Summary
 This release adds support for automated database migrations for the non-integrated version of the Viewer. More information about these automated migrations is below.
