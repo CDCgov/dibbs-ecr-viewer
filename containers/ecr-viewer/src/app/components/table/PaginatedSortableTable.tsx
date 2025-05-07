@@ -10,6 +10,15 @@ import { noData } from "@/app/utils/data-utils";
 import PaginationBar from "./PaginationBar";
 import TableHeaderCell, { SortHandlerFn, TableHeader } from "./TableHeaderCell";
 
+type StringKeys<T> = Extract<keyof T, string>;
+
+export interface TableColumn<T> extends TableHeader {
+  id: StringKeys<T>;
+  // TODO: can we better express this type?
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  formatter?: (val: any, item: T) => ReactNode;
+}
+
 /**
  * A client side controlled paginated and sorted table. For use with smaller data.
  * @param props React Props
@@ -18,16 +27,14 @@ import TableHeaderCell, { SortHandlerFn, TableHeader } from "./TableHeaderCell";
  * @param props.itemType Type of item being displayed
  * @returns client side paginated sortable table
  */
-export const PaginatedSortableTable = <
-  T extends { uuid: string; [k: string]: ReactNode },
->({
+export const PaginatedSortableTable = <T extends { uuid: string }>({
   items,
   itemType,
   initHeaders,
 }: {
   items: T[];
   itemType: string;
-  initHeaders: TableHeader<T>[];
+  initHeaders: TableColumn<T>[];
 }) => {
   const [tableHeaders, setTableHeaders] = useState(initHeaders);
   const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0]);
@@ -50,17 +57,13 @@ export const PaginatedSortableTable = <
   return (
     <div>
       <Table bordered={false} className="width-full table-radius-md">
-        <SortableHeader
-          key={Math.random()}
-          headers={tableHeaders}
-          setHeaders={setTableHeaders}
-        />
+        <SortableHeader headers={tableHeaders} setHeaders={setTableHeaders} />
 
         <tbody>
           {sortedItems.slice(startIndex, endIndex).map((item) => (
             <tr key={item.uuid}>
-              {initHeaders.map(({ id }) => (
-                <td key={id}>{item[id] || noData}</td>
+              {initHeaders.map(({ id, formatter = (v) => `${v}` }) => (
+                <td key={id}>{formatter(item[id], item) || noData}</td>
               ))}
             </tr>
           ))}
@@ -87,8 +90,8 @@ const SortableHeader = <T,>({
   headers,
   setHeaders,
 }: {
-  headers: TableHeader<T>[];
-  setHeaders: (h: TableHeader<T>[]) => void;
+  headers: TableColumn<T>[];
+  setHeaders: (h: TableColumn<T>[]) => void;
 }) => {
   const handleSort: SortHandlerFn = (columnId, direction) =>
     setHeaders(

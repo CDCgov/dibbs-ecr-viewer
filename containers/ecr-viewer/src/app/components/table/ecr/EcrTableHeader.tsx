@@ -17,7 +17,7 @@ export const EcrTableHeader = <T,>({
   headers,
   disabled,
 }: {
-  headers: TableHeader<T>[];
+  headers: TableHeader[];
   disabled: boolean;
 }) => {
   const { updateQueryParam, pushQueryUpdate } = useQueryParam();

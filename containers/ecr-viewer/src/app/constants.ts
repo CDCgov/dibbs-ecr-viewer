@@ -1,8 +1,6 @@
 import { TableHeader } from "./components/table/TableHeaderCell";
 
-// We don't use the id to index into any object, so this is fine here
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const INITIAL_HEADERS: TableHeader<any>[] = [
+export const INITIAL_HEADERS: TableHeader[] = [
   {
     id: "patient",
     value: "Patient",

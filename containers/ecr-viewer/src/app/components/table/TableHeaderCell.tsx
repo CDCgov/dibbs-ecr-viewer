@@ -3,16 +3,15 @@ import React from "react";
 
 import { SortButton } from "./SortButton";
 
-type StringKeys<T> = Extract<keyof T, string>;
 export type SortDirection = "ASC" | "DESC" | "";
 
-export type TableHeader<T> = {
-  id: StringKeys<T>;
+export interface TableHeader {
+  id: string;
   value: string;
-  className: string;
+  className?: string;
   dataSortable: boolean;
   sortDirection: SortDirection;
-};
+}
 
 export type SortHandlerFn = (
   columnId: string,
@@ -28,13 +27,13 @@ export type SortHandlerFn = (
  * @param props.style element style for the `th`
  * @returns table header cell component
  */
-export const TableHeaderCell = <T,>({
+export const TableHeaderCell = ({
   column,
   disabled,
   handleSort,
   style,
 }: {
-  column: TableHeader<T>;
+  column: TableHeader;
   disabled: boolean;
   handleSort: SortHandlerFn;
   style?: Record<string, string>;
