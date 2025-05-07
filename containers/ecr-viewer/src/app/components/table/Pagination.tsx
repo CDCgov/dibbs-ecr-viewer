@@ -5,9 +5,9 @@ import classnames from "classnames";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { NavigateBefore, NavigateNext } from "./Icon";
+import { NavigateBefore, NavigateNext } from "@/app/components/Icon";
 
-type PaginationProps = React.ComponentProps<typeof USWDSPagination>;
+export type PaginationProps = React.ComponentProps<typeof USWDSPagination>;
 
 /**
  * A copy of the Trussworks USWDS Pagination that will make the previous and forward buttons invisible

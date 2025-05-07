@@ -2,20 +2,21 @@
 
 import { useState, ReactNode } from "react";
 
-import { Label, Select, Table } from "@trussworks/react-uswds";
+import { Table } from "@trussworks/react-uswds";
 
-import { Pagination } from "@/app/components/Pagination";
 import { PAGE_SIZES } from "@/app/constants";
 import { noData } from "@/app/utils/data-utils";
 
+import PaginationBar from "./PaginationBar";
 import TableHeaderCell, { SortHandlerFn, TableHeader } from "./TableHeaderCell";
 
 /**
  * A client side controlled paginated and sorted table. For use with smaller data.
- * @param root0
- * @param root0.items
- * @param root0.initHeaders
- * @param root0.itemType
+ * @param props React Props
+ * @param props.items Items to fill table rows
+ * @param props.initHeaders Header specifiction
+ * @param props.itemType Type of item being displayed
+ * @returns client side paginated sortable table
  */
 export const PaginatedSortableTable = <
   T extends { uuid: string; [k: string]: ReactNode },
@@ -63,43 +64,19 @@ export const PaginatedSortableTable = <
           ))}
         </tbody>
       </Table>
-      <div className="width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center">
-        <div className="flex-1">
-          Showing {startIndex}-{endIndex} of {numItems} {itemType}
-        </div>
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          pathname=""
-          onClickPrevious={() => setPage(page - 1)}
-          onClickNext={() => setPage(page + 1)}
-          onClickPageNumber={(_e, p) => setPage(p)}
-        />
-        <div className="display-flex flex-align-center flex-1 flex-justify-end">
-          <Label
-            htmlFor="input-select"
-            className="margin-top-0 margin-right-1025"
-          >
-            {itemType} per page
-          </Label>
-          <Select
-            id="input-select"
-            name="input-select"
-            value={itemsPerPage.toString()}
-            className="styled width-11075 margin-top-0"
-            onChange={(e) => {
-              const value = e.target.value;
-              setItemsPerPage(Number(value));
-            }}
-          >
-            {PAGE_SIZES.map((size) => (
-              <option value={size.toString()} key={size}>
-                {size}
-              </option>
-            ))}
-          </Select>
-        </div>
-      </div>
+      <PaginationBar
+        itemType={itemType}
+        currentPage={page}
+        totalCount={numItems}
+        itemsPerPage={itemsPerPage}
+        onItemsPerPageHandler={(value) => setItemsPerPage(Number(value))}
+        paginationProps={{
+          pathname: "",
+          onClickPrevious: () => setPage(page - 1),
+          onClickNext: () => setPage(page + 1),
+          onClickPageNumber: (_e, p) => setPage(p),
+        }}
+      />
     </div>
   );
 };
@@ -125,7 +102,7 @@ const SortableHeader = <T,>({
       <tr>
         {headers.map((column) => (
           <TableHeaderCell
-            key={column.id}
+            key={column.id + column.sortDirection}
             column={column}
             handleSort={handleSort}
             disabled={false}

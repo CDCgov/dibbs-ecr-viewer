@@ -3,8 +3,8 @@ import React from "react";
 
 import { SortButton } from "./SortButton";
 
-type StringKeys<T> = keyof T extends string ? keyof T : never;
-type SortDirection = "ASC" | "DESC" | "";
+type StringKeys<T> = Extract<keyof T, string>;
+export type SortDirection = "ASC" | "DESC" | "";
 
 export type TableHeader<T> = {
   id: StringKeys<T>;
@@ -20,12 +20,13 @@ export type SortHandlerFn = (
 ) => void;
 
 /**
- *
- * @param root0
- * @param root0.column
- * @param root0.disabled
- * @param root0.handleSort
- * @param root0.style
+ * Header cell in a table
+ * @param props React Props
+ * @param props.column Column specification
+ * @param props.disabled Whether the sort button is disabled
+ * @param props.handleSort Handler when sort button is clicked
+ * @param props.style element style for the `th`
+ * @returns table header cell component
  */
 export const TableHeaderCell = <T,>({
   column,

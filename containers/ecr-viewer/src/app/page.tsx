@@ -40,7 +40,7 @@ const HomePage = async ({
   const filterConditionsArr = config.condition?.split("|");
   const filterDates = returnParamDates(config.dateRange, config.dates);
 
-  const tableHeaders = INITIAL_HEADERS.map((header) => {
+  const tableHeaders: typeof INITIAL_HEADERS = INITIAL_HEADERS.map((header) => {
     return {
       ...header,
       sortDirection: header.id === config.columnId ? config.direction : "",

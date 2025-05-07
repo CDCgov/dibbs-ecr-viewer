@@ -1,5 +1,6 @@
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
+import { SortDirection } from "@/app/components/table/TableHeaderCell";
 import { DEFAULT_ITEMS_PER_PAGE, INITIAL_HEADERS } from "@/app/constants";
 
 import {
@@ -44,7 +45,7 @@ type LibraryConfig = {
   itemsPerPage: number;
   page: number;
   columnId: string;
-  direction: string;
+  direction: SortDirection;
   condition: string | undefined;
   dates: string;
   dateRange: DateRangeOption;

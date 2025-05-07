@@ -101,3 +101,9 @@ $table-border-radius-md: 0.5rem;
     border-top-right-radius: $table-border-radius-md;
   }
 }
+
+.pagination-bar {
+  .usa-pagination {
+    margin: 0;
+  }
+}

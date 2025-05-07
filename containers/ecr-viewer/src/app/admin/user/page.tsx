@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import Header from "@/app/components/Header";
 import { PaginatedSortableTable } from "@/app/components/table/PaginatedSortableTable";
-import { TableHeader } from "@/app/components/table/ecr/EcrTableHeader";
+import { TableHeader } from "@/app/components/table/TableHeaderCell";
 import { formatDate } from "@/app/services/formatDateService";
 import {
   getLoggedInUser,
@@ -26,7 +26,7 @@ const UserAdminPage = async () => {
     date_created: formatDate(u.date_created.toISOString()),
   }));
 
-  const tableHeaders: TableHeader[] = [
+  const tableHeaders: TableHeader<(typeof users)[0]>[] = [
     {
       id: "name",
       value: "User Name",

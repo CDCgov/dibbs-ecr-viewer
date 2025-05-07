@@ -5,7 +5,6 @@ import TableHeaderCell, {
   TableHeader,
 } from "@/app/components/table/TableHeaderCell";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
-import { EcrDisplay } from "@/app/services/listEcrDataService";
 
 /**
  * Interactive header for the ecr library table
@@ -14,11 +13,11 @@ import { EcrDisplay } from "@/app/services/listEcrDataService";
  * @param params.disabled whether to disable the sort functionality
  * @returns Interactive header row
  */
-export const EcrTableHeader = ({
+export const EcrTableHeader = <T,>({
   headers,
   disabled,
 }: {
-  headers: TableHeader<EcrDisplay>[];
+  headers: TableHeader<T>[];
   disabled: boolean;
 }) => {
   const { updateQueryParam, pushQueryUpdate } = useQueryParam();
