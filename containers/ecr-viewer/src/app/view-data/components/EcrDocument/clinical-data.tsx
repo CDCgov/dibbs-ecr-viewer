@@ -466,11 +466,9 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
       }
 
       // Get the first display value from the coding array
-      for (const coding of outbreakInfo.code?.coding || []) {
-        if (coding.display) {
-          lines.push("Type: " + coding.display);
-          break;
-        }
+      const coding = outbreakInfo.code?.coding?.find((c) => c.display);
+      if (coding?.display) {
+        lines.push("Type: " + coding.display);
       }
 
       const value = evaluateValue(outbreakInfo, fhirPathMappings.value);
