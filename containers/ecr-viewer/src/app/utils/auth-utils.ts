@@ -11,3 +11,14 @@ export const isLoggedInUser = async () => {
   const session = await getServerSession();
   return !!session;
 };
+
+/**
+ * Server side helper to get currently logged in user.
+ * A user can have access to an ecr page without being a logged in user if
+ * they are authenticated via an NBS jwt.
+ * @returns the user who is logged in or undefined
+ */
+export const getLoggedInUserSession = async () => {
+  const session = await getServerSession();
+  return session?.user;
+};

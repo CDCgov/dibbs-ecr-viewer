@@ -44,7 +44,10 @@ def _process_files():
     subfolders = subfolders_raw.split(",")
 
     print("Requesting db migration...")
-    rs = rqsts.post(MIGRATION_URL, data={"migration_secret": "test"})
+    rs = rqsts.post(
+        MIGRATION_URL,
+        data={"migration_secret": "test", "init_admin_email": "ecr-viewer@admin.com"},
+    )
     assert rs.status_code == 200, f"{rs.json()}"
 
     requests = []

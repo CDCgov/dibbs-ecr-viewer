@@ -33,6 +33,9 @@ jest.mock("next/navigation", () => ({
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
   useId: () => "r:id",
+  // Unclear why this doesn't work in tests
+  // https://github.com/vercel/next.js/discussions/49304
+  cache: <T>(fn: T): T => fn,
 }));
 
 beforeEach(() => {
