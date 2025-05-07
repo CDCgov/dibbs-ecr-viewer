@@ -453,31 +453,32 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
     fhirPathMappings.emergencyOutbreakInfo,
   );
 
-  const value = outbreakInfos.reduce((acc, outbreakInfo) => {
-    const lines = [];
-    if (outbreakInfo.effectiveDateTime) {
-      lines.push(
-        "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
-      );
-    } else if (outbreakInfo.effectivePeriod) {
-      lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
-    }
+  return outbreakInfos
+    .map((outbreakInfo) => {
+      const lines = [];
 
-    // Get the first display value from the coding array
-    for (const coding of outbreakInfo.code?.coding || []) {
-      if (coding.display) {
-        lines.push("Type: " + coding.display);
-        break;
+      if (outbreakInfo.effectiveDateTime) {
+        lines.push(
+          "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
+        );
+      } else if (outbreakInfo.effectivePeriod) {
+        lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
       }
-    }
-    const value = evaluateValue(outbreakInfo, fhirPathMappings.value);
 
-    if (value) {
-      lines.push("Result: " + value);
-    }
+      // Get the first display value from the coding array
+      for (const coding of outbreakInfo.code?.coding || []) {
+        if (coding.display) {
+          lines.push("Type: " + coding.display);
+          break;
+        }
+      }
 
-    return acc + lines.join("\n");
-  }, "");
+      const value = evaluateValue(outbreakInfo, fhirPathMappings.value);
+      if (value) {
+        lines.push("Result: " + value);
+      }
 
-  return value;
+      return lines.join("\n");
+    })
+    .join("\n\n");
 };
