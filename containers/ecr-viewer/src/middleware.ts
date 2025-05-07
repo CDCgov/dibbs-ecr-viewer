@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withApiTokenAuth } from "./middlewares/withApiTokenAuth";
 import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
+import { withUnauthorized } from "./middlewares/withUnauthorized";
 import { withUrlParamChecks } from "./middlewares/withUrlParamChecks";
 
 // https://reacthustle.com/blog/how-to-chain-multiple-middleware-functions-in-nextjs
@@ -12,8 +14,14 @@ export type ChainableMiddleware = (
 ) => Promise<NextResponse>;
 
 export type MiddlewareFactory = (
-  middleware: ChainableMiddleware,
+  next: ChainableMiddleware,
+  end: ChainableMiddleware,
 ) => ChainableMiddleware;
+
+// Function to exit all middleware processing with a successful continuation
+// of the request
+const exitMiddleware: ChainableMiddleware = async (request: NextRequest) =>
+  NextResponse.next({ request });
 
 /**
  * Helper to compose multiple MiddlewareFactory instances together.
@@ -33,37 +41,47 @@ export type MiddlewareFactory = (
  * by earlier layers) will be properly passed on to the Next.js request
  * handlers: page components, server actions and route handlers.
  * @param functions - Middleware functions to run
+ * @param endFn - Middware function run at the end of the chain
  * @param index - driver of walking the chain - only used internally
  * @returns chain of middleware
  */
 export const chainMiddleware = (
   functions: MiddlewareFactory[] = [],
+  endFn: ChainableMiddleware = exitMiddleware,
   index = 0,
 ): ChainableMiddleware => {
   const current = functions[index];
   if (current) {
-    const next = chainMiddleware(functions, index + 1);
-    return current(next);
+    const next = chainMiddleware(functions, endFn, index + 1);
+    return current(next, endFn);
   }
 
-  return async (request) => NextResponse.next({ request });
+  return endFn;
 };
+
+// Sub-chain for auth, which early exits back to the main chain
+const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
+  chainMiddleware(
+    [withNbsAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
+    next,
+  );
 
 /**
  * Composed middleware handlers
  */
-export default chainMiddleware([withNbsAuth, withNextAuth, withUrlParamChecks]);
+export default chainMiddleware([authMiddleware, withUrlParamChecks]);
 
 export const config = {
   matcher: [
     /*
      * Run middleware on all request paths except these:
-     * - Api routes
+     * - Public API routes
+     * - Error pages
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - images (static files in public/images/ directory)
      */
-    "/((?!api|error|_next/static|_next/image|public|img|uswds|images).*)",
+    "/((?!api/health-check|api/auth|error|_next/static|_next/image|public|img|uswds|images).*)",
     /**
      * Fix issue where the pattern above was causing middleware
      * to not run on the homepage:
