@@ -34,11 +34,9 @@ export const PaginatedSortableTable = <
   const [page, setPage] = useState(1);
 
   const numItems = items.length;
-  const totalPages = numItems > 0 ? Math.ceil(numItems / itemsPerPage) : 1;
-  const startIndex = numItems > 0 ? (page - 1) * itemsPerPage + 1 : 0;
+  const startIndex = (page - 1) * itemsPerPage;
   const endIndex = Math.min(page * itemsPerPage, numItems);
 
-  console.log({ numItems, totalPages, startIndex, endIndex });
   // maybe memo this?
   const sortColumn = tableHeaders.find(({ sortDirection }) => !!sortDirection);
   const sortedItems = [...items];
@@ -52,10 +50,14 @@ export const PaginatedSortableTable = <
   return (
     <div>
       <Table bordered={false} className="width-full table-radius-md">
-        <SortableHeader headers={tableHeaders} setHeaders={setTableHeaders} />
+        <SortableHeader
+          key={Math.random()}
+          headers={tableHeaders}
+          setHeaders={setTableHeaders}
+        />
 
         <tbody>
-          {sortedItems.slice(startIndex - 1, endIndex).map((item) => (
+          {sortedItems.slice(startIndex, endIndex).map((item) => (
             <tr key={item.uuid}>
               {initHeaders.map(({ id }) => (
                 <td key={id}>{item[id] || noData}</td>
@@ -88,15 +90,14 @@ const SortableHeader = <T,>({
   headers: TableHeader<T>[];
   setHeaders: (h: TableHeader<T>[]) => void;
 }) => {
-  const handleSort: SortHandlerFn = (columnId, direction) => {
-    console.log({ columnId, direction });
+  const handleSort: SortHandlerFn = (columnId, direction) =>
     setHeaders(
       headers.map((h) => ({
         ...h,
         sortDirection: h.id === columnId ? direction : "",
       })),
     );
-  };
+
   return (
     <thead>
       <tr>

@@ -27,12 +27,9 @@ export const EcrTableHeader = <T,>({
    * which triggers a re-render of this component with the updated props when the
    * page gets the new search params.
    * @param columnId - The ID of the column to sort by.
-   * @param curDirection - The current direction of sort.
+   * @param direction - The direction to sort.
    */
-  const handleSort = (columnId: string, curDirection: string) => {
-    // Flip the sort from the current direction, ASC is default
-    const direction = curDirection === "ASC" ? "DESC" : "ASC";
-
+  const handleSort = (columnId: string, direction: string) => {
     updateQueryParam("columnId", columnId);
     updateQueryParam("direction", direction);
     pushQueryUpdate();

@@ -55,7 +55,13 @@ export const TableHeaderCell = <T,>({
           columnName={column.value}
           direction={column.sortDirection}
           disabled={disabled}
-          handleSort={() => handleSort(column.id, column.sortDirection)}
+          // Flip the sort from the current direction, ASC is default
+          handleSort={() =>
+            handleSort(
+              column.id,
+              column.sortDirection === "ASC" ? "DESC" : "ASC",
+            )
+          }
         />
       ) : (
         <div className="display-flex">{column.value}</div>
