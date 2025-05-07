@@ -44,7 +44,17 @@ interface RR {
   rule_summaries: ruleSummary[];
 }
 
-export interface BundleExtendedMetadata {
+export interface BundleMetadata {
+  last_name: string;
+  first_name: string;
+  birth_date: string;
+  eicr_set_id: string | undefined;
+  eicr_version_number: string | undefined;
+  rr: RR[] | undefined;
+  report_date: string;
+}
+
+export interface BundleExtendedMetadata extends BundleMetadata {
   patient_id: string;
   person_id: string;
   gender: string | undefined;
@@ -55,9 +65,7 @@ export interface BundleExtendedMetadata {
   longitude: string | undefined;
   rr_id: string | undefined;
   processing_status: string | undefined;
-  eicr_set_id: string | undefined;
   eicr_id: string;
-  eicr_version_number: string;
   replaced_eicr_id: string | undefined;
   replaced_eicr_version: string | undefined;
   authoring_datetime: string | undefined;
@@ -83,20 +91,4 @@ export interface BundleExtendedMetadata {
   usual_industry: string | undefined;
   preferred_language: string | undefined;
   pregnancy_status: string | undefined;
-  ecr_id: string;
-  last_name: string | undefined;
-  first_name: string | undefined;
-  birth_date: string | undefined;
-  rr: RR[] | undefined;
-  report_date: string | undefined;
-}
-export interface BundleMetadata {
-  last_name: string;
-  first_name: string;
-  birth_date: string;
-  data_source: string;
-  eicr_set_id: string | undefined;
-  eicr_version_number: string | undefined;
-  rr: RR[] | undefined;
-  report_date: string;
 }

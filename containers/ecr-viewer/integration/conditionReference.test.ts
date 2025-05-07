@@ -23,7 +23,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.resetAllMocks();
+  jest.clearAllMocks();
 });
 
 const condition1 = {
@@ -56,6 +56,8 @@ describe("condition_reference table", () => {
     const db = getDb<Core>();
 
     await db.insertInto("condition_reference").values(condition1).execute();
+
+    jest.spyOn(console, "error").mockImplementation();
 
     // Violates pkey
     await expect(
