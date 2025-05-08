@@ -4,11 +4,11 @@ import { useState, ReactNode } from "react";
 
 import { Table } from "@trussworks/react-uswds";
 
+import PaginationBar from "@/app/components/pagination/PaginationBar";
 import { PAGE_SIZES } from "@/app/constants";
 import { noData } from "@/app/utils/data-utils";
 
-import PaginationBar from "./PaginationBar";
-import TableHeaderCell, { SortHandlerFn, TableHeader } from "./TableHeaderCell";
+import { SortDirection, SortableHeader, TableHeader } from "./SortableHeader";
 
 type StringKeys<T> = Extract<keyof T, string>;
 
@@ -57,7 +57,20 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
   return (
     <div>
       <Table bordered={false} className="width-full table-radius-md">
-        <SortableHeader headers={tableHeaders} setHeaders={setTableHeaders} />
+        <SortableHeader
+          headers={tableHeaders}
+          handleSort={(columnId: string, direction: SortDirection) =>
+            setTableHeaders(
+              tableHeaders.map((h) => ({
+                ...h,
+                sortDirection: h.id === columnId ? direction : "",
+              })),
+            )
+          }
+          // Because of the way uswds defines table styling, a classname on
+          // the header doesn't take precedence. Hence the hardcoded style.
+          style={{ paddingTop: "1.25rem" }}
+        />
 
         <tbody>
           {sortedItems.slice(startIndex, endIndex).map((item) => (
@@ -69,6 +82,7 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
           ))}
         </tbody>
       </Table>
+
       <PaginationBar
         itemType={itemType}
         currentPage={page}
@@ -83,37 +97,5 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
         }}
       />
     </div>
-  );
-};
-
-const SortableHeader = <T,>({
-  headers,
-  setHeaders,
-}: {
-  headers: TableColumn<T>[];
-  setHeaders: (h: TableColumn<T>[]) => void;
-}) => {
-  const handleSort: SortHandlerFn = (columnId, direction) =>
-    setHeaders(
-      headers.map((h) => ({
-        ...h,
-        sortDirection: h.id === columnId ? direction : "",
-      })),
-    );
-
-  return (
-    <thead>
-      <tr>
-        {headers.map((column) => (
-          <TableHeaderCell
-            key={column.id + column.sortDirection}
-            column={column}
-            handleSort={handleSort}
-            disabled={false}
-            style={{ paddingTop: "1.25rem" }}
-          />
-        ))}
-      </tr>
-    </thead>
   );
 };

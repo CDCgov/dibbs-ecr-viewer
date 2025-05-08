@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 
 import Cookies from "js-cookie";
 
-import PaginationBar from "@/app/components/table/PaginationBar";
+import PaginationBar from "@/app/components/pagination/PaginationBar";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
 
 interface EcrPaginationWrapperProps {

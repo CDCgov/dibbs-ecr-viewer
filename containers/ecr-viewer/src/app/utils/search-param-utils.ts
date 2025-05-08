@@ -1,6 +1,6 @@
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-import { SortDirection } from "@/app/components/table/TableHeaderCell";
+import { SortDirection } from "@/app/components/table/SortableHeader";
 import { DEFAULT_ITEMS_PER_PAGE, INITIAL_HEADERS } from "@/app/constants";
 
 import {

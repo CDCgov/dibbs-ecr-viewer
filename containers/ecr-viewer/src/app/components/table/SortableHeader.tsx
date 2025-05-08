@@ -18,26 +18,28 @@ export type SortHandlerFn = (
   direction: SortDirection,
 ) => void;
 
+interface TableHeaderCellProps {
+  column: TableHeader;
+  disabled?: boolean;
+  handleSort: SortHandlerFn;
+  style?: Record<string, string>;
+}
+
 /**
  * Header cell in a table
  * @param props React Props
  * @param props.column Column specification
- * @param props.disabled Whether the sort button is disabled
+ * @param props.disabled Whether the sort button is disabled. Default false.
  * @param props.handleSort Handler when sort button is clicked
  * @param props.style element style for the `th`
  * @returns table header cell component
  */
-export const TableHeaderCell = ({
+const TableHeaderCell = ({
   column,
-  disabled,
+  disabled = false,
   handleSort,
   style,
-}: {
-  column: TableHeader;
-  disabled: boolean;
-  handleSort: SortHandlerFn;
-  style?: Record<string, string>;
-}) => {
+}: TableHeaderCellProps) => {
   return (
     <th
       id={`${column.id}-header`}
@@ -79,4 +81,36 @@ const getAriaSortValue = (sortDirection: string): AriaSortType | undefined => {
   }
 };
 
-export default TableHeaderCell;
+interface SortableHeaderProps extends Omit<TableHeaderCellProps, "column"> {
+  headers: TableHeader[];
+  className?: string;
+}
+
+/**
+ *
+ * @param props React Props
+ * @param props.headers Header specifications
+ * @param props.className classnames to apply to `thead`
+ * @returns sortable header component
+ */
+export const SortableHeader = ({
+  headers,
+  className,
+  ...props
+}: SortableHeaderProps) => {
+  return (
+    <thead className={className}>
+      <tr>
+        {headers.map((column) => (
+          <TableHeaderCell
+            key={column.id + column.sortDirection}
+            column={column}
+            {...props}
+          />
+        ))}
+      </tr>
+    </thead>
+  );
+};
+
+export default SortableHeader;

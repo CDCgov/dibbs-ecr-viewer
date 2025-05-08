@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 
-import TableHeaderCell, {
+import SortableHeader, {
   TableHeader,
-} from "@/app/components/table/TableHeaderCell";
+} from "@/app/components/table/SortableHeader";
 import { useQueryParam } from "@/app/hooks/useQueryParam";
 
 /**
@@ -13,7 +13,7 @@ import { useQueryParam } from "@/app/hooks/useQueryParam";
  * @param params.disabled whether to disable the sort functionality
  * @returns Interactive header row
  */
-export const EcrTableHeader = <T,>({
+export const EcrTableHeader = ({
   headers,
   disabled,
 }: {
@@ -36,17 +36,11 @@ export const EcrTableHeader = <T,>({
   };
 
   return (
-    <thead className="position-sticky top-0">
-      <tr>
-        {headers.map((column) => (
-          <TableHeaderCell
-            key={column.id}
-            column={column}
-            handleSort={handleSort}
-            disabled={disabled}
-          />
-        ))}
-      </tr>
-    </thead>
+    <SortableHeader
+      className="position-sticky top-0"
+      headers={headers}
+      disabled={disabled}
+      handleSort={handleSort}
+    />
   );
 };

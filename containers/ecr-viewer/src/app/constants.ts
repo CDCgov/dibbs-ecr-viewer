@@ -1,4 +1,4 @@
-import { TableHeader } from "./components/table/TableHeaderCell";
+import { TableHeader } from "./components/table/SortableHeader";
 
 export const INITIAL_HEADERS: TableHeader[] = [
   {
