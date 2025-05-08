@@ -56,6 +56,10 @@ afterAll(async () => {
   await dropExisting();
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
@@ -96,6 +100,10 @@ describe("program area service", () => {
     expect(
       conditions.filter((c) => c.program_area_uuid === null),
     ).toBeArrayOfSize(1);
+
+    // program with name already exists
+    jest.spyOn(console, "error").mockImplementation();
+    await expect(createProgramArea(progName, [])).rejects.toThrow();
   });
 
   it("should update a program area name", async () => {
@@ -109,6 +117,12 @@ describe("program area service", () => {
     expect(beforeNameConds).toStrictEqual(afterNameConds);
     const progArea = afterNameProgramAreas.find((p) => p.uuid === id);
     expect(progArea).toHaveProperty("name", "Happy Days");
+
+    // program with name already exists
+    jest.spyOn(console, "error").mockImplementation();
+    await expect(
+      updateProgramArea(id, { name: "Fun Times" }),
+    ).rejects.toThrow();
   });
 
   it("should update a program area conditions", async () => {
