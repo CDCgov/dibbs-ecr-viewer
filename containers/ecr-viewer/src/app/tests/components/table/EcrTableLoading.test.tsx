@@ -4,7 +4,7 @@ import router from "next-router-mock";
 
 import { EcrTableLoading } from "@/app/components/table/TableContentLoading";
 
-jest.mock("../../services/listEcrDataService");
+jest.mock("../../../services/listEcrDataService");
 
 jest.mock("next/navigation", () => ({
   useRouter: () => router,
