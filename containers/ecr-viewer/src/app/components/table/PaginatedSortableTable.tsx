@@ -89,12 +89,10 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
         totalCount={numItems}
         itemsPerPage={itemsPerPage}
         onItemsPerPageHandler={(value) => setItemsPerPage(Number(value))}
-        paginationProps={{
-          pathname: "",
-          onClickPrevious: () => setPage(page - 1),
-          onClickNext: () => setPage(page + 1),
-          onClickPageNumber: (_e, p) => setPage(p),
-        }}
+        pathname=""
+        onClickPrevious={() => setPage(page - 1)}
+        onClickNext={() => setPage(page + 1)}
+        onClickPageNumber={(_e, p) => setPage(p)}
       />
     </div>
   );

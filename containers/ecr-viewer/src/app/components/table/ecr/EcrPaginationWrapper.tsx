@@ -48,7 +48,7 @@ const EcrPaginationWrapper = ({
           updateQueryParam("itemsPerPage", value);
           pushQueryUpdate();
         }}
-        paginationProps={{ pathname: "" }}
+        pathname=""
       />
     </div>
   );

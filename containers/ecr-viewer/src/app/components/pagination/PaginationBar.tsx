@@ -8,14 +8,12 @@ import { PAGE_SIZES } from "@/app/constants";
 
 import { Pagination, PaginationProps } from "./Pagination";
 
-interface EcrPaginationWrapperProps {
+interface PaginationBarProps extends PaginationProps {
   totalCount: number;
   itemsPerPage: number;
   itemType: string;
-  currentPage: number;
   classNames?: string;
   onItemsPerPageHandler: (v: string) => void;
-  paginationProps: Omit<PaginationProps, "currentPage">;
 }
 
 /**
@@ -36,9 +34,9 @@ const PaginationBar = ({
   itemsPerPage,
   itemType,
   onItemsPerPageHandler,
-  paginationProps,
   classNames,
-}: EcrPaginationWrapperProps) => {
+  ...paginationProps
+}: PaginationBarProps) => {
   const totalPages = totalCount > 0 ? Math.ceil(totalCount / itemsPerPage) : 1;
   const startIndex = totalCount > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
   const endIndex = Math.min(currentPage * itemsPerPage, totalCount);
