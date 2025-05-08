@@ -68,6 +68,39 @@
   }
 }
 
+.usa-modal-overlay:has(.usa-modal.sidepanel-modal) {
+  padding: 0;
+  text-align: right;
+}
+
+.usa-modal.sidepanel-modal {
+  height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0;
+  max-width: clamp(40rem, 50vw, 60rem);
+
+  .usa-modal__main {
+    margin: -2rem 0;
+  }
+
+  .usa-modal__heading {
+    font-size: 2.5rem;
+  }
+
+  dt {
+    text-transform: uppercase;
+    color: color("base");
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  dd {
+    margin-bottom: 3rem;
+    margin-inline-start: 0;
+  }
+}
+
 .usa-prose > h5 {
   font-family: "Source Sans Pro Web";
   font-size: 1rem;

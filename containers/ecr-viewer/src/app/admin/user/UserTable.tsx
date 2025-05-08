@@ -1,9 +1,9 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
+  Accordion,
   Modal,
-  ModalFooter,
   ModalHeading,
   ModalRef,
   ModalToggleButton,
@@ -24,8 +24,12 @@ import { toSentenceCase } from "@/app/utils/format-utils";
  * @returns paginated, sorted table of users
  */
 export const UserTable = ({ users }: { users: ListedUser[] }) => {
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
+  // TODO: implement listed program
+  //   const [selectedUserPrograms, setSelectedUserPrograms] = useState<ListedProgram | null>(null)
   const modalRef = useRef<ModalRef>(null);
+
+  useEffect(() => {}, [selectedUser]);
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -33,14 +37,14 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
       value: "Email",
       dataSortable: true,
       sortDirection: "",
-      formatter: (v: string) => (
+      formatter: (v: string, user: ListedUser) => (
         <ModalToggleButton
           type="button"
           modalRef={modalRef}
           className="action-text"
           unstyled={true}
           onClick={() => {
-            setSelectedUser(v);
+            setSelectedUser(user);
           }}
         >
           {v}
@@ -75,21 +79,47 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
 
   return (
     <div>
-      {selectedUser}
+      {selectedUser?.email}
       <Modal
         id="user-details"
+        className="sidepanel-modal"
         ref={modalRef}
         aria-labelledby="modal-1-heading"
         aria-describedby="modal-1-description"
       >
-        <ModalHeading id="modal-1-heading">
-          Are you sure you want to continue?
-        </ModalHeading>
-        <div className="usa-prose">
-          <p id="modal-1-description">User information.</p>
+        <div>
+          <ModalHeading
+            id="modal-1-heading"
+            className="font-sans-3xl margin-bottom-0"
+          >
+            {selectedUser?.name ? selectedUser?.name : selectedUser?.email}
+          </ModalHeading>
+          <p className="text-base margin-bottom-2 margin-top-1">
+            Last logged in:{" "}
+            {selectedUser?.date_of_last_login
+              ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
+              : "Never"}
+          </p>
         </div>
-        <ModalFooter>I am footer</ModalFooter>
-        {selectedUser}
+        <div className="section__line_gray" />
+
+        <section>
+          <h3 id="modal-1-description">User Information</h3>
+
+          <dt>Name</dt>
+          <dd>{selectedUser?.name ?? "Not on file"}</dd>
+
+          <dt>Email</dt>
+          <dd>{selectedUser?.email}</dd>
+
+          <dt>User Type</dt>
+          <dd>{toSentenceCase(selectedUser?.user_type)}</dd>
+
+          <dt>Program Area Access</dt>
+          <dd>
+            <ProgramAreaContent user={selectedUser} />
+          </dd>
+        </section>
       </Modal>
       <PaginatedSortableTable
         initHeaders={tableHeaders}
@@ -97,5 +127,27 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
         itemType="users"
       />
     </div>
+  );
+};
+
+const ProgramAreaContent = ({ user }: { user: ListedUser | null }) => {
+  if (user?.user_type === "admin") {
+    return "All program areas";
+  }
+
+  if (!user || user.program_areas.length === 0) {
+    return "No program areas assigned";
+  }
+
+  return (
+    <Accordion
+      items={user.program_areas.map((pa) => ({
+        title: pa.name,
+        content: <p>to do</p>,
+        id: pa.program_area_uuid,
+        expanded: false,
+        headingLevel: "h4",
+      }))}
+    />
   );
 };
