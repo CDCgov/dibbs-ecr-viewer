@@ -14,7 +14,7 @@ type StringKeys<T> = Extract<keyof T, string>;
 
 export interface TableColumn<T> extends TableHeader {
   id: StringKeys<T>;
-  // TODO: can we better express this type?
+  // Can't express that val needs to be T[id] in typescript (yet?)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?: (val: any, item: T) => ReactNode;
 }
