@@ -81,8 +81,8 @@ export interface condition_reference {
   program_area_uuid: string | null;
 }
 
-export type UserConditionReference = Selectable<condition_reference>;
-export type NewUserConditionReference = Insertable<condition_reference>;
+export type ConditionReference = Selectable<condition_reference>;
+export type NewConditionReference = Insertable<condition_reference>;
 
 export interface Core {
   ecr_data: ecr_data;
