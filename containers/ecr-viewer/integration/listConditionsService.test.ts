@@ -4,7 +4,7 @@
 
 import { getAllConditions } from "@/app/services/listConditionsService";
 
-import { createEcrCondition } from "./helpers/core";
+import { createCoreEcr, createEcrCondition } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
 
 beforeAll(async () => {
@@ -17,6 +17,20 @@ afterAll(async () => {
 
 describe("Conditions service", () => {
   it("Should retrieve all unique conditions", async () => {
+    await createCoreEcr({
+      eicr_id: "12345",
+      set_id: "12345",
+      first_name: "first",
+      last_name: "last",
+      birth_date: "1970-01-01",
+    });
+    await createCoreEcr({
+      eicr_id: "54321",
+      set_id: "54321",
+      first_name: "first",
+      last_name: "last",
+      birth_date: "1970-01-01",
+    });
     await createEcrCondition({
       eicr_id: "12345",
       uuid: "12345",

@@ -25,10 +25,10 @@ export const getDbRaw = (): Kysely<AnyDb> => {
   let db;
   switch (db_type) {
     case "sqlserver":
-      db = new Kysely(sqlserver);
+      db = new Kysely({ ...sqlserver, log: ["error"] });
       break;
     case "postgres":
-      db = new Kysely(postgres);
+      db = new Kysely({ ...postgres, log: ["error"] });
       break;
     default:
       throw new Error(`unknown db type: ${db_type}`);

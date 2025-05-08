@@ -17,6 +17,10 @@ afterAll(async () => {
   await dropExisting();
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const adminId = "1235";
 const adminUser = {
   uuid: adminId,
@@ -42,6 +46,8 @@ describe("user table", () => {
         author_uuid: adminId,
       })
       .execute();
+
+    jest.spyOn(console, "error").mockImplementation();
 
     // Violates pkey
     await expect(
@@ -110,6 +116,8 @@ describe("program_area table", () => {
       author_uuid: adminId,
     };
 
+    jest.spyOn(console, "error").mockImplementation();
+
     // Author FK doesn't exist yet
     await expect(
       db.insertInto("program_area").values(prog1).execute(),
@@ -171,6 +179,8 @@ describe("user_program_area table", () => {
       user_uuid: adminId,
       program_area_uuid: progId,
     };
+
+    jest.spyOn(console, "error").mockImplementation();
 
     // Neither FK doesn't exist yet
     await expect(

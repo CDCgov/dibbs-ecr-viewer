@@ -1,3 +1,9 @@
+---
+title: API Reference Documentation
+group: Documents
+category: Guides
+---
+
 # eCR Viewer API Documentation
 
 ## View eCR
@@ -14,7 +20,7 @@ Display an eCR
 
 **Method** : `GET`
 
-**Auth required** : YES
+**Auth required** : Yes, via `auth` param or broswer login flow
 
 **Permissions required** : None
 
@@ -59,7 +65,7 @@ Process a zip file containing an eCR/RR pair
 
 **Method** : `POST`
 
-**Auth required** : Coming Soon
+**Auth required** : Yes, token passed via `Authorization` header
 
 **Permissions required** : None
 
@@ -113,7 +119,7 @@ the state of the application, including updating the conditions used in the view
 
 **Method** : `POST`
 
-**Auth required** : Coming Soon
+**Auth required** : Yes, token passed via `Authorization` header
 
 **Permissions required** : None
 

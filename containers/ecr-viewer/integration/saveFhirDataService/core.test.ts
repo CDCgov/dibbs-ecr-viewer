@@ -13,7 +13,6 @@ const baseCoreMetadata: BundleMetadata = {
   last_name: "lname",
   first_name: "fname",
   birth_date: "2000-01-01",
-  data_source: "s3",
   eicr_set_id: "1234",
   eicr_version_number: "1",
   rr: [],
@@ -53,6 +52,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dropExisting();
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe("saveFhirData - core", () => {
