@@ -9,7 +9,7 @@ import { getCheckAdmin } from "./userService";
 /**
  * Create a program area with the given name. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be throw.
- * @param name Name of the program area to add. Must be unique.
+ * @param name Name of the program area to add. Must be unique (DB enforced).
  * @param conditions list of condition codes to associate with the program area
  * @returns UUID of the created program area
  */
@@ -51,7 +51,8 @@ export const createProgramArea = async (
  * @param uuid (current) id of the program area to update
  * @param updates object with fields to update in the record.
  * @param updates.name string of the new name for the program. Optional.
- * @param updates.conditions list of condition codes to associate with the program (must be full list). Optional.
+ * @param updates.conditions list of condition codes to associate with the program (must be full
+ * list - if an empty list is passed, the program will have no conditions associated after this call). Optional.
  */
 export const updateProgramArea = async (
   uuid: string,
