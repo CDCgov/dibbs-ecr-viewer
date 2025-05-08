@@ -1,6 +1,8 @@
 // This file contains declarations which are used in high level components or which style
 // elements without a modifier to scope them to a specific component
 
+@use "uswds-core" as *;
+
 // ===== Variables ===== //
 
 $content-container-max-width: 80rem;
@@ -105,5 +107,19 @@ $table-border-radius-md: 0.5rem;
 .pagination-bar {
   .usa-pagination {
     margin: 0;
+  }
+}
+
+.action-text {
+  color: var(--Primary-primary, #005ea2);
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    color: color("primary-dark");
+    text-decoration: none;
   }
 }
