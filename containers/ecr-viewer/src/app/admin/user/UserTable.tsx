@@ -35,7 +35,7 @@ const tableHeaders: TableColumn<ListedUser>[] = [
     formatter: (pas: NamedUserPogramArea[], user) =>
       user.user_type === "admin"
         ? "All program areas"
-        : pas.map(({ name }) => name).join(", "),
+        : pas.map(({ name }) => name).join(", ") || "No program areas assigned",
   },
   {
     id: "date_of_last_login",
