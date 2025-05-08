@@ -6,13 +6,18 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
   const { ecr_rr_conditions, condition_reference } = getTables(db, schema);
 
   if (db.dialect.name === "postgres") {
-    await db.updateTable(ecr_rr_conditions)
+    await db
+      .updateTable(ecr_rr_conditions)
       .set((eb) => ({
         condition_code: eb
           .selectFrom(condition_reference)
           .select(`${condition_reference}.code`)
-          .whereRef(`${condition_reference}.condition_name`, "=", `${ecr_rr_conditions}.condition`)
-          .limit(1)
+          .whereRef(
+            `${condition_reference}.condition_name`,
+            "=",
+            `${ecr_rr_conditions}.condition`,
+          )
+          .limit(1),
       }))
       .where("condition_code", "is", null)
       .execute();
@@ -42,8 +47,11 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const { ecr_rr_conditions } = getTables(db, schema);
 
-  await db.updateTable(ecr_rr_conditions)
+  await db
+    .updateTable(ecr_rr_conditions)
     .set({ condition_code: null })
     .execute();
-  console.log("INFO: condition_code in ecr_rr_conditions set to null. Re-run backfill if needed.");
+  console.log(
+    "INFO: condition_code in ecr_rr_conditions set to null. Re-run backfill if needed.",
+  );
 }
