@@ -69,14 +69,16 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
               >
                 Side panel details
               </h3>
-              <dt>
-                detail 1
-              </dt>
-              <dd>
-                <p>
-                  Hi there
-                </p>
-              </dd>
+              <dl>
+                <dt>
+                  detail 1
+                </dt>
+                <dd>
+                  <p>
+                    Hi there
+                  </p>
+                </dd>
+              </dl>
             </section>
           </div>
           <button

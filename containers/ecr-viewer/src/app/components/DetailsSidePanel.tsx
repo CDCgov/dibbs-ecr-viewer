@@ -103,12 +103,14 @@ export const DetailsSidePanel = ({
         <section>
           <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
 
-          {details.map(({ title, value }, i) => (
-            <React.Fragment key={`detail-${i}`}>
-              <dt>{title}</dt>
-              <dd>{value}</dd>
-            </React.Fragment>
-          ))}
+          <dl>
+            {details.map(({ title, value }, i) => (
+              <React.Fragment key={`detail-${i}`}>
+                <dt>{title}</dt>
+                <dd>{value}</dd>
+              </React.Fragment>
+            ))}
+          </dl>
         </section>
       </Modal>
     </ForceClient>
