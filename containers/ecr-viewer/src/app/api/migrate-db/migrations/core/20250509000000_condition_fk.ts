@@ -2,14 +2,22 @@ import { Kysely } from "kysely";
 
 import { AnyDb } from "@/app/data/metadataDb/database";
 import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
+import { getTable } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
- * Add fks to core schema.
+ * Add condition_code column and foreign key constraint to ecr_rr_conditions.
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const _db = db.withSchema(schema);
+
+  await _db.schema
+    .alterTable("ecr_rr_conditions")
+    .addColumn("condition_code", "varchar(20)", (cb) =>
+      cb.references("condition_reference.code"),
+    )
+    .execute();
 
   // data type needs to match referenced column
   await _db.schema
@@ -39,11 +47,15 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 }
 
 /**
- * Remove fks from core schema
+ * Roll back condition_code addition to ecr_rr_conditions.
  * @param db - the database connection
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
+  await _db.schema
+    .alterTable("ecr_rr_conditions")
+    .dropColumn("condition_code")
+    .execute();
   await _db.schema
     .alterTable("ecr_rr_rule_summaries")
     .dropConstraint("ecr_rr_rule_summaries_fk_ecr_rr_conditions")
