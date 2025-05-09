@@ -45,6 +45,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-1"
             >
               First-1 Last-1
@@ -138,6 +139,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-2"
             >
               First-2 Last-2
@@ -233,6 +235,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-3"
             >
               First-3 Last-3
@@ -328,6 +331,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-4"
             >
               First-4 Last-4
@@ -423,6 +427,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-5"
             >
               First-5 Last-5
@@ -518,6 +523,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-6"
             >
               First-6 Last-6
@@ -613,6 +619,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-7"
             >
               First-7 Last-7
@@ -708,6 +715,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-8"
             >
               First-8 Last-8
@@ -803,6 +811,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-9"
             >
               First-9 Last-9
@@ -898,6 +907,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-10"
             >
               First-10 Last-10
@@ -993,6 +1003,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-11"
             >
               First-11 Last-11
@@ -1088,6 +1099,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-12"
             >
               First-12 Last-12
@@ -1183,6 +1195,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-13"
             >
               First-13 Last-13
@@ -1278,6 +1291,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-14"
             >
               First-14 Last-14
@@ -1373,6 +1387,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-15"
             >
               First-15 Last-15
@@ -1468,6 +1483,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-16"
             >
               First-16 Last-16
@@ -1563,6 +1579,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-17"
             >
               First-17 Last-17
@@ -1658,6 +1675,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-18"
             >
               First-18 Last-18
@@ -1753,6 +1771,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-19"
             >
               First-19 Last-19
@@ -1848,6 +1867,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-20"
             >
               First-20 Last-20
@@ -1943,6 +1963,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-21"
             >
               First-21 Last-21
@@ -2038,6 +2059,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-22"
             >
               First-22 Last-22
@@ -2133,6 +2155,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-23"
             >
               First-23 Last-23
@@ -2228,6 +2251,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-24"
             >
               First-24 Last-24
@@ -2323,6 +2347,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-25"
             >
               First-25 Last-25
@@ -2427,6 +2452,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-1"
             >
               First-1 Last-1
@@ -2493,6 +2519,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-0"
         >
           First-1 Last-1
@@ -2526,6 +2553,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-1"
         >
           First-1 Last-1
@@ -2561,6 +2589,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-2"
         >
           First-1 Last-1
@@ -2594,6 +2623,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-3"
         >
           First-1 Last-1
@@ -2627,6 +2657,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-4"
         >
           First-1 Last-1
@@ -2710,6 +2741,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-2"
             >
               First-2 Last-2
@@ -2805,6 +2837,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-3"
             >
               First-3 Last-3
@@ -2900,6 +2933,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-4"
             >
               First-4 Last-4
@@ -2995,6 +3029,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-5"
             >
               First-5 Last-5
@@ -3090,6 +3125,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-6"
             >
               First-6 Last-6
@@ -3185,6 +3221,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-7"
             >
               First-7 Last-7
@@ -3280,6 +3317,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-8"
             >
               First-8 Last-8
@@ -3375,6 +3413,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-9"
             >
               First-9 Last-9
@@ -3470,6 +3509,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-10"
             >
               First-10 Last-10
@@ -3565,6 +3605,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-11"
             >
               First-11 Last-11
@@ -3660,6 +3701,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-12"
             >
               First-12 Last-12
@@ -3755,6 +3797,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-13"
             >
               First-13 Last-13
@@ -3850,6 +3893,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-14"
             >
               First-14 Last-14
@@ -3945,6 +3989,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-15"
             >
               First-15 Last-15
@@ -4040,6 +4085,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-16"
             >
               First-16 Last-16
@@ -4135,6 +4181,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-17"
             >
               First-17 Last-17
@@ -4230,6 +4277,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-18"
             >
               First-18 Last-18
@@ -4325,6 +4373,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-19"
             >
               First-19 Last-19
@@ -4420,6 +4469,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-20"
             >
               First-20 Last-20
@@ -4515,6 +4565,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-21"
             >
               First-21 Last-21
@@ -4610,6 +4661,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-22"
             >
               First-22 Last-22
@@ -4705,6 +4757,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-23"
             >
               First-23 Last-23
@@ -4800,6 +4853,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-24"
             >
               First-24 Last-24
@@ -4895,6 +4949,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-25"
             >
               First-25 Last-25
@@ -4999,6 +5054,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-1"
             >
               First-1 Last-1
@@ -5065,6 +5121,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-0"
         >
           First-1 Last-1
@@ -5098,6 +5155,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-1"
         >
           First-1 Last-1
@@ -5133,6 +5191,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-2"
         >
           First-1 Last-1
@@ -5166,6 +5225,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-3"
         >
           First-1 Last-1
@@ -5199,6 +5259,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-4"
         >
           First-1 Last-1
@@ -5232,6 +5293,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-5"
         >
           First-1 Last-1
@@ -5265,6 +5327,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         <a
+          class="action-text"
           href="/view-data?id=id-rel-1-6"
         >
           First-1 Last-1
@@ -5325,6 +5388,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-2"
             >
               First-2 Last-2
@@ -5420,6 +5484,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-3"
             >
               First-3 Last-3
@@ -5515,6 +5580,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-4"
             >
               First-4 Last-4
@@ -5610,6 +5676,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-5"
             >
               First-5 Last-5
@@ -5705,6 +5772,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-6"
             >
               First-6 Last-6
@@ -5800,6 +5868,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-7"
             >
               First-7 Last-7
@@ -5895,6 +5964,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-8"
             >
               First-8 Last-8
@@ -5990,6 +6060,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-9"
             >
               First-9 Last-9
@@ -6085,6 +6156,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-10"
             >
               First-10 Last-10
@@ -6180,6 +6252,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-11"
             >
               First-11 Last-11
@@ -6275,6 +6348,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-12"
             >
               First-12 Last-12
@@ -6370,6 +6444,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-13"
             >
               First-13 Last-13
@@ -6465,6 +6540,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-14"
             >
               First-14 Last-14
@@ -6560,6 +6636,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-15"
             >
               First-15 Last-15
@@ -6655,6 +6732,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-16"
             >
               First-16 Last-16
@@ -6750,6 +6828,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-17"
             >
               First-17 Last-17
@@ -6845,6 +6924,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-18"
             >
               First-18 Last-18
@@ -6940,6 +7020,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-19"
             >
               First-19 Last-19
@@ -7035,6 +7116,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-20"
             >
               First-20 Last-20
@@ -7130,6 +7212,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-21"
             >
               First-21 Last-21
@@ -7225,6 +7308,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-22"
             >
               First-22 Last-22
@@ -7320,6 +7404,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-23"
             >
               First-23 Last-23
@@ -7415,6 +7500,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-24"
             >
               First-24 Last-24
@@ -7510,6 +7596,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             class="patient-name-content"
           >
             <a
+              class="action-text"
               href="/view-data?id=id-25"
             >
               First-25 Last-25
