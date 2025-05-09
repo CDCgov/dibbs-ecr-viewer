@@ -139,6 +139,8 @@ const ProgramAreaContent = ({
 
   return (
     <Accordion
+      multiselectable={true}
+      className="accordion-dibbs"
       items={user.program_areas.map((pa) => ({
         title: pa.name,
         content:
