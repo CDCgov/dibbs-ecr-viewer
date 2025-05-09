@@ -32,7 +32,10 @@ const EncounterDetails = ({
   return (
     <AccordionSection>
       <EncounterSection title="Encounter Details" data={encounterData} />
-      <EncounterSection title="Hospital Encounter Details" data={hospitalEncounterData} />
+      <EncounterSection
+        title="Hospital Encounter Details"
+        data={hospitalEncounterData}
+      />
       <EncounterSection
         title="Facility Details"
         toolTip="Specific healthcare facility where the encounter took place."

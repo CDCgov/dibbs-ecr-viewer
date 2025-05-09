@@ -48,45 +48,45 @@ describe("Encounter", () => {
       },
     ];
 
-    const hospitalEncounterData= [
+    const hospitalEncounterData = [
       {
         title: "Hospital Admission Diagnosis",
         table: true,
         value: (
-            <table>
-              <thead>
+          <table>
+            <thead>
               <tr>
                 <th>Problem</th>
                 <th>Date/Time</th>
               </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody>
               <tr>
                 <td>COVID</td>
                 <td>2025-02-05</td>
               </tr>
-              </tbody>
-            </table>
+            </tbody>
+          </table>
         ),
       },
       {
         title: "Hospital Discharge Diagnosis",
         table: true,
         value: (
-            <table>
-              <thead>
+          <table>
+            <thead>
               <tr>
                 <th>Problem</th>
                 <th>Date/Time</th>
               </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody>
               <tr>
                 <td>COVID</td>
                 <td>2025-02-05</td>
               </tr>
-              </tbody>
-            </table>
+            </tbody>
+          </table>
         ),
       },
     ];

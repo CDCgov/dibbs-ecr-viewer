@@ -17,7 +17,8 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 import {
   formatCodeableConcept,
   formatQuantity,
-  formatRange, formatReference,
+  formatRange,
+  formatReference,
 } from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";

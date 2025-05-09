@@ -431,8 +431,8 @@ export const formatAge = (age: Age | undefined): string | undefined => {
  * @returns .reference value of the supplied reference
  */
 export const formatReference = (reference: Reference): string => {
-  return reference?.reference || ""
-}
+  return reference?.reference || "";
+};
 
 const getFormattedMonths = (months: number): string => {
   if (months < 1) return "";

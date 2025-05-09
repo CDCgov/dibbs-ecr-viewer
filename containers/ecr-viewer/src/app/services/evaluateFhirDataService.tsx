@@ -616,13 +616,21 @@ export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
   const hospitalEncounterData = [
     {
       title: "Hospital Admission Diagnosis",
-      value: evaluateEncounterDiagnosisData(fhirBundle, "46241-6", "Hospital Admission Diagnosis"),
-      table: true
+      value: evaluateEncounterDiagnosisData(
+        fhirBundle,
+        "46241-6",
+        "Hospital Admission Diagnosis",
+      ),
+      table: true,
     },
     {
       title: "Hospital Discharge Diagnosis",
-      value: evaluateEncounterDiagnosisData(fhirBundle, "11535-2", "Hospital Discharge Diagnosis"),
-      table: true
+      value: evaluateEncounterDiagnosisData(
+        fhirBundle,
+        "11535-2",
+        "Hospital Discharge Diagnosis",
+      ),
+      table: true,
     },
   ];
   return evaluateData(hospitalEncounterData);
@@ -635,16 +643,24 @@ export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
  * @param caption - A string to set the caption for the UI element
  * @returns An array of evaluated and formatted hospital encounter data.
  */
-export const evaluateEncounterDiagnosisData = (fhirBundle: Bundle, code: string, caption: string) => {
+export const evaluateEncounterDiagnosisData = (
+  fhirBundle: Bundle,
+  code: string,
+  caption: string,
+) => {
+  const dxRefs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.hospitalEncounterDiagnosisRef,
+    { code },
+  );
 
-  const dxRefs = evaluateAll(fhirBundle, fhirPathMappings.hospitalEncounterDiagnosisRef, {code})
+  const dx: Condition[] = dxRefs
+    .map((x) => {
+      return evaluateReference<Condition>(fhirBundle, formatReference(x));
+    })
+    .filter((x): x is Condition => Boolean(x));
 
-  const dx: Condition[] = dxRefs.map((x)=> {
-    return evaluateReference<Condition>(fhirBundle, formatReference(x))
-  }).filter((x):x is Condition => Boolean(x))
-
-  if(dx.length === 0) return;
-
+  if (dx.length === 0) return;
 
   const dxColumns = [
     {
@@ -654,11 +670,11 @@ export const evaluateEncounterDiagnosisData = (fhirBundle: Bundle, code: string,
     {
       columnName: "Date/Time",
       infoPath: "hospitalEncounterDiagnosisDateTime",
-      applyToValue: formatDateTime
+      applyToValue: formatDateTime,
     },
   ];
 
-  return <EvaluateTable resources={dx} columns={dxColumns} caption={caption}/>;
+  return <EvaluateTable resources={dx} columns={dxColumns} caption={caption} />;
 };
 
 /**
