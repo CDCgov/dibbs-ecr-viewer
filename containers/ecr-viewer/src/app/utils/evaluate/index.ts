@@ -17,7 +17,7 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 import {
   formatCodeableConcept,
   formatQuantity,
-  formatRange,
+  formatRange, formatReference,
 } from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
@@ -247,7 +247,7 @@ export const evaluateValue = (
     const range = formatRange(originalValue);
     value = range || originalValue.text || "";
   } else if (isReference(originalValue, originalValuePath)) {
-    value = originalValue?.reference || "";
+    value = formatReference(originalValue);
   } else if (typeof originalValue === "object") {
     console.error(`Not implemented for ${originalValuePath}`);
   }
@@ -265,7 +265,6 @@ const isObservationReferenceRange = (
   p: string,
 ): v is ObservationReferenceRange => p === "Observation.referenceRange";
 const isReference = (v: object, p: string): v is Reference => p === "Reference";
-
 /**
  * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource
  * must be provided as a type parameter. This will also be checked at runtime and an

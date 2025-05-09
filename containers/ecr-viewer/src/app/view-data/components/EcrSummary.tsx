@@ -38,10 +38,6 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
   conditionSummary,
   snomed,
 }) => {
-  console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-  console.log('Encounter Details: ', encounterDetails)
-  console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-
   const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
     (condition) => {
       return {

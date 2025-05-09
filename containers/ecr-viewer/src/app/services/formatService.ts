@@ -9,6 +9,7 @@ import {
   Period,
   Quantity,
   Range,
+  Reference,
   RelatedPerson,
 } from "fhir/r4";
 
@@ -423,6 +424,15 @@ export const formatAge = (age: Age | undefined): string | undefined => {
 
   return `${getFormattedMonths(totalMonths)}${days} day${makePlural(days)}`;
 };
+
+/**
+ * Returns the value of a Reference
+ * @param reference the reference being formatted
+ * @returns .reference value of the supplied reference
+ */
+export const formatReference = (reference: Reference): string => {
+  return reference?.reference || ""
+}
 
 const getFormattedMonths = (months: number): string => {
   if (months < 1) return "";
