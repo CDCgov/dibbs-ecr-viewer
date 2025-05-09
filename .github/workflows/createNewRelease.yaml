@@ -188,5 +188,7 @@ jobs:
       - name: Commit New Documentation
         uses: EndBug/add-and-commit@v9
         with:
-          add: docs
+          add: |
+            - docs
+            - all-docs
           message: Automated update of docs for ${{ needs.build-containers-for-release.outputs.version }} release.
