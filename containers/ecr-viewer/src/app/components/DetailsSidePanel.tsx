@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, useId, useRef } from "react";
+import React, { ReactNode, RefObject, useId, useRef } from "react";
 
 import {
   Modal,
@@ -100,11 +100,11 @@ export const DetailsSidePanel = ({
       <section>
         <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
 
-        {details.map(({ title, value }) => (
-          <>
+        {details.map(({ title, value }, i) => (
+          <React.Fragment key={`detail-${i}`}>
             <dt>{title}</dt>
             <dd>{value}</dd>
-          </>
+          </React.Fragment>
         ))}
       </section>
     </Modal>
