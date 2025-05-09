@@ -229,6 +229,58 @@ exports[`UnavailableInfo should match snapshot 1`] = `
         >
           <h4
             class="usa-summary-box__heading padding-y-105"
+            id="unavailable-hospital-encounter-details"
+          >
+            Hospital Encounter Details
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Hospital Admission Diagnosis
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                >
+                  No data
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Hospital Discharge Diagnosis
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                >
+                  No data
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
             id="unavailable-facility-details"
           >
             Facility Details

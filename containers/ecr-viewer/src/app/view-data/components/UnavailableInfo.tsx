@@ -29,6 +29,7 @@ interface UnavailableInfoProps {
  * @param props.demographicsUnavailableData The unavailable demographic data
  * @param props.socialUnavailableData The unavailable social data
  * @param props.encounterUnavailableData The unavailable encounter data
+ * @param props.hospitalEncounterUnavailableData The unavailable hospital encounter diagnosis data
  * @param props.facilityUnavailableData The unavailable facility data
  * @param props.providerUnavailableData The unavailable provider data
  * @param props.symptomsProblemsUnavailableData The unavailable symptoms and problems data
