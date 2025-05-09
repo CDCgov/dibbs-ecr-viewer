@@ -57,6 +57,21 @@ export const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
 
 /**
+ * Check the currently logged in user is an admin and return them. Throws
+ * an error if the currently logged in user isn't an admin.
+ * @param actionDesc description of the action that only admins can do
+ * @returns admin user
+ */
+export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
+  const loggedInUser = await getLoggedInUser();
+  if (!isAdmin(loggedInUser)) {
+    throw new Error(`Standard user cannot ${actionDesc}`);
+  }
+
+  return loggedInUser;
+};
+
+/**
  * Create a user with the given email and user type. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
@@ -68,10 +83,7 @@ export const createUser = async (
   email: string,
   user_type: "admin" | "standard",
 ): Promise<string> => {
-  const creatingUser = await getLoggedInUser();
-  if (!isAdmin(creatingUser)) {
-    throw new Error("Standard user cannot create new users");
-  }
+  const creatingUser = await getCheckAdmin("create new users");
 
   try {
     const uuid = randomUUID();
@@ -144,10 +156,7 @@ export const updateUser = async (
   uuid: string,
   updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
+  await getCheckAdmin("update users");
 
   try {
     await updateUserQuery(uuid, updates);
@@ -177,10 +186,7 @@ const updateUserQuery = async (
 export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
-  const listingUser = await getLoggedInUser();
-  if (!isAdmin(listingUser)) {
-    throw new Error("Standard user cannot list user program areas");
-  }
+  await getCheckAdmin("list user program areas");
 
   try {
     return await getDb<Core>()
@@ -207,10 +213,7 @@ export const updateUserProgramAreas = async (
   uuid: string,
   programAreaUuids: string[],
 ): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
+  await getCheckAdmin("update user program areas");
 
   try {
     await getDb<Core>()
@@ -244,10 +247,7 @@ const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
  * @param uuid Email of the user to delete
  */
 export const deleteUser = async (uuid: string): Promise<void> => {
-  const deletingUser = await getLoggedInUser();
-  if (!isAdmin(deletingUser)) {
-    throw new Error("Standard user cannot delete users");
-  }
+  await getCheckAdmin("delete users");
 
   try {
     await updateUserQuery(uuid, { status: "deleted" });
@@ -267,10 +267,7 @@ export type ListedUser = User & { program_areas: NamedUserPogramArea[] };
  * @returns list of all active users
  */
 export const listUsers = async (): Promise<ListedUser[]> => {
-  const listingUser = await getLoggedInUser();
-  if (!isAdmin(listingUser)) {
-    throw new Error("Standard user cannot list users");
-  }
+  await getCheckAdmin("list users");
 
   try {
     return await getDb<Core>()
