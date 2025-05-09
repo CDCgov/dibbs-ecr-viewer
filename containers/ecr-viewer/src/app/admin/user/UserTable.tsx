@@ -141,17 +141,30 @@ const ProgramAreaContent = ({
     <Accordion
       multiselectable={true}
       className="accordion-dibbs"
-      items={user.program_areas.map((pa) => ({
-        title: pa.name,
-        content:
+      items={user.program_areas.map((pa) => {
+        const conditionNames =
           programAreas
             .find(({ uuid }) => pa.program_area_uuid === uuid)
-            ?.conditions.map(({ condition_name }) => condition_name)
-            .join(", ") || "No conditions assigned to program area",
-        id: pa.program_area_uuid,
-        expanded: false,
-        headingLevel: "h4",
-      }))}
+            ?.conditions.map(({ condition_name }) => condition_name) || [];
+
+        return {
+          title: (
+            <div className="display-flex flex-justify text-normal">
+              <span>{pa.name}</span>
+              <span>
+                {conditionNames.length} condition
+                {conditionNames.length !== 1 && "s"}
+              </span>
+            </div>
+          ),
+          content:
+            conditionNames?.join(", ") ||
+            "No conditions assigned to program area",
+          id: pa.program_area_uuid,
+          expanded: false,
+          headingLevel: "h4",
+        };
+      })}
     />
   );
 };
