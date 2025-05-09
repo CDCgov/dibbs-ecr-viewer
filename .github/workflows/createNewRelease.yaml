@@ -180,9 +180,10 @@ jobs:
       - name: Copy to latest folder - copy ecr-viewer docs to main deployment folder
         run: |
           rm -rf ./all-docs/latest
+          rm -rf ./docs/latest
           mkdir -p ./all-docs/latest/containers
           cp -r ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers/* ./all-docs/latest/containers
-          cp -r ./all-docs/latest/containers/ecr-viewer ./docs/
+          cp -r ./all-docs/latest/containers/ecr-viewer/* ./docs/
 
       - name: Commit New Documentation
         uses: EndBug/add-and-commit@v9
