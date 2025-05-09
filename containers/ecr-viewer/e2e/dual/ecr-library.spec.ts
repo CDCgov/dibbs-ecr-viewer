@@ -43,7 +43,7 @@ test.describe("ecr library page", () => {
 
       // Make sure reset button works
       await page.getByLabel("reset").click();
-      await expect(page.getByText("Showing 1-2")).toBeVisible();
+      await expect(page.getByText("Showing 1-3")).toBeVisible();
       await expect(page.getByText("Zika Virus Disease")).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
