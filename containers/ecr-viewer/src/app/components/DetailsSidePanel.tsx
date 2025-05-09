@@ -53,7 +53,7 @@ interface Detail {
 }
 
 /**
- * The Details side panel is a modal that takes up half-ish of the right side of the panel when
+ * The Details side panel is a modal that takes up half-ish of the right side of the page when
  * triggerred by a `DetailsTrigger`. The side panel should un-conditionally be in the markup, its
  * visibility is controlled by the trigger.
  * @param props React Props
@@ -88,7 +88,7 @@ export const DetailsSidePanel = ({
     >
       <div>
         <ModalHeading
-          id="modal-1-heading"
+          id={`details-sidepanel-${id}-heading`}
           className="font-sans-3xl margin-bottom-0"
         >
           {title}
@@ -98,7 +98,7 @@ export const DetailsSidePanel = ({
       <div className="section__line_gray" />
 
       <section>
-        <h3 id="modal-1-description">{description}</h3>
+        <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
 
         {details.map(({ title, value }) => (
           <>

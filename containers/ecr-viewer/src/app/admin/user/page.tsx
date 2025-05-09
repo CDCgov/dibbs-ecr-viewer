@@ -51,7 +51,7 @@ const UserAdminPage = async () => {
 
   const users = await listUsers();
   const programAreas = await listProgramAreas();
-  // Only for form hackery - delete evenaully
+  // Only for form hackery - delete later
   const conditions = await listConditionReferences();
 
   return (
