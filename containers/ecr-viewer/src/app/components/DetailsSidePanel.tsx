@@ -54,7 +54,8 @@ interface Detail {
 
 /**
  * The Details side panel is a modal that takes up half-ish of the right side of the panel when
- * triggerred by a `DetailsTrigger`.
+ * triggerred by a `DetailsTrigger`. The side panel should un-conditionally be in the markup, its
+ * visibility is controlled by the trigger.
  * @param props React Props
  * @param props.details Array of title-value pairs
  * @param props.title Title of the side panel (usually the subject)
