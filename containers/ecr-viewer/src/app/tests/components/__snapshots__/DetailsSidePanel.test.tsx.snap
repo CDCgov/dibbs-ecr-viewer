@@ -86,6 +86,7 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
             aria-label="Close this window"
             class="usa-button usa-modal__close"
             data-close-modal="true"
+            data-focus=""
             data-testid="button"
             type="button"
           >

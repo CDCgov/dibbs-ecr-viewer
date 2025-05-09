@@ -42,7 +42,16 @@ export const DetailsTrigger = ({
       modalRef={detailsRef}
       className={classnames("action-text", className)}
       unstyled={true}
-      onClick={onClick}
+      onClick={() => {
+        // move the initial focus to the close button
+        document &&
+          document
+            .querySelector<HTMLButtonElement>("button.usa-modal__close")
+            ?.setAttribute("data-focus", "");
+
+        // call passed in on click handler
+        onClick();
+      }}
     >
       {children}
     </ModalToggleButton>
