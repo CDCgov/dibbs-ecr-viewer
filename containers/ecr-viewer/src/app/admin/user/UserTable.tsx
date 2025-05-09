@@ -1,14 +1,13 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+
+import { Accordion } from "@trussworks/react-uswds";
 
 import {
-  Accordion,
-  Modal,
-  ModalHeading,
-  ModalRef,
-  ModalToggleButton,
-} from "@trussworks/react-uswds";
-
+  DetailsSidePanel,
+  DetailsTrigger,
+  useDetailsRef,
+} from "@/app/components/DetailsSidePanel";
 import {
   PaginatedSortableTable,
   TableColumn,
@@ -27,9 +26,9 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
   // TODO: implement listed program
   //   const [selectedUserPrograms, setSelectedUserPrograms] = useState<ListedProgram | null>(null)
-  const modalRef = useRef<ModalRef>(null);
+  const detailsRef = useDetailsRef();
 
-  useEffect(() => {}, [selectedUser]);
+  //   useEffect(() => {}, [selectedUser]);
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -38,17 +37,14 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
       dataSortable: true,
       sortDirection: "",
       formatter: (v: string, user: ListedUser) => (
-        <ModalToggleButton
-          type="button"
-          modalRef={modalRef}
-          className="action-text"
-          unstyled={true}
+        <DetailsTrigger
+          detailsRef={detailsRef}
           onClick={() => {
             setSelectedUser(user);
           }}
         >
           {v}
-        </ModalToggleButton>
+        </DetailsTrigger>
       ),
     },
     {
@@ -79,48 +75,34 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
 
   return (
     <div>
-      {selectedUser?.email}
-      <Modal
-        id="user-details"
-        className="sidepanel-modal"
-        ref={modalRef}
-        aria-labelledby="modal-1-heading"
-        aria-describedby="modal-1-description"
-      >
-        <div>
-          <ModalHeading
-            id="modal-1-heading"
-            className="font-sans-3xl margin-bottom-0"
-          >
-            {selectedUser?.name ? selectedUser?.name : selectedUser?.email}
-          </ModalHeading>
-          <p className="text-base margin-bottom-2 margin-top-1">
-            Last logged in:{" "}
-            {selectedUser?.date_of_last_login
-              ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
-              : "Never"}
-          </p>
-        </div>
-        <div className="section__line_gray" />
-
-        <section>
-          <h3 id="modal-1-description">User Information</h3>
-
-          <dt>Name</dt>
-          <dd>{selectedUser?.name ?? "Not on file"}</dd>
-
-          <dt>Email</dt>
-          <dd>{selectedUser?.email}</dd>
-
-          <dt>User Type</dt>
-          <dd>{toSentenceCase(selectedUser?.user_type)}</dd>
-
-          <dt>Program Area Access</dt>
-          <dd>
-            <ProgramAreaContent user={selectedUser} />
-          </dd>
-        </section>
-      </Modal>
+      <DetailsSidePanel
+        detailsRef={detailsRef}
+        title={selectedUser?.name ? selectedUser?.name : selectedUser?.email!}
+        subtitle={`Last logged in: ${
+          selectedUser?.date_of_last_login
+            ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
+            : "Never"
+        }`}
+        description="User Information"
+        details={[
+          {
+            title: "Name",
+            value: selectedUser?.name ?? "Not on file",
+          },
+          {
+            title: "Email",
+            value: selectedUser?.email,
+          },
+          {
+            title: "User Type",
+            value: toSentenceCase(selectedUser?.user_type),
+          },
+          {
+            title: "Program Area Access",
+            value: <ProgramAreaContent user={selectedUser} />,
+          },
+        ]}
+      />
       <PaginatedSortableTable
         initHeaders={tableHeaders}
         items={users}
