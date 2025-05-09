@@ -10,6 +10,9 @@ import { noData } from "@/app/utils/data-utils";
 
 import { SortDirection, SortableHeader, TableHeader } from "./SortableHeader";
 
+// Object keys in javascript can be `string | number | symbol`, but the `id`
+// field requires a `string`, so we need to limit the `keyof` to only the
+// string ones or typescript gets mad
 type StringKeys<T> = Extract<keyof T, string>;
 
 export interface TableColumn<T> extends TableHeader {
@@ -44,7 +47,6 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = Math.min(page * itemsPerPage, numItems);
 
-  // maybe memo this?
   const sortColumn = tableHeaders.find(({ sortDirection }) => !!sortDirection);
   const sortedItems = [...items];
   if (!!sortColumn) {
