@@ -13,6 +13,7 @@ import {
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
 import { formatDateTime } from "@/app/services/formatDateService";
+import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
 import { toSentenceCase } from "@/app/utils/format-utils";
 
@@ -20,15 +21,18 @@ import { toSentenceCase } from "@/app/utils/format-utils";
  *
  * @param props React props
  * @param props.users listed users
+ * @param props.programAreas listed program areas
  * @returns paginated, sorted table of users
  */
-export const UserTable = ({ users }: { users: ListedUser[] }) => {
+export const UserTable = ({
+  users,
+  programAreas,
+}: {
+  users: ListedUser[];
+  programAreas: ListedProgramArea[];
+}) => {
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
-  // TODO: implement listed program
-  //   const [selectedUserPrograms, setSelectedUserPrograms] = useState<ListedProgram | null>(null)
   const detailsRef = useDetailsRef();
-
-  //   useEffect(() => {}, [selectedUser]);
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -100,7 +104,12 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
           },
           {
             title: "Program Area Access",
-            value: <ProgramAreaContent user={selectedUser} />,
+            value: (
+              <ProgramAreaContent
+                user={selectedUser}
+                programAreas={programAreas}
+              />
+            ),
           },
         ]}
       />
@@ -113,7 +122,13 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
   );
 };
 
-const ProgramAreaContent = ({ user }: { user: ListedUser | null }) => {
+const ProgramAreaContent = ({
+  user,
+  programAreas,
+}: {
+  user: ListedUser | null;
+  programAreas: ListedProgramArea[];
+}) => {
   if (user?.user_type === "admin") {
     return "All program areas";
   }
@@ -126,7 +141,11 @@ const ProgramAreaContent = ({ user }: { user: ListedUser | null }) => {
     <Accordion
       items={user.program_areas.map((pa) => ({
         title: pa.name,
-        content: <p>to do</p>,
+        content:
+          programAreas
+            .find(({ uuid }) => pa.program_area_uuid === uuid)
+            ?.conditions.map(({ condition_name }) => condition_name)
+            .join(", ") || "No conditions assigned to program area",
         id: pa.program_area_uuid,
         expanded: false,
         headingLevel: "h4",

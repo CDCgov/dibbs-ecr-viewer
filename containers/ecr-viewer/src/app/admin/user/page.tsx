@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import Header from "@/app/components/Header";
+import { listProgramAreas } from "@/app/services/programAreaService";
 import {
   createUser,
   getLoggedInUser,
@@ -32,6 +33,7 @@ const UserAdminPage = async () => {
   }
 
   const users = await listUsers();
+  const programAreas = await listProgramAreas();
 
   return (
     <div className="display-flex flex-column height-viewport">
@@ -39,7 +41,7 @@ const UserAdminPage = async () => {
       <main className="main-container">
         <div className="content-container margin-top-10">
           <h2 className="margin-bottom-5">User Management</h2>
-          <UserTable users={users} />
+          <UserTable users={users} programAreas={programAreas} />
         </div>
       </main>
 
