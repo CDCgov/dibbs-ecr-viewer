@@ -8,7 +8,7 @@ import { MetadataDbInvalid } from "./components/ErrorPage";
 import Filters from "./components/Filters";
 import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
-import { EcrTableLoading } from "./components/table/TableContentLoading";
+import { TableContentLoading } from "./components/table/TableContentLoading";
 import EcrPaginationWrapper from "./components/table/ecr/EcrPaginationWrapper";
 import EcrTableContent from "./components/table/ecr/EcrTableContent";
 import { EcrTableHeader } from "./components/table/ecr/EcrTableHeader";
@@ -91,7 +91,7 @@ const HomePage = async ({
               <Suspense
                 // key needed to force fallback state to retrigger on params change
                 key={JSON.stringify(config)}
-                fallback={<EcrTableLoading />}
+                fallback={<TableContentLoading />}
               >
                 <EcrTableContent
                   currentPage={config.page}

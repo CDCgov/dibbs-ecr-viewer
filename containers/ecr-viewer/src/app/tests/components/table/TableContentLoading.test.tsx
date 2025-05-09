@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
 import router from "next-router-mock";
 
-import { EcrTableLoading } from "@/app/components/table/TableContentLoading";
+import { TableContentLoading } from "@/app/components/table/TableContentLoading";
 
 jest.mock("../../../services/listEcrDataService");
 
@@ -12,7 +12,7 @@ jest.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(router.asPath.split("?")[1] || ""),
 }));
 
-describe("EcrTableLoading", () => {
+describe("TableContentLoading", () => {
   describe("Snapshot test", () => {
     let container: HTMLElement;
 
@@ -25,7 +25,7 @@ describe("EcrTableLoading", () => {
       });
       window.IntersectionObserver = mockIntersectionObserver;
 
-      container = render(<EcrTableLoading />).container;
+      container = render(<TableContentLoading />).container;
     });
     it("should match snapshot", () => {
       expect(container).toMatchSnapshot();
