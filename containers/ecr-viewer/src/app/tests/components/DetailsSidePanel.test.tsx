@@ -2,6 +2,7 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { axe } from "jest-axe";
 
 import {
   DetailsSidePanel,
@@ -50,6 +51,8 @@ describe("DetailsSidePanel", () => {
     expect(screen.getByRole("dialog")).toHaveClass("is-visible");
 
     expect(document.querySelector("body")).toMatchSnapshot();
+
+    expect(await axe(document.querySelector("body")!)).toHaveNoViolations();
 
     const close = screen.getByRole("button", { name: "Close this window" });
     await user.click(close);

@@ -62,80 +62,80 @@ const UserAdminPage = async () => {
           <h2 className="margin-bottom-5">User Management</h2>
           <UserTable users={users} programAreas={programAreas} />
         </div>
+
+        {/* HACKY, BUT USEFUL. KEEPING AROUND FOR THE MOMENT*/}
+        {false && process.env.NODE_ENV !== "production" && (
+          <div style={{ margin: "100px" }}>
+            <h2>Scratch functionality to test above</h2>
+            <form action={submitCreateUser}>
+              <label>
+                Email:
+                <input type="text" required={true} id="email" name="email" />
+              </label>
+              <fieldset>
+                <legend>User type:</legend>
+                <div>
+                  <label>
+                    Standard User
+                    <input
+                      type="radio"
+                      name="user_type"
+                      required={true}
+                      defaultChecked={true}
+                      value="standard"
+                    />
+                  </label>
+                  <label>
+                    Admin User
+                    <input
+                      type="radio"
+                      name="user_type"
+                      required={true}
+                      value="admin"
+                    />
+                  </label>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>Program Areas:</legend>
+                {programAreas.map((programArea) => (
+                  <label>
+                    {programArea.name}
+                    <input
+                      type="checkbox"
+                      name="programareas"
+                      value={programArea.uuid}
+                    />
+                  </label>
+                ))}
+              </fieldset>
+              <button type="submit">Add New User</button>
+            </form>
+
+            <hr className="margin-y-4" />
+            <form action={submitCreateProgramArea}>
+              <label>
+                Name:
+                <input type="text" required={true} id="name" name="name" />
+              </label>
+              <fieldset>
+                <legend>Conditions:</legend>
+                {conditions.map((condition) => (
+                  <label>
+                    {condition.condition_name}
+                    <input
+                      type="checkbox"
+                      name="conditions"
+                      value={condition.code}
+                    />
+                  </label>
+                ))}
+              </fieldset>
+              <button type="submit">Add New Program Area</button>
+            </form>
+          </div>
+        )}
       </main>
-
-      {/* HACKY, BUT USEFUL. KEEPING AROUND FOR THE MOMENT*/}
-      {process.env.NODE_ENV !== "production" && (
-        <div style={{ margin: "100px" }}>
-          <h2>Scratch functionality to test above</h2>
-          <form action={submitCreateUser}>
-            <label>
-              Email:
-              <input type="text" required={true} id="email" name="email" />
-            </label>
-            <fieldset>
-              <legend>User type:</legend>
-              <div>
-                <label>
-                  Standard User
-                  <input
-                    type="radio"
-                    name="user_type"
-                    required={true}
-                    defaultChecked={true}
-                    value="standard"
-                  />
-                </label>
-                <label>
-                  Admin User
-                  <input
-                    type="radio"
-                    name="user_type"
-                    required={true}
-                    value="admin"
-                  />
-                </label>
-              </div>
-            </fieldset>
-            <fieldset>
-              <legend>Program Areas:</legend>
-              {programAreas.map((programArea) => (
-                <label>
-                  {programArea.name}
-                  <input
-                    type="checkbox"
-                    name="programareas"
-                    value={programArea.uuid}
-                  />
-                </label>
-              ))}
-            </fieldset>
-            <button type="submit">Add New User</button>
-          </form>
-
-          <hr className="margin-y-4" />
-          <form action={submitCreateProgramArea}>
-            <label>
-              Name:
-              <input type="text" required={true} id="name" name="name" />
-            </label>
-            <fieldset>
-              <legend>Conditions:</legend>
-              {conditions.map((condition) => (
-                <label>
-                  {condition.condition_name}
-                  <input
-                    type="checkbox"
-                    name="conditions"
-                    value={condition.code}
-                  />
-                </label>
-              ))}
-            </fieldset>
-            <button type="submit">Add New Program Area</button>
-          </form>
-        </div>
-      )}
     </div>
   );
 };
