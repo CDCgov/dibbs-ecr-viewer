@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { createInitialAdminUser } from "@/app/services/userService";
+
 import { migrateDown, migrateUp } from "./migrate";
 import { updateConditions } from "./updateConditions";
 
@@ -16,6 +18,7 @@ const schema = z.object({
     .string()
     .optional()
     .transform((v) => v?.toLowerCase()),
+  init_admin_email: z.string().optional(),
 });
 
 interface MigrationResponse {
@@ -55,9 +58,12 @@ export async function POST(
   }
 
   try {
-    const { migration_secret, direction, skip_condition_update } = schema.parse(
-      Object.fromEntries(formData),
-    );
+    const {
+      migration_secret,
+      direction,
+      skip_condition_update,
+      init_admin_email,
+    } = schema.parse(Object.fromEntries(formData));
     if (migration_secret !== process.env.METADATA_DATABASE_MIGRATION_SECRET) {
       console.log(
         `Migration secret: ${process.env.METADATA_DATABASE_MIGRATION_SECRET}`,
@@ -76,6 +82,7 @@ export async function POST(
     } else if (direction === "up") {
       await migrateUp();
       skip_condition_update !== "true" && (await updateConditions());
+      !!init_admin_email && (await createInitialAdminUser(init_admin_email));
     } else {
       return NextResponse.json(
         {

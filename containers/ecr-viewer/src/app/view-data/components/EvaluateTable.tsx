@@ -157,8 +157,9 @@ const evaluateTableRowData = (
   const rowCellsData = columns.map((column) =>
     evaluateTableRowCell(column, entry, mappings),
   );
-  const hiddenRow = rowCellsData.find(({ hiddenRow }) => !!hiddenRow)
-    ?.hiddenRow;
+  const hiddenRow = rowCellsData.find(
+    ({ hiddenRow }) => !!hiddenRow,
+  )?.hiddenRow;
 
   // This row is entirely empty, skip it
   if (rowCellsData.every(({ data }) => !data))

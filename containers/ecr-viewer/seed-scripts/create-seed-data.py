@@ -43,8 +43,28 @@ def _process_files():
 
     subfolders = subfolders_raw.split(",")
 
+    print("Requesting API token...")
+    token_req = rqsts.post(
+        f"{os.getenv('AUTH_ISSUER').replace('localhost', 'host.docker.internal')}/protocol/openid-connect/token",
+        data={
+            "client_id": os.getenv("AUTH_CLIENT_ID"),
+            "client_secret": os.getenv("AUTH_CLIENT_SECRET"),
+            "username": os.getenv("AUTH_USER"),
+            "password": os.getenv("AUTH_PASSWORD"),
+            "grant_type": "password",
+            "scope": "openid email profile",
+        },
+    )
+    assert token_req.status_code == 200, f"{token_req.json()}"
+    token = token_req.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
     print("Requesting db migration...")
-    rs = rqsts.post(MIGRATION_URL, data={"migration_secret": "test"})
+    rs = rqsts.post(
+        MIGRATION_URL,
+        data={"migration_secret": "test", "init_admin_email": "ecr-viewer@admin.com"},
+        headers=headers,
+    )
     assert rs.status_code == 200, f"{rs.json()}"
 
     requests = []
@@ -67,7 +87,10 @@ def _process_files():
 
             files = [("upload_file", (f"{folder}.zip", zip_buffer, "application/zip"))]
             request = grequests.post(
-                UPLOAD_URL, files=files, data={"return_fhir_bundle": True}
+                UPLOAD_URL,
+                files=files,
+                data={"return_fhir_bundle": True},
+                headers=headers,
             )
 
             requests.append(request)
