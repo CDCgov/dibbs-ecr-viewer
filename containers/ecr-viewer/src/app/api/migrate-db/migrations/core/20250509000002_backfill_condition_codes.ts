@@ -19,7 +19,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
       .where("condition_code", "is", null)
       .execute();
   } else if (dbDialect() === "sqlserver") {
-    // Use a join approach for SQL Server to avoid subquery-in-SET issues
     const rows = await _db
       .selectFrom("ecr_rr_conditions as erc")
       .innerJoin("condition_reference as cr", "erc.condition", "cr.condition_name")
@@ -45,8 +44,4 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
     .updateTable("ecr_rr_conditions")
     .set({ condition_code: null })
     .execute();
-
-  console.log(
-    "INFO: condition_code in ecr_rr_conditions set to null. Re-run backfill if needed."
-  );
 }

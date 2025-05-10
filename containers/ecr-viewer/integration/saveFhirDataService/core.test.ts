@@ -87,6 +87,7 @@ describe("saveFhirData - core", () => {
       rr: [
         {
           condition: "flu",
+          condition_code: "123",
           rule_summaries: [],
         },
       ],
@@ -245,6 +246,7 @@ describe("saveFhirData - core", () => {
       rr: [
         {
           condition: "flu",
+          condition_code: "123",
           rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
         },
       ],
