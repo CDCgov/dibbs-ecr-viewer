@@ -17,7 +17,7 @@ describe("PaginationBar component", () => {
     let itemsPerPage = 3;
     render(
       <PaginationBar
-        itemType="items"
+        itemType="Items"
         totalCount={9}
         currentPage={2}
         itemsPerPage={itemsPerPage}
@@ -36,13 +36,13 @@ describe("PaginationBar component", () => {
 
     expect(screen.getByText("Showing 4-6 of 9 items")).toBeInTheDocument();
 
-    expect(screen.getByRole("combobox", { name: "items per page" }));
+    expect(screen.getByRole("combobox", { name: "Items per page" }));
 
     expect(screen.getByRole("option", { name: "3", selected: true }));
 
     const user = userEvent.setup();
     const itemsPerPageSelect = screen.getByRole("combobox", {
-      name: "items per page",
+      name: "Items per page",
     });
     await user.selectOptions(itemsPerPageSelect, "10");
     expect(itemsPerPage).toBe(10);

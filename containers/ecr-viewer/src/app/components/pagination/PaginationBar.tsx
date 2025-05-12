@@ -5,6 +5,7 @@ import { Label, Select } from "@trussworks/react-uswds";
 import classnames from "classnames";
 
 import { PAGE_SIZES } from "@/app/constants";
+import { toUnSentenceCase } from "@/app/utils/format-utils";
 
 import { Pagination, PaginationProps } from "./Pagination";
 
@@ -22,7 +23,7 @@ interface PaginationBarProps extends PaginationProps {
  * @param props.totalCount - Total number of items
  * @param props.currentPage - Current page index
  * @param props.itemsPerPage - Number of items per page
- * @param props.itemType - Type of item being paginated in plural form
+ * @param props.itemType - Type of item being paginated in plural uppercased form
  * @param props.onItemsPerPageHandler - Handler when items per page changes
  * @param props.paginationProps - Props passed on to `Pagination` component
  * @param props.classNames - classnames to apply to the outer div
@@ -54,7 +55,8 @@ const PaginationBar = ({
       )}
     >
       <div className="flex-1">
-        Showing {startIndex}-{endIndex} of {totalCount} {itemType}
+        Showing {startIndex}-{endIndex} of {totalCount}{" "}
+        {toUnSentenceCase(itemType)}
       </div>
       <Pagination
         currentPage={currentPage}

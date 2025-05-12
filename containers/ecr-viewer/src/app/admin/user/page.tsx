@@ -12,13 +12,10 @@ import { UserTable } from "./UserTable";
 
 async function submitCreateUser(form: FormData) {
   "use server";
-  console.log({ form });
-
-  const uuid = await createUser(
+  await createUser(
     form.get("email") as string,
     form.get("user_type") === "admin" ? "admin" : "standard",
   );
-  console.log({ uuid });
 }
 
 /**

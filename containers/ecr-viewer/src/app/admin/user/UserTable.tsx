@@ -57,7 +57,7 @@ export const UserTable = ({ users }: { users: ListedUser[] }) => {
     <PaginatedSortableTable
       initHeaders={tableHeaders}
       items={users}
-      itemType="users"
+      itemType="Users"
     />
   );
 };
