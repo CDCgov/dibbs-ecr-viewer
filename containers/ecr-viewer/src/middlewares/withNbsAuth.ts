@@ -47,7 +47,7 @@ export const withNbsAuth: MiddlewareFactory = (
     try {
       await jwtVerify(token, await importSPKI(key.trim(), "RS256"));
       return end(request);
-    } catch (e) {
+    } catch {
       // set the header on the request to get more helpful error page if we never auth
       request.headers.set(NBS_AUTH_HEADER, "false");
       return next(request);
