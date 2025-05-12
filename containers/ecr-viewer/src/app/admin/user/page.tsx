@@ -18,25 +18,19 @@ import { UserTable } from "./UserTable";
 
 async function submitCreateUser(form: FormData) {
   "use server";
-  console.log({ form });
-
   const uuid = await createUser(
     form.get("email") as string,
     form.get("user_type") === "admin" ? "admin" : "standard",
   );
 
   await updateUserProgramAreas(uuid, form.getAll("programareas") as string[]);
-  console.log({ uuid });
 }
 async function submitCreateProgramArea(form: FormData) {
   "use server";
-  console.log({ form });
-
-  const uuid = await createProgramArea(
+  await createProgramArea(
     form.get("name") as string,
     form.getAll("conditions") as string[],
   );
-  console.log({ uuid });
 }
 
 /**

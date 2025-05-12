@@ -85,7 +85,7 @@ export const UserTable = ({
     <ForceClient
       loading={
         <PaginatedSortableTableLoading
-          itemType="users"
+          itemType="Users"
           initHeaders={tableHeaders}
         />
       }
@@ -127,7 +127,7 @@ export const UserTable = ({
         <PaginatedSortableTable
           initHeaders={tableHeaders}
           items={users}
-          itemType="users"
+          itemType="Users"
         />
       </div>
     </ForceClient>
