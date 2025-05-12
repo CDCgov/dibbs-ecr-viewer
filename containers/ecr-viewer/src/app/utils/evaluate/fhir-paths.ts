@@ -358,7 +358,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   hospitalEncounterDiagnosisRef: {
     type: "Reference",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.where(code = %code).exists()).entry",
+    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = %code).entry",
   },
 
   hospitalEncounterDiagnosisCode: {
