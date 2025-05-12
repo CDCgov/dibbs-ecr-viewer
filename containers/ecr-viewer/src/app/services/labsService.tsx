@@ -397,6 +397,11 @@ export const evaluateDiagnosticReportData = (
       className: "minw-10 width-20",
     },
     {
+      columnName: "Result Status",
+      infoPath: "observationResultStatus",
+      className: "minw-10 width-20",
+    },
+    {
       columnName: "Lab Comment",
       infoPath: "observationNote",
       hiddenBaseText: "comment",
@@ -703,6 +708,13 @@ function getFormattedLabsContent(
     {
       title: "Result Type",
       value: returnFieldValueFromLabHtmlString(labReportJson, "Result Type"),
+      className: "lab-text-content",
+    },
+    {
+      title: "Result Status",
+      value:
+        evaluateValue(report, fhirPathMappings.diagnosticReportStatus) ||
+        noData,
       className: "lab-text-content",
     },
     {

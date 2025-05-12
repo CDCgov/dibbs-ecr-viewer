@@ -3,12 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import router from "next-router-mock";
 
-import EcrTableContent from "@/app/components/EcrTableContent";
+import EcrTableContent from "@/app/components/table/ecr/EcrTableContent";
 import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
 import { range } from "@/app/utils/data-utils";
 
-jest.mock("../../services/listEcrDataService");
-jest.mock("../../../app/data/metadataDb/database");
+jest.mock("../../../services/listEcrDataService");
+jest.mock("../../../../app/data/metadataDb/database");
 
 jest.mock("next/navigation", () => ({
   useRouter: () => router,
