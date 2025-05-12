@@ -7,7 +7,7 @@ exports[`EcrPaginationWrapper should match snapshot 1`] = `
   >
     <br />
     <div
-      class="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center"
+      class="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center ecr-pagination-drop-shadow"
     >
       <div
         class="flex-1"
@@ -18,7 +18,8 @@ exports[`EcrPaginationWrapper should match snapshot 1`] = `
         25
          of 
         100
-         eCRs
+         
+        eCRs
       </div>
       <nav
         aria-label="Pagination"
@@ -141,7 +142,8 @@ exports[`EcrPaginationWrapper should match snapshot 1`] = `
           data-testid="label"
           for="input-select"
         >
-          eCRs per page
+          eCRs
+           per page
         </label>
         <select
           class="usa-select styled width-11075 margin-top-0"
@@ -149,6 +151,11 @@ exports[`EcrPaginationWrapper should match snapshot 1`] = `
           id="input-select"
           name="input-select"
         >
+          <option
+            value="10"
+          >
+            10
+          </option>
           <option
             value="25"
           >

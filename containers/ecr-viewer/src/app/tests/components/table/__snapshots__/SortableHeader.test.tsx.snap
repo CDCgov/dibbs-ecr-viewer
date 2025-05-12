@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SortableHeader disabled should match snapshot 1`] = `
+<table>
+  <thead>
+    <tr>
+      <th
+        aria-sort="ascending"
+        class="i-am-a-class"
+        data-sortable="true"
+        id="column-one-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-description="Sort by Column One"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          disabled=""
+          id="column-one-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Column One
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        data-sortable="true"
+        id="column-two-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-description="Sort by Column Two"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          disabled=""
+          id="column-two-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Column Two
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        data-sortable="false"
+        id="column-three-header"
+        role="columnheader"
+        scope="col"
+      >
+        <div
+          class="display-flex"
+        >
+          Column Three
+        </div>
+      </th>
+    </tr>
+  </thead>
+</table>
+`;
+
+exports[`SortableHeader enabled should match snapshot 1`] = `
+<table>
+  <thead>
+    <tr>
+      <th
+        aria-sort="ascending"
+        class="i-am-a-class"
+        data-sortable="true"
+        id="column-one-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-description="Sort by Column One"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          id="column-one-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Column One
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        data-sortable="true"
+        id="column-two-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-description="Sort by Column Two"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          id="column-two-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Column Two
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
+      <th
+        data-sortable="false"
+        id="column-three-header"
+        role="columnheader"
+        scope="col"
+      >
+        <div
+          class="display-flex"
+        >
+          Column Three
+        </div>
+      </th>
+    </tr>
+  </thead>
+</table>
+`;
