@@ -47,7 +47,7 @@ test.describe("ecr library page", () => {
       await expect(page.getByText("Zika Virus Disease")).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(2);
+      ).toEqual(3);
     });
 
     test("Search should filter results ", async ({ page }) => {
@@ -107,11 +107,11 @@ test.describe("ecr library page", () => {
       await page.getByTestId("Select").selectOption("100");
 
       await expect(page.getByLabel("Page 2")).not.toBeVisible();
-      await expect(page.getByText("Showing 1-2")).toBeVisible();
+      await expect(page.getByText("Showing 1-3")).toBeVisible();
       await expect(page.getByText("Yoda")).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(2);
+      ).toEqual(3);
     });
 
     test("When visiting a direct url all query parameters should be applied", async ({
@@ -143,7 +143,7 @@ test.describe("ecr library page", () => {
       await expect(page.getByTestId("filter-tag")).toContainText(
         totalNumOfConditions,
       );
-      await expect(page.getByText("Showing 1-2 of 2 eCRs")).toBeVisible();
+      await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
 
       await page.getByLabel(/Filter by Received Date/).click();
       // playwright doesn't believe the option is in the viewport even though it very much is
