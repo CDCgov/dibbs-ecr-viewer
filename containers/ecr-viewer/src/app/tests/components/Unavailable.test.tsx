@@ -49,15 +49,18 @@ describe("UnavailableInfo", () => {
       },
     ];
     const hospitalEncounterUnavailableData = [
-      {
-        title: "Hospital Admission Diagnosis",
-        value: "",
-      },
-      {
-        title: "Hospital Discharge Diagnosis",
-        value: "",
-      },
-    ];
+          {
+            title: 'Hospital Admission Diagnosis',
+            value: undefined,
+            table: true
+          },
+          {
+            title: 'Hospital Discharge Diagnosis',
+            value: undefined,
+            table: true
+          }
+        ]
+    ;
     const facilityUnavailableData = [
       {
         title: "Facility Name",
