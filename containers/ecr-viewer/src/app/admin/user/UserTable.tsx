@@ -83,7 +83,6 @@ export const UserTable = ({
     },
   ];
 
-  // TODO an actual loading state
   return (
     <div>
       <DetailsSidePanel

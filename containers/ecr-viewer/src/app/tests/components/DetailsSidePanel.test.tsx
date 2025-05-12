@@ -55,8 +55,10 @@ describe("DetailsSidePanel", () => {
     expect(await axe(document.querySelector("body")!)).toHaveNoViolations();
 
     const close = screen.getByRole("button", { name: "Close this window" });
+    expect(close).toHaveFocus();
     await user.click(close);
 
     expect(screen.getByRole("dialog")).not.toHaveClass("is-visible");
+    expect(trigger).toHaveFocus();
   });
 });
