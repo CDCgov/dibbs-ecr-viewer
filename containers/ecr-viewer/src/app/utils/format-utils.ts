@@ -21,10 +21,20 @@ export const toKebabCase = (input: string): string => {
  * @param str - The string to convert to sentence case.
  * @returns The converted sentence-case string. If the input is empty or not a string, the original input is returned.
  */
-export function toSentenceCase(str: string | undefined) {
+export const toSentenceCase = (str: string | undefined) => {
   if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+};
+
+/**
+ * Converts a string to opposite sentence case, making the first character lowercase and the rest is left alone.
+ * @param str - The string to convert to sentence case.
+ * @returns The converted un-sentence-case string. If the input is empty or not a string, the original input is returned.
+ */
+export const toUnSentenceCase = (str: string | undefined) => {
+  if (!str) return str;
+  return str.charAt(0).toLowerCase() + str.slice(1);
+};
 
 /**
  * Converts a string to title case, making the first character of each word uppercase.

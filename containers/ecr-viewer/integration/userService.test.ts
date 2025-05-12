@@ -55,11 +55,12 @@ describe("user service", () => {
         uuid: adminId,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
 
@@ -92,11 +93,12 @@ describe("user service", () => {
         uuid: adminId,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
   });
@@ -114,11 +116,12 @@ describe("user service", () => {
         uuid: expect.any(String),
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
       {
         uuid: userId,
@@ -129,6 +132,7 @@ describe("user service", () => {
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
   });
@@ -145,11 +149,12 @@ describe("user service", () => {
         uuid: adminId!,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
       {
         uuid: userId!,
@@ -160,6 +165,7 @@ describe("user service", () => {
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
   });
@@ -195,11 +201,12 @@ describe("user service", () => {
         uuid: adminId!,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
 

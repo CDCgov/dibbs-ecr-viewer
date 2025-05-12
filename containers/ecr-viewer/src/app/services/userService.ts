@@ -11,6 +11,7 @@ import {
   ProgramArea,
   User,
   UserUpdate,
+  UserProgramArea,
 } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
@@ -36,18 +37,21 @@ export const getLoggedInUser = cache(async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
   if (!email) return;
 
-  // Update the user's name to match the IDP
-  !!name &&
-    (await getDb<Core>()
-      .updateTable("user")
-      .set({ name })
-      .where("email", "=", email)
-      .execute());
+  // Update the last log in and user's name to match the IDP
+  await getDb<Core>()
+    .updateTable("user")
+    .set({ date_of_last_login: new Date(), name })
+    .where("email", "=", email)
+    .execute();
 
   return await getUserByEmail(email);
 });
 
-const isAdmin = (user: User | undefined): user is User =>
+/**
+ * @param user User to check is an admin
+ * @returns true is the user both exists and is an admin, false otherwise
+ */
+export const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
 
 /**
@@ -98,7 +102,7 @@ export const createUser = async (
 export const createInitialAdminUser = async (
   email: string,
 ): Promise<string | undefined> => {
-  const users = await listActiveUsersQuery();
+  const users = await listActiveUsersQuery(getDb<Core>());
   if (users.some(({ user_type }) => user_type === "admin")) {
     console.warn("Active admin user already exists. Skipping user creation.");
     return;
@@ -253,15 +257,42 @@ export const deleteUser = async (uuid: string): Promise<void> => {
   }
 };
 
+export type NamedUserPogramArea = UserProgramArea & { name: string };
+export type ListedUser = User & { program_areas: NamedUserPogramArea[] };
+
 /**
  * List all active users. The logged in user must be an admin.
  * @returns list of all active users
  */
-export const listUsers = async (): Promise<User[]> => {
+export const listUsers = async (): Promise<ListedUser[]> => {
   await getCheckAdmin("list users");
 
   try {
-    return await listActiveUsersQuery();
+    return await getDb<Core>()
+      .transaction()
+      .execute(async (db) => {
+        const users = await listActiveUsersQuery(db);
+        const userProgramAreas = await db
+          .selectFrom("user_program_area")
+          .innerJoin(
+            "program_area",
+            "user_program_area.program_area_uuid",
+            "program_area.uuid",
+          )
+          .select([
+            "user_program_area.user_uuid",
+            "user_program_area.program_area_uuid",
+            "program_area.name",
+          ])
+          .execute();
+
+        return users.map((user) => ({
+          ...user,
+          program_areas: userProgramAreas.filter(
+            ({ user_uuid }) => user_uuid === user.uuid,
+          ),
+        }));
+      });
   } catch (error: unknown) {
     const message = "Failed to list users";
     console.error({ message, error });
@@ -269,8 +300,8 @@ export const listUsers = async (): Promise<User[]> => {
   }
 };
 
-const listActiveUsersQuery = async () => {
-  return await getDb<Core>()
+const listActiveUsersQuery = async (db: Kysely<Core>) => {
+  return await db
     .selectFrom("user")
     .selectAll()
     .where("status", "=", "active")

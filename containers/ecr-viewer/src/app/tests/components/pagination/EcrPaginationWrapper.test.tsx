@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 
-import EcrPaginationWrapper from "@/app/components/EcrPaginationWrapper";
+import EcrPaginationWrapper from "@/app/components/table/ecr/EcrPaginationWrapper";
 
 const mockPush = jest.fn();
 const mockSearchParams = new URLSearchParams();
@@ -117,10 +117,11 @@ describe("Pagination for EcrPaginationWrapper", () => {
     );
 
     const select = screen.getByTestId("Select");
-    expect(select.children).toHaveLength(4);
-    expect(select.children[0]).toHaveTextContent("25");
-    expect(select.children[1]).toHaveTextContent("50");
-    expect(select.children[2]).toHaveTextContent("75");
-    expect(select.children[3]).toHaveTextContent("100");
+    expect(select.children).toHaveLength(5);
+    expect(select.children[0]).toHaveTextContent("10");
+    expect(select.children[1]).toHaveTextContent("25");
+    expect(select.children[2]).toHaveTextContent("50");
+    expect(select.children[3]).toHaveTextContent("75");
+    expect(select.children[4]).toHaveTextContent("100");
   });
 });
