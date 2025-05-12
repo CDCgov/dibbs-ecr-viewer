@@ -2,17 +2,20 @@
  * @jest-environment node
  */
 
-import { processZip } from "@/app/api/process-zip/service";
 import {
   saveFhirData,
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
+import {
+  getOrchestrationResponse,
+  orchestrationRequest,
+} from "@/app/api/services/orchestrationService";
 import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 
 jest.mock("../../../api/save-fhir-data/service");
 jest.mock("../../../data/metadataDb/database");
 
-describe("processZip", () => {
+describe("orchestrationRequest", () => {
   const mockFile = new File(["content"], "test.zip");
   const mockEcr = { entry: [{ resource: { id: "123" } }] };
   const mockMetadata = { key: "value" };
@@ -39,7 +42,10 @@ describe("processZip", () => {
       message: "Success",
     });
 
-    const response = await processZip(mockFile);
+    const response = await orchestrationRequest(
+      getOrchestrationResponse("process-zip", { upload_file: mockFile }),
+      false,
+    );
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
@@ -64,7 +70,10 @@ describe("processZip", () => {
       message: "Success",
     });
 
-    const response = await processZip(mockFile);
+    const response = await orchestrationRequest(
+      getOrchestrationResponse("process-zip", { upload_file: mockFile }),
+      false,
+    );
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
@@ -84,7 +93,10 @@ describe("processZip", () => {
       message: "Success",
     });
 
-    const response = await processZip(mockFile, true);
+    const response = await orchestrationRequest(
+      getOrchestrationResponse("process-zip", { upload_file: mockFile }),
+      true,
+    );
 
     expect(response).toStrictEqual({
       status: 200,
@@ -101,7 +113,10 @@ describe("processZip", () => {
     });
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    const response = await processZip(mockFile);
+    const response = await orchestrationRequest(
+      getOrchestrationResponse("process-zip", { upload_file: mockFile }),
+      false,
+    );
 
     expect(response).toEqual({
       message: "Failed to process orchestration response",
@@ -132,7 +147,10 @@ describe("processZip", () => {
       delete process.env.METADATA_DATABASE_TYPE;
       delete process.env.METADATA_DATABASE_SCHEMA;
 
-      await processZip(mockFile);
+      await orchestrationRequest(
+        getOrchestrationResponse("process-zip", { upload_file: mockFile }),
+        false,
+      );
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -143,7 +161,10 @@ describe("processZip", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "extended";
 
-      await processZip(mockFile);
+      await orchestrationRequest(
+        getOrchestrationResponse("process-zip", { upload_file: mockFile }),
+        false,
+      );
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -154,7 +175,10 @@ describe("processZip", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "core";
 
-      await processZip(mockFile);
+      await orchestrationRequest(
+        getOrchestrationResponse("process-zip", { upload_file: mockFile }),
+        false,
+      );
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
