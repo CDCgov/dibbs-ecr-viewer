@@ -1,4 +1,11 @@
-import React, { ReactNode, RefObject, useId, useRef } from "react";
+import React, {
+  ReactNode,
+  RefObject,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 import {
   Modal,
@@ -87,37 +94,45 @@ export const DetailsSidePanel = ({
   description: string;
 }) => {
   const id = useId();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <Modal
-      id={`details-sidepanel-${id}`}
-      className="sidepanel-modal"
-      ref={detailsRef}
-      aria-labelledby={`details-sidepanel-${id}-heading`}
-      aria-describedby={`details-sidepanel-${id}-description`}
-    >
-      <div>
-        <ModalHeading
-          id={`details-sidepanel-${id}-heading`}
-          className="font-sans-3xl margin-bottom-0"
-        >
-          {title}
-        </ModalHeading>
-        <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
-      </div>
-      <div className="section__line_gray" />
+    mounted && (
+      <Modal
+        id={`details-sidepanel-${id}`}
+        className="sidepanel-modal"
+        ref={detailsRef}
+        aria-labelledby={`details-sidepanel-${id}-heading`}
+        aria-describedby={`details-sidepanel-${id}-description`}
+      >
+        <div>
+          <ModalHeading
+            id={`details-sidepanel-${id}-heading`}
+            className="font-sans-3xl margin-bottom-0"
+          >
+            {title}
+          </ModalHeading>
+          <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
+        </div>
+        <div className="section__line_gray" />
 
-      <section>
-        <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
+        <section>
+          <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
 
-        <dl>
-          {details.map(({ title, value }, i) => (
-            <React.Fragment key={`detail-${i}`}>
-              <dt>{title}</dt>
-              <dd>{value}</dd>
-            </React.Fragment>
-          ))}
-        </dl>
-      </section>
-    </Modal>
+          <dl>
+            {details.map(({ title, value }, i) => (
+              <React.Fragment key={`detail-${i}`}>
+                <dt>{title}</dt>
+                <dd>{value}</dd>
+              </React.Fragment>
+            ))}
+          </dl>
+        </section>
+      </Modal>
+    )
   );
 };

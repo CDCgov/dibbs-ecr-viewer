@@ -8,7 +8,6 @@ import {
   DetailsTrigger,
   useDetailsRef,
 } from "@/app/components/DetailsSidePanel";
-import { PaginatedSortableTableLoading } from "@/app/components/table/PaginatedSortableLoadingTable";
 import {
   PaginatedSortableTable,
   TableColumn,
@@ -17,7 +16,6 @@ import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
 import { toSentenceCase } from "@/app/utils/format-utils";
-import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 /**
  *
@@ -82,55 +80,46 @@ export const UserTable = ({
 
   // TODO an actual loading state
   return (
-    <ForceClient
-      loading={
-        <PaginatedSortableTableLoading
-          itemType="Users"
-          initHeaders={tableHeaders}
-        />
-      }
-    >
-      <div>
-        <DetailsSidePanel
-          detailsRef={detailsRef}
-          title={selectedUser?.name ? selectedUser?.name : selectedUser?.email!}
-          subtitle={`Last logged in: ${
-            selectedUser?.date_of_last_login
-              ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
-              : "Never"
-          }`}
-          description="User Information"
-          details={[
-            {
-              title: "Name",
-              value: selectedUser?.name ?? "Not on file",
-            },
-            {
-              title: "Email",
-              value: selectedUser?.email,
-            },
-            {
-              title: "User Type",
-              value: toSentenceCase(selectedUser?.user_type),
-            },
-            {
-              title: "Program Area Access",
-              value: (
-                <ProgramAreaContent
-                  user={selectedUser}
-                  programAreas={programAreas}
-                />
-              ),
-            },
-          ]}
-        />
-        <PaginatedSortableTable
-          initHeaders={tableHeaders}
-          items={users}
-          itemType="Users"
-        />
-      </div>
-    </ForceClient>
+    <div>
+      <DetailsSidePanel
+        detailsRef={detailsRef}
+        title={selectedUser?.name ? selectedUser?.name : selectedUser?.email!}
+        subtitle={`Last logged in: ${
+          selectedUser?.date_of_last_login
+            ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
+            : "Never"
+        }`}
+        description="User Information"
+        details={[
+          {
+            title: "Name",
+            value: selectedUser?.name ?? "Not on file",
+          },
+          {
+            title: "Email",
+            value: selectedUser?.email,
+          },
+          {
+            title: "User Type",
+            value: toSentenceCase(selectedUser?.user_type),
+          },
+          {
+            title: "Program Area Access",
+            value: (
+              <ProgramAreaContent
+                user={selectedUser}
+                programAreas={programAreas}
+              />
+            ),
+          },
+        ]}
+      />
+      <PaginatedSortableTable
+        initHeaders={tableHeaders}
+        items={users}
+        itemType="Users"
+      />
+    </div>
   );
 };
 
