@@ -130,14 +130,14 @@ export const orchestrationRequest = async (
 };
 
 /**
+ * @param routeSchema
  * @param processBody Async function that takes a form and returns orchestration data
  * @returns POST handler for an orchestration processing route
  */
 export const postOrchestration =
-  (
-    processBody: (
-      formData: FormData,
-    ) => Promise<ProcessOrchestrationResponse & { status: number }>,
+  <T extends z.ZodObject<any>>(
+    routeSchema: T,
+    processBody: (body: z.infer<T>) => Promise<BundleInfo>,
   ) =>
   async (
     request: NextRequest,
@@ -154,7 +154,19 @@ export const postOrchestration =
     }
 
     try {
-      const { status, ...payload } = await processBody(formData);
+      const schema = routeSchema.extend({
+        return_fhir_bundle: z
+          .string()
+          .optional()
+          .transform((v) => v?.toLowerCase()),
+      });
+      const { return_fhir_bundle, ...body } = schema.parse(
+        Object.fromEntries(formData),
+      );
+      const { status, ...payload } = await orchestrationRequest(
+        processBody(body),
+        return_fhir_bundle === "true",
+      );
       return NextResponse.json(payload, { status });
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {

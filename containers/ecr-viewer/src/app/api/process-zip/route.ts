@@ -1,8 +1,9 @@
 import { z } from "zod";
 
-import { postOrchestration } from "@/app/api/orchestration-utils";
-
-import { processZip } from "./service";
+import {
+  getOrchestrationResponse,
+  postOrchestration,
+} from "@/app/api/orchestration-utils";
 
 const schema = z.object({
   upload_file: z
@@ -10,10 +11,6 @@ const schema = z.object({
     .refine((file) => file.type === "application/zip", {
       message: "File must be a zip",
     }),
-  return_fhir_bundle: z
-    .string()
-    .optional()
-    .transform((v) => v?.toLowerCase()),
 });
 
 /**
@@ -21,18 +18,11 @@ const schema = z.object({
  * @param request - The incoming request object.
  * @returns A `NextResponse` object with a JSON payload indicating the success message.
  */
-export const POST = postOrchestration(async (formData: FormData) => {
-  const body = schema.parse(Object.fromEntries(formData));
-  return await processZip(body.upload_file, body.return_fhir_bundle === "true");
-});
-// export async function POST(
-//   request: NextRequest,
-// ): Promise<NextResponse<ProcessOrchestrationResponse>> {
-//   return await postOrchestration(request, async (formData: FormData) => {
-//     const body = schema.parse(Object.fromEntries(formData));
-//     return await processZip(
-//       body.upload_file,
-//       body.return_fhir_bundle === "true",
-//     );
-//   });
-// }
+export const POST = postOrchestration(
+  schema,
+  async (body) =>
+    await getOrchestrationResponse("process-zip", {
+      data_type: "zip",
+      ...body,
+    }),
+);
