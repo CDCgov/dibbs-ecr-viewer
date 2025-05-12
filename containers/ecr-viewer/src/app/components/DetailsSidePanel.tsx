@@ -1,11 +1,4 @@
-import React, {
-  ReactNode,
-  RefObject,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactNode, RefObject, useId, useRef } from "react";
 
 import {
   Modal,
@@ -14,6 +7,8 @@ import {
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
+
+import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 /**
  * The details ref links the trigger(s) and side panel.
@@ -94,14 +89,9 @@ export const DetailsSidePanel = ({
   description: string;
 }) => {
   const id = useId();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
-    mounted && (
+    <ForceClient loading={null}>
       <Modal
         id={`details-sidepanel-${id}`}
         className="sidepanel-modal"
@@ -133,6 +123,6 @@ export const DetailsSidePanel = ({
           </dl>
         </section>
       </Modal>
-    )
+    </ForceClient>
   );
 };

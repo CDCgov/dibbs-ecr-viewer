@@ -16,6 +16,7 @@ import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
 import { toSentenceCase } from "@/app/utils/format-utils";
+import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 /**
  *
@@ -74,7 +75,11 @@ export const UserTable = ({
       value: "Last Logged In",
       dataSortable: true,
       sortDirection: "",
-      formatter: (d: Date | null) => formatDateTime(d?.toISOString()),
+      formatter: (d: Date | null) => (
+        <ForceClient loading={null}>
+          {formatDateTime(d?.toISOString())}
+        </ForceClient>
+      ),
     },
   ];
 
