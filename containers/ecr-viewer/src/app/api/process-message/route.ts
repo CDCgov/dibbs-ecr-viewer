@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-import {
-  getOrchestrationResponse,
-  postOrchestration,
-} from "@/app/api/orchestration-utils";
+import { postOrchestration } from "@/app/api/services/orchestrationService";
 
 const schema = z.object({
   message: z.string(),
@@ -15,11 +12,4 @@ const schema = z.object({
  * @param request - The incoming request object.
  * @returns A `NextResponse` object with a JSON payload indicating the success message.
  */
-export const POST = postOrchestration(
-  schema,
-  async (body) =>
-    await getOrchestrationResponse("process-message", {
-      data_type: "ecr",
-      ...body,
-    }),
-);
+export const POST = postOrchestration("process-message", "ecr", schema);

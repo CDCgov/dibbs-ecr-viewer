@@ -4,8 +4,8 @@ import { z } from "zod";
 
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
-import { saveFhirData, saveWithMetadata } from "./save-fhir-data/service";
-import { BundleExtendedMetadata, BundleMetadata } from "./save-fhir-data/types";
+import { saveFhirData, saveWithMetadata } from "../save-fhir-data/service";
+import { BundleExtendedMetadata, BundleMetadata } from "../save-fhir-data/types";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -21,9 +21,15 @@ interface OrchestrationRawResponse {
   };
 }
 
-export interface BundleInfo {
+interface BundleInfo {
   ecr: Bundle;
   metadata: BundleMetadata | BundleExtendedMetadata | undefined;
+}
+
+export interface ProcessOrchestrationResponse {
+  message: string;
+  erorors?: string[];
+  bundle?: Bundle<FhirResource>;
 }
 
 /**
@@ -48,7 +54,7 @@ const getOrchestrationConfigName = () => {
  * @param formEntries - endpoint-specific form entries to add to the body
  * @returns orchestration response
  */
-export const getOrchestrationResponse = async (
+const getOrchestrationResponse = async (
   endpoint: string,
   formEntries: Record<string, string | Blob | undefined>,
 ): Promise<BundleInfo> => {
@@ -84,7 +90,7 @@ export const getOrchestrationResponse = async (
  * @param metadata - the related metadata to save
  * @returns the status and message from saving
  */
-export const saveToSource = (
+const saveToSource = (
   bundle: Bundle,
   metadata: BundleMetadata | BundleExtendedMetadata | undefined,
 ) => {
@@ -102,7 +108,7 @@ export const saveToSource = (
  * @param returnBundle - whether to return the fhir bundle (default false)
  * @returns An object containing the status and message.
  */
-export const orchestrationRequest = async (
+const orchestrationRequest = async (
   getResponse: Promise<BundleInfo>,
   returnBundle: boolean = false,
 ) => {
@@ -130,14 +136,16 @@ export const orchestrationRequest = async (
 };
 
 /**
- * @param routeSchema
- * @param processBody Async function that takes a form and returns orchestration data
+ * @param endpoint orchestration end point to use
+ * @param data_type orchestration `data_type` of the request
+ * @param routeSchema Zod schema to parse the request's body
  * @returns POST handler for an orchestration processing route
  */
 export const postOrchestration =
-  <T extends z.ZodObject<any>>(
-    routeSchema: T,
-    processBody: (body: z.infer<T>) => Promise<BundleInfo>,
+  <T extends z.ZodRawShape, Schema extends z.ZodObject<T>>(
+    endpoint: string,
+    data_type: string,
+    routeSchema: Schema,
   ) =>
   async (
     request: NextRequest,
@@ -163,8 +171,9 @@ export const postOrchestration =
       const { return_fhir_bundle, ...body } = schema.parse(
         Object.fromEntries(formData),
       );
+      const resp = getOrchestrationResponse(endpoint, { data_type, ...body });
       const { status, ...payload } = await orchestrationRequest(
-        processBody(body),
+        resp,
         return_fhir_bundle === "true",
       );
       return NextResponse.json(payload, { status });
@@ -186,9 +195,3 @@ export const postOrchestration =
       );
     }
   };
-
-export interface ProcessOrchestrationResponse {
-  message: string;
-  erorors?: string[];
-  bundle?: Bundle<FhirResource>;
-}

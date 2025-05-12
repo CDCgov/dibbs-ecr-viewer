@@ -4,9 +4,7 @@
 import { NextRequest } from "next/server";
 
 import { POST } from "@/app/api/process-zip/route";
-import { processZip } from "@/app/api/process-zip/service";
 
-jest.mock("../../../api/process-zip/service");
 jest.mock("../../../data/metadataDb/database");
 
 describe("POST Process Zip", () => {
