@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
+exports[`EcrTableLoading Snapshot test should match snapshot 1`] = `
 <div>
   <tbody
     data-testid="loading-table"
@@ -11,7 +11,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -22,7 +22,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -33,7 +43,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -44,7 +64,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -55,64 +75,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -125,7 +88,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -136,7 +99,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -147,7 +120,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -158,7 +141,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -169,64 +152,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -239,7 +165,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -250,7 +176,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -261,7 +197,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -272,7 +218,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -283,64 +229,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -353,7 +242,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -364,7 +253,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -375,7 +274,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -386,7 +295,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -397,64 +306,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
-          >
-             
-          </div>
-        </div>
-      </td>
-      <td>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -467,7 +319,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -478,7 +330,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -489,7 +351,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -500,7 +372,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -511,7 +383,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
           >
              
           </div>
@@ -524,7 +396,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -535,7 +407,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -546,7 +428,17 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -557,7 +449,7 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
@@ -568,7 +460,315 @@ exports[`TableContentLoading Snapshot test should match snapshot 1`] = `
           class="grid-row"
         >
           <div
-            class="loading-blob grid-col-4 loading-blob-dark-gray width-full"
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+        <br />
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
+          >
+             
+          </div>
+        </div>
+      </td>
+      <td>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="loading-blob grid-col-8 loading-blob-dark-gray width-full"
           >
              
           </div>
