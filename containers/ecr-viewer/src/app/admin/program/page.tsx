@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import Header from "@/app/components/Header";
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import {
   createProgramArea,
@@ -33,11 +33,13 @@ const ProgramAdminPage = async () => {
   const conditions = await listConditionReferences();
 
   return (
-    <div className="display-flex flex-column height-viewport">
-      <Header />
+    <>
       <main className="main-container">
         <div className="content-container margin-top-10">
-          <h2 className="margin-bottom-5">Program management</h2>
+          <div className="display-flex flex-justify">
+            <h2 className="margin-bottom-5">Program management</h2>
+            <Link href="/admin/program/create">Create New Program Area</Link>
+          </div>
           {programAreas.length === 0 ? (
             <div className="width-full height-half bg-base-lightest display-flex flex-align-center flex-justify-center">
               <p className="text-bold font-size-lg">No program areas added</p>
@@ -74,7 +76,7 @@ const ProgramAdminPage = async () => {
           </form>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

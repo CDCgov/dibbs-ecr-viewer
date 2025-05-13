@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import Header from "@/app/components/Header";
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import {
   createProgramArea,
@@ -49,8 +48,7 @@ const UserAdminPage = async () => {
   const conditions = await listConditionReferences();
 
   return (
-    <div className="display-flex flex-column height-viewport">
-      <Header />
+    <>
       <main className="main-container">
         <div className="content-container margin-top-10">
           <h2 className="margin-bottom-5">User Management</h2>
@@ -130,7 +128,7 @@ const UserAdminPage = async () => {
           </form>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
