@@ -430,9 +430,7 @@
         "name": "Grand Republic Medical Facility Clinic",
         "address": {
           "use": "work",
-          "line": [
-            "500 Republica Medical Plaza, Suite 1000 Drive"
-          ],
+          "line": ["500 Republica Medical Plaza, Suite 1000 Drive"],
           "city": "Senate District",
           "state": "Galactic City",
           "country": "Coruscant",
@@ -474,9 +472,7 @@
         "address": [
           {
             "use": "work",
-            "line": [
-              "500 Republica Medical Plaza, Suite 1000 Drive"
-            ],
+            "line": ["500 Republica Medical Plaza, Suite 1000 Drive"],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -525,23 +521,15 @@
         "name": [
           {
             "family": "Hemlock",
-            "given": [
-              "Royce"
-            ],
-            "prefix": [
-              "Dr."
-            ],
-            "suffix": [
-              "MD, GCS"
-            ]
+            "given": ["Royce"],
+            "prefix": ["Dr."],
+            "suffix": ["MD, GCS"]
           }
         ],
         "address": [
           {
             "use": "work",
-            "line": [
-              "200 Corusca Street"
-            ],
+            "line": ["200 Corusca Street"],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -591,9 +579,7 @@
         "address": [
           {
             "use": "work",
-            "line": [
-              "500 Republica Medical Plaza, Suite 1000 Drive"
-            ],
+            "line": ["500 Republica Medical Plaza, Suite 1000 Drive"],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -749,9 +735,7 @@
           {
             "use": "official",
             "family": "RENDAR",
-            "given": [
-              "DAX"
-            ]
+            "given": ["DAX"]
           }
         ],
         "birthDate": "1955-10-01",
@@ -794,9 +778,7 @@
         "address": [
           {
             "use": "home",
-            "line": [
-              "500 Republica, Suite 456"
-            ],
+            "line": ["500 Republica, Suite 456"],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -829,12 +811,8 @@
             "name": {
               "use": "official",
               "family": "Fertha",
-              "given": [
-                "Perrin"
-              ],
-              "prefix": [
-                "Mr"
-              ]
+              "given": ["Perrin"],
+              "prefix": ["Mr"]
             },
             "telecom": [
               {
@@ -845,9 +823,7 @@
             ],
             "address": {
               "use": "home",
-              "line": [
-                "500 Republica, Suite 460"
-              ],
+              "line": ["500 Republica, Suite 460"],
               "city": "Senate District",
               "state": "Galactic City",
               "country": "Coruscant",
