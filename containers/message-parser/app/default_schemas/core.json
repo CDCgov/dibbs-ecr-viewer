@@ -59,6 +59,14 @@
           "category": "RR Reportability Information"
         }
       },
+      "condition_code": {
+        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.text, Observation.valueCodeableConcept.coding.display)", 
+        "data_type": "string",
+        "nullable": true,
+        "metadata": {
+          "category": "RR Reportability Information"
+        }
+      },
       "rule_summaries": {
         "fhir_path": "Observation.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
         "data_type": "array",
