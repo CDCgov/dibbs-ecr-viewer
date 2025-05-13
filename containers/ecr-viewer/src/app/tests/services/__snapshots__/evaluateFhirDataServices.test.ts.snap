@@ -34,6 +34,322 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
 />
 `;
 
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Admission Diagnosis returns that data and matches snapshot 1`] = `
+{
+  "availableData": [
+    {
+      "table": true,
+      "title": "Hospital Admission Diagnosis",
+      "value": <EvaluateTable
+        caption="Hospital Admission Diagnosis"
+        columns={
+          [
+            {
+              "columnName": "Problem",
+              "infoPath": "hospitalEncounterDiagnosisCode",
+            },
+            {
+              "applyToValue": [Function],
+              "columnName": "Date/Time",
+              "infoPath": "hospitalEncounterDiagnosisDateTime",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "code": "problem-item-list",
+                      "display": "Problem List Item",
+                      "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                    },
+                  ],
+                },
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "code": "840539006",
+                    "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "system": "http://snomed.info/sct",
+                  },
+                ],
+              },
+              "extension": [
+                {
+                  "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  "valueCoding": {
+                    "code": "840539006",
+                    "system": "http://snomed.info/sct",
+                  },
+                },
+              ],
+              "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67",
+                },
+              ],
+              "meta": {
+                "source": "ecr",
+              },
+              "onsetDateTime": "2025-02-05",
+              "resourceType": "Condition",
+              "subject": {
+                "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
+              },
+            },
+          ]
+        }
+      />,
+    },
+  ],
+  "unavailableData": [
+    {
+      "table": true,
+      "title": "Hospital Discharge Diagnosis",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
+{
+  "availableData": [
+    {
+      "table": true,
+      "title": "Hospital Discharge Diagnosis",
+      "value": <EvaluateTable
+        caption="Hospital Discharge Diagnosis"
+        columns={
+          [
+            {
+              "columnName": "Problem",
+              "infoPath": "hospitalEncounterDiagnosisCode",
+            },
+            {
+              "applyToValue": [Function],
+              "columnName": "Date/Time",
+              "infoPath": "hospitalEncounterDiagnosisDateTime",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "code": "problem-item-list",
+                      "display": "Problem List Item",
+                      "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                    },
+                  ],
+                },
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "code": "840539006",
+                    "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "system": "http://snomed.info/sct",
+                  },
+                ],
+              },
+              "extension": [
+                {
+                  "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  "valueCoding": {
+                    "code": "840539006",
+                    "system": "http://snomed.info/sct",
+                  },
+                },
+              ],
+              "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67",
+                },
+              ],
+              "meta": {
+                "source": "ecr",
+              },
+              "onsetDateTime": "2025-02-05",
+              "resourceType": "Condition",
+              "subject": {
+                "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
+              },
+            },
+          ]
+        }
+      />,
+    },
+  ],
+  "unavailableData": [
+    {
+      "table": true,
+      "title": "Hospital Admission Diagnosis",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data and match snapshot 1`] = `
+{
+  "availableData": [
+    {
+      "table": true,
+      "title": "Hospital Admission Diagnosis",
+      "value": <EvaluateTable
+        caption="Hospital Admission Diagnosis"
+        columns={
+          [
+            {
+              "columnName": "Problem",
+              "infoPath": "hospitalEncounterDiagnosisCode",
+            },
+            {
+              "applyToValue": [Function],
+              "columnName": "Date/Time",
+              "infoPath": "hospitalEncounterDiagnosisDateTime",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "code": "problem-item-list",
+                      "display": "Problem List Item",
+                      "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                    },
+                  ],
+                },
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "code": "840539006",
+                    "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "system": "http://snomed.info/sct",
+                  },
+                ],
+              },
+              "extension": [
+                {
+                  "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  "valueCoding": {
+                    "code": "840539006",
+                    "system": "http://snomed.info/sct",
+                  },
+                },
+              ],
+              "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67",
+                },
+              ],
+              "meta": {
+                "source": "ecr",
+              },
+              "onsetDateTime": "2025-02-05",
+              "resourceType": "Condition",
+              "subject": {
+                "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
+              },
+            },
+          ]
+        }
+      />,
+    },
+    {
+      "table": true,
+      "title": "Hospital Discharge Diagnosis",
+      "value": <EvaluateTable
+        caption="Hospital Discharge Diagnosis"
+        columns={
+          [
+            {
+              "columnName": "Problem",
+              "infoPath": "hospitalEncounterDiagnosisCode",
+            },
+            {
+              "applyToValue": [Function],
+              "columnName": "Date/Time",
+              "infoPath": "hospitalEncounterDiagnosisDateTime",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "code": "problem-item-list",
+                      "display": "Problem List Item",
+                      "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                    },
+                  ],
+                },
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "code": "840539006",
+                    "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "system": "http://snomed.info/sct",
+                  },
+                ],
+              },
+              "extension": [
+                {
+                  "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  "valueCoding": {
+                    "code": "840539006",
+                    "system": "http://snomed.info/sct",
+                  },
+                },
+              ],
+              "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67",
+                },
+              ],
+              "meta": {
+                "source": "ecr",
+              },
+              "onsetDateTime": "2025-02-05",
+              "resourceType": "Condition",
+              "subject": {
+                "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
+              },
+            },
+          ]
+        }
+      />,
+    },
+  ],
+  "unavailableData": [],
+}
+`;
+
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when all fields present 1`] = `
 <ExpandCollapseAccordion
   descriptor="employment details"

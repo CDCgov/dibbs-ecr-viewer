@@ -4,6 +4,9 @@ import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadat
 import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
 import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import BundlePatientWithHospitalEncounterData from "../../../../../../test-data/fhir/BundlePatientWithHospitalEncounterData.json";
+import BundleHospitalEncounterOnlyAdmissionDx from "../../../../../../test-data/fhir/BundleHospitalEncounterOnlyAdmissionDx.json";
+import BundleHospitalEncounterOnlyDischargeDx from "../../../../../../test-data/fhir/BundleHospitalEncounterOnlyDischargeDx.json";
 import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluateEncounterId,
@@ -22,7 +25,7 @@ import {
   calculatePatientAge,
   createPatientAgeDataProp,
   evaluateOccupation,
-  evaluateOccupationHistory,
+  evaluateOccupationHistory, evaluateHospitalEncounterData,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -426,6 +429,42 @@ Home: 123-456-6909`,
       );
     });
   });
+
+  describe("Evaluate Hospital Encounter Data", ()=>{
+    it("should return unavailable data when no Admission Diagnosis or Discharge diagnosis are found", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [],
+      };
+
+      expect(evaluateHospitalEncounterData(bundle)).toEqual({"availableData": [], "unavailableData": [{"table": true, "title": "Hospital Admission Diagnosis", "value": undefined}, {"table": true, "title": "Hospital Discharge Diagnosis", "value": undefined}]});
+    });
+
+    it("should return Hospital Encounter Data and match snapshot", () => {
+      const actual = evaluateHospitalEncounterData(
+          BundlePatientWithHospitalEncounterData as unknown as Bundle,
+      );
+
+      expect(actual).toMatchSnapshot();
+    });
+
+    it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
+      const actual = evaluateHospitalEncounterData(
+          BundleHospitalEncounterOnlyAdmissionDx as unknown as Bundle,
+      );
+
+      expect(actual).toMatchSnapshot();
+    });
+
+    it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
+      const actual = evaluateHospitalEncounterData(
+          BundleHospitalEncounterOnlyDischargeDx as unknown as Bundle,
+      );
+
+      expect(actual).toMatchSnapshot();
+    });
+  })
 
   describe("Evaluate Occupation History", () => {
     it("should return empty when no jobs", () => {
