@@ -76,7 +76,64 @@ Process an eCR (e.g. `seed-scripts/baseECR/star-wars/yoda-zika-v1-positive`) and
 ```sh
 curl --location '<DIBBS_URL>/ecr-viewer/api/process-zip' \
 --form 'upload_file=@"<PATH_TO_ECR_ZIP_FILE>";type=application/zip' \
---form 'return_fhir_bundle=true'
+--form 'return_fhir_bundle=true' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+
+### Success Response
+
+**Condition** : eCR was processed and saved to storage. If metadata database is enabled, metadata was saved to relational database.
+
+**Code** : `200 OK`
+
+**Content** : `message` and optionally `bundle` if requested
+
+### Error Responses
+
+**Condition** : eCR failed to process or metadata failed to save if enabled
+
+**Code** : `400`
+
+**Content** : `message` with details on error
+
+#### Or
+
+**Condition** : eCR already processed
+
+**Code** : `409 CONFLICT`
+
+**Content** : `message` with details on error
+
+## Process eCR message
+
+Process a message containing an eCR/RR pair
+
+**URL** : `/ecr-viewer/api/process-message`
+
+**POST Form Fields** :
+
+- `message=[string]` String containing the xml content of the eCR.
+- `rr_data=[string]` Optional. String contianing the xml content of the RR.
+- `return_fhir_bundle=[true|false]` By default, the fhir bundle is not returned. Set this field to `"true"` to have the response include the `bundle` field with the FHIR json object. OPTIONAL.
+
+Note, in addition to accepting these fields as a form body, a stringified JSON body is also accepted.
+
+**Method** : `POST`
+
+**Auth required** : Yes, token passed via `Authorization` header
+
+**Permissions required** : None
+
+### Example
+
+Process an eCR (e.g. `seed-scripts/baseECR/star-wars/yoda-zika-v1-positive`) and have the processed FHIR bundle returned.
+
+```sh
+curl --location '<DIBBS_URL>/ecr-viewer/api/process-message' \
+--form 'message=<"<PATH_TO_ECR_FILE>"' \
+--form 'rr_data=<"<PATH_TO_RR_FILE>"' \
+--form 'return_fhir_bundle=true' \
+--header 'Authorization: Bearer <TOKEN>'
 ```
 
 ### Success Response
@@ -129,7 +186,8 @@ Migrate a DB to the latest state.
 
 ```sh
 curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
---form 'migration_secret=<your migration secret>'
+--form 'migration_secret=<your migration secret>' \
+--header 'Authorization: Bearer <TOKEN>'
 ```
 
 Roll back a DB migration one step.
@@ -137,7 +195,8 @@ Roll back a DB migration one step.
 ```sh
 curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
 --form 'migration_secret=<your migration secret>' \
---form 'direction=down'
+--form 'direction=down' \
+--header 'Authorization: Bearer <TOKEN>'
 ```
 
 ### Success Response
