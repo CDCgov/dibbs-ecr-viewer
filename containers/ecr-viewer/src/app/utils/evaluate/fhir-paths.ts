@@ -85,8 +85,8 @@ export type PathTypes = {
   encounterType: string;
   encounterID: Identifier;
   hospitalEncounterDiagnosisRef: Reference;
-  hospitalEncounterDiagnosisCode: CodeableConcept;
-  hospitalEncounterDiagnosisDateTime: string;
+  conditionCode: CodeableConcept;
+  ConditionOnsetDateTime: string;
   facilityContact: string;
   facilityContactAddress: string;
   facilityLocation: string;
@@ -361,11 +361,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = %code).entry",
   },
 
-  hospitalEncounterDiagnosisCode: {
+  conditionCode: {
     type: "CodeableConcept",
     path: "Condition.code",
   },
-  hospitalEncounterDiagnosisDateTime: {
+  ConditionOnsetDateTime: {
     type: "string",
     path: "Condition.onsetDateTime",
   },
