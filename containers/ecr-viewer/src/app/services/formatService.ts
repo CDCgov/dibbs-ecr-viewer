@@ -404,6 +404,16 @@ export const formatRange = (data: Range | undefined): string | undefined => {
 };
 
 /**
+ * Returns the value of a Reference
+ * @param reference the reference being formatted
+ * @returns .reference value of the supplied reference
+ */
+export const formatReference = (reference: Reference | undefined): string | undefined => {
+  if (!reference) return;
+  return reference.reference;
+};
+
+/**
  * Takes a patient's age and formats it into a string. If the patient is 2 years or older
  * the function will return `x years`. When the patient is under 2 years old, it will
  * return the age in `x months, y days`.
@@ -423,15 +433,6 @@ export const formatAge = (age: Age | undefined): string | undefined => {
   const totalMonths = years * 12 + months;
 
   return `${getFormattedMonths(totalMonths)}${days} day${makePlural(days)}`;
-};
-
-/**
- * Returns the value of a Reference
- * @param reference the reference being formatted
- * @returns .reference value of the supplied reference
- */
-export const formatReference = (reference: Reference): string => {
-  return reference?.reference || "";
 };
 
 const getFormattedMonths = (months: number): string => {
