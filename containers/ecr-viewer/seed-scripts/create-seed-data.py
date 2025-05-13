@@ -7,7 +7,6 @@ import zipfile
 import grequests
 import requests as rqsts
 
-UPLOAD_URL = "http://host.docker.internal:3000/ecr-viewer/api/process-zip"
 MIGRATION_URL = "http://host.docker.internal:3000/ecr-viewer/api/migrate-db"
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -67,6 +66,8 @@ def _process_files():
     )
     assert rs.status_code == 200, f"{rs.json()}"
 
+    UPLOAD_URL = os.getenv("UPLOAD_URL")
+
     requests = []
     folder_paths = []
     for subfolder in subfolders:
@@ -81,17 +82,12 @@ def _process_files():
             if not os.path.isdir(folder_path):
                 continue
 
-            print(f"Zipping and uploading: {folder_path}")
-
-            zip_buffer = zip_folder(folder_path)
-
-            files = [("upload_file", (f"{folder}.zip", zip_buffer, "application/zip"))]
-            request = grequests.post(
-                UPLOAD_URL,
-                files=files,
-                data={"return_fhir_bundle": True},
-                headers=headers,
-            )
+            if UPLOAD_URL.endswith("process-zip"):
+                request = process_zip(UPLOAD_URL, folder_path, folder, headers)
+            elif UPLOAD_URL.endswith("process-message"):
+                request = process_message(UPLOAD_URL, folder_path, headers)
+            else:
+                raise ("Unknown endpoint type")
 
             requests.append(request)
             folder_paths.append(folder_path)
@@ -137,6 +133,42 @@ def _process_files():
     )
     if failed:
         exit(1)
+
+
+def process_zip(url, folder_path, folder, headers):
+    """Process a zip and submit post to API"""
+    print(f"Zipping and uploading: {folder_path}")
+
+    zip_buffer = zip_folder(folder_path)
+
+    files = [("upload_file", (f"{folder}.zip", zip_buffer, "application/zip"))]
+    return grequests.post(
+        url,
+        files=files,
+        data={"return_fhir_bundle": True},
+        headers=headers,
+    )
+
+
+def process_message(url, folder_path, headers):
+    """Process a message and submit post to API"""
+    print(f"Uploading files from: {folder_path}")
+
+    data = {"return_fhir_bundle": True}
+    with open(f"{folder_path}/CDA_eICR.xml") as f:
+        data["message"] = f.read()
+
+    try:
+        with open(f"{folder_path}/CDA_RR.xml") as f:
+            data["rr_data"] = f.read()
+    except:  # noqa: E722
+        print(f"No rr data found to upload from {folder_path}")
+
+    return grequests.post(
+        url,
+        data=data,
+        headers=headers,
+    )
 
 
 if __name__ == "__main__":
