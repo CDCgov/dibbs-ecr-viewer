@@ -3,7 +3,9 @@ import { z } from "zod";
 import { postOrchestration } from "@/app/api/services/orchestrationRouteService";
 
 const schema = z.object({
-  message: z.string(),
+  message: z.string().refine((val) => !!val.match(/<.*>.*<\/.*>/), {
+    message: "Message must contain xml",
+  }),
   rr_data: z.string().optional(),
 });
 

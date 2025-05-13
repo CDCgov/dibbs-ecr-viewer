@@ -29,26 +29,29 @@ export const postOrchestration =
     request: NextRequest,
   ): Promise<NextResponse<ProcessOrchestrationResponse>> => {
     // Parse out the form from the request
-    let formData: FormData;
+    let rawBody: object;
     try {
-      formData = await request.formData();
+      const contentType = request.headers.get("content-type");
+      if (contentType?.includes("form-")) {
+        rawBody = Object.fromEntries(await request.formData());
+      } else {
+        rawBody = await request.json();
+      }
     } catch {
       return NextResponse.json(
-        { message: "Validation error", errors: ["No form found"] },
+        { message: "Validation error", errors: ["No form or json body found"] },
         { status: 400 },
       );
     }
 
     try {
       const schema = routeSchema.extend({
-        return_fhir_bundle: z
+        return_fhir_bundle: z.coerce
           .string()
           .optional()
           .transform((v) => v?.toLowerCase()),
       });
-      const { return_fhir_bundle, ...body } = schema.parse(
-        Object.fromEntries(formData),
-      );
+      const { return_fhir_bundle, ...body } = schema.parse(rawBody);
       const resp = getOrchestrationResponse(endpoint, { data_type, ...body });
       const { status, ...payload } = await orchestrationRequest(
         resp,

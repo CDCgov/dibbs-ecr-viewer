@@ -162,7 +162,7 @@ def process_message(url, folder_path, headers):
         with open(f"{folder_path}/CDA_RR.xml") as f:
             data["rr_data"] = f.read()
     except:  # noqa: E722
-        print(f"No rr data found to upload from {folder_path}")
+        print(f"No RR data found to upload from {folder_path}")
 
     return grequests.post(
         url,

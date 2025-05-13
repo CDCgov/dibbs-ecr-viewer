@@ -48,24 +48,37 @@ const getOrchestrationConfigName = () => {
 /**
  * Make a request to orchestration /process-zip endpoint
  * @param endpoint - orchestration end point to use for data processing
- * @param formEntries - endpoint-specific form entries to add to the body
+ * @param bodyEntries - endpoint-specific entries to add to the body
  * @returns orchestration response
  */
 export const getOrchestrationResponse = async (
   endpoint: string,
-  formEntries: Record<string, string | Blob | undefined>,
+  bodyEntries: Record<string, string | Blob | undefined>,
 ): Promise<BundleInfo> => {
-  const formData = new FormData();
-  formData.append("message_type", "ecr");
-  formData.append("include_error_types", "[errors]");
-  formData.append("config_file_name", getOrchestrationConfigName());
-  for (const [k, v] of Object.entries(formEntries)) {
-    !!v && formData.append(k, v);
+  const bodyObj = {
+    message_type: "ecr",
+    include_error_types: "[errors]",
+    config_file_name: getOrchestrationConfigName(),
+    ...bodyEntries,
+  };
+
+  let body: string | FormData;
+  const headers = new Headers();
+  if (endpoint === "process-zip") {
+    const formData = new FormData();
+    for (const [k, v] of Object.entries(bodyObj)) {
+      !!v && formData.append(k, v);
+    }
+    body = formData;
+  } else {
+    body = JSON.stringify(bodyObj);
+    headers.append("content-type", "application/json");
   }
 
   const response = await fetch(`${process.env.ORCHESTRATION_URL}/${endpoint}`, {
     method: "post",
-    body: formData,
+    body,
+    headers,
   });
 
   if (response.status !== 200) {

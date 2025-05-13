@@ -24,9 +24,10 @@ describe("POST Process Zip", () => {
   });
 
   const createRequest = (formData: FormData) => {
-    const a = new NextRequest("localhost:3000/ecr-viewer/api/process-zip");
-    a.formData = () => Promise.resolve(formData);
-    return a;
+    return new NextRequest("localhost:3000/ecr-viewer/api/process-zip", {
+      method: "post",
+      body: formData,
+    });
   };
 
   it("should return a 200 response when valid zip file is provided", async () => {

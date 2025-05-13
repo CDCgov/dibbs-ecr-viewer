@@ -22,118 +22,126 @@ describe("POST Process Message", () => {
   const mockMessage = "<totally>real xml</totally>";
   const mockRR = "<optional>rr</optional>";
 
-  const createRequest = (formData: FormData) => {
-    const a = new NextRequest("localhost:3000/ecr-viewer/api/process-message");
-    a.formData = () => Promise.resolve(formData);
-    return a;
+  const createRequestJSON = (
+    body: Record<string, string | boolean | number>,
+  ) => {
+    return new NextRequest("localhost:3000/ecr-viewer/api/process-message", {
+      method: "post",
+      body: JSON.stringify(body),
+    });
+  };
+  const createRequestForm = (
+    body: Record<string, string | boolean | number>,
+  ) => {
+    const form = new FormData();
+    for (const [k, v] of Object.entries(body)) {
+      form.append(k, v.toString());
+    }
+    return new NextRequest("localhost:3000/ecr-viewer/api/process-message", {
+      method: "post",
+      body: form,
+    });
   };
 
-  it("should return a 200 response when valid message is provided", async () => {
-    const formData = new FormData();
-    formData.append("message", mockMessage);
-    const request = createRequest(formData);
+  for (const createRequest of [createRequestForm, createRequestJSON]) {
+    it("should return a 200 response when valid message is provided", async () => {
+      const request = createRequest({ message: mockMessage });
 
-    (orchestrationRequest as jest.Mock).mockResolvedValue({
-      message: "ok",
-      status: 200,
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toEqual(200);
+      expect(await response.json()).toEqual({ message: "ok" });
     });
 
-    const response = await POST(request);
+    it("should return a 200 response when valid message and rr", async () => {
+      const request = createRequest({ message: mockMessage, rr_data: mockRR });
 
-    expect(response.status).toEqual(200);
-    expect(await response.json()).toEqual({ message: "ok" });
-  });
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
 
-  it("should return a 200 response when valid message and rr", async () => {
-    const formData = new FormData();
-    formData.append("message", mockMessage);
-    formData.append("rr_data", mockRR);
-    const request = createRequest(formData);
+      const response = await POST(request);
 
-    (orchestrationRequest as jest.Mock).mockResolvedValue({
-      message: "ok",
-      status: 200,
+      expect(response.status).toEqual(200);
+      expect(await response.json()).toEqual({ message: "ok" });
     });
 
-    const response = await POST(request);
+    it("should return a 200 response when valid message and return fhir bundle flag provided", async () => {
+      const request = createRequest({
+        message: mockMessage,
+        return_fhir_bundle: true,
+      });
 
-    expect(response.status).toEqual(200);
-    expect(await response.json()).toEqual({ message: "ok" });
-  });
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+        bundle,
+      });
 
-  it("should return a 200 response when valid message and return fhir bundle flag provided", async () => {
-    const formData = new FormData();
-    formData.append("message", mockMessage);
-    formData.append("return_fhir_bundle", "True");
-    const request = createRequest(formData);
+      const response = await POST(request);
 
-    (orchestrationRequest as jest.Mock).mockResolvedValue({
-      message: "ok",
-      status: 200,
-      bundle,
+      expect(response.status).toEqual(200);
+      expect(await response.json()).toEqual({ message: "ok", bundle });
     });
 
-    const response = await POST(request);
+    it("should return a 400 response when message is not an xml string", async () => {
+      const request = createRequest({ message: "123" });
 
-    expect(response.status).toEqual(200);
-    expect(await response.json()).toEqual({ message: "ok", bundle });
-  });
+      const response = await POST(request);
 
-  it("should return a 400 response when message is not a string", async () => {
-    const invalidFile = new File(["content"], "test.txt", {
-      type: "text/plain",
+      expect(response.status).toEqual(400);
+      const jsonResponse = await response.json();
+      expect(jsonResponse.message).toEqual("Validation error");
+      expect(jsonResponse.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: "Message must contain xml",
+          }),
+        ]),
+      );
     });
-    const formData = new FormData();
-    formData.append("message", invalidFile);
-    const request = createRequest(formData);
 
-    const response = await POST(request);
+    it("should return a 400 response when required fields are missing", async () => {
+      const request = createRequest({});
 
-    expect(response.status).toEqual(400);
-    const jsonResponse = await response.json();
-    expect(jsonResponse.message).toEqual("Validation error");
-    expect(jsonResponse.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          message: "Expected string, received object",
-        }),
-      ]),
-    );
-  });
+      const response = await POST(request);
 
-  it("should return a 400 response when required fields are missing", async () => {
-    const formData = new FormData();
-    const request = createRequest(formData);
+      expect(response.status).toEqual(400);
+      const jsonResponse = await response.json();
+      expect(jsonResponse.message).toEqual("Validation error");
+      expect(jsonResponse.errors).toBeDefined();
+    });
 
-    const response = await POST(request);
+    it("should return a 400 response when required no form sent", async () => {
+      const response = await POST(
+        new NextRequest("localhost:3000/ecr-viewer/api/process-message"),
+      );
 
-    expect(response.status).toEqual(400);
-    const jsonResponse = await response.json();
-    expect(jsonResponse.message).toEqual("Validation error");
-    expect(jsonResponse.errors).toBeDefined();
-  });
+      expect(response.status).toEqual(400);
+      const jsonResponse = await response.json();
+      expect(jsonResponse.message).toEqual("Validation error");
+      expect(jsonResponse.errors).toBeDefined();
+    });
 
-  it("should return a 400 response when required no form sent", async () => {
-    const response = await POST(
-      new NextRequest("localhost:3000/ecr-viewer/api/process-message"),
-    );
+    it("should return a 500 response when an unexpected error occurs", async () => {
+      const request = createRequest({ message: mockMessage });
+      (orchestrationRequest as jest.Mock).mockRejectedValue(
+        new Error("oh no!"),
+      );
 
-    expect(response.status).toEqual(400);
-    const jsonResponse = await response.json();
-    expect(jsonResponse.message).toEqual("Validation error");
-    expect(jsonResponse.errors).toBeDefined();
-  });
+      jest.spyOn(console, "error").mockImplementation();
+      const response = await POST(request);
 
-  it("should return a 500 response when an unexpected error occurs", async () => {
-    const formData = new FormData();
-    formData.append("message", mockMessage);
-    const request = createRequest(formData);
-    (orchestrationRequest as jest.Mock).mockRejectedValue(new Error("oh no!"));
-
-    jest.spyOn(console, "error").mockImplementation();
-    const response = await POST(request);
-
-    expect(response.status).toEqual(500);
-    expect(await response.json()).toEqual({ message: "Internal Server Error" });
-  });
+      expect(response.status).toEqual(500);
+      expect(await response.json()).toEqual({
+        message: "Internal Server Error",
+      });
+    });
+  }
 });
