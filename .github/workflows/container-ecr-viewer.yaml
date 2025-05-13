@@ -85,10 +85,10 @@ jobs:
         include:
           - config: AWS_SQLSERVER_NON_INTEGRATED
             schema: extended
-            endpoint: "process-zip"
+            endpoint: process-zip
           - config: AZURE_PG_NON_INTEGRATED
             schema: core
-            endpoint: "process-message"
+            endpoint: process-message
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
