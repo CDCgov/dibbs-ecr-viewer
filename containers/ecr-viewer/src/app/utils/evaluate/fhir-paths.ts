@@ -86,7 +86,7 @@ export type PathTypes = {
   encounterID: Identifier;
   hospitalEncounterDiagnosisRef: Reference;
   hospitalEncounterDiagnosisCode: CodeableConcept;
-  hospitalEncounterDiagnosisDateTime: String;
+  hospitalEncounterDiagnosisDateTime: string;
   facilityContact: string;
   facilityContactAddress: string;
   facilityLocation: string;
