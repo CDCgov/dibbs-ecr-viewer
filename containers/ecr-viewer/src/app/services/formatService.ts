@@ -408,7 +408,9 @@ export const formatRange = (data: Range | undefined): string | undefined => {
  * @param reference the reference being formatted
  * @returns .reference value of the supplied reference
  */
-export const formatReference = (reference: Reference | undefined): string | undefined => {
+export const formatReference = (
+  reference: Reference | undefined,
+): string | undefined => {
   if (!reference) return;
   return reference.reference;
 };
