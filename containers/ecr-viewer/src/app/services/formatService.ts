@@ -404,7 +404,7 @@ export const formatRange = (data: Range | undefined): string | undefined => {
 };
 
 /**
- * Returns the value of a Reference
+ * Returns the value of a Reference. While this function is currently very simple, it exists to futureproof a change in how we format references.
  * @param reference the reference being formatted
  * @returns .reference value of the supplied reference
  */
