@@ -49,7 +49,7 @@ const ProgramAdminPage = async () => {
       </main>
 
       {/* HACKY, BUT USEFUL. KEEPING AROUND FOR THE MOMENT*/}
-      {process.env.NODE_ENV !== "production" && (
+      {process.env.NODE_ENV === "development" && (
         <div style={{ margin: "100px" }}>
           <h2>Scratch functionality to test above</h2>
           <form action={submitCreateProgramArea}>
@@ -59,8 +59,8 @@ const ProgramAdminPage = async () => {
             </label>
             <fieldset>
               <legend>Conditions:</legend>
-              {conditions.map((condition) => (
-                <label>
+              {conditions.map((condition, i) => (
+                <label key={i}>
                   {condition.condition_name}
                   <input
                     type="checkbox"

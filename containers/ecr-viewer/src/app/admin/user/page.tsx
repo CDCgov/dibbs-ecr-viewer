@@ -59,7 +59,7 @@ const UserAdminPage = async () => {
       </main>
 
       {/* HACKY, BUT USEFUL. KEEPING AROUND FOR THE MOMENT*/}
-      {process.env.NODE_ENV !== "production" && (
+      {process.env.NODE_ENV === "development" && (
         <div style={{ margin: "100px" }}>
           <h2>Scratch functionality to test above</h2>
           <form action={submitCreateUser}>
