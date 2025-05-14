@@ -71,30 +71,6 @@
             "mode": "snapshot"
           },
           {
-            "id": "e9c9e752-dfae-c13d-a4c0-64cef027435f",
-            "title": "Discharge Diagnosis",
-            "text": {
-              "status": "generated",
-              "div": "Diverticula of intestine"
-            },
-            "code": {
-              "coding": [
-                {
-                  "code": "11535-2",
-                  "system": "http://loinc.org",
-                  "display": "Hospital Discharge Diagnosis"
-                }
-              ]
-            },
-            "mode": "snapshot",
-            "entry": [
-              {
-                "display": "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
-                "reference": "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79"
-              }
-            ]
-          },
-          {
             "id": "b47c4891-d48f-42c3-9f92-54c3c7d66d42",
             "title": "History of Present Illness",
             "text": {

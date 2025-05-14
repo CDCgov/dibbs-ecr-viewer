@@ -202,7 +202,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
 }
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data and match snapshot 1`] = `
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data when present and match snapshot 1`] = `
 {
   "availableData": [
     {
