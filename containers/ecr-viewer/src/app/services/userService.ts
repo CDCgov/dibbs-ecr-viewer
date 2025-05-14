@@ -1,3 +1,5 @@
+"use server";
+
 import "server-only";
 import { cache } from "react";
 import { randomUUID } from "node:crypto";

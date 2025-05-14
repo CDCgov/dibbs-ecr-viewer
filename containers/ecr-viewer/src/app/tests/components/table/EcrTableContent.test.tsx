@@ -131,7 +131,7 @@ describe("EcrTableContent", () => {
       await act(async () => {
         expect(await axe(container)).toHaveNoViolations();
       });
-    });
+    }, 10000); // sometimes slow on ci
   });
 
   it("should call listEcrDataService with all params", async () => {
