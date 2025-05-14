@@ -53,13 +53,13 @@ const UserAdminPage = async () => {
       <Header />
       <main className="main-container">
         <div className="content-container margin-top-10">
-          <h2 className="margin-bottom-5">User Management</h2>
+          <h2 className="margin-bottom-5">User management</h2>
           <UserTable users={users} programAreas={programAreas} />
         </div>
       </main>
 
       {/* HACKY, BUT USEFUL. KEEPING AROUND FOR THE MOMENT*/}
-      {process.env.NODE_ENV !== "production" && (
+      {process.env.NODE_ENV === "development" && (
         <div style={{ margin: "100px" }}>
           <h2>Scratch functionality to test above</h2>
           <form action={submitCreateUser}>
