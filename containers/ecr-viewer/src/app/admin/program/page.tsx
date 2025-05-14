@@ -19,7 +19,7 @@ async function submitCreateProgramArea(form: FormData) {
 }
 
 /**
- * User admin landing page with table of active users
+ * Program admin landing page with table of active users
  * @returns user admin page
  */
 const ProgramAdminPage = async () => {
