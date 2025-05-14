@@ -14,16 +14,18 @@ export interface ProcessOrchestrationResponse {
 }
 
 /**
- * @param endpoint orchestration end point to use
- * @param data_type orchestration `data_type` of the request
  * @param routeSchema Zod schema to parse the request's body
+ * @param getEndpoint given the parsed body, return the endpoint and data type
  * @returns POST handler for an orchestration processing route
  */
 export const postOrchestration =
-  <T extends z.ZodRawShape, Schema extends z.ZodObject<T>>(
-    endpoint: string,
-    data_type: string,
+  <
+    Schema extends z.ZodObject<{
+      [key: string]: z.ZodType<File | string | undefined>;
+    }>,
+  >(
     routeSchema: Schema,
+    getEndpoint: (formEntries: z.infer<Schema>) => string[],
   ) =>
   async (
     request: NextRequest,
@@ -52,7 +54,7 @@ export const postOrchestration =
           .transform((v) => v?.toLowerCase()),
       });
       const { return_fhir_bundle, ...body } = schema.parse(rawBody);
-      const resp = getOrchestrationResponse(endpoint, { data_type, ...body });
+      const resp = getOrchestrationResponse(getEndpoint, body);
       const { status, ...payload } = await orchestrationRequest(
         resp,
         return_fhir_bundle === "true",

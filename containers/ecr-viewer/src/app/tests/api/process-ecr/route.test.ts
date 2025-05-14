@@ -4,7 +4,7 @@
 import { Bundle } from "fhir/r4";
 import { NextRequest } from "next/server";
 
-import { POST } from "@/app/api/process-message/route";
+import { POST } from "@/app/api/process-ecr/route";
 import { orchestrationRequest } from "@/app/api/services/orchestrationService";
 
 jest.mock("../../../api/services/orchestrationService");
@@ -18,14 +18,14 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("POST Process Message", () => {
-  const mockMessage = "<totally>real xml</totally>";
+describe("POST Process ecr", () => {
+  const mockEcr = "<totally>real xml</totally>";
   const mockRR = "<optional>rr</optional>";
 
   const createRequestJSON = (
     body: Record<string, string | boolean | number>,
   ) => {
-    return new NextRequest("localhost:3000/ecr-viewer/api/process-message", {
+    return new NextRequest("localhost:3000/ecr-viewer/api/process-ecr", {
       method: "post",
       body: JSON.stringify(body),
     });
@@ -37,15 +37,15 @@ describe("POST Process Message", () => {
     for (const [k, v] of Object.entries(body)) {
       form.append(k, v.toString());
     }
-    return new NextRequest("localhost:3000/ecr-viewer/api/process-message", {
+    return new NextRequest("localhost:3000/ecr-viewer/api/process-ecr", {
       method: "post",
       body: form,
     });
   };
 
   for (const createRequest of [createRequestForm, createRequestJSON]) {
-    it("should return a 200 response when valid message is provided", async () => {
-      const request = createRequest({ message: mockMessage });
+    it("should return a 200 response when valid ecr is provided", async () => {
+      const request = createRequest({ ecr: mockEcr });
 
       (orchestrationRequest as jest.Mock).mockResolvedValue({
         message: "ok",
@@ -58,8 +58,8 @@ describe("POST Process Message", () => {
       expect(await response.json()).toEqual({ message: "ok" });
     });
 
-    it("should return a 200 response when valid message and rr", async () => {
-      const request = createRequest({ message: mockMessage, rr_data: mockRR });
+    it("should return a 200 response when valid ecr and rr", async () => {
+      const request = createRequest({ ecr: mockEcr, rr_data: mockRR });
 
       (orchestrationRequest as jest.Mock).mockResolvedValue({
         message: "ok",
@@ -72,9 +72,9 @@ describe("POST Process Message", () => {
       expect(await response.json()).toEqual({ message: "ok" });
     });
 
-    it("should return a 200 response when valid message and return fhir bundle flag provided", async () => {
+    it("should return a 200 response when valid ecr and return fhir bundle flag provided", async () => {
       const request = createRequest({
-        message: mockMessage,
+        ecr: mockEcr,
         return_fhir_bundle: true,
       });
 
@@ -90,8 +90,8 @@ describe("POST Process Message", () => {
       expect(await response.json()).toEqual({ message: "ok", bundle });
     });
 
-    it("should return a 400 response when message is not an xml string", async () => {
-      const request = createRequest({ message: "123" });
+    it("should return a 400 response when ecr is not an xml string", async () => {
+      const request = createRequest({ ecr: "123" });
 
       const response = await POST(request);
 
@@ -101,7 +101,7 @@ describe("POST Process Message", () => {
       expect(jsonResponse.errors).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            message: "Message must contain xml",
+            message: "eCR must contain XML",
           }),
         ]),
       );
@@ -120,7 +120,7 @@ describe("POST Process Message", () => {
 
     it("should return a 400 response when required no form sent", async () => {
       const response = await POST(
-        new NextRequest("localhost:3000/ecr-viewer/api/process-message"),
+        new NextRequest("localhost:3000/ecr-viewer/api/process-ecr"),
       );
 
       expect(response.status).toEqual(400);
@@ -130,7 +130,7 @@ describe("POST Process Message", () => {
     });
 
     it("should return a 500 response when an unexpected error occurs", async () => {
-      const request = createRequest({ message: mockMessage });
+      const request = createRequest({ ecr: mockEcr });
       (orchestrationRequest as jest.Mock).mockRejectedValue(
         new Error("oh no!"),
       );
