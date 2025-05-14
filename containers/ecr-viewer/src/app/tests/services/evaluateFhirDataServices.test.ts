@@ -1,4 +1,4 @@
-import util from 'util';
+import util from "util";
 
 import { Bundle } from "fhir/r4";
 
@@ -485,7 +485,10 @@ Home: 123-456-6909`,
       ],
     };
 
-    const addSectionsToBundle = (newSections: object[], bundle: Bundle ): Bundle => {
+    const addSectionsToBundle = (
+      newSections: object[],
+      bundle: Bundle,
+    ): Bundle => {
       return {
         ...bundle,
         entry: [
@@ -496,14 +499,14 @@ Home: 123-456-6909`,
               ...bundle.entry![0].resource,
               section: [
                 ...(bundle.entry![0].resource?.section || []),
-                ...newSections
-              ]
-            }
+                ...newSections,
+              ],
+            },
           },
-          ...bundle.entry!.slice(1)
-        ]
+          ...bundle.entry!.slice(1),
+        ],
       };
-    }
+    };
 
     it("should return unavailable data when no Admission Diagnosis or Discharge diagnosis are found", () => {
       const bundle: Bundle = {
@@ -531,9 +534,14 @@ Home: 123-456-6909`,
 
     it("should return Hospital Encounter Data when present and match snapshot", () => {
       // Create a bundle with Admission and Discharge Dx
-      const bundleWithHospitalEncounterData = addSectionsToBundle([admissionDiagnosis, dischargeDiagnosis], BundlePatientWithCovid)
+      const bundleWithHospitalEncounterData = addSectionsToBundle(
+        [admissionDiagnosis, dischargeDiagnosis],
+        BundlePatientWithCovid,
+      );
 
-      const actual = evaluateHospitalEncounterData(bundleWithHospitalEncounterData);
+      const actual = evaluateHospitalEncounterData(
+        bundleWithHospitalEncounterData,
+      );
 
       expect(actual).toMatchSnapshot();
       expect(actual.availableData[0].title).toEqual(
@@ -546,10 +554,14 @@ Home: 123-456-6909`,
     });
 
     it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
+      const bundleWithAdmissionDxDataOnly = addSectionsToBundle(
+        [admissionDiagnosis],
+        BundlePatientWithCovid,
+      );
 
-      const bundleWithAdmissionDxDataOnly = addSectionsToBundle([admissionDiagnosis], BundlePatientWithCovid)
-
-      const actual = evaluateHospitalEncounterData(bundleWithAdmissionDxDataOnly);
+      const actual = evaluateHospitalEncounterData(
+        bundleWithAdmissionDxDataOnly,
+      );
 
       expect(actual).toMatchSnapshot();
       expect(actual.availableData[0].title).toEqual(
@@ -561,7 +573,10 @@ Home: 123-456-6909`,
     });
 
     it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
-      const bundleWithDischargeDxOnly = addSectionsToBundle([dischargeDiagnosis], BundlePatientWithCovid)
+      const bundleWithDischargeDxOnly = addSectionsToBundle(
+        [dischargeDiagnosis],
+        BundlePatientWithCovid,
+      );
 
       const actual = evaluateHospitalEncounterData(bundleWithDischargeDxOnly);
 
