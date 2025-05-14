@@ -1,10 +1,12 @@
+import util from 'util';
+
 import { Bundle } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
 import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
-import BundlePatientWithCovid from "../../../../../../test-data/fhir/BundlePatientWithCovid.json";
+import * as _BundlePatientWithCovid from "../../../../../../test-data/fhir/BundlePatientWithCovid.json";
 import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluateEncounterId,
@@ -32,6 +34,7 @@ import mappings from "@/app/utils/evaluate/fhir-paths";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;
+const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Identifier", () => {
@@ -482,6 +485,26 @@ Home: 123-456-6909`,
       ],
     };
 
+    const addSectionsToBundle = (newSections: object[], bundle: Bundle ): Bundle => {
+      return {
+        ...bundle,
+        entry: [
+          {
+            ...bundle.entry![0],
+            // @ts-ignore
+            resource: {
+              ...bundle.entry![0].resource,
+              section: [
+                ...(bundle.entry![0].resource?.section || []),
+                ...newSections
+              ]
+            }
+          },
+          ...bundle.entry!.slice(1)
+        ]
+      };
+    }
+
     it("should return unavailable data when no Admission Diagnosis or Discharge diagnosis are found", () => {
       const bundle: Bundle = {
         resourceType: "Bundle",
@@ -507,24 +530,10 @@ Home: 123-456-6909`,
     });
 
     it("should return Hospital Encounter Data when present and match snapshot", () => {
-      // Patient bundle without Hospital Encounter Data
-      const bundle = JSON.parse(
-        JSON.stringify(BundlePatientWithCovid),
-      ) as Bundle;
+      // Create a bundle with Admission and Discharge Dx
+      const bundleWithHospitalEncounterData = addSectionsToBundle([admissionDiagnosis, dischargeDiagnosis], BundlePatientWithCovid)
 
-      // Grab the composition section
-      const compositionEntry = bundle!.entry!.find(
-        (e: any) => e.resource?.resourceType === "Composition",
-      );
-
-      // Add Hospital encounter data to section array. ts-ignore because it thinks section doesn't exist
-      // @ts-ignore
-      compositionEntry?.resource?.section?.push(
-        admissionDiagnosis,
-        dischargeDiagnosis,
-      );
-
-      const actual = evaluateHospitalEncounterData(bundle);
+      const actual = evaluateHospitalEncounterData(bundleWithHospitalEncounterData);
 
       expect(actual).toMatchSnapshot();
       expect(actual.availableData[0].title).toEqual(
@@ -537,20 +546,10 @@ Home: 123-456-6909`,
     });
 
     it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
-      const bundle = JSON.parse(
-        JSON.stringify(BundlePatientWithCovid),
-      ) as Bundle;
 
-      // Grab the composition section
-      const compositionEntry = bundle!.entry!.find(
-        (e: any) => e.resource?.resourceType === "Composition",
-      );
+      const bundleWithAdmissionDxDataOnly = addSectionsToBundle([admissionDiagnosis], BundlePatientWithCovid)
 
-      // Add Admission Diagnosis data only to section array. ts-ignore because it thinks section doesn't exist
-      // @ts-ignore
-      compositionEntry?.resource?.section?.push(admissionDiagnosis);
-
-      const actual = evaluateHospitalEncounterData(bundle);
+      const actual = evaluateHospitalEncounterData(bundleWithAdmissionDxDataOnly);
 
       expect(actual).toMatchSnapshot();
       expect(actual.availableData[0].title).toEqual(
@@ -562,20 +561,9 @@ Home: 123-456-6909`,
     });
 
     it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
-      const bundle = JSON.parse(
-        JSON.stringify(BundlePatientWithCovid),
-      ) as Bundle;
+      const bundleWithDischargeDxOnly = addSectionsToBundle([dischargeDiagnosis], BundlePatientWithCovid)
 
-      // Grab the composition section
-      const compositionEntry = bundle!.entry!.find(
-        (e: any) => e.resource?.resourceType === "Composition",
-      );
-
-      // Add Hospital encounter data to section array
-      // @ts-ignore
-      compositionEntry?.resource?.section?.push(dischargeDiagnosis);
-
-      const actual = evaluateHospitalEncounterData(bundle);
+      const actual = evaluateHospitalEncounterData(bundleWithDischargeDxOnly);
 
       expect(actual).toMatchSnapshot();
       expect(actual.availableData[0].title).toEqual(
