@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import {
+  ProcessedEntry,
   getOrchestrationResponse,
   orchestrationRequest,
 } from "./orchestrationService";
@@ -25,7 +26,7 @@ export const postOrchestration =
     }>,
   >(
     routeSchema: Schema,
-    getEndpoint: (formEntries: z.infer<Schema>) => string[],
+    getEndpoint: (formEntries: z.infer<Schema>) => Promise<ProcessedEntry>,
   ) =>
   async (
     request: NextRequest,

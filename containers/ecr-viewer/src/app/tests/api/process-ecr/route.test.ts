@@ -23,7 +23,7 @@ describe("POST Process ecr", () => {
   const mockRR = "<optional>rr</optional>";
 
   const createRequestJSON = (
-    body: Record<string, string | boolean | number>,
+    body: Record<string, string | boolean | number | File>,
   ) => {
     return new NextRequest("localhost:3000/ecr-viewer/api/process-ecr", {
       method: "post",
@@ -31,7 +31,7 @@ describe("POST Process ecr", () => {
     });
   };
   const createRequestForm = (
-    body: Record<string, string | boolean | number>,
+    body: Record<string, string | boolean | number | File>,
   ) => {
     const form = new FormData();
     for (const [k, v] of Object.entries(body)) {
@@ -44,7 +44,7 @@ describe("POST Process ecr", () => {
   };
 
   for (const createRequest of [createRequestForm, createRequestJSON]) {
-    it("should return a 200 response when valid ecr is provided", async () => {
+    it("should return a 200 response when valid ecr is provided as a string", async () => {
       const request = createRequest({ ecr: mockEcr });
 
       (orchestrationRequest as jest.Mock).mockResolvedValue({
@@ -54,8 +54,8 @@ describe("POST Process ecr", () => {
 
       const response = await POST(request);
 
-      expect(response.status).toEqual(200);
       expect(await response.json()).toEqual({ message: "ok" });
+      expect(response.status).toEqual(200);
     });
 
     it("should return a 200 response when valid ecr and rr", async () => {
@@ -68,8 +68,8 @@ describe("POST Process ecr", () => {
 
       const response = await POST(request);
 
-      expect(response.status).toEqual(200);
       expect(await response.json()).toEqual({ message: "ok" });
+      expect(response.status).toEqual(200);
     });
 
     it("should return a 200 response when valid ecr and return fhir bundle flag provided", async () => {
@@ -88,23 +88,6 @@ describe("POST Process ecr", () => {
 
       expect(response.status).toEqual(200);
       expect(await response.json()).toEqual({ message: "ok", bundle });
-    });
-
-    it("should return a 400 response when ecr is not an xml string", async () => {
-      const request = createRequest({ ecr: "123" });
-
-      const response = await POST(request);
-
-      expect(response.status).toEqual(400);
-      const jsonResponse = await response.json();
-      expect(jsonResponse.message).toEqual("Validation error");
-      expect(jsonResponse.errors).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            message: "eCR must contain XML",
-          }),
-        ]),
-      );
     });
 
     it("should return a 400 response when required fields are missing", async () => {
@@ -144,4 +127,58 @@ describe("POST Process ecr", () => {
       });
     });
   }
+
+  describe("JSON data only", () => {
+    it("should return a 400 response when ecr is not a string", async () => {
+      const request = createRequestJSON({ ecr: 123 });
+
+      const response = await POST(request);
+
+      expect(response.status).toEqual(400);
+      const jsonResponse = await response.json();
+      expect(jsonResponse.message).toEqual("Validation error");
+      expect(jsonResponse.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: "Invalid input",
+          }),
+        ]),
+      );
+    });
+  });
+
+  describe("Form data only", () => {
+    it("should return a 200 response when valid ecr is provided as a file", async () => {
+      const request = createRequestForm({
+        ecr: new File([mockEcr], "CDA_eICR.xml"),
+        rr: new File([mockRR], "CDA_RR.xml"),
+      });
+
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
+
+      const response = await POST(request);
+
+      expect(await response.json()).toEqual({ message: "ok" });
+      expect(response.status).toEqual(200);
+    });
+
+    it("should return a 200 response when valid ecr is provided as a zip file", async () => {
+      const request = createRequestForm({
+        ecr: new File([mockEcr], "CDA_eICR.xml", { type: "application/zip" }),
+      });
+
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
+
+      const response = await POST(request);
+
+      expect(await response.json()).toEqual({ message: "ok" });
+      expect(response.status).toEqual(200);
+    });
+  });
 });

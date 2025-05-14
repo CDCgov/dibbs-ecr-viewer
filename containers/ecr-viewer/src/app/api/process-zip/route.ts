@@ -15,4 +15,8 @@ const schema = z.object({
  * @param request - The incoming request object.
  * @returns A `NextResponse` object with a JSON payload indicating the success message.
  */
-export const POST = postOrchestration(schema, () => ["process-zip", "zip"]);
+export const POST = postOrchestration(schema, async (body) => [
+  body,
+  "process-zip",
+  "zip",
+]);

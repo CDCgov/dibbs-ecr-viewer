@@ -45,19 +45,25 @@ const getOrchestrationConfigName = () => {
   }
 };
 
+export type ProcessedEntry = [
+  Record<string, string | File | undefined>,
+  string,
+  string,
+];
+
 /**
  * Make a request to orchestration /process-zip endpoint
  * @param getEndpoint - Given the body, get the endpoind and data type
- * @param bodyEntries - endpoint-specific entries to add to the body
+ * @param rawBodyEntries - endpoint-specific entries to add to the body
  * @returns orchestration response
  */
 export const getOrchestrationResponse = async <
   T extends Record<string, string | Blob | undefined>,
 >(
-  getEndpoint: (bodyEntries: T) => string[],
-  bodyEntries: T,
+  getEndpoint: (bodyEntries: T) => Promise<ProcessedEntry>,
+  rawBodyEntries: T,
 ): Promise<BundleInfo> => {
-  const [endpoint, data_type] = getEndpoint(bodyEntries);
+  const [bodyEntries, endpoint, data_type] = await getEndpoint(rawBodyEntries);
   const bodyObj = {
     message_type: "ecr",
     include_error_types: "[errors]",

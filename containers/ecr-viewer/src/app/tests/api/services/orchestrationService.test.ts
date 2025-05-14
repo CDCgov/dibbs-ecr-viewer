@@ -7,6 +7,7 @@ import {
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
 import {
+  ProcessedEntry,
   getOrchestrationResponse,
   orchestrationRequest,
 } from "@/app/api/services/orchestrationService";
@@ -14,6 +15,10 @@ import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 
 jest.mock("../../../api/save-fhir-data/service");
 jest.mock("../../../data/metadataDb/database");
+
+const getEndpoint = async (
+  b: Record<string, File>,
+): Promise<ProcessedEntry> => [b, "process-zip", "zip"];
 
 describe("orchestrationRequest", () => {
   const mockFile = new File(["content"], "test.zip");
@@ -43,7 +48,7 @@ describe("orchestrationRequest", () => {
     });
 
     const response = await orchestrationRequest(
-      getOrchestrationResponse(() => ["process-zip", "zip"], {
+      getOrchestrationResponse(getEndpoint, {
         upload_file: mockFile,
       }),
       false,
@@ -73,7 +78,7 @@ describe("orchestrationRequest", () => {
     });
 
     const response = await orchestrationRequest(
-      getOrchestrationResponse(() => ["process-zip", "zip"], {
+      getOrchestrationResponse(getEndpoint, {
         upload_file: mockFile,
       }),
       false,
@@ -98,7 +103,7 @@ describe("orchestrationRequest", () => {
     });
 
     const response = await orchestrationRequest(
-      getOrchestrationResponse(() => ["process-zip", "zip"], {
+      getOrchestrationResponse(getEndpoint, {
         upload_file: mockFile,
       }),
       true,
@@ -120,7 +125,7 @@ describe("orchestrationRequest", () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
     const response = await orchestrationRequest(
-      getOrchestrationResponse(() => ["process-zip", "zip"], {
+      getOrchestrationResponse(getEndpoint, {
         upload_file: mockFile,
       }),
       false,
@@ -156,7 +161,7 @@ describe("orchestrationRequest", () => {
       delete process.env.METADATA_DATABASE_SCHEMA;
 
       await orchestrationRequest(
-        getOrchestrationResponse(() => ["process-zip", "zip"], {
+        getOrchestrationResponse(getEndpoint, {
           upload_file: mockFile,
         }),
         false,
@@ -172,7 +177,7 @@ describe("orchestrationRequest", () => {
       process.env.METADATA_DATABASE_SCHEMA = "extended";
 
       await orchestrationRequest(
-        getOrchestrationResponse(() => ["process-zip", "zip"], {
+        getOrchestrationResponse(getEndpoint, {
           upload_file: mockFile,
         }),
         false,
@@ -188,7 +193,7 @@ describe("orchestrationRequest", () => {
       process.env.METADATA_DATABASE_SCHEMA = "core";
 
       await orchestrationRequest(
-        getOrchestrationResponse(() => ["process-zip", "zip"], {
+        getOrchestrationResponse(getEndpoint, {
           upload_file: mockFile,
         }),
         false,
