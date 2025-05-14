@@ -105,24 +105,20 @@ export const ProgramForm = ({
             </p>
           </div>
         ),
-        content: conditions.map((condition, i) => {
-          condition.condition_name === "Anencephaly" &&
-            console.log({ condition });
-          return (
-            <React.Fragment key={`condition-${condition.code}`}>
-              {i !== 0 && <div className="section__line_light_gray" />}
-              <Checkbox
-                id={`condition-${condition.code}`}
-                name="conditions"
-                label={name}
-                checked={condition.checked === true}
-                onChange={(e) => {
-                  setCondition(category, condition.code, e.target.checked);
-                }}
-              />
-            </React.Fragment>
-          );
-        }),
+        content: conditions.map((condition, i) => (
+          <React.Fragment key={`condition-${condition.code}`}>
+            {i !== 0 && <div className="section__line_light_gray" />}
+            <Checkbox
+              id={`condition-${condition.code}`}
+              name="conditions"
+              label={condition.condition_name}
+              checked={condition.checked === true}
+              onChange={(e) => {
+                setCondition(category, condition.code, e.target.checked);
+              }}
+            />
+          </React.Fragment>
+        )),
         id: category,
         expanded: !!expandedCategories[category],
         headingLevel: "h4",
