@@ -431,54 +431,56 @@ Home: 123-456-6909`,
 
   describe("Evaluate Hospital Encounter Data", () => {
     const admissionDiagnosis = {
-      "id": "3b7a0c34-1be8-2d5a-6acd-c7b633e496c5",
-      "title": "HOSPITAL ADMISSION DIAGNOSIS",
-      "text": {
-        "status": "generated",
-        "div": "Covid19"
+      id: "3b7a0c34-1be8-2d5a-6acd-c7b633e496c5",
+      title: "HOSPITAL ADMISSION DIAGNOSIS",
+      text: {
+        status: "generated",
+        div: "Covid19",
       },
-      "code": {
-        "coding": [
+      code: {
+        coding: [
           {
-            "code": "46241-6",
-            "system": "http://loinc.org",
-            "display": "Hospital Admission Diagnosis"
-          }
-        ]
+            code: "46241-6",
+            system: "http://loinc.org",
+            display: "Hospital Admission Diagnosis",
+          },
+        ],
       },
-      "mode": "snapshot",
-      "entry": [
+      mode: "snapshot",
+      entry: [
         {
-          "display": "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
-          "reference": "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79"
-        }
-      ]
-    }
+          display:
+            "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+          reference: "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79",
+        },
+      ],
+    };
 
     const dischargeDiagnosis = {
-      "id": "e9c9e752-dfae-c13d-a4c0-64cef027435f",
-      "title": "Discharge Diagnosis",
-      "text": {
-        "status": "generated",
-        "div": "Diverticula of intestine"
+      id: "e9c9e752-dfae-c13d-a4c0-64cef027435f",
+      title: "Discharge Diagnosis",
+      text: {
+        status: "generated",
+        div: "Diverticula of intestine",
       },
-      "code": {
-        "coding": [
+      code: {
+        coding: [
           {
-            "code": "11535-2",
-            "system": "http://loinc.org",
-            "display": "Hospital Discharge Diagnosis"
-          }
-        ]
+            code: "11535-2",
+            system: "http://loinc.org",
+            display: "Hospital Discharge Diagnosis",
+          },
+        ],
       },
-      "mode": "snapshot",
-      "entry": [
+      mode: "snapshot",
+      entry: [
         {
-          "display": "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
-          "reference": "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79"
-        }
-      ]
-    }
+          display:
+            "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+          reference: "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79",
+        },
+      ],
+    };
 
     it("should return unavailable data when no Admission Diagnosis or Discharge diagnosis are found", () => {
       const bundle: Bundle = {
@@ -506,58 +508,61 @@ Home: 123-456-6909`,
 
     it("should return Hospital Encounter Data when present and match snapshot", () => {
       // Patient bundle without Hospital Encounter Data
-      const bundle = JSON.parse(JSON.stringify(BundlePatientWithCovid)) as Bundle;
+      const bundle = JSON.parse(
+        JSON.stringify(BundlePatientWithCovid),
+      ) as Bundle;
 
       // Grab the composition section
       const compositionEntry = bundle!.entry!.find(
-          (e: any) => e.resource?.resourceType === "Composition"
+        (e: any) => e.resource?.resourceType === "Composition",
       );
 
       // Add Hospital encounter data to section array. ts-ignore because it thinks section doesn't exist
       // @ts-ignore
-      compositionEntry?.resource?.section?.push(admissionDiagnosis, dischargeDiagnosis)
-
-      const actual = evaluateHospitalEncounterData(
-        bundle
+      compositionEntry?.resource?.section?.push(
+        admissionDiagnosis,
+        dischargeDiagnosis,
       );
+
+      const actual = evaluateHospitalEncounterData(bundle);
 
       expect(actual).toMatchSnapshot();
     });
 
     it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
-      const bundle = JSON.parse(JSON.stringify(BundlePatientWithCovid)) as Bundle;
+      const bundle = JSON.parse(
+        JSON.stringify(BundlePatientWithCovid),
+      ) as Bundle;
 
       // Grab the composition section
       const compositionEntry = bundle!.entry!.find(
-          (e: any) => e.resource?.resourceType === "Composition"
+        (e: any) => e.resource?.resourceType === "Composition",
       );
 
       // Add Admission Diagnosis data only to section array. ts-ignore because it thinks section doesn't exist
       // @ts-ignore
-      compositionEntry?.resource?.section?.push(admissionDiagnosis)
+      compositionEntry?.resource?.section?.push(admissionDiagnosis);
 
-      const actual = evaluateHospitalEncounterData(
-          bundle
-      );
+      const actual = evaluateHospitalEncounterData(bundle);
 
       expect(actual).toMatchSnapshot();
     });
 
     it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
-      const bundle = JSON.parse(JSON.stringify(BundlePatientWithCovid)) as Bundle;
+      const bundle = JSON.parse(
+        JSON.stringify(BundlePatientWithCovid),
+      ) as Bundle;
 
       // Grab the composition section
       const compositionEntry = bundle!.entry!.find(
-          (e: any) => e.resource?.resourceType === "Composition"
+        (e: any) => e.resource?.resourceType === "Composition",
       );
 
       // Add Hospital encounter data to section array
       // @ts-ignore
-      compositionEntry?.resource?.section?.push(dischargeDiagnosis)
+      compositionEntry?.resource?.section?.push(dischargeDiagnosis);
 
-      const actual = evaluateHospitalEncounterData(
-          bundle
-      );
+      const actual = evaluateHospitalEncounterData(bundle);
 
       expect(actual).toMatchSnapshot();
     });
