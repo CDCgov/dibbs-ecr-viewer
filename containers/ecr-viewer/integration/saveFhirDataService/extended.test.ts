@@ -93,6 +93,31 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   report_date: "2024-12-20",
 };
 
+const condition_reference = {
+  code: "123",
+  concept_name: "condition (disease)",
+  condition_name: "condition",
+  condition_category: "category",
+};
+
+const adminId = "1235";
+const adminUser = {
+  uuid: adminId,
+  email: "admin@test.gov",
+  name: "Adam Admin",
+  date_of_last_login: new Date("2024-01-01"),
+  user_type: "admin",
+  status: "active",
+  author_uuid: adminId,
+};
+
+const progId = "234-12";
+const programArea = {
+  uuid: progId,
+  name: "Disease",
+  author_uuid: adminId,
+};
+
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
@@ -109,6 +134,16 @@ afterEach(() => {
 });
 
 describe("saveFhirData - extended", () => {
+  beforeEach(async () => {
+    const db = getDb<Extended>();
+    await db.insertInto("user").values(adminUser).execute();
+    await db.insertInto("program_area").values(programArea).execute();
+    await db
+      .insertInto("condition_reference")
+      .values(condition_reference)
+      .execute();
+  });
+
   afterEach(async () => {
     await clearExtended();
   });
@@ -131,6 +166,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
+          condition_code: "123",
           rule_summaries: [],
         },
       ],
@@ -154,6 +190,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
+          condition_code: "123",
           rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
         },
       ],
@@ -231,5 +268,40 @@ describe("saveFhirData - extended", () => {
     expect(resp.status).toEqual(500);
     expect(rolledback).toBeFalse();
     expect(res).toHaveLength(0);
+  });
+  it("should reference the condition_code foreign key", async () => {
+    const db = getDb<Extended>();
+    const metadata: BundleExtendedMetadata = {
+      ...baseExtendedMetadata,
+      rr: [
+        {
+          condition: "flu",
+          condition_code: "123",
+          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+        },
+      ],
+    };
+
+    let rolledback = false;
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => {
+        rolledback = true;
+        return makePromiseResolveWithStatus(200);
+      },
+    );
+
+    const conditions = await db
+      .selectFrom("ecr_rr_conditions")
+      .selectAll()
+      .execute();
+
+    expect(resp.message).toEqual("Success. Saved metadata to database.");
+    expect(resp.status).toEqual(200);
+    expect(conditions).toHaveLength(1);
+    expect(conditions[0].condition_code).toEqual("123");
   });
 });

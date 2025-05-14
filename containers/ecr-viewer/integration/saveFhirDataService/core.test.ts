@@ -59,6 +59,16 @@ afterEach(() => {
 });
 
 describe("saveFhirData - core", () => {
+  beforeEach(async () => {
+    const db = getDb<Core>();
+    await db.insertInto("user").values(adminUser).execute();
+    await db.insertInto("program_area").values(programArea).execute();
+    await db
+      .insertInto("condition_reference")
+      .values(condition_reference)
+      .execute();
+  });
+
   afterEach(async () => {
     await clearCore();
   });
@@ -252,24 +262,6 @@ describe("saveFhirData - core", () => {
         },
       ],
     };
-
-    // Insert minimal condition_reference data
-    await db.insertInto("user").values(adminUser).execute();
-    await db.insertInto("program_area").values(programArea).execute();
-    await db
-      .updateTable("condition_reference")
-      .set({ program_area_uuid: progId })
-      .where("code", "=", "123")
-      .execute(),
-      await db
-        .insertInto("condition_reference")
-        .values({
-          code: "123",
-          concept_name: "condition (disease)",
-          condition_name: "flu",
-          condition_category: "category",
-        })
-        .execute();
 
     let rolledback = false;
     const resp = await saveFhirMetadata(
