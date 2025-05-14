@@ -1,7 +1,12 @@
 import { Kysely } from "kysely";
+
 import { AnyDb } from "@/app/data/metadataDb/database";
 import { dbDialect, dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 
+/**
+ * Backfill condition codes in the ecr_rr_conditions table
+ * @param db The database connection
+ */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const _db = db.withSchema(schema);
@@ -44,6 +49,10 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
   }
 }
 
+/**
+ * Rollback the condition codes in the ecr_rr_conditions table
+ * @param db The database connection
+ */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const _db = db.withSchema(schema);

@@ -282,14 +282,12 @@ describe("saveFhirData - extended", () => {
       ],
     };
 
-    let rolledback = false;
     const resp = await saveFhirMetadata(
       "1-2-3-4",
       "core",
       metadata,
       makePromiseResolveWithStatus(200),
       () => {
-        rolledback = true;
         return makePromiseResolveWithStatus(200);
       },
     );
