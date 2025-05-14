@@ -527,9 +527,13 @@ Home: 123-456-6909`,
       const actual = evaluateHospitalEncounterData(bundle);
 
       expect(actual).toMatchSnapshot();
-      expect(actual.availableData[0].title).toEqual('Hospital Admission Diagnosis')
-      expect(actual.availableData[1].title).toEqual('Hospital Discharge Diagnosis')
-      expect(actual.unavailableData.length).toEqual(0)
+      expect(actual.availableData[0].title).toEqual(
+        "Hospital Admission Diagnosis",
+      );
+      expect(actual.availableData[1].title).toEqual(
+        "Hospital Discharge Diagnosis",
+      );
+      expect(actual.unavailableData.length).toEqual(0);
     });
 
     it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
@@ -549,8 +553,12 @@ Home: 123-456-6909`,
       const actual = evaluateHospitalEncounterData(bundle);
 
       expect(actual).toMatchSnapshot();
-      expect(actual.availableData[0].title).toEqual('Hospital Admission Diagnosis')
-      expect(actual.unavailableData[0].title).toEqual('Hospital Discharge Diagnosis')
+      expect(actual.availableData[0].title).toEqual(
+        "Hospital Admission Diagnosis",
+      );
+      expect(actual.unavailableData[0].title).toEqual(
+        "Hospital Discharge Diagnosis",
+      );
     });
 
     it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
@@ -570,8 +578,12 @@ Home: 123-456-6909`,
       const actual = evaluateHospitalEncounterData(bundle);
 
       expect(actual).toMatchSnapshot();
-      expect(actual.availableData[0].title).toEqual('Hospital Discharge Diagnosis')
-      expect(actual.unavailableData[0].title).toEqual('Hospital Admission Diagnosis')
+      expect(actual.availableData[0].title).toEqual(
+        "Hospital Discharge Diagnosis",
+      );
+      expect(actual.unavailableData[0].title).toEqual(
+        "Hospital Admission Diagnosis",
+      );
     });
   });
 
