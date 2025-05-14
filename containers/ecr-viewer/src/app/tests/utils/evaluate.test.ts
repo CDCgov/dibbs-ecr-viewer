@@ -279,7 +279,6 @@ describe("evaluate value", () => {
   });
 });
 
-// TODO PR: move these tests
 describe("Evaluate Reference", () => {
   it("should return undefined if resource not found", () => {
     const actual = evaluateReference<Observation>(

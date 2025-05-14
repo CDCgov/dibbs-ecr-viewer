@@ -270,7 +270,11 @@ const UrlSavingLink = ({
   };
 
   return (
-    <Link onClick={saveUrl} href={`/view-data?id=${ecrId}`}>
+    <Link
+      onClick={saveUrl}
+      href={`/view-data?id=${ecrId}`}
+      className="action-text"
+    >
       {children}
     </Link>
   );

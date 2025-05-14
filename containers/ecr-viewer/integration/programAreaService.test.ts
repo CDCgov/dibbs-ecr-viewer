@@ -19,37 +19,35 @@ import {
 
 import { buildCore, dropExisting } from "./helpers/ddl";
 
+const cond123 = {
+  code: "123",
+  concept_name: "condition 1 (disease)",
+  condition_name: "condition 1",
+  condition_category: "category",
+};
+const cond456 = {
+  code: "456",
+  concept_name: "condition 2 (disease)",
+  condition_name: "condition 2",
+  condition_category: "category",
+};
+const cond789 = {
+  code: "789",
+  concept_name: "condition 3 (disease)",
+  condition_name: "condition 3",
+  condition_category: "other category",
+};
+
 let adminId;
 beforeAll(async () => {
   await buildCore();
   adminId = await createInitialAdminUser("admin@admin.com");
-  await getDb<Core>()
-    .insertInto("condition_reference")
-    .values({
-      code: "123",
-      concept_name: "condition 1 (disease)",
-      condition_name: "condition 1",
-      condition_category: "category",
-    })
-    .execute();
-  await getDb<Core>()
-    .insertInto("condition_reference")
-    .values({
-      code: "456",
-      concept_name: "condition 2 (disease)",
-      condition_name: "condition 2",
-      condition_category: "category",
-    })
-    .execute();
-  await getDb<Core>()
-    .insertInto("condition_reference")
-    .values({
-      code: "789",
-      concept_name: "condition 3 (disease)",
-      condition_name: "condition 3",
-      condition_category: "other category",
-    })
-    .execute();
+  for (const cond of [cond123, cond456, cond789]) {
+    await getDb<Core>()
+      .insertInto("condition_reference")
+      .values(cond)
+      .execute();
+  }
 });
 
 afterAll(async () => {
@@ -86,6 +84,10 @@ describe("program area service", () => {
         name: progName,
         author_uuid: expect.any(String),
         date_created: expect.any(Date),
+        conditions: [
+          { ...cond123, program_area_uuid: progId },
+          { ...cond456, program_area_uuid: progId },
+        ],
       },
     ]);
 
@@ -130,11 +132,10 @@ describe("program area service", () => {
     const id = await createProgramArea(progName, []);
 
     const beforeConds = await listConditionReferences();
-    const beforeCondProgramAreas = await listProgramAreas();
+    const beforeCond = beforeConds.filter((c) => c.program_area_uuid === id);
+    expect(beforeCond).toBeArrayOfSize(0);
     await updateProgramArea(id, { conditions: ["789"] });
     const afterConds = await listConditionReferences();
-    const afterCondProgramAreas = await listProgramAreas();
-    expect(beforeCondProgramAreas).toStrictEqual(afterCondProgramAreas);
     expect(beforeConds).not.toStrictEqual(afterConds);
     const cond = afterConds.filter((c) => c.program_area_uuid === id);
     expect(cond).toBeArrayOfSize(1);
