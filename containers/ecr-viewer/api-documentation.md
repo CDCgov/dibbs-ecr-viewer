@@ -54,6 +54,8 @@ Display an eCR
 
 ## Process eCR zip
 
+Deprecated - please use [Process eCR](#process-ecr) instead.
+
 Process a zip file containing an eCR/RR pair
 
 **URL** : `/ecr-viewer/api/process-zip`
@@ -104,17 +106,17 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-zip' \
 
 **Content** : `message` with details on error
 
-## Process eCR message
+## Process eCR
 
 Process a message containing an eCR/RR pair
 
-**URL** : `/ecr-viewer/api/process-message`
+**URL** : `/ecr-viewer/api/process-ecr`
 
 **POST Form Fields** :
 
-- `message=[string]` String containing the xml content of the eCR.
-- `rr_data=[string]` Optional. String contianing the xml content of the RR.
-- `return_fhir_bundle=[true|false]` By default, the fhir bundle is not returned. Set this field to `"true"` to have the response include the `bundle` field with the FHIR json object. OPTIONAL.
+- `ecr=[string|File]` Either a string containing the content of the eCR, an eCR xml file, or a zipped eCR/RR pair
+- `rr=[string|File]` Optional. Either a string or file containing the content of the RR
+- `return_fhir_bundle=[true|false]` Optional. By default, the fhir bundle is not returned. Set this field to `"true"` to have the response include the `bundle` field with the FHIR json object.
 
 Note, in addition to accepting these fields as a form body, a stringified JSON body is also accepted.
 
@@ -128,10 +130,31 @@ Note, in addition to accepting these fields as a form body, a stringified JSON b
 
 Process an eCR (e.g. `seed-scripts/baseECR/star-wars/yoda-zika-v1-positive`) and have the processed FHIR bundle returned.
 
+With inlined string contents:
+
 ```sh
 curl --location '<DIBBS_URL>/ecr-viewer/api/process-message' \
---form 'message=<"<PATH_TO_ECR_FILE>"' \
---form 'rr_data=<"<PATH_TO_RR_FILE>"' \
+--form 'ecr=<"<PATH_TO_ECR_FILE>"' \
+--form 'rr=<"<PATH_TO_RR_FILE>"' \
+--form 'return_fhir_bundle=true' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+
+With file contents:
+
+```sh
+curl --location '<DIBBS_URL>/ecr-viewer/api/process-message' \
+--form 'ecr=@"<PATH_TO_ECR_FILE>"' \
+--form 'rr=@"<PATH_TO_RR_FILE>"' \
+--form 'return_fhir_bundle=true' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+
+With zip file:
+
+```sh
+curl --location '<DIBBS_URL>/ecr-viewer/api/process-message' \
+--form 'ecr=@"<PATH_TO_ECR_RR_ZIP_FILE>";type=application/zip' \
 --form 'return_fhir_bundle=true' \
 --header 'Authorization: Bearer <TOKEN>'
 ```
