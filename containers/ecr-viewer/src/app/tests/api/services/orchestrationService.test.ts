@@ -3,14 +3,14 @@
  */
 
 import {
-  saveFhirData,
-  saveWithMetadata,
-} from "@/app/api/save-fhir-data/service";
-import {
   ProcessedEntry,
   getOrchestrationResponse,
   orchestrationRequest,
-} from "@/app/api/services/orchestrationService";
+} from "@/app/api/process-ecr/service";
+import {
+  saveFhirData,
+  saveWithMetadata,
+} from "@/app/api/save-fhir-data/service";
 import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 
 jest.mock("../../../api/save-fhir-data/service");

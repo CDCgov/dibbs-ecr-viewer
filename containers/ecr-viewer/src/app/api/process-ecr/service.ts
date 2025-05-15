@@ -45,32 +45,41 @@ const getOrchestrationConfigName = () => {
   }
 };
 
-export type ProcessedEntry = [
-  Record<string, string | File | undefined>,
-  string,
-  string,
-];
+interface RequestBody {
+  ecr: File | string;
+  rr?: File | string;
+}
+
+const asString = async (v: string | File | undefined) =>
+  v instanceof File ? await v.text() : v;
 
 /**
  * Make a request to orchestration /process-zip endpoint
- * @param getEndpoint - Given the body, get the endpoind and data type
- * @param rawBodyEntries - endpoint-specific entries to add to the body
+ * @param rawBodyEntries - raw body entries
+ * @param rawBodyEntries.ecr - ecr data
+ * @param rawBodyEntries.rr - rr data
  * @returns orchestration response
  */
-export const getOrchestrationResponse = async <
-  T extends Record<string, string | Blob | undefined>,
->(
-  getEndpoint: (bodyEntries: T) => Promise<ProcessedEntry>,
-  rawBodyEntries: T,
-): Promise<BundleInfo> => {
-  const [bodyEntries, endpoint, data_type] = await getEndpoint(rawBodyEntries);
-  const bodyObj = {
+export const getOrchestrationResponse = async ({
+  ecr,
+  rr,
+}: RequestBody): Promise<BundleInfo> => {
+  const bodyObj: Record<string, string | File | undefined> = {
     message_type: "ecr",
     include_error_types: "[errors]",
     config_file_name: getOrchestrationConfigName(),
-    data_type,
-    ...bodyEntries,
   };
+  let endpoint = "process-message";
+  if (ecr instanceof File && ecr.type === "application/zip") {
+    (endpoint = "process-zip"), (bodyObj.data_type = "zip");
+    bodyObj.upload_file = ecr;
+  } else {
+    bodyObj.data_type = "ecr";
+    bodyObj.message = await asString(ecr);
+    bodyObj.rr_data = await asString(rr);
+  }
+
+  console.log({ endpoint, bodyObj });
 
   let body: string | FormData;
   const headers = new Headers();
@@ -124,17 +133,17 @@ const saveToSource = (
 
 /**
  * Save the zip via orchestration
- * @param getResponse - Promise that resolves to an orchestration response
+ * @param body - Parsed body of the request
  * @param returnBundle - whether to return the fhir bundle (default false)
  * @returns An object containing the status and message.
  */
 export const orchestrationRequest = async (
-  getResponse: Promise<BundleInfo>,
+  body: RequestBody,
   returnBundle: boolean = false,
 ) => {
   let orchestrationResp: BundleInfo;
   try {
-    orchestrationResp = await getResponse;
+    orchestrationResp = await getOrchestrationResponse(body);
   } catch (error: unknown) {
     const message = "Failed to process orchestration response";
     console.error({ message, error });
