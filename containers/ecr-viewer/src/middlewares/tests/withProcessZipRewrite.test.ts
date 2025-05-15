@@ -6,11 +6,6 @@ import { NextRequest } from "next/server";
 import { chainMiddleware } from "@/middleware";
 import { withProcessZipRewrite } from "@/middlewares/withProcessZipRewrite";
 
-// Mock next-auth/jwt getToken
-jest.mock("next-auth/jwt", () => ({
-  getToken: jest.fn(),
-}));
-
 const middleware = chainMiddleware([withProcessZipRewrite]);
 
 describe("Process zip rewrite Middleware", () => {
