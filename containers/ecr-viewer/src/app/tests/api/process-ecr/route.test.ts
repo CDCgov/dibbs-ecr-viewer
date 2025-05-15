@@ -7,7 +7,7 @@ import { NextRequest } from "next/server";
 import { POST } from "@/app/api/process-ecr/route";
 import { orchestrationRequest } from "@/app/api/process-ecr/service";
 
-jest.mock("../../../api/services/orchestrationService");
+jest.mock("../../../api/process-ecr/service");
 
 const bundle: Bundle = {
   type: "document",

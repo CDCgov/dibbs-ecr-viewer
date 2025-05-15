@@ -2,11 +2,7 @@
  * @jest-environment node
  */
 
-import {
-  ProcessedEntry,
-  getOrchestrationResponse,
-  orchestrationRequest,
-} from "@/app/api/process-ecr/service";
+import { orchestrationRequest } from "@/app/api/process-ecr/service";
 import {
   saveFhirData,
   saveWithMetadata,
@@ -15,10 +11,6 @@ import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 
 jest.mock("../../../api/save-fhir-data/service");
 jest.mock("../../../data/metadataDb/database");
-
-const getEndpoint = async (
-  b: Record<string, File>,
-): Promise<ProcessedEntry> => [b, "process-zip", "zip"];
 
 describe("orchestrationRequest", () => {
   const mockFile = new File(["content"], "test.zip");
@@ -47,12 +39,7 @@ describe("orchestrationRequest", () => {
       message: "Success",
     });
 
-    const response = await orchestrationRequest(
-      getOrchestrationResponse(getEndpoint, {
-        upload_file: mockFile,
-      }),
-      false,
-    );
+    const response = await orchestrationRequest({ ecr: mockFile }, false);
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
@@ -77,12 +64,7 @@ describe("orchestrationRequest", () => {
       message: "Success",
     });
 
-    const response = await orchestrationRequest(
-      getOrchestrationResponse(getEndpoint, {
-        upload_file: mockFile,
-      }),
-      false,
-    );
+    const response = await orchestrationRequest({ ecr: mockFile }, false);
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
@@ -102,12 +84,7 @@ describe("orchestrationRequest", () => {
       message: "Success",
     });
 
-    const response = await orchestrationRequest(
-      getOrchestrationResponse(getEndpoint, {
-        upload_file: mockFile,
-      }),
-      true,
-    );
+    const response = await orchestrationRequest({ ecr: mockFile }, true);
 
     expect(response).toStrictEqual({
       status: 200,
@@ -124,12 +101,7 @@ describe("orchestrationRequest", () => {
     });
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    const response = await orchestrationRequest(
-      getOrchestrationResponse(getEndpoint, {
-        upload_file: mockFile,
-      }),
-      false,
-    );
+    const response = await orchestrationRequest({ ecr: mockFile }, false);
 
     expect(response).toEqual({
       message: "Failed to process orchestration response",
@@ -160,12 +132,7 @@ describe("orchestrationRequest", () => {
       delete process.env.METADATA_DATABASE_TYPE;
       delete process.env.METADATA_DATABASE_SCHEMA;
 
-      await orchestrationRequest(
-        getOrchestrationResponse(getEndpoint, {
-          upload_file: mockFile,
-        }),
-        false,
-      );
+      await orchestrationRequest({ ecr: mockFile }, false);
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -176,12 +143,7 @@ describe("orchestrationRequest", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "extended";
 
-      await orchestrationRequest(
-        getOrchestrationResponse(getEndpoint, {
-          upload_file: mockFile,
-        }),
-        false,
-      );
+      await orchestrationRequest({ ecr: mockFile }, false);
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -192,12 +154,7 @@ describe("orchestrationRequest", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "core";
 
-      await orchestrationRequest(
-        getOrchestrationResponse(getEndpoint, {
-          upload_file: mockFile,
-        }),
-        false,
-      );
+      await orchestrationRequest({ ecr: mockFile }, false);
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
