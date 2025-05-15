@@ -48,7 +48,6 @@ export const POST = async (
 ): Promise<NextResponse<ProcessEcrResponse>> => {
   // Parse out the form from the request
   let rawBody: object;
-  console.log({ request });
   try {
     const contentType = request.headers.get("content-type");
     if (contentType?.includes("form-")) {
@@ -57,7 +56,6 @@ export const POST = async (
       rawBody = await request.json();
     }
   } catch (e) {
-    console.log({ e });
     return NextResponse.json(
       { message: "Validation error", errors: ["No form or json body found"] },
       { status: 400 },

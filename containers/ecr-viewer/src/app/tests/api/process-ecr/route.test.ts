@@ -32,12 +32,13 @@ describe("POST Process ecr", () => {
   };
   const createRequestForm = (
     body: Record<string, string | boolean | number | File>,
+    endpoint = "process-ecr",
   ) => {
     const form = new FormData();
     for (const [k, v] of Object.entries(body)) {
-      form.append(k, v.toString());
+      form.append(k, v instanceof File ? v : v.toString());
     }
-    return new NextRequest("localhost:3000/ecr-viewer/api/process-ecr", {
+    return new NextRequest(`localhost:3000/ecr-viewer/api/${endpoint}`, {
       method: "post",
       body: form,
     });
@@ -179,6 +180,66 @@ describe("POST Process ecr", () => {
 
       expect(await response.json()).toEqual({ message: "ok" });
       expect(response.status).toEqual(200);
+    });
+
+    it("should return a 400 response when valid upload_file is provided as a zip file", async () => {
+      const request = createRequestForm({
+        upload_file: new File([mockEcr], "CDA_eICR.xml", {
+          type: "application/zip",
+        }),
+      });
+
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
+
+      const response = await POST(request);
+
+      const json = await response.json();
+      expect(json.message).toEqual("Validation error");
+      expect(response.status).toEqual(400);
+    });
+
+    it("should return a 200 response when valid upload_file is provide to rewritten process-zip", async () => {
+      const request = createRequestForm(
+        {
+          upload_file: new File([mockEcr], "CDA_eICR.xml", {
+            type: "application/zip",
+          }),
+        },
+        "process-zip",
+      );
+
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
+
+      const response = await POST(request);
+
+      expect(await response.json()).toEqual({ message: "ok" });
+      expect(response.status).toEqual(200);
+    });
+
+    it("should return a 400 response when valid ecr is provided as a zip file to rewritten process-zip", async () => {
+      const request = createRequestForm(
+        {
+          ecr: new File([mockEcr], "CDA_eICR.xml", { type: "application/zip" }),
+        },
+        "process-zip",
+      );
+
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
+
+      const response = await POST(request);
+
+      const json = await response.json();
+      expect(json.message).toEqual("Validation error");
+      expect(response.status).toEqual(400);
     });
   });
 });
