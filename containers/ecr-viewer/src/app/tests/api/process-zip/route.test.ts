@@ -4,8 +4,8 @@
 import { Bundle } from "fhir/r4";
 import { NextRequest } from "next/server";
 
+import { orchestrationRequest } from "@/app/api/process-ecr/service";
 import { POST } from "@/app/api/process-zip/route";
-import { orchestrationRequest } from "@/app/api/services/orchestrationService";
 
 jest.mock("../../../api/services/orchestrationService");
 
