@@ -84,8 +84,8 @@ def _process_files():
 
             if UPLOAD_URL.endswith("process-zip"):
                 request = process_zip(UPLOAD_URL, folder_path, folder, headers)
-            elif UPLOAD_URL.endswith("process-message"):
-                request = process_message(UPLOAD_URL, folder_path, headers)
+            elif UPLOAD_URL.endswith("process-ecr"):
+                request = process_ecr(UPLOAD_URL, folder_path, headers)
             else:
                 raise ("Unknown endpoint type")
 
@@ -150,7 +150,7 @@ def process_zip(url, folder_path, folder, headers):
     )
 
 
-def process_message(url, folder_path, headers):
+def process_ecr(url, folder_path, headers):
     """Process a message and submit post to API"""
     print(f"Uploading files from: {folder_path}")
 

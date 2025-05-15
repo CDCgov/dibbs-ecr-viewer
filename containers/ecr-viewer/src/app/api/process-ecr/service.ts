@@ -71,7 +71,8 @@ export const getOrchestrationResponse = async ({
   };
   let endpoint = "process-message";
   if (ecr instanceof File && ecr.type === "application/zip") {
-    (endpoint = "process-zip"), (bodyObj.data_type = "zip");
+    endpoint = "process-zip";
+    bodyObj.data_type = "zip";
     bodyObj.upload_file = ecr;
   } else {
     bodyObj.data_type = "ecr";

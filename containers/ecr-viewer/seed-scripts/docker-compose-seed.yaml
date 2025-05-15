@@ -79,7 +79,7 @@ services:
     environment:
       - CONFIG_NAME
       - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
-      - UPLOAD_URL=${UPLOAD_URL:-http://host.docker.internal:3000/ecr-viewer/api/process-zip}
+      - UPLOAD_URL=${UPLOAD_URL:-http://host.docker.internal:3000/ecr-viewer/api/process-ecr}
       - AUTH_CLIENT_ID
       - AUTH_CLIENT_SECRET
       - AUTH_ISSUER
