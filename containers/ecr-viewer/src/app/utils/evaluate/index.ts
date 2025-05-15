@@ -18,6 +18,7 @@ import {
   formatCodeableConcept,
   formatQuantity,
   formatRange,
+  formatReference,
 } from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
@@ -247,7 +248,7 @@ export const evaluateValue = (
     const range = formatRange(originalValue);
     value = range || originalValue.text || "";
   } else if (isReference(originalValue, originalValuePath)) {
-    value = originalValue?.reference || "";
+    value = formatReference(originalValue) || "";
   } else if (typeof originalValue === "object") {
     console.error(`Not implemented for ${originalValuePath}`);
   }

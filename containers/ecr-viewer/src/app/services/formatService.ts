@@ -9,6 +9,7 @@ import {
   Period,
   Quantity,
   Range,
+  Reference,
   RelatedPerson,
 } from "fhir/r4";
 
@@ -400,6 +401,18 @@ export const formatRange = (data: Range | undefined): string | undefined => {
   } else if (high) {
     return `<=${high}`;
   }
+};
+
+/**
+ * Returns the value of a Reference. While this function is currently very simple, it exists to futureproof a change in how we format references.
+ * @param reference the reference being formatted
+ * @returns .reference value of the supplied reference
+ */
+export const formatReference = (
+  reference: Reference | undefined,
+): string | undefined => {
+  if (!reference) return;
+  return reference.reference;
 };
 
 /**
