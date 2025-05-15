@@ -81,13 +81,22 @@ export const ProgramForm = ({
     setConditionCategories(nextConditionCategories);
   };
 
+  const setCategory = (category: string, checked: boolean) => {
+    console.log({ category, checked });
+    const nextConditionCategories = {
+      ...conditionCategories,
+      [category]: conditionCategories[category].map((c) => ({ ...c, checked })),
+    };
+    setConditionCategories(nextConditionCategories);
+  };
+
   const accordionItems: AccordionItem[] = Object.keys(conditionCategories)
     .sort()
     .map((category) => {
       const conditions = conditionCategories[category];
       return {
         title: (
-          <div>
+          <div className="display-flex flex-justify">
             <Checkbox
               name="category"
               id={category}
@@ -98,10 +107,15 @@ export const ProgramForm = ({
                   <span className="text-base">RCKMS condition category</span>
                 </div>
               }
+              checked={conditions.every(({ checked }) => !!checked)}
+              onChange={(e) => {
+                setCategory(category, e.target.checked);
+              }}
             />
 
             <p>
-              num checked: {conditions.filter(({ checked }) => checked).length}
+              {conditions.filter(({ checked }) => checked).length}/
+              {conditions.length} conditions selected
             </p>
           </div>
         ),
@@ -125,12 +139,18 @@ export const ProgramForm = ({
       };
     });
 
+  const numConditionsSelected = Object.values(conditionCategories)
+    .flatMap((id) => id)
+    .filter(({ checked }) => !!checked).length;
+
+  const submitDisabled = !name.trim() || !numConditionsSelected;
+
   return (
     <>
       <div className="display-flex flex-justify margin-bottom-3">
         <h2 className="margin-0">{title}</h2>
         <div>
-          <Button type="submit" className="margin-0">
+          <Button type="submit" className="margin-0" disabled={submitDisabled}>
             Create New Program Area
           </Button>
         </div>
@@ -145,9 +165,12 @@ export const ProgramForm = ({
       >
         <fieldset className="dibbs-fieldset">
           <legend>Name program area</legend>
+          <span>
+            Required fields are marked with an asterisk (<RequiredMarker />)
+          </span>
           <label className="usa-label">
             Program area name
-            <RequiredMarker /> (required)
+            <RequiredMarker />
             <TextInput
               type="text"
               required={true}
@@ -160,6 +183,14 @@ export const ProgramForm = ({
         </fieldset>
         <fieldset className="dibbs-fieldset">
           <legend>Add Conditions</legend>
+          <span>
+            Select a minimum of 1 condition
+            <RequiredMarker />
+          </span>
+          <p className="text-bold font-size-md">
+            {numConditionsSelected} condition
+            {numConditionsSelected === 1 ? "" : "s"} selected
+          </p>
           <ExpandCollapseAccordionControlled
             descriptor="condition categories"
             className="accordion-dibbs margin-top-3"
@@ -176,7 +207,7 @@ export const ProgramForm = ({
           />
         </fieldset>
         <div className="display-flex flex-justify-end margin-y-4">
-          <Button type="submit" className="margin-0">
+          <Button type="submit" className="margin-0" disabled={submitDisabled}>
             Create New Program Area
           </Button>
         </div>

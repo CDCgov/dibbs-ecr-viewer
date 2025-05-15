@@ -16,7 +16,7 @@ import { notFoundUnlessAdmin } from "@/app/services/userService";
 /**
  * @returns Page to create a program area
  */
-export const CreateProgramPage = async () => {
+const CreateProgramPage = async () => {
   await notFoundUnlessAdmin();
 
   const conditions = await listConditionReferences();
