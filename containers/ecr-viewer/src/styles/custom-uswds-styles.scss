@@ -131,12 +131,16 @@
     text-transform: uppercase;
     color: color("base");
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   dd {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     margin-inline-start: 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 

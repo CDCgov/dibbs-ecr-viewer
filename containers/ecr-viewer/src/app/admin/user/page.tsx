@@ -51,7 +51,7 @@ const UserAdminPage = async () => {
     <>
       <main className="main-container">
         <div className="content-container margin-top-10">
-          <h2 className="margin-bottom-5">User Management</h2>
+          <h2 className="margin-bottom-5">User management</h2>
           <UserTable users={users} programAreas={programAreas} />
         </div>
       </main>

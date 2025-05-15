@@ -47,6 +47,50 @@ describe("Encounter", () => {
         ),
       },
     ];
+
+    const hospitalEncounterData = [
+      {
+        title: "Hospital Admission Diagnosis",
+        table: true,
+        value: (
+          <table>
+            <thead>
+              <tr>
+                <th>Problem</th>
+                <th>Date/Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>COVID</td>
+                <td>2025-02-05</td>
+              </tr>
+            </tbody>
+          </table>
+        ),
+      },
+      {
+        title: "Hospital Discharge Diagnosis",
+        table: true,
+        value: (
+          <table>
+            <thead>
+              <tr>
+                <th>Problem</th>
+                <th>Date/Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>COVID</td>
+                <td>2025-02-05</td>
+              </tr>
+            </tbody>
+          </table>
+        ),
+      },
+    ];
+
     const facilityData = [
       {
         title: "Facility Name",
@@ -82,6 +126,7 @@ describe("Encounter", () => {
     container = render(
       <EncounterDetails
         encounterData={encounterData}
+        hospitalEncounterData={hospitalEncounterData}
         facilityData={facilityData}
         providerData={providerData}
       />,

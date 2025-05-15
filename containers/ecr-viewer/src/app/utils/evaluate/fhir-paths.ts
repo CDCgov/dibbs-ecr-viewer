@@ -84,6 +84,9 @@ export type PathTypes = {
   encounterDiagnosis: EncounterDiagnosis;
   encounterType: string;
   encounterID: Identifier;
+  hospitalEncounterDiagnosisRef: Reference;
+  conditionCode: CodeableConcept;
+  conditionOnsetDateTime: string;
   facilityContact: string;
   facilityContactAddress: string;
   facilityLocation: string;
@@ -352,6 +355,21 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Identifier",
     path: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].identifier",
   },
+
+  hospitalEncounterDiagnosisRef: {
+    type: "Reference",
+    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = %code).entry",
+  },
+
+  conditionCode: {
+    type: "CodeableConcept",
+    path: "Condition.code",
+  },
+  conditionOnsetDateTime: {
+    type: "string",
+    path: "Condition.onsetDateTime",
+  },
+
   facilityContact: {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Location')[0].telecom.where(system = 'phone')[0].value",
@@ -376,7 +394,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
   },
-
   compositionEncounterRef: {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
@@ -469,7 +486,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.section.where(code.coding[0].code = '29549-3').entry.reference",
   },
 
-  // CareTEam
+  // CareTeam
   careTeamParticipants: {
     type: "CareTeamParticipant",
     path: "Bundle.entry.resource.where(resourceType = 'CareTeam').participant",
