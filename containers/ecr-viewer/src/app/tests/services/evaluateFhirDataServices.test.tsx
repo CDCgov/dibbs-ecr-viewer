@@ -544,28 +544,32 @@ Home: 123-456-6909`,
 
       expect(actual).toMatchSnapshot();
 
-      expect(actual.availableData.length).toEqual(2)
-      expect(actual.unavailableData.length).toEqual(0)
+      expect(actual.availableData.length).toEqual(2);
+      expect(actual.unavailableData.length).toEqual(0);
 
-      render(<>
-            {actual.availableData[0].value}
-            {actual.availableData[1].value}
-          </>)
+      render(
+        <>
+          {actual.availableData[0].value}
+          {actual.availableData[1].value}
+        </>,
+      );
 
-      const tables = screen.getAllByRole("table")
-      expect(tables.length).toEqual(2)
+      const tables = screen.getAllByRole("table");
+      expect(tables.length).toEqual(2);
 
-      const problems = screen.getAllByText("Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)")
-      expect(problems.length).toEqual(2)
+      const problems = screen.getAllByText(
+        "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+      );
+      expect(problems.length).toEqual(2);
 
-      const times = screen.getAllByText("02/05/2025")
-      expect(times.length).toEqual(2)
+      const times = screen.getAllByText("02/05/2025");
+      expect(times.length).toEqual(2);
 
       expect(
-          screen.queryByText("Hospital Admission Diagnosis"),
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).toBeInTheDocument();
       expect(
-          screen.queryByText("Hospital Discharge Diagnosis"),
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).toBeInTheDocument();
     });
 
@@ -579,22 +583,22 @@ Home: 123-456-6909`,
         bundleWithAdmissionDxDataOnly,
       );
 
-      expect(actual.availableData.length).toEqual(1)
-      expect(actual.unavailableData.length).toEqual(1)
+      expect(actual.availableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(1);
 
-      render(actual.availableData[0].value)
+      render(actual.availableData[0].value);
       expect(screen.getByRole("table")).toBeInTheDocument();
       expect(
-          screen.getByText("Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"),
+        screen.getByText(
+          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getByText("02/05/2025")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).toBeInTheDocument();
       expect(
-          screen.getByText("02/05/2025"),
-      ).toBeInTheDocument();
-      expect(
-          screen.queryByText("Hospital Admission Diagnosis"),
-      ).toBeInTheDocument();
-      expect(
-          screen.queryByText("Hospital Discharge Diagnosis"),
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).not.toBeInTheDocument();
     });
 
@@ -608,23 +612,22 @@ Home: 123-456-6909`,
 
       expect(actual).toMatchSnapshot();
 
-      expect(actual.availableData.length).toEqual(1)
-      expect(actual.unavailableData.length).toEqual(1)
+      expect(actual.availableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(1);
 
-
-      render(actual.availableData[0].value)
+      render(actual.availableData[0].value);
       expect(screen.getByRole("table")).toBeInTheDocument();
       expect(
-          screen.getByText("Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"),
+        screen.getByText(
+          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getByText("02/05/2025")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).toBeInTheDocument();
       expect(
-          screen.getByText("02/05/2025"),
-      ).toBeInTheDocument();
-      expect(
-          screen.queryByText("Hospital Discharge Diagnosis"),
-      ).toBeInTheDocument();
-      expect(
-          screen.queryByText("Hospital Admission Diagnosis"),
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).not.toBeInTheDocument();
     });
   });
