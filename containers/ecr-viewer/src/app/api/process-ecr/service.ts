@@ -79,8 +79,6 @@ export const getOrchestrationResponse = async ({
     bodyObj.rr_data = await asString(rr);
   }
 
-  console.log({ endpoint, bodyObj });
-
   let body: string | FormData;
   const headers = new Headers();
   if (endpoint === "process-zip") {

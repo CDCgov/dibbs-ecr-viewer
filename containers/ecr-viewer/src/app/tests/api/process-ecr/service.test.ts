@@ -2,7 +2,10 @@
  * @jest-environment node
  */
 
-import { orchestrationRequest } from "@/app/api/process-ecr/service";
+import {
+  getOrchestrationResponse,
+  orchestrationRequest,
+} from "@/app/api/process-ecr/service";
 import {
   saveFhirData,
   saveWithMetadata,
@@ -13,7 +16,9 @@ jest.mock("../../../api/save-fhir-data/service");
 jest.mock("../../../data/metadataDb/database");
 
 describe("orchestrationRequest", () => {
-  const mockFile = new File(["content"], "test.zip");
+  const mockFile = new File(["content"], "test.zip", {
+    type: "application/zip",
+  });
   const mockEcr = { entry: [{ resource: { id: "123" } }] };
   const mockMetadata = { key: "value" };
 
@@ -106,6 +111,101 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: "Failed to process orchestration response",
       status: 500,
+    });
+  });
+
+  describe("getOrchestrationResponse", () => {
+    it("should call process zip when ecr is a zip", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({ ecr: mockFile });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-zip");
+      expect(args[1].body).toBeInstanceOf(FormData);
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toBeArrayOfSize(0);
+    });
+
+    it("should handle string contents", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({ ecr: "ecr", rr: "rr" });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-message");
+      const body = args[1].body;
+      expect(body).toEqual(
+        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr","rr_data":"rr"}',
+      );
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toStrictEqual([
+        ["content-type", "application/json"],
+      ]);
+    });
+
+    it("should handle File contents", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({
+        ecr: new File(["ecr"], "ecr.xml"),
+        rr: new File(["rr"], "rr.xml"),
+      });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-message");
+      const body = args[1].body;
+      expect(body).toEqual(
+        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr","rr_data":"rr"}',
+      );
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toStrictEqual([
+        ["content-type", "application/json"],
+      ]);
+    });
+
+    it("should handle undefined rr", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({
+        ecr: new File(["ecr"], "ecr.xml"),
+        rr: undefined,
+      });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-message");
+      const body = args[1].body;
+      expect(body).toEqual(
+        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr"}',
+      );
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toStrictEqual([
+        ["content-type", "application/json"],
+      ]);
     });
   });
 

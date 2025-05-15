@@ -17,7 +17,6 @@ export const withProcessZipRewrite: MiddlewareFactory = (
 ) => {
   return async function (request: NextRequest) {
     const url = request.nextUrl.toString();
-    console.log({ url });
     if (url.endsWith("/api/process-zip")) {
       return NextResponse.rewrite(url.replace("zip", "ecr"));
     } else {
