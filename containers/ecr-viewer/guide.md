@@ -33,7 +33,7 @@ flowchart LR
   end
   user --> nbs
   nbs -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by NBS| container
-  ingestion -->|<code>/api/process-zip<br>/api/process-ecr</code>| container
+  ingestion -->|<code>/api/process-ecr</code>| container
 ```
 
 ### Non-Integrated Architecture Diagram
@@ -56,7 +56,7 @@ flowchart LR
   end
   user -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by identity provider| container
   user -->|<code>/</code><br>eCR Library<br>Authenticated By identity provider| container
-  ingestion -->|<code>/api/process-zip<br>/api/process-ecr</code>| container
+  ingestion -->|<code>/api/process-ecr</code>| container
 ```
 
 ### Dual Architecture Diagram
@@ -82,7 +82,7 @@ flowchart LR
   nbs -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by NBS| container
   user -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by identity provider| container
   user -->|<code>/</code><br>eCR Library<br>Authenticated By identity provider| container
-  ingestion -->|<code>/api/process-zip<br>/api/process-ecr</code>| container
+  ingestion -->|<code>/api/process-ecr</code>| container
 ```
 
 ## Environment Variable Setup
