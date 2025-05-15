@@ -1,9 +1,11 @@
+import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
 import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import * as _BundlePatientWithCovid from "../../../../../../test-data/fhir/BundlePatientWithCovid.json";
 import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluateEncounterId,
@@ -23,6 +25,7 @@ import {
   createPatientAgeDataProp,
   evaluateOccupation,
   evaluateOccupationHistory,
+  evaluateHospitalEncounterData,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -30,6 +33,7 @@ import mappings from "@/app/utils/evaluate/fhir-paths";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;
+const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
 
 describe("evaluateFhirDataServices tests", () => {
   describe("Evaluate Identifier", () => {
@@ -424,6 +428,208 @@ Home: 123-456-6909`,
       expect(evaluateOccupation(bundle)).toEqual(
         "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present",
       );
+    });
+  });
+
+  describe("Evaluate Hospital Encounter Data", () => {
+    const admissionDiagnosis = {
+      id: "3b7a0c34-1be8-2d5a-6acd-c7b633e496c5",
+      title: "HOSPITAL ADMISSION DIAGNOSIS",
+      text: {
+        status: "generated",
+        div: "Covid19",
+      },
+      code: {
+        coding: [
+          {
+            code: "46241-6",
+            system: "http://loinc.org",
+            display: "Hospital Admission Diagnosis",
+          },
+        ],
+      },
+      mode: "snapshot",
+      entry: [
+        {
+          display:
+            "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+          reference: "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79",
+        },
+      ],
+    };
+
+    const dischargeDiagnosis = {
+      id: "e9c9e752-dfae-c13d-a4c0-64cef027435f",
+      title: "Discharge Diagnosis",
+      text: {
+        status: "generated",
+        div: "Covid19",
+      },
+      code: {
+        coding: [
+          {
+            code: "11535-2",
+            system: "http://loinc.org",
+            display: "Hospital Discharge Diagnosis",
+          },
+        ],
+      },
+      mode: "snapshot",
+      entry: [
+        {
+          display:
+            "Problem - Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+          reference: "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79",
+        },
+      ],
+    };
+
+    const addSectionsToBundle = (
+      newSections: object[],
+      bundle: Bundle,
+    ): Bundle => {
+      return {
+        ...bundle,
+        entry: [
+          {
+            ...bundle.entry![0],
+            // @ts-ignore
+            resource: {
+              ...bundle.entry![0].resource,
+              section: [
+                //@ts-expect-error
+                ...(bundle.entry![0].resource?.section || []),
+                ...newSections,
+              ],
+            },
+          },
+          ...bundle.entry!.slice(1),
+        ],
+      };
+    };
+
+    it("should return unavailable data when no Admission Diagnosis or Discharge diagnosis are found", () => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [],
+      };
+
+      expect(evaluateHospitalEncounterData(bundle)).toEqual({
+        availableData: [],
+        unavailableData: [
+          {
+            table: true,
+            title: "Hospital Admission Diagnosis",
+            value: undefined,
+          },
+          {
+            table: true,
+            title: "Hospital Discharge Diagnosis",
+            value: undefined,
+          },
+        ],
+      });
+    });
+
+    it("should return Hospital Encounter Data when present and match snapshot", () => {
+      // Create a bundle with Admission and Discharge Dx
+      const bundleWithHospitalEncounterData = addSectionsToBundle(
+        [admissionDiagnosis, dischargeDiagnosis],
+        BundlePatientWithCovid,
+      );
+
+      const actual = evaluateHospitalEncounterData(
+        bundleWithHospitalEncounterData,
+      );
+
+      expect(actual).toMatchSnapshot();
+
+      expect(actual.availableData.length).toEqual(2);
+      expect(actual.unavailableData.length).toEqual(0);
+
+      render(
+        <>
+          {actual.availableData[0].value}
+          {actual.availableData[1].value}
+        </>,
+      );
+
+      const tables = screen.getAllByRole("table");
+      expect(tables.length).toEqual(2);
+
+      const problems = screen.getAllByText(
+        "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+      );
+      expect(problems.length).toEqual(2);
+
+      const times = screen.getAllByText("02/05/2025");
+      expect(times.length).toEqual(2);
+
+      expect(
+        screen.queryByText("Hospital Admission Diagnosis"),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Discharge Diagnosis"),
+      ).toBeInTheDocument();
+    });
+
+    it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
+      const bundleWithAdmissionDxDataOnly = addSectionsToBundle(
+        [admissionDiagnosis],
+        BundlePatientWithCovid,
+      );
+
+      const actual = evaluateHospitalEncounterData(
+        bundleWithAdmissionDxDataOnly,
+      );
+
+      expect(actual.availableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(1);
+
+      render(actual.availableData[0].value);
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getByText("02/05/2025")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Admission Diagnosis"),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Discharge Diagnosis"),
+      ).not.toBeInTheDocument();
+    });
+
+    it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
+      const bundleWithDischargeDxOnly = addSectionsToBundle(
+        [dischargeDiagnosis],
+        BundlePatientWithCovid,
+      );
+
+      const actual = evaluateHospitalEncounterData(bundleWithDischargeDxOnly);
+
+      expect(actual).toMatchSnapshot();
+
+      expect(actual.availableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(1);
+
+      render(actual.availableData[0].value);
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getByText("02/05/2025")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Discharge Diagnosis"),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Admission Diagnosis"),
+      ).not.toBeInTheDocument();
     });
   });
 
