@@ -365,7 +365,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "CodeableConcept",
     path: "Condition.code",
   },
-  ConditionOnsetDateTime: {
+  conditionOnsetDateTime: {
     type: "string",
     path: "Condition.onsetDateTime",
   },

@@ -1,3 +1,4 @@
+import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
@@ -462,7 +463,7 @@ Home: 123-456-6909`,
       title: "Discharge Diagnosis",
       text: {
         status: "generated",
-        div: "Diverticula of intestine",
+        div: "Covid19",
       },
       code: {
         coding: [
@@ -542,13 +543,30 @@ Home: 123-456-6909`,
       );
 
       expect(actual).toMatchSnapshot();
-      expect(actual.availableData[0].title).toEqual(
-        "Hospital Admission Diagnosis",
-      );
-      expect(actual.availableData[1].title).toEqual(
-        "Hospital Discharge Diagnosis",
-      );
-      expect(actual.unavailableData.length).toEqual(0);
+
+      expect(actual.availableData.length).toEqual(2)
+      expect(actual.unavailableData.length).toEqual(0)
+
+      render(<>
+            {actual.availableData[0].value}
+            {actual.availableData[1].value}
+          </>)
+
+      const tables = screen.getAllByRole("table")
+      expect(tables.length).toEqual(2)
+
+      const problems = screen.getAllByText("Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)")
+      expect(problems.length).toEqual(2)
+
+      const times = screen.getAllByText("02/05/2025")
+      expect(times.length).toEqual(2)
+
+      expect(
+          screen.queryByText("Hospital Admission Diagnosis"),
+      ).toBeInTheDocument();
+      expect(
+          screen.queryByText("Hospital Discharge Diagnosis"),
+      ).toBeInTheDocument();
     });
 
     it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
@@ -561,13 +579,23 @@ Home: 123-456-6909`,
         bundleWithAdmissionDxDataOnly,
       );
 
-      expect(actual).toMatchSnapshot();
-      expect(actual.availableData[0].title).toEqual(
-        "Hospital Admission Diagnosis",
-      );
-      expect(actual.unavailableData[0].title).toEqual(
-        "Hospital Discharge Diagnosis",
-      );
+      expect(actual.availableData.length).toEqual(1)
+      expect(actual.unavailableData.length).toEqual(1)
+
+      render(actual.availableData[0].value)
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(
+          screen.getByText("Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"),
+      ).toBeInTheDocument();
+      expect(
+          screen.getByText("02/05/2025"),
+      ).toBeInTheDocument();
+      expect(
+          screen.queryByText("Hospital Admission Diagnosis"),
+      ).toBeInTheDocument();
+      expect(
+          screen.queryByText("Hospital Discharge Diagnosis"),
+      ).not.toBeInTheDocument();
     });
 
     it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
@@ -579,12 +607,25 @@ Home: 123-456-6909`,
       const actual = evaluateHospitalEncounterData(bundleWithDischargeDxOnly);
 
       expect(actual).toMatchSnapshot();
-      expect(actual.availableData[0].title).toEqual(
-        "Hospital Discharge Diagnosis",
-      );
-      expect(actual.unavailableData[0].title).toEqual(
-        "Hospital Admission Diagnosis",
-      );
+
+      expect(actual.availableData.length).toEqual(1)
+      expect(actual.unavailableData.length).toEqual(1)
+
+
+      render(actual.availableData[0].value)
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(
+          screen.getByText("Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"),
+      ).toBeInTheDocument();
+      expect(
+          screen.getByText("02/05/2025"),
+      ).toBeInTheDocument();
+      expect(
+          screen.queryByText("Hospital Discharge Diagnosis"),
+      ).toBeInTheDocument();
+      expect(
+          screen.queryByText("Hospital Admission Diagnosis"),
+      ).not.toBeInTheDocument();
     });
   });
 

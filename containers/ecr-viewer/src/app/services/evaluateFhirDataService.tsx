@@ -665,11 +665,11 @@ export const evaluateEncounterDiagnosisData = (
   const dxColumns = [
     {
       columnName: "Problem",
-      infoPath: "hospitalEncounterDiagnosisCode",
+      infoPath: "conditionCode",
     },
     {
       columnName: "Date/Time",
-      infoPath: "hospitalEncounterDiagnosisDateTime",
+      infoPath: "conditionOnsetDateTime",
       applyToValue: formatDateTime,
     },
   ];
