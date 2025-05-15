@@ -71,8 +71,8 @@ const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
  * Composed middleware handlers
  */
 export default chainMiddleware([
-  withProcessZipRewrite,
   authMiddleware,
+  withProcessZipRewrite,
   withUrlParamChecks,
 ]);
 

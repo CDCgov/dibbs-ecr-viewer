@@ -141,7 +141,7 @@ Rhapsody documentation and an example route can be found [here](https://github.c
 
 ### From API
 
-Data can be added directly via API requeset to eCR Viewer's `/process-ecr` endpoints. See the [API documentation](./api-documentation.md) for more details.
+Data can be added directly via API requeset to eCR Viewer's `/process-ecr` endpoint. See the [API documentation](./api-documentation.md) for more details.
 
 ```bash
 # zip file
