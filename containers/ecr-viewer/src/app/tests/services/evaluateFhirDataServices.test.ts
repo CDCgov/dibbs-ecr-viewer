@@ -1,8 +1,3 @@
-<<<<<<< Updated upstream
-import util from "util";
-
-=======
->>>>>>> Stashed changes
 import { Bundle } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
