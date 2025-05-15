@@ -156,11 +156,11 @@ def process_ecr(url, folder_path, headers):
 
     data = {"return_fhir_bundle": True}
     with open(f"{folder_path}/CDA_eICR.xml") as f:
-        data["message"] = f.read()
+        data["ecr"] = f.read()
 
     try:
         with open(f"{folder_path}/CDA_RR.xml") as f:
-            data["rr_data"] = f.read()
+            data["rr"] = f.read()
     except:  # noqa: E722
         print(f"No RR data found to upload from {folder_path}")
 
