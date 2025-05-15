@@ -33,7 +33,7 @@ flowchart LR
   end
   user --> nbs
   nbs -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by NBS| container
-  ingestion -->|<code>/api/process-zip<br>/api/process-message</code>| container
+  ingestion -->|<code>/api/process-zip<br>/api/process-ecr</code>| container
 ```
 
 ### Non-Integrated Architecture Diagram
@@ -56,7 +56,7 @@ flowchart LR
   end
   user -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by identity provider| container
   user -->|<code>/</code><br>eCR Library<br>Authenticated By identity provider| container
-  ingestion -->|<code>/api/process-zip<br>/api/process-message</code>| container
+  ingestion -->|<code>/api/process-zip<br>/api/process-ecr</code>| container
 ```
 
 ### Dual Architecture Diagram
@@ -82,7 +82,7 @@ flowchart LR
   nbs -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by NBS| container
   user -->|<code>/view-data</code><br>eCR Viewer<br>Authenticated by identity provider| container
   user -->|<code>/</code><br>eCR Library<br>Authenticated By identity provider| container
-  ingestion -->|<code>/api/process-zip<br>/api/process-message</code>| container
+  ingestion -->|<code>/api/process-zip<br>/api/process-ecr</code>| container
 ```
 
 ## Environment Variable Setup
@@ -141,19 +141,19 @@ Rhapsody documentation and an example route can be found [here](https://github.c
 
 ### From API
 
-Data can be added directly via API requeset to eCR Viewer's `/process-zip` or `/process-message` endpoints. See the [API documentation](./api-documentation.md) for more details.
+Data can be added directly via API requeset to eCR Viewer's `/process-ecr` endpoints. See the [API documentation](./api-documentation.md) for more details.
 
 ```bash
-# process-zip
-curl --location '{URL}/ecr-viewer/api/process-zip' \
---form 'upload_file=@"/path/to/eicr.zip";type=application/zip'
+# zip file
+curl --location '{URL}/ecr-viewer/api/process-ecr' \
+--form 'ecr=@"/path/to/eicr.zip";type=application/zip'
 ```
 
 ```sh
-# process-message
-curl --location '<DIBBS_URL>/ecr-viewer/api/process-message' \
---form 'message=<"<PATH_TO_ECR_FILE>"' \
---form 'rr_data=<"<PATH_TO_RR_FILE>"'
+# string contents
+curl --location '<DIBBS_URL>/ecr-viewer/api/process-ecr' \
+--form 'ecr=<"<PATH_TO_ECR_FILE>"' \
+--form 'rr=<"<PATH_TO_RR_FILE>"'
 ```
 
 ## Database Setup
