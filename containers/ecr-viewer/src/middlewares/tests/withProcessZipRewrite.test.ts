@@ -1,0 +1,36 @@
+/**
+ * @jest-environment node
+ */
+import { NextRequest } from "next/server";
+
+import { chainMiddleware } from "@/middleware";
+import { withProcessZipRewrite } from "@/middlewares/withProcessZipRewrite";
+
+// Mock next-auth/jwt getToken
+jest.mock("next-auth/jwt", () => ({
+  getToken: jest.fn(),
+}));
+
+const middleware = chainMiddleware([withProcessZipRewrite]);
+
+describe("Process zip rewrite Middleware", () => {
+  it("should rewrite process-zip to process-ecr", async () => {
+    const req = new NextRequest(
+      "https://www.example.com/ecr-viewer/api/process-zip",
+    );
+
+    const resp = await middleware(req);
+    expect(resp.status).toBe(200);
+    expect(resp.headers.get("x-middleware-rewrite")).toEqual(
+      "https://www.example.com/ecr-viewer/api/process-ecr",
+    );
+  });
+
+  it("should not rewrite when a non-process-zip-endpoint", async () => {
+    const req = new NextRequest("https://www.example.com/ecr-viewer?page=3");
+
+    const resp = await middleware(req);
+    expect(resp.status).toBe(200);
+    expect(resp.headers.get("x-middleware-rewrite")).toBeNull();
+  });
+});
