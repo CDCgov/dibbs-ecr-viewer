@@ -5,14 +5,6 @@ import { ArrowBack } from "@/app/components/Icon";
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import { notFoundUnlessAdmin } from "@/app/services/userService";
 
-// async function submitCreateProgramArea(form: FormData) {
-//   "use server";
-//   await createProgramArea(
-//     form.get("name") as string,
-//     form.getAll("conditions") as string[],
-//   );
-// }
-
 /**
  * @returns Page to create a program area
  */
@@ -31,7 +23,7 @@ const CreateProgramPage = async () => {
           <ArrowBack aria-hidden={true} className="square-3" />
           Back to program management
         </Link>
-        <ProgramForm title="Create program area" initValues={{ conditions }} />
+        <ProgramForm action="Create" initValues={{ conditions }} />
       </div>
     </main>
   );

@@ -1,4 +1,4 @@
-import "server-only";
+"use server";
 import { randomUUID } from "node:crypto";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -25,7 +25,7 @@ export const createProgramArea = async (
 
   if (name.trim().length < 2 || conditions.length === 0) {
     throw new Error(
-      "Invalid program. Must have a non-empty name and at least one condition assigned.",
+      "Invalid program area. Must have a non-empty name and at least one condition assigned.",
     );
   }
 
