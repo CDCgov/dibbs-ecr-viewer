@@ -1,5 +1,3 @@
-import { notFound } from "next/navigation";
-
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import {
   createProgramArea,
@@ -7,9 +5,8 @@ import {
 } from "@/app/services/programAreaService";
 import {
   createUser,
-  getLoggedInUser,
-  isAdmin,
   listUsers,
+  notFoundUnlessAdmin,
   updateUserProgramAreas,
 } from "@/app/services/userService";
 
@@ -37,10 +34,7 @@ async function submitCreateProgramArea(form: FormData) {
  * @returns user admin page
  */
 const UserAdminPage = async () => {
-  const admin = await getLoggedInUser();
-  if (!isAdmin(admin)) {
-    notFound();
-  }
+  await notFoundUnlessAdmin();
 
   const users = await listUsers();
   const programAreas = await listProgramAreas();

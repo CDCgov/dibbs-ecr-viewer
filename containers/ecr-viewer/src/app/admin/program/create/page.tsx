@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { ProgramForm } from "@/app/admin/program/ProgramForm";
 import { ArrowBack } from "@/app/components/Icon";
 import { listConditionReferences } from "@/app/services/listConditionsService";
-import { getLoggedInUser, isAdmin } from "@/app/services/userService";
+import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 // async function submitCreateProgramArea(form: FormData) {
 //   "use server";
@@ -18,10 +17,7 @@ import { getLoggedInUser, isAdmin } from "@/app/services/userService";
  * @returns Page to create a program area
  */
 export const CreateProgramPage = async () => {
-  const admin = await getLoggedInUser();
-  if (!isAdmin(admin)) {
-    notFound();
-  }
+  await notFoundUnlessAdmin();
 
   const conditions = await listConditionReferences();
 

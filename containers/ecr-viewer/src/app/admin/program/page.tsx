@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import {
   createProgramArea,
   listProgramAreas,
 } from "@/app/services/programAreaService";
-import { getLoggedInUser, isAdmin } from "@/app/services/userService";
+import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { ProgramTable } from "./ProgramTable";
 
@@ -23,10 +22,7 @@ async function submitCreateProgramArea(form: FormData) {
  * @returns user admin page
  */
 const ProgramAdminPage = async () => {
-  const admin = await getLoggedInUser();
-  if (!isAdmin(admin)) {
-    notFound();
-  }
+  await notFoundUnlessAdmin();
 
   const programAreas = await listProgramAreas();
   // Only for form hackery - delete later
