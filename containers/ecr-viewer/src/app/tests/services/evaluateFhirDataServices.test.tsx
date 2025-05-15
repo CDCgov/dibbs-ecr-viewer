@@ -488,6 +488,7 @@ Home: 123-456-6909`,
       newSections: object[],
       bundle: Bundle,
     ): Bundle => {
+      // @ts-ignore
       return {
         ...bundle,
         entry: [
