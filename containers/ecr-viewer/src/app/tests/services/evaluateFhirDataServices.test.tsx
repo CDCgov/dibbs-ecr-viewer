@@ -488,7 +488,6 @@ Home: 123-456-6909`,
       newSections: object[],
       bundle: Bundle,
     ): Bundle => {
-      // @ts-ignore
       return {
         ...bundle,
         entry: [
@@ -498,6 +497,7 @@ Home: 123-456-6909`,
             resource: {
               ...bundle.entry![0].resource,
               section: [
+                //@ts-expect-error
                 ...(bundle.entry![0].resource?.section || []),
                 ...newSections,
               ],
