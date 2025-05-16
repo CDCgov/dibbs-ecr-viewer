@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Program Admin Page Creating programs should render a program page 1`] = `
+exports[`Program Admin Page Creating programs should render a create program page 1`] = `
 <div>
   <main
     class="main-container"
@@ -147,7 +147,7 @@ exports[`Program Admin Page Creating programs should render a program page 1`] =
             data-allow-multiple="true"
             data-testid="accordion"
           >
-            <h4
+            <h3
               class="usa-accordion__heading"
             >
               <button
@@ -166,13 +166,13 @@ exports[`Program Admin Page Creating programs should render a program page 1`] =
                   >
                     <input
                       class="usa-checkbox__input"
-                      id="category"
+                      id="checkbox-category"
                       name="category"
                       type="checkbox"
                     />
                     <label
                       class="usa-checkbox__label"
-                      for="category"
+                      for="checkbox-category"
                     >
                       <div>
                         <strong>
@@ -196,7 +196,7 @@ exports[`Program Admin Page Creating programs should render a program page 1`] =
                   </p>
                 </div>
               </button>
-            </h4>
+            </h3>
             <div
               class="usa-accordion__content usa-prose"
               data-testid="accordionItem_category"
@@ -217,7 +217,7 @@ exports[`Program Admin Page Creating programs should render a program page 1`] =
                   class="usa-checkbox__label"
                   for="condition-456"
                 >
-                  condition
+                  condition 1
                 </label>
               </div>
               <div
@@ -238,7 +238,7 @@ exports[`Program Admin Page Creating programs should render a program page 1`] =
                   class="usa-checkbox__label"
                   for="condition-789"
                 >
-                  condition
+                  condition 2
                 </label>
               </div>
             </div>

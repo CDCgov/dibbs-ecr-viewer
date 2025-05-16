@@ -160,7 +160,7 @@ const ConditionFieldSet = ({
         )),
         id: category,
         expanded: !!expandedCategories[category],
-        headingLevel: "h4",
+        headingLevel: "h3",
       };
     });
 
@@ -205,7 +205,7 @@ const CategoryTitle = ({
     <div className="display-flex flex-justify">
       <Checkbox
         name="category"
-        id={category}
+        id={`checkbox-${category}`}
         label={
           <div>
             <strong>{category}</strong>

@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { axe } from "jest-axe";
 import { notFound } from "next/navigation";
 
 import ProgramCreatePage from "@/app/admin/program/create/page";
@@ -104,20 +105,21 @@ describe("Program Admin Page", () => {
         {
           code: "456",
           concept_name: "condition 1 (disease)",
-          condition_name: "condition",
+          condition_name: "condition 1",
           condition_category: "category",
           program_area_uuid: null,
         },
         {
           code: "789",
           concept_name: "condition 2 (disease)",
-          condition_name: "condition",
+          condition_name: "condition 2",
           condition_category: "category",
           program_area_uuid: "789",
         },
       ]);
       const { container } = render(await ProgramCreatePage());
       expect(container).toMatchSnapshot();
+      expect(await axe(container)).toHaveNoViolations();
     });
   });
 });
