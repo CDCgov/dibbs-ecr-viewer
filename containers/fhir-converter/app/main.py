@@ -94,6 +94,22 @@ async def convert(
     return result
 
 
+@app.post("/combine")
+async def combine_rr_eicr(    
+        input: Annotated[FhirConverterInput, Body(examples=sample_request)],
+        # response: Response
+    ):
+    """
+    """
+    fhir_converter_input = dict(input)
+    fhir_converter_input.pop("rr_data")
+    input.input_data = resolve_references(input.input_data)
+
+    merged_ecr = add_rr_data_to_eicr(input.rr_data, input.input_data)
+       
+    return merged_ecr
+
+
 def add_rr_data_to_eicr(rr, ecr):
     """
     Extracts relevant fields from an RR document, and inserts them into a
@@ -119,7 +135,8 @@ def add_rr_data_to_eicr(rr, ecr):
     rr = etree.fromstring(rr)
     ecr = etree.fromstring(ecr)
 
-    if ecr.xpath('//*[@code="88085-6"]'):
+    # Check for eICR Processing Status entry (required & only available in RR)
+    if ecr.xpath('//*[@root="2.16.840.1.113883.10.20.15.2.3.29"]'):
         print("This eCR has already been merged with RR data.")
         return etree.tostring(ecr, encoding="unicode", method="xml")
 
