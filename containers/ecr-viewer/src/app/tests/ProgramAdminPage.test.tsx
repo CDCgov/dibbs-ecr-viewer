@@ -99,7 +99,7 @@ describe("Program Admin Page", () => {
   });
 
   describe("Creating programs", () => {
-    it("should render a program page", async () => {
+    it("should render a create program page", async () => {
       (listConditionReferences as jest.Mock).mockResolvedValue([
         {
           code: "456",
