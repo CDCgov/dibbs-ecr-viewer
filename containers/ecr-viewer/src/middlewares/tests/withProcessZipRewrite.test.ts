@@ -10,6 +10,10 @@ const middleware = chainMiddleware([withProcessZipRewrite]);
 
 describe("Process zip rewrite Middleware", () => {
   it("should rewrite process-zip to process-ecr", async () => {
+    let message = "";
+    jest.spyOn(console, "warn").mockImplementation((m) => {
+      message = m;
+    });
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/process-zip",
     );
@@ -19,6 +23,10 @@ describe("Process zip rewrite Middleware", () => {
     expect(resp.headers.get("x-middleware-rewrite")).toEqual(
       "https://www.example.com/ecr-viewer/api/process-ecr",
     );
+    expect(message).toEqual(
+      "The `process-zip` API has been deprecated. Use `process-ecr` instead.",
+    );
+    jest.clearAllMocks();
   });
 
   it("should not rewrite when a non-process-zip-endpoint", async () => {

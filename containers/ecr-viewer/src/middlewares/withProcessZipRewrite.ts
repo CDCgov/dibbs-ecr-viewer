@@ -14,6 +14,9 @@ export const withProcessZipRewrite: MiddlewareFactory = (
   return async function (request: NextRequest) {
     const url = request.nextUrl.toString();
     if (url.endsWith("/api/process-zip")) {
+      console.warn(
+        "The `process-zip` API has been deprecated. Use `process-ecr` instead.",
+      );
       return NextResponse.rewrite(url.replace("zip", "ecr"));
     } else {
       return next(request);
