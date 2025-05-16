@@ -115,32 +115,31 @@ const CategoryTitle = ({
   );
 };
 
-const ConditionCheckBox = ({
-  condition,
-  onChecked,
+const NameFieldSet = ({
+  name,
+  setName,
 }: {
-  condition: FormCondition;
-  onChecked: (checked: boolean) => void;
+  name: string;
+  setName: (n: string) => void;
 }) => {
   return (
-    <Checkbox
-      id={`condition-${condition.code}`}
-      name="conditions"
-      value={condition.code}
-      label={condition.condition_name}
-      checked={condition.checked === true}
-      onChange={(e) => onChecked(e.target.checked)}
-    />
-  );
-};
-
-const keysToBoolean = <T extends object>(obj: T, val: boolean) => {
-  return Object.keys(obj).reduce(
-    (acc, cur) => {
-      acc[cur] = val;
-      return acc;
-    },
-    {} as Record<string, boolean>,
+    <FieldSet legend="Name program area">
+      <span>
+        Required fields are marked with an asterisk (<RequiredMarker />)
+      </span>
+      <label className="usa-label">
+        Program area name
+        <RequiredMarker />
+        <TextInput
+          type="text"
+          required={true}
+          id="name"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
+    </FieldSet>
   );
 };
 
@@ -229,30 +228,31 @@ const ConditionFieldSet = ({
   );
 };
 
-const NameFieldSet = ({
-  name,
-  setName,
+const ConditionCheckBox = ({
+  condition,
+  onChecked,
 }: {
-  name: string;
-  setName: (n: string) => void;
+  condition: FormCondition;
+  onChecked: (checked: boolean) => void;
 }) => {
   return (
-    <FieldSet legend="Name program area">
-      <span>
-        Required fields are marked with an asterisk (<RequiredMarker />)
-      </span>
-      <label className="usa-label">
-        Program area name
-        <RequiredMarker />
-        <TextInput
-          type="text"
-          required={true}
-          id="name"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </label>
-    </FieldSet>
+    <Checkbox
+      id={`condition-${condition.code}`}
+      name="conditions"
+      value={condition.code}
+      label={condition.condition_name}
+      checked={condition.checked === true}
+      onChange={(e) => onChecked(e.target.checked)}
+    />
+  );
+};
+
+const keysToBoolean = <T extends object>(obj: T, val: boolean) => {
+  return Object.keys(obj).reduce(
+    (acc, cur) => {
+      acc[cur] = val;
+      return acc;
+    },
+    {} as Record<string, boolean>,
   );
 };
