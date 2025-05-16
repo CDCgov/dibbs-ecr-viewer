@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { notFound } from "next/navigation";
 
+import ProgramCreatePage from "@/app/admin/program/create/page";
 import ProgramAdminPage from "@/app/admin/program/page";
+import { listConditionReferences } from "@/app/services/listConditionsService";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { isAdmin, notFoundUnlessAdmin } from "@/app/services/userService";
 
@@ -94,5 +96,28 @@ describe("Program Admin Page", () => {
       screen.queryByText("No program areas added"),
     ).not.toBeInTheDocument();
     expect(container).toMatchSnapshot();
+  });
+
+  describe("Creating programs", () => {
+    it("should render a program page", async () => {
+      (listConditionReferences as jest.Mock).mockResolvedValue([
+        {
+          code: "456",
+          concept_name: "condition 1 (disease)",
+          condition_name: "condition",
+          condition_category: "category",
+          program_area_uuid: null,
+        },
+        {
+          code: "789",
+          concept_name: "condition 2 (disease)",
+          condition_name: "condition",
+          condition_category: "category",
+          program_area_uuid: "789",
+        },
+      ]);
+      const { container } = render(await ProgramCreatePage());
+      expect(container).toMatchSnapshot();
+    });
   });
 });

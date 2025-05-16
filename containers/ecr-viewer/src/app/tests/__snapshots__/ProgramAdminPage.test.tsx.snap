@@ -1,5 +1,268 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Program Admin Page Creating programs should render a program page 1`] = `
+<div>
+  <main
+    class="main-container"
+  >
+    <div
+      class="content-container margin-top-10"
+    >
+      <a
+        class="action-text margin-bottom-3 display-inline-flex flex-align-center"
+        href="/admin/program"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon square-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Back to program management
+      </a>
+      <div
+        class="display-flex flex-justify margin-bottom-3"
+      >
+        <h2
+          class="margin-0"
+        >
+          Create program area
+        </h2>
+        <div>
+          <button
+            class="usa-button margin-0"
+            data-testid="button"
+            disabled=""
+            form="r:id"
+            type="submit"
+          >
+            Create program area
+          </button>
+        </div>
+      </div>
+      <div
+        class="section__line_gray"
+        style="margin-bottom: 1.5rem;"
+      />
+      <form
+        id="r:id"
+      >
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            Name program area
+          </legend>
+          <span>
+            Required fields are marked with an asterisk (
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+            )
+          </span>
+          <label
+            class="usa-label"
+          >
+            Program area name
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+            <input
+              class="usa-input"
+              data-testid="textInput"
+              id="name"
+              name="name"
+              required=""
+              type="text"
+              value=""
+            />
+          </label>
+        </fieldset>
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            Add conditions
+          </legend>
+          <span>
+            Select a minimum of 1 condition
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+          </span>
+          <p
+            class="text-bold font-size-md"
+          >
+            0
+             condition
+            s
+             selected
+          </p>
+          <div
+            class="display-flex"
+          >
+            <div
+              class="margin-left-auto padding-top-1"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Expand all 
+                condition categories
+              </button>
+              <span
+                class="vertical-line"
+              />
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Collapse all 
+                condition categories
+              </button>
+            </div>
+          </div>
+          <div
+            class="usa-accordion accordion-dibbs margin-top-3"
+            data-allow-multiple="true"
+            data-testid="accordion"
+          >
+            <h4
+              class="usa-accordion__heading"
+            >
+              <button
+                aria-controls="category"
+                aria-expanded="true"
+                class="usa-accordion__button"
+                data-testid="accordionButton_category"
+                type="button"
+              >
+                <div
+                  class="display-flex flex-justify"
+                >
+                  <div
+                    class="usa-checkbox"
+                    data-testid="checkbox"
+                  >
+                    <input
+                      class="usa-checkbox__input"
+                      id="category"
+                      name="category"
+                      type="checkbox"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="category"
+                    >
+                      <div>
+                        <strong>
+                          category
+                        </strong>
+                        <br />
+                        <span
+                          class="text-base"
+                        >
+                          RCKMS condition category
+                        </span>
+                      </div>
+                    </label>
+                  </div>
+                  <p>
+                    0
+                    /
+                    2
+                     
+                    conditions selected
+                  </p>
+                </div>
+              </button>
+            </h4>
+            <div
+              class="usa-accordion__content usa-prose"
+              data-testid="accordionItem_category"
+              id="category"
+            >
+              <div
+                class="usa-checkbox"
+                data-testid="checkbox"
+              >
+                <input
+                  class="usa-checkbox__input"
+                  id="condition-456"
+                  name="conditions"
+                  type="checkbox"
+                  value="456"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="condition-456"
+                >
+                  condition
+                </label>
+              </div>
+              <div
+                class="section__line_light_gray"
+              />
+              <div
+                class="usa-checkbox"
+                data-testid="checkbox"
+              >
+                <input
+                  class="usa-checkbox__input"
+                  id="condition-789"
+                  name="conditions"
+                  type="checkbox"
+                  value="789"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="condition-789"
+                >
+                  condition
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div
+          class="display-flex flex-justify-end margin-y-4"
+        >
+          <button
+            class="usa-button margin-0"
+            data-testid="button"
+            disabled=""
+            form="r:id"
+            type="submit"
+          >
+            Create program area
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+`;
+
 exports[`Program Admin Page should list program areas when available 1`] = `
 <div>
   <main
