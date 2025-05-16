@@ -82,39 +82,6 @@ export const ProgramForm = ({
   );
 };
 
-const CategoryTitle = ({
-  category,
-  conditions,
-  onChecked,
-}: {
-  category: string;
-  conditions: FormCondition[];
-  onChecked: (checked: boolean) => void;
-}) => {
-  return (
-    <div className="display-flex flex-justify">
-      <Checkbox
-        name="category"
-        id={category}
-        label={
-          <div>
-            <strong>{category}</strong>
-            <br />
-            <span className="text-base">RCKMS condition category</span>
-          </div>
-        }
-        checked={conditions.every(({ checked }) => !!checked)}
-        onChange={(e) => onChecked(e.target.checked)}
-      />
-
-      <p>
-        {conditions.filter(({ checked }) => checked).length}/{conditions.length}{" "}
-        conditions selected
-      </p>
-    </div>
-  );
-};
-
 const NameFieldSet = ({
   name,
   setName,
@@ -225,6 +192,39 @@ const ConditionFieldSet = ({
         items={accordionItems}
       />
     </FieldSet>
+  );
+};
+
+const CategoryTitle = ({
+  category,
+  conditions,
+  onChecked,
+}: {
+  category: string;
+  conditions: FormCondition[];
+  onChecked: (checked: boolean) => void;
+}) => {
+  return (
+    <div className="display-flex flex-justify">
+      <Checkbox
+        name="category"
+        id={category}
+        label={
+          <div>
+            <strong>{category}</strong>
+            <br />
+            <span className="text-base">RCKMS condition category</span>
+          </div>
+        }
+        checked={conditions.every(({ checked }) => !!checked)}
+        onChange={(e) => onChecked(e.target.checked)}
+      />
+
+      <p>
+        {conditions.filter(({ checked }) => checked).length}/{conditions.length}{" "}
+        conditions selected
+      </p>
+    </div>
   );
 };
 
