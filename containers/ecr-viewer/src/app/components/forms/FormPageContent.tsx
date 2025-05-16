@@ -49,7 +49,6 @@ export const FormPageContent = ({
         id={id}
         onSubmit={async (e) => {
           e.preventDefault();
-          console.log(e);
           setSubmitting(true);
           setError("");
           try {
