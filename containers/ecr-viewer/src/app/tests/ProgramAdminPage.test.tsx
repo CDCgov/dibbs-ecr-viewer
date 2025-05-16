@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import ProgramAdminPage from "@/app/admin/program/page";
 import { listProgramAreas } from "@/app/services/programAreaService";
-import { isAdmin } from "@/app/services/userService";
+import { isAdmin, notFoundUnlessAdmin } from "@/app/services/userService";
 
 jest.mock("../data/metadataDb/database");
 jest.mock("../utils/auth-utils", () => ({
@@ -22,12 +22,12 @@ describe("Program Admin Page", () => {
     jest.clearAllMocks();
   });
 
-  it("should show 404 if not an admin", async () => {
+  it("should check user is an admin", async () => {
     (isAdmin as unknown as jest.Mock).mockReturnValue(false);
     (listProgramAreas as jest.Mock).mockResolvedValue([]);
 
     render(await ProgramAdminPage());
-    expect(notFound).toHaveBeenCalled();
+    expect(notFoundUnlessAdmin).toHaveBeenCalled();
   });
 
   it("should show no program areas message if none", async () => {

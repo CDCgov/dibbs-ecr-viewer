@@ -22,18 +22,15 @@ interface FormValues {
 }
 
 const groupByCategory = (conditions: FormCondition[]) => {
-  return conditions.reduce(
-    (acc, cur) => {
-      const category = cur.condition_category || "Unknown";
-      acc[category] ||= [] as FormCondition[];
-      acc[category].push(cur);
-      acc[category].sort((a, b) =>
-        a.condition_name < b.condition_name ? -1 : 1,
-      );
-      return acc;
-    },
-    {} as { [key: string]: FormCondition[] },
-  );
+  return conditions.reduce((acc, cur) => {
+    const category = cur.condition_category || "Unknown";
+    acc[category] ||= [] as FormCondition[];
+    acc[category].push(cur);
+    acc[category].sort((a, b) =>
+      a.condition_name < b.condition_name ? -1 : 1,
+    );
+    return acc;
+  }, {} as ConditionCateogires);
 };
 
 /**

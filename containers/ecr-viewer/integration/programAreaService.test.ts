@@ -110,7 +110,7 @@ describe("program area service", () => {
 
   it("should update a program area name", async () => {
     const progName = "Sad Times";
-    const id = await createProgramArea(progName, []);
+    const id = await createProgramArea(progName, ["123"]);
 
     const beforeNameConds = await listConditionReferences();
     await updateProgramArea(id, { name: "Happy Days" });
@@ -129,11 +129,12 @@ describe("program area service", () => {
 
   it("should update a program area conditions", async () => {
     const progName = "Sad Times";
-    const id = await createProgramArea(progName, []);
+    const id = await createProgramArea(progName, ["123"]);
 
     const beforeConds = await listConditionReferences();
     const beforeCond = beforeConds.filter((c) => c.program_area_uuid === id);
-    expect(beforeCond).toBeArrayOfSize(0);
+    expect(beforeCond).toBeArrayOfSize(1);
+    expect(beforeCond[0]).toHaveProperty("code", "123");
     await updateProgramArea(id, { conditions: ["789"] });
     const afterConds = await listConditionReferences();
     expect(beforeConds).not.toStrictEqual(afterConds);
@@ -144,7 +145,7 @@ describe("program area service", () => {
 
   it("should delete a program area", async () => {
     const beforeCreate = await listProgramAreas();
-    const id = await createProgramArea("test", []);
+    const id = await createProgramArea("test", ["123"]);
     const afterCreate = await listProgramAreas();
 
     await updateUserProgramAreas(adminId!, [id, progId!]);
@@ -155,7 +156,9 @@ describe("program area service", () => {
 
     const afterDelete = await listProgramAreas();
 
-    expect(beforeCreate).toStrictEqual(afterDelete);
+    expect(beforeCreate.map(({ uuid }) => uuid)).toStrictEqual(
+      afterDelete.map(({ uuid }) => uuid),
+    );
     expect(afterDelete).toBeArrayOfSize(3);
     expect(afterCreate).toBeArrayOfSize(4);
 
