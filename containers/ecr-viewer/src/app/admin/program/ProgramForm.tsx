@@ -1,15 +1,10 @@
 "use client";
 import React, { useState } from "react";
 
-import {
-  Button,
-  Checkbox,
-  RequiredMarker,
-  TextInput,
-} from "@trussworks/react-uswds";
-import { useRouter } from "next/navigation";
+import { Checkbox, RequiredMarker, TextInput } from "@trussworks/react-uswds";
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
+import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
 import { createProgramArea } from "@/app/services/programAreaService";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
@@ -55,10 +50,6 @@ export const ProgramForm = ({
   action: string;
   initValues: FormValues;
 }) => {
-  const router = useRouter();
-
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
     groupByCategory(initValues.conditions),
@@ -70,71 +61,24 @@ export const ProgramForm = ({
     .map(({ code }) => code);
   const numConditionsSelected = selectedConditions.length;
 
-  const submitDisabled = !name.trim() || !numConditionsSelected || submitting;
+  const valid = !!name.trim() && numConditionsSelected > 0;
 
   return (
-    <>
-      <div className="display-flex flex-justify margin-bottom-3">
-        <h2 className="margin-0">{action} program area</h2>
-        <div>
-          <SubmitButton disabled={submitDisabled} action={action} />
-        </div>
-      </div>
-
-      <div className="section__line_gray" style={{ marginBottom: "1.5rem" }} />
-      <form
-        id="program-area-form"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setSubmitting(true);
-          try {
-            await createProgramArea(name, selectedConditions);
-          } catch (error: unknown) {
-            setSubmitting(false);
-            // TODO harden - create our own error type for user errors
-            if (error instanceof Error) {
-              setError(error.message);
-            } else {
-              throw error;
-            }
-            return;
-          }
-
-          router.push("/admin/program");
-        }}
-      >
-        {/** TODO: styling of error */}
-        {error && <p aria-live="polite">{error}</p>}
-        <NameFieldSet name={name} setName={setName} />
-        <ConditionFieldSet
-          conditionCategories={conditionCategories}
-          setConditionCategories={setConditionCategories}
-          numConditionsSelected={numConditionsSelected}
-        />
-        <div className="display-flex flex-justify-end margin-y-4">
-          <SubmitButton disabled={submitDisabled} action={action} />
-        </div>
-      </form>
-    </>
-  );
-};
-
-const SubmitButton = ({
-  disabled,
-  action,
-}: {
-  disabled: boolean;
-  action: string;
-}) => {
-  return (
-    <Button
-      type="submit"
-      form="program-area-form"
-      className="margin-0"
-      disabled={disabled}
+    <FormPageContent
+      action={`${action} program area`}
+      formValid={valid}
+      submitAction={async () => {
+        await createProgramArea(name, selectedConditions);
+      }}
+      successRoute="/admin/program"
     >
-      {action} program area
-    </Button>
+      <NameFieldSet name={name} setName={setName} />
+      <ConditionFieldSet
+        conditionCategories={conditionCategories}
+        setConditionCategories={setConditionCategories}
+        numConditionsSelected={numConditionsSelected}
+      />
+    </FormPageContent>
   );
 };
 
@@ -150,7 +94,7 @@ const CategoryTitle = ({
   return (
     <div className="display-flex flex-justify">
       <Checkbox
-        name="conditions"
+        name="category"
         id={category}
         label={
           <div>
@@ -182,6 +126,7 @@ const ConditionCheckBox = ({
     <Checkbox
       id={`condition-${condition.code}`}
       name="conditions"
+      value={condition.code}
       label={condition.condition_name}
       checked={condition.checked === true}
       onChange={(e) => onChecked(e.target.checked)}
