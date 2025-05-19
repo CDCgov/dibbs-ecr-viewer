@@ -223,6 +223,19 @@ def add_rr_data_to_eicr(rr, ecr):
         # Append the ecr section into the eCR - puts it at the end
         ecr.append(ecr_section)
 
+    # If eICR >=R3, remove (optional) RR section that came from eICR
+    # This is duplicate/incomplete info from RR
+    # TODO ANGELA: Only remove if confirmed we added rr section?
+    ecr_version = ecr.xpath('//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension')[0]
+    if ecr_version == "2021-01-01" or ecr_version == "2022-05-01":
+        namespaces = {"hl7": "urn:hl7-org:v3"}
+        rr_from_eicr = ecr.xpath('//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',namespaces=namespaces)[0]
+
+        if rr_from_eicr:
+            rr_from_eicr_parent = rr_from_eicr.getparent()
+            if rr_from_eicr_parent is not None:
+                rr_from_eicr_parent.remove(rr_from_eicr)
+
     ecr = etree.tostring(ecr, encoding="unicode", method="xml")
 
     return ecr
