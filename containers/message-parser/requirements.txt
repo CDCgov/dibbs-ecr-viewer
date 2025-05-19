@@ -4,7 +4,7 @@ azure-keyvault-secrets
 azure-storage-blob
 cryptography>=43.0.1
 fastapi>=0.109.1
-fhirpathpy=1.12.1
+fhirpathpy==1.12.1
 frozendict
 google-auth
 google-cloud-storage
