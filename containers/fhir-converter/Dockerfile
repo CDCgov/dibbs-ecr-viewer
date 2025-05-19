@@ -28,7 +28,7 @@ COPY --from=build /build/FHIR-Converter/output /build/FHIR-Converter/output
 COPY --from=build /build/FHIR-Converter/data/Templates /build/FHIR-Converter/data/Templates
 
 # # Install python via pyenv
-RUN apt-get update && apt-get install -y curl jq libicu-dev
+RUN apk update && apk upgrade install -y curl jq libicu-dev
 
 # Get an up to date copy of active rxnorm codes and names
 RUN rm /build/FHIR-Converter/output/rxnorm.csv
