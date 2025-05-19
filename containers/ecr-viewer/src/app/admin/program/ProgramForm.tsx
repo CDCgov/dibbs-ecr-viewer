@@ -1,21 +1,27 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import {
   Button,
+  ButtonGroup,
   Checkbox,
+  Modal,
+  ModalFooter,
+  ModalHeading,
+  ModalRef,
+  ModalToggleButton,
   RequiredMarker,
   TextInput,
 } from "@trussworks/react-uswds";
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
-import { ConditionReference } from "@/app/data/metadataDb/types/core";
+import { ListedCondition } from "@/app/services/listConditionsService";
 import { toKebabCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
-interface FormCondition extends ConditionReference {
+interface FormCondition extends ListedCondition {
   checked?: boolean;
 }
 
@@ -127,6 +133,7 @@ const ConditionFieldSet = ({
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >(keysToBoolean(conditionCategories, true));
+  const modalRef = useRef<ModalRef>(null);
 
   const accordionItems: AccordionItem[] = Object.keys(conditionCategories)
     .sort()
@@ -160,6 +167,7 @@ const ConditionFieldSet = ({
                 outline={true}
                 disabled={numSelected === disabledCount}
                 onClick={() =>
+                  // TODO handle when one of the conditions is assigned
                   setConditionCategories({
                     ...conditionCategories,
                     [category]: conditionCategories[category].map((c) => ({
@@ -179,23 +187,39 @@ const ConditionFieldSet = ({
             {conditions.map((condition, i) => (
               <React.Fragment key={`condition-${condition.code}`}>
                 {i !== 0 && <div className="section__line_light_gray" />}
-                <Checkbox
-                  id={`condition-${condition.code}`}
-                  name="conditions"
-                  value={condition.code}
-                  label={condition.condition_name}
-                  checked={condition.checked === true}
-                  onChange={(e) =>
-                    setConditionCategories({
-                      ...conditionCategories,
-                      [category]: conditionCategories[category].map((c) =>
-                        c.code === condition.code
-                          ? { ...c, checked: e.target.checked }
-                          : c,
-                      ),
-                    })
-                  }
-                />
+                <div className="display-flex flex-justify">
+                  <Checkbox
+                    id={`condition-${condition.code}`}
+                    name="conditions"
+                    value={condition.code}
+                    label={condition.condition_name}
+                    checked={condition.checked === true}
+                    aria-controls={
+                      !!condition.program_area_name
+                        ? modalRef.current?.modalId
+                        : undefined
+                    }
+                    onClick={(e) => {
+                      !!condition.program_area_name &&
+                        modalRef.current?.toggleModal(e, true);
+                    }}
+                    onChange={(e) => {
+                      setConditionCategories({
+                        ...conditionCategories,
+                        [category]: conditionCategories[category].map((c) =>
+                          c.code === condition.code
+                            ? { ...c, checked: e.target.checked }
+                            : c,
+                        ),
+                      });
+                    }}
+                  />
+                  {!!condition.program_area_name && (
+                    <span className="text-base">
+                      Condition in {condition.program_area_name}
+                    </span>
+                  )}
+                </div>
               </React.Fragment>
             ))}
           </>
@@ -230,6 +254,35 @@ const ConditionFieldSet = ({
         }
         items={accordionItems}
       />
+      <Modal
+        id="confirm-condition"
+        ref={modalRef}
+        aria-labelledby="confirm-condition-heading"
+        aria-describedby="confirm-condition-description"
+      >
+        <ModalHeading id="confirm-condition-heading">
+          Are you sure?
+        </ModalHeading>
+        <p id="confirm-condition-description">
+          This condition is already assigned to a program area.
+        </p>
+
+        <ModalFooter>
+          <ButtonGroup>
+            <ModalToggleButton modalRef={modalRef} closer={true}>
+              Continue without saving
+            </ModalToggleButton>
+            <ModalToggleButton
+              modalRef={modalRef}
+              closer={true}
+              unstyled={true}
+              className="padding-105 text-center"
+            >
+              Go back
+            </ModalToggleButton>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
     </FieldSet>
   );
 };
