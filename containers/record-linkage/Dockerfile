@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12.10-alpine
 
 RUN apt-get update && \
     apt-get upgrade -y \
