@@ -115,7 +115,9 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     if (releaseVersion === "2016-12-01") {
       return "R1.1 (2016-12-01)";
     } else if (releaseVersion === "2021-01-01") {
-      return "R3.1 (2021-01-01)";
+      return "R3 (2021-01-01)";
+    } else if (releaseVersion === "2022-05-01") {
+      return "R3.1 (2022-05-01)";
     } else {
       return releaseVersion;
     }
