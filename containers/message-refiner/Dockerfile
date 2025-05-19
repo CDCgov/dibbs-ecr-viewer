@@ -1,7 +1,7 @@
 FROM python:3.13.3-alpine
 
 RUN apk update && \
-    apk upgrade
+    apk upgrade --no-cache
 
 RUN pip install --upgrade pip  --break-system-packages
 
