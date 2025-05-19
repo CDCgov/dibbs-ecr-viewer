@@ -4,7 +4,7 @@ import { AnyDb } from "@/app/data/metadataDb/database";
 import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 
 /**
- * Add condition_code column and foreign key constraint to ecr_rr_conditions.
+ * fks to core schema.
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
@@ -39,7 +39,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 }
 
 /**
- * Roll back condition_code addition to ecr_rr_conditions.
+ * Roll back fks to core schema.
  * @param db - the database connection
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
