@@ -126,7 +126,7 @@
         }
       },
       "code": {
-        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.text, Observation.valueCodeableConcept.coding.value)",
+        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.text, Observation.valueCodeableConcept.coding.code)",
         "data_type": "string",
         "nullable": true,
         "metadata": {
