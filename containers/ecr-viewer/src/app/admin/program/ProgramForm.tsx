@@ -11,7 +11,7 @@ import {
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
-import { createProgramArea } from "@/app/services/programAreaService";
+import { toKebabCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
@@ -43,14 +43,17 @@ const groupByCategory = (conditions: FormCondition[]) => {
  * @param props React props
  * @param props.initValues Initial values the form is set to
  * @param props.action Action of the form (e.g. "Create", "Edit")
+ * @param props.submitAction Handler for the submitted data
  * @returns Program area add/edit form
  */
 export const ProgramForm = ({
   action,
   initValues,
+  submitAction,
 }: {
   action: string;
   initValues: FormValues;
+  submitAction: (name: string, conditions: string[]) => Promise<void>;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
@@ -70,7 +73,7 @@ export const ProgramForm = ({
       action={`${action} program area`}
       formValid={valid}
       submitAction={async () => {
-        await createProgramArea(name, selectedConditions);
+        await submitAction(name, selectedConditions);
       }}
       successRoute="/admin/program"
     >
@@ -204,8 +207,8 @@ const ConditionFieldSet = ({
             ))}
           </>
         ),
-        id: category,
-        expanded: !!expandedCategories[category],
+        id: toKebabCase(category),
+        expanded: !!expandedCategories[toKebabCase(category)],
         headingLevel: "h3",
       };
     });
@@ -223,10 +226,10 @@ const ConditionFieldSet = ({
       <ExpandCollapseAccordionControlled
         descriptor="condition categories"
         className="accordion-dibbs margin-top-3"
-        handleToggle={(category) =>
+        handleToggle={(categoryId) =>
           setExpandedCategories({
             ...expandedCategories,
-            [category]: !expandedCategories[category],
+            [categoryId]: !expandedCategories[categoryId],
           })
         }
         handleToggleAll={(expanded) =>
@@ -241,7 +244,7 @@ const ConditionFieldSet = ({
 const keysToBoolean = <T extends object>(obj: T, val: boolean) => {
   return Object.keys(obj).reduce(
     (acc, cur) => {
-      acc[cur] = val;
+      acc[toKebabCase(cur)] = val;
       return acc;
     },
     {} as Record<string, boolean>,

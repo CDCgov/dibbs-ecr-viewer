@@ -41,6 +41,8 @@ td {
   width: 100%;
   max-width: $content-container-max-width;
   min-width: $content-container-min-width;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 @keyframes shimmer {

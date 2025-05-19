@@ -43,6 +43,7 @@ describe("ProgramForm", () => {
             },
           ],
         }}
+        submitAction={async () => {}}
       />,
     );
 
@@ -126,6 +127,7 @@ describe("ProgramForm", () => {
             },
           ],
         }}
+        submitAction={async () => {}}
       />,
     );
 
