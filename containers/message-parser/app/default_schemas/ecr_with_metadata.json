@@ -125,8 +125,8 @@
           "category": "RR Reportability Information"
         }
       },
-      "condition_code": {
-        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.text, Observation.valueCodeableConcept.coding.display)",
+      "code": {
+        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.text, Observation.valueCodeableConcept.coding.value)",
         "data_type": "string",
         "nullable": true,
         "metadata": {
