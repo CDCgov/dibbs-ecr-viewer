@@ -186,19 +186,23 @@ exports[`Program Admin Page Creating programs should render a create program pag
               id="category"
             >
               <button
-                class="usa-button usa-button--outline"
+                aria-controls="condition-456 condition-789"
+                class="usa-button usa-button--outline margin-top-0"
                 data-testid="button"
                 type="button"
               >
-                Select all
+                Select
+                 all
               </button>
               <button
+                aria-controls="condition-456 condition-789"
                 class="usa-button usa-button--outline margin-top-0"
                 data-testid="button"
                 disabled=""
                 type="button"
               >
-                Deselect all
+                Deselect
+                 all
               </button>
               <div
                 class="usa-checkbox"

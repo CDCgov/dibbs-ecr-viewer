@@ -150,39 +150,32 @@ const ConditionFieldSet = ({
         ),
         content: (
           <>
-            <Button
-              type="button"
-              outline={true}
-              disabled={numSelected === numConditions}
-              onClick={() =>
-                setConditionCategories({
-                  ...conditionCategories,
-                  [category]: conditionCategories[category].map((c) => ({
-                    ...c,
-                    checked: true,
-                  })),
-                })
-              }
-            >
-              Select all
-            </Button>
-            <Button
-              type="button"
-              outline={true}
-              disabled={numSelected === 0}
-              className="margin-top-0"
-              onClick={() =>
-                setConditionCategories({
-                  ...conditionCategories,
-                  [category]: conditionCategories[category].map((c) => ({
-                    ...c,
-                    checked: false,
-                  })),
-                })
-              }
-            >
-              Deselect all
-            </Button>
+            {[
+              { type: "Select", checked: true, disabledCount: numConditions },
+              { type: "Deselect", checked: false, disabledCount: 0 },
+            ].map(({ type, checked, disabledCount }) => (
+              <Button
+                key={type}
+                type="button"
+                outline={true}
+                disabled={numSelected === disabledCount}
+                onClick={() =>
+                  setConditionCategories({
+                    ...conditionCategories,
+                    [category]: conditionCategories[category].map((c) => ({
+                      ...c,
+                      checked,
+                    })),
+                  })
+                }
+                aria-controls={conditions
+                  .map(({ code }) => `condition-${code}`)
+                  .join(" ")}
+                className="margin-top-0"
+              >
+                {type} all
+              </Button>
+            ))}
             {conditions.map((condition, i) => (
               <React.Fragment key={`condition-${condition.code}`}>
                 {i !== 0 && <div className="section__line_light_gray" />}
