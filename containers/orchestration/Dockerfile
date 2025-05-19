@@ -7,7 +7,7 @@ ARG SMARTY_AUTH_TOKEN
 FROM python:3.13.3-alpine
 
 RUN apk update && \
-    apk upgrade &&
+    apk upgrade
 
 RUN pip install --upgrade pip --break-system-packages
 

@@ -1,7 +1,7 @@
 FROM python:3.12.10-alpine
 
 RUN apk update && \
-    apk upgrade && \
+    apk upgrade \
     apk add --no-cache \
         postgresql-dev \
         gcc \
