@@ -158,42 +158,25 @@ exports[`Program Admin Page Creating programs should render a create program pag
                 type="button"
               >
                 <div
-                  class="display-flex flex-justify"
+                  class="display-flex flex-justify flex-align-center"
                 >
-                  <div
-                    class="usa-checkbox"
-                    data-testid="checkbox"
-                  >
-                    <input
-                      class="usa-checkbox__input"
-                      id="checkbox-category"
-                      name="category"
-                      type="checkbox"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="checkbox-category"
+                  <div>
+                    <strong>
+                      category
+                    </strong>
+                    <br />
+                    <span
+                      class="text-base"
                     >
-                      <div>
-                        <strong>
-                          category
-                        </strong>
-                        <br />
-                        <span
-                          class="text-base"
-                        >
-                          RCKMS condition category
-                        </span>
-                      </div>
-                    </label>
+                      RCKMS condition category
+                    </span>
                   </div>
-                  <p>
+                  <span>
                     0
                     /
                     2
-                     
-                    conditions selected
-                  </p>
+                     conditions selected
+                  </span>
                 </div>
               </button>
             </h3>
@@ -202,6 +185,21 @@ exports[`Program Admin Page Creating programs should render a create program pag
               data-testid="accordionItem_category"
               id="category"
             >
+              <button
+                class="usa-button usa-button--outline"
+                data-testid="button"
+                type="button"
+              >
+                Select all
+              </button>
+              <button
+                class="usa-button usa-button--outline margin-top-0"
+                data-testid="button"
+                disabled=""
+                type="button"
+              >
+                Deselect all
+              </button>
               <div
                 class="usa-checkbox"
                 data-testid="checkbox"

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { notFound } from "next/navigation";
 
@@ -119,7 +119,11 @@ describe("Program Admin Page", () => {
       ]);
       const { container } = render(await ProgramCreatePage());
       expect(container).toMatchSnapshot();
-      expect(await axe(container)).toHaveNoViolations();
+      let results;
+      await act(async () => {
+        results = await axe(container);
+      });
+      expect(results).toHaveNoViolations();
     });
   });
 });

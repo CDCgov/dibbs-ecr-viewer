@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
 
-import { Checkbox, RequiredMarker, TextInput } from "@trussworks/react-uswds";
+import {
+  Button,
+  Checkbox,
+  RequiredMarker,
+  TextInput,
+} from "@trussworks/react-uswds";
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
@@ -124,40 +129,81 @@ const ConditionFieldSet = ({
     .sort()
     .map((category) => {
       const conditions = conditionCategories[category];
+      const numConditions = conditions.length;
+      const numSelected = conditions.filter(({ checked }) => checked).length;
       return {
         title: (
-          <CategoryTitle
-            category={category}
-            conditions={conditions}
-            onChecked={(checked) => {
-              const nextConditionCategories = {
-                ...conditionCategories,
-                [category]: conditionCategories[category].map((c) => ({
-                  ...c,
-                  checked,
-                })),
-              };
-              setConditionCategories(nextConditionCategories);
-            }}
-          />
+          <div className="display-flex flex-justify flex-align-center">
+            <div>
+              <strong>{category}</strong>
+              <br />
+              <span className="text-base">RCKMS condition category</span>
+            </div>
+
+            <span>
+              {numSelected}/{numConditions} conditions selected
+            </span>
+          </div>
         ),
-        content: conditions.map((condition, i) => (
-          <React.Fragment key={`condition-${condition.code}`}>
-            {i !== 0 && <div className="section__line_light_gray" />}
-            <ConditionCheckBox
-              condition={condition}
-              onChecked={(checked) => {
-                const nextConditionCategories = {
+        content: (
+          <>
+            <Button
+              type="button"
+              outline={true}
+              disabled={numSelected === numConditions}
+              onClick={() =>
+                setConditionCategories({
                   ...conditionCategories,
-                  [category]: conditionCategories[category].map((c) =>
-                    c.code === condition.code ? { ...c, checked } : c,
-                  ),
-                };
-                setConditionCategories(nextConditionCategories);
-              }}
-            />
-          </React.Fragment>
-        )),
+                  [category]: conditionCategories[category].map((c) => ({
+                    ...c,
+                    checked: true,
+                  })),
+                })
+              }
+            >
+              Select all
+            </Button>
+            <Button
+              type="button"
+              outline={true}
+              disabled={numSelected === 0}
+              className="margin-top-0"
+              onClick={() =>
+                setConditionCategories({
+                  ...conditionCategories,
+                  [category]: conditionCategories[category].map((c) => ({
+                    ...c,
+                    checked: false,
+                  })),
+                })
+              }
+            >
+              Deselect all
+            </Button>
+            {conditions.map((condition, i) => (
+              <React.Fragment key={`condition-${condition.code}`}>
+                {i !== 0 && <div className="section__line_light_gray" />}
+                <Checkbox
+                  id={`condition-${condition.code}`}
+                  name="conditions"
+                  value={condition.code}
+                  label={condition.condition_name}
+                  checked={condition.checked === true}
+                  onChange={(e) =>
+                    setConditionCategories({
+                      ...conditionCategories,
+                      [category]: conditionCategories[category].map((c) =>
+                        c.code === condition.code
+                          ? { ...c, checked: e.target.checked }
+                          : c,
+                      ),
+                    })
+                  }
+                />
+              </React.Fragment>
+            ))}
+          </>
+        ),
         id: category,
         expanded: !!expandedCategories[category],
         headingLevel: "h3",
@@ -189,58 +235,6 @@ const ConditionFieldSet = ({
         items={accordionItems}
       />
     </FieldSet>
-  );
-};
-
-const CategoryTitle = ({
-  category,
-  conditions,
-  onChecked,
-}: {
-  category: string;
-  conditions: FormCondition[];
-  onChecked: (checked: boolean) => void;
-}) => {
-  return (
-    <div className="display-flex flex-justify">
-      <Checkbox
-        name="category"
-        id={`checkbox-${category}`}
-        label={
-          <div>
-            <strong>{category}</strong>
-            <br />
-            <span className="text-base">RCKMS condition category</span>
-          </div>
-        }
-        checked={conditions.every(({ checked }) => !!checked)}
-        onChange={(e) => onChecked(e.target.checked)}
-      />
-
-      <p>
-        {conditions.filter(({ checked }) => checked).length}/{conditions.length}{" "}
-        conditions selected
-      </p>
-    </div>
-  );
-};
-
-const ConditionCheckBox = ({
-  condition,
-  onChecked,
-}: {
-  condition: FormCondition;
-  onChecked: (checked: boolean) => void;
-}) => {
-  return (
-    <Checkbox
-      id={`condition-${condition.code}`}
-      name="conditions"
-      value={condition.code}
-      label={condition.condition_name}
-      checked={condition.checked === true}
-      onChange={(e) => onChecked(e.target.checked)}
-    />
   );
 };
 
