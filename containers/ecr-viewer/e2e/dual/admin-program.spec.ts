@@ -34,10 +34,15 @@ test.describe("program management page", () => {
     }).analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
-    await page.getByLabel("Program area name").fill("Interesting Conditions");
+    // Find a random condition (avoid clashes in parallel tests)
+    const checkboxes = await page.getByRole("checkbox").all();
+    const index = Math.floor(Math.random() * checkboxes.length);
+    const checkbox = checkboxes[index];
+    const conditionName = await checkbox.inputValue();
+    await checkbox.scrollIntoViewIfNeeded();
+    await checkbox.dispatchEvent("click");
 
-    await page.getByLabel("Mpox").scrollIntoViewIfNeeded();
-    await page.getByLabel("Mpox").dispatchEvent("click");
+    page.getByLabel("Program area name").fill(conditionName);
 
     await page
       .getByRole("button", { name: "Create program area" })
@@ -46,6 +51,6 @@ test.describe("program management page", () => {
 
     await page.waitForURL("/ecr-viewer/admin/program");
     await expect(page.getByText("Program management")).toBeVisible();
-    await expect(page.getByText("Interesting Conditions")).toBeVisible();
+    await expect(page.getByText(conditionName)).toBeVisible();
   });
 });
