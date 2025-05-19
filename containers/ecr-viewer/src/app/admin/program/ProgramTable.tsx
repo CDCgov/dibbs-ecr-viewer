@@ -63,7 +63,7 @@ export const ProgramTable = ({
         subtitle={`Created on ${formatDateTime(
           selectedProgramArea?.date_created.toISOString(),
         )}`}
-        description="Program Area Information"
+        description="Program area information"
         details={[
           {
             title: "Name",
@@ -75,12 +75,16 @@ export const ProgramTable = ({
               selectedProgramArea?.conditions.length === 0 ? (
                 "No conditions assigned"
               ) : (
-                // TODO: style this!
-                <ul>
+                <ul className="add-list-reset">
                   {selectedProgramArea?.conditions
                     .sort()
                     .map(({ condition_name, code }) => (
-                      <li key={code}>{condition_name}</li>
+                      <li
+                        key={code}
+                        className="border-bottom border-base-lightest padding-y-1"
+                      >
+                        {condition_name}
+                      </li>
                     ))}
                 </ul>
               ),
