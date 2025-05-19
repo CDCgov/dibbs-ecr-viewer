@@ -316,7 +316,7 @@ const saveRR = async (
         uuid: rr_conditions_uuid,
         eicr_id: ecrId,
         condition: rrItem.condition,
-        condition_code: rrItem.condition_code,
+        condition_code: rrItem.code,
       })
       .execute();
     // Loop through the rule summaries array

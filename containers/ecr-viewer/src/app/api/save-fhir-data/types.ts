@@ -41,7 +41,7 @@ interface ruleSummary {
 
 interface RR {
   condition: string;
-  condition_code: string | undefined;
+  code: string | undefined;
   rule_summaries: ruleSummary[];
 }
 
