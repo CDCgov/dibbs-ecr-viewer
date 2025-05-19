@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { ReactNode, RefObject, useRef, useState } from "react";
 
 import {
   Button,
@@ -134,6 +134,34 @@ const ConditionFieldSet = ({
     Record<string, boolean>
   >(keysToBoolean(conditionCategories, true));
   const modalRef = useRef<ModalRef>(null);
+  const [confirmingCondition, setConfirmingCondtion] =
+    useState<FormCondition | null>(null);
+  const [confirmingCategory, setConfirmingCategory] = useState<string | null>(
+    null,
+  );
+
+  const setCondition = (
+    category: string,
+    condition: FormCondition,
+    checked: boolean,
+  ) => {
+    setConditionCategories({
+      ...conditionCategories,
+      [category]: conditionCategories[category].map((c) =>
+        c.code === condition.code ? { ...c, checked } : c,
+      ),
+    });
+  };
+
+  const setCategory = (category: string, checked: boolean) => {
+    setConditionCategories({
+      ...conditionCategories,
+      [category]: conditionCategories[category].map((c) => ({
+        ...c,
+        checked,
+      })),
+    });
+  };
 
   const accordionItems: AccordionItem[] = Object.keys(conditionCategories)
     .sort()
@@ -158,24 +186,26 @@ const ConditionFieldSet = ({
         content: (
           <>
             {[
-              { type: "Select", checked: true, disabledCount: numConditions },
-              { type: "Deselect", checked: false, disabledCount: 0 },
-            ].map(({ type, checked, disabledCount }) => (
+              { type: "Select", checked: true },
+              { type: "Deselect", checked: false },
+            ].map(({ type, checked }) => (
               <Button
                 key={type}
                 type="button"
                 outline={true}
-                disabled={numSelected === disabledCount}
-                onClick={() =>
-                  // TODO handle when one of the conditions is assigned
-                  setConditionCategories({
-                    ...conditionCategories,
-                    [category]: conditionCategories[category].map((c) => ({
-                      ...c,
-                      checked,
-                    })),
-                  })
-                }
+                onClick={(e) => {
+                  if (
+                    !checked ||
+                    conditions.every(
+                      ({ program_area_name }) => !program_area_name,
+                    )
+                  ) {
+                    setCategory(category, checked);
+                  } else {
+                    setConfirmingCategory(category);
+                    modalRef.current?.toggleModal(e, true);
+                  }
+                }}
                 aria-controls={conditions
                   .map(({ code }) => `condition-${code}`)
                   .join(" ")}
@@ -200,18 +230,20 @@ const ConditionFieldSet = ({
                         : undefined
                     }
                     onClick={(e) => {
-                      !!condition.program_area_name &&
-                        modalRef.current?.toggleModal(e, true);
+                      // modal requires click event
+                      if (!condition.program_area_name || condition.checked)
+                        return;
+
+                      setConfirmingCondtion(condition);
+                      setConfirmingCategory(category);
+                      modalRef.current?.toggleModal(e, true);
                     }}
                     onChange={(e) => {
-                      setConditionCategories({
-                        ...conditionCategories,
-                        [category]: conditionCategories[category].map((c) =>
-                          c.code === condition.code
-                            ? { ...c, checked: e.target.checked }
-                            : c,
-                        ),
-                      });
+                      // React requires on change handler
+                      if (!!condition.program_area_name && !condition.checked)
+                        return;
+
+                      setCondition(category, condition, e.target.checked);
                     }}
                   />
                   {!!condition.program_area_name && (
@@ -259,29 +291,73 @@ const ConditionFieldSet = ({
         ref={modalRef}
         aria-labelledby="confirm-condition-heading"
         aria-describedby="confirm-condition-description"
+        forceAction={true}
       >
-        <ModalHeading id="confirm-condition-heading">
-          Are you sure?
-        </ModalHeading>
-        <p id="confirm-condition-description">
-          This condition is already assigned to a program area.
-        </p>
+        {confirmingCategory &&
+          (confirmingCondition ? (
+            <>
+              <ModalHeading id="confirm-condition-heading">
+                Are you sure you want to add{" "}
+                {confirmingCondition?.condition_name}?
+              </ModalHeading>
+              <div id="confirm-condition-description">
+                <p>
+                  A condition can only live in one program area. If you add{" "}
+                  {confirmingCondition?.condition_name} to this program area, it
+                  will be removed from the program area,{" "}
+                  {confirmingCondition?.program_area_name}.
+                </p>
 
-        <ModalFooter>
-          <ButtonGroup>
-            <ModalToggleButton modalRef={modalRef} closer={true}>
-              Continue without saving
-            </ModalToggleButton>
-            <ModalToggleButton
-              modalRef={modalRef}
-              closer={true}
-              unstyled={true}
-              className="padding-105 text-center"
-            >
-              Go back
-            </ModalToggleButton>
-          </ButtonGroup>
-        </ModalFooter>
+                <p>Are you sure you want to continue?</p>
+              </div>
+              <ConfirmationFooter
+                modalRef={modalRef}
+                onClick={() => {
+                  setCondition(confirmingCategory!, confirmingCondition!, true);
+                  setConfirmingCondtion(null);
+                  setConfirmingCategory(null);
+                }}
+              >
+                Yes, add condition
+              </ConfirmationFooter>
+            </>
+          ) : (
+            <>
+              <ModalHeading id="confirm-condition-heading">
+                Are you sure you want to add all conditions from{" "}
+                {confirmingCategory}?
+              </ModalHeading>
+              <div id="confirm-condition-description">
+                <p>
+                  A condition can only live in one program area. If you add the
+                  below conditions to this program area, they will be removed
+                  from their program areas.
+                </p>
+
+                <ul>
+                  {conditionCategories[confirmingCategory]
+                    .filter((c) => !!c.program_area_name)
+                    .map(({ condition_name, program_area_name }) => (
+                      <li key={condition_name}>
+                        {condition_name}, {program_area_name}
+                      </li>
+                    ))}
+                </ul>
+
+                <p>Are you sure you want to continue?</p>
+              </div>
+
+              <ConfirmationFooter
+                modalRef={modalRef}
+                onClick={() => {
+                  setCategory(confirmingCategory!, true);
+                  setConfirmingCategory(null);
+                }}
+              >
+                Yes, add all conditions
+              </ConfirmationFooter>
+            </>
+          ))}
       </Modal>
     </FieldSet>
   );
@@ -294,5 +370,34 @@ const keysToBoolean = <T extends object>(obj: T, val: boolean) => {
       return acc;
     },
     {} as Record<string, boolean>,
+  );
+};
+
+const ConfirmationFooter = ({
+  onClick,
+  children,
+  modalRef,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+  modalRef: RefObject<ModalRef>;
+}) => {
+  return (
+    <ModalFooter>
+      <ButtonGroup className="flex-justify-end">
+        <ModalToggleButton
+          modalRef={modalRef}
+          closer={true}
+          outline={true}
+          data-focus={true}
+          className="padding-105 text-center"
+        >
+          Cancel
+        </ModalToggleButton>
+        <ModalToggleButton modalRef={modalRef} closer={true} onClick={onClick}>
+          {children}
+        </ModalToggleButton>
+      </ButtonGroup>
+    </ModalFooter>
   );
 };
