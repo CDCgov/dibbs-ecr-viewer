@@ -2,7 +2,10 @@
  * @jest-environment node
  */
 
-import { processZip } from "@/app/api/process-zip/service";
+import {
+  getOrchestrationResponse,
+  orchestrationRequest,
+} from "@/app/api/process-ecr/service";
 import {
   saveFhirData,
   saveWithMetadata,
@@ -12,8 +15,10 @@ import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 jest.mock("../../../api/save-fhir-data/service");
 jest.mock("../../../data/metadataDb/database");
 
-describe("processZip", () => {
-  const mockFile = new File(["content"], "test.zip");
+describe("orchestrationRequest", () => {
+  const mockFile = new File(["content"], "test.zip", {
+    type: "application/zip",
+  });
   const mockEcr = { entry: [{ resource: { id: "123" } }] };
   const mockMetadata = { key: "value" };
 
@@ -39,7 +44,7 @@ describe("processZip", () => {
       message: "Success",
     });
 
-    const response = await processZip(mockFile);
+    const response = await orchestrationRequest({ ecr: mockFile }, false);
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
@@ -64,7 +69,7 @@ describe("processZip", () => {
       message: "Success",
     });
 
-    const response = await processZip(mockFile);
+    const response = await orchestrationRequest({ ecr: mockFile }, false);
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
@@ -84,7 +89,7 @@ describe("processZip", () => {
       message: "Success",
     });
 
-    const response = await processZip(mockFile, true);
+    const response = await orchestrationRequest({ ecr: mockFile }, true);
 
     expect(response).toStrictEqual({
       status: 200,
@@ -101,11 +106,106 @@ describe("processZip", () => {
     });
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    const response = await processZip(mockFile);
+    const response = await orchestrationRequest({ ecr: mockFile }, false);
 
     expect(response).toEqual({
       message: "Failed to process orchestration response",
       status: 500,
+    });
+  });
+
+  describe("getOrchestrationResponse", () => {
+    it("should call process zip when ecr is a zip", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({ ecr: mockFile });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-zip");
+      expect(args[1].body).toBeInstanceOf(FormData);
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toBeArrayOfSize(0);
+    });
+
+    it("should handle string contents", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({ ecr: "ecr", rr: "rr" });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-message");
+      const body = args[1].body;
+      expect(body).toEqual(
+        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr","rr_data":"rr"}',
+      );
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toStrictEqual([
+        ["content-type", "application/json"],
+      ]);
+    });
+
+    it("should handle File contents", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({
+        ecr: new File(["ecr"], "ecr.xml"),
+        rr: new File(["rr"], "rr.xml"),
+      });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-message");
+      const body = args[1].body;
+      expect(body).toEqual(
+        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr","rr_data":"rr"}',
+      );
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toStrictEqual([
+        ["content-type", "application/json"],
+      ]);
+    });
+
+    it("should handle undefined rr", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        status: 200,
+        json: jest.fn().mockResolvedValue({
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        }),
+      });
+
+      await getOrchestrationResponse({
+        ecr: new File(["ecr"], "ecr.xml"),
+        rr: undefined,
+      });
+      const args = (global.fetch as jest.Mock).mock.calls[0];
+      expect(args[0]).toEndWith("process-message");
+      const body = args[1].body;
+      expect(body).toEqual(
+        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr"}',
+      );
+      const headers = args[1].headers;
+      expect([...headers.entries()]).toStrictEqual([
+        ["content-type", "application/json"],
+      ]);
     });
   });
 
@@ -132,7 +232,7 @@ describe("processZip", () => {
       delete process.env.METADATA_DATABASE_TYPE;
       delete process.env.METADATA_DATABASE_SCHEMA;
 
-      await processZip(mockFile);
+      await orchestrationRequest({ ecr: mockFile }, false);
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -143,7 +243,7 @@ describe("processZip", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "extended";
 
-      await processZip(mockFile);
+      await orchestrationRequest({ ecr: mockFile }, false);
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -154,7 +254,7 @@ describe("processZip", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "core";
 
-      await processZip(mockFile);
+      await orchestrationRequest({ ecr: mockFile }, false);
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
