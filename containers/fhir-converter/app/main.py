@@ -228,7 +228,10 @@ def add_rr_data_to_eicr(rr, ecr):
     ecr_version = ecr.xpath('//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension')[0]
     if ecr_version == "2021-01-01" or ecr_version == "2022-05-01":
         namespaces = {"hl7": "urn:hl7-org:v3"}
-        rr_from_eicr = ecr.xpath('//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',namespaces=namespaces)[0]
+        rr_from_eicr = ecr.xpath(
+            '//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',
+            namespaces=namespaces,
+        )[0]
 
         if rr_from_eicr:
             rr_from_eicr_parent = rr_from_eicr.getparent()
