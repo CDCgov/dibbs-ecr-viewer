@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { dbIsValid } from "./api/migrate-db/migrate";
 import { MetadataDbInvalid } from "./components/ErrorPage";
 import Filters from "./components/Filters";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { EcrTableLoading } from "./components/table/TableContentLoading";
@@ -108,6 +109,7 @@ const HomePage = async ({
           </EcrTableWrapper>
         </EcrPaginationWrapper>
       </main>
+      <Footer/>
     </div>
   );
 };

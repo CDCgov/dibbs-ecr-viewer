@@ -1,6 +1,7 @@
 import React from "react";
 
 import { BackButton } from "./BackButton";
+import Footer from "./Footer";
 import Header from "./Header";
 import { Error } from "./Icon";
 
@@ -41,6 +42,7 @@ const ErrorPage = ({
         <BackButton className="margin-top-3 font-sans-md text-primary" />
       </div>
     </main>
+    <Footer/>
   </div>
 );
 

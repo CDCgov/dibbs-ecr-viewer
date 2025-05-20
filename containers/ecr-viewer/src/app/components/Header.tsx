@@ -21,7 +21,7 @@ const Header: React.FC = () => (
         <div className="usa-logo">
           <h1>
             <Link href="/" prefetch={false}>
-              DIBBs eCR Viewer
+              eCR Viewer
             </Link>
           </h1>
         </div>
