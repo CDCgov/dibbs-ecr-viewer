@@ -23,6 +23,12 @@ export const createProgramArea = async (
 ): Promise<string> => {
   const creatingUser = await getCheckAdmin("create program areas");
 
+  if (name.trim().length < 2 || conditions.length === 0) {
+    throw new Error(
+      "Invalid program area. Must have a non-empty name and at least one condition assigned.",
+    );
+  }
+
   try {
     const uuid = randomUUID();
     await getDb<Core>()
