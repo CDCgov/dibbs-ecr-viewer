@@ -45,22 +45,58 @@ const getOrchestrationConfigName = () => {
   }
 };
 
+interface RequestBody {
+  ecr: File | string;
+  rr?: File | string;
+}
+
+const asString = async (v: string | File | undefined) =>
+  v instanceof File ? await v.text() : v;
+
 /**
  * Make a request to orchestration /process-zip endpoint
- * @param file - the file to send to orchestration
+ * @param rawBodyEntries - raw body entries
+ * @param rawBodyEntries.ecr - ecr data
+ * @param rawBodyEntries.rr - rr data
  * @returns orchestration response
  */
-const getOrchestrationResponse = async (file: File): Promise<BundleInfo> => {
-  const formData = new FormData();
-  formData.append("message_type", "ecr");
-  formData.append("include_error_types", "[errors]");
-  formData.append("config_file_name", getOrchestrationConfigName());
-  formData.append("data_type", "zip");
-  formData.append("upload_file", file);
+export const getOrchestrationResponse = async ({
+  ecr,
+  rr,
+}: RequestBody): Promise<BundleInfo> => {
+  const bodyObj: Record<string, string | File | undefined> = {
+    message_type: "ecr",
+    include_error_types: "[errors]",
+    config_file_name: getOrchestrationConfigName(),
+  };
+  let endpoint = "process-message";
+  if (ecr instanceof File && ecr.type === "application/zip") {
+    endpoint = "process-zip";
+    bodyObj.data_type = "zip";
+    bodyObj.upload_file = ecr;
+  } else {
+    bodyObj.data_type = "ecr";
+    bodyObj.message = await asString(ecr);
+    bodyObj.rr_data = await asString(rr);
+  }
 
-  const response = await fetch(`${process.env.ORCHESTRATION_URL}/process-zip`, {
+  let body: string | FormData;
+  const headers = new Headers();
+  if (endpoint === "process-zip") {
+    const formData = new FormData();
+    for (const [k, v] of Object.entries(bodyObj)) {
+      !!v && formData.append(k, v);
+    }
+    body = formData;
+  } else {
+    body = JSON.stringify(bodyObj);
+    headers.append("content-type", "application/json");
+  }
+
+  const response = await fetch(`${process.env.ORCHESTRATION_URL}/${endpoint}`, {
     method: "post",
-    body: formData,
+    body,
+    headers,
   });
 
   if (response.status !== 200) {
@@ -96,14 +132,17 @@ const saveToSource = (
 
 /**
  * Save the zip via orchestration
- * @param file - the file to send to orchestration
+ * @param body - Parsed body of the request
  * @param returnBundle - whether to return the fhir bundle (default false)
  * @returns An object containing the status and message.
  */
-export const processZip = async (file: File, returnBundle: boolean = false) => {
+export const orchestrationRequest = async (
+  body: RequestBody,
+  returnBundle: boolean = false,
+) => {
   let orchestrationResp: BundleInfo;
   try {
-    orchestrationResp = await getOrchestrationResponse(file);
+    orchestrationResp = await getOrchestrationResponse(body);
   } catch (error: unknown) {
     const message = "Failed to process orchestration response";
     console.error({ message, error });
