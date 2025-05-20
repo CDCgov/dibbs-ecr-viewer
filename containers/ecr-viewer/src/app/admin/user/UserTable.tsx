@@ -94,6 +94,7 @@ export const UserTable = ({
             : "Never"
         }`}
         description="User Information"
+        itemType="user"
         details={[
           {
             title: "Name",

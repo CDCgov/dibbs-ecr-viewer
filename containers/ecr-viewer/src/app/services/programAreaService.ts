@@ -1,4 +1,4 @@
-import "server-only";
+"use server";
 import { randomUUID } from "node:crypto";
 
 import { getDb } from "@/app/data/metadataDb/database";

@@ -2,6 +2,7 @@ import React, { ReactNode, RefObject, useId, useRef } from "react";
 
 import {
   Modal,
+  ModalFooter,
   ModalHeading,
   ModalRef,
   ModalToggleButton,
@@ -73,6 +74,8 @@ interface Detail {
  * @param props.subtitle Subtitle of the side panel (such as logged in date)
  * @param props.description Side panel description (usually generic)
  * @param props.detailsRef Ref linking the trigger(s) and panel - see `useDetailsRef`
+ * @param props.itemType string describing item type of details (e.g. "user")
+ * @param props.deleteAction Optional function to handle deleting the item. Adds delete button if available
  * @returns Side Panel component
  */
 export const DetailsSidePanel = ({
@@ -81,12 +84,16 @@ export const DetailsSidePanel = ({
   title,
   subtitle,
   description,
+  itemType,
+  deleteAction,
 }: {
   detailsRef: RefObject<ModalRef>;
   details: Detail[];
   title: string;
   subtitle: string;
   description: string;
+  itemType: string;
+  deleteAction?: () => Promise<void>;
 }) => {
   const id = useId();
 
@@ -122,7 +129,39 @@ export const DetailsSidePanel = ({
             ))}
           </dl>
         </section>
+        {deleteAction && <DeleteFooter itemType={itemType} />}
       </Modal>
     </ForceClient>
+  );
+};
+
+const DeleteFooter = ({ itemType }) => {
+  const id = useId();
+  const confirmRef = useRef<ModalRef>(null);
+
+  return (
+    <>
+      <ModalFooter className="botder-top border-base-light">
+        <ModalToggleButton type="button" modalRef={confirmRef}>
+          Remove {itemType}
+        </ModalToggleButton>
+      </ModalFooter>
+      <Modal
+        id={`delete-confirm-${id}`}
+        ref={confirmRef}
+        aria-labelledby={`delete-confirm-${id}-heading`}
+        aria-describedby={`delete-confirm-${id}-description`}
+      >
+        <ModalHeading id={`delete-confirm-${id}-heading`}>
+          Remove TODO USER?
+        </ModalHeading>
+        <p id={`delete-confirm-${id}-description`}>
+          Removing a user from the eCR Viewer is a permanent action. This cannot
+          be undone.
+        </p>
+        <p>This action will NOT edit or remove the user from AD.</p>
+        TODO CONFIRMATION FOOTER
+      </Modal>
+    </>
   );
 };

@@ -12,7 +12,10 @@ import {
 } from "@/app/components/table/PaginatedSortableTable";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
 import { formatDateTime } from "@/app/services/formatDateService";
-import { ListedProgramArea } from "@/app/services/programAreaService";
+import {
+  ListedProgramArea,
+  deleteProgramArea,
+} from "@/app/services/programAreaService";
 
 /**
  *
@@ -64,6 +67,10 @@ export const ProgramTable = ({
           selectedProgramArea?.date_created.toISOString(),
         )}`}
         description="Program area information"
+        itemType="program area"
+        deleteAction={async () => {
+          deleteProgramArea(selectedProgramArea?.uuid!);
+        }}
         details={[
           {
             title: "Name",
