@@ -5,6 +5,7 @@ import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
 import { Kysely } from "kysely";
+import { notFound } from "next/navigation";
 
 import { getDb } from "@/app/data/metadataDb/database";
 import {
@@ -55,6 +56,16 @@ export const getLoggedInUser = cache(async () => {
  */
 export const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
+
+/**
+ * If the logged in user is not an admin, force the page calling this to 404.
+ */
+export const notFoundUnlessAdmin = async () => {
+  const admin = await getLoggedInUser();
+  if (!isAdmin(admin)) {
+    notFound();
+  }
+};
 
 /**
  * Check the currently logged in user is an admin and return them. Throws
