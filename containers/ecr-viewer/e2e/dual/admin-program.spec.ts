@@ -15,23 +15,6 @@ test.describe("program management page", () => {
       page,
     }).analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
-
-    // TODO: enable these once we can create programs
-    // open up side panel
-    // await page.getByText("Interesting Conditions").click();
-    // await expect(page.getByText("Mpox")).toBeVisible();
-
-    // const accessibilityScanResultsSidePanel = await new AxeBuilder({
-    //   page,
-    // }).analyze();
-
-    // // axe struggles with the modal background, but all manual testing
-    // // points to contrast being fine
-    // const nonColorViolations =
-    //   accessibilityScanResultsSidePanel.violations.filter(
-    //     (v) => v.id !== "color-contrast",
-    //   );
-    // expect(nonColorViolations).toEqual([]);
   });
 
   test("should create a program", async ({ page }) => {
@@ -69,5 +52,21 @@ test.describe("program management page", () => {
     await page.waitForURL("/ecr-viewer/admin/program");
     await expect(page.getByText("Program management")).toBeVisible();
     await expect(page.getByText(conditionName)).toBeVisible();
+
+    // open up side panel
+    await page.getByText(conditionName).click();
+    await expect(page.getByText("Program area information")).toBeVisible();
+
+    const accessibilityScanResultsSidePanel = await new AxeBuilder({
+      page,
+    }).analyze();
+
+    // axe struggles with the modal background, but all manual testing
+    // points to contrast being fine
+    const nonColorViolations =
+      accessibilityScanResultsSidePanel.violations.filter(
+        (v) => v.id !== "color-contrast",
+      );
+    expect(nonColorViolations).toEqual([]);
   });
 });
