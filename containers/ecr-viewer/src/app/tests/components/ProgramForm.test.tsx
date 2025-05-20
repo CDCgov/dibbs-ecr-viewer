@@ -121,6 +121,26 @@ describe("ProgramForm", () => {
     expect(checkboxes[0]).not.toBeChecked();
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
+
+    // select the assigned in first cateogry
+    await user.click(screen.getByRole("checkbox", { name: "condition 2" }));
+    expect(
+      screen.getByText("Are you sure you want to add condition 2?"),
+    ).toBeVisible();
+    await user.click(
+      screen.getByRole("button", { name: "Yes, add condition" }),
+    );
+    expect(submitButtons[0]).not.toBeDisabled();
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    // select all (should go through without modal since only unchecked are unassigned)
+    await user.click(selectButtons[0]);
+    expect(submitButtons[0]).not.toBeDisabled();
+    expect(checkboxes[0]).toBeChecked();
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
   });
 
   it("should render a filled out form", async () => {

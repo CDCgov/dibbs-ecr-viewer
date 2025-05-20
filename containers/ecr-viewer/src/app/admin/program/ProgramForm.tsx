@@ -205,8 +205,10 @@ const ConditionFieldSet = ({
                   if (
                     !checked ||
                     conditions.every(
-                      ({ program_area_uuid }) =>
-                        !program_area_uuid || program_area_uuid === progUuid,
+                      (c) =>
+                        !c.program_area_uuid ||
+                        c.program_area_uuid === progUuid ||
+                        c.checked,
                     )
                   ) {
                     setCategory(category, checked);
@@ -238,23 +240,23 @@ const ConditionFieldSet = ({
                       label={condition.condition_name}
                       checked={condition.checked === true}
                       aria-controls={
-                        isAlreadyAssigned
+                        isAlreadyAssigned && !condition.checked
                           ? modalRef.current?.modalId
                           : undefined
                       }
                       onClick={(e) => {
                         // modal requires click event
-                        if (!isAlreadyAssigned) return;
-
-                        setConfirmingCondtion(condition);
-                        setConfirmingCategory(category);
-                        modalRef.current?.toggleModal(e, true);
+                        if (isAlreadyAssigned && !condition.checked) {
+                          setConfirmingCondtion(condition);
+                          setConfirmingCategory(category);
+                          modalRef.current?.toggleModal(e, true);
+                        }
                       }}
                       onChange={(e) => {
                         // React requires on change handler
-                        if (isAlreadyAssigned) return;
-
-                        setCondition(category, condition, e.target.checked);
+                        if (!isAlreadyAssigned || condition.checked) {
+                          setCondition(category, condition, e.target.checked);
+                        }
                       }}
                     />
                     {isAlreadyAssigned && (
