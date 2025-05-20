@@ -19,7 +19,7 @@ interface FormCondition extends ConditionReference {
   checked?: boolean;
 }
 
-type ConditionCateogires = Record<string, FormCondition[]>;
+type ConditionCategories = Record<string, FormCondition[]>;
 
 interface FormValues {
   name?: string;
@@ -35,7 +35,7 @@ const groupByCategory = (conditions: FormCondition[]) => {
       a.condition_name < b.condition_name ? -1 : 1,
     );
     return acc;
-  }, {} as ConditionCateogires);
+  }, {} as ConditionCategories);
 };
 
 /**
@@ -121,8 +121,8 @@ const ConditionFieldSet = ({
   numConditionsSelected,
 }: {
   numConditionsSelected: number;
-  conditionCategories: ConditionCateogires;
-  setConditionCategories: (c: ConditionCateogires) => void;
+  conditionCategories: ConditionCategories;
+  setConditionCategories: (c: ConditionCategories) => void;
 }) => {
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
