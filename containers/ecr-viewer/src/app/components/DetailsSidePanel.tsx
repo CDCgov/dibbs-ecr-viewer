@@ -142,7 +142,12 @@ const DeleteFooter = ({ itemType }) => {
   return (
     <>
       <ModalFooter className="botder-top border-base-light">
-        <ModalToggleButton type="button" modalRef={confirmRef}>
+        <ModalToggleButton
+          type="button"
+          modalRef={confirmRef}
+          opener={true}
+          closer={false}
+        >
           Remove {itemType}
         </ModalToggleButton>
       </ModalFooter>
