@@ -21,14 +21,14 @@ RUN dotnet publish \
   -o output
 
 # Set up python Server
-FROM python:3.13.3-alpine AS runtime
+FROM python:3.13-slim AS runtime
 
 # Copy FHIR-Converter binary from build stage
 COPY --from=build /build/FHIR-Converter/output /build/FHIR-Converter/output
 COPY --from=build /build/FHIR-Converter/data/Templates /build/FHIR-Converter/data/Templates
 
 # # Install python via pyenv
-RUN apk update && apk add --no-cache curl jq icu-dev
+RUN apt-get update && apt-get install -y curl jq libicu-dev
 
 # Get an up to date copy of active rxnorm codes and names
 RUN rm /build/FHIR-Converter/output/rxnorm.csv
