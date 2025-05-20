@@ -26,6 +26,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 1",
               condition_category: "first category",
               program_area_uuid: null,
+              program_area_name: null,
             },
             {
               code: "789",
@@ -33,6 +34,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 2",
               condition_category: "first category",
               program_area_uuid: "789",
+              program_area_name: "A Program Area",
             },
             {
               code: "123",
@@ -40,6 +42,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 3",
               condition_category: "other category",
               program_area_uuid: null,
+              program_area_name: null,
             },
           ],
         }}
@@ -109,6 +112,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 1",
               condition_category: "first category",
               program_area_uuid: null,
+              program_area_name: null,
             },
             {
               code: "789",
@@ -116,6 +120,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 2",
               condition_category: "first category",
               program_area_uuid: "789",
+              program_area_name: "A Program Area",
               checked: true,
             },
             {
@@ -124,6 +129,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 3",
               condition_category: "other category",
               program_area_uuid: null,
+              program_area_name: null,
             },
           ],
         }}
