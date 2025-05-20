@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { withApiTokenAuth } from "./middlewares/withApiTokenAuth";
 import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
+import { withProcessZipRewrite } from "./middlewares/withProcessZipRewrite";
 import { withUnauthorized } from "./middlewares/withUnauthorized";
 import { withUrlParamChecks } from "./middlewares/withUrlParamChecks";
 
@@ -69,7 +70,11 @@ const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
 /**
  * Composed middleware handlers
  */
-export default chainMiddleware([authMiddleware, withUrlParamChecks]);
+export default chainMiddleware([
+  authMiddleware,
+  withProcessZipRewrite,
+  withUrlParamChecks,
+]);
 
 export const config = {
   matcher: [
