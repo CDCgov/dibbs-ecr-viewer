@@ -10,6 +10,7 @@ import {
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
 import { toKebabCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
@@ -59,6 +60,7 @@ export const ProgramForm = ({
   const [conditionCategories, setConditionCategories] = useState(
     groupByCategory(initValues.conditions),
   );
+  const { createToast } = React.useContext(ToastContext);
 
   const selectedConditions = Object.values(conditionCategories)
     .flatMap((id) => id)
@@ -74,6 +76,7 @@ export const ProgramForm = ({
       formValid={valid}
       submitAction={async () => {
         await submitAction(name, selectedConditions);
+        createToast("I created a program!", "success");
       }}
       successRoute="/admin/program"
     >

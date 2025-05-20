@@ -39,6 +39,12 @@
   }
 }
 
+.usa-alert.toast {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .usa-button.usa-pagination__button:hover {
   border-bottom-width: 1px;
   border-bottom-style: solid;
