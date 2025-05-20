@@ -16,7 +16,7 @@ pydantic-settings
 pydantic>=2.0.0
 rapidfuzz
 requests
-setuptools>=70.0.0
+setuptools>=78.1.1
 smartystreets_python_sdk
 typing_extensions>=4.8.0
 urllib3
