@@ -166,7 +166,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
-          condition_code: "123",
+          code: "123",
           rule_summaries: [],
         },
       ],
@@ -190,7 +190,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
-          condition_code: "123",
+          code: "123",
           rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
         },
       ],
@@ -276,7 +276,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
-          condition_code: "123",
+          code: "123",
           rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
         },
       ],
