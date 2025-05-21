@@ -15,7 +15,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     .alterTable("ecr_rr_conditions")
     .addColumn("condition_code", "varchar(20)")
     .execute();
-  
+
   await _db.schema
     .alterTable("ecr_rr_conditions")
     .addForeignKeyConstraint(
