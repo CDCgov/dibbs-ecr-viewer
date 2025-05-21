@@ -12,7 +12,7 @@ import {
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { makePlural, toKebabCase } from "@/app/utils/format-utils";
+import { makePlural, toKebabCase, toTitleCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
@@ -126,26 +126,18 @@ const UserTypeFieldSet = ({
       <label className="usa-label">
         USER TYPE
         <RequiredMarker />
-        <Radio
-          label="Admin"
-          type="radio"
-          required={true}
-          name="userType"
-          id="userType-admin"
-          value="admin"
-          checked={userType === "admin"}
-          onChange={(e) => setUserType(e.target.value as UserType)}
-        />
-        <Radio
-          label="Standard"
-          type="radio"
-          required={true}
-          name="userType"
-          id="userType-standard"
-          value="standard"
-          checked={userType === "standard"}
-          onChange={(e) => setUserType(e.target.value as UserType)}
-        />
+        {["admin", "standard"].map((option) => (
+          <Radio
+            label={toTitleCase(option)}
+            type="radio"
+            required={true}
+            name="userType"
+            id={`userType-${option}`}
+            value={option}
+            checked={userType === option}
+            onChange={(e) => setUserType(e.target.value as UserType)}
+          />
+        ))}
       </label>
     </FieldSet>
   );
