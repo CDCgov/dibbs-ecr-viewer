@@ -15,6 +15,11 @@ import ReactDOM from "react-dom";
 
 import { Close } from "./Icon";
 
+// Fork: forceAction, modalRoot, and renderToPortal were removed as those
+// can cause some strange interaction effects with multi-modal usage and
+// we want to be more opinionated in the usage for the viewer. Add `onClose`
+// prop to allow event handling when the modal is closed for any reason
+// (e.g. escape, click on button, click on overlay)
 interface ModalComponentProps {
   id: string;
   children: React.ReactNode;
@@ -65,6 +70,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
   const tempPaddingRef = useRef<string>();
   const modalEl = useRef<HTMLDivElement>(null);
 
+  // Fork: handle multiple layers of aria-hidden-ing
   const NON_MODALS = `body > *:not(${modalRootSelector}):not([aria-hidden]:not([data-modal-hidden]))`;
   const NON_MODALS_HIDDEN = `[data-modal-hidden]`;
 
@@ -83,6 +89,8 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
     [id, isOpen],
   );
 
+  // Fork: add the `data-modal-count` attribute to the body and make the
+  // `data-modal-hidden` attribute a counter instead of a boolean
   const handleOpenEffect = () => {
     const { body } = document;
     body.style.paddingRight = tempPaddingRef.current || "";
@@ -96,6 +104,8 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
     });
   };
 
+  // Fork: only remove attributes when the last modal that added the attribute
+  // is closed
   const handleCloseEffect = () => {
     const { body } = document;
     const count = getAttributeCount(body, "data-modal-count");
@@ -179,6 +189,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
     },
   };
 
+  // Fork: add isolation: isolate style to ensure each modal's stack is independent
   const modal = (
     <FocusTrap active={isOpen} focusTrapOptions={focusTrapOptions}>
       <ModalWrapper
@@ -228,6 +239,8 @@ const useModal = (
     const clickedElement = e.target as Element;
 
     if (e && clickedElement) {
+      // Fork: this was updated to be more specific that the button was in
+      // its modal vs any modal
       if (clickedElement.closest(`${modalRootSelector} .usa-modal`)) {
         // Element is inside its modal
 
