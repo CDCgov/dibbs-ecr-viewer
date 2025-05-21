@@ -13,11 +13,20 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   await _db.schema
     .alterTable("ecr_rr_conditions")
-    .addColumn("condition_code", "varchar(20)", (cb) =>
-      cb.references("condition_reference.code"),
+    .addColumn("condition_code", "varchar(20)")
+    .execute();
+  
+  await _db.schema
+    .alterTable("ecr_rr_conditions")
+    .addForeignKeyConstraint(
+      "ecr_rr_conditions_fk_condition_code",
+      ["condition_code"],
+      "condition_reference",
+      ["code"],
     )
     .execute();
 
+  // Backfill condition_code for existing records
   if (dbDialect() === "postgres") {
     await _db
       .updateTable("ecr_rr_conditions")
@@ -62,6 +71,10 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
+  await _db.schema
+    .alterTable("ecr_rr_conditions")
+    .dropConstraint("ecr_rr_conditions_fk_condition_code")
+    .execute();
   await _db.schema
     .alterTable("ecr_rr_conditions")
     .dropColumn("condition_code")
