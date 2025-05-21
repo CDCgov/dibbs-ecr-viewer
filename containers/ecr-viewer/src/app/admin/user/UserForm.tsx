@@ -6,7 +6,7 @@ import {
   Checkbox,
   RequiredMarker,
   TextInput,
-  Radio
+  Radio,
 } from "@trussworks/react-uswds";
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
@@ -53,7 +53,7 @@ export const UserForm = ({
   submitAction: (
     email: string,
     userType: UserType,
-    programs: string[]
+    programs: string[],
   ) => Promise<void>;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
@@ -78,7 +78,11 @@ export const UserForm = ({
     >
       <EmailFieldSet email={email} setEmail={setEmail} />
       <UserTypeFieldSet userType={userType} setUserType={setUserType} />
-      <ProgramFieldSet programs={programs} setPrograms={setPrograms} numProgramsSelected={numProgramsSelected} />
+      <ProgramFieldSet
+        programs={programs}
+        setPrograms={setPrograms}
+        numProgramsSelected={numProgramsSelected}
+      />
     </FormPageContent>
   );
 };
@@ -155,7 +159,7 @@ const UserTypeFieldSet = ({
 const ProgramFieldSet = ({
   programs,
   setPrograms,
-  numProgramsSelected
+  numProgramsSelected,
 }: {
   programs: FormProgram[];
   setPrograms: (c: FormProgram[]) => void;
@@ -165,35 +169,34 @@ const ProgramFieldSet = ({
     Record<string, boolean>
   >(valsToBoolean(programs, true));
 
-  const accordionItems: AccordionItem[] = programs
-    .map((program) => {
-      const name = program.name
-      const conditions = program.conditions;
-      const numConditions = conditions.length;
-      
-      return {
-        title: (
-          <div className="display-flex flex-justify flex-align-center">
-            <div>
-              <React.Fragment key={`program-${program.uuid}`}>
-                <Checkbox
-                  id={`program-${program.uuid}`}
-                  name="programs"
-                  value={program.uuid}
-                  label={name}
-                  checked={program.checked === true}
-                  onChange={(e) =>
-                    setPrograms(
-                      programs.map((c) =>
-                        c.uuid === program.uuid
-                          ? { ...c, checked: e.target.checked }
-                          : c
-                      )
-                    )
-                  }
-                />
-              </React.Fragment>
-            </div>
+  const accordionItems: AccordionItem[] = programs.map((program) => {
+    const name = program.name;
+    const conditions = program.conditions;
+    const numConditions = conditions.length;
+
+    return {
+      title: (
+        <div className="display-flex flex-justify flex-align-center">
+          <div>
+            <React.Fragment key={`program-${program.uuid}`}>
+              <Checkbox
+                id={`program-${program.uuid}`}
+                name="programs"
+                value={program.uuid}
+                label={name}
+                checked={program.checked === true}
+                onChange={(e) =>
+                  setPrograms(
+                    programs.map((c) =>
+                      c.uuid === program.uuid
+                        ? { ...c, checked: e.target.checked }
+                        : c,
+                    ),
+                  )
+                }
+              />
+            </React.Fragment>
+          </div>
 
             <span>
               {numConditions} condition{makePlural(numConditions)}
@@ -235,7 +238,7 @@ const ProgramFieldSet = ({
                 programs.map((c) => ({
                   ...c,
                   checked,
-                }))
+                })),
               )
             }
             aria-controls={programs
@@ -268,11 +271,13 @@ const ProgramFieldSet = ({
 // TODO: Rename...?
 // TODO: Make more generic?
 const valsToBoolean = (programs: FormProgram[], val: boolean) => {
-  return programs.map((obj) => obj.name).reduce(
-    (acc, cur) => {
-      acc[toKebabCase(cur)] = val;
-      return acc;
-    },
-    {} as Record<string, boolean>,
-  );
+  return programs
+    .map((obj) => obj.name)
+    .reduce(
+      (acc, cur) => {
+        acc[toKebabCase(cur)] = val;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
 };
