@@ -2,39 +2,64 @@
  * @jest-environment node
  */
 
+import { notFound } from "next/navigation";
+
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 import { createProgramArea } from "@/app/services/programAreaService";
 import {
   createInitialAdminUser,
   createUser,
   deleteUser,
+  getCheckAdmin,
   listUserProgramAreas,
   listUsers,
+  notFoundUnlessAdmin,
   updateUser,
   updateUserProgramAreas,
 } from "@/app/services/userService";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
-
-beforeAll(async () => {
-  await buildCore();
-});
-
-afterAll(async () => {
-  await dropExisting();
-});
 
 const adminEmail = "admin@admin.com";
 const adminName = "Adam Admin";
 const userEmail = "standard@user.com";
 
+const cond123 = {
+  code: "123",
+  concept_name: "condition 1 (disease)",
+  condition_name: "condition 1",
+  condition_category: "category",
+};
+
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
-jest.mock("../src/app/utils/auth-utils", () => ({
-  getLoggedInUserSession: jest
-    .fn()
-    .mockResolvedValue({ name: "Adam Admin", email: "admin@admin.com" }),
-}));
+jest.mock("../src/app/utils/auth-utils");
+
+beforeAll(async () => {
+  await buildCore();
+  await getDb<Core>()
+    .insertInto("condition_reference")
+    .values(cond123)
+    .execute();
+});
+
+beforeEach(() => {
+  (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+    name: "Adam Admin",
+    email: "admin@admin.com",
+  });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+afterAll(async () => {
+  await dropExisting();
+});
 
 describe("user service", () => {
   let adminId;
@@ -55,11 +80,12 @@ describe("user service", () => {
         uuid: adminId,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
 
@@ -92,11 +118,12 @@ describe("user service", () => {
         uuid: adminId,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
   });
@@ -114,11 +141,12 @@ describe("user service", () => {
         uuid: expect.any(String),
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
       {
         uuid: userId,
@@ -129,6 +157,7 @@ describe("user service", () => {
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
   });
@@ -145,11 +174,12 @@ describe("user service", () => {
         uuid: adminId!,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
       {
         uuid: userId!,
@@ -160,6 +190,7 @@ describe("user service", () => {
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
   });
@@ -167,7 +198,7 @@ describe("user service", () => {
   it("should update a user's program areas", async () => {
     // standard user created in prior test
     await updateUser(userId!, { name: "Olga Nunes" });
-    const progId = await createProgramArea("Disease", []);
+    const progId = await createProgramArea("Disease", ["123"]);
 
     await updateUserProgramAreas(userId!, [progId]);
 
@@ -195,16 +226,48 @@ describe("user service", () => {
         uuid: adminId!,
         email: adminEmail,
         name: adminName,
-        date_of_last_login: null,
+        date_of_last_login: expect.any(Date),
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
         date_created: expect.any(Date),
+        program_areas: [],
       },
     ]);
 
     // should also delete program area assignments
     const progAreas = await listUserProgramAreas(userId!);
     expect(progAreas).toStrictEqual([]);
+  });
+
+  describe("getCheckAdmin", () => {
+    it("should return admin if user is an admin", async () => {
+      const admin = await getCheckAdmin("do a thing");
+      expect(admin.email).toBe(adminEmail);
+    });
+
+    it("should error if user is not an admin", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Sally Standard",
+        email: "standard@user.com",
+      });
+      await expect(getCheckAdmin("do a thing")).rejects.toThrow();
+    });
+  });
+
+  describe("notFoundUnessAdmin", () => {
+    it("should do nothing if user is an admin", async () => {
+      await notFoundUnlessAdmin();
+      expect(notFound).not.toHaveBeenCalled();
+    });
+
+    it("should notFound if user is not an admin", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Sally Standard",
+        email: "standard@user.com",
+      });
+      await notFoundUnlessAdmin();
+      expect(notFound).toHaveBeenCalled();
+    });
   });
 });

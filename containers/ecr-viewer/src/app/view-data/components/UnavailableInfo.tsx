@@ -11,6 +11,7 @@ interface UnavailableInfoProps {
   demographicsUnavailableData: DisplayDataProps[];
   socialUnavailableData: DisplayDataProps[];
   encounterUnavailableData: DisplayDataProps[];
+  hospitalEncounterUnavailableData: DisplayDataProps[];
   facilityUnavailableData: DisplayDataProps[];
   providerUnavailableData: DisplayDataProps[];
   symptomsProblemsUnavailableData: DisplayDataProps[];
@@ -28,6 +29,7 @@ interface UnavailableInfoProps {
  * @param props.demographicsUnavailableData The unavailable demographic data
  * @param props.socialUnavailableData The unavailable social data
  * @param props.encounterUnavailableData The unavailable encounter data
+ * @param props.hospitalEncounterUnavailableData The unavailable hospital encounter diagnosis data
  * @param props.facilityUnavailableData The unavailable facility data
  * @param props.providerUnavailableData The unavailable provider data
  * @param props.symptomsProblemsUnavailableData The unavailable symptoms and problems data
@@ -43,6 +45,7 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
   demographicsUnavailableData,
   socialUnavailableData,
   encounterUnavailableData,
+  hospitalEncounterUnavailableData,
   facilityUnavailableData,
   providerUnavailableData,
   symptomsProblemsUnavailableData,
@@ -63,6 +66,10 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
       <UnavailableSection
         title="Encounter Details"
         data={encounterUnavailableData}
+      />
+      <UnavailableSection
+        title="Hospital Encounter Details"
+        data={hospitalEncounterUnavailableData}
       />
       <UnavailableSection
         title="Facility Details"

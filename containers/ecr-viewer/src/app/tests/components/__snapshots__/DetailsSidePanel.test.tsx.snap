@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DetailsSidePanel renders details side panel 1`] = `
+<body
+  class="usa-js-modal--active"
+  style="padding-right: 0px;"
+>
+  <div
+    aria-hidden="true"
+    data-modal-hidden=""
+  >
+    <div>
+      <button
+        class="usa-button usa-button--unstyled action-text"
+        data-close-modal="true"
+        data-open-modal="true"
+        data-testid="button"
+        type="button"
+      >
+        Click me
+      </button>
+      ,
+    </div>
+  </div>
+  <div
+    aria-describedby="details-sidepanel-r:id-description"
+    aria-labelledby="details-sidepanel-r:id-heading"
+    class="usa-modal-wrapper is-visible"
+    data-force-action="false"
+    id="details-sidepanel-r:id"
+    role="dialog"
+  >
+    <div
+      aria-controls="details-sidepanel-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal sidepanel-modal"
+        data-force-action="false"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <div>
+              <h2
+                class="usa-modal__heading font-sans-3xl margin-bottom-0"
+                id="details-sidepanel-r:id-heading"
+              >
+                Title
+              </h2>
+              <p
+                class="text-base margin-bottom-2 margin-top-1"
+              >
+                Subtitle
+              </p>
+            </div>
+            <div
+              class="section__line_gray"
+            />
+            <section>
+              <h3
+                id="details-sidepanel-r:id-description"
+              >
+                Side panel details
+              </h3>
+              <dl>
+                <dt>
+                  detail 1
+                </dt>
+                <dd>
+                  <p>
+                    Hi there
+                  </p>
+                </dd>
+              </dl>
+            </section>
+          </div>
+          <button
+            aria-controls="details-sidepanel-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-focus=""
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

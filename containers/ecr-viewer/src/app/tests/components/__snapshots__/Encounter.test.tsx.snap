@@ -105,6 +105,86 @@ exports[`Encounter should match snapshot 1`] = `
         <div
           class="gutter-3"
         >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="hospital-encounter-details"
+          >
+            Hospital Encounter Details
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              class="grid-row"
+            >
+              <div
+                class="grid-col-auto width-full text-pre-line"
+              >
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        Problem
+                      </th>
+                      <th>
+                        Date/Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        COVID
+                      </td>
+                      <td>
+                        2025-02-05
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div
+              class="section__line_gray"
+            />
+            <div
+              class="grid-row"
+            >
+              <div
+                class="grid-col-auto width-full text-pre-line"
+              >
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        Problem
+                      </th>
+                      <th>
+                        Date/Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        COVID
+                      </td>
+                      <td>
+                        2025-02-05
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div
+              class="section__line_gray"
+            />
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
           <span
             class="usa-tooltip"
             data-testid="tooltipWrapper"

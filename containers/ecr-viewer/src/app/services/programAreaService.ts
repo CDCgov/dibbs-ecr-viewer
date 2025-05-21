@@ -1,8 +1,12 @@
-import "server-only";
+"use server";
 import { randomUUID } from "node:crypto";
 
 import { getDb } from "@/app/data/metadataDb/database";
-import { Core, ProgramArea } from "@/app/data/metadataDb/types/core";
+import {
+  ConditionReference,
+  Core,
+  ProgramArea,
+} from "@/app/data/metadataDb/types/core";
 
 import { getCheckAdmin } from "./userService";
 
@@ -18,6 +22,12 @@ export const createProgramArea = async (
   conditions: string[],
 ): Promise<string> => {
   const creatingUser = await getCheckAdmin("create program areas");
+
+  if (name.trim().length < 2 || conditions.length === 0) {
+    throw new Error(
+      "Invalid program area. Must have a non-empty name and at least one condition assigned.",
+    );
+  }
 
   try {
     const uuid = randomUUID();
@@ -126,15 +136,36 @@ export const deleteProgramArea = async (uuid: string): Promise<void> => {
   }
 };
 
+export type ListedProgramArea = ProgramArea & {
+  conditions: ConditionReference[];
+};
+
 /**
  * List program areas. The logged in user must be an admin.
  * @returns list of all program areas
  */
-export const listProgramAreas = async (): Promise<ProgramArea[]> => {
+export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
   await getCheckAdmin("list program areas");
 
   try {
-    return await getDb<Core>().selectFrom("program_area").selectAll().execute();
+    return await getDb<Core>()
+      .transaction()
+      .execute(async (db) => {
+        const programAreas = await db
+          .selectFrom("program_area")
+          .selectAll()
+          .execute();
+        const conditionRefs = await db
+          .selectFrom("condition_reference")
+          .selectAll()
+          .execute();
+        return programAreas.map((pa) => ({
+          ...pa,
+          conditions: conditionRefs.filter(
+            ({ program_area_uuid }) => program_area_uuid === pa.uuid,
+          ),
+        }));
+      });
   } catch (error: unknown) {
     const message = "Failed to list program areas";
     console.error({ message, error });

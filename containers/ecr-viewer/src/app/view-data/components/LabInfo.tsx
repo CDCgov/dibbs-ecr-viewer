@@ -63,6 +63,7 @@ const LabResultDetail = ({
         if (item.value) return <DataDisplay item={item} key={index} />;
       })}
       <ExpandCollapseAccordion
+        className="accordion-rr margin-bottom-3"
         items={labResult.diagnosticReportDataItems}
         descriptor="labs"
       />

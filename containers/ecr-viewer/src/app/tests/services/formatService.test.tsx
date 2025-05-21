@@ -580,7 +580,7 @@ describe("FormatService tests", () => {
         `Sister\nAnastasia Bubbletea Pizza\nHome: 555-995-9999`,
       );
     });
-    // TODO PR: Add tests for RelatedPerson
+
     it("should return undefined if a patient has no contact", () => {
       const actual = formatPatientContactList([]);
       expect(actual).toBeUndefined();
