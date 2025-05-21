@@ -1,12 +1,7 @@
 import Link from "next/link";
 
-import {
-  listProgramAreas,
-} from "@/app/services/programAreaService";
-import {
-  listUsers,
-  notFoundUnlessAdmin,
-} from "@/app/services/userService";
+import { listProgramAreas } from "@/app/services/programAreaService";
+import { listUsers, notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { UserTable } from "./UserTable";
 
@@ -21,7 +16,7 @@ const UserAdminPage = async () => {
   const programAreas = await listProgramAreas();
 
   return (
-    <> 
+    <>
       <main className="main-container">
         <div className="content-container margin-top-10">
           <div className="display-flex flex-justify">
@@ -35,7 +30,6 @@ const UserAdminPage = async () => {
           <UserTable users={users} programAreas={programAreas} />
         </div>
       </main>
-
     </>
   );
 };

@@ -4,7 +4,11 @@ import Link from "next/link";
 import { UserForm } from "@/app/admin/user/UserForm";
 import { ArrowBack } from "@/app/components/Icon";
 import { listProgramAreas } from "@/app/services/programAreaService";
-import { createUser, notFoundUnlessAdmin, updateUserProgramAreas } from "@/app/services/userService";
+import {
+  createUser,
+  notFoundUnlessAdmin,
+  updateUserProgramAreas,
+} from "@/app/services/userService";
 
 /**
  * @returns Page to add a new user
