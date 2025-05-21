@@ -1,4 +1,4 @@
-import "server-only";
+"use server";
 import { randomUUID } from "node:crypto";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -22,6 +22,12 @@ export const createProgramArea = async (
   conditions: string[],
 ): Promise<string> => {
   const creatingUser = await getCheckAdmin("create program areas");
+
+  if (name.trim().length < 2 || conditions.length === 0) {
+    throw new Error(
+      "Invalid program area. Must have a non-empty name and at least one condition assigned.",
+    );
+  }
 
   try {
     const uuid = randomUUID();

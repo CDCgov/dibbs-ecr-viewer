@@ -41,6 +41,8 @@ td {
   width: 100%;
   max-width: $content-container-max-width;
   min-width: $content-container-min-width;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 @keyframes shimmer {
@@ -121,5 +123,47 @@ $table-border-radius-md: 0.5rem;
   &:active {
     color: color("primary-dark");
     text-decoration: none;
+  }
+}
+
+.dibbs-fieldset {
+  border: 1px solid color("base-lighter");
+  padding: 42px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  legend {
+    float: left;
+    font-size: 1.75rem;
+    font-weight: 700;
+
+    // because of the float putting the margin on the next sibling
+    & + * {
+      margin-top: 1.5rem;
+    }
+  }
+
+  .usa-checkbox__label {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-left: 4rem;
+    &:first-of-type {
+      margin-top: 0;
+    }
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    // the checkbox
+    &::before {
+      border: 1px solid color("base-dark");
+      border-radius: 2px;
+      box-shadow: none;
+      background: none;
+    }
   }
 }

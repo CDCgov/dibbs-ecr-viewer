@@ -1,7 +1,7 @@
 "use client";
 import React, { useId, useState } from "react";
 
-import classNames from "classnames";
+import classnames from "classnames";
 
 import { AccordionItem } from "@/app/view-data/types";
 
@@ -13,14 +13,17 @@ import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
  * @param props react props
  * @param props.items accordion items to display
  * @param props.descriptor desciptor for expand/collapse button labels
+ * @param props.className optionally, classes to pass to the Accordion component
  * @returns expandable/collapsable accordion
  */
 export const ExpandCollapseAccordion = ({
   items,
   descriptor,
+  className,
 }: {
   items: AccordionItem[];
   descriptor: string;
+  className?: string;
 }) => {
   const id = useId();
 
@@ -28,7 +31,7 @@ export const ExpandCollapseAccordion = ({
   const uniqueIdItems = items.map((item, i) => ({
     ...item,
     id: `${item.id}-${id}-${i}`,
-    className: classNames("side-nav-ignore", item.className),
+    className: classnames("side-nav-ignore", item.className),
   }));
 
   const [accordionItems, setAccordionItems] = useState(uniqueIdItems);
@@ -45,27 +48,55 @@ export const ExpandCollapseAccordion = ({
   };
 
   return (
+    <ExpandCollapseAccordionControlled
+      descriptor={descriptor}
+      className={className}
+      items={accordionItems}
+      handleToggle={handleToggle}
+      handleToggleAll={(expanded) =>
+        setAccordionItems(accordionItems.map((item) => ({ ...item, expanded })))
+      }
+    />
+  );
+};
+
+/**
+ * Accordion where expand all/collapse all buttons are added above items
+ * @param props react props
+ * @param props.items accordion items to display
+ * @param props.descriptor desciptor for expand/collapse button labels
+ * @param props.handleToggle handler for toggling one accordion item
+ * @param props.handleToggleAll handler for toggling all accordion items
+ * @param props.className optionally, classes to pass to the Accordion component
+ * @returns expandable/collapsable accordion
+ */
+export const ExpandCollapseAccordionControlled = ({
+  items,
+  className,
+  descriptor,
+  handleToggle,
+  handleToggleAll,
+}: {
+  items: AccordionItem[];
+  descriptor: string;
+  handleToggle: (id: string) => void;
+  handleToggleAll: (expanded: boolean) => void;
+  className?: string;
+}) => {
+  return (
     <>
       <div className="display-flex">
         <div className="margin-left-auto padding-top-1">
           <ExpandCollapseButtons
-            expandHandler={() =>
-              setAccordionItems(
-                accordionItems.map((item) => ({ ...item, expanded: true })),
-              )
-            }
-            collapseHandler={() =>
-              setAccordionItems(
-                accordionItems.map((item) => ({ ...item, expanded: false })),
-              )
-            }
+            expandHandler={() => handleToggleAll(true)}
+            collapseHandler={() => handleToggleAll(false)}
             descriptor={descriptor}
           />
         </div>
       </div>
       <Accordion
-        className="accordion-rr margin-bottom-3"
-        items={accordionItems}
+        className={className}
+        items={items}
         toggleItem={handleToggle}
       />
     </>
