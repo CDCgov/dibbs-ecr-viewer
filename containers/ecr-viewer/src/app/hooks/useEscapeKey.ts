@@ -1,12 +1,12 @@
 import React from "react";
 
 /**
- *
- * @param handleEsc
+ * Hook to do something when escape is pressed (typically close something)
+ * @param handleEsc handler for when the escape key is pressed
  */
-function useEscapeKey(handleEsc) {
+function useEscapeKey(handleEsc: () => void) {
   React.useEffect(() => {
-    function handleKeydown(e) {
+    function handleKeydown(e: KeyboardEvent) {
       if (e.code === "Escape") {
         handleEsc();
       }

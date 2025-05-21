@@ -5,7 +5,8 @@ import Toast from "./Toast";
 import { ToastContext } from "./ToastProvider";
 
 /**
- *
+ * Display all the active toasts
+ * @returns shelf of toast
  */
 function ToastShelf() {
   const { toasts } = React.useContext(ToastContext);

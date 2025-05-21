@@ -39,10 +39,33 @@
   }
 }
 
+@keyframes progress {
+  100% {
+    width: 0;
+  }
+}
+
 .usa-alert.toast {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  + .progress {
+    position: relative;
+    height: 2px;
+    width: 100%;
+
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #4070f4;
+      animation: progress 5s linear forwards;
+    }
+  }
 }
 
 .usa-button.usa-pagination__button:hover {

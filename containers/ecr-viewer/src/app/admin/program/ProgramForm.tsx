@@ -76,7 +76,7 @@ export const ProgramForm = ({
       formValid={valid}
       submitAction={async () => {
         await submitAction(name, selectedConditions);
-        createToast("I created a program!", "success");
+        createToast(`${name} successfully saved`, "success");
       }}
       successRoute="/admin/program"
     >

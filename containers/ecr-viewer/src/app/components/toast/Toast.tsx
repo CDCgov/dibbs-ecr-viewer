@@ -1,56 +1,62 @@
-import React from "react";
-// import {
-//   AlertOctagon,
-//   AlertTriangle,
-//   CheckCircle,
-//   Info,
-//   X,
-// } from "react-feather";
+"use client";
+import React, { ReactNode, useContext, useEffect } from "react";
 
-// import VisuallyHidden from "../VisuallyHidden";
 import { Alert, Button } from "@trussworks/react-uswds";
 
-import { ToastContext } from "./ToastProvider";
+import { HighlightOff } from "@/app/components/Icon";
 
-// const ICONS_BY_VARIANT = {
-//   notice: Info,
-//   warning: AlertTriangle,
-//   success: CheckCircle,
-//   error: AlertOctagon,
-// };
+import { ToastContext, ToastVariant } from "./ToastProvider";
 
 /**
  *
- * @param root0
- * @param root0.id
- * @param root0.variant
- * @param root0.children
+ * @param props react props
+ * @param props.id The toasts ID
+ * @param props.variant The variant of toast (e.g. "success")
+ * @param props.children Toast content
+ * @returns Toast component
  */
-function Toast({ id, variant, children }) {
-  const { dismissToast } = React.useContext(ToastContext);
+function Toast({
+  id,
+  variant,
+  children,
+}: {
+  id: string;
+  variant: ToastVariant;
+  children: ReactNode;
+}) {
+  const { dismissToast } = useContext(ToastContext);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => dismissToast(id), 5000);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
 
   return (
-    <Alert
-      aria-live="polite"
-      className="toast"
-      headingLevel="h4"
-      type={variant}
-      slim={true}
-      cta={
-        <Button
-          className="action-text margin-x-2"
-          type="button"
-          unstyled={true}
-          aria-label="Dismiss message"
-          aria-live="off"
-          onClick={() => dismissToast(id)}
-        >
-          X
-        </Button>
-      }
-    >
-      {children}
-    </Alert>
+    <div>
+      <Alert
+        aria-live="polite"
+        className="toast"
+        headingLevel="h4"
+        type={variant}
+        slim={true}
+        cta={
+          <Button
+            className="margin-x-2 text-base display-flex flex-align-center"
+            type="button"
+            unstyled={true}
+            aria-label="Dismiss message"
+            aria-live="off"
+            onClick={() => dismissToast(id)}
+          >
+            <HighlightOff aria-hidden={true} className="square-3" />
+          </Button>
+        }
+      >
+        {children}
+      </Alert>
+      <div className="progress" />
+    </div>
   );
 }
 
