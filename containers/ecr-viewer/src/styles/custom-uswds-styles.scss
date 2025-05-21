@@ -48,49 +48,64 @@
   background-color: #14333D;
   color: white;
   height: 5.5rem;
+  line-height: 0;
 
-  .usa-logo {
-    margin-left: 0px;
-
-    a {
-      color: white;
-    }
+  .usa-nav {
+    height: 2.5rem;
+    padding: 0;
   }
 
   .usa-navbar {
     border-bottom: none;
   }
 
-  @media (min-width: 64em) {
     .usa-logo {
       margin-bottom: 1.5rem;
       margin-top: 1.5rem;
     }
 
-    .usa-nav-container {
-      margin-left: 0px;
-      padding: 0.5rem 1.5rem;
+    a {
+      font-weight: 400 !important;
+      font-size: 1.125rem !important;
+      color: #E7F2F5 !important;
+    }
 
+    @media (min-width: 64em) {
+      .usa-nav__link:hover::after {
+        background-color: #82B4C9;
+      }
+    }
+
+    .usa-nav-container {
+      height: 2.5rem;
+      margin: 1.5rem 5rem;
+      padding: 0;
       &::after {
         content: none;
       }
     }
-  }
-
-  .usa-nav-container {
-    margin: 0px;
-    padding: 0.5rem 1.5rem;
-
-    &::after {
-      content: none;
-    }
-  }
 
   h1 {
     font-family: "Merriweather";
     font-style: normal;
-    font-weight: bold;
     font-size: 2rem;
+  }
+
+  .user-menu {
+    width: 12.5rem;
+    height: 7.625rem;
+    background-color: deeppink;
+    position: absolute;
+    top: 100%;
+  }
+
+  .user-menu-button {
+    background-color: transparent;
+  }
+
+  .user-menu-container {
+    position: relative;
+    z-index: 400;
   }
 }
 
@@ -114,7 +129,7 @@
 }
 
 .footer-content {
-  margin: 1.25rem 5rem 1.25rem 5rem;
+  margin: 1.25rem 5rem;
   height: 3rem;
 }
 
