@@ -1,4 +1,46 @@
+# Notes 5/21/25
+## What's Changed
+
+THIS IS A BREAKING RELEASE! Please read more below before installing. 
+
+## Release Summary
+This release adds authentication to `/api` routes. When calling the API to process eCRs, all users will need to pass a bearer token from either Rhapsody or their IDP to access the routes. In this release, it's still possible to save data without authentication directly to the orchestration container, but this will be removed in an upcoming release. Please see the [guide](cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html), [API documentation](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/containers/ecr-viewer/api-documentation.md), and [Rhapsody examples](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/examples/rhapsody) for more details about how to use this new release.
+
+This release also adds a new `/api/process-ecr` route to the eCR Viewer container, which replaces the now deprecated `/api/process-zip` endpoint. The old `process-zip` endpoint will also be removed in a coming release. The guide and API documentation have been updated with how to use this new endpoint.
+
+
+### :construction: Required Infrastructure Changes :construction:
+
+There is one environment variable changes associated with the automated migrations. This change is only required for users running the NBS-integrated Viewer.
+
+`NBS_API_PUB_KEY`: Similar to `NBS_PUB_KEY` but used for authenticating the `/api` routes.
+
+
+## :bar_chart: Automated Database Migrations :bar_chart:
+
+This release includes no new database migrations.
+
+
+### 🏕 Features
+* feat!: api auth by @mcmcgrath13 in https://github.com/CDCgov/dibbs-ecr-viewer/pull/683
+* feat: Add/modify Lab result & obs result status by @angelathe in https://github.com/CDCgov/dibbs-ecr-viewer/pull/688
+* feat: Add hospital admission and discharge diagnosis data to viewer by @gordonfarrell in https://github.com/CDCgov/dibbs-ecr-viewer/pull/701
+* feat: `process-ecr` api endpoint by @mcmcgrath13 in https://github.com/CDCgov/dibbs-ecr-viewer/pull/712
+
+
+### :zipper_mouth_face: Secret Future Features
+*These features are not available to end users yet, but they will be soon!*
+* feat: program area and conditions CRUD by @mcmcgrath13 in https://github.com/CDCgov/dibbs-ecr-viewer/pull/673
+* feat: user management table by @mcmcgrath13 in https://github.com/CDCgov/dibbs-ecr-viewer/pull/692
+* feat: user details pane by @mcmcgrath13 in https://github.com/CDCgov/dibbs-ecr-viewer/pull/694
+* feat: program management table by @mcmcgrath13 in https://github.com/CDCgov/dibbs-ecr-viewer/pull/717
+* feat: create program area form by @mcmcgrath13 in https://github.com/CDCgov/dibbs-ecr-viewer/pull/718
+
+**Full Changelog**: https://github.com/CDCgov/dibbs-ecr-viewer/compare/3.4.0...4.0.0
+
 # Notes 5/7/25
+
+
 ## Release Summary
 This release adds support for automated database migrations for the non-integrated version of the Viewer. More information about these automated migrations is below.
 
