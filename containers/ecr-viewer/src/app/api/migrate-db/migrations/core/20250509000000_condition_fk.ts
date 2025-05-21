@@ -17,7 +17,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
       cb.references("condition_reference.code"),
     )
     .execute();
-  
+
   if (dbDialect() === "postgres") {
     await _db
       .updateTable("ecr_rr_conditions")
