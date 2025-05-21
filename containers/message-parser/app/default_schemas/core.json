@@ -60,7 +60,7 @@
         }
       },
       "code": {
-        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.coding.code)",
+        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.coding.code).where(Observation.valueCodeableConcept.coding.code = %snomedCode)",
         "data_type": "string",
         "nullable": true,
         "metadata": {
