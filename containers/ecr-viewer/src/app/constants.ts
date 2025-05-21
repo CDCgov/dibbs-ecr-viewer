@@ -1,4 +1,6 @@
-export const INITIAL_HEADERS = [
+import { TableHeader } from "./components/table/SortableHeader";
+
+export const INITIAL_HEADERS: TableHeader[] = [
   {
     id: "patient",
     value: "Patient",
@@ -36,5 +38,5 @@ export const INITIAL_HEADERS = [
   },
 ];
 
-export const PAGE_SIZES = [25, 50, 75, 100];
-export const DEFAULT_ITEMS_PER_PAGE = PAGE_SIZES[0];
+export const PAGE_SIZES = [10, 25, 50, 75, 100];
+export const DEFAULT_ITEMS_PER_PAGE = PAGE_SIZES[1];

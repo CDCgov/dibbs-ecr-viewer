@@ -9,6 +9,7 @@ import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface EncounterProps {
   encounterData: DisplayDataProps[];
+  hospitalEncounterData: DisplayDataProps[];
   facilityData: DisplayDataProps[];
   providerData: DisplayDataProps[];
 }
@@ -17,18 +18,24 @@ interface EncounterProps {
  * Functional component for displaying encounter details.
  * @param props - Props containing encounter details.
  * @param props.encounterData - Encounter details to be displayed.
+ * @param props.hospitalEncounterData - Hospital Encounter Diagnosis details to be displayed.
  * @param props.providerData - Provider details to be displayed.
  * @param props.facilityData - Facility details to be displayed.
  * @returns The JSX element representing the encounter details.
  */
 const EncounterDetails = ({
   encounterData,
+  hospitalEncounterData,
   facilityData,
   providerData,
 }: EncounterProps) => {
   return (
     <AccordionSection>
       <EncounterSection title="Encounter Details" data={encounterData} />
+      <EncounterSection
+        title="Hospital Encounter Details"
+        data={hospitalEncounterData}
+      />
       <EncounterSection
         title="Facility Details"
         toolTip="Specific healthcare facility where the encounter took place."

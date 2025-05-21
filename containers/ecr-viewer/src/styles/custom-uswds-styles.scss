@@ -15,9 +15,42 @@
   overflow: visible;
 }
 
+// used primarily in the admin pages
+.usa-accordion.accordion-dibbs {
+  .usa-accordion__button {
+    background-color: color("base-lightest");
+    border-radius: 0.25rem;
+    color: color("base-darker");
+    @include add-background-svg("usa-icons/arrow_drop_down");
+
+    &[aria-expanded="true"] {
+      @include add-background-svg("usa-icons/arrow_drop_up");
+      border-end-end-radius: 0;
+      border-end-start-radius: 0;
+    }
+  }
+
+  .usa-accordion__content {
+    border-radius: 0 0 0.25rem;
+    border: 1px solid color("base-lightest");
+    border-top: none;
+    box-shadow: 0px 2px 3px 0px #f3f3f3;
+    background-color: color("white");
+  }
+}
+
 .usa-button.usa-pagination__button:hover {
   border-bottom-width: 1px;
   border-bottom-style: solid;
+}
+
+.usa-checkbox {
+  background: none;
+}
+
+.usa-checkbox__label {
+  display: flex;
+  align-items: center;
 }
 
 .usa-header {
@@ -65,6 +98,49 @@
     font-style: normal;
     font-weight: bold;
     font-size: 2rem;
+  }
+}
+
+.usa-modal-overlay:has(.usa-modal.sidepanel-modal) {
+  padding: 0;
+  text-align: right;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.usa-modal.sidepanel-modal {
+  height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0;
+  max-width: clamp(40rem, 50vw, 60rem);
+  overflow-y: auto;
+
+  .usa-modal__main {
+    margin: -2rem 0;
+  }
+
+  .usa-modal__heading {
+    font-size: 2.5rem;
+  }
+
+  .usa-modal__close {
+    z-index: 30;
+  }
+
+  dt {
+    text-transform: uppercase;
+    color: color("base");
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  dd {
+    margin-bottom: 2rem;
+    margin-inline-start: 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 

@@ -38,6 +38,22 @@ jest.mock("react", () => ({
   cache: <T>(fn: T): T => fn,
 }));
 
+// Mock tabable to avoid focus trap errors with modals
+jest.mock("tabbable", () => {
+  const lib = jest.requireActual("tabbable");
+  return {
+    ...lib,
+    tabbable: (node: HTMLElement, options: object) =>
+      lib.tabbable(node, { ...options, displayCheck: "none" }),
+    focusable: (node: HTMLElement, options: object) =>
+      lib.focusable(node, { ...options, displayCheck: "none" }),
+    isFocusable: (node: HTMLElement, options: object) =>
+      lib.isFocusable(node, { ...options, displayCheck: "none" }),
+    isTabbable: (node: HTMLElement, options: object) =>
+      lib.isTabbable(node, { ...options, displayCheck: "none" }),
+  };
+});
+
 beforeEach(() => {
   clearEvaluateCache();
 });

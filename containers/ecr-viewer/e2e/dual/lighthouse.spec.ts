@@ -149,4 +149,20 @@ lighthouseTest.describe("lighthouse", async () => {
       });
     },
   );
+
+  lighthouseTest(
+    "admin user management",
+    async ({ page, port, playAudit, commonConfig }) => {
+      await page.goto("/ecr-viewer/admin/user");
+      await playAudit({
+        page,
+        thresholds: {
+          performance: 95,
+          accessibility: 100,
+        },
+        port,
+        ...commonConfig,
+      });
+    },
+  );
 });

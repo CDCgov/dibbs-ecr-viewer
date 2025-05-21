@@ -1,8 +1,11 @@
+"use server";
+
 import "server-only";
 import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
 import { Kysely } from "kysely";
+import { notFound } from "next/navigation";
 
 import { getDb } from "@/app/data/metadataDb/database";
 import {
@@ -11,6 +14,7 @@ import {
   ProgramArea,
   User,
   UserUpdate,
+  UserProgramArea,
 } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
@@ -36,19 +40,47 @@ export const getLoggedInUser = cache(async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
   if (!email) return;
 
-  // Update the user's name to match the IDP
-  !!name &&
-    (await getDb<Core>()
-      .updateTable("user")
-      .set({ name })
-      .where("email", "=", email)
-      .execute());
+  // Update the last log in and user's name to match the IDP
+  await getDb<Core>()
+    .updateTable("user")
+    .set({ date_of_last_login: new Date(), name })
+    .where("email", "=", email)
+    .execute();
 
   return await getUserByEmail(email);
 });
 
-const isAdmin = (user: User | undefined): user is User =>
+/**
+ * @param user User to check is an admin
+ * @returns true is the user both exists and is an admin, false otherwise
+ */
+export const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
+
+/**
+ * If the logged in user is not an admin, force the page calling this to 404.
+ */
+export const notFoundUnlessAdmin = async () => {
+  const admin = await getLoggedInUser();
+  if (!isAdmin(admin)) {
+    notFound();
+  }
+};
+
+/**
+ * Check the currently logged in user is an admin and return them. Throws
+ * an error if the currently logged in user isn't an admin.
+ * @param actionDesc description of the action that only admins can do
+ * @returns admin user
+ */
+export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
+  const loggedInUser = await getLoggedInUser();
+  if (!isAdmin(loggedInUser)) {
+    throw new Error(`Standard user cannot ${actionDesc}`);
+  }
+
+  return loggedInUser;
+};
 
 /**
  * Create a user with the given email and user type. The currently logged in user
@@ -62,10 +94,7 @@ export const createUser = async (
   email: string,
   user_type: "admin" | "standard",
 ): Promise<string> => {
-  const creatingUser = await getLoggedInUser();
-  if (!isAdmin(creatingUser)) {
-    throw new Error("Standard user cannot create new users");
-  }
+  const creatingUser = await getCheckAdmin("create new users");
 
   try {
     const uuid = randomUUID();
@@ -86,7 +115,7 @@ export const createUser = async (
 export const createInitialAdminUser = async (
   email: string,
 ): Promise<string | undefined> => {
-  const users = await listActiveUsersQuery();
+  const users = await listActiveUsersQuery(getDb<Core>());
   if (users.some(({ user_type }) => user_type === "admin")) {
     console.warn("Active admin user already exists. Skipping user creation.");
     return;
@@ -138,10 +167,7 @@ export const updateUser = async (
   uuid: string,
   updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
+  await getCheckAdmin("update users");
 
   try {
     await updateUserQuery(uuid, updates);
@@ -171,10 +197,7 @@ const updateUserQuery = async (
 export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
-  const listingUser = await getLoggedInUser();
-  if (!isAdmin(listingUser)) {
-    throw new Error("Standard user cannot list user program areas");
-  }
+  await getCheckAdmin("list user program areas");
 
   try {
     return await getDb<Core>()
@@ -201,10 +224,7 @@ export const updateUserProgramAreas = async (
   uuid: string,
   programAreaUuids: string[],
 ): Promise<void> => {
-  const updatingUser = await getLoggedInUser();
-  if (!isAdmin(updatingUser)) {
-    throw new Error("Standard user cannot update users");
-  }
+  await getCheckAdmin("update user program areas");
 
   try {
     await getDb<Core>()
@@ -238,10 +258,7 @@ const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
  * @param uuid Email of the user to delete
  */
 export const deleteUser = async (uuid: string): Promise<void> => {
-  const deletingUser = await getLoggedInUser();
-  if (!isAdmin(deletingUser)) {
-    throw new Error("Standard user cannot delete users");
-  }
+  await getCheckAdmin("delete users");
 
   try {
     await updateUserQuery(uuid, { status: "deleted" });
@@ -253,18 +270,42 @@ export const deleteUser = async (uuid: string): Promise<void> => {
   }
 };
 
+export type NamedUserPogramArea = UserProgramArea & { name: string };
+export type ListedUser = User & { program_areas: NamedUserPogramArea[] };
+
 /**
  * List all active users. The logged in user must be an admin.
  * @returns list of all active users
  */
-export const listUsers = async (): Promise<User[]> => {
-  const listingUser = await getLoggedInUser();
-  if (!isAdmin(listingUser)) {
-    throw new Error("Standard user cannot list users");
-  }
+export const listUsers = async (): Promise<ListedUser[]> => {
+  await getCheckAdmin("list users");
 
   try {
-    return await listActiveUsersQuery();
+    return await getDb<Core>()
+      .transaction()
+      .execute(async (db) => {
+        const users = await listActiveUsersQuery(db);
+        const userProgramAreas = await db
+          .selectFrom("user_program_area")
+          .innerJoin(
+            "program_area",
+            "user_program_area.program_area_uuid",
+            "program_area.uuid",
+          )
+          .select([
+            "user_program_area.user_uuid",
+            "user_program_area.program_area_uuid",
+            "program_area.name",
+          ])
+          .execute();
+
+        return users.map((user) => ({
+          ...user,
+          program_areas: userProgramAreas.filter(
+            ({ user_uuid }) => user_uuid === user.uuid,
+          ),
+        }));
+      });
   } catch (error: unknown) {
     const message = "Failed to list users";
     console.error({ message, error });
@@ -272,8 +313,8 @@ export const listUsers = async (): Promise<User[]> => {
   }
 };
 
-const listActiveUsersQuery = async () => {
-  return await getDb<Core>()
+const listActiveUsersQuery = async (db: Kysely<Core>) => {
+  return await db
     .selectFrom("user")
     .selectAll()
     .where("status", "=", "active")
