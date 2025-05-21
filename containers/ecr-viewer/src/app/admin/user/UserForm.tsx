@@ -193,19 +193,17 @@ const ProgramFieldSet = ({
             </React.Fragment>
           </div>
 
-            <span>
-              {numConditions} condition{makePlural(numConditions)}
-            </span>
-          </div>
-        ),
-        content: (
-          conditions.map((c) => c.condition_name).join("; ")
-        ),
-        id: toKebabCase(name),
-        expanded: !!expandedPrograms[toKebabCase(name)],
-        headingLevel: "h3",
-      };
-    })
+          <span>
+            {numConditions} condition{makePlural(numConditions)}
+          </span>
+        </div>
+      ),
+      content: conditions.map((c) => c.condition_name).join("; "),
+      id: toKebabCase(name),
+      expanded: !!expandedPrograms[toKebabCase(name)],
+      headingLevel: "h3",
+    };
+  });
 
   return (
     <FieldSet legend="Select program area(s)">
