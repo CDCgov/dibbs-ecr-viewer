@@ -8,7 +8,9 @@ import {
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
+import { useRouter } from "next/navigation";
 
+import { toSentenceCase } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 import Modal from "./Modal";
@@ -74,10 +76,12 @@ interface Detail {
  * @param props.details Array of title-value pairs
  * @param props.title Title of the side panel (usually the subject)
  * @param props.subtitle Subtitle of the side panel (such as logged in date)
- * @param props.description Side panel description (usually generic)
  * @param props.detailsRef Ref linking the trigger(s) and panel - see `useDetailsRef`
  * @param props.itemType string describing item type of details (e.g. "user")
  * @param props.deleteAction Optional function to handle deleting the item. Adds delete button if available
+ * @param props.deleteExplainerText Optional text to explain implications of deleting the item
+ * @param props.deleteModalTitle Optional tilte of modal
+ * @param props.deleteModalBody Optional content for delete modal
  * @returns Side Panel component
  */
 export const DetailsSidePanel = ({
@@ -85,20 +89,25 @@ export const DetailsSidePanel = ({
   details,
   title,
   subtitle,
-  description,
   itemType,
   deleteAction,
+  deleteExplainerText,
+  deleteModalTitle,
+  deleteModalBody,
 }: {
   detailsRef: RefObject<ModalRef>;
   details: Detail[];
   title: string;
   subtitle: string;
-  description: string;
   itemType: string;
   deleteAction?: () => Promise<void>;
+  deleteExplainerText?: string;
+  deleteModalTitle?: string;
+  deleteModalBody?: ReactNode;
 }) => {
   const id = useId();
   const confirmRef = useRef<ModalRef>(null);
+  const router = useRouter();
 
   return (
     <ForceClient loading={null}>
@@ -110,38 +119,49 @@ export const DetailsSidePanel = ({
         aria-describedby={`details-sidepanel-${id}-description`}
       >
         <div>
-          <ModalHeading
-            id={`details-sidepanel-${id}-heading`}
-            className="font-sans-3xl margin-bottom-0"
-          >
-            {title}
-          </ModalHeading>
-          <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
-        </div>
-        <div className="section__line_gray" />
-
-        <section>
-          <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
-
-          <dl>
-            {details.map(({ title, value }, i) => (
-              <React.Fragment key={`detail-${i}`}>
-                <dt>{title}</dt>
-                <dd>{value}</dd>
-              </React.Fragment>
-            ))}
-          </dl>
-        </section>
-        {deleteAction && (
-          <ModalFooter className="botder-top border-base-light">
-            <ModalToggleButton
-              type="button"
-              modalRef={confirmRef}
-              opener={true}
-              closer={false}
+          <div className="border-bottom border-base-lightest">
+            <ModalHeading
+              id={`details-sidepanel-${id}-heading`}
+              className="font-sans-3xl margin-bottom-0"
             >
-              Remove {itemType}
-            </ModalToggleButton>
+              {title}
+            </ModalHeading>
+            <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
+          </div>
+
+          <section>
+            <h3 id={`details-sidepanel-${id}-description`}>
+              {toSentenceCase(itemType)} information
+            </h3>
+
+            <dl>
+              {details.map(({ title, value }, i) => (
+                <React.Fragment key={`detail-${i}`}>
+                  <dt>{title}</dt>
+                  <dd>{value}</dd>
+                </React.Fragment>
+              ))}
+            </dl>
+          </section>
+        </div>
+        {deleteAction && (
+          <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
+            <div>
+              <h3 className="margin-top-0">Delete {itemType}</h3>
+              <p>{deleteExplainerText}</p>
+            </div>
+            <div>
+              <ModalToggleButton
+                type="button"
+                outline={true}
+                modalRef={confirmRef}
+                className="text-no-wrap"
+                opener={true}
+                closer={false}
+              >
+                Delete {itemType}
+              </ModalToggleButton>
+            </div>
           </ModalFooter>
         )}
       </Modal>
@@ -156,25 +176,33 @@ export const DetailsSidePanel = ({
           aria-describedby={`delete-confirm-${id}-description`}
         >
           <ModalHeading id={`delete-confirm-${id}-heading`}>
-            Remove TODO USER?
+            {deleteModalTitle}
           </ModalHeading>
-          <p id={`delete-confirm-${id}-description`}>
-            Removing a user from the eCR Viewer is a permanent action. This
-            cannot be undone.
-          </p>
-          <p>This action will NOT edit or remove the user from AD.</p>
-          TODO CONFIRMATION FOOTER
+          {deleteModalBody}
+
+          {/* TODO: abstract out confirmation footer once condition assignment check pr is in */}
+          <p>Are you sure you want to continue?</p>
           <ModalFooter>
-            <ButtonGroup>
-              <ModalToggleButton modalRef={confirmRef} closer={true}>
-                Continue without saving
+            <ButtonGroup className="flex-justify-end">
+              <ModalToggleButton
+                outline={true}
+                modalRef={confirmRef}
+                closer={true}
+                data-focus={true}
+              >
+                Cancel
               </ModalToggleButton>
               <ModalToggleButton
                 modalRef={confirmRef}
                 closer={true}
                 className="padding-105 text-center"
+                onClick={async () => {
+                  await deleteAction();
+                  detailsRef.current?.toggleModal(undefined, false);
+                  router.refresh();
+                }}
               >
-                Go back
+                Yes, delete {itemType}
               </ModalToggleButton>
             </ButtonGroup>
           </ModalFooter>

@@ -66,11 +66,12 @@ export const ProgramTable = ({
         subtitle={`Created on ${formatDateTime(
           selectedProgramArea?.date_created.toISOString(),
         )}`}
-        description="Program area information"
         itemType="program area"
         deleteAction={async () => {
           deleteProgramArea(selectedProgramArea?.uuid!);
         }}
+        deleteExplainerText="When you delete this program area, the program area will not be available in the eCR library for standard users."
+        deleteModalTitle={`Delete ${selectedProgramArea?.name}`}
         details={[
           {
             title: "Name",

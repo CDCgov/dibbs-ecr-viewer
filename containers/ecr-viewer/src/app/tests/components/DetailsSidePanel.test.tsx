@@ -28,7 +28,6 @@ const SidePanel = () => {
         detailsRef={detailsRef}
         title="Title"
         subtitle="Subtitle"
-        description="Side panel details"
         itemType="item"
         details={[{ title: "detail 1", value: <p>Hi there</p> }]}
       />

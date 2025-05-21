@@ -93,7 +93,6 @@ export const UserTable = ({
             ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
             : "Never"
         }`}
-        description="User Information"
         itemType="user"
         details={[
           {
