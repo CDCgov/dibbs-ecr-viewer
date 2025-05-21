@@ -13,6 +13,7 @@ import {
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
+import { makePlural } from "@/app/utils/format-utils";
 
 /**
  *
@@ -52,7 +53,7 @@ export const ProgramTable = ({
       dataSortable: false,
       sortDirection: "",
       formatter: (conditions: ConditionReference[]) =>
-        `${conditions.length} condition${conditions.length === 1 ? "" : "s"}`,
+        `${conditions.length} condition${makePlural(conditions.length)}`,
     },
   ];
   return (

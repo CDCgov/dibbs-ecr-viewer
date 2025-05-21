@@ -11,7 +11,7 @@ import {
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
-import { toKebabCase } from "@/app/utils/format-utils";
+import { makePlural, toKebabCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
@@ -214,7 +214,7 @@ const ConditionFieldSet = ({
       </span>
       <p className="text-bold font-size-md">
         {numConditionsSelected} condition
-        {numConditionsSelected === 1 ? "" : "s"} selected
+        {makePlural(numConditionsSelected)} selected
       </p>
       <ExpandCollapseAccordionControlled
         descriptor="condition categories"
