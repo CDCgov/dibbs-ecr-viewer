@@ -4,10 +4,10 @@ ARG TRIGGER_CODE_REFERENCE_URL
 ARG SMARTY_AUTH_ID
 ARG SMARTY_AUTH_TOKEN
 
-FROM python:3.13-slim
+FROM python:3.13.3-alpine
 
-RUN apt-get update && \
-    apt-get upgrade -y
+RUN apk update && \
+    apk upgrade --no-cache
 
 RUN pip install --upgrade pip --break-system-packages
 
@@ -37,7 +37,7 @@ ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
 ENV OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4317/v1/traces
 
 # Install curl for health check
-RUN apt-get update && apt-get install -y curl
+RUN apk update && apk add --no-cache curl
 
 EXPOSE 8080
 RUN export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
