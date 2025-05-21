@@ -1,0 +1,275 @@
+"use client";
+import React, { useState } from "react";
+
+import {
+  Button,
+  Checkbox,
+  RequiredMarker,
+  TextInput,
+  Radio
+} from "@trussworks/react-uswds";
+
+import { FieldSet } from "@/app/components/forms/FieldSet";
+import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import { ListedProgramArea } from "@/app/services/programAreaService";
+import { toKebabCase } from "@/app/utils/format-utils";
+import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
+import { AccordionItem } from "@/app/view-data/types";
+
+type UserType = "admin" | "standard";
+
+interface FormProgram extends ListedProgramArea {
+  checked?: boolean;
+}
+
+// type ConditionCategories = Record<string, FormCondition[]>;
+
+interface FormValues {
+  email?: string;
+  userType?: UserType;
+  programs: FormProgram[];
+}
+
+/**
+ *
+ * @param props React props
+ * @param props.initValues Initial values the form is set to
+ * @param props.action Action of the form (e.g. "Create", "Edit")
+ * @param props.submitAction Handler for the submitted data
+ * @returns Program area add/edit form
+ */
+export const UserForm = ({
+  action,
+  initValues,
+  submitAction,
+}: {
+  action: string;
+  initValues: FormValues;
+  submitAction: (
+    email: string,
+    userType: UserType,
+    programs: string[]
+  ) => Promise<void>;
+}) => {
+  const [email, setEmail] = useState(initValues.email || "");
+  const [userType, setUserType] = useState<UserType>("standard");
+  const [programs, setPrograms] = useState(initValues.programs);
+
+  const selectedPrograms = Object.values(programs)
+    .filter(({ checked }) => !!checked)
+    .map(({ uuid }) => uuid);
+  const numProgramsSelected = selectedPrograms.length;
+
+  const valid = !!email.trim(); // TODO ANGELA: Update this
+
+  return (
+    <FormPageContent
+      action={`${action} user`}
+      formValid={valid}
+      submitAction={async () => {
+        await submitAction(email, userType, selectedPrograms);
+      }}
+      successRoute="/admin/user"
+    >
+      <EmailFieldSet email={email} setEmail={setEmail} />
+      <UserTypeFieldSet userType={userType} setUserType={setUserType} />
+      <ProgramFieldSet programs={programs} setPrograms={setPrograms} numProgramsSelected={numProgramsSelected} />
+    </FormPageContent>
+  );
+};
+
+const EmailFieldSet = ({
+  email,
+  setEmail,
+}: {
+  email: string;
+  setEmail: (n: string) => void;
+}) => {
+  return (
+    <FieldSet legend="AD Email">
+      <span>
+        Required fields are marked with an asterisk (<RequiredMarker />)
+      </span>
+      <label className="usa-label">
+        AD EMAIL
+        <RequiredMarker />
+        <TextInput
+          type="text"
+          required={true}
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </label>
+    </FieldSet>
+  );
+};
+
+const UserTypeFieldSet = ({
+  userType,
+  setUserType,
+}: {
+  userType: UserType;
+  setUserType: (n: UserType) => void;
+}) => {
+  return (
+    <FieldSet legend="Select user type">
+      <span>
+        User type will apply to all users added. These can be edited later (
+        <RequiredMarker />)
+      </span>
+      <label className="usa-label">
+        USER TYPE
+        <RequiredMarker />
+        <Radio
+          label="Admin"
+          type="radio"
+          required={true}
+          name="userType"
+          id="userType-admin"
+          value="admin"
+          checked={userType === "admin"}
+          onChange={(e) => setUserType(e.target.value as UserType)}
+        />
+        <Radio
+          label="Standard"
+          type="radio"
+          required={true}
+          name="userType"
+          id="userType-standard"
+          value="standard"
+          checked={userType === "standard"}
+          onChange={(e) => setUserType(e.target.value as UserType)}
+        />
+      </label>
+    </FieldSet>
+  );
+};
+
+const ProgramFieldSet = ({
+  programs,
+  setPrograms,
+  numProgramsSelected
+}: {
+  programs: FormProgram[];
+  setPrograms: (c: FormProgram[]) => void;
+  numProgramsSelected: number;
+}) => {
+  const [expandedPrograms, setExpandedPrograms] = useState<
+    Record<string, boolean>
+  >(valsToBoolean(programs, true));
+
+  const accordionItems: AccordionItem[] = programs
+    .map((program) => {
+      const name = program.name
+      const conditions = program.conditions;
+      const numConditions = conditions.length;
+      
+      return {
+        title: (
+          <div className="display-flex flex-justify flex-align-center">
+            <div>
+              <React.Fragment key={`program-${program.uuid}`}>
+                <Checkbox
+                  id={`program-${program.uuid}`}
+                  name="programs"
+                  value={program.uuid}
+                  label={name}
+                  checked={program.checked === true}
+                  onChange={(e) =>
+                    setPrograms(
+                      programs.map((c) =>
+                        c.uuid === program.uuid
+                          ? { ...c, checked: e.target.checked }
+                          : c
+                      )
+                    )
+                  }
+                />
+              </React.Fragment>
+            </div>
+
+            <span>
+              {numConditions} condition
+              {numConditions === 1 ? "" : "s"}
+            </span>
+          </div>
+        ),
+        content: (
+          conditions.map((c) => c.condition_name).join("; ")
+        ),
+        id: toKebabCase(name),
+        expanded: !!expandedPrograms[toKebabCase(name)],
+        headingLevel: "h3",
+      };
+    })
+
+  return (
+    <FieldSet legend="Select program area(s)">
+      <span>
+        Select one or more program areas. Program areas will apply to all users
+        added.
+        <RequiredMarker />
+      </span>
+      <p className="text-bold font-size-md">
+        {numProgramsSelected}/{programs.length} program area
+        {numProgramsSelected === 1 ? "" : "s"} selected
+      </p>
+      {/* // TODO: Should we decompose this? Abstract this? */}
+      <div className="margin-right-auto">
+        {[
+          { type: "Select", checked: true, disabledCount: programs.length },
+          { type: "Deselect", checked: false, disabledCount: 0 },
+        ].map(({ type, checked, disabledCount }) => (
+          <Button
+            key={type}
+            type="button"
+            outline={true}
+            disabled={numProgramsSelected === disabledCount}
+            onClick={() =>
+              setPrograms(
+                programs.map((c) => ({
+                  ...c,
+                  checked,
+                }))
+              )
+            }
+            aria-controls={programs
+              .map(({ uuid }) => `condition-${uuid}`)
+              .join(" ")}
+            className="margin-top-0"
+          >
+            {type} all
+          </Button>
+        ))}
+      </div>
+      <ExpandCollapseAccordionControlled
+        descriptor="sections"
+        className="accordion-dibbs margin-top-3"
+        handleToggle={(p) =>
+          setExpandedPrograms({
+            ...expandedPrograms,
+            [p]: !expandedPrograms[p],
+          })
+        }
+        handleToggleAll={(expanded) =>
+          setExpandedPrograms(valsToBoolean(programs, expanded))
+        }
+        items={accordionItems}
+      />
+    </FieldSet>
+  );
+};
+
+// TODO: Rename...?
+// TODO: Make more generic?
+const valsToBoolean = (programs: FormProgram[], val: boolean) => {
+  return programs.map((obj) => obj.name).reduce(
+    (acc, cur) => {
+      acc[toKebabCase(cur)] = val;
+      return acc;
+    },
+    {} as Record<string, boolean>,
+  );
+};
