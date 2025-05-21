@@ -28,7 +28,6 @@ function Toast({
 
   useEffect(() => {
     const timeout = window.setTimeout(() => dismissToast(id), 5000);
-
     return () => window.clearTimeout(timeout);
   }, []);
 

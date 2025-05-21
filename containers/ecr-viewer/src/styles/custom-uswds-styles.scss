@@ -50,20 +50,23 @@
   justify-content: space-between;
   align-items: center;
 
-  + .progress {
-    position: relative;
+  &.usa-alert--success::before {
+    background-color: color("success");
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
     height: 2px;
     width: 100%;
+    background-color: #4070f4;
+    animation: progress 5s linear forwards infinite;
+    z-index: 2;
 
-    &::before {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background-color: #4070f4;
-      animation: progress 5s linear forwards;
+    &.usa-alert--success {
+      background-color: color("success");
     }
   }
 }
