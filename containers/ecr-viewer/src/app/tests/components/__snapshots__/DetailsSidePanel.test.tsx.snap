@@ -3,11 +3,12 @@
 exports[`DetailsSidePanel renders details side panel 1`] = `
 <body
   class="usa-js-modal--active"
+  data-modal-count="1"
   style="padding-right: 0px;"
 >
   <div
     aria-hidden="true"
-    data-modal-hidden=""
+    data-modal-hidden="1"
   >
     <div>
       <button
@@ -26,9 +27,9 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
     aria-describedby="details-sidepanel-r:id-description"
     aria-labelledby="details-sidepanel-r:id-heading"
     class="usa-modal-wrapper is-visible"
-    data-force-action="false"
     id="details-sidepanel-r:id"
     role="dialog"
+    style="isolation: isolate;"
   >
     <div
       aria-controls="details-sidepanel-r:id"
@@ -37,7 +38,6 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
     >
       <div
         class="usa-modal sidepanel-modal"
-        data-force-action="false"
         data-testid="modalWindow"
         tabindex="-1"
       >
@@ -48,38 +48,40 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
             class="usa-modal__main"
           >
             <div>
-              <h2
-                class="usa-modal__heading font-sans-3xl margin-bottom-0"
-                id="details-sidepanel-r:id-heading"
+              <div
+                class="border-bottom border-base-lightest"
               >
-                Title
-              </h2>
-              <p
-                class="text-base margin-bottom-2 margin-top-1"
-              >
-                Subtitle
-              </p>
+                <h2
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
+                  id="details-sidepanel-r:id-heading"
+                >
+                  Title
+                </h2>
+                <p
+                  class="text-base margin-bottom-2 margin-top-1"
+                >
+                  Subtitle
+                </p>
+              </div>
+              <section>
+                <h3
+                  id="details-sidepanel-r:id-description"
+                >
+                  Item
+                   information
+                </h3>
+                <dl>
+                  <dt>
+                    detail 1
+                  </dt>
+                  <dd>
+                    <p>
+                      Hi there
+                    </p>
+                  </dd>
+                </dl>
+              </section>
             </div>
-            <div
-              class="section__line_gray"
-            />
-            <section>
-              <h3
-                id="details-sidepanel-r:id-description"
-              >
-                Side panel details
-              </h3>
-              <dl>
-                <dt>
-                  detail 1
-                </dt>
-                <dd>
-                  <p>
-                    Hi there
-                  </p>
-                </dd>
-              </dl>
-            </section>
           </div>
           <button
             aria-controls="details-sidepanel-r:id"
