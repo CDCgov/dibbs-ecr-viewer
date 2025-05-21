@@ -30,11 +30,6 @@ interface FormValues {
   programs: FormProgram[];
 }
 
-// Check that email address is mildly valid (any@any.any)
-const isValidEmail = (email: string | undefined) => {
-  return !!(email || "").match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-}
-
 /**
  *
  * @param props React props
@@ -65,14 +60,14 @@ export const UserForm = ({
     .map(({ uuid }) => uuid);
   const numProgramsSelected = selectedPrograms.length;
 
-  const valid = isValidEmail(email) && numProgramsSelected > 0;
+  const valid = !!email && numProgramsSelected > 0;
 
   return (
     <FormPageContent
       action={`${action} user`}
       formValid={valid}
       submitAction={async () => {
-        await submitAction(email, userType, selectedPrograms);
+        await submitAction(email.trim(), userType, selectedPrograms);
       }}
       successRoute="/admin/user"
     >
@@ -103,7 +98,7 @@ const EmailFieldSet = ({
         AD EMAIL
         <RequiredMarker />
         <TextInput
-          type="text"
+          type="email"
           required={true}
           id="email"
           name="email"
