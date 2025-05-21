@@ -12,7 +12,7 @@ import {
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { toKebabCase } from "@/app/utils/format-utils";
+import { makePlural, toKebabCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
@@ -28,6 +28,11 @@ interface FormValues {
   email?: string;
   userType?: UserType;
   programs: FormProgram[];
+}
+
+// Check that email address is mildly valid (any@any.any)
+const isValidEmail = (email: string | undefined) => {
+  return !!(email || "").match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 }
 
 /**
@@ -60,7 +65,7 @@ export const UserForm = ({
     .map(({ uuid }) => uuid);
   const numProgramsSelected = selectedPrograms.length;
 
-  const valid = !!email.trim(); // TODO ANGELA: Update this
+  const valid = isValidEmail(email) && numProgramsSelected > 0;
 
   return (
     <FormPageContent
@@ -191,8 +196,7 @@ const ProgramFieldSet = ({
             </div>
 
             <span>
-              {numConditions} condition
-              {numConditions === 1 ? "" : "s"}
+              {numConditions} condition{makePlural(numConditions)}
             </span>
           </div>
         ),
@@ -213,8 +217,7 @@ const ProgramFieldSet = ({
         <RequiredMarker />
       </span>
       <p className="text-bold font-size-md">
-        {numProgramsSelected}/{programs.length} program area
-        {numProgramsSelected === 1 ? "" : "s"} selected
+        {numProgramsSelected}/{programs.length} program areas selected
       </p>
       {/* // TODO: Should we decompose this? Abstract this? */}
       <div className="margin-right-auto">
