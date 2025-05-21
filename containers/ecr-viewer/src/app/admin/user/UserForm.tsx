@@ -22,8 +22,6 @@ interface FormProgram extends ListedProgramArea {
   checked?: boolean;
 }
 
-// type ConditionCategories = Record<string, FormCondition[]>;
-
 interface FormValues {
   email?: string;
   userType?: UserType;
