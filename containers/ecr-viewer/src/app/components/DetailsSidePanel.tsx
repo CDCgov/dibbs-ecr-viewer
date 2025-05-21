@@ -1,7 +1,7 @@
 import React, { ReactNode, RefObject, useId, useRef } from "react";
 
 import {
-  Modal,
+  ButtonGroup,
   ModalFooter,
   ModalHeading,
   ModalRef,
@@ -10,6 +10,8 @@ import {
 import classnames from "classnames";
 
 import { ForceClient } from "@/app/view-data/components/ForceClient";
+
+import Modal from "./Modal";
 
 /**
  * The details ref links the trigger(s) and side panel.
@@ -96,6 +98,7 @@ export const DetailsSidePanel = ({
   deleteAction?: () => Promise<void>;
 }) => {
   const id = useId();
+  const confirmRef = useRef<ModalRef>(null);
 
   return (
     <ForceClient loading={null}>
@@ -129,44 +132,54 @@ export const DetailsSidePanel = ({
             ))}
           </dl>
         </section>
-        {deleteAction && <DeleteFooter itemType={itemType} />}
+        {deleteAction && (
+          <ModalFooter className="botder-top border-base-light">
+            <ModalToggleButton
+              type="button"
+              modalRef={confirmRef}
+              opener={true}
+              closer={false}
+            >
+              Remove {itemType}
+            </ModalToggleButton>
+          </ModalFooter>
+        )}
       </Modal>
-    </ForceClient>
-  );
-};
 
-const DeleteFooter = ({ itemType }) => {
-  const id = useId();
-  const confirmRef = useRef<ModalRef>(null);
-
-  return (
-    <>
-      <ModalFooter className="botder-top border-base-light">
-        <ModalToggleButton
-          type="button"
-          modalRef={confirmRef}
-          opener={true}
-          closer={false}
+      {/* NOTE: order is important here so the confirmation goes on top of the side panel*/}
+      {deleteAction && (
+        <Modal
+          id={`delete-confirm-${id}`}
+          className="delete-confirm-modal"
+          ref={confirmRef}
+          aria-labelledby={`delete-confirm-${id}-heading`}
+          aria-describedby={`delete-confirm-${id}-description`}
         >
-          Remove {itemType}
-        </ModalToggleButton>
-      </ModalFooter>
-      <Modal
-        id={`delete-confirm-${id}`}
-        ref={confirmRef}
-        aria-labelledby={`delete-confirm-${id}-heading`}
-        aria-describedby={`delete-confirm-${id}-description`}
-      >
-        <ModalHeading id={`delete-confirm-${id}-heading`}>
-          Remove TODO USER?
-        </ModalHeading>
-        <p id={`delete-confirm-${id}-description`}>
-          Removing a user from the eCR Viewer is a permanent action. This cannot
-          be undone.
-        </p>
-        <p>This action will NOT edit or remove the user from AD.</p>
-        TODO CONFIRMATION FOOTER
-      </Modal>
-    </>
+          <ModalHeading id={`delete-confirm-${id}-heading`}>
+            Remove TODO USER?
+          </ModalHeading>
+          <p id={`delete-confirm-${id}-description`}>
+            Removing a user from the eCR Viewer is a permanent action. This
+            cannot be undone.
+          </p>
+          <p>This action will NOT edit or remove the user from AD.</p>
+          TODO CONFIRMATION FOOTER
+          <ModalFooter>
+            <ButtonGroup>
+              <ModalToggleButton modalRef={confirmRef} closer={true}>
+                Continue without saving
+              </ModalToggleButton>
+              <ModalToggleButton
+                modalRef={confirmRef}
+                closer={true}
+                className="padding-105 text-center"
+              >
+                Go back
+              </ModalToggleButton>
+            </ButtonGroup>
+          </ModalFooter>
+        </Modal>
+      )}
+    </ForceClient>
   );
 };

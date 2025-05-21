@@ -6,6 +6,7 @@ export const ArrowDownward = UswdsIcon.ArrowDownward;
 export const ArrowForward = UswdsIcon.ArrowForward;
 export const ArrowUpward = UswdsIcon.ArrowUpward;
 export const Autorenew = UswdsIcon.Autorenew;
+export const Close = UswdsIcon.Close;
 export const Error = UswdsIcon.Error;
 export const ExpandMore = UswdsIcon.ExpandMore;
 export const Event = UswdsIcon.Event;

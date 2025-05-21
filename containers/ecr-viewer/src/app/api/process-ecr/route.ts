@@ -55,7 +55,7 @@ export const POST = async (
     } else {
       rawBody = await request.json();
     }
-  } catch (e) {
+  } catch {
     return NextResponse.json(
       { message: "Validation error", errors: ["No form or json body found"] },
       { status: 400 },
