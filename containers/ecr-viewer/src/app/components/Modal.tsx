@@ -69,6 +69,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
   const initialPaddingRef = useRef<string>();
   const tempPaddingRef = useRef<string>();
   const modalEl = useRef<HTMLDivElement>(null);
+  const wrapperEl = useRef<HTMLDivElement>(null);
 
   // Fork: handle multiple layers of aria-hidden-ing
   const NON_MODALS = `body > *:not(${modalRootSelector}):not([aria-hidden]:not([data-modal-hidden]))`;
@@ -96,6 +97,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
     body.style.paddingRight = tempPaddingRef.current || "";
     body.classList.add("usa-js-modal--active");
     incrementAttribute(body, "data-modal-count");
+    wrapperEl.current?.removeAttribute("aria-hidden");
 
     document.querySelectorAll(NON_MODALS).forEach((el) => {
       if (el.id === "modal-root") return;
@@ -112,6 +114,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
     if (count === 1) {
       body.style.paddingRight = initialPaddingRef.current || "";
       body.classList.remove("usa-js-modal--active");
+      body.removeAttribute("data-modal-count");
     } else {
       body.setAttribute("data-modal-count", `${count - 1}`);
     }
@@ -195,6 +198,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
       <ModalWrapper
         role="dialog"
         id={id}
+        ref={wrapperEl}
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
         isVisible={isOpen}
