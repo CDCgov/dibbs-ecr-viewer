@@ -36,7 +36,7 @@
     "@azure/storage-blob": "^12.24.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "@google-cloud/storage": "^7.16.0",
-    "@next/bundle-analyzer": "^15.1.7",
+    "@next/bundle-analyzer": "^15.3.1",
     "@trussworks/react-uswds": "^9.1.0",
     "@uswds/uswds": "^3.11.0",
     "classnames": "^2.5.1",
