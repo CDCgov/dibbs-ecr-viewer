@@ -1,7 +1,7 @@
 import { Kysely } from "kysely";
 
 import { AnyDb } from "@/app/data/metadataDb/database";
-import { dbNamespace, dbDialect } from "@/app/data/metadataDb/utils/db-config";
+import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 
 /**
  * Add condition_code column and foreign key constraint to ecr_rr_conditions, backfill condition codes.
