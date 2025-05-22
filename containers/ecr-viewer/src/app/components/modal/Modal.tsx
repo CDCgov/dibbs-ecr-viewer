@@ -65,7 +65,11 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
 ): React.ReactElement => {
   const modalRootSelector = `[id="${id}"]`;
 
-  const { isOpen, toggleModal } = useModal(isInitiallyOpen, modalRootSelector);
+  const { isOpen, toggleModal } = useModal(
+    isInitiallyOpen,
+    modalRootSelector,
+    onClose,
+  );
   const [mounted, setMounted] = useState(false);
   const initialPaddingRef = useRef<string>();
   const tempPaddingRef = useRef<string>();
@@ -78,7 +82,6 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
 
   const closeModal = (e?: React.MouseEvent) => {
     toggleModal(e, false);
-    onClose?.();
   };
 
   useImperativeHandle(
@@ -250,6 +253,7 @@ type ModalHook = {
 const useModal = (
   isInitiallyOpen: boolean | undefined,
   modalRootSelector: string,
+  onClose?: () => void,
 ): ModalHook => {
   const [isOpen, setIsOpen] = useState(isInitiallyOpen || false);
 
@@ -280,9 +284,14 @@ const useModal = (
     }
 
     if (open === true) setIsOpen(true);
-    else if (open === false) setIsOpen(false);
-    else {
-      setIsOpen((state) => !state);
+    else if (open === false) {
+      onClose?.();
+      setIsOpen(false);
+    } else {
+      setIsOpen((state) => {
+        if (state) onClose?.();
+        return !state;
+      });
     }
 
     return true;

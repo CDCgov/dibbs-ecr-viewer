@@ -185,7 +185,6 @@ export const DetailsSidePanel = ({
               await deleteAction();
               detailsRef.current?.toggleModal(undefined, false);
               router.refresh();
-              // window.location.reload();
             }}
           >
             Yes, delete {itemType}
