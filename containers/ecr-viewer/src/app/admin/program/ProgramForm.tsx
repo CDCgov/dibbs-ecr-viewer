@@ -142,7 +142,7 @@ const ConditionFieldSet = ({
 
   const modalRef = useRef<ModalRef>(null);
 
-  const [confirmingCondition, setConfirmingCondtion] =
+  const [confirmingCondition, setConfirmingCondition] =
     useState<FormCondition | null>(null);
   const [confirmingCategory, setConfirmingCategory] = useState<string | null>(
     null,
@@ -247,7 +247,7 @@ const ConditionFieldSet = ({
                       onClick={(e) => {
                         // modal requires click event
                         if (isAlreadyAssigned && !condition.checked) {
-                          setConfirmingCondtion(condition);
+                          setConfirmingCondition(condition);
                           setConfirmingCategory(category);
                           modalRef.current?.toggleModal(e, true);
                         }
@@ -323,7 +323,7 @@ const ConditionFieldSet = ({
               <ConfirmationFooter
                 modalRef={modalRef}
                 reset={() => {
-                  setConfirmingCondtion(null);
+                  setConfirmingCondition(null);
                   setConfirmingCategory(null);
                 }}
                 onClick={() => {
