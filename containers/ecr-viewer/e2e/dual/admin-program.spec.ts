@@ -52,5 +52,23 @@ test.describe("program management page", () => {
     await page.waitForURL("/ecr-viewer/admin/program");
     await expect(page.getByText("Program management")).toBeVisible();
     await expect(page.getByText(conditionName)).toBeVisible();
+
+    // Open create form to test already assigned modal
+    await page.getByText("Create program area").click();
+    await expect(page.getByText(`Condition in ${conditionName}`)).toBeVisible();
+    await checkbox.scrollIntoViewIfNeeded();
+    await checkbox.dispatchEvent("click");
+    await expect(page.getByText("Are you sure you want to add")).toBeVisible();
+
+    const accessibilityScanResultsModal = await new AxeBuilder({
+      page,
+    }).analyze();
+
+    // axe struggles with the modal background, but all manual testing
+    // points to contrast being fine
+    const nonColorViolations = accessibilityScanResultsModal.violations.filter(
+      (v) => v.id !== "color-contrast",
+    );
+    expect(nonColorViolations).toEqual([]);
   });
 });
