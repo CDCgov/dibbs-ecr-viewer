@@ -294,13 +294,13 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
             <p>
               Me?
             </p>
-            <p>
-              Are you sure you want to continue?
-            </p>
             <div
               class="usa-modal__footer"
               data-testid="modalFooter"
             >
+              <p>
+                Are you sure you want to continue?
+              </p>
               <ul
                 class="usa-button-group flex-justify-end"
               >
@@ -308,7 +308,7 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button usa-button--outline"
+                    class="usa-button usa-button--outline padding-105"
                     data-close-modal="true"
                     data-focus="true"
                     data-testid="button"
@@ -321,7 +321,7 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button padding-105 text-center"
+                    class="usa-button"
                     data-close-modal="true"
                     data-testid="button"
                     type="button"
@@ -544,13 +544,13 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
             <p>
               Me?
             </p>
-            <p>
-              Are you sure you want to continue?
-            </p>
             <div
               class="usa-modal__footer"
               data-testid="modalFooter"
             >
+              <p>
+                Are you sure you want to continue?
+              </p>
               <ul
                 class="usa-button-group flex-justify-end"
               >
@@ -558,7 +558,7 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button usa-button--outline"
+                    class="usa-button usa-button--outline padding-105"
                     data-close-modal="true"
                     data-focus="true"
                     data-testid="button"
@@ -571,7 +571,7 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button padding-105 text-center"
+                    class="usa-button"
                     data-close-modal="true"
                     data-testid="button"
                     type="button"
@@ -791,13 +791,13 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
             <p>
               Me?
             </p>
-            <p>
-              Are you sure you want to continue?
-            </p>
             <div
               class="usa-modal__footer"
               data-testid="modalFooter"
             >
+              <p>
+                Are you sure you want to continue?
+              </p>
               <ul
                 class="usa-button-group flex-justify-end"
               >
@@ -805,7 +805,7 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button usa-button--outline"
+                    class="usa-button usa-button--outline padding-105"
                     data-close-modal="true"
                     data-focus="true"
                     data-testid="button"
@@ -818,7 +818,7 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button padding-105 text-center"
+                    class="usa-button"
                     data-close-modal="true"
                     data-testid="button"
                     type="button"
@@ -1040,13 +1040,13 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
             <p>
               Me?
             </p>
-            <p>
-              Are you sure you want to continue?
-            </p>
             <div
               class="usa-modal__footer"
               data-testid="modalFooter"
             >
+              <p>
+                Are you sure you want to continue?
+              </p>
               <ul
                 class="usa-button-group flex-justify-end"
               >
@@ -1054,7 +1054,7 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button usa-button--outline"
+                    class="usa-button usa-button--outline padding-105"
                     data-close-modal="true"
                     data-focus="true"
                     data-testid="button"
@@ -1067,7 +1067,7 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
                   class="usa-button-group__item"
                 >
                   <button
-                    class="usa-button padding-105 text-center"
+                    class="usa-button"
                     data-close-modal="true"
                     data-testid="button"
                     type="button"

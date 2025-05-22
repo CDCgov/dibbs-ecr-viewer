@@ -3,6 +3,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
+import { useRouter } from "next/navigation";
 
 import {
   DetailsSidePanel,
@@ -44,10 +45,10 @@ const SidePanel = (
 
 describe("DetailsSidePanel", () => {
   it("renders details side panel", async () => {
-    const reload = jest.fn();
-    jest
-      .spyOn(window, "location", "get")
-      .mockImplementation(() => ({ reload }) as unknown as Location);
+    const mockReload = jest.fn();
+    (useRouter as jest.Mock).mockReturnValue({
+      refresh: mockReload,
+    });
 
     const { unmount } = render(<SidePanel />);
     expect(screen.getByRole("dialog")).not.toHaveClass("is-visible");
@@ -169,7 +170,7 @@ describe("DetailsSidePanel", () => {
     expect(document.querySelector("body")).not.toHaveAttribute(
       "data-modal-count",
     );
-    expect(reload).toHaveBeenCalledOnce();
+    expect(mockReload).toHaveBeenCalledOnce();
 
     modals.forEach((d) => expect(d).not.toHaveClass("is-visible"));
     expect(secondTrigger).toHaveFocus();

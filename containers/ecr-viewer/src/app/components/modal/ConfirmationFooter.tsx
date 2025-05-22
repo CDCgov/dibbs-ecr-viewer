@@ -33,7 +33,7 @@ const ConfirmationFooter = ({
           closer={true}
           outline={true}
           data-focus={true}
-          className="padding-105 text-center"
+          className="padding-105"
         >
           Cancel
         </ModalToggleButton>
