@@ -208,6 +208,40 @@ describe("saveFhirData - extended", () => {
     expect(resp.status).toEqual(200);
   });
 
+  it("should reference the condition_code foreign key", async () => {
+    const db = getDb<Extended>();
+    const metadata: BundleExtendedMetadata = {
+      ...baseExtendedMetadata,
+      rr: [
+        {
+          condition: "flu",
+          code: "123",
+          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+        },
+      ],
+    };
+
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => {
+        return makePromiseResolveWithStatus(200);
+      },
+    );
+
+    const conditions = await db
+      .selectFrom("ecr_rr_conditions")
+      .selectAll()
+      .execute();
+
+    expect(resp.message).toEqual("Success. Saved metadata to database.");
+    expect(resp.status).toEqual(200);
+    expect(conditions).toHaveLength(1);
+    expect(conditions[0].condition_code).toEqual("123");
+  });
+  
   it("should return an error and roll back fhir data when db save fails", async () => {
     let rolledback = false;
     const badMetadata = {
@@ -268,38 +302,5 @@ describe("saveFhirData - extended", () => {
     expect(resp.status).toEqual(500);
     expect(rolledback).toBeFalse();
     expect(res).toHaveLength(0);
-  });
-  it("should reference the condition_code foreign key", async () => {
-    const db = getDb<Extended>();
-    const metadata: BundleExtendedMetadata = {
-      ...baseExtendedMetadata,
-      rr: [
-        {
-          condition: "flu",
-          code: "123",
-          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
-        },
-      ],
-    };
-
-    const resp = await saveFhirMetadata(
-      "1-2-3-4",
-      "core",
-      metadata,
-      makePromiseResolveWithStatus(200),
-      () => {
-        return makePromiseResolveWithStatus(200);
-      },
-    );
-
-    const conditions = await db
-      .selectFrom("ecr_rr_conditions")
-      .selectAll()
-      .execute();
-
-    expect(resp.message).toEqual("Success. Saved metadata to database.");
-    expect(resp.status).toEqual(200);
-    expect(conditions).toHaveLength(1);
-    expect(conditions[0].condition_code).toEqual("123");
   });
 });
