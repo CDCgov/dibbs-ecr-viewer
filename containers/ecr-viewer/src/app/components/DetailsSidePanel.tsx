@@ -11,7 +11,6 @@ import classnames from "classnames";
 import { useRouter } from "next/navigation";
 
 import { toSentenceCase } from "@/app/utils/format-utils";
-import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 import Modal from "./Modal";
 
