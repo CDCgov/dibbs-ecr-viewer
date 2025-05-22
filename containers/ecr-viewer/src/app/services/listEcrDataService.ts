@@ -349,35 +349,31 @@ export const generateFilterDateStatement = (
  */
 export const generateSortStatement = (
   columnName: string,
-  direction: string,
+  direction: string
 ): OrderByExpression<Core, "ecr_data", {}>[] => {
-  // Valid columns and directions
   const validColumns: { [key: string]: string } = {
-    patient: "patient",
+    patient: "first_name",
     date_created: "date_created",
     report_date: "encounter_start_date",
   };
-  const validDirections = ["ASC", "DESC"];
+  const validDirections = ["asc", "desc"];
 
-  // Validation checks
   columnName = validColumns[columnName] ?? "date_created";
-  if (!validDirections.includes(direction)) {
-    direction = "DESC";
-  }
-  direction = direction.toLowerCase();
+  direction = validDirections.includes(direction.toLowerCase())
+    ? direction.toLowerCase()
+    : "desc";
 
-  if (columnName === "patient") {
+  if (columnName === "first_name" || columnName === "last_name") {
+    // Sort by both first and last name for 'patient'
     return [
       `first_name ${direction}`,
       `last_name ${direction}`,
-    ] as OrderByExpression<Core, "ecr_data", {}>[];
+    ] as unknown as OrderByExpression<Core, "ecr_data", {}>[];
   }
-  // Default case for other columns
-  return [`${columnName} ${direction}`] as OrderByExpression<
-    Core,
-    "ecr_data",
-    {}
-  >[];
+
+  return [
+    `${columnName} ${direction}`,
+  ] as unknown as OrderByExpression<Core, "ecr_data", {}>[];
 };
 
 /**
