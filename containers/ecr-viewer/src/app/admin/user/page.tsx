@@ -50,7 +50,6 @@ const UserAdminPage = async () => {
 
   return (
     <div className="display-flex flex-column height-viewport">
-      <Header />
       <main className="main-container">
         <div className="content-container margin-top-10">
           <h2 className="margin-bottom-5">User management</h2>

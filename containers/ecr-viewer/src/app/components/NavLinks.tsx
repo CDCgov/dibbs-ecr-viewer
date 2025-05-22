@@ -14,10 +14,10 @@ const NavLinks = async () => {
                     <a href="/ecr-viewer" className="usa-nav__link">eCR Library</a>
                 </li>
                 <li className="usa-nav__primary-item">
-                    <a href="/" className="usa-nav__link">User Management</a>
+                    <a href="/ecr-viewer/admin/user" className="usa-nav__link">User Management</a>
                 </li>
                 <li className="usa-nav__primary-item">
-                    <a href="/" className="usa-nav__link">Program Management</a>
+                    <a href="/ecr-viewer/admin/program" className="usa-nav__link">Program Management</a>
                 </li>
             </ul>
             }

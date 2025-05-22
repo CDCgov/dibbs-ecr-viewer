@@ -17,7 +17,7 @@ import useEscapeKey from "@/app/hooks/useEscapeKey";
  * @returns The header section of the application.
  */
 const UserMenu = ({user}: {user: User}) => {
-    const [showMenu, setShowMenu] = useState(true);
+    const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
