@@ -89,5 +89,41 @@ test.describe("program management page", () => {
         (v) => v.id !== "color-contrast",
       );
     expect(nonColorViolationsModal).toEqual([]);
+
+    // close the confirmation modal
+    await page.getByRole("button", { name: "Close this window" }).click();
+
+    await page
+      .getByRole("link", { name: "Back to program management" })
+      .click();
+    await page.waitForURL("/ecr-viewer/admin/program");
+
+    // open up side panel to delete the condition
+    await page.getByText(conditionName).click();
+    await expect(page.getByText("Program area information")).toBeVisible();
+
+    await page.getByRole("button", { name: "Delete program area" }).click();
+    await expect(page.getByText(`Delete ${conditionName}`)).toBeVisible();
+
+    const accessibilityScanResultsConfirmation = await new AxeBuilder({
+      page,
+    }).analyze();
+
+    // axe struggles with the modal background, but all manual testing
+    // points to contrast being fine
+    const nonColorViolationsConfirmation =
+      accessibilityScanResultsConfirmation.violations.filter(
+        (v) => v.id !== "color-contrast",
+      );
+    expect(nonColorViolationsConfirmation).toEqual([]);
+
+    await page
+      .getByRole("button", { name: "Yes, delete program area" })
+      .click();
+    await expect(page.locator("body")).not.toHaveAttribute("data-modal-count");
+
+    for (const el of await page.getByText(conditionName).all()) {
+      await expect(el).not.toBeVisible();
+    }
   });
 });
