@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import Header from "@/app/components/Header";
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import {
   createProgramArea,
