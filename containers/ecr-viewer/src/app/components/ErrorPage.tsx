@@ -2,8 +2,8 @@ import React from "react";
 
 import { BackButton } from "./BackButton";
 import Footer from "./Footer";
-import Header from "./Header";
 import { Error } from "./Icon";
+import NavLinks from "@/app/components/NavLinks";
 
 /**
  * @param props React props
@@ -22,7 +22,6 @@ const ErrorPage = ({
   children: React.ReactNode;
 }) => (
   <div className="height-viewport width-viewport display-flex flex-column">
-    <Header />
     <main className="display-flex flex-justify-center height-full">
       <div className="display-inline-block margin-y-auto">
         <h2 className="font-family-serif font-serif-xl margin-bottom-0">
@@ -42,7 +41,6 @@ const ErrorPage = ({
         <BackButton className="margin-top-3 font-sans-md text-primary" />
       </div>
     </main>
-    <Footer/>
   </div>
 );
 

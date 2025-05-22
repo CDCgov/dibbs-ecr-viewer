@@ -49,6 +49,8 @@
   color: white;
   height: 5.5rem;
   line-height: 0;
+  margin-top: 0;
+  padding-top: 1.5rem;
 
   .usa-nav {
     height: 2.5rem;
@@ -78,7 +80,7 @@
 
     .usa-nav-container {
       height: 2.5rem;
-      margin: 1.5rem 5rem;
+      margin: 0 5rem 1.5rem 5rem;
       padding: 0;
       &::after {
         content: none;
@@ -91,20 +93,41 @@
     font-size: 2rem;
   }
 
+  img {
+    width: auto;
+    height: auto;
+  }
+
   .user-menu {
+    position: fixed;
+    top: 4rem; /* Adjust this to place it below your header/logo */
+    right: 0;
     width: 12.5rem;
     height: 7.625rem;
-    background-color: deeppink;
-    position: absolute;
-    top: 100%;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px #000000;
+    padding: 0.8125rem;
+
+    .user-name{
+      color: #000000 !Important;
+      margin-top: 0;
+      font-size: 1.125rem;
+    }
+
+    .user-role{
+      color: #565C65 !Important;
+      border-bottom: 1px solid #D9D9D9;
+      font-size: 1.125rem;
+    }
   }
 
   .user-menu-button {
     background-color: transparent;
+    border: 0;
   }
 
   .user-menu-container {
-    position: relative;
     z-index: 400;
   }
 }

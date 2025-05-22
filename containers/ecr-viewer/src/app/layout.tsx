@@ -1,7 +1,11 @@
 import "@/styles/styles.scss";
 
+import Header from "@/app/components/Header";
+import NavLinks from "@/app/components/NavLinks";
+
 import { AuthSessionProvider } from "./components/AuthSessionProvider";
 import RespectMotionPreferences from "./components/RespectMotionPreferences";
+import Footer from "@/app/components/Footer";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
@@ -26,7 +30,13 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <AuthSessionProvider>{children}</AuthSessionProvider>
+          <AuthSessionProvider>
+            <Header>
+              <NavLinks/>
+            </Header>
+            {children}
+            <Footer/>
+          </AuthSessionProvider>
         </body>
       </html>
     </RespectMotionPreferences>

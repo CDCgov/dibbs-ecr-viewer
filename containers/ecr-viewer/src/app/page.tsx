@@ -18,6 +18,7 @@ import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
+import NavLinks from "@/app/components/NavLinks";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
@@ -58,7 +59,6 @@ const HomePage = async ({
 
   return (
     <div className="display-flex flex-column height-viewport">
-      <Header />
       <main className="overflow-auto height-full">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
           <h2 className="margin-bottom-0 text-bold font-sans-xl">
@@ -109,7 +109,6 @@ const HomePage = async ({
           </EcrTableWrapper>
         </EcrPaginationWrapper>
       </main>
-      <Footer/>
     </div>
   );
 };
