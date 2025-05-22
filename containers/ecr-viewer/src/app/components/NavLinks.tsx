@@ -11,7 +11,7 @@ const NavLinks = async () => {
             { isAdmin(user) &&
             <ul className="usa-nav__primary usa-accordion">
                 <li className="usa-nav__primary-item">
-                    <a href="/" className="usa-nav__link">eCR Library</a>
+                    <a href="/ecr-viewer" className="usa-nav__link">eCR Library</a>
                 </li>
                 <li className="usa-nav__primary-item">
                     <a href="/" className="usa-nav__link">User Management</a>

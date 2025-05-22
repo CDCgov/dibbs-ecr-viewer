@@ -55,7 +55,7 @@ const UserMenu = ({user}: {user: User}) => {
                 <div className="menu-items-container">
                     <div>
                         <p className="user-name">{user.name}</p>
-                        <p className="user-role">{user.user_type}</p>
+                        <p className="user-role">{user.user_type.charAt(0).toUpperCase() + user.user_type.slice(1)}</p>
                     </div>
                     <div>
                         <SignOutButton/>
