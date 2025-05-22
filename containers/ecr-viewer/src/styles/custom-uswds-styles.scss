@@ -62,7 +62,7 @@
     height: 2px;
     width: 100%;
     background-color: #4070f4;
-    animation: progress 5s linear forwards infinite;
+    animation: progress 5s linear forwards;
     z-index: 2;
 
     &.usa-alert--success {

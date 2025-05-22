@@ -1,9 +1,7 @@
 "use client";
 import React, { ReactNode, useContext, useEffect } from "react";
 
-import { Alert, Button } from "@trussworks/react-uswds";
-
-import { HighlightOff } from "@/app/components/Icon";
+import { Alert } from "@trussworks/react-uswds";
 
 import { ToastContext, ToastVariant } from "./ToastProvider";
 
@@ -39,18 +37,6 @@ function Toast({
         headingLevel="h4"
         type={variant}
         slim={true}
-        cta={
-          <Button
-            className="margin-x-2 text-base display-flex flex-align-center"
-            type="button"
-            unstyled={true}
-            aria-label="Dismiss message"
-            aria-live="off"
-            onClick={() => dismissToast(id)}
-          >
-            <HighlightOff aria-hidden={true} className="square-3" />
-          </Button>
-        }
       >
         {children}
       </Alert>
