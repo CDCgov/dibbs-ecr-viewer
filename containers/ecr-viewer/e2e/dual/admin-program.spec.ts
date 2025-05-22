@@ -63,10 +63,31 @@ test.describe("program management page", () => {
 
     // axe struggles with the modal background, but all manual testing
     // points to contrast being fine
-    const nonColorViolations =
+    const nonColorViolationsSidePanel =
       accessibilityScanResultsSidePanel.violations.filter(
         (v) => v.id !== "color-contrast",
       );
-    expect(nonColorViolations).toEqual([]);
+    expect(nonColorViolationsSidePanel).toEqual([]);
+
+    await page.getByRole("button", { name: "Close this window" }).click();
+
+    // Open create form to test already assigned modal
+    await page.getByText("Create program area").click();
+    await expect(page.getByText(`Condition in ${conditionName}`)).toBeVisible();
+    await checkbox.scrollIntoViewIfNeeded();
+    await checkbox.dispatchEvent("click");
+    await expect(page.getByText("Are you sure you want to add")).toBeVisible();
+
+    const accessibilityScanResultsModal = await new AxeBuilder({
+      page,
+    }).analyze();
+
+    // axe struggles with the modal background, but all manual testing
+    // points to contrast being fine
+    const nonColorViolationsModal =
+      accessibilityScanResultsModal.violations.filter(
+        (v) => v.id !== "color-contrast",
+      );
+    expect(nonColorViolationsModal).toEqual([]);
   });
 });

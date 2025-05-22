@@ -20,17 +20,25 @@ export const getAllConditions = async (): Promise<string[]> => {
   }
 };
 
+export interface ListedCondition extends ConditionReference {
+  program_area_name: string | null;
+}
+
 /**
  * List all conditions in the reference table.
  * @returns list of all conditions
  */
-export const listConditionReferences = async (): Promise<
-  ConditionReference[]
-> => {
+export const listConditionReferences = async (): Promise<ListedCondition[]> => {
   try {
     return await getDb<Core>()
       .selectFrom("condition_reference")
-      .selectAll()
+      .leftJoin(
+        "program_area",
+        "condition_reference.program_area_uuid",
+        "program_area.uuid",
+      )
+      .selectAll("condition_reference")
+      .select("program_area.name as program_area_name")
       .execute();
   } catch (error: unknown) {
     const message = "Failed to list condition references";
