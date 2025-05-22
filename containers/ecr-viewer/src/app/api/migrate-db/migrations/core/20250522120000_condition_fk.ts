@@ -16,16 +16,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     .addColumn("condition_code", "varchar(20)")
     .execute();
 
-  await _db.schema
-    .alterTable("ecr_rr_conditions")
-    .addForeignKeyConstraint(
-      "ecr_rr_conditions_fk_condition_code",
-      ["condition_code"],
-      "condition_reference",
-      ["code"],
-    )
-    .execute();
-
   // Backfill condition_code for existing records
   const rows = await _db
     .selectFrom("ecr_rr_conditions as erc")
