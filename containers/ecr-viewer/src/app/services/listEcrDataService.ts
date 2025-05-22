@@ -349,7 +349,7 @@ export const generateFilterDateStatement = (
  */
 export const generateSortStatement = (
   columnName: string,
-  direction: string
+  direction: string,
 ): OrderByExpression<Core, "ecr_data", {}>[] => {
   const validColumns: { [key: string]: string } = {
     patient: "first_name",
@@ -371,9 +371,11 @@ export const generateSortStatement = (
     ] as unknown as OrderByExpression<Core, "ecr_data", {}>[];
   }
 
-  return [
-    `${columnName} ${direction}`,
-  ] as unknown as OrderByExpression<Core, "ecr_data", {}>[];
+  return [`${columnName} ${direction}`] as unknown as OrderByExpression<
+    Core,
+    "ecr_data",
+    {}
+  >[];
 };
 
 /**
