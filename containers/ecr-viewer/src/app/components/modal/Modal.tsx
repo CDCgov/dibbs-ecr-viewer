@@ -13,9 +13,8 @@ import classnames from "classnames";
 import FocusTrap from "focus-trap-react";
 import ReactDOM from "react-dom";
 
+import { Close } from "@/app/components/Icon";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
-
-import { Close } from "./Icon";
 
 // Fork: forceAction, modalRoot, and renderToPortal were removed as those
 // can cause some strange interaction effects with multi-modal usage and

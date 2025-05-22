@@ -1,21 +1,19 @@
 "use client";
-import React, { ReactNode, RefObject, useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 
 import {
   Button,
-  ButtonGroup,
   Checkbox,
-  ModalFooter,
   ModalHeading,
   ModalRef,
-  ModalToggleButton,
   RequiredMarker,
   TextInput,
 } from "@trussworks/react-uswds";
 
-import Modal from "@/app/components/Modal";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import ConfirmationFooter from "@/app/components/modal/ConfirmationFooter";
+import Modal from "@/app/components/modal/Modal";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { toKebabCase, makePlural } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
@@ -385,42 +383,6 @@ const ConfirmationModal = ({
           </>
         ))}
     </Modal>
-  );
-};
-
-const ConfirmationFooter = ({
-  onConfirm,
-  children,
-  modalRef,
-}: {
-  onConfirm: () => void;
-  children: ReactNode;
-  modalRef: RefObject<ModalRef>;
-}) => {
-  return (
-    <ModalFooter>
-      <p>Are you sure you want to continue?</p>
-      <ButtonGroup className="flex-justify-end">
-        <ModalToggleButton
-          modalRef={modalRef}
-          closer={true}
-          outline={true}
-          data-focus={true}
-          className="padding-105 text-center"
-        >
-          Cancel
-        </ModalToggleButton>
-        <ModalToggleButton
-          modalRef={modalRef}
-          closer={true}
-          onClick={() => {
-            onConfirm();
-          }}
-        >
-          {children}
-        </ModalToggleButton>
-      </ButtonGroup>
-    </ModalFooter>
   );
 };
 

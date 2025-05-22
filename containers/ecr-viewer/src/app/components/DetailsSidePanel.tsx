@@ -1,17 +1,18 @@
 import React, { ReactNode, RefObject, useId, useRef } from "react";
 
 import {
-  ButtonGroup,
   ModalFooter,
   ModalHeading,
   ModalRef,
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
+import { useRouter } from "next/navigation";
 
 import { toSentenceCase } from "@/app/utils/format-utils";
 
-import Modal from "./Modal";
+import ConfirmationFooter from "./modal/ConfirmationFooter";
+import Modal from "./modal/Modal";
 
 /**
  * The details ref links the trigger(s) and side panel.
@@ -105,6 +106,7 @@ export const DetailsSidePanel = ({
 }) => {
   const id = useId();
   const confirmRef = useRef<ModalRef>(null);
+  const router = useRouter();
 
   return (
     <>
@@ -177,32 +179,17 @@ export const DetailsSidePanel = ({
           </ModalHeading>
           {deleteModalBody}
 
-          {/* TODO: abstract out confirmation footer once condition assignment check pr is in */}
-          <p>Are you sure you want to continue?</p>
-          <ModalFooter>
-            <ButtonGroup className="flex-justify-end">
-              <ModalToggleButton
-                outline={true}
-                modalRef={confirmRef}
-                closer={true}
-                data-focus={true}
-              >
-                Cancel
-              </ModalToggleButton>
-              <ModalToggleButton
-                modalRef={confirmRef}
-                closer={true}
-                className="padding-105 text-center"
-                onClick={async () => {
-                  await deleteAction();
-                  detailsRef.current?.toggleModal(undefined, false);
-                  window.location.reload();
-                }}
-              >
-                Yes, delete {itemType}
-              </ModalToggleButton>
-            </ButtonGroup>
-          </ModalFooter>
+          <ConfirmationFooter
+            modalRef={confirmRef}
+            onConfirm={async () => {
+              await deleteAction();
+              detailsRef.current?.toggleModal(undefined, false);
+              router.refresh();
+              // window.location.reload();
+            }}
+          >
+            Yes, delete {itemType}
+          </ConfirmationFooter>
         </Modal>
       )}
     </>
