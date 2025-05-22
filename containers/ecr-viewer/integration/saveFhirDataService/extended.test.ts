@@ -241,7 +241,7 @@ describe("saveFhirData - extended", () => {
     expect(conditions).toHaveLength(1);
     expect(conditions[0].condition_code).toEqual("123");
   });
-  
+
   it("should return an error and roll back fhir data when db save fails", async () => {
     let rolledback = false;
     const badMetadata = {
