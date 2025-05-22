@@ -8,7 +8,6 @@ import {
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
-import { useRouter } from "next/navigation";
 
 import { toSentenceCase } from "@/app/utils/format-utils";
 
@@ -106,10 +105,9 @@ export const DetailsSidePanel = ({
 }) => {
   const id = useId();
   const confirmRef = useRef<ModalRef>(null);
-  const router = useRouter();
 
   return (
-    <ForceClient loading={null}>
+    <>
       <Modal
         id={`details-sidepanel-${id}`}
         className="sidepanel-modal"
@@ -207,6 +205,6 @@ export const DetailsSidePanel = ({
           </ModalFooter>
         </Modal>
       )}
-    </ForceClient>
+    </>
   );
 };

@@ -13,13 +13,13 @@ import {
   TextInput,
 } from "@trussworks/react-uswds";
 
+import Modal from "@/app/components/Modal";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { toKebabCase, makePlural } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
-import { Modal } from "@/components/Modal";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;
@@ -336,7 +336,7 @@ const ConfirmationModal = ({
       ref={modalRef}
       aria-labelledby="confirm-condition-heading"
       aria-describedby="confirm-condition-description"
-      forceAction={true}
+      onClose={onClose}
     >
       {confirmingCategory &&
         (confirmingCondition ? (
@@ -351,11 +351,7 @@ const ConfirmationModal = ({
               will be removed from the program area{" "}
               {confirmingCondition?.program_area_name}.
             </p>
-            <ConfirmationFooter
-              modalRef={modalRef}
-              onClose={onClose}
-              onConfirm={onConfirm}
-            >
+            <ConfirmationFooter modalRef={modalRef} onConfirm={onConfirm}>
               Yes, add condition
             </ConfirmationFooter>
           </>
@@ -383,11 +379,7 @@ const ConfirmationModal = ({
               </ul>
             </div>
 
-            <ConfirmationFooter
-              modalRef={modalRef}
-              onClose={onClose}
-              onConfirm={onConfirm}
-            >
+            <ConfirmationFooter modalRef={modalRef} onConfirm={onConfirm}>
               Yes, add all conditions
             </ConfirmationFooter>
           </>
@@ -398,12 +390,10 @@ const ConfirmationModal = ({
 
 const ConfirmationFooter = ({
   onConfirm,
-  onClose,
   children,
   modalRef,
 }: {
   onConfirm: () => void;
-  onClose: () => void;
   children: ReactNode;
   modalRef: RefObject<ModalRef>;
 }) => {
@@ -417,7 +407,6 @@ const ConfirmationFooter = ({
           outline={true}
           data-focus={true}
           className="padding-105 text-center"
-          onClick={onClose}
         >
           Cancel
         </ModalToggleButton>
@@ -426,7 +415,6 @@ const ConfirmationFooter = ({
           closer={true}
           onClick={() => {
             onConfirm();
-            onClose();
           }}
         >
           {children}

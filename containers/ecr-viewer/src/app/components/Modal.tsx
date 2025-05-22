@@ -13,6 +13,8 @@ import classnames from "classnames";
 import FocusTrap from "focus-trap-react";
 import ReactDOM from "react-dom";
 
+import { ForceClient } from "@/app/view-data/components/ForceClient";
+
 import { Close } from "./Icon";
 
 // Fork: forceAction, modalRoot, and renderToPortal were removed as those
@@ -222,7 +224,20 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
   return ReactDOM.createPortal(modal, document.body);
 };
 
-export const Modal = forwardRef(ModalForwardRef);
+const InnerModal = forwardRef(ModalForwardRef);
+
+const ClientSideModal: React.ForwardRefRenderFunction<ModalRef, ModalProps> = (
+  props,
+  ref,
+) => {
+  return (
+    <ForceClient loading={null}>
+      <InnerModal {...props} ref={ref} />
+    </ForceClient>
+  );
+};
+
+export const Modal = forwardRef(ClientSideModal);
 
 export default Modal;
 
