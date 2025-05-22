@@ -44,10 +44,6 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
   await _db.schema
     .alterTable("ecr_rr_conditions")
-    .dropConstraint("ecr_rr_conditions_fk_condition_code")
-    .execute();
-  await _db.schema
-    .alterTable("ecr_rr_conditions")
     .dropColumn("condition_code")
     .execute();
 }
