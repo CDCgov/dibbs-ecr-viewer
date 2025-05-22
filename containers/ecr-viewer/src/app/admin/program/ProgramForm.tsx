@@ -150,24 +150,15 @@ const ConditionFieldSet = ({
 
   const setCondition = (
     category: string,
-    condition: FormCondition,
+    condition: FormCondition | null,
     checked: boolean,
   ) => {
     setConditionCategories({
       ...conditionCategories,
       [category]: conditionCategories[category].map((c) =>
-        c.code === condition.code ? { ...c, checked } : c,
+        // a null condition indicates all conditions should be checked
+        !condition || c.code === condition.code ? { ...c, checked } : c,
       ),
-    });
-  };
-
-  const setCategory = (category: string, checked: boolean) => {
-    setConditionCategories({
-      ...conditionCategories,
-      [category]: conditionCategories[category].map((c) => ({
-        ...c,
-        checked,
-      })),
     });
   };
 
@@ -211,7 +202,7 @@ const ConditionFieldSet = ({
                         c.checked,
                     )
                   ) {
-                    setCategory(category, checked);
+                    setCondition(category, null, checked);
                   } else {
                     setConfirmingCategory(category);
                     modalRef.current?.toggleModal(e, true);
@@ -300,89 +291,119 @@ const ConditionFieldSet = ({
         }
         items={accordionItems}
       />
-      <Modal
-        id="confirm-condition"
-        ref={modalRef}
-        aria-labelledby="confirm-condition-heading"
-        aria-describedby="confirm-condition-description"
-        forceAction={true}
-      >
-        {confirmingCategory &&
-          (confirmingCondition ? (
-            <>
-              <ModalHeading id="confirm-condition-heading">
-                Are you sure you want to add{" "}
-                {confirmingCondition?.condition_name}?
-              </ModalHeading>
-              <p id="confirm-condition-description">
-                A condition can only live in one program area. If you add{" "}
-                {confirmingCondition?.condition_name} to this program area, it
-                will be removed from the program area{" "}
-                {confirmingCondition?.program_area_name}.
-              </p>
-              <ConfirmationFooter
-                modalRef={modalRef}
-                reset={() => {
-                  setConfirmingCondition(null);
-                  setConfirmingCategory(null);
-                }}
-                onClick={() => {
-                  setCondition(confirmingCategory!, confirmingCondition!, true);
-                }}
-              >
-                Yes, add condition
-              </ConfirmationFooter>
-            </>
-          ) : (
-            <>
-              <ModalHeading id="confirm-condition-heading">
-                Are you sure you want to add all conditions from{" "}
-                {confirmingCategory}?
-              </ModalHeading>
-              <div id="confirm-condition-description">
-                <p>
-                  A condition can only live in one program area. If you add the
-                  below conditions to this program area, they will be removed
-                  from their current program area.
-                </p>
-
-                <ul>
-                  {conditionCategories[confirmingCategory]
-                    .filter((c) => !!c.program_area_name)
-                    .map(({ condition_name, program_area_name }) => (
-                      <li key={condition_name}>
-                        {condition_name}, {program_area_name}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-
-              <ConfirmationFooter
-                modalRef={modalRef}
-                reset={() => {
-                  setConfirmingCategory(null);
-                }}
-                onClick={() => {
-                  setCategory(confirmingCategory!, true);
-                }}
-              >
-                Yes, add all conditions
-              </ConfirmationFooter>
-            </>
-          ))}
-      </Modal>
+      <ConfirmationModal
+        modalRef={modalRef}
+        confirmingCategory={confirmingCategory}
+        confirmingCondition={confirmingCondition}
+        onClose={() => {
+          setConfirmingCondition(null);
+          setConfirmingCategory(null);
+        }}
+        onConfirm={() =>
+          setCondition(confirmingCategory!, confirmingCondition!, true)
+        }
+        categoryConditions={
+          !!confirmingCategory
+            ? conditionCategories[confirmingCategory].filter(
+                (c) =>
+                  !!c.program_area_uuid && c.program_area_uuid !== progUuid,
+              )
+            : []
+        }
+      />
     </FieldSet>
   );
 };
 
+const ConfirmationModal = ({
+  confirmingCategory,
+  confirmingCondition,
+  categoryConditions,
+  onClose,
+  onConfirm,
+  modalRef,
+}: {
+  confirmingCategory: string | null;
+  confirmingCondition: FormCondition | null;
+  categoryConditions: FormCondition[];
+  onClose: () => void;
+  onConfirm: () => void;
+  modalRef: RefObject<ModalRef>;
+}) => {
+  return (
+    <Modal
+      id="confirm-condition"
+      ref={modalRef}
+      aria-labelledby="confirm-condition-heading"
+      aria-describedby="confirm-condition-description"
+      forceAction={true}
+    >
+      {confirmingCategory &&
+        (confirmingCondition ? (
+          <>
+            <ModalHeading id="confirm-condition-heading">
+              Are you sure you want to add {confirmingCondition?.condition_name}
+              ?
+            </ModalHeading>
+            <p id="confirm-condition-description">
+              A condition can only live in one program area. If you add{" "}
+              {confirmingCondition?.condition_name} to this program area, it
+              will be removed from the program area{" "}
+              {confirmingCondition?.program_area_name}.
+            </p>
+            <ConfirmationFooter
+              modalRef={modalRef}
+              onClose={onClose}
+              onConfirm={onConfirm}
+            >
+              Yes, add condition
+            </ConfirmationFooter>
+          </>
+        ) : (
+          <>
+            <ModalHeading id="confirm-condition-heading">
+              Are you sure you want to add all conditions from{" "}
+              {confirmingCategory}?
+            </ModalHeading>
+            <div id="confirm-condition-description">
+              <p>
+                A condition can only live in one program area. If you add the
+                below conditions to this program area, they will be removed from
+                their current program area.
+              </p>
+
+              <ul>
+                {categoryConditions.map(
+                  ({ condition_name, program_area_name }) => (
+                    <li key={condition_name}>
+                      {condition_name}, {program_area_name}
+                    </li>
+                  ),
+                )}
+              </ul>
+            </div>
+
+            <ConfirmationFooter
+              modalRef={modalRef}
+              onClose={onClose}
+              onConfirm={onConfirm}
+            >
+              Yes, add all conditions
+            </ConfirmationFooter>
+          </>
+        ))}
+    </Modal>
+  );
+};
+
 const ConfirmationFooter = ({
-  onClick,
-  reset,
+  onConfirm,
+  onClose,
   children,
   modalRef,
 }: {
-  onClick: () => void;
-  reset: () => void;
+  onConfirm: () => void;
+  onClose: () => void;
   children: ReactNode;
   modalRef: RefObject<ModalRef>;
 }) => {
@@ -396,7 +417,7 @@ const ConfirmationFooter = ({
           outline={true}
           data-focus={true}
           className="padding-105 text-center"
-          onClick={reset}
+          onClick={onClose}
         >
           Cancel
         </ModalToggleButton>
@@ -404,8 +425,8 @@ const ConfirmationFooter = ({
           modalRef={modalRef}
           closer={true}
           onClick={() => {
-            onClick();
-            reset();
+            onConfirm();
+            onClose();
           }}
         >
           {children}
