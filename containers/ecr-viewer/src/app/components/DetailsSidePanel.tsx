@@ -1,14 +1,13 @@
 import React, { ReactNode, RefObject, useId, useRef } from "react";
 
 import {
-  Modal,
   ModalHeading,
   ModalRef,
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
 
-import { ForceClient } from "@/app/view-data/components/ForceClient";
+import { Modal } from "@/components/Modal";
 
 /**
  * The details ref links the trigger(s) and side panel.
@@ -91,38 +90,36 @@ export const DetailsSidePanel = ({
   const id = useId();
 
   return (
-    <ForceClient loading={null}>
-      <Modal
-        id={`details-sidepanel-${id}`}
-        className="sidepanel-modal"
-        ref={detailsRef}
-        aria-labelledby={`details-sidepanel-${id}-heading`}
-        aria-describedby={`details-sidepanel-${id}-description`}
-      >
-        <div>
-          <ModalHeading
-            id={`details-sidepanel-${id}-heading`}
-            className="font-sans-3xl margin-bottom-0"
-          >
-            {title}
-          </ModalHeading>
-          <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
-        </div>
-        <div className="section__line_gray" />
+    <Modal
+      id={`details-sidepanel-${id}`}
+      className="sidepanel-modal"
+      ref={detailsRef}
+      aria-labelledby={`details-sidepanel-${id}-heading`}
+      aria-describedby={`details-sidepanel-${id}-description`}
+    >
+      <div>
+        <ModalHeading
+          id={`details-sidepanel-${id}-heading`}
+          className="font-sans-3xl margin-bottom-0"
+        >
+          {title}
+        </ModalHeading>
+        <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
+      </div>
+      <div className="section__line_gray" />
 
-        <section>
-          <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
+      <section>
+        <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
 
-          <dl>
-            {details.map(({ title, value }, i) => (
-              <React.Fragment key={`detail-${i}`}>
-                <dt>{title}</dt>
-                <dd>{value}</dd>
-              </React.Fragment>
-            ))}
-          </dl>
-        </section>
-      </Modal>
-    </ForceClient>
+        <dl>
+          {details.map(({ title, value }, i) => (
+            <React.Fragment key={`detail-${i}`}>
+              <dt>{title}</dt>
+              <dd>{value}</dd>
+            </React.Fragment>
+          ))}
+        </dl>
+      </section>
+    </Modal>
   );
 };
