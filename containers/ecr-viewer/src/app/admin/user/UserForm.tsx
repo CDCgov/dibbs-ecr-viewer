@@ -225,7 +225,7 @@ const ProgramFieldSet = ({
               )
             }
             aria-controls={programs
-              .map(({ uuid }) => `condition-${uuid}`)
+              .map(({ uuid }) => `program-${uuid}`)
               .join(" ")}
             className="margin-top-0"
           >
