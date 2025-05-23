@@ -9,7 +9,7 @@ describe('Footer', () => {
         render(<Footer />);
         const logo = screen.getByAltText('Centers for Disease Control and Prevention Logo');
         expect(logo).toBeInTheDocument();
-        expect(logo).toHaveAttribute('src', expect.stringContaining('cdc-logo.png'));
+        expect(logo.getAttribute('src')).toContain('cdc-logo.png');
     });
 
     it('contains a mailto link to dibbs@cdc.gov', () => {
