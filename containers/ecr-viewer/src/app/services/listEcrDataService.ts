@@ -351,27 +351,29 @@ export const generateSortStatement = (
   columnName: string,
   direction: string,
 ): OrderByExpression<Core, "ecr_data", {}>[] => {
+  // Valid columns and directions
   const validColumns: { [key: string]: string } = {
-    patient: "first_name",
+    patient: "patient",
     date_created: "date_created",
     report_date: "encounter_start_date",
   };
-  const validDirections = ["asc", "desc"];
+  const validDirections = ["ASC", "DESC"];
 
+  // Validation checks
   columnName = validColumns[columnName] ?? "date_created";
-  direction = validDirections.includes(direction.toLowerCase())
-    ? direction.toLowerCase()
-    : "desc";
+  if (!validDirections.includes(direction)) {
+    direction = "DESC";
+  }
+  direction = direction.toLowerCase();
 
-  if (columnName === "first_name" || columnName === "last_name") {
-    // Sort by both first and last name for 'patient'
+  if (columnName === "patient") {
     return [
       `first_name ${direction}`,
       `last_name ${direction}`,
-    ] as unknown as OrderByExpression<Core, "ecr_data", {}>[];
+    ] as OrderByExpression<Core, "ecr_data", {}>[];
   }
-
-  return [`${columnName} ${direction}`] as unknown as OrderByExpression<
+  // Default case for other columns
+  return [`${columnName} ${direction}`] as OrderByExpression<
     Core,
     "ecr_data",
     {}
