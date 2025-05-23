@@ -2,6 +2,13 @@ import {getLoggedInUser, isAdmin} from "@/app/services/userService";
 
 import UserMenu from "./UserMenu";
 
+
+/**
+ * Nav links component for the eCR Viewer Header.
+ * This component renders navigation links for admin users and returns a
+ * user menu containing user information and a sign-out button
+ * @returns The header nav links and a user menu
+ */
 const NavLinks = async () => {
 
     const user = await getLoggedInUser()
@@ -22,7 +29,7 @@ const NavLinks = async () => {
             </ul>
             }
             <UserMenu user={user}/>
-    </div >)
+        </div >)
 }
 
 export default NavLinks;

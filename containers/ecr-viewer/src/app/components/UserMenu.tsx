@@ -5,16 +5,18 @@ import React, {useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 
 import {User} from "@/app/data/metadataDb/types/core";
-import {SignOutButton} from "@/app/components/SignOutButton";
 import useEscapeKey from "@/app/hooks/useEscapeKey";
+
+import {SignOutButton} from "./SignOutButton";
 
 
 /**
- * Header component for the ECR Viewer project.
- * This component renders the header section of the application, including the
- * navigation container, navbar, and logo. It uses USWDS (U.S. Web Design System)
- * classes for styling.
- * @returns The header section of the application.
+ * User Menu component for the ECR Viewer project.
+ * This component renders a dropdown menu that contains user information
+ * and a sign-out button
+ * @param props Component props.
+ * @param props.user - Details of the currently logged-in user
+ * @returns The UserMenu component of the application.
  */
 const UserMenu = ({user}: {user: User}) => {
     const [showMenu, setShowMenu] = useState(false);
