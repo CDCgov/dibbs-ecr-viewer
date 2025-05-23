@@ -50,7 +50,7 @@ const UserMenu = ({user}: {user: User}) => {
 
     return (<div className="user-menu-container">
         <button ref={buttonRef} className='user-menu-button' onClick={()=> {toggleMenuDropdown()}}>
-            <Image src="/ecr-viewer/user-profile.png" alt="eCR Viewer Logo" width={28} height={28}/>
+            <Image src="/ecr-viewer/user-profile.png" alt="User Menu Icon" width={28} height={28}/>
         </button>
         { showMenu && (
             <div ref={menuRef} className="user-menu">
