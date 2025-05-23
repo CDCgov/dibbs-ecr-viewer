@@ -10,38 +10,43 @@ import { ToastContext, ToastVariant } from "./ToastProvider";
  * @param props react props
  * @param props.id The toasts ID
  * @param props.variant The variant of toast (e.g. "success")
+ * @param props.timeout The timeout of the toast in seconds.
  * @param props.children Toast content
  * @returns Toast component
  */
 function Toast({
   id,
   variant,
+  timeout,
   children,
 }: {
   id: string;
   variant: ToastVariant;
+  timeout: number;
   children: ReactNode;
 }) {
   const { dismissToast } = useContext(ToastContext);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => dismissToast(id), 5000);
-    return () => window.clearTimeout(timeout);
+    const t = window.setTimeout(() => dismissToast(id), timeout * 1000);
+    return () => window.clearTimeout(t);
   }, []);
 
+  // Make sure the timeout is synced with the progress bar
+  const style = { "--toast-timeout": `${timeout}s` } as React.CSSProperties;
+
   return (
-    <div>
-      <Alert
-        aria-live="polite"
-        className="toast"
-        headingLevel="h4"
-        type={variant}
-        slim={true}
-      >
-        {children}
-      </Alert>
-      <div className="progress" />
-    </div>
+    <Alert
+      aria-live="polite"
+      aria-label="Notification"
+      className="toast"
+      headingLevel="h4"
+      type={variant}
+      slim={true}
+      style={style}
+    >
+      {children}
+    </Alert>
   );
 }
 

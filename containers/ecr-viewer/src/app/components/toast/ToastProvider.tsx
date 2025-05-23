@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useCallback, useState } from "react";
+import React, { ReactNode, useCallback, useMemo, useState } from "react";
 
 import useEscapeKey from "@/app/hooks/useEscapeKey";
 
@@ -38,7 +38,7 @@ function ToastProvider({ children }: { children: ReactNode }) {
     const newToast = {
       message,
       variant,
-      id: crypto.randomUUID(),
+      id: `${Math.random()}`,
     };
     setToasts((ts) => [...ts, newToast]);
   }, []);
@@ -47,7 +47,7 @@ function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((ts) => ts.filter((t) => t.id !== id));
   }, []);
 
-  const value = React.useMemo(() => {
+  const value = useMemo(() => {
     return {
       toasts,
       createToast,
