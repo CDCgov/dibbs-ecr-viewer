@@ -1,4 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { notFound } from "next/navigation";
 
@@ -76,14 +77,14 @@ describe("Program Admin Page", () => {
           {
             code: "456",
             concept_name: "condition 1 (disease)",
-            condition_name: "condition",
+            condition_name: "condition 1",
             condition_category: "category",
             program_area_uuid: "789",
           },
           {
             code: "789",
             concept_name: "condition 2 (disease)",
-            condition_name: "condition",
+            condition_name: "condition 2",
             condition_category: "category",
             program_area_uuid: "789",
           },
@@ -97,6 +98,13 @@ describe("Program Admin Page", () => {
       screen.queryByText("No program areas added"),
     ).not.toBeInTheDocument();
     expect(container).toMatchSnapshot();
+
+    const user = userEvent.setup();
+    await user.click(
+      screen.getByRole("button", { name: "Program Area Three" }),
+    );
+    expect(screen.getByText("Program area information")).toBeInTheDocument();
+    expect(screen.getByText("condition 1")).toBeInTheDocument();
   });
 
   describe("Creating programs", () => {
