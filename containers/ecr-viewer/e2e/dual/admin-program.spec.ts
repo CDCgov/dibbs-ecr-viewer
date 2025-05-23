@@ -51,7 +51,11 @@ test.describe("program management page", () => {
 
     await page.waitForURL("/ecr-viewer/admin/program");
     await expect(page.getByText("Program management")).toBeVisible();
-    await expect(page.getByText(conditionName)).toBeVisible();
+
+    await expect(page.getByRole("cell", { name: conditionName })).toBeVisible();
+    await expect(
+      page.getByText(`${conditionName} successfully saved`),
+    ).toBeVisible();
 
     // Open create form to test already assigned modal
     await page.getByText("Create program area").click();
