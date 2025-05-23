@@ -175,6 +175,11 @@
   }
 }
 
+.usa-input {
+  border: 1px solid color("base");
+  border-radius: 0.25rem;
+}
+
 .usa-tooltip__body {
   max-width: 700px;
   min-width: min(450px, 0.25 * (100vw - 16rem));
