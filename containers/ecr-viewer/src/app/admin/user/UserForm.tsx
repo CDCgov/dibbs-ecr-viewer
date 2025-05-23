@@ -88,12 +88,12 @@ const EmailFieldSet = ({
   setEmail: (n: string) => void;
 }) => {
   return (
-    <FieldSet legend="AD Email">
+    <FieldSet legend="Email">
       <span>
-        Required fields are marked with an asterisk (<RequiredMarker />)
+        Add the new user by their login email (<RequiredMarker />)
       </span>
       <label className="usa-label">
-        AD EMAIL
+        EMAIL
         <RequiredMarker />
         <TextInput
           type="email"
