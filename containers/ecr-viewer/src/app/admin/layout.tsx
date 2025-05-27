@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 
-import Header from "@/app/components/Header";
-
 /**
  * @param props React props
  * @param props.children Page content
