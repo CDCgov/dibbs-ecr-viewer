@@ -58,7 +58,7 @@ test.describe("program management page", () => {
     ).toBeVisible();
 
     // open up side panel
-    await page.getByText(conditionName).click();
+    await page.getByRole("button", { name: conditionName }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
     const accessibilityScanResultsSidePanel = await new AxeBuilder({
