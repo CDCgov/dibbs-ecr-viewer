@@ -17,7 +17,7 @@ import { Search } from "@/app/components/Icon";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ListedCondition } from "@/app/services/listConditionsService";
-import { toKebabCase } from "@/app/utils/format-utils";
+import { toKebabCase, makePlural } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 import { Modal } from "@/components/Modal";
@@ -74,7 +74,6 @@ export const ProgramForm = ({
     .flatMap((id) => id)
     .filter(({ checked }) => !!checked)
     .map(({ code }) => code);
-  console.log({ selectedConditions });
   const numConditionsSelected = selectedConditions.length;
 
   const valid = !!name.trim() && numConditionsSelected > 0;
@@ -308,7 +307,7 @@ const ConditionFieldSet = ({
       <div className="display-flex flex-justify margin-top-3">
         <p className="text-bold font-size-md margin-y-0">
           {numConditionsSelected} condition
-          {numConditionsSelected === 1 ? "" : "s"} selected
+          {makePlural(numConditionsSelected)} selected
         </p>
         <SearchField
           searchTerm={searchTerm}
@@ -365,7 +364,11 @@ const SearchField = ({
 }) => {
   return (
     <div className="live-search">
-      {searchTerm && <p className="result-count">{numResults} results </p>}
+      {searchTerm && (
+        <p aria-live="polite" className="result-count">
+          {numResults} results{" "}
+        </p>
+      )}
       <Search aria-hidden={true} className="square-3 text-base" />
       <TextInput
         type="search"
