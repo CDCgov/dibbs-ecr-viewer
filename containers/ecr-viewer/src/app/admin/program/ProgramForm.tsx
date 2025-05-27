@@ -363,7 +363,7 @@ const SearchField = ({
     <div className="live-search">
       {searchTerm && (
         <p aria-live="polite" className="result-count">
-          {numResults} results{" "}
+          {numResults} result{makePlural(numResults)}
         </p>
       )}
       <Search aria-hidden={true} className="square-3 text-base" />
