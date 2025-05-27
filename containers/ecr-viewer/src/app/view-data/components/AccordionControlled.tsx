@@ -6,12 +6,19 @@
  */
 import React from "react";
 
+import { Checkbox } from "@trussworks/react-uswds";
 import classnames from "classnames";
 
 import { AccordionItem as AccordionItemProps } from "@/app/view-data/types";
 
+type AccordionControlledItem = AccordionItemProps & {
+  group?: string;
+  isChecked?: () => boolean;
+  onChecked?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
 type AccordionProps = {
-  items: AccordionItemProps[];
+  items: AccordionControlledItem[];
   className?: string;
   toggleItem: (id: string) => void;
 };
@@ -75,6 +82,7 @@ export const AccordionControlled = ({
   className,
   toggleItem,
 }: AccordionProps & JSX.IntrinsicElements["div"]): React.ReactElement => {
+  // TODO ANGELA: Things get passed in through here, then we add the checkbox item
   return (
     <div
       className={classnames("usa-accordion", className)}
@@ -82,16 +90,60 @@ export const AccordionControlled = ({
       data-allow-multiple={true}
     >
       {items.map((item) => (
-        <AccordionItem
-          key={`accordionItem_${item.id}`}
-          {...item}
-          handleToggle={(): void => {
-            toggleItem(item.id);
-          }}
-        />
+        <div
+          key={`accordionItemWrapper-${item.id}`}
+          className="display-flex flex-align-top margin-bottom-2"
+        >
+          {item.isChecked && item.onChecked && (
+            <div className="margin-right-2 margin-top-3">
+              <CheckboxItem
+                id={item.id}
+                group={item.group ?? "checkbox"}
+                // label={item.id}
+                isChecked={item.isChecked}
+                onChecked={item.onChecked}
+              />
+            </div>
+          )}
+          <div className="flex-grow-1 width-full">
+            <AccordionItem
+              {...item}
+              handleToggle={(): void => {
+                toggleItem(item.id);
+              }}
+            />
+          </div>
+        </div>
       ))}
     </div>
   );
 };
 
 export default AccordionControlled;
+
+type CheckboxItemProps = {
+  id: string;
+  group: string;
+  isChecked: () => boolean;
+  onChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const CheckboxItem = ({
+  id,
+  group,
+  isChecked,
+  onChecked,
+}: CheckboxItemProps): React.ReactElement => (
+  <div key={`${group}-${id}`}>
+    <Checkbox
+      id={`${group}-${id}`}
+      name={`${group}s`}
+      value={id}
+      aria-label={`Checkbox for ${group}-${id}`} // TODO ANGELA: needs to be a human-readable string?
+      label="" // TODO ANGELA: maybe make own checkbox component w/o label?
+      checked={isChecked()}
+      onChange={onChecked}
+    />
+  </div>
+);
+

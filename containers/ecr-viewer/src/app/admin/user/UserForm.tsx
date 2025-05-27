@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 import {
   Button,
-  Checkbox,
   RequiredMarker,
   TextInput,
   Radio,
@@ -159,30 +158,13 @@ const ProgramFieldSet = ({
     const conditions = program.conditions;
     const numConditions = conditions.length;
 
+    // TODO ANGELA: Pass in isChecked and onCheck handlers into items directly
     return {
       title: (
         <div className="display-flex flex-justify flex-align-center">
-          <div>
-            <React.Fragment key={`program-${program.uuid}`}>
-              <Checkbox
-                id={`program-${program.uuid}`}
-                name="programs"
-                value={program.uuid}
-                label={name}
-                checked={program.checked === true}
-                onChange={(e) =>
-                  setPrograms(
-                    programs.map((c) =>
-                      c.uuid === program.uuid
-                        ? { ...c, checked: e.target.checked }
-                        : c,
-                    ),
-                  )
-                }
-              />
-            </React.Fragment>
-          </div>
-
+          <span>
+            {name}
+          </span>
           <span>
             {numConditions} condition{makePlural(numConditions)}
           </span>
@@ -192,6 +174,15 @@ const ProgramFieldSet = ({
       id: toKebabCase(name),
       expanded: !!expandedPrograms[toKebabCase(name)],
       headingLevel: "h3",
+      group: "program",
+      isChecked: () => program.checked === true, 
+      onChecked: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPrograms(
+          programs.map((c) =>
+            c.uuid === program.uuid ? { ...c, checked: e.target.checked } : c
+          )
+        );
+      }
     };
   });
 
@@ -205,7 +196,7 @@ const ProgramFieldSet = ({
       <p className="text-bold font-size-md">
         {numProgramsSelected}/{programs.length} program areas selected
       </p>
-      {/* // TODO: Should we decompose this? Abstract this? */}
+      {/* // TODO ANGELA: Should we decompose this? Abstract this? */}
       <div className="margin-right-auto">
         {[
           { type: "Select", checked: true, disabledCount: programs.length },
@@ -221,11 +212,11 @@ const ProgramFieldSet = ({
                 programs.map((c) => ({
                   ...c,
                   checked,
-                })),
+                }))
               )
             }
             aria-controls={programs
-              .map(({ uuid }) => `program-${uuid}`)
+              .map(({ name }) => `${toKebabCase(name)}`)
               .join(" ")}
             className="margin-top-0"
           >
@@ -251,8 +242,8 @@ const ProgramFieldSet = ({
   );
 };
 
-// TODO: Rename...?
-// TODO: Make more generic?
+// TODO ANGELA: Rename...?
+// TODO ANGELA: Make more generic?
 const valsToBoolean = (programs: FormProgram[], val: boolean) => {
   return programs
     .map((obj) => obj.name)
