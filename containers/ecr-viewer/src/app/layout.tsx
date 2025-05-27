@@ -32,10 +32,10 @@ export default function RootLayout({
         <body className="overflow-x-auto">
           <AuthSessionProvider>
             <Header>
-              <NavLinks/>
+              <NavLinks />
             </Header>
             {children}
-            <Footer/>
+            <Footer />
           </AuthSessionProvider>
         </body>
       </html>

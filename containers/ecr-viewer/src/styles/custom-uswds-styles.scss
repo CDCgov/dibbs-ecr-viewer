@@ -54,7 +54,7 @@
 }
 
 .usa-header {
-  background-color: #14333D;
+  background-color: #14333d;
   color: white;
   height: 5.5rem;
   line-height: 0;
@@ -70,31 +70,31 @@
     border-bottom: none;
   }
 
-    .usa-logo {
-      margin-bottom: 1.5rem;
-      margin-top: 1.5rem;
-    }
+  .usa-logo {
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+  }
 
-    a {
-      font-weight: 400 !important;
-      font-size: 1.125rem !important;
-      color: #E7F2F5 !important;
-    }
+  a {
+    font-weight: 400 !important;
+    font-size: 1.125rem !important;
+    color: #e7f2f5 !important;
+  }
 
-    @media (min-width: 64em) {
-      .usa-nav__link:hover::after {
-        background-color: #82B4C9;
-      }
+  @media (min-width: 64em) {
+    .usa-nav__link:hover::after {
+      background-color: #82b4c9;
     }
+  }
 
-    .usa-nav-container {
-      height: 2.5rem;
-      margin: 0 5rem 1.5rem 5rem;
-      padding: 0;
-      &::after {
-        content: none;
-      }
+  .usa-nav-container {
+    height: 2.5rem;
+    margin: 0 5rem 1.5rem 5rem;
+    padding: 0;
+    &::after {
+      content: none;
     }
+  }
 
   h1 {
     font-family: "Merriweather";
@@ -112,7 +112,7 @@
   }
 
   .user-menu-button {
-    background-color: #14333D !important;
+    background-color: #14333d !important;
     border: 0;
   }
 
@@ -123,30 +123,29 @@
     z-index: 1000;
     width: 12.5rem;
     height: 7.625rem;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     border-radius: 5px;
     box-shadow: 0 2px 4px #000000;
     padding: 0.8125rem;
 
-
     .sign-out-button {
-      color: #1A4480;
+      color: #1a4480;
       background: none !important;
       font-weight: 400;
       font-size: 1.125rem;
       padding: 0;
     }
 
-    .user-name{
-      color: #000000 !Important;
-      margin: 0 0 .6rem 0;
+    .user-name {
+      color: #000000 !important;
+      margin: 0 0 0.6rem 0;
       font-size: 1.125rem;
       font-weight: 700;
     }
 
-    .user-role{
-      color: #565C65 !Important;
-      border-bottom: 1px solid #D9D9D9;
+    .user-role {
+      color: #565c65 !important;
+      border-bottom: 1px solid #d9d9d9;
       font-size: 1.125rem;
       padding-bottom: 1rem;
       margin: 0 0 1rem 0;
@@ -161,28 +160,27 @@
 
 .usa-footer {
   height: 5.5rem;
-  background-color: #14333D;
+  background-color: #14333d;
   padding-top: 1.25rem;
 
-  .usa-footer__primary-section{
-    background-color: #14333D;
+  .usa-footer__primary-section {
+    background-color: #14333d;
   }
 
   p {
     font-weight: 400;
-    color: #E7F2F5;
+    color: #e7f2f5;
   }
 
-  a{
+  a {
     font-weight: 700;
-    color: #E7F2F5;
+    color: #e7f2f5;
   }
   .footer-content {
     margin: 0 5rem 1.25rem 5rem;
     height: 3rem;
   }
 }
-
 
 .usa-modal-overlay:has(.usa-modal.sidepanel-modal) {
   padding: 0;

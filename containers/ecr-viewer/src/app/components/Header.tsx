@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 
-import Image from 'next/image';
+import Image from "next/image";
 import Link from "next/link";
 
 /**
@@ -14,20 +14,22 @@ import Link from "next/link";
  * @param props.children - nav links to be displayed in the header
  * @returns The header section of the application.
  */
-const Header = ({children}: {children: ReactNode}) =>{
-    return(<header className="usa-header usa-header--basic">
-    <div
-      className="usa-nav-container"
-      style={{ maxWidth: "none" }}
-    >
-        <Link className='dibbs-logo' href="/" prefetch={false}>
-            <Image src="/ecr-viewer/ecr-viewer-logo.png" alt="eCR Viewer Logo" width={185} height={40} />
+const Header = ({ children }: { children: ReactNode }) => {
+  return (
+    <header className="usa-header usa-header--basic">
+      <div className="usa-nav-container" style={{ maxWidth: "none" }}>
+        <Link className="dibbs-logo" href="/" prefetch={false}>
+          <Image
+            src="/ecr-viewer/ecr-viewer-logo.png"
+            alt="eCR Viewer Logo"
+            width={185}
+            height={40}
+          />
         </Link>
         {children}
-
-    </div>
-  </header>
-)
+      </div>
+    </header>
+  );
 };
 
 export default Header;

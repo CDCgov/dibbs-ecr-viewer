@@ -5,16 +5,16 @@ import React from "react";
  * @param handleEsc handler for when the escape key is pressed
  */
 function useEscapeKey(handleEsc: () => void) {
-    React.useEffect(() => {
-        function handleKeydown(e: KeyboardEvent) {
-            if (e.code === "Escape") {
-                handleEsc();
-            }
-        }
+  React.useEffect(() => {
+    function handleKeydown(e: KeyboardEvent) {
+      if (e.code === "Escape") {
+        handleEsc();
+      }
+    }
 
-        window.addEventListener("keydown", handleKeydown);
-        return () => window.removeEventListener("keydown", handleKeydown);
-    }, [handleEsc]);
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [handleEsc]);
 }
 
 export default useEscapeKey;
