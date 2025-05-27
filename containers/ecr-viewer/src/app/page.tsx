@@ -6,8 +6,6 @@ import { notFound } from "next/navigation";
 import { dbIsValid } from "./api/migrate-db/migrate";
 import { MetadataDbInvalid } from "./components/ErrorPage";
 import Filters from "./components/Filters";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { EcrTableLoading } from "./components/table/TableContentLoading";
 import EcrPaginationWrapper from "./components/table/ecr/EcrPaginationWrapper";
@@ -18,7 +16,6 @@ import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
-import NavLinks from "@/app/components/NavLinks";
 
 /**
  * Functional component for rendering the home page that lists all eCRs.
