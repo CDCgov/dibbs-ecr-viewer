@@ -66,7 +66,7 @@ export const ProgramForm = ({
   submitAction: (
     name: string,
     conditions: string[],
-  ) => Promise<ServerActionResult<string>>;
+  ) => Promise<ServerActionResult<string | undefined>>;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(

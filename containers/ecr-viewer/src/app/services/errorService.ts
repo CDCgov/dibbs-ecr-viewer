@@ -1,3 +1,6 @@
+/**
+ * An error which has a message that is intended to be displayed to end users.
+ */
 export class UserFacingError extends Error {
   constructor(message: string, options?: ErrorOptions) {
     // Need to pass `options` as the second parameter to install the "cause" property.
@@ -13,20 +16,20 @@ export interface ServerActionResult<T> {
 }
 
 /**
- * @param f service function to action-ify
+ * @param fn service function to action-ify
  * @returns server result with error message in the `error` field and result in the `payload` field
  */
 export const makeServerAction =
   // need the any to infer the function type, which ignoring then confuses jsdoc
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, jsdoc/require-jsdoc
   <Func extends (...args: any) => any>(
-      f: Func,
+      fn: Func,
     ): ((
       ...args: Parameters<Func>
     ) => Promise<ServerActionResult<Awaited<ReturnType<Func>>>>) =>
     async (...args) => {
       try {
-        const res = await f(...args);
+        const res = await fn(...args);
         return { payload: res };
       } catch (e) {
         if (e instanceof UserFacingError) {
