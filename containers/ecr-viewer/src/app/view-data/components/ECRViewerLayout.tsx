@@ -1,9 +1,6 @@
 import React from "react";
 
-import Header from "@/app/components/Header";
-
 import PatientBanner from "./PatientBanner";
-import NavLinks from "@/app/components/NavLinks";
 
 /**
  * Layout component for the ecr viewer page.
