@@ -10,7 +10,6 @@ import Header from "@/app/components/Header";
 const AdminPageLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="display-flex flex-column height-viewport">
-      <Header />
       {children}
     </div>
   );
