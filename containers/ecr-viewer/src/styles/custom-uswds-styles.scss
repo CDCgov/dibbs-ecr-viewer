@@ -178,6 +178,12 @@
 .usa-input {
   border: 1px solid color("base");
   border-radius: 0.25rem;
+
+  &#search-field {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 
 .usa-tooltip__body {

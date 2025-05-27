@@ -169,21 +169,18 @@ const ConditionFieldSet = ({
   ) => {
     setConditionCategories({
       ...conditionCategories,
-      [category]: conditionCategories[category].map(
-        (c) => {
-          // a null condition indicates all conditions should be checked
-          // Only allow checking of filtered conditions (aka visible)
-          if (
-            (!condition || c.code === condition.code) &&
-            filteredConditionCategories[category].includes(c)
-          ) {
-            return { ...c, checked };
-          } else {
-            return c;
-          }
-        },
-        // !condition || c.code === condition.code ? { ...c, checked } : c,
-      ),
+      [category]: conditionCategories[category].map((c) => {
+        // a null condition indicates all conditions should be checked
+        // Only allow checking of filtered conditions (aka visible)
+        if (
+          (!condition || c.code === condition.code) &&
+          filteredConditionCategories[category].includes(c)
+        ) {
+          return { ...c, checked };
+        } else {
+          return c;
+        }
+      }),
     });
   };
 
