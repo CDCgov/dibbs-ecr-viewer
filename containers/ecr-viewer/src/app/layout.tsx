@@ -1,11 +1,10 @@
 import "@/styles/styles.scss";
 
-import Header from "@/app/components/Header";
-import NavLinks from "@/app/components/NavLinks";
-
 import { AuthSessionProvider } from "./components/AuthSessionProvider";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import NavLinks from "./components/NavLinks";
 import RespectMotionPreferences from "./components/RespectMotionPreferences";
-import Footer from "@/app/components/Footer";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
