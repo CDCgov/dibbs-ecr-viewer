@@ -1,6 +1,5 @@
 import React from "react";
 
-import Header from "@/app/components/Header";
 import { Error } from "@/app/components/Icon";
 
 /**
@@ -8,7 +7,6 @@ import { Error } from "@/app/components/Icon";
  */
 const ErrorAuthPage = () => (
   <div className="height-viewport width-viewport display-flex flex-column">
-    <Header />
     <main className="display-flex flex-justify-center height-full">
       <div className="display-inline-block margin-y-auto">
         <h2 className="font-family-serif font-serif-xl margin-bottom-0">
