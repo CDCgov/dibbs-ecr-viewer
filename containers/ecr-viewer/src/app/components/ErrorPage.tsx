@@ -1,9 +1,7 @@
 import React from "react";
 
 import { BackButton } from "./BackButton";
-import Footer from "./Footer";
 import { Error } from "./Icon";
-import NavLinks from "@/app/components/NavLinks";
 
 /**
  * @param props React props
