@@ -305,6 +305,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
 
   return (
     <ExpandCollapseAccordion
+      className="accordion-rr margin-bottom-3"
       descriptor="employment details"
       items={jobObs.map((obs) => {
         const getComponentValue = (code: string) => {
