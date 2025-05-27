@@ -15,6 +15,7 @@ import {
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { toKebabCase, makePlural } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
@@ -62,7 +63,10 @@ export const ProgramForm = ({
   action: string;
   initValues: FormValues;
   progUuid?: string;
-  submitAction: (name: string, conditions: string[]) => Promise<void>;
+  submitAction: (
+    name: string,
+    conditions: string[],
+  ) => Promise<ServerActionResult<string>>;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
@@ -82,7 +86,7 @@ export const ProgramForm = ({
       action={`${action} program area`}
       formValid={valid}
       submitAction={async () => {
-        await submitAction(name, selectedConditions);
+        return await submitAction(name, selectedConditions);
       }}
       successRoute="/admin/program"
     >
