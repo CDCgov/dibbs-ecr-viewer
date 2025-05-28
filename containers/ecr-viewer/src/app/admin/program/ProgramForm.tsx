@@ -10,6 +10,7 @@ import {
   TextInput,
 } from "@trussworks/react-uswds";
 
+import { Search } from "@/app/components/Icon";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import ConfirmationFooter from "@/app/components/modal/ConfirmationFooter";
@@ -137,6 +138,19 @@ const ConditionFieldSet = ({
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >(keysToBoolean(conditionCategories, true));
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredConditionCategories = Object.keys(conditionCategories).reduce(
+    (acc, cur) => {
+      acc[cur] = conditionCategories[cur].filter(
+        (c) =>
+          !searchTerm ||
+          c.condition_name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+      return acc;
+    },
+    {} as ConditionCategories,
+  );
 
   const modalRef = useRef<ModalRef>(null);
 
@@ -153,17 +167,26 @@ const ConditionFieldSet = ({
   ) => {
     setConditionCategories({
       ...conditionCategories,
-      [category]: conditionCategories[category].map((c) =>
+      [category]: conditionCategories[category].map((c) => {
         // a null condition indicates all conditions should be checked
-        !condition || c.code === condition.code ? { ...c, checked } : c,
-      ),
+        // Only allow checking of filtered conditions (aka visible)
+        if (
+          (!condition || c.code === condition.code) &&
+          filteredConditionCategories[category].includes(c)
+        ) {
+          return { ...c, checked };
+        } else {
+          return c;
+        }
+      }),
     });
   };
 
   const accordionItems: AccordionItem[] = Object.keys(conditionCategories)
     .sort()
+    .filter((category) => filteredConditionCategories[category].length > 0)
     .map((category) => {
-      const conditions = conditionCategories[category];
+      const conditions = filteredConditionCategories[category];
       const numConditions = conditions.length;
       const numSelected = conditions.filter(({ checked }) => checked).length;
       return {
@@ -265,19 +288,31 @@ const ConditionFieldSet = ({
       };
     });
 
+  const numResults = Object.values(filteredConditionCategories).reduce(
+    (total, cur) => total + cur.length,
+    0,
+  );
+
   return (
     <FieldSet legend="Add conditions">
       <span>
         Select a minimum of 1 condition
         <RequiredMarker />
       </span>
-      <p className="text-bold font-size-md">
-        {numConditionsSelected} condition
-        {makePlural(numConditionsSelected)} selected
-      </p>
+      <div className="display-flex flex-justify margin-top-3">
+        <p className="text-bold font-size-md margin-y-0">
+          {numConditionsSelected} condition
+          {makePlural(numConditionsSelected)} selected
+        </p>
+        <SearchField
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          numResults={numResults}
+        />
+      </div>
       <ExpandCollapseAccordionControlled
         descriptor="condition categories"
-        className="accordion-dibbs margin-top-3"
+        className="accordion-dibbs margin-top-3 margin-bottom-1"
         handleToggle={(categoryId) =>
           setExpandedCategories({
             ...expandedCategories,
@@ -302,7 +337,7 @@ const ConditionFieldSet = ({
         }
         categoryConditions={
           !!confirmingCategory
-            ? conditionCategories[confirmingCategory].filter(
+            ? filteredConditionCategories[confirmingCategory].filter(
                 (c) =>
                   !!c.program_area_uuid && c.program_area_uuid !== progUuid,
               )
@@ -310,6 +345,36 @@ const ConditionFieldSet = ({
         }
       />
     </FieldSet>
+  );
+};
+
+const SearchField = ({
+  searchTerm,
+  setSearchTerm,
+  numResults,
+}: {
+  searchTerm: string;
+  setSearchTerm: (v: string) => void;
+  numResults: number;
+}) => {
+  return (
+    <div className="live-search">
+      {searchTerm && (
+        <p aria-live="polite" className="result-count">
+          {numResults} result{makePlural(numResults)}
+        </p>
+      )}
+      <Search aria-hidden={true} className="square-3 text-base" />
+      <TextInput
+        type="search"
+        aria-label="Search conditions"
+        id="condition-search"
+        name="condition-search"
+        placeholder="Search conditions"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
   );
 };
 
