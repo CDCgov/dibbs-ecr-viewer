@@ -95,7 +95,7 @@ export const AccordionControlled = ({
           className="display-flex flex-align-top margin-bottom-2"
         >
           {item.isChecked && item.onChecked && (
-            <div className="margin-right-2 margin-top-3">
+            <div className="margin-right-1 margin-top-3">
               <CheckboxItem
                 id={item.id}
                 group={item.group ?? "checkbox"}

@@ -158,7 +158,6 @@ const ProgramFieldSet = ({
     const conditions = program.conditions;
     const numConditions = conditions.length;
 
-    // TODO ANGELA: Pass in isChecked and onCheck handlers into items directly
     return {
       title: (
         <div className="display-flex flex-justify flex-align-center">
@@ -194,7 +193,7 @@ const ProgramFieldSet = ({
         <RequiredMarker />
       </span>
       <p className="text-bold font-size-md">
-        {numProgramsSelected}/{programs.length} program areas selected
+        Program area ({numProgramsSelected}/{programs.length}) selected
       </p>
       {/* // TODO ANGELA: Should we decompose this? Abstract this? */}
       <div className="margin-right-auto">
@@ -242,8 +241,12 @@ const ProgramFieldSet = ({
   );
 };
 
-// TODO ANGELA: Rename...?
-// TODO ANGELA: Make more generic?
+/**
+ * TODO ANGELA: Add purpose
+ * @param programs React props
+ * @param val Initial values the form is set to
+ * @returns Program area add/edit form
+ */
 const valsToBoolean = (programs: FormProgram[], val: boolean) => {
   return programs
     .map((obj) => obj.name)
