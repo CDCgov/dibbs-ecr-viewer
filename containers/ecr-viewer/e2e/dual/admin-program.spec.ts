@@ -46,7 +46,7 @@ test.describe("program management page", () => {
     await checkbox.scrollIntoViewIfNeeded();
     await checkbox.dispatchEvent("click");
 
-    page.getByLabel("Program area name").fill(conditionName);
+    await page.getByLabel("Program area name").fill(conditionName);
 
     await page
       .getByRole("button", { name: "Create program area" })
@@ -96,5 +96,16 @@ test.describe("program management page", () => {
         (v) => v.id !== "color-contrast",
       );
     expect(nonColorViolationsModal).toEqual([]);
+
+    // re-submit to check failure state
+    await page.getByRole("button", { name: "Yes, add condition" }).click();
+    await page.getByLabel("Program area name").fill(conditionName);
+
+    await page
+      .getByRole("button", { name: "Create program area" })
+      .first()
+      .click();
+
+    await expect(page.getByText("Failed to create program area")).toBeVisible();
   });
 });
