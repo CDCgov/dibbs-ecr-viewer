@@ -65,6 +65,7 @@ export const ProgramTable = ({
           selectedProgramArea?.date_created.toISOString(),
         )}`}
         description="Program area information"
+        editHref={`/admin/program/edit?uuid=${selectedProgramArea?.uuid}`}
         details={[
           {
             title: "Name",

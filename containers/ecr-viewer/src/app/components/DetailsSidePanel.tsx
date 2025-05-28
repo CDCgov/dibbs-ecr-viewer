@@ -6,6 +6,7 @@ import {
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
+import Link from "next/link";
 
 import { Modal } from "@/components/Modal";
 
@@ -72,6 +73,7 @@ interface Detail {
  * @param props.subtitle Subtitle of the side panel (such as logged in date)
  * @param props.description Side panel description (usually generic)
  * @param props.detailsRef Ref linking the trigger(s) and panel - see `useDetailsRef`
+ * @param props.editHref Link to the edit page for this item
  * @returns Side Panel component
  */
 export const DetailsSidePanel = ({
@@ -80,12 +82,14 @@ export const DetailsSidePanel = ({
   title,
   subtitle,
   description,
+  editHref,
 }: {
   detailsRef: RefObject<ModalRef>;
   details: Detail[];
   title: string;
   subtitle: string;
   description: string;
+  editHref?: string;
 }) => {
   const id = useId();
 
@@ -109,7 +113,16 @@ export const DetailsSidePanel = ({
       <div className="section__line_gray" />
 
       <section>
-        <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
+        <div className="display-flex flex-justify flex-align-center">
+          <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
+          {!!editHref && (
+            <div>
+              <Link href={editHref} className="usa-button usa-button--outline">
+                Edit Program Area
+              </Link>
+            </div>
+          )}
+        </div>
 
         <dl>
           {details.map(({ title, value }, i) => (

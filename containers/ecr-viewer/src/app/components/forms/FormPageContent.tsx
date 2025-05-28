@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useId, useState } from "react";
+import { ReactNode, useEffect, useId, useState } from "react";
 
 import { Alert, Button } from "@trussworks/react-uswds";
 import { useRouter } from "next/navigation";
@@ -12,17 +12,20 @@ import { useRouter } from "next/navigation";
  * @param props.formValid Whether the form is valid
  * @param props.submitAction Handler to run on submission
  * @param props.children Content of the form, typically a series of `FieldSet`
+ * @param props.formTouched
  * @returns form with header and submit buttons
  */
 export const FormPageContent = ({
   action,
   formValid,
+  formTouched,
   successRoute,
   children,
   submitAction,
 }: {
   action: string;
   formValid: boolean;
+  formTouched: boolean;
   successRoute: string;
   children: ReactNode;
   submitAction: () => Promise<void>;
@@ -33,7 +36,23 @@ export const FormPageContent = ({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const submitDisabled = !formValid || submitting;
+  // Warning to user that they have unsaved data
+  useEffect(() => {
+    if (!formTouched) return;
+
+    function beforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+    }
+
+    window.addEventListener("beforeunload", beforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnload);
+    };
+  }, [formTouched]);
+
+  const submitDisabled = !formValid || !formTouched || submitting;
+  console.log({ formTouched, formValid, submitting, submitDisabled });
 
   return (
     <>

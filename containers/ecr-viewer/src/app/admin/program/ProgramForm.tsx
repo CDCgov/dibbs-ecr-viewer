@@ -45,6 +45,13 @@ const groupByCategory = (conditions: FormCondition[]) => {
   }, {} as ConditionCategories);
 };
 
+const sortedCodes = (conditions: FormCondition[]) => {
+  return conditions
+    .filter(({ checked }) => !!checked)
+    .map(({ code }) => code)
+    .sort();
+};
+
 /**
  *
  * @param props React props
@@ -70,18 +77,31 @@ export const ProgramForm = ({
     groupByCategory(initValues.conditions),
   );
 
-  const selectedConditions = Object.values(conditionCategories)
-    .flatMap((id) => id)
-    .filter(({ checked }) => !!checked)
-    .map(({ code }) => code);
+  const selectedConditions = sortedCodes(
+    Object.values(conditionCategories).flatMap((id) => id),
+  );
   const numConditionsSelected = selectedConditions.length;
 
+  const initSelectedConditions = sortedCodes(initValues.conditions);
+  const touched =
+    name !== initValues.name ||
+    selectedConditions.length !== initSelectedConditions.length ||
+    selectedConditions.some((c, i) => initSelectedConditions[i] !== c);
   const valid = !!name.trim() && numConditionsSelected > 0;
+  console.log({
+    touched,
+    valid,
+    name,
+    initName: initValues.name,
+    conditions: selectedConditions,
+    initConditions: sortedCodes(initValues.conditions),
+  });
 
   return (
     <FormPageContent
       action={`${action} program area`}
       formValid={valid}
+      formTouched={touched}
       submitAction={async () => {
         await submitAction(name, selectedConditions);
       }}

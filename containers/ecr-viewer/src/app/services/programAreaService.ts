@@ -57,6 +57,27 @@ export const createProgramArea = async (
 };
 
 /**
+ * Get program area with the given uuid
+ * @param uuid id of the program to get
+ * @returns program area if available, otherwise undefined
+ */
+export const getProgramArea = async (
+  uuid: string,
+): Promise<ProgramArea | undefined> => {
+  try {
+    return await getDb<Core>()
+      .selectFrom("program_area")
+      .selectAll()
+      .where("program_area.uuid", "=", uuid)
+      .executeTakeFirst();
+  } catch (error: unknown) {
+    const message = "Failed to get program area";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+};
+
+/**
  * Update a program with the the given uuid.
  * @param uuid (current) id of the program area to update
  * @param updates object with fields to update in the record.
