@@ -1,5 +1,10 @@
 // This file is adapted from https://github.com/trussworks/react-uswds/tree/main/src/components/modal to allow
-// for multi-modal support
+// for multi-modal support.
+//
+// The original modal would assume only one modal existed so it would not open additional modals
+// (or in some configs would, but not allow interacting with them) and then would remove added attributes
+// un-conditionally when one modal was closed. We needed to handle layers of modals.
+
 import React, {
   useEffect,
   useState,
@@ -38,15 +43,23 @@ export type ModalRef = {
   toggleModal: (event?: React.MouseEvent, open?: boolean) => boolean;
 };
 
+// Fork: We use counting attributes to handle knowing when the last modal
+// that caused an attribute to be added is removed. This way when two modals are open
+// and we close one, the aria-hidden isn't removed from the background yet
+
+// Get an attribute from an element and set it to 1 bigger than its current value
 const incrementAttribute = (el: Element, attr: string) => {
   el.setAttribute(attr, `${parseInt(el.getAttribute(attr) || "0") + 1}`);
 };
 
+// Get the current value of an attribute as a number
 const getAttributeCount = (el: Element, attr: string) =>
   parseInt(el.getAttribute(attr) || "1");
 
 /**
+ * A modal component which supports layered modals.
  *
+ * Adapted from the @trussworks/react-uswds Modal to suit the needs of the viewer.
  * @param props React props
  * @param props.id component ID
  * @param props.children modal content
@@ -76,7 +89,8 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
   const modalEl = useRef<HTMLDivElement>(null);
   const wrapperEl = useRef<HTMLDivElement>(null);
 
-  // Fork: handle multiple layers of aria-hidden-ing
+  // Fork: handle multiple layers of aria-hidden-ing by making sure we don't un-hide things
+  // that we didn't hide in the first place
   const NON_MODALS = `body > *:not(${modalRootSelector}):not([aria-hidden]:not([data-modal-hidden]))`;
   const NON_MODALS_HIDDEN = `[data-modal-hidden]`;
 
@@ -196,7 +210,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
     },
   };
 
-  // Fork: add isolation: isolate style to ensure each modal's stack is independent
+  // Fork: add isolation: isolate style to ensure each modal's z-stack is independent
   const modal = (
     <FocusTrap active={isOpen} focusTrapOptions={focusTrapOptions}>
       <ModalWrapper
