@@ -146,7 +146,7 @@ describe("ProgramForm", () => {
   it("should render a filled out form", async () => {
     render(
       <ProgramForm
-        action="Create"
+        action="Edit"
         progUuid="789"
         initValues={{
           name: "I have a name",
@@ -184,7 +184,7 @@ describe("ProgramForm", () => {
 
     // valid due to initial inputs
     const submitButtons = screen.getAllByRole("button", {
-      name: "Create program area",
+      name: "Edit program area",
     });
     expect(submitButtons).toHaveLength(2);
     expect(submitButtons[0]).toBeEnabled();
@@ -215,6 +215,18 @@ describe("ProgramForm", () => {
     expect(submitButtons[0]).not.toBeDisabled();
     expect(checkboxes[0]).toBeChecked();
     expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    // search and deselect all on condition 2
+    await user.type(screen.getByPlaceholderText("Search conditions"), "2");
+    expect(screen.getByText("1 result")).toBeInTheDocument();
+    const deselectButtons = screen.getAllByRole("button", {
+      name: "Deselect all",
+    });
+    await user.click(deselectButtons[0]);
+    expect(submitButtons[0]).not.toBeDisabled();
+    expect(checkboxes[0]).toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
   });
 });

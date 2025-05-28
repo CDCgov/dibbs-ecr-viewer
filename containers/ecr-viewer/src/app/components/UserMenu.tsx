@@ -8,6 +8,7 @@ import { User } from "@/app/data/metadataDb/types/core";
 import useEscapeKey from "@/app/hooks/useEscapeKey";
 
 import { SignOutButton } from "./SignOutButton";
+import {toSentenceCase} from "@/app/utils/format-utils";
 
 /**
  * User Menu component for the ECR Viewer project.
@@ -69,8 +70,7 @@ const UserMenu = ({ user }: { user: User }) => {
             <div>
               <p className="user-name">{user.name}</p>
               <p className="user-role">
-                {user.user_type.charAt(0).toUpperCase() +
-                  user.user_type.slice(1)}
+                {toSentenceCase(user.user_type)}
               </p>
             </div>
             <div>

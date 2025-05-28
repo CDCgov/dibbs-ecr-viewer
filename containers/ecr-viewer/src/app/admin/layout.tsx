@@ -7,7 +7,7 @@ import { ReactNode } from "react";
  */
 const AdminPageLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="display-flex flex-column height-viewport">{children}</div>
+    <div className="overflow-y-auto display-flex flex-column height-viewport-header-footer">{children}</div>
   );
 };
 

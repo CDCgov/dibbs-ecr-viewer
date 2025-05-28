@@ -19,7 +19,7 @@ const ErrorPage = ({
   subTitle?: string;
   children: React.ReactNode;
 }) => (
-  <div className="height-viewport width-viewport display-flex flex-column">
+  <div className="height-viewport-header-footer width-viewport display-flex flex-column">
     <main className="display-flex flex-justify-center height-full">
       <div className="display-inline-block margin-y-auto">
         <h2 className="font-family-serif font-serif-xl margin-bottom-0">
