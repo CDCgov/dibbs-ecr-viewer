@@ -60,7 +60,7 @@ If you consistently encounter the error message `"ecr_viewer_db" does not exist`
 
 To run the eCR Viewer locally:
 
-1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed. Ensure that [host networking is enabled](https://docs.docker.com/engine/network/tutorials/host/#:~:text=To%20enable%20this%20feature%20in,Network%20select%20Enable%20host%20networking.)
+1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed. Ensure that [docker host networking is enabled](https://docs.docker.com/engine/network/tutorials/host/#:~:text=To%20enable%20this%20feature%20in,Network%20select%20Enable%20host%20networking.)
 2. Clone the DIBBs eCR Viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
 4. Install all of the Node dependencies for the eCR Viewer with `npm install`.
