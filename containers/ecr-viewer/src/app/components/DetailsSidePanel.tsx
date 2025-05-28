@@ -79,7 +79,7 @@ interface Detail {
  * @param props.itemType string describing item type of details (e.g. "user")
  * @param props.deleteAction Optional function to handle deleting the item. Adds delete button if available
  * @param props.deleteExplainerText Optional text to explain implications of deleting the item
- * @param props.deleteModalTitle Optional tilte of modal
+ * @param props.deleteModalTitle Optional title of modal
  * @param props.deleteModalBody Optional content for delete modal
  * @returns Side Panel component
  */
