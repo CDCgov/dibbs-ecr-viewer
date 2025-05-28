@@ -17,6 +17,8 @@ import {
 } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
+import { UserFacingError, makeServerAction } from "./errorService";
+
 const getUserByEmail = async (
   email: string | null | undefined,
 ): Promise<User | undefined> => {
@@ -76,7 +78,7 @@ export const notFoundUnlessAdmin = async () => {
 export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
   const loggedInUser = await getLoggedInUser();
   if (!isAdmin(loggedInUser)) {
-    throw new Error(`Standard user cannot ${actionDesc}`);
+    throw new UserFacingError(`Standard user cannot ${actionDesc}`);
   }
 
   return loggedInUser;
@@ -102,9 +104,10 @@ export const createUser = async (
   } catch (error: unknown) {
     const message = "Failed to create new user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
+export const createUserAction = makeServerAction(createUser);
 
 /**
  * Create an initial admin user with the given email. If any active
@@ -127,7 +130,7 @@ export const createInitialAdminUser = async (
   } catch (error: unknown) {
     const message = "Failed to create initial admin user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -140,7 +143,7 @@ const createUserQuery = async (
   const user = await getUserByEmail(email);
   if (!!user) {
     if (user.status === "active") {
-      throw new Error("User already exists and is active");
+      throw new UserFacingError("User already exists and is active");
     } else {
       await updateUserQuery(user.uuid, { status: "active", user_type });
       return user.uuid;
@@ -174,9 +177,10 @@ export const updateUser = async (
   } catch (error: unknown) {
     const message = "Failed to update user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
+export const updateUserAction = makeServerAction(updateUser);
 
 const updateUserQuery = async (
   uuid: string,
@@ -211,7 +215,7 @@ export const listUserProgramAreas = async (
   } catch (error: unknown) {
     const message = "Failed to list user program areas";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -241,9 +245,12 @@ export const updateUserProgramAreas = async (
   } catch (error: unknown) {
     const message = "Failed to update user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
+export const updateUserProgramAreasAction = makeServerAction(
+  updateUserProgramAreas,
+);
 
 const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
   await db
@@ -266,9 +273,10 @@ export const deleteUser = async (uuid: string): Promise<void> => {
   } catch (error: unknown) {
     const message = "Failed to delete user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
+export const deleteUserAction = makeServerAction(deleteUser);
 
 export type NamedUserPogramArea = UserProgramArea & { name: string };
 export type ListedUser = User & { program_areas: NamedUserPogramArea[] };
@@ -309,7 +317,7 @@ export const listUsers = async (): Promise<ListedUser[]> => {
   } catch (error: unknown) {
     const message = "Failed to list users";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 

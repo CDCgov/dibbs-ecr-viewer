@@ -8,6 +8,7 @@ import {
   ProgramArea,
 } from "@/app/data/metadataDb/types/core";
 
+import { UserFacingError, makeServerAction } from "./errorService";
 import { getCheckAdmin } from "./userService";
 
 /**
@@ -24,7 +25,7 @@ export const createProgramArea = async (
   const creatingUser = await getCheckAdmin("create program areas");
 
   if (name.trim().length < 2 || conditions.length === 0) {
-    throw new Error(
+    throw new UserFacingError(
       "Invalid program area. Must have a non-empty name and at least one condition assigned.",
     );
   }
@@ -52,9 +53,10 @@ export const createProgramArea = async (
   } catch (error: unknown) {
     const message = "Failed to create program area";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
+export const createProgramAreaAction = makeServerAction(createProgramArea);
 
 /**
  * Update a program with the the given uuid.
@@ -100,9 +102,10 @@ export const updateProgramArea = async (
   } catch (error: unknown) {
     const message = "Failed to update program area";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
+export const updateProgramAreaAction = makeServerAction(updateProgramArea);
 
 /**
  * Delete program area by id and remove any references in the conditions table.
@@ -132,9 +135,10 @@ export const deleteProgramArea = async (uuid: string): Promise<void> => {
   } catch (error: unknown) {
     const message = "Failed to delete program area";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
+export const deleteProgramAreaAction = makeServerAction(deleteProgramArea);
 
 export type ListedProgramArea = ProgramArea & {
   conditions: ConditionReference[];
@@ -169,6 +173,6 @@ export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
   } catch (error: unknown) {
     const message = "Failed to list program areas";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };

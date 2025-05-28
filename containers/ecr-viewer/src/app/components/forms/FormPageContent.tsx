@@ -4,6 +4,8 @@ import { ReactNode, useId, useState } from "react";
 import { Alert, Button } from "@trussworks/react-uswds";
 import { useRouter } from "next/navigation";
 
+import { ServerActionResult } from "@/app/services/errorService";
+
 /**
  *
  * @param props React props
@@ -14,7 +16,7 @@ import { useRouter } from "next/navigation";
  * @param props.children Content of the form, typically a series of `FieldSet`
  * @returns form with header and submit buttons
  */
-export const FormPageContent = ({
+export const FormPageContent = <T,>({
   action,
   formValid,
   successRoute,
@@ -25,7 +27,7 @@ export const FormPageContent = ({
   formValid: boolean;
   successRoute: string;
   children: ReactNode;
-  submitAction: () => Promise<void>;
+  submitAction: () => Promise<ServerActionResult<T>>;
 }) => {
   const router = useRouter();
   const id = useId();
@@ -51,15 +53,10 @@ export const FormPageContent = ({
           e.preventDefault();
           setSubmitting(true);
           setError("");
-          try {
-            await submitAction();
-          } catch (error: unknown) {
+          const res = await submitAction();
+          if (res.error) {
             setSubmitting(false);
-            if (error instanceof Error) {
-              setError(error.message);
-            } else {
-              throw error;
-            }
+            setError(res.error);
             return;
           }
 
