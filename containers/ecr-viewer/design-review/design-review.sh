@@ -51,11 +51,6 @@ if ! command_exists git; then
     brew install git
 fi
 
-# Install Docker if it's not already installed
-if ! command_exists docker; then
-    brew install --cask docker
-fi
-
 # Install NPM if it's not already installed
 if ! command_exists npm; then
     brew install node
@@ -90,6 +85,7 @@ npm i
 
 # Write env vars to .env.local
 npm run setup-local-env
+cp ../orchestration/.env.sample ../orchestration/.env
 
 if [ "$IS_NON_INTEGRATED" = true ]; then
     echo "CONFIG_NAME=AWS_SQLSERVER_NON_INTEGRATED" >> .env.local

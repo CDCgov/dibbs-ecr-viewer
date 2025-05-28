@@ -34,6 +34,10 @@ test.describe("program management page", () => {
     }).analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
+    // search for a condition (but not too specifically due to randomness)
+    await page.getByPlaceholder("Search conditions").fill("i");
+    await expect(page.getByText("216 results")).toBeVisible();
+
     // Find a random condition (avoid clashes in parallel tests)
     const checkboxes = await page.getByRole("checkbox").all();
     const index = Math.floor(Math.random() * checkboxes.length);
@@ -53,8 +57,29 @@ test.describe("program management page", () => {
     await expect(page.getByText("Program management")).toBeVisible();
     await expect(page.getByText(conditionName)).toBeVisible();
 
+    // open up side panel
+    await page.getByText(conditionName).click();
+    await expect(page.getByText("Program area information")).toBeVisible();
+
+    const accessibilityScanResultsSidePanel = await new AxeBuilder({
+      page,
+    }).analyze();
+
+    // axe struggles with the modal background, but all manual testing
+    // points to contrast being fine
+    const nonColorViolationsSidePanel =
+      accessibilityScanResultsSidePanel.violations.filter(
+        (v) => v.id !== "color-contrast",
+      );
+    expect(nonColorViolationsSidePanel).toEqual([]);
+
+    await page.getByRole("button", { name: "Close this window" }).click();
+
     // Open create form to test already assigned modal
     await page.getByText("Create program area").click();
+    // search for a condition again so checkbox is correct
+    await page.getByPlaceholder("Search conditions").fill("i");
+    await expect(page.getByText("216 results")).toBeVisible();
     await expect(page.getByText(`Condition in ${conditionName}`)).toBeVisible();
     await checkbox.scrollIntoViewIfNeeded();
     await checkbox.dispatchEvent("click");
@@ -66,9 +91,10 @@ test.describe("program management page", () => {
 
     // axe struggles with the modal background, but all manual testing
     // points to contrast being fine
-    const nonColorViolations = accessibilityScanResultsModal.violations.filter(
-      (v) => v.id !== "color-contrast",
-    );
-    expect(nonColorViolations).toEqual([]);
+    const nonColorViolationsModal =
+      accessibilityScanResultsModal.violations.filter(
+        (v) => v.id !== "color-contrast",
+      );
+    expect(nonColorViolationsModal).toEqual([]);
   });
 });
