@@ -6,7 +6,7 @@ describe("error service", () => {
       switch (cse) {
         case "happy":
           return 123;
-        case "expected":
+        case "user-facing-error":
           throw new UserFacingError("I failed");
         case "failure":
           throw new Error("Whoops");
@@ -24,12 +24,12 @@ describe("error service", () => {
     it("should handle user facing errors", async () => {
       let errMsg = "";
       try {
-        await myFn("expected");
+        await myFn("user-facing-error");
       } catch (err) {
         expect(err).toBeInstanceOf(UserFacingError);
         errMsg = (err as UserFacingError).message;
       }
-      const res = await myAction("expected");
+      const res = await myAction("user-facing-error");
       expect(res.error).toEqual(errMsg);
       expect(res.payload).toBeUndefined();
     });
