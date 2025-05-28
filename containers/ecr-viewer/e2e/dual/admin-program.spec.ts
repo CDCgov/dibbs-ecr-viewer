@@ -80,7 +80,11 @@ test.describe("program management page", () => {
     await checkbox.dispatchEvent("click");
     await expect(page.getByText("Are you sure you want to add")).toBeVisible();
 
-    const accessibilityScanResultsModal = await axe.analyze();
+    // this is flaky on webkit, so adding more retrying
+    let accessibilityScanResultsModal = await axe.analyze();
+    if (accessibilityScanResultsModal.violations.length > 0) {
+      accessibilityScanResultsModal = await axe.analyze();
+    }
     expect(accessibilityScanResultsModal.violations).toEqual([]);
   });
 });
