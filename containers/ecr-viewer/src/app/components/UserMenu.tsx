@@ -6,9 +6,9 @@ import Image from "next/image";
 
 import { User } from "@/app/data/metadataDb/types/core";
 import useEscapeKey from "@/app/hooks/useEscapeKey";
+import { toSentenceCase } from "@/app/utils/format-utils";
 
 import { SignOutButton } from "./SignOutButton";
-import { toSentenceCase } from "@/app/utils/format-utils";
 
 /**
  * User Menu component for the ECR Viewer project.
