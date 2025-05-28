@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 import { Kysely } from "kysely";
 import { notFound } from "next/navigation";
 
-import {dbIsValid} from "@/app/api/migrate-db/migrate";
+import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   Core,
@@ -44,7 +44,9 @@ export const getLoggedInUser = cache(async () => {
   // Update the last log in and user's name to match the IDP
   const isValid = await dbIsValid();
   if (!isValid) {
-    console.warn(`Cannot get user, database setup is incomplete. Please submit a POST request to \`/ecr-viewer/api/migrate-db\` to migrate the database to the expected state. The body must contain a form with the field \`migration_secret=${process.env.METADATA_DATABASE_MIGRATION_SECRET}\``);
+    console.warn(
+      `Cannot get user, database setup is incomplete. Please submit a POST request to \`/ecr-viewer/api/migrate-db\` to migrate the database to the expected state. The body must contain a form with the field \`migration_secret=${process.env.METADATA_DATABASE_MIGRATION_SECRET}\``,
+    );
     return;
   }
 
