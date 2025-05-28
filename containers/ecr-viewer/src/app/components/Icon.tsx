@@ -13,4 +13,5 @@ export const ExpandMore = UswdsIcon.ExpandMore;
 export const HighlightOff = UswdsIcon.HighlightOff;
 export const NavigateBefore = UswdsIcon.NavigateBefore;
 export const NavigateNext = UswdsIcon.NavigateNext;
+export const Search = UswdsIcon.Search;
 export const SortArrow = UswdsIcon.SortArrow;

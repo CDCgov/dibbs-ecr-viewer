@@ -189,3 +189,26 @@ $table-border-radius-md: 0.5rem;
   animation: toast 800ms cubic-bezier(0, 0.46, 0, 1.04) both;
   will-change: transform;
 }
+
+.live-search {
+  position: relative;
+  min-width: 20rem;
+
+  svg {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+
+  input {
+    height: 2.5rem;
+    padding: 0.5rem;
+    padding-left: 2.5rem;
+  }
+
+  .result-count {
+    position: absolute;
+    top: -3rem;
+    right: 0;
+  }
+}
