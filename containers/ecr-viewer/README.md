@@ -37,9 +37,9 @@ We recommend running the eCR Viewer from a container, but if that isn't feasible
 To build the Docker image for the eCR Viewer from source instead of downloading it from the DIBBs eCR Viewer repository follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the DIBBs eCR Viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
-3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
-4. Run `docker build -t ecr-viewer .`.
+3. Clone the DIBBs eCR Viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+4. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
+5. Run `docker build -t ecr-viewer .`.
 
 ## Non Integrated Viewer
 
@@ -60,7 +60,7 @@ If you consistently encounter the error message `"ecr_viewer_db" does not exist`
 
 To run the eCR Viewer locally:
 
-1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed.
+1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed. Ensure that [host networking is enabled](https://docs.docker.com/engine/network/tutorials/host/#:~:text=To%20enable%20this%20feature%20in,Network%20select%20Enable%20host%20networking.)
 2. Clone the DIBBs eCR Viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
 4. Install all of the Node dependencies for the eCR Viewer with `npm install`.
