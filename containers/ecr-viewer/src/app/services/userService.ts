@@ -1,7 +1,6 @@
 "use server";
 
 import "server-only";
-import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
 import { Kysely } from "kysely";
@@ -35,10 +34,11 @@ const getUserByEmail = async (
 /**
  * Get the db User object for the currently logged in user.
  *
- * Cached so once we start using this and other crud in UI
- * we re-use the db call.
+ * We should think about caching this in the future, so once we
+ * start using this and other crud in UI we re-use the db call.
+ * @returns Logged in User or undefined
  */
-export const getLoggedInUser = cache(async () => {
+export const getLoggedInUser = async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
   if (!email) return;
 
@@ -50,7 +50,7 @@ export const getLoggedInUser = cache(async () => {
     .execute();
 
   return await getUserByEmail(email);
-});
+};
 
 /**
  * @param user User to check is an admin
