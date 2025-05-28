@@ -25,7 +25,7 @@ const mockAdminUser: User = {
   email: "",
   date_of_last_login: new Date(),
   name: "Kyle Katarn",
-  user_type: "admin",
+  user_type: "Admin",
   date_created: new Date(),
   author_uuid: "",
 };
