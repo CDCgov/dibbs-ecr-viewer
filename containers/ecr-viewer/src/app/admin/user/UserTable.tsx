@@ -15,7 +15,7 @@ import {
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
-import { toSentenceCase } from "@/app/utils/format-utils";
+import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 /**
@@ -93,7 +93,7 @@ export const UserTable = ({
             ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
             : "Never"
         }`}
-        description="User Information"
+        itemType="user"
         details={[
           {
             title: "Name",
@@ -158,7 +158,7 @@ const ProgramAreaContent = ({
               <span>{pa.name}</span>
               <span>
                 {conditionNames.length} condition
-                {conditionNames.length !== 1 && "s"}
+                {makePlural(conditionNames.length)}
               </span>
             </div>
           ),

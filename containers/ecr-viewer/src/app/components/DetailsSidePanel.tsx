@@ -1,14 +1,20 @@
 import React, { ReactNode, RefObject, useId, useRef } from "react";
 
 import {
-  Modal,
+  ModalFooter,
   ModalHeading,
   ModalRef,
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
+import { useRouter } from "next/navigation";
 
-import { ForceClient } from "@/app/view-data/components/ForceClient";
+import { ServerActionResult } from "@/app/services/errorService";
+import { toSentenceCase } from "@/app/utils/format-utils";
+
+import ConfirmationFooter from "./modal/ConfirmationFooter";
+import Modal from "./modal/Modal";
+import { ToastContext } from "./toast/ToastProvider";
 
 /**
  * The details ref links the trigger(s) and side panel.
@@ -71,8 +77,12 @@ interface Detail {
  * @param props.details Array of title-value pairs
  * @param props.title Title of the side panel (usually the subject)
  * @param props.subtitle Subtitle of the side panel (such as logged in date)
- * @param props.description Side panel description (usually generic)
  * @param props.detailsRef Ref linking the trigger(s) and panel - see `useDetailsRef`
+ * @param props.itemType string describing item type of details (e.g. "user")
+ * @param props.deleteAction Optional function to handle deleting the item. Adds delete button if available
+ * @param props.deleteExplainerText Optional text to explain implications of deleting the item
+ * @param props.deleteModalTitle Optional title of modal
+ * @param props.deleteModalBody Optional content for delete modal
  * @returns Side Panel component
  */
 export const DetailsSidePanel = ({
@@ -80,18 +90,29 @@ export const DetailsSidePanel = ({
   details,
   title,
   subtitle,
-  description,
+  itemType,
+  deleteAction,
+  deleteExplainerText,
+  deleteModalTitle,
+  deleteModalBody,
 }: {
   detailsRef: RefObject<ModalRef>;
   details: Detail[];
   title: string;
   subtitle: string;
-  description: string;
+  itemType: string;
+  deleteAction?: () => Promise<ServerActionResult<void>>;
+  deleteExplainerText?: string;
+  deleteModalTitle?: string;
+  deleteModalBody?: ReactNode;
 }) => {
   const id = useId();
+  const confirmRef = useRef<ModalRef>(null);
+  const router = useRouter();
+  const { createToast } = React.useContext(ToastContext);
 
   return (
-    <ForceClient loading={null}>
+    <>
       <Modal
         id={`details-sidepanel-${id}`}
         className="sidepanel-modal"
@@ -100,29 +121,84 @@ export const DetailsSidePanel = ({
         aria-describedby={`details-sidepanel-${id}-description`}
       >
         <div>
-          <ModalHeading
-            id={`details-sidepanel-${id}-heading`}
-            className="font-sans-3xl margin-bottom-0"
-          >
-            {title}
-          </ModalHeading>
-          <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
+          <div className="border-bottom border-base-lightest">
+            <ModalHeading
+              id={`details-sidepanel-${id}-heading`}
+              className="font-sans-3xl margin-bottom-0"
+            >
+              {title}
+            </ModalHeading>
+            <p className="text-base margin-bottom-2 margin-top-1">{subtitle}</p>
+          </div>
+
+          <section>
+            <h3 id={`details-sidepanel-${id}-description`}>
+              {toSentenceCase(itemType)} information
+            </h3>
+
+            <dl>
+              {details.map(({ title, value }, i) => (
+                <React.Fragment key={`detail-${i}`}>
+                  <dt>{title}</dt>
+                  <dd>{value}</dd>
+                </React.Fragment>
+              ))}
+            </dl>
+          </section>
         </div>
-        <div className="section__line_gray" />
-
-        <section>
-          <h3 id={`details-sidepanel-${id}-description`}>{description}</h3>
-
-          <dl>
-            {details.map(({ title, value }, i) => (
-              <React.Fragment key={`detail-${i}`}>
-                <dt>{title}</dt>
-                <dd>{value}</dd>
-              </React.Fragment>
-            ))}
-          </dl>
-        </section>
+        {deleteAction && (
+          <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
+            <div>
+              <h3 className="margin-top-0">Delete {itemType}</h3>
+              <p>{deleteExplainerText}</p>
+            </div>
+            <div>
+              <ModalToggleButton
+                type="button"
+                outline={true}
+                modalRef={confirmRef}
+                className="text-no-wrap"
+                opener={true}
+                closer={false}
+              >
+                Delete {itemType}
+              </ModalToggleButton>
+            </div>
+          </ModalFooter>
+        )}
       </Modal>
-    </ForceClient>
+
+      {/* NOTE: order is important here so the confirmation goes on top of the side panel*/}
+      {deleteAction && (
+        <Modal
+          id={`delete-confirm-${id}`}
+          className="delete-confirm-modal"
+          ref={confirmRef}
+          aria-labelledby={`delete-confirm-${id}-heading`}
+          aria-describedby={`delete-confirm-${id}-description`}
+        >
+          <ModalHeading id={`delete-confirm-${id}-heading`}>
+            {deleteModalTitle}
+          </ModalHeading>
+          {deleteModalBody}
+
+          <ConfirmationFooter
+            modalRef={confirmRef}
+            onConfirm={async () => {
+              const res = await deleteAction();
+              detailsRef.current?.toggleModal(undefined, false);
+              if (res.error) {
+                createToast(res.error, "error");
+              } else {
+                createToast(`${title} succesfully deleted`, "success");
+              }
+              router.refresh();
+            }}
+          >
+            Yes, delete {itemType}
+          </ConfirmationFooter>
+        </Modal>
+      )}
+    </>
   );
 };

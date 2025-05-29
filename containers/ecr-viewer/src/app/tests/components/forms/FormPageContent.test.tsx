@@ -4,6 +4,7 @@ import router from "next-router-mock";
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import { makeServerAction } from "@/app/services/errorService";
 
 describe("FormPageContent", () => {
   beforeEach(() => {
@@ -18,6 +19,7 @@ describe("FormPageContent", () => {
         successRoute="/path/to/somewhere"
         submitAction={async () => {
           submitted = true;
+          return {};
         }}
       >
         <FieldSet legend="A field">
@@ -47,6 +49,7 @@ describe("FormPageContent", () => {
         successRoute="/path/to/somewhere"
         submitAction={async () => {
           submitted = true;
+          return {};
         }}
       >
         <FieldSet legend="A field">
@@ -71,14 +74,15 @@ describe("FormPageContent", () => {
   });
 
   it("should handle a submission failure", async () => {
+    const action = makeServerAction(async () => {
+      throw new Error("I failed!");
+    });
     render(
       <FormPageContent
         action="File a form"
         formValid={true}
         successRoute="/path/to/somewhere"
-        submitAction={async () => {
-          throw new Error("I failed!");
-        }}
+        submitAction={action}
       >
         <FieldSet legend="A field">
           <input type="text" />
@@ -102,7 +106,8 @@ describe("FormPageContent", () => {
     }
 
     expect(screen.queryByText("Submission failed")).toBeInTheDocument();
-    expect(screen.queryByText("I failed!")).toBeInTheDocument();
+    expect(screen.queryByText("I failed!")).not.toBeInTheDocument();
+    expect(screen.queryByText("Action failed")).toBeInTheDocument();
     expect(router.pathname).not.toBe("/path/to/somewhere");
   });
 });
