@@ -271,7 +271,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 >
                   <button
                     aria-controls="program-area-two"
-                    aria-expanded="true"
+                    aria-expanded="false"
                     class="usa-accordion__button"
                     data-testid="accordionButton_program-area-two"
                     type="button"
@@ -292,6 +292,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 <div
                   class="usa-accordion__content usa-prose"
                   data-testid="accordionItem_program-area-two"
+                  hidden=""
                   id="program-area-two"
                 >
                   condition
@@ -332,7 +333,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 >
                   <button
                     aria-controls="program-area-three"
-                    aria-expanded="true"
+                    aria-expanded="false"
                     class="usa-accordion__button"
                     data-testid="accordionButton_program-area-three"
                     type="button"
@@ -354,6 +355,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 <div
                   class="usa-accordion__content usa-prose"
                   data-testid="accordionItem_program-area-three"
+                  hidden=""
                   id="program-area-three"
                 >
                   condition; condition

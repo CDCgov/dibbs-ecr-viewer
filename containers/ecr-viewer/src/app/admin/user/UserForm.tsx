@@ -180,7 +180,7 @@ export const ProgramFieldSet = ({
 }) => {
   const [expandedPrograms, setExpandedPrograms] = useState<
     Record<string, boolean>
-  >(valsToBoolean(programs, true));
+  >(valsToBoolean(programs, false));
   const isStandardUser = userType === "standard";
 
   const accordionItems: AccordionItem[] = programs.map((program) => {
@@ -219,8 +219,14 @@ export const ProgramFieldSet = ({
   return (
     <FieldSet legend="Program area access">
       <span>
-        Select one or more program areas.
-        <RequiredMarker />
+        {isStandardUser ? (
+          <>
+            Select one or more program areas.
+            <RequiredMarker />
+          </>
+        ) : (
+          <>Admins will be able to see all program areas and conditions.</>
+        )}
       </span>
       <p className="text-bold font-size-md">
         Program area ({numProgramsSelected}/{programs.length}) selected
@@ -240,7 +246,7 @@ export const ProgramFieldSet = ({
                   programs.map((c) => ({
                     ...c,
                     checked,
-                  })),
+                  }))
                 )
               }
               aria-controls={programs
