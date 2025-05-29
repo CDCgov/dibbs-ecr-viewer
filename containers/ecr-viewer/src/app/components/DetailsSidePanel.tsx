@@ -148,7 +148,7 @@ export const DetailsSidePanel = ({
         </div>
         <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
           <div>
-            <h3 className="margin-top-0">Delete {itemType}</h3>
+            <h3 className="margin-top-0">Remove {itemType}</h3>
             <p>{deleteExplainerText}</p>
           </div>
           <div>
@@ -160,7 +160,7 @@ export const DetailsSidePanel = ({
               opener={true}
               closer={false}
             >
-              Delete {itemType}
+              Remove {itemType}
             </ModalToggleButton>
           </div>
         </ModalFooter>
@@ -192,7 +192,7 @@ export const DetailsSidePanel = ({
             router.refresh();
           }}
         >
-          Yes, delete {itemType}
+          Yes, remove {itemType}
         </ConfirmationFooter>
       </Modal>
     </>

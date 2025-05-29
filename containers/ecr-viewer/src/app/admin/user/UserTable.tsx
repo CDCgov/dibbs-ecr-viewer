@@ -99,12 +99,12 @@ export const UserTable = ({
         }`}
         itemType="user"
         deleteAction={async () => await deleteAction(selectedUser?.uuid!)}
-        deleteExplainerText="Deleting the user will remove the user account and data from the eCR Viewer. The user account and data will still be available in your login provider."
-        deleteModalTitle={`Delete ${selectedUser?.name || selectedUser?.email}?`}
+        deleteExplainerText="Removing the user will remove the user account and data from the eCR Viewer. The user account and data will still be available in your login provider."
+        deleteModalTitle={`Remove ${selectedUser?.name || selectedUser?.email}`}
         deleteModalBody={
           <p>
-            Deleting a user from the eCR Viewer is a permanent action. This
-            cannot be undone.{" "}
+            This action will not edit or remove the user from your login
+            provider.
           </p>
         }
         details={[
