@@ -146,4 +146,3 @@ const CheckboxItem = ({
     />
   </div>
 );
-
