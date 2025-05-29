@@ -12,6 +12,7 @@ import {
   PaginatedSortableTable,
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
+import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
@@ -23,14 +24,17 @@ import { ForceClient } from "@/app/view-data/components/ForceClient";
  * @param props React props
  * @param props.users listed users
  * @param props.programAreas listed program areas
+ * @param props.deleteAction action to do upon delete confirmation
  * @returns paginated, sorted table of users
  */
 export const UserTable = ({
   users,
   programAreas,
+  deleteAction,
 }: {
   users: ListedUser[];
   programAreas: ListedProgramArea[];
+  deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
   const detailsRef = useDetailsRef();
@@ -94,6 +98,15 @@ export const UserTable = ({
             : "Never"
         }`}
         itemType="user"
+        deleteAction={async () => await deleteAction(selectedUser?.uuid!)}
+        deleteExplainerText="Deleting the user will remove the user account and data from the eCR Viewer. The user account and data will still be available in your login provider."
+        deleteModalTitle={`Delete ${selectedUser?.name || selectedUser?.email}?`}
+        deleteModalBody={
+          <p>
+            Deleting a user from the eCR Viewer is a permanent action. This
+            cannot be undone.{" "}
+          </p>
+        }
         details={[
           {
             title: "Name",

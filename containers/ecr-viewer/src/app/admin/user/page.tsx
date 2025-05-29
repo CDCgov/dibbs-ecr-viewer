@@ -1,3 +1,5 @@
+import { revalidatePath } from "next/cache";
+
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import {
   createProgramArea,
@@ -5,6 +7,7 @@ import {
 } from "@/app/services/programAreaService";
 import {
   createUser,
+  deleteUserAction,
   listUsers,
   notFoundUnlessAdmin,
   updateUserProgramAreas,
@@ -46,7 +49,15 @@ const UserAdminPage = async () => {
       <main className="main-container">
         <div className="content-container margin-top-10">
           <h2 className="margin-bottom-5">User management</h2>
-          <UserTable users={users} programAreas={programAreas} />
+          <UserTable
+            users={users}
+            programAreas={programAreas}
+            deleteAction={async (uuid) => {
+              "use server";
+              revalidatePath("/ecr-viewer/admin/user");
+              return await deleteUserAction(uuid);
+            }}
+          />
         </div>
       </main>
 
