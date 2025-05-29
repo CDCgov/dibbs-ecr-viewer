@@ -23,7 +23,7 @@ const UserAdminPage = async () => {
             <h2 className="margin-bottom-5">User management</h2>
             <div>
               <Link href="/admin/user/create" className="usa-button">
-                + Add new user
+                Create new user
               </Link>
             </div>
           </div>

@@ -29,7 +29,7 @@ const CreateUserPage = async () => {
           Back to User Management
         </Link>
         <UserForm
-          action="Add"
+          action="Create"
           initValues={{ programs }}
           submitAction={async (email, userType, programs) => {
             "use server";
