@@ -45,10 +45,10 @@ test.describe("user management page", () => {
 
     await expect(page.getByText("User management")).toBeVisible();
 
-    await page.getByText("Add new user").click();
+    await page.getByText("Create new user").click();
 
     await page.waitForURL("/ecr-viewer/admin/user/create");
-    await expect(page.getByRole("heading", { name: "Add user" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Create user" })).toBeVisible();
 
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
@@ -66,7 +66,7 @@ test.describe("user management page", () => {
     await checkboxProgram1.scrollIntoViewIfNeeded();
     await checkboxProgram1.dispatchEvent("click");
 
-    await page.getByRole("button", { name: "Add user" }).first().click();
+    await page.getByRole("button", { name: "Create user" }).first().click();
 
     // Check that user has been successfully/correctly created
     await page.waitForURL("/ecr-viewer/admin/user");

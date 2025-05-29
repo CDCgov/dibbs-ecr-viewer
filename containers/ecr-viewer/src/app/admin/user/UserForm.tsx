@@ -51,7 +51,9 @@ export const UserForm = ({
   ) => Promise<ServerActionResult<string>>;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
-  const [userType, setUserType] = useState<UserType>("standard");
+  const [userType, setUserType] = useState<UserType>(
+    initValues.userType || "standard"
+  );
   const [programs, setPrograms] = useState(initValues.programs);
 
   const { createToast } = React.useContext(ToastContext);
@@ -61,7 +63,10 @@ export const UserForm = ({
     .map(({ uuid }) => uuid);
   const numProgramsSelected = selectedPrograms.length;
 
-  const valid = !!email && numProgramsSelected > 0;
+  const valid =
+    !!email &&
+    numProgramsSelected > 0 &&
+    (userType === "admin" || userType === "standard");
 
   return (
     <FormPageContent
@@ -178,8 +183,7 @@ const ProgramFieldSet = ({
   const isStandardUser = userType === "standard"
 
   const accordionItems: AccordionItem[] = programs.map((program) => {
-    const name = program.name;
-    const conditions = program.conditions;
+    const { name, conditions } = program;
     const numConditions = conditions.length;
 
     return {
