@@ -119,7 +119,7 @@ export const AccordionControlled = ({
               toggleItem(item.id);
             }}
           />
-        )
+        ),
       )}
     </div>
   );
