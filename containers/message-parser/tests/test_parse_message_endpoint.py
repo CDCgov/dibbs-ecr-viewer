@@ -45,6 +45,7 @@ expected_successful_response = {
         "rr": [
             {
                 "code": "840539006",
+                "condition": "COVID-19 unfortunately",
             }
         ],
     },
@@ -102,6 +103,7 @@ expected_successful_response_with_meta_data = {
             "value": [
                 {
                     "code": "840539006",
+                    "condition": "COVID-19 unfortunately"
                 },
             ],
         },
@@ -119,6 +121,7 @@ expected_successful_response_floats = {
         "rr": [
             {
                 "code": "840539006",
+                "condition": "COVID-19 unfortunately"
             }
         ],
     },
@@ -176,6 +179,7 @@ expected_successful_response_floats_with_meta_data = {
             "value": [
                 {
                     "code": "840539006",
+                    "condition": "COVID-19 unfortunately",
                 },
             ],
         },
