@@ -166,7 +166,6 @@ const UserTypeFieldSet = ({
   );
 };
 
-
 // eslint-disable-next-line jsdoc/require-jsdoc
 export const ProgramFieldSet = ({
   programs,

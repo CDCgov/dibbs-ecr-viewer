@@ -150,12 +150,11 @@ describe("User Admin Page", () => {
           setPrograms={setPrograms}
           numProgramsSelected={numProgramsSelected}
           userType={userType}
-        />
+        />,
       );
 
       const checkboxes = screen.queryAllByRole("checkbox");
       expect(checkboxes.length).toBe(0);
-  
     });
   });
 });
