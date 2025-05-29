@@ -47,7 +47,7 @@ export const UserForm = ({
   submitAction: (
     email: string,
     userType: UserType,
-    programs: string[]
+    programs: string[],
   ) => Promise<ServerActionResult<string>>;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
@@ -68,8 +68,13 @@ export const UserForm = ({
       action={`${action} user`}
       formValid={valid}
       submitAction={async () => {
-        const res = await submitAction(email.trim(), userType, selectedPrograms);
-        if (!res.error) createToast(`${email.trim()} successfully saved`, "success");
+        const res = await submitAction(
+          email.trim(),
+          userType,
+          selectedPrograms,
+        );
+        if (!res.error)
+          createToast(`${email.trim()} successfully saved`, "success");
         return res;
       }}
       successRoute="/admin/user"
@@ -168,9 +173,7 @@ const ProgramFieldSet = ({
     return {
       title: (
         <div className="display-flex flex-justify flex-align-center">
-          <span>
-            {name}
-          </span>
+          <span>{name}</span>
           <span>
             {numConditions} condition{makePlural(numConditions)}
           </span>
@@ -181,14 +184,14 @@ const ProgramFieldSet = ({
       expanded: !!expandedPrograms[toKebabCase(name)],
       headingLevel: "h3",
       group: "program",
-      isChecked: () => program.checked === true, 
+      isChecked: () => program.checked === true,
       onChecked: (e: React.ChangeEvent<HTMLInputElement>) => {
         setPrograms(
           programs.map((c) =>
-            c.uuid === program.uuid ? { ...c, checked: e.target.checked } : c
-          )
+            c.uuid === program.uuid ? { ...c, checked: e.target.checked } : c,
+          ),
         );
-      }
+      },
     };
   });
 
@@ -217,7 +220,7 @@ const ProgramFieldSet = ({
                 programs.map((c) => ({
                   ...c,
                   checked,
-                }))
+                })),
               )
             }
             aria-controls={programs

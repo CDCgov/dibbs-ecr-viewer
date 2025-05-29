@@ -56,11 +56,13 @@ test.describe("user management page", () => {
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
     page.getByLabel("EMAIL").fill(`${browserName}@test.test`);
-    const adminRadio = page.getByLabel("Standard", {exact: true});
+    const adminRadio = page.getByLabel("Standard", { exact: true });
     await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
 
-    const checkboxProgram1 = await page.getByLabel(`Checkbox for program-${toKebabCase(program1)}`);  
+    const checkboxProgram1 = await page.getByLabel(
+      `Checkbox for program-${toKebabCase(program1)}`,
+    );
     await checkboxProgram1.scrollIntoViewIfNeeded();
     await checkboxProgram1.dispatchEvent("click");
 
@@ -75,7 +77,7 @@ test.describe("user management page", () => {
     await expect(row.getByText("Standard")).toBeVisible();
     await expect(page.getByText(program1)).toBeVisible();
     await expect(page.getByText(program2)).not.toBeVisible();
-  }); 
+  });
 });
 
 const createRandomProgramArea = async (page: Page) => {
