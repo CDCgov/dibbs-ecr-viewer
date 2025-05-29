@@ -228,14 +228,13 @@ export const ProgramFieldSet = ({
       {isStandardUser && (
         <div className="margin-right-auto">
           {[
-            { type: "Select", checked: true, disabledCount: programs.length },
-            { type: "Deselect", checked: false, disabledCount: 0 },
-          ].map(({ type, checked, disabledCount }) => (
+            { type: "Select", checked: true },
+            { type: "Deselect", checked: false },
+          ].map(({ type, checked }) => (
             <Button
               key={type}
               type="button"
               outline={true}
-              disabled={numProgramsSelected === disabledCount}
               onClick={() =>
                 setPrograms(
                   programs.map((c) => ({

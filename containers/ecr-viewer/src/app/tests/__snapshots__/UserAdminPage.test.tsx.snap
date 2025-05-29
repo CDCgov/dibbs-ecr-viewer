@@ -199,7 +199,6 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
               aria-controls="program-area-two program-area-three"
               class="usa-button usa-button--outline margin-top-0"
               data-testid="button"
-              disabled=""
               type="button"
             >
               Deselect
