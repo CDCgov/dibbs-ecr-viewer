@@ -70,7 +70,7 @@ export const UserForm = ({
 
   return (
     <FormPageContent
-      action={`${action} new user`}
+      action={`${action} user`}
       formValid={valid}
       submitAction={async () => {
         const res = await submitAction(

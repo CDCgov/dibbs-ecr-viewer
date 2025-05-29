@@ -34,7 +34,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
         <h2
           class="margin-0"
         >
-          Create new user
+          Create user
         </h2>
         <div>
           <button
@@ -44,7 +44,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             form="r:id"
             type="submit"
           >
-            Create new user
+            Create user
           </button>
         </div>
       </div>
@@ -373,7 +373,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             form="r:id"
             type="submit"
           >
-            Create new user
+            Create user
           </button>
         </div>
       </form>
@@ -403,7 +403,7 @@ exports[`User Admin Page should list users when available 1`] = `
             class="usa-button"
             href="/admin/user/create"
           >
-            Create new user
+            Create user
           </a>
         </div>
       </div>

@@ -11,7 +11,7 @@ import {
 } from "@/app/services/userService";
 
 /**
- * @returns Page to add a new user
+ * @returns Page to create a new user
  */
 const CreateUserPage = async () => {
   await notFoundUnlessAdmin();
