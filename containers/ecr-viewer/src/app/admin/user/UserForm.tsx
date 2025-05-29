@@ -125,6 +125,7 @@ const UserTypeFieldSet = ({
         <RequiredMarker />
         {["admin", "standard"].map((option) => (
           <Radio
+            key={option}
             label={toTitleCase(option)}
             type="radio"
             required={true}
