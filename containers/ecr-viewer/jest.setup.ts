@@ -17,15 +17,15 @@ expect.extend(matchers);
 
 // Mocking `next/navigation` hooks
 jest.mock("next/navigation", () => ({
-  useRouter: () => router,
-  usePathname: () => router.pathname,
-  useSearchParams: () => {
+  useRouter: jest.fn().mockReturnValue(router),
+  usePathname: jest.fn().mockReturnValue(router.pathname),
+  useSearchParams: jest.fn().mockImplementation(() => {
     const params = new URLSearchParams(router.asPath.split("?")[1]);
     return {
       get: params.get.bind(params),
       toString: () => params.toString(),
     };
-  },
+  }),
   notFound: jest.fn(),
 }));
 

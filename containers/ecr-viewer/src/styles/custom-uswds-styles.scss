@@ -155,8 +155,17 @@
   max-width: clamp(40rem, 50vw, 60rem);
   overflow-y: auto;
 
+  .usa-modal__content {
+    height: 100%;
+    justify-content: flex-end;
+  }
+
   .usa-modal__main {
     margin: -2rem 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .usa-modal__heading {
