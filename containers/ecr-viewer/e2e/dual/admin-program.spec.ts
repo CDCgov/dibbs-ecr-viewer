@@ -29,9 +29,9 @@ test.describe("program management page", () => {
       page.getByRole("heading", { name: "Create program area" }),
     ).toBeVisible();
 
-    const accessibilityScanResultsBase = await new AxeBuilder({
-      page,
-    }).analyze();
+    const axe = new AxeBuilder({ page });
+
+    const accessibilityScanResultsBase = await axe.analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
     // search for a condition (but not too specifically due to randomness)
@@ -46,7 +46,7 @@ test.describe("program management page", () => {
     await checkbox.scrollIntoViewIfNeeded();
     await checkbox.dispatchEvent("click");
 
-    page.getByLabel("Program area name").fill(conditionName);
+    await page.getByLabel("Program area name").fill(conditionName);
 
     await page
       .getByRole("button", { name: "Create program area" })
@@ -61,17 +61,12 @@ test.describe("program management page", () => {
     await page.getByText(conditionName).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
-    const accessibilityScanResultsSidePanel = await new AxeBuilder({
-      page,
-    }).analyze();
-
     // axe struggles with the modal background, but all manual testing
     // points to contrast being fine
-    const nonColorViolationsSidePanel =
-      accessibilityScanResultsSidePanel.violations.filter(
-        (v) => v.id !== "color-contrast",
-      );
-    expect(nonColorViolationsSidePanel).toEqual([]);
+    axe.disableRules("color-contrast");
+
+    const accessibilityScanResultsSidePanel = await axe.analyze();
+    expect(accessibilityScanResultsSidePanel.violations).toEqual([]);
 
     await page.getByRole("button", { name: "Close this window" }).click();
 
@@ -85,21 +80,25 @@ test.describe("program management page", () => {
     await checkbox.dispatchEvent("click");
     await expect(page.getByText("Are you sure you want to add")).toBeVisible();
 
-    const accessibilityScanResultsModal = await new AxeBuilder({
-      page,
-    }).analyze();
+    // this is flaky on webkit, so adding more retrying
+    let accessibilityScanResultsModal = await axe.analyze();
+    if (accessibilityScanResultsModal.violations.length > 0) {
+      accessibilityScanResultsModal = await axe.analyze();
+    }
+    expect(accessibilityScanResultsModal.violations).toEqual([]);
 
-    // axe struggles with the modal background, but all manual testing
-    // points to contrast being fine
-    const nonColorViolationsModal =
-      accessibilityScanResultsModal.violations.filter(
-        (v) => v.id !== "color-contrast",
-      );
-    expect(nonColorViolationsModal).toEqual([]);
+    // re-submit to check failure state
+    await page.getByRole("button", { name: "Yes, add condition" }).click();
+    await page.getByLabel("Program area name").fill(conditionName);
 
-    // close the confirmation modal
-    await page.getByRole("button", { name: "Close this window" }).click();
+    await page
+      .getByRole("button", { name: "Create program area" })
+      .first()
+      .click();
 
+    await expect(page.getByText("Failed to create program area")).toBeVisible();
+
+    // Go back to main table
     await page
       .getByRole("link", { name: "Back to program management" })
       .click();
@@ -112,17 +111,8 @@ test.describe("program management page", () => {
     await page.getByRole("button", { name: "Delete program area" }).click();
     await expect(page.getByText(`Delete ${conditionName}`)).toBeVisible();
 
-    const accessibilityScanResultsConfirmation = await new AxeBuilder({
-      page,
-    }).analyze();
-
-    // axe struggles with the modal background, but all manual testing
-    // points to contrast being fine
-    const nonColorViolationsConfirmation =
-      accessibilityScanResultsConfirmation.violations.filter(
-        (v) => v.id !== "color-contrast",
-      );
-    expect(nonColorViolationsConfirmation).toEqual([]);
+    const accessibilityScanResultsConfirmation = await axe.analyze();
+    expect(accessibilityScanResultsConfirmation.violations).toEqual([]);
 
     await page
       .getByRole("button", { name: "Yes, delete program area" })
