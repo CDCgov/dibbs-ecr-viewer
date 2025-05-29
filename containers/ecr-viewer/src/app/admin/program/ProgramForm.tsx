@@ -1,14 +1,11 @@
 "use client";
-import React, { ReactNode, RefObject, useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 
 import {
   Button,
-  ButtonGroup,
   Checkbox,
-  ModalFooter,
   ModalHeading,
   ModalRef,
-  ModalToggleButton,
   RequiredMarker,
   TextInput,
 } from "@trussworks/react-uswds";
@@ -16,11 +13,14 @@ import {
 import { Search } from "@/app/components/Icon";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import ConfirmationFooter from "@/app/components/modal/ConfirmationFooter";
+import Modal from "@/app/components/modal/Modal";
+import { ToastContext } from "@/app/components/toast/ToastProvider";
+import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { toKebabCase, makePlural } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
-import { Modal } from "@/components/Modal";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;
@@ -70,12 +70,16 @@ export const ProgramForm = ({
   action: string;
   initValues: FormValues;
   progUuid?: string;
-  submitAction: (name: string, conditions: string[]) => Promise<void>;
+  submitAction: (
+    name: string,
+    conditions: string[],
+  ) => Promise<ServerActionResult<string | undefined>>;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
     groupByCategory(initValues.conditions),
   );
+  const { createToast } = React.useContext(ToastContext);
 
   const selectedConditions = sortedCodes(
     Object.values(conditionCategories).flatMap((id) => id),
@@ -105,7 +109,9 @@ export const ProgramForm = ({
       formValid={valid}
       formTouched={touched}
       submitAction={async () => {
-        await submitAction(name, selectedConditions);
+        const res = await submitAction(name, selectedConditions);
+        if (!res.error) createToast(`${name} successfully saved`, "success");
+        return res;
       }}
     >
       <NameFieldSet name={name} setName={setName} />
@@ -422,7 +428,7 @@ const ConfirmationModal = ({
       ref={modalRef}
       aria-labelledby="confirm-condition-heading"
       aria-describedby="confirm-condition-description"
-      forceAction={true}
+      onClose={onClose}
     >
       {confirmingCategory &&
         (confirmingCondition ? (
@@ -437,11 +443,7 @@ const ConfirmationModal = ({
               will be removed from the program area{" "}
               {confirmingCondition?.program_area_name}.
             </p>
-            <ConfirmationFooter
-              modalRef={modalRef}
-              onClose={onClose}
-              onConfirm={onConfirm}
-            >
+            <ConfirmationFooter modalRef={modalRef} onConfirm={onConfirm}>
               Yes, add condition
             </ConfirmationFooter>
           </>
@@ -469,56 +471,12 @@ const ConfirmationModal = ({
               </ul>
             </div>
 
-            <ConfirmationFooter
-              modalRef={modalRef}
-              onClose={onClose}
-              onConfirm={onConfirm}
-            >
+            <ConfirmationFooter modalRef={modalRef} onConfirm={onConfirm}>
               Yes, add all conditions
             </ConfirmationFooter>
           </>
         ))}
     </Modal>
-  );
-};
-
-const ConfirmationFooter = ({
-  onConfirm,
-  onClose,
-  children,
-  modalRef,
-}: {
-  onConfirm: () => void;
-  onClose: () => void;
-  children: ReactNode;
-  modalRef: RefObject<ModalRef>;
-}) => {
-  return (
-    <ModalFooter>
-      <p>Are you sure you want to continue?</p>
-      <ButtonGroup className="flex-justify-end">
-        <ModalToggleButton
-          modalRef={modalRef}
-          closer={true}
-          outline={true}
-          data-focus={true}
-          className="padding-105 text-center"
-          onClick={onClose}
-        >
-          Cancel
-        </ModalToggleButton>
-        <ModalToggleButton
-          modalRef={modalRef}
-          closer={true}
-          onClick={() => {
-            onConfirm();
-            onClose();
-          }}
-        >
-          {children}
-        </ModalToggleButton>
-      </ButtonGroup>
-    </ModalFooter>
   );
 };
 

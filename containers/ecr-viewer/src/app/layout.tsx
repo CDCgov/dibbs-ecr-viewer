@@ -2,6 +2,8 @@ import "@/styles/styles.scss";
 
 import { AuthSessionProvider } from "./components/AuthSessionProvider";
 import RespectMotionPreferences from "./components/RespectMotionPreferences";
+import ToastProvider from "./components/toast/ToastProvider";
+import ToastShelf from "./components/toast/ToastShelf";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
@@ -26,9 +28,14 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <AuthSessionProvider>
-            <div className="isolate">{children}</div>
-          </AuthSessionProvider>
+          <div className="isolate">
+            <AuthSessionProvider>
+              <ToastProvider>
+                <ToastShelf />
+                {children}
+              </ToastProvider>
+            </AuthSessionProvider>
+          </div>
         </body>
       </html>
     </RespectMotionPreferences>

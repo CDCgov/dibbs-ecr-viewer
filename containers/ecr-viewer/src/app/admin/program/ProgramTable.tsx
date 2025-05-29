@@ -11,6 +11,7 @@ import {
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
+import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { makePlural } from "@/app/utils/format-utils";
@@ -19,12 +20,15 @@ import { makePlural } from "@/app/utils/format-utils";
  *
  * @param props React props
  * @param props.programAreas listed program areas
+ * @param props.deleteAction action to do upon delete confirmation
  * @returns paginated, sorted table of program areas
  */
 export const ProgramTable = ({
   programAreas,
+  deleteAction,
 }: {
   programAreas: ListedProgramArea[];
+  deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const detailsRef = useDetailsRef();
   const [selectedProgramArea, setSelectedProgramArea] =
@@ -64,8 +68,13 @@ export const ProgramTable = ({
         subtitle={`Created on ${formatDateTime(
           selectedProgramArea?.date_created.toISOString(),
         )}`}
-        description="Program area information"
         editHref={`/admin/program/edit?uuid=${selectedProgramArea?.uuid}`}
+        itemType="program area"
+        deleteAction={async () =>
+          await deleteAction(selectedProgramArea?.uuid!)
+        }
+        deleteExplainerText="When you delete this program area, the program area will not be available in the eCR library for standard users."
+        deleteModalTitle={`Delete ${selectedProgramArea?.name}`}
         details={[
           {
             title: "Name",

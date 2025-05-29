@@ -116,10 +116,11 @@ describe("program area service", () => {
     await updateProgramArea(id, { name: "Happy Days" });
     const afterNameConds = await listConditionReferences();
     const afterNameProgramAreas = await listProgramAreas();
-    // eslint-disable-next-line unused-imports/no-unused-vars
     expect(
+      // eslint-disable-next-line unused-imports/no-unused-vars
       beforeNameConds.map(({ program_area_name, ...cond }) => cond),
     ).toStrictEqual(
+      // eslint-disable-next-line unused-imports/no-unused-vars
       afterNameConds.map(({ program_area_name, ...cond }) => cond),
     );
     const progArea = afterNameProgramAreas.find((p) => p.uuid === id);

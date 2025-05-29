@@ -6,21 +6,21 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { ArrowBack } from "@/app/components/Icon";
+import { ServerActionResult } from "@/app/services/errorService";
 
 /**
  *
  * @param props React props
- * @param props.successRoute Route to redirect to upon successful submission
- * @param props.action Action of the form (e.g. "Create program area", "Edit program area")
+ * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.formValid Whether the form is valid
  * @param props.submitAction Handler to run on submission
  * @param props.children Content of the form, typically a series of `FieldSet`
  * @param props.formTouched
  * @param props.itemType
- * @param props.itemHomeRoute
+ * @param props.itemHomeRoute Route to redirect to upon successful submission or to go back to
  * @returns form with header and submit buttons
  */
-export const FormPageContent = ({
+export const FormPageContent = <T,>({
   action,
   itemType,
   formValid,
@@ -35,7 +35,7 @@ export const FormPageContent = ({
   formTouched: boolean;
   itemHomeRoute: string;
   children: ReactNode;
-  submitAction: () => Promise<void>;
+  submitAction: () => Promise<ServerActionResult<T>>;
 }) => {
   const router = useRouter();
   const id = useId();
@@ -84,30 +84,6 @@ export const FormPageContent = ({
               />
             </div>
           </div>
-        </div>
-
-        <form
-          id={id}
-          className="margin-top-3 isolate"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            setSubmitting(true);
-            setError("");
-            try {
-              await submitAction();
-            } catch (error: unknown) {
-              setSubmitting(false);
-              if (error instanceof Error) {
-                setError(error.message);
-              } else {
-                throw error;
-              }
-              return;
-            }
-
-            router.push(itemHomeRoute);
-          }}
-        >
           {error && (
             <Alert
               type="error"
@@ -119,6 +95,25 @@ export const FormPageContent = ({
               {error}
             </Alert>
           )}
+        </div>
+
+        <form
+          id={id}
+          className="margin-top-3 isolate"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setSubmitting(true);
+            setError("");
+            const res = await submitAction();
+            if (res.error) {
+              setSubmitting(false);
+              setError(res.error);
+              return;
+            }
+
+            router.push(itemHomeRoute);
+          }}
+        >
           {children}
           <div className="display-flex flex-justify-end margin-y-4">
             <SubmitButton
