@@ -44,9 +44,9 @@ expected_successful_response = {
         "active_problems": [],
         "rr": [
             {
-                "code" : "840539006",
+                "code": "840539006",
             }
-        ]
+        ],
     },
 }
 
@@ -93,15 +93,15 @@ expected_successful_response_with_meta_data = {
             "data_type": "array",
             "resource_type": "Condition",
         },
-        'rr': {
-            'data_type': 'array',
-            'fhir_path': "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
-            '= '
+        "rr": {
+            "data_type": "array",
+            "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
+            "= "
             "'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
-            'resource_type': 'Observation',
-            'value': [
+            "resource_type": "Observation",
+            "value": [
                 {
-                    'code': '840539006',
+                    "code": "840539006",
                 },
             ],
         },
@@ -167,15 +167,15 @@ expected_successful_response_floats_with_meta_data = {
             "data_type": "array",
             "resource_type": "Condition",
         },
-        'rr': {
-            'data_type': 'array',
-            'fhir_path': "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
-            '= '
+        "rr": {
+            "data_type": "array",
+            "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
+            "= "
             "'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
-            'resource_type': 'Observation',
-            'value': [
+            "resource_type": "Observation",
+            "value": [
                 {
-                    'code': '840539006',
+                    "code": "840539006",
                 },
             ],
         },
