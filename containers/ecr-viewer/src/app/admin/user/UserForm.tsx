@@ -226,33 +226,35 @@ export const ProgramFieldSet = ({
       <p className="text-bold font-size-md">
         Program area ({numProgramsSelected}/{programs.length}) selected
       </p>
-      <div className="margin-right-auto">
-        {[
-          { type: "Select", checked: true, disabledCount: programs.length },
-          { type: "Deselect", checked: false, disabledCount: 0 },
-        ].map(({ type, checked, disabledCount }) => (
-          <Button
-            key={type}
-            type="button"
-            outline={true}
-            disabled={numProgramsSelected === disabledCount}
-            onClick={() =>
-              setPrograms(
-                programs.map((c) => ({
-                  ...c,
-                  checked,
-                })),
-              )
-            }
-            aria-controls={programs
-              .map(({ name }) => `${toKebabCase(name)}`)
-              .join(" ")}
-            className="margin-top-0"
-          >
-            {type} all
-          </Button>
-        ))}
-      </div>
+      {isStandardUser && (
+        <div className="margin-right-auto">
+          {[
+            { type: "Select", checked: true, disabledCount: programs.length },
+            { type: "Deselect", checked: false, disabledCount: 0 },
+          ].map(({ type, checked, disabledCount }) => (
+            <Button
+              key={type}
+              type="button"
+              outline={true}
+              disabled={numProgramsSelected === disabledCount}
+              onClick={() =>
+                setPrograms(
+                  programs.map((c) => ({
+                    ...c,
+                    checked,
+                  }))
+                )
+              }
+              aria-controls={programs
+                .map(({ name }) => `${toKebabCase(name)}`)
+                .join(" ")}
+              className="margin-top-0"
+            >
+              {type} all
+            </Button>
+          ))}
+        </div>
+      )}
       <ExpandCollapseAccordionControlled
         descriptor="sections"
         className="accordion-dibbs margin-top-3"
