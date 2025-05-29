@@ -82,7 +82,6 @@ export const AccordionControlled = ({
   className,
   toggleItem,
 }: AccordionProps & JSX.IntrinsicElements["div"]): React.ReactElement => {
-  // TODO ANGELA: Things get passed in through here, then we add the checkbox item
   return (
     <div
       className={classnames("usa-accordion", className)}

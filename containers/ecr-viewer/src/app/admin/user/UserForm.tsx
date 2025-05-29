@@ -202,7 +202,6 @@ const ProgramFieldSet = ({
       <p className="text-bold font-size-md">
         Program area ({numProgramsSelected}/{programs.length}) selected
       </p>
-      {/* // TODO ANGELA: Should we decompose this? Abstract this? */}
       <div className="margin-right-auto">
         {[
           { type: "Select", checked: true, disabledCount: programs.length },
@@ -248,12 +247,8 @@ const ProgramFieldSet = ({
   );
 };
 
-/**
- * TODO ANGELA: Add purpose
- * @param programs React props
- * @param val Initial values the form is set to
- * @returns Program area add/edit form
- */
+// Converts an array of program objects into 
+// Record<[program-name]: boolean indicating expanded state>
 const valsToBoolean = (programs: FormProgram[], val: boolean) => {
   return programs
     .map((obj) => obj.name)
