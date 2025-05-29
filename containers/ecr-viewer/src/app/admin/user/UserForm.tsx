@@ -242,7 +242,7 @@ export const ProgramFieldSet = ({
                   programs.map((c) => ({
                     ...c,
                     checked,
-                  }))
+                  })),
                 )
               }
               aria-controls={programs

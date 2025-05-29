@@ -157,8 +157,10 @@ describe("User Admin Page", () => {
       expect(checkboxes.length).toBe(0);
 
       // Select all / deselect all buttons should not appear
-      const selectAll = screen.queryByRole("button", {name: /Select all/i});
-      const deselectAll = screen.queryByRole("button", { name: /Deselect all/i });
+      const selectAll = screen.queryByRole("button", { name: /Select all/i });
+      const deselectAll = screen.queryByRole("button", {
+        name: /Deselect all/i,
+      });
       expect(selectAll).not.toBeInTheDocument();
       expect(deselectAll).not.toBeInTheDocument();
     });
