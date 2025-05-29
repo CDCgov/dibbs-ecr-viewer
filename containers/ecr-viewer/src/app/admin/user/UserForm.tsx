@@ -65,7 +65,7 @@ export const UserForm = ({
 
   return (
     <FormPageContent
-      action={`${action} user`}
+      action={`${action} new user`}
       formValid={valid}
       submitAction={async () => {
         const res = await submitAction(
@@ -85,6 +85,7 @@ export const UserForm = ({
         programs={programs}
         setPrograms={setPrograms}
         numProgramsSelected={numProgramsSelected}
+        userType={userType}
       />
     </FormPageContent>
   );
@@ -126,24 +127,32 @@ const UserTypeFieldSet = ({
   setUserType: (n: UserType) => void;
 }) => {
   return (
-    <FieldSet legend="Select user type">
-      <span>
-        User type will apply to all users added. These can be edited later (
-        <RequiredMarker />)
-      </span>
-      <label className="usa-label">
+    <FieldSet legend="User type">
+      <label className="display-block width-full">
         USER TYPE
         <RequiredMarker />
-        {["admin", "standard"].map((option) => (
+        {[
+          {
+            name: "admin",
+            description:
+              "Admins have full access to user management, program management, and the eCR Library",
+          },
+          {
+            name: "standard",
+            description:
+              "Standard users can only use the eCR Library with limited access to program area(s)",
+          },
+        ].map((option) => (
           <Radio
-            key={option}
-            label={toTitleCase(option)}
+            key={option.name}
+            label={toTitleCase(option.name)}
+            labelDescription={option.description}
             type="radio"
             required={true}
             name="userType"
-            id={`userType-${option}`}
-            value={option}
-            checked={userType === option}
+            id={`userType-${option.name}`}
+            value={option.name}
+            checked={userType === option.name}
             onChange={(e) => setUserType(e.target.value as UserType)}
           />
         ))}
@@ -156,14 +165,17 @@ const ProgramFieldSet = ({
   programs,
   setPrograms,
   numProgramsSelected,
+  userType,
 }: {
   programs: FormProgram[];
   setPrograms: (c: FormProgram[]) => void;
   numProgramsSelected: number;
+  userType: UserType;
 }) => {
   const [expandedPrograms, setExpandedPrograms] = useState<
     Record<string, boolean>
   >(valsToBoolean(programs, true));
+  const isStandardUser = userType === "standard"
 
   const accordionItems: AccordionItem[] = programs.map((program) => {
     const name = program.name;
@@ -184,19 +196,19 @@ const ProgramFieldSet = ({
       expanded: !!expandedPrograms[toKebabCase(name)],
       headingLevel: "h3",
       group: "program",
-      isChecked: () => program.checked === true,
-      onChecked: (e: React.ChangeEvent<HTMLInputElement>) => {
+      isChecked: () => isStandardUser && program.checked === true,
+      onChecked: isStandardUser ? (e: React.ChangeEvent<HTMLInputElement>) => {
         setPrograms(
           programs.map((c) =>
-            c.uuid === program.uuid ? { ...c, checked: e.target.checked } : c,
-          ),
+            c.uuid === program.uuid ? { ...c, checked: e.target.checked } : c
+          )
         );
-      },
+      } : undefined,
     };
   });
 
   return (
-    <FieldSet legend="Select program area(s)">
+    <FieldSet legend="Program area access">
       <span>
         Select one or more program areas. Program areas will apply to all users
         added.
@@ -220,7 +232,7 @@ const ProgramFieldSet = ({
                 programs.map((c) => ({
                   ...c,
                   checked,
-                })),
+                }))
               )
             }
             aria-controls={programs

@@ -34,7 +34,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
         <h2
           class="margin-0"
         >
-          Add user
+          Create new user
         </h2>
         <div>
           <button
@@ -44,7 +44,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             form="r:id"
             type="submit"
           >
-            Add user
+            Create new user
           </button>
         </div>
       </div>
@@ -96,20 +96,10 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           class="dibbs-fieldset"
         >
           <legend>
-            Select user type
+            User type
           </legend>
-          <span>
-            User type will apply to all users added. These can be edited later (
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
-            >
-              *
-            </abbr>
-            )
-          </span>
           <label
-            class="usa-label"
+            class="display-block width-full"
           >
             USER TYPE
             <abbr
@@ -135,6 +125,11 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 for="userType-admin"
               >
                 Admin
+                <span
+                  class="usa-checkbox__label-description"
+                >
+                  Admins have full access to user management, program management, and the eCR Library
+                </span>
               </label>
             </div>
             <div
@@ -155,6 +150,11 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 for="userType-standard"
               >
                 Standard
+                <span
+                  class="usa-checkbox__label-description"
+                >
+                  Standard users can only use the eCR Library with limited access to program area(s)
+                </span>
               </label>
             </div>
           </label>
@@ -163,7 +163,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           class="dibbs-fieldset"
         >
           <legend>
-            Select program area(s)
+            Program area access
           </legend>
           <span>
             Select one or more program areas. Program areas will apply to all users added.
@@ -373,7 +373,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             form="r:id"
             type="submit"
           >
-            Add user
+            Create new user
           </button>
         </div>
       </form>
@@ -403,7 +403,7 @@ exports[`User Admin Page should list users when available 1`] = `
             class="usa-button"
             href="/admin/user/create"
           >
-            + Add new user
+            Create new user
           </a>
         </div>
       </div>
