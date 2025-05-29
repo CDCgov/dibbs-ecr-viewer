@@ -84,7 +84,7 @@ export const ProgramForm = ({
 
   const initSelectedConditions = sortedCodes(initValues.conditions);
   const touched =
-    name !== initValues.name ||
+    (name && name !== initValues.name) ||
     selectedConditions.length !== initSelectedConditions.length ||
     selectedConditions.some((c, i) => initSelectedConditions[i] !== c);
   const valid = !!name.trim() && numConditionsSelected > 0;
@@ -99,13 +99,14 @@ export const ProgramForm = ({
 
   return (
     <FormPageContent
-      action={`${action} program area`}
+      action={action}
+      itemType="program area"
+      itemHomeRoute="/admin/program"
       formValid={valid}
       formTouched={touched}
       submitAction={async () => {
         await submitAction(name, selectedConditions);
       }}
-      successRoute="/admin/program"
     >
       <NameFieldSet name={name} setName={setName} />
       <ConditionFieldSet

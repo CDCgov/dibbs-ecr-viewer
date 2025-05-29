@@ -26,7 +26,9 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <AuthSessionProvider>{children}</AuthSessionProvider>
+          <AuthSessionProvider>
+            <div className="isolate">{children}</div>
+          </AuthSessionProvider>
         </body>
       </html>
     </RespectMotionPreferences>
