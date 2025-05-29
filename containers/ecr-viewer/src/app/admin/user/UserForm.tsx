@@ -250,7 +250,7 @@ const ProgramFieldSet = ({
   );
 };
 
-// Converts an array of program objects into 
+// Converts an array of program objects into
 // Record<[program-name]: boolean indicating expanded state>
 const valsToBoolean = (programs: FormProgram[], val: boolean) => {
   return programs
