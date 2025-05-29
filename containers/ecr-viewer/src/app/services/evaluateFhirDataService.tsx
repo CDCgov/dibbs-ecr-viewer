@@ -742,7 +742,7 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
     fhirPathMappings.encounterAttendingRefs,
   );
 
-  sortByPeriod(encounterParticipantRefs, ({period}) => period)
+  sortByPeriod(encounterParticipantRefs, ({ period }) => period);
 
   const { practitioner, organization } = evaluatePractitionerRoleReference(
     fhirBundle,
