@@ -73,7 +73,7 @@ export const ProgramForm = ({
   submitAction: (
     name: string,
     conditions: string[],
-  ) => Promise<ServerActionResult<string | undefined>>;
+  ) => Promise<ServerActionResult<string | void>>;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
@@ -92,14 +92,6 @@ export const ProgramForm = ({
     selectedConditions.length !== initSelectedConditions.length ||
     selectedConditions.some((c, i) => initSelectedConditions[i] !== c);
   const valid = !!name.trim() && numConditionsSelected > 0;
-  console.log({
-    touched,
-    valid,
-    name,
-    initName: initValues.name,
-    conditions: selectedConditions,
-    initConditions: sortedCodes(initValues.conditions),
-  });
 
   return (
     <FormPageContent

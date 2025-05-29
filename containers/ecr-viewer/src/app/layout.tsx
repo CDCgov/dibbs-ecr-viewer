@@ -28,11 +28,11 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <div className="isolate">
+          <div className="position-relative isolate">
             <AuthSessionProvider>
               <ToastProvider>
-                <ToastShelf />
                 {children}
+                <ToastShelf />
               </ToastProvider>
             </AuthSessionProvider>
           </div>

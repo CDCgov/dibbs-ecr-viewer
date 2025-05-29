@@ -187,7 +187,8 @@ describe("ProgramForm", () => {
       name: "Edit program area",
     });
     expect(submitButtons).toHaveLength(2);
-    expect(submitButtons[0]).toBeEnabled();
+    // Not yet touched
+    expect(submitButtons[0]).toBeDisabled();
     expect(
       screen.queryByText("Condition in A Program Area"),
     ).not.toBeInTheDocument();

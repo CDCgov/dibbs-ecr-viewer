@@ -15,8 +15,8 @@ import { ServerActionResult } from "@/app/services/errorService";
  * @param props.formValid Whether the form is valid
  * @param props.submitAction Handler to run on submission
  * @param props.children Content of the form, typically a series of `FieldSet`
- * @param props.formTouched
- * @param props.itemType
+ * @param props.formTouched Whether the form has been touched (editted)
+ * @param props.itemType The type of item the form is about (e.g. "user")
  * @param props.itemHomeRoute Route to redirect to upon successful submission or to go back to
  * @returns form with header and submit buttons
  */
@@ -47,34 +47,57 @@ export const FormPageContent = <T,>({
   useEffect(() => {
     if (!formTouched) return;
 
-    function beforeUnload(e: BeforeUnloadEvent) {
+    const beforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-    }
+    };
 
     window.addEventListener("beforeunload", beforeUnload);
-
     return () => {
       window.removeEventListener("beforeunload", beforeUnload);
     };
   }, [formTouched]);
 
   const submitDisabled = !formValid || !formTouched || submitting;
-  console.log({ formTouched, formValid, submitting, submitDisabled });
 
   const actionPhrase = `${action} ${itemType}`;
 
   return (
     <main className="main-container">
-      <div className="content-container margin-top-10 position-relative">
+      <div className="content-container margin-top-3 position-relative">
+        <Link
+          href="/admin/program"
+          className="action-text display-inline-flex flex-align-center"
+        >
+          <ArrowBack aria-hidden={true} className="square-3" />
+          Back to {itemType}
+        </Link>
         <div className="border-bottom border-base-lighter position-sticky top-0 bg-white isolate z-500 padding-top-1">
-          <Link
-            href="/admin/program"
-            className="action-text margin-bottom-3 display-inline-flex flex-align-center"
-          >
-            <ArrowBack aria-hidden={true} className="square-3" />
-            Back to {itemType}
-          </Link>
-          <div className="display-flex flex-justify margin-bottom-3">
+          <div className="height-5 margin-bottom-1">
+            {formTouched && !submitting && (
+              <Alert
+                type="warning"
+                slim={true}
+                headingLevel="h4"
+                aria-live="polite"
+              >
+                You have unsaved changes
+              </Alert>
+            )}
+
+            {error && (
+              <Alert
+                type="error"
+                heading="Submission failed"
+                headingLevel="h4"
+                className="margin-bottom-3"
+                aria-live="polite"
+              >
+                {error}
+              </Alert>
+            )}
+          </div>
+
+          <div className="display-flex flex-justify margin-bottom-2">
             <h2 className="margin-0">{actionPhrase}</h2>
             <div>
               <SubmitButton
@@ -84,17 +107,6 @@ export const FormPageContent = <T,>({
               />
             </div>
           </div>
-          {error && (
-            <Alert
-              type="error"
-              heading="Submission failed"
-              headingLevel="h4"
-              className="margin-bottom-3"
-              aria-live="polite"
-            >
-              {error}
-            </Alert>
-          )}
         </div>
 
         <form
@@ -119,7 +131,7 @@ export const FormPageContent = <T,>({
             <SubmitButton
               formId={id}
               disabled={submitDisabled}
-              action={action}
+              action={actionPhrase}
             />
           </div>
         </form>

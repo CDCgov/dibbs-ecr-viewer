@@ -14,9 +14,11 @@ describe("FormPageContent", () => {
     let submitted = false;
     render(
       <FormPageContent
-        action="File a form"
+        action="File"
+        itemType="a form"
         formValid={true}
-        successRoute="/path/to/somewhere"
+        formTouched={true}
+        itemHomeRoute="/path/to/somewhere"
         submitAction={async () => {
           submitted = true;
           return {};
@@ -44,9 +46,11 @@ describe("FormPageContent", () => {
     let submitted = false;
     render(
       <FormPageContent
-        action="File a form"
+        action="File"
+        itemType="a form"
         formValid={false}
-        successRoute="/path/to/somewhere"
+        formTouched={true}
+        itemHomeRoute="/path/to/somewhere"
         submitAction={async () => {
           submitted = true;
           return {};
@@ -70,6 +74,45 @@ describe("FormPageContent", () => {
     await user.click(submitButtons[0]);
     expect(submitted).toBeFalse();
     expect(screen.queryByText("Submission failed")).not.toBeInTheDocument();
+    expect(screen.queryByText("You have unsaved changes")).toBeInTheDocument();
+    expect(router.pathname).not.toBe("/path/to/somewhere");
+  });
+
+  it("should render an untouched form page as not submittable", async () => {
+    let submitted = false;
+    render(
+      <FormPageContent
+        action="File"
+        itemType="a form"
+        formValid={true}
+        formTouched={false}
+        itemHomeRoute="/path/to/somewhere"
+        submitAction={async () => {
+          submitted = true;
+          return {};
+        }}
+      >
+        <FieldSet legend="A field">
+          <input type="text" />
+        </FieldSet>
+      </FormPageContent>,
+    );
+
+    const submitButtons = screen.getAllByRole("button", {
+      name: "File a form",
+    });
+    expect(submitButtons).toHaveLength(2);
+    for (const button of submitButtons) {
+      expect(button).toBeDisabled();
+    }
+
+    const user = userEvent.setup();
+    await user.click(submitButtons[0]);
+    expect(submitted).toBeFalse();
+    expect(screen.queryByText("Submission failed")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("You have unsaved changes"),
+    ).not.toBeInTheDocument();
     expect(router.pathname).not.toBe("/path/to/somewhere");
   });
 
@@ -79,9 +122,11 @@ describe("FormPageContent", () => {
     });
     render(
       <FormPageContent
-        action="File a form"
+        action="File"
+        itemType="a form"
         formValid={true}
-        successRoute="/path/to/somewhere"
+        formTouched={true}
+        itemHomeRoute="/path/to/somewhere"
         submitAction={action}
       >
         <FieldSet legend="A field">
