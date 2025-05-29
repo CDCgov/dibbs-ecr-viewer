@@ -104,7 +104,7 @@ test.describe("program management page", () => {
 
     // Go back to main table
     await page
-      .getByRole("link", { name: "Back to program management" })
+      .getByRole("link", { name: "Back to program area management" })
       .click();
     await page.waitForURL("/ecr-viewer/admin/program");
 
