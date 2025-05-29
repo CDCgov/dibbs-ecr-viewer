@@ -91,7 +91,7 @@ export const AccordionControlled = ({
       {items.map((item) =>
         item.isChecked && item.onChecked ? (
           <div
-            key={`accordionItemWrapper-${item.id}`}
+            key={`accordionItem-${item.id}`}
             className="display-flex flex-align-top margin-bottom-2"
           >
             <div className="margin-right-1 margin-top-3">
