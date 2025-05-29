@@ -101,10 +101,7 @@ expected_successful_response_with_meta_data = {
             "'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
             "resource_type": "Observation",
             "value": [
-                {
-                    "code": "840539006",
-                    "condition": "COVID-19 unfortunately"
-                },
+                {"code": "840539006", "condition": "COVID-19 unfortunately"},
             ],
         },
     },
@@ -118,12 +115,7 @@ expected_successful_response_floats = {
         "latitude": "34.58002",
         "longitude": "-118.08925",
         "active_problems": [],
-        "rr": [
-            {
-                "code": "840539006",
-                "condition": "COVID-19 unfortunately"
-            }
-        ],
+        "rr": [{"code": "840539006", "condition": "COVID-19 unfortunately"}],
     },
 }
 
