@@ -5,9 +5,9 @@ import { UserForm } from "@/app/admin/user/UserForm";
 import { ArrowBack } from "@/app/components/Icon";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import {
-  createUser,
+  createUserAction,
   notFoundUnlessAdmin,
-  updateUserProgramAreas,
+  updateUserProgramAreasAction,
 } from "@/app/services/userService";
 
 /**
@@ -33,10 +33,15 @@ const CreateUserPage = async () => {
           initValues={{ programs }}
           submitAction={async (email, userType, programs) => {
             "use server";
-            console.log(email, userType, programs);
-            const userUUID = await createUser(email, userType);
-            await updateUserProgramAreas(userUUID, programs);
             revalidatePath("/ecr-viewer/admin/user");
+
+            const res = await createUserAction(email, userType);
+
+            if (res.payload) {
+              const userUUID = res.payload;
+              await updateUserProgramAreasAction(userUUID, programs);
+            }
+            return res;
           }}
         />
       </div>

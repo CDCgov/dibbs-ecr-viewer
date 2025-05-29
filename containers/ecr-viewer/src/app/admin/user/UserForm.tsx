@@ -10,6 +10,8 @@ import {
 
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import { ToastContext } from "@/app/components/toast/ToastProvider";
+import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { makePlural, toKebabCase, toTitleCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
@@ -45,12 +47,14 @@ export const UserForm = ({
   submitAction: (
     email: string,
     userType: UserType,
-    programs: string[],
-  ) => Promise<void>;
+    programs: string[]
+  ) => Promise<ServerActionResult<string>>;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>("standard");
   const [programs, setPrograms] = useState(initValues.programs);
+
+  const { createToast } = React.useContext(ToastContext);
 
   const selectedPrograms = Object.values(programs)
     .filter(({ checked }) => !!checked)
@@ -64,7 +68,9 @@ export const UserForm = ({
       action={`${action} user`}
       formValid={valid}
       submitAction={async () => {
-        await submitAction(email.trim(), userType, selectedPrograms);
+        const res = await submitAction(email.trim(), userType, selectedPrograms);
+        if (!res.error) createToast(`${email.trim()} successfully saved`, "success");
+        return res;
       }}
       successRoute="/admin/user"
     >
