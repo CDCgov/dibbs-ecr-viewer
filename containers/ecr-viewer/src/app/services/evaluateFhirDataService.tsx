@@ -737,10 +737,13 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
   );
 
   const encounter = evaluateReference<Encounter>(fhirBundle, encounterRef);
-  const encounterParticipantRef = evaluateOne(
+  const encounterParticipantRefs = evaluateAll(
     encounter,
-    fhirPathMappings.encounterIndividualRef,
+    fhirPathMappings.encounterAttendingRefs,
   );
+
+  sortByPeriod(encounterParticipantRefs, ({period}) => period)
+
   const { practitioner, organization } = evaluatePractitionerRoleReference(
     fhirBundle,
     encounterParticipantRef,
