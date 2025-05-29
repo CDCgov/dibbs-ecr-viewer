@@ -61,7 +61,7 @@ test.describe("user management page", () => {
     await adminRadio.dispatchEvent("click");
 
     const checkboxProgram1 = await page.getByLabel(
-      `Checkbox for program-${toKebabCase(program1)}`,
+      `Checkbox for ${toKebabCase(program1)}`,
     );
     await checkboxProgram1.scrollIntoViewIfNeeded();
     await checkboxProgram1.dispatchEvent("click");
