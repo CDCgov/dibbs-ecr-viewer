@@ -45,7 +45,7 @@ test.describe("user management page", () => {
 
     await expect(page.getByText("User management")).toBeVisible();
 
-    await page.getByText("Create new user").click();
+    await page.getByText("Create user").click();
 
     await page.waitForURL("/ecr-viewer/admin/user/create");
     await expect(
