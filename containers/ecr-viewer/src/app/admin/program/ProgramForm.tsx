@@ -16,6 +16,7 @@ import {
 import { Search } from "@/app/components/Icon";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { toKebabCase, makePlural } from "@/app/utils/format-utils";
@@ -73,6 +74,7 @@ export const ProgramForm = ({
   const [conditionCategories, setConditionCategories] = useState(
     groupByCategory(initValues.conditions),
   );
+  const { createToast } = React.useContext(ToastContext);
 
   const selectedConditions = Object.values(conditionCategories)
     .flatMap((id) => id)
@@ -87,7 +89,9 @@ export const ProgramForm = ({
       action={`${action} program area`}
       formValid={valid}
       submitAction={async () => {
-        return await submitAction(name, selectedConditions);
+        const res = await submitAction(name, selectedConditions);
+        if (!res.error) createToast(`${name} successfully saved`, "success");
+        return res;
       }}
       successRoute="/admin/program"
     >

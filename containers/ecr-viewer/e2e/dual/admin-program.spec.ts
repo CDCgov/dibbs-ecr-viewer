@@ -55,10 +55,14 @@ test.describe("program management page", () => {
 
     await page.waitForURL("/ecr-viewer/admin/program");
     await expect(page.getByText("Program management")).toBeVisible();
-    await expect(page.getByText(conditionName)).toBeVisible();
+
+    await expect(page.getByRole("cell", { name: conditionName })).toBeVisible();
+    await expect(
+      page.getByText(`${conditionName} successfully saved`),
+    ).toBeVisible();
 
     // open up side panel
-    await page.getByText(conditionName).click();
+    await page.getByRole("button", { name: conditionName }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
     // axe struggles with the modal background, but all manual testing
