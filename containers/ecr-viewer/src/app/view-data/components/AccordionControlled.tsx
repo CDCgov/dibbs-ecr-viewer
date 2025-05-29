@@ -6,7 +6,7 @@
  */
 import React from "react";
 
-// import { Checkbox } from "@trussworks/react-uswds";
+import { Checkbox } from "@trussworks/react-uswds";
 import classnames from "classnames";
 
 import { AccordionItem as AccordionItemProps } from "@/app/view-data/types";
@@ -127,7 +127,6 @@ type CheckboxItemProps = {
   onChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-// Using native input element because don't want empty label on checkbox
 const CheckboxItem = ({
   id,
   group,
@@ -135,15 +134,14 @@ const CheckboxItem = ({
   onChecked,
 }: CheckboxItemProps): React.ReactElement => (
   <div key={`${group}-${id}`}>
-    <input
-      type="checkbox"
+    <Checkbox
+      id={`${group}-${id}`}
       name={`${group}s`}
       value={id}
-      id={`${group}-${id}`}
-      aria-label="Checkbox for ${id}"
+      aria-label={`Checkbox for ${group}-${id}`}
+      label=""
       checked={isChecked()}
       onChange={onChecked}
-      className="usa-checkbox__input"
     />
   </div>
 );
