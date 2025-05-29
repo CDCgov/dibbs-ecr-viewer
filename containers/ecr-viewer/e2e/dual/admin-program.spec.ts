@@ -109,7 +109,7 @@ test.describe("program management page", () => {
     await page.waitForURL("/ecr-viewer/admin/program");
 
     // open up side panel to delete the condition
-    await page.getByText(conditionName).click();
+    await page.getByRole("button", { name: conditionName }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
     await page.getByRole("button", { name: "Delete program area" }).click();
@@ -122,6 +122,13 @@ test.describe("program management page", () => {
       .getByRole("button", { name: "Yes, delete program area" })
       .click();
     await expect(page.locator("body")).not.toHaveAttribute("data-modal-count");
+
+    await expect(
+      page.getByText(`${conditionName} succesfully deleted`),
+    ).toBeVisible();
+
+    // Dismiss any toasts
+    await page.keyboard.press("Escape");
 
     for (const el of await page.getByText(conditionName).all()) {
       await expect(el).not.toBeVisible();

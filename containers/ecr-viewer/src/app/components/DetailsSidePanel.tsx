@@ -9,10 +9,12 @@ import {
 import classnames from "classnames";
 import { useRouter } from "next/navigation";
 
+import { ServerActionResult } from "@/app/services/errorService";
 import { toSentenceCase } from "@/app/utils/format-utils";
 
 import ConfirmationFooter from "./modal/ConfirmationFooter";
 import Modal from "./modal/Modal";
+import { ToastContext } from "./toast/ToastProvider";
 
 /**
  * The details ref links the trigger(s) and side panel.
@@ -99,7 +101,7 @@ export const DetailsSidePanel = ({
   title: string;
   subtitle: string;
   itemType: string;
-  deleteAction?: () => Promise<void>;
+  deleteAction?: () => Promise<ServerActionResult<void>>;
   deleteExplainerText?: string;
   deleteModalTitle?: string;
   deleteModalBody?: ReactNode;
@@ -107,6 +109,7 @@ export const DetailsSidePanel = ({
   const id = useId();
   const confirmRef = useRef<ModalRef>(null);
   const router = useRouter();
+  const { createToast } = React.useContext(ToastContext);
 
   return (
     <>
@@ -182,8 +185,13 @@ export const DetailsSidePanel = ({
           <ConfirmationFooter
             modalRef={confirmRef}
             onConfirm={async () => {
-              await deleteAction();
+              const res = await deleteAction();
               detailsRef.current?.toggleModal(undefined, false);
+              if (res.error) {
+                createToast(res.error, "error");
+              } else {
+                createToast(`${title} succesfully deleted`, "success");
+              }
               router.refresh();
             }}
           >

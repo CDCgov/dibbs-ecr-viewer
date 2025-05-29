@@ -86,6 +86,7 @@ describe("DetailsSidePanel", () => {
       <SidePanel
         deleteAction={async () => {
           deleted = true;
+          return {};
         }}
         deleteExplainerText="I will really be deleted"
         deleteModalTitle="Delete me?"

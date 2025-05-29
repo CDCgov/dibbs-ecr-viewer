@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
 import {
-  deleteProgramArea,
+  deleteProgramAreaAction,
   listProgramAreas,
 } from "@/app/services/programAreaService";
 import { notFoundUnlessAdmin } from "@/app/services/userService";
@@ -38,8 +38,9 @@ const ProgramAdminPage = async () => {
             programAreas={programAreas}
             deleteAction={async (uuid) => {
               "use server";
-              await deleteProgramArea(uuid);
+              const res = await deleteProgramAreaAction(uuid);
               revalidatePath("/ecr-viewer/admin/program");
+              return res;
             }}
           />
         )}

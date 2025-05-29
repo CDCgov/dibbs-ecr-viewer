@@ -11,6 +11,7 @@ import {
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
+import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { makePlural } from "@/app/utils/format-utils";
@@ -27,7 +28,7 @@ export const ProgramTable = ({
   deleteAction,
 }: {
   programAreas: ListedProgramArea[];
-  deleteAction: (uuid: string) => Promise<void>;
+  deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const detailsRef = useDetailsRef();
   const [selectedProgramArea, setSelectedProgramArea] =
