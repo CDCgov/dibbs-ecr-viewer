@@ -180,7 +180,7 @@ const ProgramFieldSet = ({
   const [expandedPrograms, setExpandedPrograms] = useState<
     Record<string, boolean>
   >(valsToBoolean(programs, true));
-  const isStandardUser = userType === "standard"
+  const isStandardUser = userType === "standard";
 
   const accordionItems: AccordionItem[] = programs.map((program) => {
     const { name, conditions } = program;
@@ -201,13 +201,17 @@ const ProgramFieldSet = ({
       headingLevel: "h3",
       group: "program",
       isChecked: () => isStandardUser && program.checked === true,
-      onChecked: isStandardUser ? (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPrograms(
-          programs.map((c) =>
-            c.uuid === program.uuid ? { ...c, checked: e.target.checked } : c
-          )
-        );
-      } : undefined,
+      onChecked: isStandardUser
+        ? (e: React.ChangeEvent<HTMLInputElement>) => {
+            setPrograms(
+              programs.map((c) =>
+                c.uuid === program.uuid
+                  ? { ...c, checked: e.target.checked }
+                  : c,
+              ),
+            );
+          }
+        : undefined,
     };
   });
 
@@ -236,7 +240,7 @@ const ProgramFieldSet = ({
                 programs.map((c) => ({
                   ...c,
                   checked,
-                }))
+                })),
               )
             }
             aria-controls={programs
