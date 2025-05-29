@@ -88,32 +88,39 @@ export const AccordionControlled = ({
       data-testid="accordion"
       data-allow-multiple={true}
     >
-      {items.map((item) => (
-        <div
-          key={`accordionItemWrapper-${item.id}`}
-          className="display-flex flex-align-top margin-bottom-2"
-        >
-          {item.isChecked && item.onChecked && (
+      {items.map((item) =>
+        item.isChecked && item.onChecked ? (
+          <div
+            key={`accordionItemWrapper-${item.id}`}
+            className="display-flex flex-align-top margin-bottom-2"
+          >
             <div className="margin-right-1 margin-top-3">
               <CheckboxItem
                 id={item.id}
                 group={item.group ?? "checkbox"}
-                // label={item.id}
                 isChecked={item.isChecked}
                 onChecked={item.onChecked}
               />
             </div>
-          )}
-          <div className="flex-grow-1 width-full">
-            <AccordionItem
-              {...item}
-              handleToggle={(): void => {
-                toggleItem(item.id);
-              }}
-            />
+            <div className="flex-grow-1 width-full">
+              <AccordionItem
+                {...item}
+                handleToggle={(): void => {
+                  toggleItem(item.id);
+                }}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        ) : (
+          <AccordionItem
+            key={`accordionItem_${item.id}`}
+            {...item}
+            handleToggle={(): void => {
+              toggleItem(item.id);
+            }}
+          />
+        )
+      )}
     </div>
   );
 };
