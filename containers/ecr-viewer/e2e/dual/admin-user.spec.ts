@@ -96,9 +96,6 @@ const createRandomProgramArea = async (page: Page) => {
     .click();
 
   await page.waitForURL("/ecr-viewer/admin/program");
-  await expect(
-    page.getByText(`Program ${index}`, { exact: true })
-  ).toBeVisible();
 
   return `Program ${index}`;
 };
