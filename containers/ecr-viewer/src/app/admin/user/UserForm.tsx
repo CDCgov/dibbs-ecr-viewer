@@ -52,7 +52,7 @@ export const UserForm = ({
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
-    initValues.userType || "standard"
+    initValues.userType || "standard",
   );
   const [programs, setPrograms] = useState(initValues.programs);
 

@@ -48,7 +48,9 @@ test.describe("user management page", () => {
     await page.getByText("Create new user").click();
 
     await page.waitForURL("/ecr-viewer/admin/user/create");
-    await expect(page.getByRole("heading", { name: "Create user" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Create user" }),
+    ).toBeVisible();
 
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
