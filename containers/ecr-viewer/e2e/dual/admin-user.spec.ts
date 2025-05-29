@@ -57,13 +57,13 @@ test.describe("user management page", () => {
     }).analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
-    page.getByLabel("EMAIL").fill(`${browserName}@test.test`);
+    page.getByLabel("Email").fill(`${browserName}@test.test`);
     const adminRadio = page.getByLabel("Standard", { exact: true });
     await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
 
     const checkboxProgram1 = await page.getByLabel(
-      `Checkbox for ${toKebabCase(program1)}`,
+      `Select ${toKebabCase(program1)}`,
     );
     await checkboxProgram1.scrollIntoViewIfNeeded();
     await checkboxProgram1.dispatchEvent("click");

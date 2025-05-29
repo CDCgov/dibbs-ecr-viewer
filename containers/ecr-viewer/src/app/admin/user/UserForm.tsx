@@ -109,7 +109,7 @@ const EmailFieldSet = ({
         Add the new user by their login email (<RequiredMarker />)
       </span>
       <label className="usa-label">
-        EMAIL
+        Email
         <RequiredMarker />
         <TextInput
           type="email"
@@ -134,7 +134,7 @@ const UserTypeFieldSet = ({
   return (
     <FieldSet legend="User type">
       <label className="display-block width-full">
-        USER TYPE
+        User type
         <RequiredMarker />
         {[
           {
@@ -219,8 +219,7 @@ export const ProgramFieldSet = ({
   return (
     <FieldSet legend="Program area access">
       <span>
-        Select one or more program areas. Program areas will apply to all users
-        added.
+        Select one or more program areas.
         <RequiredMarker />
       </span>
       <p className="text-bold font-size-md">

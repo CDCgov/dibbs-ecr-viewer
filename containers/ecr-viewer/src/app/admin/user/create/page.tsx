@@ -26,7 +26,7 @@ const CreateUserPage = async () => {
           className="action-text margin-bottom-3 display-inline-flex flex-align-center"
         >
           <ArrowBack aria-hidden={true} className="square-3" />
-          Back to User Management
+          Back to user management
         </Link>
         <UserForm
           action="Create"
