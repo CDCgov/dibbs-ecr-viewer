@@ -1,7 +1,8 @@
-import { act, render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { notFound } from "next/navigation";
 
+import { FormProgram, ProgramFieldSet } from "@/app/admin/user/UserForm";
 import CreateUserPage from "@/app/admin/user/create/page";
 import UserAdminPage from "@/app/admin/user/page";
 import { listProgramAreas } from "@/app/services/programAreaService";
@@ -23,6 +24,47 @@ jest.mock("../services/programAreaService");
 jest.mock("../services/listConditionsService", () => ({
   listConditionReferences: jest.fn().mockResolvedValue([]),
 }));
+
+const mockPrograms: FormProgram[] = [
+  {
+    name: "Program Area Two",
+    uuid: "456",
+    date_created: new Date("2025-01-05"),
+    author_uuid: "abc",
+    conditions: [
+      {
+        code: "123",
+        concept_name: "condition (disease)",
+        condition_name: "condition",
+        condition_category: "category",
+        program_area_uuid: "456",
+      },
+    ],
+  },
+  {
+    name: "Program Area Three",
+    uuid: "789",
+    date_created: new Date("2025-01-09"),
+    author_uuid: "abc",
+    conditions: [
+      {
+        code: "456",
+        concept_name: "condition 1 (disease)",
+        condition_name: "condition",
+        condition_category: "category",
+        program_area_uuid: "789",
+      },
+      {
+        code: "789",
+        concept_name: "condition 2 (disease)",
+        condition_name: "condition",
+        condition_category: "category",
+        program_area_uuid: "789",
+      },
+    ],
+  },
+];
+
 describe("User Admin Page", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -87,45 +129,7 @@ describe("User Admin Page", () => {
 
   describe("Creating users", () => {
     it("should render a create user page", async () => {
-      (listProgramAreas as jest.Mock).mockResolvedValue([
-        {
-          name: "Program Area Two",
-          uuid: "456",
-          date_created: new Date("2025-01-05"),
-          author_uuid: "abc",
-          conditions: [
-            {
-              code: "123",
-              concept_name: "condition (disease)",
-              condition_name: "condition",
-              condition_category: "category",
-              program_area_uuid: "456",
-            },
-          ],
-        },
-        {
-          name: "Program Area Three",
-          uuid: "789",
-          date_created: new Date("2025-01-09"),
-          author_uuid: "abc",
-          conditions: [
-            {
-              code: "456",
-              concept_name: "condition 1 (disease)",
-              condition_name: "condition",
-              condition_category: "category",
-              program_area_uuid: "789",
-            },
-            {
-              code: "789",
-              concept_name: "condition 2 (disease)",
-              condition_name: "condition",
-              condition_category: "category",
-              program_area_uuid: "789",
-            },
-          ],
-        },
-      ]);
+      (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
       const { container } = render(await CreateUserPage());
       expect(container).toMatchSnapshot();
       let results;
@@ -133,6 +137,25 @@ describe("User Admin Page", () => {
         results = await axe(container);
       });
       expect(results).toHaveNoViolations();
+    });
+
+    it("when creating an admin user, should not be able to choose program area access", async () => {
+      const setPrograms = jest.fn();
+      const numProgramsSelected = mockPrograms.filter((p) => p.checked).length;
+      const userType = "admin";
+
+      render(
+        <ProgramFieldSet
+          programs={mockPrograms}
+          setPrograms={setPrograms}
+          numProgramsSelected={numProgramsSelected}
+          userType={userType}
+        />
+      );
+
+      const checkboxes = screen.queryAllByRole("checkbox");
+      expect(checkboxes.length).toBe(0);
+  
     });
   });
 });

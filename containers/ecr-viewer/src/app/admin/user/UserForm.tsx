@@ -19,7 +19,7 @@ import { AccordionItem } from "@/app/view-data/types";
 
 type UserType = "admin" | "standard";
 
-interface FormProgram extends ListedProgramArea {
+export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
 }
 
@@ -65,8 +65,8 @@ export const UserForm = ({
 
   const valid =
     !!email &&
-    numProgramsSelected > 0 &&
-    (userType === "admin" || userType === "standard");
+    (userType === "admin" || userType === "standard") &&
+    (userType === "admin" || numProgramsSelected > 0);
 
   return (
     <FormPageContent
@@ -166,7 +166,9 @@ const UserTypeFieldSet = ({
   );
 };
 
-const ProgramFieldSet = ({
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+export const ProgramFieldSet = ({
   programs,
   setPrograms,
   numProgramsSelected,
