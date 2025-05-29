@@ -108,12 +108,45 @@ test.describe("program management page", () => {
       .click();
     await page.waitForURL("/ecr-viewer/admin/program");
 
-    // open up side panel to delete the condition
+    // open up side panel to edit the condition
     await page.getByRole("button", { name: conditionName }).click();
+    await expect(page.getByText("Program area information")).toBeVisible();
+    await page.getByText("Edit program area").click();
+
+    await page.waitForURL(/\/ecr-viewer\/admin\/program\/edit\?uuid=.*/);
+    await expect(
+      page.getByRole("heading", { name: "Edit program area" }),
+    ).toBeVisible();
+
+    // Not touched yet
+    await expect(
+      page.getByRole("button", { name: "Edit program area" }).first(),
+    ).toBeDisabled();
+
+    const newConditionName = conditionName + " editted";
+    await page.getByLabel("Program area name").fill(newConditionName);
+
+    await page
+      .getByRole("button", { name: "Edit program area" })
+      .first()
+      .click();
+
+    await page.waitForURL("/ecr-viewer/admin/program");
+    await expect(page.getByText("Program management")).toBeVisible();
+
+    await expect(
+      page.getByRole("cell", { name: newConditionName }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(`${newConditionName} successfully saved`),
+    ).toBeVisible();
+
+    // open up side panel to delete the condition
+    await page.getByRole("button", { name: newConditionName }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
     await page.getByRole("button", { name: "Delete program area" }).click();
-    await expect(page.getByText(`Delete ${conditionName}`)).toBeVisible();
+    await expect(page.getByText(`Delete ${newConditionName}`)).toBeVisible();
 
     const accessibilityScanResultsConfirmation = await axe.analyze();
     expect(accessibilityScanResultsConfirmation.violations).toEqual([]);
@@ -124,13 +157,17 @@ test.describe("program management page", () => {
     await expect(page.locator("body")).not.toHaveAttribute("data-modal-count");
 
     await expect(
-      page.getByText(`${conditionName} succesfully deleted`),
+      page.getByText(`${newConditionName} succesfully deleted`),
     ).toBeVisible();
 
     // Dismiss any toasts
     await page.keyboard.press("Escape");
 
     for (const el of await page.getByText(conditionName).all()) {
+      await expect(el).not.toBeVisible();
+    }
+
+    for (const el of await page.getByText(newConditionName).all()) {
       await expect(el).not.toBeVisible();
     }
   });
