@@ -43,7 +43,7 @@ export const FormPageContent = <T,>({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Warning to user that they have unsaved data
+  // Alert user that they have unsaved data if they hard navigate away
   useEffect(() => {
     if (!formTouched) return;
 
@@ -58,7 +58,6 @@ export const FormPageContent = <T,>({
   }, [formTouched]);
 
   const submitDisabled = !formValid || !formTouched || submitting;
-
   const actionPhrase = `${action} ${itemType}`;
 
   return (
@@ -69,11 +68,11 @@ export const FormPageContent = <T,>({
           className="action-text display-inline-flex flex-align-center"
         >
           <ArrowBack aria-hidden={true} className="square-3" />
-          Back to {itemType}
+          Back to {itemType} management
         </Link>
         <div className="border-bottom border-base-lighter position-sticky top-0 bg-white isolate z-500 padding-top-1">
           <div className="height-5 margin-bottom-1">
-            {formTouched && !submitting && (
+            {formTouched && !submitting && !error && (
               <Alert
                 type="warning"
                 slim={true}
