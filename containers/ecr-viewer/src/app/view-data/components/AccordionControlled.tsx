@@ -6,6 +6,7 @@
  */
 import React, { ReactNode } from "react";
 
+import { Checkbox } from "@trussworks/react-uswds";
 import classnames from "classnames";
 
 import { AccordionItem as AccordionItemProps } from "@/app/view-data/types";
@@ -81,22 +82,15 @@ const AccordionCheckBox = ({
 }: AccordionCheckboxProps & { children: ReactNode }) => {
   return onChecked ? (
     <div className="display-flex flex-align-top margin-bottom-2">
-      <div className="margin-right-1 margin-top-3">
-        <div>
-          <div data-testid="checkbox" className="usa-checkbox">
-            <input
-              className="usa-checkbox__input"
-              id={`checkbox-${id}`}
-              type="checkbox"
-              name={checkboxGroup}
-              aria-label={checkboxLabel}
-              onChange={(e) => onChecked(e.target.checked)}
-              checked={isChecked}
-            />
-            <span className="usa-checkbox__label" />
-          </div>
-        </div>
-      </div>
+      <Checkbox
+        className="margin-right-1 margin-top-3"
+        id={`checkbox-${id}`}
+        name={checkboxGroup!}
+        aria-label={checkboxLabel}
+        onChange={(e) => onChecked(e.target.checked)}
+        checked={isChecked}
+        label=""
+      />
       <div className="flex-grow-1 width-full">{children}</div>
     </div>
   ) : (
