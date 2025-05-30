@@ -105,9 +105,7 @@ const EmailFieldSet = ({
 }) => {
   return (
     <FieldSet legend="Email">
-      <span>
-        Add the new user by their login email (<RequiredMarker />)
-      </span>
+      <span>Add the new user by their login email</span>
       <label className="usa-label">
         Email
         <RequiredMarker />
