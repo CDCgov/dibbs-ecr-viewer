@@ -91,66 +91,64 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           <legend>
             User type
           </legend>
-          <label
-            class="display-block width-full"
-          >
-            User type
+          <span>
+            Select the user type
             <abbr
               class="usa-hint usa-hint--required"
               title="required"
             >
               *
             </abbr>
-            <div
-              class="usa-radio"
-              data-testid="radio"
+          </span>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              id="userType-admin"
+              name="userType"
+              required=""
+              type="radio"
+              value="admin"
+            />
+            <label
+              class="usa-radio__label"
+              for="userType-admin"
             >
-              <input
-                class="usa-radio__input"
-                id="userType-admin"
-                name="userType"
-                required=""
-                type="radio"
-                value="admin"
-              />
-              <label
-                class="usa-radio__label"
-                for="userType-admin"
+              Admin
+              <span
+                class="usa-checkbox__label-description"
               >
-                Admin
-                <span
-                  class="usa-checkbox__label-description"
-                >
-                  Admins have full access to user management, program management, and the eCR Library
-                </span>
-              </label>
-            </div>
-            <div
-              class="usa-radio"
-              data-testid="radio"
+                Admins have full access to user management, program management, and the eCR Library
+              </span>
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              checked=""
+              class="usa-radio__input"
+              id="userType-standard"
+              name="userType"
+              required=""
+              type="radio"
+              value="standard"
+            />
+            <label
+              class="usa-radio__label"
+              for="userType-standard"
             >
-              <input
-                checked=""
-                class="usa-radio__input"
-                id="userType-standard"
-                name="userType"
-                required=""
-                type="radio"
-                value="standard"
-              />
-              <label
-                class="usa-radio__label"
-                for="userType-standard"
+              Standard
+              <span
+                class="usa-checkbox__label-description"
               >
-                Standard
-                <span
-                  class="usa-checkbox__label-description"
-                >
-                  Standard users can only use the eCR Library with limited access to program area(s)
-                </span>
-              </label>
-            </div>
-          </label>
+                Standard users can only use the eCR Library with limited access to program area(s)
+              </span>
+            </label>
+          </div>
         </fieldset>
         <fieldset
           class="dibbs-fieldset"
