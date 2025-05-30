@@ -296,7 +296,7 @@ const ConditionFieldSet = ({
                       }}
                     />
                     {isAlreadyAssigned && (
-                      <span className="text-base">
+                      <span className="text-base line-height-13">
                         Condition in {condition.program_area_name}
                       </span>
                     )}
