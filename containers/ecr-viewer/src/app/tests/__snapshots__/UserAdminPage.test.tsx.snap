@@ -217,7 +217,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 type="button"
               >
                 Expand all 
-                sections
+                program areas
               </button>
               <span
                 class="vertical-line"
@@ -228,7 +228,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                 type="button"
               >
                 Collapse all 
-                sections
+                program areas
               </button>
             </div>
           </div>
@@ -241,27 +241,20 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
               class="display-flex flex-align-top margin-bottom-2"
             >
               <div
-                class="margin-right-1 margin-top-3"
+                class="usa-checkbox margin-right-1 margin-top-3"
+                data-testid="checkbox"
               >
-                <div>
-                  <div
-                    class="usa-checkbox"
-                    data-testid="checkbox"
-                  >
-                    <input
-                      aria-label="Checkbox for program-program-area-two"
-                      class="usa-checkbox__input"
-                      id="program-program-area-two"
-                      name="programs"
-                      type="checkbox"
-                      value="program-area-two"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="program-program-area-two"
-                    />
-                  </div>
-                </div>
+                <input
+                  aria-label="Select Program Area Two"
+                  class="usa-checkbox__input"
+                  id="checkbox-program-area-two"
+                  name="program"
+                  type="checkbox"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="checkbox-program-area-two"
+                />
               </div>
               <div
                 class="flex-grow-1 width-full"
@@ -303,27 +296,20 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
               class="display-flex flex-align-top margin-bottom-2"
             >
               <div
-                class="margin-right-1 margin-top-3"
+                class="usa-checkbox margin-right-1 margin-top-3"
+                data-testid="checkbox"
               >
-                <div>
-                  <div
-                    class="usa-checkbox"
-                    data-testid="checkbox"
-                  >
-                    <input
-                      aria-label="Checkbox for program-program-area-three"
-                      class="usa-checkbox__input"
-                      id="program-program-area-three"
-                      name="programs"
-                      type="checkbox"
-                      value="program-area-three"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="program-program-area-three"
-                    />
-                  </div>
-                </div>
+                <input
+                  aria-label="Select Program Area Three"
+                  class="usa-checkbox__input"
+                  id="checkbox-program-area-three"
+                  name="program"
+                  type="checkbox"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="checkbox-program-area-three"
+                />
               </div>
               <div
                 class="flex-grow-1 width-full"
