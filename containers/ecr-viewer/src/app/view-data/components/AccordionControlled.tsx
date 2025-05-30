@@ -4,24 +4,27 @@
  *
  * The component has been adapted to move the state control from inside the component to the consuming site.
  */
-import React from "react";
+import React, { ReactNode } from "react";
 
-import { Checkbox } from "@trussworks/react-uswds";
 import classnames from "classnames";
 
 import { AccordionItem as AccordionItemProps } from "@/app/view-data/types";
 
-type AccordionControlledItem = AccordionItemProps & {
-  group?: string;
-  isChecked?: () => boolean;
-  onChecked?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
+interface AccordionCheckboxProps {
+  id: string;
+  checkboxGroup?: string;
+  checkboxLabel?: string;
+  isChecked?: boolean;
+  onChecked?: (checked: boolean) => void;
+}
 
-type AccordionProps = {
-  items: AccordionControlledItem[];
+type AccordionControlledItemProps = AccordionItemProps & AccordionCheckboxProps;
+
+interface AccordionProps {
+  items: AccordionControlledItemProps[];
   className?: string;
   toggleItem: (id: string) => void;
-};
+}
 
 const AccordionItem = ({
   title,
@@ -31,7 +34,8 @@ const AccordionItem = ({
   className,
   headingLevel,
   handleToggle,
-}: AccordionItemProps): React.ReactElement => {
+  ...checkboxProps
+}: AccordionControlledItemProps): React.ReactElement => {
   const headingClasses = classnames("usa-accordion__heading", className);
   const contentClasses = classnames(
     "usa-accordion__content",
@@ -42,7 +46,7 @@ const AccordionItem = ({
   const Heading = headingLevel;
 
   return (
-    <>
+    <AccordionCheckBox id={id} {...checkboxProps}>
       <Heading className={headingClasses}>
         <button
           type="button"
@@ -63,7 +67,40 @@ const AccordionItem = ({
       >
         {content}
       </div>
-    </>
+    </AccordionCheckBox>
+  );
+};
+
+const AccordionCheckBox = ({
+  id,
+  checkboxGroup,
+  checkboxLabel,
+  isChecked,
+  onChecked,
+  children,
+}: AccordionCheckboxProps & { children: ReactNode }) => {
+  return onChecked ? (
+    <div className="display-flex flex-align-top margin-bottom-2">
+      <div className="margin-right-1 margin-top-3">
+        <div>
+          <div data-testid="checkbox" className="usa-checkbox">
+            <input
+              className="usa-checkbox__input"
+              id={`checkbox-${id}`}
+              type="checkbox"
+              name={checkboxGroup}
+              aria-label={checkboxLabel}
+              onChange={(e) => onChecked(e.target.checked)}
+              checked={isChecked}
+            />
+            <span className="usa-checkbox__label" />
+          </div>
+        </div>
+      </div>
+      <div className="flex-grow-1 width-full">{children}</div>
+    </div>
+  ) : (
+    <>{children}</>
   );
 };
 
@@ -88,67 +125,17 @@ export const AccordionControlled = ({
       data-testid="accordion"
       data-allow-multiple={true}
     >
-      {items.map((item) =>
-        item.isChecked && item.onChecked ? (
-          <div
-            key={`accordionItem-${item.id}`}
-            className="display-flex flex-align-top margin-bottom-2"
-          >
-            <div className="margin-right-1 margin-top-3">
-              <CheckboxItem
-                id={item.id}
-                group={item.group ?? "checkbox"}
-                isChecked={item.isChecked}
-                onChecked={item.onChecked}
-              />
-            </div>
-            <div className="flex-grow-1 width-full">
-              <AccordionItem
-                {...item}
-                handleToggle={(): void => {
-                  toggleItem(item.id);
-                }}
-              />
-            </div>
-          </div>
-        ) : (
-          <AccordionItem
-            key={`accordionItem_${item.id}`}
-            {...item}
-            handleToggle={(): void => {
-              toggleItem(item.id);
-            }}
-          />
-        ),
-      )}
+      {items.map((item) => (
+        <AccordionItem
+          key={`accordionItem_${item.id}`}
+          {...item}
+          handleToggle={(): void => {
+            toggleItem(item.id);
+          }}
+        />
+      ))}
     </div>
   );
 };
 
 export default AccordionControlled;
-
-type CheckboxItemProps = {
-  id: string;
-  group: string;
-  isChecked: () => boolean;
-  onChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const CheckboxItem = ({
-  id,
-  group,
-  isChecked,
-  onChecked,
-}: CheckboxItemProps): React.ReactElement => (
-  <div key={`${group}-${id}`}>
-    <Checkbox
-      id={`${group}-${id}`}
-      name={`${group}s`}
-      value={id}
-      aria-label={`Checkbox for ${group}-${id}`}
-      label=""
-      checked={isChecked()}
-      onChange={onChecked}
-    />
-  </div>
-);
