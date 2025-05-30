@@ -737,18 +737,18 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
   );
 
   const encounter = evaluateReference<Encounter>(fhirBundle, encounterRef);
-  const encounterParticipantRefs = evaluateAll(
+  const encounterAttendingRefs = evaluateAll(
     encounter,
     fhirPathMappings.encounterAttendingRefs,
   );
 
   // CDA has there being only one responsible party per eCR - find them
   const { practitioner, organization } =
-    encounterParticipantRefs
-      .map((encounterParticipantRef) =>
+    encounterAttendingRefs
+      .map((encounterAttendingRef) =>
         evaluatePractitionerRoleReference(
           fhirBundle,
-          encounterParticipantRef.individual?.reference,
+          encounterAttendingRef.individual?.reference,
         ),
       )
       .find(
