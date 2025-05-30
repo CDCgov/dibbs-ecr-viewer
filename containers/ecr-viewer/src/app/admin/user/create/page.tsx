@@ -39,9 +39,9 @@ const CreateUserPage = async () => {
 
             if (res.payload) {
               const userUUID = res.payload;
-              await updateUserProgramAreasAction(userUUID, programs);
+              return await updateUserProgramAreasAction(userUUID, programs);
             }
-            return res;
+            return { error: res.error };
           }}
         />
       </div>

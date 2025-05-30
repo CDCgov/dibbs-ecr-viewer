@@ -48,7 +48,7 @@ export const UserForm = ({
     email: string,
     userType: UserType,
     programs: string[],
-  ) => Promise<ServerActionResult<string>>;
+  ) => Promise<ServerActionResult<void>>;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
