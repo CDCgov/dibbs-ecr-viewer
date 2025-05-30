@@ -95,8 +95,9 @@ const createRandomProgramArea = async (page: Page) => {
   const checkboxCond = checkboxesCond[index];
   await checkboxCond.scrollIntoViewIfNeeded();
   await checkboxCond.dispatchEvent("click");
+  const conditionName = await checkboxCond.inputValue();
 
-  await page.getByLabel("Program area name").fill(`Program ${index}`);
+  await page.getByLabel("Program area name").fill(`Program ${conditionName}`);
   await page
     .getByRole("button", { name: "Create program area" })
     .first()
@@ -104,7 +105,7 @@ const createRandomProgramArea = async (page: Page) => {
 
   await page.waitForURL("/ecr-viewer/admin/program");
 
-  return `Program ${index}`;
+  return `Program ${conditionName}`;
 };
 
 const deleteProgramArea = async (page: Page, program: string) => {
