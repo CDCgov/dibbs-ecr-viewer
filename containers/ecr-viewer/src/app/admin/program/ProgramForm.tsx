@@ -262,16 +262,17 @@ const ConditionFieldSet = ({
                       name="conditions"
                       value={condition.code}
                       label={
-                        <span>
-                          {condition.condition_name}{" "}
+                        <div>
+                          <p className="margin-0">{condition.condition_name}</p>
                           {hasDuplicateName && (
-                            <i className="text-base">
-                              —{" "}
-                              {condition.concept_name ||
-                                `SNOMED ${condition.code}`}
-                            </i>
+                            <p className="margin-0">
+                              <i className="text-base">
+                                {condition.concept_name ||
+                                  `SNOMED ${condition.code}`}
+                              </i>
+                            </p>
                           )}
-                        </span>
+                        </div>
                       }
                       checked={condition.checked === true}
                       aria-controls={
