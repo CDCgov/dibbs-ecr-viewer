@@ -200,15 +200,14 @@ export const ProgramFieldSet = ({
       id: toKebabCase(name),
       expanded: !!expandedPrograms[toKebabCase(name)],
       headingLevel: "h3",
-      group: "program",
-      isChecked: () => isStandardUser && program.checked === true,
+      checkboxGroup: "program",
+      checkboxLabel: `Select ${program.name}`,
+      isChecked: isStandardUser && program.checked === true,
       onChecked: isStandardUser
-        ? (e: React.ChangeEvent<HTMLInputElement>) => {
+        ? (checked: boolean) => {
             setPrograms(
               programs.map((c) =>
-                c.uuid === program.uuid
-                  ? { ...c, checked: e.target.checked }
-                  : c,
+                c.uuid === program.uuid ? { ...c, checked } : c,
               ),
             );
           }
@@ -260,7 +259,7 @@ export const ProgramFieldSet = ({
         </div>
       )}
       <ExpandCollapseAccordionControlled
-        descriptor="sections"
+        descriptor="program areas"
         className="accordion-dibbs margin-top-3"
         handleToggle={(p) =>
           setExpandedPrograms({
