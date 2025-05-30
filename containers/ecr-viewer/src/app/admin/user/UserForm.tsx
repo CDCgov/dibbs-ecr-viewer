@@ -200,7 +200,7 @@ export const ProgramFieldSet = ({
       headingLevel: "h3",
       checkboxGroup: "program",
       checkboxLabel: `Select ${program.name}`,
-      isChecked: isStandardUser && program.checked === true,
+      isChecked: program.checked === true,
       onChecked: isStandardUser
         ? (checked: boolean) => {
             setPrograms(
@@ -218,44 +218,48 @@ export const ProgramFieldSet = ({
       <span>
         {isStandardUser ? (
           <>
-            Select one or more program areas.
+            Select one or more program areas
             <RequiredMarker />
           </>
         ) : (
-          <>Admins will be able to see all program areas and conditions.</>
+          <>Admins will be able to see all program areas and conditions</>
         )}
       </span>
-      <p className="text-bold font-size-md">
-        Program area ({numProgramsSelected}/{programs.length} selected)
-      </p>
+
       {isStandardUser && (
-        <div className="margin-right-auto">
-          {[
-            { type: "Select", checked: true },
-            { type: "Deselect", checked: false },
-          ].map(({ type, checked }) => (
-            <Button
-              key={type}
-              type="button"
-              outline={true}
-              onClick={() =>
-                setPrograms(
-                  programs.map((c) => ({
-                    ...c,
-                    checked,
-                  })),
-                )
-              }
-              aria-controls={programs
-                .map(({ name }) => `${toKebabCase(name)}`)
-                .join(" ")}
-              className="margin-top-0"
-            >
-              {type} all
-            </Button>
-          ))}
-        </div>
+        <>
+          <p className="text-bold font-size-md">
+            Program area ({numProgramsSelected}/{programs.length} selected)
+          </p>
+          <div className="margin-right-auto">
+            {[
+              { type: "Select", checked: true },
+              { type: "Deselect", checked: false },
+            ].map(({ type, checked }) => (
+              <Button
+                key={type}
+                type="button"
+                outline={true}
+                onClick={() =>
+                  setPrograms(
+                    programs.map((c) => ({
+                      ...c,
+                      checked,
+                    })),
+                  )
+                }
+                aria-controls={programs
+                  .map(({ name }) => `${toKebabCase(name)}`)
+                  .join(" ")}
+                className="margin-top-0"
+              >
+                {type} all
+              </Button>
+            ))}
+          </div>
+        </>
       )}
+
       <ExpandCollapseAccordionControlled
         descriptor="program areas"
         className="accordion-dibbs margin-top-3"
