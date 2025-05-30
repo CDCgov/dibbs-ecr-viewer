@@ -1,8 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, Page } from "@playwright/test";
 
-import { toKebabCase } from "@/app/utils/format-utils";
-
 import { logInToKeycloak } from "./utils";
 
 test.describe("user management page", () => {
@@ -57,14 +55,15 @@ test.describe("user management page", () => {
     }).analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
-    page.getByLabel("Email").fill(`${browserName}@test.test`);
-    const adminRadio = page.getByLabel("Standard", { exact: true });
+    const email = `${browserName}-${Math.floor(Math.random() * 100)}@test.test`;
+    page.getByLabel("Email").fill(email);
+    const adminRadio = page.getByLabel("Standard");
     await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
 
-    const checkboxProgram1 = await page.getByLabel(
-      `Select ${toKebabCase(program1)}`,
-    );
+    const checkboxProgram1 = page.getByLabel(`Select ${program1}`, {
+      exact: true,
+    });
     await checkboxProgram1.scrollIntoViewIfNeeded();
     await checkboxProgram1.dispatchEvent("click");
 
@@ -72,13 +71,17 @@ test.describe("user management page", () => {
 
     // Check that user has been successfully/correctly created
     await page.waitForURL("/ecr-viewer/admin/user");
-    await expect(page.getByText(`${browserName}@test.test`)).toBeVisible();
+    await expect(page.getByRole("button", { name: email })).toBeVisible();
+    await expect(page.getByText(`${email} successfully saved`)).toBeVisible();
     const row = page.locator("tr", {
-      has: page.getByText(`${browserName}@test.test`),
+      has: page.getByText(email),
     });
     await expect(row.getByText("Standard")).toBeVisible();
     await expect(page.getByText(program1)).toBeVisible();
     await expect(page.getByText(program2)).not.toBeVisible();
+
+    await deleteProgramArea(page, program1);
+    await deleteProgramArea(page, program2);
   });
 });
 
@@ -102,4 +105,12 @@ const createRandomProgramArea = async (page: Page) => {
   await page.waitForURL("/ecr-viewer/admin/program");
 
   return `Program ${index}`;
+};
+
+const deleteProgramArea = async (page: Page, program: string) => {
+  await page.goto("/ecr-viewer/admin/program");
+  await page.getByLabel("Program areas per page").selectOption("100");
+  await page.getByRole("button", { name: program }).click();
+  await page.getByRole("button", { name: "Delete program area" }).click();
+  await page.getByRole("button", { name: "Yes, delete program area" }).click();
 };

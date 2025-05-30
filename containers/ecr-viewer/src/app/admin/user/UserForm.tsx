@@ -131,35 +131,35 @@ const UserTypeFieldSet = ({
 }) => {
   return (
     <FieldSet legend="User type">
-      <label className="display-block width-full">
-        User type
+      <span>
+        Select the user type
         <RequiredMarker />
-        {[
-          {
-            name: "admin",
-            description:
-              "Admins have full access to user management, program management, and the eCR Library",
-          },
-          {
-            name: "standard",
-            description:
-              "Standard users can only use the eCR Library with limited access to program area(s)",
-          },
-        ].map((option) => (
-          <Radio
-            key={option.name}
-            label={toTitleCase(option.name)}
-            labelDescription={option.description}
-            type="radio"
-            required={true}
-            name="userType"
-            id={`userType-${option.name}`}
-            value={option.name}
-            checked={userType === option.name}
-            onChange={(e) => setUserType(e.target.value as UserType)}
-          />
-        ))}
-      </label>
+      </span>
+      {[
+        {
+          name: "admin",
+          description:
+            "Admins have full access to user management, program management, and the eCR Library",
+        },
+        {
+          name: "standard",
+          description:
+            "Standard users can only use the eCR Library with limited access to program area(s)",
+        },
+      ].map((option) => (
+        <Radio
+          key={option.name}
+          label={toTitleCase(option.name)}
+          labelDescription={option.description}
+          type="radio"
+          required={true}
+          name="userType"
+          id={`userType-${option.name}`}
+          value={option.name}
+          checked={userType === option.name}
+          onChange={(e) => setUserType(e.target.value as UserType)}
+        />
+      ))}
     </FieldSet>
   );
 };
