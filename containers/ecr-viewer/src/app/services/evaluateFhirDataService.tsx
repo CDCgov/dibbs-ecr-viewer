@@ -742,12 +742,22 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
     fhirPathMappings.encounterAttendingRefs,
   );
 
-  sortByPeriod(encounterParticipantRefs, ({period}) => period)
-
-  const { practitioner, organization } = evaluatePractitionerRoleReference(
-    fhirBundle,
-    encounterParticipantRef,
-  );
+  // CDA has there being only one responsible party per eCR - find them
+  const { practitioner, organization } =
+    encounterParticipantRefs
+      .map((encounterParticipantRef) =>
+        evaluatePractitionerRoleReference(
+          fhirBundle,
+          encounterParticipantRef.individual?.reference,
+        ),
+      )
+      .find(
+        ({ practitioner }) =>
+          practitioner?.extension?.find(
+            ({ url }) =>
+              url === "http://hl7.org/fhir/StructureDefinition/_datatype",
+          )?.valueString === "Responsible Party",
+      ) || {};
 
   const providerData: DisplayDataProps[] = [
     {
