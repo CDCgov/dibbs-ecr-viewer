@@ -153,7 +153,7 @@ describe("ProgramForm", () => {
           conditions: [
             {
               code: "456",
-              concept_name: "condition 1 (disease)",
+              concept_name: null,
               condition_name: "condition 1",
               condition_category: "first category",
               program_area_uuid: null,
@@ -161,7 +161,15 @@ describe("ProgramForm", () => {
             },
             {
               code: "789",
-              concept_name: "condition 2 (disease)",
+              concept_name: "condition 1 (infection)",
+              condition_name: "condition 1",
+              condition_category: "first category",
+              program_area_uuid: "789",
+              program_area_name: "A Program Area",
+            },
+            {
+              code: "765",
+              concept_name: "condition 2 (infection)",
               condition_name: "condition 2",
               condition_category: "first category",
               program_area_uuid: "789",
@@ -195,10 +203,15 @@ describe("ProgramForm", () => {
     const nameInput = screen.getByLabelText("Program area name*");
     expect(nameInput).toHaveValue("I have a name");
 
+    // check for duplicate condition name handling
+    expect(screen.getByText("SNOMED 456")).toBeVisible();
+    expect(screen.getByText("condition 1 (infection)")).toBeVisible();
+
     const checkboxes = screen.getAllByRole("checkbox");
     expect(checkboxes[0]).not.toBeChecked();
-    expect(checkboxes[1]).toBeChecked();
-    expect(checkboxes[2]).not.toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).toBeChecked();
+    expect(checkboxes[3]).not.toBeChecked();
 
     const user = userEvent.setup();
 
@@ -208,6 +221,7 @@ describe("ProgramForm", () => {
     expect(checkboxes[0]).not.toBeChecked();
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
+    expect(checkboxes[3]).not.toBeChecked();
 
     // select all in first category
     const selectButtons = screen.getAllByRole("button", { name: "Select all" });
@@ -215,9 +229,10 @@ describe("ProgramForm", () => {
     expect(submitButtons[0]).not.toBeDisabled();
     expect(checkboxes[0]).toBeChecked();
     expect(checkboxes[1]).toBeChecked();
-    expect(checkboxes[2]).not.toBeChecked();
+    expect(checkboxes[2]).toBeChecked();
+    expect(checkboxes[3]).not.toBeChecked();
 
-    // search and deselect all on condition 2
+    // search and deselect all on condition 1
     await user.type(screen.getByPlaceholderText("Search conditions"), "2");
     expect(screen.getByText("1 result")).toBeInTheDocument();
     const deselectButtons = screen.getAllByRole("button", {
@@ -226,7 +241,8 @@ describe("ProgramForm", () => {
     await user.click(deselectButtons[0]);
     expect(submitButtons[0]).not.toBeDisabled();
     expect(checkboxes[0]).toBeChecked();
-    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[1]).toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
+    expect(checkboxes[3]).not.toBeChecked();
   });
 });
