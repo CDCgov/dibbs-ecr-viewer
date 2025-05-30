@@ -62,14 +62,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             Email
           </legend>
           <span>
-            Add the new user by their login email (
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
-            >
-              *
-            </abbr>
-            )
+            Add the new user by their login email
           </span>
           <label
             class="usa-label"
@@ -166,7 +159,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             Program area access
           </legend>
           <span>
-            Select one or more program areas.
+            Select one or more program areas
             <abbr
               class="usa-hint usa-hint--required"
               title="required"
