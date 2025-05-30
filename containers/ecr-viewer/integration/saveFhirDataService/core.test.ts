@@ -35,7 +35,6 @@ afterEach(() => {
 });
 
 describe("saveFhirData - core", () => {
-
   afterEach(async () => {
     await clearCore();
   });

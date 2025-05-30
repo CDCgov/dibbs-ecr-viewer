@@ -109,7 +109,6 @@ afterEach(() => {
 });
 
 describe("saveFhirData - extended", () => {
-
   afterEach(async () => {
     await clearExtended();
   });
