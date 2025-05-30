@@ -11,7 +11,7 @@ google-cloud-storage
 httpx
 phonenumbers
 polling
-pycountry
+pycountry>=24.6.1
 pydantic-settings
 pydantic>=2.0.0
 rapidfuzz
