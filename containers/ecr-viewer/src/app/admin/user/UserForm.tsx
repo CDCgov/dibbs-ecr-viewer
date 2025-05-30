@@ -229,7 +229,7 @@ export const ProgramFieldSet = ({
         )}
       </span>
       <p className="text-bold font-size-md">
-        Program area ({numProgramsSelected}/{programs.length}) selected
+        Program area ({numProgramsSelected}/{programs.length} selected)
       </p>
       {isStandardUser && (
         <div className="margin-right-auto">

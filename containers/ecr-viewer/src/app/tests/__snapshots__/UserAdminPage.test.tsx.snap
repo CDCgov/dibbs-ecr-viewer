@@ -181,7 +181,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             0
             /
             2
-            ) selected
+             selected)
           </p>
           <div
             class="margin-right-auto"
