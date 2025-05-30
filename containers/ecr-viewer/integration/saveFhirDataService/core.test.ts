@@ -25,24 +25,6 @@ const condition_reference = {
   condition_category: "category",
 };
 
-const adminId = "1235";
-const adminUser = {
-  uuid: adminId,
-  email: "admin@test.gov",
-  name: "Adam Admin",
-  date_of_last_login: new Date("2024-01-01"),
-  user_type: "admin",
-  status: "active",
-  author_uuid: adminId,
-};
-
-const progId = "234-12";
-const programArea = {
-  uuid: progId,
-  name: "Disease",
-  author_uuid: adminId,
-};
-
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
@@ -61,8 +43,6 @@ afterEach(() => {
 describe("saveFhirData - core", () => {
   beforeEach(async () => {
     const db = getDb<Core>();
-    await db.insertInto("user").values(adminUser).execute();
-    await db.insertInto("program_area").values(programArea).execute();
     await db
       .insertInto("condition_reference")
       .values(condition_reference)
