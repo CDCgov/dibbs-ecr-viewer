@@ -49,7 +49,10 @@ def _get_engine():
     return _engine
 
 
-def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]]):
+def _retrieve_tes_info_and_save(
+    concept_code_to_type_dict: dict[str, list[str]],
+    condition_group_dict: dict[str, dict[str, str]],
+):
     """
     Fetches Condition and Concept data from the TES API and builds out the SQLite database.
     """
@@ -65,6 +68,7 @@ def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]])
                 bundle.entry, desc="Processing ValueSets", unit=" ValueSet", leave=False
             ):
                 valueSet: ValueSet = entry.resource  # type: ignore
+                condition_group = condition_group_dict.get(valueSet.url, {})
 
                 concepts: set[Concept] = set()
                 if valueSet.compose and valueSet.compose.include:
@@ -122,6 +126,8 @@ def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]])
                         category = _RCKMS_CONDITION_CATEGORIES[concept.code]
 
                 condition = Condition(
+                    group_id=condition_group.get("id"),
+                    group_name=condition_group.get("name"),
                     name=valueSet.title,
                     code=coding.code,
                     system=coding.system,
@@ -275,6 +281,52 @@ def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
     return dict
 
 
+def _build_condition_group_by_url_dict() -> dict[str, list[str]]:
+    """
+    Makes a request to the TES API and builds a dictionary from the results. This
+    dictionary maps a Condition group to one or more condition concept value set urls.
+    """
+    # Make a request to grab all 6 available concept types
+    response = requests.get(
+        _TES_API_URL,
+        params={
+            "context": "http://aphl.org/fhir/vsm/CodeSystem/usage-context-type|condition-grouper",
+            "_count": "1000",  # should actually be 200ish
+        },
+        headers=_TES_HEADER,
+    )
+
+    if response.status_code != 200:
+        print("Error fetching condition group data")
+        print(response.url)
+        print(response.text)
+        sys.exit(1)
+
+    data = response.json()
+
+    bundle = Bundle(**data)
+    dict = {}
+    for entry in tqdm(
+        bundle.entry, desc="Processing Concept Groups", unit="ValueSet", leave=False
+    ):
+        valueSet: ValueSet = entry.resource
+
+        for condition in tqdm(
+            valueSet.compose.include,
+            desc=f"Processing conditions in compose.includes for {valueSet.id}",
+            unit=" Condition",
+            leave=False,
+        ):
+            # A condition value set is an array
+            for vs in condition.valueSet:
+                url = vs.split("|")[0]
+                if url in dict:
+                    raise ValueError("duplicate condition value set")
+
+                dict[url] = {"name": valueSet.title, "id": valueSet.id}
+    return dict
+
+
 def _get_gem_formatted_code(code: str) -> str:
     """
     Takes a code and converts it to the Generalized Equivalency Mapping code format
@@ -315,5 +367,6 @@ def _build_crosswalk_table():
 
 if __name__ == "__main__":
     concept_code_types_dict = _build_concept_type_by_code_dict()
-    _retrieve_tes_info_and_save(concept_code_types_dict)
+    condition_group_dict = _build_condition_group_by_url_dict()
+    _retrieve_tes_info_and_save(concept_code_types_dict, condition_group_dict)
     _build_crosswalk_table()

@@ -57,6 +57,8 @@ class ConceptType(SQLModel, table=True):
 
 class Condition(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    group_id: str | None
+    group_name: str | None
     name: str
     code: str = Field(index=True)
     system: str
