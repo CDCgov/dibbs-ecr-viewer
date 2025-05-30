@@ -93,13 +93,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   report_date: "2024-12-20",
 };
 
-const condition_reference = {
-  code: "123",
-  concept_name: "condition (disease)",
-  condition_name: "condition",
-  condition_category: "category",
-};
-
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
@@ -116,13 +109,6 @@ afterEach(() => {
 });
 
 describe("saveFhirData - extended", () => {
-  beforeEach(async () => {
-    const db = getDb<Extended>();
-    await db
-      .insertInto("condition_reference")
-      .values(condition_reference)
-      .execute();
-  });
 
   afterEach(async () => {
     await clearExtended();

@@ -18,12 +18,6 @@ const baseCoreMetadata: BundleMetadata = {
   rr: [],
   report_date: "12/20/2024",
 };
-const condition_reference = {
-  code: "123",
-  concept_name: "condition (disease)",
-  condition_name: "condition",
-  condition_category: "category",
-};
 
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
@@ -41,13 +35,6 @@ afterEach(() => {
 });
 
 describe("saveFhirData - core", () => {
-  beforeEach(async () => {
-    const db = getDb<Core>();
-    await db
-      .insertInto("condition_reference")
-      .values(condition_reference)
-      .execute();
-  });
 
   afterEach(async () => {
     await clearCore();
