@@ -18,17 +18,17 @@ const NavLinks = async () => {
           <ul className="usa-nav__primary usa-accordion">
             <li className="usa-nav__primary-item">
               <a href="/ecr-viewer" className="usa-nav__link">
-                eCR Library
+                eCR library
               </a>
             </li>
             <li className="usa-nav__primary-item">
               <a href="/ecr-viewer/admin/user" className="usa-nav__link">
-                User Management
+                User management
               </a>
             </li>
             <li className="usa-nav__primary-item">
               <a href="/ecr-viewer/admin/program" className="usa-nav__link">
-                Program Management
+                Program management
               </a>
             </li>
           </ul>
