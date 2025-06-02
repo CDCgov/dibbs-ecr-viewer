@@ -6,8 +6,8 @@ import { User } from "@/app/data/metadataDb/types/core";
 import useEscapeKey from "@/app/hooks/useEscapeKey";
 import { toSentenceCase } from "@/app/utils/format-utils";
 
-import {useIsLoggedInUser} from "./AuthSessionProvider";
-import {Person} from "./Icon";
+import { useIsLoggedInUser } from "./AuthSessionProvider";
+import { Person } from "./Icon";
 import { SignOutButton } from "./SignOutButton";
 
 /**
@@ -50,34 +50,36 @@ const UserMenu = ({ user }: { user?: User | undefined }) => {
     };
   }, [showMenu]);
 
-  if (loggedIn) { return (
-    <div className="user-menu-container">
-      <button
-        ref={buttonRef}
-        className="user-menu-button"
-        onClick={() => {
-          toggleMenuDropdown();
-        }}
-      >
-        <Person className="person-icon"/>
-      </button>
-      {showMenu && (
-        <div ref={menuRef} className="user-menu">
-          <div className="menu-items-container">
-            <div>
-              <p className="user-email">{user ? user.email : ""}</p>
-              <p className="user-role">
-                {user ? toSentenceCase(user.user_type) : ""}
-              </p>
-            </div>
-            <div>
-              <SignOutButton />
+  if (loggedIn) {
+    return (
+      <div className="user-menu-container">
+        <button
+          ref={buttonRef}
+          className="user-menu-button"
+          onClick={() => {
+            toggleMenuDropdown();
+          }}
+        >
+          <Person className="person-icon" />
+        </button>
+        {showMenu && (
+          <div ref={menuRef} className="user-menu">
+            <div className="menu-items-container">
+              <div>
+                <p className="user-email">{user ? user.email : ""}</p>
+                <p className="user-role">
+                  {user ? toSentenceCase(user.user_type) : ""}
+                </p>
+              </div>
+              <div>
+                <SignOutButton />
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
-  )}
+        )}
+      </div>
+    );
+  }
 };
 
 export default UserMenu;
