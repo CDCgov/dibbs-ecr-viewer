@@ -115,6 +115,12 @@
     margin-top: 1.5rem;
   }
 
+  .person-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    fill: color("blue-cool-5");
+  }
+
   a {
     font-weight: 400 !important;
     font-size: 1.125rem !important;
@@ -154,6 +160,7 @@
   .user-menu-button {
     background-color: color("blue-cool-80") !important;
     border: 0;
+    padding: 0;
   }
 
   .user-menu {
