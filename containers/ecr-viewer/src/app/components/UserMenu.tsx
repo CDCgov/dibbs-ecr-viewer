@@ -17,7 +17,11 @@ import { SignOutButton } from "./SignOutButton";
  * @param props.user - Details of the currently logged-in user
  * @returns The UserMenu component of the application.
  */
-const UserMenu = ({ user }: { user: Partial<Pick<User, "email" | "user_type">> }) => {
+const UserMenu = ({
+  user,
+}: {
+  user: Partial<Pick<User, "email" | "user_type">>;
+}) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -67,9 +71,7 @@ const UserMenu = ({ user }: { user: Partial<Pick<User, "email" | "user_type">> }
           <div className="menu-items-container">
             <div>
               <p className="user-email">{user.email}</p>
-              <p className="user-role">
-                {toSentenceCase(user.user_type)}
-              </p>
+              <p className="user-role">{toSentenceCase(user.user_type)}</p>
             </div>
             <div>
               <SignOutButton />

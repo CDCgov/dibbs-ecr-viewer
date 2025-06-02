@@ -45,15 +45,15 @@ export const getLoggedInUser = async () => {
   try {
     // Update the last log in and user's name to match the IDP
     await getDb<Core>()
-        .updateTable("user")
-        .set({date_of_last_login: new Date(), name})
-        .where("email", "=", email)
-        .execute();
+      .updateTable("user")
+      .set({ date_of_last_login: new Date(), name })
+      .where("email", "=", email)
+      .execute();
 
-  return await getUserByEmail(email);
-  } catch (e){
-    console.error(e)
-    return undefined
+    return await getUserByEmail(email);
+  } catch (e) {
+    console.error(e);
+    return undefined;
   }
 };
 

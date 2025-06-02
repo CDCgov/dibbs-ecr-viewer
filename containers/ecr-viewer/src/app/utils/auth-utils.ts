@@ -2,9 +2,9 @@ import "server-only";
 import { getServerSession } from "next-auth/next";
 
 interface UserSession {
-    name?: string | null
-    email: string
-    image?: string | null
+  name?: string | null;
+  email: string;
+  image?: string | null;
 }
 
 /**
@@ -27,9 +27,9 @@ export const isLoggedInUser = async () => {
 export const getLoggedInUserSession = async () => {
   const session = await getServerSession();
 
-  if(!session?.user) return
+  if (!session?.user) return;
 
-  session.user.email ||= ''
+  session.user.email ||= "";
 
   return session.user as UserSession;
 };

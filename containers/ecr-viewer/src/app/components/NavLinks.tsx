@@ -1,5 +1,5 @@
 import { getLoggedInUser, isAdmin } from "@/app/services/userService";
-import {getLoggedInUserSession} from "@/app/utils/auth-utils";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import UserMenu from "./UserMenu";
 
@@ -10,9 +10,9 @@ import UserMenu from "./UserMenu";
  * @returns The header nav links and a user menu
  */
 const NavLinks = async () => {
-  const sessionUser = await getLoggedInUserSession()
-  if (!sessionUser) return
-    
+  const sessionUser = await getLoggedInUserSession();
+  if (!sessionUser) return;
+
   const dbUser = await getLoggedInUser();
 
   return (
