@@ -33,7 +33,9 @@ describe("UserMenu component", () => {
     renderWithSession(<UserMenu user={mockUser} />);
     const button = screen.getByRole("button");
     fireEvent.click(button);
-    expect(screen.getByText("kyle.katarn@fakestarwarsemail.bananas.com")).toBeInTheDocument();
+    expect(
+      screen.getByText("kyle.katarn@fakestarwarsemail.bananas.com"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Admin")).toBeInTheDocument();
   });
 });

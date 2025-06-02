@@ -32,14 +32,14 @@ export default function RootLayout({
         <head />
         <body className="overflow-x-auto">
           <AuthSessionProvider>
-              <Header>
-                  <NavLinks />
-              </Header>
-              <ToastProvider>
-                <ToastShelf />
+            <Header>
+              <NavLinks />
+            </Header>
+            <ToastProvider>
+              <ToastShelf />
               {children}
             </ToastProvider>
-              <Footer />
+            <Footer />
           </AuthSessionProvider>
         </body>
       </html>
