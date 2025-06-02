@@ -1,123 +1,53 @@
-# PRIME Public Health Data Infrastructure (PHDI)
-
-[![codecov](https://codecov.io/gh/CDCgov/dibbs-ecr-viewer/graph/badge.svg?token=J62Y1IH9U6)](https://codecov.io/gh/CDCgov/dibbs-ecr-viewer)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/CDCgov/dibbs-ecr-viewer/main.svg)](https://results.pre-commit.ci/latest/github/CDCgov/dibbs-ecr-viewer/main)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-
-- [PRIME Public Health Data Infrastructure (PHDI)](#prime-public-health-data-infrastructure-phdi)
-  - [Overview](#overview)
-    - [Problem Scope](#problem-scope)
-  - [Getting Started](#getting-started)
-  - [Main Features](#main-features)
-  - [Where to Get PHDI](#where-to-get-phdi)
-  - [Documentation](#documentation)
-  - [Additional Acknowledgments](#additional-acknowledgments)
-  - [Standard Notices](#standard-notices)
-    - [Public Domain Standard Notice](#public-domain-standard-notice)
-    - [License Standard Notice](#license-standard-notice)
-    - [Privacy Standard Notice](#privacy-standard-notice)
-    - [Contributing Standard Notice](#contributing-standard-notice)
-    - [Records Management Standard Notice](#records-management-standard-notice)
-    - [Related documents](#related-documents)
-    - [Additional Standard Notices](#additional-standard-notices)
+# Data Ingestion Building Blocks (DIBBs) eCR Viewer
 
 **General disclaimer** This repository was created for use by CDC programs to collaborate on public health related projects in support of the [CDC mission](https://www.cdc.gov/about/organization/mission.htm). GitHub is not hosted by the CDC, but is a third party website used by CDC and its partners to share information and collaborate on software. CDC use of GitHub does not imply an endorsement of any one particular service, product, or enterprise.
 
 ## Overview
+This repository is part of the CDC [Office of Public Health Data, Surveillance, and Technology (OPHDST)](https://www.cdc.gov/ophdst/index.html) branch and includes the core software for the DIBBs eCR Viewer. 
 
-This repository is a part of the CDC/USDS [PHDI project](https://cdcgov.github.io/dibbs-ecr-viewer/) and has two components:
+The project uses a container-based structure. The main containers used are as follows:
 
-1. PHDI Python Package
-2. PHDI containerized Building Blocks
-
-The PHDI Python package contains source code for a platform to help public health authorities (PHAs) ingest and report on public health data. This platform is composed of **Building Blocks**, which are modular software tools that, when composed together, can improve data quality and reduce data cleaning workloads by providing analysis-ready data to downstream public health surveillance systems and other analytical and reporting applications.
-
-PHDI contains:
-
-- Our SDK — the Python library containing Building Block source code
-  - [Repository](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/phdi)
-  - [API documentation](https://cdcgov.github.io/dibbs-ecr-viewer/latest/sdk/phdi.html)
-- Containerized web services exposing Building Block functionality as HTTP endpoints
-  - [Repository](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers)
-  - [User guide](https://cdcgov.github.io/dibbs-ecr-viewer/) (under Building Blocks)
-- Cloud Starter Kit — Repositories that implement a complete cloud-based pipeline composed of Building Blocks
-  - [Azure](https://github.com/CDCgov/dibbs-ecr-viewer-azure)
-  - [Google Cloud Platform](https://github.com/CDCgov/phdi-google-cloud)
+- [Orchestration](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/orchestration)
+  - Enables coordinated execution of DIBBs, allowing for fully automated workflows for Viewer
+- [FHIR Converter](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/fhir-converter)
+  - Converts incoming messages into the FHIR-based format, which allows the eCR Viewer to have one standard format it follows, rather than the many different implementations of C-CDA that eCRs arrive in 
+- [Ingestion](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ingestion) 
+  - Standardizes data fields (including record name, date of birth, phone number, and geolocation) based on preset defaults to ensure consistency 
+  - Optionally enriches data by providing precise geographic locations based on patient street addresses from input data  
+- [Trigger Code Reference](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/trigger-code-reference)
+  - “Stamps” FHIR bundle resources with their associated condition and uses these stamped resources for the “associated labs and clinical information” feature in the eCR Summary 
+  - Leverages the APHL-provided [Terminology Exchange Service (TES)](https://tes.tools.aimsplatform.org/auth/signin) dataset, which maps clinical codes (LOINC, ICD-10) to their relevant SNOMED condition codes 
+- [Message Parser](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/message-parser)
+  - Extracts specific fields from eCR FHIR bundles to be stored in a relational database  
+- [eCR Viewer](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ecr-viewer)
+  - Renders the eCR Viewer from FHIR bundles and also handles data storage 
 
 ### Problem Scope
+[Electronic Case Reporting (eCR)](https://www.cdc.gov/ecr/php/index.html) automates the exchange of data between electronic health records and public health agencies. 
 
-Current public health systems that digest, analyze, and respond to data are siloed. Lacking access to actionable data, our national, as well as state, local, and territorial infrastructure, isn’t pandemic-ready. Our objective is to help the CDC best support PHAs in moving towards a modern public health data infrastructure. See our [public website](https://cdcgov.github.io/dibbs-site/) for more details.
+The eCR Viewer is an intuitive interface that helps your epidemiologists and case investigators make better sense of eCR data, faster.
 
-PHDI is a sibling project to [PRIME ReportStream](https://reportstream.cdc.gov), which focuses on improving the delivery of COVID-19 test data to public health departments, and [PRIME SimpleReport](https://simplereport.gov), which provides a better way for organizations and testing facilities to report COVID-19 rapid tests to public health departments.
+## Getting in Touch
+If you're interested in adopting the eCR Viewer or want to learn more about our work, please reach out to dibbs@cdc.gov. 
 
-## Getting Started
-
-In order to use the PHDI library, you need [Python 3.9 or higher](https://www.python.org/downloads/) and [pip python package manager](https://pip.pypa.io/en/stable/installation/) (or any python package manager).
-
-To install using pip:
-
-```
-pip install phdi
-```
-
-## Main Features
-
-Here are the current tools that PHDI offers:
-
-- **Containerized Building Blocks**
-  - **[Alerts](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/alerts.html)** - Provides the ability to send alerts via SMS, Slack, or Microsoft Teams
-  - **[FHIR Converter](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/fhir-converter.html)** - Enables conversion of health data from legacy formats (e.g., HL7 version 2, CCDA) to [FHIR](https://hl7.org/FHIR/), a standard for health care data exchange
-  - **[Data Ingestion](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/ingestion.html)** - Includes the entire pipeline of Building Blocks below
-    - **[Harmonization](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/ingestion.html#tag/fhirharmonization)** - Standardizes input data (e.g., patient names and phone numbers) to streamline the process of cleaning data and improve data quality
-    - **[Geospatial](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/ingestion.html#tag/fhirgeospatial)** - Provides a common interface for obtaining precise geographic locations based on street addresses from input data
-    - **[Linkage](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/ingestion.html#tag/fhirlinkage)** - Assigns a common identifier to patient records in order to link and deduplicate patient records seen across data contributors
-    - **[Transport](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/ingestion.html#tag/fhirtransport)** - Offers functionality for reading and writing data from storage resources (e.g,. FHIR servers)
-  - **[Message Parser](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/message-parser.html)** - Extracts desired fields from a given message
-  - **[Tabulation](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/tabulation.html)** - Extracts data from a FHIR server, converts it to a tabular representation, and stores it to a user-defined tabular storage file type (e.g., Parquet or CSV)
-  - **[Record Linkage](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/record-linkage.html)** - Links new health care messages to existing records if a connection exists
-  - **[Validation](https://cdcgov.github.io/dibbs-ecr-viewer/latest/containers/validation.html)** - Checks whether health care messages are in the proper format and contain user-defined fields of interest
-- **Implementation Support** - Resources to help users implement PHDI tools to manage their data and analysis workflows
-  - **[Examples](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/examples)** - Sample data that simulates how a Building Block could be used
-  - **[Tutorials](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/tutorials)** - Step-by-step instructions to implement Building Blocks source code
-
-## Where to Get PHDI
-
-The source code is hosted on GitHub at: https://github.com/CDCgov/dibbs-ecr-viewer.
-
-The latest released version is available at the [Python Package Index (PyPI)](https://pypi.org/project/phdi/).
-
-**Python modules**
-
-```
-pip install phdi
-```
-
-**Containerized services**
-
-```
-build from source
-build Docker locally
-pull down Docker images from GitHub
-```
+## Getting Started with Development
+Check the README files of individual containers to get started.
 
 ## Documentation
+Additional technical documentation for this project can be found on our [Github Pages site](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html).
 
-PHDI documentation is currently hosted on GitHub Pages: https://cdcgov.github.io/dibbs-ecr-viewer/
+## Related Repositories
+- [dibbs-aws](https://github.com/CDCgov/dibbs-aws)
+  - Provides the infrastructure required to run the eCR Viewer in an AWS environment
+- [dibbs-azure](https://github.com/CDCgov/dibbs-azure)
+  - Provides the infrastructure required to run the eCR Viewer in an Azure environment
+- [dibbs-vm](https://github.com/CDCgov/dibbs-vm)
+  - Provides the infrastructure required to run the eCR Viewer using a hybrid virtual machine (the VM can be run anywhere, but does require cloud storage)
+- [FHIR Converter](https://github.com/CDCgov/dibbs-FHIR-Converter)
+  - A fork of the [Microsoft FHIR Converter](https://github.com/microsoft/FHIR-Converter), which significantly expands the coverage for eCR C-CDA conversion to FHIR
+- [eICR-anonymization](https://github.com/CDCgov/eicr-anonymization)
+  - A utility that anonymizes eCR/RR files for use in testing
 
-There, you can find our:
-
-- SDK API reference documentation
-- User guide for containerized Building Blocks
-
-## Additional Acknowledgments
-
-We mapped the rootnames of the PHDI database to nicknames produced by the aggregation and synthesis of open source work from a number of projects. While we do not employ the packages and wrappers used by the various projects (merely their open source data), we wish to give credit to their various works building collections of nickname mappings. These projects are:
-
-- [Secure Enterprise Master Patient Index](https://github.com/MrCsabaToth/SOEMPI), based on OpenEMPI, conducted by Vanderbilt University
-- [Curated Nicknames](https://github.com/carltonnorthern/nicknames), scraped from genealogy webpages and run by Old Dominion University Web Science and Digital Libraries Research Group
-- [Simple Public Domain Nickname Mappings](https://github.com/onyxrev/common_nickname_csv), hand collected using various sources
-- [Lingua En Nickname](https://github.com/brianary/Lingua-EN-Nickname), collected from a series of GenWeb projects
-- [diminutives.db](https://github.com/HaJongler/diminutives.db), compiled via a nickname extract using Wikipedia and Wiktionary
 
 ## Standard Notices
 
