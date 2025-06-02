@@ -3,40 +3,46 @@
 **General disclaimer** This repository was created for use by CDC programs to collaborate on public health related projects in support of the [CDC mission](https://www.cdc.gov/about/organization/mission.htm). GitHub is not hosted by the CDC, but is a third party website used by CDC and its partners to share information and collaborate on software. CDC use of GitHub does not imply an endorsement of any one particular service, product, or enterprise.
 
 ## Overview
-This repository is part of the CDC [Office of Public Health Data, Surveillance, and Technology (OPHDST)](https://www.cdc.gov/ophdst/index.html) branch and includes the core software for the DIBBs eCR Viewer. 
+
+This repository is part of the CDC [Office of Public Health Data, Surveillance, and Technology (OPHDST)](https://www.cdc.gov/ophdst/index.html) branch and includes the core software for the DIBBs eCR Viewer.
 
 The project uses a container-based structure. The main containers used are as follows:
 
 - [Orchestration](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/orchestration)
   - Enables coordinated execution of DIBBs, allowing for fully automated workflows for Viewer
 - [FHIR Converter](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/fhir-converter)
-  - Converts incoming messages into the FHIR-based format, which allows the eCR Viewer to have one standard format it follows, rather than the many different implementations of C-CDA that eCRs arrive in 
-- [Ingestion](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ingestion) 
-  - Standardizes data fields (including record name, date of birth, phone number, and geolocation) based on preset defaults to ensure consistency 
-  - Optionally enriches data by providing precise geographic locations based on patient street addresses from input data  
+  - Converts incoming messages into the FHIR-based format, which allows the eCR Viewer to have one standard format it follows, rather than the many different implementations of C-CDA that eCRs arrive in
+- [Ingestion](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ingestion)
+  - Standardizes data fields (including record name, date of birth, phone number, and geolocation) based on preset defaults to ensure consistency
+  - Optionally enriches data by providing precise geographic locations based on patient street addresses from input data
 - [Trigger Code Reference](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/trigger-code-reference)
-  - “Stamps” FHIR bundle resources with their associated condition and uses these stamped resources for the “associated labs and clinical information” feature in the eCR Summary 
-  - Leverages the APHL-provided [Terminology Exchange Service (TES)](https://tes.tools.aimsplatform.org/auth/signin) dataset, which maps clinical codes (LOINC, ICD-10) to their relevant SNOMED condition codes 
+  - “Stamps” FHIR bundle resources with their associated condition and uses these stamped resources for the “associated labs and clinical information” feature in the eCR Summary
+  - Leverages the APHL-provided [Terminology Exchange Service (TES)](https://tes.tools.aimsplatform.org/auth/signin) dataset, which maps clinical codes (LOINC, ICD-10) to their relevant SNOMED condition codes
 - [Message Parser](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/message-parser)
-  - Extracts specific fields from eCR FHIR bundles to be stored in a relational database  
+  - Extracts specific fields from eCR FHIR bundles to be stored in a relational database
 - [eCR Viewer](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ecr-viewer)
-  - Renders the eCR Viewer from FHIR bundles and also handles data storage 
+  - Renders the eCR Viewer from FHIR bundles and also handles data storage
 
 ### Problem Scope
-[Electronic Case Reporting (eCR)](https://www.cdc.gov/ecr/php/index.html) automates the exchange of data between electronic health records and public health agencies. 
+
+[Electronic Case Reporting (eCR)](https://www.cdc.gov/ecr/php/index.html) automates the exchange of data between electronic health records and public health agencies.
 
 The eCR Viewer is an intuitive interface that helps your epidemiologists and case investigators make better sense of eCR data, faster.
 
 ## Getting in Touch
-If you're interested in adopting the eCR Viewer or want to learn more about our work, please reach out to dibbs@cdc.gov. 
+
+If you're interested in adopting the eCR Viewer or want to learn more about our work, please reach out to dibbs@cdc.gov.
 
 ## Getting Started with Development
+
 Check the README files of individual containers to get started.
 
 ## Documentation
+
 Additional technical documentation for this project can be found on our [Github Pages site](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html).
 
 ## Related Repositories
+
 - [dibbs-aws](https://github.com/CDCgov/dibbs-aws)
   - Provides the infrastructure required to run the eCR Viewer in an AWS environment
 - [dibbs-azure](https://github.com/CDCgov/dibbs-azure)
@@ -47,7 +53,6 @@ Additional technical documentation for this project can be found on our [Github 
   - A fork of the [Microsoft FHIR Converter](https://github.com/microsoft/FHIR-Converter), which significantly expands the coverage for eCR C-CDA conversion to FHIR
 - [eICR-anonymization](https://github.com/CDCgov/eicr-anonymization)
   - A utility that anonymizes eCR/RR files for use in testing
-
 
 ## Standard Notices
 
