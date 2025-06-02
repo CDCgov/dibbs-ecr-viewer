@@ -1,6 +1,8 @@
 import "@/styles/styles.scss";
 
+import { isUsingNextAuth } from "./api/auth/providers";
 import { AuthSessionProvider } from "./components/AuthSessionProvider";
+import { AutoSignout } from "./components/AutoSignout";
 import RespectMotionPreferences from "./components/RespectMotionPreferences";
 import ToastProvider from "./components/toast/ToastProvider";
 import ToastShelf from "./components/toast/ToastShelf";
@@ -29,6 +31,7 @@ export default function RootLayout({
         <head />
         <body className="overflow-x-auto">
           <AuthSessionProvider>
+            {isUsingNextAuth && <AutoSignout />}
             <ToastProvider>
               <ToastShelf />
               {children}

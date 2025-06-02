@@ -20,4 +20,10 @@ export const handler = NextAuth({
   pages: {
     signIn: `${process.env.BASE_PATH}/signin`,
   },
+  session: {
+    maxAge: (Number(process.env.AUTH_SESSION_DURATION_MIN) || 15) * 60,
+  },
+  jwt: {
+    maxAge: 16 * 60 * 60, // 16 hours
+  },
 });
