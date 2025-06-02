@@ -49,6 +49,10 @@ td {
   height: calc(100vh - 11rem);
 }
 
+.min-height-viewport-header-footer {
+  min-height: calc(100vh - 11rem);
+}
+
 @keyframes shimmer {
   to {
     background-position-x: 0%;
