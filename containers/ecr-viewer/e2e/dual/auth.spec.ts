@@ -19,7 +19,7 @@ test.describe("keycloak", () => {
 
     await expect(page.getByTestId("ecr-library-header")).toBeVisible();
 
-    await page.getByTestId("user-menu-button").click()
+    await page.getByTestId("user-menu-button").click();
 
     await expect(page.getByText("Sign Out")).toBeVisible();
     await page.getByRole("button", { name: "Sign Out" }).click();
