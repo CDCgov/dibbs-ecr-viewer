@@ -1,4 +1,5 @@
 import { getLoggedInUser, isAdmin } from "@/app/services/userService";
+import {getLoggedInUserSession} from "@/app/utils/auth-utils";
 
 import UserMenu from "./UserMenu";
 
@@ -9,11 +10,14 @@ import UserMenu from "./UserMenu";
  * @returns The header nav links and a user menu
  */
 const NavLinks = async () => {
-  const user = await getLoggedInUser();
+  const sessionUser = await getLoggedInUserSession()
+  if (!sessionUser) return
+    
+  const dbUser = await getLoggedInUser();
 
   return (
     <div className="usa-nav display-flex flex-row ">
-      {isAdmin(user) && (
+      {isAdmin(dbUser) && (
         <ul className="usa-nav__primary usa-accordion">
           <li className="usa-nav__primary-item">
             <a href="/ecr-viewer" className="usa-nav__link">
@@ -32,7 +36,7 @@ const NavLinks = async () => {
           </li>
         </ul>
       )}
-      <UserMenu user={user} />
+      <UserMenu user={dbUser || sessionUser} />
     </div>
   );
 };
