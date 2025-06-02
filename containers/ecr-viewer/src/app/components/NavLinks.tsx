@@ -12,7 +12,6 @@ const NavLinks = async () => {
   const user = await getLoggedInUser();
 
   return (
-    user && (
       <div className="usa-nav display-flex flex-row ">
         {isAdmin(user) && (
           <ul className="usa-nav__primary usa-accordion">
@@ -35,7 +34,6 @@ const NavLinks = async () => {
         )}
         <UserMenu user={user} />
       </div>
-    )
   );
 };
 
