@@ -39,6 +39,46 @@
   }
 }
 
+@keyframes progress {
+  100% {
+    width: 0;
+  }
+}
+
+.usa-alert.toast {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #4070f4;
+    animation: progress var(--toast-timeout) linear forwards;
+    z-index: 2;
+  }
+
+  &.usa-alert--success::before {
+    background-color: color("success");
+  }
+
+  &.usa-alert--warning::before {
+    background-color: color("warning");
+  }
+
+  &.usa-alert--error::before {
+    background-color: color("error");
+  }
+
+  &.usa-alert--info::before {
+    background-color: color("info");
+  }
+}
+
 .usa-button.usa-pagination__button:hover {
   border-bottom-width: 1px;
   border-bottom-style: solid;
@@ -202,8 +242,17 @@
   max-width: clamp(40rem, 50vw, 60rem);
   overflow-y: auto;
 
+  .usa-modal__content {
+    height: 100%;
+    justify-content: flex-end;
+  }
+
   .usa-modal__main {
     margin: -2rem 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .usa-modal__heading {

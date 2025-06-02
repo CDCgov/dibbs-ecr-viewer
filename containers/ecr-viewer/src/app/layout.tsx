@@ -5,6 +5,8 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NavLinks from "./components/NavLinks";
 import RespectMotionPreferences from "./components/RespectMotionPreferences";
+import ToastProvider from "./components/toast/ToastProvider";
+import ToastShelf from "./components/toast/ToastShelf";
 
 export const metadata = {
   title: "DIBBs eCR Viewer",
@@ -30,11 +32,14 @@ export default function RootLayout({
         <head />
         <body className="overflow-x-auto">
           <AuthSessionProvider>
-            <Header>
-              <NavLinks />
-            </Header>
-            {children}
-            <Footer />
+              <Header>
+                  <NavLinks />
+              </Header>
+              <ToastProvider>
+                <ToastShelf />
+              {children}
+            </ToastProvider>
+              <Footer />
           </AuthSessionProvider>
         </body>
       </html>

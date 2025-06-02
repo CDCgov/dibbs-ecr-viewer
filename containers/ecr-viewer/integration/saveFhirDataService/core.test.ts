@@ -63,6 +63,7 @@ describe("saveFhirData - core", () => {
       rr: [
         {
           condition: "flu",
+          code: "123",
           rule_summaries: [],
         },
       ],
@@ -86,6 +87,7 @@ describe("saveFhirData - core", () => {
       rr: [
         {
           condition: "flu",
+          code: "123",
           rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
         },
       ],
@@ -101,6 +103,40 @@ describe("saveFhirData - core", () => {
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
+  });
+
+  it("should reference the condition_code foreign key", async () => {
+    const db = getDb<Core>();
+    const metadata: BundleMetadata = {
+      ...baseCoreMetadata,
+      rr: [
+        {
+          condition: "flu",
+          code: "123",
+          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+        },
+      ],
+    };
+
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => {
+        return makePromiseResolveWithStatus(200);
+      },
+    );
+
+    const conditions = await db
+      .selectFrom("ecr_rr_conditions")
+      .selectAll()
+      .execute();
+
+    expect(resp.message).toEqual("Success. Saved metadata to database.");
+    expect(resp.status).toEqual(200);
+    expect(conditions).toHaveLength(1);
+    expect(conditions[0].condition_code).toEqual("123");
   });
 
   it("should return an error and roll back fhir bundle when db save fails", async () => {
