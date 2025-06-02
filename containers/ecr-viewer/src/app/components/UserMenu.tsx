@@ -6,7 +6,6 @@ import { User } from "@/app/data/metadataDb/types/core";
 import useEscapeKey from "@/app/hooks/useEscapeKey";
 import { toSentenceCase } from "@/app/utils/format-utils";
 
-import { useIsLoggedInUser } from "./AuthSessionProvider";
 import { Person } from "./Icon";
 import { SignOutButton } from "./SignOutButton";
 
