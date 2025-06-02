@@ -68,8 +68,10 @@ const UserMenu = ({ user }: { user?: User | undefined }) => {
         <div ref={menuRef} className="user-menu">
           <div className="menu-items-container">
             <div>
-              <p className="user-email">{user ? user.email : ''}</p>
-              <p className="user-role">{user ? toSentenceCase(user.user_type) : ''}</p>
+              <p className="user-email">{user ? user.email : ""}</p>
+              <p className="user-role">
+                {user ? toSentenceCase(user.user_type) : ""}
+              </p>
             </div>
             <div>
               <SignOutButton />
