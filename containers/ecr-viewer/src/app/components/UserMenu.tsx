@@ -68,7 +68,7 @@ const UserMenu = ({ user }: { user: User }) => {
         <div ref={menuRef} className="user-menu">
           <div className="menu-items-container">
             <div>
-              <p className="user-name">{user.name}</p>
+              <p className="user-email">{user.email}</p>
               <p className="user-role">{toSentenceCase(user.user_type)}</p>
             </div>
             <div>

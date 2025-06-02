@@ -10,9 +10,9 @@ describe("UserMenu component", () => {
   const mockUser: User = {
     status: "",
     uuid: "",
-    email: "",
+    email: "kyle.katarn@fakestarwarsemail.bananas.com",
     date_of_last_login: new Date(),
-    name: "Kyle Katarn",
+    name: "",
     user_type: "admin",
     date_created: new Date(),
     author_uuid: "",
@@ -33,7 +33,7 @@ describe("UserMenu component", () => {
     renderWithSession(<UserMenu user={mockUser} />);
     const button = screen.getByRole("button");
     fireEvent.click(button);
-    expect(screen.getByText("Kyle Katarn")).toBeInTheDocument();
+    expect(screen.getByText("kyle.katarn@fakestarwarsemail.bananas.com")).toBeInTheDocument();
     expect(screen.getByText("Admin")).toBeInTheDocument();
   });
 });
