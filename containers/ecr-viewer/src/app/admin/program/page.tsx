@@ -1,6 +1,10 @@
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
-import { listProgramAreas } from "@/app/services/programAreaService";
+import {
+  deleteProgramAreaAction,
+  listProgramAreas,
+} from "@/app/services/programAreaService";
 import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { ProgramTable } from "./ProgramTable";
@@ -30,7 +34,15 @@ const ProgramAdminPage = async () => {
             <p className="text-bold font-size-lg">No program areas added</p>
           </div>
         ) : (
-          <ProgramTable programAreas={programAreas} />
+          <ProgramTable
+            programAreas={programAreas}
+            deleteAction={async (uuid) => {
+              "use server";
+              const res = await deleteProgramAreaAction(uuid);
+              revalidatePath("/ecr-viewer/admin/program");
+              return res;
+            }}
+          />
         )}
       </div>
     </main>

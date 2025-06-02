@@ -60,7 +60,7 @@ If you consistently encounter the error message `"ecr_viewer_db" does not exist`
 
 To run the eCR Viewer locally:
 
-1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed.
+1. Ensure that Git, Docker, and Node (version 18.x or higher) are installed. Ensure that [docker host networking is enabled](https://docs.docker.com/engine/network/tutorials/host/#:~:text=To%20enable%20this%20feature%20in,Network%20select%20Enable%20host%20networking.)
 2. Clone the DIBBs eCR Viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/ecr-viewer/`.
 4. Install all of the Node dependencies for the eCR Viewer with `npm install`.
@@ -80,8 +80,8 @@ The eCR Viewer is primarily developed on Apple silicon machines, See this [integ
 
 Sample eICRs are included in `containers/ecr-viewer/seed-scripts/baseECR/`. If you ever need to update the eCRs or add new eCRs you can regenerate the data by:
 
-1. Delete the current volume used by your DB: `docker compose -f ./docker-compose.yaml --profile "*" down -v`
-2. Run `npm run convert-seed-data` to re-run the FHIR conversion of the seed eCRs
+1. Delete the current volume used by your DB: `npm run clear-local`
+2. Run `npm run convert-seed-data:build` to re-run the FHIR conversion of the seed eCRs (if you're confident none of the containers need to re-build, you can omit the `:build` postfix)
 3. Run `npm run local-dev` to re-run the eCR Viewer with the newly converted data.
 
 By default, the seed data in the `star-wars` subfolder converts. To convert other (or additional) subfolders, set the `SEED_DATA_DIRECTORIES` environment variable to a comma delimited list of subfolders (e.g. `star-wars,Dir2` or `Dir2`).

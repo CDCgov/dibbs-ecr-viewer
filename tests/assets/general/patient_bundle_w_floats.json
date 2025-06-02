@@ -80,6 +80,27 @@
         "method": "GET",
         "url": "testing for entry with no resource"
       }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "valueCodeableConcept": {
+          "text": "COVID-19 unfortunately",
+          "coding": [
+            {
+              "code": "840539006",
+              "system": "http://snomed.info/sct",
+              "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+            }
+          ]
+        }
+      }
     }
   ]
 }

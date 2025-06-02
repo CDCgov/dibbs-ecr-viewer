@@ -1,25 +1,26 @@
 "use client";
-import React, { ReactNode, RefObject, useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 
 import {
   Button,
-  ButtonGroup,
   Checkbox,
-  ModalFooter,
   ModalHeading,
   ModalRef,
-  ModalToggleButton,
   RequiredMarker,
   TextInput,
 } from "@trussworks/react-uswds";
 
+import { Search } from "@/app/components/Icon";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import ConfirmationFooter from "@/app/components/modal/ConfirmationFooter";
+import Modal from "@/app/components/modal/Modal";
+import { ToastContext } from "@/app/components/toast/ToastProvider";
+import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
-import { toKebabCase } from "@/app/utils/format-utils";
+import { toKebabCase, makePlural } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
-import { Modal } from "@/components/Modal";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;
@@ -62,12 +63,16 @@ export const ProgramForm = ({
   action: string;
   initValues: FormValues;
   progUuid?: string;
-  submitAction: (name: string, conditions: string[]) => Promise<void>;
+  submitAction: (
+    name: string,
+    conditions: string[],
+  ) => Promise<ServerActionResult<string | undefined>>;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
     groupByCategory(initValues.conditions),
   );
+  const { createToast } = React.useContext(ToastContext);
 
   const selectedConditions = Object.values(conditionCategories)
     .flatMap((id) => id)
@@ -82,7 +87,9 @@ export const ProgramForm = ({
       action={`${action} program area`}
       formValid={valid}
       submitAction={async () => {
-        await submitAction(name, selectedConditions);
+        const res = await submitAction(name, selectedConditions);
+        if (!res.error) createToast(`${name} successfully saved`, "success");
+        return res;
       }}
       successRoute="/admin/program"
     >
@@ -139,6 +146,19 @@ const ConditionFieldSet = ({
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >(keysToBoolean(conditionCategories, true));
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredConditionCategories = Object.keys(conditionCategories).reduce(
+    (acc, cur) => {
+      acc[cur] = conditionCategories[cur].filter(
+        (c) =>
+          !searchTerm ||
+          c.condition_name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+      return acc;
+    },
+    {} as ConditionCategories,
+  );
 
   const modalRef = useRef<ModalRef>(null);
 
@@ -155,17 +175,26 @@ const ConditionFieldSet = ({
   ) => {
     setConditionCategories({
       ...conditionCategories,
-      [category]: conditionCategories[category].map((c) =>
+      [category]: conditionCategories[category].map((c) => {
         // a null condition indicates all conditions should be checked
-        !condition || c.code === condition.code ? { ...c, checked } : c,
-      ),
+        // Only allow checking of filtered conditions (aka visible)
+        if (
+          (!condition || c.code === condition.code) &&
+          filteredConditionCategories[category].includes(c)
+        ) {
+          return { ...c, checked };
+        } else {
+          return c;
+        }
+      }),
     });
   };
 
   const accordionItems: AccordionItem[] = Object.keys(conditionCategories)
     .sort()
+    .filter((category) => filteredConditionCategories[category].length > 0)
     .map((category) => {
-      const conditions = conditionCategories[category];
+      const conditions = filteredConditionCategories[category];
       const numConditions = conditions.length;
       const numSelected = conditions.filter(({ checked }) => checked).length;
       return {
@@ -267,19 +296,31 @@ const ConditionFieldSet = ({
       };
     });
 
+  const numResults = Object.values(filteredConditionCategories).reduce(
+    (total, cur) => total + cur.length,
+    0,
+  );
+
   return (
     <FieldSet legend="Add conditions">
       <span>
         Select a minimum of 1 condition
         <RequiredMarker />
       </span>
-      <p className="text-bold font-size-md">
-        {numConditionsSelected} condition
-        {numConditionsSelected === 1 ? "" : "s"} selected
-      </p>
+      <div className="display-flex flex-justify margin-top-3">
+        <p className="text-bold font-size-md margin-y-0">
+          {numConditionsSelected} condition
+          {makePlural(numConditionsSelected)} selected
+        </p>
+        <SearchField
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          numResults={numResults}
+        />
+      </div>
       <ExpandCollapseAccordionControlled
         descriptor="condition categories"
-        className="accordion-dibbs margin-top-3"
+        className="accordion-dibbs margin-top-3 margin-bottom-1"
         handleToggle={(categoryId) =>
           setExpandedCategories({
             ...expandedCategories,
@@ -304,7 +345,7 @@ const ConditionFieldSet = ({
         }
         categoryConditions={
           !!confirmingCategory
-            ? conditionCategories[confirmingCategory].filter(
+            ? filteredConditionCategories[confirmingCategory].filter(
                 (c) =>
                   !!c.program_area_uuid && c.program_area_uuid !== progUuid,
               )
@@ -312,6 +353,36 @@ const ConditionFieldSet = ({
         }
       />
     </FieldSet>
+  );
+};
+
+const SearchField = ({
+  searchTerm,
+  setSearchTerm,
+  numResults,
+}: {
+  searchTerm: string;
+  setSearchTerm: (v: string) => void;
+  numResults: number;
+}) => {
+  return (
+    <div className="live-search">
+      {searchTerm && (
+        <p aria-live="polite" className="result-count">
+          {numResults} result{makePlural(numResults)}
+        </p>
+      )}
+      <Search aria-hidden={true} className="square-3 text-base" />
+      <TextInput
+        type="search"
+        aria-label="Search conditions"
+        id="condition-search"
+        name="condition-search"
+        placeholder="Search conditions"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
   );
 };
 
@@ -336,7 +407,7 @@ const ConfirmationModal = ({
       ref={modalRef}
       aria-labelledby="confirm-condition-heading"
       aria-describedby="confirm-condition-description"
-      forceAction={true}
+      onClose={onClose}
     >
       {confirmingCategory &&
         (confirmingCondition ? (
@@ -351,11 +422,7 @@ const ConfirmationModal = ({
               will be removed from the program area{" "}
               {confirmingCondition?.program_area_name}.
             </p>
-            <ConfirmationFooter
-              modalRef={modalRef}
-              onClose={onClose}
-              onConfirm={onConfirm}
-            >
+            <ConfirmationFooter modalRef={modalRef} onConfirm={onConfirm}>
               Yes, add condition
             </ConfirmationFooter>
           </>
@@ -383,56 +450,12 @@ const ConfirmationModal = ({
               </ul>
             </div>
 
-            <ConfirmationFooter
-              modalRef={modalRef}
-              onClose={onClose}
-              onConfirm={onConfirm}
-            >
+            <ConfirmationFooter modalRef={modalRef} onConfirm={onConfirm}>
               Yes, add all conditions
             </ConfirmationFooter>
           </>
         ))}
     </Modal>
-  );
-};
-
-const ConfirmationFooter = ({
-  onConfirm,
-  onClose,
-  children,
-  modalRef,
-}: {
-  onConfirm: () => void;
-  onClose: () => void;
-  children: ReactNode;
-  modalRef: RefObject<ModalRef>;
-}) => {
-  return (
-    <ModalFooter>
-      <p>Are you sure you want to continue?</p>
-      <ButtonGroup className="flex-justify-end">
-        <ModalToggleButton
-          modalRef={modalRef}
-          closer={true}
-          outline={true}
-          data-focus={true}
-          className="padding-105 text-center"
-          onClick={onClose}
-        >
-          Cancel
-        </ModalToggleButton>
-        <ModalToggleButton
-          modalRef={modalRef}
-          closer={true}
-          onClick={() => {
-            onConfirm();
-            onClose();
-          }}
-        >
-          {children}
-        </ModalToggleButton>
-      </ButtonGroup>
-    </ModalFooter>
   );
 };
 
