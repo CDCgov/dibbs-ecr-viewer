@@ -6,8 +6,8 @@ import { User } from "@/app/data/metadataDb/types/core";
 import useEscapeKey from "@/app/hooks/useEscapeKey";
 import { toSentenceCase } from "@/app/utils/format-utils";
 
-import {useIsLoggedInUser} from "./AuthSessionProvider";
-import {Person} from "./Icon";
+import { useIsLoggedInUser } from "./AuthSessionProvider";
+import { Person } from "./Icon";
 import { SignOutButton } from "./SignOutButton";
 
 /**
@@ -57,7 +57,7 @@ const UserMenu = ({ user }: { user?: User | undefined }) => {
           toggleMenuDropdown();
         }}
       >
-        <Person className="person-icon"/>
+        <Person className="person-icon" />
       </button>
       {showMenu && (
         <div ref={menuRef} className="user-menu">
@@ -75,7 +75,7 @@ const UserMenu = ({ user }: { user?: User | undefined }) => {
         </div>
       )}
     </div>
-  )
+  );
 };
 
 export default UserMenu;
