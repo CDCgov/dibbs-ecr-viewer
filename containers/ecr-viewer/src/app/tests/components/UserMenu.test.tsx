@@ -24,9 +24,9 @@ describe("UserMenu component", () => {
 
   it("renders the profile image with correct alt text", () => {
     renderWithSession(<UserMenu user={mockUser} />);
-    const profileImage = screen.getByAltText("User Menu Icon");
+    const profileImage = screen.getByRole("img");
     expect(profileImage).toBeInTheDocument();
-    expect(profileImage.getAttribute("src")).toContain("user-profile.png");
+    expect(profileImage.getAttribute("aria-label")).toContain("User Menu");
   });
 
   it("toggles the menu when button is clicked and displays user info", () => {

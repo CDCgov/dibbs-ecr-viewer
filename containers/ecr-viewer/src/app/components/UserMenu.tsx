@@ -56,7 +56,9 @@ const UserMenu = ({ user }: { user?: User | undefined }) => {
           toggleMenuDropdown();
         }}
       >
-        <Person className="person-icon" />
+        <Person
+            aria-label="User Menu"
+            className="person-icon" />
       </button>
       {showMenu && (
         <div ref={menuRef} className="user-menu">

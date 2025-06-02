@@ -49,9 +49,9 @@ describe("NavLinks component", () => {
     render(await NavLinks());
 
     // Navigation links
-    expect(screen.getByText("eCR Library")).toBeInTheDocument();
-    expect(screen.getByText("User Management")).toBeInTheDocument();
-    expect(screen.getByText("Program Management")).toBeInTheDocument();
+    expect(screen.getByText("eCR library")).toBeInTheDocument();
+    expect(screen.getByText("User management")).toBeInTheDocument();
+    expect(screen.getByText("Program management")).toBeInTheDocument();
 
     // User menu
     expect(screen.getByTestId("user-menu")).toHaveTextContent("Kyle Katarn");
