@@ -308,6 +308,7 @@ const saveRR = async (
   // Loop through each condition/rule object in rr array
   for (const rrItem of metadata.rr) {
     const rr_conditions_uuid = randomUUID();
+
     // Insert condition into ecr_rr_conditions
     await trx
       .insertInto("ecr_rr_conditions")
@@ -315,6 +316,7 @@ const saveRR = async (
         uuid: rr_conditions_uuid,
         eicr_id: ecrId,
         condition: rrItem.condition,
+        condition_code: rrItem.code,
       })
       .execute();
     // Loop through the rule summaries array

@@ -18,7 +18,7 @@ import Modal from "@/app/components/modal/Modal";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
-import { toKebabCase, makePlural } from "@/app/utils/format-utils";
+import { makePlural, toKebabCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
