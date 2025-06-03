@@ -45,6 +45,7 @@ const UserMenu = ({
   };
 
   useEffect(() => {
+    if (!showMenu) return;
     document.addEventListener("mousedown", outsideMenuClick);
     return () => {
       document.removeEventListener("mousedown", outsideMenuClick);
