@@ -1,0 +1,712 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User Admin Page Creating users should render a create user page 1`] = `
+<div>
+  <main
+    class="main-container"
+  >
+    <div
+      class="content-container margin-top-10"
+    >
+      <a
+        class="action-text margin-bottom-3 display-inline-flex flex-align-center"
+        href="/admin/user"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon square-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Back to user management
+      </a>
+      <div
+        class="display-flex flex-justify margin-bottom-3"
+      >
+        <h2
+          class="margin-0"
+        >
+          Create user
+        </h2>
+        <div>
+          <button
+            class="usa-button margin-0"
+            data-testid="button"
+            disabled=""
+            form="r:id"
+            type="submit"
+          >
+            Create user
+          </button>
+        </div>
+      </div>
+      <div
+        class="section__line_gray"
+        style="margin-bottom: 1.5rem;"
+      />
+      <form
+        id="r:id"
+      >
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            Email
+          </legend>
+          <span>
+            Add the new user by their login email
+          </span>
+          <label
+            class="usa-label"
+          >
+            Email
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+            <input
+              class="usa-input"
+              data-testid="textInput"
+              id="email"
+              name="email"
+              required=""
+              type="email"
+              value=""
+            />
+          </label>
+        </fieldset>
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            User type
+          </legend>
+          <span>
+            Select the user type
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+          </span>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              id="userType-admin"
+              name="userType"
+              required=""
+              type="radio"
+              value="admin"
+            />
+            <label
+              class="usa-radio__label"
+              for="userType-admin"
+            >
+              Admin
+              <span
+                class="usa-checkbox__label-description"
+              >
+                Admins have full access to user management, program management, and the eCR Library
+              </span>
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              checked=""
+              class="usa-radio__input"
+              id="userType-standard"
+              name="userType"
+              required=""
+              type="radio"
+              value="standard"
+            />
+            <label
+              class="usa-radio__label"
+              for="userType-standard"
+            >
+              Standard
+              <span
+                class="usa-checkbox__label-description"
+              >
+                Standard users can only use the eCR Library with limited access to program area(s)
+              </span>
+            </label>
+          </div>
+        </fieldset>
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            Program area access
+          </legend>
+          <span>
+            Select one or more program areas
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+          </span>
+          <p
+            class="text-bold font-size-md"
+          >
+            0
+             program area
+            s
+             
+            selected
+          </p>
+          <div
+            class="margin-right-auto"
+          >
+            <button
+              aria-controls="program-area-two program-area-three"
+              class="usa-button usa-button--outline margin-top-0"
+              data-testid="button"
+              type="button"
+            >
+              Select
+               all
+            </button>
+            <button
+              aria-controls="program-area-two program-area-three"
+              class="usa-button usa-button--outline margin-top-0"
+              data-testid="button"
+              type="button"
+            >
+              Deselect
+               all
+            </button>
+          </div>
+          <div
+            class="display-flex"
+          >
+            <div
+              class="margin-left-auto padding-top-1"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Expand all 
+                program areas
+              </button>
+              <span
+                class="vertical-line"
+              />
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Collapse all 
+                program areas
+              </button>
+            </div>
+          </div>
+          <div
+            class="usa-accordion accordion-dibbs margin-top-3"
+            data-allow-multiple="true"
+            data-testid="accordion"
+          >
+            <div
+              class="display-flex flex-align-top margin-bottom-2"
+            >
+              <div
+                class="usa-checkbox margin-right-1 margin-top-3"
+                data-testid="checkbox"
+              >
+                <input
+                  aria-label="Select Program Area Two"
+                  class="usa-checkbox__input"
+                  id="checkbox-program-area-two"
+                  name="program"
+                  type="checkbox"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="checkbox-program-area-two"
+                />
+              </div>
+              <div
+                class="flex-grow-1 width-full"
+              >
+                <h3
+                  class="usa-accordion__heading"
+                >
+                  <button
+                    aria-controls="program-area-two"
+                    aria-expanded="false"
+                    class="usa-accordion__button"
+                    data-testid="accordionButton_program-area-two"
+                    type="button"
+                  >
+                    <div
+                      class="display-flex flex-justify flex-align-center"
+                    >
+                      <span>
+                        Program Area Two
+                      </span>
+                      <span>
+                        1
+                         condition
+                      </span>
+                    </div>
+                  </button>
+                </h3>
+                <div
+                  class="usa-accordion__content usa-prose"
+                  data-testid="accordionItem_program-area-two"
+                  hidden=""
+                  id="program-area-two"
+                >
+                  condition
+                </div>
+              </div>
+            </div>
+            <div
+              class="display-flex flex-align-top margin-bottom-2"
+            >
+              <div
+                class="usa-checkbox margin-right-1 margin-top-3"
+                data-testid="checkbox"
+              >
+                <input
+                  aria-label="Select Program Area Three"
+                  class="usa-checkbox__input"
+                  id="checkbox-program-area-three"
+                  name="program"
+                  type="checkbox"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="checkbox-program-area-three"
+                />
+              </div>
+              <div
+                class="flex-grow-1 width-full"
+              >
+                <h3
+                  class="usa-accordion__heading"
+                >
+                  <button
+                    aria-controls="program-area-three"
+                    aria-expanded="false"
+                    class="usa-accordion__button"
+                    data-testid="accordionButton_program-area-three"
+                    type="button"
+                  >
+                    <div
+                      class="display-flex flex-justify flex-align-center"
+                    >
+                      <span>
+                        Program Area Three
+                      </span>
+                      <span>
+                        2
+                         condition
+                        s
+                      </span>
+                    </div>
+                  </button>
+                </h3>
+                <div
+                  class="usa-accordion__content usa-prose"
+                  data-testid="accordionItem_program-area-three"
+                  hidden=""
+                  id="program-area-three"
+                >
+                  condition, condition
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div
+          class="display-flex flex-justify-end margin-y-4"
+        >
+          <button
+            class="usa-button margin-0"
+            data-testid="button"
+            disabled=""
+            form="r:id"
+            type="submit"
+          >
+            Create user
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`User Admin Page should list users when available 1`] = `
+<div>
+  <main
+    class="main-container"
+  >
+    <div
+      class="content-container margin-top-10"
+    >
+      <div
+        class="display-flex flex-justify"
+      >
+        <h2
+          class="margin-bottom-5"
+        >
+          User management
+        </h2>
+        <div>
+          <a
+            class="usa-button"
+            href="/admin/user/create"
+          >
+            Create user
+          </a>
+        </div>
+      </div>
+      <div>
+        <div>
+          <table
+            class="usa-table usa-table--borderless width-full table-radius-md"
+            data-testid="table"
+          >
+            <thead>
+              <tr>
+                <th
+                  data-sortable="true"
+                  id="email-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <button
+                    aria-description="Sort by Email"
+                    class="usa-button usa-button--unstyled sort-button usa-button"
+                    data-testid="button"
+                    id="email-sort-button"
+                    type="button"
+                  >
+                    <span
+                      class="text-ink"
+                    >
+                      Email
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon square-3"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </button>
+                </th>
+                <th
+                  data-sortable="true"
+                  id="user_type-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <button
+                    aria-description="Sort by User Type"
+                    class="usa-button usa-button--unstyled sort-button usa-button"
+                    data-testid="button"
+                    id="user_type-sort-button"
+                    type="button"
+                  >
+                    <span
+                      class="text-ink"
+                    >
+                      User Type
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon square-3"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </button>
+                </th>
+                <th
+                  data-sortable="false"
+                  id="program_areas-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <div
+                    class="display-flex"
+                  >
+                    Program Areas
+                  </div>
+                </th>
+                <th
+                  data-sortable="true"
+                  id="date_of_last_login-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <button
+                    aria-description="Sort by Last Logged In"
+                    class="usa-button usa-button--unstyled sort-button usa-button"
+                    data-testid="button"
+                    id="date_of_last_login-sort-button"
+                    type="button"
+                  >
+                    <span
+                      class="text-ink"
+                    >
+                      Last Logged In
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon square-3"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <button
+                    class="usa-button usa-button--unstyled action-text"
+                    data-close-modal="true"
+                    data-open-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    test@test.test
+                  </button>
+                </td>
+                <td>
+                  Admin
+                </td>
+                <td>
+                  Program A, Program B
+                </td>
+                <td>
+                  04/15/2025 6:30 AM EDT
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="usa-button usa-button--unstyled action-text"
+                    data-close-modal="true"
+                    data-open-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    foo@foo.foo
+                  </button>
+                </td>
+                <td>
+                  Standard
+                </td>
+                <td>
+                  Program B
+                </td>
+                <td>
+                  04/16/2025 6:30 AM EDT
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            class="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center"
+          >
+            <div
+              class="flex-1"
+            >
+              Showing 
+              1
+              -
+              2
+               of 
+              2
+               
+              users
+            </div>
+            <nav
+              aria-label="Pagination"
+              class="usa-pagination flex-1"
+            >
+              <ul
+                class="usa-pagination__list"
+              >
+                <li
+                  class="usa-pagination__item usa-pagination__arrow"
+                >
+                  <button
+                    aria-label="Previous page"
+                    class="usa-button usa-button--unstyled usa-pagination__link usa-pagination__previous-page text-bold visibility-hidden"
+                    data-testid="pagination-previous"
+                    hidden=""
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon text-ink"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                      />
+                    </svg>
+                    <span
+                      class="usa-pagination__link-text"
+                    >
+                      Previous
+                    </span>
+                  </button>
+                </li>
+                <li
+                  class="usa-pagination__item usa-pagination__page-no"
+                >
+                  <button
+                    aria-current="page"
+                    aria-label="Page 1"
+                    class="usa-button usa-button--unstyled usa-pagination__button text-bold usa-current"
+                    data-testid="pagination-page-number"
+                    type="button"
+                  >
+                    1
+                  </button>
+                </li>
+                <li
+                  class="usa-pagination__item usa-pagination__arrow"
+                >
+                  <button
+                    aria-label="Next page"
+                    class="usa-button usa-button--unstyled usa-pagination__link usa-pagination__next-page text-bold visibility-hidden"
+                    data-testid="pagination-next"
+                    hidden=""
+                    type="button"
+                  >
+                    <span
+                      class="usa-pagination__link-text"
+                    >
+                      Next
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon text-ink"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+            <div
+              class="display-flex flex-align-center flex-1 flex-justify-end"
+            >
+              <label
+                class="usa-label margin-top-0 margin-right-1025"
+                data-testid="label"
+                for="input-select"
+              >
+                Users
+                 per page
+              </label>
+              <select
+                class="usa-select styled width-11075 margin-top-0"
+                data-testid="Select"
+                id="input-select"
+                name="input-select"
+              >
+                <option
+                  value="10"
+                >
+                  10
+                </option>
+                <option
+                  value="25"
+                >
+                  25
+                </option>
+                <option
+                  value="50"
+                >
+                  50
+                </option>
+                <option
+                  value="75"
+                >
+                  75
+                </option>
+                <option
+                  value="100"
+                >
+                  100
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+`;
