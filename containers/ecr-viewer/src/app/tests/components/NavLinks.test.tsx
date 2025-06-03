@@ -48,7 +48,7 @@ const mockStandardUser: User = {
 
 describe("NavLinks component", () => {
   it("renders admin navigation links and user menu for an admin user", async () => {
-    getLoggedInUserSession.mockResolvedValue(mockAdminUser)
+    getLoggedInUserSession.mockResolvedValue(mockAdminUser);
     getLoggedInUser.mockResolvedValue(mockAdminUser);
     isAdmin.mockReturnValue(true);
 
@@ -65,7 +65,7 @@ describe("NavLinks component", () => {
   });
 
   it("Does not render links for a standard user but does render menu", async () => {
-    getLoggedInUserSession.mockResolvedValue(mockStandardUser)
+    getLoggedInUserSession.mockResolvedValue(mockStandardUser);
     getLoggedInUser.mockResolvedValue(mockStandardUser);
     isAdmin.mockReturnValue(false);
 
