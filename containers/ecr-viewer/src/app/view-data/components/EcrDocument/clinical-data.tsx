@@ -73,6 +73,13 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     },
   ];
 
+  const emergencyOutbreakInfo: DisplayDataProps[] = [
+    {
+      title: "Emergency Outbreak Info",
+      value: evaluateOutbreakInfo(fhirBundle),
+    },
+  ];
+
   const administeredMedication = evaluateAdministeredMedication(fhirBundle);
 
   const treatmentData: DisplayDataProps[] = [
@@ -122,6 +129,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     clinicalNotes: evaluateData(clinicalNotes),
     reasonForVisitDetails: evaluateData(reasonForVisitData),
     activeProblemsDetails: evaluateData(activeProblemsTableData),
+    emergencyOutbreakInfo: evaluateData(emergencyOutbreakInfo),
     treatmentData: evaluateData(treatmentData),
     vitalData: evaluateData(vitalData),
     immunizationsDetails: evaluateData(immunizationsData),
@@ -420,7 +428,7 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
       infoPath: "vitalSignType",
       applyToValue: toSentenceCase,
     },
-    { columnName: "Result", infoPath: "vitalSignValue" },
+    { columnName: "Result", infoPath: "value" },
     {
       columnName: "Date/Time",
       infoPath: "vitalSignDateTime",
@@ -437,4 +445,38 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
       fixed={false}
     />
   );
+};
+
+const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
+  const outbreakInfos = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.emergencyOutbreakInfo,
+  );
+
+  return outbreakInfos
+    .map((outbreakInfo) => {
+      const lines = [];
+
+      if (outbreakInfo.effectiveDateTime) {
+        lines.push(
+          "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
+        );
+      } else if (outbreakInfo.effectivePeriod) {
+        lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
+      }
+
+      // Get the first display value from the coding array
+      const coding = outbreakInfo.code?.coding?.find((c) => c.display);
+      if (coding?.display) {
+        lines.push("Type: " + coding.display);
+      }
+
+      const value = evaluateValue(outbreakInfo, fhirPathMappings.value);
+      if (value) {
+        lines.push("Result: " + value);
+      }
+
+      return lines.join("\n");
+    })
+    .join("\n\n");
 };
