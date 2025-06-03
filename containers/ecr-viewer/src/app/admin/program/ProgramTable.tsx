@@ -88,7 +88,9 @@ export const ProgramTable = ({
               ) : (
                 <ul className="add-list-reset">
                   {selectedProgramArea?.conditions
-                    .sort()
+                    .sort((a, b) =>
+                      a.condition_name < b.condition_name ? -1 : 1,
+                    )
                     .map(({ condition_name, code }) => (
                       <li
                         key={code}
