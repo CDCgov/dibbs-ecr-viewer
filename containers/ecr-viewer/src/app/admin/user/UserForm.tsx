@@ -29,6 +29,13 @@ interface FormValues {
   programs: FormProgram[];
 }
 
+const sortedIds = (programs: FormProgram[]) => {
+  return programs
+    .filter(({ checked }) => !!checked)
+    .map(({ uuid }) => uuid)
+    .sort();
+};
+
 /**
  *
  * @param props React props
@@ -58,20 +65,28 @@ export const UserForm = ({
 
   const { createToast } = React.useContext(ToastContext);
 
-  const selectedPrograms = Object.values(programs)
-    .filter(({ checked }) => !!checked)
-    .map(({ uuid }) => uuid);
+  const selectedPrograms = sortedIds(programs);
   const numProgramsSelected = selectedPrograms.length;
+
+  const initSelectedPrograms = sortedIds(initValues.programs);
 
   const valid =
     !!email &&
     (userType === "admin" || userType === "standard") &&
     (userType === "admin" || numProgramsSelected > 0);
+  const touched =
+    (email && email !== initValues.email) ||
+    userType !== (initValues.userType || "standard") ||
+    numProgramsSelected !== initSelectedPrograms.length ||
+    selectedPrograms.some((uuid, i) => uuid !== initSelectedPrograms[i]);
 
   return (
     <FormPageContent
-      action={`${action} user`}
+      itemType="user"
+      action={action}
+      itemHomeRoute="/admin/user"
       formValid={valid}
+      formTouched={touched}
       submitAction={async () => {
         const res = await submitAction(
           email.trim(),
@@ -82,7 +97,6 @@ export const UserForm = ({
           createToast(`${email.trim()} successfully saved`, "success");
         return res;
       }}
-      successRoute="/admin/user"
     >
       <EmailFieldSet email={email} setEmail={setEmail} />
       <UserTypeFieldSet userType={userType} setUserType={setUserType} />
