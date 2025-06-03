@@ -57,9 +57,7 @@ const UserMenu = ({
       <button
         ref={buttonRef}
         className="user-menu-button"
-        onClick={() => {
-          toggleMenuDropdown();
-        }}
+        onClick={toggleMenuDropdown}
       >
         <Person
           aria-label="User Menu"
