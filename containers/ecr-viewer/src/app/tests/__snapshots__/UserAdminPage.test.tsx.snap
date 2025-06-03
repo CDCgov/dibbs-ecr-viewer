@@ -168,11 +168,11 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           <p
             class="text-bold font-size-md"
           >
-            Program area (
             0
-            /
-            2
-             selected)
+             program area
+            s
+             
+            selected
           </p>
           <div
             class="margin-right-auto"
@@ -335,7 +335,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                   hidden=""
                   id="program-area-three"
                 >
-                  condition; condition
+                  condition, condition
                 </div>
               </div>
             </div>
