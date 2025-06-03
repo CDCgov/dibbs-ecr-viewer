@@ -52,7 +52,7 @@ export const getLoggedInUser = async () => {
 
     return await getUserByEmail(email);
   } catch (error: unknown) {
-    console.error({error, message: "failed to get logged in user"});
+    console.error({ error, message: "failed to get logged in user" });
     return undefined;
   }
 };
