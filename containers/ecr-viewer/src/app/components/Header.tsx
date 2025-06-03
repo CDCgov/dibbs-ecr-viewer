@@ -16,7 +16,7 @@ import Link from "next/link";
  */
 const Header = ({ children }: { children: ReactNode }) => {
   return (
-    <header className="usa-header usa-header--basic">
+    <header className="usa-header usa-header--basic position-relative header-z-index isolate">
       <div className="usa-nav-container" style={{ maxWidth: "none" }}>
         <Link className="dibbs-logo" href="/" prefetch={false}>
           <Image
