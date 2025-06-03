@@ -7,6 +7,11 @@ import NavLinks from "@/app/components/NavLinks";
 import { User } from "@/app/data/metadataDb/types/core";
 
 const { getLoggedInUser, isAdmin } = require("../../services/userService");
+const { getLoggedInUserSession } = require("../../utils/auth-utils");
+
+jest.mock("../../utils/auth-utils", () => ({
+  getLoggedInUserSession: jest.fn(),
+}));
 
 jest.mock("../../services/userService", () => ({
   getLoggedInUser: jest.fn(),
@@ -43,6 +48,7 @@ const mockStandardUser: User = {
 
 describe("NavLinks component", () => {
   it("renders admin navigation links and user menu for an admin user", async () => {
+    getLoggedInUserSession.mockResolvedValue(mockAdminUser)
     getLoggedInUser.mockResolvedValue(mockAdminUser);
     isAdmin.mockReturnValue(true);
 
@@ -59,6 +65,7 @@ describe("NavLinks component", () => {
   });
 
   it("Does not render links for a standard user but does render menu", async () => {
+    getLoggedInUserSession.mockResolvedValue(mockStandardUser)
     getLoggedInUser.mockResolvedValue(mockStandardUser);
     isAdmin.mockReturnValue(false);
 
