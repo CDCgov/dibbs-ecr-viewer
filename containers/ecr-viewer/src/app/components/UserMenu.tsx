@@ -55,6 +55,7 @@ const UserMenu = ({
   return (
     <div className="user-menu-container">
       <button
+        type="button"
         ref={buttonRef}
         className="user-menu-button"
         onClick={toggleMenuDropdown}
