@@ -45,6 +45,13 @@ const groupByCategory = (conditions: FormCondition[]) => {
   }, {} as ConditionCategories);
 };
 
+const sortedCodes = (conditions: FormCondition[]) => {
+  return conditions
+    .filter(({ checked }) => !!checked)
+    .map(({ code }) => code)
+    .sort();
+};
+
 /**
  *
  * @param props React props
@@ -66,7 +73,7 @@ export const ProgramForm = ({
   submitAction: (
     name: string,
     conditions: string[],
-  ) => Promise<ServerActionResult<string | undefined>>;
+  ) => Promise<ServerActionResult<string | void>>;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
@@ -74,24 +81,30 @@ export const ProgramForm = ({
   );
   const { createToast } = React.useContext(ToastContext);
 
-  const selectedConditions = Object.values(conditionCategories)
-    .flatMap((id) => id)
-    .filter(({ checked }) => !!checked)
-    .map(({ code }) => code);
+  const selectedConditions = sortedCodes(
+    Object.values(conditionCategories).flatMap((id) => id),
+  );
   const numConditionsSelected = selectedConditions.length;
 
+  const initSelectedConditions = sortedCodes(initValues.conditions);
+  const touched =
+    (name && name !== initValues.name) ||
+    selectedConditions.length !== initSelectedConditions.length ||
+    selectedConditions.some((c, i) => initSelectedConditions[i] !== c);
   const valid = !!name.trim() && numConditionsSelected > 0;
 
   return (
     <FormPageContent
-      action={`${action} program area`}
+      action={action}
+      itemType="program area"
+      itemHomeRoute="/admin/program"
       formValid={valid}
+      formTouched={touched}
       submitAction={async () => {
         const res = await submitAction(name, selectedConditions);
         if (!res.error) createToast(`${name} successfully saved`, "success");
         return res;
       }}
-      successRoute="/admin/program"
     >
       <NameFieldSet name={name} setName={setName} />
       <ConditionFieldSet

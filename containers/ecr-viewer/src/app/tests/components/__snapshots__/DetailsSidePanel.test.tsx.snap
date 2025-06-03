@@ -64,12 +64,16 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
                 </p>
               </div>
               <section>
-                <h3
-                  id="details-sidepanel-r:id-description"
+                <div
+                  class="display-flex flex-justify flex-align-center"
                 >
-                  Item
-                   information
-                </h3>
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
                 <dl>
                   <dt>
                     detail 1
@@ -182,12 +186,16 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
                 </p>
               </div>
               <section>
-                <h3
-                  id="details-sidepanel-r:id-description"
+                <div
+                  class="display-flex flex-justify flex-align-center"
                 >
-                  Item
-                   information
-                </h3>
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
                 <dl>
                   <dt>
                     detail 1
@@ -433,12 +441,16 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
                 </p>
               </div>
               <section>
-                <h3
-                  id="details-sidepanel-r:id-description"
+                <div
+                  class="display-flex flex-justify flex-align-center"
                 >
-                  Item
-                   information
-                </h3>
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
                 <dl>
                   <dt>
                     detail 1
@@ -681,12 +693,16 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
                 </p>
               </div>
               <section>
-                <h3
-                  id="details-sidepanel-r:id-description"
+                <div
+                  class="display-flex flex-justify flex-align-center"
                 >
-                  Item
-                   information
-                </h3>
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
                 <dl>
                   <dt>
                     detail 1
@@ -930,12 +946,16 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
                 </p>
               </div>
               <section>
-                <h3
-                  id="details-sidepanel-r:id-description"
+                <div
+                  class="display-flex flex-justify flex-align-center"
                 >
-                  Item
-                   information
-                </h3>
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
                 <dl>
                   <dt>
                     detail 1

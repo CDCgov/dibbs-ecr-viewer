@@ -7,6 +7,7 @@ import {
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { ServerActionResult } from "@/app/services/errorService";
@@ -78,6 +79,7 @@ interface Detail {
  * @param props.title Title of the side panel (usually the subject)
  * @param props.subtitle Subtitle of the side panel (such as logged in date)
  * @param props.detailsRef Ref linking the trigger(s) and panel - see `useDetailsRef`
+ * @param props.editHref Link to the edit page for this item
  * @param props.itemType string describing item type of details (e.g. "user")
  * @param props.deleteAction Optional function to handle deleting the item. Adds delete button if available
  * @param props.deleteExplainerText Optional text to explain implications of deleting the item
@@ -90,6 +92,7 @@ export const DetailsSidePanel = ({
   details,
   title,
   subtitle,
+  editHref,
   itemType,
   deleteAction,
   deleteExplainerText,
@@ -100,6 +103,7 @@ export const DetailsSidePanel = ({
   details: Detail[];
   title: string;
   subtitle: string;
+  editHref?: string;
   itemType: string;
   deleteAction?: () => Promise<ServerActionResult<void>>;
   deleteExplainerText?: string;
@@ -132,9 +136,21 @@ export const DetailsSidePanel = ({
           </div>
 
           <section>
-            <h3 id={`details-sidepanel-${id}-description`}>
-              {toSentenceCase(itemType)} information
-            </h3>
+            <div className="display-flex flex-justify flex-align-center">
+              <h3 id={`details-sidepanel-${id}-description`}>
+                {toSentenceCase(itemType)} information
+              </h3>
+              {!!editHref && (
+                <div>
+                  <Link
+                    href={editHref}
+                    className="usa-button usa-button--outline"
+                  >
+                    Edit {itemType}
+                  </Link>
+                </div>
+              )}
+            </div>
 
             <dl>
               {details.map(({ title, value }, i) => (
@@ -181,7 +197,6 @@ export const DetailsSidePanel = ({
             {deleteModalTitle}
           </ModalHeading>
           {deleteModalBody}
-
           <ConfirmationFooter
             modalRef={confirmRef}
             onConfirm={async () => {
