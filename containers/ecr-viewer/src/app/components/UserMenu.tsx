@@ -35,11 +35,11 @@ const UserMenu = ({
   useEffect(() => {
     const outsideMenuClick = (event: MouseEvent) => {
       if (
-          showMenu &&
-          menuRef.current &&
-          !menuRef.current.contains(event.target as Node) &&
-          buttonRef.current &&
-          !buttonRef.current.contains(event.target as Node)
+        showMenu &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
       ) {
         setShowMenu(false);
       }
