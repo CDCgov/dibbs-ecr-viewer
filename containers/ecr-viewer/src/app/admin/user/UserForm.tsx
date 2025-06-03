@@ -194,7 +194,7 @@ export const ProgramFieldSet = ({
           </span>
         </div>
       ),
-      content: conditions.map((c) => c.condition_name).join("; "),
+      content: conditions.map((c) => c.condition_name).join(", "),
       id: toKebabCase(name),
       expanded: !!expandedPrograms[toKebabCase(name)],
       headingLevel: "h3",
@@ -229,7 +229,8 @@ export const ProgramFieldSet = ({
       {isStandardUser && (
         <>
           <p className="text-bold font-size-md">
-            Program area ({numProgramsSelected}/{programs.length} selected)
+            {numProgramsSelected} program area{makePlural(numProgramsSelected)}{" "}
+            selected
           </p>
           <div className="margin-right-auto">
             {[
