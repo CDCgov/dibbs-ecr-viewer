@@ -55,6 +55,7 @@ export const getEcrDocumentAccordionItems = (
       hospitalEncounterData.unavailableData,
       clinicalData.reasonForVisitDetails.unavailableData,
       clinicalData.activeProblemsDetails.unavailableData,
+      clinicalData.emergencyOutbreakInfo.unavailableData,
       providerData.unavailableData,
       clinicalData.vitalData.unavailableData,
       clinicalData.immunizationsDetails.unavailableData,
@@ -124,6 +125,9 @@ export const getEcrDocumentAccordionItems = (
           }
           activeProblemsDetails={
             clinicalData.activeProblemsDetails.availableData
+          }
+          emergencyOutbreakInfo={
+            clinicalData.emergencyOutbreakInfo.availableData
           }
           vitalData={clinicalData.vitalData.availableData}
           immunizationsDetails={clinicalData.immunizationsDetails.availableData}
