@@ -7,14 +7,14 @@ import {
 } from "kysely";
 
 export interface ecr_data {
-  eicr_id: Generated<string>;
+  eicr_id: string;
   set_id: string;
   eicr_version_number: string | undefined;
   fhir_reference_link: string | undefined;
   date_created: Generated<Date>;
-  last_name: string | undefined;
-  first_name: string | undefined;
-  birth_date: ColumnType<Date, string> | undefined;
+  last_name: string;
+  first_name: string;
+  birth_date: ColumnType<Date, string>;
   encounter_start_date: Date | undefined;
 }
 
@@ -25,6 +25,7 @@ export interface ecr_rr_conditions {
   uuid: Generated<string>;
   eicr_id: string;
   condition: string;
+  condition_code: string | null;
 }
 
 export type ECRConditions = Selectable<ecr_rr_conditions>;
@@ -80,8 +81,8 @@ export interface condition_reference {
   program_area_uuid: string | null;
 }
 
-export type UserConditionReference = Selectable<condition_reference>;
-export type NewUserConditionReference = Insertable<condition_reference>;
+export type ConditionReference = Selectable<condition_reference>;
+export type NewConditionReference = Insertable<condition_reference>;
 
 export interface Core {
   ecr_data: ecr_data;

@@ -26,11 +26,13 @@ import {
   DataDisplay,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
+import EvaluateTable from "@/app/view-data/components/EvaluateTable";
 import { ExpandCollapseAccordion } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 import {
   formatDate,
+  formatDateTime,
   formatPeriodDate,
   formatStartEndDate,
   formatStartEndDateTime,
@@ -47,6 +49,7 @@ import {
   formatPhoneNumber,
   sortByPeriod,
   formatCurrentAddress,
+  formatReference,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import { evaluateTravelHistoryTable } from "./socialHistoryService";
@@ -302,6 +305,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
 
   return (
     <ExpandCollapseAccordion
+      className="accordion-rr margin-bottom-3"
       descriptor="employment details"
       items={jobObs.map((obs) => {
         const getComponentValue = (code: string) => {
@@ -602,6 +606,76 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
     },
   ];
   return evaluateData(encounterData);
+};
+
+/**
+ * Evaluates Hospital Encounter Admission and Discharge diagnosis data from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing hospital encounter data.
+ * @returns An array of evaluated and formatted hospital encounter data.
+ */
+export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
+  const hospitalEncounterData = [
+    {
+      title: "Hospital Admission Diagnosis",
+      value: evaluateEncounterDiagnosisData(
+        fhirBundle,
+        "46241-6",
+        "Hospital Admission Diagnosis",
+      ),
+      table: true,
+    },
+    {
+      title: "Hospital Discharge Diagnosis",
+      value: evaluateEncounterDiagnosisData(
+        fhirBundle,
+        "11535-2",
+        "Hospital Discharge Diagnosis",
+      ),
+      table: true,
+    },
+  ];
+  return evaluateData(hospitalEncounterData);
+};
+
+/**
+ * Evaluates either Hospital Admission Diagnosis or Discharge diagnosis data from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing hospital encounter data.
+ * @param code - the associated code for the section to be evaluated. e.g. 46241-6 for Admission Dx or 11535-2 for Discharge Dx
+ * @param caption - A string to set the caption for the UI element
+ * @returns An array of evaluated and formatted hospital encounter data.
+ */
+export const evaluateEncounterDiagnosisData = (
+  fhirBundle: Bundle,
+  code: string,
+  caption: string,
+) => {
+  const dxRefs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.hospitalEncounterDiagnosisRef,
+    { code },
+  );
+
+  const dx: Condition[] = dxRefs
+    .map((x) => {
+      return evaluateReference<Condition>(fhirBundle, formatReference(x));
+    })
+    .filter((x): x is Condition => Boolean(x));
+
+  if (dx.length === 0) return;
+
+  const dxColumns = [
+    {
+      columnName: "Problem",
+      infoPath: "conditionCode",
+    },
+    {
+      columnName: "Date/Time",
+      infoPath: "conditionOnsetDateTime",
+      applyToValue: formatDateTime,
+    },
+  ];
+
+  return <EvaluateTable resources={dx} columns={dxColumns} caption={caption} />;
 };
 
 /**

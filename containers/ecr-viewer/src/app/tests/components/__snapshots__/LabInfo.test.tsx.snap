@@ -287,6 +287,12 @@ Mos Eisley, CO
                         class="table-header minw-10 width-20"
                         scope="col"
                       >
+                        Result Status
+                      </th>
+                      <th
+                        class="table-header minw-10 width-20"
+                        scope="col"
+                      >
                         Lab Comment
                       </th>
                     </tr>
@@ -312,6 +318,11 @@ Mos Eisley, CO
                         class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        final
                       </td>
                       <td
                         class="text-top text-pre-line"
@@ -343,6 +354,11 @@ Mos Eisley, CO
                         class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        final
                       </td>
                       <td
                         class="text-top text-pre-line"
@@ -542,6 +558,25 @@ Mos Eisley, CO
                     <div
                       class="data-title padding-right-1"
                     >
+                      Result Status
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      final
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
                       Narrative
                     </div>
                     <div
@@ -612,6 +647,12 @@ Mos Eisley, CO
                         class="table-header minw-10 width-20"
                         scope="col"
                       >
+                        Result Status
+                      </th>
+                      <th
+                        class="table-header minw-10 width-20"
+                        scope="col"
+                      >
                         Lab Comment
                       </th>
                     </tr>
@@ -637,6 +678,11 @@ Mos Eisley, CO
                         class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        final
                       </td>
                       <td
                         class="text-top text-pre-line"
@@ -668,6 +714,11 @@ Mos Eisley, CO
                         class="text-top text-pre-line"
                       >
                         LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        final
                       </td>
                       <td
                         class="text-top text-pre-line"
@@ -867,6 +918,25 @@ Mos Eisley, CO
                     <div
                       class="data-title padding-right-1"
                     >
+                      Result Status
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      final
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
                       Narrative
                     </div>
                     <div
@@ -1044,6 +1114,12 @@ Coruscant, MA
                         class="table-header minw-10 width-20"
                         scope="col"
                       >
+                        Result Status
+                      </th>
+                      <th
+                        class="table-header minw-10 width-20"
+                        scope="col"
+                      >
                         Lab Comment
                       </th>
                     </tr>
@@ -1081,6 +1157,11 @@ Coruscant, MA
                       <td
                         class="text-top text-pre-line"
                       >
+                        Preliminary results
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
                         <button
                           aria-controls="hidden-comment-r:id"
                           aria-expanded="false"
@@ -1101,7 +1182,7 @@ Coruscant, MA
                     >
                       <td
                         class="hideableData p-list"
-                        colspan="5"
+                        colspan="6"
                       >
                         <p>
                           Lab comment
@@ -1132,6 +1213,11 @@ Coruscant, MA
                         >
                           No data
                         </span>
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        final
                       </td>
                       <td
                         class="text-top text-pre-line"
@@ -1421,6 +1507,25 @@ Coruscant, MA
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
                       LAB GENETIC TESTING
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Status
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      Preliminary results
                     </div>
                   </div>
                   <div

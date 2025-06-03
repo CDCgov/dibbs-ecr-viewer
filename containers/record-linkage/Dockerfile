@@ -1,10 +1,11 @@
-FROM python:3.12-slim
+FROM python:3.12.10-alpine
 
-RUN apt-get update && \
-    apt-get upgrade -y \
-    libpq-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+        postgresql-dev \
+        gcc \
+        musl-dev
 
 RUN pip install --upgrade pip --break-system-packages
 
@@ -19,4 +20,4 @@ COPY ./migrations /code/migrations
 COPY ./assets /code/assets
 
 EXPOSE 8080
-CMD uvicorn app.main:app --host 0.0.0.0 --port 8080 --log-config app/log_config.yaml
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--log-config", "app/log_config.yaml"]

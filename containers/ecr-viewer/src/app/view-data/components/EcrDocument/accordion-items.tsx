@@ -9,6 +9,7 @@ import {
   evaluateEncounterData,
   evaluateProviderData,
   evaluateFacilityData,
+  evaluateHospitalEncounterData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
 import { evaluateAll } from "@/app/utils/evaluate";
@@ -35,6 +36,7 @@ export const getEcrDocumentAccordionItems = (
 ): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(fhirBundle);
   const socialData = evaluateSocialData(fhirBundle);
+  const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
   const providerData = evaluateProviderData(fhirBundle);
   const clinicalData = evaluateClinicalData(fhirBundle);
@@ -44,11 +46,13 @@ export const getEcrDocumentAccordionItems = (
     fhirBundle,
     evaluateAll(fhirBundle, fhirPathMappings.diagnosticReports),
   );
+
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
       demographicsData.unavailableData,
       socialData.unavailableData,
       encounterData.unavailableData,
+      hospitalEncounterData.unavailableData,
       clinicalData.reasonForVisitDetails.unavailableData,
       clinicalData.activeProblemsDetails.unavailableData,
       clinicalData.emergencyOutbreakInfo.unavailableData,
@@ -92,10 +96,12 @@ export const getEcrDocumentAccordionItems = (
       content: (
         <>
           {encounterData.availableData.length > 0 ||
+          hospitalEncounterData.availableData.length > 0 ||
           facilityData.availableData.length > 0 ||
           providerData.availableData.length > 0 ? (
             <EncounterDetails
               encounterData={encounterData.availableData}
+              hospitalEncounterData={hospitalEncounterData.availableData}
               facilityData={facilityData.availableData}
               providerData={providerData.availableData}
             />
@@ -183,6 +189,9 @@ export const getEcrDocumentAccordionItems = (
               demographicsUnavailableData={demographicsData.unavailableData}
               socialUnavailableData={socialData.unavailableData}
               encounterUnavailableData={encounterData.unavailableData}
+              hospitalEncounterUnavailableData={
+                hospitalEncounterData.unavailableData
+              }
               facilityUnavailableData={facilityData.unavailableData}
               symptomsProblemsUnavailableData={[
                 ...clinicalData.reasonForVisitDetails.unavailableData,

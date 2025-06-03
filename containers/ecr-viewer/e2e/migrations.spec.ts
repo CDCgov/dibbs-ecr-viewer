@@ -16,6 +16,10 @@ const toForm = (obj: Record<string, string>) => {
   return form;
 };
 
+const headers = {
+  Authorization: `Bearer ${process.env.DUMMY_NBS_JWT}`,
+};
+
 test.describe("migrations", () => {
   test.beforeEach(logInToKeycloak);
 
@@ -30,7 +34,9 @@ test.describe("migrations", () => {
     ).toBeVisible();
     await expect(page.getByText("eCR Library")).not.toBeVisible();
 
-    const noSecret = await request.post(`/ecr-viewer/api/migrate-db`);
+    const noSecret = await request.post(`/ecr-viewer/api/migrate-db`, {
+      headers,
+    });
     expect(await noSecret.json()).toEqual(
       expect.objectContaining({
         message: "Validation error",
@@ -40,6 +46,7 @@ test.describe("migrations", () => {
 
     const wrongSecret = await request.post(`/ecr-viewer/api/migrate-db`, {
       form: toForm({ migration_secret: "nope" }),
+      headers,
     });
     expect(await wrongSecret.json()).toEqual(
       expect.objectContaining({
@@ -51,6 +58,7 @@ test.describe("migrations", () => {
 
     const up = await request.post(`/ecr-viewer/api/migrate-db`, {
       form: toForm({ migration_secret: "test" }),
+      headers,
     });
     expect(await up.json()).toEqual(
       expect.objectContaining({ message: "success" }),
@@ -65,6 +73,7 @@ test.describe("migrations", () => {
 
     const down = await request.post(`/ecr-viewer/api/migrate-db`, {
       form: toForm({ migration_secret: "test", direction: "down" }),
+      headers,
     });
     expect(await down.json()).toEqual(
       expect.objectContaining({ message: "success" }),

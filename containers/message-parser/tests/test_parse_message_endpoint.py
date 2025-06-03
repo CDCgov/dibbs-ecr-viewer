@@ -42,6 +42,12 @@ expected_successful_response = {
         "latitude": None,
         "longitude": None,
         "active_problems": [],
+        "rr": [
+            {
+                "code": "840539006",
+                "condition": "COVID-19 unfortunately",
+            }
+        ],
     },
 }
 
@@ -88,6 +94,16 @@ expected_successful_response_with_meta_data = {
             "data_type": "array",
             "resource_type": "Condition",
         },
+        "rr": {
+            "data_type": "array",
+            "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
+            "= "
+            "'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+            "resource_type": "Observation",
+            "value": [
+                {"code": "840539006", "condition": "COVID-19 unfortunately"},
+            ],
+        },
     },
 }
 
@@ -99,6 +115,7 @@ expected_successful_response_floats = {
         "latitude": "34.58002",
         "longitude": "-118.08925",
         "active_problems": [],
+        "rr": [{"code": "840539006", "condition": "COVID-19 unfortunately"}],
     },
 }
 
@@ -144,6 +161,19 @@ expected_successful_response_floats_with_meta_data = {
             + ".where(category.coding.code='problem-item-list')",
             "data_type": "array",
             "resource_type": "Condition",
+        },
+        "rr": {
+            "data_type": "array",
+            "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
+            "= "
+            "'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+            "resource_type": "Observation",
+            "value": [
+                {
+                    "code": "840539006",
+                    "condition": "COVID-19 unfortunately",
+                },
+            ],
         },
     },
 }

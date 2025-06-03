@@ -86,7 +86,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   usual_industry: "Space Exploration",
   preferred_language: "English",
   pregnancy_status: "Pregnant",
-  ecr_id: "234322",
   last_name: "Kenobi",
   first_name: "Obi-Wan",
   birth_date: "1970-01-01",
@@ -103,6 +102,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dropExisting();
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe("saveFhirData - extended", () => {
@@ -128,6 +131,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
+          code: "123",
           rule_summaries: [],
         },
       ],
@@ -151,6 +155,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
+          code: "123",
           rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
         },
       ],
@@ -166,6 +171,40 @@ describe("saveFhirData - extended", () => {
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
+  });
+
+  it("should reference the condition_code foreign key", async () => {
+    const db = getDb<Extended>();
+    const metadata: BundleExtendedMetadata = {
+      ...baseExtendedMetadata,
+      rr: [
+        {
+          condition: "flu",
+          code: "123",
+          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+        },
+      ],
+    };
+
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => {
+        return makePromiseResolveWithStatus(200);
+      },
+    );
+
+    const conditions = await db
+      .selectFrom("ecr_rr_conditions")
+      .selectAll()
+      .execute();
+
+    expect(resp.message).toEqual("Success. Saved metadata to database.");
+    expect(resp.status).toEqual(200);
+    expect(conditions).toHaveLength(1);
+    expect(conditions[0].condition_code).toEqual("123");
   });
 
   it("should return an error and roll back fhir data when db save fails", async () => {

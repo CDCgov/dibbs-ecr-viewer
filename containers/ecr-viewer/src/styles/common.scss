@@ -1,6 +1,13 @@
 // This file contains declarations which are used in high level components or which style
 // elements without a modifier to scope them to a specific component
 
+@use "uswds-core" as *;
+
+// ===== Variables ===== //
+
+$content-container-max-width: 80rem;
+$content-container-min-width: 40rem;
+
 // ==== Base element styles ===== //
 
 h2 {
@@ -28,6 +35,14 @@ td {
   display: flex;
   justify-content: center;
   overflow: visible;
+}
+
+.content-container {
+  width: 100%;
+  max-width: $content-container-max-width;
+  min-width: $content-container-min-width;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 @keyframes shimmer {
@@ -78,5 +93,122 @@ td {
 
   p:last-of-type {
     margin-block-end: 0.5em;
+  }
+}
+
+$table-border-radius-md: 0.5rem;
+.table-radius-md {
+  th:first-of-type {
+    border-top-left-radius: $table-border-radius-md;
+  }
+  th:last-of-type {
+    border-top-right-radius: $table-border-radius-md;
+  }
+}
+
+.pagination-bar {
+  .usa-pagination {
+    margin: 0;
+  }
+}
+
+.action-text {
+  color: color("primary");
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    color: color("primary-dark");
+    text-decoration: none;
+  }
+}
+
+.dibbs-fieldset {
+  border: 1px solid color("base-lighter");
+  padding: 42px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  legend {
+    float: left;
+    font-size: 1.75rem;
+    font-weight: 700;
+
+    // because of the float putting the margin on the next sibling
+    & + * {
+      margin-top: 1.5rem;
+    }
+  }
+
+  .usa-checkbox__label {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-left: 4rem;
+    &:first-of-type {
+      margin-top: 0;
+    }
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    // the checkbox
+    &::before {
+      border: 1px solid color("base-dark");
+      border-radius: 2px;
+      box-shadow: none;
+      background: none;
+    }
+  }
+}
+
+@keyframes toast {
+  from {
+    transform: translateX(calc(100% + 64px));
+  }
+}
+
+.toast-shelf {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  list-style-type: none;
+}
+
+.toast-item {
+  animation: toast 800ms cubic-bezier(0, 0.46, 0, 1.04) both;
+  will-change: transform;
+}
+
+.live-search {
+  position: relative;
+  min-width: 20rem;
+
+  svg {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+
+  input {
+    height: 2.5rem;
+    padding: 0.5rem;
+    padding-left: 2.5rem;
+  }
+
+  .result-count {
+    position: absolute;
+    top: -3rem;
+    right: 0;
   }
 }

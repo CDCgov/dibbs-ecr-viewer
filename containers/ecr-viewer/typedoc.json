@@ -8,7 +8,7 @@
     "eCR Storage - GCP",
     "eCR Library Metadata"
   ],
-  "projectDocuments": ["guide.md"],
+  "projectDocuments": ["guide.md", "api-documentation.md"],
   "entryPoints": ["environment.d.ts"],
   "out": "./docs",
   "highlightLanguages": [

@@ -186,7 +186,7 @@
             "value": "2061347"
           }
         ],
-        "status": "final",
+        "status": "preliminary",
         "code": {
           "coding": [
             {
@@ -200,6 +200,20 @@
           "start": "1824-05-05T16:55:00Z",
           "end": "1824-05-05T16:55:00Z"
         },
+        "extension": [
+          {
+            "url": "http://terminology.hl7.org/CodeSystem/v2-0123",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "P",
+                  "system": "urn:oid:2.16.840.1.113883.18.51",
+                  "display": "Preliminary results"
+                }
+              ]
+            }
+          }
+        ],
         "subject": {
           "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
         },
@@ -684,7 +698,7 @@
             ]
           }
         ],
-        "status": "final",
+        "status": "preliminary",
         "code": {
           "coding": [
             {
@@ -722,6 +736,18 @@
                 "valueString": "#Result.1.2.3.4.7.Narrative"
               }
             ]
+          },
+          {
+            "url": "http://terminology.hl7.org/ValueSet/v2-0085",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "P",
+                  "system": "urn:oid:2.16.840.1.113883.18.34",
+                  "display": "Preliminary results"
+                }
+              ]
+            }
           },
           {
             "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
