@@ -49,7 +49,7 @@ test.describe("program management page", () => {
     await page.getByLabel("Program area name").fill(conditionName);
 
     await page
-      .getByRole("button", { name: "Create program area" })
+      .getByRole("button", { name: "Save program area" })
       .first()
       .click();
 
@@ -96,7 +96,7 @@ test.describe("program management page", () => {
     await page.getByLabel("Program area name").fill(conditionName);
 
     await page
-      .getByRole("button", { name: "Create program area" })
+      .getByRole("button", { name: "Save program area" })
       .first()
       .click();
 
@@ -120,14 +120,14 @@ test.describe("program management page", () => {
 
     // Not touched yet
     await expect(
-      page.getByRole("button", { name: "Edit program area" }).first(),
+      page.getByRole("button", { name: "Save program area" }).first(),
     ).toBeDisabled();
 
     const newConditionName = conditionName + " editted";
     await page.getByLabel("Program area name").fill(newConditionName);
 
     await page
-      .getByRole("button", { name: "Edit program area" })
+      .getByRole("button", { name: "Save program area" })
       .first()
       .click();
 

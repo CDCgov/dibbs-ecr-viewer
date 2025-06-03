@@ -52,7 +52,8 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
               form="r:id"
               type="submit"
             >
-              Create user
+              Save 
+              user
             </button>
           </div>
         </div>
@@ -357,7 +358,8 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             form="r:id"
             type="submit"
           >
-            Create user
+            Save 
+            user
           </button>
         </div>
       </form>

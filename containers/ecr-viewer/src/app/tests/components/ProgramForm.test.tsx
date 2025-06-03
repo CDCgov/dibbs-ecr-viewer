@@ -52,7 +52,7 @@ describe("ProgramForm", () => {
 
     // no name or conditions selected yet
     const submitButtons = screen.getAllByRole("button", {
-      name: "Create program area",
+      name: "Save program area",
     });
     expect(submitButtons).toHaveLength(2);
     expect(submitButtons[0]).toBeDisabled();
@@ -184,7 +184,7 @@ describe("ProgramForm", () => {
 
     // valid due to initial inputs
     const submitButtons = screen.getAllByRole("button", {
-      name: "Edit program area",
+      name: "Save program area",
     });
     expect(submitButtons).toHaveLength(2);
     // Not yet touched

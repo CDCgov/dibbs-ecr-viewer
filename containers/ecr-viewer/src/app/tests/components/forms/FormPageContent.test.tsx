@@ -31,7 +31,7 @@ describe("FormPageContent", () => {
     );
 
     const submitButtons = screen.getAllByRole("button", {
-      name: "File a form",
+      name: "Save a form",
     });
     expect(submitButtons).toHaveLength(2);
 
@@ -63,7 +63,7 @@ describe("FormPageContent", () => {
     );
 
     const submitButtons = screen.getAllByRole("button", {
-      name: "File a form",
+      name: "Save a form",
     });
     expect(submitButtons).toHaveLength(2);
     for (const button of submitButtons) {
@@ -99,7 +99,7 @@ describe("FormPageContent", () => {
     );
 
     const submitButtons = screen.getAllByRole("button", {
-      name: "File a form",
+      name: "Save a form",
     });
     expect(submitButtons).toHaveLength(2);
     for (const button of submitButtons) {
@@ -136,7 +136,7 @@ describe("FormPageContent", () => {
     );
 
     const submitButtons = screen.getAllByRole("button", {
-      name: "File a form",
+      name: "Save a form",
     });
     expect(submitButtons).toHaveLength(2);
 
@@ -144,7 +144,7 @@ describe("FormPageContent", () => {
     await user.click(submitButtons[0]);
 
     const afterSubmitButtons = screen.getAllByRole("button", {
-      name: "File a form",
+      name: "Save a form",
     });
     for (const button of afterSubmitButtons) {
       expect(button).not.toBeDisabled();

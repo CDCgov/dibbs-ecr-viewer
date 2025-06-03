@@ -52,7 +52,8 @@ exports[`Program Admin Page Creating programs should render a create program pag
               form="r:id"
               type="submit"
             >
-              Create program area
+              Save 
+              program area
             </button>
           </div>
         </div>
@@ -306,7 +307,8 @@ exports[`Program Admin Page Creating programs should render a create program pag
             form="r:id"
             type="submit"
           >
-            Create program area
+            Save 
+            program area
           </button>
         </div>
       </form>

@@ -102,7 +102,7 @@ export const FormPageContent = <T,>({
               <SubmitButton
                 formId={id}
                 disabled={submitDisabled}
-                action={actionPhrase}
+                itemType={itemType}
               />
             </div>
           </div>
@@ -130,7 +130,7 @@ export const FormPageContent = <T,>({
             <SubmitButton
               formId={id}
               disabled={submitDisabled}
-              action={actionPhrase}
+              itemType={itemType}
             />
           </div>
         </form>
@@ -141,11 +141,11 @@ export const FormPageContent = <T,>({
 
 const SubmitButton = ({
   disabled,
-  action,
+  itemType,
   formId,
 }: {
   disabled: boolean;
-  action: string;
+  itemType: string;
   formId: string;
 }) => {
   return (
@@ -155,7 +155,7 @@ const SubmitButton = ({
       className="margin-0"
       disabled={disabled}
     >
-      {action}
+      Save {itemType}
     </Button>
   );
 };
