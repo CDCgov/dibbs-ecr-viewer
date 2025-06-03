@@ -187,7 +187,7 @@ export const DetailsSidePanel = ({
             if (res.error) {
               createToast(res.error, "error");
             } else {
-              createToast(`${title} succesfully deleted`, "success");
+              createToast(`${title} succesfully removed`, "success");
             }
             router.refresh();
           }}
