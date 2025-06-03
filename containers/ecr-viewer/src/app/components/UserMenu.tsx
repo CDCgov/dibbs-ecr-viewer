@@ -32,19 +32,19 @@ const UserMenu = ({
 
   useEscapeKey(() => setShowMenu(false));
 
-  const outsideMenuClick = (event: MouseEvent) => {
-    if (
-      showMenu &&
-      menuRef.current &&
-      !menuRef.current.contains(event.target as Node) &&
-      buttonRef.current &&
-      !buttonRef.current.contains(event.target as Node)
-    ) {
-      setShowMenu(false);
-    }
-  };
-
   useEffect(() => {
+    const outsideMenuClick = (event: MouseEvent) => {
+      if (
+          showMenu &&
+          menuRef.current &&
+          !menuRef.current.contains(event.target as Node) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    };
+
     if (!showMenu) return;
     document.addEventListener("mousedown", outsideMenuClick);
     return () => {
