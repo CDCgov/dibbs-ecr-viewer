@@ -1,31 +1,39 @@
 "use client";
-import { ReactNode, useId, useState } from "react";
+import { ReactNode, useEffect, useId, useState } from "react";
 
 import { Alert, Button } from "@trussworks/react-uswds";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { ArrowBack } from "@/app/components/Icon";
 import { ServerActionResult } from "@/app/services/errorService";
 
 /**
  *
  * @param props React props
- * @param props.successRoute Route to redirect to upon successful submission
- * @param props.action Action of the form (e.g. "Create program area", "Edit program area")
+ * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.formValid Whether the form is valid
  * @param props.submitAction Handler to run on submission
  * @param props.children Content of the form, typically a series of `FieldSet`
+ * @param props.formTouched Whether the form has been touched (editted)
+ * @param props.itemType The type of item the form is about (e.g. "user")
+ * @param props.itemHomeRoute Route to redirect to upon successful submission or to go back to
  * @returns form with header and submit buttons
  */
 export const FormPageContent = <T,>({
   action,
+  itemType,
   formValid,
-  successRoute,
+  formTouched,
+  itemHomeRoute,
   children,
   submitAction,
 }: {
   action: string;
+  itemType: string;
   formValid: boolean;
-  successRoute: string;
+  formTouched: boolean;
+  itemHomeRoute: string;
   children: ReactNode;
   submitAction: () => Promise<ServerActionResult<T>>;
 }) => {
@@ -35,61 +43,109 @@ export const FormPageContent = <T,>({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const submitDisabled = !formValid || submitting;
+  // Alert user that they have unsaved data if they hard navigate away
+  useEffect(() => {
+    if (!formTouched) return;
+
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnload);
+    };
+  }, [formTouched]);
+
+  const submitDisabled = !formValid || !formTouched || submitting;
+  const actionPhrase = `${action} ${itemType}`;
 
   return (
-    <>
-      <div className="display-flex flex-justify margin-bottom-3">
-        <h2 className="margin-0">{action}</h2>
-        <div>
-          <SubmitButton formId={id} disabled={submitDisabled} action={action} />
+    <main className="main-container">
+      <div className="content-container margin-top-3 position-relative">
+        <Link
+          href={itemHomeRoute}
+          className="action-text display-inline-flex flex-align-center"
+        >
+          <ArrowBack aria-hidden={true} className="square-3" />
+          Back to {itemType} management
+        </Link>
+        <div className="border-bottom border-base-lighter position-sticky top-0 bg-white isolate z-500 padding-top-1">
+          <div className="height-5 margin-bottom-1">
+            {formTouched && !submitting && !error && (
+              <Alert
+                type="warning"
+                slim={true}
+                headingLevel="h4"
+                aria-live="polite"
+              >
+                You have unsaved changes
+              </Alert>
+            )}
+
+            {error && (
+              <Alert
+                type="error"
+                heading="Submission failed"
+                headingLevel="h4"
+                className="margin-bottom-3"
+                aria-live="polite"
+              >
+                {error}
+              </Alert>
+            )}
+          </div>
+
+          <div className="display-flex flex-justify margin-bottom-2">
+            <h2 className="margin-0">{actionPhrase}</h2>
+            <div>
+              <SubmitButton
+                formId={id}
+                disabled={submitDisabled}
+                itemType={itemType}
+              />
+            </div>
+          </div>
         </div>
+
+        <form
+          id={id}
+          className="margin-top-3 isolate"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setSubmitting(true);
+            setError("");
+            const res = await submitAction();
+            if (res.error) {
+              setSubmitting(false);
+              setError(res.error);
+              return;
+            }
+
+            router.push(itemHomeRoute);
+          }}
+        >
+          {children}
+          <div className="display-flex flex-justify-end margin-y-4">
+            <SubmitButton
+              formId={id}
+              disabled={submitDisabled}
+              itemType={itemType}
+            />
+          </div>
+        </form>
       </div>
-
-      <div className="section__line_gray" style={{ marginBottom: "1.5rem" }} />
-      <form
-        id={id}
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setSubmitting(true);
-          setError("");
-          const res = await submitAction();
-          if (res.error) {
-            setSubmitting(false);
-            setError(res.error);
-            return;
-          }
-
-          router.push(successRoute);
-        }}
-      >
-        {error && (
-          <Alert
-            type="error"
-            heading="Submission failed"
-            headingLevel="h4"
-            className="margin-bottom-3"
-            aria-live="polite"
-          >
-            {error}
-          </Alert>
-        )}
-        {children}
-        <div className="display-flex flex-justify-end margin-y-4">
-          <SubmitButton formId={id} disabled={submitDisabled} action={action} />
-        </div>
-      </form>
-    </>
+    </main>
   );
 };
 
 const SubmitButton = ({
   disabled,
-  action,
+  itemType,
   formId,
 }: {
   disabled: boolean;
-  action: string;
+  itemType: string;
   formId: string;
 }) => {
   return (
@@ -99,7 +155,7 @@ const SubmitButton = ({
       className="margin-0"
       disabled={disabled}
     >
-      {action}
+      Save {itemType}
     </Button>
   );
 };
