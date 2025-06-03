@@ -18,7 +18,9 @@ test.describe("user management page", () => {
 
     // open up side panel
     await page.getByText("ecr-viewer@admin.com").click();
-    await expect(page.getByText("Ecr Admin")).toHaveCount(2);
+    await expect(
+      page.getByRole("heading", { name: "Ecr Admin" }),
+    ).toBeVisible();
 
     const accessibilityScanResultsSidePanel = await new AxeBuilder({
       page,
