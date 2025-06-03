@@ -21,3 +21,4 @@ smartystreets_python_sdk
 typing_extensions>=4.8.0
 urllib3
 uvicorn
+h11>=0.16.0 # not directly required, pinned by Snyk to avoid a vulnerability
