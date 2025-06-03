@@ -112,6 +112,6 @@ const deleteProgramArea = async (page: Page, program: string) => {
   await page.goto("/ecr-viewer/admin/program");
   await page.getByLabel("Program areas per page").selectOption("100");
   await page.getByRole("button", { name: program }).click();
-  await page.getByRole("button", { name: "Delete program area" }).click();
-  await page.getByRole("button", { name: "Yes, delete program area" }).click();
+  await page.getByRole("button", { name: "Remove program area" }).click();
+  await page.getByRole("button", { name: "Yes, remove program area" }).click();
 };
