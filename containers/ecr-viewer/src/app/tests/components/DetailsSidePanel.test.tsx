@@ -114,7 +114,7 @@ describe("DetailsSidePanel", () => {
     expect(await axe(document.querySelector("body")!)).toHaveNoViolations();
 
     // Open delete confirmation modal
-    const deleteButton = screen.getByRole("button", { name: "Delete item" });
+    const deleteButton = screen.getByRole("button", { name: "Remove item" });
     await user.click(deleteButton);
 
     const modals = screen.queryAllByRole("dialog", { hidden: true });
@@ -162,7 +162,7 @@ describe("DetailsSidePanel", () => {
     expect(await axe(document.querySelector("body")!)).toHaveNoViolations();
 
     const confirmButton = screen.getByRole("button", {
-      name: "Yes, delete item",
+      name: "Yes, remove item",
     });
     await user.click(confirmButton);
 
