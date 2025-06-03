@@ -31,18 +31,20 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <Header>
+        <AuthSessionProvider>
+        <div className="position-relative header-z-index isolate">
+        <Header>
             <NavLinks />
-          </Header>
+        </Header>
+        </div>
           <div className="position-relative isolate">
-            <AuthSessionProvider>
               <ToastProvider>
                 {children}
                 <ToastShelf />
               </ToastProvider>
-            </AuthSessionProvider>
-            <Footer />
+              <Footer />
           </div>
+        </AuthSessionProvider>
         </body>
       </html>
     </RespectMotionPreferences>
