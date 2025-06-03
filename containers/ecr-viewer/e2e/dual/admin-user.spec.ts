@@ -67,7 +67,7 @@ test.describe("user management page", () => {
     await checkboxProgram1.scrollIntoViewIfNeeded();
     await checkboxProgram1.dispatchEvent("click");
 
-    await page.getByRole("button", { name: "Create user" }).first().click();
+    await page.getByRole("button", { name: "Save user" }).first().click();
 
     // Check that user has been successfully/correctly created
     await page.waitForURL("/ecr-viewer/admin/user");
@@ -98,10 +98,7 @@ const createRandomProgramArea = async (page: Page) => {
   const conditionName = await checkboxCond.inputValue();
 
   await page.getByLabel("Program area name").fill(`Program ${conditionName}`);
-  await page
-    .getByRole("button", { name: "Create program area" })
-    .first()
-    .click();
+  await page.getByRole("button", { name: "Save program area" }).first().click();
 
   await page.waitForURL("/ecr-viewer/admin/program");
 
