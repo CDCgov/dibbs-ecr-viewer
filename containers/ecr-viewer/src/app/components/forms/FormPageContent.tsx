@@ -64,7 +64,7 @@ export const FormPageContent = <T,>({
     <main className="main-container">
       <div className="content-container margin-top-3 position-relative">
         <Link
-          href="/admin/program"
+          href={itemHomeRoute}
           className="action-text display-inline-flex flex-align-center"
         >
           <ArrowBack aria-hidden={true} className="square-3" />
