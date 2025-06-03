@@ -80,6 +80,20 @@ test.describe("user management page", () => {
     await expect(page.getByText(program1)).toBeVisible();
     await expect(page.getByText(program2)).not.toBeVisible();
 
+    // Delete the user
+    await page.getByRole("button", { name: email }).click();
+    await expect(page.getByText("User information")).toBeVisible();
+
+    await page.getByRole("button", { name: "Yes, remove user" }).click();
+
+    await expect(page.getByText(`${email} succesfully removed`)).toBeVisible();
+
+    // Dismiss any toasts
+    await page.keyboard.press("Escape");
+
+    await page.getByRole("button", { name: "Remove user" }).click();
+    await expect(page.getByText(`Remove ${email}`)).toBeVisible();
+
     await deleteProgramArea(page, program1);
     await deleteProgramArea(page, program2);
   });
