@@ -68,6 +68,7 @@ export const ProgramTable = ({
         subtitle={`Created on ${formatDateTime(
           selectedProgramArea?.date_created.toISOString(),
         )}`}
+        editHref={`/admin/program/edit?uuid=${selectedProgramArea?.uuid}`}
         itemType="program area"
         deleteAction={async () =>
           await deleteAction(selectedProgramArea?.uuid!)
@@ -87,7 +88,9 @@ export const ProgramTable = ({
               ) : (
                 <ul className="add-list-reset">
                   {selectedProgramArea?.conditions
-                    .sort()
+                    .sort((a, b) =>
+                      a.condition_name < b.condition_name ? -1 : 1,
+                    )
                     .map(({ condition_name, code }) => (
                       <li
                         key={code}
