@@ -18,6 +18,7 @@ const Header = ({ children }: { children: ReactNode }) => {
   return (
     <header className="usa-header usa-header--basic position-relative header-z-index isolate">
       <div className="usa-nav-container" style={{ maxWidth: "none" }}>
+          <h1>
         <Link className="dibbs-logo" href="/" prefetch={false}>
           <Image
             src="/ecr-viewer/ecr-viewer-logo.png"
@@ -26,6 +27,7 @@ const Header = ({ children }: { children: ReactNode }) => {
             height={40}
           />
         </Link>
+          </h1>
         {children}
       </div>
     </header>
