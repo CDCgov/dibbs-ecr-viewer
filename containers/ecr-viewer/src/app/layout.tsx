@@ -36,7 +36,6 @@ export default function RootLayout({
             <Header>
               <NavLinks />
             </Header>
-            <div className="position-relative isolate">
               <ToastProvider>
                 {children}
                 <ToastShelf />
