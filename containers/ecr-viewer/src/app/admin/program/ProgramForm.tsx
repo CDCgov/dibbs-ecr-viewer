@@ -259,6 +259,10 @@ const ConditionFieldSet = ({
               </Button>
             ))}
             {conditions.map((condition, i) => {
+              const hasDuplicateName =
+                conditions.filter(
+                  (c) => c.condition_name === condition.condition_name,
+                ).length > 1;
               const isAlreadyAssigned =
                 condition.program_area_uuid &&
                 condition.program_area_uuid !== progUuid;
@@ -270,7 +274,19 @@ const ConditionFieldSet = ({
                       id={`condition-${condition.code}`}
                       name="conditions"
                       value={condition.code}
-                      label={condition.condition_name}
+                      label={
+                        <div>
+                          <p className="margin-0">{condition.condition_name}</p>
+                          {hasDuplicateName && (
+                            <p className="margin-0">
+                              <i className="text-base">
+                                {condition.concept_name ||
+                                  `SNOMED ${condition.code}`}
+                              </i>
+                            </p>
+                          )}
+                        </div>
+                      }
                       checked={condition.checked === true}
                       aria-controls={
                         isAlreadyAssigned && !condition.checked
@@ -293,7 +309,7 @@ const ConditionFieldSet = ({
                       }}
                     />
                     {isAlreadyAssigned && (
-                      <span className="text-base">
+                      <span className="text-base line-height-13">
                         Condition in {condition.program_area_name}
                       </span>
                     )}
