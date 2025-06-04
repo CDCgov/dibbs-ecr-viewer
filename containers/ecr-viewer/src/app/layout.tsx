@@ -31,6 +31,7 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
+          <div className="position-relative isolate">
           <AuthSessionProvider>
             <Header>
               <NavLinks />
