@@ -43,6 +43,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </AuthSessionProvider>
+          </div>
         </body>
       </html>
     </RespectMotionPreferences>
