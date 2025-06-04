@@ -5,7 +5,7 @@ import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 import { getTables } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
- * Add user and program area tables.
+ * Add condition reference tables.
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
@@ -31,7 +31,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 }
 
 /**
- * Roll back user and program area tables.
+ * Roll back condition reference tables.
  * @param db - the database connection
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Program Admin Page Creating programs should render a create program page 1`] = `
+exports[`User Admin Page Creating users should render a create user page 1`] = `
 <div>
   <main
     class="main-container"
@@ -10,7 +10,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
     >
       <a
         class="action-text display-inline-flex flex-align-center"
-        href="/admin/program"
+        href="/admin/user"
       >
         <svg
           aria-hidden="true"
@@ -27,7 +27,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
           />
         </svg>
         Back to 
-        program area
+        user
          management
       </a>
       <div
@@ -42,7 +42,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
           <h2
             class="margin-0"
           >
-            Create program area
+            Create user
           </h2>
           <div>
             <button
@@ -53,7 +53,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
               type="submit"
             >
               Save 
-              program area
+              user
             </button>
           </div>
         </div>
@@ -66,22 +66,15 @@ exports[`Program Admin Page Creating programs should render a create program pag
           class="dibbs-fieldset"
         >
           <legend>
-            Name program area
+            Email
           </legend>
           <span>
-            Required fields are marked with an asterisk (
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
-            >
-              *
-            </abbr>
-            )
+            Add the new user by their login email
           </span>
           <label
             class="usa-label"
           >
-            Program area name
+            Email
             <abbr
               class="usa-hint usa-hint--required"
               title="required"
@@ -91,10 +84,10 @@ exports[`Program Admin Page Creating programs should render a create program pag
             <input
               class="usa-input"
               data-testid="textInput"
-              id="name"
-              name="name"
+              id="email"
+              name="email"
               required=""
-              type="text"
+              type="email"
               value=""
             />
           </label>
@@ -103,10 +96,10 @@ exports[`Program Admin Page Creating programs should render a create program pag
           class="dibbs-fieldset"
         >
           <legend>
-            Add conditions
+            User type
           </legend>
           <span>
-            Select a minimum of 1 condition
+            Select the user type
             <abbr
               class="usa-hint usa-hint--required"
               title="required"
@@ -115,44 +108,100 @@ exports[`Program Admin Page Creating programs should render a create program pag
             </abbr>
           </span>
           <div
-            class="display-flex flex-justify margin-top-3"
+            class="usa-radio"
+            data-testid="radio"
           >
-            <p
-              class="text-bold font-size-md margin-y-0"
+            <input
+              class="usa-radio__input"
+              id="userType-admin"
+              name="userType"
+              required=""
+              type="radio"
+              value="admin"
+            />
+            <label
+              class="usa-radio__label"
+              for="userType-admin"
             >
-              0
-               condition
-              s
-               selected
-            </p>
-            <div
-              class="live-search"
-            >
-              <svg
-                aria-hidden="true"
-                class="usa-icon square-3 text-base"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
+              Admin
+              <span
+                class="usa-checkbox__label-description"
               >
-                <path
-                  d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-                />
-              </svg>
-              <input
-                aria-label="Search conditions"
-                class="usa-input"
-                data-testid="textInput"
-                id="condition-search"
-                name="condition-search"
-                placeholder="Search conditions"
-                type="search"
-                value=""
-              />
-            </div>
+                Admins have full access to user management, program management, and the eCR Library
+              </span>
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              checked=""
+              class="usa-radio__input"
+              id="userType-standard"
+              name="userType"
+              required=""
+              type="radio"
+              value="standard"
+            />
+            <label
+              class="usa-radio__label"
+              for="userType-standard"
+            >
+              Standard
+              <span
+                class="usa-checkbox__label-description"
+              >
+                Standard users can only use the eCR Library with limited access to program area(s)
+              </span>
+            </label>
+          </div>
+        </fieldset>
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            Program area access
+          </legend>
+          <span>
+            Select one or more program areas
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+          </span>
+          <p
+            class="text-bold font-size-md"
+          >
+            0
+             program area
+            s
+             
+            selected
+          </p>
+          <div
+            class="margin-right-auto"
+          >
+            <button
+              aria-controls="program-area-two program-area-three"
+              class="usa-button usa-button--outline margin-top-0"
+              data-testid="button"
+              type="button"
+            >
+              Select
+               all
+            </button>
+            <button
+              aria-controls="program-area-two program-area-three"
+              class="usa-button usa-button--outline margin-top-0"
+              data-testid="button"
+              type="button"
+            >
+              Deselect
+               all
+            </button>
           </div>
           <div
             class="display-flex"
@@ -166,7 +215,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
                 type="button"
               >
                 Expand all 
-                condition categories
+                program areas
               </button>
               <span
                 class="vertical-line"
@@ -177,134 +226,124 @@ exports[`Program Admin Page Creating programs should render a create program pag
                 type="button"
               >
                 Collapse all 
-                condition categories
+                program areas
               </button>
             </div>
           </div>
           <div
-            class="usa-accordion accordion-dibbs margin-top-3 margin-bottom-1"
+            class="usa-accordion accordion-dibbs margin-top-3"
             data-allow-multiple="true"
             data-testid="accordion"
           >
-            <h3
-              class="usa-accordion__heading"
-            >
-              <button
-                aria-controls="category"
-                aria-expanded="true"
-                class="usa-accordion__button"
-                data-testid="accordionButton_category"
-                type="button"
-              >
-                <div
-                  class="display-flex flex-justify flex-align-center"
-                >
-                  <div>
-                    <strong>
-                      category
-                    </strong>
-                    <br />
-                    <span
-                      class="text-base"
-                    >
-                      RCKMS condition category
-                    </span>
-                  </div>
-                  <span>
-                    0
-                    /
-                    2
-                     conditions selected
-                  </span>
-                </div>
-              </button>
-            </h3>
             <div
-              class="usa-accordion__content usa-prose"
-              data-testid="accordionItem_category"
-              id="category"
+              class="display-flex flex-align-top margin-bottom-2"
             >
-              <button
-                aria-controls="condition-456 condition-789"
-                class="usa-button usa-button--outline margin-top-0"
-                data-testid="button"
-                type="button"
-              >
-                Select
-                 all
-              </button>
-              <button
-                aria-controls="condition-456 condition-789"
-                class="usa-button usa-button--outline margin-top-0"
-                data-testid="button"
-                type="button"
-              >
-                Deselect
-                 all
-              </button>
               <div
-                class="display-flex flex-justify"
+                class="usa-checkbox margin-right-1 margin-top-3"
+                data-testid="checkbox"
               >
-                <div
-                  class="usa-checkbox"
-                  data-testid="checkbox"
-                >
-                  <input
-                    class="usa-checkbox__input"
-                    id="condition-456"
-                    name="conditions"
-                    type="checkbox"
-                    value="456"
-                  />
-                  <label
-                    class="usa-checkbox__label"
-                    for="condition-456"
-                  >
-                    <div>
-                      <p
-                        class="margin-0"
-                      >
-                        condition 1
-                      </p>
-                    </div>
-                  </label>
-                </div>
+                <input
+                  aria-label="Select Program Area Two"
+                  class="usa-checkbox__input"
+                  id="checkbox-program-area-two"
+                  name="program"
+                  type="checkbox"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="checkbox-program-area-two"
+                />
               </div>
               <div
-                class="section__line_light_gray"
-              />
-              <div
-                class="display-flex flex-justify"
+                class="flex-grow-1 width-full"
               >
-                <div
-                  class="usa-checkbox"
-                  data-testid="checkbox"
+                <h3
+                  class="usa-accordion__heading"
                 >
-                  <input
-                    class="usa-checkbox__input"
-                    id="condition-789"
-                    name="conditions"
-                    type="checkbox"
-                    value="789"
-                  />
-                  <label
-                    class="usa-checkbox__label"
-                    for="condition-789"
+                  <button
+                    aria-controls="program-area-two"
+                    aria-expanded="false"
+                    class="usa-accordion__button"
+                    data-testid="accordionButton_program-area-two"
+                    type="button"
                   >
-                    <div>
-                      <p
-                        class="margin-0"
-                      >
-                        condition 2
-                      </p>
+                    <div
+                      class="display-flex flex-justify flex-align-center"
+                    >
+                      <span>
+                        Program Area Two
+                      </span>
+                      <span>
+                        1
+                         condition
+                      </span>
                     </div>
-                  </label>
-                </div>
-                <span
-                  class="text-base line-height-13"
+                  </button>
+                </h3>
+                <div
+                  class="usa-accordion__content usa-prose"
+                  data-testid="accordionItem_program-area-two"
+                  hidden=""
+                  id="program-area-two"
                 >
-                  Condition in 
-                </span>
+                  condition
+                </div>
+              </div>
+            </div>
+            <div
+              class="display-flex flex-align-top margin-bottom-2"
+            >
+              <div
+                class="usa-checkbox margin-right-1 margin-top-3"
+                data-testid="checkbox"
+              >
+                <input
+                  aria-label="Select Program Area Three"
+                  class="usa-checkbox__input"
+                  id="checkbox-program-area-three"
+                  name="program"
+                  type="checkbox"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="checkbox-program-area-three"
+                />
+              </div>
+              <div
+                class="flex-grow-1 width-full"
+              >
+                <h3
+                  class="usa-accordion__heading"
+                >
+                  <button
+                    aria-controls="program-area-three"
+                    aria-expanded="false"
+                    class="usa-accordion__button"
+                    data-testid="accordionButton_program-area-three"
+                    type="button"
+                  >
+                    <div
+                      class="display-flex flex-justify flex-align-center"
+                    >
+                      <span>
+                        Program Area Three
+                      </span>
+                      <span>
+                        2
+                         condition
+                        s
+                      </span>
+                    </div>
+                  </button>
+                </h3>
+                <div
+                  class="usa-accordion__content usa-prose"
+                  data-testid="accordionItem_program-area-three"
+                  hidden=""
+                  id="program-area-three"
+                >
+                  condition, condition
+                </div>
               </div>
             </div>
           </div>
@@ -320,7 +359,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
             type="submit"
           >
             Save 
-            program area
+            user
           </button>
         </div>
       </form>
@@ -329,7 +368,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
 </div>
 `;
 
-exports[`Program Admin Page should list program areas when available 1`] = `
+exports[`User Admin Page should list users when available 1`] = `
 <div>
   <main
     class="main-container"
@@ -343,14 +382,14 @@ exports[`Program Admin Page should list program areas when available 1`] = `
         <h2
           class="margin-bottom-5"
         >
-          Program management
+          User management
         </h2>
         <div>
           <a
             class="usa-button"
-            href="/admin/program/create"
+            href="/admin/user/create"
           >
-            Create program area
+            Create user
           </a>
         </div>
       </div>
@@ -363,24 +402,23 @@ exports[`Program Admin Page should list program areas when available 1`] = `
             <thead>
               <tr>
                 <th
-                  aria-sort="ascending"
                   data-sortable="true"
-                  id="name-header"
+                  id="email-header"
                   role="columnheader"
                   scope="col"
                   style="padding-top: 1.25rem;"
                 >
                   <button
-                    aria-description="Sort by Program Area"
+                    aria-description="Sort by Email"
                     class="usa-button usa-button--unstyled sort-button usa-button"
                     data-testid="button"
-                    id="name-sort-button"
+                    id="email-sort-button"
                     type="button"
                   >
                     <span
                       class="text-ink"
                     >
-                      Program Area
+                      Email
                     </span>
                     <svg
                       aria-hidden="true"
@@ -393,14 +431,49 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                        d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </button>
+                </th>
+                <th
+                  data-sortable="true"
+                  id="user_type-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <button
+                    aria-description="Sort by User Type"
+                    class="usa-button usa-button--unstyled sort-button usa-button"
+                    data-testid="button"
+                    id="user_type-sort-button"
+                    type="button"
+                  >
+                    <span
+                      class="text-ink"
+                    >
+                      User Type
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon square-3"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
                       />
                     </svg>
                   </button>
                 </th>
                 <th
                   data-sortable="false"
-                  id="conditions-header"
+                  id="program_areas-header"
                   role="columnheader"
                   scope="col"
                   style="padding-top: 1.25rem;"
@@ -408,8 +481,43 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                   <div
                     class="display-flex"
                   >
-                    Number of Conditions
+                    Program Areas
                   </div>
+                </th>
+                <th
+                  data-sortable="true"
+                  id="date_of_last_login-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <button
+                    aria-description="Sort by Last Logged In"
+                    class="usa-button usa-button--unstyled sort-button usa-button"
+                    data-testid="button"
+                    id="date_of_last_login-sort-button"
+                    type="button"
+                  >
+                    <span
+                      class="text-ink"
+                    >
+                      Last Logged In
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon square-3"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </button>
                 </th>
               </tr>
             </thead>
@@ -423,11 +531,17 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                     data-testid="button"
                     type="button"
                   >
-                    Program Area One
+                    test@test.test
                   </button>
                 </td>
                 <td>
-                  0 conditions
+                  Admin
+                </td>
+                <td>
+                  Program A, Program B
+                </td>
+                <td>
+                  04/15/2025 6:30 AM EDT
                 </td>
               </tr>
               <tr>
@@ -439,27 +553,17 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                     data-testid="button"
                     type="button"
                   >
-                    Program Area Three
+                    foo@foo.foo
                   </button>
                 </td>
                 <td>
-                  2 conditions
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <button
-                    class="usa-button usa-button--unstyled action-text"
-                    data-close-modal="true"
-                    data-open-modal="true"
-                    data-testid="button"
-                    type="button"
-                  >
-                    Program Area Two
-                  </button>
+                  Standard
                 </td>
                 <td>
-                  1 condition
+                  Program B
+                </td>
+                <td>
+                  04/16/2025 6:30 AM EDT
                 </td>
               </tr>
             </tbody>
@@ -473,11 +577,11 @@ exports[`Program Admin Page should list program areas when available 1`] = `
               Showing 
               1
               -
-              3
+              2
                of 
-              3
+              2
                
-              program areas
+              users
             </div>
             <nav
               aria-label="Pagination"
@@ -571,7 +675,7 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                 data-testid="label"
                 for="input-select"
               >
-                Program areas
+                Users
                  per page
               </label>
               <select

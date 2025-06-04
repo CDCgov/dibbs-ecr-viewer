@@ -100,7 +100,7 @@ export type PathTypes = {
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
   vitalSignType: CodeableConcept;
-  vitalSignValue: ValueX;
+  value: ValueX;
   vitalSignDateTime: ValueX;
   resolve: unknown;
   activeProblems: Condition;
@@ -109,6 +109,7 @@ export type PathTypes = {
   activeProblemsOnsetAge: ValueX;
   activeProblemsComments: string;
   historyOfPresentIllness: string;
+  emergencyOutbreakInfo: Observation;
   planOfTreatment: string;
   plannedProcedures: CarePlanActivity;
   plannedProcedureName: string;
@@ -412,12 +413,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
   },
 
-  // Clinical Data
-  clinicalReasonForVisit: {
-    type: "ValueX",
-    path: "Bundle.entry.resource.section.where(title.lower() = 'reason for visit')[0].extension[0].value",
-  },
-
   // Vitals
   patientVitalSigns: {
     type: "Observation",
@@ -427,7 +422,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "CodeableConcept",
     path: "code",
   },
-  vitalSignValue: {
+  value: {
     type: "ValueX",
     path: "value",
   },
@@ -442,6 +437,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Clinical Info
+  clinicalReasonForVisit: {
+    type: "ValueX",
+    path: "Bundle.entry.resource.section.where(title.lower() = 'reason for visit')[0].extension[0].value",
+  },
   activeProblems: {
     type: "Condition",
     path: "Bundle.entry.resource.where(resourceType = 'Condition').where(category.coding.code = 'problem-item-list')",
@@ -456,6 +455,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   historyOfPresentIllness: {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = '10164-2').text.`div`.first()",
+  },
+  emergencyOutbreakInfo: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information')",
   },
 
   // Treatment Details

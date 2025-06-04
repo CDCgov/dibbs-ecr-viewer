@@ -89,7 +89,7 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
  * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
  * @param email Email of the user to add
- * @param user_type Type of user to create ("admiin" or "standard")
+ * @param user_type Type of user to create ("admin" or "standard")
  * @returns UUID of the created user
  */
 export const createUser = async (

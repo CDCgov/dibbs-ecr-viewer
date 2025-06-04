@@ -30,13 +30,15 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <AuthSessionProvider>
-            {isUsingNextAuth && <AutoSignout />}
-            <ToastProvider>
-              <ToastShelf />
-              {children}
-            </ToastProvider>
-          </AuthSessionProvider>
+          <div className="position-relative isolate">
+            <AuthSessionProvider>
+              {isUsingNextAuth && <AutoSignout />}
+              <ToastProvider>
+                {children}
+                <ToastShelf />
+              </ToastProvider>
+            </AuthSessionProvider>
+          </div>
         </body>
       </html>
     </RespectMotionPreferences>
