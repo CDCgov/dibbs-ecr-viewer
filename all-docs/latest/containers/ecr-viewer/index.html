@@ -70,7 +70,7 @@ body.dark, :root[data-theme="dark"] {
 <p>If you consistently encounter the error message <code>&quot;ecr_viewer_db&quot; does not exist</code> when attempting to run the app, there could be conflicting databases running on port 5432 as part of other background processes. Try pruning any dangling Docker images and containers (<code>docker image prune</code> and <code>docker container prune</code>). If issues persist, try logging into <code>psql</code> on the command line to see what databases are running there.</p>
 <h2 id="development" class="tsd-anchor-link">Development<a href="#development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="run-ecr-viewer-locally" class="tsd-anchor-link">Run eCR Viewer Locally<a href="#run-ecr-viewer-locally" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>To run the eCR Viewer locally:</p>
 <ol>
-<li>Ensure that Git, Docker, and Node (version 18.x or higher) are installed.</li>
+<li>Ensure that Git, Docker, and Node (version 18.x or higher) are installed. Ensure that <a href="https://docs.docker.com/engine/network/tutorials/host/#:~:text=To%20enable%20this%20feature%20in,Network%20select%20Enable%20host%20networking.">docker host networking is enabled</a></li>
 <li>Clone the DIBBs eCR Viewer repository with <code>git clone https://github.com/CDCgov/dibbs-ecr-viewer</code>.</li>
 <li>Navigate to <code>/dibbs-ecr-viewer/containers/ecr-viewer/</code>.</li>
 <li>Install all of the Node dependencies for the eCR Viewer with <code>npm install</code>.</li>
@@ -82,8 +82,8 @@ body.dark, :root[data-theme="dark"] {
 <h3 id="windows-setup" class="tsd-anchor-link">Windows Setup<a href="#windows-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The eCR Viewer is primarily developed on Apple silicon machines, See this <a href="https://github.com/CDCgov/dibbs-ecr-viewer/wiki/Integration-Testing#running-integration-tests-locally-on-windows">integration testing wiki page</a> for additional infomation for running on Windows machines.</p>
 <h3 id="updating-seed-data" class="tsd-anchor-link">Updating Seed Data<a href="#updating-seed-data" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Sample eICRs are included in <code>containers/ecr-viewer/seed-scripts/baseECR/</code>. If you ever need to update the eCRs or add new eCRs you can regenerate the data by:</p>
 <ol>
-<li>Delete the current volume used by your DB: <code>docker compose -f ./docker-compose.yaml --profile &quot;*&quot; down -v</code></li>
-<li>Run <code>npm run convert-seed-data</code> to re-run the FHIR conversion of the seed eCRs</li>
+<li>Delete the current volume used by your DB: <code>npm run clear-local</code></li>
+<li>Run <code>npm run convert-seed-data:build</code> to re-run the FHIR conversion of the seed eCRs (if you're confident none of the containers need to re-build, you can omit the <code>:build</code> postfix)</li>
 <li>Run <code>npm run local-dev</code> to re-run the eCR Viewer with the newly converted data.</li>
 </ol>
 <p>By default, the seed data in the <code>star-wars</code> subfolder converts. To convert other (or additional) subfolders, set the <code>SEED_DATA_DIRECTORIES</code> environment variable to a comma delimited list of subfolders (e.g. <code>star-wars,Dir2</code> or <code>Dir2</code>).</p>
