@@ -41,7 +41,6 @@ export default function RootLayout({
                 <ToastShelf />
               </ToastProvider>
               <Footer />
-            </div>
           </AuthSessionProvider>
           </div>
         </body>
