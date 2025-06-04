@@ -33,6 +33,8 @@ const UserMenu = ({
   useEscapeKey(() => setShowMenu(false));
 
   useEffect(() => {
+    if (!showMenu) return;
+
     const outsideMenuClick = (event: MouseEvent) => {
       if (
         showMenu &&
@@ -45,7 +47,6 @@ const UserMenu = ({
       }
     };
 
-    if (!showMenu) return;
     document.addEventListener("mousedown", outsideMenuClick);
     return () => {
       document.removeEventListener("mousedown", outsideMenuClick);
