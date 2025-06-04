@@ -231,7 +231,7 @@
           <templateId extension="2015-08-01"
             root="2.16.840.1.113883.10.20.22.2.22" />
           <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
-          <!-- [C-CDA R2.1] Encounters Section (entries required) (V3)-->
+          <!-- [C-CDA R2.1] Encounters Section (entries required) (V3) -->
           <templateId extension="2015-08-01"
             root="2.16.840.1.113883.10.20.22.2.22.1" />
           <code code="46240-8" codeSystem="2.16.840.1.113883.6.1"
@@ -252,6 +252,11 @@
                   <td>02/16/2025</td>
                   <td>Grand Republic Medical Facility Clinic</td>
                 </tr>
+                <tr>
+                  <td>Office outpatient visit - followup</td>
+                  <td>02/17/2025</td>
+                  <td>Grand Republic Medical Facility Clinic</td>
+                </tr>
               </tbody>
             </table>
           </text>
@@ -262,11 +267,63 @@
               <!-- [C-CDA R2.1] Encounter Activities (V3) -->
               <templateId extension="2015-08-01"
                 root="2.16.840.1.113883.10.20.22.4.49" />
-              <id root="8c69827d-fc6e-4580-a1af-17f03078bbf0" />
+              <id root="dd5cda14-6b1b-4666-b928-b4995ac7dcd6" />
               <code code="99213" codeSystem="2.16.840.1.113883.6.12"
                 codeSystemName="CPT-4"
                 displayName="Office outpatient visit 15 minutes" />
-              <effectiveTime value="20200513" />
+              <effectiveTime value="20250216" />
+              <participant typeCode="LOC">
+                <participantRole classCode="SDLOC">
+                  <code code="1160-1" codeSystem="2.16.840.1.113883.1.11.20275"
+                    codeSystemName="HealthcareServiceLocation"
+                    displayName="Grand Republic Medical Facility Clinic" />
+                </participantRole>
+              </participant>
+              <performer>
+                <assignedEntity>
+                  <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+                  <assignedPerson>
+                    <name>
+                      <prefix>Dr</prefix>
+                      <given>Royce</given>
+                      <family>Hemlock</family>
+                    </name>
+                  </assignedPerson>
+                </assignedEntity>
+              </performer>
+            </encounter>
+          </entry>
+          <entry typeCode="DRIV">
+            <encounter classCode="ENC" moodCode="EVN">
+              <!-- [C-CDA R1.1] Encounter Activities -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.49" />
+              <!-- [C-CDA R2.1] Encounter Activities (V3) -->
+              <templateId extension="2015-08-01"
+                root="2.16.840.1.113883.10.20.22.4.49" />
+              <id root="4fdc9253-e0c8-4a1b-9f3d-82e7a5876652" />
+              <code code="99212" codeSystem="2.16.840.1.113883.6.12"
+                codeSystemName="CPT-4"
+                displayName="Office outpatient visit - followup" />
+              <effectiveTime value="20250217" />
+              <participant typeCode="LOC">
+                <participantRole classCode="SDLOC">
+                  <code code="1160-1" codeSystem="2.16.840.1.113883.1.11.20275"
+                    codeSystemName="HealthcareServiceLocation"
+                    displayName="Grand Republic Medical Facility Clinic" />
+                </participantRole>
+              </participant>
+              <performer>
+                <assignedEntity>
+                  <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+                  <assignedPerson>
+                    <name>
+                      <prefix>Dr</prefix>
+                      <given>Royce</given>
+                      <family>Hemlock</family>
+                    </name>
+                  </assignedPerson>
+                </assignedEntity>
+              </performer>
             </encounter>
           </entry>
         </section>
@@ -280,8 +337,10 @@
             codeSystemName="LOINC" displayName="History of Present Illness" />
           <title>History of Present Illness</title>
           <text mediaType="text/x-hl7-text+xml">
-            <paragraph>fever, cough, exposure to COVID-19 hot zone;
-            </paragraph>
+            <paragraph>The patient presented on February 16, 2025 with difficulty breathing and
+              fever. At follow-up on February 17, patient reported worsening symptoms including
+              cough. Patient disclosed recent travel to a known COVID-19 hot zone from February
+              8-14, 2025. Based on symptoms and exposure history, SARS-CoV-2 testing was ordered.</paragraph>
           </text>
         </section>
       </component>
@@ -304,7 +363,7 @@
       <!-- Problems Section -->
       <component>
         <section>
-          <!-- [C-CDA R1.1] Problem Section (entries optional) -->
+          <!-- [C-CDA R1.1] Problem Section (entries optional)-->
           <templateId root="2.16.840.1.113883.10.20.22.2.5" />
           <!-- [C-CDA R2.1] Problem Section (entries optional) (V3) -->
           <templateId extension="2015-08-01"
@@ -354,7 +413,7 @@
                           <tbody>
                             <tr>
                               <td>symptom</td>
-                              <td>Difficulty Breathing</td>
+                              <td>Difficulty Breathing )finding)</td>
                               <td>02/16/2025</td>
                               <td>230145002</td>
                               <td>SNOMED-CT</td>
@@ -386,7 +445,7 @@
               <!-- [C-CDA 2.1] Problem Concern Act (V3) -->
               <templateId extension="2015-08-01"
                 root="2.16.840.1.113883.10.20.22.4.3" />
-              <id root="420ffc00-7bd3-4191-82cd-1ebd4367f6a6" />
+              <id root="a1c0c380-eacc-4b40-9207-85164185558d" />
               <code code="CONC" codeSystem="2.16.840.1.113883.5.6"
                 displayName="Concern" />
               <statusCode code="active" />
@@ -400,7 +459,7 @@
                   <templateId root="2.16.840.1.113883.10.20.22.4.4" />
                   <templateId extension="2015-08-01"
                     root="2.16.840.1.113883.10.20.22.4.4" />
-                  <id root="5024cf76-074d-471b-b0f2-1330f73aa45f" />
+                  <id root="1ab9be3d-7d95-478c-9db1-655bd93f7040" />
                   <code code="75325-1"
                     codeSystem="2.16.840.1.113883.6.1"
                     codeSystemName="LOINC" displayName="SYMPTOM">
@@ -417,6 +476,36 @@
                     codeSystemName="SNOMED-CT"
                     displayName="Difficulty Breathing"
                     xsi:type="CD" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN"
+                  negationInd="false">
+                  <!-- [C-CDA R1.1] Problem Observation -->
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2015-08-01"
+                    root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2016-12-01"
+                    root="2.16.840.1.113883.10.20.15.2.3.3" />
+                  <!-- [eICR R2 STU1.1] Initial Case Report Trigger Code Problem Observation -->
+                  <id root="1ea2fc61-9b88-4fd1-a43c-6e3f7502e0e8" />
+                  <code code="75325-1"
+                    codeSystem="2.16.840.1.113883.6.1"
+                    codeSystemName="LOINC" displayName="SYMPTOM">
+                    <translation code="418799008"
+                      codeSystem="2.16.840.1.113883.6.96"
+                      codeSystemName="SNOMED CT" displayName="SYMPTOM" />
+                  </code>
+                  <statusCode code="completed" />
+                  <effectiveTime>
+                    <low value="20250216" />
+                  </effectiveTime>
+                  <value code="186747009"
+                    codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT"
+                    displayName="Coronavirus infection (disorder)"
+                    sdtc:valueSet="2.16.840.1.114222.4.11.7508"
+                    sdtc:valueSetVersion="20200429" xsi:type="CD" />
                 </observation>
               </entryRelationship>
             </act>
