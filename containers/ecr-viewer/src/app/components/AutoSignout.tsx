@@ -18,7 +18,6 @@ const ACTIVE_EVENTS = ["click", "keydown", "scroll"];
 const WARNING_DURATION = 90;
 
 const signOutGoHome = () => signOut({ callbackUrl: "/ecr-viewer" });
-
 /**
  * Root layout for the view-data page
  * @returns laid out content
@@ -28,6 +27,7 @@ export const AutoSignout = () => {
   const [isActive, setIsActive] = useState(false);
   const [timeToExpireSecs, setTimeToExpireSecs] = useState(99999999999);
   const modalRef = useRef<ModalRef>(null);
+  console.log({ timeToExpireSecs, isActive, data });
 
   // flip isActive to true on an event that we mark as activity
   useEffect(() => {
