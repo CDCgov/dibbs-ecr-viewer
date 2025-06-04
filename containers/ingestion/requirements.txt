@@ -11,7 +11,7 @@ google-cloud-storage
 httpx
 phonenumbers
 polling
-pycountry
+pycountry>=24.6.1
 pydantic-settings
 pydantic>=2.0.0
 rapidfuzz
@@ -21,3 +21,4 @@ smartystreets_python_sdk
 typing_extensions>=4.8.0
 urllib3
 uvicorn
+h11>=0.16.0 # not directly required, pinned by Snyk to avoid a vulnerability

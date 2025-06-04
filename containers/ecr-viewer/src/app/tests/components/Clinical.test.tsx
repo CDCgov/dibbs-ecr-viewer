@@ -113,6 +113,7 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
       <ClinicalInfo
         clinicalNotes={[]}
         activeProblemsDetails={[]}
+        emergencyOutbreakInfo={[]}
         vitalData={[]}
         reasonForVisitDetails={[]}
         immunizationsDetails={[]}
@@ -145,6 +146,7 @@ describe("Snapshot test for Clinical Notes", () => {
       <ClinicalInfo
         clinicalNotes={clinicalNotes}
         activeProblemsDetails={[]}
+        emergencyOutbreakInfo={[]}
         vitalData={[]}
         reasonForVisitDetails={[]}
         immunizationsDetails={[]}
@@ -212,6 +214,7 @@ describe("Snapshot test for Clinical Notes", () => {
       <ClinicalInfo
         clinicalNotes={clinicalNotes}
         activeProblemsDetails={[]}
+        emergencyOutbreakInfo={[]}
         vitalData={[]}
         reasonForVisitDetails={[]}
         immunizationsDetails={[]}
@@ -235,6 +238,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
   const testReasonForVisitData =
     testClinicalData.reasonForVisitDetails.availableData;
   const testTreatmentData = testClinicalData.treatmentData.availableData;
+  const testOutbreakInfo = testClinicalData.emergencyOutbreakInfo.availableData;
 
   it("eCR Viewer renders immunization table given FHIR bundle with immunization info", () => {
     const clinicalInfo = render(
@@ -242,6 +246,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         immunizationsDetails={testImmunizationsData}
         reasonForVisitDetails={[]}
         activeProblemsDetails={[]}
+        emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
         clinicalNotes={[]}
@@ -266,6 +271,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         immunizationsDetails={[]}
         reasonForVisitDetails={[]}
         activeProblemsDetails={testActiveProblemsData}
+        emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
         clinicalNotes={[]}
@@ -288,6 +294,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         immunizationsDetails={[]}
         reasonForVisitDetails={[]}
         activeProblemsDetails={[]}
+        emergencyOutbreakInfo={[]}
         vitalData={testVitalSignsData}
         treatmentData={[]}
         clinicalNotes={[]}
@@ -326,6 +333,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         immunizationsDetails={[]}
         reasonForVisitDetails={testReasonForVisitData}
         activeProblemsDetails={[]}
+        emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
         clinicalNotes={[]}
@@ -343,6 +351,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         immunizationsDetails={[]}
         reasonForVisitDetails={[]}
         activeProblemsDetails={[]}
+        emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={testTreatmentData}
         clinicalNotes={[]}
@@ -358,12 +367,31 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     expect(expectedTable.length).toEqual(4);
   });
 
+  it("eCR Viewer renders emergency outbreak info given FHIR bundle with emergency outbreak info", () => {
+    const clinicalInfo = render(
+      <ClinicalInfo
+        immunizationsDetails={[]}
+        reasonForVisitDetails={[]}
+        activeProblemsDetails={[]}
+        emergencyOutbreakInfo={testOutbreakInfo}
+        vitalData={[]}
+        treatmentData={[]}
+        clinicalNotes={[]}
+      />,
+    );
+    const expectedEmergencyOutbreakElement = clinicalInfo.getByTestId(
+      "emergency-outbreak-info",
+    );
+    expect(expectedEmergencyOutbreakElement).toBeInTheDocument();
+  });
+
   it("eCR Viewer renders all Clinical Info sections", () => {
     const clinicalInfo = render(
       <ClinicalInfo
         immunizationsDetails={testImmunizationsData}
         reasonForVisitDetails={testReasonForVisitData}
         activeProblemsDetails={testActiveProblemsData}
+        emergencyOutbreakInfo={[]}
         vitalData={testVitalSignsData}
         treatmentData={testTreatmentData}
         clinicalNotes={[]}
