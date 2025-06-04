@@ -13,10 +13,7 @@ import {
 
 let clicked = false;
 const SidePanel = (
-  props: Omit<
-    React.ComponentProps<typeof DetailsSidePanel>,
-    "detailsRef" | "title" | "subtitle" | "itemType" | "details"
-  >,
+  props: Pick<React.ComponentProps<typeof DetailsSidePanel>, "deleteAction">,
 ) => {
   const detailsRef = useDetailsRef();
 
@@ -36,6 +33,14 @@ const SidePanel = (
         subtitle="Subtitle"
         itemType="item"
         details={[{ title: "detail 1", value: <p>Hi there</p> }]}
+        deleteExplainerText="I will really be deleted"
+        deleteModalTitle="Delete me?"
+        deleteModalBody={
+          <>
+            <p>Really?</p>
+            <p>Me?</p>
+          </>
+        }
         {...props}
       />
       ,
@@ -50,8 +55,10 @@ describe("DetailsSidePanel", () => {
       refresh: mockReload,
     });
 
-    const { unmount } = render(<SidePanel />);
-    expect(screen.getByRole("dialog")).not.toHaveClass("is-visible");
+    const { unmount } = render(<SidePanel deleteAction={async () => ({})} />);
+    screen
+      .getAllByRole("dialog")
+      .forEach((el) => expect(el).not.toHaveClass("is-visible"));
 
     const firstTrigger = screen.getByRole("button", { name: "Click me" });
     expect(firstTrigger).toBeInTheDocument();
@@ -70,7 +77,9 @@ describe("DetailsSidePanel", () => {
     expect(close).toHaveFocus();
     await user.click(close);
 
-    expect(screen.getByRole("dialog")).not.toHaveClass("is-visible");
+    screen
+      .getAllByRole("dialog")
+      .forEach((el) => expect(el).not.toHaveClass("is-visible"));
     expect(firstTrigger).toHaveFocus();
     expect(document.querySelector("body")).not.toHaveAttribute(
       "data-modal-count",
@@ -88,14 +97,6 @@ describe("DetailsSidePanel", () => {
           deleted = true;
           return {};
         }}
-        deleteExplainerText="I will really be deleted"
-        deleteModalTitle="Delete me?"
-        deleteModalBody={
-          <>
-            <p>Really?</p>
-            <p>Me?</p>
-          </>
-        }
       />,
     );
     screen
@@ -113,7 +114,7 @@ describe("DetailsSidePanel", () => {
     expect(await axe(document.querySelector("body")!)).toHaveNoViolations();
 
     // Open delete confirmation modal
-    const deleteButton = screen.getByRole("button", { name: "Delete item" });
+    const deleteButton = screen.getByRole("button", { name: "Remove item" });
     await user.click(deleteButton);
 
     const modals = screen.queryAllByRole("dialog", { hidden: true });
@@ -161,7 +162,7 @@ describe("DetailsSidePanel", () => {
     expect(await axe(document.querySelector("body")!)).toHaveNoViolations();
 
     const confirmButton = screen.getByRole("button", {
-      name: "Yes, delete item",
+      name: "Yes, remove item",
     });
     await user.click(confirmButton);
 

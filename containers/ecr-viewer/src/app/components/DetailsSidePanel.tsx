@@ -105,9 +105,9 @@ export const DetailsSidePanel = ({
   subtitle: string;
   editHref?: string;
   itemType: string;
-  deleteAction?: () => Promise<ServerActionResult<void>>;
-  deleteExplainerText?: string;
-  deleteModalTitle?: string;
+  deleteAction: () => Promise<ServerActionResult<void>>;
+  deleteExplainerText: string;
+  deleteModalTitle: string;
   deleteModalBody?: ReactNode;
 }) => {
   const id = useId();
@@ -162,58 +162,55 @@ export const DetailsSidePanel = ({
             </dl>
           </section>
         </div>
-        {deleteAction && (
-          <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
-            <div>
-              <h3 className="margin-top-0">Delete {itemType}</h3>
-              <p>{deleteExplainerText}</p>
-            </div>
-            <div>
-              <ModalToggleButton
-                type="button"
-                outline={true}
-                modalRef={confirmRef}
-                className="text-no-wrap"
-                opener={true}
-                closer={false}
-              >
-                Delete {itemType}
-              </ModalToggleButton>
-            </div>
-          </ModalFooter>
-        )}
+        <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
+          <div>
+            <h3 className="margin-top-0">Remove {itemType}</h3>
+            <p>{deleteExplainerText}</p>
+          </div>
+          <div>
+            <ModalToggleButton
+              type="button"
+              outline={true}
+              modalRef={confirmRef}
+              className="text-no-wrap"
+              opener={true}
+              closer={false}
+            >
+              Remove {itemType}
+            </ModalToggleButton>
+          </div>
+        </ModalFooter>
       </Modal>
 
       {/* NOTE: order is important here so the confirmation goes on top of the side panel*/}
-      {deleteAction && (
-        <Modal
-          id={`delete-confirm-${id}`}
-          className="delete-confirm-modal"
-          ref={confirmRef}
-          aria-labelledby={`delete-confirm-${id}-heading`}
-          aria-describedby={`delete-confirm-${id}-description`}
+      <Modal
+        id={`delete-confirm-${id}`}
+        className="delete-confirm-modal"
+        ref={confirmRef}
+        aria-labelledby={`delete-confirm-${id}-heading`}
+        aria-describedby={`delete-confirm-${id}-description`}
+      >
+        <ModalHeading id={`delete-confirm-${id}-heading`}>
+          {deleteModalTitle}
+        </ModalHeading>
+        {deleteModalBody}
+
+        <ConfirmationFooter
+          modalRef={confirmRef}
+          onConfirm={async () => {
+            const res = await deleteAction();
+            detailsRef.current?.toggleModal(undefined, false);
+            if (res.error) {
+              createToast(res.error, "error");
+            } else {
+              createToast(`${title} succesfully removed`, "success");
+            }
+            router.refresh();
+          }}
         >
-          <ModalHeading id={`delete-confirm-${id}-heading`}>
-            {deleteModalTitle}
-          </ModalHeading>
-          {deleteModalBody}
-          <ConfirmationFooter
-            modalRef={confirmRef}
-            onConfirm={async () => {
-              const res = await deleteAction();
-              detailsRef.current?.toggleModal(undefined, false);
-              if (res.error) {
-                createToast(res.error, "error");
-              } else {
-                createToast(`${title} succesfully deleted`, "success");
-              }
-              router.refresh();
-            }}
-          >
-            Yes, delete {itemType}
-          </ConfirmationFooter>
-        </Modal>
-      )}
+          Yes, remove {itemType}
+        </ConfirmationFooter>
+      </Modal>
     </>
   );
 };
