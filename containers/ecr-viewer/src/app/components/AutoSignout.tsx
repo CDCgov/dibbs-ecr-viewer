@@ -11,37 +11,42 @@ import { signOut, useSession } from "next-auth/react";
 
 import Modal, { ModalRef } from "./modal/Modal";
 
-const events = ["click", "scroll", "keypress"];
+// Events we consider "activity" to keep the session alive
+const ACTIVE_EVENTS = ["click", "keypress", "scroll"];
 
+// Seconds out from session expiration at which we'll warn the user
 const WARNING_DURATION = 90;
+
+const signOutGoHome = () => signOut({ callbackUrl: "/ecr-viewer" });
 
 /**
  * Root layout for the view-data page
  * @returns laid out content
  */
 export const AutoSignout = () => {
-  const { update, data, status } = useSession();
+  const { update, data } = useSession();
   const [isActive, setIsActive] = useState(false);
   const [timeToExpireSecs, setTimeToExpireSecs] = useState(99999999999);
+  const modalRef = useRef<ModalRef>(null);
 
-  // update lastActive state
+  // delay session update to make sure original action (e.g. signout) happens first
+  const updateInASec = () => setTimeout(update, 1000);
+
+  // flip isActive to true on an event that we mark as activity
   useEffect(() => {
     if (isActive) return;
 
-    const updateActive = () => {
-      setIsActive(true);
-    };
+    const updateActive = () => setIsActive(true);
 
-    events.forEach((e) => window.addEventListener(e, updateActive));
+    ACTIVE_EVENTS.forEach((e) => window.addEventListener(e, updateActive));
     return () =>
-      events.forEach((e) => window.removeEventListener(e, updateActive));
+      ACTIVE_EVENTS.forEach((e) => window.removeEventListener(e, updateActive));
   }, [isActive]);
 
   // refresh session if becomes active and then don't allow checking activity for 30 seconds
   useEffect(() => {
     if (isActive) {
-      // delay session update to make sure original action (e.g. signout) happens first
-      setTimeout(update, 1000);
+      updateInASec();
       const t = setTimeout(() => {
         setIsActive(false);
       }, 30 * 1000);
@@ -50,10 +55,10 @@ export const AutoSignout = () => {
     }
   }, [isActive]);
 
-  // Session has expired
+  // Keep track of seconds left until the session expires
   useEffect(() => {
     if (data?.expires) {
-      const expires = new Date(data?.expires);
+      const expires = new Date(data.expires);
       const ttExpire = Math.floor((expires.valueOf() - Date.now()) / 1000);
       setTimeToExpireSecs(ttExpire);
 
@@ -62,23 +67,18 @@ export const AutoSignout = () => {
         () => setTimeToExpireSecs((prior) => prior - 1),
         1000,
       );
-      return () => {
-        clearInterval(i);
-      };
+      return () => clearInterval(i);
     }
   }, [data]);
 
-  // Sign out
+  // Sign out and clear modal if needed
   useEffect(() => {
-    if (timeToExpireSecs < 0) signOut({ callbackUrl: `/ecr-viewer` });
+    if (timeToExpireSecs < 0) signOutGoHome();
     if (modalRef.current?.modalIsOpen && timeToExpireSecs > WARNING_DURATION) {
       modalRef.current.toggleModal();
     }
   }, [timeToExpireSecs]);
 
-  const modalRef = useRef<ModalRef>(null);
-
-  console.log({ data, status });
   return (
     timeToExpireSecs < WARNING_DURATION && (
       <Modal
@@ -87,7 +87,7 @@ export const AutoSignout = () => {
         id="session-expiring"
         aria-labelledby="session-expiring-heading"
         aria-describedby="session-expiring-description"
-        onClose={() => setTimeout(update, 1000)}
+        onClose={updateInASec}
       >
         <ModalHeading id="session-expiring-heading">
           Session about to expire
@@ -113,7 +113,7 @@ export const AutoSignout = () => {
               closer={true}
               outline={true}
               className="padding-105"
-              onClick={() => signOut({ callbackUrl: `/ecr-viewer` })}
+              onClick={signOutGoHome}
             >
               Sign out
             </ModalToggleButton>
