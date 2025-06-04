@@ -34,12 +34,12 @@ export default function RootLayout({
           <div className="position-relative isolate">
             <AuthSessionProvider>
               <ToastProvider>
-              <Header>
-                <NavLinks />
-              </Header>
+                <Header>
+                  <NavLinks />
+                </Header>
                 {children}
                 <ToastShelf />
-              <Footer />
+                <Footer />
               </ToastProvider>
             </AuthSessionProvider>
           </div>
