@@ -33,14 +33,14 @@ export default function RootLayout({
         <body className="overflow-x-auto">
           <div className="position-relative isolate">
             <AuthSessionProvider>
+              <ToastProvider>
               <Header>
                 <NavLinks />
               </Header>
-              <ToastProvider>
                 {children}
                 <ToastShelf />
-              </ToastProvider>
               <Footer />
+              </ToastProvider>
             </AuthSessionProvider>
           </div>
         </body>

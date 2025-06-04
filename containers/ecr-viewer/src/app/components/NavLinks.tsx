@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getLoggedInUser, isAdmin } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
@@ -20,19 +22,19 @@ const NavLinks = async () => {
       {isAdmin(dbUser) && (
         <ul className="usa-nav__primary usa-accordion">
           <li className="usa-nav__primary-item">
-            <a href="/ecr-viewer" className="usa-nav__link">
+            <Link href="/" className="usa-nav__link">
               eCR library
-            </a>
+            </Link>
           </li>
           <li className="usa-nav__primary-item">
-            <a href="/ecr-viewer/admin/user" className="usa-nav__link">
+            <Link href="/admin/user" className="usa-nav__link">
               User management
-            </a>
+            </Link>
           </li>
           <li className="usa-nav__primary-item">
-            <a href="/ecr-viewer/admin/program" className="usa-nav__link">
+            <Link href="/admin/program" className="usa-nav__link">
               Program management
-            </a>
+            </Link>
           </li>
         </ul>
       )}
