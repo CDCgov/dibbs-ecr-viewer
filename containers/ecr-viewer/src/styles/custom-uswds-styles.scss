@@ -130,9 +130,9 @@
     color: color("blue-cool-5") !important;
   }
 
-    .usa-nav__link:hover::after {
-      background-color: color("blue-cool-30");
-    }
+  .usa-nav__link:hover::after {
+    background-color: color("blue-cool-30");
+  }
 
   .usa-nav-container {
     height: 2.5rem;
@@ -144,15 +144,13 @@
   }
 
   @media (max-width: 64em) {
-  .usa-nav-container {
+    .usa-nav-container {
       align-items: flex-end;
       justify-content: space-between;
       display: flex;
-      margin: 0 clamp(.1rem, 6.25vw, 4rem) 1.5rem clamp(.1rem, 6.25vw, 4rem);
+      margin: 0 clamp(0.1rem, 6.25vw, 4rem) 1.5rem clamp(0.1rem, 6.25vw, 4rem);
     }
   }
-
-
 
   h1 {
     font-family: var(--font-serif);
@@ -203,8 +201,8 @@
 
     .user-email {
       color: color("ink") !important;
-      margin: .7rem 0 0.6rem 0;
-      padding-top: .1rem;
+      margin: 0.7rem 0 0.6rem 0;
+      padding-top: 0.1rem;
       font-size: 1.125rem;
       font-weight: 700;
       white-space: nowrap;

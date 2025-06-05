@@ -21,15 +21,15 @@ const NavLinks = async () => {
     <div className="display-flex flex-row">
       {isAdmin(dbUser) && (
         <div className="display-flex flex-row">
-            <Link href="/" className="usa-nav__link">
-              eCR library
-            </Link>
-            <Link href="/admin/user" className="usa-nav__link">
-              User management
-            </Link>
-            <Link href="/admin/program" className="usa-nav__link">
-              Program management
-            </Link>
+          <Link href="/" className="usa-nav__link">
+            eCR library
+          </Link>
+          <Link href="/admin/user" className="usa-nav__link">
+            User management
+          </Link>
+          <Link href="/admin/program" className="usa-nav__link">
+            Program management
+          </Link>
         </div>
       )}
       <UserMenu user={dbUser || sessionUser} />
