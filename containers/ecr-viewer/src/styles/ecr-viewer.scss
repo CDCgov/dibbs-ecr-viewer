@@ -20,6 +20,10 @@ main {
 
 // ===== Page styling ===== //
 
+.minw-49rem {
+  min-width: 49rem;
+}
+
 .ecr-viewer-container {
   width: 100%;
   max-width: $content-container-max-width;

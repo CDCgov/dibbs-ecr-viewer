@@ -101,11 +101,6 @@
   margin-top: 0;
   padding-top: 1.5rem;
 
-  .usa-nav {
-    height: 2.5rem;
-    padding: 0;
-  }
-
   .usa-navbar {
     border-bottom: none;
   }
@@ -113,6 +108,9 @@
   .usa-nav__link {
     padding: 1rem 0.5rem !important;
     margin: 0 0.5rem;
+    height: 2.2rem;
+    text-decoration: none;
+    min-width: fit-content;
   }
 
   .usa-logo {
@@ -132,11 +130,9 @@
     color: color("blue-cool-5") !important;
   }
 
-  @media (min-width: 64em) {
     .usa-nav__link:hover::after {
       background-color: color("blue-cool-30");
     }
-  }
 
   .usa-nav-container {
     height: 2.5rem;
@@ -146,6 +142,17 @@
       content: none;
     }
   }
+
+  @media (max-width: 64em) {
+  .usa-nav-container {
+      align-items: flex-end;
+      justify-content: space-between;
+      display: flex;
+      margin: 0 clamp(.1rem, 6.25vw, 4rem) 1.5rem clamp(.1rem, 6.25vw, 4rem);
+    }
+  }
+
+
 
   h1 {
     font-family: var(--font-serif);
@@ -196,7 +203,8 @@
 
     .user-email {
       color: color("ink") !important;
-      margin: 0 0 0.6rem 0;
+      margin: .7rem 0 0.6rem 0;
+      padding-top: .1rem;
       font-size: 1.125rem;
       font-weight: 700;
       white-space: nowrap;
@@ -206,8 +214,9 @@
       color: color("base") !important;
       border-bottom: 1px solid color("gray-30");
       font-size: 1.125rem;
-      padding-bottom: 1rem;
-      margin: 0 0 1rem 0;
+      padding-top: 1rem;
+      padding-bottom: 1.2rem;
+      margin: 0rem 0 1rem 0;
     }
   }
 

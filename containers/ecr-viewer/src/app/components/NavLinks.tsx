@@ -18,25 +18,19 @@ const NavLinks = async () => {
   const dbUser = await getLoggedInUser();
 
   return (
-    <div className="usa-nav display-flex flex-row ">
+    <div className="display-flex flex-row">
       {isAdmin(dbUser) && (
-        <ul className="usa-nav__primary usa-accordion">
-          <li className="usa-nav__primary-item">
+        <div className="display-flex flex-row">
             <Link href="/" className="usa-nav__link">
               eCR library
             </Link>
-          </li>
-          <li className="usa-nav__primary-item">
             <Link href="/admin/user" className="usa-nav__link">
               User management
             </Link>
-          </li>
-          <li className="usa-nav__primary-item">
             <Link href="/admin/program" className="usa-nav__link">
               Program management
             </Link>
-          </li>
-        </ul>
+        </div>
       )}
       <UserMenu user={dbUser || sessionUser} />
     </div>

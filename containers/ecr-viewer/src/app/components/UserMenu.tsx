@@ -69,15 +69,9 @@ const UserMenu = ({
       </button>
       {showMenu && (
         <div ref={menuRef} className="user-menu">
-          <div className="menu-items-container">
-            <div>
               <p className="user-email">{user.email}</p>
               <p className="user-role">{toSentenceCase(user.user_type)}</p>
-            </div>
-            <div>
               <SignOutButton />
-            </div>
-          </div>
         </div>
       )}
     </div>
