@@ -132,6 +132,8 @@
 
   .usa-nav__link:hover::after {
     background-color: color("blue-cool-30");
+    width: 91%;
+    left: .5rem;
   }
 
   .usa-nav-container {
