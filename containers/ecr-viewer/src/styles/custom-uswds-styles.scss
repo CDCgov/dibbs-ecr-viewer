@@ -233,6 +233,11 @@
     background-color: color("blue-cool-80");
   }
 
+  .footer-content {
+    margin: 0 5rem 1.25rem 5rem;
+    height: 3rem;
+  }
+
   p {
     font-weight: 400;
     color: color("blue-cool-5");
@@ -242,9 +247,9 @@
     font-weight: 700;
     color: color("blue-cool-5");
   }
-  .footer-content {
-    margin: 0 5rem 1.25rem 5rem;
-    height: 3rem;
+
+  img {
+    min-width: 12.875rem;
   }
 }
 
