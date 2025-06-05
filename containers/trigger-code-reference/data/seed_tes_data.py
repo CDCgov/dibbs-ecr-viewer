@@ -24,6 +24,9 @@ _TES_HEADER = {"X-API-KEY": _TES_API_KEY}
 _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
 
+# Update this with the latest version of value sets on TES available
+_VERSION = sys.argv[1]
+
 _DB_URL = "sqlite:///tes.db"
 _DEBUG = True  # Set this to True if you'd like to see DB migration output
 
@@ -210,6 +213,7 @@ def _fetch_conditions_bundle(current_iteration: int) -> Bundle:
         _TES_API_URL,
         params={
             "context-type": f"{_CONTEXT_SYSTEM}|{_CONTEXT_CODE}",
+            "version": _VERSION,
             "_getpagesoffset": current_iteration * _BATCH_SIZE,
             "_count": _BATCH_SIZE,
         },

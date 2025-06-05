@@ -74,11 +74,15 @@ class Condition(SQLModel, table=True):
         Two conditions are equal if they have the same code and system
         """
         if isinstance(other, self.__class__):
-            return self.code == other.code and self.system == other.system
+            return (
+                self.code == other.code
+                and self.system == other.system
+                and self.version == other.version
+            )
         return NotImplemented
 
     def __hash__(self):
         """
         Hashes the condition based on the code and system
         """
-        return hash((self.code, self.system))
+        return hash((self.code, self.system, self.version))
