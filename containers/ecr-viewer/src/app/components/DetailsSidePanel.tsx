@@ -7,6 +7,7 @@ import {
   ModalToggleButton,
 } from "@trussworks/react-uswds";
 import classnames from "classnames";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { ServerActionResult } from "@/app/services/errorService";
@@ -78,6 +79,7 @@ interface Detail {
  * @param props.title Title of the side panel (usually the subject)
  * @param props.subtitle Subtitle of the side panel (such as logged in date)
  * @param props.detailsRef Ref linking the trigger(s) and panel - see `useDetailsRef`
+ * @param props.editHref Link to the edit page for this item
  * @param props.itemType string describing item type of details (e.g. "user")
  * @param props.deleteAction Optional function to handle deleting the item. Adds delete button if available
  * @param props.deleteExplainerText Optional text to explain implications of deleting the item
@@ -90,6 +92,7 @@ export const DetailsSidePanel = ({
   details,
   title,
   subtitle,
+  editHref,
   itemType,
   deleteAction,
   deleteExplainerText,
@@ -100,10 +103,11 @@ export const DetailsSidePanel = ({
   details: Detail[];
   title: string;
   subtitle: string;
+  editHref?: string;
   itemType: string;
-  deleteAction?: () => Promise<ServerActionResult<void>>;
-  deleteExplainerText?: string;
-  deleteModalTitle?: string;
+  deleteAction: () => Promise<ServerActionResult<void>>;
+  deleteExplainerText: string;
+  deleteModalTitle: string;
   deleteModalBody?: ReactNode;
 }) => {
   const id = useId();
@@ -132,9 +136,21 @@ export const DetailsSidePanel = ({
           </div>
 
           <section>
-            <h3 id={`details-sidepanel-${id}-description`}>
-              {toSentenceCase(itemType)} information
-            </h3>
+            <div className="display-flex flex-justify flex-align-center">
+              <h3 id={`details-sidepanel-${id}-description`}>
+                {toSentenceCase(itemType)} information
+              </h3>
+              {!!editHref && (
+                <div>
+                  <Link
+                    href={editHref}
+                    className="usa-button usa-button--outline"
+                  >
+                    Edit {itemType}
+                  </Link>
+                </div>
+              )}
+            </div>
 
             <dl>
               {details.map(({ title, value }, i) => (
@@ -146,59 +162,55 @@ export const DetailsSidePanel = ({
             </dl>
           </section>
         </div>
-        {deleteAction && (
-          <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
-            <div>
-              <h3 className="margin-top-0">Delete {itemType}</h3>
-              <p>{deleteExplainerText}</p>
-            </div>
-            <div>
-              <ModalToggleButton
-                type="button"
-                outline={true}
-                modalRef={confirmRef}
-                className="text-no-wrap"
-                opener={true}
-                closer={false}
-              >
-                Delete {itemType}
-              </ModalToggleButton>
-            </div>
-          </ModalFooter>
-        )}
+        <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
+          <div>
+            <h3 className="margin-top-0">Remove {itemType}</h3>
+            <p>{deleteExplainerText}</p>
+          </div>
+          <div>
+            <ModalToggleButton
+              type="button"
+              outline={true}
+              modalRef={confirmRef}
+              className="text-no-wrap"
+              opener={true}
+              closer={false}
+            >
+              Remove {itemType}
+            </ModalToggleButton>
+          </div>
+        </ModalFooter>
       </Modal>
 
       {/* NOTE: order is important here so the confirmation goes on top of the side panel*/}
-      {deleteAction && (
-        <Modal
-          id={`delete-confirm-${id}`}
-          className="delete-confirm-modal"
-          ref={confirmRef}
-          aria-labelledby={`delete-confirm-${id}-heading`}
-          aria-describedby={`delete-confirm-${id}-description`}
-        >
-          <ModalHeading id={`delete-confirm-${id}-heading`}>
-            {deleteModalTitle}
-          </ModalHeading>
-          {deleteModalBody}
+      <Modal
+        id={`delete-confirm-${id}`}
+        className="delete-confirm-modal"
+        ref={confirmRef}
+        aria-labelledby={`delete-confirm-${id}-heading`}
+        aria-describedby={`delete-confirm-${id}-description`}
+      >
+        <ModalHeading id={`delete-confirm-${id}-heading`}>
+          {deleteModalTitle}
+        </ModalHeading>
+        {deleteModalBody}
 
-          <ConfirmationFooter
-            modalRef={confirmRef}
-            onConfirm={async () => {
-              const res = await deleteAction();
-              detailsRef.current?.toggleModal(undefined, false);
-              if (res.error) {
-                createToast(res.error, "error");
-              } else {
-                createToast(`${title} succesfully deleted`, "success");
-              }
-              router.refresh();
-            }}
-          >
-            Yes, delete {itemType}
-          </ConfirmationFooter>
-        </Modal>
-      )}
+        <ConfirmationFooter
+          modalRef={confirmRef}
+          onConfirm={async () => {
+            const res = await deleteAction();
+            detailsRef.current?.toggleModal(undefined, false);
+            if (res.error) {
+              createToast(res.error, "error");
+            } else {
+              createToast(`${title} succesfully removed`, "success");
+            }
+            router.refresh();
+          }}
+        >
+          Yes, remove {itemType}
+        </ConfirmationFooter>
+      </Modal>
     </>
   );
 };

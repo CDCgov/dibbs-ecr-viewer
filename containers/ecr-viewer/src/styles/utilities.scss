@@ -53,10 +53,22 @@
   height: 50vh;
 }
 
+// ==== isolation ==== //
+
+.isolate {
+  isolation: isolate;
+}
+
 // ==== left ==== //
 
 .left-12 {
   left: 6rem;
+}
+
+// ==== line height ==== //
+
+.line-height-13 {
+  line-height: 1.3;
 }
 
 // ==== margin ==== //

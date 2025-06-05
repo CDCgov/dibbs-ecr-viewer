@@ -68,12 +68,13 @@ export const ProgramTable = ({
         subtitle={`Created on ${formatDateTime(
           selectedProgramArea?.date_created.toISOString(),
         )}`}
+        editHref={`/admin/program/edit?uuid=${selectedProgramArea?.uuid}`}
         itemType="program area"
         deleteAction={async () =>
           await deleteAction(selectedProgramArea?.uuid!)
         }
-        deleteExplainerText="When you delete this program area, the program area will not be available in the eCR library for standard users."
-        deleteModalTitle={`Delete ${selectedProgramArea?.name}`}
+        deleteExplainerText="When you remove this program area, the program area will not be available in the eCR library for standard users."
+        deleteModalTitle={`Remove ${selectedProgramArea?.name}`}
         details={[
           {
             title: "Name",
@@ -87,7 +88,9 @@ export const ProgramTable = ({
               ) : (
                 <ul className="add-list-reset">
                   {selectedProgramArea?.conditions
-                    .sort()
+                    .sort((a, b) =>
+                      a.condition_name < b.condition_name ? -1 : 1,
+                    )
                     .map(({ condition_name, code }) => (
                       <li
                         key={code}
