@@ -3,4 +3,4 @@ fhirpathpy
 pathlib
 pydantic>=2.0.0
 requests
-uvicorn
+uvicorn>=0.34.3

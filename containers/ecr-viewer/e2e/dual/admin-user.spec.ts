@@ -20,7 +20,9 @@ test.describe("user management page", () => {
 
     // open up side panel
     await page.getByText("ecr-viewer@admin.com").click();
-    await expect(page.getByText("Ecr Admin")).toHaveCount(2);
+    await expect(
+      page.getByRole("heading", { name: "Ecr Admin" }),
+    ).toBeVisible();
 
     const accessibilityScanResultsSidePanel = await new AxeBuilder({
       page,
@@ -84,6 +86,19 @@ test.describe("user management page", () => {
     await expect(page.getByText(program1)).toBeVisible();
     await expect(page.getByText(program2)).not.toBeVisible();
 
+    // Delete the user
+    await page.getByRole("button", { name: email }).click();
+    await expect(page.getByText("User information")).toBeVisible();
+
+    await page.getByRole("button", { name: "Remove user" }).click();
+    await expect(page.getByText(`Remove ${email}`)).toBeVisible();
+
+    await page.getByRole("button", { name: "Yes, remove user" }).click();
+    await expect(page.getByText(`${email} succesfully removed`)).toBeVisible();
+
+    // Dismiss any toasts
+    await page.keyboard.press("Escape");
+
     await deleteProgramArea(page, program1);
     await deleteProgramArea(page, program2);
   });
@@ -113,6 +128,6 @@ const deleteProgramArea = async (page: Page, program: string) => {
   await page.goto("/ecr-viewer/admin/program");
   await page.getByLabel("Program areas per page").selectOption("100");
   await page.getByRole("button", { name: program }).click();
-  await page.getByRole("button", { name: "Delete program area" }).click();
-  await page.getByRole("button", { name: "Yes, delete program area" }).click();
+  await page.getByRole("button", { name: "Remove program area" }).click();
+  await page.getByRole("button", { name: "Yes, remove program area" }).click();
 };

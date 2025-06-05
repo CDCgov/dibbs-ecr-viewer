@@ -153,19 +153,19 @@ test.describe("program management page", () => {
     await page.getByRole("button", { name: newConditionName }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
-    await page.getByRole("button", { name: "Delete program area" }).click();
-    await expect(page.getByText(`Delete ${newConditionName}`)).toBeVisible();
+    await page.getByRole("button", { name: "Remove program area" }).click();
+    await expect(page.getByText(`Remove ${newConditionName}`)).toBeVisible();
 
     const accessibilityScanResultsConfirmation = await axe.analyze();
     expect(accessibilityScanResultsConfirmation.violations).toEqual([]);
 
     await page
-      .getByRole("button", { name: "Yes, delete program area" })
+      .getByRole("button", { name: "Yes, remove program area" })
       .click();
     await expect(page.locator("body")).not.toHaveAttribute("data-modal-count");
 
     await expect(
-      page.getByText(`${newConditionName} succesfully deleted`),
+      page.getByText(`${newConditionName} succesfully removed`),
     ).toBeVisible();
 
     // Dismiss any toasts

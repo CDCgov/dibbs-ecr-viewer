@@ -94,7 +94,7 @@ export type PathTypes = {
   facilityAddress: Address;
   facilityType: ValueX;
   compositionEncounterRef: string;
-  encounterIndividualRef: string;
+  encounterAttendingRefs: EncounterParticipant;
   encounterParticipants: EncounterParticipant;
   rrDetails: Observation;
   clinicalReasonForVisit: ValueX;
@@ -399,9 +399,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
   },
-  encounterIndividualRef: {
-    type: "string",
-    path: "Encounter.participant.where(type.coding.code = 'ATND').individual.reference",
+  encounterAttendingRefs: {
+    type: "EncounterParticipant",
+    path: "Encounter.participant.where(type.coding.code = 'ATND')",
   },
   encounterParticipants: {
     type: "EncounterParticipant",

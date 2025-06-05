@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { Bundle } from "fhir/r4";
+import { Bundle, BundleEntry, Practitioner } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
@@ -26,6 +26,7 @@ import {
   evaluateOccupation,
   evaluateOccupationHistory,
   evaluateHospitalEncounterData,
+  evaluateProviderData,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -116,6 +117,39 @@ Home: 123-456-6909`,
       );
 
       expect(actual).toMatchSnapshot();
+    });
+  });
+
+  describe("evaluateProviderData", () => {
+    it("should return the responsible party", () => {
+      const actual = evaluateProviderData(BundlePatientWithCovid);
+      expect(actual.availableData[0].value).toStrictEqual(
+        "Dr. Royce Hemlock MD, GCS",
+      );
+    });
+    it("should return unavailable if no responsible party", () => {
+      const practitionerUrl = "urn:uuid:bfac23db-1743-b679-f23e-0fe21c335c9b";
+      const practitioner = BundlePatientWithCovid?.entry?.find(
+        (e) => e.fullUrl === practitionerUrl,
+      ) as BundleEntry<Practitioner>;
+      const bundle: Bundle = {
+        ...BundlePatientWithCovid,
+        entry: [
+          ...(BundlePatientWithCovid?.entry?.filter(
+            (e) => e.fullUrl !== practitionerUrl,
+          ) || []),
+          {
+            ...practitioner,
+            resource: {
+              ...practitioner.resource!,
+              extension: undefined,
+            },
+          },
+        ],
+      };
+      const actual = evaluateProviderData(bundle);
+      expect(actual.availableData).toBeEmpty();
+      expect(actual.unavailableData).toBeArrayOfSize(6);
     });
   });
 

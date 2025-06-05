@@ -73,8 +73,8 @@ export const ProgramTable = ({
         deleteAction={async () =>
           await deleteAction(selectedProgramArea?.uuid!)
         }
-        deleteExplainerText="When you delete this program area, the program area will not be available in the eCR library for standard users."
-        deleteModalTitle={`Delete ${selectedProgramArea?.name}`}
+        deleteExplainerText="When you remove this program area, the program area will not be available in the eCR library for standard users."
+        deleteModalTitle={`Remove ${selectedProgramArea?.name}`}
         details={[
           {
             title: "Name",
