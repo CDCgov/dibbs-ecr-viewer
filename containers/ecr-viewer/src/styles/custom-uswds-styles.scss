@@ -93,10 +93,6 @@
   align-items: center;
 }
 
-.header-z-index {
-  z-index: 10;
-}
-
 .usa-header {
   background-color: color("blue-cool-80");
   color: white;
@@ -152,7 +148,7 @@
   }
 
   h1 {
-    font-family: "Merriweather", serif;
+    font-family: var(--font-serif);
     font-style: normal;
     font-size: 2rem;
     margin: 0;

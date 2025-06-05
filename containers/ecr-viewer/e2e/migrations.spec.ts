@@ -32,7 +32,7 @@ test.describe("migrations", () => {
     await expect(
       page.getByText("eCR Viewer setup is incomplete"),
     ).toBeVisible();
-    await expect(page.getByTestId("ecr-library-header")).not.toBeVisible();
+    await expect(page.getByText("eCR Library")).not.toBeVisible();
 
     const noSecret = await request.post(`/ecr-viewer/api/migrate-db`, {
       headers,
@@ -69,7 +69,7 @@ test.describe("migrations", () => {
     await expect(
       page.getByText("eCR Viewer setup is incomplete"),
     ).not.toBeVisible();
-    await expect(page.getByTestId("ecr-library-header")).toBeVisible();
+    await expect(page.getByText("eCR Library")).toBeVisible();
 
     const down = await request.post(`/ecr-viewer/api/migrate-db`, {
       form: toForm({ migration_secret: "test", direction: "down" }),
@@ -84,6 +84,6 @@ test.describe("migrations", () => {
     await expect(
       page.getByText("eCR Viewer setup is incomplete"),
     ).toBeVisible();
-    await expect(page.getByTestId("ecr-library-header")).not.toBeVisible();
+    await expect(page.getByText("eCR Library")).not.toBeVisible();
   });
 });

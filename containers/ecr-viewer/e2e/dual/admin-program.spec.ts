@@ -9,7 +9,7 @@ test.describe("program management page", () => {
   test("should pass accessiblity", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/program");
 
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Program management' })).toBeVisible();
 
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
@@ -20,7 +20,7 @@ test.describe("program management page", () => {
   test("should create a program", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/program");
 
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Program management' })).toBeVisible();
 
     await page.getByText("Create program area").click();
 
@@ -54,7 +54,7 @@ test.describe("program management page", () => {
       .click();
 
     await page.waitForURL("/ecr-viewer/admin/program");
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Program management' })).toBeVisible();
 
     await expect(page.getByRole("cell", { name: conditionName })).toBeVisible();
     await expect(
@@ -132,7 +132,7 @@ test.describe("program management page", () => {
       .click();
 
     await page.waitForURL("/ecr-viewer/admin/program");
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Program management' })).toBeVisible();
 
     await expect(
       page.getByRole("cell", { name: newConditionName }),
