@@ -27,7 +27,6 @@ export const AutoSignout = () => {
   const [isActive, setIsActive] = useState(false);
   const [timeToExpireSecs, setTimeToExpireSecs] = useState(99999999999);
   const modalRef = useRef<ModalRef>(null);
-  console.log({ timeToExpireSecs, isActive, data });
 
   // flip isActive to true on an event that we mark as activity
   useEffect(() => {

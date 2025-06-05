@@ -1,6 +1,5 @@
-import { act, render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { useSession } from "next-auth/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { signOut, useSession } from "next-auth/react";
 
 import { AutoSignout } from "@/app/components/AutoSignout";
 
@@ -14,21 +13,30 @@ describe("AutoSignout", () => {
   afterEach(() => {
     jest.useRealTimers();
   });
-  it("updates session on activity", async () => {
+
+  it("updates session on activity", () => {
     const updateMock = jest.fn();
     (useSession as jest.Mock).mockReturnValue({
       update: updateMock,
       data: {
-        expires: new Date(Date.now() + 3000).toISOString(),
+        expires: new Date(Date.now() + 300000).toISOString(),
       },
     });
 
-    const { container } = render(<AutoSignout />);
+    render(
+      <div>
+        <button>click me</button>
+        <AutoSignout />
+      </div>,
+    );
+
+    // outside of warning period
+    expect(screen.getByRole("dialog")).toHaveClass("is-hidden");
 
     expect(updateMock).not.toHaveBeenCalled();
 
-    const user = userEvent.setup();
-    await user.click(container);
+    const button = screen.getByRole("button", { name: "click me" });
+    fireEvent.click(button);
 
     act(() => {
       jest.advanceTimersByTime(1100);
@@ -36,8 +44,7 @@ describe("AutoSignout", () => {
 
     expect(updateMock).toHaveBeenCalledOnce();
 
-    // click again, shouldn't trigger update due to delay
-    await user.click(container);
+    fireEvent.click(button);
 
     act(() => {
       jest.advanceTimersByTime(1100);
@@ -45,7 +52,51 @@ describe("AutoSignout", () => {
     expect(updateMock).toHaveBeenCalledOnce();
   });
 
-  it("shows warning when no activity and expiration approaching", () => {});
+  it("shows warning when no activity and expiration approaching", () => {
+    const updateMock = jest.fn();
+    (useSession as jest.Mock).mockReturnValue({
+      update: updateMock,
+      data: {
+        expires: new Date(Date.now() + 30000).toISOString(),
+      },
+    });
 
-  it("force signs out user when session expires", () => {});
+    render(
+      <div>
+        <button>click me</button>
+        <AutoSignout />
+      </div>,
+    );
+
+    // outside of warning period
+    expect(screen.getByRole("dialog")).toHaveClass("is-visible");
+
+    // extend the session
+    const button = screen.getByRole("button", { name: "Extend session" });
+    fireEvent.click(button);
+
+    expect(screen.getByRole("dialog")).toHaveClass("is-hidden");
+    act(() => {
+      jest.advanceTimersByTime(1100);
+    });
+    expect(updateMock).toHaveBeenCalledOnce();
+  });
+
+  it("force signs out user when session expires", () => {
+    (useSession as jest.Mock).mockReturnValue({
+      update: jest.fn(),
+      data: {
+        expires: new Date(Date.now() - 30).toISOString(),
+      },
+    });
+
+    render(
+      <div>
+        <button>click me</button>
+        <AutoSignout />
+      </div>,
+    );
+
+    expect(signOut).toHaveBeenCalledOnce();
+  });
 });
