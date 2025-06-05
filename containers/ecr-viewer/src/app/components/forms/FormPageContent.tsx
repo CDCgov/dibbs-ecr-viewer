@@ -57,7 +57,7 @@ export const FormPageContent = <T,>({
           Back to {itemType} management
         </Link>
         <div className="border-bottom border-base-lighter position-sticky top-0 bg-white isolate z-500 padding-top-1">
-          <div className="height-5 margin-bottom-1">
+          <div className="minh-5 margin-bottom-1">
             {formTouched && !submitting && !error && (
               <Alert
                 type="warning"
