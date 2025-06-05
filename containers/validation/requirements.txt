@@ -3,4 +3,4 @@ hl7
 lxml
 pydantic>=2.0.0
 pyyaml
-uvicorn
+uvicorn>=0.34.3
