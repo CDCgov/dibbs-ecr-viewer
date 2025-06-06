@@ -8,23 +8,19 @@ import Image from "next/image";
  */
 const Footer: React.FC = () => (
   <footer className="usa-footer usa-footer--slim">
-    <div>
-      <div className="footer-content display-flex flex-justify">
-        <div>
-          <Image
-            src="/ecr-viewer/cdc-logo.png"
-            alt="Centers for Disease Control and Prevention Logo"
-            width={206}
-            height={48}
-          />
-        </div>
-        <div className="display-flex flex-align-center">
-          <p>
-            For more information about this solution, send us an email at{" "}
-            <a href="mailto:dibbs@cdc.gov">dibbs@cdc.gov</a>
-          </p>
-        </div>
+    <div className="footer-content display-flex flex-justify flex-align-center">
+      <div className="flex-shrink-0">
+        <Image
+          src="/ecr-viewer/cdc-logo.png"
+          alt="Centers for Disease Control and Prevention Logo"
+          width={206}
+          height={48}
+        />
       </div>
+      <p className="margin-left-2">
+        For more information about this solution, send us an email at{" "}
+        <a href="mailto:dibbs@cdc.gov">dibbs@cdc.gov</a>
+      </p>
     </div>
   </footer>
 );
