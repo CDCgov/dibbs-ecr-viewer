@@ -22,6 +22,7 @@ import { UserFacingError, makeServerAction } from "./errorService";
 const getUserByEmail = async (
   email: string | null | undefined,
 ): Promise<User | undefined> => {
+  console.log({ id: "getUserByEmail1", email });
   if (!email) return;
 
   return await getDb<Core>()
@@ -40,6 +41,7 @@ const getUserByEmail = async (
  */
 export const getLoggedInUser = async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
+  console.log({ id: "getLoggedInUser1", email, name });
   if (!email) return;
 
   // Update the last log in and user's name to match the IDP
@@ -49,6 +51,7 @@ export const getLoggedInUser = async () => {
     .where("email", "=", email)
     .execute();
 
+  console.log({ id: "getLoggedInUser2", email, name });
   return await getUserByEmail(email);
 };
 
@@ -56,15 +59,21 @@ export const getLoggedInUser = async () => {
  * @param user User to check is an admin
  * @returns true is the user both exists and is an admin, false otherwise
  */
-export const isAdmin = (user: User | undefined): user is User =>
-  !!user && user.user_type === "admin" && user.status === "active";
+export const isAdmin = (user: User | undefined): user is User => {
+  const res = !!user && user.user_type === "admin" && user.status === "active";
+  console.log({ id: "isAdmin1", user, res });
+  return res;
+};
 
 /**
  * If the logged in user is not an admin, force the page calling this to 404.
  */
 export const notFoundUnlessAdmin = async () => {
   const admin = await getLoggedInUser();
+
+  console.log({ id: "notFoundUnlessAdmin1", admin });
   if (!isAdmin(admin)) {
+    console.log({ id: "notFoundUnlessAdmin2" });
     notFound();
   }
 };
@@ -77,7 +86,9 @@ export const notFoundUnlessAdmin = async () => {
  */
 export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
   const loggedInUser = await getLoggedInUser();
+  console.log({ id: "getCheckAdmin1", loggedInUser });
   if (!isAdmin(loggedInUser)) {
+    console.log({ id: "getCheckAdmin2", loggedInUser });
     throw new UserFacingError(`Standard user cannot ${actionDesc}`);
   }
 
@@ -97,9 +108,11 @@ export const createUser = async (
   user_type: "admin" | "standard",
 ): Promise<string> => {
   const creatingUser = await getCheckAdmin("create new users");
+  console.log({ id: "createUser1", creatingUser });
 
   try {
     const uuid = randomUUID();
+    console.log({ id: "createUser2", creatingUser, uuid });
     return await createUserQuery(email, user_type, uuid, creatingUser.uuid);
   } catch (error: unknown) {
     const message = "Failed to create new user";
@@ -141,6 +154,7 @@ const createUserQuery = async (
   author_uuid: string,
 ) => {
   const user = await getUserByEmail(email);
+  console.log({ id: "createUserQuery1", user });
   if (!!user) {
     if (user.status === "active") {
       throw new UserFacingError("User already exists and is active");
@@ -156,6 +170,7 @@ const createUserQuery = async (
     user_type,
     author_uuid,
   };
+  console.log({ id: "createUserQuery2", user, newUser });
 
   await getDb<Core>().insertInto("user").values(newUser).execute();
   return uuid;
