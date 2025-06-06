@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import { dbIsValid } from "./api/migrate-db/migrate";
 import { MetadataDbInvalid } from "./components/ErrorPage";
 import Filters from "./components/Filters";
-import Header from "./components/Header";
 import LibrarySearch from "./components/LibrarySearch";
 import { EcrTableLoading } from "./components/table/TableContentLoading";
 import EcrPaginationWrapper from "./components/table/ecr/EcrPaginationWrapper";
@@ -56,8 +55,7 @@ const HomePage = async ({
   const allConditions = await getAllConditions();
 
   return (
-    <div className="display-flex flex-column height-viewport">
-      <Header />
+    <div className="display-flex flex-column height-viewport-header-footer">
       <main className="overflow-auto height-full">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
           <h2 className="margin-bottom-0 text-bold font-sans-xl">

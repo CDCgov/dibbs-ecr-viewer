@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 
-import Header from "@/app/components/Header";
-
 /**
  * @param props React props
  * @param props.children Page content
@@ -9,8 +7,7 @@ import Header from "@/app/components/Header";
  */
 const AdminPageLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="display-flex flex-column height-viewport">
-      <Header />
+    <div className="overflow-y-auto display-flex flex-column min-height-viewport-header-footer">
       {children}
     </div>
   );

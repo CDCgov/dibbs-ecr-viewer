@@ -40,6 +40,7 @@
   font-size: 1rem;
   border-collapse: separate;
   font-family: "Source Sans Pro Web";
+  isolation: isolate;
 
   // Hide highlight color by matching th color on sorted column - per design
   &.usa-table th {
