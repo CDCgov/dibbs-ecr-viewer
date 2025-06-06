@@ -17,11 +17,15 @@ test.describe("keycloak", () => {
     await page.getByRole("textbox", { name: "password" }).fill("pw");
     await page.getByRole("button", { name: "Sign in" }).click();
 
-    await expect(page.getByRole('heading', { name: "eCR Library" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "eCR Library" }),
+    ).toBeVisible();
 
-    await page.getByRole("button", {name: "User Menu"}).click({ timeout: 5000 });
+    await page
+      .getByRole("button", { name: "User Menu" })
+      .click({ timeout: 5000 });
 
-    await expect(page.getByRole("button", {name: "Sign Out"})).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign Out" })).toBeVisible();
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
