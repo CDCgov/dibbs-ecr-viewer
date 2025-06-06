@@ -1,5 +1,5 @@
 fastapi>=0.109.1
-httpx
+httpx>=0.28.1
 lxml
 pathlib
 pydantic-settings
@@ -7,4 +7,4 @@ pydantic>=2.0.0
 python-multipart
 requests
 rich
-uvicorn
+uvicorn>=0.34.3
