@@ -4,9 +4,9 @@ import { test, expect, Page } from "@playwright/test";
 import { logInToKeycloak } from "./utils";
 
 test.describe("user management page", () => {
-  test.beforeEach(logInToKeycloak);
-
   test("should pass accessiblity", async ({ page }) => {
+    await logInToKeycloak({ page });
+
     await page.goto("/ecr-viewer/admin/user");
 
     await expect(page.getByText("User Management")).toBeVisible();
@@ -36,6 +36,8 @@ test.describe("user management page", () => {
   });
 
   test("should create a new user", async ({ page, browserName }) => {
+    await logInToKeycloak({ page });
+
     // Create programs
     const program1 = await createRandomProgramArea(page);
     const program2 = await createRandomProgramArea(page);
@@ -97,6 +99,18 @@ test.describe("user management page", () => {
 
     await deleteProgramArea(page, program1);
     await deleteProgramArea(page, program2);
+  });
+
+  test("it should not show to non-admin", async ({ page }) => {
+    await logInToKeycloak({ page }, undefined, "ecr-viewer-standard");
+    await page.goto("/ecr-viewer/admin/user");
+
+    await expect(
+      page.getByRole("heading", { name: "Page not found" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "User management" }),
+    ).not.toBeVisible();
   });
 });
 
