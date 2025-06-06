@@ -105,9 +105,7 @@
     margin: auto auto auto 0.75rem !important;
     font-size: 1.5rem;
     font-weight: 200;
-    font-family:
-      "Merriweather Web", Georgia, Cambria, "Times New Roman", Times, serif;
-    font-style: normal;
+    @include u-font-family('serif')
   }
 
   .usa-navbar {
@@ -156,15 +154,6 @@
       justify-content: space-between;
       display: flex;
       margin: 0 clamp(0.1rem, 6.25vw, 4rem) 1.5rem clamp(0.1rem, 6.25vw, 4rem);
-    }
-  }
-
-  .dibbs-logo {
-    width: 185px !important;
-    height: 40px;
-
-    img {
-      max-width: none !important;
     }
   }
 

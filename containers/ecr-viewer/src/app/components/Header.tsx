@@ -22,7 +22,7 @@ const Header = ({ children }: { children: ReactNode }) => {
         style={{ maxWidth: "none" }}
       >
         <Link
-          className="dibbs-logo display-flex flex-direction-row width-fit-content"
+          className="display-flex flex-direction-row width-fit-content"
           href="/"
           prefetch={false}
         >

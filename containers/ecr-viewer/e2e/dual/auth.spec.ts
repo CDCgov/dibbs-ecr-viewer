@@ -9,7 +9,7 @@ test.describe("keycloak", () => {
     await page.goto("/ecr-viewer");
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
 
-    await page.getByTestId("button").click();
+    await page.getByRole("button").click();
 
     await page
       .getByRole("textbox", { name: "username" })
@@ -17,11 +17,11 @@ test.describe("keycloak", () => {
     await page.getByRole("textbox", { name: "password" }).fill("pw");
     await page.getByRole("button", { name: "Sign in" }).click();
 
-    await expect(page.getByTestId("ecr-library-header")).toBeVisible();
+    await expect(page.getByRole('heading', { name: "eCR Library" })).toBeVisible();
 
-    await page.getByTestId("user-menu-button").click();
+    await page.getByRole("button", {name: "User Menu"}).click({ timeout: 5000 });
 
-    await expect(page.getByText("Sign Out")).toBeVisible();
+    await expect(page.getByRole("button", {name: "Sign Out"})).toBeVisible();
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
@@ -34,7 +34,7 @@ test.describe("keycloak", () => {
     await page.goto(`/ecr-viewer?auth=${process.env.DUMMY_NBS_JWT}`);
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
 
-    await page.getByTestId("button").click();
+    await page.getByRole("button").click();
 
     await page
       .getByRole("textbox", { name: "username" })
@@ -53,7 +53,7 @@ test.describe("keycloak", () => {
       "ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2Fview-data%3Fid%3Ddb734647-fc99-424c-a864-7e3cda82e703",
     );
 
-    await page.getByTestId("button").click();
+    await page.getByRole("button").click();
 
     await page
       .getByRole("textbox", { name: "username" })

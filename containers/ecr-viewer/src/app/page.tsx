@@ -59,7 +59,6 @@ const HomePage = async ({
       <main className="overflow-auto height-full">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
           <h2
-            data-testid="ecr-library-header"
             className="margin-bottom-0 text-bold font-sans-xl"
           >
             eCR Library
