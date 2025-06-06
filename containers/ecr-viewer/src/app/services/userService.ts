@@ -54,7 +54,7 @@ export const getLoggedInUser = cache(async () => {
     console.error({ error, message: "Failed to get logged in user" });
     return undefined;
   }
-};
+});
 
 /**
  * @param user User to check is an admin
