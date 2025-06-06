@@ -16,5 +16,5 @@ When updating the TES database, ensure you also have the latest data on conditio
 2. Ensure dependencies have been installed (`pip install -r requirements.txt -r dev-requirements.txt`)
 3. Update (or create) your `.env` file to include your TES API key. Ex: `TES_API_KEY=xxxx....`
 4. If a `tes.db` file already exists in the `/data` directory, go ahead and delete it
-5. Navigate into the `/data` directory (`cd /data`) and run the `seed_tes_data.py` script with `python seed_tes_data.py <LATEST_TES_VERSION_DATE>`. This will create the `tes.db` file and load it with data from the TES API
+5. Navigate into the `/data` directory (`cd /data`) and run the `seed_tes_data.py` script with `python seed_tes_data.py <LATEST_TES_VERSION_DATE>`. This will create the `tes.db` file and load it with data from the TES API. The version string can be found on the TES web app by looking at the value set version used in any given condition group's value sets.
 6. You should see the output from the script and a newly created `tes.db` database file in the `/data` directory
