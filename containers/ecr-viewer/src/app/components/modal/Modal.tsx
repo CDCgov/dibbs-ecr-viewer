@@ -216,7 +216,6 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
         ref={wrapperEl}
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
-        aria-hidden={isOpen}
         isVisible={isOpen}
         handleClose={closeModal}
         style={{ zIndex }}
