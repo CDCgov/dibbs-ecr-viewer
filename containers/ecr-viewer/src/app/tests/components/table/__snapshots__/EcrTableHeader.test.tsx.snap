@@ -3,7 +3,7 @@
 exports[`EcrTableHeader disabled should match snapshot 1`] = `
 <table>
   <thead
-    class="position-sticky top-0"
+    class="position-sticky top-0 z-100"
   >
     <tr>
       <th
@@ -148,7 +148,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
 exports[`EcrTableHeader enabled should match snapshot 1`] = `
 <table>
   <thead
-    class="position-sticky top-0"
+    class="position-sticky top-0 z-100"
   >
     <tr>
       <th

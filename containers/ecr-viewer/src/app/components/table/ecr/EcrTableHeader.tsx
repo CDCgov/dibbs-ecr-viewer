@@ -37,7 +37,7 @@ export const EcrTableHeader = ({
 
   return (
     <SortableHeader
-      className="position-sticky top-0"
+      className="position-sticky top-0 z-100"
       headers={headers}
       disabled={disabled}
       handleSort={handleSort}
