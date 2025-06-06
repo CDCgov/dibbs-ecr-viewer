@@ -5,37 +5,6 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
   <main
     class="width-full minw-main"
   >
-    <header
-      class="usa-header usa-header--basic"
-    >
-      <div
-        class="usa-nav-container flex-row flex-align-center flex-justify"
-        style="max-width: none;"
-      >
-        <div
-          class="usa-navbar"
-        >
-          <div
-            class="usa-logo"
-          >
-            <h1>
-              <a
-                href="/"
-              >
-                DIBBs eCR Viewer
-              </a>
-            </h1>
-          </div>
-        </div>
-        <button
-          class="usa-button flex-align-self-center"
-          data-testid="button"
-          type="button"
-        >
-          Sign Out
-        </button>
-      </div>
-    </header>
     <div
       class="patient-banner"
     >
