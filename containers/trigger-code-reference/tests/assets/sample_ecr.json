@@ -932,9 +932,9 @@
         "code": {
           "coding": [
             {
-              "code": "94310-0",
+              "code": "95209-3",
               "system": "http://loinc.org",
-              "display": "SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection"
+              "display": "SARS-CoV+SARS-CoV-2 (COVID-19) Ag [Presence] in Respiratory system specimen by Rapid immunoassay"
             }
           ]
         },
@@ -990,9 +990,9 @@
         "code": {
           "coding": [
             {
-              "code": "94310-0",
+              "code": "95209-3",
               "system": "http://loinc.org",
-              "display": "SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection"
+              "display": "ef84511f-a88a-0a84-2353-d44f641673b0"
             }
           ]
         },
