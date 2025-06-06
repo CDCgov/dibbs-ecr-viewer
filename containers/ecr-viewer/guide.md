@@ -137,7 +137,7 @@ These are variables that have been retired and no longer have a use in the app. 
 
 Data can be added to the eCR Viewer as a step in Rhapsody.
 
-Rhapsody documentation and an example route can be found [here](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/examples/rhapsody).
+See our [Rhapsody examples](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/examples/rhapsody) for more information on using Rhapsody to load data with different configurations of the eCR viewer.
 
 ### From API
 
