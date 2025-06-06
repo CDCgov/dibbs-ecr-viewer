@@ -17,7 +17,9 @@ describe("Header component", () => {
     expect(logo.getAttribute("src")).toContain("dibbs-logo.png");
 
     // Check that it has the correct text
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('eCR Viewer');
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "eCR Viewer",
+    );
   });
 
   it("renders children passed to the component", () => {
