@@ -31,7 +31,7 @@ export default function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <div className="minw-49rem position-relative isolate">
+          <div className="minw-55rem position-relative isolate">
             <AuthSessionProvider>
               <ToastProvider>
                 <Header>

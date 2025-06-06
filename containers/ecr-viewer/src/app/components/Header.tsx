@@ -21,16 +21,19 @@ const Header = ({ children }: { children: ReactNode }) => {
         className="usa-nav-container display-flex flex-direction-row"
         style={{ maxWidth: "none" }}
       >
-        <h1>
-          <Link className="dibbs-logo" href="/" prefetch={false}>
+          <Link className="dibbs-logo display-flex flex-direction-row width-fit-content" href="/" prefetch={false}>
             <Image
-              src="/ecr-viewer/ecr-viewer-logo.png"
-              alt="eCR Viewer Logo"
-              width={185}
+              className="flex-shrink-0"
+              src="/ecr-viewer/dibbs-logo.png"
+              alt="DIBBs Logo"
+              width={40}
               height={40}
             />
+              <h1 className='text-no-wrap'>
+                  eCR Viewer
+              </h1>
+
           </Link>
-        </h1>
         {children}
       </div>
     </header>

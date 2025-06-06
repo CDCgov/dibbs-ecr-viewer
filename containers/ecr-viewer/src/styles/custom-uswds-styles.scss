@@ -101,6 +101,14 @@
   margin-top: 0;
   padding-top: 1.5rem;
 
+  h1 {
+    margin: auto auto auto .75rem !important;
+    font-size: 1.5rem;
+    font-weight: 200;
+    font-family: "Merriweather Web", Georgia, Cambria, "Times New Roman", Times, serif;
+    font-style: normal;
+  }
+
   .usa-navbar {
     border-bottom: none;
   }
@@ -113,11 +121,6 @@
     min-width: fit-content;
   }
 
-  .usa-logo {
-    margin-bottom: 1.5rem;
-    margin-top: 1.5rem;
-  }
-
   .person-icon {
     width: 1.75rem;
     height: 1.75rem;
@@ -128,6 +131,7 @@
     font-weight: 400 !important;
     font-size: 1.125rem !important;
     color: color("blue-cool-5") !important;
+    text-decoration: none;
   }
 
   .usa-nav__link:hover::after {
@@ -154,13 +158,6 @@
     }
   }
 
-  h1 {
-    font-family: var(--font-serif);
-    font-style: normal;
-    font-size: 2rem;
-    margin: 0;
-  }
-
   .dibbs-logo {
     width: 185px !important;
     height: 40px;
@@ -174,6 +171,10 @@
     background-color: color("blue-cool-80") !important;
     border: 0;
     padding: 0;
+  }
+
+  .user-menu-button:hover {
+    cursor: pointer;
   }
 
   .user-menu {
@@ -238,6 +239,12 @@
   .footer-content {
     margin: 0 5rem 1.25rem 5rem;
     height: 3rem;
+  }
+
+  @media (max-width: 64em) {
+    .footer-content {
+      margin: 0 clamp(0.1rem, 6.25vw, 4rem) 1.5rem clamp(0.1rem, 6.25vw, 4rem);
+    }
   }
 
   p {
