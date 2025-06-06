@@ -1,5 +1,7 @@
 import "@/styles/styles.scss";
 
+import { getServerSession } from "next-auth";
+
 import { isUsingNextAuth } from "./api/auth/providers";
 import { AuthSessionProvider } from "./components/AuthSessionProvider";
 import { AutoSignout } from "./components/AutoSignout";
@@ -20,18 +22,19 @@ export const metadata = {
  * @returns A React element representing the top-level HTML structure, with the
  *   `children` rendered inside the `<body>` tag.
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initSession = await getServerSession();
   return (
     <RespectMotionPreferences>
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
           <div className="position-relative isolate">
-            <AuthSessionProvider>
+            <AuthSessionProvider initSession={initSession || undefined}>
               {isUsingNextAuth && <AutoSignout />}
               <ToastProvider>
                 {children}

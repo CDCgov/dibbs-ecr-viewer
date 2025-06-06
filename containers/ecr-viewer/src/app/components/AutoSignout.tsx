@@ -58,19 +58,23 @@ export const AutoSignout = () => {
       const expires = new Date(data.expires);
       const ttExpire = Math.floor((expires.valueOf() - Date.now()) / 1000);
       setTimeToExpireSecs(ttExpire);
+      const t = setTimeout(signOutGoHome, ttExpire * 1000);
 
       // decrement time each second
       const i = setInterval(
         () => setTimeToExpireSecs((prior) => prior - 1),
         1000,
       );
-      return () => clearInterval(i);
+      return () => {
+        clearTimeout(t);
+        clearInterval(i);
+      };
     }
   }, [data]);
 
   // Sign out and clear modal if needed
   useEffect(() => {
-    if (timeToExpireSecs < 0) signOutGoHome();
+    if (timeToExpireSecs < 0) signOutGoHome(); // main timeout should catch this, but just in case
     if (timeToExpireSecs <= WARNING_DURATION && !isActive)
       modalRef.current?.toggleModal(undefined, true);
     if (timeToExpireSecs > WARNING_DURATION && modalRef.current?.modalIsOpen) {
