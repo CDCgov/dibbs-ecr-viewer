@@ -24,6 +24,10 @@ _TES_HEADER = {"X-API-KEY": _TES_API_KEY}
 _CONTEXT_SYSTEM = "http://terminology.hl7.org/CodeSystem/usage-context-type"
 _CONTEXT_CODE = "focus"
 
+if len(sys.argv) < 2:
+    print("Error: TES version date argument is required.")
+    sys.exit(1)
+
 # Update this with the latest version of value sets on TES available
 _VERSION = sys.argv[1]
 
