@@ -12,12 +12,11 @@ const RedirectPage = () => {
   if (!providerMap[0]) notFound();
   return (
     <div
-      className="position-relative text-white"
+      className="height-viewport-header-footer position-relative text-white"
       style={{
         backgroundImage: `url(${bgRedirect.src})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "100vh",
         minWidth: "100vw",
         overflowY: "auto",
         overflowX: "auto",
