@@ -643,6 +643,31 @@
       "realmRoles": ["admin", "default-roles-master"],
       "notBefore": 0,
       "groups": []
+    },
+    {
+      "id": "1c3b6114-3c12-4ef7-95ba-a0091f506ed7",
+      "username": "ecr-viewer-standard",
+      "firstName": "Salome",
+      "lastName": "Standard",
+      "email": "ecr-viewer@standard.com",
+      "emailVerified": true,
+      "createdTimestamp": 1732143781849,
+      "enabled": true,
+      "totp": false,
+      "credentials": [
+        {
+          "id": "c28534a5-f006-4c8d-9b2a-d1aa9b257abe",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1732143832209,
+          "value": "pw"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["admin", "default-roles-master"],
+      "notBefore": 0,
+      "groups": []
     }
   ],
   "localizationTexts": {},
