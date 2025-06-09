@@ -4,7 +4,7 @@ lxml
 pathlib
 pydantic-settings
 pydantic>=2.0.0
-python-multipart
+python-multipart>=0.0.18
 requests
 rich
 uvicorn>=0.34.3
