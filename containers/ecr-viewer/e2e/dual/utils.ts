@@ -1,6 +1,7 @@
 import {
   APIRequestContext,
   PlaywrightTestArgs,
+  TestInfo,
   expect,
 } from "@playwright/test";
 
@@ -8,16 +9,20 @@ import {
  * Helper to lot into via keycloak and go to the viewer page
  * @param props playwright test args
  * @param props.page page
+ * @param _t test info (unused, but passed from before each)
+ * @param userName user name to log in as. Default is `ecr-viewer-admin`
  */
-export const logInToKeycloak = async ({ page }: PlaywrightTestArgs) => {
+export const logInToKeycloak = async (
+  { page }: Pick<PlaywrightTestArgs, "page">,
+  _t?: TestInfo,
+  userName = "ecr-viewer-admin",
+) => {
   await page.goto("/ecr-viewer");
   await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
 
   await page.getByRole("button").click();
 
-  await page
-    .getByRole("textbox", { name: "username" })
-    .fill("ecr-viewer-admin");
+  await page.getByRole("textbox", { name: "username" }).fill(userName);
   await page.getByRole("textbox", { name: "password" }).fill("pw");
   await page.getByRole("button", { name: "Sign in" }).click();
 

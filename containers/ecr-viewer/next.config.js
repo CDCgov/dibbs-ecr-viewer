@@ -19,7 +19,7 @@ const nextConfig = {
     // in production. Server actions are protected like any other route, so we
     // allow any origin to hit them
     serverActions: {
-      allowedOrigins: ["*"],
+      allowedOrigins: ["**.cloudapp.azure.com", "**.azurecontainerapps.io"],
     },
   },
   output: "standalone",
