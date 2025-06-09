@@ -11,7 +11,6 @@ MESSAGE_TO_TEMPLATE_MAP = {
 def build_fhir_converter_request(
     input_msg: str,
     orchestration_request: OrchestrationRequest,
-    workflow_params: dict | None = None,
 ) -> dict:
     """
     Helper function for constructing the input payload for an API call to

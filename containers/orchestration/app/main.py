@@ -52,19 +52,7 @@ logger = logging.getLogger(__name__)
 # Read settings immediately to fail fast in case there are invalid values.
 get_settings()
 
-# Configure metrics trackers
-process_message_counter = meter.create_counter(
-    "process_message_counter",
-    description="The number of served requests returning each possible"
-    " status code for the process_message endpoint.",
-)
-process_counter = meter.create_counter(
-    "process_counter",
-    description="The number of served requests returning each possible"
-    " status code for the process endpoint.",
-)
-
-# Instantiate FastAPI via BaseService class
+# Instantiate FastAPI via PHDI's BaseService class
 app = BaseService(
     service_name="Orchestration",
     service_path="/orchestration",
@@ -194,6 +182,8 @@ async def process_zip_endpoint(
         rr_content,
     )
 
+    return building_block_response
+
 
 @app.post(
     "/process-message", status_code=200, responses=process_message_response_examples
@@ -216,13 +206,15 @@ async def process_message_endpoint(
     """
     process_request = dict(request)
 
-    return await apply_workflow_to_message(
+    building_block_response = await apply_workflow_to_message(
         process_request.get("message_type"),
         process_request.get("data_type"),
         process_request.get("config_file_name"),
         process_request.get("message"),
         process_request.get("rr_data"),
     )
+    
+    return building_block_response
 
 
 async def apply_workflow_to_message(
@@ -252,7 +244,7 @@ async def apply_workflow_to_message(
     # Load the config file and fail fast if we can't find it
     try:
         processing_config = load_processing_config(config_file_name)
-
+    
     except FileNotFoundError as error:
         return Response(
             content=json.dumps(
@@ -270,9 +262,11 @@ async def apply_workflow_to_message(
         "message": message,
         "rr_data": rr_content,
     }
-
+    
     try:
-        response, responses = await call_apis(config=processing_config, input=api_input)
+        response, responses = await call_apis(
+            config=processing_config, input=api_input
+        )
     except HTTPException as error:
         # These exceptions are purposefully created in call_apis to surface service errors
         raise error

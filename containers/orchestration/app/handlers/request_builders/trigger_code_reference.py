@@ -1,6 +1,5 @@
 from app.models import OrchestrationRequest
 
-
 def build_stamp_condition_extensions_request(
     input_msg: str,
     orchestration_request: OrchestrationRequest,
@@ -23,7 +22,7 @@ def build_stamp_condition_extensions_request(
     """
     # Initialize workflow_params as an empty dictionary if it's None
     workflow_params = workflow_params or {}
-
+    
     return {
         "bundle": input_msg,
         "conditions": workflow_params.get("conditions"),
