@@ -4,9 +4,9 @@ import { UserForm } from "@/app/admin/user/UserForm";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import {
   createUserAction,
-  notFoundUnlessAdmin,
   updateUserProgramAreasAction,
-} from "@/app/services/userService";
+} from "@/app/services/serverActionService";
+import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 /**
  * @returns Page to create a new user

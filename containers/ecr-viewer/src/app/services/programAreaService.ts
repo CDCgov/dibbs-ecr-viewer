@@ -1,4 +1,4 @@
-"use server";
+import "server-only";
 import { randomUUID } from "node:crypto";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -8,7 +8,7 @@ import {
   ProgramArea,
 } from "@/app/data/metadataDb/types/core";
 
-import { UserFacingError, makeServerAction } from "./errorService";
+import { UserFacingError } from "./errorService";
 import { getCheckAdmin } from "./userService";
 
 /**
@@ -56,7 +56,6 @@ export const createProgramArea = async (
     throw new UserFacingError(message);
   }
 };
-export const createProgramAreaAction = makeServerAction(createProgramArea);
 
 /**
  * Get program area with the given uuid
@@ -126,7 +125,6 @@ export const updateProgramArea = async (
     throw new UserFacingError(message);
   }
 };
-export const updateProgramAreaAction = makeServerAction(updateProgramArea);
 
 /**
  * Delete program area by id and remove any references in the conditions table.
@@ -159,7 +157,6 @@ export const deleteProgramArea = async (uuid: string): Promise<void> => {
     throw new UserFacingError(message);
   }
 };
-export const deleteProgramAreaAction = makeServerAction(deleteProgramArea);
 
 export type ListedProgramArea = ProgramArea & {
   conditions: ConditionReference[];

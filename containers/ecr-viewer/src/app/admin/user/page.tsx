@@ -2,11 +2,8 @@ import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
 import { listProgramAreas } from "@/app/services/programAreaService";
-import {
-  deleteUserAction,
-  listUsers,
-  notFoundUnlessAdmin,
-} from "@/app/services/userService";
+import { deleteUserAction } from "@/app/services/serverActionService";
+import { listUsers, notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { UserTable } from "./UserTable";
 
