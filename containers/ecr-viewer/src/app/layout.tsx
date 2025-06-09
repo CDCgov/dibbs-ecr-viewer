@@ -5,6 +5,9 @@ import { getServerSession } from "next-auth";
 import { isUsingNextAuth } from "./api/auth/providers";
 import { AuthSessionProvider } from "./components/AuthSessionProvider";
 import { AutoSignout } from "./components/AutoSignout";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import NavLinks from "./components/NavLinks";
 import RespectMotionPreferences from "./components/RespectMotionPreferences";
 import ToastProvider from "./components/toast/ToastProvider";
 import ToastShelf from "./components/toast/ToastShelf";
@@ -33,12 +36,16 @@ export default async function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <div className="position-relative isolate">
+          <div className="minw-55rem position-relative isolate">
             <AuthSessionProvider initSession={initSession || undefined}>
               {isUsingNextAuth && <AutoSignout />}
               <ToastProvider>
+                <Header>
+                  <NavLinks />
+                </Header>
                 {children}
                 <ToastShelf />
+                <Footer />
               </ToastProvider>
             </AuthSessionProvider>
           </div>

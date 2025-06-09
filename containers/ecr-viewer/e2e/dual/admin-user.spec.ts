@@ -9,7 +9,9 @@ test.describe("user management page", () => {
   test("should pass accessiblity", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/user");
 
-    await expect(page.getByText("User Management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "User management" }),
+    ).toBeVisible();
 
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
@@ -43,7 +45,9 @@ test.describe("user management page", () => {
     // Create user & assign to Program 1
     await page.goto("/ecr-viewer/admin/user");
 
-    await expect(page.getByText("User management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "User management" }),
+    ).toBeVisible();
 
     await page.getByText("Create user").click();
 

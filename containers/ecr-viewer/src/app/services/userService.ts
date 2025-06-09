@@ -42,14 +42,19 @@ export const getLoggedInUser = async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
   if (!email) return;
 
-  // Update the last log in and user's name to match the IDP
-  await getDb<Core>()
-    .updateTable("user")
-    .set({ date_of_last_login: new Date(), name })
-    .where("email", "=", email)
-    .execute();
+  try {
+    // Update the last log in and user's name to match the IDP
+    await getDb<Core>()
+      .updateTable("user")
+      .set({ date_of_last_login: new Date(), name })
+      .where("email", "=", email)
+      .execute();
 
-  return await getUserByEmail(email);
+    return await getUserByEmail(email);
+  } catch (error: unknown) {
+    console.error({ error, message: "Failed to get logged in user" });
+    return undefined;
+  }
 };
 
 /**

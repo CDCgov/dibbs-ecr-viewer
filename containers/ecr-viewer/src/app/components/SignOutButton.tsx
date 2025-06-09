@@ -14,7 +14,7 @@ export const SignOutButton = () => {
     loggedIn && (
       <Button
         type="button"
-        className="flex-align-self-center"
+        className="flex-align-self-center sign-out-button"
         onClick={() => signOut({ callbackUrl: `/ecr-viewer` })}
       >
         Sign Out

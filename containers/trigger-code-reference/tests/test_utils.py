@@ -147,7 +147,7 @@ def test_find_codes_by_resource_type():
     # Update assertions with actual codes from the bundle
     # * LOINC code for SARS-like Coronavirus
     # * SNOMED code for "Detected (qualifier value)" - indicates a positive test result
-    assert ["94310-0", "260373001"] == find_codes_by_resource_type(observation_resource)
+    assert ["95209-3", "260373001"] == find_codes_by_resource_type(observation_resource)
 
     # SNOMED code for "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
     # this is the official SNOMED code for COVID-19
@@ -159,7 +159,7 @@ def test_find_codes_by_resource_type():
 
     # LOINC code for SARS-like Coronavirus
     # * standard LOINC code for COVID-19 PCR diagnostic test
-    assert ["94310-0"] == find_codes_by_resource_type(diagnostic_resource)
+    assert ["95209-3"] == find_codes_by_resource_type(diagnostic_resource)
 
     # Test for a resource we don't stamp for (Patient - unchanged)
     patient_resource = next(

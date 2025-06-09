@@ -221,6 +221,7 @@
   <component>
     <!-- structredBody contains all of the clinical sections of the eICR -->
     <structuredBody>
+
       <!-- Encounters section -->
       <component>
         <section>
@@ -266,6 +267,25 @@
                 codeSystemName="CPT-4"
                 displayName="Office outpatient visit 15 minutes" />
               <effectiveTime value="20250216" />
+              <participant typeCode="LOC">
+                <participantRole classCode="SDLOC">
+                  <code code="1160-1" codeSystem="2.16.840.1.113883.1.11.20275"
+                    codeSystemName="HealthcareServiceLocation"
+                    displayName="Grand Republic Medical Facility Clinic" />
+                </participantRole>
+              </participant>
+              <performer>
+                <assignedEntity>
+                  <id extension="1234567890" root="2.16.840.1.113883.4.6" />
+                  <assignedPerson>
+                    <name>
+                      <prefix>Dr</prefix>
+                      <given>Royce</given>
+                      <family>Hemlock</family>
+                    </name>
+                  </assignedPerson>
+                </assignedEntity>
+              </performer>
             </encounter>
           </entry>
         </section>
