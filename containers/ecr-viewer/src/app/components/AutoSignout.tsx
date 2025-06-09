@@ -44,11 +44,11 @@ export const AutoSignout = () => {
     if (isActive) {
       // delay session update to make sure original action (e.g. signout) happens first
       setTimeout(update, 1000);
-      const t = setTimeout(() => {
+      const activityTimeout = setTimeout(() => {
         setIsActive(false);
       }, 30 * 1000);
 
-      return () => clearTimeout(t);
+      return () => clearTimeout(activityTimeout);
     }
   }, [isActive]);
 
@@ -56,18 +56,18 @@ export const AutoSignout = () => {
   useEffect(() => {
     if (data?.expires) {
       const expires = new Date(data.expires);
-      const ttExpire = Math.floor((expires.valueOf() - Date.now()) / 1000);
-      setTimeToExpireSecs(ttExpire);
-      const t = setTimeout(signOutGoHome, ttExpire * 1000);
+      const timeToExpire = Math.floor((expires.valueOf() - Date.now()) / 1000);
+      setTimeToExpireSecs(timeToExpire);
+      const signoutTimeout = setTimeout(signOutGoHome, timeToExpire * 1000);
 
       // decrement time each second
-      const i = setInterval(
+      const countdownInternval = setInterval(
         () => setTimeToExpireSecs((prior) => prior - 1),
         1000,
       );
       return () => {
-        clearTimeout(t);
-        clearInterval(i);
+        clearTimeout(signoutTimeout);
+        clearInterval(countdownInternval);
       };
     }
   }, [data]);
