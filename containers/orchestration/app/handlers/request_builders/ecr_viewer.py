@@ -1,6 +1,3 @@
-from opentelemetry import trace
-
-from app.handlers.tracer import tracer
 from app.models import OrchestrationRequest
 
 
@@ -23,38 +20,26 @@ def build_save_fhir_data_body(
       included in the workflow config for the validation step of a workflow.
     :return: A dictionary ready to send to the validation service.
     """
-    with tracer.start_as_current_span(
-        "build_save_fhir_data_body_request",
-        kind=trace.SpanKind(0),
-        attributes={
-            "message_type": orchestration_request.get("message_type"),
-            "data_type": orchestration_request.get("data_type"),
-            "workflow_params": str(workflow_params),
-        },
-    ):
-        if workflow_params.get("fhirBundle"):
-            fhirBundle = workflow_params["fhirBundle"].json()["extended_bundle"]
+    if workflow_params.get("fhirBundle"):
+        fhirBundle = workflow_params["fhirBundle"].json()["extended_bundle"]
+    else:
+        # If the message from the last step is a FHIR bundle, use it.
+        if input_msg.get("resourceType") == "Bundle":
+            fhirBundle = input_msg
+        # If the message from the last step is not a FHIR bundle, use the orginal message from the request.
+        elif orchestration_request.get("message_type") == "fhir":
+            fhirBundle = orchestration_request.get("message")
+        # If neither the message from the last step nor the original message from the request is a FHIR bundle, raise an error.
         else:
-            # If the message from the last step is a FHIR bundle, use it.
-            if input_msg.get("resourceType") == "Bundle":
-                fhirBundle = input_msg
-            # If the message from the last step is not a FHIR bundle, use the orginal message from the request.
-            elif orchestration_request.get("message_type") == "fhir":
-                fhirBundle = orchestration_request.get("message")
-            # If neither the message from the last step nor the original message from the request is a FHIR bundle, raise an error.
-            else:
-                raise ValueError("Invalid message type for FHIR data.")
-
-        request = {
-            "fhirBundle": fhirBundle,
-        }
-
-        if workflow_params is not None:
-            if workflow_params.get("metadata") is not None:
-                request["metadata"] = workflow_params["metadata"].json()[
-                    "parsed_values"
-                ]
-            if workflow_params.get("saveSource") is not None:
-                request["saveSource"] = workflow_params["saveSource"]
-
-        return request
+            raise ValueError("Invalid message type for FHIR data.")
+    request = {
+        "fhirBundle": fhirBundle,
+    }
+    if workflow_params is not None:
+        if workflow_params.get("metadata") is not None:
+            request["metadata"] = workflow_params["metadata"].json()[
+                "parsed_values"
+            ]
+        if workflow_params.get("saveSource") is not None:
+            request["saveSource"] = workflow_params["saveSource"]
+    return request

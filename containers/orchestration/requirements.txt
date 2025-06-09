@@ -6,6 +6,3 @@ uvicorn[standard]>=0.34.3
 lxml
 requests
 python-dotenv
-opentelemetry-distro>=0.54b0
-opentelemetry-exporter-otlp>=1.33.0
-opentelemetry-exporter-prometheus>=0.54b0
