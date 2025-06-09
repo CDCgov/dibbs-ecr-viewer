@@ -1,10 +1,8 @@
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
-import {
-  deleteProgramAreaAction,
-  listProgramAreas,
-} from "@/app/services/programAreaService";
+import { listProgramAreas } from "@/app/services/programAreaService";
+import { deleteProgramAreaAction } from "@/app/services/serverActionService";
 import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { ProgramTable } from "./ProgramTable";
