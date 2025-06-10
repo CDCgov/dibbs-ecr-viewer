@@ -2,6 +2,7 @@ from requests import Response
 
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 
+
 def unpack_validation_response(response: Response) -> ServiceHandlerResponse:
     """
     Helper function for processing a response from the DIBBs validation

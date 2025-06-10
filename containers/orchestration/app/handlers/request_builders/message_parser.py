@@ -1,5 +1,6 @@
 from app.models import OrchestrationRequest
 
+
 def build_message_parser_message_request(
     input_msg: str,
     orchestration_request: OrchestrationRequest,
@@ -21,10 +22,7 @@ def build_message_parser_message_request(
       message parser.
     """
     # Template format will depend on the data's structure
-    if (
-        isinstance(input_msg, dict)
-        and input_msg.get("resourceType", "") == "Bundle"
-    ):
+    if isinstance(input_msg, dict) and input_msg.get("resourceType", "") == "Bundle":
         msg_fmt = "fhir"
     else:
         msg_fmt = orchestration_request.get("message_type")

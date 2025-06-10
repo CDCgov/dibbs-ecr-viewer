@@ -2,6 +2,7 @@ from requests import Response
 
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 
+
 def unpack_parsed_message_response(
     response: Response,
 ) -> ServiceHandlerResponse:

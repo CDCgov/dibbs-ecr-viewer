@@ -2,6 +2,7 @@ from requests import Response
 
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 
+
 def unpack_stamp_condition_extensions_response(
     response: Response,
 ) -> ServiceHandlerResponse:
@@ -17,7 +18,7 @@ def unpack_stamp_condition_extensions_response(
       parsed message created by the service.
     """
     status_code = response.status_code
-    
+
     match status_code:
         case 200:
             return ServiceHandlerResponse(

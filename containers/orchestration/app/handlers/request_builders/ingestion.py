@@ -2,6 +2,7 @@ import os
 
 from app.models import OrchestrationRequest
 
+
 def build_validation_request(
     orchestration_request: OrchestrationRequest,
     workflow_params: dict | None = None,
@@ -55,12 +56,12 @@ def build_ingestion_name_request(
         "case": "upper",
         "remove_numbers": "true",
     }
-    
+
     # Initialize workflow_params as an empty dictionary if it's None
     workflow_params = workflow_params or {}
     for key, value in default_params.items():
         workflow_params.setdefault(key, value)
-    
+
     return {
         "data": input_msg,
         "trim": workflow_params.get("trim"),
@@ -92,7 +93,7 @@ def build_ingestion_phone_request(
     # Since only one param, just add it explicitly
     if not workflow_params:
         workflow_params = {"overwrite": "true"}
-    
+
     return {
         "data": input_msg,
         "overwrite": workflow_params.get("overwrite", "true"),

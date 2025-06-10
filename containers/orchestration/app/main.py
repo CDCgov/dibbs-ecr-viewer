@@ -213,7 +213,7 @@ async def process_message_endpoint(
         process_request.get("message"),
         process_request.get("rr_data"),
     )
-    
+
     return building_block_response
 
 
@@ -244,7 +244,7 @@ async def apply_workflow_to_message(
     # Load the config file and fail fast if we can't find it
     try:
         processing_config = load_processing_config(config_file_name)
-    
+
     except FileNotFoundError as error:
         return Response(
             content=json.dumps(
@@ -262,11 +262,9 @@ async def apply_workflow_to_message(
         "message": message,
         "rr_data": rr_content,
     }
-    
+
     try:
-        response, responses = await call_apis(
-            config=processing_config, input=api_input
-        )
+        response, responses = await call_apis(config=processing_config, input=api_input)
     except HTTPException as error:
         # These exceptions are purposefully created in call_apis to surface service errors
         raise error

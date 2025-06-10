@@ -111,20 +111,18 @@ async def _send_websocket_dump(
     """
     status = (
         "success"
-        if (
-            service_response.status_code == 200 and service_response.should_continue
-        )
+        if (service_response.status_code == 200 and service_response.should_continue)
         else "error"
     )
-    
+
     # Write service responses into websocket message
-    
+
     progress_dict[endpoint_name] = {
         "status": status,
         "status_code": base_response.status_code,
         "response": base_response.json(),
     }
-    
+
     await websocket.send_text(json.dumps(progress_dict))
     return progress_dict
 
@@ -186,14 +184,14 @@ async def call_apis(
             raise HTTPException(
                 status_code=service_response.status_code, detail=error_detail
             )
-        
+
         if not service_response.should_continue:
             error_detail = f"Service {service} completed, but orchestration cannot continue: {service_response.msg_content}"
             raise HTTPException(
                 status_code=400,
                 detail=error_detail,
             )
-        
+
         # Validation and save_bundle do not contain any updates to the data
         if service not in ["validation", "save_bundle"]:
             current_message = service_response.msg_content
