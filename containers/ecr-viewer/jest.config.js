@@ -22,13 +22,11 @@ const customJestConfig = {
       : [],
 };
 
-// We need to override transformIgnorePatterns after creating the jest config  
-// because next/jest overrides transformIgnorePatterns to ignore node_modules. 
+// We need to override transformIgnorePatterns after creating the jest config
+// because next/jest overrides transformIgnorePatterns to ignore node_modules.
 // See here for more info: https://stackoverflow.com/a/72926763
 // eslint-disable-next-line jsdoc/require-jsdoc
 module.exports = async () => ({
   ...(await createJestConfig(customJestConfig)()),
-  transformIgnorePatterns: [
-    'node_modules/(?!(jose)/)',
-  ]
+  transformIgnorePatterns: ["node_modules/(?!(jose)/)"],
 });
