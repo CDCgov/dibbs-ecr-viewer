@@ -37,7 +37,7 @@ test.describe("user management page", () => {
     expect(nonColorViolations).toEqual([]);
   });
 
-  test("should create a new user", async ({ page, browserName }) => {
+  test("should create, edit, and delete a new user", async ({ page, browserName }) => {
     await logInToKeycloak({ page });
 
     // Create programs
@@ -48,14 +48,14 @@ test.describe("user management page", () => {
     await page.goto("/ecr-viewer/admin/user");
 
     await expect(
-      page.getByRole("heading", { name: "User management" }),
+      page.getByRole("heading", { name: "User management" })
     ).toBeVisible();
 
     await page.getByText("Create user").click();
 
     await page.waitForURL("/ecr-viewer/admin/user/create");
     await expect(
-      page.getByRole("heading", { name: "Create user" }),
+      page.getByRole("heading", { name: "Create user" })
     ).toBeVisible();
 
     const accessibilityScanResultsBase = await new AxeBuilder({
@@ -87,6 +87,54 @@ test.describe("user management page", () => {
     await expect(row.getByText("Standard")).toBeVisible();
     await expect(page.getByText(program1)).toBeVisible();
     await expect(page.getByText(program2)).not.toBeVisible();
+
+    // Open side panel to edit user
+    await page.getByRole("button", { name: email }).click();
+    await expect(page.getByText("User information")).toBeVisible();
+    await page.getByText("Edit user").click();
+    await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
+    await expect(
+      page.getByRole("heading", { name: "Edit user" })
+    ).toBeVisible();
+
+    // Not touched yet
+    await expect(
+      page.getByRole("button", { name: "Save user" }).first()
+    ).toBeDisabled();
+
+    // Edit user email & program
+    const newEmail = email + "edited";
+    page.getByLabel("Email").clear();
+    page.getByLabel("Email").fill(newEmail);
+
+
+    await checkboxProgram1.scrollIntoViewIfNeeded();
+    await checkboxProgram1.dispatchEvent("click");
+
+    const checkboxProgram2 = page.getByLabel(`Select ${program2}`, {
+      exact: true,
+    });
+    await checkboxProgram2.scrollIntoViewIfNeeded();
+    await checkboxProgram2.dispatchEvent("click");
+    await page
+      .getByRole("button", { name: "Save program area" })
+      .first()
+      .click();
+
+    // Confirm edit changes have saved
+    await page.waitForURL("/ecr-viewer/admin/user");
+    await expect(
+      page.getByRole("heading", { name: "User management" })
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("cell", { name: newEmail })
+    ).toBeVisible();
+    await expect(
+      page.getByText(`${newEmail} successfully saved`)
+    ).toBeVisible();
+    await expect(page.getByText(program1)).not.toBeVisible();
+    await expect(page.getByText(program2)).toBeVisible();
 
     // Delete the user
     await page.getByRole("button", { name: email }).click();
