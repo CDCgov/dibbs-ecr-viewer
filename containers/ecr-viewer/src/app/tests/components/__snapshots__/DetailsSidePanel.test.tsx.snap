@@ -26,10 +26,10 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
   <div
     aria-describedby="details-sidepanel-r:id-description"
     aria-labelledby="details-sidepanel-r:id-heading"
-    class="usa-modal-wrapper is-visible"
+    class="usa-modal-wrapper is-visible isolate"
     id="details-sidepanel-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="details-sidepanel-r:id"
@@ -146,11 +146,11 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
     aria-describedby="delete-confirm-r:id-description"
     aria-hidden="true"
     aria-labelledby="delete-confirm-r:id-heading"
-    class="usa-modal-wrapper is-hidden"
+    class="usa-modal-wrapper is-hidden isolate"
     data-modal-hidden="1"
     id="delete-confirm-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="delete-confirm-r:id"
@@ -279,10 +279,10 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
   <div
     aria-describedby="details-sidepanel-r:id-description"
     aria-labelledby="details-sidepanel-r:id-heading"
-    class="usa-modal-wrapper is-visible"
+    class="usa-modal-wrapper is-visible isolate"
     id="details-sidepanel-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="details-sidepanel-r:id"
@@ -399,11 +399,11 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
     aria-describedby="delete-confirm-r:id-description"
     aria-hidden="true"
     aria-labelledby="delete-confirm-r:id-heading"
-    class="usa-modal-wrapper is-hidden"
+    class="usa-modal-wrapper is-hidden isolate"
     data-modal-hidden="1"
     id="delete-confirm-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="delete-confirm-r:id"
@@ -533,11 +533,11 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
     aria-describedby="details-sidepanel-r:id-description"
     aria-hidden="true"
     aria-labelledby="details-sidepanel-r:id-heading"
-    class="usa-modal-wrapper is-visible"
+    class="usa-modal-wrapper is-visible isolate"
     data-modal-hidden="1"
     id="details-sidepanel-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="details-sidepanel-r:id"
@@ -653,11 +653,11 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
   <div
     aria-describedby="delete-confirm-r:id-description"
     aria-labelledby="delete-confirm-r:id-heading"
-    class="usa-modal-wrapper is-visible"
+    class="usa-modal-wrapper is-visible isolate"
     data-modal-hidden="1"
     id="delete-confirm-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="delete-confirm-r:id"
@@ -786,10 +786,10 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
   <div
     aria-describedby="details-sidepanel-r:id-description"
     aria-labelledby="details-sidepanel-r:id-heading"
-    class="usa-modal-wrapper is-visible"
+    class="usa-modal-wrapper is-visible isolate"
     id="details-sidepanel-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="details-sidepanel-r:id"
@@ -905,10 +905,10 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
   <div
     aria-describedby="delete-confirm-r:id-description"
     aria-labelledby="delete-confirm-r:id-heading"
-    class="usa-modal-wrapper is-hidden"
+    class="usa-modal-wrapper is-hidden isolate"
     id="delete-confirm-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="delete-confirm-r:id"
@@ -1038,11 +1038,11 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
     aria-describedby="details-sidepanel-r:id-description"
     aria-hidden="true"
     aria-labelledby="details-sidepanel-r:id-heading"
-    class="usa-modal-wrapper is-visible"
+    class="usa-modal-wrapper is-visible isolate"
     data-modal-hidden="1"
     id="details-sidepanel-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="details-sidepanel-r:id"
@@ -1158,10 +1158,10 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
   <div
     aria-describedby="delete-confirm-r:id-description"
     aria-labelledby="delete-confirm-r:id-heading"
-    class="usa-modal-wrapper is-visible"
+    class="usa-modal-wrapper is-visible isolate"
     id="delete-confirm-r:id"
     role="dialog"
-    style="isolation: isolate;"
+    style="z-index: 99999;"
   >
     <div
       aria-controls="delete-confirm-r:id"

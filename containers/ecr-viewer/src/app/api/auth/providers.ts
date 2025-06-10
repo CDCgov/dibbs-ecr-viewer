@@ -55,3 +55,5 @@ export const providerMap: ProviderDetails[] = providers.map((provider) => ({
   name: provider.name,
   wellKnown: provider?.wellKnown,
 }));
+
+export const isUsingNextAuth = !!providerMap[0];
