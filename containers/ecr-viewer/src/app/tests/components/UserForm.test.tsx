@@ -59,7 +59,7 @@ describe("UserForm", () => {
       <UserForm
         action="Create"
         initValues={{
-          programs: mockPrograms
+          programs: mockPrograms,
         }}
         submitAction={async () => ({})}
       />,
@@ -99,7 +99,9 @@ describe("UserForm", () => {
     await user.click(buttonStandardUser[0]);
 
     // select all programs
-    const butonSelectAll = screen.getAllByRole("button", { name: "Select all" })[0];
+    const butonSelectAll = screen.getAllByRole("button", {
+      name: "Select all",
+    })[0];
     expect(butonSelectAll).not.toBeDisabled();
     await user.click(butonSelectAll);
     for (const checkbox of checkboxes) {
@@ -120,7 +122,7 @@ describe("UserForm", () => {
   it("should render a filled out form", async () => {
     // User should only have Program Area Two checked
     const mockCheckedPrograms = mockPrograms.map((p) =>
-      p.name === "Program Area Two" ? { ...p, checked: true } : p
+      p.name === "Program Area Two" ? { ...p, checked: true } : p,
     );
 
     render(
@@ -132,7 +134,7 @@ describe("UserForm", () => {
           programs: mockCheckedPrograms,
         }}
         submitAction={async () => ({})}
-      />
+      />,
     );
 
     // valid due to initial inputs
@@ -161,6 +163,5 @@ describe("UserForm", () => {
       name: /Program Area Three/i,
     })[0];
     expect(checkboxProgramThree).not.toBeChecked();
-
   });
 });
