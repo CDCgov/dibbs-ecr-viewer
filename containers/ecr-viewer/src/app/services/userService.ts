@@ -165,6 +165,27 @@ const createUserQuery = async (
 };
 
 /**
+ * Get a user with the given uuid
+ * @param uuid id of the user to get
+ * @returns user if available, otherwise undefined
+ */
+export const getUser = async (
+  uuid: string,
+): Promise<User | undefined> => {
+  try {
+    return await getDb<Core>()
+      .selectFrom("user")
+      .selectAll()
+      .where("user.uuid", "=", uuid)
+      .executeTakeFirst();
+  } catch (error: unknown) {
+    const message = "Failed to get user";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+};
+
+/**
  * Update a user with the the given id.
  * @param uuid id of the user to update
  * @param updates objecct with fields to update in their record. UUID fields should not be updated.
