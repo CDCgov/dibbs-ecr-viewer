@@ -1,19 +1,26 @@
 "use client";
+import { Session } from "next-auth";
 import { SessionProvider, useSession } from "next-auth/react";
 
 /**
  * Root layout for the view-data page
  * @param props react props
+ * @param props.initSession server side session info
  * @param props.children content
  * @returns laid out content
  */
 export const AuthSessionProvider = ({
+  initSession,
   children,
 }: {
+  initSession?: Session;
   children: React.ReactNode;
 }) => {
   return (
-    <SessionProvider basePath={`${process.env.BASE_PATH}/api/auth`}>
+    <SessionProvider
+      basePath={`${process.env.BASE_PATH}/api/auth`}
+      session={initSession}
+    >
       {children}
     </SessionProvider>
   );

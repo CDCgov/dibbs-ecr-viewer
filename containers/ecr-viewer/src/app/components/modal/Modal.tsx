@@ -21,7 +21,7 @@ import ReactDOM from "react-dom";
 import { Close } from "@/app/components/Icon";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
-// Fork: forceAction, modalRoot, and renderToPortal were removed as those
+// Fork: forceAction, modalRoot, isInitiallyOpen, and renderToPortal were removed as those
 // can cause some strange interaction effects with multi-modal usage and
 // we want to be more opinionated in the usage for the viewer. Add `onClose`
 // prop to allow event handling when the modal is closed for any reason
@@ -31,8 +31,8 @@ interface ModalComponentProps {
   children: React.ReactNode;
   className?: string;
   isLarge?: boolean;
+  zIndex?: number;
   onClose?: () => void;
-  isInitiallyOpen?: boolean;
 }
 
 export type ModalProps = ModalComponentProps & JSX.IntrinsicElements["div"];
@@ -64,7 +64,8 @@ const getAttributeCount = (el: Element, attr: string) =>
  * @param props.id component ID
  * @param props.children modal content
  * @param props.isLarge whether to make the modal big. Default false
- * @param props.isInitiallyOpen whether modal should start open
+ * @param props.zIndex z index of the modal. Should only be set if a modal can't be
+ * placed in the markup in the correct view-order.
  * @param props.onClose Handler to call when modal closes
  * @param ref Reference to the modal
  * @returns Modal
@@ -73,16 +74,12 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
   ModalRef,
   ModalProps
 > = (
-  { id, children, isLarge = false, isInitiallyOpen, onClose, ...divProps },
+  { id, children, isLarge = false, zIndex = 99999, onClose, ...divProps },
   ref,
 ): React.ReactElement => {
   const modalRootSelector = `[id="${id}"]`;
 
-  const { isOpen, toggleModal } = useModal(
-    isInitiallyOpen,
-    modalRootSelector,
-    onClose,
-  );
+  const { isOpen, toggleModal } = useModal(modalRootSelector, onClose);
   const [mounted, setMounted] = useState(false);
   const initialPaddingRef = useRef<string>();
   const tempPaddingRef = useRef<string>();
@@ -221,7 +218,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
         aria-describedby={ariaDescribedBy}
         isVisible={isOpen}
         handleClose={closeModal}
-        style={{ isolation: "isolate" }}
+        style={{ zIndex }}
       >
         <ModalWindow
           modalId={id}
@@ -265,11 +262,10 @@ type ModalHook = {
 };
 
 const useModal = (
-  isInitiallyOpen: boolean | undefined,
   modalRootSelector: string,
   onClose?: () => void,
 ): ModalHook => {
-  const [isOpen, setIsOpen] = useState(isInitiallyOpen || false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const allowToggle = (e: React.MouseEvent): boolean => {
     const clickedElement = e.target as Element;
@@ -297,15 +293,16 @@ const useModal = (
       return false;
     }
 
-    if (open === true) setIsOpen(true);
-    else if (open === false) {
+    // toggling
+    if (open === undefined) {
+      open = !isOpen;
+    }
+
+    if (open === true) {
+      setIsOpen(true);
+    } else {
       onClose?.();
       setIsOpen(false);
-    } else {
-      setIsOpen((state) => {
-        if (state) onClose?.();
-        return !state;
-      });
     }
 
     return true;
@@ -397,6 +394,7 @@ const ModalWrapperForwardRef: React.ForwardRefRenderFunction<
       "is-visible": isVisible,
       "is-hidden": !isVisible,
     },
+    "isolate",
     className,
   );
 
