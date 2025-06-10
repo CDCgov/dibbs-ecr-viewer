@@ -117,7 +117,7 @@ test.describe("user management page", () => {
     await checkboxProgram2.scrollIntoViewIfNeeded();
     await checkboxProgram2.dispatchEvent("click");
     await page
-      .getByRole("button", { name: "Save program area" })
+      .getByRole("button", { name: "Save user" })
       .first()
       .click();
 
