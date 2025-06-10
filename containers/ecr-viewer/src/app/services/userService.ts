@@ -169,9 +169,7 @@ const createUserQuery = async (
  * @param uuid id of the user to get
  * @returns user if available, otherwise undefined
  */
-export const getUser = async (
-  uuid: string,
-): Promise<User | undefined> => {
+export const getUser = async (uuid: string): Promise<User | undefined> => {
   try {
     return await getDb<Core>()
       .selectFrom("user")

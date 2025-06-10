@@ -7,9 +7,12 @@ import {
   updateUserAction,
   updateUserProgramAreasAction,
 } from "@/app/services/serverActionService";
-import { getUser, listUserProgramAreas, notFoundUnlessAdmin } from "@/app/services/userService";
+import {
+  getUser,
+  listUserProgramAreas,
+  notFoundUnlessAdmin,
+} from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
-
 
 /**
  * Edit a user
@@ -36,12 +39,10 @@ const EditUserPage = async ({
     notFound();
   }
 
-  const userPrograms = await listUserProgramAreas(uuid)
-  const userProgramUUIDs = new Set(
-    userPrograms.map((up) => up.uuid)
-  );
+  const userPrograms = await listUserProgramAreas(uuid);
+  const userProgramUUIDs = new Set(userPrograms.map((up) => up.uuid));
   const programs = (await listProgramAreas()).map((p) =>
-    userProgramUUIDs.has(p.uuid) ? { ...p, checked: true } : p
+    userProgramUUIDs.has(p.uuid) ? { ...p, checked: true } : p,
   );
 
   const isValidUserType = (value: string): value is UserType => {
@@ -60,7 +61,10 @@ const EditUserPage = async ({
         "use server";
         revalidatePath("/ecr-viewer/admin/user");
 
-        const res = await updateUserAction(uuid, { email, user_type: userType });
+        const res = await updateUserAction(uuid, {
+          email,
+          user_type: userType,
+        });
 
         if (!res.error) {
           return await updateUserProgramAreasAction(uuid, programs);
