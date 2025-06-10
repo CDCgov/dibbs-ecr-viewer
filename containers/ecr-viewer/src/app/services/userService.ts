@@ -181,7 +181,7 @@ export const getUser = async (
   } catch (error: unknown) {
     const message = "Failed to get user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
