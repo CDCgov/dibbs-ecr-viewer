@@ -220,8 +220,12 @@ export const evaluateValue = (
   entry: FhirData,
   path: string | FhirPath<string>,
 ): string => {
-  const [fhirPath, type] =
+  let [fhirPath, type] =
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
+  if (type === "TimeX") {
+    // TODO: time/period handling
+    type = "string";
+  }
   const originalValue =
     evaluateOneAndCheck<ValueX>(entry, fhirPath, type) || "";
 

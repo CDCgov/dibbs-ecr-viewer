@@ -4,9 +4,9 @@ import {
   CareTeamParticipant,
   Medication,
   MedicationAdministration,
+  Observation,
   Period,
   Practitioner,
-  Procedure,
   Reference,
 } from "fhir/r4";
 
@@ -20,7 +20,7 @@ import {
   formatName,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { evaluateData, safeParse } from "@/app/utils/data-utils";
+import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateReference,
@@ -85,9 +85,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
-      value: returnProceduresTable(
-        evaluateAll(fhirBundle, fhirPathMappings.procedures),
-      ),
+      value: returnProceduresTable(fhirBundle),
     },
     {
       title: "Planned Procedures",
@@ -367,37 +365,81 @@ const evaluatePlanOfTreatment = (
 
 /**
  * Generates a formatted table representing the list of procedures based on the provided array of procedures and mappings.
- * @param proceduresArray - An array containing the list of procedures.
+ * @param fhirBundle - The fhir bundle
  * @returns - A formatted table React element representing the list of procedures, or undefined if the procedures array is empty.
  */
 export const returnProceduresTable = (
-  proceduresArray: Procedure[],
+  fhirBundle: Bundle,
 ): React.JSX.Element | undefined => {
-  if (proceduresArray.length === 0) {
+  // Literal Procedure resources
+  const procedures = evaluateAll(fhirBundle, fhirPathMappings.procedures);
+
+  // References to Observations in the procedure history section
+  const obsRefs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.procedureHistoryRefs,
+  );
+  const obs = obsRefs
+    .map((r) => evaluateReference<Observation>(fhirBundle, r.reference))
+    .filter(notEmpty);
+
+  if (procedures.length === 0 && obs.length === 0) {
     return undefined;
   }
 
   const columnInfo: ColumnInfoInput[] = [
     { columnName: "Name", infoPath: "procedureName" },
     { columnName: "Date/Time Performed", infoPath: "procedureDate" },
-    { columnName: "Reason", infoPath: "procedureReason" },
+    { columnName: "Status", infoPath: "procedureStatus" },
+    {
+      columnName: "Details",
+      hiddenBaseText: "details",
+      infoPath: "procedureDetails",
+    },
   ];
 
-  proceduresArray = proceduresArray.map((entry) => {
-    // Have date and time be on two different lines
-    const dt = formatDateTime(entry.performedDateTime);
-    return { ...entry, performedDateTime: dt.replace(" ", "\n") };
-  });
+  const procBundle = [
+    ...procedures.map((entry) => {
+      const { id, code, performedDateTime, performedPeriod, status, ...rest } =
+        entry;
+      const details = JSON.stringify(rest);
+      return {
+        id,
+        resourceType: "Procedure",
+        code,
+        performedDateTime,
+        performedPeriod,
+        status,
+        details,
+      };
+    }),
+    ...obs.map((entry) => {
+      const { id, code, effectiveDateTime, effectivePeriod, status, ...rest } =
+        entry;
+      const details = JSON.stringify(rest);
+      return {
+        id,
+        resourceType: "Procedure",
+        code,
+        performedDateTime: effectiveDateTime,
+        performedPeriod: effectivePeriod,
+        status,
+        details,
+      };
+    }),
+  ];
 
-  proceduresArray.sort(
-    (a, b) =>
-      new Date(b.performedDateTime ?? "").getTime() -
-      new Date(a.performedDateTime ?? "").getTime(),
-  );
+  // TODO: bring back sorting - maybe put on evaluate table?
+  // procedures.sort(
+  //   (a, b) =>
+  //     new Date(b.performedDateTime ?? "").getTime() -
+  //     new Date(a.performedDateTime ?? "").getTime(),
+  // );
+  console.log({ procBundle });
 
   return (
     <EvaluateTable
-      resources={proceduresArray}
+      resources={procBundle}
       columns={columnInfo}
       caption="Procedures"
       className="margin-y-0"

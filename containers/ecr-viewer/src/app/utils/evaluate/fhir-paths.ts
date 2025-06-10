@@ -35,6 +35,8 @@ export type ValueX =
   | Reference
   | ObservationReferenceRange;
 
+export type TimeX = string | Period;
+
 /**
  * Mapping from the FHIR path key to the expected type upon valuation.
  */
@@ -128,9 +130,12 @@ export type PathTypes = {
   immunizationsManufacturerName: string;
   immunizationsLotNumber: unknown;
   procedures: Procedure;
-  procedureName: string;
-  procedureDate: string;
+  procedureHistoryRefs: Reference;
+  procedureName: CodeableConcept;
+  procedureDate: TimeX;
+  procedureStatus: string;
   procedureReason: string;
+  procedureDetails: unknown;
   diagnosticReports: DiagnosticReport;
   diagnosticReportStatus: string;
   observations: Observation;
@@ -525,20 +530,30 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Immunization.manufacturer.name",
   },
   immunizationsLotNumber: { type: "unknown", path: "Immunization.lotNumber" },
+
+  // === Procedure ===
   procedures: {
     type: "Procedure",
     path: "Bundle.entry.resource.where(resourceType = 'Procedure')",
   },
-
-  // Procedure
-  procedureName: {
-    type: "string",
-    path: "Procedure.code.coding.iif(where(system = 'http://loinc.org').display.exists(), where(system = 'http://loinc.org').display, display.first())",
+  procedureHistoryRefs: {
+    type: "Reference",
+    path: "Bundle.entry.resource.section.where(code.coding[0].code = '47519-4').entry.where(reference.startsWith('Observation/'))",
   },
-  procedureDate: { type: "string", path: "Procedure.performedDateTime" },
-  procedureReason: { type: "string", path: "Procedure.reason.display" },
 
-  // Lab Info
+  // core fields
+  procedureName: {
+    type: "CodeableConcept",
+    path: "Procedure.code",
+  },
+  procedureDate: { type: "TimeX", path: "Procedure.performed" },
+  procedureStatus: { type: "string", path: "Procedure.status" },
+
+  // extra details
+  procedureDetails: { type: "unknown", path: "Procedure.details" },
+  procedureReason: { type: "CodeableConcepts", path: "Procedure.reasonCode" },
+
+  // === Lab Info ===
   diagnosticReports: {
     type: "DiagnosticReport",
     path: "Bundle.entry.resource.where(resourceType = 'DiagnosticReport')",

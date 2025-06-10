@@ -16,7 +16,7 @@ export type Mapping = {
 export interface ColumnInfoInput {
   columnName: string;
   infoPath?: string;
-  value?: string;
+  value?: ReactNode;
   className?: string;
   hiddenBaseText?: string;
   applyToValue?: (value: string) => ReactNode;
@@ -180,27 +180,28 @@ export const evaluateTableRowCell = (
   entry: Element,
   mappings: Mapping,
 ) => {
-  let strData: string;
+  let data: ReactNode;
   let hiddenRow: ReactNode = null;
   let hidden = false;
   if (column?.value) {
-    strData = column.value;
+    data = column.value;
   } else if (column?.infoPath) {
-    strData = evaluateValue(entry, mappings[column.infoPath]).replaceAll(
-      "<br/>",
-      "\n",
-    );
+    const strData: string = evaluateValue(
+      entry,
+      mappings[column.infoPath],
+    ).replaceAll("<br/>", "\n");
+    if (strData && column.applyToValue) {
+      data = column.applyToValue(strData);
+    }
+    {
+      data = strData;
+    }
   } else {
     throw new Error(
       `No value or infoPath provided to EvaluateTable column: ${JSON.stringify(
         column,
       )}`,
     );
-  }
-
-  let data: ReactNode = strData;
-  if (strData && column.applyToValue) {
-    data = column.applyToValue(strData);
   }
 
   if (data && column.hiddenBaseText) {
