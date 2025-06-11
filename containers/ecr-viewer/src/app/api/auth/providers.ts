@@ -31,6 +31,19 @@ const azure = () => {
       clientId: process.env.AUTH_CLIENT_ID,
       clientSecret: process.env.AUTH_CLIENT_SECRET,
       tenantId: process.env.AUTH_ISSUER,
+      // Override the default profile fetcher as 1) we don't care about images and 2)
+      // azure makes it look like you have an email, but it's really a UPN, so use that
+      // as a fall-back for email if needed and it looks email-like
+      async profile(profile) {
+        const altEmail = profile.upn?.includes("@") ? profile.upn : null;
+
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email || altEmail,
+          image: null,
+        };
+      },
     });
 };
 export const providers = [keycloak(), azure()].filter(
@@ -42,3 +55,5 @@ export const providerMap: ProviderDetails[] = providers.map((provider) => ({
   name: provider.name,
   wellKnown: provider?.wellKnown,
 }));
+
+export const isUsingNextAuth = !!providerMap[0];

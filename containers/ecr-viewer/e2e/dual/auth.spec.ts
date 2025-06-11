@@ -17,9 +17,15 @@ test.describe("keycloak", () => {
     await page.getByRole("textbox", { name: "password" }).fill("pw");
     await page.getByRole("button", { name: "Sign in" }).click();
 
-    await expect(page.getByText("eCR Library")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "eCR Library" }),
+    ).toBeVisible();
 
-    await expect(page.getByText("Sign Out")).toBeVisible();
+    await page
+      .getByRole("button", { name: "User Menu" })
+      .click({ timeout: 5000 });
+
+    await expect(page.getByRole("button", { name: "Sign Out" })).toBeVisible();
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
@@ -103,7 +109,9 @@ test.describe("keycloak", () => {
 
     // via nbs auth, cannot navigate to library or sign out
     await expect(page.getByText("Back to eCR Library")).not.toBeVisible();
-    await expect(page.getByText("Sign Out")).not.toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Sign Out" }),
+    ).not.toBeVisible();
     await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
     );

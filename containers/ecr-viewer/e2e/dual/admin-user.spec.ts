@@ -4,12 +4,14 @@ import { test, expect, Page } from "@playwright/test";
 import { logInToKeycloak } from "./utils";
 
 test.describe("user management page", () => {
-  test.beforeEach(logInToKeycloak);
-
   test("should pass accessiblity", async ({ page }) => {
+    await logInToKeycloak({ page });
+
     await page.goto("/ecr-viewer/admin/user");
 
-    await expect(page.getByText("User Management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "User management" }),
+    ).toBeVisible();
 
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
@@ -18,7 +20,9 @@ test.describe("user management page", () => {
 
     // open up side panel
     await page.getByText("ecr-viewer@admin.com").click();
-    await expect(page.getByText("Ecr Admin")).toHaveCount(2);
+    await expect(
+      page.getByRole("heading", { name: "Ecr Admin" }),
+    ).toBeVisible();
 
     const accessibilityScanResultsSidePanel = await new AxeBuilder({
       page,
@@ -34,6 +38,8 @@ test.describe("user management page", () => {
   });
 
   test("should create a new user", async ({ page, browserName }) => {
+    await logInToKeycloak({ page });
+
     // Create programs
     const program1 = await createRandomProgramArea(page);
     const program2 = await createRandomProgramArea(page);
@@ -41,7 +47,9 @@ test.describe("user management page", () => {
     // Create user & assign to Program 1
     await page.goto("/ecr-viewer/admin/user");
 
-    await expect(page.getByText("User management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "User management" }),
+    ).toBeVisible();
 
     await page.getByText("Create user").click();
 
@@ -80,8 +88,33 @@ test.describe("user management page", () => {
     await expect(page.getByText(program1)).toBeVisible();
     await expect(page.getByText(program2)).not.toBeVisible();
 
+    // Delete the user
+    await page.getByRole("button", { name: email }).click();
+    await expect(page.getByText("User information")).toBeVisible();
+
+    await page.getByRole("button", { name: "Remove user" }).click();
+    await expect(page.getByText(`Remove ${email}`)).toBeVisible();
+
+    await page.getByRole("button", { name: "Yes, remove user" }).click();
+    await expect(page.getByText(`${email} succesfully removed`)).toBeVisible();
+
+    // Dismiss any toasts
+    await page.keyboard.press("Escape");
+
     await deleteProgramArea(page, program1);
     await deleteProgramArea(page, program2);
+  });
+
+  test("it should not show to non-admin", async ({ page }) => {
+    await logInToKeycloak({ page }, undefined, "ecr-viewer-standard");
+    await page.goto("/ecr-viewer/admin/user");
+
+    await expect(
+      page.getByRole("heading", { name: "Page not found" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "User management" }),
+    ).not.toBeVisible();
   });
 });
 
@@ -109,6 +142,6 @@ const deleteProgramArea = async (page: Page, program: string) => {
   await page.goto("/ecr-viewer/admin/program");
   await page.getByLabel("Program areas per page").selectOption("100");
   await page.getByRole("button", { name: program }).click();
-  await page.getByRole("button", { name: "Delete program area" }).click();
-  await page.getByRole("button", { name: "Yes, delete program area" }).click();
+  await page.getByRole("button", { name: "Remove program area" }).click();
+  await page.getByRole("button", { name: "Yes, remove program area" }).click();
 };

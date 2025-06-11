@@ -26,9 +26,9 @@ test.describe("ecr library page", () => {
     const totalNumOfConditions = "2";
     test("Set reportable condition filter to zika", async ({ page }) => {
       await page.goto("/ecr-viewer");
-      await expect(page.getByTestId("filter-tag")).toContainText(
-        totalNumOfConditions,
-      );
+      await expect(
+        page.getByLabel("Filter by Reportable Condition"),
+      ).toContainText(totalNumOfConditions);
 
       await page.getByLabel("Filter by reportable condition").click();
       // Add delay since conditions rerenders shortly after opening
@@ -52,12 +52,12 @@ test.describe("ecr library page", () => {
 
     test("Search should filter results ", async ({ page }) => {
       await page.goto("/ecr-viewer");
-      await expect(page.getByTestId("filter-tag")).toContainText(
-        totalNumOfConditions,
-      );
+      await expect(
+        page.getByLabel("Filter by Reportable Condition"),
+      ).toContainText(totalNumOfConditions);
 
-      await page.getByTestId("textInput").fill("Yoda");
-      await page.getByTestId("form").getByTestId("button").click();
+      await page.getByRole("searchbox").fill("Yoda");
+      await page.getByRole("button", { name: "search" }).click();
 
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
       await expect(
@@ -72,13 +72,13 @@ test.describe("ecr library page", () => {
       page,
     }) => {
       await page.goto("/ecr-viewer");
-      await expect(page.getByTestId("filter-tag")).toContainText(
-        totalNumOfConditions,
-      );
+      await expect(
+        page.getByLabel("Filter by Reportable Condition"),
+      ).toContainText(totalNumOfConditions);
 
-      await page.getByTestId("textInput").click();
-      await page.getByTestId("textInput").fill("Yoda");
-      await page.getByTestId("form").getByTestId("button").click();
+      await page.getByRole("searchbox").click();
+      await page.getByRole("searchbox").fill("Yoda");
+      await page.getByRole("button", { name: "search" }).click();
 
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
 
@@ -96,15 +96,15 @@ test.describe("ecr library page", () => {
 
     test("Set results per page", async ({ page }) => {
       await page.goto("/ecr-viewer?itemsPerPage=1");
-      await expect(page.getByTestId("filter-tag")).toContainText(
-        totalNumOfConditions,
-      );
+      await expect(
+        page.getByLabel("Filter by Reportable Condition"),
+      ).toContainText(totalNumOfConditions);
 
       await page.getByText("Showing 1-1").waitFor();
 
       await expect(page.getByLabel("Page 2")).toBeVisible();
 
-      await page.getByTestId("Select").selectOption("100");
+      await page.getByLabel("eCRs per page").selectOption("100");
 
       await expect(page.getByLabel("Page 2")).not.toBeVisible();
       await expect(page.getByText("Showing 1-3")).toBeVisible();
@@ -120,8 +120,8 @@ test.describe("ecr library page", () => {
       await page.goto(
         "/ecr-viewer?columnId=date_created&direction=DESC&itemsPerPage=72&page=1&condition=Zika+Virus+Disease&search=Yoda&dateRange=last-30-days",
       );
-      await expect(page.getByTestId("textInput")).toHaveValue("Yoda");
-      await expect(page.getByTestId("Select")).toHaveValue("72");
+      await expect(page.getByRole("searchbox")).toHaveValue("Yoda");
+      await expect(page.getByLabel("eCRs per page")).toHaveValue("72");
       await page.getByText("Showing 1-1 of 1 eCRs").click();
       await page.getByLabel("Filter by reportable condition").click();
       await expect(
@@ -140,16 +140,16 @@ test.describe("ecr library page", () => {
       page,
     }) => {
       await page.goto("/ecr-viewer");
-      await expect(page.getByTestId("filter-tag")).toContainText(
-        totalNumOfConditions,
-      );
+      await expect(
+        page.getByLabel("Filter by Reportable Condition"),
+      ).toContainText(totalNumOfConditions);
       await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
 
       await page.getByLabel(/Filter by Received Date/).click();
       // playwright doesn't believe the option is in the viewport even though it very much is
       await page.getByLabel("Custom date range").dispatchEvent("click");
-      await page.getByTestId("start-date").fill("2024-01-01");
-      await page.getByTestId("end-date").fill("2024-01-02");
+      await page.getByLabel("Start date").fill("2024-01-01");
+      await page.getByLabel("End date").fill("2024-01-02");
       await page.getByLabel("Apply Filter").click();
 
       await page.waitForURL(
@@ -174,6 +174,7 @@ test.describe("ecr library page", () => {
       });
 
       await headerButton.click();
+      // No role/label based selector available here, using test ID
       await expect(page.getByTestId("loading-table")).toBeVisible();
       await expect(page.getByText("Yoda")).toBeVisible();
       await expect(
@@ -186,6 +187,7 @@ test.describe("ecr library page", () => {
       );
 
       await headerButton.click();
+      // No role/label based selector available here, using test ID
       await expect(page.getByTestId("loading-table")).toBeVisible();
       await expect(page.getByText("Yoda")).toBeVisible();
       await expect(

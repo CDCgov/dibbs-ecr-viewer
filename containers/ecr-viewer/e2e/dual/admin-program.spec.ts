@@ -9,7 +9,9 @@ test.describe("program management page", () => {
   test("should pass accessiblity", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/program");
 
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Program management" }),
+    ).toBeVisible();
 
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
@@ -20,7 +22,9 @@ test.describe("program management page", () => {
   test("should create a program", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/program");
 
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Program management" }),
+    ).toBeVisible();
 
     await page.getByText("Create program area").click();
 
@@ -36,7 +40,7 @@ test.describe("program management page", () => {
 
     // search for a condition (but not too specifically due to randomness)
     await page.getByPlaceholder("Search conditions").fill("i");
-    await expect(page.getByText("216 results")).toBeVisible();
+    await expect(page.getByText("232 results")).toBeVisible();
 
     // Find a random condition (avoid clashes in parallel tests)
     const checkboxes = await page.getByRole("checkbox").all();
@@ -54,7 +58,9 @@ test.describe("program management page", () => {
       .click();
 
     await page.waitForURL("/ecr-viewer/admin/program");
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Program management" }),
+    ).toBeVisible();
 
     await expect(page.getByRole("cell", { name: conditionName })).toBeVisible();
     await expect(
@@ -78,7 +84,7 @@ test.describe("program management page", () => {
     await page.getByText("Create program area").click();
     // search for a condition again so checkbox is correct
     await page.getByPlaceholder("Search conditions").fill("i");
-    await expect(page.getByText("216 results")).toBeVisible();
+    await expect(page.getByText("232 results")).toBeVisible();
     await expect(page.getByText(`Condition in ${conditionName}`)).toBeVisible();
     await checkbox.scrollIntoViewIfNeeded();
     await checkbox.dispatchEvent("click");
@@ -132,7 +138,9 @@ test.describe("program management page", () => {
       .click();
 
     await page.waitForURL("/ecr-viewer/admin/program");
-    await expect(page.getByText("Program management")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Program management" }),
+    ).toBeVisible();
 
     await expect(
       page.getByRole("cell", { name: newConditionName }),
@@ -145,19 +153,19 @@ test.describe("program management page", () => {
     await page.getByRole("button", { name: newConditionName }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
-    await page.getByRole("button", { name: "Delete program area" }).click();
-    await expect(page.getByText(`Delete ${newConditionName}`)).toBeVisible();
+    await page.getByRole("button", { name: "Remove program area" }).click();
+    await expect(page.getByText(`Remove ${newConditionName}`)).toBeVisible();
 
     const accessibilityScanResultsConfirmation = await axe.analyze();
     expect(accessibilityScanResultsConfirmation.violations).toEqual([]);
 
     await page
-      .getByRole("button", { name: "Yes, delete program area" })
+      .getByRole("button", { name: "Yes, remove program area" })
       .click();
     await expect(page.locator("body")).not.toHaveAttribute("data-modal-count");
 
     await expect(
-      page.getByText(`${newConditionName} succesfully deleted`),
+      page.getByText(`${newConditionName} succesfully removed`),
     ).toBeVisible();
 
     // Dismiss any toasts

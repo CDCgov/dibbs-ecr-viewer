@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import bgRedirect from "../../../assets/bg-redirect.svg";
-import { providerMap } from "@/app/api/auth/providers";
+import { isUsingNextAuth, providerMap } from "@/app/api/auth/providers";
 
 import { RedirectButton } from "./components/RedirectButton";
 
@@ -9,15 +9,14 @@ import { RedirectButton } from "./components/RedirectButton";
  * @returns a sign-in (redirect) page
  */
 const RedirectPage = () => {
-  if (!providerMap[0]) notFound();
+  if (!isUsingNextAuth) notFound();
   return (
     <div
-      className="position-relative text-white"
+      className="height-viewport-header-footer position-relative text-white"
       style={{
         backgroundImage: `url(${bgRedirect.src})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "100vh",
         minWidth: "100vw",
         overflowY: "auto",
         overflowX: "auto",

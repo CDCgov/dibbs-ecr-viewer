@@ -94,50 +94,157 @@
 }
 
 .usa-header {
-  background-color: #172e51;
+  background-color: color("blue-cool-80");
   color: white;
+  height: 5.5rem;
+  line-height: 0;
+  margin-top: 0;
+  padding-top: 1.5rem;
 
-  .usa-logo {
-    margin-left: 0px;
-
-    a {
-      color: white;
-    }
+  h1 {
+    margin: auto auto auto 0.75rem !important;
+    font-size: 1.5rem;
+    font-weight: 200;
+    @include u-font-family("serif");
   }
 
   .usa-navbar {
     border-bottom: none;
   }
 
-  @media (min-width: 64em) {
-    .usa-logo {
-      margin-bottom: 1.5rem;
-      margin-top: 1.5rem;
-    }
+  .usa-nav__link {
+    padding: 1rem 0.5rem !important;
+    margin: 0 0.5rem;
+    height: 2.2rem;
+    text-decoration: none;
+    min-width: fit-content;
+  }
 
-    .usa-nav-container {
-      margin-left: 0px;
-      padding: 0.5rem 1.5rem;
+  .person-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    fill: color("blue-cool-5");
+  }
 
-      &::after {
-        content: none;
-      }
-    }
+  a {
+    font-weight: 400 !important;
+    font-size: 1.125rem !important;
+    color: color("blue-cool-5") !important;
+    text-decoration: none;
+  }
+
+  .usa-nav__link:hover::after {
+    background-color: color("blue-cool-30");
+    width: 91%;
+    left: 0.5rem;
   }
 
   .usa-nav-container {
-    margin-left: 0px;
-    padding: 0.5rem 1.5rem;
-
+    height: 2.5rem;
+    margin: 0 5rem 1.5rem 5rem;
+    padding: 0;
     &::after {
       content: none;
     }
   }
 
-  h1 {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 2rem;
+  @media (max-width: 64em) {
+    .usa-nav-container {
+      align-items: flex-end;
+      justify-content: space-between;
+      display: flex;
+      margin: 0 clamp(0.1rem, 6.25vw, 4rem) 1.5rem clamp(0.1rem, 6.25vw, 4rem);
+    }
+  }
+
+  .user-menu-button {
+    background-color: color("blue-cool-80") !important;
+    border: 0;
+    padding: 0;
+  }
+
+  .user-menu-button:hover {
+    cursor: pointer;
+  }
+
+  .user-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+    width: auto;
+    min-width: 12.5rem;
+    height: 7.625rem;
+    background-color: color("white");
+    border-radius: 5px;
+    box-shadow: 0 2px 4px color("black");
+    padding: 0.8125rem;
+
+    .sign-out-button {
+      color: color("blue-cool-60");
+      background: none !important;
+      font-weight: 400;
+      font-size: 1.125rem;
+      padding: 0;
+    }
+
+    .sign-out-button:hover {
+      color: color("blue-cool-70");
+    }
+
+    .user-email {
+      color: color("ink") !important;
+      margin: 0.7rem 0 0.6rem 0;
+      padding-top: 0.1rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .user-role {
+      color: color("base") !important;
+      border-bottom: 1px solid color("gray-30");
+      font-size: 1.125rem;
+      padding-top: 1rem;
+      padding-bottom: 1.2rem;
+      margin: 0rem 0 1rem 0;
+    }
+  }
+
+  .user-menu-container {
+    position: relative;
+    z-index: 1000;
+  }
+}
+
+.usa-footer {
+  height: 5.5rem;
+  background-color: color("blue-cool-80");
+  padding-top: 1.25rem;
+
+  .usa-footer__primary-section {
+    background-color: color("blue-cool-80");
+  }
+
+  .footer-content {
+    margin: 0 5rem 1.25rem 5rem;
+    height: 3rem;
+  }
+
+  @media (max-width: 64em) {
+    .footer-content {
+      margin: 0 clamp(0.1rem, 6.25vw, 4rem) 1.5rem clamp(0.1rem, 6.25vw, 4rem);
+    }
+  }
+
+  p {
+    font-weight: 400;
+    color: color("blue-cool-5");
+  }
+
+  a {
+    font-weight: 700;
+    color: color("blue-cool-5");
   }
 }
 

@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useEffect, useId, useState } from "react";
+import { ReactNode, useId, useState } from "react";
 
 import { Alert, Button } from "@trussworks/react-uswds";
 import Link from "next/link";
@@ -43,20 +43,6 @@ export const FormPageContent = <T,>({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Alert user that they have unsaved data if they hard navigate away
-  useEffect(() => {
-    if (!formTouched) return;
-
-    const beforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-    };
-
-    window.addEventListener("beforeunload", beforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", beforeUnload);
-    };
-  }, [formTouched]);
-
   const submitDisabled = !formValid || !formTouched || submitting;
   const actionPhrase = `${action} ${itemType}`;
 
@@ -71,7 +57,7 @@ export const FormPageContent = <T,>({
           Back to {itemType} management
         </Link>
         <div className="border-bottom border-base-lighter position-sticky top-0 bg-white isolate z-500 padding-top-1">
-          <div className="height-5 margin-bottom-1">
+          <div className="minh-5 margin-bottom-1">
             {formTouched && !submitting && !error && (
               <Alert
                 type="warning"

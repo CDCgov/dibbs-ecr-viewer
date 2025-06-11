@@ -1,6 +1,8 @@
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
 import { listProgramAreas } from "@/app/services/programAreaService";
+import { deleteUserAction } from "@/app/services/serverActionService";
 import { listUsers, notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { UserTable } from "./UserTable";
@@ -27,7 +29,15 @@ const UserAdminPage = async () => {
               </Link>
             </div>
           </div>
-          <UserTable users={users} programAreas={programAreas} />
+          <UserTable
+            users={users}
+            programAreas={programAreas}
+            deleteAction={async (uuid) => {
+              "use server";
+              revalidatePath("/ecr-viewer/admin/user");
+              return await deleteUserAction(uuid);
+            }}
+          />
         </div>
       </main>
     </>
