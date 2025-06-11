@@ -20,6 +20,7 @@ export interface ColumnInfoInput {
   className?: string;
   hiddenBaseText?: string;
   applyToValue?: (value: string) => ReactNode;
+  evaluateEntry?: (el: Element) => ReactNode;
 }
 
 interface TableProps {
@@ -196,6 +197,8 @@ export const evaluateTableRowCell = (
     {
       data = strData;
     }
+  } else if (column?.evaluateEntry) {
+    data = column.evaluateEntry(entry);
   } else {
     throw new Error(
       `No value or infoPath provided to EvaluateTable column: ${JSON.stringify(

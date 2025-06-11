@@ -134,7 +134,16 @@ export type PathTypes = {
   procedureName: CodeableConcept;
   procedureDate: TimeX;
   procedureStatus: string;
-  procedureReason: string;
+  procedureReason: CodeableConcept;
+  procedureLocationRef: Reference;
+  procedureOrgRef: Reference;
+  procedureBodySite: CodeableConcept;
+  procedureOutcome: CodeableConcept;
+  procedureComplication: CodeableConcept;
+  procedureProductRef: Reference;
+  procedureSpecimen: CodeableConcept;
+  procedureMethod: CodeableConcept;
+  procedurePriority: CodeableConcept;
   procedureDetails: unknown;
   diagnosticReports: DiagnosticReport;
   diagnosticReportStatus: string;
@@ -544,14 +553,38 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // core fields
   procedureName: {
     type: "CodeableConcept",
-    path: "Procedure.code",
+    path: "code",
   },
-  procedureDate: { type: "TimeX", path: "Procedure.performed" },
-  procedureStatus: { type: "string", path: "Procedure.status" },
+  procedureDate: {
+    type: "TimeX",
+    path: "Procedure.performed | Observation.effective",
+  },
+  procedureStatus: { type: "string", path: "status" },
 
   // extra details
   procedureDetails: { type: "unknown", path: "Procedure.details" },
-  procedureReason: { type: "CodeableConcepts", path: "Procedure.reasonCode" },
+  procedureReason: { type: "CodeableConcept", path: "Procedure.reasonCode" },
+  procedureLocationRef: { type: "Reference", path: "Procedure.location" },
+  procedureOrgRef: { type: "Reference", path: "Procedure.performer.actor" },
+  procedureBodySite: { type: "CodeableConcept", path: "bodySite" },
+  procedureOutcome: { type: "CodeableConcept", path: "Observation.value" },
+  procedureComplication: {
+    type: "CodeableConcept",
+    path: "Procedure.complication",
+  },
+  procedureProductRef: { type: "Reference", path: "Procedure.usedReference" },
+  procedureSpecimen: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'specimen').value",
+  },
+  procedureMethod: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'http://hl7.org/fhir/StructureDefinition/procedure-method').value | Observation.method",
+  },
+  procedurePriority: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'priorityCode').value",
+  },
 
   // === Lab Info ===
   diagnosticReports: {

@@ -66,7 +66,12 @@ export const EvaluateTableRow = ({
       </tr>
       {hiddenRow && (
         <tr hidden={hiddenComment} id={`hidden-comment-${id}`}>
-          <td colSpan={numCols} className="hideableData p-list">
+          <td
+            colSpan={numCols}
+            className="p-list"
+            style={{ borderTop: "none" }}
+          >
+            <div className="border-top border-base-lighter margin-top-neg-105 margin-bottom-1" />
             {hiddenRow}
           </td>
         </tr>

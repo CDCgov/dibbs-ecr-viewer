@@ -2,9 +2,13 @@ import {
   Bundle,
   CarePlanActivity,
   CareTeamParticipant,
+  Device,
+  Element,
+  Location,
   Medication,
   MedicationAdministration,
   Observation,
+  Organization,
   Period,
   Practitioner,
   Reference,
@@ -16,13 +20,17 @@ import {
   formatStartEndDate,
 } from "@/app/services/formatDateService";
 import {
+  formatAddress,
+  formatAddressList,
   formatCodeableConcept,
+  formatContactPoint,
   formatName,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -32,7 +40,10 @@ import {
   AdministeredMedication,
   AdministeredMedicationTableData,
 } from "@/app/view-data/components/AdministeredMedication";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import {
+  DataDisplay,
+  DisplayDataProps,
+} from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
@@ -394,40 +405,11 @@ export const returnProceduresTable = (
     {
       columnName: "Details",
       hiddenBaseText: "details",
-      infoPath: "procedureDetails",
+      evaluateEntry: (el) => evaluateProcedureDetails(fhirBundle, el),
     },
   ];
 
-  const procBundle = [
-    ...procedures.map((entry) => {
-      const { id, code, performedDateTime, performedPeriod, status, ...rest } =
-        entry;
-      const details = JSON.stringify(rest);
-      return {
-        id,
-        resourceType: "Procedure",
-        code,
-        performedDateTime,
-        performedPeriod,
-        status,
-        details,
-      };
-    }),
-    ...obs.map((entry) => {
-      const { id, code, effectiveDateTime, effectivePeriod, status, ...rest } =
-        entry;
-      const details = JSON.stringify(rest);
-      return {
-        id,
-        resourceType: "Procedure",
-        code,
-        performedDateTime: effectiveDateTime,
-        performedPeriod: effectivePeriod,
-        status,
-        details,
-      };
-    }),
-  ];
+  const procBundle = [...procedures, ...obs];
 
   // TODO: bring back sorting - maybe put on evaluate table?
   // procedures.sort(
@@ -435,7 +417,6 @@ export const returnProceduresTable = (
   //     new Date(b.performedDateTime ?? "").getTime() -
   //     new Date(a.performedDateTime ?? "").getTime(),
   // );
-  console.log({ procBundle });
 
   return (
     <EvaluateTable
@@ -445,6 +426,96 @@ export const returnProceduresTable = (
       className="margin-y-0"
     />
   );
+};
+
+const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
+  const content = [
+    {
+      title: "Reason",
+      value: evaluateAll(procedure, fhirPathMappings.procedureReason)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Body Site",
+      value: evaluateAll(procedure, fhirPathMappings.procedureBodySite)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Method",
+      value: evaluateAll(procedure, fhirPathMappings.procedureMethod)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Outcome",
+      value: evaluateValue(procedure, fhirPathMappings.procedureOutcome),
+    },
+    {
+      title: "Complication",
+      value: evaluateAll(procedure, fhirPathMappings.procedureComplication)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Priority",
+      value: evaluateValue(procedure, fhirPathMappings.procedurePriority),
+    },
+    {
+      title: "Specimen",
+      value: evaluateAll(procedure, fhirPathMappings.procedureSpecimen)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Product",
+      value: evaluateAll(procedure, fhirPathMappings.procedureProductRef)
+        .map((r) => evaluateReference<Device>(fhirBundle, r.reference))
+        .filter(notEmpty)
+        .map((d) =>
+          [
+            formatCodeableConcept(d.type),
+            d.identifier &&
+              `ID: ${d.identifier?.map(({ value }) => value).join(", ")}`,
+          ]
+            .filter(Boolean)
+            .join("\n"),
+        )
+        .join("\n\n"),
+    },
+    {
+      title: "Service Location",
+      value: formatAddress(
+        evaluateReference<Location>(
+          fhirBundle,
+          evaluateOne(procedure, fhirPathMappings.procedureLocationRef)
+            ?.reference,
+        )?.address,
+      ),
+    },
+    {
+      title: "Organization",
+      value: evaluateAll(procedure, fhirPathMappings.procedureOrgRef)
+        .map((r) => evaluateReference<Organization>(fhirBundle, r.reference))
+        .filter(notEmpty)
+        .map((o) =>
+          [o.name, formatAddressList(o.address), formatContactPoint(o.telecom)]
+            .filter(Boolean)
+            .join("\n"),
+        )
+        .join("\n\n"),
+    },
+  ].filter(({ value }) => !!value);
+
+  if (content.length === 0) return;
+
+  return content.map(({ title, value }, i) => (
+    <DataDisplay
+      key={title}
+      item={{ title, value, dividerLine: i < content.length - 1 }}
+    />
+  ));
 };
 
 /**
