@@ -142,7 +142,7 @@ test.describe("user management page", () => {
 
     await page.getByRole("button", { name: "Yes, remove user" }).click();
     await expect(
-      page.getByText(`${newEmail} succesfully removed`)
+      page.getByText(`${newEmail} succesfully removed`),
     ).toBeVisible();
 
     // Dismiss any toasts
