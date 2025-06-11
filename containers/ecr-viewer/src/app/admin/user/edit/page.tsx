@@ -41,7 +41,7 @@ const EditUserPage = async ({
 
   const userPrograms = await listUserProgramAreas(uuid);
   const userProgramUUIDs = new Set(userPrograms.map((up) => up.uuid));
-  const programs = (await listProgramAreas()).map((p) =>
+  const initPrograms = (await listProgramAreas()).map((p) =>
     userProgramUUIDs.has(p.uuid) ? { ...p, checked: true } : p,
   );
 
@@ -55,7 +55,7 @@ const EditUserPage = async ({
       initValues={{
         email: user.email,
         userType: isValidUserType(user.user_type) ? user.user_type : undefined,
-        programs,
+        programs: initPrograms,
       }}
       submitAction={async (email, userType, programs) => {
         "use server";
