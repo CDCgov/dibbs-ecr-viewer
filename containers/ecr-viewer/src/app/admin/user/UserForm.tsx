@@ -17,7 +17,7 @@ import { makePlural, toKebabCase, toTitleCase } from "@/app/utils/format-utils";
 import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
-type UserType = "admin" | "standard";
+export type UserType = "admin" | "standard";
 
 export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
@@ -91,7 +91,7 @@ export const UserForm = ({
         const res = await submitAction(
           email.trim(),
           userType,
-          selectedPrograms,
+          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");
