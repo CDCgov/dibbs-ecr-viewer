@@ -31,7 +31,9 @@ test.describe("viewer page", () => {
     );
     await page.getByRole("button", { name: "Expand all labs" }).click();
 
-    const viewCommentButtons = await page.getByTestId("comment-button").all();
+    const viewCommentButtons = await page
+      .getByRole("button", { name: "View comment" })
+      .all();
     for (const viewCommentButton of viewCommentButtons) {
       await viewCommentButton.scrollIntoViewIfNeeded();
       await viewCommentButton.click();

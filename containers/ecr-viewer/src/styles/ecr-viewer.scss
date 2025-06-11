@@ -14,7 +14,15 @@ html {
   --patient-banner-buffer: 3.1rem;
 }
 
+main {
+  border-top: 0 !important;
+}
+
 // ===== Page styling ===== //
+
+.minw-55rem {
+  min-width: 55rem;
+}
 
 .ecr-viewer-container {
   width: 100%;
@@ -55,6 +63,12 @@ html {
   border-left: 1px solid #005ea2;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+}
+
+.section__line_light_gray {
+  border-top: 1px solid #f0f0f0;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .section__line_gray {

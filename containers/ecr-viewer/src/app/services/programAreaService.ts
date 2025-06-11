@@ -8,6 +8,7 @@ import {
   ProgramArea,
 } from "@/app/data/metadataDb/types/core";
 
+import { UserFacingError } from "./errorService";
 import { getCheckAdmin } from "./userService";
 
 /**
@@ -22,6 +23,12 @@ export const createProgramArea = async (
   conditions: string[],
 ): Promise<string> => {
   const creatingUser = await getCheckAdmin("create program areas");
+
+  if (name.trim().length < 2 || conditions.length === 0) {
+    throw new UserFacingError(
+      "Invalid program area. Must have a non-empty name and at least one condition assigned.",
+    );
+  }
 
   try {
     const uuid = randomUUID();
@@ -45,6 +52,27 @@ export const createProgramArea = async (
     return uuid;
   } catch (error: unknown) {
     const message = "Failed to create program area";
+    console.error({ message, error });
+    throw new UserFacingError(message);
+  }
+};
+
+/**
+ * Get program area with the given uuid
+ * @param uuid id of the program to get
+ * @returns program area if available, otherwise undefined
+ */
+export const getProgramArea = async (
+  uuid: string,
+): Promise<ProgramArea | undefined> => {
+  try {
+    return await getDb<Core>()
+      .selectFrom("program_area")
+      .selectAll()
+      .where("program_area.uuid", "=", uuid)
+      .executeTakeFirst();
+  } catch (error: unknown) {
+    const message = "Failed to get program area";
     console.error({ message, error });
     throw new Error(message);
   }
@@ -94,7 +122,7 @@ export const updateProgramArea = async (
   } catch (error: unknown) {
     const message = "Failed to update program area";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -126,7 +154,7 @@ export const deleteProgramArea = async (uuid: string): Promise<void> => {
   } catch (error: unknown) {
     const message = "Failed to delete program area";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -163,6 +191,6 @@ export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
   } catch (error: unknown) {
     const message = "Failed to list program areas";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };

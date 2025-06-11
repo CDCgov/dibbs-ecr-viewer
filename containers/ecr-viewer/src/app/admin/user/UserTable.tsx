@@ -12,10 +12,11 @@ import {
   PaginatedSortableTable,
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
+import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
-import { toSentenceCase } from "@/app/utils/format-utils";
+import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 /**
@@ -23,14 +24,17 @@ import { ForceClient } from "@/app/view-data/components/ForceClient";
  * @param props React props
  * @param props.users listed users
  * @param props.programAreas listed program areas
+ * @param props.deleteAction action to do upon delete confirmation
  * @returns paginated, sorted table of users
  */
 export const UserTable = ({
   users,
   programAreas,
+  deleteAction,
 }: {
   users: ListedUser[];
   programAreas: ListedProgramArea[];
+  deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
   const detailsRef = useDetailsRef();
@@ -93,7 +97,17 @@ export const UserTable = ({
             ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
             : "Never"
         }`}
-        description="User Information"
+        editHref={`/admin/user/edit?uuid=${selectedUser?.uuid}`}
+        itemType="user"
+        deleteAction={async () => await deleteAction(selectedUser?.uuid!)}
+        deleteExplainerText="Removing the user will remove the user account and data from the eCR Viewer. The user account and data will still be available in your login provider."
+        deleteModalTitle={`Remove ${selectedUser?.name || selectedUser?.email}`}
+        deleteModalBody={
+          <p>
+            This action will not edit or remove the user from your login
+            provider.
+          </p>
+        }
         details={[
           {
             title: "Name",
@@ -158,7 +172,7 @@ const ProgramAreaContent = ({
               <span>{pa.name}</span>
               <span>
                 {conditionNames.length} condition
-                {conditionNames.length !== 1 && "s"}
+                {makePlural(conditionNames.length)}
               </span>
             </div>
           ),

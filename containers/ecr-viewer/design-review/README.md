@@ -15,6 +15,7 @@ curl https://raw.githubusercontent.com/CDCgov/dibbs-ecr-viewer/main/containers/e
 
 - The first command uses the wget program to download a copy the `design-review.sh` file from this directory to the root level of your user directory e.g. `Users/johndoe`.
 - The second command (`chmod +x design-review.sh`) assigns executable permissions to `design-review.sh` allowing it to be run.
+- Make sure you have [docker](https://www.docker.com/) already installed and you have host networking enabled in Docker > Settings > Resources > Network
 
 ## Usage
 

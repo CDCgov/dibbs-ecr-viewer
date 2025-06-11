@@ -305,6 +305,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
 
   return (
     <ExpandCollapseAccordion
+      className="accordion-rr margin-bottom-3"
       descriptor="employment details"
       items={jobObs.map((obs) => {
         const getComponentValue = (code: string) => {
@@ -736,14 +737,27 @@ export const evaluateProviderData = (fhirBundle: Bundle) => {
   );
 
   const encounter = evaluateReference<Encounter>(fhirBundle, encounterRef);
-  const encounterParticipantRef = evaluateOne(
+  const encounterAttendingRefs = evaluateAll(
     encounter,
-    fhirPathMappings.encounterIndividualRef,
+    fhirPathMappings.encounterAttendingRefs,
   );
-  const { practitioner, organization } = evaluatePractitionerRoleReference(
-    fhirBundle,
-    encounterParticipantRef,
-  );
+
+  // CDA has there being only one responsible party per eCR - find them
+  const { practitioner, organization } =
+    encounterAttendingRefs
+      .map((encounterAttendingRef) =>
+        evaluatePractitionerRoleReference(
+          fhirBundle,
+          encounterAttendingRef.individual?.reference,
+        ),
+      )
+      .find(
+        ({ practitioner }) =>
+          practitioner?.extension?.find(
+            ({ url }) =>
+              url === "http://hl7.org/fhir/StructureDefinition/_datatype",
+          )?.valueString === "Responsible Party",
+      ) || {};
 
   const providerData: DisplayDataProps[] = [
     {

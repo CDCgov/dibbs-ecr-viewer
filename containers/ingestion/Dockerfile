@@ -1,7 +1,7 @@
-FROM python:3.13-slim
+FROM python:3.13.3-alpine
 
-RUN apt-get update && \
-    apt-get upgrade -y
+RUN apk update && \
+    apk upgrade --no-cache
 
 RUN pip install --upgrade pip --break-system-packages
 

@@ -8,16 +8,17 @@ fastapi>=0.109.1
 fhirpathpy
 google-auth
 google-cloud-storage
-httpx
+httpx>=0.28.1
 phonenumbers
 polling
-pycountry
+pycountry>=24.6.1
 pydantic-settings
 pydantic>=2.0.0
 rapidfuzz
 requests
-setuptools>=70.0.0
+setuptools>=78.1.1
 smartystreets_python_sdk
 typing_extensions>=4.8.0
 urllib3
-uvicorn
+uvicorn>=0.34.3
+h11>=0.16.0 # not directly required, pinned by Snyk to avoid a vulnerability

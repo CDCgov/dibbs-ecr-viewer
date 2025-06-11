@@ -1,80 +1,49 @@
-import { notFound } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
-import Header from "@/app/components/Header";
-import { listConditionReferences } from "@/app/services/listConditionsService";
-import {
-  createProgramArea,
-  listProgramAreas,
-} from "@/app/services/programAreaService";
-import { getLoggedInUser, isAdmin } from "@/app/services/userService";
+import { listProgramAreas } from "@/app/services/programAreaService";
+import { deleteProgramAreaAction } from "@/app/services/serverActionService";
+import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { ProgramTable } from "./ProgramTable";
-
-async function submitCreateProgramArea(form: FormData) {
-  "use server";
-  await createProgramArea(
-    form.get("name") as string,
-    form.getAll("conditions") as string[],
-  );
-}
 
 /**
  * Program admin landing page with table of active users
  * @returns user admin page
  */
 const ProgramAdminPage = async () => {
-  const admin = await getLoggedInUser();
-  if (!isAdmin(admin)) {
-    notFound();
-  }
+  await notFoundUnlessAdmin();
 
   const programAreas = await listProgramAreas();
-  // Only for form hackery - delete later
-  const conditions = await listConditionReferences();
 
   return (
-    <div className="display-flex flex-column height-viewport">
-      <Header />
-      <main className="main-container">
-        <div className="content-container margin-top-10">
+    <main className="main-container">
+      <div className="content-container margin-top-10">
+        <div className="display-flex flex-justify">
           <h2 className="margin-bottom-5">Program management</h2>
-          {programAreas.length === 0 ? (
-            <div className="width-full height-half bg-base-lightest display-flex flex-align-center flex-justify-center">
-              <p className="text-bold font-size-lg">No program areas added</p>
-            </div>
-          ) : (
-            <ProgramTable programAreas={programAreas} />
-          )}
+          <div>
+            <Link href="/admin/program/create" className="usa-button">
+              Create program area
+            </Link>
+          </div>
         </div>
-      </main>
-
-      {/* HACKY, BUT USEFUL. KEEPING AROUND FOR THE MOMENT*/}
-      {process.env.NODE_ENV === "development" && (
-        <div style={{ margin: "100px" }}>
-          <h2>Scratch functionality to test above</h2>
-          <form action={submitCreateProgramArea}>
-            <label>
-              Name:
-              <input type="text" required={true} id="name" name="name" />
-            </label>
-            <fieldset>
-              <legend>Conditions:</legend>
-              {conditions.map((condition, i) => (
-                <label key={i}>
-                  {condition.condition_name}
-                  <input
-                    type="checkbox"
-                    name="conditions"
-                    value={condition.code}
-                  />
-                </label>
-              ))}
-            </fieldset>
-            <button type="submit">Add New Program Area</button>
-          </form>
-        </div>
-      )}
-    </div>
+        {programAreas.length === 0 ? (
+          <div className="width-full height-half bg-base-lightest display-flex flex-align-center flex-justify-center">
+            <p className="text-bold font-size-lg">No program areas added</p>
+          </div>
+        ) : (
+          <ProgramTable
+            programAreas={programAreas}
+            deleteAction={async (uuid) => {
+              "use server";
+              const res = await deleteProgramAreaAction(uuid);
+              revalidatePath("/ecr-viewer/admin/program");
+              return res;
+            }}
+          />
+        )}
+      </div>
+    </main>
   );
 };
 

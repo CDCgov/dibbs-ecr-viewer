@@ -1,10 +1,9 @@
-"use server";
-
 import "server-only";
 import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
 import { Kysely } from "kysely";
+import { notFound } from "next/navigation";
 
 import { getDb } from "@/app/data/metadataDb/database";
 import {
@@ -16,6 +15,8 @@ import {
   UserProgramArea,
 } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
+
+import { UserFacingError } from "./errorService";
 
 const getUserByEmail = async (
   email: string | null | undefined,
@@ -32,21 +33,27 @@ const getUserByEmail = async (
 /**
  * Get the db User object for the currently logged in user.
  *
- * Cached so once we start using this and other crud in UI
- * we re-use the db call.
+ * We should think about caching this in the future, so once we
+ * start using this and other crud in UI we re-use the db call.
+ * @returns Logged in User or undefined
  */
 export const getLoggedInUser = cache(async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
   if (!email) return;
 
-  // Update the last log in and user's name to match the IDP
-  await getDb<Core>()
-    .updateTable("user")
-    .set({ date_of_last_login: new Date(), name })
-    .where("email", "=", email)
-    .execute();
+  try {
+    // Update the last log in and user's name to match the IDP
+    await getDb<Core>()
+      .updateTable("user")
+      .set({ date_of_last_login: new Date(), name })
+      .where("email", "=", email)
+      .execute();
 
-  return await getUserByEmail(email);
+    return await getUserByEmail(email);
+  } catch (error: unknown) {
+    console.error({ error, message: "Failed to get logged in user" });
+    return undefined;
+  }
 });
 
 /**
@@ -57,6 +64,16 @@ export const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
 
 /**
+ * If the logged in user is not an admin, force the page calling this to 404.
+ */
+export const notFoundUnlessAdmin = async () => {
+  const admin = await getLoggedInUser();
+  if (!isAdmin(admin)) {
+    notFound();
+  }
+};
+
+/**
  * Check the currently logged in user is an admin and return them. Throws
  * an error if the currently logged in user isn't an admin.
  * @param actionDesc description of the action that only admins can do
@@ -65,7 +82,7 @@ export const isAdmin = (user: User | undefined): user is User =>
 export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
   const loggedInUser = await getLoggedInUser();
   if (!isAdmin(loggedInUser)) {
-    throw new Error(`Standard user cannot ${actionDesc}`);
+    throw new UserFacingError(`Standard user cannot ${actionDesc}`);
   }
 
   return loggedInUser;
@@ -76,7 +93,7 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
  * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
  * @param email Email of the user to add
- * @param user_type Type of user to create ("admiin" or "standard")
+ * @param user_type Type of user to create ("admin" or "standard")
  * @returns UUID of the created user
  */
 export const createUser = async (
@@ -91,7 +108,7 @@ export const createUser = async (
   } catch (error: unknown) {
     const message = "Failed to create new user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -116,7 +133,7 @@ export const createInitialAdminUser = async (
   } catch (error: unknown) {
     const message = "Failed to create initial admin user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -129,7 +146,7 @@ const createUserQuery = async (
   const user = await getUserByEmail(email);
   if (!!user) {
     if (user.status === "active") {
-      throw new Error("User already exists and is active");
+      throw new UserFacingError("User already exists and is active");
     } else {
       await updateUserQuery(user.uuid, { status: "active", user_type });
       return user.uuid;
@@ -148,6 +165,25 @@ const createUserQuery = async (
 };
 
 /**
+ * Get a user with the given uuid
+ * @param uuid id of the user to get
+ * @returns user if available, otherwise undefined
+ */
+export const getUser = async (uuid: string): Promise<User | undefined> => {
+  try {
+    return await getDb<Core>()
+      .selectFrom("user")
+      .selectAll()
+      .where("user.uuid", "=", uuid)
+      .executeTakeFirst();
+  } catch (error: unknown) {
+    const message = "Failed to get user";
+    console.error({ message, error });
+    throw new UserFacingError(message);
+  }
+};
+
+/**
  * Update a user with the the given id.
  * @param uuid id of the user to update
  * @param updates objecct with fields to update in their record. UUID fields should not be updated.
@@ -163,7 +199,7 @@ export const updateUser = async (
   } catch (error: unknown) {
     const message = "Failed to update user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -200,7 +236,7 @@ export const listUserProgramAreas = async (
   } catch (error: unknown) {
     const message = "Failed to list user program areas";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -230,7 +266,7 @@ export const updateUserProgramAreas = async (
   } catch (error: unknown) {
     const message = "Failed to update user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -255,7 +291,7 @@ export const deleteUser = async (uuid: string): Promise<void> => {
   } catch (error: unknown) {
     const message = "Failed to delete user";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 
@@ -298,7 +334,7 @@ export const listUsers = async (): Promise<ListedUser[]> => {
   } catch (error: unknown) {
     const message = "Failed to list users";
     console.error({ message, error });
-    throw new Error(message);
+    throw new UserFacingError(message);
   }
 };
 

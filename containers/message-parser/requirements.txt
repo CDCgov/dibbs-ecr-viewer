@@ -4,14 +4,14 @@ azure-keyvault-secrets
 azure-storage-blob
 cryptography>=43.0.1
 fastapi>=0.109.1
-fhirpathpy
+fhirpathpy==1.2.1
 frozendict
 google-auth
 google-cloud-storage
-httpx
+httpx>=0.28.1
 lxml
 pydantic-settings
 pydantic>=2.0.0
 requests
 urllib3
-uvicorn
+uvicorn>=0.34.3

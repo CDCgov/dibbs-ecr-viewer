@@ -1,9 +1,13 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { axe } from "jest-axe";
 import { notFound } from "next/navigation";
 
+import ProgramCreatePage from "@/app/admin/program/create/page";
 import ProgramAdminPage from "@/app/admin/program/page";
+import { listConditionReferences } from "@/app/services/listConditionsService";
 import { listProgramAreas } from "@/app/services/programAreaService";
-import { isAdmin } from "@/app/services/userService";
+import { isAdmin, notFoundUnlessAdmin } from "@/app/services/userService";
 
 jest.mock("../data/metadataDb/database");
 jest.mock("../utils/auth-utils", () => ({
@@ -22,12 +26,12 @@ describe("Program Admin Page", () => {
     jest.clearAllMocks();
   });
 
-  it("should show 404 if not an admin", async () => {
+  it("should check user is an admin", async () => {
     (isAdmin as unknown as jest.Mock).mockReturnValue(false);
     (listProgramAreas as jest.Mock).mockResolvedValue([]);
 
     render(await ProgramAdminPage());
-    expect(notFound).toHaveBeenCalled();
+    expect(notFoundUnlessAdmin).toHaveBeenCalled();
   });
 
   it("should show no program areas message if none", async () => {
@@ -73,14 +77,14 @@ describe("Program Admin Page", () => {
           {
             code: "456",
             concept_name: "condition 1 (disease)",
-            condition_name: "condition",
+            condition_name: "condition 1",
             condition_category: "category",
             program_area_uuid: "789",
           },
           {
             code: "789",
             concept_name: "condition 2 (disease)",
-            condition_name: "condition",
+            condition_name: "condition 2",
             condition_category: "category",
             program_area_uuid: "789",
           },
@@ -94,5 +98,40 @@ describe("Program Admin Page", () => {
       screen.queryByText("No program areas added"),
     ).not.toBeInTheDocument();
     expect(container).toMatchSnapshot();
+
+    const user = userEvent.setup();
+    await user.click(
+      screen.getByRole("button", { name: "Program Area Three" }),
+    );
+    expect(screen.getByText("Program area information")).toBeInTheDocument();
+    expect(screen.getByText("condition 1")).toBeInTheDocument();
+  });
+
+  describe("Creating programs", () => {
+    it("should render a create program page", async () => {
+      (listConditionReferences as jest.Mock).mockResolvedValue([
+        {
+          code: "456",
+          concept_name: "condition 1 (disease)",
+          condition_name: "condition 1",
+          condition_category: "category",
+          program_area_uuid: null,
+        },
+        {
+          code: "789",
+          concept_name: "condition 2 (disease)",
+          condition_name: "condition 2",
+          condition_category: "category",
+          program_area_uuid: "789",
+        },
+      ]);
+      const { container } = render(await ProgramCreatePage());
+      expect(container).toMatchSnapshot();
+      let results;
+      await act(async () => {
+        results = await axe(container);
+      });
+      expect(results).toHaveNoViolations();
+    });
   });
 });

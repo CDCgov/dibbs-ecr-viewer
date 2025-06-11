@@ -1,6 +1,12 @@
 import "server-only";
 import { getServerSession } from "next-auth/next";
 
+interface UserSession {
+  name?: string | null;
+  email: string;
+  image?: string | null;
+}
+
 /**
  * Server side helper for whether this user is logged in. For client side, see `useLoggedInUser`.
  * A user can have access to an ecr page without being a logged in user if
@@ -20,5 +26,10 @@ export const isLoggedInUser = async () => {
  */
 export const getLoggedInUserSession = async () => {
   const session = await getServerSession();
-  return session?.user;
+
+  if (!session?.user) return;
+
+  session.user.email ||= "";
+
+  return session.user as UserSession;
 };
