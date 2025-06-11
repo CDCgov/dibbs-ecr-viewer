@@ -42,7 +42,7 @@
     "classnames": "^2.5.1",
     "fhirpath": "^3.18.0",
     "html-react-parser": "^5.2.3",
-    "jose": "5.10.0",
+    "jose": "6.0.11",
     "js-cookie": "^3.0.5",
     "kysely": "^0.27.6",
     "luxon": "^3.6.1",
