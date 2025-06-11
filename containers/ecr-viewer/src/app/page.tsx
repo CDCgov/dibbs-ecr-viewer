@@ -4,8 +4,8 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { dbIsValid } from "./api/migrate-db/migrate";
+import Filters from "./components/EcrFilters";
 import { MetadataDbInvalid } from "./components/ErrorPage";
-import Filters from "./components/Filters";
 import LibrarySearch from "./components/LibrarySearch";
 import { EcrTableLoading } from "./components/table/TableContentLoading";
 import EcrPaginationWrapper from "./components/table/ecr/EcrPaginationWrapper";

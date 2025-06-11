@@ -2,7 +2,7 @@
 
 import { Search } from "@trussworks/react-uswds";
 
-import { useQueryParam } from "@/app/hooks/useQueryParam";
+import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 
 interface LibrarySearchProps {
   initSearchTerm?: string;
@@ -23,7 +23,7 @@ const LibrarySearch = ({
   className,
   textBoxClassName,
 }: LibrarySearchProps) => {
-  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
+  const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
   return (
     <Search

@@ -11,6 +11,15 @@ const copyParams = (params: URLSearchParams | ReadonlyURLSearchParams) =>
   new URLSearchParams(params.toString());
 
 /**
+ * Custom hook to manage query parameters in the URL (set, delete, and update). It resets page back to 1. This is specialized on the ecr library params.
+ * @returns - An object containing
+ *  - searchParams: Current search params from the URL
+ *  - updateQueryParam: Function to update a specific query parameter.
+ *    If an object is passed, its keys that are set to true are concatenated with a |. Otherwise, the value is set directly.
+ */
+export const useLibraryQueryParam = () => useQueryParam<LibraryParam>(["page"]);
+
+/**
  * Custom hook to manage query parameters in the URL (set, delete, and update). Hook by default, it resets page back to 1. This is currently specialized on the ecr library params, but could be made more abstract
  * down the road if needed
  * @param resets - array of params that should always be reset when updating the query
@@ -19,7 +28,7 @@ const copyParams = (params: URLSearchParams | ReadonlyURLSearchParams) =>
  *  - updateQueryParam: Function to update a specific query parameter.
  *    If an object is passed, its keys that are set to true are concatenated with a |. Otherwise, the value is set directly.
  */
-export const useQueryParam = (resets: LibraryParam[] = ["page"]) => {
+export const useQueryParam = <Param extends string>(resets: Param[] = []) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -32,18 +41,18 @@ export const useQueryParam = (resets: LibraryParam[] = ["page"]) => {
   }
 
   // Set a query param with a specific value
-  const setQueryParam = (key: LibraryParam, value: string) => {
+  const setQueryParam = (key: Param, value: string) => {
     curSearchParams.set(key, value);
   };
 
   // Delete a query param or a specific query param value
-  const deleteQueryParam = (key: LibraryParam) => {
+  const deleteQueryParam = (key: Param) => {
     curSearchParams.delete(key);
   };
 
   const pushQueryUpdate = () => {
     const keys = (
-      [...searchParams.keys(), ...curSearchParams.keys()] as LibraryParam[]
+      [...searchParams.keys(), ...curSearchParams.keys()] as Param[]
     ).filter((k) => !resets.includes(k));
     if (
       keys.some((key) => searchParams.get(key) !== curSearchParams.get(key))
@@ -54,7 +63,7 @@ export const useQueryParam = (resets: LibraryParam[] = ["page"]) => {
 
   // Update a specific query param (set or delete if default)
   const updateQueryParam = (
-    key: LibraryParam,
+    key: Param,
     value: string | { [key: string]: boolean },
     isDefault: boolean = false,
   ) => {

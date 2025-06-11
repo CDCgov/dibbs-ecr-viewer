@@ -18,6 +18,53 @@ type ValidationFn = (searchParams: URLSearchParams) => void;
 
 export type PageSearchParams = { [key: string]: string | string[] | undefined };
 
+type ParamSpec<Config> = {
+  [K in keyof Config]: {
+    default: Config[K];
+    validator?: ValidationFn;
+  };
+};
+
+const getSearchParam = <Config, K extends string & keyof Config>(
+  spec: ParamSpec<Config>,
+  searchParams: PageSearchParams,
+  key: K,
+  altDefault?: string | undefined,
+): Config[K] => {
+  const rawVal = searchParams[key];
+  let singleVal: string | undefined;
+  if (Array.isArray(rawVal)) {
+    console.error(
+      `got unexpected array value for search param ${key}, taking first`,
+    );
+    singleVal = rawVal[0];
+  } else {
+    singleVal = rawVal;
+  }
+
+  let val: Config[K] | undefined;
+  let altDefaultVal: Config[K] | undefined;
+  const defaultVal = spec[key]?.default;
+  if (typeof defaultVal === "number") {
+    (val as number) = Number(singleVal);
+    (altDefaultVal as number) = Number(altDefault);
+  } else {
+    (val as string | undefined) = singleVal;
+    (altDefaultVal as string | undefined) = altDefault;
+  }
+
+  // Allow empty strings to return if explicitly sent
+  if (val === "" || val) {
+    return val;
+  } else if (altDefaultVal) {
+    return altDefaultVal;
+  } else {
+    return defaultVal;
+  }
+};
+
+// ==== Common Validation Helpers ====
+
 // helper to check date paramaters are valid, used for both params
 const checkDates: ValidationFn = (searchParams: URLSearchParams) => {
   const dateRange = searchParams.get("dateRange");
@@ -41,6 +88,8 @@ const isPositiveInt = (paramName: string): ValidationFn => {
   };
 };
 
+// ===== eCR Library search params =====
+
 type LibraryConfig = {
   itemsPerPage: number;
   page: number;
@@ -57,12 +106,7 @@ export type LibraryParam = keyof LibraryConfig;
 /**
  * Mapping from param name to default and function that validates and fixes search params
  */
-export const LIBRARY_SEARCH_PARAMS: {
-  [K in LibraryParam]: {
-    default: LibraryConfig[K];
-    validator?: ValidationFn;
-  };
-} = {
+export const LIBRARY_SEARCH_PARAMS: ParamSpec<LibraryConfig> = {
   itemsPerPage: {
     default: DEFAULT_ITEMS_PER_PAGE,
     validator: isPositiveInt("itemsPerPage"),
@@ -113,43 +157,6 @@ export const LIBRARY_SEARCH_PARAMS: {
   },
 };
 
-const getSearchParam = <K extends LibraryParam>(
-  searchParams: PageSearchParams,
-  key: K,
-  altDefault?: string | undefined,
-): LibraryConfig[K] => {
-  const rawVal = searchParams[key];
-  let singleVal: string | undefined;
-  if (Array.isArray(rawVal)) {
-    console.error(
-      `got unexpected array value for search param ${key}, taking first`,
-    );
-    singleVal = rawVal[0];
-  } else {
-    singleVal = rawVal;
-  }
-
-  let val: LibraryConfig[K] | undefined;
-  let altDefaultVal: LibraryConfig[K] | undefined;
-  const defaultVal = LIBRARY_SEARCH_PARAMS[key]?.default;
-  if (typeof defaultVal === "number") {
-    (val as number) = Number(singleVal);
-    (altDefaultVal as number) = Number(altDefault);
-  } else {
-    (val as string | undefined) = singleVal;
-    (altDefaultVal as string | undefined) = altDefault;
-  }
-
-  // Allow empty strings to return if explicitly sent
-  if (val === "" || val) {
-    return val;
-  } else if (altDefaultVal) {
-    return altDefaultVal;
-  } else {
-    return defaultVal;
-  }
-};
-
 /**
  * Get the library config with all search params populated with values or defaults
  * @param searchParams - The page's search params
@@ -163,11 +170,78 @@ export const getLibraryConfig = (
   const keys = Object.keys(LIBRARY_SEARCH_PARAMS) as LibraryParam[];
   const config = keys.reduce(
     <K extends LibraryParam>(acc: Partial<LibraryConfig>, key: K) => {
-      acc[key] = getSearchParam(searchParams, key, cookieStore.get(key)?.value);
+      acc[key] = getSearchParam(
+        LIBRARY_SEARCH_PARAMS,
+        searchParams,
+        key,
+        cookieStore.get(key)?.value,
+      );
       return acc;
     },
     {},
   );
 
   return config as LibraryConfig;
+};
+
+// ===== Admin User Page Config =====
+
+type AdminUserConfig = {
+  itemsPerPage: number;
+  userType: string;
+  programArea: string | undefined;
+};
+
+export type AdminUserParam = keyof AdminUserConfig;
+
+/**
+ * Mapping from param name to default and function that validates and fixes search params
+ */
+export const ADMIN_USER_SEARCH_PARAMS: ParamSpec<AdminUserConfig> = {
+  itemsPerPage: {
+    default: DEFAULT_ITEMS_PER_PAGE,
+    validator: isPositiveInt("itemsPerPage"),
+  },
+  programArea: {
+    default: undefined,
+    // Middleware runs on the edge runtime, so we can't make db calls. Would need
+    // to do a fetch to the API conditions endpoint to get the valid program areas
+    // and filter by. This may be worth it in the future, but not today.
+  },
+  userType: {
+    default: "all",
+    validator: (searchParams) => {
+      const param = searchParams.get("userType") as string;
+      if (!["all", "standars", "admin"].includes(param)) {
+        searchParams.delete("userType");
+      }
+    },
+  },
+};
+
+/**
+ * Get the admin user config with all search params populated with values or defaults
+ * @param searchParams - The page's search params
+ * @param cookieStore - The cookie store from the request
+ * @returns the library config
+ */
+export const getAdminUserConfig = (
+  searchParams: PageSearchParams,
+  cookieStore: ReadonlyRequestCookies,
+): AdminUserConfig => {
+  const keys = Object.keys(ADMIN_USER_SEARCH_PARAMS) as AdminUserParam[];
+  const config = keys.reduce(
+    <K extends AdminUserParam>(acc: Partial<AdminUserConfig>, key: K) => {
+      acc[key] = getSearchParam(
+        ADMIN_USER_SEARCH_PARAMS,
+        searchParams,
+        key,
+        cookieStore.get(key)?.value,
+      );
+      return acc;
+    },
+    {},
+  );
+
+  return config as AdminUserConfig;
 };

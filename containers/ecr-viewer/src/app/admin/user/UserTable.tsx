@@ -37,6 +37,7 @@ export const UserTable = ({
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
+  const [filteredUsers, setFilteredUsers] = useState<ListedUser[]>(users);
   const detailsRef = useDetailsRef();
 
   const tableHeaders: TableColumn<ListedUser>[] = [
@@ -134,7 +135,7 @@ export const UserTable = ({
       />
       <PaginatedSortableTable
         initHeaders={tableHeaders}
-        items={users}
+        items={filteredUsers}
         itemType="Users"
       />
     </div>
