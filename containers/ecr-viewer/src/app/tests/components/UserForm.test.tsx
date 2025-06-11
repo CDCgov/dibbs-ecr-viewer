@@ -136,7 +136,7 @@ describe("UserForm", () => {
           programs: mockCheckedPrograms,
         }}
         submitAction={mockSubmitAction}
-      />
+      />,
     );
 
     // valid due to initial inputs
@@ -181,7 +181,7 @@ describe("UserForm", () => {
     expect(mockSubmitAction).toHaveBeenCalledWith(
       "test@test.test",
       "admin",
-      [] // Admins shouldn't be saved with assigned program areas
+      [], // Admins shouldn't be saved with assigned program areas
     );
   });
 });
