@@ -423,13 +423,6 @@ export const returnProceduresTable = (
 
   const procBundle = [...procedures, ...obs];
 
-  // TODO: bring back sorting - maybe put on evaluate table?
-  // procedures.sort(
-  //   (a, b) =>
-  //     new Date(b.performedDateTime ?? "").getTime() -
-  //     new Date(a.performedDateTime ?? "").getTime(),
-  // );
-
   return (
     <EvaluateTable
       resources={procBundle}

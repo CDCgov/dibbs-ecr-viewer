@@ -20,6 +20,107 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
       type: "batch",
       entry: [
         {
+          fullUrl: "urn:uuid:2.16.840.1.113883.9.9.9.9.9",
+          resource: {
+            resourceType: "Composition",
+            date: "2020-11-07T09:44:21-05:00",
+            title: "Initial Public Health Case Report",
+            section: [
+              {
+                id: "e2c29a84-7743-da0b-1df0-7b4e56c58b29",
+                title: "Procedures",
+                text: {
+                  status: "generated",
+                  div: '<table border="1" width="100%" xmlns="urn:hl7-org:v3"><thead><tr><th>Procedure</th><th>Date</th></tr></thead><tbody><tr><td>Colonic polypectomy</td><td>November 15, 2020</td></tr></tbody></table>',
+                },
+                code: {
+                  coding: [
+                    {
+                      code: "47519-4",
+                      system: "http://loinc.org",
+                      display: "History of Procedures",
+                    },
+                  ],
+                },
+                mode: "snapshot",
+                entry: [
+                  {
+                    reference: "Procedure/b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
+                  },
+                  {
+                    reference:
+                      "Observation/44e6df0f-4e41-63ee-2bda-625369930b7c",
+                  },
+                ],
+              },
+            ],
+          },
+          request: {
+            method: "PUT",
+            url: "Composition/2.16.840.1.113883.9.9.9.9.9",
+          },
+        },
+        {
+          fullUrl: "urn:uuid:44e6df0f-4e41-63ee-2bda-625369930b7c",
+          resource: {
+            resourceType: "Observation",
+            id: "44e6df0f-4e41-63ee-2bda-625369930b7c",
+            meta: {
+              profile: [
+                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults",
+              ],
+              source: "ecr",
+            },
+            identifier: [
+              {
+                system: "urn:ietf:rfc:3986",
+                value: "urn:uuid:6dab0739-749d-4c62-8f5e-eea77a045ce8",
+              },
+            ],
+            category: [
+              {
+                coding: [
+                  {
+                    system:
+                      "http://terminology.hl7.org/CodeSystem/observation-category",
+                    code: "procedure",
+                  },
+                ],
+              },
+            ],
+            status: "final",
+            code: {
+              coding: [
+                {
+                  code: "274025005",
+                  system: "http://snomed.info/sct",
+                  display: "Colonic polypectomy",
+                },
+              ],
+            },
+            value: {
+              coding: [{ display: "We did it!" }],
+            },
+            methodCode: {
+              coding: [{ display: "Some how, some way" }],
+            },
+            effectiveDateTime: "2020-11-15",
+            bodySite: {
+              coding: [
+                {
+                  code: "416949008",
+                  system: "http://snomed.info/sct",
+                  display: "Abdomen and pelvis",
+                },
+              ],
+            },
+          },
+          request: {
+            method: "PUT",
+            url: "Observation/44e6df0f-4e41-63ee-2bda-625369930b7c",
+          },
+        },
+        {
           resource: {
             id: "b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
             code: {
@@ -104,7 +205,190 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
               },
             ],
             resourceType: "Procedure",
-            performedDateTime: "06/16/2022",
+            performedPeriod: {
+              start: "201611012234",
+              end: "201611020243",
+            },
+            performer: [
+              {
+                actor: {
+                  reference: "Organization/1234",
+                },
+              },
+            ],
+            complication: [
+              {
+                coding: [{ display: "Nausea" }],
+              },
+              {
+                coding: [{ display: "Heartburn" }],
+              },
+            ],
+
+            extension: [
+              {
+                url: "specimen",
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      code: "309266009",
+                      system: "http://snomed.info/sct",
+                      display: "anal polyp",
+                    },
+                  ],
+                },
+              },
+              {
+                url: "specimen",
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      code: "57259009",
+                      system: "http://snomed.info/sct",
+                      display: "bile duct",
+                    },
+                  ],
+                },
+              },
+              {
+                url: "priorityCode",
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      code: "CR",
+                      display: "call black please",
+                    },
+                  ],
+                },
+              },
+              {
+                url: "http://hl7.org/fhir/StructureDefinition/procedure-method",
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      display: "the way we felt like it",
+                    },
+                  ],
+                },
+              },
+            ],
+            usedReference: [
+              {
+                reference: "Device/1c4fb2b0-801a-f762-f367-d9f03280ea97",
+              },
+            ],
+            location: {
+              reference: "Location/7df7cf78-ecc5-75ec-0746-e14deee862a3",
+            },
+          },
+        },
+        {
+          fullUrl: "urn:uuid:1c4fb2b0-801a-f762-f367-d9f03280ea97",
+          resource: {
+            resourceType: "Device",
+            id: "1c4fb2b0-801a-f762-f367-d9f03280ea97",
+            identifier: [
+              {
+                system: "urn:oid:2.16.840.1.113883.3.3719",
+                value:
+                  "(01)51022222233336(11)141231(17)150707(10)A213B1(21)1234",
+                assigner: {
+                  display: "FDA",
+                },
+              },
+            ],
+            type: {
+              coding: [
+                {
+                  code: "90412006",
+                  system: "http://snomed.info/sct",
+                  display: "Colonoscope",
+                },
+              ],
+            },
+            meta: {
+              source: "ecr",
+            },
+          },
+          request: {
+            method: "PUT",
+            url: "Device/1c4fb2b0-801a-f762-f367-d9f03280ea97",
+          },
+        },
+        {
+          fullUrl: "urn:uuid:7df7cf78-ecc5-75ec-0746-e14deee862a3",
+          resource: {
+            resourceType: "Location",
+            id: "7df7cf78-ecc5-75ec-0746-e14deee862a3",
+            name: "Community Health and Hospitals",
+            address: {
+              line: ["1002 Healthcare Drive"],
+              city: "Ann Arbor",
+              state: "MI",
+              country: "US",
+              postalCode: "99999",
+            },
+            telecom: [
+              {
+                system: "phone",
+                value: "+1(555)555-5000",
+                use: "work",
+              },
+            ],
+            type: [
+              {
+                coding: [
+                  {
+                    code: "1160-1",
+                    system: "urn:oid:2.16.840.1.113883.6.259",
+                    display: "Community Health and Hospitals",
+                  },
+                ],
+              },
+            ],
+            meta: {
+              source: "ecr",
+            },
+          },
+          request: {
+            method: "PUT",
+            url: "Location/7df7cf78-ecc5-75ec-0746-e14deee862a3",
+          },
+        },
+        {
+          fullUrl: "urn:uuid:1234",
+          resource: {
+            resourceType: "Organization",
+            id: "1234",
+            name: "Good Health Hospital",
+            address: [
+              {
+                line: ["1000 Hospital Lane"],
+                city: "Ann Arbor",
+                state: "MI",
+                country: "US",
+                postalCode: "99999",
+              },
+            ],
+            telecom: [
+              {
+                system: "phone",
+                value: "+1(555)-555-1212",
+                use: "work",
+              },
+              {
+                system: "fax",
+                value: "+1(555)-555-3333",
+                use: "work",
+              },
+            ],
+            meta: {
+              source: "ecr",
+            },
+          },
+          request: {
+            method: "PUT",
+            url: "Organization/1234",
           },
         },
       ],
