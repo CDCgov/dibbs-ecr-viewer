@@ -124,6 +124,8 @@ describe("UserForm", () => {
     const mockCheckedPrograms = mockPrograms.map((p) =>
       p.name === "Program Area Two" ? { ...p, checked: true } : p,
     );
+    const mockSubmitAction = jest.fn().mockResolvedValue({});
+    const user = userEvent.setup();
 
     render(
       <UserForm
@@ -133,8 +135,8 @@ describe("UserForm", () => {
           userType: "standard",
           programs: mockCheckedPrograms,
         }}
-        submitAction={async () => ({})}
-      />,
+        submitAction={mockSubmitAction}
+      />
     );
 
     // valid due to initial inputs
@@ -163,5 +165,23 @@ describe("UserForm", () => {
       name: /Program Area Three/i,
     })[0];
     expect(checkboxProgramThree).not.toBeChecked();
+
+    // Select another program -> switch to admin -> save
+    await user.click(checkboxProgramThree);
+    expect(checkboxProgramThree).toBeChecked();
+    expect(checkboxProgramTwo).toBeChecked();
+
+    const buttonAdmin = screen.getAllByRole("radio", {
+      name: /admin/i,
+    })[0];
+    await user.click(buttonAdmin);
+    expect(buttonAdmin).toBeChecked();
+    await userEvent.click(submitButtons[0]);
+
+    expect(mockSubmitAction).toHaveBeenCalledWith(
+      "test@test.test",
+      "admin",
+      [] // Admins shouldn't be saved with assigned program areas
+    );
   });
 });
