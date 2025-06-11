@@ -118,10 +118,7 @@ test.describe("user management page", () => {
     });
     await checkboxProgram2.scrollIntoViewIfNeeded();
     await checkboxProgram2.dispatchEvent("click");
-    await page
-      .getByRole("button", { name: "Save user" })
-      .first()
-      .click();
+    await page.getByRole("button", { name: "Save user" }).first().click();
 
     // Confirm edit changes have saved
     await page.waitForURL("/ecr-viewer/admin/user");
