@@ -246,7 +246,7 @@
         "data_type": "float",
         "nullable": true
       },
-      "test_result_refeference_range_low_units": {
+      "test_result_reference_range_low_units": {
         "fhir_path": "Observation.refereneceRange.low.unit",
         "data_type": "string",
         "nullable": true
