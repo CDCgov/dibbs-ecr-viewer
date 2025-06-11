@@ -148,6 +148,7 @@ test.describe("user management page", () => {
     // Dismiss any toasts
     await page.keyboard.press("Escape");
 
+    await page.goto("/ecr-viewer/admin/program");
     await deleteProgramArea(page, program1);
     await deleteProgramArea(page, program2);
   });
@@ -186,7 +187,6 @@ const createRandomProgramArea = async (page: Page) => {
 };
 
 const deleteProgramArea = async (page: Page, program: string) => {
-  await page.goto("/ecr-viewer/admin/program");
   await page.getByLabel("Program areas per page").selectOption("100");
   await page.getByRole("button", { name: program }).click();
   await page.getByRole("button", { name: "Remove program area" }).click();
