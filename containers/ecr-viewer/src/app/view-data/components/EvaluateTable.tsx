@@ -216,7 +216,7 @@ export const evaluateTableRowCell = (
     data = column.evaluateEntry(entry);
   } else {
     throw new Error(
-      `No value or infoPath provided to EvaluateTable column: ${JSON.stringify(
+      `No value, infoPath, or evaluateEntry provided to EvaluateTable column: ${JSON.stringify(
         column,
       )}`,
     );

@@ -490,6 +490,23 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
         .join("\n\n"),
     },
     {
+      title: "Medication",
+      value: evaluateAll(procedure, fhirPathMappings.procedureMedRef)
+        .map((r) =>
+          evaluateReference<MedicationAdministration>(fhirBundle, r.reference),
+        )
+        .filter(notEmpty)
+        .map((ma) => {
+          const med = evaluateReference<Medication>(
+            fhirBundle,
+            ma.medicationReference?.reference,
+          );
+          return formatCodeableConcept(med?.code);
+        })
+        .filter(Boolean)
+        .join("\n"),
+    },
+    {
       title: "Service Location",
       value: formatAddress(
         evaluateReference<Location>(

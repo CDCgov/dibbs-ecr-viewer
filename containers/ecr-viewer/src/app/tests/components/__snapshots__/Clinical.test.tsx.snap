@@ -524,6 +524,25 @@ ID: (01)51022222233336(11)141231(17)150707(10)A213B1(21)1234
                               <div
                                 class="data-title padding-right-1"
                               >
+                                Medication
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Atenolol 25 MG Oral Tablet
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
                                 Service Location
                               </div>
                               <div

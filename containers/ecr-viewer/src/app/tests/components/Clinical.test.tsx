@@ -271,6 +271,13 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
                   ],
                 },
               },
+              {
+                url: "medicationAdministration",
+                valueReference: {
+                  reference:
+                    "MedicationAdministration/1b8ee8b8-7e66-4cc6-7677-a8dfa341b39d",
+                },
+              },
             ],
             usedReference: [
               {
@@ -280,6 +287,67 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
             location: {
               reference: "Location/7df7cf78-ecc5-75ec-0746-e14deee862a3",
             },
+          },
+        },
+        {
+          fullUrl: "urn:uuid:1b8ee8b8-7e66-4cc6-7677-a8dfa341b39d",
+          resource: {
+            resourceType: "MedicationAdministration",
+            id: "1b8ee8b8-7e66-4cc6-7677-a8dfa341b39d",
+            identifier: [
+              {
+                system: "urn:ietf:rfc:3986",
+                value: "urn:uuid:6c844c75-aa34-411c-b7bd-5e4a9f206e29",
+              },
+            ],
+            status: "in-progress",
+            effectivePeriod: {
+              start: "2012-03-18",
+            },
+            dosage: {
+              route: {
+                coding: [
+                  {
+                    code: "C38288",
+                    system: "urn:oid:2.16.840.1.113883.3.26.1.1",
+                    display: "ORAL",
+                  },
+                ],
+              },
+              dose: {
+                value: 1,
+              },
+            },
+            subject: {
+              reference: "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
+            },
+            medicationReference: {
+              reference: "Medication/4361c210-6a33-4124-2863-0853046ef9a9",
+            },
+          },
+          request: {
+            method: "PUT",
+            url: "MedicationAdministration/1b8ee8b8-7e66-4cc6-7677-a8dfa341b39d",
+          },
+        },
+        {
+          fullUrl: "urn:uuid:4361c210-6a33-4124-2863-0853046ef9a9",
+          resource: {
+            resourceType: "Medication",
+            id: "4361c210-6a33-4124-2863-0853046ef9a9",
+            code: {
+              coding: [
+                {
+                  code: "197380",
+                  system: "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  display: "Atenolol 25 MG Oral Tablet",
+                },
+              ],
+            },
+          },
+          request: {
+            method: "PUT",
+            url: "Medication/4361c210-6a33-4124-2863-0853046ef9a9",
           },
         },
         {

@@ -141,6 +141,7 @@ export type PathTypes = {
   procedureOutcome: CodeableConcept;
   procedureComplication: CodeableConcept;
   procedureProductRef: Reference;
+  procedureMedRef: Reference;
   procedureSpecimen: CodeableConcept;
   procedureMethod: CodeableConcept;
   procedurePriority: CodeableConcept;
@@ -571,6 +572,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Procedure.complication",
   },
   procedureProductRef: { type: "Reference", path: "Procedure.usedReference" },
+  procedureMedRef: {
+    type: "Reference",
+    path: "Procedure.extension.where(url = 'medicationAdministration').value",
+  },
   procedureSpecimen: {
     type: "CodeableConcept",
     path: "Procedure.extension.where(url = 'specimen').value",
