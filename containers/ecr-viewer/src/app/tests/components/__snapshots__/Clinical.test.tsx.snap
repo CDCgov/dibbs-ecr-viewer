@@ -220,7 +220,13 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                           class="table-header"
                           scope="col"
                         >
-                          Reason
+                          Status
+                        </th>
+                        <th
+                          class="table-header"
+                          scope="col"
+                        >
+                          Details
                         </th>
                       </tr>
                     </thead>
@@ -234,13 +240,57 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                         <td
                           class="text-top text-pre-line"
                         >
-                          06/24/2022
-12:50 PM EDT
+                          06/24/2022 12:50 PM EDT
                         </td>
                         <td
                           class="text-top text-pre-line"
                         >
-                          Struck by nonvenomous lizards, sequela
+                          completed
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          <button
+                            aria-controls="hidden-comment-r:id"
+                            aria-expanded="false"
+                            class="usa-button usa-button--unstyled"
+                            data-test-id="comment-button"
+                            data-testid="button"
+                            type="button"
+                          >
+                            View
+                             
+                            details
+                          </button>
+                        </td>
+                      </tr>
+                      <tr
+                        hidden=""
+                        id="hidden-comment-r:id"
+                      >
+                        <td
+                          class="p-list"
+                          colspan="4"
+                        >
+                          <div
+                            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                          />
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Reason
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Struck by nonvenomous lizards, sequela
+                              </div>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                       <tr>
@@ -257,7 +307,52 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                         <td
                           class="text-top text-pre-line"
                         >
-                          Routine general medical examination at a health care facility
+                          completed
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          <button
+                            aria-controls="hidden-comment-r:id"
+                            aria-expanded="false"
+                            class="usa-button usa-button--unstyled"
+                            data-test-id="comment-button"
+                            data-testid="button"
+                            type="button"
+                          >
+                            View
+                             
+                            details
+                          </button>
+                        </td>
+                      </tr>
+                      <tr
+                        hidden=""
+                        id="hidden-comment-r:id"
+                      >
+                        <td
+                          class="p-list"
+                          colspan="4"
+                        >
+                          <div
+                            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                          />
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Reason
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Routine general medical examination at a health care facility
+                              </div>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     </tbody>

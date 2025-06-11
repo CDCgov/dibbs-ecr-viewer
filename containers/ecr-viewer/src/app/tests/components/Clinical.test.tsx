@@ -1,7 +1,7 @@
 import React from "react";
 
 import { render, screen } from "@testing-library/react";
-import { Procedure } from "fhir/r4";
+import { Bundle } from "fhir/r4";
 import { axe } from "jest-axe";
 
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
@@ -15,97 +15,105 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
   let container: HTMLElement;
 
   beforeAll(() => {
-    const proceduresArray = [
-      {
-        id: "b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
-        code: {
-          coding: [
-            {
-              code: "0241U",
-              system: "http://www.ama-assn.org/go/cpt",
-              display:
-                "HC INFECTIOUS DISEASE PATHOGEN SPECIFIC RNA SARS-COV-2/INF A&B/RSV UPPER RESP SPEC DETECTED OR NOT",
+    const proceduresBundle = {
+      resourceType: "Bundle",
+      type: "batch",
+      entry: [
+        {
+          resource: {
+            id: "b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
+            code: {
+              coding: [
+                {
+                  code: "0241U",
+                  system: "http://www.ama-assn.org/go/cpt",
+                  display:
+                    "HC INFECTIOUS DISEASE PATHOGEN SPECIFIC RNA SARS-COV-2/INF A&B/RSV UPPER RESP SPEC DETECTED OR NOT",
+                },
+                {
+                  code: "12345",
+                  system: "something that isn't loinc",
+                  display: "Don't display me!",
+                },
+              ],
             },
-            {
-              code: "12345",
-              system: "something that isn't loinc",
-              display: "Don't display me!",
+            meta: {
+              source: ["ecr"],
+              profile: [
+                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure",
+              ],
             },
-          ],
-        },
-        meta: {
-          source: ["ecr"],
-          profile: [
-            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure",
-          ],
-        },
-        reason: [
-          {
-            display: "Struck by nonvenomous lizards, sequela",
-            reference: "e436d9b7-6b4e-f553-0314-5a388d15e02e",
-          },
-        ],
-        status: "completed",
-        subject: {
-          reference: "Patient/5360b569-1354-4ece-b6a1-58b0946fc861",
-        },
-        identifier: [
-          {
-            value: "2884257^",
-            system: "urn:oid:1.2.840.114350.1.13.502.3.7.1.1988.1",
-          },
-        ],
-        resourceType: "Procedure",
-        performedDateTime: "2022-06-24T12:50:00-04:00",
-      },
-      {
-        id: "b40f0081-4052-4971-3f3b-e3d9f5e1e44e",
-        code: {
-          coding: [
-            {
-              code: "86308",
-              system: "http://www.ama-assn.org/go/cpt",
-              display: "HC HETEROPHILE ANTIBODIES SCREENING",
+            reasonCode: [
+              {
+                coding: [{ display: "Struck by nonvenomous lizards, sequela" }],
+              },
+            ],
+            status: "completed",
+            subject: {
+              reference: "Patient/5360b569-1354-4ece-b6a1-58b0946fc861",
             },
-            {
-              code: "12345",
-              system: "http://loinc.org",
-              display: "LOINC codes are better",
+            identifier: [
+              {
+                value: "2884257^",
+                system: "urn:oid:1.2.840.114350.1.13.502.3.7.1.1988.1",
+              },
+            ],
+            resourceType: "Procedure",
+            performedDateTime: "2022-06-24T12:50:00-04:00",
+          },
+        },
+        {
+          resource: {
+            id: "b40f0081-4052-4971-3f3b-e3d9f5e1e44e",
+            code: {
+              coding: [
+                {
+                  code: "86308",
+                  system: "http://www.ama-assn.org/go/cpt",
+                  display: "HC HETEROPHILE ANTIBODIES SCREENING",
+                },
+                {
+                  code: "12345",
+                  system: "http://loinc.org",
+                  display: "LOINC codes are better",
+                },
+              ],
             },
-          ],
-        },
-        meta: {
-          source: ["ecr"],
-          profile: [
-            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure",
-          ],
-        },
-        reason: [
-          {
-            display:
-              "Routine general medical examination at a health care facility",
-            reference: "7cda2e3e-5d91-428f-8abe-517846d4749e",
+            meta: {
+              source: ["ecr"],
+              profile: [
+                "http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure",
+              ],
+            },
+            reasonCode: {
+              coding: [
+                {
+                  display:
+                    "Routine general medical examination at a health care facility",
+                },
+              ],
+            },
+            status: "completed",
+            subject: {
+              reference: "Patient/5360b569-1354-4ece-b6a1-58b0946fc861",
+            },
+            identifier: [
+              {
+                value: "2884257^",
+                system: "urn:oid:1.2.840.114350.1.13.502.3.7.1.1988.1",
+              },
+            ],
+            resourceType: "Procedure",
+            performedDateTime: "06/16/2022",
           },
-        ],
-        status: "completed",
-        subject: {
-          reference: "Patient/5360b569-1354-4ece-b6a1-58b0946fc861",
         },
-        identifier: [
-          {
-            value: "2884257^",
-            system: "urn:oid:1.2.840.114350.1.13.502.3.7.1.1988.1",
-          },
-        ],
-        resourceType: "Procedure",
-        performedDateTime: "06/16/2022",
-      },
-    ] as unknown as Procedure[];
+      ],
+    } as unknown as Bundle;
 
     const treatmentData = [
       {
         title: "Procedures",
-        value: returnProceduresTable(proceduresArray),
+        value: returnProceduresTable(proceduresBundle),
       },
     ];
 

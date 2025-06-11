@@ -400,7 +400,19 @@ export const returnProceduresTable = (
 
   const columnInfo: ColumnInfoInput[] = [
     { columnName: "Name", infoPath: "procedureName" },
-    { columnName: "Date/Time Performed", infoPath: "procedureDate" },
+    {
+      columnName: "Date/Time Performed",
+      infoPath: "procedureDate",
+      sortFn: (a: string, b: string) => {
+        const aDate = new Date(
+          a.replace("Start: ", "").replace("End: ", "").split("\n")[0],
+        );
+        const bDate = new Date(
+          b.replace("Start: ", "").replace("End: ", "").split("\n")[0],
+        );
+        return bDate.valueOf() - aDate.valueOf();
+      },
+    },
     { columnName: "Status", infoPath: "procedureStatus" },
     {
       columnName: "Details",

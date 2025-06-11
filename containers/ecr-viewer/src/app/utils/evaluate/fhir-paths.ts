@@ -144,7 +144,6 @@ export type PathTypes = {
   procedureSpecimen: CodeableConcept;
   procedureMethod: CodeableConcept;
   procedurePriority: CodeableConcept;
-  procedureDetails: unknown;
   diagnosticReports: DiagnosticReport;
   diagnosticReportStatus: string;
   observations: Observation;
@@ -562,7 +561,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   procedureStatus: { type: "string", path: "status" },
 
   // extra details
-  procedureDetails: { type: "unknown", path: "Procedure.details" },
   procedureReason: { type: "CodeableConcept", path: "Procedure.reasonCode" },
   procedureLocationRef: { type: "Reference", path: "Procedure.location" },
   procedureOrgRef: { type: "Reference", path: "Procedure.performer.actor" },

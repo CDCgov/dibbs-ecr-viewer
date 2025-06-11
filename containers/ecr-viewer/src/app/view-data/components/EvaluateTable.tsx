@@ -21,6 +21,7 @@ export interface ColumnInfoInput {
   hiddenBaseText?: string;
   applyToValue?: (value: string) => ReactNode;
   evaluateEntry?: (el: Element) => ReactNode;
+  sortFn?: (a: string, b: string) => number;
 }
 
 interface TableProps {
@@ -53,6 +54,21 @@ const EvaluateTable = ({
   fixed = true,
   outerBorder = true,
 }: TableProps): React.JSX.Element => {
+  const tableRowData = resources.map((entry) =>
+    evaluateTableRowData(columns, mappings, entry),
+  );
+
+  columns.forEach(({ sortFn }, i) => {
+    if (!sortFn) return;
+
+    tableRowData.sort((aRow, bRow) => {
+      const a = aRow.rowCellsData[i].data;
+      const b = bRow.rowCellsData[i].data;
+      if (typeof a !== "string" || typeof b !== "string") return 0;
+      return sortFn(a, b);
+    });
+  });
+
   return (
     <BaseTable
       columns={columns}
@@ -61,10 +77,10 @@ const EvaluateTable = ({
       fixed={fixed}
       outerBorder={outerBorder}
     >
-      {resources.map((entry, index) => (
+      {tableRowData.map((row, index) => (
         <EvaluateTableRow
           key={index}
-          tableRowData={evaluateTableRowData(columns, mappings, entry)}
+          tableRowData={row}
           numCols={columns.length}
         />
       ))}
@@ -193,8 +209,7 @@ export const evaluateTableRowCell = (
     ).replaceAll("<br/>", "\n");
     if (strData && column.applyToValue) {
       data = column.applyToValue(strData);
-    }
-    {
+    } else {
       data = strData;
     }
   } else if (column?.evaluateEntry) {

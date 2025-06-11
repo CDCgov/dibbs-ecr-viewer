@@ -69,6 +69,7 @@ export const EvaluateTableRow = ({
           <td
             colSpan={numCols}
             className="p-list"
+            // className doesn't work here because of all the table styling rules
             style={{ borderTop: "none" }}
           >
             <div className="border-top border-base-lighter margin-top-neg-105 margin-bottom-1" />
