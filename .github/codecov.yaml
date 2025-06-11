@@ -32,9 +32,6 @@ flag_management:
     - name: "message-parser"
       paths:
         - "containers/message-parser"
-    - name: "message-refiner"
-      paths:
-        - "containers/message-refiner"
     - name: "orchestration"
       paths:
         - "containers/orchestration"
