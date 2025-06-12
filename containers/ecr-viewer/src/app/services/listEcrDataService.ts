@@ -355,7 +355,7 @@ export const generateSortStatement = (
   const validColumns: { [key: string]: string } = {
     patient: "patient",
     date_created: "date_created",
-    report_date: "encounter_start_date",
+    encounter_date: "encounter_start_date",
   };
   const validDirections = ["ASC", "DESC"];
 
