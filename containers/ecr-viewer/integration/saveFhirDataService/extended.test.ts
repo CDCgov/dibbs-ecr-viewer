@@ -36,7 +36,7 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   processing_status: "Processed",
   set_id: "1234",
   eicr_id: "eicr-12345",
-  eicr_version_number: "1.0",
+  eicr_version_number: "1",
   replaced_eicr_id: "23423",
   replaced_eicr_version: "23432",
   authoring_date: "2024-01-01",
@@ -210,6 +210,28 @@ describe("saveFhirData - extended", () => {
     expect(resp.status).toEqual(200);
     expect(conditions).toHaveLength(1);
     expect(conditions[0].condition_code).toEqual("123");
+  });
+
+  it("should handle duplicate labs and address across different ecrs", async () => {
+    const resp1 = await saveFhirMetadata(
+      "1-2-3-4",
+      "extended",
+      baseExtendedMetadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
+    expect(resp1.message).toEqual("Success. Saved metadata to database.");
+    expect(resp1.status).toEqual(200);
+
+    const resp2 = await saveFhirMetadata(
+      "1-2-3-5",
+      "extended",
+      { ...baseExtendedMetadata, eicr_version_number: "2" },
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
+    expect(resp2.message).toEqual("Success. Saved metadata to database.");
+    expect(resp2.status).toEqual(200);
   });
 
   it("should return an error and roll back fhir data when db save fails", async () => {
