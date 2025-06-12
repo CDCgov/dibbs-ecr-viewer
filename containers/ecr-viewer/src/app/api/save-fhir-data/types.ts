@@ -26,22 +26,22 @@ interface Lab {
   test_result_interpretation: string | undefined;
   test_result_interpretation_code: string | undefined;
   test_result_interpretation_system: string | undefined;
-  test_result_ref_range_low: string | undefined;
-  test_result_ref_range_low_units: string | undefined;
-  test_result_ref_range_high: string | undefined;
-  test_result_ref_range_high_units: string | undefined;
+  test_result_reference_range_low_value: string | undefined;
+  test_result_reference_range_low_units: string | undefined;
+  test_result_reference_range_high_value: string | undefined;
+  test_result_reference_range_high_units: string | undefined;
   specimen_type: string | undefined;
   performing_lab: string | undefined;
   specimen_collection_date: string | undefined;
 }
 
 interface ruleSummary {
-  summary: string;
+  rule_summary: string;
 }
 
 interface RR {
   condition: string;
-  code: string | undefined;
+  condition_code: string | undefined;
   rule_summaries: ruleSummary[];
 }
 
@@ -49,10 +49,10 @@ export interface BundleMetadata {
   last_name: string;
   first_name: string;
   birth_date: string;
-  eicr_set_id: string | undefined;
+  set_id: string | undefined;
   eicr_version_number: string | undefined;
   rr: RR[] | undefined;
-  report_date: string;
+  encounter_start_date: string | undefined;
 }
 
 export interface BundleExtendedMetadata extends BundleMetadata {
@@ -69,13 +69,12 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   eicr_id: string;
   replaced_eicr_id: string | undefined;
   replaced_eicr_version: string | undefined;
-  authoring_datetime: string | undefined;
+  authoring_date: string | undefined;
   provider_id: string | undefined;
-  facility_id_number: string | undefined;
+  facility_id: string | undefined;
   facility_name: string | undefined;
   facility_type: string | undefined;
   encounter_type: string | undefined;
-  encounter_start_date: string | undefined;
   encounter_end_date: string | undefined;
   reason_for_visit: string | undefined;
   active_problems: string | undefined;

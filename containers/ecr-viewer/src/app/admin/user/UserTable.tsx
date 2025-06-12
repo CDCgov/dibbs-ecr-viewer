@@ -97,6 +97,7 @@ export const UserTable = ({
             ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
             : "Never"
         }`}
+        editHref={`/admin/user/edit?uuid=${selectedUser?.uuid}`}
         itemType="user"
         deleteAction={async () => await deleteAction(selectedUser?.uuid!)}
         deleteExplainerText="Removing the user will remove the user account and data from the eCR Viewer. The user account and data will still be available in your login provider."

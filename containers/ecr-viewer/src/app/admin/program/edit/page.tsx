@@ -11,7 +11,7 @@ import { PageSearchParams } from "@/app/utils/search-param-utils";
 /**
  * @param props page props
  * @param props.searchParams Search params
- * @returns Page to create a program area
+ * @returns Page to edit a program area
  */
 const EditProgramPage = async ({
   searchParams,

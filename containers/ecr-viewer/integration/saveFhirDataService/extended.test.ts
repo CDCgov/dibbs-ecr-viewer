@@ -34,14 +34,14 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   longitude: "-120.1234",
   rr_id: "rr-12345",
   processing_status: "Processed",
-  eicr_set_id: "1234",
+  set_id: "1234",
   eicr_id: "eicr-12345",
   eicr_version_number: "1.0",
   replaced_eicr_id: "23423",
   replaced_eicr_version: "23432",
-  authoring_datetime: "2024-01-01",
+  authoring_date: "2024-01-01",
   provider_id: "12345",
-  facility_id_number: "12345",
+  facility_id: "12345",
   facility_name: "Hospital A",
   facility_type: "Inpatient",
   encounter_type: "Inpatient",
@@ -65,10 +65,10 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
       test_result_interpretation_code: "N",
       test_result_interpretation_system:
         "http://hl7.org/fhir/v3/ObservationInterpretation",
-      test_result_ref_range_low: "70",
-      test_result_ref_range_low_units: "mg/dL",
-      test_result_ref_range_high: "140",
-      test_result_ref_range_high_units: "mg/dL",
+      test_result_reference_range_low_value: "70",
+      test_result_reference_range_low_units: "mg/dL",
+      test_result_reference_range_high_value: "140",
+      test_result_reference_range_high_units: "mg/dL",
       specimen_type: "Blood",
       performing_lab: "Lab A",
       specimen_collection_date: "2024-01-01",
@@ -90,7 +90,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   first_name: "Obi-Wan",
   birth_date: "1970-01-01",
   rr: [],
-  report_date: "2024-12-20",
 };
 
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
@@ -131,7 +130,7 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
-          code: "123",
+          condition_code: "123",
           rule_summaries: [],
         },
       ],
@@ -155,8 +154,11 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
-          code: "123",
-          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+          condition_code: "123",
+          rule_summaries: [
+            { rule_summary: "fever" },
+            { rule_summary: "influenza" },
+          ],
         },
       ],
     };
@@ -180,8 +182,11 @@ describe("saveFhirData - extended", () => {
       rr: [
         {
           condition: "flu",
-          code: "123",
-          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+          condition_code: "123",
+          rule_summaries: [
+            { rule_summary: "fever" },
+            { rule_summary: "influenza" },
+          ],
         },
       ],
     };
