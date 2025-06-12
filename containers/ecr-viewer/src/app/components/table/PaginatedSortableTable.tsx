@@ -29,22 +29,21 @@ export interface TableColumn<T> extends TableHeader {
  * @param props.items Items to fill table rows
  * @param props.initHeaders Header specifiction
  * @param props.itemType Type of item being displayed
- * @param props.initItemsPerPage Items per apge to start display with
  * @returns client side paginated sortable table
  */
 export const PaginatedSortableTable = <T extends { uuid: string }>({
   items,
   itemType,
   initHeaders,
-  initItemsPerPage = PAGE_SIZES[0],
 }: {
   items: T[];
   itemType: string;
   initHeaders: TableColumn<T>[];
-  initItemsPerPage: number;
 }) => {
   const [tableHeaders, setTableHeaders] = useState(initHeaders);
-  const [itemsPerPage, setItemsPerPage] = useState(initItemsPerPage);
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(Cookies.get("itemsPerPage")) || PAGE_SIZES[0],
+  );
   const [page, setPage] = useState(1);
 
   const numItems = items.length;

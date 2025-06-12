@@ -10,6 +10,7 @@ import React, {
 import { Button } from "@trussworks/react-uswds";
 
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
+import { LibraryParam } from "@/app/utils/search-param-utils";
 
 import { Autorenew } from "./Icon";
 
@@ -43,7 +44,7 @@ const FilterGroup = ({
   paramKeys,
   children,
 }: {
-  paramKeys: string[];
+  paramKeys: LibraryParam[];
   children: React.ReactNode;
 }) => {
   const [filterBoxOpen, setFilterBoxOpen] = useState<string>(FILTER_CLOSED);

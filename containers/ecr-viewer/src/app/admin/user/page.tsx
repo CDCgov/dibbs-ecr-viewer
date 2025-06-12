@@ -9,8 +9,6 @@ import { UserTable } from "./UserTable";
 
 /**
  * User admin landing page with table of active users
- * @param props - parameters from the page
- * @param props.searchParams - list of search params
  * @returns user admin page
  */
 const UserAdminPage = async () => {
