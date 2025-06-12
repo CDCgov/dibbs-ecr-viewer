@@ -40,8 +40,22 @@ interface FilterProps {
  * @returns The rendered Filters component.
  */
 const Filters = (props: FilterProps) => {
+  const { searchParams, deleteQueryParam, pushQueryUpdate } =
+    useLibraryQueryParam();
+
+  const paramKeys = Object.values(ParamName);
+  const resetToDefault = () => {
+    for (const key of paramKeys) {
+      deleteQueryParam(key);
+    }
+    pushQueryUpdate();
+  };
+
   return (
-    <FilterGroup paramKeys={Object.values(ParamName)}>
+    <FilterGroup
+      resetHandler={resetToDefault}
+      resetEnabled={paramKeys.some((k) => searchParams.get(k) !== null)}
+    >
       <FilterByDate {...props} />
       <FilterReportableConditions {...props} />
     </FilterGroup>

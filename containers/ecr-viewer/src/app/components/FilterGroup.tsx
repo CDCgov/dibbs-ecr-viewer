@@ -9,9 +9,6 @@ import React, {
 
 import { Button } from "@trussworks/react-uswds";
 
-import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
-import { LibraryParam } from "@/app/utils/search-param-utils";
-
 import { Autorenew } from "./Icon";
 
 // We use a context to communicate between the overall <Filters /> component
@@ -36,21 +33,22 @@ export const FilterOpenContext = createContext<FilterOpenContextValue>({
 /**
  * Functional component that renders a group of filters.
  * @param props - react props
- * @param props.paramKeys - search param keys controlled by these filters
+ * @param props.resetEnabled - Whether the reset button should show
+ * @param props.resetHandler - Function to handle reset button click
  * @param props.children - filters in this filter group
  * @returns The rendered Filters component.
  */
 const FilterGroup = ({
-  paramKeys,
+  resetEnabled,
+  resetHandler,
   children,
 }: {
-  paramKeys: LibraryParam[];
+  resetEnabled: boolean;
+  resetHandler: () => void;
   children: React.ReactNode;
 }) => {
   const [filterBoxOpen, setFilterBoxOpen] = useState<string>(FILTER_CLOSED);
   const lastOpenButtonRef = useRef<HTMLElement | null>(null);
-  const { searchParams, deleteQueryParam, pushQueryUpdate } =
-    useLibraryQueryParam();
 
   const filterOpenContextValue = {
     filterBoxOpen,
@@ -85,13 +83,6 @@ const FilterGroup = ({
     }
   }, [filterBoxOpen]);
 
-  const resetToDefault = () => {
-    for (const key of paramKeys) {
-      deleteQueryParam(key);
-    }
-    pushQueryUpdate();
-  };
-
   return (
     <div>
       <div className="border-top border-base-lighter"></div>
@@ -101,11 +92,11 @@ const FilterGroup = ({
           {children}
         </FilterOpenContext.Provider>
 
-        {paramKeys.some((k) => searchParams.get(k) !== null) && (
+        {resetEnabled && (
           <Button
             type="button"
             unstyled={true}
-            onClick={resetToDefault}
+            onClick={resetHandler}
             aria-label="Reset Filters to Defaults"
             className="gap-05"
           >
