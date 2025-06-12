@@ -127,8 +127,10 @@ def build_ingestion_dob_request(
     default_params = {"overwrite": "true", "format": "Y%-m%-d%"}
     # Initialize workflow_params as an empty dictionary if it's None
     workflow_params = workflow_params or {}
+
     for key, value in default_params.items():
         workflow_params.setdefault(key, value)
+
     return {
         "data": input_msg,
         "overwrite": workflow_params.get("overwrite"),
