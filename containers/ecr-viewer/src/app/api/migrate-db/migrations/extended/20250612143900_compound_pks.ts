@@ -17,11 +17,23 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   await _db.schema
     .alterTable("ecr_labs")
+    .dropConstraint("ecr_labs_pkey")
+    .execute();
+  await _db.schema
+    .alterTable("ecr_labs")
     .addPrimaryKeyConstraint("ecr_labs_pk_uuid_eicr_id", ["uuid", "eicr_id"])
+    .execute();
+
+  await _db.schema
+    .alterTable("patient_address")
+    .dropConstraint("patient_address_pkey")
     .execute();
   await _db.schema
     .alterTable("patient_address")
-    .addPrimaryKeyConstraint("ecr_labs_pk_uuid_eicr_id", ["uuid", "eicr_id"])
+    .addPrimaryKeyConstraint("patient_address_pk_uuid_eicr_id", [
+      "uuid",
+      "eicr_id",
+    ])
     .execute();
 }
 
@@ -31,12 +43,22 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
+
   await _db.schema
     .alterTable("ecr_labs")
     .dropConstraint("ecr_labs_pk_uuid_eicr_id")
     .execute();
   await _db.schema
+    .alterTable("ecr_labs")
+    .addPrimaryKeyConstraint("ecr_labs_pkey", ["uuid"])
+    .execute();
+
+  await _db.schema
     .alterTable("patient_address")
-    .dropConstraint("ecr_labs_pk_uuid_eicr_id")
+    .dropConstraint("patient_address_pk_uuid_eicr_id")
+    .execute();
+  await _db.schema
+    .alterTable("patient_address")
+    .addPrimaryKeyConstraint("patient_address_pkey", ["uuid"])
     .execute();
 }
