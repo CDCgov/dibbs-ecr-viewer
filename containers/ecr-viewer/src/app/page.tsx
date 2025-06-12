@@ -7,6 +7,7 @@ import { dbIsValid } from "./api/migrate-db/migrate";
 import Filters from "./components/EcrFilters";
 import { MetadataDbInvalid } from "./components/ErrorPage";
 import LibrarySearch from "./components/LibrarySearch";
+import { NoDataRow } from "./components/table/NoDataRow";
 import { EcrTableLoading } from "./components/table/TableContentLoading";
 import EcrPaginationWrapper from "./components/table/ecr/EcrPaginationWrapper";
 import EcrTableContent from "./components/table/ecr/EcrTableContent";
@@ -59,7 +60,7 @@ const HomePage = async ({
       <main className="overflow-auto height-full">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
           <h2 className="margin-bottom-0 text-bold font-sans-xl">
-            eCR Library
+            eCR library
           </h2>
           <LibrarySearch
             initSearchTerm={config.search}
@@ -135,14 +136,10 @@ const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
 
 const EcrTableNoData = () => (
   <tbody>
-    <tr>
-      <td colSpan={999} className="text-middle text-center height-card">
-        <span className="text-bold font-body-lg" tabIndex={0}>
-          No eCRs found. We couldn't find any eCRs matching your filter or
-          search criteria.
-        </span>
-      </td>
-    </tr>
+    <NoDataRow>
+      No eCRs found. We couldn't find any eCRs matching your filter or search
+      criteria.
+    </NoDataRow>
   </tbody>
 );
 

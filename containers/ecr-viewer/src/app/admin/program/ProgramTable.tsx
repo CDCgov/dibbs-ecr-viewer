@@ -37,7 +37,7 @@ export const ProgramTable = ({
   const tableHeaders: TableColumn<ListedProgramArea>[] = [
     {
       id: "name",
-      value: "Program Area",
+      value: "Program area",
       dataSortable: true,
       sortDirection: "ASC",
       formatter: (v: string, programArea: ListedProgramArea) => (
@@ -53,7 +53,7 @@ export const ProgramTable = ({
     },
     {
       id: "conditions",
-      value: "Number of Conditions",
+      value: "Number of conditions",
       dataSortable: false,
       sortDirection: "",
       formatter: (conditions: ConditionReference[]) =>

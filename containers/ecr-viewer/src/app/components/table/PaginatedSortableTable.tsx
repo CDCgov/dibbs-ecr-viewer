@@ -9,6 +9,7 @@ import PaginationBar from "@/app/components/pagination/PaginationBar";
 import { PAGE_SIZES } from "@/app/constants";
 import { noData } from "@/app/utils/data-utils";
 
+import { NoDataRow } from "./NoDataRow";
 import { SortDirection, SortableHeader, TableHeader } from "./SortableHeader";
 
 // Object keys in javascript can be `string | number | symbol`, but the `id`
@@ -78,13 +79,20 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
         />
 
         <tbody>
-          {sortedItems.slice(startIndex, endIndex).map((item) => (
-            <tr key={item.uuid}>
-              {initHeaders.map(({ id, formatter = (v) => v }) => (
-                <td key={id}>{formatter(item[id], item) || noData}</td>
-              ))}
-            </tr>
-          ))}
+          {sortedItems.length > 0 ? (
+            sortedItems.slice(startIndex, endIndex).map((item) => (
+              <tr key={item.uuid}>
+                {initHeaders.map(({ id, formatter = (v) => v }) => (
+                  <td key={id}>{formatter(item[id], item) || noData}</td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <NoDataRow>
+              No {itemType.toLowerCase()} found. We couldn't find any{" "}
+              {itemType.toLowerCase()} matching your filter or search criteria.
+            </NoDataRow>
+          )}
         </tbody>
       </Table>
 

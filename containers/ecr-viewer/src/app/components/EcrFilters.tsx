@@ -119,7 +119,7 @@ const FilterReportableConditions = ({
 
   return (
     <Filter
-      type="Reportable Condition"
+      type="reportable condition"
       isActive={!isAllSelected}
       resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
@@ -233,7 +233,7 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
 
   return (
     <Filter
-      type="Received Date"
+      type="received date"
       isActive={true}
       resetHandler={() => {
         setStartDate(initStart);

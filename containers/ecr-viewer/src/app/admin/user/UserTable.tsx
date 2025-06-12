@@ -3,11 +3,14 @@ import { useState } from "react";
 
 import { Accordion } from "@trussworks/react-uswds";
 
+import { Filter, RadioDateOptions } from "@/app/components/BaseFilter";
 import {
   DetailsSidePanel,
   DetailsTrigger,
   useDetailsRef,
 } from "@/app/components/DetailsSidePanel";
+import FilterGroup from "@/app/components/FilterGroup";
+import { Person } from "@/app/components/Icon";
 import {
   PaginatedSortableTable,
   TableColumn,
@@ -18,6 +21,12 @@ import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
 import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
+
+const USER_TYPE_OPTIONS: Record<string, string> = {
+  all: "All users",
+  admin: "Admin",
+  standard: "Standard",
+};
 
 /**
  *
@@ -37,8 +46,14 @@ export const UserTable = ({
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
-  const [filteredUsers, setFilteredUsers] = useState<ListedUser[]>(users);
+  const [filterUserTypeOption, setFilterUserTypeOption] =
+    useState<string>("all");
   const detailsRef = useDetailsRef();
+
+  const filteredUsers = users.filter(
+    ({ user_type }) =>
+      filterUserTypeOption === "all" || filterUserTypeOption === user_type,
+  );
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -59,25 +74,27 @@ export const UserTable = ({
     },
     {
       id: "user_type",
-      value: "User Type",
+      value: "User type",
       dataSortable: true,
       sortDirection: "",
       formatter: toSentenceCase,
     },
     {
       id: "program_areas",
-      value: "Program Areas",
+      value: "Program areas",
       dataSortable: false,
       sortDirection: "",
       formatter: (pas: NamedUserPogramArea[], user) =>
         user.user_type === "admin"
           ? "All program areas"
-          : pas.map(({ name }) => name).join(", ") ||
-            "No program areas assigned",
+          : pas
+              .map(({ name }) => name)
+              .sort()
+              .join(", ") || "No program areas assigned",
     },
     {
       id: "date_of_last_login",
-      value: "Last Logged In",
+      value: "Last logged in",
       dataSortable: true,
       sortDirection: "",
       formatter: (d: Date | null) => (
@@ -133,6 +150,30 @@ export const UserTable = ({
           },
         ]}
       />
+      <FilterGroup
+        resetEnabled={filterUserTypeOption !== "all"}
+        resetHandler={() => {
+          setFilterUserTypeOption("all");
+        }}
+      >
+        <Filter
+          isActive={true}
+          type="user type"
+          title={USER_TYPE_OPTIONS[filterUserTypeOption]}
+          resetHandler={() => {}}
+          icon={Person}
+        >
+          <div className="display-flex flex-column margin-bottom-1">
+            <RadioDateOptions
+              groupName="user-type"
+              optionsMap={USER_TYPE_OPTIONS}
+              onChange={setFilterUserTypeOption}
+              currentOption={filterUserTypeOption}
+              classNames="padding-bottom-1"
+            />
+          </div>
+        </Filter>
+      </FilterGroup>
       <PaginatedSortableTable
         initHeaders={tableHeaders}
         items={filteredUsers}
