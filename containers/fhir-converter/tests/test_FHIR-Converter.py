@@ -358,6 +358,24 @@ def test_add_rr_to_ecr_rr_already_present(capfd):
     assert "This eCR has already been merged with RR data." in out
 
 
+def test_add_rr_to_ecr_rr_remove_extra_rr(capfd):
+    with open("./tests/test_files/3.1/CDA_eICR.xml") as fp:
+        eicr = fp.read()
+    with open("./tests/test_files/3.1/CDA_RR.xml") as fp:
+        rr = fp.read()
+
+    ecr = add_rr_data_to_eicr(rr, eicr)
+    root = etree.fromstring(ecr)
+
+    # RR section ("88085-6") should appear only once
+    code_RR_loinc = root.xpath('.//hl7:*[@code="88085-6"]', namespaces={"hl7": "urn:hl7-org:v3"})
+    assert len(code_RR_loinc) == 1
+
+    # RR section from eICR (v>3.1) should not exist (should have been removed)
+    rr_from_eicr = root.xpath('.//hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]', namespaces={"hl7": "urn:hl7-org:v3"})
+    assert len(rr_from_eicr) == 0
+    
+
 def test_standardize_hl7_datetimes():
     message_long_date = open("./tests/test_files/FileSingleMessageLongDate.hl7").read()
     massage_timezone = open("./tests/test_files/FileSingleMessageLongTZ.hl7").read()
