@@ -174,15 +174,13 @@ async def process_zip_endpoint(
     else:
         message = upload_file.read()
 
-    building_block_response = await apply_workflow_to_message(
+    return await apply_workflow_to_message(
         message_type,
         data_type,
         config_file_name,
         message,
         rr_content,
     )
-
-    return building_block_response
 
 
 @app.post(
@@ -206,15 +204,13 @@ async def process_message_endpoint(
     """
     process_request = dict(request)
 
-    building_block_response = await apply_workflow_to_message(
+    return await apply_workflow_to_message(
         process_request.get("message_type"),
         process_request.get("data_type"),
         process_request.get("config_file_name"),
         process_request.get("message"),
         process_request.get("rr_data"),
     )
-
-    return building_block_response
 
 
 async def apply_workflow_to_message(
