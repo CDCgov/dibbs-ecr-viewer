@@ -3,17 +3,15 @@ import { notFound } from "next/navigation";
 
 import { ProgramForm } from "@/app/admin/program/ProgramForm";
 import { listConditionReferences } from "@/app/services/listConditionsService";
-import {
-  getProgramArea,
-  updateProgramAreaAction,
-} from "@/app/services/programAreaService";
+import { getProgramArea } from "@/app/services/programAreaService";
+import { updateProgramAreaAction } from "@/app/services/serverActionService";
 import { notFoundUnlessAdmin } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
 
 /**
  * @param props page props
  * @param props.searchParams Search params
- * @returns Page to create a program area
+ * @returns Page to edit a program area
  */
 const EditProgramPage = async ({
   searchParams,

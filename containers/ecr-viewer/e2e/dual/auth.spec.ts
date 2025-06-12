@@ -109,7 +109,9 @@ test.describe("keycloak", () => {
 
     // via nbs auth, cannot navigate to library or sign out
     await expect(page.getByText("Back to eCR Library")).not.toBeVisible();
-    await expect(page.getByText("Sign Out")).not.toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Sign Out" }),
+    ).not.toBeVisible();
     await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
     );

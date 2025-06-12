@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 
 import { ProgramForm } from "@/app/admin/program/ProgramForm";
 import { listConditionReferences } from "@/app/services/listConditionsService";
-import { createProgramAreaAction } from "@/app/services/programAreaService";
+import { createProgramAreaAction } from "@/app/services/serverActionService";
 import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 /**

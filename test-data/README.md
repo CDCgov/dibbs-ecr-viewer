@@ -29,20 +29,14 @@
 
 ### eCRs
 
-| File Name                                                                                                                                                                  | Description                                                             | Size (lines) |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------ |
-| [1dd10047-2207-4eac-a993-0f706c88be5d](ecr/1dd10047-2207-4eac-a993-0f706c88be5d/CDA_eICR.xml)                                                                              | eICR of Luke Skywalker contains lots of lab results                     | 2000         |
-| [9408ddce-4dcb-416c-a153-82cce01839e2](ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml)                                                                              | Empty eICR, RR has contents                                             | 600          |
-| [ecr_sample_input_bad](ecr/ecr_sample_input_bad/ecr_sample_input_bad.xml)                                                                                                  | eICR currently used in validation service, has some sort of bad input   | 2000         |
-| [ecr_sample_input_good.xml](ecr/ecr_sample_input_good/ecr_sample_input_good.xml)                                                                                           | eICR, currently used in validation service, has some sort of good input | 2000         |
-| [ecr_sample_input_good_with_RR.xml](ecr/ecr_sample_input_good_with_RR/ecr_sample_input_good_with_RR.xml)                                                                   | RR, with good sample input used in validation service                   | 2000         |
-| [message_refiner_test_eicr.xml](ecr/message_refiner_test_eicr.xml/message_refiner_test_eicr.xml)                                                                           | eICR used with message refiner                                          | 2000         |
-| [refined_message_condition_only.xml](ecr/refined_message_condition_only/refined_message_condition_only.xml)                                                                | as title suggests                                                       | 2000         |
-| [refined_message_labs_reason.xml](ecr/refined_message_labs_reason/refined_message_labs_reason.xml)                                                                         | as title suggests                                                       | 2000         |
-| [refined_message_no_parameters.xml](ecr/refined_message_no_parameters/refined_message_no_parameters.xml)                                                                   | as title suggests                                                       | 2000         |
-| [refined_message_results_section_chlamydia_condition.xml](ecr/refined_message_results_section_chlamydia_condition/refined_message_results_section_chlamydia_condition.xml) | as title suggests                                                       | 2000         |
-| [refined_message_social_history_only.xml](ecr/refined_message_social_history_only/refined_message_social_history_only.xml)                                                 | as title suggests                                                       | 2000         |
-| [CDA_eICR.xml](ecr/validation/CDA_eICR.xml)                                                                                                                                | empty eICR with RR                                                      | 2000         |
+| File Name                                                                                                | Description                                                             | Size (lines) |
+| -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------ |
+| [1dd10047-2207-4eac-a993-0f706c88be5d](ecr/1dd10047-2207-4eac-a993-0f706c88be5d/CDA_eICR.xml)            | eICR of Luke Skywalker contains lots of lab results                     | 2000         |
+| [9408ddce-4dcb-416c-a153-82cce01839e2](ecr/9408ddce-4dcb-416c-a153-82cce01839e2/CDA_eICR.xml)            | Empty eICR, RR has contents                                             | 600          |
+| [ecr_sample_input_bad](ecr/ecr_sample_input_bad/ecr_sample_input_bad.xml)                                | eICR currently used in validation service, has some sort of bad input   | 2000         |
+| [ecr_sample_input_good.xml](ecr/ecr_sample_input_good/ecr_sample_input_good.xml)                         | eICR, currently used in validation service, has some sort of good input | 2000         |
+| [ecr_sample_input_good_with_RR.xml](ecr/ecr_sample_input_good_with_RR/ecr_sample_input_good_with_RR.xml) | RR, with good sample input used in validation service                   | 2000         |
+| [CDA_eICR.xml](ecr/validation/CDA_eICR.xml)                                                              | empty eICR with RR                                                      | 2000         |
 
 ### ZIP Files
 

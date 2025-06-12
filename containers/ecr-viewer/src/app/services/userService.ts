@@ -1,6 +1,5 @@
-"use server";
-
 import "server-only";
+import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
 import { Kysely } from "kysely";
@@ -17,7 +16,7 @@ import {
 } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
-import { UserFacingError, makeServerAction } from "./errorService";
+import { UserFacingError } from "./errorService";
 
 const getUserByEmail = async (
   email: string | null | undefined,
@@ -38,7 +37,7 @@ const getUserByEmail = async (
  * start using this and other crud in UI we re-use the db call.
  * @returns Logged in User or undefined
  */
-export const getLoggedInUser = async () => {
+export const getLoggedInUser = cache(async () => {
   const { email, name } = (await getLoggedInUserSession()) || {};
   if (!email) return;
 
@@ -55,7 +54,7 @@ export const getLoggedInUser = async () => {
     console.error({ error, message: "Failed to get logged in user" });
     return undefined;
   }
-};
+});
 
 /**
  * @param user User to check is an admin
@@ -112,7 +111,6 @@ export const createUser = async (
     throw new UserFacingError(message);
   }
 };
-export const createUserAction = makeServerAction(createUser);
 
 /**
  * Create an initial admin user with the given email. If any active
@@ -167,6 +165,25 @@ const createUserQuery = async (
 };
 
 /**
+ * Get a user with the given uuid
+ * @param uuid id of the user to get
+ * @returns user if available, otherwise undefined
+ */
+export const getUser = async (uuid: string): Promise<User | undefined> => {
+  try {
+    return await getDb<Core>()
+      .selectFrom("user")
+      .selectAll()
+      .where("user.uuid", "=", uuid)
+      .executeTakeFirst();
+  } catch (error: unknown) {
+    const message = "Failed to get user";
+    console.error({ message, error });
+    throw new UserFacingError(message);
+  }
+};
+
+/**
  * Update a user with the the given id.
  * @param uuid id of the user to update
  * @param updates objecct with fields to update in their record. UUID fields should not be updated.
@@ -185,7 +202,6 @@ export const updateUser = async (
     throw new UserFacingError(message);
   }
 };
-export const updateUserAction = makeServerAction(updateUser);
 
 const updateUserQuery = async (
   uuid: string,
@@ -253,9 +269,6 @@ export const updateUserProgramAreas = async (
     throw new UserFacingError(message);
   }
 };
-export const updateUserProgramAreasAction = makeServerAction(
-  updateUserProgramAreas,
-);
 
 const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
   await db
@@ -281,7 +294,6 @@ export const deleteUser = async (uuid: string): Promise<void> => {
     throw new UserFacingError(message);
   }
 };
-export const deleteUserAction = makeServerAction(deleteUser);
 
 export type NamedUserPogramArea = UserProgramArea & { name: string };
 export type ListedUser = User & { program_areas: NamedUserPogramArea[] };
