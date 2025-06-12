@@ -72,12 +72,12 @@ describe("Filter by Reportable Conditions Component", () => {
     });
 
     // Initially closed
-    expect(screen.queryByText(/Filter by Reportable Condition/)).toBeNull();
+    expect(screen.queryByText(/Filter by reportable condition/)).toBeNull();
 
     // Open on click
     await user.click(toggleButton);
     expect(
-      screen.getByText(/Filter by Reportable Condition/),
+      screen.getByText(/Filter by reportable condition/),
     ).toBeInTheDocument();
     const applyFilterButton = screen.getByRole("button", {
       name: /Apply Filter/i,
@@ -86,7 +86,7 @@ describe("Filter by Reportable Conditions Component", () => {
 
     // Close on click
     await user.click(toggleButton);
-    expect(screen.queryByText(/Filter by Reportable Condition/)).toBeNull();
+    expect(screen.queryByText(/Filter by reportable condition/)).toBeNull();
   });
 
   it("Fetches conditions on Filters component mount", async () => {
@@ -126,7 +126,7 @@ describe("Filter by Reportable Conditions Component", () => {
 
     // Applying filter and re-opening filter box should still filter out Condition1
     const toggleApplyButton = screen.getByRole("button", {
-      name: /Apply Filter/i,
+      name: /Apply filter/i,
     });
     await user.click(toggleApplyButton);
 
@@ -177,12 +177,12 @@ describe("Filter by Reportable Conditions Component", () => {
     await user.click(checkbox);
 
     expect(toggleFilterButton.getAttribute("aria-label")).toBe(
-      "Filter by Reportable Condition, 1 selected",
+      "Filter by reportable condition, 1 selected",
     );
 
     await user.click(checkbox);
     expect(toggleFilterButton.getAttribute("aria-label")).toBe(
-      "Filter by Reportable Condition",
+      "Filter by reportable condition",
     );
   });
 
@@ -322,7 +322,7 @@ describe("Filter by Date Component", () => {
     const { container } = renderFilters();
 
     const toggleFilterButton = await screen.findByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleFilterButton);
 
@@ -333,31 +333,31 @@ describe("Filter by Date Component", () => {
     const user = userEvent.setup();
     renderFilters();
     const toggleButton = await screen.findByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
 
     // Initially closed
-    expect(screen.queryByText(/Filter by Received Date/)).toBeNull();
+    expect(screen.queryByText(/Filter by received date/)).toBeNull();
     expect(screen.queryByText(/Last year/)).toBeInTheDocument();
 
     // Open on click
     await user.click(toggleButton);
-    expect(screen.getByText(/Filter by Received Date/)).toBeInTheDocument();
+    expect(screen.getByText(/Filter by received date/)).toBeInTheDocument();
     const applyFilterButton = screen.getByRole("button", {
-      name: /Apply Filter/i,
+      name: /Apply filter/i,
     });
     expect(applyFilterButton).toBeInTheDocument();
 
     // Close on click
     await user.click(toggleButton);
-    expect(screen.queryByText(/Filter by Received Date/)).toBeNull();
+    expect(screen.queryByText(/Filter by received date/)).toBeNull();
   });
 
   it("Updates filter date range when selection is made", async () => {
     const user = userEvent.setup();
     const { rerender } = renderFilters();
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleButton);
 
@@ -374,7 +374,7 @@ describe("Filter by Date Component", () => {
     await user.click(radioLast7Days);
 
     const applyFilterButton = screen.getByRole("button", {
-      name: /Apply Filter For Received Date/i,
+      name: /Apply filter for received date/i,
     });
     await user.click(applyFilterButton);
 
@@ -390,7 +390,7 @@ describe("Filter by Date Component", () => {
     // Filter by Date button should be titled "Last 7 days"
     expect(
       screen.getByRole("button", {
-        name: /Filter by Received Date/i,
+        name: /Filter by received date/i,
       }),
     ).toHaveTextContent("Last 7 days");
 
@@ -398,7 +398,7 @@ describe("Filter by Date Component", () => {
     rerender(<Filters {...MOCK_PROPS} />);
     expect(
       screen.getByRole("button", {
-        name: /Filter by Received Date/i,
+        name: /Filter by received date/i,
       }),
     ).toHaveTextContent("Last 7 days");
   });
@@ -408,11 +408,11 @@ describe("Filter by Date Component", () => {
     renderFilters();
 
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
 
     expect(toggleButton.getAttribute("aria-label")).toBe(
-      "Filter by Received Date, Last year selected",
+      "Filter by received date, Last year selected",
     );
     await user.click(toggleButton);
 
@@ -423,11 +423,11 @@ describe("Filter by Date Component", () => {
     await user.click(radioLast7Days);
 
     const applyFilterButton = screen.getByRole("button", {
-      name: /Apply Filter For Received Date/i,
+      name: /Apply filter For received date/i,
     });
     await user.click(applyFilterButton);
     expect(toggleButton.getAttribute("aria-label")).toBe(
-      "Filter by Received Date, Last 7 days selected",
+      "Filter by received date, Last 7 days selected",
     );
   });
 
@@ -438,7 +438,7 @@ describe("Filter by Date Component", () => {
 
     renderFilters();
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleButton);
 
@@ -463,7 +463,7 @@ describe("Filter by Date Component", () => {
     const user = userEvent.setup();
     renderFilters();
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
 
     await user.click(toggleButton);
@@ -502,7 +502,7 @@ describe("Filter by Date Component - custom dates", () => {
     const { container } = renderFilters();
 
     const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleFilterButton);
 
@@ -519,7 +519,7 @@ describe("Filter by Date Component - custom dates", () => {
 
     renderFilters();
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleButton);
 
@@ -538,7 +538,7 @@ describe("Filter by Date Component - custom dates", () => {
 
     renderFilters();
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleButton);
 
@@ -553,7 +553,7 @@ describe("Filter by Date Component - custom dates", () => {
     await user.type(startDateInput, "2025-01-01");
     await user.type(endDateInput, "2025-01-02");
 
-    const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
+    const applyButton = screen.getByRole("button", { name: /Apply filter/i });
     await user.click(applyButton);
 
     expect(toggleButton).toHaveFocus();
@@ -561,7 +561,7 @@ describe("Filter by Date Component - custom dates", () => {
     // Filter by Date button title should include custom date range
     expect(
       screen.getByRole("button", {
-        name: /Filter by Received Date/i,
+        name: /Filter by received date/i,
       }),
     ).toHaveTextContent("From 01/01/2025 to 01/02/2025");
 
@@ -586,7 +586,7 @@ describe("Filter by Date Component - custom dates", () => {
 
     renderFilters();
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleButton);
 
@@ -599,7 +599,7 @@ describe("Filter by Date Component - custom dates", () => {
     await user.type(startDateInput, "2025-01-01");
 
     const applyButton = screen.getByRole("button", {
-      name: /Apply Filter/i,
+      name: /Apply filter/i,
     });
     await user.click(applyButton);
 
@@ -642,7 +642,7 @@ describe("Filter Opening/Closing Controls", () => {
     const user = userEvent.setup();
     renderFilters();
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(toggleButton);
 
@@ -681,7 +681,7 @@ describe("Filter Opening/Closing Controls", () => {
       </div>,
     );
     const toggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
 
     await user.click(toggleButton);
@@ -716,7 +716,7 @@ describe("Filter Opening/Closing Controls", () => {
     const user = userEvent.setup();
     renderFilters();
     const dateToggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(dateToggleButton);
 
@@ -741,7 +741,7 @@ describe("Filter Opening/Closing Controls", () => {
 
     // condtion should be open
     expect(
-      screen.getByText("Filter by Reportable Condition"),
+      screen.getByText("Filter by reportable condition"),
     ).toBeInTheDocument();
 
     // open date and check reset
@@ -809,11 +809,11 @@ describe("Reset button", () => {
 
     // reset button not visible by default
     expect(
-      screen.queryByRole("button", { name: /Reset Filters to Defaults/i }),
+      screen.queryByRole("button", { name: /Reset filters to defaults/i }),
     ).not.toBeInTheDocument();
 
     const dateToggleButton = screen.getByRole("button", {
-      name: /Filter by Received Date/i,
+      name: /Filter by received date/i,
     });
     await user.click(dateToggleButton);
 
@@ -824,7 +824,7 @@ describe("Reset button", () => {
     await user.click(radio);
     expect(radio).toBeChecked();
 
-    const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
+    const applyButton = screen.getByRole("button", { name: /Apply filter/i });
     await user.click(applyButton);
 
     // should be closed
@@ -841,7 +841,7 @@ describe("Reset button", () => {
 
     // reset button should be visible now that something has changed
     expect(
-      screen.getByRole("button", { name: /Reset Filters to Defaults/i }),
+      screen.getByRole("button", { name: /Reset filters to defaults/i }),
     ).toBeInTheDocument();
 
     // Update condition selection
@@ -864,7 +864,7 @@ describe("Reset button", () => {
     );
 
     const resetButton = screen.getByRole("button", {
-      name: /Reset Filters to Defaults/i,
+      name: /Reset filters to defaults/i,
     });
     await user.click(resetButton);
 
