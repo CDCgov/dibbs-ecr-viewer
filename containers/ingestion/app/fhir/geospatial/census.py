@@ -67,7 +67,7 @@ class CensusFhirGeocodeClient(BaseFhirGeocodeClient):
     def geocode_bundle(self, bundle: dict, overwrite=True) -> dict:
         """
         Performs geocoding on all resources in a given FHIR bundle whose
-        resource type is among those supported by the PHDI SDK. Currently,
+        resource type is among those supported. Currently,
         this includes:
 
             - Patient
