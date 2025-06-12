@@ -18,23 +18,40 @@ test.describe("user management page", () => {
     }).analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
+    // filter by user type
+    await page.getByLabel("Filter by user type").click();
+    await expect(page.getByText("Filter by user type")).toBeVisible();
+    await page.getByLabel("Admin").dispatchEvent("click");
+    await expect(
+      page.getByRole("table").getByText("Standard"),
+    ).not.toBeVisible();
+
+    await page.getByLabel("Standard").dispatchEvent("click");
+    await expect(page.getByRole("table").getByText("Admin")).not.toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(page.getByText("Filter by user type")).not.toBeVisible();
+
+    await page.getByLabel("Reset Filters to Defaults").click();
+    await expect(
+      page.getByLabel("Reset Filters to Defaults"),
+    ).not.toBeVisible();
+
     // open up side panel
     await page.getByText("ecr-viewer@admin.com").click();
     await expect(
       page.getByRole("heading", { name: "Ecr Admin" }),
     ).toBeVisible();
 
-    const accessibilityScanResultsSidePanel = await new AxeBuilder({
-      page,
-    }).analyze();
-
     // axe struggles with the modal background, but all manual testing
     // points to contrast being fine
-    const nonColorViolations =
-      accessibilityScanResultsSidePanel.violations.filter(
-        (v) => v.id !== "color-contrast",
-      );
-    expect(nonColorViolations).toEqual([]);
+    const accessibilityScanResultsSidePanel = await new AxeBuilder({
+      page,
+    })
+      .disableRules("color-contrast")
+      .analyze();
+
+    expect(accessibilityScanResultsSidePanel.violations).toEqual([]);
   });
 
   test("should create, edit, and delete a new user", async ({
