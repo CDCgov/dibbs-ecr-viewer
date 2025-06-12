@@ -116,6 +116,16 @@ export const Filter = ({
                 setFilterBoxOpen(FILTER_SUBMITTED);
                 openBtnRef?.current?.parentElement?.focus();
               }}
+              onKeyDown={
+                !submitHandler
+                  ? (e) => {
+                      if (e.code === "Enter") {
+                        e.preventDefault();
+                        setIsFilterBoxOpen(false);
+                      }
+                    }
+                  : undefined
+              }
             >
               <fieldset className="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full">
                 <FilterLegend type={type} />
