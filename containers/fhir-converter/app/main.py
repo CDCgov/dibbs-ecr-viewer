@@ -225,7 +225,9 @@ def add_rr_data_to_eicr(rr, ecr):
     # If eICR >=R3, remove (optional) RR section that came from eICR
     # This is duplicate/incomplete info from RR
     ecr_version = ecr.xpath('//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension')
-    if (len(ecr_version) > 0) and (ecr_version[0] == "2021-01-01" or ecr_version[0] == "2022-05-01"):
+    if (len(ecr_version) > 0) and (
+        ecr_version[0] == "2021-01-01" or ecr_version[0] == "2022-05-01"
+    ):
         namespaces = {"hl7": "urn:hl7-org:v3"}
         rr_from_eicr = ecr.xpath(
             '//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',
