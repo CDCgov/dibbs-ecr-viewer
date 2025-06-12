@@ -401,7 +401,7 @@
         "data_type": "array",
         "nullable": true,
         "secondary_schema": {
-          "summary": {
+          "rule_summary": {
             "fhir_path": "valueString",
             "data_type": "string",
             "nullable": true
