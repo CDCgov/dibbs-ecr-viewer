@@ -83,7 +83,6 @@ typing-extensions = ">=4.6.0"
 
 [package.extras]
 aio = ["aiohttp (>=3.0)"]
-tracing = ["opentelemetry-api (>=1.26,<2.0)"]
 
 [[package]]
 name = "azure-identity"
@@ -843,7 +842,6 @@ requests = ">=2.18.0,<3.0.0dev"
 
 [package.extras]
 protobuf = ["protobuf (<6.0.0dev)"]
-tracing = ["opentelemetry-api (>=1.1.0)"]
 
 [[package]]
 name = "google-crc32c"
