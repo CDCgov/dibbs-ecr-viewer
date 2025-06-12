@@ -108,36 +108,8 @@ services:
       - "${TRIGGER_CODE_REFERENCE_PORT_NUMBER}:8080"
     logging:
       driver: "json-file"
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: "jaeger"
-    volumes:
-      - "./jaeger-ui.json:/etc/jaeger/jaeger-ui.json"
-    command: --query.ui-config /etc/jaeger/jaeger-ui.json
-    ports:
-      - "16686:16686" # serves frontend and queries
-  prometheus:
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    volumes:
-      - "./prometheus.yaml:/etc/prometheus/prometheus.yaml"
-      - "prom_data:/prometheus"
-  grafana:
-    image: grafana/grafana-oss
-    ports:
-      - "4000:3000"
-    volumes:
-      - ./grafana.ini:/etc/grafana/grafana.ini
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
-      - ./grafana/datasources/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      - grafana_data:/var/lib/grafana
-    depends_on:
-      - prometheus
 
 volumes:
-  prom_data:
-  grafana_data:
   db:
   azure-data:
   aws-data:
