@@ -27,14 +27,14 @@ test.describe("ecr library page", () => {
     test("Set reportable condition filter to zika", async ({ page }) => {
       await page.goto("/ecr-viewer");
       await expect(
-        page.getByLabel("Filter by Reportable Condition"),
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
 
       await page.getByLabel("Filter by reportable condition").click();
       // Add delay since conditions rerenders shortly after opening
       await page.getByText("Deselect all").click({ delay: 200 });
       await page.getByRole("group").getByText("Zika Virus Disease").click();
-      await page.getByLabel("Apply Filter").click();
+      await page.getByLabel("Apply filter").click();
       await expect(page.getByText("Showing 1-1")).toBeVisible();
       await expect(page.getByText("Zika Virus Disease")).toBeVisible();
       expect(
@@ -53,7 +53,7 @@ test.describe("ecr library page", () => {
     test("Search should filter results ", async ({ page }) => {
       await page.goto("/ecr-viewer");
       await expect(
-        page.getByLabel("Filter by Reportable Condition"),
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
 
       await page.getByRole("searchbox").fill("Yoda");
@@ -73,7 +73,7 @@ test.describe("ecr library page", () => {
     }) => {
       await page.goto("/ecr-viewer");
       await expect(
-        page.getByLabel("Filter by Reportable Condition"),
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
 
       await page.getByRole("searchbox").click();
@@ -85,7 +85,7 @@ test.describe("ecr library page", () => {
       await page.getByLabel("Filter by reportable condition").click();
       await page.getByText("Deselect all").click();
       await page.getByRole("group").getByText("COVID-19").click();
-      await page.getByLabel("Apply Filter").click();
+      await page.getByLabel("Apply filter").click();
 
       await expect(page.getByText("Showing 0-0 of 0 eCRs")).toBeVisible();
       expect(
@@ -97,7 +97,7 @@ test.describe("ecr library page", () => {
     test("Set results per page", async ({ page }) => {
       await page.goto("/ecr-viewer?itemsPerPage=1");
       await expect(
-        page.getByLabel("Filter by Reportable Condition"),
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
 
       await page.getByText("Showing 1-1").waitFor();
@@ -141,16 +141,16 @@ test.describe("ecr library page", () => {
     }) => {
       await page.goto("/ecr-viewer");
       await expect(
-        page.getByLabel("Filter by Reportable Condition"),
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
       await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
 
-      await page.getByLabel(/Filter by Received Date/).click();
+      await page.getByLabel(/Filter by received date/).click();
       // playwright doesn't believe the option is in the viewport even though it very much is
       await page.getByLabel("Custom date range").dispatchEvent("click");
       await page.getByLabel("Start date").fill("2024-01-01");
       await page.getByLabel("End date").fill("2024-01-02");
-      await page.getByLabel("Apply Filter").click();
+      await page.getByLabel("Apply filter").click();
 
       await page.waitForURL(
         "/ecr-viewer?dateRange=custom&dates=2024-01-01%7C2024-01-02",
@@ -165,8 +165,8 @@ test.describe("ecr library page", () => {
 
     for (const [header, colIndex] of [
       ["Patient", "1"],
-      ["Received Date", "2"],
-      ["Encounter Date", "3"],
+      ["Received date", "2"],
+      ["Encounter date", "3"],
     ]) {
       const headerButton = page.getByRole("button", {
         name: header,

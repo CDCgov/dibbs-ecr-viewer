@@ -20,8 +20,7 @@ const copyParams = (params: URLSearchParams | ReadonlyURLSearchParams) =>
 export const useLibraryQueryParam = () => useQueryParam<LibraryParam>(["page"]);
 
 /**
- * Custom hook to manage query parameters in the URL (set, delete, and update). Hook by default, it resets page back to 1. This is currently specialized on the ecr library params, but could be made more abstract
- * down the road if needed
+ * Custom hook to manage query parameters in the URL (set, delete, and update).
  * @param resets - array of params that should always be reset when updating the query
  * @returns - An object containing
  *  - searchParams: Current search params from the URL

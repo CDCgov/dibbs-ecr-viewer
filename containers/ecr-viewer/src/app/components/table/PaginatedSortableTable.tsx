@@ -90,7 +90,7 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
           ) : (
             <NoDataRow>
               No {itemType.toLowerCase()} found. We couldn't find any{" "}
-              {itemType.toLowerCase()} matching your filter or search criteria.
+              {itemType.toLowerCase()} matching your filter criteria.
             </NoDataRow>
           )}
         </tbody>

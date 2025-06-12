@@ -156,23 +156,10 @@ export const UserTable = ({
           setFilterUserTypeOption("all");
         }}
       >
-        <Filter
-          isActive={true}
-          type="user type"
-          title={USER_TYPE_OPTIONS[filterUserTypeOption]}
-          resetHandler={() => {}}
-          icon={Person}
-        >
-          <div className="display-flex flex-column margin-bottom-1">
-            <RadioDateOptions
-              groupName="user-type"
-              optionsMap={USER_TYPE_OPTIONS}
-              onChange={setFilterUserTypeOption}
-              currentOption={filterUserTypeOption}
-              classNames="padding-bottom-1"
-            />
-          </div>
-        </Filter>
+        <FilterByUserType
+          filterUserTypeOption={filterUserTypeOption}
+          setFilterUserTypeOption={setFilterUserTypeOption}
+        />
       </FilterGroup>
       <PaginatedSortableTable
         initHeaders={tableHeaders}
@@ -180,6 +167,34 @@ export const UserTable = ({
         itemType="Users"
       />
     </div>
+  );
+};
+
+const FilterByUserType = ({
+  filterUserTypeOption,
+  setFilterUserTypeOption,
+}: {
+  filterUserTypeOption: string;
+  setFilterUserTypeOption: (v: string) => void;
+}) => {
+  return (
+    <Filter
+      isActive={true}
+      type="user type"
+      title={USER_TYPE_OPTIONS[filterUserTypeOption]}
+      resetHandler={() => {}}
+      icon={Person}
+    >
+      <div className="display-flex flex-column margin-bottom-1">
+        <RadioDateOptions
+          groupName="user-type"
+          optionsMap={USER_TYPE_OPTIONS}
+          onChange={setFilterUserTypeOption}
+          currentOption={filterUserTypeOption}
+          classNames="padding-bottom-1"
+        />
+      </div>
+    </Filter>
   );
 };
 

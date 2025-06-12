@@ -119,6 +119,8 @@ export const Filter = ({
               onKeyDown={
                 !submitHandler
                   ? (e) => {
+                      // If no submit button, enter doesn't do anything, so
+                      // add a manual handler to still close out the box on enter
                       if (e.code === "Enter") {
                         e.preventDefault();
                         setIsFilterBoxOpen(false);

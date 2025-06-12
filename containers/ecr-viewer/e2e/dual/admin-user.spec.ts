@@ -50,7 +50,6 @@ test.describe("user management page", () => {
     })
       .disableRules("color-contrast")
       .analyze();
-
     expect(accessibilityScanResultsSidePanel.violations).toEqual([]);
   });
 
