@@ -107,13 +107,12 @@ For more information on the endpoint go to the documentation [here](https://cdcg
 graph TD
     subgraph Main Services
         A[Orchestration Service]
-        A --> B[Validation Service]
-        A --> C[FHIR Converter Service]
-        A --> D[Ingestion Service]
-        A --> E[Trigger Code Reference Service]
-        A --> F[Message Parser Service]
-        A --> G[ECR Viewer]
-        G --> H[ECR Viewer DB]
+        A --> B[FHIR Converter Service]
+        A --> C[Ingestion Service]
+        A --> D[Trigger Code Reference Service]
+        A --> E[Message Parser Service]
+        A --> F[ECR Viewer]
+        F --> G[ECR Viewer DB]
     end
 
     subgraph Observability

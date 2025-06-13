@@ -23,7 +23,6 @@ The files that need to be changed are
 - containers/message-parser/requirements.txt
 - containers/record-linkage/requirements.txt
 - containers/tabulation/requirements.txt
-- containers/validation/requirements.txt
 
 ## Changing Docker
 
@@ -36,4 +35,3 @@ The Docker files that need to be changed are
 - containers/message-parser/DockerFile
 - containers/record-linkage/DockerFile
 - containers/tabulation/DockerFile
-- containers/validation/DockerFile

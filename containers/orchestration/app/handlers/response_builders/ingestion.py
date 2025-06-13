@@ -6,56 +6,6 @@ from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 from app.handlers.tracer import tracer
 
 
-def unpack_validation_response(response: Response) -> ServiceHandlerResponse:
-    """
-    Helper function for processing a response from the DIBBs validation
-    service. If the message is valid, with no errors in data structure,
-    just report that to the calling orchestrator so we can continue the
-    workflow. If the message isn't valid but the service succeeded (status
-    code 200), tell the caller what the errors were so they can abort
-    and inform the user.
-
-    :param response: The response returned by a POST request to the validation
-      service.
-    :return: A ServiceHandlerResponse with any validation errors the data
-      generated, or an instruction to continue to the next service.
-    """
-    with tracer.start_as_current_span(
-        "unpack_validation_response",
-        kind=trace.SpanKind(0),
-        attributes={"status_code": response.status_code},
-    ) as handler_span:
-        match response.status_code:
-            case 200:
-                validator_response = response.json()
-                handler_span.add_event(
-                    "Validation service completed successfully",
-                    attributes={
-                        "validation_results": validator_response.get(
-                            "validation_results"
-                        ),
-                        "message_is_valid": validator_response.get("message_valid"),
-                    },
-                )
-                return ServiceHandlerResponse(
-                    response.status_code,
-                    validator_response.get("validation_results"),
-                    validator_response.get("message_valid"),
-                )
-            case _:
-                handler_span.add_event(
-                    "Validation of message failed, or message contained errors"
-                )
-                handler_span.set_status(
-                    StatusCode(2), "Error Message: " + response.text
-                )
-                return ServiceHandlerResponse(
-                    response.status_code,
-                    f"Validation service failed: {response.text}",
-                    False,
-                )
-
-
 def unpack_ingestion_standardization(response: Response) -> ServiceHandlerResponse:
     """
     Helper function for processing a response from the ingestion standardization

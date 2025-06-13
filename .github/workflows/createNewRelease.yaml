@@ -117,7 +117,6 @@ jobs:
           MPI_PERSON_TABLE: person
           # Orchestration
           TRIGGER_CODE_REFERENCE_URL: http://localhost:8086
-          VALIDATION_URL: http://localhost:8081
           FHIR_CONVERTER_URL: http://localhost:8082
           INGESTION_URL: http://localhost:8083
           MESSAGE_PARSER_URL: http://localhost:8085
