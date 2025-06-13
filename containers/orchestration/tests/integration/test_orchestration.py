@@ -316,7 +316,7 @@ async def test_websocket_process_message_endpoint(setup):
         },
     }
     client = TestClient(app)
-
+    print
     # Pull in and read test zip file
     with open(
         Path(__file__).parent.parent / "assets" / "test_zip.zip",
@@ -331,5 +331,9 @@ async def test_websocket_process_message_endpoint(setup):
 
         # Pull response message from websocket connection like frontend would
         messages = websocket.receive_json()
+
+    print(f"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    print(f"The value of message is {messages}")
+    print(f"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 
     assert messages == expected_response_message
