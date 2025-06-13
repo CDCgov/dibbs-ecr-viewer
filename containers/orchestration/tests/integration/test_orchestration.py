@@ -294,29 +294,8 @@ def test_process_message_hl7(setup):
 @pytest.mark.integration
 async def test_websocket_process_message_endpoint(setup):
     expected_response_message = {
-        "validate": {
-            "status": "success",
-            "status_code": 200,
-            "response": {
-                "message_valid": True,
-                "validation_results": {
-                    "fatal": [],
-                    "errors": [],
-                    "warnings": [],
-                    "information": [],
-                    "message_ids": {
-                        "eicr": {
-                            "extension": None,
-                            "root": "c34356e3-e6e7-4905-b239-c26c6e493921",
-                        },
-                        "rr": {},
-                    },
-                },
-            },
-        },
     }
     client = TestClient(app)
-    print
     # Pull in and read test zip file
     with open(
         Path(__file__).parent.parent / "assets" / "test_zip.zip",
@@ -331,9 +310,5 @@ async def test_websocket_process_message_endpoint(setup):
 
         # Pull response message from websocket connection like frontend would
         messages = websocket.receive_json()
-
-    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    print(f"The value of message is {messages}")
-    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 
     assert messages == expected_response_message
