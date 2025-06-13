@@ -26,7 +26,6 @@ def test_health_check(setup):
     """
     port_number_strings = [
         "ORCHESTRATION_PORT_NUMBER",
-        "VALIDATION_PORT_NUMBER",
         "FHIR_CONVERTER_PORT_NUMBER",
         "INGESTION_PORT_NUMBER",
         "MESSAGE_PARSER_PORT_NUMBER",
