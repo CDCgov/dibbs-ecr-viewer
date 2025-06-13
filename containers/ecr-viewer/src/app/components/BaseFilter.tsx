@@ -9,9 +9,13 @@ import React, {
 
 import { Button, Label } from "@trussworks/react-uswds";
 
-import { toKebabCase } from "@/app/utils/format-utils";
+import { toKebabCase, toSentenceCase } from "@/app/utils/format-utils";
 
-import { FILTER_CLOSED, FILTER_SUBMITTED, FilterOpenContext } from "./Filters";
+import {
+  FILTER_CLOSED,
+  FILTER_SUBMITTED,
+  FilterOpenContext,
+} from "./FilterGroup";
 
 /**
  * A reusable Filter component for eCR Library. It displays a button
@@ -44,7 +48,7 @@ export const Filter = ({
   icon: ComponentType<{ className?: string }>;
   tag?: ReactNode;
   resetHandler: () => void;
-  submitHandler: () => void;
+  submitHandler?: () => void;
   children: ReactNode;
 }) => {
   const { filterBoxOpen, setFilterBoxOpen, lastOpenButtonRef } =
@@ -92,7 +96,7 @@ export const Filter = ({
           <span ref={openBtnRef} className="square-205 usa-icon">
             <IconTag aria-hidden={true} className="square-205" />
           </span>
-          <span className="text-ink">{title || type}</span>
+          <span className="text-ink">{title || toSentenceCase(type)}</span>
           {tag && (
             <span
               className="usa-tag padding-05 bg-base-darker radius-md"
@@ -108,15 +112,27 @@ export const Filter = ({
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                submitHandler();
+                submitHandler?.();
                 setFilterBoxOpen(FILTER_SUBMITTED);
                 openBtnRef?.current?.parentElement?.focus();
               }}
+              onKeyDown={
+                !submitHandler
+                  ? (e) => {
+                      // If no submit button, enter doesn't do anything, so
+                      // add a manual handler to still close out the box on enter
+                      if (e.code === "Enter") {
+                        e.preventDefault();
+                        setIsFilterBoxOpen(false);
+                      }
+                    }
+                  : undefined
+              }
             >
               <fieldset className="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full">
                 <FilterLegend type={type} />
                 {children}
-                <ApplyFilterButton type={type} />
+                {submitHandler && <ApplyFilterButton type={type} />}
               </fieldset>
             </form>
           </div>
@@ -134,7 +150,7 @@ export const Filter = ({
  */
 const FilterLegend = ({ type }: { type: string }) => {
   return (
-    <legend className="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-x-105 text-no-wrap">
+    <legend className="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap">
       Filter by {type}
     </legend>
   );
@@ -152,9 +168,9 @@ const ApplyFilterButton = ({ type }: { type: string }) => {
       <Button
         type="submit"
         className="margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
-        aria-label={`Apply Filter for ${type}`}
+        aria-label={`Apply filter for ${type}`}
       >
-        Apply Filter
+        Apply filter
       </Button>
     </div>
   );

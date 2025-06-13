@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import Cookies from "js-cookie";
 
 import PaginationBar from "@/app/components/pagination/PaginationBar";
-import { useQueryParam } from "@/app/hooks/useQueryParam";
+import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 
 interface EcrPaginationWrapperProps {
   totalCount: number;
@@ -28,7 +28,7 @@ const EcrPaginationWrapper = ({
   itemsPerPage,
   children,
 }: EcrPaginationWrapperProps) => {
-  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
+  const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
   return (
     <div className="main-container height-ecr-library flex-column flex-align-center">

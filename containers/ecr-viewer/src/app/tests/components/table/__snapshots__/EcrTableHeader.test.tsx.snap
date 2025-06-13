@@ -50,7 +50,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-description="Sort by Received Date"
+          aria-description="Sort by Received date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           disabled=""
@@ -60,7 +60,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
           <span
             class="text-ink"
           >
-            Received Date
+            Received date
           </span>
           <svg
             aria-hidden="true"
@@ -86,7 +86,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-description="Sort by Encounter Date"
+          aria-description="Sort by Encounter date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           disabled=""
@@ -96,7 +96,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
           <span
             class="text-ink"
           >
-            Encounter Date
+            Encounter date
           </span>
           <svg
             aria-hidden="true"
@@ -124,7 +124,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
         <div
           class="display-flex"
         >
-          Reportable Condition
+          Reportable condition
         </div>
       </th>
       <th
@@ -137,7 +137,7 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
         <div
           class="display-flex"
         >
-          RCKMS Rule Summary
+          RCKMS rule summary
         </div>
       </th>
     </tr>
@@ -194,7 +194,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-description="Sort by Received Date"
+          aria-description="Sort by Received date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           id="date_created-sort-button"
@@ -203,7 +203,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
           <span
             class="text-ink"
           >
-            Received Date
+            Received date
           </span>
           <svg
             aria-hidden="true"
@@ -229,7 +229,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         scope="col"
       >
         <button
-          aria-description="Sort by Encounter Date"
+          aria-description="Sort by Encounter date"
           class="usa-button usa-button--unstyled sort-button usa-button"
           data-testid="button"
           id="encounter_date-sort-button"
@@ -238,7 +238,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
           <span
             class="text-ink"
           >
-            Encounter Date
+            Encounter date
           </span>
           <svg
             aria-hidden="true"
@@ -266,7 +266,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         <div
           class="display-flex"
         >
-          Reportable Condition
+          Reportable condition
         </div>
       </th>
       <th
@@ -279,7 +279,7 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         <div
           class="display-flex"
         >
-          RCKMS Rule Summary
+          RCKMS rule summary
         </div>
       </th>
     </tr>
