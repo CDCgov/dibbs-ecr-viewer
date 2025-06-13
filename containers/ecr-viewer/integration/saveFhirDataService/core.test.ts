@@ -13,10 +13,10 @@ const baseCoreMetadata: BundleMetadata = {
   last_name: "lname",
   first_name: "fname",
   birth_date: "2000-01-01",
-  eicr_set_id: "1234",
+  set_id: "1234",
   eicr_version_number: "1",
   rr: [],
-  report_date: "12/20/2024",
+  encounter_start_date: "12/20/2024",
 };
 
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
@@ -63,7 +63,7 @@ describe("saveFhirData - core", () => {
       rr: [
         {
           condition: "flu",
-          code: "123",
+          condition_code: "123",
           rule_summaries: [],
         },
       ],
@@ -87,8 +87,11 @@ describe("saveFhirData - core", () => {
       rr: [
         {
           condition: "flu",
-          code: "123",
-          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+          condition_code: "123",
+          rule_summaries: [
+            { rule_summary: "fever" },
+            { rule_summary: "influenza" },
+          ],
         },
       ],
     };
@@ -112,8 +115,11 @@ describe("saveFhirData - core", () => {
       rr: [
         {
           condition: "flu",
-          code: "123",
-          rule_summaries: [{ summary: "fever" }, { summary: "influenza" }],
+          condition_code: "123",
+          rule_summaries: [
+            { rule_summary: "fever" },
+            { rule_summary: "influenza" },
+          ],
         },
       ],
     };
