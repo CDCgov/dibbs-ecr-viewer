@@ -6,10 +6,8 @@ from unittest.mock import patch
 import httpx
 import pytest
 from lxml import etree
-from starlette.testclient import TestClient
 
 from app.config import get_settings
-from app.main import app
 
 get_settings()
 
