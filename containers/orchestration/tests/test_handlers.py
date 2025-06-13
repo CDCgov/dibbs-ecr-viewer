@@ -51,7 +51,7 @@ def test_build_fhir_converter_request():
     orchestration_request = {
         "message_type": "ecr",
         "data_type": "ecr",
-        "config_file_name": "sample-orchestration-config.json",
+        "config_file_name": "integrated.json",
         "message": message,
     }
     result = build_fhir_converter_request(message, orchestration_request)
