@@ -37,6 +37,9 @@ test.describe("ecr library page", () => {
       await page.getByLabel("Apply Filter").click();
       await expect(page.getByText("Showing 1-1")).toBeVisible();
       await expect(page.getByText("Zika Virus Disease")).toBeVisible();
+      await expect(
+        page.getByText("Rule used in reportability determination"),
+      ).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
       ).toEqual(1);
