@@ -21,7 +21,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by Received Date"
+            aria-label="Filter by received date"
             class="usa-button margin-right-0 filters-applied"
             data-testid="button"
             type="button"
@@ -47,7 +47,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
             <span
               class="text-ink"
             >
-              Received Date
+              Received date
             </span>
           </button>
           <div
@@ -58,10 +58,10 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
                 class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
               >
                 <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-x-105 text-no-wrap"
+                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
                 >
                   Filter by 
-                  Received Date
+                  received date
                 </legend>
                 <div
                   class="display-flex flex-column"
@@ -236,12 +236,12 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
                   class="display-flex flex-column flex-stretch padding-x-105"
                 >
                   <button
-                    aria-label="Apply Filter for Received Date"
+                    aria-label="Apply filter for received date"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
                     type="submit"
                   >
-                    Apply Filter
+                    Apply filter
                   </button>
                 </div>
               </fieldset>
@@ -256,7 +256,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
           <button
             aria-expanded="false"
             aria-haspopup="listbox"
-            aria-label="Filter by Reportable Condition"
+            aria-label="Filter by reportable condition"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -282,7 +282,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
             <span
               class="text-ink"
             >
-              Reportable Condition
+              Reportable condition
             </span>
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
@@ -319,7 +319,7 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by Received Date, Last year selected"
+            aria-label="Filter by received date, Last year selected"
             class="usa-button margin-right-0 filters-applied"
             data-testid="button"
             type="button"
@@ -356,10 +356,10 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
                 class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
               >
                 <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-x-105 text-no-wrap"
+                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
                 >
                   Filter by 
-                  Received Date
+                  received date
                 </legend>
                 <div
                   class="display-flex flex-column"
@@ -492,12 +492,12 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
                   class="display-flex flex-column flex-stretch padding-x-105"
                 >
                   <button
-                    aria-label="Apply Filter for Received Date"
+                    aria-label="Apply filter for received date"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
                     type="submit"
                   >
-                    Apply Filter
+                    Apply filter
                   </button>
                 </div>
               </fieldset>
@@ -512,7 +512,7 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
           <button
             aria-expanded="false"
             aria-haspopup="listbox"
-            aria-label="Filter by Reportable Condition"
+            aria-label="Filter by reportable condition"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -538,7 +538,7 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
             <span
               class="text-ink"
             >
-              Reportable Condition
+              Reportable condition
             </span>
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
@@ -575,7 +575,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
           <button
             aria-expanded="false"
             aria-haspopup="listbox"
-            aria-label="Filter by Received Date, Last year selected"
+            aria-label="Filter by received date, Last year selected"
             class="usa-button margin-right-0 filters-applied"
             data-testid="button"
             type="button"
@@ -613,7 +613,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by Reportable Condition"
+            aria-label="Filter by reportable condition"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -639,7 +639,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
             <span
               class="text-ink"
             >
-              Reportable Condition
+              Reportable condition
             </span>
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
@@ -656,10 +656,10 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
                 class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
               >
                 <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-x-105 text-no-wrap"
+                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
                 >
                   Filter by 
-                  Reportable Condition
+                  reportable condition
                 </legend>
                 <div
                   class="display-flex flex-column"
@@ -730,12 +730,12 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
                   class="display-flex flex-column flex-stretch padding-x-105"
                 >
                   <button
-                    aria-label="Apply Filter for Reportable Condition"
+                    aria-label="Apply filter for reportable condition"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
                     type="submit"
                   >
-                    Apply Filter
+                    Apply filter
                   </button>
                 </div>
               </fieldset>
