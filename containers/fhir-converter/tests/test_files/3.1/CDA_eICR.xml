@@ -1,3 +1,69 @@
+<!--
+    File:               CDAR2_IG_PHCASERPT_R2_D3.1_SAMPLE.xml
+    Specification:      Public Health Case Report, Release 2, STU Release 3.1 - US Realm
+    
+    Created:            Eric M Haas, Health eData Inc, on behalf of HL7 PHER Working Group
+    
+    Revision History:   11/09/2015              Eric M Haas     Pre-publication 
+                        Oct-Dec 2020            Sarah Gaunt     Additions/Revisions for 1st update to STU Release 1 (Release 2, STU
+Release 1.1) 
+                        Nov 2017                Sarah Gaunt     Updates
+                        Feb 2019                David deRoode   Update
+                        Mar 2019                Sarah Gaunt     Update
+                        Aug-Nov 2019            Sarah Gaunt     Update
+                        Jan 2020                Sarah Gaunt     Update for publication of STU2
+                        Sept-Dec 2020           Sarah Gaunt     Additions/Revisions for Release 2, STU Release 3
+                        Aug 2021                Sarah Gaunt     Update for publication of STU3
+                        May 2022                Sarah Gaunt     Additions/Revisions for Un-balloted update STU 3.1
+-->
+<!--
+    Disclaimer: 
+    This sample file is informative only.
+    This sample file contains representative data elements from the eICR IG. 
+    The file depicts a fictional character's health data. Any resemblance to a real person is
+coincidental.
+    To illustrate as many data elements as possible, the clinical scenario may not be entirely
+plausible. 
+    The data in this sample file is not intended to represent a real patients, people or clinical
+events. 
+    This sample is designed to be used in conjunction with the eICR IG.
+     
+    Where guidance has been given to the conformance or cardinality of elements or
+    attributes and there is a discrepancy with the IG, the IG is always the normative
+    source of truth.
+    
+    Please note:  This sample is valid against the Schema and Schematron for ERRORS (not warnings). 
+    Logical schematron WARNINGS will generate from the sample file. 
+    It is logical to generate a samples file from a system with valid warnings.
+-->
+<!-- 
+    Templates are identified in comments above their template id.  
+    The IG in which the template version was first published is identified in square brackets before
+the template name.
+    
+    e.g.: [C-CDA 2.1] Continuity of Care (CCD) (V3)       indicates that the Discharge Summary (V3) template
+was first published in IG C-CDA R2.1
+          [C-CDA R2.0] Plan of Treatment Section (V2)     indicates that the Plan of Treatment Section (V2)
+template was first published in IG C-CDA R2.0
+          [C-CDA R1.1] History of Present Illness Section indicates that the Hospital Course Section was
+first published in IG C-CDA R1.1
+          
+    Even though all 3 templates above are included in IG C-CDA 2.1, because there have been no new
+versions of 
+    the History of Present Illness Section template in IGs later than C-CDA R1.1, it is considered to
+be published in R1.1. 
+    Similarly, there have been no new versions of the Plan of Treatment Section template later than
+C-CDA R.2 so it 
+    is considered to be published in R2.0.
+-->
+<!--
+    While assertion of conformance with both C-CDA R2.1 and C-CDA R1.1 is NOT a requirement of the eICR
+IG, it is recommended that, if the 
+    originating system includes both the versioned and un-versioned templateId, then both these
+templateIds SHOULD be preserved in the eICR document.
+    The examples and sample file included with this IG illustrate the optional use of the C-CDA R1.1
+templateId.
+-->
 <ClinicalDocument
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="urn:hl7-org:v3 ../../../cda-core-2.0/schema/extensions/SDTC/infrastructure/cda/CDA_SDTC.xsd"
