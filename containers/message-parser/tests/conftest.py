@@ -28,12 +28,7 @@ def read_json_from_root_test_assets():
         Reads a JSON file from the test assets directory.
         """
         with open(
-            (
-                Path(__file__).parent.parent.parent.parent
-                / "assets"
-                / "general"
-                / filename
-            ),
+            (Path(__file__).parent.parent.parent.parent / "assets" / "fhir" / filename),
         ) as file:
             return json.load(file)
 

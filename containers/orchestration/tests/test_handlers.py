@@ -594,7 +594,7 @@ def test_build_stamp_condition_extensions_request():
         open(
             Path(__file__).parent.parent.parent.parent
             / "assets"
-            / "general"
+            / "fhir"
             / "patient_bundle.json"
         )
     )
