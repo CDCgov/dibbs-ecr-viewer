@@ -48,17 +48,11 @@ def test_process_message_success(patched_post_request):
     request = {
         "message_type": "elr",
         "data_type": "hl7",
-        "config_file_name": "integrated.json",
+        "config_file_name": "non-integrated-core.json",
         "message": message,
     }
     # Need a mocked return value for each of the called services,
     # which we can use a side_effect iterator to sequentially return
-    validation_post_request = mock.Mock()
-    validation_post_request.status_code = 200
-    validation_post_request.json.return_value = {
-        "validation_results": [],
-        "message_valid": True,
-    }
     conversion_post_request = mock.Mock()
     conversion_post_request.status_code = 200
     conversion_post_request.json.return_value = {
@@ -112,7 +106,6 @@ def test_process_message_success(patched_post_request):
     }
 
     patched_post_request.side_effect = [
-        validation_post_request,
         conversion_post_request,
         ingestion_post_request,
         ingestion_post_request,
