@@ -108,19 +108,18 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
   const eicrReleaseVersion = (fhirBundle: Bundle) => {
+    const releaseVersionMap: Record<string, string> = {
+      "2016-12-01": "R1.1 (2016-12-01)",
+      "2021-01-01": "R3 (2021-01-01)",
+      "2022-05-01": "R3.1 (2022-05-01)",
+    };
+
     const releaseVersion: string = evaluateValue(
       fhirBundle,
       fhirPathMappings.eicrReleaseVersion,
     );
-    if (releaseVersion === "2016-12-01") {
-      return "R1.1 (2016-12-01)";
-    } else if (releaseVersion === "2021-01-01") {
-      return "R3 (2021-01-01)";
-    } else if (releaseVersion === "2022-05-01") {
-      return "R3.1 (2022-05-01)";
-    } else {
-      return releaseVersion;
-    }
+
+    return releaseVersionMap[releaseVersion] || releaseVersion
   };
 
   const fhirEICRProcessingStatus = evaluateValue(
