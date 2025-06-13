@@ -593,7 +593,6 @@ def test_build_stamp_condition_extensions_request():
     input_msg = json.load(
         open(
             Path(__file__).parent.parent.parent.parent
-            / "tests"
             / "assets"
             / "general"
             / "patient_bundle.json"
