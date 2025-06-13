@@ -98,7 +98,6 @@ def datetime_to_str(
             )
 
 
-# Originally from phdi/harmonization/utils.py
 def compare_strings(
     string1: str,
     string2: str,

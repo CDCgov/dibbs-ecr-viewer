@@ -1,7 +1,3 @@
-# Copied from phdi/tests/test_data_generator.py
-# TODO: Move this to dibbs SDK when it is created
-
-
 def generate_list_patients_contact():
     patient_data = [
         ["11-7-2153", "John", "Shepard", "", "", "", "", "90909", 1],

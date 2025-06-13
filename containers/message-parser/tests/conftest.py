@@ -22,7 +22,7 @@ def read_json_from_test_assets():
 
 
 @pytest.fixture(scope="session")
-def read_json_from_phdi_test_assets():
+def read_json_from_root_test_assets():
     def _read_json(filename: str) -> dict:
         """
         Reads a JSON file from the test assets directory.
