@@ -30,7 +30,6 @@ def read_json_from_root_test_assets():
         with open(
             (
                 Path(__file__).parent.parent.parent.parent
-                / "tests"
                 / "assets"
                 / "general"
                 / filename
