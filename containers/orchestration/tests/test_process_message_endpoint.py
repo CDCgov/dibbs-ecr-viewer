@@ -10,10 +10,7 @@ from app.main import app
 client = TestClient(app)
 
 test_config_path = (
-    Path(__file__).parent.parent
-    / "app"
-    / "default_configs"
-    / "integrated.json"
+    Path(__file__).parent.parent / "app" / "default_configs" / "integrated.json"
 )
 
 fhir_bundle_path = Path(__file__).parent / "assets" / "patient_bundle.json"
