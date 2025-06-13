@@ -119,7 +119,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       fhirPathMappings.eicrReleaseVersion,
     );
 
-    return releaseVersionMap[releaseVersion] || releaseVersion
+    return releaseVersionMap[releaseVersion] || releaseVersion;
   };
 
   const fhirEICRProcessingStatus = evaluateValue(
