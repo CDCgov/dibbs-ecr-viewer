@@ -94,21 +94,6 @@ async def convert(
     return result
 
 
-@app.post("/combine")
-async def combine_rr_eicr(
-    input: Annotated[FhirConverterInput, Body(examples=sample_request)],
-    # response: Response
-):
-    """ """
-    fhir_converter_input = dict(input)
-    fhir_converter_input.pop("rr_data")
-    input.input_data = resolve_references(input.input_data)
-
-    merged_ecr = add_rr_data_to_eicr(input.rr_data, input.input_data)
-
-    return merged_ecr
-
-
 def add_rr_data_to_eicr(rr, ecr):
     """
     Extracts relevant fields from an RR document, and inserts them into a
