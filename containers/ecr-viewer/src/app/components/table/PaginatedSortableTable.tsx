@@ -3,11 +3,13 @@
 import { useState, ReactNode } from "react";
 
 import { Table } from "@trussworks/react-uswds";
+import Cookies from "js-cookie";
 
 import PaginationBar from "@/app/components/pagination/PaginationBar";
 import { PAGE_SIZES } from "@/app/constants";
 import { noData } from "@/app/utils/data-utils";
 
+import { NoDataRow } from "./NoDataRow";
 import { SortDirection, SortableHeader, TableHeader } from "./SortableHeader";
 
 // Object keys in javascript can be `string | number | symbol`, but the `id`
@@ -40,7 +42,9 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
   initHeaders: TableColumn<T>[];
 }) => {
   const [tableHeaders, setTableHeaders] = useState(initHeaders);
-  const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0]);
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(Cookies.get("itemsPerPage")) || PAGE_SIZES[0],
+  );
   const [page, setPage] = useState(1);
 
   const numItems = items.length;
@@ -75,13 +79,20 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
         />
 
         <tbody>
-          {sortedItems.slice(startIndex, endIndex).map((item) => (
-            <tr key={item.uuid}>
-              {initHeaders.map(({ id, formatter = (v) => v }) => (
-                <td key={id}>{formatter(item[id], item) || noData}</td>
-              ))}
-            </tr>
-          ))}
+          {sortedItems.length > 0 ? (
+            sortedItems.slice(startIndex, endIndex).map((item) => (
+              <tr key={item.uuid}>
+                {initHeaders.map(({ id, formatter = (v) => v }) => (
+                  <td key={id}>{formatter(item[id], item) || noData}</td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <NoDataRow>
+              No {itemType.toLowerCase()} found. We couldn't find any{" "}
+              {itemType.toLowerCase()} matching your filter criteria.
+            </NoDataRow>
+          )}
         </tbody>
       </Table>
 
@@ -90,7 +101,14 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
         currentPage={page}
         totalCount={numItems}
         itemsPerPage={itemsPerPage}
-        onItemsPerPageHandler={(value) => setItemsPerPage(Number(value))}
+        onItemsPerPageHandler={(value) => {
+          // Write the cookie for future visits
+          Cookies.set("itemsPerPage", value, {
+            expires: 1000,
+          });
+
+          setItemsPerPage(Number(value));
+        }}
         pathname=""
         onClickPrevious={() => setPage(page - 1)}
         onClickNext={() => setPage(page + 1)}

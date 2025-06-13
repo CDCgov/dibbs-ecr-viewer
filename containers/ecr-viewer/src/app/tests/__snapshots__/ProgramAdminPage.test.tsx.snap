@@ -371,7 +371,7 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                   style="padding-top: 1.25rem;"
                 >
                   <button
-                    aria-description="Sort by Program Area"
+                    aria-description="Sort by Program area"
                     class="usa-button usa-button--unstyled sort-button usa-button"
                     data-testid="button"
                     id="name-sort-button"
@@ -380,7 +380,7 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                     <span
                       class="text-ink"
                     >
-                      Program Area
+                      Program area
                     </span>
                     <svg
                       aria-hidden="true"
@@ -408,7 +408,7 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                   <div
                     class="display-flex"
                   >
-                    Number of Conditions
+                    Number of conditions
                   </div>
                 </th>
               </tr>
