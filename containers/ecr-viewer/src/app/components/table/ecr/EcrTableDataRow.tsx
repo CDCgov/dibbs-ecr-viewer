@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 
 import { ExpandMore } from "@/app/components/Icon";
-import { useQueryParam } from "@/app/hooks/useQueryParam";
+import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import { EcrDisplay, RelatedEcr } from "@/app/services/listEcrDataService";
 import { noData } from "@/app/utils/data-utils";
@@ -263,7 +263,7 @@ const UrlSavingLink = ({
   ecrId: string;
   children: React.ReactNode;
 }) => {
-  const { searchParams } = useQueryParam();
+  const { searchParams } = useLibraryQueryParam();
 
   const saveUrl = () => {
     saveToSessionStorage("urlParams", searchParams.toString());
