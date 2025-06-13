@@ -281,7 +281,7 @@ def test_process_zip_success(patched_post_request):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "integrated.json",
+            "config_file_name": "non-integrated-core.json",
         }
         files = {"upload_file": ("file.zip", f)}
 
@@ -292,12 +292,6 @@ def test_process_zip_success(patched_post_request):
                 "FhirResource": {"foo": "bar"},
             },
             "bundle": {"entry": [{"resource": {"id": "foo"}}]},
-        }
-        validation_post_request = mock.Mock()
-        validation_post_request.status_code = 200
-        validation_post_request.json.return_value = {
-            "validation_results": [],
-            "message_valid": True,
         }
         conversion_post_request = mock.Mock()
         conversion_post_request.status_code = 200
@@ -345,7 +339,6 @@ def test_process_zip_success(patched_post_request):
         }
 
         patched_post_request.side_effect = [
-            validation_post_request,
             conversion_post_request,
             ingestion_post_request,
             ingestion_post_request,
