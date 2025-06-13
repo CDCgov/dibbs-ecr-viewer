@@ -89,6 +89,44 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
 };
 
 /**
+ * Given an ecrId return not found if the user is not authorized to see it.
+ * @param ecrId ID of the ecr to authorize
+ * @returns if the user can the eCR, if not a not found error will be thrown
+ */
+export const notFoundUnlessEcrAuthed = async (ecrId: string): Promise<void> => {
+  const user = await getLoggedInUser();
+  if (!user) return notFound();
+  if (user.user_type === "admin") return;
+
+  // check standard users permissions
+  const res = await getDb<Core>()
+    .selectFrom("user_program_area")
+    .select("user_program_area.program_area_uuid")
+    .where("user_program_area.user_uuid", "=", user.uuid)
+    .innerJoin(
+      "program_area",
+      "user_program_area.program_area_uuid",
+      "program_area.uuid",
+    )
+    .innerJoin(
+      "condition_reference",
+      "program_area.uuid",
+      "condition_reference.program_area_uuid",
+    )
+    .innerJoin(
+      "ecr_rr_conditions",
+      "condition_reference.code",
+      "ecr_rr_conditions.condition_code",
+    )
+    .where("ecr_rr_conditions.eicr_id", "=", ecrId)
+    .execute();
+
+  console.log({ res, user });
+
+  if (res.length === 0) return notFound();
+};
+
+/**
  * Create a user with the given email and user type. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
