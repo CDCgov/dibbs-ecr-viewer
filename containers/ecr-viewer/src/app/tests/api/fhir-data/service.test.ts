@@ -5,7 +5,6 @@ import { S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobServiceClient } from "@azure/storage-blob";
 import { ApiError } from "@google-cloud/storage";
 
-import { get_azure, get_fhir_data, get_s3 } from "@/app/api/fhir-data/service";
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
 import {
@@ -13,6 +12,7 @@ import {
   GCP_SOURCE,
   S3_SOURCE,
 } from "@/app/data/blobStorage/utils";
+import { getAzure, getFhirData, getS3 } from "@/app/services/fhirDataService";
 
 jest.mock("../../../data/blobStorage/s3Client");
 jest.mock("../../../data/blobStorage/gcpClient", () => ({
@@ -37,7 +37,7 @@ const simpleResponse = {
   fhirBundle: defaultFhirBundle,
 };
 
-describe("get_fhir_data", () => {
+describe("getFhirData", () => {
   afterEach(() => {
     process.env.SOURCE = S3_SOURCE;
     jest.resetAllMocks();
@@ -46,11 +46,11 @@ describe("get_fhir_data", () => {
   it("should return a 500 response when METADATA_DATABASE_TYPE is invalid", async () => {
     (process.env.SOURCE as any) = "p0$+gre$";
 
-    const response = await get_fhir_data("123");
+    const response = await getFhirData("123");
 
     jest.spyOn(console, "error").mockImplementation();
     expect(response.status).toEqual(500);
-    expect(await response.json()).toEqual({
+    expect(response.payload).toEqual({
       message: "Invalid source",
     });
   });
@@ -70,9 +70,9 @@ describe("get_fhir_data", () => {
         file: () => ({ download: () => "Some text" }),
       });
 
-      const response = await get_fhir_data("1234");
+      const response = await getFhirData("1234");
 
-      expect(await response.json()).toEqual({ fhirBundle: "Some text" });
+      expect(response.payload).toEqual({ fhirBundle: "Some text" });
       expect(response.status).toEqual(200);
     });
 
@@ -89,9 +89,9 @@ describe("get_fhir_data", () => {
         }),
       });
 
-      const response = await get_fhir_data("1234");
+      const response = await getFhirData("1234");
 
-      expect(await response.json()).toEqual({ message: "eCR ID not found" });
+      expect(response.payload).toEqual({ message: "eCR ID not found" });
       expect(response.status).toEqual(404);
     });
 
@@ -103,9 +103,9 @@ describe("get_fhir_data", () => {
         }),
       });
 
-      const response = await get_fhir_data("1234");
+      const response = await getFhirData("1234");
 
-      expect(await response.json()).toEqual({
+      expect(response.payload).toEqual({
         message: "Something went wrong!",
       });
       expect(response.status).toEqual(500);
@@ -119,9 +119,9 @@ describe("get_fhir_data", () => {
         }),
       });
 
-      const response = await get_fhir_data("1234");
+      const response = await getFhirData("1234");
 
-      expect(await response.json()).toEqual({
+      expect(response.payload).toEqual({
         message: "Internal Server Error.",
       });
       expect(response.status).toEqual(500);
@@ -131,9 +131,9 @@ describe("get_fhir_data", () => {
       process.env.ECR_BUCKET_NAME = "";
       jest.spyOn(console, "error").mockImplementation(() => {});
 
-      const response = await get_fhir_data("1234");
+      const response = await getFhirData("1234");
 
-      expect(await response.json()).toEqual({
+      expect(response.payload).toEqual({
         message: "Failed to download the FHIR data due to misconfiguration.",
       });
       expect(response.status).toEqual(500);
@@ -141,7 +141,7 @@ describe("get_fhir_data", () => {
   });
 });
 
-describe("get_s3", () => {
+describe("getS3", () => {
   afterEach(() => {
     process.env.SOURCE = S3_SOURCE;
     jest.resetAllMocks();
@@ -149,7 +149,7 @@ describe("get_s3", () => {
 
   it("should return ecr when database query succeeds", async () => {
     s3Client.send = jest.fn().mockReturnValue({ Body: defaultFhirBundle });
-    const response = await get_s3("123");
+    const response = await getS3("123");
 
     expect(response.status).toEqual(200);
     expect(response.payload).toEqual({
@@ -158,13 +158,13 @@ describe("get_s3", () => {
     expect(s3Client.send).toHaveBeenCalledTimes(1);
   });
 
-  it("should be called by get_fhir_data when source is S3", async () => {
+  it("should be called by getFhirData when source is S3", async () => {
     process.env.SOURCE = S3_SOURCE;
     s3Client.send = jest.fn().mockReturnValue({ Body: defaultFhirBundle });
-    const response = await get_fhir_data("123");
+    const response = await getFhirData("123");
 
     expect(response.status).toEqual(200);
-    expect(await response.json()).toEqual(simpleResponse);
+    expect(response.payload).toEqual(simpleResponse);
     expect(s3Client.send).toHaveBeenCalledTimes(1);
   });
 
@@ -179,7 +179,7 @@ describe("get_s3", () => {
         $metadata: {},
       });
     });
-    const response = await get_s3("123");
+    const response = await getS3("123");
     expect(response.status).toEqual(404);
     expect(response.payload).toEqual({ message: "eCR ID not found" });
     expect(s3Client.send).toHaveBeenCalledTimes(1);
@@ -196,7 +196,7 @@ describe("get_s3", () => {
         $metadata: {},
       });
     });
-    const response = await get_s3("123");
+    const response = await getS3("123");
     expect(response.status).toEqual(500);
     expect(response.payload).toEqual({ message: "Oh no!" });
     expect(s3Client.send).toHaveBeenCalledTimes(1);
@@ -208,14 +208,14 @@ describe("get_s3", () => {
     s3Client.send = jest.fn().mockImplementation(async () => {
       throw new Error("test error");
     });
-    const response = await get_s3("123");
+    const response = await getS3("123");
     expect(response.status).toEqual(500);
     expect(response.payload).toEqual({ message: "test error" });
     expect(s3Client.send).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("get_azure", () => {
+describe("getAzure", () => {
   const blockBlobClient = {
     download: jest.fn(),
   };
@@ -245,7 +245,7 @@ describe("get_azure", () => {
     blockBlobClient.download = jest
       .fn()
       .mockReturnValue({ readableStreamBody: defaultFhirBundle });
-    const response = await get_azure("123");
+    const response = await getAzure("123");
 
     expect(response.status).toEqual(200);
     expect(response.payload).toEqual({
@@ -254,15 +254,15 @@ describe("get_azure", () => {
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
   });
 
-  it("should be called by get_fhir_data when source is azure", async () => {
+  it("should be called by getFhirData when source is azure", async () => {
     process.env.SOURCE = AZURE_SOURCE;
     blockBlobClient.download = jest
       .fn()
       .mockReturnValue({ readableStreamBody: defaultFhirBundle });
-    const response = await get_fhir_data("123");
+    const response = await getFhirData("123");
 
     expect(response.status).toEqual(200);
-    expect(await response.json()).toEqual(simpleResponse);
+    expect(response.payload).toEqual(simpleResponse);
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
   });
 
@@ -272,7 +272,7 @@ describe("get_azure", () => {
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
       throw { statusCode: 404, code: "ResourceNotFound" };
     });
-    const response = await get_azure("123");
+    const response = await getAzure("123");
     expect(response.status).toEqual(404);
     expect(response.payload).toEqual({ message: "eCR ID not found" });
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
@@ -284,7 +284,7 @@ describe("get_azure", () => {
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
       throw { statusCode: 409, message: "Oh no!" };
     });
-    const response = await get_azure("123");
+    const response = await getAzure("123");
     expect(response.status).toEqual(500);
     expect(response.payload).toEqual({ message: "Oh no!" });
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
@@ -296,7 +296,7 @@ describe("get_azure", () => {
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
       throw { statusCode: 409, message: "Oh no!" };
     });
-    const response = await get_azure("123");
+    const response = await getAzure("123");
     expect(response.status).toEqual(500);
     expect(response.payload).toEqual({ message: "Oh no!" });
     expect(blockBlobClient.download).toHaveBeenCalledTimes(1);
@@ -306,7 +306,7 @@ describe("get_azure", () => {
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
       throw { statusCode: 409, message: "Oh no!" };
     });
-    const response = await get_azure("123");
+    const response = await getAzure("123");
     expect(response.status).toEqual(500);
     expect(response.payload).toEqual({
       message:

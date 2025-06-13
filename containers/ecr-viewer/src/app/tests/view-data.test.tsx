@@ -2,7 +2,7 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 
-import { get_fhir_data } from "@/app/api/fhir-data/service";
+import { getFhirData } from "@/app/services/fhirDataService";
 import ECRViewerPage from "@/app/view-data/page";
 
 jest.mock("../view-data/component-utils", () => ({
@@ -14,7 +14,7 @@ jest.mock("../view-data/components/LoadingComponent", () => ({
 }));
 
 jest.mock("../api/fhir-data/service", () => ({
-  get_fhir_data: jest.fn(),
+  getFhirData: jest.fn(),
 }));
 jest.mock("../components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
@@ -47,7 +47,7 @@ describe("ECRViewerPage", () => {
   });
 
   it("should handle 404 error", async () => {
-    mockFetch(get_fhir_data as jest.Mock, {}, 404);
+    mockFetch(getFhirData as jest.Mock, {}, 404);
 
     const component = await ECRViewerPage({ searchParams: { id: "123" } });
     render(component);
@@ -56,12 +56,7 @@ describe("ECRViewerPage", () => {
   });
 
   it("should handle 500 error", async () => {
-    mockFetch(
-      get_fhir_data as jest.Mock,
-      {},
-      500,
-      "uh oh something went wrong",
-    );
+    mockFetch(getFhirData as jest.Mock, {}, 500, "uh oh something went wrong");
 
     const component = await ECRViewerPage({ searchParams: { id: "123" } });
     render(component);
@@ -71,7 +66,7 @@ describe("ECRViewerPage", () => {
   });
 
   it("should handle invalid response", async () => {
-    mockFetch(get_fhir_data as jest.Mock, null, 200);
+    mockFetch(getFhirData as jest.Mock, null, 200);
 
     const component = await ECRViewerPage({ searchParams: { id: "123" } });
     render(component);
