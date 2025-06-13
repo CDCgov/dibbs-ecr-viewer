@@ -13,7 +13,7 @@ test_config_path = (
     Path(__file__).parent.parent
     / "app"
     / "default_configs"
-    / "sample-orchestration-config.json"
+    / "integrated.json"
 )
 
 fhir_bundle_path = Path(__file__).parent / "assets" / "patient_bundle.json"
@@ -51,7 +51,7 @@ def test_process_message_success(patched_post_request):
     request = {
         "message_type": "elr",
         "data_type": "hl7",
-        "config_file_name": "sample-orchestration-config.json",
+        "config_file_name": "integrated.json",
         "message": message,
     }
     # Need a mocked return value for each of the called services,
@@ -135,7 +135,7 @@ def test_process_message_orchestration_error(patched_call_apis):
     request = {
         "message_type": "elr",
         "data_type": "hl7",
-        "config_file_name": "sample-orchestration-config.json",
+        "config_file_name": "integrated.json",
         "message": message,
     }
 
@@ -153,14 +153,14 @@ def test_process_message_orchestration_bad_config(patched_call_apis):
     request = {
         "message_type": "elr",
         "data_type": "hl7",
-        "config_file_name": "sample-orchestration-config-i-do-not-exist.json",
+        "config_file_name": "integrated-i-do-not-exist.json",
         "message": message,
     }
 
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 400
     assert actual_response.json() == {
-        "message": "A config with the name 'sample-orchestration-config-i-do-not-exist.json' could not be found.",
+        "message": "A config with the name 'integrated-i-do-not-exist.json' could not be found.",
         "processed_values": {},
     }
 
@@ -225,7 +225,7 @@ def test_process_message_mismatched_data_types_ecr():
         "message_type": "ecr",
         "data_type": "fhir",
         "message": {"foo": "bar"},
-        "config_file_name": "sample-orchestration-config.json",
+        "config_file_name": "integrated.json",
     }
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 422
@@ -240,7 +240,7 @@ def test_process_message_mismatched_data_types_fhir():
         "message_type": "fhir",
         "data_type": "zip",
         "message": "foo",
-        "config_file_name": "sample-orchestration-config.json",
+        "config_file_name": "integrated.json",
     }
 
     actual_response = client.post("/process-message", json=request)
@@ -257,7 +257,7 @@ def test_process_message_invalid_fhir():
         "message_type": "fhir",
         "data_type": "fhir",
         "message": json.dumps("foo"),
-        "config_file_name": "sample-orchestration-config.json",
+        "config_file_name": "integrated.json",
     }
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 422
@@ -272,7 +272,7 @@ def test_process_message_input_validation_with_rr_data():
     request = {
         "message": "foo",
         "data_type": "elr",
-        "config_file_name": "sample-orchestration-config.json",
+        "config_file_name": "integrated.json",
         "message_type": "elr",
         "rr_data": "bar",
     }
@@ -291,7 +291,7 @@ def test_process_zip_success(patched_post_request):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "sample-orchestration-config.json",
+            "config_file_name": "integrated.json",
         }
         files = {"upload_file": ("file.zip", f)}
 
@@ -377,7 +377,7 @@ def test_process_zip_with_empty_zip():
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "sample-orchestration-config.json",
+            "config_file_name": "integrated.json",
         }
         files = {"upload_file": ("file.zip", f)}
 
