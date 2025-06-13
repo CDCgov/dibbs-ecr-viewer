@@ -124,6 +124,21 @@ def add_rr_data_to_eicr(rr, ecr):
         print("This eCR has already been merged with RR data.")
         return etree.tostring(ecr, encoding="unicode", method="xml")
 
+    # If eICR >=R3, remove (optional) RR section that came from eICR
+    # This is duplicate/incomplete info from RR
+    ecr_version = ecr.xpath('//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension')
+    if (len(ecr_version) > 0) and (ecr_version[0] >= "2021-01-01"):
+        namespaces = {"hl7": "urn:hl7-org:v3"}
+        rr_from_eicr = ecr.xpath(
+            '//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',
+            namespaces=namespaces,
+        )[0]
+
+        if rr_from_eicr is not None:
+            rr_from_eicr_parent = rr_from_eicr.getparent()
+            if rr_from_eicr_parent is not None:
+                rr_from_eicr_parent.remove(rr_from_eicr)
+
     # Create the tags for elements we'll be looking for
     rr_tags = [
         "templateId",
@@ -206,21 +221,6 @@ def add_rr_data_to_eicr(rr, ecr):
 
         # Append the ecr section into the eCR - puts it at the end
         ecr.append(ecr_section)
-
-    # If eICR >=R3, remove (optional) RR section that came from eICR
-    # This is duplicate/incomplete info from RR
-    ecr_version = ecr.xpath('//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension')
-    if (len(ecr_version) > 0) and (ecr_version[0] >= "2021-01-01"):
-        namespaces = {"hl7": "urn:hl7-org:v3"}
-        rr_from_eicr = ecr.xpath(
-            '//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',
-            namespaces=namespaces,
-        )[0]
-
-        if rr_from_eicr is not None:
-            rr_from_eicr_parent = rr_from_eicr.getparent()
-            if rr_from_eicr_parent is not None:
-                rr_from_eicr_parent.remove(rr_from_eicr)
 
     ecr = etree.tostring(ecr, encoding="unicode", method="xml")
 
