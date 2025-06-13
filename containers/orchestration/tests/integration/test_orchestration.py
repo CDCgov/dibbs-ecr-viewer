@@ -293,8 +293,7 @@ def test_process_message_hl7(setup):
 @pytest.mark.asyncio
 @pytest.mark.integration
 async def test_websocket_process_message_endpoint(setup):
-    expected_response_message = {
-    }
+    expected_response_message = {}
     client = TestClient(app)
     # Pull in and read test zip file
     with open(
