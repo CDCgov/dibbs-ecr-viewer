@@ -19,7 +19,9 @@ const baseCoreMetadata: BundleMetadata = {
   encounter_start_date: "12/20/2024",
 };
 
-const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
+export const makePromiseResolveWithStatus = (
+  status: number,
+): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
 beforeAll(async () => {

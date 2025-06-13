@@ -91,18 +91,33 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
 /**
  * Given an ecrId return not found if the user is not authorized to see it.
  * @param ecrId ID of the ecr to authorize
- * @returns if the user can the eCR, if not a not found error will be thrown
+ * @returns whether the loggen in user can see this eCR
  */
-export const notFoundUnlessEcrAuthed = async (ecrId: string): Promise<void> => {
+export const isLoggedInUserEcrAuthed = async (
+  ecrId: string,
+): Promise<boolean> => {
   const user = await getLoggedInUser();
-  if (!user) return notFound();
-  if (user.user_type === "admin") return;
+  if (!user) return false;
+  if (user.user_type === "admin") return true;
 
   // check standard users permissions
+  return await isUserEcrAuthed(user.uuid, ecrId);
+};
+
+/**
+ * Check whether a given user (by id) is authorized to see an ecr (by ID)
+ * @param userId user's uuid
+ * @param ecrId eCR's id
+ * @returns whether the user is allowed to see the ecr
+ */
+export const isUserEcrAuthed = async (
+  userId: string,
+  ecrId: string,
+): Promise<boolean> => {
   const res = await getDb<Core>()
     .selectFrom("user_program_area")
     .select("user_program_area.program_area_uuid")
-    .where("user_program_area.user_uuid", "=", user.uuid)
+    .where("user_program_area.user_uuid", "=", userId)
     .innerJoin(
       "program_area",
       "user_program_area.program_area_uuid",
@@ -119,11 +134,9 @@ export const notFoundUnlessEcrAuthed = async (ecrId: string): Promise<void> => {
       "ecr_rr_conditions.condition_code",
     )
     .where("ecr_rr_conditions.eicr_id", "=", ecrId)
-    .execute();
+    .executeTakeFirst();
 
-  console.log({ res, user });
-
-  if (res.length === 0) return notFound();
+  return !!res;
 };
 
 /**
