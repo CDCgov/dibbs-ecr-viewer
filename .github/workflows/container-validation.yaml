@@ -45,8 +45,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
-          commit_hash=$(git rev-parse HEAD)
-          find ./ -name requirements.txt -exec sed -i -e "s/phdi@main/phdi@${commit_hash}/g" {} \;
           pip install -r requirements.txt
           if [ -f dev-requirements.txt ]; then
             pip install -r dev-requirements.txt
@@ -75,13 +73,7 @@ jobs:
         run: pip install pytest
       - name: Install dependencies
         working-directory: ./containers/${{env.CONTAINER}}
-        # When running as a PR check, instead of importing the SDK from @main,
-        # import it from the current commit. (Need to do this for all containers)
         run: |
-          if [[ $GITHUB_REF != "refs/heads/main" ]]; then
-            commit_hash=$(git rev-parse HEAD)
-            find ./ -name requirements.txt -exec sed -i -e "s/phdi@main/phdi@${commit_hash}/g" {} \;
-          fi
           pip install -r requirements.txt
           if [ -f dev-requirements.txt ]; then
             pip install -r dev-requirements.txt
