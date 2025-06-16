@@ -46,10 +46,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# https://nextjs.org/docs/messages/sharp-missing-in-production
-# COPY --from=builder --chown=nextjs:nodejs /app/node_modules/sharp ./node_modules/sharp
-# ENV NEXT_SHARP_PATH /app/node_modules/sharp
-
 USER nextjs
 
 EXPOSE 3000
