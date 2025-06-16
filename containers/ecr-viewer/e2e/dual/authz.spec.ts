@@ -36,7 +36,12 @@ test.describe("standarad user authorization", () => {
     // COVID and deselect all
     expect(await page.getByRole("checkbox").all()).toHaveLength(2);
 
-    // TODO: add checks that correct eCRs are listed
+    // Only COVID eCR are listed
+    const rows = await page.getByRole("row").all();
+    expect(rows).toHaveLength(2);
+    rows.forEach((row) => expect(row.getByText("COVID-19")).toBeVisible());
+
+    await expect(page.getByText("Showing 1-2 of 2 eCRs")).toBeVisible();
   });
 
   test("can't see non-covid eCR", async ({ page }) => {

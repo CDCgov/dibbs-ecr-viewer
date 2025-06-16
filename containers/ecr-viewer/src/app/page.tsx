@@ -15,6 +15,7 @@ import { EcrTableHeader } from "./components/table/ecr/EcrTableHeader";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
+import { getLoggedInUser } from "./services/userService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
 
@@ -33,6 +34,8 @@ const HomePage = async ({
     notFound();
   } else if (!(await dbIsValid())) {
     return <MetadataDbInvalid />;
+  } else if (!(await getLoggedInUser())) {
+    notFound();
   }
 
   const cookieStore = cookies();
