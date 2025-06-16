@@ -28,7 +28,7 @@ const Header = ({ children }: { children: ReactNode }) => {
         >
           <Image
             className="flex-shrink-0"
-            src="/ecr-viewer/dibbs-logo.png"
+            src="/ecr-viewer/img/dibbs-logo.png"
             alt="DIBBs Logo"
             width={40}
             height={40}
