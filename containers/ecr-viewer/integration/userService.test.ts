@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 
 import { saveFhirMetadata } from "@/app/api/save-fhir-data/service";
 import { BundleMetadata } from "@/app/api/save-fhir-data/types";
+import { BlobResponse } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
 import { createProgramArea } from "@/app/services/programAreaService";
@@ -14,6 +15,7 @@ import {
   createUser,
   deleteUser,
   getCheckAdmin,
+  isLoggedInUserEcrAuthed,
   isUserEcrAuthed,
   listUserProgramAreas,
   listUsers,
@@ -24,7 +26,11 @@ import {
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
-import { makePromiseResolveWithStatus } from "./saveFhirDataService/core.test";
+
+export const makePromiseResolveWithStatus = (
+  status: number,
+): Promise<BlobResponse> =>
+  new Promise((resolve) => resolve({ message: "hi there", status }));
 
 const adminEmail = "admin@admin.com";
 const adminName = "Adam Admin";
@@ -167,7 +173,7 @@ describe("user service", () => {
   });
 
   it("admin should be authed to see ecr", async () => {
-    const res = await isUserEcrAuthed(adminId!, ecrId);
+    const res = await isLoggedInUserEcrAuthed(ecrId);
     expect(res).toBeTrue();
   });
 
