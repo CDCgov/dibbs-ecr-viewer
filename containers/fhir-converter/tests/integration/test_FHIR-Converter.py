@@ -55,12 +55,7 @@ def test_vxu_conversion(setup, snapshot):
 @pytest.mark.integration
 def test_ecr_conversion(setup, snapshot):
     input_data = open(
-        Path(__file__).parent.parent.parent.parent.parent
-        / "tests"
-        / "assets"
-        / "fhir-converter"
-        / "ccda"
-        / "ccda_sample.xml"
+        Path(__file__).parent.parent.parent / "assets" / "ccda" / "ccda_sample.xml"
     ).read()
     request = {"input_data": input_data, "input_type": "ecr", "root_template": "EICR"}
     ecr_conversion_response = httpx.post(CONVERT_TO_FHIR, json=request)

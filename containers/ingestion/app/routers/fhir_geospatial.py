@@ -113,7 +113,7 @@ def geocode_bundle_endpoint(
         geocode_client = CensusFhirGeocodeClient()
 
     # Here we need to remove the parameters that are used here
-    #   but are not required in the PHDI function in the SDK
+    #   but are not required in the function in the SDK
     input.pop("geocode_method", None)
     input.pop("smarty_auth_id", None)
     input.pop("smarty_auth_token", None)
