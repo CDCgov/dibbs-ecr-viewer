@@ -175,7 +175,7 @@ const FilterReportableConditions = ({
           ))}
         </div>
       </div>
-      <div className="border-top-1px border-base-lighter margin-x-neg-105"></div>
+      <div className="border-top-1px border-base-lighter"></div>
     </Filter>
   );
 };
