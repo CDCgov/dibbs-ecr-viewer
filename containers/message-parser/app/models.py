@@ -78,7 +78,7 @@ class ParseMessageInput(BaseModel):
         default=None,
     )
     fhir_converter_url: str | None = Field(
-        description="The URL of an instance of the PHDI FHIR converter. Required when "
+        description="The URL of an instance of the FHIR converter. Required when "
         "the message is not already in FHIR format.",
         default=None,
     )
