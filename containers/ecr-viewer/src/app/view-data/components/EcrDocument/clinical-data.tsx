@@ -2,11 +2,15 @@ import {
   Bundle,
   CarePlanActivity,
   CareTeamParticipant,
+  Device,
+  Element,
+  Location,
   Medication,
   MedicationAdministration,
+  Observation,
+  Organization,
   Period,
   Practitioner,
-  Procedure,
   Reference,
 } from "fhir/r4";
 
@@ -16,13 +20,17 @@ import {
   formatStartEndDate,
 } from "@/app/services/formatDateService";
 import {
+  formatAddress,
+  formatAddressList,
   formatCodeableConcept,
+  formatContactPoint,
   formatName,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { evaluateData, safeParse } from "@/app/utils/data-utils";
+import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -32,7 +40,10 @@ import {
   AdministeredMedication,
   AdministeredMedicationTableData,
 } from "@/app/view-data/components/AdministeredMedication";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import {
+  DataDisplay,
+  DisplayDataProps,
+} from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
@@ -85,9 +96,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
-      value: returnProceduresTable(
-        evaluateAll(fhirBundle, fhirPathMappings.procedures),
-      ),
+      value: returnProceduresTable(fhirBundle),
     },
     {
       title: "Planned Procedures",
@@ -367,42 +376,168 @@ const evaluatePlanOfTreatment = (
 
 /**
  * Generates a formatted table representing the list of procedures based on the provided array of procedures and mappings.
- * @param proceduresArray - An array containing the list of procedures.
+ * @param fhirBundle - The fhir bundle
  * @returns - A formatted table React element representing the list of procedures, or undefined if the procedures array is empty.
  */
 export const returnProceduresTable = (
-  proceduresArray: Procedure[],
+  fhirBundle: Bundle,
 ): React.JSX.Element | undefined => {
-  if (proceduresArray.length === 0) {
+  // Literal Procedure resources
+  const procedures = evaluateAll(fhirBundle, fhirPathMappings.procedures);
+
+  // References to Observations in the procedure history section
+  const obsRefs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.procedureHistoryRefs,
+  );
+  const obs = obsRefs
+    .map((r) => evaluateReference<Observation>(fhirBundle, r.reference))
+    .filter(notEmpty);
+
+  if (procedures.length === 0 && obs.length === 0) {
     return undefined;
   }
 
   const columnInfo: ColumnInfoInput[] = [
     { columnName: "Name", infoPath: "procedureName" },
-    { columnName: "Date/Time Performed", infoPath: "procedureDate" },
-    { columnName: "Reason", infoPath: "procedureReason" },
+    {
+      columnName: "Date/Time Performed",
+      infoPath: "procedureDate",
+      sortFn: (a: string, b: string) => {
+        const aDate = new Date(
+          a.replace("Start: ", "").replace("End: ", "").split("\n")[0],
+        );
+        const bDate = new Date(
+          b.replace("Start: ", "").replace("End: ", "").split("\n")[0],
+        );
+        return bDate.valueOf() - aDate.valueOf();
+      },
+    },
+    { columnName: "Status", infoPath: "procedureStatus" },
+    {
+      columnName: "Details",
+      hiddenBaseText: "details",
+      evaluateEntry: (el) => evaluateProcedureDetails(fhirBundle, el),
+    },
   ];
 
-  proceduresArray = proceduresArray.map((entry) => {
-    // Have date and time be on two different lines
-    const dt = formatDateTime(entry.performedDateTime);
-    return { ...entry, performedDateTime: dt.replace(" ", "\n") };
-  });
-
-  proceduresArray.sort(
-    (a, b) =>
-      new Date(b.performedDateTime ?? "").getTime() -
-      new Date(a.performedDateTime ?? "").getTime(),
-  );
+  const procBundle = [...procedures, ...obs];
 
   return (
     <EvaluateTable
-      resources={proceduresArray}
+      resources={procBundle}
       columns={columnInfo}
       caption="Procedures"
       className="margin-y-0"
     />
   );
+};
+
+const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
+  const content = [
+    {
+      title: "Reason",
+      value: evaluateAll(procedure, fhirPathMappings.procedureReason)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Body Site",
+      value: evaluateAll(procedure, fhirPathMappings.procedureBodySite)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Method",
+      value: evaluateAll(procedure, fhirPathMappings.procedureMethod)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Outcome",
+      value: evaluateValue(procedure, fhirPathMappings.procedureOutcome),
+    },
+    {
+      title: "Complication",
+      value: evaluateAll(procedure, fhirPathMappings.procedureComplication)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Priority",
+      value: evaluateValue(procedure, fhirPathMappings.procedurePriority),
+    },
+    {
+      title: "Specimen",
+      value: evaluateAll(procedure, fhirPathMappings.procedureSpecimen)
+        .map((v) => formatCodeableConcept(v))
+        .join("\n"),
+    },
+    {
+      title: "Product",
+      value: evaluateAll(procedure, fhirPathMappings.procedureProductRef)
+        .map((r) => evaluateReference<Device>(fhirBundle, r.reference))
+        .filter(notEmpty)
+        .map((d) =>
+          [
+            formatCodeableConcept(d.type),
+            d.identifier &&
+              `ID: ${d.identifier?.map(({ value }) => value).join(", ")}`,
+          ]
+            .filter(Boolean)
+            .join("\n"),
+        )
+        .join("\n\n"),
+    },
+    {
+      title: "Medication",
+      value: evaluateAll(procedure, fhirPathMappings.procedureMedRef)
+        .map((r) =>
+          evaluateReference<MedicationAdministration>(fhirBundle, r.reference),
+        )
+        .filter(notEmpty)
+        .map((ma) => {
+          const med = evaluateReference<Medication>(
+            fhirBundle,
+            ma.medicationReference?.reference,
+          );
+          return formatCodeableConcept(med?.code);
+        })
+        .filter(Boolean)
+        .join("\n"),
+    },
+    {
+      title: "Service Location",
+      value: formatAddress(
+        evaluateReference<Location>(
+          fhirBundle,
+          evaluateOne(procedure, fhirPathMappings.procedureLocationRef)
+            ?.reference,
+        )?.address,
+      ),
+    },
+    {
+      title: "Organization",
+      value: evaluateAll(procedure, fhirPathMappings.procedureOrgRef)
+        .map((r) => evaluateReference<Organization>(fhirBundle, r.reference))
+        .filter(notEmpty)
+        .map((o) =>
+          [o.name, formatAddressList(o.address), formatContactPoint(o.telecom)]
+            .filter(Boolean)
+            .join("\n"),
+        )
+        .join("\n\n"),
+    },
+  ].filter(({ value }) => !!value);
+
+  if (content.length === 0) return;
+
+  return content.map(({ title, value }, i) => (
+    <DataDisplay
+      key={title}
+      item={{ title, value, dividerLine: i < content.length - 1 }}
+    />
+  ));
 };
 
 /**
