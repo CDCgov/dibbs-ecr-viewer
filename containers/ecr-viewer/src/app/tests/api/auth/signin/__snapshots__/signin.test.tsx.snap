@@ -4,7 +4,7 @@ exports[`Sign-in Page should match snapshot 1`] = `
 <div>
   <div
     class="height-viewport-header-footer position-relative text-white"
-    style="background-image: url(/img.jpg); background-size: cover; background-position: center; min-width: 100vw; overflow-y: auto; overflow-x: auto;"
+    style="background-image: url("/img.jpg"); background-size: cover; background-position: center; min-width: 100vw; overflow-y: auto; overflow-x: auto;"
   >
     <div
       class="width-tablet position-absolute top-3950 left-12 padding-bottom-6 padding-right-6 grid-row gap-5"
