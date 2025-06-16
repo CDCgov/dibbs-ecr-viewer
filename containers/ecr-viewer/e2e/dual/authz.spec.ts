@@ -32,9 +32,9 @@ test.describe("standarad user authorization", () => {
     ).toContainText("1");
 
     await page.getByLabel("Filter by reportable condition").click();
-    const condGroup = page.getByRole("group");
-    await expect(condGroup.getByText("COVID")).toBeVisible();
-    expect(condGroup.all()).toHaveLength(2);
+    await expect(page.getByLabel("COVID-19")).toBeVisible();
+    // COVID and deselect all
+    expect(await page.getByRole("checkbox").all()).toHaveLength(2);
 
     // TODO: add checks that correct eCRs are listed
   });
