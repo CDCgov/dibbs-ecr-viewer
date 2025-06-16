@@ -67,11 +67,13 @@ To run the eCR Viewer locally:
 5. Setup your `.env.local` by running `npm run setup-local-env`.
 6. Create seed data with `npm run convert-seed-data` - this will take ~10 minutes. Note that this process will fail immediately if the Docker daemon isn't running.
 7. Run the eCR Viewer on `localhost:3000/ecr-viewer` with `npm run local-dev`.
-8. Optionally, to seed the COVID program area and a standard user, run `npm run test:e2e:seed-user-prog`
 
 #### Logging in
 
-The default IDP is keycloak for local development. The default user is `ecr-viewer-admin` and password is `pw`.
+The default IDP is keycloak for local development. The default users are (password is `pw`):
+
+- admin: `ecr-viewer-admin`
+- standard (access to COVID eCRs): `ecr-viewer-standard`
 
 ### Windows Setup
 

@@ -2,6 +2,10 @@ import { expect, test } from "@playwright/test";
 
 import { logInToKeycloak } from "./dual/utils";
 
+// This test is not really a test, but more of a seed script to add a
+// standard user with access to the covid program area. It is run as part of
+// the `convert-seed-data` npm script.
+
 test("seed standard user and covid program", async ({ page }) => {
   await logInToKeycloak({ page });
 
