@@ -10,13 +10,13 @@ client = TestClient(app)
 
 
 @pytest.fixture
-def fhir_bundle(read_json_from_phdi_test_assets):
-    return read_json_from_phdi_test_assets("patient_bundle.json")
+def fhir_bundle(read_json_from_root_test_assets):
+    return read_json_from_root_test_assets("patient_bundle.json")
 
 
 @pytest.fixture
-def fhir_bundle_w_float(read_json_from_phdi_test_assets):
-    return read_json_from_phdi_test_assets("patient_bundle_w_floats.json")
+def fhir_bundle_w_float(read_json_from_root_test_assets):
+    return read_json_from_root_test_assets("patient_bundle_w_floats.json")
 
 
 @pytest.fixture
@@ -25,8 +25,8 @@ def test_schema(read_schema_from_default_schemas):
 
 
 @pytest.fixture
-def reference_bundle(read_json_from_phdi_test_assets):
-    return read_json_from_phdi_test_assets("patient_bundle_w_labs.json")
+def reference_bundle(read_json_from_root_test_assets):
+    return read_json_from_root_test_assets("patient_bundle_w_labs.json")
 
 
 @pytest.fixture

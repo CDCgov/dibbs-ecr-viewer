@@ -35,6 +35,8 @@ export type ValueX =
   | Reference
   | ObservationReferenceRange;
 
+export type TimeX = string | Period;
+
 /**
  * Mapping from the FHIR path key to the expected type upon valuation.
  */
@@ -128,9 +130,21 @@ export type PathTypes = {
   immunizationsManufacturerName: string;
   immunizationsLotNumber: unknown;
   procedures: Procedure;
-  procedureName: string;
-  procedureDate: string;
-  procedureReason: string;
+  procedureHistoryRefs: Reference;
+  procedureName: CodeableConcept;
+  procedureDate: TimeX;
+  procedureStatus: string;
+  procedureReason: CodeableConcept;
+  procedureLocationRef: Reference;
+  procedureOrgRef: Reference;
+  procedureBodySite: CodeableConcept;
+  procedureOutcome: CodeableConcept;
+  procedureComplication: CodeableConcept;
+  procedureProductRef: Reference;
+  procedureMedRef: Reference;
+  procedureSpecimen: CodeableConcept;
+  procedureMethod: CodeableConcept;
+  procedurePriority: CodeableConcept;
   diagnosticReports: DiagnosticReport;
   diagnosticReportStatus: string;
   observations: Observation;
@@ -525,20 +539,57 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Immunization.manufacturer.name",
   },
   immunizationsLotNumber: { type: "unknown", path: "Immunization.lotNumber" },
+
+  // === Procedure ===
   procedures: {
     type: "Procedure",
     path: "Bundle.entry.resource.where(resourceType = 'Procedure')",
   },
-
-  // Procedure
-  procedureName: {
-    type: "string",
-    path: "Procedure.code.coding.iif(where(system = 'http://loinc.org').display.exists(), where(system = 'http://loinc.org').display, display.first())",
+  procedureHistoryRefs: {
+    type: "Reference",
+    path: "Bundle.entry.resource.section.where(code.coding[0].code = '47519-4').entry.where(reference.startsWith('Observation/'))",
   },
-  procedureDate: { type: "string", path: "Procedure.performedDateTime" },
-  procedureReason: { type: "string", path: "Procedure.reason.display" },
 
-  // Lab Info
+  // core fields
+  procedureName: {
+    type: "CodeableConcept",
+    path: "code",
+  },
+  procedureDate: {
+    type: "TimeX",
+    path: "Procedure.performed | Observation.effective",
+  },
+  procedureStatus: { type: "string", path: "status" },
+
+  // extra details
+  procedureReason: { type: "CodeableConcept", path: "Procedure.reasonCode" },
+  procedureLocationRef: { type: "Reference", path: "Procedure.location" },
+  procedureOrgRef: { type: "Reference", path: "Procedure.performer.actor" },
+  procedureBodySite: { type: "CodeableConcept", path: "bodySite" },
+  procedureOutcome: { type: "CodeableConcept", path: "Observation.value" },
+  procedureComplication: {
+    type: "CodeableConcept",
+    path: "Procedure.complication",
+  },
+  procedureProductRef: { type: "Reference", path: "Procedure.usedReference" },
+  procedureMedRef: {
+    type: "Reference",
+    path: "Procedure.extension.where(url = 'medicationAdministration').value",
+  },
+  procedureSpecimen: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'specimen').value",
+  },
+  procedureMethod: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'http://hl7.org/fhir/StructureDefinition/procedure-method').value | Observation.method",
+  },
+  procedurePriority: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'priorityCode').value",
+  },
+
+  // === Lab Info ===
   diagnosticReports: {
     type: "DiagnosticReport",
     path: "Bundle.entry.resource.where(resourceType = 'DiagnosticReport')",
