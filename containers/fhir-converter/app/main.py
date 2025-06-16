@@ -12,12 +12,12 @@ from app.service import convert_to_fhir, resolve_references
 description = (Path(__file__).parent.parent / "README.md").read_text(encoding="utf-8")
 
 app = FastAPI(
-    title="PHDI FHIR Converter Service",
+    title="DIBBS eCR Viewer FHIR Converter Service",
     version=os.getenv("APP_VERSION", "1.0.0"),
     contact={
         "name": "CDC Public Health Data Infrastructure",
         "url": "https://cdcgov.github.io/dibbs-ecr-viewer/",
-        "email": "dmibuildingblocks@cdc.gov",
+        "email": "dibbs@cdc.gov",
     },
     license_info={
         "name": "Creative Commons Zero v1.0 Universal",
