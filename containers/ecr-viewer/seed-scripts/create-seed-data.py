@@ -97,6 +97,7 @@ def _process_files():
     # Send requests asynchronously
     n = 0
     failed = []
+    duplicates = []
     num_requests = len(requests)
     for index, response in grequests.imap_enumerated(requests, size=8):
         n += 1
@@ -105,6 +106,12 @@ def _process_files():
             failed.append(folder_path)
             print(
                 f"Received response {n} of {num_requests} - Failed to upload {folder_path}: No response received"
+            )
+            continue
+        if response.status_code == 409:
+            duplicates.append(folder_path)
+            print(
+                "Failed to upload {folder_path} as an eCR with that ID already exists."
             )
             continue
         if response.status_code != 200:
@@ -129,7 +136,7 @@ def _process_files():
             )
 
     print(
-        f"Conversion complete: {n} records attempted and {len(failed)} failed : {failed}"
+        f"Conversion complete: {n} records attempted, {len(duplicates)} already loaded and {len(failed)} failed \n\nfailed : {failed}\n\nduplicate: {duplicates}"
     )
     if failed:
         exit(1)

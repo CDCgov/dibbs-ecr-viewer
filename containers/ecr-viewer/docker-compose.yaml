@@ -47,6 +47,9 @@ services:
       - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
     profiles:
       - ecr-viewer
+    depends_on:
+      keycloak:
+        condition: service_healthy
 
   postgres:
     image: "postgres:alpine"
