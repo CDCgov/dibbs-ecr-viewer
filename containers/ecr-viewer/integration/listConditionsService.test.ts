@@ -16,11 +16,9 @@ import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 import { createCoreEcr, createEcrCondition } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
 
-// jest.mock("../src/app/services/userService")
 jest.mock("../src/app/utils/auth-utils");
 
 let userId;
-let adminId;
 
 beforeAll(async () => {
   (getLoggedInUserSession as jest.Mock).mockResolvedValue({
@@ -80,7 +78,7 @@ beforeAll(async () => {
     condition: "condition3",
     condition_code: "77777",
   });
-  adminId = await createInitialAdminUser("admin@admin.com");
+  await createInitialAdminUser("admin@admin.com");
   const progId = await createProgramArea("test", ["12345"]);
   userId = await createUser("test@test.com", "standard");
   await updateUserProgramAreas(userId, [progId]);
