@@ -11,7 +11,7 @@ const Footer: React.FC = () => (
     <div className="footer-content display-flex flex-justify flex-align-center">
       <div className="flex-shrink-0">
         <Image
-          src="/ecr-viewer/cdc-logo.png"
+          src="/ecr-viewer/img/cdc-logo.png"
           alt="Centers for Disease Control and Prevention Logo"
           width={206}
           height={48}
