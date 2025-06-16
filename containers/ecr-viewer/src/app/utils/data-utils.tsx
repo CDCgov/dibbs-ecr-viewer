@@ -163,3 +163,15 @@ export const range = (start: number, end?: number, step: number = 1) => {
 
   return output;
 };
+
+/**
+ * Helper to filter out empty values and convince typescript only the actual values
+ * are left.
+ * @param value A value to check existence of
+ * @returns Whether the value exists
+ */
+export const notEmpty = <TValue,>(
+  value: TValue | null | undefined,
+): value is TValue => {
+  return value !== null && value !== undefined;
+};
