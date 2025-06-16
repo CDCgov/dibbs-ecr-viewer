@@ -19,6 +19,5 @@ The Docker files that need to be changed are
 - containers/alerts/DockerFile
 - containers/ingestion/DockerFile
 - containers/message-parser/DockerFile
-- containers/record-linkage/DockerFile
 - containers/tabulation/DockerFile
 - containers/validation/DockerFile

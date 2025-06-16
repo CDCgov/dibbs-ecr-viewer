@@ -1,0 +1,1059 @@
+<ClinicalDocument
+    xmlns="urn:hl7-org:v3"
+    xmlns:cda="urn:hl7-org:v3"
+    xmlns:sdtc="urn:hl7-org:sdtc"
+    xmlns:voc="http://www.lantanagroup.com/voc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="urn:hl7-org:v3 ../../schema/infrastructure/cda/CDA_SDTC.xsd">
+    <realmCode code="US" />
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3" />
+    <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.1.2" />
+    <id root="644454dc-f6d6-496d-b832-c7479890d131" />
+    <code code="88085-6" codeSystem="2.16.840.1.113883.6.1"
+        displayName="Reportability response report Document Public health" />
+    <title>Reportability Response</title>
+    <effectiveTime value="20230427185701+0000" />
+    <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
+    <languageCode code="en-US" />
+    <recordTarget>
+        <patientRole>
+            <id extension="123453" root="2.16.840.1.113883.19.5" />
+            <id extension="444-22-2222" root="2.16.840.1.113883.4.1" />
+            <addr use="H">
+                <streetAddressLine>2222 Home Street</streetAddressLine>
+                <city>Ann Arbor</city>
+                <state>MI</state>
+                <postalCode>99999</postalCode>
+                <county>26001</county>
+                <country>US</country>
+                <useablePeriod xsi:type="IVL_TS">
+                    <low value="200007200845" />
+                </useablePeriod>
+            </addr>
+            <telecom use="HP" value="tel:+1-555-555-2003" />
+            <telecom use="WP" value="tel:+1-555-555-2004" />
+            <patient>
+                <name use="L">
+                    <given>Eve</given>
+                    <given qualifier="IN">H</given>
+                    <family>Everywoman</family>
+                </name>
+                <name use="A">
+                    <given>Ruth</given>
+                    <given qualifier="IN">L</given>
+                    <family>Everywoman</family>
+                </name>
+                <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1" />
+                <birthTime value="19741124" />
+                <sdtc:deceasedInd value="false" />
+                <raceCode code="2106-3" codeSystem="2.16.840.1.113883.6.238"
+                    codeSystemName="Race &amp; Ethnicity - CDC" displayName="White" />
+                <ethnicGroupCode code="2186-5" codeSystem="2.16.840.1.113883.6.238"
+                    codeSystemName="Race &amp; Ethnicity - CDC" displayName="Not Hispanic or Latino" />
+                <guardian>
+                    <addr use="H">
+                        <streetAddressLine>4444 Home Street</streetAddressLine>
+                        <city>Ann Arbor</city>
+                        <state>MI</state>
+                        <postalCode>99999</postalCode>
+                        <country>US</country>
+                    </addr>
+                    <telecom use="HP" value="tel:+1-555-555-2006" />
+                    <telecom value="mailto:mail@guardian.com" />
+                    <guardianPerson>
+                        <name use="L">
+                            <given>Martha</given>
+                            <given qualifier="IN">L</given>
+                            <family>Mum</family>
+                        </name>
+                    </guardianPerson>
+                </guardian>
+                <languageCommunication>
+                    <languageCode code="en" />
+                    <modeCode code="ESP" codeSystem="2.16.840.1.113883.5.60"
+                        codeSystemName="LanguageAbilityMode" displayName="Expressed spoken" />
+                    <proficiencyLevelCode code="G" codeSystem="2.16.840.1.113883.5.61"
+                        codeSystemName="LanguageAbilityProficiency" displayName="Good" />
+                    <preferenceInd value="true" />
+                </languageCommunication>
+            </patient>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20230427185701+0000" />
+        <assignedAuthor>
+            <id root="2.16.840.1.114222.4.1.217446" />
+            <addr>
+                <streetAddressLine>8515 Georgia Avenue, Suite 700</streetAddressLine>
+                <city>Silver Spring</city>
+                <state>MD</state>
+                <postalCode>20910</postalCode>
+                <country>US</country>
+            </addr>
+            <telecom use="WP" value="tel:+1(844)836-8377" />
+            <assignedAuthoringDevice>
+                <manufacturerModelName displayName="APHL" />
+                <softwareName displayName="AIMS" />
+            </assignedAuthoringDevice>
+        </assignedAuthor>
+    </author>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id root="2.16.840.1.114222.4.1.217446" />
+                <name>APHL | Association of Public Health Laboratories.</name>
+                <telecom use="WP" value="tel:+1(844)836-8377" />
+                <addr>
+                    <streetAddressLine>8515 Georgia Avenue, Suite 700</streetAddressLine>
+                    <city>Silver Spring</city>
+                    <state>MD</state>
+                    <postalCode>20910</postalCode>
+                    <country>US</country>
+                </addr>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <informationRecipient typeCode="PRCP">
+        <intendedRecipient>
+            <id extension="6666666666666" root="2.16.840.1.113883.4.6" />
+            <addr>
+                <streetAddressLine>1002 Healthcare Drive</streetAddressLine>
+                <city>Ann Arbor</city>
+                <state>MI</state>
+                <postalCode>99999</postalCode>
+                <country>US</country>
+            </addr>
+            <telecom use="WP" value="tel:+1(555)555-1003" />
+            <telecom use="WP" value="fax:+1(555)555-1234" />
+            <telecom use="WP" value="mailto:mail@provider_domain.com" />
+            <informationRecipient>
+                <name>
+                    <given>Henry</given>
+                    <family>Seven</family>
+                    <suffix qualifier="AC">M.D.</suffix>
+                </name>
+            </informationRecipient>
+            <receivedOrganization>
+                <name>Community Health and Hospitals</name>
+                <addr>
+                    <streetAddressLine>1002 Healthcare Drive</streetAddressLine>
+                    <city>Ann Arbor</city>
+                    <state>MI</state>
+                    <postalCode>99999</postalCode>
+                    <country>US</country>
+                </addr>
+            </receivedOrganization>
+        </intendedRecipient>
+    </informationRecipient>
+    <componentOf>
+        <encompassingEncounter>
+            <id extension="9937012" root="2.16.840.1.113883.19" />
+            <code code="AMB" codeSystem="2.16.840.1.113883.5.4"
+                codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory" />
+            <effectiveTime>
+                <low value="20201107084421-0500" />
+                <high value="20201108112103-0500" />
+            </effectiveTime>
+            <responsibleParty>
+                <assignedEntity>
+                    <id extension="6666666666666" root="2.16.840.1.113883.4.6" />
+                    <addr>
+                        <streetAddressLine>1002 Healthcare Drive</streetAddressLine>
+                        <city>Ann Arbor</city>
+                        <state>MI</state>
+                        <postalCode>99999</postalCode>
+                        <country>US</country>
+                    </addr>
+                    <telecom use="WP" value="tel:+1(555)555-1003" />
+                    <telecom use="WP" value="fax:+1(555)555-1234" />
+                    <telecom use="WP" value="mailto:mail@provider_domain.com" />
+                    <assignedPerson>
+                        <name>
+                            <given>Henry</given>
+                            <family>Seven</family>
+                            <suffix qualifier="AC">M.D.</suffix>
+                        </name>
+                    </assignedPerson>
+                    <representedOrganization>
+                        <name>Community Health and Hospitals</name>
+                        <addr>
+                            <streetAddressLine>1002 Healthcare Drive</streetAddressLine>
+                            <city>Ann Arbor</city>
+                            <state>MI</state>
+                            <postalCode>99999</postalCode>
+                            <country>US</country>
+                        </addr>
+                    </representedOrganization>
+                </assignedEntity>
+            </responsibleParty>
+            <location>
+                <healthCareFacility>
+                    <id extension="77777777777" root="2.16.840.1.113883.4.6" />
+                    <code code="OF" codeSystem="2.16.840.1.113883.5.111"
+                        displayName="Outpatient facility" />
+                    <location>
+                        <addr>
+                            <streetAddressLine>1000 Hospital Lane</streetAddressLine>
+                            <city>Ann Arbor</city>
+                            <state>MI</state>
+                            <postalCode>99999</postalCode>
+                            <country>US</country>
+                        </addr>
+                    </location>
+                    <serviceProviderOrganization>
+                        <name>Good Health Hospital</name>
+                        <telecom use="WP" value="tel: 1+(555)-555-1212" />
+                        <telecom use="WP" value="fax: 1+(555)-555-3333" />
+                        <addr>
+                            <streetAddressLine>1000 Hospital Lane</streetAddressLine>
+                            <city>Ann Arbor</city>
+                            <state>MI</state>
+                            <postalCode>99999</postalCode>
+                            <country>US</country>
+                        </addr>
+                    </serviceProviderOrganization>
+                </healthCareFacility>
+            </location>
+        </encompassingEncounter>
+    </componentOf>
+    <component>
+        <structuredBody>
+            <component>
+                <section>
+                    <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.2.1" />
+                    <code code="88084-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+                    <text>
+                        <br />
+                        <br />
+                        <paragraph>
+                            <content styleCode="Bold">Subject:</content>
+                        </paragraph>
+                        <paragraph>Public Health Reporting Communication: one or more conditions are
+                            reportable, or may be reportable, to public health.</paragraph>
+                    </text>
+                    <entry typeCode="DRIV">
+                        <act classCode="ACT" moodCode="INT">
+                            <templateId extension="2014-06-09"
+                                root="2.16.840.1.113883.10.20.22.4.20" />
+                            <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.7" />
+                            <id root="c62d8411-27a3-4d22-9ddb-a4998faea87a" />
+                            <code code="131195008" codeSystem="2.16.840.1.113883.6.96"
+                                codeSystemName="SNOMED CT" displayName="Subject of information" />
+                            <text>Public Health Reporting Communication: one or more conditions are
+                                reportable, or may be reportable, to public health.</text>
+                            <statusCode code="completed" />
+                        </act>
+                    </entry>
+                </section>
+            </component>
+            <component>
+                <section>
+                    <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.2.3" />
+                    <code code="88082-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                        displayName="Initial case report processing information Document" />
+                    <entry>
+                        <act classCode="ACT" moodCode="EVN">
+                            <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.9" />
+                            <id root="6bff7990-f218-4f9d-a5aa-eb7afa6e9a3c" />
+                            <code code="RR5" codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Received eICR Information" />
+                            <text xsi:type="ST">eICR_Filename.xml</text>
+                            <statusCode code="completed" />
+                            <effectiveTime value="20161212152000-0700" />
+                            <reference typeCode="REFR">
+                                <externalDocument classCode="DOCCLIN" moodCode="EVN">
+                                    <templateId extension="2014-06-09"
+                                        root="2.16.840.1.113883.10.20.22.4.115" />
+                                    <templateId extension="2017-04-01"
+                                        root="2.16.840.1.113883.10.20.15.2.3.10" />
+                                    <id extension="db734647-fc99-424c-a864-7e3cda82e704"
+                                        root="2.16.840.1.113883.9.9.9.9.9.bug" />
+                                    <code code="55751-2" codeSystem="2.16.840.1.113883.6.1"
+                                        codeSystemName="LOINC"
+                                        displayName="Public Health Case Report (eICR)" />
+                                    <setId extension="31"
+                                        root="2.16.840.1.113883.3.117.1.1.5.2.1.1.1" />
+                                    <versionNumber value="2" />
+                                </externalDocument>
+                            </reference>
+                        </act>
+                    </entry>
+                    <entry>
+                        <act classCode="ACT" moodCode="EVN">
+                            <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.29" />
+                            <id root="39d966b9-8a3a-4024-93d8-138e97d5898a" />
+                            <code code="RRVS20" codeSystem="2.16.840.1.114222.4.5.274"
+                                codeSystemName="PHIN VS (CDC Local Coding System)"
+                                displayName="eICR was processed - with a warning" />
+                            <entryRelationship typeCode="RSON">
+                                <observation classCode="OBS" moodCode="EVN">
+                                    <templateId extension="2017-04-01"
+                                        root="2.16.840.1.113883.10.20.15.2.3.21" />
+                                    <id root="e39d6ae2-8c6e-4638-9b33-412996586f42" />
+                                    <code code="RR6" codeSystem="2.16.840.1.114222.4.5.232"
+                                        codeSystemName="PHIN Questions"
+                                        displayName="eICR processing status reason" />
+                                    <value code="RRVS29" codeSystem="2.16.840.1.114222.4.5.274"
+                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                        displayName="eICR was processed with the warning of: outdated RCTC version"
+                                        xsi:type="CD" />
+                                    <entryRelationship typeCode="RSON">
+                                        <observation classCode="OBS" moodCode="EVN">
+                                            <templateId extension="2017-04-01"
+                                                root="2.16.840.1.113883.10.20.15.2.3.32" />
+                                            <id root="80f7b4ff-4d96-46ef-ae8f-af1f9c1f206c" />
+                                            <code code="RRVS33"
+                                                codeSystem="2.16.840.1.114222.4.5.274"
+                                                codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                displayName="Expected RCTC Version Detail" />
+                                            <value xsi:type="ST">19/05/2016</value>
+                                        </observation>
+                                    </entryRelationship>
+                                </observation>
+                            </entryRelationship>
+                            <entryRelationship typeCode="SPRT">
+                                <observation classCode="OBS" moodCode="EVN">
+                                    <templateId extension="2017-04-01"
+                                        root="2.16.840.1.113883.10.20.15.2.3.33" />
+                                    <id root="80f7b4ff-4d96-46ef-ae8f-af1f9c1f206e" />
+                                    <code code="RR10" codeSystem="2.16.840.1.114222.4.5.232"
+                                        codeSystemName="PHIN Questions"
+                                        displayName="eICR Validation Output" />
+                                    <value mediaType="text/xhtml" xsi:type="ED">
+                                        <reference value="http://validation.xml" />
+                                    </value>
+                                </observation>
+                            </entryRelationship>
+                        </act>
+                    </entry>
+                    <entry>
+                        <act classCode="ACT" moodCode="EVN">
+                            <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.22" />
+                            <id root="39d966b9-8a3a-4024-93d8-138e97d58986" />
+                            <code code="PHC1464" codeSystem="2.16.840.1.114222.4.5.274"
+                                codeSystemName="PHIN VS (CDC Local Coding System)"
+                                displayName="Manually Initiated eICR" />
+                        </act>
+                    </entry>
+                </section>
+            </component>
+            <component>
+                <section>
+                    <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.2.2" />
+                    <code code="55112-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+                    <text>
+                        <paragraph>
+                            <content styleCode="Bold">Summary:</content>
+                        </paragraph>
+                        <paragraph>Your organization electronically submitted an initial case report
+                            to determine if reporting to public health is needed for a patient.
+                            "Zika virus disease (disorder)" is reportable to "State Department of
+                            Health". An initial case report was sent to "State Department of
+                            Health". Additional information may be required for this report. <br />
+							<br />
+                        </paragraph>
+                        <paragraph>
+                            <content styleCode="Bold">"Zika virus disease (disorder)" for "State
+                                Department of Health"</content>
+                        </paragraph>
+                        <paragraph>Reporting is required within "24 hours". Reporting to this Public
+                            Health Agency is based on "both patient home address and provider
+                            facility address". </paragraph>
+                        <list>
+                            <item>
+                                <paragraph>Local mosquito-borne Zika virus transmission was reported
+                                    in your area. Increased watchfulness for symptoms of Zika virus
+                                    in your patients is warranted. (Immediate action requested)</paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Additional information for the required reporting of Zika
+                                    must be submitted to State Department of Health immediately.
+                                    This additional information can be submitted here. ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/disease/zika/Supplemental_data_form.pdf">
+                                    Link</linkHtml> - Immediate action required) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Zika has particular risks for pregnant women. Follow-up
+                                    guidance for pregnant women and couples who are planning
+                                    pregnancy. ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf">
+                                    Link</linkHtml> - Immediate action requested) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Further Laboratory testing for Zika may be needed.
+                                    Guidance for additional testing and specimen collection ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf">
+                                    Link</linkHtml> - Action requested) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Forms for submitting further Zika laboratory testing ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/zika_test_request_form_UPHL.xlsx">
+                                    Link</linkHtml> - Information only) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Treatment guidance ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf">
+                                    Link</linkHtml> - Information only) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>If you have additional questions regarding Zika or
+                                    reporting, contact information for the State Department of
+                                    Health is available here. ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf">
+                                    Link</linkHtml>) </paragraph>
+                            </item>
+                        </list>
+                        <paragraph>Additional Resources (Information only):</paragraph>
+                        <list>
+                            <item>
+                                <paragraph>Control and prevention information for providers ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/plan.pdf">
+                                    Link</linkHtml>) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Detailed condition references ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/plan.pdf">
+                                    Link</linkHtml>) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Prevalence in State ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/plan.pdf">
+                                    Link</linkHtml>) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>CDC webpage ( <linkHtml
+                                        href="https://www.cdc.gov/zika/index.html">Link</linkHtml>) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>Patient information factsheet ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/factsheet.pdf">
+                                    Link</linkHtml>) </paragraph>
+                            </item>
+                            <item>
+                                <paragraph>State Resident information ( <linkHtml
+                                        href="http://statedepartmentofhealth.gov/epi/diseases/zika/ZikaVirus_QA_StateDOH.pdf">
+                                    Link</linkHtml>) </paragraph>
+                            </item>
+                        </list>
+                    </text>
+                    <entry typeCode="DRIV">
+                        <act classCode="ACT" moodCode="INT">
+                            <templateId extension="2014-06-09"
+                                root="2.16.840.1.113883.10.20.22.4.20" />
+                            <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.8" />
+                            <id root="7a0ed3d3-16f3-4fa9-bac5-882f5c7d44b8" />
+                            <code code="304561000" codeSystem="2.16.840.1.113883.6.96"
+                                codeSystemName="SNOMED CT"
+                                displayName="Informing health care professional (procedure)" />
+                            <text>Your organization electronically submitted an initial case report
+                                to determine if reporting to public health is needed for a patient.
+                                "Zika virus disease (disorder)" is reportable to "State Department
+                                of Health". An initial case report was sent to "State Department of
+                                Health". Additional information may be required for this report.</text>
+                            <statusCode code="completed" />
+                        </act>
+                    </entry>
+                    <entry typeCode="DRIV">
+                        <observation classCode="OBS" moodCode="EVN">
+                            <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.30" />
+                            <code code="RR9" codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Reportability response priority" />
+                            <value code="RRVS14" codeSystem="2.16.840.1.114222.4.5.274"
+                                codeSystemName="PHIN VS (CDC Local Coding System)"
+                                displayName="Action required" xsi:type="CD" />
+                        </observation>
+                    </entry>
+                    <entry typeCode="DRIV">
+                        <organizer classCode="CLUSTER" moodCode="EVN">
+                            <templateId extension="2017-04-01"
+                                root="2.16.840.1.113883.10.20.15.2.3.34" />
+                            <code code="RR11" codeSystem="2.16.840.1.114222.4.5.232"
+                                codeSystemName="PHIN Questions"
+                                displayName="Reportability Response Coded Information" />
+                            <statusCode code="completed" />
+                            <component>
+                                <observation classCode="OBS" moodCode="EVN">
+                                    <templateId extension="2017-04-01"
+                                        root="2.16.840.1.113883.10.20.15.2.3.12" />
+                                    <id root="a054d401-7b23-4b15-bc28-c889c156ba6a" />
+                                    <code code="64572001" codeSystem="2.16.840.1.113883.6.96"
+                                        codeSystemName="SNOMED" displayName="Condition">
+                                        <translation code="75323-6"
+                                            codeSystem="2.16.840.1.113883.6.1"
+                                            codeSystemName="LOINC" displayName="Condition" />
+                                    </code>
+                                    <value code="3928002" codeSystem="2.16.840.1.113883.6.96"
+                                        codeSystemName="SNOMED CT"
+                                        displayName="Zika virus disease (disorder)" xsi:type="CD" />
+                                    <entryRelationship typeCode="COMP">
+                                        <organizer classCode="CLUSTER" moodCode="EVN">
+                                            <templateId extension="2017-04-01"
+                                                root="2.16.840.1.113883.10.20.15.2.3.13" />
+                                            <id root="fcf92143-4289-450e-9550-8d574facf626" />
+                                            <code code="RRVS7"
+                                                codeSystem="2.16.840.1.114222.4.5.274"
+                                                codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                displayName="Both patient home address and provider facility address"></code>
+                                            <statusCode code="completed" />
+                                            <participant typeCode="LOC">
+                                                <templateId extension="2017-04-01"
+                                                    root="2.16.840.1.113883.10.20.15.2.4.2" />
+                                                <participantRole>
+                                                    <id extension="12341234"
+                                                        root="2.16.840.1.113883.4.6" />
+                                                    <code code="RR8"
+                                                        codeSystem="2.16.840.1.114222.4.5.232"
+                                                        codeSystemName="PHIN Questions"
+                                                        displayName="Responsible Agency"></code>
+                                                    <addr use="WP">
+                                                        <streetAddressLine>7777 Health Authority
+                                                            Drive</streetAddressLine>
+                                                        <city />
+                                                        <state>State</state>
+                                                        <postalCode>99999</postalCode>
+                                                    </addr>
+                                                    <telecom use="WP" value="tel:+1-555-555-3555" />
+                                                    <telecom use="WP" value="fax:+1-955-555-3555" />
+                                                    <telecom use="WP"
+                                                        value="mailto:mail@healthauthoritywest.gov" />
+                                                    <telecom use="WP"
+                                                        value="https://www.healthauthoritywest.gov" />
+                                                    <playingEntity>
+                                                        <name>State Department of Health</name>
+                                                        <desc>Responsible Agency Description</desc>
+                                                    </playingEntity>
+                                                </participantRole>
+                                            </participant>
+                                            <participant typeCode="LOC">
+                                                <templateId extension="2017-04-01"
+                                                    root="2.16.840.1.113883.10.20.15.2.4.3" />
+                                                <participantRole>
+                                                    <id extension="12341234"
+                                                        root="2.16.840.1.113883.4.6" />
+                                                    <code code="RR12"
+                                                        codeSystem="2.16.840.1.114222.4.5.232"
+                                                        codeSystemName="PHIN Questions"
+                                                        displayName="Rules Authoring Agency" />
+                                                    <addr use="WP">
+                                                        <streetAddressLine>7777 Health Authority
+                                                            Drive</streetAddressLine>
+                                                        <city>City</city>
+                                                        <state>State</state>
+                                                        <postalCode>99999</postalCode>
+                                                    </addr>
+                                                    <telecom use="WP" value="tel:+1-555-555-3555" />
+                                                    <telecom use="WP" value="fax:+1-955-555-3555" />
+                                                    <telecom use="WP"
+                                                        value="mailto:mail@healthauthoritywest.gov" />
+                                                    <telecom use="WP"
+                                                        value="https://www.healthauthoritywest.gov" />
+                                                    <playingEntity>
+                                                        <name>State Department of Health</name>
+                                                        <desc>Rules Authoring Agency Description</desc>
+                                                    </playingEntity>
+                                                </participantRole>
+                                            </participant>
+                                            <participant typeCode="LOC">
+                                                <templateId extension="2017-04-01"
+                                                    root="2.16.840.1.113883.10.20.15.2.4.1" />
+                                                <participantRole>
+                                                    <id extension="43214321"
+                                                        root="2.16.840.1.113883.4.6" />
+                                                    <code code="RR7"
+                                                        codeSystem="2.16.840.1.114222.4.5.232"
+                                                        codeSystemName="PHIN Questions"
+                                                        displayName="Routing Entity" />
+                                                    <addr use="WP">
+                                                        <streetAddressLine>7777 Health Authority
+                                                            Drive</streetAddressLine>
+                                                        <city>City</city>
+                                                        <state>State</state>
+                                                        <postalCode>99999</postalCode>
+                                                    </addr>
+                                                    <telecom use="WP" value="tel:+1-555-555-3555" />
+                                                    <telecom use="WP" value="fax:+1-955-555-3555" />
+                                                    <telecom use="WP"
+                                                        value="mailto:mail@healthauthoritywest.gov" />
+                                                    <telecom use="WP"
+                                                        value="https://www.healthauthoritywest.gov" />
+                                                    <playingEntity>
+                                                        <name>State Department of Health Routing
+                                                            Agency</name>
+                                                        <desc>Routing Agency Description</desc>
+                                                    </playingEntity>
+                                                </participantRole>
+                                            </participant>
+                                            <component typeCode="COMP">
+                                                <observation classCode="OBS" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.19" />
+                                                    <id root="e39d6ae2-8c6e-4638-9b33-412996586f41" />
+                                                    <code code="RR1"
+                                                        codeSystem="2.16.840.1.114222.4.5.232"
+                                                        codeSystemName="PHIN Questions"
+                                                        displayName="Determination of reportability" />
+                                                    <value code="RRVS1"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Reportable" xsi:type="CD" />
+                                                    <entryRelationship typeCode="RSON">
+                                                        <observation classCode="OBS" moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.26" />
+                                                            <id
+                                                                root="8709a342-56ad-425a-b7b1-76a16c2dd2d5" />
+                                                            <code code="RR2"
+                                                                codeSystem="2.16.840.1.114222.4.5.232"
+                                                                codeSystemName="PHIN Questions"
+                                                                displayName="Determination of reportability reason" />
+                                                            <value xsi:type="ST">Reason for
+                                                                determination of reportability</value>
+                                                        </observation>
+                                                    </entryRelationship>
+                                                    <entryRelationship typeCode="RSON">
+                                                        <observation classCode="OBS" moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.27" />
+                                                            <id
+                                                                root="f2dfdffb-bccb-4ee4-9b6c-0ae82b15ada6" />
+                                                            <code code="RR3"
+                                                                codeSystem="2.16.840.1.114222.4.5.232"
+                                                                codeSystemName="PHIN Questions"
+                                                                displayName="Determination of reportability rule" />
+                                                            <value xsi:type="ST">Rule used in
+                                                                reportability determination</value>
+                                                        </observation>
+                                                    </entryRelationship>
+                                                </observation>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <observation classCode="OBS" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.14" />
+                                                    <id root="8334d0bd-a404-4e12-9e9c-e278669e59ba" />
+                                                    <code code="RR4"
+                                                        codeSystem="2.16.840.1.114222.4.5.232"
+                                                        codeSystemName="PHIN Questions"
+                                                        displayName="Timeframe to report (urgency)" />
+                                                    <value unit="h" value="24" xsi:type="PQ" />
+                                                </observation>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="37a3d003-fff3-4da4-9ee8-3a472918bd33" />
+                                                    <code code="RRVS13"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Outbreak- or Cluster Related" />
+                                                    <priorityCode code="RRVS18"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Immediate action requested" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Local mosquito-borne
+                                                                    Zika virus transmission was
+                                                                    reported in your area. Increased
+                                                                    watchfulness for symptoms of
+                                                                    Zika virus in your patients is
+                                                                    warranted.</originalText>
+                                                            </code>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="814d6c77-aa2c-4dfd-8f62-d5a0df4b5bbb" />
+                                                    <code code="RRVS8"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHINs VS (CDC Local Coding System)"
+                                                        displayName="Additional reporting needs" />
+                                                    <priorityCode code="RRVS17"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Immediate action required" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Additional information
+                                                                    for the required reporting of
+                                                                    Zika must be submitted to State
+                                                                    Department of Health
+                                                                    immediately. This additional
+                                                                    information can be submitted
+                                                                    here.</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/disease/zika/Supplemental_data_form.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="9a74e2ed-2cd2-4b20-b232-3b9ccb69e425" />
+                                                    <code code="RRVS10"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Treatment and/or prevention" />
+                                                    <priorityCode code="RRVS18"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Immediate action requested" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Zika has particular
+                                                                    risks for pregnant women.
+                                                                    Follow-up guidance for pregnant
+                                                                    women and couples who are
+                                                                    planning pregnancy.</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="7608d227-af8b-48f0-a568-a8d01a6b87db" />
+                                                    <code code="RRVS9"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Additional detection and/or laboratory testing needs" />
+                                                    <priorityCode code="RRVS16"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Action requested" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Further Laboratory
+                                                                    testing for Zika may be needed.
+                                                                    Guidance for additional testing
+                                                                    and specimen collection</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="995ea621-bf4b-4a55-aef9-657c9a62f3dc" />
+                                                    <code code="RRVS9"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Additional detection and/or laboratory testing needs" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Forms for submitting
+                                                                    further Zika laboratory testing</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/zika_test_request_form_UPHL.xlsx" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="6a5fc1e5-e687-424d-9154-9413cce6dffd" />
+                                                    <code code="RRVS10"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Treatment and/or prevention" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Treatment guidance</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="43d036d6-c982-4003-b6fb-9e114b6965b9" />
+                                                    <code code="RRVS12"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="PHA Contact Information" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>If you have additional
+                                                                    questions regarding Zika or
+                                                                    reporting, contact information
+                                                                    for the State Department of
+                                                                    Health is available here.</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/Zika_Virus_Testing_Guidance.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="6037f159-451b-4a3e-af4a-46d1b4a84bf1" />
+                                                    <code code="RRVS10"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Treatment and/or prevention" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Control and prevention
+                                                                    information for providers</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/plan.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="dc932ec5-2962-4f36-a140-e39e054ab9b0" />
+                                                    <code code="RRVS10"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Treatment and/or prevention" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Detailed condition
+                                                                    references</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/plan.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="6263a212-be58-46ea-94e6-2ff8d69dd425" />
+                                                    <code code="RRVS11"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Additional Resources" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Prevalence in State</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/plan.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="c72a0c60-1cf9-43c1-84e0-1fa802513b5c" />
+                                                    <code code="RRVS11"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Additional Resources" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>CDC webpage</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="https://www.cdc.gov/zika/index.html" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="95d0c2a4-833c-48bc-ab55-27c149cc42ab" />
+                                                    <code code="RRVS11"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Additional Resources" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>Patient information
+                                                                    factsheet</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/factsheet.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                            <component typeCode="COMP">
+                                                <act classCode="ACT" moodCode="EVN">
+                                                    <templateId extension="2017-04-01"
+                                                        root="2.16.840.1.113883.10.20.15.2.3.20" />
+                                                    <id root="9269b2ff-199a-480e-bf4c-3c814c4f018a" />
+                                                    <code code="RRVS11"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Additional Resources" />
+                                                    <priorityCode code="RRVS15"
+                                                        codeSystem="2.16.840.1.114222.4.5.274"
+                                                        codeSystemName="PHIN VS (CDC Local Coding System)"
+                                                        displayName="Information only" />
+                                                    <reference typeCode="REFR">
+                                                        <externalDocument classCode="DOC"
+                                                            moodCode="EVN">
+                                                            <templateId extension="2017-04-01"
+                                                                root="2.16.840.1.113883.10.20.15.2.3.17" />
+                                                            <code nullFlavor="OTH">
+                                                                <originalText>State Resident
+                                                                    information</originalText>
+                                                            </code>
+                                                            <text mediaType="text/html">
+                                                                <reference
+                                                                    value="http://statedepartmentofhealth.gov/epi/diseases/zika/ZikaVirus_QA_StateDOH.pdf" />
+                                                            </text>
+                                                        </externalDocument>
+                                                    </reference>
+                                                </act>
+                                            </component>
+                                        </organizer>
+                                    </entryRelationship>
+                                </observation>
+                            </component>
+                        </organizer>
+                    </entry>
+                </section>
+            </component>
+        </structuredBody>
+    </component>
+</ClinicalDocument>

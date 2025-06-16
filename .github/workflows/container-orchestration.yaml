@@ -114,13 +114,6 @@ jobs:
             pip install -r dev-requirements.txt
           fi
       - name: Run integration tests for containers
-        env:
-          MPI_DBNAME: testdb
-          MPI_PASSWORD: pw
-          MPI_DB_TYPE: postgres
-          MPI_HOST: localhost
-          MPI_USER: postgres
-          MPI_PORT: 5432
         working-directory: ./containers/${{env.CONTAINER}}/tests/integration
         run: |
           python -m pytest -m "integration"

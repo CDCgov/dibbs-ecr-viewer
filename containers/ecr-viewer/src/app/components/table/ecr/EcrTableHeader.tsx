@@ -4,7 +4,7 @@ import React from "react";
 import SortableHeader, {
   TableHeader,
 } from "@/app/components/table/SortableHeader";
-import { useQueryParam } from "@/app/hooks/useQueryParam";
+import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 
 /**
  * Interactive header for the ecr library table
@@ -20,7 +20,7 @@ export const EcrTableHeader = ({
   headers: TableHeader[];
   disabled: boolean;
 }) => {
-  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
+  const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
   /**
    * Handles sorting the table data by a given column. We update the search params,
