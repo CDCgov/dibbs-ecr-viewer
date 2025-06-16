@@ -69,9 +69,9 @@ process_counter = meter.create_counter(
     " status code for the process endpoint.",
 )
 
-# Instantiate FastAPI via PHDI's BaseService class
+# Instantiate FastAPI via BaseService class
 app = BaseService(
-    service_name="PHDI Orchestration",
+    service_name="Orchestration",
     service_path="/orchestration",
     description_path=Path(__file__).parent.parent / "README.md",
     openapi_url="/orchestration/openapi.json",
