@@ -38,7 +38,11 @@ export const EvaluateTableRow = ({
     <>
       <tr>
         {rowCellsData.map(({ data, hidden }, index) => (
-          <td key={`row-data-${index}`} className="text-top text-pre-line">
+          <td
+            key={`row-data-${index}`}
+            className="text-top text-pre-line"
+            style={!hiddenComment ? { borderBottom: "none" } : undefined}
+          >
             {data ? (
               hidden ? (
                 <Button
@@ -62,7 +66,13 @@ export const EvaluateTableRow = ({
       </tr>
       {hiddenRow && (
         <tr hidden={hiddenComment} id={`hidden-comment-${id}`}>
-          <td colSpan={numCols} className="hideableData p-list">
+          <td
+            colSpan={numCols}
+            className="p-list"
+            // className doesn't work here because of all the table styling rules
+            style={{ borderTop: "none" }}
+          >
+            <div className="border-top border-base-lighter margin-top-neg-105 margin-bottom-1" />
             {hiddenRow}
           </td>
         </tr>

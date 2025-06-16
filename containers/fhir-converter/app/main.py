@@ -126,7 +126,9 @@ def add_rr_data_to_eicr(rr, ecr):
 
     # If eICR >=R3, remove (optional) RR section that came from eICR
     # This is duplicate/incomplete info from RR
-    ecr_version = ecr.xpath('string(//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension)')
+    ecr_version = ecr.xpath(
+        'string(//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension)'
+    )
     if ecr_version >= "2021-01-01":
         namespaces = {"hl7": "urn:hl7-org:v3"}
         rr_from_eicr_arr = ecr.xpath(
