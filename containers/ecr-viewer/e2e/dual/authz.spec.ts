@@ -8,6 +8,17 @@ test.describe("standarad user authorization", () => {
       await logInToKeycloak({ page }, undefined, "ecr-viewer-standard"),
   );
 
+  test("header", async ({ page }) => {
+    await page.goto("/ecr-viewer");
+
+    await expect(
+      page.getByRole("heading", { name: "eCR library" }),
+    ).toBeVisible();
+
+    await expect(page.getByText("User management")).not.toBeVisible();
+    await expect(page.getByText("Program management")).not.toBeVisible();
+  });
+
   test("library", async ({ page }) => {
     await page.goto("/ecr-viewer");
 
