@@ -277,6 +277,30 @@ describe("evaluate value", () => {
       expect(actual).toEqual("1 in");
     });
   });
+  describe("TimeX", () => {
+    it("should provide the formatted date time if date/time returned", () => {
+      const actual = evaluateValue(
+        {
+          resourceType: "Observation",
+          effectiveDateTime: "20201010",
+        } as any,
+        { path: "effective", type: "TimeX", name: "dateTime" },
+      );
+
+      expect(actual).toEqual("10/10/2020");
+    });
+    it("should provide the formatted start/end if period returned", () => {
+      const actual = evaluateValue(
+        {
+          resourceType: "Observation",
+          effectivePeriod: { start: "20201010" },
+        } as any,
+        { path: "effective", type: "TimeX", name: "dateTime" },
+      );
+
+      expect(actual).toEqual("Start: 10/10/2020");
+    });
+  });
 });
 
 describe("Evaluate Reference", () => {

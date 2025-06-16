@@ -76,9 +76,12 @@ exports[`Active Problems Table should match snapshot 1`] = `
         id="hidden-comment-r:id"
       >
         <td
-          class="hideableData p-list"
+          class="p-list"
           colspan="4"
         >
+          <div
+            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+          />
           Test note
         </td>
       </tr>
