@@ -21,7 +21,6 @@ The files that need to be changed are
 - containers/alerts/requirements.txt
 - containers/ingestion/requirements.txt
 - containers/message-parser/requirements.txt
-- containers/record-linkage/requirements.txt
 - containers/tabulation/requirements.txt
 - containers/validation/requirements.txt
 
@@ -34,6 +33,5 @@ The Docker files that need to be changed are
 - containers/alerts/DockerFile
 - containers/ingestion/DockerFile
 - containers/message-parser/DockerFile
-- containers/record-linkage/DockerFile
 - containers/tabulation/DockerFile
 - containers/validation/DockerFile

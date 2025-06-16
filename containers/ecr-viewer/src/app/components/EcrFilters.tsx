@@ -1,15 +1,7 @@
 "use client";
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 
-import { Button } from "@trussworks/react-uswds";
-
-import { useQueryParam } from "@/app/hooks/useQueryParam";
+import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDateTime } from "@/app/services/formatDateService";
 import {
   CustomDateRangeOption,
@@ -25,32 +17,14 @@ import {
   RadioDateOptions,
   CustomDateInput,
 } from "./BaseFilter";
-import { Autorenew, Coronavirus, Event } from "./Icon";
+import FilterGroup from "./FilterGroup";
+import { Coronavirus, Event } from "./Icon";
 
 enum ParamName {
   Condition = "condition",
   DateRange = "dateRange",
   Dates = "dates",
 }
-
-// We use a context to communicate between the overall <Filters /> component
-// and the `<Filter />` component to avoid prop drilling
-type FilterOpenContextValue = {
-  filterBoxOpen: string;
-  setFilterBoxOpen: (v: string) => void;
-  lastOpenButtonRef: { current: HTMLElement | null };
-};
-// We need the submitted case to differentiate from closing and prevent
-// a race condition with submitting and resetting if we try to do a reset
-// just after submitting.
-export const FILTER_SUBMITTED = "__submitted__";
-export const FILTER_CLOSED = "__closed__";
-
-export const FilterOpenContext = createContext<FilterOpenContextValue>({
-  filterBoxOpen: FILTER_CLOSED,
-  setFilterBoxOpen: () => {},
-  lastOpenButtonRef: { current: null },
-});
 
 interface FilterProps {
   allConditions: string[];
@@ -66,42 +40,8 @@ interface FilterProps {
  * @returns The rendered Filters component.
  */
 const Filters = (props: FilterProps) => {
-  const [filterBoxOpen, setFilterBoxOpen] = useState<string>(FILTER_CLOSED);
-  const lastOpenButtonRef = useRef<HTMLElement | null>(null);
-  const { searchParams, deleteQueryParam, pushQueryUpdate } = useQueryParam();
-
-  const filterOpenContextValue = {
-    filterBoxOpen,
-    setFilterBoxOpen,
-    lastOpenButtonRef,
-  };
-
-  const resetFilters = useCallback(() => {
-    setFilterBoxOpen(FILTER_CLOSED);
-  }, []);
-
-  // When a filter is open, close it if the escape key is hit or a click happens
-  // outside the <Filter /> component (implemented by stopping click propogation on <Filter />)
-  useEffect(() => {
-    if (filterBoxOpen !== FILTER_CLOSED && filterBoxOpen !== FILTER_SUBMITTED) {
-      const handleEscapeFilters = (event: KeyboardEvent) => {
-        if (event.code === "Escape") {
-          resetFilters();
-
-          // Return focus to the most recently selected open button
-          lastOpenButtonRef.current?.focus();
-          lastOpenButtonRef.current = null;
-        }
-      };
-
-      window.addEventListener("keydown", handleEscapeFilters);
-      window.addEventListener("click", resetFilters);
-      return () => {
-        window.removeEventListener("keydown", handleEscapeFilters);
-        window.removeEventListener("click", resetFilters);
-      };
-    }
-  }, [filterBoxOpen]);
+  const { searchParams, deleteQueryParam, pushQueryUpdate } =
+    useLibraryQueryParam();
 
   const paramKeys = Object.values(ParamName);
   const resetToDefault = () => {
@@ -112,31 +52,13 @@ const Filters = (props: FilterProps) => {
   };
 
   return (
-    <div>
-      <div className="border-top border-base-lighter"></div>
-      <div className="margin-x-3 margin-y-105 display-flex flex-align-center gap-105">
-        <span className="line-height-sans-6">FILTERS:</span>
-        <FilterOpenContext.Provider value={filterOpenContextValue}>
-          <FilterByDate {...props} />
-          <FilterReportableConditions {...props} />
-        </FilterOpenContext.Provider>
-
-        {paramKeys.some((k) => searchParams.get(k) !== null) && (
-          <Button
-            type="button"
-            unstyled={true}
-            onClick={resetToDefault}
-            aria-label="Reset Filters to Defaults"
-            className="gap-05"
-          >
-            <span className="square-205 usa-icon">
-              <Autorenew aria-hidden={true} className="square-205" />
-            </span>
-            Reset
-          </Button>
-        )}
-      </div>
-    </div>
+    <FilterGroup
+      resetHandler={resetToDefault}
+      resetEnabled={paramKeys.some((k) => searchParams.get(k) !== null)}
+    >
+      <FilterByDate {...props} />
+      <FilterReportableConditions {...props} />
+    </FilterGroup>
   );
 };
 
@@ -153,7 +75,7 @@ const FilterReportableConditions = ({
   initConditions,
   allConditions,
 }: FilterProps) => {
-  const { updateQueryParam, pushQueryUpdate } = useQueryParam();
+  const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
   const initFilterState = allConditions.reduce(
     (dict: { [key: string]: boolean }, condition: string) => {
@@ -197,7 +119,7 @@ const FilterReportableConditions = ({
 
   return (
     <Filter
-      type="Reportable Condition"
+      type="reportable condition"
       isActive={!isAllSelected}
       resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
@@ -270,7 +192,7 @@ const FilterReportableConditions = ({
 const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const today = new Date().toLocaleDateString("en-CA");
   const { deleteQueryParam, updateQueryParam, pushQueryUpdate } =
-    useQueryParam();
+    useLibraryQueryParam();
   const [filterDateOption, setFilterDateOption] =
     useState<string>(initDateRange);
   const [initStart, initEnd] = initCustomDate.split("|");
@@ -311,7 +233,7 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
 
   return (
     <Filter
-      type="Received Date"
+      type="received date"
       isActive={true}
       resetHandler={() => {
         setStartDate(initStart);
