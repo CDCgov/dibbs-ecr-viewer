@@ -7,6 +7,7 @@ import { logInToKeycloak } from "./dual/utils";
 // the `convert-seed-data` npm script.
 
 test("seed standard user and covid program", async ({ page }) => {
+  test.setTimeout(60000); // keycloak is slow
   await logInToKeycloak({ page });
 
   await page.goto("/ecr-viewer/admin/program");

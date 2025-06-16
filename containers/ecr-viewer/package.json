@@ -29,7 +29,7 @@
     "test:e2e:integrated": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'playwright test ./e2e/integrated'",
     "test:e2e:seed-user-prog": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'playwright test ./e2e/seed.spec.ts --project chromium'",
     "clear-local": "docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile \"*\" down -v",
-    "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit ${CONVERT_FLAGS} && npm run test:e2e:seed-user-prog && docker compose --profile \"*\" down'",
+    "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit ${CONVERT_FLAGS}'",
     "convert-seed-data:build": "CONVERT_FLAGS=--build npm run convert-seed-data"
   },
   "dependencies": {
