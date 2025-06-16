@@ -129,16 +129,16 @@ def add_rr_data_to_eicr(rr, ecr):
     ecr_version = ecr.xpath('string(//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension)')
     if ecr_version >= "2021-01-01":
         namespaces = {"hl7": "urn:hl7-org:v3"}
-        rr_from_eicr = ecr.xpath(
+        rr_from_eicr_arr = ecr.xpath(
             '//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',
             namespaces=namespaces,
         )
 
-        if rr_from_eicr:
-            rr = rr_from_eicr[0]
-            rr_parent = rr.getparent()
+        if rr_from_eicr_arr:
+            rr_from_eicr = rr_from_eicr_arr[0]
+            rr_parent = rr_from_eicr.getparent()
             if rr_parent is not None:
-                rr_parent.remove(rr)
+                rr_parent.remove(rr_from_eicr)
 
     # Create the tags for elements we'll be looking for
     rr_tags = [
