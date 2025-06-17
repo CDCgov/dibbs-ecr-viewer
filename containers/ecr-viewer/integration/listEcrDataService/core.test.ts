@@ -178,7 +178,7 @@ describe("listEcrData - core", () => {
     const columnName = "date_created";
     const direction = "DESC";
 
-    const result = await listEcrData(
+    const actual = await listEcrData(
       startIndex,
       itemsPerPage,
       columnName,
@@ -186,10 +186,13 @@ describe("listEcrData - core", () => {
       testDateRange,
     );
 
-    expect(result).toBeEmpty();
+    expect(actual).toBeEmpty();
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
   });
 
-  it("should return data when found", async () => {
+  it("should return all data when found for admin", async () => {
     await createCoreEcr(coreTemplate);
     await createCoreEcr({ ...coreTemplate, ...relatedEcr });
     await createEcrCondition({
@@ -234,6 +237,143 @@ describe("listEcrData - core", () => {
         ],
       },
     ]);
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
+
+    await clearEcrCore();
+  });
+
+  it("should not return unauthorized data when found for standard user", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "standard@standard.com",
+    });
+    await createCoreEcr(coreTemplate);
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+    await createEcrCondition({
+      uuid: "12345",
+      eicr_id: "12345",
+      condition: "Condition1",
+      // no condition code
+    });
+    await createEcrCondition({
+      uuid: "23456",
+      eicr_id: "12345",
+      condition: "Condition2",
+      condition_code: "456", // not in user's program
+    });
+    await createEcrRule({
+      uuid: "12345",
+      ecr_rr_conditions_id: "12345",
+      rule_summary: "Rule1",
+    });
+
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const columnName = "date_created";
+    const direction = "DESC";
+    const actual: EcrDisplay[] = await listEcrData(
+      startIndex,
+      itemsPerPage,
+      columnName,
+      direction,
+      testDateRange,
+    );
+    expect(actual).toStrictEqual([]);
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
+
+    await clearEcrCore();
+  });
+
+  it("should return authorized data when found for standard user", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "standard@standard.com",
+    });
+    await createCoreEcr(coreTemplate);
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+    await createEcrCondition({
+      uuid: "12345",
+      eicr_id: "12345",
+      condition: "Condition1",
+      condition_code: "123",
+    });
+    await createEcrRule({
+      uuid: "12345",
+      ecr_rr_conditions_id: "12345",
+      rule_summary: "Rule1",
+    });
+
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const columnName = "date_created";
+    const direction = "DESC";
+    const actual: EcrDisplay[] = await listEcrData(
+      startIndex,
+      itemsPerPage,
+      columnName,
+      direction,
+      testDateRange,
+    );
+    expect(actual).toStrictEqual([
+      {
+        date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
+        ecrId: "12345",
+        patient_date_of_birth: "12/01/2024",
+        patient_first_name: "Billy",
+        patient_last_name: "Bob",
+        patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
+        reportable_conditions: ["Condition1"],
+        rule_summaries: ["Rule1"],
+        eicr_set_id: "123",
+        eicr_version_number: "2",
+        related_ecrs: [
+          {
+            ...relatedEcr,
+            set_id: "123",
+          },
+        ],
+      },
+    ]);
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
+
+    await clearEcrCore();
+  });
+
+  it("should return no data when no user", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
+    await createCoreEcr(coreTemplate);
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+    await createEcrCondition({
+      uuid: "12345",
+      eicr_id: "12345",
+      condition: "Condition1",
+      condition_code: "123",
+    });
+    await createEcrRule({
+      uuid: "12345",
+      ecr_rr_conditions_id: "12345",
+      rule_summary: "Rule1",
+    });
+
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const columnName = "date_created";
+    const direction = "DESC";
+    const actual: EcrDisplay[] = await listEcrData(
+      startIndex,
+      itemsPerPage,
+      columnName,
+      direction,
+      testDateRange,
+    );
+    expect(actual).toStrictEqual([]);
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
 
     await clearEcrCore();
   });
