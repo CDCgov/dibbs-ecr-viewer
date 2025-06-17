@@ -2,23 +2,14 @@
  * @jest-environment node
  */
 
-import { getDb } from "@/app/data/metadataDb/database";
-import { Core } from "@/app/data/metadataDb/types/core";
 import { getAllConditions } from "@/app/services/listConditionsService";
-import { createProgramArea } from "@/app/services/programAreaService";
-import {
-  createInitialAdminUser,
-  createUser,
-  updateUserProgramAreas,
-} from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { createCoreEcr, createEcrCondition } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
+import { seedUserProgramData } from "./helpers/seed";
 
 jest.mock("../src/app/utils/auth-utils");
-
-let userId;
 
 beforeAll(async () => {
   (getLoggedInUserSession as jest.Mock).mockResolvedValue({
@@ -27,24 +18,7 @@ beforeAll(async () => {
   });
 
   await buildCore();
-  await getDb<Core>()
-    .insertInto("condition_reference")
-    .values({
-      code: "12345",
-      concept_name: "condition 1 (disease)",
-      condition_name: "condition 1",
-      condition_category: "category",
-    })
-    .execute();
-  await getDb<Core>()
-    .insertInto("condition_reference")
-    .values({
-      code: "54321",
-      concept_name: "condition 2 (disease)",
-      condition_name: "condition 2",
-      condition_category: "category",
-    })
-    .execute();
+  await seedUserProgramData();
 
   await createCoreEcr({
     eicr_id: "12345",
@@ -64,24 +38,20 @@ beforeAll(async () => {
     eicr_id: "12345",
     uuid: "12345",
     condition: "condition1",
-    condition_code: "12345",
+    condition_code: "123",
   });
   await createEcrCondition({
     eicr_id: "54321",
     uuid: "54321",
     condition: "condition2",
-    condition_code: "54321",
+    condition_code: "456",
   });
   await createEcrCondition({
     eicr_id: "12345",
     uuid: "77777",
     condition: "condition3",
-    condition_code: "77777",
+    condition_code: "777",
   });
-  await createInitialAdminUser("admin@admin.com");
-  const progId = await createProgramArea("test", ["12345"]);
-  userId = await createUser("test@test.com", "standard");
-  await updateUserProgramAreas(userId, [progId]);
 });
 
 afterAll(async () => {
@@ -104,7 +74,7 @@ describe("Conditions service", () => {
 
   it("Should retrieve only unique conditions with authz for standard users", async () => {
     (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-      email: "test@test.com",
+      email: "standard@standard.com",
     });
 
     const conditions = await getAllConditions();

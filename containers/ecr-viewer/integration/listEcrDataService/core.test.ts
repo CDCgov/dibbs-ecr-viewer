@@ -14,6 +14,7 @@ import {
   createEcrRule,
 } from "../helpers/core";
 import { buildCore, dropExisting, clearEcrCore } from "../helpers/ddl";
+import { seedUserProgramData } from "../helpers/seed";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewCoreECR } from "@/app/data/metadataDb/types/core";
 import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
@@ -29,12 +30,6 @@ import {
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
-import { createProgramArea } from "@/app/services/programAreaService";
-import {
-  createInitialAdminUser,
-  createUser,
-  updateUserProgramAreas,
-} from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const testDateRange = {
@@ -93,28 +88,7 @@ beforeAll(async () => {
     email: "admin@admin.com",
   });
   await buildCore();
-  await createInitialAdminUser("admin@admin.com");
-  const progId = await createProgramArea("test", ["123"]);
-  const userId = await createUser("test@test.com", "standard");
-  await updateUserProgramAreas(userId, [progId]);
-  await getDb<Core>()
-    .insertInto("condition_reference")
-    .values({
-      code: "123",
-      concept_name: "condition 1 (disease)",
-      condition_name: "condition 1",
-      condition_category: "category",
-    })
-    .execute();
-  await getDb<Core>()
-    .insertInto("condition_reference")
-    .values({
-      code: "456",
-      concept_name: "condition 2 (disease)",
-      condition_name: "condition 2",
-      condition_category: "category",
-    })
-    .execute();
+  await seedUserProgramData();
 });
 
 afterAll(async () => {

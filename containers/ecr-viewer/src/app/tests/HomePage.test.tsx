@@ -32,7 +32,7 @@ jest.mock("../components/AuthSessionProvider", () => ({
 jest.mock("../utils/auth-utils", () => ({
   getLoggedInUserSession: jest
     .fn()
-    .mockResolvedValue({ email: "test@test.com" }),
+    .mockResolvedValue({ email: "standard@standard.com" }),
 }));
 
 describe("Home Page", () => {
