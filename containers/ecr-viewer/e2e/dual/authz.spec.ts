@@ -38,8 +38,12 @@ test.describe("standarad user authorization", () => {
 
     // Only COVID eCR are listed
     const rows = await page.getByRole("row").all();
-    expect(rows).toHaveLength(2);
-    rows.forEach((row) => expect(row.getByText("COVID-19")).toBeVisible());
+    expect(rows).toHaveLength(3); // header + two eCR
+    for (const row of rows) {
+      if ((await row.getByRole("columnheader").count()) > 0) continue;
+
+      expect(await row.getByText("COVID-19").count()).toBeGreaterThan(0);
+    }
 
     await expect(page.getByText("Showing 1-2 of 2 eCRs")).toBeVisible();
   });
