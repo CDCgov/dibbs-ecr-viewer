@@ -267,7 +267,7 @@ const updateUserQuery = async (
 
 /**
  * List the program areas a user is assigned to.
- * @param uuid id of the user to update
+ * @param uuid id of the user
  * @returns list of program areas
  */
 export const listUserProgramAreas = async (
@@ -275,6 +275,23 @@ export const listUserProgramAreas = async (
 ): Promise<ProgramArea[]> => {
   await getCheckAdmin("list user program areas");
 
+  return listUserProgramAreasQuery(uuid);
+};
+
+/**
+ * List the program areas the logged in user is assigned to.
+ * @returns list of program areas
+ */
+export const listLoggedInUserProgramAreas = async (): Promise<
+  ProgramArea[]
+> => {
+  const user = await getLoggedInUser();
+  return user ? await listUserProgramAreasQuery(user.uuid) : [];
+};
+
+const listUserProgramAreasQuery = async (
+  uuid: string,
+): Promise<ProgramArea[]> => {
   try {
     return await getDb<Core>()
       .selectFrom(["user_program_area", "program_area"])

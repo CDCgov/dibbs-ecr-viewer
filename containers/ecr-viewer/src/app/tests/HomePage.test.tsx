@@ -6,7 +6,10 @@ import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { DEFAULT_ITEMS_PER_PAGE } from "@/app/constants";
 import HomePage from "@/app/page";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
-import { getLoggedInUser } from "@/app/services/userService";
+import {
+  getLoggedInUser,
+  listLoggedInUserProgramAreas,
+} from "@/app/services/userService";
 import { returnParamDates } from "@/app/utils/date-utils";
 
 jest.mock("../services/listEcrDataService", () => {
@@ -78,6 +81,31 @@ describe("Home Page", () => {
     (getLoggedInUser as jest.Mock).mockResolvedValue(undefined);
     render(await HomePage({ searchParams: {} }));
     expect(notFound).toHaveBeenCalled();
+  });
+  it("yes metadata database, standard user with no program areas, should not show the homepage", async () => {
+    (getLoggedInUser as jest.Mock).mockResolvedValue({
+      uuid: "1234",
+      user_type: "standard",
+    });
+    (listLoggedInUserProgramAreas as jest.Mock).mockResolvedValue([]);
+    render(await HomePage({ searchParams: {} }));
+    expect(getTotalEcrCount).not.toHaveBeenCalled();
+    expect(notFound).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("Your user setup is incomplete"),
+    ).toBeInTheDocument();
+  });
+  it("yes metadata database, standard user with program areas, should show the homepage", async () => {
+    (getLoggedInUser as jest.Mock).mockResolvedValue({
+      uuid: "1234",
+      user_type: "standard",
+    });
+    (listLoggedInUserProgramAreas as jest.Mock).mockResolvedValue([
+      { uuid: "4567" },
+    ]);
+    render(await HomePage({ searchParams: {} }));
+    expect(getTotalEcrCount).toHaveBeenCalledOnce();
+    expect(notFound).not.toHaveBeenCalled();
   });
   it("yes metadata database, no user, but not set up, should show error page", async () => {
     (dbIsValid as jest.Mock).mockResolvedValue(false);

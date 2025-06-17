@@ -5,7 +5,10 @@ import { notFound } from "next/navigation";
 
 import { dbIsValid } from "./api/migrate-db/migrate";
 import Filters from "./components/EcrFilters";
-import { MetadataDbInvalid } from "./components/ErrorPage";
+import {
+  MetadataDbInvalid,
+  StandardUserNoPrograms,
+} from "./components/ErrorPage";
 import LibrarySearch from "./components/LibrarySearch";
 import { NoDataRow } from "./components/table/NoDataRow";
 import { EcrTableLoading } from "./components/table/TableContentLoading";
@@ -15,7 +18,10 @@ import { EcrTableHeader } from "./components/table/ecr/EcrTableHeader";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
-import { getLoggedInUser } from "./services/userService";
+import {
+  getLoggedInUser,
+  listLoggedInUserProgramAreas,
+} from "./services/userService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
 
@@ -34,8 +40,15 @@ const HomePage = async ({
     notFound();
   } else if (!(await dbIsValid())) {
     return <MetadataDbInvalid />;
-  } else if (!(await getLoggedInUser())) {
+  }
+  const user = await getLoggedInUser();
+  if (!user) {
     notFound();
+  } else if (user.user_type === "standard") {
+    const progAreas = await listLoggedInUserProgramAreas();
+    if (progAreas.length === 0) {
+      return <StandardUserNoPrograms />;
+    }
   }
 
   const cookieStore = cookies();
