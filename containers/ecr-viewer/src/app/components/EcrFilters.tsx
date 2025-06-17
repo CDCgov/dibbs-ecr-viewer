@@ -17,6 +17,7 @@ import {
   RadioDateOptions,
   CustomDateInput,
   SelectDeselectAllCheckbox,
+  CheckboxOptions,
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
 import { Coronavirus, Event } from "./Icon";
@@ -143,26 +144,11 @@ const FilterReportableConditions = ({
         />
         <div className="border-top-1px border-base-lighter margin-x-105"></div>
         {/* (Scroll) Filter Conditions checkboxes */}
-        <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105">
-          {Object.keys(filterConditions).map((condition) => (
-            <div className="checkbox-color usa-checkbox" key={condition}>
-              <input
-                id={`condition-${condition}`}
-                className="usa-checkbox__input"
-                type="checkbox"
-                value={condition}
-                onChange={handleCheckboxChange}
-                checked={filterConditions[condition]}
-              />
-              <label
-                className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
-                htmlFor={`condition-${condition}`}
-              >
-                {condition}
-              </label>
-            </div>
-          ))}
-        </div>
+        <CheckboxOptions
+          groupName="condition"
+          filterItems={filterConditions}
+          onChange={handleCheckboxChange}
+        />
       </div>
       <div className="border-top-1px border-base-lighter margin-x-neg-105"></div>
     </Filter>

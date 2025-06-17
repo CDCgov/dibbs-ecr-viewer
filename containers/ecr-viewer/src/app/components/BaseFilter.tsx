@@ -366,3 +366,44 @@ export const SelectDeselectAllCheckbox = ({
     </div>
   );
 };
+
+/**
+ * A group of checkbox button components, given a set of options.
+ * @param props - The properties for the Checkbox group component.
+ * @param props.groupName - The name of the checkbox buttons group.
+ * @param props.filterItems - The option currently selected.
+ * @param props.onChange - The callback function to handle the `onChange` event when the checkbox is clicked.
+ * @returns The rendered checkbox group component.
+ */
+export const CheckboxOptions = ({
+  groupName,
+  filterItems,
+  onChange,
+}: {
+  groupName: string;
+  filterItems: { [key: string]: boolean };
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) => {
+  return (
+    <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105">
+      {Object.keys(filterItems).map((item) => (
+        <div className="checkbox-color usa-checkbox" key={item}>
+          <input
+            id={`${groupName}-${item}`}
+            className="usa-checkbox__input"
+            type="checkbox"
+            value={item}
+            onChange={onChange}
+            checked={filterItems[item]}
+          />
+          <label
+            className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
+            htmlFor={`${groupName}-${item}`}
+          >
+            {item}
+          </label>
+        </div>
+      ))}
+    </div>
+  );
+};
