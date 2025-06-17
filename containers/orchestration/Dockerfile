@@ -41,5 +41,4 @@ RUN apk update && apk add --no-cache curl
 
 EXPOSE 8080
 RUN export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
-CMD opentelemetry-instrument --service_name dibbs-orchestration gunicorn app.main:app --bind 0.0.0.0:8080 --workers $((`nproc` * 2 + 1)) --worker-class uvicorn.workers.UvicornWorker --timeout 100
-# --log-config app/log_config.yaml
+CMD opentelemetry-instrument --service_name dibbs-orchestration uvicorn app.main:app --host 0.0.0.0 --port 8080 --workers $((`nproc` * 2 + 1)) --log-config app/log_config.yaml

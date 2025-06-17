@@ -154,6 +154,12 @@ def convert_to_fhir(
         result = vars(converter_response)
         result["fhir_conversion_failed"] = "true"
 
+    # clean up files used for conversion
+    if os.path.exists(input_data_file_path):
+        os.remove(input_data_file_path)
+    if os.path.exists(output_data_file_path):
+        os.remove(output_data_file_path)
+
     return {"response": result}
 
 
