@@ -16,6 +16,7 @@ import {
   RadioDateOption,
   RadioDateOptions,
   CustomDateInput,
+  SelectDeselectAllCheckbox,
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
 import { Coronavirus, Event } from "./Icon";
@@ -125,7 +126,7 @@ const FilterReportableConditions = ({
       icon={Coronavirus}
       tag={
         Object.keys(filterConditions).filter(
-          (key) => filterConditions[key] === true,
+          (key) => filterConditions[key] === true
         ).length || "0"
       }
       submitHandler={() => {
@@ -135,24 +136,12 @@ const FilterReportableConditions = ({
     >
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <div className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105">
-          <input
-            id="condition-all"
-            className="usa-checkbox__input"
-            type="checkbox"
-            value="all"
-            onChange={handleSelectAll}
-            checked={isAllSelected}
-          />
-          <label
-            className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
-            htmlFor="condition-all"
-          >
-            {isAllSelected ? "Deselect all" : "Select all"}
-          </label>
-        </div>
+        <SelectDeselectAllCheckbox
+          groupName="condition"
+          onChange={handleSelectAll}
+          isAllSelected={isAllSelected}
+        />
         <div className="border-top-1px border-base-lighter margin-x-105"></div>
-
         {/* (Scroll) Filter Conditions checkboxes */}
         <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105">
           {Object.keys(filterConditions).map((condition) => (

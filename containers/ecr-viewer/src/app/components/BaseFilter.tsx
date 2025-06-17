@@ -179,7 +179,7 @@ const ApplyFilterButton = ({ type }: { type: string }) => {
 const getSelectedFiltersLabel = (
   isActive: boolean,
   title?: string,
-  tag?: ReactNode,
+  tag?: ReactNode
 ) => {
   if (isActive) {
     if (title?.length) {
@@ -326,6 +326,43 @@ export const CustomDateInput = ({
           onDateChange(date);
         }}
       />
+    </div>
+  );
+};
+
+/**
+ * Checkbox to Select/Deselect all depending on checked status.
+ * @param props - The properties for the Select/Deselect all checkbox.
+ * @param props.groupName - The name of the group that's being selected/deselected.
+ * @param props.onChange - The callback function to handle the `onChange` event when the checkbox is clicked.
+ * @param props.isAllSelected - Indicates whether all are selected.
+ * @returns The rendered Select/Deselect all checkbox component.
+ */
+export const SelectDeselectAllCheckbox = ({
+  groupName,
+  onChange,
+  isAllSelected,
+}: {
+  groupName: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isAllSelected: boolean;
+}) => {
+  return (
+    <div className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105">
+      <input
+        id={`${groupName}-all`}
+        className="usa-checkbox__input"
+        type="checkbox"
+        value="all"
+        onChange={onChange}
+        checked={isAllSelected}
+      />
+      <label
+        className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
+        htmlFor={`${groupName}-all`}
+      >
+        {isAllSelected ? "Deselect all" : "Select all"}
+      </label>
     </div>
   );
 };
