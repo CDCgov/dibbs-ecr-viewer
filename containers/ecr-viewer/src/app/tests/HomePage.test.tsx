@@ -53,11 +53,11 @@ describe("Home Page", () => {
     expect(notFound).toHaveBeenCalled();
   });
   it("yes metadata database, should show the homepage", async () => {
-    render(await HomePage({ searchParams: {} }));
     (getLoggedInUser as jest.Mock).mockResolvedValue({
       uuid: "1234",
       user_type: "admin",
     });
+    render(await HomePage({ searchParams: {} }));
     expect(getTotalEcrCount).toHaveBeenCalledOnce();
     expect(notFound).not.toHaveBeenCalled();
   });
@@ -74,11 +74,10 @@ describe("Home Page", () => {
       screen.getByText("eCR Viewer setup is incomplete"),
     ).toBeInTheDocument();
   });
-  it("yes metadata database, no user, should show the homepage", async () => {
-    render(await HomePage({ searchParams: {} }));
+  it("yes metadata database, no user, should not show the homepage", async () => {
     (getLoggedInUser as jest.Mock).mockResolvedValue(undefined);
-    expect(getTotalEcrCount).toHaveBeenCalledOnce();
-    expect(notFound).not.toHaveBeenCalled();
+    render(await HomePage({ searchParams: {} }));
+    expect(notFound).toHaveBeenCalled();
   });
   it("yes metadata database, no user, but not set up, should show error page", async () => {
     (dbIsValid as jest.Mock).mockResolvedValue(false);
