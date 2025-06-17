@@ -274,7 +274,6 @@ export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
   await getCheckAdmin("list user program areas");
-
   return listUserProgramAreasQuery(uuid);
 };
 
