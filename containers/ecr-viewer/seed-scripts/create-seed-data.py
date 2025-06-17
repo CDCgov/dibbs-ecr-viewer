@@ -2,6 +2,7 @@ import argparse
 import io
 import json
 import os
+import time
 import zipfile
 
 import grequests
@@ -70,27 +71,28 @@ def _process_files():
 
     requests = []
     folder_paths = []
-    for subfolder in subfolders:
-        subfolder_path = os.path.join(BASEDIR, "baseECR", subfolder)
+    for i in range(100):
+        for subfolder in subfolders:
+            subfolder_path = os.path.join(BASEDIR, "baseECR", subfolder)
 
-        if not os.path.isdir(subfolder_path):
-            print(f"Skipping: {subfolder_path} is not a valid directory.")
-            continue
-
-        for folder in os.listdir(subfolder_path):
-            folder_path = os.path.join(subfolder_path, folder)
-            if not os.path.isdir(folder_path):
+            if not os.path.isdir(subfolder_path):
+                print(f"Skipping: {subfolder_path} is not a valid directory.")
                 continue
 
-            if UPLOAD_URL.endswith("process-zip"):
-                request = process_zip(UPLOAD_URL, folder_path, folder, headers)
-            elif UPLOAD_URL.endswith("process-ecr"):
-                request = process_ecr(UPLOAD_URL, folder_path, headers)
-            else:
-                raise ("Unknown endpoint type")
+            for folder in os.listdir(subfolder_path):
+                folder_path = os.path.join(subfolder_path, folder)
+                if not os.path.isdir(folder_path):
+                    continue
 
-            requests.append(request)
-            folder_paths.append(folder_path)
+                if UPLOAD_URL.endswith("process-zip"):
+                    request = process_zip(UPLOAD_URL, folder_path, folder, headers)
+                elif UPLOAD_URL.endswith("process-ecr"):
+                    request = process_ecr(UPLOAD_URL, folder_path, headers)
+                else:
+                    raise ("Unknown endpoint type")
+
+                requests.append(request)
+                folder_paths.append(folder_path)
 
     print(f"Sending {len(requests)} ZIP files...")
 
@@ -98,13 +100,18 @@ def _process_files():
     n = 0
     failed = []
     num_requests = len(requests)
-    for index, response in grequests.imap_enumerated(requests, size=8):
+    for index, response in grequests.imap_enumerated(requests, size=1000):
         n += 1
         folder_path = folder_paths[index]
         if response is None:
             failed.append(folder_path)
             print(
                 f"Received response {n} of {num_requests} - Failed to upload {folder_path}: No response received"
+            )
+            continue
+        if response.status_code == 409:
+            print(
+                f"Received response {n} of {num_requests} - duplicate eCR: {folder_path}"
             )
             continue
         if response.status_code != 200:
@@ -131,8 +138,8 @@ def _process_files():
     print(
         f"Conversion complete: {n} records attempted and {len(failed)} failed : {failed}"
     )
-    if failed:
-        exit(1)
+    # if failed:
+    # exit(1)
 
 
 def process_zip(url, folder_path, folder, headers):
@@ -172,5 +179,9 @@ def process_ecr(url, folder_path, headers):
 
 
 if __name__ == "__main__":
+    start = time.time()
     args = _get_args()
     _process_files()
+    end = time.time()
+    print("TIME:")
+    print(end - start)

@@ -89,6 +89,7 @@ def convert_to_fhir(
     """
 
     # Setup path variables
+    id = str(uuid.uuid4())
     converter_project_path = os.getenv(
         "FHIR_CONVERTER_TOOL_PATH",
         "/build/FHIR-Converter/output/Microsoft.Health.Fhir.Liquid.Converter.Tool",
@@ -102,10 +103,10 @@ def convert_to_fhir(
         raise ValueError(
             f"Invalid input_type {input_type}. Valid values are 'hl7v2' and 'ecr'."
         )
-    output_data_file_path = "/tmp/output.json"
+    output_data_file_path = f"/tmp/output-{id}.json"
 
     # Write input data to file
-    input_data_file_path = Path(f"/tmp/{input_type}-input.txt")
+    input_data_file_path = Path(f"/tmp/{input_type}-input-{id}.txt")
     input_data_file_path.write_text(input_data)
 
     # Formulate command for the FHIR Converter.
