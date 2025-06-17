@@ -1,6 +1,6 @@
 # Getting Started with DIBBs eCR Viewer
 
-**If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guide.md)**
+**If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guides/setup.md)**
 
 If you're looking to contribute to development on the eCR Viewer, you're in the right place.
 
@@ -138,7 +138,7 @@ Other useful playwright tools/commands
 
 ## API Documentation
 
-Can be found in [api-documentation.md](api-documentation.md).
+Can be found in [api-documentation.md](./guides/api-documentation.md).
 
 # Architecture Diagram
 
