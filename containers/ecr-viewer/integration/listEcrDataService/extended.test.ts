@@ -3,13 +3,22 @@
  */
 
 import { createEcrCondition, createEcrRule } from "../helpers/core";
-import { buildExtended, dropExisting, clearExtended } from "../helpers/ddl";
+import { buildExtended, dropExisting, clearEcrExtended } from "../helpers/ddl";
 import { createExtendedEcr } from "../helpers/extended";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 import { NewExtendedECR } from "@/app/data/metadataDb/types/extended";
 import {
   getTotalEcrCount,
   listEcrData,
 } from "@/app/services/listEcrDataService";
+import { createProgramArea } from "@/app/services/programAreaService";
+import {
+  createInitialAdminUser,
+  createUser,
+  updateUserProgramAreas,
+} from "@/app/services/userService";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const testDateRange = {
   startDate: new Date("12-01-2024"),
@@ -63,8 +72,47 @@ const relatedEcr = {
   date_created: new Date("2024-12-01T11:00:00Z"),
 };
 
+jest.mock("../../src/app/utils/auth-utils");
+
+beforeEach(() => {
+  (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+    name: "Adam Admin",
+    email: "admin@admin.com",
+  });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 beforeAll(async () => {
+  (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+    name: "Adam Admin",
+    email: "admin@admin.com",
+  });
   await buildExtended();
+  await createInitialAdminUser("admin@admin.com");
+  const progId = await createProgramArea("test", ["123"]);
+  const userId = await createUser("test@test.com", "standard");
+  await updateUserProgramAreas(userId, [progId]);
+  await getDb<Core>()
+    .insertInto("condition_reference")
+    .values({
+      code: "123",
+      concept_name: "condition 1 (disease)",
+      condition_name: "condition 1",
+      condition_category: "category",
+    })
+    .execute();
+  await getDb<Core>()
+    .insertInto("condition_reference")
+    .values({
+      code: "456",
+      concept_name: "condition 2 (disease)",
+      condition_name: "condition 2",
+      condition_category: "category",
+    })
+    .execute();
 });
 
 afterAll(async () => {
@@ -133,7 +181,7 @@ describe("listEcrData - extended", () => {
       },
     ]);
 
-    await clearExtended();
+    await clearEcrExtended();
   });
 });
 
@@ -143,7 +191,7 @@ describe("get total extended ecr count", () => {
     await createExtendedEcr({ ...extendedTemplate, ...relatedEcr });
   });
 
-  afterAll(async () => await clearExtended());
+  afterAll(async () => await clearEcrExtended());
 
   it("should call db to get all ecrs", async () => {
     const actual = await getTotalEcrCount(testDateRange);
