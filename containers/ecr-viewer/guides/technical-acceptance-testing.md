@@ -42,17 +42,23 @@ Instructions have been provided for different operating systems, so follow the i
 
 Here, we’ll verify that the eCR Viewer service is available to receive requests by running the eCR Viewer Health Check request.
 
-**Powershell (compatible with versions 5 and 7):**
+<details>
+<summary>Powershell (compatible with versions 5 and 7)</summary>
 
 ```powershell
 Invoke-WebRequest -Uri "https://{{dibbs-url}}/ecr-viewer/api/health-check" -UseBasicParsing
 ```
 
-**Unix (Mac, Linux) or Windows Command Prompt:**
+</details>
+
+<details>
+<summary>Unix (Mac, Linux) or Windows Command Prompt</summary>
 
 ```bash
 curl https://{{dibbs-url}}/ecr-viewer/api/health-check
 ```
+
+</details>
 
 You should receive the following response:
 
@@ -70,7 +76,8 @@ If you are running the viewer with a metadata database (standalone or dual boot)
 
 In order to apply migrations, you will need the migration secret. This can be set to a static value by setting the `METADATA_DATABASE_MIGRATION_SECRET`, otherwise it will be generated randomly each time the viewer is started. Once generated, it will be logged to the eCR Viewer server logs.
 
-**Powershell 5 and 7:**
+<details>
+<summary>Powershell 5 and 7</summary>
 
 ```powershell
 $boundary = [guid]::NewGuid().ToString()
@@ -91,11 +98,16 @@ Invoke-RestMethod -Uri "https://{{ dibbs-url }}/ecr-viewer/api/migrate-db" `
 -Method Post -Headers $headers -Body $body
 ```
 
-**Unix (Mac, Linux) and Windows Command Prompt:**
+</details>
+
+<details>
+<summary>Unix (Mac, Linux) and Windows Command Prompt</summary>
 
 ```bash
 curl {{ dibbs-url }}/ecr-viewer/api/migrate-db --form migration_secret={{ migration-secret }}
 ```
+
+</details>
 
 ### 3. Pipeline Run
 
@@ -105,7 +117,8 @@ Please ensure that the sample eCR you’re using is a zip file, and the eICR and
 
 Run the Process eCR request:
 
-**Powershell 5:**
+<details>
+<summary>Powershell 5</summary>
 
 ```powershell
 $FilePath = '{{ path-to-eCR-zip-file }}'
@@ -151,7 +164,10 @@ $FileInfo = Get-Item $FilePath
 Import-ApiForm -URI $URL -File $FileInfo -ContentType "application/zip" -NewName "ecr_zip"
 ```
 
-**Powershell 7:**
+</details>
+
+<details>
+<summary>Powershell 7</summary>
 
 ```powershell
 $FilePath = "{{path-to-eCR-zip-file}}"
@@ -162,19 +178,27 @@ Invoke-WebRequest -Uri "https://{{ dibbs-url }}/ecr-viewer/api/process-zip" `
     -Form @{ upload_file = Get-Item $FileEPath } `
 ```
 
-**Windows Command Prompt:**
+</details>
+
+<details>
+<summary>Windows Command Prompt</summary>
 
 ```bash
 curl {{ dibbs-url }}/ecr-viewer/api/process-zip \
     --form upload_file=@"{{ path to file }}";type=application/zip
 ```
 
-**Unix (Mac, Linux):**
+</details>
+
+<details>
+<summary>Unix (Mac, Linux)</summary>
 
 ```bash
 curl {{ dibbs-url }}/ecr-viewer/api/process-zip \
     --form 'upload_file=@"{{ path to file }}";type=application/zip'
 ```
+
+</details>
 
 You should see the following response:
 

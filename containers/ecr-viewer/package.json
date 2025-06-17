@@ -5,7 +5,7 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
-    "docs": "typedoc",
+    "docs": "typedoc --customCss guides/assets/styles.css",
     "dev": "next dev",
     "local-dev": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} up -d && npm run dev'",
     "local-docker": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up'",
