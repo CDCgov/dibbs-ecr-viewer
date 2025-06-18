@@ -116,16 +116,6 @@ graph TD
         G --> H[ECR Viewer DB]
     end
 
-    subgraph Observability
-        direction TB
-        I[Jaeger] --> J[Prometheus]
-        K[OpenTelemetry Collector] --> J
-        K --> I
-        L[Grafana] --> J
-    end
-
-    A --> I
-
     M[Python]
     N[Uvicorn]
     O[FastAPI]
@@ -136,7 +126,6 @@ graph TD
 
     style A fill:#f9f,stroke:#333,stroke-width:4px,color:#000
     style Main Services fill:#bbf,stroke:#333,stroke-width:2px
-    style Observability fill:#bbf,stroke:#333,stroke-width:2px,color:#000
 ```
 
 #### Application API
