@@ -109,7 +109,6 @@ class WS_File:
 @app.websocket("/process-ws")
 async def process_message_endpoint_ws(
     websocket: WebSocket,
-    client: httpx.AsyncClient = Depends(get_client),
 ) -> OrchestrationResponse:
     """
     Creates a websocket connection with the client and accepts a zipped XML file.
@@ -136,7 +135,7 @@ async def process_message_endpoint_ws(
             processing_config = load_processing_config("test-no-save.json")
             response, responses = await call_apis(
                 config=processing_config,
-                client=client,
+                client=websocket.state.client,
                 input=initial_input,
                 websocket=websocket,
             )
