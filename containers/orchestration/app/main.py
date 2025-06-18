@@ -182,9 +182,6 @@ async def process_zip_endpoint(
         rr_content,
     )
 
-    return building_block_response
-
-
 @app.post(
     "/process-message", status_code=200, responses=process_message_response_examples
 )
