@@ -2,6 +2,7 @@ from requests import Response
 
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 
+
 def unpack_save_fhir_data_response(response: Response) -> ServiceHandlerResponse:
     """
     Helper function for processing a response from save fhir data.
@@ -15,7 +16,7 @@ def unpack_save_fhir_data_response(response: Response) -> ServiceHandlerResponse
       parsed message created by the service.
     """
     status_code = response.status_code
-    
+
     match status_code:
         case 200:
             return ServiceHandlerResponse(
