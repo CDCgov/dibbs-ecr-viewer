@@ -316,7 +316,6 @@ async def test_websocket_process_message_endpoint(setup):
             },
         },
     }
-    client = TestClient(app)
 
     # Pull in and read test zip file
     with open(
@@ -326,11 +325,12 @@ async def test_websocket_process_message_endpoint(setup):
         test_zip = file.read()
 
     # Create fake websocket connection
-    with client.websocket_connect("/process-ws") as websocket:
-        # Send zip into fake connection, triggering process-ws endpoint
-        websocket.send_bytes(test_zip)
+    with TestClient(app) as client:
+        with client.websocket_connect("/process-ws") as websocket:
+            # Send zip into fake connection, triggering process-ws endpoint
+            websocket.send_bytes(test_zip)
 
-        # Pull response message from websocket connection like frontend would
-        messages = websocket.receive_json()
+            # Pull response message from websocket connection like frontend would
+            messages = websocket.receive_json()
 
     assert messages == expected_response_message
