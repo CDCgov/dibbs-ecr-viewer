@@ -61,7 +61,9 @@ export const UserForm = ({
   const [userType, setUserType] = useState<UserType>(
     initValues.userType || "standard",
   );
-  const [programs, setPrograms] = useState(initValues.programs);
+  const [programs, setPrograms] = useState(
+    [...initValues.programs].sort((a, b) => (a.name < b.name ? -1 : 1)),
+  );
 
   const { createToast } = React.useContext(ToastContext);
 
