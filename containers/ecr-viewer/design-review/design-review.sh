@@ -104,8 +104,8 @@ else
   echo "Skipping seed data FHIR conversion..."
 fi
 
-# Run ecr viewer
-npm run local-docker
+# Run ecr viewer in the background
+npm run local-docker:silent
 
 # Wait for eCR Viewer to be available
 while ! curl -s -o /dev/null -w "%{http_code}" "$URL" | grep -q "200"; do
