@@ -30,4 +30,4 @@ ENV SMARTY_AUTH_TOKEN=$SMARTY_AUTH_TOKEN
 RUN apk update && apk add --no-cache curl
 
 EXPOSE 8080
-CMD uvicorn app.main:app --host 0.0.0.0 --port 8080
+CMD uvicorn app.main:app --host 0.0.0.0 --port 8080 --log-config app/log_config.yaml
