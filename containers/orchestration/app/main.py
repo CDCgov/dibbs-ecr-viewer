@@ -52,7 +52,19 @@ logger = logging.getLogger(__name__)
 # Read settings immediately to fail fast in case there are invalid values.
 get_settings()
 
-# Instantiate FastAPI via PHDI's BaseService class
+# Configure metrics trackers
+process_message_counter = meter.create_counter(
+    "process_message_counter",
+    description="The number of served requests returning each possible"
+    " status code for the process_message endpoint.",
+)
+process_counter = meter.create_counter(
+    "process_counter",
+    description="The number of served requests returning each possible"
+    " status code for the process endpoint.",
+)
+
+# Instantiate FastAPI via BaseService class
 app = BaseService(
     service_name="Orchestration",
     service_path="/orchestration",
