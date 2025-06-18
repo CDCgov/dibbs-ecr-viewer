@@ -4,6 +4,7 @@ from app.models import OrchestrationRequest
 
 
 def build_validation_request(
+    input_msg: str,
     orchestration_request: OrchestrationRequest,
     workflow_params: dict | None = None,
 ) -> dict:
@@ -32,6 +33,7 @@ def build_validation_request(
 
 def build_ingestion_name_request(
     input_msg: str,
+    orchestration_request: OrchestrationRequest,
     workflow_params: dict | None = None,
 ) -> dict:
     """
@@ -73,6 +75,7 @@ def build_ingestion_name_request(
 
 def build_ingestion_phone_request(
     input_msg: str,
+    orchestration_request: OrchestrationRequest,
     workflow_params: dict | None = None,
 ) -> dict:
     """
@@ -102,6 +105,7 @@ def build_ingestion_phone_request(
 
 def build_ingestion_dob_request(
     input_msg: str,
+    orchestration_request: OrchestrationRequest,
     workflow_params: dict | None = None,
 ) -> dict:
     """

@@ -36,6 +36,7 @@ def build_message_parser_message_request(
 
 def build_message_parser_phdc_request(
     input_msg: str,
+    orchestration_request: OrchestrationRequest,
     workflow_params: dict | None = None,
 ) -> dict:
     """
