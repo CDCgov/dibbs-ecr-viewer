@@ -1,6 +1,3 @@
-from opentelemetry import trace
-
-from app.handlers.tracer import tracer
 from app.models import OrchestrationRequest
 
 MESSAGE_TO_TEMPLATE_MAP = {
@@ -33,25 +30,12 @@ def build_fhir_converter_request(
     :return: A dictionary ready to JSON-serialize as a payload to the
       FHIR converter.
     """
-    with tracer.start_as_current_span(
-        "build_fhir_converter_request",
-        kind=trace.SpanKind(0),
-        attributes={
-            "message_type": orchestration_request.get("message_type"),
-            "data_type": orchestration_request.get("data_type"),
-            "workflow_params": str(workflow_params),
-        },
-    ) as handler_span:
-        # Template will depend on input data formatting and typing
-        input_type = orchestration_request.get("message_type")
-        root_template = MESSAGE_TO_TEMPLATE_MAP[input_type]
-        handler_span.add_event(
-            "identified root template type for conversion",
-            attributes={"root_template": root_template},
-        )
-        return {
-            "input_data": input_msg,
-            "input_type": input_type,
-            "root_template": root_template,
-            "rr_data": orchestration_request.get("rr_data"),
-        }
+    # Template will depend on input data formatting and typing
+    input_type = orchestration_request.get("message_type")
+    root_template = MESSAGE_TO_TEMPLATE_MAP[input_type]
+    return {
+        "input_data": input_msg,
+        "input_type": input_type,
+        "root_template": root_template,
+        "rr_data": orchestration_request.get("rr_data"),
+    }
