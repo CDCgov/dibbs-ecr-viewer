@@ -1,16 +1,16 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { Accordion } from "@trussworks/react-uswds";
 
-import { Filter, RadioDateOptions } from "@/app/components/BaseFilter";
+import { CheckboxOptions, Filter, RadioDateOptions, SelectDeselectAllCheckbox } from "@/app/components/BaseFilter";
 import {
   DetailsSidePanel,
   DetailsTrigger,
   useDetailsRef,
 } from "@/app/components/DetailsSidePanel";
 import FilterGroup from "@/app/components/FilterGroup";
-import { Person } from "@/app/components/Icon";
+import { Folder, Person } from "@/app/components/Icon";
 import {
   PaginatedSortableTable,
   TableColumn,
@@ -27,6 +27,8 @@ const USER_TYPE_OPTIONS: Record<string, string> = {
   admin: "Admin",
   standard: "Standard",
 };
+
+type FilterProgramAreasType = {[key: string]: boolean};
 
 /**
  *
@@ -45,15 +47,34 @@ export const UserTable = ({
   programAreas: ListedProgramArea[];
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
+  const initFilterProgramAreaState = programAreas.reduce((acc, program) => {
+    acc[program.name] = true;
+    return acc;
+  }, {} as FilterProgramAreasType);
+
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
   const [filterUserTypeOption, setFilterUserTypeOption] =
     useState<string>("all");
+  const [filterProgramAreas, setFilterProgramAreas] =
+    useState(initFilterProgramAreaState);
   const detailsRef = useDetailsRef();
 
-  const filteredUsers = users.filter(
-    ({ user_type }) =>
-      filterUserTypeOption === "all" || filterUserTypeOption === user_type,
+  const filteredProgramAreaNames = Object.keys(filterProgramAreas).filter(
+    (name) => filterProgramAreas[name] === true
   );
+  const isAllSelected = Object.values(filterProgramAreas).every(
+    (prog) => prog === true
+  );
+
+  const filteredUsers = users.filter(({ user_type, program_areas }) => {
+    const matchUserType =
+      filterUserTypeOption === "all" || filterUserTypeOption === user_type;
+
+    const matchProgramAreas = user_type === "admin" || program_areas.some(
+      (program) => filteredProgramAreaNames.includes(program.name)
+    );
+    return matchUserType && matchProgramAreas;
+  });
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -151,14 +172,20 @@ export const UserTable = ({
         ]}
       />
       <FilterGroup
-        resetEnabled={filterUserTypeOption !== "all"}
+        resetEnabled={filterUserTypeOption !== "all" || !isAllSelected}
         resetHandler={() => {
           setFilterUserTypeOption("all");
+          setFilterProgramAreas(initFilterProgramAreaState);
         }}
       >
         <FilterByUserType
           filterUserTypeOption={filterUserTypeOption}
           setFilterUserTypeOption={setFilterUserTypeOption}
+        />
+        <FilterByProgramArea
+          isAllSelected={isAllSelected}
+          filterProgramAreas={filterProgramAreas}
+          setFilterProgramAreas={setFilterProgramAreas}
         />
       </FilterGroup>
       <PaginatedSortableTable
@@ -197,6 +224,70 @@ const FilterByUserType = ({
     </Filter>
   );
 };
+
+const FilterByProgramArea = ({
+  isAllSelected,
+  filterProgramAreas,
+  setFilterProgramAreas,
+}: {
+  isAllSelected: boolean;
+  filterProgramAreas: FilterProgramAreasType;
+  setFilterProgramAreas: Dispatch<SetStateAction<FilterProgramAreasType>>;
+}) => {
+  const handleSelectDeselectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = event.target;
+    const updatedProgramAreas = Object.keys(filterProgramAreas).reduce(
+      (acc, programName) => {
+        acc[programName] = checked;
+        return acc;
+      },
+      {} as FilterProgramAreasType
+    );
+
+    setFilterProgramAreas(updatedProgramAreas);
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = event.target;
+    console.log(value, checked)
+    setFilterProgramAreas((prev) => {
+      return { ...prev, [value]: checked };
+    });
+  };
+
+  return (
+    <Filter
+      isActive={!isAllSelected}
+      type="program area"
+      title="Program area"
+      resetHandler={() => {}}
+      icon={Folder}
+      tag={
+        Object.values(filterProgramAreas).filter(
+          (prog) => prog === true
+        ).length || "0"
+      }
+    >
+      {/* Select All checkbox */}
+      <div className="display-flex flex-column">
+        <SelectDeselectAllCheckbox
+          groupName="condition"
+          onChange={handleSelectDeselectAll}
+          isAllSelected={isAllSelected}
+        />
+        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        {/* (Scroll) Filter Conditions checkboxes */}
+        <CheckboxOptions
+          groupName="condition"
+          filterItems={filterProgramAreas}
+          onChange={handleCheckboxChange}
+        />
+      </div>
+      <div className="border-top-1px border-base-lighter margin-x-neg-105"></div>
+    </Filter>
+  );
+};
+
 
 const ProgramAreaContent = ({
   user,

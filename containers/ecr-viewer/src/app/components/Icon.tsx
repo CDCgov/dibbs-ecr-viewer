@@ -11,6 +11,7 @@ export const Coronavirus = UswdsIcon.Coronavirus;
 export const Error = UswdsIcon.Error;
 export const Event = UswdsIcon.Event;
 export const ExpandMore = UswdsIcon.ExpandMore;
+export const Folder = UswdsIcon.Folder;
 export const HighlightOff = UswdsIcon.HighlightOff;
 export const NavigateBefore = UswdsIcon.NavigateBefore;
 export const NavigateNext = UswdsIcon.NavigateNext;
