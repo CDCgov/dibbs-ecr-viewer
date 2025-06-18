@@ -85,10 +85,8 @@ export const POST = async (
       );
     }
 
-    console.error(error);
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 },
-    );
+    const message = "Internal Server Error";
+    console.error({ message, error });
+    return NextResponse.json({ message }, { status: 500 });
   }
 };

@@ -80,9 +80,13 @@ export async function POST(
     if (direction === "down") {
       await migrateDown();
     } else if (direction === "up") {
+      console.log("HERE");
       await migrateUp();
+      console.log("THERE");
       skip_condition_update !== "true" && (await updateConditions());
+      console.log("OVER THERE");
       !!init_admin_email && (await createInitialAdminUser(init_admin_email));
+      console.log("DONE");
     } else {
       return NextResponse.json(
         {
