@@ -74,7 +74,7 @@ If you are running the viewer with a metadata database (standalone or dual boot)
 
 ![Screenshot of the DIBBs eCR Viewer with an error message "eCR Viewer setup is incomplete"](./assets/setup-incomplete.png)
 
-In order to apply migrations, you will need the migration secret. This can be set to a static value by setting the `METADATA_DATABASE_MIGRATION_SECRET`, otherwise it will be generated randomly each time the viewer is started. Once generated, it will be logged to the eCR Viewer server logs.
+In order to apply migrations, you will need the migration secret. This can be set to a static value by setting the `METADATA_DATABASE_MIGRATION_SECRET`, otherwise it will be generated randomly each time the viewer is started. Once generated, it will be logged to the eCR Viewer server logs. Check your container's logs to find this secret - it will be logged as `migration_secret=<your secret here>`.
 
 <details>
 <summary>Powershell 5 and 7</summary>
