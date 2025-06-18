@@ -4,12 +4,14 @@ import os
 from pathlib import Path
 from typing import Annotated
 
-import requests
+import httpx
 from fastapi import (
     Body,
+    Depends,
     File,
     Form,
     HTTPException,
+    Request,
     Response,
     UploadFile,
     WebSocket,
@@ -83,6 +85,13 @@ upload_config_response = load_config_assets(
 )
 
 
+async def get_client(request: Request) -> httpx.AsyncClient:
+    """
+    Get the httpx client from the request
+    """
+    return request.state.client
+
+
 class WS_File:
     """
     A class to represent a file object for WebSocket communication.
@@ -100,6 +109,7 @@ class WS_File:
 @app.websocket("/process-ws")
 async def process_message_endpoint_ws(
     websocket: WebSocket,
+    client: httpx.AsyncClient = Depends(get_client),
 ) -> OrchestrationResponse:
     """
     Creates a websocket connection with the client and accepts a zipped XML file.
@@ -125,7 +135,10 @@ async def process_message_endpoint_ws(
             }
             processing_config = load_processing_config("test-no-save.json")
             response, responses = await call_apis(
-                config=processing_config, input=initial_input, websocket=websocket
+                config=processing_config,
+                client=client,
+                input=initial_input,
+                websocket=websocket,
             )
             if _socket_response_is_valid(response=response):
                 # Parse and work with the API response data (JSON, XML, etc.)
@@ -161,6 +174,7 @@ async def process_zip_endpoint(
     data_type: str = Form(None),
     config_file_name: str = Form(None),
     upload_file: UploadFile = File(None),
+    client: httpx.AsyncClient = Depends(get_client),
 ) -> OrchestrationResponse:
     """
     This endpoint provides a wrapper function for unpacking an uploaded zip
@@ -197,6 +211,7 @@ async def process_zip_endpoint(
         config_file_name,
         message,
         rr_content,
+        client,
     )
 
     # Vacuous addition--if we got here without breaking, it's a 200,
@@ -211,6 +226,7 @@ async def process_zip_endpoint(
 )
 async def process_message_endpoint(
     request: OrchestrationRequest,
+    client: httpx.AsyncClient = Depends(get_client),
 ) -> OrchestrationResponse:
     """
     This endpoint provides a wrapper function for unpacking a message
@@ -246,6 +262,7 @@ async def process_message_endpoint(
             process_request.get("config_file_name"),
             process_request.get("message"),
             process_request.get("rr_data"),
+            client,
         )
 
         workflow_status = building_block_response.status_code
@@ -270,6 +287,7 @@ async def apply_workflow_to_message(
     config_file_name: str,
     message: str,
     rr_content: str,
+    client: httpx.AsyncClient,
 ) -> Response:
     """
     Main orchestration function that applies a config-defined workflow to an
@@ -325,7 +343,7 @@ async def apply_workflow_to_message(
         wf_span.add_event("sending params to `call_apis`")
         try:
             response, responses = await call_apis(
-                config=processing_config, input=api_input
+                config=processing_config, client=client, input=api_input
             )
         except HTTPException as error:
             # These exceptions are purposefully created in call_apis to surface service errors
@@ -402,7 +420,9 @@ def _filter_failed_responses(responses):
 
 
 @app.get("/conditions", status_code=200, responses=sample_list_conditions_response)
-async def list_conditions_endpoint() -> ListConditionsResponse:
+async def list_conditions_endpoint(
+    client: httpx.AsyncClient = Depends(get_client),
+) -> ListConditionsResponse:
     """
     This endpoint gets a list of all of the conditions known to the trigger
     code reference service
@@ -410,7 +430,7 @@ async def list_conditions_endpoint() -> ListConditionsResponse:
     tcr_url = format_service_url(
         SERVICE_URLS["trigger_code_reference"], "/get-conditions"
     )
-    resp = requests.get(tcr_url)
+    resp = await client.get(tcr_url)
     return {"conditions": resp.json()}
 
 
