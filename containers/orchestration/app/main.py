@@ -277,7 +277,9 @@ async def apply_workflow_to_message(
     }
 
     try:
-        response, responses = await call_apis(config=processing_config, client=client, input=api_input)
+        response, responses = await call_apis(
+            config=processing_config, client=client, input=api_input
+        )
     except HTTPException as error:
         # These exceptions are purposefully created in call_apis to surface service errors
         raise error
