@@ -22,7 +22,7 @@ Please consult the [eCR Viewer Setup Guide](https://cdcgov.github.io/dibbs-ecr-v
 
 ## Acceptance Checklist
 
-The following instructions will guide you through this list. Mark the checklist as you complete each step.
+The following instructions will guide you through this list.
 
 - Verified that the eCR Viewer health check is available
 - Verified that the metadata database is up to date (if using one)
