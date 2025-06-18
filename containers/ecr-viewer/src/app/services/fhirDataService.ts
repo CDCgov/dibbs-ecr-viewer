@@ -2,7 +2,6 @@ import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobClient, BlobDownloadResponseParsed } from "@azure/storage-blob";
 import { ApiError } from "@google-cloud/storage";
 import { Bundle } from "fhir/r4";
-import { NextResponse } from "next/server";
 
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
@@ -16,29 +15,43 @@ import {
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
-type FhirDataResponse = {
-  payload: { fhirBundle: Bundle } | { message: string };
+interface Response {
   status: number;
-};
+  payload: object;
+}
+interface SuccessResponse extends Response {
+  status: 200;
+  payload: { fhirBundle: Bundle };
+}
+interface ErrorResponse extends Response {
+  payload: { message: string };
+}
+
+type FhirDataResponse = SuccessResponse | ErrorResponse;
+
+/**
+ * Determine if this is a success response from the fhir service
+ * @param resp the response to check
+ * @returns whether it is successful
+ */
+export const isSuccessResponse = (resp: Response): resp is SuccessResponse =>
+  resp.status === 200;
 
 /**
  * Get the fhir data for a given ECR ID
  * @param ecr_id The id of the ecr to fetch
  * @returns NextResponse with the ecr or error data
  */
-export async function get_fhir_data(ecr_id: string | null) {
-  let res: FhirDataResponse;
+export async function getFhirData(ecr_id: string | null) {
   if (process.env.SOURCE === S3_SOURCE) {
-    res = await get_s3(ecr_id);
+    return await getS3(ecr_id);
   } else if (process.env.SOURCE === AZURE_SOURCE) {
-    res = await get_azure(ecr_id);
+    return await getAzure(ecr_id);
   } else if (process.env.SOURCE === GCP_SOURCE) {
-    res = await get_gcp(ecr_id);
+    return await getGcp(ecr_id);
   } else {
-    res = { payload: { message: "Invalid source" }, status: 500 };
+    return { payload: { message: "Invalid source" }, status: 500 };
   }
-  const { status, payload } = res;
-  return NextResponse.json(payload, { status });
 }
 
 /**
@@ -46,7 +59,7 @@ export async function get_fhir_data(ecr_id: string | null) {
  * @param ecr_id - The id of the ecr to fetch.
  * @returns A promise resolving to a NextResponse object.
  */
-export const get_s3 = async (
+export const getS3 = async (
   ecr_id: string | null,
 ): Promise<FhirDataResponse> => {
   const bucketName = process.env.ECR_BUCKET_NAME;
@@ -82,7 +95,7 @@ export const get_s3 = async (
  * @param ecr_id - The id of the ecr to fetch.
  * @returns A promise resolving to a NextResponse object.
  */
-export const get_azure = async (
+export const getAzure = async (
   ecr_id: string | null,
 ): Promise<FhirDataResponse> => {
   const containerClient = azureBlobContainerClient();
@@ -129,7 +142,7 @@ export const get_azure = async (
  * @param ecr_id - The id of the ecr to fetch.
  * @returns A promise resolving to a FhirDataResponse object.
  */
-const get_gcp = async (ecr_id: string | null): Promise<FhirDataResponse> => {
+const getGcp = async (ecr_id: string | null): Promise<FhirDataResponse> => {
   const client = gcpClient();
   const blobName = `${ecr_id}.json`;
 

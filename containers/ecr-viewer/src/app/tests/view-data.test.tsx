@@ -2,39 +2,24 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 
-import { get_fhir_data } from "@/app/api/fhir-data/service";
+import BundleEcrMetadata from "../../../../../test-data/fhir/BundleEcrMetadata.json";
+import { getFhirData, isSuccessResponse } from "@/app/services/fhirDataService";
 import ECRViewerPage from "@/app/view-data/page";
-
-jest.mock("../view-data/component-utils", () => ({
-  metrics: jest.fn(),
-}));
 
 jest.mock("../view-data/components/LoadingComponent", () => ({
   EcrLoadingSkeleton: () => <div>Loading...</div>,
 }));
 
-jest.mock("../api/fhir-data/service", () => ({
-  get_fhir_data: jest.fn(),
+jest.mock("../services/fhirDataService", () => ({
+  getFhirData: jest.fn(),
+  isSuccessResponse: jest.fn(),
 }));
+
 jest.mock("../components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
 }));
 
-function mockFetch(
-  fn: jest.Mock,
-  data: any,
-  status?: number,
-  statusText?: string,
-) {
-  return fn.mockImplementation(() =>
-    Promise.resolve({
-      ok: status === 200 ? true : false,
-      status,
-      statusText,
-      json: () => data,
-    }),
-  );
-}
+jest.mock("../view-data/components/SideNav");
 
 describe("ECRViewerPage", () => {
   const ORIG_BASE_PATH = process.env.BASE_PATH;
@@ -47,7 +32,11 @@ describe("ECRViewerPage", () => {
   });
 
   it("should handle 404 error", async () => {
-    mockFetch(get_fhir_data as jest.Mock, {}, 404);
+    (getFhirData as jest.Mock).mockResolvedValue({
+      status: 404,
+      payload: { message: "not found" },
+    });
+    (isSuccessResponse as unknown as jest.Mock).mockReturnValue(false);
 
     const component = await ECRViewerPage({ searchParams: { id: "123" } });
     render(component);
@@ -56,12 +45,11 @@ describe("ECRViewerPage", () => {
   });
 
   it("should handle 500 error", async () => {
-    mockFetch(
-      get_fhir_data as jest.Mock,
-      {},
-      500,
-      "uh oh something went wrong",
-    );
+    (getFhirData as jest.Mock).mockResolvedValue({
+      status: 500,
+      payload: { message: "uh oh something went wrong" },
+    });
+    (isSuccessResponse as unknown as jest.Mock).mockReturnValue(false);
 
     const component = await ECRViewerPage({ searchParams: { id: "123" } });
     render(component);
@@ -70,16 +58,16 @@ describe("ECRViewerPage", () => {
     expect(await screen.findByText("500: uh oh something went wrong"));
   });
 
-  it("should handle invalid response", async () => {
-    mockFetch(get_fhir_data as jest.Mock, null, 200);
+  it("should handle valid response", async () => {
+    (getFhirData as jest.Mock).mockResolvedValue({
+      status: 200,
+      payload: { fhirBundle: BundleEcrMetadata },
+    });
+    (isSuccessResponse as unknown as jest.Mock).mockReturnValue(true);
 
     const component = await ECRViewerPage({ searchParams: { id: "123" } });
     render(component);
 
-    expect(
-      await screen.findByText(
-        "500: TypeError: Cannot read properties of null (reading 'fhirBundle')",
-      ),
-    );
+    expect(await screen.findByText("eCR Document"));
   });
 });
