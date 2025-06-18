@@ -26,7 +26,26 @@ test.describe("standard user authorization", () => {
       page.getByRole("heading", { name: "eCR library" }),
     ).toBeVisible();
 
-    // TODO: add checks for which eCRs and conditions are listed
+    // Only COVID is filterable
+    await expect(
+      page.getByLabel("Filter by reportable condition"),
+    ).toContainText("1");
+
+    await page.getByLabel("Filter by reportable condition").click();
+    await expect(page.getByLabel("COVID-19")).toBeVisible();
+    // COVID and deselect all
+    expect(await page.getByRole("checkbox").all()).toHaveLength(2);
+
+    // Only COVID eCR are listed
+    const rows = await page.getByRole("row").all();
+    expect(rows).toHaveLength(3); // header + two eCR
+    for (const row of rows) {
+      if ((await row.getByRole("columnheader").count()) > 0) continue;
+
+      expect(await row.getByText("COVID-19").count()).toBeGreaterThan(0);
+    }
+
+    await expect(page.getByText("Showing 1-2 of 2 eCRs")).toBeVisible();
   });
 
   test("can't see non-covid eCR", async ({ page }) => {

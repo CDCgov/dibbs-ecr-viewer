@@ -215,15 +215,15 @@ test.describe("ecr library page", () => {
         page.getByRole("button", { name: "View Related eCRs" }),
       ).toBeVisible();
       await page.getByRole("button", { name: "View Related eCRs" }).click();
-      await expect(
-        (await page.getByRole("row", { level: 2 }).all()).length,
-      ).toEqual(2);
+      expect((await page.getByRole("row", { level: 2 }).all()).length).toEqual(
+        2,
+      );
 
       // collapse it back down
       await page.getByRole("button", { name: "Hide Related eCRs" }).click();
-      await expect(
-        (await page.getByRole("row", { level: 2 }).all()).length,
-      ).toEqual(0);
+      expect((await page.getByRole("row", { level: 2 }).all()).length).toEqual(
+        0,
+      );
     });
   });
 });
