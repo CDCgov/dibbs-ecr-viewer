@@ -6,6 +6,3 @@ uvicorn[standard]>=0.34.3
 lxml
 httpx[http2]>=0.28.1
 python-dotenv
-opentelemetry-distro>=0.54b0
-opentelemetry-exporter-otlp>=1.33.0
-opentelemetry-exporter-prometheus>=0.54b0
