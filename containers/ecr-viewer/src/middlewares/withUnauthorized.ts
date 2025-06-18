@@ -21,7 +21,7 @@ export const withUnauthorized: MiddlewareFactory = (
     if (request.nextUrl.pathname.endsWith("/save-fhir-data")) {
       if (
         request.headers.get("x-orchestration") === "true" &&
-        request.headers.get("user-agent")?.startsWith("python-requests/")
+        request.headers.get("user-agent")?.startsWith("python-httpx/")
       ) {
         return end(request);
       }
