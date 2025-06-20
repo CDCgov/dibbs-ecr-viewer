@@ -197,14 +197,14 @@ test.describe("user management page", () => {
     await page.getByLabel("Filter by program area").click();
     await expect(page.getByText("Filter by program area")).toBeVisible();
 
-    // Filter: Program 2 only
     const checkboxfilterProgram1 = page.getByLabel(`${program1}`, {
       exact: true,
     });
     await checkboxfilterProgram1.dispatchEvent("click");
-    await expect(page.getByRole("table").getByText(userStandard1)).not.toBeVisible();
+    await expect(
+      page.getByRole("table").getByText(userStandard1)
+    ).not.toBeVisible();
 
-    // Filter: Program 2 only
     await checkboxfilterProgram1.dispatchEvent("click");
     const checkboxfilterProgram2 = page.getByLabel(`${program2}`, {
       exact: true,
@@ -214,15 +214,28 @@ test.describe("user management page", () => {
       page.getByRole("table").getByText(userStandard2)
     ).not.toBeVisible();
 
-    // EDGE CASE: DESLECT ALL, no one show up
+    // Deselect all programs: no users should show up
+    const checkboxSelectAll = page.getByLabel("Select all");
+    await checkboxSelectAll.dispatchEvent("click");
+    const checkboxDeselectAll = page.getByLabel("Deselect all");
+    await checkboxDeselectAll.dispatchEvent("click");
+    await expect(
+      page.getByText(
+        "No users found. We couldn't find any users matching your filter criteria."
+      )
+    ).toBeVisible();
 
-    // await page.keyboard.press("Escape");
-    // await expect(page.getByText("Filter by user type")).not.toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByText("Filter by program area")).not.toBeVisible();
 
-    // await page.getByLabel("Reset Filters to Defaults").click();
-    // await expect(
-    //   page.getByLabel("Reset Filters to Defaults")
-    // ).not.toBeVisible();
+    await page.getByLabel("Reset Filters to Defaults").click();
+    await expect(
+      page.getByLabel("Reset Filters to Defaults")
+    ).not.toBeVisible();
+
+    await expect(page.getByText(userAdmin)).toBeVisible();
+    await expect(page.getByText(userStandard1)).toBeVisible();
+    await expect(page.getByText(userStandard2)).toBeVisible();
   });
 
 

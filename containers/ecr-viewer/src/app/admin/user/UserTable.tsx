@@ -65,16 +65,24 @@ export const UserTable = ({
   const isAllSelected = Object.values(filterProgramAreas).every(
     (prog) => prog === true
   );
+  const isNoneSelected = Object.values(filterProgramAreas).every(
+    (prog) => prog === false
+  );
 
-  const filteredUsers = users.filter(({ user_type, program_areas }) => {
-    const matchUserType =
-      filterUserTypeOption === "all" || filterUserTypeOption === user_type;
+  // If no program areas are selected, do not show any users including admins
+  const filteredUsers = isNoneSelected
+    ? []
+    : users.filter(({ user_type, program_areas }) => {
+        const matchUserType =
+          filterUserTypeOption === "all" || filterUserTypeOption === user_type;
 
-    const matchProgramAreas = user_type === "admin" || program_areas.some(
-      (program) => filteredProgramAreaNames.includes(program.name)
-    );
-    return matchUserType && matchProgramAreas;
-  });
+        const matchProgramAreas =
+          user_type === "admin" ||
+          program_areas.some((program) =>
+            filteredProgramAreaNames.includes(program.name)
+          );
+        return matchUserType && matchProgramAreas;
+      });
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -271,14 +279,14 @@ const FilterByProgramArea = ({
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
         <SelectDeselectAllCheckbox
-          groupName="condition"
+          groupName="program area"
           onChange={handleSelectDeselectAll}
           isAllSelected={isAllSelected}
         />
         <div className="border-top-1px border-base-lighter margin-x-105"></div>
-        {/* (Scroll) Filter Conditions checkboxes */}
+        {/* (Scroll) Filter by Program Area checkboxes */}
         <CheckboxOptions
-          groupName="condition"
+          groupName="program area"
           filterItems={filterProgramAreas}
           onChange={handleCheckboxChange}
         />
