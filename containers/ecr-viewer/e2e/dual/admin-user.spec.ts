@@ -153,8 +153,6 @@ test.describe("user management page", () => {
     page,
     browserName,
   }) => {
-    test.setTimeout(60000); // 60 seconds
-
     await logInToKeycloak({ page });
 
     // Create programs
