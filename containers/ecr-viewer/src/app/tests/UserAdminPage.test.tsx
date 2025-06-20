@@ -7,7 +7,6 @@ import CreateUserPage from "@/app/admin/user/create/page";
 import UserAdminPage from "@/app/admin/user/page";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import {
-  getLoggedInUser,
   isAdmin,
   ListedUser,
   listUsers,
