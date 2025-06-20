@@ -179,7 +179,7 @@ const ApplyFilterButton = ({ type }: { type: string }) => {
 const getSelectedFiltersLabel = (
   isActive: boolean,
   title?: string,
-  tag?: ReactNode
+  tag?: ReactNode,
 ) => {
   if (isActive) {
     if (title?.length) {

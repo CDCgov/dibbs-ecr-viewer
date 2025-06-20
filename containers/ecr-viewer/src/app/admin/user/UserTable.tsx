@@ -3,7 +3,12 @@ import { Dispatch, SetStateAction, useState } from "react";
 
 import { Accordion } from "@trussworks/react-uswds";
 
-import { CheckboxOptions, Filter, RadioDateOptions, SelectDeselectAllCheckbox } from "@/app/components/BaseFilter";
+import {
+  CheckboxOptions,
+  Filter,
+  RadioDateOptions,
+  SelectDeselectAllCheckbox,
+} from "@/app/components/BaseFilter";
 import {
   DetailsSidePanel,
   DetailsTrigger,
@@ -28,7 +33,7 @@ const USER_TYPE_OPTIONS: Record<string, string> = {
   standard: "Standard",
 };
 
-type FilterProgramAreasType = {[key: string]: boolean};
+type FilterProgramAreasType = { [key: string]: boolean };
 
 /**
  *
@@ -55,15 +60,16 @@ export const UserTable = ({
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
   const [filterUserTypeOption, setFilterUserTypeOption] =
     useState<string>("all");
-  const [filterProgramAreas, setFilterProgramAreas] =
-    useState(initFilterProgramAreaState);
+  const [filterProgramAreas, setFilterProgramAreas] = useState(
+    initFilterProgramAreaState,
+  );
   const detailsRef = useDetailsRef();
 
   const filteredProgramAreaNames = Object.keys(filterProgramAreas).filter(
-    (name) => filterProgramAreas[name] === true
+    (name) => filterProgramAreas[name] === true,
   );
   const isAllSelected = Object.values(filterProgramAreas).every(
-    (prog) => prog === true
+    (prog) => prog === true,
   );
   const isNoneSelected = Object.values(filterProgramAreas).every(
     (prog) => prog === false
@@ -76,13 +82,13 @@ export const UserTable = ({
         const matchUserType =
           filterUserTypeOption === "all" || filterUserTypeOption === user_type;
 
-        const matchProgramAreas =
-          user_type === "admin" ||
-          program_areas.some((program) =>
-            filteredProgramAreaNames.includes(program.name)
-          );
-        return matchUserType && matchProgramAreas;
-      });
+    const matchProgramAreas =
+      user_type === "admin" ||
+      program_areas.some((program) =>
+        filteredProgramAreaNames.includes(program.name),
+      );
+    return matchUserType && matchProgramAreas;
+  });
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -242,14 +248,16 @@ const FilterByProgramArea = ({
   filterProgramAreas: FilterProgramAreasType;
   setFilterProgramAreas: Dispatch<SetStateAction<FilterProgramAreasType>>;
 }) => {
-  const handleSelectDeselectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectDeselectAll = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { checked } = event.target;
     const updatedProgramAreas = Object.keys(filterProgramAreas).reduce(
       (acc, programName) => {
         acc[programName] = checked;
         return acc;
       },
-      {} as FilterProgramAreasType
+      {} as FilterProgramAreasType,
     );
 
     setFilterProgramAreas(updatedProgramAreas);
@@ -257,7 +265,7 @@ const FilterByProgramArea = ({
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
-    console.log(value, checked)
+    console.log(value, checked);
     setFilterProgramAreas((prev) => {
       return { ...prev, [value]: checked };
     });
@@ -271,9 +279,8 @@ const FilterByProgramArea = ({
       resetHandler={() => {}}
       icon={Folder}
       tag={
-        Object.values(filterProgramAreas).filter(
-          (prog) => prog === true
-        ).length || "0"
+        Object.values(filterProgramAreas).filter((prog) => prog === true)
+          .length || "0"
       }
     >
       {/* Select All checkbox */}
@@ -295,7 +302,6 @@ const FilterByProgramArea = ({
     </Filter>
   );
 };
-
 
 const ProgramAreaContent = ({
   user,
