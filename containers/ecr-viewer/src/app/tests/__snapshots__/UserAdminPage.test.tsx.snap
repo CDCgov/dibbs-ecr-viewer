@@ -444,6 +444,50 @@ exports[`User Admin Page should list users when available 1`] = `
                 </button>
               </div>
             </div>
+            <div>
+              <div
+                class="position-relative display-flex flex-column"
+              >
+                <button
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-label="Filter by program area"
+                  class="usa-button margin-right-0 filter-button"
+                  data-testid="button"
+                  type="button"
+                >
+                  <span
+                    class="square-205 usa-icon"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon square-205"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="text-ink"
+                  >
+                    Program area
+                  </span>
+                  <span
+                    class="usa-tag padding-05 bg-base-darker radius-md"
+                    data-testid="filter-tag"
+                  >
+                    2
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div>
@@ -583,14 +627,14 @@ exports[`User Admin Page should list users when available 1`] = `
                     data-testid="button"
                     type="button"
                   >
-                    test@test.test
+                    admin@admin.com
                   </button>
                 </td>
                 <td>
                   Admin
                 </td>
                 <td>
-                  Program A, Program B
+                  All program areas
                 </td>
                 <td>
                   04/15/2025 6:30 AM EDT
@@ -605,18 +649,38 @@ exports[`User Admin Page should list users when available 1`] = `
                     data-testid="button"
                     type="button"
                   >
-                    foo@foo.foo
+                    sallystandard@standard.com
                   </button>
                 </td>
                 <td>
                   Standard
                 </td>
                 <td>
-                  Program B
+                  Program Area Three, Program Area Two
                 </td>
                 <td>
-                  04/16/2025 6:30 AM EDT
+                  04/15/2025 6:30 AM EDT
                 </td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="usa-button usa-button--unstyled action-text"
+                    data-close-modal="true"
+                    data-open-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    stevenstandard@standard.com
+                  </button>
+                </td>
+                <td>
+                  Standard
+                </td>
+                <td>
+                  Program Area Three
+                </td>
+                <td />
               </tr>
             </tbody>
           </table>
@@ -629,9 +693,9 @@ exports[`User Admin Page should list users when available 1`] = `
               Showing 
               1
               -
-              2
+              3
                of 
-              2
+              3
                
               users
             </div>
