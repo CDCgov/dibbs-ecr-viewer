@@ -149,10 +149,7 @@ test.describe("user management page", () => {
     await deleteProgramArea(page, program2);
   });
 
-  test("filter by user type or program area", async ({
-    page,
-    browserName,
-  }) => {
+  test("filter by user type or program area", async ({ page, browserName }) => {
     await logInToKeycloak({ page });
 
     // Create programs

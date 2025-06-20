@@ -53,14 +53,14 @@ export const UserTable = ({
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const sortedProgramAreas = [...programAreas].sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name),
   );
   const initFilterProgramAreaState = sortedProgramAreas.reduce(
     (acc, program) => {
       acc[program.name] = true;
       return acc;
     },
-    {} as FilterProgramAreasType
+    {} as FilterProgramAreasType,
   );
 
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
