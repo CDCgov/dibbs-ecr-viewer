@@ -149,10 +149,7 @@ test.describe("user management page", () => {
     await deleteProgramArea(page, program2);
   });
 
-  test("filter by user type or program area", async ({
-    page,
-    browserName,
-  }) => {
+  test("filter by user type or program area", async ({ page, browserName }) => {
     test.setTimeout(60000); // 60 seconds
 
     await logInToKeycloak({ page });
@@ -167,13 +164,13 @@ test.describe("user management page", () => {
       browserName,
       page,
       "standard",
-      [program1]
+      [program1],
     );
     const userStandard2 = await createRandomUser(
       browserName,
       page,
       "standard",
-      [program2]
+      [program2],
     );
 
     // filter by user type
@@ -181,7 +178,7 @@ test.describe("user management page", () => {
     await expect(page.getByText("Filter by user type")).toBeVisible();
     await page.getByLabel("Admin").dispatchEvent("click");
     await expect(
-      page.getByRole("table").getByText("Standard")
+      page.getByRole("table").getByText("Standard"),
     ).not.toBeVisible();
 
     await page.getByLabel("Standard").dispatchEvent("click");
@@ -192,7 +189,7 @@ test.describe("user management page", () => {
 
     await page.getByLabel("Reset Filters to Defaults").click();
     await expect(
-      page.getByLabel("Reset Filters to Defaults")
+      page.getByLabel("Reset Filters to Defaults"),
     ).not.toBeVisible();
 
     // filter by program area
@@ -204,7 +201,7 @@ test.describe("user management page", () => {
     });
     await checkboxfilterProgram1.dispatchEvent("click");
     await expect(
-      page.getByRole("table").getByText(userStandard1)
+      page.getByRole("table").getByText(userStandard1),
     ).not.toBeVisible();
 
     await checkboxfilterProgram1.dispatchEvent("click");
@@ -213,7 +210,7 @@ test.describe("user management page", () => {
     });
     await checkboxfilterProgram2.dispatchEvent("click");
     await expect(
-      page.getByRole("table").getByText(userStandard2)
+      page.getByRole("table").getByText(userStandard2),
     ).not.toBeVisible();
 
     // Deselect all programs: no users should show up
@@ -223,8 +220,8 @@ test.describe("user management page", () => {
     await checkboxDeselectAll.dispatchEvent("click");
     await expect(
       page.getByText(
-        "No users found. We couldn't find any users matching your filter criteria."
-      )
+        "No users found. We couldn't find any users matching your filter criteria.",
+      ),
     ).toBeVisible();
 
     await page.keyboard.press("Escape");
@@ -232,14 +229,13 @@ test.describe("user management page", () => {
 
     await page.getByLabel("Reset Filters to Defaults").click();
     await expect(
-      page.getByLabel("Reset Filters to Defaults")
+      page.getByLabel("Reset Filters to Defaults"),
     ).not.toBeVisible();
 
     await expect(page.getByText(userAdmin)).toBeVisible();
     await expect(page.getByText(userStandard1)).toBeVisible();
     await expect(page.getByText(userStandard2)).toBeVisible();
   });
-
 
   test("it should not show to non-admin", async ({ page }) => {
     await logInToKeycloak({ page }, undefined, "ecr-viewer-standard");
@@ -274,7 +270,12 @@ const createRandomProgramArea = async (page: Page) => {
   return `Program ${conditionName}`;
 };
 
-const createRandomUser = async (browserName: string, page: Page, userType: string = "standard", programAreas: string[]) => {
+const createRandomUser = async (
+  browserName: string,
+  page: Page,
+  userType: string = "standard",
+  programAreas: string[],
+) => {
   await page.goto("/ecr-viewer/admin/user");
   await expect(
     page.getByRole("heading", { name: "User management" }),
@@ -308,7 +309,7 @@ const createRandomUser = async (browserName: string, page: Page, userType: strin
   await page.waitForURL("/ecr-viewer/admin/user");
 
   await expect(
-    page.getByText(`${random}@user.com successfully saved`)
+    page.getByText(`${random}@user.com successfully saved`),
   ).toBeVisible();
 
   return `${random}@user.com`;

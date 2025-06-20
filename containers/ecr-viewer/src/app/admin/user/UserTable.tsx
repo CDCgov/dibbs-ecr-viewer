@@ -72,7 +72,7 @@ export const UserTable = ({
     (prog) => prog === true,
   );
   const isNoneSelected = Object.values(filterProgramAreas).every(
-    (prog) => prog === false
+    (prog) => prog === false,
   );
 
   // If no program areas are selected, do not show any users including admins
@@ -82,13 +82,13 @@ export const UserTable = ({
         const matchUserType =
           filterUserTypeOption === "all" || filterUserTypeOption === user_type;
 
-    const matchProgramAreas =
-      user_type === "admin" ||
-      program_areas.some((program) =>
-        filteredProgramAreaNames.includes(program.name),
-      );
-    return matchUserType && matchProgramAreas;
-  });
+        const matchProgramAreas =
+          user_type === "admin" ||
+          program_areas.some((program) =>
+            filteredProgramAreaNames.includes(program.name),
+          );
+        return matchUserType && matchProgramAreas;
+      });
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
