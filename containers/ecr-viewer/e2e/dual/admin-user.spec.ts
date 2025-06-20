@@ -42,25 +42,6 @@ test.describe("user management page", () => {
       page.getByRole("heading", { name: "User management" })
     ).toBeVisible();
 
-    // filter by user type
-    await page.getByLabel("Filter by user type").click();
-    await expect(page.getByText("Filter by user type")).toBeVisible();
-    await page.getByLabel("Admin").dispatchEvent("click");
-    await expect(
-      page.getByRole("table").getByText("Standard"),
-    ).not.toBeVisible();
-
-    await page.getByLabel("Standard").dispatchEvent("click");
-    await expect(page.getByRole("table").getByText("Admin")).not.toBeVisible();
-
-    await page.keyboard.press("Escape");
-    await expect(page.getByText("Filter by user type")).not.toBeVisible();
-
-    await page.getByLabel("Reset Filters to Defaults").click();
-    await expect(
-      page.getByLabel("Reset Filters to Defaults"),
-    ).not.toBeVisible();
-
     // open up side panel
     await page.getByText("ecr-viewer@admin.com").click();
     await expect(
@@ -166,6 +147,85 @@ test.describe("user management page", () => {
     await deleteProgramArea(page, program2);
   });
 
+  test("filter by user type or program area", async ({
+    page,
+    browserName,
+  }) => {
+    test.setTimeout(60000); // 60 seconds
+
+    await logInToKeycloak({ page });
+
+    // Create programs
+    const program1 = await createRandomProgramArea(page);
+    const program2 = await createRandomProgramArea(page);
+
+    // Create users
+    const userAdmin = await createRandomUser(browserName, page, "admin", []);
+    const userStandard1 = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [program1]
+    );
+    const userStandard2 = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [program2]
+    );
+
+    // filter by user type
+    await page.getByLabel("Filter by user type").click();
+    await expect(page.getByText("Filter by user type")).toBeVisible();
+    await page.getByLabel("Admin").dispatchEvent("click");
+    await expect(
+      page.getByRole("table").getByText("Standard")
+    ).not.toBeVisible();
+
+    await page.getByLabel("Standard").dispatchEvent("click");
+    await expect(page.getByRole("table").getByText("Admin")).not.toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(page.getByText("Filter by user type")).not.toBeVisible();
+
+    await page.getByLabel("Reset Filters to Defaults").click();
+    await expect(
+      page.getByLabel("Reset Filters to Defaults")
+    ).not.toBeVisible();
+
+    // filter by program area
+    await page.getByLabel("Filter by program area").click();
+    await expect(page.getByText("Filter by program area")).toBeVisible();
+
+    // Filter: Program 2 only
+    const checkboxfilterProgram1 = page.getByLabel(`${program1}`, {
+      exact: true,
+    });
+    await checkboxfilterProgram1.dispatchEvent("click");
+    await expect(page.getByRole("table").getByText(userStandard1)).not.toBeVisible();
+
+    // Filter: Program 2 only
+    await checkboxfilterProgram1.dispatchEvent("click");
+    const checkboxfilterProgram2 = page.getByLabel(`${program2}`, {
+      exact: true,
+    });
+    await checkboxfilterProgram2.dispatchEvent("click");
+    await expect(
+      page.getByRole("table").getByText(userStandard2)
+    ).not.toBeVisible();
+
+    // EDGE CASE: DESLECT ALL, no one show up
+
+    // await page.keyboard.press("Escape");
+    // await expect(page.getByText("Filter by user type")).not.toBeVisible();
+
+    // await page.getByLabel("Reset Filters to Defaults").click();
+    // await expect(
+    //   page.getByLabel("Reset Filters to Defaults")
+    // ).not.toBeVisible();
+  });
+
+
   test("it should not show to non-admin", async ({ page }) => {
     await logInToKeycloak({ page }, undefined, "ecr-viewer-standard");
     await page.goto("/ecr-viewer/admin/user");
@@ -199,7 +259,7 @@ const createRandomProgramArea = async (page: Page) => {
   return `Program ${conditionName}`;
 };
 
-const createRandomUser = async (browserName: string, page: Page, userType: string = "standard", programAreas: [string]) => {
+const createRandomUser = async (browserName: string, page: Page, userType: string = "standard", programAreas: string[]) => {
   await page.goto("/ecr-viewer/admin/user");
   await expect(
     page.getByRole("heading", { name: "User management" })
@@ -212,12 +272,15 @@ const createRandomUser = async (browserName: string, page: Page, userType: strin
 
   if (userType === "admin") {
     const adminRadio = page.getByLabel("Admin");
-    await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
   };
 
   if (userType === "standard") {
     for (const program of programAreas) {
+      const standardRadio = page.getByLabel("Standard");
+      await standardRadio.scrollIntoViewIfNeeded();
+      await standardRadio.dispatchEvent("click");
+
       const checkbox = page.getByLabel(`Select ${program}`, {
         exact: true,
       });
@@ -228,6 +291,10 @@ const createRandomUser = async (browserName: string, page: Page, userType: strin
 
   await page.getByRole("button", { name: "Save user" }).first().click();
   await page.waitForURL("/ecr-viewer/admin/user");
+
+  await expect(
+    page.getByText(`${random}@user.com successfully saved`)
+  ).toBeVisible();
 
   return `${random}@user.com`;
 };
