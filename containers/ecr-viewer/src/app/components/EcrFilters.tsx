@@ -127,7 +127,7 @@ const FilterReportableConditions = ({
       icon={Coronavirus}
       tag={
         Object.keys(filterConditions).filter(
-          (key) => filterConditions[key] === true
+          (key) => filterConditions[key] === true,
         ).length || "0"
       }
       submitHandler={() => {

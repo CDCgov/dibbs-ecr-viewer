@@ -22,14 +22,14 @@ test.describe("user management page", () => {
     await page.goto("/ecr-viewer/admin/user");
 
     await expect(
-      page.getByRole("heading", { name: "User management" })
+      page.getByRole("heading", { name: "User management" }),
     ).toBeVisible();
 
     await page.getByText("Create user").click();
 
     await page.waitForURL("/ecr-viewer/admin/user/create");
     await expect(
-      page.getByRole("heading", { name: "Create user" })
+      page.getByRole("heading", { name: "Create user" }),
     ).toBeVisible();
 
     const accessibilityScanResultsBaseCreateUser = await new AxeBuilder({
@@ -39,7 +39,7 @@ test.describe("user management page", () => {
 
     await page.getByRole("link", { name: "Back to user management" }).click();
     await expect(
-      page.getByRole("heading", { name: "User management" })
+      page.getByRole("heading", { name: "User management" }),
     ).toBeVisible();
 
     // filter by user type
@@ -88,7 +88,9 @@ test.describe("user management page", () => {
     const program2 = await createRandomProgramArea(page);
 
     // Create user & assign to Program 1
-    const user = await createRandomUser(browserName, page, "standard", [program1])
+    const user = await createRandomUser(browserName, page, "standard", [
+      program1,
+    ]);
 
     // Check that user has been successfully/correctly created
     await page.waitForURL("/ecr-viewer/admin/user");
@@ -199,10 +201,15 @@ const createRandomProgramArea = async (page: Page) => {
   return `Program ${conditionName}`;
 };
 
-const createRandomUser = async (browserName: string, page: Page, userType: string = "standard", programAreas: [string]) => {
+const createRandomUser = async (
+  browserName: string,
+  page: Page,
+  userType: string = "standard",
+  programAreas: [string],
+) => {
   await page.goto("/ecr-viewer/admin/user");
   await expect(
-    page.getByRole("heading", { name: "User management" })
+    page.getByRole("heading", { name: "User management" }),
   ).toBeVisible();
   await page.getByText("Create user").click();
   await page.waitForURL("/ecr-viewer/admin/user/create");
@@ -214,7 +221,7 @@ const createRandomUser = async (browserName: string, page: Page, userType: strin
     const adminRadio = page.getByLabel("Admin");
     await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
-  };
+  }
 
   if (userType === "standard") {
     for (const program of programAreas) {
