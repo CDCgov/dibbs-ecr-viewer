@@ -18,6 +18,30 @@ test.describe("user management page", () => {
     }).analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
+    // create user page
+    await page.goto("/ecr-viewer/admin/user");
+
+    await expect(
+      page.getByRole("heading", { name: "User management" })
+    ).toBeVisible();
+
+    await page.getByText("Create user").click();
+
+    await page.waitForURL("/ecr-viewer/admin/user/create");
+    await expect(
+      page.getByRole("heading", { name: "Create user" })
+    ).toBeVisible();
+
+    const accessibilityScanResultsBaseCreateUser = await new AxeBuilder({
+      page,
+    }).analyze();
+    expect(accessibilityScanResultsBaseCreateUser.violations).toEqual([]);
+
+    await page.getByRole("link", { name: "Back to user management" }).click();
+    await expect(
+      page.getByRole("heading", { name: "User management" })
+    ).toBeVisible();
+
     // filter by user type
     await page.getByLabel("Filter by user type").click();
     await expect(page.getByText("Filter by user type")).toBeVisible();
@@ -64,51 +88,21 @@ test.describe("user management page", () => {
     const program2 = await createRandomProgramArea(page);
 
     // Create user & assign to Program 1
-    await page.goto("/ecr-viewer/admin/user");
-
-    await expect(
-      page.getByRole("heading", { name: "User management" }),
-    ).toBeVisible();
-
-    await page.getByText("Create user").click();
-
-    await page.waitForURL("/ecr-viewer/admin/user/create");
-    await expect(
-      page.getByRole("heading", { name: "Create user" }),
-    ).toBeVisible();
-
-    const accessibilityScanResultsBase = await new AxeBuilder({
-      page,
-    }).analyze();
-    expect(accessibilityScanResultsBase.violations).toEqual([]);
-
-    const email = `${browserName}-${Math.floor(Math.random() * 100)}@test.test`;
-    page.getByLabel("Email").fill(email);
-    const adminRadio = page.getByLabel("Standard");
-    await adminRadio.scrollIntoViewIfNeeded();
-    await adminRadio.dispatchEvent("click");
-
-    const checkboxProgram1 = page.getByLabel(`Select ${program1}`, {
-      exact: true,
-    });
-    await checkboxProgram1.scrollIntoViewIfNeeded();
-    await checkboxProgram1.dispatchEvent("click");
-
-    await page.getByRole("button", { name: "Save user" }).first().click();
+    const user = await createRandomUser(browserName, page, "standard", [program1])
 
     // Check that user has been successfully/correctly created
     await page.waitForURL("/ecr-viewer/admin/user");
-    await expect(page.getByRole("button", { name: email })).toBeVisible();
-    await expect(page.getByText(`${email} successfully saved`)).toBeVisible();
+    await expect(page.getByRole("button", { name: user })).toBeVisible();
+    await expect(page.getByText(`${user} successfully saved`)).toBeVisible();
     const row = page.locator("tr", {
-      has: page.getByText(email),
+      has: page.getByText(user),
     });
     await expect(row.getByText("Standard")).toBeVisible();
     await expect(page.getByText(program1)).toBeVisible();
     await expect(page.getByText(program2)).not.toBeVisible();
 
     // Open side panel to edit user
-    await page.getByRole("button", { name: email }).click();
+    await page.getByRole("button", { name: user }).click();
     await expect(page.getByText("User information")).toBeVisible();
     await page.getByText("Edit user").click();
     await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
@@ -122,10 +116,13 @@ test.describe("user management page", () => {
     ).toBeDisabled();
 
     // Edit user email & program
-    const newEmail = email + "edited";
+    const newEmail = user + "edited";
     page.getByLabel("Email").clear();
     page.getByLabel("Email").fill(newEmail);
 
+    const checkboxProgram1 = page.getByLabel(`Select ${program1}`, {
+      exact: true,
+    });
     await checkboxProgram1.scrollIntoViewIfNeeded();
     await checkboxProgram1.dispatchEvent("click");
 
@@ -200,6 +197,39 @@ const createRandomProgramArea = async (page: Page) => {
   await page.waitForURL("/ecr-viewer/admin/program");
 
   return `Program ${conditionName}`;
+};
+
+const createRandomUser = async (browserName: string, page: Page, userType: string = "standard", programAreas: [string]) => {
+  await page.goto("/ecr-viewer/admin/user");
+  await expect(
+    page.getByRole("heading", { name: "User management" })
+  ).toBeVisible();
+  await page.getByText("Create user").click();
+  await page.waitForURL("/ecr-viewer/admin/user/create");
+
+  const random = Math.floor(Math.random() * 1000);
+  await page.getByLabel("Email").fill(`${browserName}-${random}@user.com`);
+
+  if (userType === "admin") {
+    const adminRadio = page.getByLabel("Admin");
+    await adminRadio.scrollIntoViewIfNeeded();
+    await adminRadio.dispatchEvent("click");
+  };
+
+  if (userType === "standard") {
+    for (const program of programAreas) {
+      const checkbox = page.getByLabel(`Select ${program}`, {
+        exact: true,
+      });
+      await checkbox.scrollIntoViewIfNeeded();
+      await checkbox.dispatchEvent("click");
+    }
+  }
+
+  await page.getByRole("button", { name: "Save user" }).first().click();
+  await page.waitForURL("/ecr-viewer/admin/user");
+
+  return `${random}@user.com`;
 };
 
 const deleteProgramArea = async (page: Page, program: string) => {
