@@ -70,7 +70,7 @@
     "@dotenvx/dotenvx": "^1.44.1",
     "@dword-design/eslint-plugin-import-alias": "^5.1.1",
     "@next/eslint-plugin-next": "^14.2.5",
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.53.1",
     "@smithy/util-stream": "^4.1.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
