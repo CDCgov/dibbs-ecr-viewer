@@ -41,7 +41,7 @@
     "@trussworks/react-uswds": "^9.1.0",
     "@uswds/uswds": "^3.11.0",
     "classnames": "^2.5.1",
-    "fhirpath": "^3.18.0",
+    "fhirpath": "^4.4.0",
     "html-react-parser": "^5.2.3",
     "jose": "6.0.11",
     "js-cookie": "^3.0.5",
