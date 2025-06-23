@@ -72,9 +72,7 @@ export const UserForm = ({
 
   const initSelectedPrograms = sortedIds(initValues.programs);
 
-  const valid =
-    !!email &&
-    (userType === "admin" || userType === "standard");
+  const valid = !!email && (userType === "admin" || userType === "standard");
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||
