@@ -72,7 +72,7 @@ def _process_files():
 
     requests = []
     folder_paths = []
-    for i in range(1):
+    for i in range(4):
         for subfolder in ["star-wars"]:
             subfolder_path = os.path.join(BASEDIR, "baseECR", subfolder)
 
