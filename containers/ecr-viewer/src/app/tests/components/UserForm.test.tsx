@@ -79,8 +79,8 @@ describe("UserForm", () => {
     const emailInput = screen.getByLabelText(/Email/i);
     await user.type(emailInput, "test@test.test");
 
-    // still disabled
-    expect(submitButtons[0]).toBeDisabled();
+    // no longer disabled (users don't need to be assigned to any program areas)
+    expect(submitButtons[0]).not.toBeDisabled();
 
     // change user type to admin
     const buttonAdminUser = screen.getAllByRole("radio", {

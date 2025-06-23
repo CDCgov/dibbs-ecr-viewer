@@ -74,8 +74,7 @@ export const UserForm = ({
 
   const valid =
     !!email &&
-    (userType === "admin" || userType === "standard") &&
-    (userType === "admin" || numProgramsSelected > 0);
+    (userType === "admin" || userType === "standard");
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||
