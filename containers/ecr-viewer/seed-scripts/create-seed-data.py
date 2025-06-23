@@ -8,6 +8,9 @@ import zipfile
 import grequests
 import requests as rqsts
 
+from dotenv import load_dotenv
+load_dotenv("../.env.local")
+
 MIGRATION_URL = "http://host.docker.internal:3000/ecr-viewer/api/migrate-db"
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,43 +39,41 @@ def _process_files():
     """Zips subfolders and sends them to the API."""
     print("Processing subfolders...")
 
-    subfolders_raw = os.getenv("SEED_DATA_DIRECTORIES")
-    if not subfolders_raw:
-        print("No subfolders found in SEED_DATA_DIRECTORIES.")
-        return
+    # subfolders_raw = os.getenv("SEED_DATA_DIRECTORIES")
+    # if not subfolders_raw:
+    #     print("No subfolders found in SEED_DATA_DIRECTORIES.")
+    #     return
 
-    subfolders = subfolders_raw.split(",")
+    # subfolders = subfolders_raw.split(",")
 
     print("Requesting API token...")
     token_req = rqsts.post(
-        f"{os.getenv('AUTH_ISSUER').replace('localhost', 'host.docker.internal')}/protocol/openid-connect/token",
+        os.getenv("AUTH_ISSUER"),
         data={
             "client_id": os.getenv("AUTH_CLIENT_ID"),
             "client_secret": os.getenv("AUTH_CLIENT_SECRET"),
-            "username": os.getenv("AUTH_USER"),
-            "password": os.getenv("AUTH_PASSWORD"),
-            "grant_type": "password",
-            "scope": "openid email profile",
+            "grant_type": "client_credentials",
+            "scope": f"{os.getenv('AUTH_CLIENT_ID')}/.default",
         },
     )
     assert token_req.status_code == 200, f"{token_req.json()}"
     token = token_req.json()["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    print("Requesting db migration...")
-    rs = rqsts.post(
-        MIGRATION_URL,
-        data={"migration_secret": "test", "init_admin_email": "ecr-viewer@admin.com"},
-        headers=headers,
-    )
-    assert rs.status_code == 200, f"{rs.json()}"
+    # print("Requesting db migration...")
+    # rs = rqsts.post(
+    #     MIGRATION_URL,
+    #     data={"migration_secret": "test", "init_admin_email": "ecr-viewer@admin.com"},
+    #     headers=headers,
+    # )
+    # assert rs.status_code == 200, f"{rs.json()}"
 
     UPLOAD_URL = os.getenv("UPLOAD_URL")
 
     requests = []
     folder_paths = []
-    for i in range(4):
-        for subfolder in subfolders:
+    for i in range(1):
+        for subfolder in ["star-wars"]:
             subfolder_path = os.path.join(BASEDIR, "baseECR", subfolder)
 
             if not os.path.isdir(subfolder_path):
@@ -116,8 +117,9 @@ def _process_files():
             continue
         if response.status_code != 200:
             failed.append(folder_path)
+
             print(
-                f"Received response {n} of {num_requests} - Failed to upload {folder_path}. Status: {response.status_code}. Body: {json.dumps(response.json())}"
+                f"Received response {n} of {num_requests} - Failed to upload {folder_path}. Status: {response.status_code}. Body: {response.text}"
             )
         else:
             response_json = response.json()
