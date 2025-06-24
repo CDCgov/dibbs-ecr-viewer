@@ -6,9 +6,6 @@ from unittest.mock import patch
 import httpx
 import pytest
 from lxml import etree
-from starlette.testclient import TestClient
-
-from app.main import app
 
 ORCHESTRATION_URL = "http://localhost:8080"
 PROCESS_ZIP_ENDPOINT = ORCHESTRATION_URL + "/process-zip"
