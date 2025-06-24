@@ -172,7 +172,7 @@ async def call_apis(
                 params[v] = responses[k]
 
         request_body = request_body_func(current_message, input, params)
-        response = post_request(client, service_url, request_body)
+        response = await post_request(client, service_url, request_body)
         service_response = response_func(response)
         if websocket:
             progress_dict = await _send_websocket_dump(
