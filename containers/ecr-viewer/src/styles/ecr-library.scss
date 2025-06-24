@@ -39,7 +39,7 @@
 .table-ecr-library {
   font-size: 1rem;
   border-collapse: separate;
-  font-family: "Source Sans Pro Web";
+  // font-family: "Source Sans Pro Web";
   isolation: isolate;
 
   // Hide highlight color by matching th color on sorted column - per design
@@ -141,10 +141,6 @@
 
 .ecr-library-wrapper {
   height: calc(100% - 4rem);
-}
-
-.height-ecr-library {
-  height: calc(100% - 2.45rem - 1.5rem - 4.45rem);
 }
 
 .ecr-pagination-drop-shadow {

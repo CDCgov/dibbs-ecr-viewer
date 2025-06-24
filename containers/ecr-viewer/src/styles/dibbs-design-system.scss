@@ -1,0 +1,363 @@
+// from https://github.com/CDCgov/dibbs-design-system/blob/main/sass/design_system.scss
+
+@use "variables" as *;
+@use "uswds-core" as *;
+@use "uswds-settings" as *;
+
+html,
+body {
+  height: 100%;
+}
+html {
+  scroll-behavior: auto;
+  box-sizing: border-box;
+}
+
+body {
+  @include u-font("sans", 5);
+  line-height: 1.4;
+  background-color: $background;
+}
+
+.application-container {
+  display: flex;
+  flex-flow: column;
+  min-height: 100%;
+}
+
+header,
+footer {
+  padding: 1rem 5rem;
+  margin: 0;
+  background-color: $brand-darker;
+}
+
+h1 {
+  @include u-font("serif", 12);
+}
+h2 {
+  @include u-font("sans", 11);
+}
+h3 {
+  @include u-font("sans", 8);
+}
+h4 {
+  @include u-font("sans", 5);
+}
+
+.main-body {
+  background-color: $background;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.usa-button {
+  background-color: $accent-primary;
+  box-shadow: inset 0 0 0 2px $accent-primary;
+
+  &:hover,
+  &--outline:hover {
+    box-shadow: inset 0 0 0 2px $accent-dark;
+    background-color: $accent-dark;
+  }
+
+  &:active,
+  &--outline:active {
+    box-shadow: inset 0 0 0 2px $accent-darker;
+    background-color: $accent-darker;
+  }
+
+  &--secondary {
+    background-color: white;
+    box-shadow: inset 0 0 0 2px $accent-primary;
+    color: $accent-primary;
+  }
+
+  &--secondary:hover {
+    background-color: white;
+    box-shadow: inset 0 0 0 2px $accent-dark;
+    color: $accent-dark;
+  }
+
+  &--secondary:active {
+    background-color: white;
+    box-shadow: inset 0 0 0 2px $accent-darker;
+    color: $accent-darker;
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:active {
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+    background-color: color("disabled-light");
+  }
+
+  &--destructive {
+    box-shadow: none;
+    color: white;
+    background-color: $destructive-primary;
+  }
+  &--destructive:hover {
+    box-shadow: none;
+    color: white;
+    background-color: $destructive-dark;
+  }
+  &--destructive:active {
+    box-shadow: none;
+    color: white;
+    background-color: $destructive-darker;
+  }
+}
+
+.usa-button--unstyled,
+a,
+a:visited {
+  box-shadow: none;
+  color: $brand-primary;
+  background-color: transparent;
+}
+
+.usa-button--unstyled:hover,
+a:hover {
+  box-shadow: none;
+  color: $brand-dark;
+  background-color: transparent;
+}
+
+.usa-button--unstyled:active,
+a:active {
+  box-shadow: none;
+  color: $brand-darker;
+  background-color: transparent;
+}
+
+.usa-alert--success {
+  .usa-alert__body::before {
+    background-color: color("success-dark");
+  }
+}
+
+.usa-alert--info {
+  .usa-alert__body::before {
+    background-color: color("info-dark");
+  }
+}
+
+.usa-alert--warning {
+  .usa-alert__body::before {
+    background-color: color("warning-dark");
+  }
+}
+
+.usa-alert--error {
+  .usa-alert__body::before {
+    background-color: color("error-dark");
+  }
+}
+
+.usa-step-indicator__segment:before {
+  box-shadow:
+    0 0 0 0.25rem white,
+    0 0 0 0 white;
+}
+
+.usa-step-indicator__segment-label,
+.usa-step-indicator__segment:before {
+  color: $text-inactive-dark;
+}
+
+.usa-step-indicator__segment--current .usa-step-indicator__segment-label {
+  color: $brand-primary;
+}
+
+.usa-step-indicator__segment--current::before,
+.usa-step-indicator__segment--current::after {
+  background-color: $brand-primary;
+  color: $brand-primary;
+  box-shadow:
+    0 0 0 0.25rem white,
+    0 0 0 0 white;
+}
+
+.usa-accordion__button,
+.usa-accordion__button:hover {
+  background-color: $background-darker;
+  color: $text-primary;
+}
+
+.usa-modal__close {
+  background-color: white;
+
+  &:active,
+  &:hover {
+    background-color: white;
+  }
+}
+
+.usa-checkbox__input:checked + [class*="__label"]::before {
+  background-color: $accent-primary;
+  box-shadow: none;
+}
+.usa-radio__input:checked + [class*="__label"]::before {
+  background-color: $accent-primary;
+  box-shadow:
+    0 0 0 2px $accent-primary,
+    inset 0 0 0 2px #fff;
+}
+
+.usa-checkbox__label {
+  cursor: pointer;
+  display: inherit;
+  font-weight: normal;
+  margin-top: 0rem;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.usa-accordion {
+  border-radius: 4px;
+  padding: 0px;
+}
+
+.usa-step-indicator__segment-label {
+  padding-right: 0;
+}
+
+.usa-sidenav__item a:not(.usa-sidenav__sublist a) {
+  font-weight: bold;
+}
+
+ul.usa-sidenav
+  > li.usa-sidenav__item
+  > ul.usa-sidenav__sublist
+  > li.usa-sidenav__item
+  > a {
+  font-weight: bold;
+}
+
+ul.usa-sidenav
+  > li.usa-sidenav__item
+  > ul.usa-sidenav__sublist
+  > li.usa-sidenav__item
+  > a.usa-current {
+  &::after {
+    background-color: rgb(0, 94, 162);
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0.25rem;
+    top: 0.25rem;
+    width: 0.25rem;
+    left: 0rem;
+    border-radius: 99rem;
+  }
+}
+
+.usa-step-indicator__current-step {
+  background-color: $brand-primary;
+  margin-right: 0.5rem;
+  padding: 0;
+  height: 2.75rem;
+  width: 2.75rem;
+}
+
+.usa-step-indicator__total-steps {
+  color: $brand-primary;
+}
+
+.usa-step-indicator__total-steps,
+.usa-step-indicator__current-step {
+  font-size: 2rem;
+}
+
+.usa-pagination .usa-current {
+  background-color: white;
+  border-radius: 0.25rem;
+  border: 1px solid $border-dark;
+  color: $accent-dark;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 140%;
+  margin: 0;
+  text-decoration: underline;
+}
+
+.usa-pagination__button:hover,
+.usa-pagination__button:focus,
+.usa-pagination__button:active,
+.usa-pagination__link:hover,
+.usa-pagination__link:focus,
+.usa-pagination__link:active {
+  color: $accent-darker;
+}
+.usa-pagination__button:hover,
+.usa-pagination__button:focus,
+.usa-pagination__button:active {
+  border: 1px solid $border;
+  background-color: $hover-neutral;
+}
+
+.usa-pagination__button,
+.usa-pagination__link {
+  color: $accent-primary;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 140%;
+  margin: 0;
+  text-decoration: none;
+}
+
+.usa-pagination__overflow {
+  align-self: center;
+}
+
+.usa-alert__heading {
+  &.h1 {
+    font-size: 2.125rem;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  &.h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  &.h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+
+  &.h4 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    line-height: 1.3;
+  }
+
+  &.h5 {
+    font-size: 1.125rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  &.h6 {
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+}
+
+.usa-step-indicator__segment--current:before,
+.usa-step-indicator__segment--complete:before {
+  box-shadow:
+    inset 0 0 0 0 $brand-darker,
+    0 0 0 0.25rem white;
+}
+
+.usa-alert__text {
+  font-size: 0.875rem;
+}

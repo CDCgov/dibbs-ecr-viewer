@@ -1,0 +1,58 @@
+// From https://github.com/CDCgov/dibbs-design-system/blob/main/sass/_variables.scss
+
+@use "uswds-settings" as *;
+@use "tokens" as *;
+
+// Pulled from the Design System Figma
+// https://www.figma.com/design/GHKuvdgY2CbfBRZKmetZNB/--DIBBs-Design-System?node-id=0-1&t=Mg5hMzBQIji0cBdB-1
+
+// Design system spacing
+$application-max-width: 45rem;
+$application-wide-max-width: 90rem;
+$application-content-margins: 13.75rem;
+$application-content-margins-wide: 10rem;
+$application-content-width-wide: calc(
+  $application-wide-max-width - 2 * $application-content-margins-wide
+);
+
+$header-content-height: 3rem;
+$footer-content-height: 5rem;
+$default-table-padding: 1.5rem;
+$site-alert-height: 2.5rem;
+
+// Design System Color Tokens
+$text-primary: black;
+$text-secondary: $gray-500;
+$text-inactive: $gray-20;
+$text-inactive-dark: $gray-600;
+
+$brand-primary: $blue-cool-50; // branded text color
+$brand-light: $blue-cool-20; // ??? is in the swatch
+$brand-lighter: $blue-cool-10; // tertiary link text color
+$brand-lightest: $blue-cool-5; // secondary button background
+$brand-dark: $blue-cool-70; // secondary button text
+$brand-darker: $blue-cool-80; // ??? is in the swatch
+
+$accent-primary: $violet-warm-60; // primary CTA / info color
+$accent-dark: $violet-warm-70; // CTA hover
+$accent-darker: $violet-warm-80; // CTA active
+
+$destructive-primary: #d54309; // primary error / info color
+$destructive-dark: #b51d09; // error hover
+$destructive-darker: #6f3331; // error active
+
+$background: $gray-100;
+$background-dark: $gray-200;
+$background-darker: $gray-300;
+$background-darkest: $gray-500;
+
+$border: $gray-400;
+$border-light: $gray-300;
+$border-dark: $gray-500;
+// Semantic tokens
+$hover-neutral: $gray-200;
+
+$drop-shadow: $gray-200;
+$focus-outline: $blue-40v;
+
+$overlay-background: rgba(0, 0, 0, 0.5);
