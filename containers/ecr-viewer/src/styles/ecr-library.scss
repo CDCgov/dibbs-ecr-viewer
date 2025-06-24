@@ -178,29 +178,29 @@
 }
 
 .filters-applied {
-  box-shadow: inset 0 0 0 2px color("primary");
-  background-color: color("primary-lighter");
+  box-shadow: inset 0 0 0 2px color("secondary");
+  background-color: color("secondary-lighter");
   font-weight: bold;
 
   span svg {
-    fill: color("primary");
+    fill: color("secondary");
   }
 
   &:hover {
-    box-shadow: inset 0 0 0 2px color("primary-dark");
-    background-color: color("primary-light");
+    box-shadow: inset 0 0 0 2px color("secondary-dark");
+    background-color: color("secondary-light");
 
     span svg {
-      fill: color("primary-dark");
+      fill: color("secondary-dark");
     }
   }
 
   &:active {
-    box-shadow: inset 0 0 0 2px color("primary");
-    background-color: color("primary-lighter");
+    box-shadow: inset 0 0 0 2px color("secondary");
+    background-color: color("secondary-lighter");
 
     span svg {
-      fill: color("primary");
+      fill: color("secondary");
     }
   }
 }

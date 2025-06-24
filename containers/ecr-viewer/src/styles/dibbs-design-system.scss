@@ -25,11 +25,11 @@ body {
   min-height: 100%;
 }
 
-header,
-footer {
+.usa-header,
+.usa-footer {
   padding: 1rem 5rem;
   margin: 0;
-  background-color: $brand-darker;
+  background-color: color("primary-darker");
 }
 
 h1 {
@@ -46,43 +46,47 @@ h4 {
 }
 
 .main-body {
-  background-color: $background;
   display: flex;
   flex: 1 1 auto;
 }
 
 .usa-button {
-  background-color: $accent-primary;
-  box-shadow: inset 0 0 0 2px $accent-primary;
+  background-color: color("secondary");
+  box-shadow: inset 0 0 0 2px color("secondary");
+
+  &--outline {
+    background-color: transparent;
+    color: color("secondary");
+  }
 
   &:hover,
   &--outline:hover {
-    box-shadow: inset 0 0 0 2px $accent-dark;
-    background-color: $accent-dark;
+    box-shadow: inset 0 0 0 2px color("secondary-dark");
+    background-color: color("secondary-dark");
   }
 
   &:active,
   &--outline:active {
-    box-shadow: inset 0 0 0 2px $accent-darker;
-    background-color: $accent-darker;
+    box-shadow: inset 0 0 0 2px color("secondary-darker");
+    background-color: color("secondary-darker");
   }
 
   &--secondary {
     background-color: white;
-    box-shadow: inset 0 0 0 2px $accent-primary;
-    color: $accent-primary;
+    box-shadow: inset 0 0 0 2px color("secondary");
+    color: color("secondary");
   }
 
   &--secondary:hover {
     background-color: white;
-    box-shadow: inset 0 0 0 2px $accent-dark;
-    color: $accent-dark;
+    box-shadow: inset 0 0 0 2px color("secondary-dark");
+    color: color("secondary-dark");
   }
 
   &--secondary:active {
     background-color: white;
-    box-shadow: inset 0 0 0 2px $accent-darker;
-    color: $accent-darker;
+    box-shadow: inset 0 0 0 2px color("secondary-darker");
+    color: color("secondary-darker");
   }
 
   &:disabled,
@@ -115,21 +119,21 @@ h4 {
 a,
 a:visited {
   box-shadow: none;
-  color: $brand-primary;
+  color: color("primary");
   background-color: transparent;
 }
 
 .usa-button--unstyled:hover,
 a:hover {
   box-shadow: none;
-  color: $brand-dark;
+  color: color("primary-dark");
   background-color: transparent;
 }
 
 .usa-button--unstyled:active,
 a:active {
   box-shadow: none;
-  color: $brand-darker;
+  color: color("primary-darker");
   background-color: transparent;
 }
 
@@ -169,13 +173,13 @@ a:active {
 }
 
 .usa-step-indicator__segment--current .usa-step-indicator__segment-label {
-  color: $brand-primary;
+  color: color("primary");
 }
 
 .usa-step-indicator__segment--current::before,
 .usa-step-indicator__segment--current::after {
-  background-color: $brand-primary;
-  color: $brand-primary;
+  background-color: color("primary");
+  color: color("primary");
   box-shadow:
     0 0 0 0.25rem white,
     0 0 0 0 white;
@@ -197,13 +201,13 @@ a:active {
 }
 
 .usa-checkbox__input:checked + [class*="__label"]::before {
-  background-color: $accent-primary;
+  background-color: color("secondary");
   box-shadow: none;
 }
 .usa-radio__input:checked + [class*="__label"]::before {
-  background-color: $accent-primary;
+  background-color: color("secondary");
   box-shadow:
-    0 0 0 2px $accent-primary,
+    0 0 0 2px color("secondary"),
     inset 0 0 0 2px #fff;
 }
 
@@ -256,7 +260,7 @@ ul.usa-sidenav
 }
 
 .usa-step-indicator__current-step {
-  background-color: $brand-primary;
+  background-color: color("primary");
   margin-right: 0.5rem;
   padding: 0;
   height: 2.75rem;
@@ -264,7 +268,7 @@ ul.usa-sidenav
 }
 
 .usa-step-indicator__total-steps {
-  color: $brand-primary;
+  color: color("primary");
 }
 
 .usa-step-indicator__total-steps,
@@ -272,41 +276,38 @@ ul.usa-sidenav
   font-size: 2rem;
 }
 
-.usa-pagination .usa-current {
-  background-color: white;
-  border-radius: 0.25rem;
-  border: 1px solid $border-dark;
-  color: $accent-dark;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 140%;
-  margin: 0;
-  text-decoration: underline;
-}
+.usa-pagination {
+  background-color: inherit;
 
-.usa-pagination__button:hover,
-.usa-pagination__button:focus,
-.usa-pagination__button:active,
-.usa-pagination__link:hover,
-.usa-pagination__link:focus,
-.usa-pagination__link:active {
-  color: $accent-darker;
-}
-.usa-pagination__button:hover,
-.usa-pagination__button:focus,
-.usa-pagination__button:active {
-  border: 1px solid $border;
-  background-color: $hover-neutral;
+  .usa-current {
+    background-color: white;
+    border-radius: 0.25rem;
+    border: 1px solid $border-dark;
+    color: color("secondary-dark");
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 140%;
+    margin: 0;
+    text-decoration: underline;
+  }
 }
 
 .usa-pagination__button,
 .usa-pagination__link {
-  color: $accent-primary;
+  color: color("secondary");
   font-size: 1rem;
   font-weight: 700;
   line-height: 140%;
   margin: 0;
   text-decoration: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: color("secondary-darker");
+    border: 1px solid $border;
+    background-color: $hover-neutral;
+  }
 }
 
 .usa-pagination__overflow {
@@ -354,7 +355,7 @@ ul.usa-sidenav
 .usa-step-indicator__segment--current:before,
 .usa-step-indicator__segment--complete:before {
   box-shadow:
-    inset 0 0 0 0 $brand-darker,
+    inset 0 0 0 0 color("primary-darker"),
     0 0 0 0.25rem white;
 }
 
