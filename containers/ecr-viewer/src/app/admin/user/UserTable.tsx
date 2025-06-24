@@ -32,6 +32,7 @@ const USER_TYPE_OPTIONS: Record<string, string> = {
   admin: "Admin",
   standard: "Standard",
 };
+const NO_PROGRAM_AREA_OPTION: string = "No program area";
 
 type FilterProgramAreasType = { [key: string]: boolean };
 
@@ -55,13 +56,13 @@ export const UserTable = ({
   const sortedProgramAreas = [...programAreas].sort((a, b) =>
     a.name.localeCompare(b.name),
   );
-  const initFilterProgramAreaState = sortedProgramAreas.reduce(
-    (acc, program) => {
+  const initFilterProgramAreaState: FilterProgramAreasType = {
+    [NO_PROGRAM_AREA_OPTION]: true,
+    ...sortedProgramAreas.reduce((acc, program) => {
       acc[program.name] = true;
       return acc;
-    },
-    {} as FilterProgramAreasType,
-  );
+    }, {} as FilterProgramAreasType),
+  };
 
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
   const [filterUserTypeOption, setFilterUserTypeOption] =
@@ -77,24 +78,27 @@ export const UserTable = ({
   const isAllSelected = Object.values(filterProgramAreas).every(
     (prog) => prog === true,
   );
-  const isNoneSelected = Object.values(filterProgramAreas).every(
-    (prog) => prog === false,
-  );
 
   // If no program areas are selected, do not show any users including admins
-  const filteredUsers = isNoneSelected
-    ? []
-    : users.filter(({ user_type, program_areas }) => {
-        const matchUserType =
-          filterUserTypeOption === "all" || filterUserTypeOption === user_type;
+  const filteredUsers = users.filter(({ user_type, program_areas }) => {
+    const matchUserType =
+      filterUserTypeOption === "all" || filterUserTypeOption === user_type;
+    
+    const userHasNoProgramAreas = user_type === "standard" && program_areas.length === 0;
+    const matchNoProgramAreas =
+      filteredProgramAreaNames.includes(NO_PROGRAM_AREA_OPTION) &&
+      userHasNoProgramAreas;
 
-        const matchProgramAreas =
-          user_type === "admin" ||
-          program_areas.some((program) =>
-            filteredProgramAreaNames.includes(program.name),
-          );
-        return matchUserType && matchProgramAreas;
-      });
+    const matchAdmin = user_type === "admin" && filteredProgramAreaNames.some((name) => name !== NO_PROGRAM_AREA_OPTION)
+    
+    const matchProgramAreas =
+      matchAdmin ||
+      matchNoProgramAreas ||
+      program_areas.some((program) =>
+        filteredProgramAreaNames.includes(program.name)
+      );
+    return matchUserType && matchProgramAreas;
+  });
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -271,7 +275,6 @@ const FilterByProgramArea = ({
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
-    console.log(value, checked);
     setFilterProgramAreas((prev) => {
       return { ...prev, [value]: checked };
     });
