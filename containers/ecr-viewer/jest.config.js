@@ -28,5 +28,5 @@ const customJestConfig = {
 // eslint-disable-next-line jsdoc/require-jsdoc
 module.exports = async () => ({
   ...(await createJestConfig(customJestConfig)()),
-  transformIgnorePatterns: ["node_modules/(?!(jose)/)"],
+  transformIgnorePatterns: ["node_modules/(?!(jose|@azure)/)"],
 });

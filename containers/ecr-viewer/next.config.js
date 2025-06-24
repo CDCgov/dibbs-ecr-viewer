@@ -26,6 +26,9 @@ const nextConfig = {
   env: {
     BASE_PATH: basePath,
   },
+
+  // next auth useSession doesn't double mount nicely
+  reactStrictMode: false,
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

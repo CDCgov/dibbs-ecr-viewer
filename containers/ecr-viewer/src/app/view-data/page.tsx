@@ -1,5 +1,7 @@
 import React from "react";
 
+import { notFound } from "next/navigation";
+
 import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
 import {
   evaluateEcrSummaryConditionSummary,
@@ -11,6 +13,8 @@ import {
   evaluatePatientName,
 } from "@/app/services/evaluateFhirDataService";
 import { getFhirData, isSuccessResponse } from "@/app/services/fhirDataService";
+import { isLoggedInUserEcrAuthed } from "@/app/services/userService";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { ECRViewerLayout } from "./components/ECRViewerLayout";
 import EcrDocument from "./components/EcrDocument";
@@ -32,6 +36,14 @@ const ECRViewerPage = async ({
 }) => {
   const fhirId = searchParams.id ?? "";
   const snomedCode = searchParams["snomed-code"] ?? "";
+
+  const user = await getLoggedInUserSession();
+  // If we have a user that means we're using IDP auth and not NBS Auth, so we
+  // need to check if they're authorized to view this eCR
+  if (user) {
+    const authed = await isLoggedInUserEcrAuthed(fhirId);
+    if (!authed) notFound();
+  }
 
   const resp = await getFhirData(fhirId);
   if (!isSuccessResponse(resp)) {
