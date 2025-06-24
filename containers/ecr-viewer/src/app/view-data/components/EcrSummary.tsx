@@ -129,7 +129,10 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           </div>
         </h3>
         <div className="usa-summary-box__text condition-details-accordion">
-          <Accordion items={conditionSummaryAccordionItems} />
+          <Accordion
+            items={conditionSummaryAccordionItems}
+            className="accordion-primary"
+          />
         </div>
       </div>
     </div>

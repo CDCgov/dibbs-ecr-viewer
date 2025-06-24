@@ -185,6 +185,11 @@ a:active {
     0 0 0 0 white;
 }
 
+.usa-accordion {
+  border-radius: 4px;
+  padding: 0px;
+}
+
 .usa-accordion__button,
 .usa-accordion__button:hover {
   background-color: $background-darker;
@@ -218,11 +223,6 @@ a:active {
   margin-top: 0rem;
   padding-left: 2rem;
   position: relative;
-}
-
-.usa-accordion {
-  border-radius: 4px;
-  padding: 0px;
 }
 
 .usa-step-indicator__segment-label {

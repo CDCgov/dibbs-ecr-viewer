@@ -174,13 +174,22 @@ main {
   margin-bottom: 8px;
 }
 
-.info-container > .usa-accordion__heading > .usa-accordion__button {
-  font-size: 2rem;
-  background-size: 2.25rem;
-
-  &[aria-expanded="false"] {
-    margin-bottom: 2.5rem;
+.accordion-primary > .usa-accordion__heading {
+  &:is(h3) {
+    @include u-font("sans", 8);
   }
+
+  & > .usa-accordion__button {
+    background-size: 1.5em;
+    background-color: color("primary");
+    color: white;
+  }
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  margin-top: 2.5em;
 }
 
 .accordion-rr {
@@ -346,6 +355,7 @@ main {
 
 .patient-banner {
   display: flex;
+  // x padding should match overall header
   padding: 0.85rem 5rem;
   align-items: center;
   gap: 12px;
