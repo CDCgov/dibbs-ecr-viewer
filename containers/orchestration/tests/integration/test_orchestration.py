@@ -8,7 +8,6 @@ import pytest
 from lxml import etree
 from starlette.testclient import TestClient
 
-from app.config import get_settings
 from app.main import app
 
 ORCHESTRATION_URL = "http://localhost:8080"
