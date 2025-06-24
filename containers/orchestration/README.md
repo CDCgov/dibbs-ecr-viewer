@@ -59,6 +59,10 @@ We recommend running the Orchestration service from a container, but if that isn
 6. Install all of the Python dependencies for the Orchestration service with `pip install -r requirements.txt` into your virtual environment.
 7. Run the Orchestration service on `localhost:8080` with `python -m uvicorn app.main:app --host 0.0.0.0 --port 8080`.
 
+#### Running with multiple workers
+
+`uvicorn` uses one worker by default, to set more workers, set the `WEB_CONCURRENCY` environtment variable. Typically 2-4 workers per CPU are recommended in production; when in doubt, `2 * num_cores + 1` is a good heuristic for picking the number of workers.
+
 ### Building the Docker Image
 
 To build the Docker image for the Orchestration service from source instead of downloading it from the dibbs-ecr-viewer repository follow these steps.
