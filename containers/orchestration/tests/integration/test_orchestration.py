@@ -9,8 +9,6 @@ from lxml import etree
 
 from app.config import get_settings
 
-get_settings()
-
 ORCHESTRATION_URL = "http://localhost:8080"
 PROCESS_ZIP_ENDPOINT = ORCHESTRATION_URL + "/process-zip"
 PROCESS_MESSAGE_ENDPOINT = ORCHESTRATION_URL + "/process-message"
@@ -286,3 +284,26 @@ def test_process_message_hl7(setup):
         f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
     )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
+
+
+@pytest.mark.asyncio
+@pytest.mark.integration
+async def test_websocket_process_message_endpoint(setup):
+    expected_response_message = {}
+    client = TestClient(app)
+    # Pull in and read test zip file
+    with open(
+        Path(__file__).parent.parent / "assets" / "test_zip.zip",
+        "rb",
+    ) as file:
+        test_zip = file.read()
+
+    # Create fake websocket connection
+    with client.websocket_connect("/process-ws") as websocket:
+        # Send zip into fake connection, triggering process-ws endpoint
+        websocket.send_bytes(test_zip)
+
+        # Pull response message from websocket connection like frontend would
+        messages = websocket.receive_json()
+
+    assert messages == expected_response_message
