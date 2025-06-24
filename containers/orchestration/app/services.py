@@ -80,7 +80,7 @@ ENDPOINT_TO_RESPONSE = {
 async def post_request(client: httpx.AsyncClient, url: str, payload: dict) -> Response:
     """
     Helper function to post an API request to a particular endpoint using
-    the `requests` module.
+    the `httpx` module.
 
     :param client: The httpx client to use
     :param url: The full URL of the endpoint to-hit.
