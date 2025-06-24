@@ -14,4 +14,4 @@ pydantic-settings
 pydantic>=2.0.0
 requests
 urllib3
-uvicorn>=0.34.3
+uvicorn[standard]>=0.34.3

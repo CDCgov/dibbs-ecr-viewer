@@ -111,7 +111,7 @@ def _process_files():
         if response.status_code == 409:
             duplicates.append(folder_path)
             print(
-                "Failed to upload {folder_path} as an eCR with that ID already exists."
+                f"Failed to upload {folder_path} as an eCR with that ID already exists."
             )
             continue
         if response.status_code != 200:

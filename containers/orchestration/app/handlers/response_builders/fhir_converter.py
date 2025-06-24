@@ -1,4 +1,4 @@
-from requests import Response
+from httpx import Response
 
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 

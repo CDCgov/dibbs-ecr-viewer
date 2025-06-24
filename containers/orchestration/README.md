@@ -21,7 +21,7 @@ Before running the orchestration unit tests, make sure you have all the services
 2. `eval "$(pyenv init -)"`
 3. `source .venv/bin/activate`
 4. `pip install -r requirements.txt -r dev-requirements.txt`
-5. `python -m pytest --cov-report xml --cov=. -m "not integration" tests/`
+5. `python -m  pytest -m "not integration" tests/`
 
 #### Running Integration Tests
 
@@ -58,6 +58,10 @@ We recommend running the Orchestration service from a container, but if that isn
 5. Activate the virtual environment with `source .venv/bin/activate` (MacOS and Linux), `venv\Scripts\activate` (Windows Command Prompt), or `.venv\Scripts\Activate.ps1` (Windows Power Shell).
 6. Install all of the Python dependencies for the Orchestration service with `pip install -r requirements.txt` into your virtual environment.
 7. Run the Orchestration service on `localhost:8080` with `python -m uvicorn app.main:app --host 0.0.0.0 --port 8080`.
+
+#### Running with multiple workers
+
+`uvicorn` uses one worker by default, to set more workers, set the `WEB_CONCURRENCY` environtment variable. Typically 2-4 workers per CPU are recommended in production; when in doubt, `2 * num_cores + 1` is a good heuristic for picking the number of workers.
 
 ### Building the Docker Image
 
