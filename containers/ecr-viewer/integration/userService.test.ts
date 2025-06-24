@@ -4,6 +4,9 @@
 
 import { notFound } from "next/navigation";
 
+import { saveFhirMetadata } from "@/app/api/save-fhir-data/service";
+import { BundleMetadata } from "@/app/api/save-fhir-data/types";
+import { BlobResponse } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
 import { createProgramArea } from "@/app/services/programAreaService";
@@ -12,6 +15,8 @@ import {
   createUser,
   deleteUser,
   getCheckAdmin,
+  isLoggedInUserEcrAuthed,
+  isUserEcrAuthed,
   listUserProgramAreas,
   listUsers,
   notFoundUnlessAdmin,
@@ -22,6 +27,11 @@ import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
 
+export const makePromiseResolveWithStatus = (
+  status: number,
+): Promise<BlobResponse> =>
+  new Promise((resolve) => resolve({ message: "hi there", status }));
+
 const adminEmail = "admin@admin.com";
 const adminName = "Adam Admin";
 const userEmail = "standard@user.com";
@@ -31,6 +41,29 @@ const cond123 = {
   concept_name: "condition 1 (disease)",
   condition_name: "condition 1",
   condition_category: "category",
+};
+const cond456 = {
+  code: "456",
+  concept_name: "condition 2 (disease)",
+  condition_name: "condition 2",
+  condition_category: "category",
+};
+
+const ecrId = "1-2-3-4";
+const baseCoreMetadata: BundleMetadata = {
+  last_name: "lname",
+  first_name: "fname",
+  birth_date: "2000-01-01",
+  set_id: "1234",
+  eicr_version_number: "1",
+  rr: [
+    {
+      condition: "condition 1",
+      condition_code: "123",
+      rule_summaries: [],
+    },
+  ],
+  encounter_start_date: "12/20/2024",
 };
 
 const UUID_REGEX =
@@ -44,6 +77,17 @@ beforeAll(async () => {
     .insertInto("condition_reference")
     .values(cond123)
     .execute();
+  await getDb<Core>()
+    .insertInto("condition_reference")
+    .values(cond456)
+    .execute();
+  await saveFhirMetadata(
+    ecrId,
+    "core",
+    baseCoreMetadata,
+    makePromiseResolveWithStatus(200),
+    () => makePromiseResolveWithStatus(200),
+  );
 });
 
 beforeEach(() => {
@@ -128,6 +172,11 @@ describe("user service", () => {
     ]);
   });
 
+  it("admin should be authed to see ecr", async () => {
+    const res = await isLoggedInUserEcrAuthed(ecrId);
+    expect(res).toBeTrue();
+  });
+
   it("should create a standard user", async () => {
     // admin created in prior test
     userId = await createUser(userEmail, "standard");
@@ -160,6 +209,11 @@ describe("user service", () => {
         program_areas: [],
       },
     ]);
+  });
+
+  it("user should not yet be authed to see ecr", async () => {
+    const res = await isUserEcrAuthed(userId!, ecrId);
+    expect(res).toBeFalse();
   });
 
   it("should update a user", async () => {
@@ -212,6 +266,11 @@ describe("user service", () => {
         date_created: expect.any(Date),
       },
     ]);
+  });
+
+  it("user should now be authed to see ecr", async () => {
+    const res = await isUserEcrAuthed(userId!, ecrId);
+    expect(res).toBeTrue();
   });
 
   it("should delete a user", async () => {
