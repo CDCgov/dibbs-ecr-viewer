@@ -7,7 +7,12 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-client = TestClient(app)
+
+@pytest.fixture
+def client():
+    with TestClient(app) as client:
+        yield client
+
 
 test_config_path = (
     Path(__file__).parent.parent / "app" / "custom_configs" / "integrated.json"
@@ -43,7 +48,7 @@ manifests on real data in each step.
 
 # /process-message tests
 @mock.patch("app.services.post_request")
-def test_process_message_success(patched_post_request):
+def test_process_message_success(patched_post_request, client):
     message = open(Path(__file__).parent / "assets" / "hl7_with_msh_3_set.hl7").read()
     request = {
         "message_type": "elr",
@@ -120,7 +125,7 @@ def test_process_message_success(patched_post_request):
 
 
 @mock.patch("app.main.call_apis", side_effect=Exception("Fake Exception"))
-def test_process_message_orchestration_error(patched_call_apis):
+def test_process_message_orchestration_error(patched_call_apis, client):
     message = open(Path(__file__).parent / "assets" / "hl7_with_msh_3_set.hl7").read()
     request = {
         "message_type": "elr",
@@ -138,7 +143,7 @@ def test_process_message_orchestration_error(patched_call_apis):
 
 
 @mock.patch("app.services.post_request")
-def test_process_message_orchestration_bad_config(patched_call_apis):
+def test_process_message_orchestration_bad_config(patched_call_apis, client):
     message = open(Path(__file__).parent / "assets" / "hl7_with_msh_3_set.hl7").read()
     request = {
         "message_type": "elr",
@@ -156,7 +161,7 @@ def test_process_message_orchestration_bad_config(patched_call_apis):
 
 
 @mock.patch("app.services.post_request")
-def test_process_message_fhir_data(patched_post_request):
+def test_process_message_fhir_data(patched_post_request, client):
     request = {
         "message_type": "fhir",
         "data_type": "fhir",
@@ -185,7 +190,7 @@ def test_process_message_fhir_data(patched_post_request):
     assert actual_response.status_code == 200
 
 
-def test_process_message_input_validation():
+def test_process_message_input_validation(client):
     request = {
         "processing_config": test_config,
     }
@@ -194,7 +199,7 @@ def test_process_message_input_validation():
     assert actual_response.status_code == 422
 
 
-def test_process_message_invalid_config():
+def test_process_message_invalid_config(client):
     request = {
         "message_type": "ecr",
         "data_type": "ecr",
@@ -210,7 +215,7 @@ def test_process_message_invalid_config():
     }
 
 
-def test_process_message_mismatched_data_types_ecr():
+def test_process_message_mismatched_data_types_ecr(client):
     request = {
         "message_type": "ecr",
         "data_type": "fhir",
@@ -225,7 +230,7 @@ def test_process_message_mismatched_data_types_ecr():
     )
 
 
-def test_process_message_mismatched_data_types_fhir():
+def test_process_message_mismatched_data_types_fhir(client):
     request = {
         "message_type": "fhir",
         "data_type": "zip",
@@ -242,7 +247,7 @@ def test_process_message_mismatched_data_types_fhir():
     )
 
 
-def test_process_message_invalid_fhir():
+def test_process_message_invalid_fhir(client):
     request = {
         "message_type": "fhir",
         "data_type": "fhir",
@@ -258,7 +263,7 @@ def test_process_message_invalid_fhir():
     )
 
 
-def test_process_message_input_validation_with_rr_data():
+def test_process_message_input_validation_with_rr_data(client):
     request = {
         "message": "foo",
         "data_type": "elr",
@@ -273,7 +278,7 @@ def test_process_message_input_validation_with_rr_data():
 
 # # /process-zip tests
 @mock.patch("app.services.post_request")
-def test_process_zip_success(patched_post_request):
+def test_process_zip_success(patched_post_request, client):
     with open(
         Path(__file__).parent / "assets" / "eICR_RR_combo.zip",
         "rb",
@@ -352,7 +357,7 @@ def test_process_zip_success(patched_post_request):
         assert actual_response.status_code == 200
 
 
-def test_process_zip_with_empty_zip():
+def test_process_zip_with_empty_zip(client):
     with open(
         Path(__file__).parent / "assets" / "empty.zip",
         "rb",
@@ -370,7 +375,7 @@ def test_process_zip_with_empty_zip():
         assert "There is no eICR in this zip file." in error_message
 
 
-def test_process_zip_invalid_config():
+def test_process_zip_invalid_config(client):
     with open(
         Path(__file__).parent / "assets" / "eICR_RR_combo.zip",
         "rb",

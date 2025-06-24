@@ -35,9 +35,6 @@ flag_management:
     - name: "orchestration"
       paths:
         - "containers/orchestration"
-    - name: "record-linkage"
-      paths:
-        - "containers/record-linkage"
     - name: "trigger-code-reference"
       paths:
         - "containers/trigger-code-reference"

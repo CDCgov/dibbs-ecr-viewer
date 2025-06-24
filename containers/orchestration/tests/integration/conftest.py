@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
+import httpx
 import pytest
-import requests
 from dotenv import load_dotenv
 from testcontainers.compose import DockerCompose
 
@@ -32,7 +32,7 @@ def setup(request):
         orchestration_service.wait_for(f"http://0.0.0.0:{port}")
 
     # migrate db
-    rs = requests.post(
+    rs = httpx.post(
         os.getenv("ecr_viewer_url") + "/api/migrate-db",
         data={"migration_secret": "test", "skip_condition_update": "true"},
         headers={

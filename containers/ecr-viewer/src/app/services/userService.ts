@@ -89,6 +89,57 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
 };
 
 /**
+ * Given an ecrId return not found if the user is not authorized to see it.
+ * @param ecrId ID of the ecr to authorize
+ * @returns whether the loggen in user can see this eCR
+ */
+export const isLoggedInUserEcrAuthed = async (
+  ecrId: string,
+): Promise<boolean> => {
+  const user = await getLoggedInUser();
+  if (!user) return false;
+  if (user.user_type === "admin") return true;
+
+  // check standard users permissions
+  return await isUserEcrAuthed(user.uuid, ecrId);
+};
+
+/**
+ * Check whether a given user (by id) is authorized to see an ecr (by ID)
+ * @param userId user's uuid
+ * @param ecrId eCR's id
+ * @returns whether the user is allowed to see the ecr
+ */
+export const isUserEcrAuthed = async (
+  userId: string,
+  ecrId: string,
+): Promise<boolean> => {
+  const res = await getDb<Core>()
+    .selectFrom("user_program_area")
+    .select("user_program_area.program_area_uuid")
+    .where("user_program_area.user_uuid", "=", userId)
+    .innerJoin(
+      "program_area",
+      "user_program_area.program_area_uuid",
+      "program_area.uuid",
+    )
+    .innerJoin(
+      "condition_reference",
+      "program_area.uuid",
+      "condition_reference.program_area_uuid",
+    )
+    .innerJoin(
+      "ecr_rr_conditions",
+      "condition_reference.code",
+      "ecr_rr_conditions.condition_code",
+    )
+    .where("ecr_rr_conditions.eicr_id", "=", ecrId)
+    .executeTakeFirst();
+
+  return !!res;
+};
+
+/**
  * Create a user with the given email and user type. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
@@ -216,14 +267,30 @@ const updateUserQuery = async (
 
 /**
  * List the program areas a user is assigned to.
- * @param uuid id of the user to update
+ * @param uuid id of the user
  * @returns list of program areas
  */
 export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
   await getCheckAdmin("list user program areas");
+  return listUserProgramAreasQuery(uuid);
+};
 
+/**
+ * List the program areas the logged in user is assigned to.
+ * @returns list of program areas
+ */
+export const listLoggedInUserProgramAreas = async (): Promise<
+  ProgramArea[]
+> => {
+  const user = await getLoggedInUser();
+  return user ? await listUserProgramAreasQuery(user.uuid) : [];
+};
+
+const listUserProgramAreasQuery = async (
+  uuid: string,
+): Promise<ProgramArea[]> => {
   try {
     return await getDb<Core>()
       .selectFrom(["user_program_area", "program_area"])

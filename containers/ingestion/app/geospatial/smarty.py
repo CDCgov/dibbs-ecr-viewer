@@ -6,7 +6,7 @@ from app.geospatial.core import BaseGeocodeClient, GeocodeResult
 
 class SmartyGeocodeClient(BaseGeocodeClient):
     """
-    Represents a PHDI-supplied geocoding client using the Smarty API.
+    Represents a package-supplied geocoding client using the Smarty API.
     Requires an authorization ID as well as an authentication token
     in order to build a street lookup client.
     """

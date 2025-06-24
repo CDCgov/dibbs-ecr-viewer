@@ -1,6 +1,6 @@
 # Getting Started with DIBBs eCR Viewer
 
-**If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guide.md)**
+**If you're trying to deploy the Viewer, please refer to our [Setup Guide](./guides/setup.md)**
 
 If you're looking to contribute to development on the eCR Viewer, you're in the right place.
 
@@ -67,10 +67,14 @@ To run the eCR Viewer locally:
 5. Setup your `.env.local` by running `npm run setup-local-env`.
 6. Create seed data with `npm run convert-seed-data` - this will take ~10 minutes. Note that this process will fail immediately if the Docker daemon isn't running.
 7. Run the eCR Viewer on `localhost:3000/ecr-viewer` with `npm run local-dev`.
+8. Optionally, seed a standard user and the COVID program area with `npm run test:e2e:seed-user-prog`
 
 #### Logging in
 
-The default IDP is keycloak for local development. The default user is `ecr-viewer-admin` and password is `pw`.
+The default IDP is keycloak for local development. The default users are (password is `pw`):
+
+- admin: `ecr-viewer-admin`
+- standard (access to COVID eCRs): `ecr-viewer-standard`
 
 ### Windows Setup
 
@@ -138,7 +142,7 @@ Other useful playwright tools/commands
 
 ## API Documentation
 
-Can be found in [api-documentation.md](api-documentation.md).
+Can be found in [api-documentation.md](./guides/api-documentation.md).
 
 # Architecture Diagram
 

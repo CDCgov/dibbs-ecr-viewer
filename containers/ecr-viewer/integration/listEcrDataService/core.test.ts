@@ -13,7 +13,8 @@ import {
   createEcrCondition,
   createEcrRule,
 } from "../helpers/core";
-import { buildCore, dropExisting, clearCore } from "../helpers/ddl";
+import { buildCore, dropExisting, clearEcrCore } from "../helpers/ddl";
+import { seedUserProgramData } from "../helpers/seed";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewCoreECR } from "@/app/data/metadataDb/types/core";
 import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
@@ -29,6 +30,7 @@ import {
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const testDateRange = {
   startDate: new Date("12-01-2024"),
@@ -54,21 +56,39 @@ const relatedEcr = {
   date_created: new Date("2024-12-01T11:00:00Z"),
 };
 
-const getWhere = async (
+const getWhere = (
   ebCallBack: (
     eb: ExpressionBuilder<Core, "ecr_data">,
   ) =>
     | ExpressionWrapper<Core, "ecr_data", SqlBool>
     | AndWrapper<Core, "ecr_data", SqlBool>,
 ) => {
-  const coredb = await getDb<Core>();
+  const coredb = getDb<Core>();
   const rawRes = coredb.selectFrom("ecr_data").where(ebCallBack).compile();
   const start = `select from "${dbNamespace()}"."ecr_data" where `;
   return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };
 };
 
+jest.mock("../../src/app/utils/auth-utils");
+
+beforeEach(() => {
+  (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+    name: "Adam Admin",
+    email: "admin@admin.com",
+  });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 beforeAll(async () => {
+  (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+    name: "Adam Admin",
+    email: "admin@admin.com",
+  });
   await buildCore();
+  await seedUserProgramData();
 });
 
 afterAll(async () => {
@@ -158,7 +178,7 @@ describe("listEcrData - core", () => {
     const columnName = "date_created";
     const direction = "DESC";
 
-    const result = await listEcrData(
+    const actual = await listEcrData(
       startIndex,
       itemsPerPage,
       columnName,
@@ -166,10 +186,13 @@ describe("listEcrData - core", () => {
       testDateRange,
     );
 
-    expect(result).toBeEmpty();
+    expect(actual).toBeEmpty();
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
   });
 
-  it("should return data when found", async () => {
+  it("should return all data when found for admin", async () => {
     await createCoreEcr(coreTemplate);
     await createCoreEcr({ ...coreTemplate, ...relatedEcr });
     await createEcrCondition({
@@ -215,7 +238,144 @@ describe("listEcrData - core", () => {
       },
     ]);
 
-    await clearCore();
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
+
+    await clearEcrCore();
+  });
+
+  it("should not return unauthorized data when found for standard user", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "standard@standard.com",
+    });
+    await createCoreEcr(coreTemplate);
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+    await createEcrCondition({
+      uuid: "12345",
+      eicr_id: "12345",
+      condition: "Condition1",
+      // no condition code
+    });
+    await createEcrCondition({
+      uuid: "23456",
+      eicr_id: "12345",
+      condition: "Condition2",
+      condition_code: "456", // not in user's program
+    });
+    await createEcrRule({
+      uuid: "12345",
+      ecr_rr_conditions_id: "12345",
+      rule_summary: "Rule1",
+    });
+
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const columnName = "date_created";
+    const direction = "DESC";
+    const actual: EcrDisplay[] = await listEcrData(
+      startIndex,
+      itemsPerPage,
+      columnName,
+      direction,
+      testDateRange,
+    );
+    expect(actual).toStrictEqual([]);
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
+
+    await clearEcrCore();
+  });
+
+  it("should return authorized data when found for standard user", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "standard@standard.com",
+    });
+    await createCoreEcr(coreTemplate);
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+    await createEcrCondition({
+      uuid: "12345",
+      eicr_id: "12345",
+      condition: "Condition1",
+      condition_code: "123",
+    });
+    await createEcrRule({
+      uuid: "12345",
+      ecr_rr_conditions_id: "12345",
+      rule_summary: "Rule1",
+    });
+
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const columnName = "date_created";
+    const direction = "DESC";
+    const actual: EcrDisplay[] = await listEcrData(
+      startIndex,
+      itemsPerPage,
+      columnName,
+      direction,
+      testDateRange,
+    );
+    expect(actual).toStrictEqual([
+      {
+        date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
+        ecrId: "12345",
+        patient_date_of_birth: "12/01/2024",
+        patient_first_name: "Billy",
+        patient_last_name: "Bob",
+        patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
+        reportable_conditions: ["Condition1"],
+        rule_summaries: ["Rule1"],
+        eicr_set_id: "123",
+        eicr_version_number: "2",
+        related_ecrs: [
+          {
+            ...relatedEcr,
+            set_id: "123",
+          },
+        ],
+      },
+    ]);
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
+
+    await clearEcrCore();
+  });
+
+  it("should return no data when no user", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
+    await createCoreEcr(coreTemplate);
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+    await createEcrCondition({
+      uuid: "12345",
+      eicr_id: "12345",
+      condition: "Condition1",
+      condition_code: "123",
+    });
+    await createEcrRule({
+      uuid: "12345",
+      ecr_rr_conditions_id: "12345",
+      rule_summary: "Rule1",
+    });
+
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const columnName = "date_created";
+    const direction = "DESC";
+    const actual: EcrDisplay[] = await listEcrData(
+      startIndex,
+      itemsPerPage,
+      columnName,
+      direction,
+      testDateRange,
+    );
+    expect(actual).toStrictEqual([]);
+
+    const actualCount = await getTotalEcrCount(testDateRange);
+    expect(actualCount).toEqual(actual.length);
+
+    await clearEcrCore();
   });
 });
 
@@ -226,7 +386,7 @@ describe("get total core ecr count", () => {
   });
 
   afterAll(async () => {
-    await clearCore();
+    await clearEcrCore();
   });
 
   it("should call db to get all ecrs", async () => {
@@ -250,8 +410,8 @@ describe("get total core ecr count", () => {
 });
 
 describe("generate search statement", () => {
-  it("should use the search term in the search statement", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should use the search term in the search statement", () => {
+    const { sql, params } = getWhere((eb) =>
       generateSearchStatement(eb, "Dan"),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -265,8 +425,8 @@ describe("generate search statement", () => {
     }
     expect(params).toStrictEqual(["%Dan%", "%Dan%"]);
   });
-  it("should escape characters when an apostrophe is added", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should escape characters when an apostrophe is added", () => {
+    const { sql, params } = getWhere((eb) =>
       generateSearchStatement(eb, "O'Riley"),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -281,10 +441,8 @@ describe("generate search statement", () => {
 
     expect(params).toStrictEqual(["%O'Riley%", "%O'Riley%"]);
   });
-  it("should only generate true statements when no search is provided", async () => {
-    const { sql, params } = await getWhere((eb) =>
-      generateSearchStatement(eb, ""),
-    );
+  it("should only generate true statements when no search is provided", () => {
+    const { sql, params } = getWhere((eb) => generateSearchStatement(eb, ""));
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual("$1 = $2");
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
@@ -295,9 +453,9 @@ describe("generate search statement", () => {
 });
 
 describe("generate filter conditions statement", () => {
-  it("should add conditions in the filter statement", async () => {
+  it("should add conditions in the filter statement", () => {
     const conditions = ["Condition1", "Condition2"];
-    const { sql, params } = await getWhere((eb) =>
+    const { sql, params } = getWhere((eb) =>
       generateFilterConditionsStatement(eb, conditions),
     );
 
@@ -313,8 +471,8 @@ describe("generate filter conditions statement", () => {
     expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
   });
 
-  it("should only look for eCRs with no conditions when de-selecting all conditions on filter", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should only look for eCRs with no conditions when de-selecting all conditions on filter", () => {
+    const { sql, params } = getWhere((eb) =>
       generateFilterConditionsStatement(eb, [""]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -330,8 +488,8 @@ describe("generate filter conditions statement", () => {
     expect(params).toStrictEqual([]);
   });
 
-  it("should return TRUE if no conditions are provided", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should return TRUE if no conditions are provided", () => {
+    const { sql, params } = getWhere((eb) =>
       generateFilterConditionsStatement(eb),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -342,8 +500,8 @@ describe("generate filter conditions statement", () => {
     expect(params).toStrictEqual([true, true]);
   });
 
-  it("should add date range in the filter statement", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should add date range in the filter statement", () => {
+    const { sql, params } = getWhere((eb) =>
       generateFilterDateStatement(eb, testDateRange),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -362,8 +520,8 @@ describe("generate filter conditions statement", () => {
     ]);
   });
 
-  it("should display all conditions in date range by default if no filter has been added", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should display all conditions in date range by default if no filter has been added", () => {
+    const { sql, params } = getWhere((eb) =>
       generateWhereStatement(eb, testDateRange, "", undefined),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -388,8 +546,8 @@ describe("generate filter conditions statement", () => {
 });
 
 describe("generate where statement", () => {
-  it("should generate where statement using search and filter statements", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should generate where statement using search and filter statements", () => {
+    const { sql, params } = getWhere((eb) =>
       generateWhereStatement(eb, testDateRange, "blah", ["Anthrax (disorder)"]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -410,8 +568,8 @@ describe("generate where statement", () => {
       "%Anthrax (disorder)%",
     ]);
   });
-  it("should generate where statement using search statement (no conditions filter provided)", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should generate where statement using search statement (no conditions filter provided)", () => {
+    const { sql, params } = getWhere((eb) =>
       generateWhereStatement(eb, testDateRange, "blah", undefined),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -433,8 +591,8 @@ describe("generate where statement", () => {
       true,
     ]);
   });
-  it("should generate where statement using filter conditions statement (no search provided)", async () => {
-    const { sql, params } = await getWhere((eb) =>
+  it("should generate where statement using filter conditions statement (no search provided)", () => {
+    const { sql, params } = getWhere((eb) =>
       generateWhereStatement(eb, testDateRange, "", ["Anthrax (disorder)"]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {

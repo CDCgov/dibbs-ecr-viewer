@@ -13,8 +13,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    instrumentationHook: true, // this needs to be here for opentelemetry
-
+    instrumentationHook: true,
     // Because of our deployment set up, the same-origin policy does not work
     // in production. Server actions are protected like any other route, so we
     // allow any origin to hit them
@@ -27,6 +26,9 @@ const nextConfig = {
   env: {
     BASE_PATH: basePath,
   },
+
+  // next auth useSession doesn't double mount nicely
+  reactStrictMode: false,
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

@@ -1,9 +1,6 @@
-from opentelemetry import trace
-from opentelemetry.trace.status import StatusCode
-from requests import Response
+from httpx import Response
 
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
-from app.handlers.tracer import tracer
 
 
 def unpack_ingestion_standardization(response: Response) -> ServiceHandlerResponse:
@@ -19,44 +16,24 @@ def unpack_ingestion_standardization(response: Response) -> ServiceHandlerRespon
     :return: A tuple containing the status code of the response as well as
       parsed message created by the service.
     """
-    with tracer.start_as_current_span(
-        "unpack_ingestion_standardization_response",
-        kind=trace.SpanKind(0),
-        attributes={"status_code": response.status_code},
-    ) as handler_span:
-        status_code = response.status_code
+    status_code = response.status_code
 
-        match status_code:
-            case 200:
-                handler_span.add_event("ingestion operation successful")
-                return ServiceHandlerResponse(
-                    status_code,
-                    response.json().get("bundle"),
-                    True,
-                )
-            case 400:
-                handler_span.add_event("ingestion service responded with bad request")
-                handler_span.set_status(
-                    StatusCode(2), "Error Message: " + response.json().get("message")
-                )
-                return ServiceHandlerResponse(
-                    status_code, response.json().get("message"), False
-                )
-            case 422:
-                handler_span.add_event(
-                    "ingestion service responded with unprocessable entity / bad input params"
-                )
-                handler_span.set_status(
-                    StatusCode(2), "Error Message: " + response.json().__str__()
-                )
-                return ServiceHandlerResponse(status_code, response.json(), False)
-            case _:
-                handler_span.add_event("ingestion service failed")
-                handler_span.set_status(
-                    StatusCode(2), "Error Message: " + response.text
-                )
-                return ServiceHandlerResponse(
-                    status_code,
-                    f"Standardization request failed: {response.text}",
-                    False,
-                )
+    match status_code:
+        case 200:
+            return ServiceHandlerResponse(
+                status_code,
+                response.json().get("bundle"),
+                True,
+            )
+        case 400:
+            return ServiceHandlerResponse(
+                status_code, response.json().get("message"), False
+            )
+        case 422:
+            return ServiceHandlerResponse(status_code, response.json(), False)
+        case _:
+            return ServiceHandlerResponse(
+                status_code,
+                f"Standardization request failed: {response.text}",
+                False,
+            )

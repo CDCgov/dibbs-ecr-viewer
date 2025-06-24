@@ -598,20 +598,20 @@ Mos Eisley, CO
                 class="usa-accordion__heading side-nav-ignore"
               >
                 <button
-                  aria-controls="stool-pathogens-naat-12-to-25-targets-r:id-1"
+                  aria-controls="stool-pathogens-12-to-25-targets-r:id-1"
                   aria-expanded="false"
                   class="usa-accordion__button"
-                  data-testid="accordionButton_stool-pathogens-naat-12-to-25-targets-r:id-1"
+                  data-testid="accordionButton_stool-pathogens-12-to-25-targets-r:id-1"
                   type="button"
                 >
-                  STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS
+                  Stool Pathogens 12 To 25 Targets
                 </button>
               </h5>
               <div
                 class="usa-accordion__content usa-prose side-nav-ignore"
-                data-testid="accordionItem_stool-pathogens-naat-12-to-25-targets-r:id-1"
+                data-testid="accordionItem_stool-pathogens-12-to-25-targets-r:id-1"
                 hidden=""
-                id="stool-pathogens-naat-12-to-25-targets-r:id-1"
+                id="stool-pathogens-12-to-25-targets-r:id-1"
               >
                 <table
                   class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0"
@@ -1181,9 +1181,12 @@ Coruscant, MA
                       id="hidden-comment-r:id"
                     >
                       <td
-                        class="hideableData p-list"
+                        class="p-list"
                         colspan="6"
                       >
+                        <div
+                          class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                        />
                         <p>
                           Lab comment
                         </p>

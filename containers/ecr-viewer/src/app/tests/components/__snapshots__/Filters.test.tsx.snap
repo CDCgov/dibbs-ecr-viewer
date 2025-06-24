@@ -724,7 +724,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
                   </div>
                 </div>
                 <div
-                  class="border-top-1px border-base-lighter margin-x-neg-105"
+                  class="border-top-1px border-base-lighter"
                 />
                 <div
                   class="display-flex flex-column flex-stretch padding-x-105"

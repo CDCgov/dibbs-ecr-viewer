@@ -39,7 +39,7 @@ def test_health_check(setup):
             service_response,
         )
         assert service_response.status_code == 200, (
-            f"Expected status code 200, but got ${service_response.status_code}. Response content is ${service_response.content}"
+            f"Expected status code 200, but got {service_response.status_code}. Response content is {service_response.content}"
         )
 
 
@@ -47,7 +47,7 @@ def test_health_check(setup):
 def test_openapi():
     actual_response = httpx.get(ORCHESTRATION_URL + "/orchestration/openapi.json")
     assert actual_response.status_code == 200, (
-        f"Expected status code 200, but got ${actual_response.status_code}. Response content is ${actual_response.content}"
+        f"Expected status code 200, but got {actual_response.status_code}. Response content is {actual_response.content}"
     )
 
 
@@ -66,7 +66,7 @@ def test_process_message_endpoint(setup):
     }
     orchestration_response = httpx.post(PROCESS_MESSAGE_ENDPOINT, json=request)
     assert orchestration_response.status_code == 200, (
-        f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
 
@@ -90,7 +90,7 @@ def test_process_zip_endpoint_with_zip(setup):
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files
         )
         assert orchestration_response.status_code == 200, (
-            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+            f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
         )
         assert orchestration_response.json()["message"] == "Processing succeeded!"
 
@@ -114,7 +114,7 @@ def test_process_zip_endpoint_with_zip_and_rr_data(setup):
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
         assert orchestration_response.status_code == 200, (
-            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+            f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
         )
         assert orchestration_response.json()["message"] == "Processing succeeded!"
         assert orchestration_response.json()["processed_values"] is not None
@@ -140,7 +140,7 @@ def test_failed_save_to_ecr_viewer(setup):
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=120
         )
         assert orchestration_response.status_code == 500, (
-            f"Expected status code 500, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+            f"Expected status code 500, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
         )
 
 
@@ -165,7 +165,7 @@ def test_success_save_to_ecr_viewer(setup):
         )
 
         assert orchestration_response.status_code == 200, (
-            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+            f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
         )
 
 
@@ -190,7 +190,7 @@ def test_previous_response_mapping_for_ecr_viewer(setup):
         )
 
         assert orchestration_response.status_code == 200, (
-            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+            f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
         )
 
 
@@ -213,7 +213,7 @@ def test_process_message_fhir(setup):
     }
     orchestration_response = httpx.post(PROCESS_MESSAGE_ENDPOINT, json=request)
     assert orchestration_response.status_code == 200, (
-        f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
 
@@ -253,7 +253,7 @@ def test_process_message_fhir_phdc(setup):
 
         # Assertions
         assert orchestration_response.status_code == 200, (
-            f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+            f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
         )
         try:
             parsed_xml = etree.fromstring(orchestration_response.text.encode())
@@ -281,7 +281,7 @@ def test_process_message_hl7(setup):
         PROCESS_MESSAGE_ENDPOINT, json=request, timeout=30
     )
     assert orchestration_response.status_code == 200, (
-        f"Expected status code 200, but got ${orchestration_response.status_code}. Response content is ${orchestration_response.content}"
+        f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
 
@@ -289,8 +289,29 @@ def test_process_message_hl7(setup):
 @pytest.mark.asyncio
 @pytest.mark.integration
 async def test_websocket_process_message_endpoint(setup):
-    expected_response_message = {}
-    client = TestClient(app)
+    expected_response_message = {
+        "validate": {
+            "status": "success",
+            "status_code": 200,
+            "response": {
+                "message_valid": True,
+                "validation_results": {
+                    "fatal": [],
+                    "errors": [],
+                    "warnings": [],
+                    "information": [],
+                    "message_ids": {
+                        "eicr": {
+                            "extension": None,
+                            "root": "c34356e3-e6e7-4905-b239-c26c6e493921",
+                        },
+                        "rr": {},
+                    },
+                },
+            },
+        },
+    }
+
     # Pull in and read test zip file
     with open(
         Path(__file__).parent.parent / "assets" / "test_zip.zip",
@@ -299,11 +320,12 @@ async def test_websocket_process_message_endpoint(setup):
         test_zip = file.read()
 
     # Create fake websocket connection
-    with client.websocket_connect("/process-ws") as websocket:
-        # Send zip into fake connection, triggering process-ws endpoint
-        websocket.send_bytes(test_zip)
+    with TestClient(app) as client:
+        with client.websocket_connect("/process-ws") as websocket:
+            # Send zip into fake connection, triggering process-ws endpoint
+            websocket.send_bytes(test_zip)
 
-        # Pull response message from websocket connection like frontend would
-        messages = websocket.receive_json()
+            # Pull response message from websocket connection like frontend would
+            messages = websocket.receive_json()
 
     assert messages == expected_response_message

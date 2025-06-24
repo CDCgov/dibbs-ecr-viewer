@@ -1,0 +1,15 @@
+.col-content summary {
+  font-weight: 700;
+  padding: 1rem;
+  border: 1px solid;
+  border-radius: 0.5rem;
+}
+
+.col-content details {
+  margin-bottom: 1rem;
+}
+
+.col-content details > *:not(summary) {
+  margin: 1rem;
+  margin-bottom: 1.5rem;
+}

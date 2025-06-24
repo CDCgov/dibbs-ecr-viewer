@@ -13,7 +13,7 @@ export const AuthSessionProvider = ({
   initSession,
   children,
 }: {
-  initSession?: Session;
+  initSession?: Session | null;
   children: React.ReactNode;
 }) => {
   return (
