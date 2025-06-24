@@ -1,7 +1,9 @@
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
+import httpx
 from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel
 
@@ -23,6 +25,17 @@ DIBBS_CONTACT = {
 
 
 STATUS_OK = {"status": "OK"}
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    httpx client used throught the application
+    """
+    # Initialize the Client on startup and add it to the state
+    async with httpx.AsyncClient(timeout=None) as client:
+        yield {"client": client}
+        # The Client closes on shutdown
 
 
 class StatusResponse(BaseModel):
@@ -72,6 +85,7 @@ class BaseService:
             license_info=LICENSES[license_info],
             description=description,
             openapi_url=openapi_url,
+            lifespan=lifespan,
         )
 
     """
