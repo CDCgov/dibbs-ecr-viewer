@@ -43,12 +43,15 @@ export const AutoSignout = () => {
   useEffect(() => {
     if (isActive) {
       // delay session update to make sure original action (e.g. signout) happens first
-      setTimeout(update, 1000);
+      const updateTimeout = setTimeout(update, 1000);
       const activityTimeout = setTimeout(() => {
         setIsActive(false);
       }, 30 * 1000);
 
-      return () => clearTimeout(activityTimeout);
+      return () => {
+        clearTimeout(activityTimeout);
+        clearTimeout(updateTimeout);
+      };
     }
   }, [isActive]);
 

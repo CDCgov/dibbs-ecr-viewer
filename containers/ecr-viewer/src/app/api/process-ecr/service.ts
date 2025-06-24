@@ -100,8 +100,13 @@ export const getOrchestrationResponse = async ({
   });
 
   if (response.status !== 200) {
-    console.error(await response.text());
-    throw "Error thrown from orchestration";
+    const message = "Error thrown from orchestration";
+    console.error({
+      message,
+      status: response.status,
+      body: await response.text(),
+    });
+    throw new Error(message);
   } else {
     const resp: OrchestrationRawResponse = await response.json();
     return {

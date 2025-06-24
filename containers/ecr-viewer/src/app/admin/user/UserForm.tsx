@@ -61,7 +61,9 @@ export const UserForm = ({
   const [userType, setUserType] = useState<UserType>(
     initValues.userType || "standard",
   );
-  const [programs, setPrograms] = useState(initValues.programs);
+  const [programs, setPrograms] = useState(
+    [...initValues.programs].sort((a, b) => (a.name < b.name ? -1 : 1)),
+  );
 
   const { createToast } = React.useContext(ToastContext);
 
@@ -70,10 +72,7 @@ export const UserForm = ({
 
   const initSelectedPrograms = sortedIds(initValues.programs);
 
-  const valid =
-    !!email &&
-    (userType === "admin" || userType === "standard") &&
-    (userType === "admin" || numProgramsSelected > 0);
+  const valid = !!email && (userType === "admin" || userType === "standard");
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||

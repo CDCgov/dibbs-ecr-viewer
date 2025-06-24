@@ -1,11 +1,17 @@
-import { Kysely, ExpressionBuilder, OrderByExpression } from "kysely";
+import {
+  Kysely,
+  ExpressionBuilder,
+  OrderByExpression,
+  SelectQueryBuilder,
+} from "kysely";
 
 import { getDb } from "@/app/data/metadataDb/database";
 import { getSql } from "@/app/data/metadataDb/dialects/common";
-import { ecr_data, Core } from "@/app/data/metadataDb/types/core";
+import { ecr_data, Core, User } from "@/app/data/metadataDb/types/core";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
+import { getLoggedInUser } from "./userService";
 
 export interface RelatedEcr {
   eicr_id: string;
@@ -60,12 +66,15 @@ export async function listEcrData(
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<EcrDisplay[]> {
+  const user = await getLoggedInUser();
+
   const res = await getDb<Core>()
     .transaction()
     .execute(async (trx) => {
       const mainQuery = trx.with("ecr_sets", (db) =>
         db
           .selectFrom("ecr_data")
+          .$call((qb) => limitEcrDataToUser(user, qb))
           .select(({ eb }) => [
             "ecr_data.set_id",
             eb.fn
@@ -113,6 +122,37 @@ export async function listEcrData(
 
   return processMetadata(res);
 }
+
+const limitEcrDataToUser = (
+  user: User | undefined,
+  qb: SelectQueryBuilder<Core, "ecr_data", {}>,
+) => {
+  if (!user) return qb.where((eb) => falseStmt(eb));
+  if (user.user_type === "admin") return qb;
+
+  return qb
+    .innerJoin(
+      "ecr_rr_conditions",
+      "ecr_data.eicr_id",
+      "ecr_rr_conditions.eicr_id",
+    )
+    .innerJoin(
+      "condition_reference",
+      "condition_reference.code",
+      "ecr_rr_conditions.condition_code",
+    )
+    .innerJoin(
+      "program_area",
+      "program_area.uuid",
+      "condition_reference.program_area_uuid",
+    )
+    .innerJoin(
+      "user_program_area",
+      "user_program_area.program_area_uuid",
+      "program_area.uuid",
+    )
+    .where("user_program_area.user_uuid", "=", user.uuid);
+};
 
 // The actual type of the CTE we create in both list fns is truly gnarly (and not exported)
 // So we cast everything to a Kysely<EcrsCte> which has the same functionality and types we need.
@@ -235,8 +275,10 @@ export const getTotalEcrCount = async (
   searchTerm?: string,
   filterConditions?: string[],
 ): Promise<number> => {
+  const user = await getLoggedInUser();
   const result = await getDb<Core>()
     .selectFrom("ecr_data")
+    .$call((qb) => limitEcrDataToUser(user, qb))
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
       generateWhereStatement(eb, filterDates, searchTerm, filterConditions),
@@ -387,3 +429,11 @@ export const generateSortStatement = (
  */
 const trueStmt = (eb: ExpressionBuilder<Core, "ecr_data">) =>
   eb(eb.val(true), "=", true);
+
+/**
+ * Helper to get a statement that is always false and appeases the database syntax gods
+ * @param eb expression builder
+ * @returns a statement that will evaluate to false
+ */
+const falseStmt = (eb: ExpressionBuilder<Core, "ecr_data">) =>
+  eb(eb.val(true), "=", false);

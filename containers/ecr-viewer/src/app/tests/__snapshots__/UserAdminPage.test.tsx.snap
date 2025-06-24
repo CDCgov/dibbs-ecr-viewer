@@ -185,7 +185,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             class="margin-right-auto"
           >
             <button
-              aria-controls="program-area-two program-area-three"
+              aria-controls="program-area-three program-area-two"
               class="usa-button usa-button--outline margin-top-0"
               data-testid="button"
               type="button"
@@ -194,7 +194,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                all
             </button>
             <button
-              aria-controls="program-area-two program-area-three"
+              aria-controls="program-area-three program-area-two"
               class="usa-button usa-button--outline margin-top-0"
               data-testid="button"
               type="button"
@@ -235,61 +235,6 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
             data-allow-multiple="true"
             data-testid="accordion"
           >
-            <div
-              class="display-flex flex-align-top margin-bottom-2"
-            >
-              <div
-                class="usa-checkbox margin-right-1 margin-top-3"
-                data-testid="checkbox"
-              >
-                <input
-                  aria-label="Select Program Area Two"
-                  class="usa-checkbox__input"
-                  id="checkbox-program-area-two"
-                  name="program"
-                  type="checkbox"
-                />
-                <label
-                  class="usa-checkbox__label"
-                  for="checkbox-program-area-two"
-                />
-              </div>
-              <div
-                class="flex-grow-1 width-full"
-              >
-                <h3
-                  class="usa-accordion__heading"
-                >
-                  <button
-                    aria-controls="program-area-two"
-                    aria-expanded="false"
-                    class="usa-accordion__button"
-                    data-testid="accordionButton_program-area-two"
-                    type="button"
-                  >
-                    <div
-                      class="display-flex flex-justify flex-align-center"
-                    >
-                      <span>
-                        Program Area Two
-                      </span>
-                      <span>
-                        1
-                         condition
-                      </span>
-                    </div>
-                  </button>
-                </h3>
-                <div
-                  class="usa-accordion__content usa-prose"
-                  data-testid="accordionItem_program-area-two"
-                  hidden=""
-                  id="program-area-two"
-                >
-                  condition
-                </div>
-              </div>
-            </div>
             <div
               class="display-flex flex-align-top margin-bottom-2"
             >
@@ -343,6 +288,61 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                   id="program-area-three"
                 >
                   condition, condition
+                </div>
+              </div>
+            </div>
+            <div
+              class="display-flex flex-align-top margin-bottom-2"
+            >
+              <div
+                class="usa-checkbox margin-right-1 margin-top-3"
+                data-testid="checkbox"
+              >
+                <input
+                  aria-label="Select Program Area Two"
+                  class="usa-checkbox__input"
+                  id="checkbox-program-area-two"
+                  name="program"
+                  type="checkbox"
+                />
+                <label
+                  class="usa-checkbox__label"
+                  for="checkbox-program-area-two"
+                />
+              </div>
+              <div
+                class="flex-grow-1 width-full"
+              >
+                <h3
+                  class="usa-accordion__heading"
+                >
+                  <button
+                    aria-controls="program-area-two"
+                    aria-expanded="false"
+                    class="usa-accordion__button"
+                    data-testid="accordionButton_program-area-two"
+                    type="button"
+                  >
+                    <div
+                      class="display-flex flex-justify flex-align-center"
+                    >
+                      <span>
+                        Program Area Two
+                      </span>
+                      <span>
+                        1
+                         condition
+                      </span>
+                    </div>
+                  </button>
+                </h3>
+                <div
+                  class="usa-accordion__content usa-prose"
+                  data-testid="accordionItem_program-area-two"
+                  hidden=""
+                  id="program-area-two"
+                >
+                  condition
                 </div>
               </div>
             </div>
