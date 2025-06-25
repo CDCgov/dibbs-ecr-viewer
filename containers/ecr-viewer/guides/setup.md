@@ -135,9 +135,12 @@ These are variables that have been retired and no longer have a use in the app. 
 
 A database user must be created and the credentials set in the corresponding environment variables described here {@link EnvironmentVariables.EcrMetadataStorage}. This user must have standard privileges (select, update, delete) as well as the ability to create and alter schemas and tables. All database setup after that point is handled via migrations performed by [Kysely](https://kysely.dev/docs/migrations). If the latest migration has not been run the eCR Viewer will log an error and display an error page to the user. Migrations only need to be run once to bring the database up to date, even if there have been multiple updates added since your most recently installed version. They must be triggered manually by calling the `/migrate-db` endpoint. The migration secret required for this step may be set via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable, but if it is not set then the eCR Viewer will generate a secret and output it to the server logs both at startup and when a request is made to the API without a valid secret included.
 
+Additionally, the optional field `init_admin_email` should be included when initializing the database in order to add an admin user for the first time. Please see the "User and Program Area Setup" section for more details.
+
 ```bash
 curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
---form 'migration_secret=<your migration secret>'
+--form 'migration_secret=<your migration secret>' \
+--form 'init_admin_email=<email>'
 ```
 
 ## Inserting data
@@ -169,7 +172,7 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-ecr' \
 
 ### Initialization
 
-Before using the app, you must initialize the database with an admin account. When calling the `/migrate-db` endpoint (see above), include the `init_admin_email` field in the form to designate which user (by email) should be granted admin access. This email must correspond to a real user in your IDP (e.g., Keycloak).
+Before using the app, you must initialize the database with an admin account. When making a `POST` request to the `/migrate-db` endpoint (see above), include the `init_admin_email` field in the form to designate which user (by email) should be granted admin access. This email must correspond to a real user in your IDP (e.g., Keycloak).
 
 Once initialized, your IDP handles authentication. The user with the email provided in `init_admin_email` will have admin privileges and can log in to the app set up further users.
 
