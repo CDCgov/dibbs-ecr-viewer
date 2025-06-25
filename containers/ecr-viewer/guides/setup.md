@@ -187,7 +187,7 @@ Once initialized, your IDP handles authentication. The user with the email provi
 
 - Can create, edit, and delete users.
 - Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
-- Deleting users will only remove them from the User management table, but will not delete them from the database.
+- Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
 
 3. **Access**
 
