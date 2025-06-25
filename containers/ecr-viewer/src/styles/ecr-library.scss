@@ -61,7 +61,7 @@
     isolation: isolate;
 
     td {
-      border-bottom: 0;
+      border-bottom: none;
     }
 
     tr {
@@ -79,7 +79,7 @@
         }
 
         &:nth-child(even) td {
-          background-color: color("base-lightest");
+          background-color: color("gray-cool-3");
         }
 
         td:first-child {

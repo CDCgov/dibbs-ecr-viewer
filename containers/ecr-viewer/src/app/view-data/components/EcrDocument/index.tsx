@@ -62,7 +62,7 @@ export const EcrDocument = ({
         </div>
       </GridContainer>
       <Accordion
-        className="accordion-primary"
+        className="accordion-primary accordion-ecr-section"
         items={accordionItems}
         toggleItem={handleToggle}
       />

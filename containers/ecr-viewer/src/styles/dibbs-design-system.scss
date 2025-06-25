@@ -32,16 +32,22 @@ body {
   background-color: color("primary-darker");
 }
 
-h1 {
+h1,
+.usa-prose > h1 {
   @include u-font("serif", 12);
 }
-h2 {
+h2,
+.usa-prose > h2 {
   @include u-font("sans", 11);
 }
-h3 {
+h3,
+.usa-prose h3 {
   @include u-font("sans", 8);
 }
-h4 {
+h4,
+.usa-prose > h4,
+h5,
+.usa-prose > h5 {
   @include u-font("sans", 5);
 }
 
@@ -274,44 +280,6 @@ ul.usa-sidenav
 .usa-step-indicator__total-steps,
 .usa-step-indicator__current-step {
   font-size: 2rem;
-}
-
-.usa-pagination {
-  background-color: inherit;
-
-  .usa-current {
-    background-color: white;
-    border-radius: 0.25rem;
-    border: 1px solid $border-dark;
-    color: color("secondary-dark");
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 140%;
-    margin: 0;
-    text-decoration: underline;
-  }
-}
-
-.usa-pagination__button,
-.usa-pagination__link {
-  color: color("secondary");
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 140%;
-  margin: 0;
-  text-decoration: none;
-
-  &:hover,
-  &:focus,
-  &:active {
-    color: color("secondary-darker");
-    border: 1px solid $border;
-    background-color: $hover-neutral;
-  }
-}
-
-.usa-pagination__overflow {
-  align-self: center;
 }
 
 .usa-alert__heading {
