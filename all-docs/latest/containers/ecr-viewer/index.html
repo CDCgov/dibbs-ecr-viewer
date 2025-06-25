@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>eCR Viewer</title><meta name="description" content="Documentation for eCR Viewer"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script>
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>eCR Viewer</title><meta name="description" content="Documentation for eCR Viewer"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><link rel="stylesheet" href="assets/custom.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script>
 <style>
 :root.mermaid-enabled .mermaid-block > pre {
   display: none;
@@ -77,8 +77,13 @@ body.dark, :root[data-theme="dark"] {
 <li>Setup your <code>.env.local</code> by running <code>npm run setup-local-env</code>.</li>
 <li>Create seed data with <code>npm run convert-seed-data</code> - this will take ~10 minutes. Note that this process will fail immediately if the Docker daemon isn't running.</li>
 <li>Run the eCR Viewer on <code>localhost:3000/ecr-viewer</code> with <code>npm run local-dev</code>.</li>
+<li>Optionally, seed a standard user and the COVID program area with <code>npm run test:e2e:seed-user-prog</code></li>
 </ol>
-<h4 id="logging-in" class="tsd-anchor-link">Logging in<a href="#logging-in" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>The default IDP is keycloak for local development. The default user is <code>ecr-viewer-admin</code> and password is <code>pw</code>.</p>
+<h4 id="logging-in" class="tsd-anchor-link">Logging in<a href="#logging-in" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>The default IDP is keycloak for local development. The default users are (password is <code>pw</code>):</p>
+<ul>
+<li>admin: <code>ecr-viewer-admin</code></li>
+<li>standard (access to COVID eCRs): <code>ecr-viewer-standard</code></li>
+</ul>
 <h3 id="windows-setup" class="tsd-anchor-link">Windows Setup<a href="#windows-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The eCR Viewer is primarily developed on Apple silicon machines, See this <a href="https://github.com/CDCgov/dibbs-ecr-viewer/wiki/Integration-Testing#running-integration-tests-locally-on-windows">integration testing wiki page</a> for additional infomation for running on Windows machines.</p>
 <h3 id="updating-seed-data" class="tsd-anchor-link">Updating Seed Data<a href="#updating-seed-data" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Sample eICRs are included in <code>containers/ecr-viewer/seed-scripts/baseECR/</code>. If you ever need to update the eCRs or add new eCRs you can regenerate the data by:</p>
 <ol>
