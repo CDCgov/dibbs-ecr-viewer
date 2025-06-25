@@ -131,6 +131,15 @@ These are variables that have been retired and no longer have a use in the app. 
 | `SQL_SERVER_PASSWORD` | Replaced with `DATABASE_URL` | 3.1             |
 | `SQL_SERVER_USER`     | Replaced with `DATABASE_URL` | 3.1             |
 
+## Database Setup
+
+A database user must be created and the credentials set in the corresponding environment variables described here {@link EnvironmentVariables.EcrMetadataStorage}. This user must have standard privileges (select, update, delete) as well as the ability to create and alter schemas and tables. All database setup after that point is handled via migrations performed by [Kysely](https://kysely.dev/docs/migrations). If the latest migration has not been run the eCR Viewer will log an error and display an error page to the user. Migrations only need to be run once to bring the database up to date, even if there have been multiple updates added since your most recently installed version. They must be triggered manually by calling the `/migrate-db` endpoint. The migration secret required for this step may be set via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable, but if it is not set then the eCR Viewer will generate a secret and output it to the server logs both at startup and when a request is made to the API without a valid secret included.
+
+```bash
+curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
+--form 'migration_secret=<your migration secret>'
+```
+
 ## Inserting data
 
 ### From Rhapsody
@@ -156,11 +165,35 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-ecr' \
 --form 'rr=<"<PATH_TO_RR_FILE>"'
 ```
 
-## Database Setup
+## User and Program Area Setup
 
-A database user must be created and the credentials set in the corresponding environment variables described here {@link EnvironmentVariables.EcrMetadataStorage}. This user must have standard privileges (select, update, delete) as well as the ability to create and alter schemas and tables. All database setup after that point is handled via migrations performed by [Kysely](https://kysely.dev/docs/migrations). If the latest migration has not been run the eCR Viewer will log an error and display an error page to the user. Migrations only need to be run once to bring the database up to date, even if there have been multiple updates added since your most recently installed version. They must be triggered manually by calling the `/migrate-db` endpoint. The migration secret required for this step may be set via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable, but if it is not set then the eCR Viewer will generate a secret and output it to the server logs both at startup and when a request is made to the API without a valid secret included.
+### Initialization
 
-```bash
-curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
---form 'migration_secret=<your migration secret>'
-```
+Before using the app, you must initialize the database with an admin account. When calling the `/migrate-db` endpoint (see above), include the `init_admin_email` field in the form to designate which user (by email) should be granted admin access. This email must correspond to a real user in your IDP (e.g., Keycloak).
+
+Once initialized, your IDP handles authentication. The user with the email provided in `init_admin_email` will have admin privileges and can log in to the app set up further users.
+
+### Roles and Privileges
+
+**Admins**: Have full access to manage program areas, user accounts, and to view all eCRs in the eCR Library.
+
+1. **Program Area Management**
+
+- Can create, edit, and delete program areas.
+- Each program area must have at least one condition, and each program area name must be unique.
+- A condition cannot belong to more than one program area.
+
+2. **User Management**
+
+- Can create, edit, and delete users.
+- Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
+- Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
+
+3. **Access**
+
+- Can access both the User Management and Program Management pages.
+- Can access all eCRs in the eCR Library.
+
+**Standard users**: Have limited access to eCRs based on their assigned program areas.
+
+- Can view eCRs whose reportable conditions are included in their list of assigned program areas
