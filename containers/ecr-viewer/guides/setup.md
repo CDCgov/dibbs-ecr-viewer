@@ -139,6 +139,7 @@ Additionally, the optional field `init_admin_email` should be included when init
 
 ```bash
 curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
+--header 'Authorization: Bearer <TOKEN>'
 --form 'migration_secret=<your migration secret>' \
 --form 'init_admin_email=<email>'
 ```
