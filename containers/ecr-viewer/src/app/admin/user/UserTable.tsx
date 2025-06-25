@@ -86,19 +86,22 @@ export const UserTable = ({
   const filteredUsers = users.filter(({ user_type, program_areas }) => {
     const matchUserType =
       filterUserTypeOption === "all" || filterUserTypeOption === user_type;
-    
-    const userHasNoProgramAreas = user_type === "standard" && program_areas.length === 0;
+
+    const userHasNoProgramAreas =
+      user_type === "standard" && program_areas.length === 0;
     const matchNoProgramAreas =
       filteredProgramAreaNames.includes(NO_PROGRAM_AREA_OPTION) &&
       userHasNoProgramAreas;
 
-    const matchAdmin = user_type === "admin" && filteredProgramAreaNames.some((name) => name === ALL_PROGRAM_AREAS_OPTION)
-    
+    const matchAdmin =
+      user_type === "admin" &&
+      filteredProgramAreaNames.some((name) => name === ALL_PROGRAM_AREAS_OPTION);
+
     const matchProgramAreas =
       matchAdmin ||
       matchNoProgramAreas ||
       program_areas.some((program) =>
-        filteredProgramAreaNames.includes(program.name)
+        filteredProgramAreaNames.includes(program.name),
       );
     return matchUserType && matchProgramAreas;
   });
