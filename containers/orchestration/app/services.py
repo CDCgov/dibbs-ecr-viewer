@@ -1,7 +1,7 @@
 import json
 import os
 
-import requests
+import httpx
 from fastapi import HTTPException, Response, WebSocket
 
 from app.handlers.request_builders.ecr_viewer import build_save_fhir_data_body
@@ -77,16 +77,17 @@ ENDPOINT_TO_RESPONSE = {
 }
 
 
-def post_request(url: str, payload: dict) -> Response:
+async def post_request(client: httpx.AsyncClient, url: str, payload: dict) -> Response:
     """
     Helper function to post an API request to a particular endpoint using
-    the `requests` module.
+    the `httpx` module.
 
+    :param client: The httpx client to use
     :param url: The full URL of the endpoint to-hit.
     :param payload: The body of the Request object, as a dictionary.
     :return: A Response object from the posted endpoint.
     """
-    return requests.post(url, json=payload, headers={"x-orchestration": "true"})
+    return await client.post(url, json=payload, headers={"x-orchestration": "true"})
 
 
 async def _send_websocket_dump(
@@ -128,7 +129,10 @@ async def _send_websocket_dump(
 
 
 async def call_apis(
-    config: dict, input: OrchestrationRequest, websocket: WebSocket = None
+    config: dict,
+    client: httpx.AsyncClient,
+    input: OrchestrationRequest,
+    websocket: WebSocket = None,
 ) -> tuple:
     """
     Asynchronous function that loops over each step in a provided workflow
@@ -168,7 +172,7 @@ async def call_apis(
                 params[v] = responses[k]
 
         request_body = request_body_func(current_message, input, params)
-        response = post_request(service_url, request_body)
+        response = await post_request(client, service_url, request_body)
         service_response = response_func(response)
         if websocket:
             progress_dict = await _send_websocket_dump(
