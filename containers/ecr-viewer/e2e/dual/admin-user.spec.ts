@@ -157,18 +157,25 @@ test.describe("user management page", () => {
     const program2 = await createRandomProgramArea(page);
 
     // Create users
+    await page.getByTestId("Select").selectOption("50"); // Increase user table pagination for testing
     const userAdmin = await createRandomUser(browserName, page, "admin", []);
     const userStandard1 = await createRandomUser(
       browserName,
       page,
       "standard",
-      [program1],
+      [program1]
     );
     const userStandard2 = await createRandomUser(
       browserName,
       page,
       "standard",
-      [program2],
+      [program2]
+    );
+    const userStandard3 = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      []
     );
 
     // filter by user type
@@ -176,7 +183,7 @@ test.describe("user management page", () => {
     await expect(page.getByText("Filter by user type")).toBeVisible();
     await page.getByLabel("Admin").dispatchEvent("click");
     await expect(
-      page.getByRole("table").getByText("Standard"),
+      page.getByRole("table").getByText("Standard")
     ).not.toBeVisible();
 
     await page.getByLabel("Standard").dispatchEvent("click");
@@ -187,19 +194,21 @@ test.describe("user management page", () => {
 
     await page.getByLabel("Reset Filters to Defaults").click();
     await expect(
-      page.getByLabel("Reset Filters to Defaults"),
+      page.getByLabel("Reset Filters to Defaults")
     ).not.toBeVisible();
 
     // filter by program area
     await page.getByLabel("Filter by program area").click();
     await expect(page.getByText("Filter by program area")).toBeVisible();
+    await expect(page.getByText("All program areas (Admin)")).toBeVisible();
+    await expect(page.getByText("No program areas (Standard)")).toBeVisible();
 
     const checkboxfilterProgram1 = page.getByLabel(`${program1}`, {
       exact: true,
     });
     await checkboxfilterProgram1.dispatchEvent("click");
     await expect(
-      page.getByRole("table").getByText(userStandard1),
+      page.getByRole("table").getByText(userStandard1)
     ).not.toBeVisible();
 
     await checkboxfilterProgram1.dispatchEvent("click");
@@ -208,7 +217,7 @@ test.describe("user management page", () => {
     });
     await checkboxfilterProgram2.dispatchEvent("click");
     await expect(
-      page.getByRole("table").getByText(userStandard2),
+      page.getByRole("table").getByText(userStandard2)
     ).not.toBeVisible();
 
     // Deselect all programs: no users should show up
@@ -218,21 +227,34 @@ test.describe("user management page", () => {
     await checkboxDeselectAll.dispatchEvent("click");
     await expect(
       page.getByText(
-        "No users found. We couldn't find any users matching your filter criteria.",
-      ),
+        "No users found. We couldn't find any users matching your filter criteria."
+      )
     ).toBeVisible();
 
+    // All program areas (Admins) should only show admin
+    const checkboxAllProgramAreas = page.getByLabel("All program areas (Admin)");
+    await checkboxAllProgramAreas.dispatchEvent("click");
+    await expect(page.getByRole("table").getByText(userAdmin)).toBeVisible();
+    await expect(
+      page.getByRole("table").getByText("Standard")
+    ).not.toBeVisible();
+
+    // No program areas (Standard) should show standard users with no program areas
+    // await checkboxAllProgramAreas.dispatchEvent("click");
+
+    // Escape and reset
     await page.keyboard.press("Escape");
     await expect(page.getByText("Filter by program area")).not.toBeVisible();
 
     await page.getByLabel("Reset Filters to Defaults").click();
     await expect(
-      page.getByLabel("Reset Filters to Defaults"),
+      page.getByLabel("Reset Filters to Defaults")
     ).not.toBeVisible();
 
     await expect(page.getByText(userAdmin)).toBeVisible();
     await expect(page.getByText(userStandard1)).toBeVisible();
     await expect(page.getByText(userStandard2)).toBeVisible();
+    await expect(page.getByText(userStandard3)).toBeVisible();
   });
 
   test("it should not show to non-admin", async ({ page }) => {
