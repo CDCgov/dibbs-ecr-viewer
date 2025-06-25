@@ -164,3 +164,31 @@ A database user must be created and the credentials set in the corresponding env
 curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
 --form 'migration_secret=<your migration secret>'
 ```
+
+## User and Program Area Setup
+
+### Initialization
+Before using the app, you must initialize the database with an admin account. When calling the `/migrate-db` endpoint (see above), the `init_admin_email` is included in the form to designate which user (by email) should be granted admin access. This email must correspond to a real user in your IDP (e.g., Keycloak).
+
+Once initialized, your IDP handles authentication. The user with the email provided in `init_admin_email` will have admin privileges.
+
+### Roles and Privileges
+
+**Admins**: Have full access to manage program areas, user accounts, and all eCRs in the eCR Library.
+1. **Program Area Management**
+- Can add, edit, and delete program areas.
+- Each program area must have at least one condition, and each program area name must be unique.
+- A condition cannot belong to more than one program area.
+
+2. **User Management**
+- Can add, edit, and delete users.
+- Users must have unique emails, but do not need to be assigned to any program area.
+- Deleting users will only remove them from the User management table, but will not delete them from the database.
+
+3. **Access**
+- Can access both the User Management and Program Management pages.
+- Can access all eCRs in the eCR Library.
+
+**Standard users**: Have limited access to eCRs based on their assigned program areas.
+
+- Can view eCRs whose reportable conditions are included in their list of assigned program areas
