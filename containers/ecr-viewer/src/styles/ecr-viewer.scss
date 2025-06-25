@@ -173,13 +173,14 @@ main {
 
 .accordion-primary {
   &.accordion-ecr-section {
-    --padding: clamp(1.25rem, 5%, 4rem);
+    --padding: clamp(1.25rem, 5%, 2.75rem);
     & > .usa-accordion__heading {
       font-size: 2rem;
 
       & > .usa-accordion__button {
         padding-left: var(--padding);
         padding-right: var(--padding);
+        background-position-x: calc(100% - var(--padding));
       }
     }
 
@@ -206,6 +207,21 @@ main {
     }
 
     margin-top: 2.5em;
+  }
+
+  // remove the bottom border from the last-est child in the accordion
+  & > .usa-accordion__content {
+    .section__line_gray:last-child {
+      padding-top: 0;
+      padding-bottom: 0;
+      border: none;
+    }
+
+    :not(:last-child) .section__line_gray:last-child {
+      border-top: 1px solid #dfe1e2;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
   }
 }
 
