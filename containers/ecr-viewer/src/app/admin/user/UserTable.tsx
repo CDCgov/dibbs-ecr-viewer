@@ -32,7 +32,8 @@ const USER_TYPE_OPTIONS: Record<string, string> = {
   admin: "Admin",
   standard: "Standard",
 };
-const NO_PROGRAM_AREA_OPTION: string = "No program area";
+const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
+const ALL_PROGRAM_AREAS_OPTION: string = "All program areas (Admin)";
 
 type FilterProgramAreasType = { [key: string]: boolean };
 
@@ -56,8 +57,10 @@ export const UserTable = ({
   const sortedProgramAreas = [...programAreas].sort((a, b) =>
     a.name.localeCompare(b.name),
   );
+  const anyUsersNoPrograms = users.some((user) => user.user_type === "standard" && user.program_areas.length === 0)
   const initFilterProgramAreaState: FilterProgramAreasType = {
-    [NO_PROGRAM_AREA_OPTION]: true,
+    [ALL_PROGRAM_AREAS_OPTION]: true,
+    ...(anyUsersNoPrograms ? { [NO_PROGRAM_AREA_OPTION]: true } : {}),
     ...sortedProgramAreas.reduce((acc, program) => {
       acc[program.name] = true;
       return acc;
@@ -89,7 +92,7 @@ export const UserTable = ({
       filteredProgramAreaNames.includes(NO_PROGRAM_AREA_OPTION) &&
       userHasNoProgramAreas;
 
-    const matchAdmin = user_type === "admin" && filteredProgramAreaNames.some((name) => name !== NO_PROGRAM_AREA_OPTION)
+    const matchAdmin = user_type === "admin" && filteredProgramAreaNames.some((name) => name === ALL_PROGRAM_AREAS_OPTION)
     
     const matchProgramAreas =
       matchAdmin ||
