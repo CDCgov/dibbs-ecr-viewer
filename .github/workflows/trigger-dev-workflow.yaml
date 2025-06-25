@@ -4,19 +4,14 @@ run-name: "Trigger Deploy - Service: ${{ inputs.service }}, Version: ${{ inputs.
 on:
   workflow_dispatch:
     inputs:
-      service:
+      container_tag:
         type: string
-        description: "The service you want to deploy. dibbs-ecr-viewer"
-        required: true
-        default: dibbs-ecr-viewer
-      version:
-        type: string
-        description: "The version to deploy. Example: v2.6.0 or main"
+        description: "The container tag to deploy. Example: `5.0.0`"
         required: true
         default: main
       dev_id:
         type: choice
-        description: "The unique ID for the dev environment. Must be between 0 and 255."
+        description: "The unique ID for the dev environment."
         options:
           - "7"
           - "42"
@@ -30,7 +25,7 @@ on:
           - AWS_INTEGRATED
       tf_branch:
         type: string
-        description: "The branch to use for the Terraform code. Default is main."
+        description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
         required: false
         default: main
       event_type:
@@ -47,8 +42,7 @@ jobs:
     steps:
       - name: Deploy to AWS Dev
         env:
-          SERVICE: ${{ inputs.service }}
-          VERSION: ${{ inputs.version }}
+          CONTAINER_TAG: ${{ inputs.container_tag }}
           DEV_ID: ${{ inputs.dev_id }}
           CONFIG_NAME: ${{ inputs.config_name }}
           TF_BRANCH: ${{ inputs.tf_branch }}
@@ -56,8 +50,8 @@ jobs:
         run: |
           repo_owner="CDCgov"
           repo_name="dibbs-aws"
-          service="$SERVICE"
-          version="$VERSION"
+          service="dibbs-ecr-viewer"
+          version="$CONTAINER_TAG"
           dev_id="$DEV_ID"
           config_name="$CONFIG_NAME"
           tf_branch="$TF_BRANCH"
