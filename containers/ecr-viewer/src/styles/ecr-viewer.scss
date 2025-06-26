@@ -173,6 +173,7 @@ main {
 
 .accordion-primary {
   &.accordion-ecr-section {
+    margin-bottom: 2rem;
     --padding: clamp(1.25rem, 5%, 2.75rem);
     & > .usa-accordion__heading {
       font-size: 2rem;
@@ -206,7 +207,7 @@ main {
       margin-top: 0;
     }
 
-    margin-top: 2.5em;
+    margin-top: 3rem;
   }
 
   // remove the bottom border from the last-est child in the accordion
@@ -253,26 +254,36 @@ main {
     }
   }
 
-  .usa-prose > table {
-    overflow-wrap: break-word;
-    width: calc(100% + 2.5rem);
-    margin-right: -1.25rem;
-    margin-left: -1.25rem;
-    margin-top: -1rem;
-    margin-bottom: 1rem;
-    border-bottom: #1b1b1b 1px solid;
-
-    &.lab-results-table-from-div {
-      border-bottom: none;
-      margin-bottom: 0;
+  .usa-prose {
+    &:has(.lab-results-table-from-div) {
+      overflow-x: auto;
     }
 
-    thead th {
-      background-color: #f0f0f0;
-    }
+    > table {
+      overflow-wrap: break-word;
+      width: calc(100% + 2.5rem);
+      margin-right: -1.25rem;
+      margin-left: -1.25rem;
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      border-bottom: #1b1b1b 1px solid;
 
-    tr td {
-      border-bottom: 0;
+      &.lab-results-table-from-div {
+        border-bottom: none;
+        margin-bottom: 3rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      thead th {
+        background-color: #f0f0f0;
+      }
+
+      tr td {
+        border-bottom: 0;
+      }
     }
   }
 }
