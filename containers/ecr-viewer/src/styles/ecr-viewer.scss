@@ -12,7 +12,7 @@ $main-min-width: $content-container-min-width + $ecr-viewer-gap +
   $nav-wrapper-width + $main-container-padding * 2;
 
 html {
-  --patient-banner-buffer: 3.25rem;
+  --patient-banner-buffer: 3.1rem;
 }
 
 main {
@@ -28,7 +28,7 @@ main {
 
   // Make sure items we link to don't get stuck behind patient banner
   *[id] {
-    scroll-margin-top: calc(var(--patient-banner-buffer) + 0.8em);
+    scroll-margin-top: calc(var(--patient-banner-buffer) + 0.75em);
   }
 }
 
