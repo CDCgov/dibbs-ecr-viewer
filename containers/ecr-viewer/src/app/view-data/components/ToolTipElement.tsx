@@ -69,6 +69,7 @@ export const ToolTipElement = ({
       {children}
       <ForceClient
         loading={
+          // margin is on the span and not the icon so the tooltip is centered correctly
           <span className="margin-left-05">
             <Icon />
           </span>
