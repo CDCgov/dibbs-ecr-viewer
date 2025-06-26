@@ -53,7 +53,7 @@ export const AutoSignout = () => {
         clearTimeout(updateTimeout);
       };
     }
-  }, [isActive, update]);
+  }, [isActive]);
 
   // Keep track of seconds left until the session expires
   useEffect(() => {

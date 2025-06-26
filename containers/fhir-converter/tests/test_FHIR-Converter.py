@@ -145,9 +145,11 @@ invalid_rr_data_response = {
 @mock.patch("app.service.open")
 @mock.patch("app.service.subprocess.run")
 @mock.patch("app.service.Path")
+@mock.patch("app.service.os.remove")
 @mock.patch("app.main.resolve_references")
 def test_convert_valid_request(
     patched_resolve_references,
+    patched_os_remove,
     patched_file_path,
     patched_subprocess_run,
     patched_open,
@@ -175,11 +177,13 @@ def test_convert_valid_request(
 @mock.patch("app.service.open")
 @mock.patch("app.service.subprocess.run")
 @mock.patch("app.service.Path")
+@mock.patch("app.service.os.remove")
 @mock.patch("app.main.add_rr_data_to_eicr")
 @mock.patch("app.main.resolve_references")
 def test_convert_valid_request_with_rr_data(
     patched_resolve_references,
     patched_add_rr_data_to_eicr,
+    patched_os_remove,
     patched_file_path,
     patched_subprocess_run,
     patched_open,
@@ -199,9 +203,11 @@ def test_convert_valid_request_with_rr_data(
 @mock.patch("app.service.open")
 @mock.patch("app.service.subprocess.run")
 @mock.patch("app.service.Path")
+@mock.patch("app.service.os.remove")
 @mock.patch("app.main.resolve_references")
 def test_convert_conversion_failure(
     patched_resolve_references,
+    patched_os_remove,
     patched_file_path,
     patched_subprocess_run,
     patched_open,
