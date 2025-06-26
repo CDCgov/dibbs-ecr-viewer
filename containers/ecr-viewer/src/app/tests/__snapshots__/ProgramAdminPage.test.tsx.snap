@@ -31,7 +31,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
          management
       </a>
       <div
-        class="border-bottom border-base-lighter position-sticky top-0 bg-white isolate z-500 padding-top-1"
+        class="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container"
       >
         <div
           class="minh-5 margin-bottom-1"

@@ -33,7 +33,7 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                   class="grid-col-auto width-full text-pre-line"
                 >
                   <div
-                    class="usa-accordion accordion-rr margin-bottom-3"
+                    class="usa-accordion accordion-rr"
                     data-allow-multiple="true"
                     data-testid="accordion"
                   >
