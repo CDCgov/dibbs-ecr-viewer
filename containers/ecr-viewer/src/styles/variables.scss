@@ -30,8 +30,9 @@ $destructive-primary: #d54309; // primary error / info color
 $destructive-dark: #b51d09; // error hover
 $destructive-darker: #6f3331; // error active
 
-// non-opaque color meter read of rgb(from $blue-cool-50 r g b / 5%);
-$background: rgb(243 246 249);
+// non-opaque color meter read of rgb(from $blue-cool-50 r g b / 5%) then made as minimally
+// light while maintaining 4.5:1 contrast ratio with the primary color as text on it;
+$background: #fcfcfd;
 $background-dark: $gray-200;
 $background-darker: $gray-300;
 $background-darkest: $gray-500;
