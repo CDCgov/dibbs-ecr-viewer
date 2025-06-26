@@ -152,8 +152,8 @@ This section provides an overview of the database schema used by the DIBBS eCR V
 
 The DIBBS eCR Viewer supports the following relational database types for storing metadata:
 
-*   **SQL Server**
-*   **PostgreSQL**
+- **SQL Server**
+- **PostgreSQL**
 
 ### Core Schema
 
@@ -163,37 +163,37 @@ The core schema contains essential data related to eCRs and their associated con
 
 This table stores the primary eCR data.
 
-| Column Name           | Data Type      | Description                                                               |
-| :-------------------- | :------------- | :------------------------------------------------------------------------ |
-| `eicr_id`             | `varchar(200)` | Primary key, unique identifier for the eICR.                              |
-| `set_id`              | `varchar(255)` | Identifier for a set of related eICRs.                                    |
-| `eicr_version_number` | `varchar(50)`  | Version number of the eICR.                                               |
-| `fhir_reference_link` | `varchar(255)` | Reference link to the FHIR resource.                                      |
-| `last_name`           | `varchar(255)` | Last name of the patient (non-nullable).                                  |
-| `first_name`          | `varchar(255)` | First name of the patient (non-nullable).                                 |
-| `birth_date`          | `date`         | Patient's birth date (non-nullable).                                      |
-| `encounter_start_date`| `datetime`     | Start date and time of the patient encounter.                             |
-| `date_created`        | `datetime`     | Date and time when the record was created (non-nullable, defaults to now).|
+| Column Name            | Data Type      | Description                                                                |
+| :--------------------- | :------------- | :------------------------------------------------------------------------- |
+| `eicr_id`              | `varchar(200)` | Primary key, unique identifier for the eICR.                               |
+| `set_id`               | `varchar(255)` | Identifier for a set of related eICRs.                                     |
+| `eicr_version_number`  | `varchar(50)`  | Version number of the eICR.                                                |
+| `fhir_reference_link`  | `varchar(255)` | Reference link to the FHIR resource.                                       |
+| `last_name`            | `varchar(255)` | Last name of the patient (non-nullable).                                   |
+| `first_name`           | `varchar(255)` | First name of the patient (non-nullable).                                  |
+| `birth_date`           | `date`         | Patient's birth date (non-nullable).                                       |
+| `encounter_start_date` | `datetime`     | Start date and time of the patient encounter.                              |
+| `date_created`         | `datetime`     | Date and time when the record was created (non-nullable, defaults to now). |
 
 #### `ecr_rr_conditions` Table
 
 This table stores conditions associated with eCRs.
 
-| Column Name           | Data Type      | Description                               |
-| :-------------------- | :------------- | :---------------------------------------- |
-| `uuid`                | `varchar(200)` | Primary key, unique identifier for the condition record. |
-| `eicr_id`             | `varchar(255)` | Foreign key, references `eicr_data.eicr_id`. |
-| `condition`           | `varchar(max)` | Description of the condition.             |
+| Column Name | Data Type      | Description                                              |
+| :---------- | :------------- | :------------------------------------------------------- |
+| `uuid`      | `varchar(200)` | Primary key, unique identifier for the condition record. |
+| `eicr_id`   | `varchar(255)` | Foreign key, references `eicr_data.eicr_id`.             |
+| `condition` | `varchar(max)` | Description of the condition.                            |
 
 #### `ecr_rr_rule_summaries` Table
 
 This table stores rule summaries related to eCR conditions.
 
-| Column Name           | Data Type      | Description                               |
-| :-------------------- | :------------- | :---------------------------------------- |
-| `uuid`                | `varchar(200)` | Primary key, unique identifier for the rule summary record. |
-| `ecr_rr_conditions_id`| `varchar(200)` | Foreign key, references `ecr_rr_conditions.uuid`. |
-| `rule_summary`        | `varchar(max)` | Summary of the rule applied.              |
+| Column Name            | Data Type      | Description                                                 |
+| :--------------------- | :------------- | :---------------------------------------------------------- |
+| `uuid`                 | `varchar(200)` | Primary key, unique identifier for the rule summary record. |
+| `ecr_rr_conditions_id` | `varchar(200)` | Foreign key, references `ecr_rr_conditions.uuid`.           |
+| `rule_summary`         | `varchar(max)` | Summary of the rule applied.                                |
 
 ### Extended Schema
 
@@ -203,84 +203,84 @@ The extended schema builds upon the core schema by adding additional demographic
 
 The following columns are added to the `ecr_data` table in the extended schema:
 
-| Column Name                  | Data Type      | Description                                    |
-| :--------------------------- | :------------- | :--------------------------------------------- |
-| `gender`                     | `varchar(100)` | Patient's gender.                              |
-| `birth_sex`                  | `varchar(255)` | Patient's birth sex.                           |
-| `gender_identity`            | `varchar(255)` | Patient's gender identity.                     |
-| `race`                       | `varchar(255)` | Patient's race.                                |
-| `ethnicity`                  | `varchar(255)` | Patient's ethnicity.                           |
-| `latitude`                   | `numeric`      | Latitude of patient's location.                |
-| `longitude`                  | `numeric`      | Longitude of patient's location.               |
-| `homelessness_status`        | `varchar(255)` | Patient's homelessness status.                 |
-| `disabilities`               | `varchar(255)` | Patient's disabilities.                        |
-| `tribal_affiliation`         | `varchar(255)` | Patient's tribal affiliation.                  |
-| `tribal_enrollment_status`   | `varchar(255)` | Patient's tribal enrollment status.            |
-| `current_job_title`          | `varchar(255)` | Patient's current job title.                   |
-| `current_job_industry`       | `varchar(255)` | Patient's current job industry.                |
-| `usual_occupation`           | `varchar(255)` | Patient's usual occupation.                    |
-| `usual_industry`             | `varchar(255)` | Patient's usual industry.                      |
-| `preferred_language`         | `varchar(255)` | Patient's preferred language.                  |
-| `pregnancy_status`           | `varchar(255)` | Patient's pregnancy status.                    |
-| `rr_id`                      | `varchar(255)` | Response Report ID.                            |
-| `processing_status`          | `varchar(255)` | Processing status of the eCR.                  |
-| `authoring_date`             | `datetime`     | Date of authoring.                             |
-| `authoring_provider`         | `varchar(255)` | Authoring provider.                            |
-| `provider_id`                | `varchar(255)` | Provider ID.                                   |
-| `facility_id`                | `varchar(255)` | Facility ID.                                   |
-| `facility_name`              | `varchar(255)` | Facility name.                                 |
-| `encounter_type`             | `varchar(255)` | Type of encounter.                             |
-| `encounter_end_date`         | `datetime`     | End date and time of the patient encounter.    |
-| `reason_for_visit`           | `varchar(max)` | Reason for visit.                              |
-| `active_problems`            | `varchar(max)` | Active problems.                               |
+| Column Name                | Data Type      | Description                                 |
+| :------------------------- | :------------- | :------------------------------------------ |
+| `gender`                   | `varchar(100)` | Patient's gender.                           |
+| `birth_sex`                | `varchar(255)` | Patient's birth sex.                        |
+| `gender_identity`          | `varchar(255)` | Patient's gender identity.                  |
+| `race`                     | `varchar(255)` | Patient's race.                             |
+| `ethnicity`                | `varchar(255)` | Patient's ethnicity.                        |
+| `latitude`                 | `numeric`      | Latitude of patient's location.             |
+| `longitude`                | `numeric`      | Longitude of patient's location.            |
+| `homelessness_status`      | `varchar(255)` | Patient's homelessness status.              |
+| `disabilities`             | `varchar(255)` | Patient's disabilities.                     |
+| `tribal_affiliation`       | `varchar(255)` | Patient's tribal affiliation.               |
+| `tribal_enrollment_status` | `varchar(255)` | Patient's tribal enrollment status.         |
+| `current_job_title`        | `varchar(255)` | Patient's current job title.                |
+| `current_job_industry`     | `varchar(255)` | Patient's current job industry.             |
+| `usual_occupation`         | `varchar(255)` | Patient's usual occupation.                 |
+| `usual_industry`           | `varchar(255)` | Patient's usual industry.                   |
+| `preferred_language`       | `varchar(255)` | Patient's preferred language.               |
+| `pregnancy_status`         | `varchar(255)` | Patient's pregnancy status.                 |
+| `rr_id`                    | `varchar(255)` | Response Report ID.                         |
+| `processing_status`        | `varchar(255)` | Processing status of the eCR.               |
+| `authoring_date`           | `datetime`     | Date of authoring.                          |
+| `authoring_provider`       | `varchar(255)` | Authoring provider.                         |
+| `provider_id`              | `varchar(255)` | Provider ID.                                |
+| `facility_id`              | `varchar(255)` | Facility ID.                                |
+| `facility_name`            | `varchar(255)` | Facility name.                              |
+| `encounter_type`           | `varchar(255)` | Type of encounter.                          |
+| `encounter_end_date`       | `datetime`     | End date and time of the patient encounter. |
+| `reason_for_visit`         | `varchar(max)` | Reason for visit.                           |
+| `active_problems`          | `varchar(max)` | Active problems.                            |
 
 #### `ecr_labs` Table
 
 This table stores laboratory results associated with eCRs.
 
-| Column Name                         | Data Type      | Description                                    |
-| :---------------------------------- | :------------- | :--------------------------------------------- |
-| `uuid`                              | `varchar(200)` | Primary key, unique identifier for the lab record. |
-| `eicr_id`                           | `varchar(200)` | Foreign key, references `ecr_data.eicr_id`.    |
-| `test_type`                         | `varchar(255)` | Type of test performed.                        |
-| `test_type_code`                    | `varchar(255)` | Code for the test type.                        |
-| `test_type_system`                  | `varchar(255)` | Coding system for the test type.               |
-| `test_result_qualitative`           | `varchar(255)` | Qualitative test result.                       |
-| `test_result_quantitative`          | `numeric`      | Quantitative test result.                      |
-| `test_result_units`                 | `varchar(50)`  | Units for the quantitative test result.        |
-| `test_result_code`                  | `varchar(255)` | Code for the test result.                      |
-| `test_result_code_display`          | `varchar(255)` | Display name for the test result code.         |
-| `test_result_code_system`           | `varchar(255)` | Coding system for the test result code.        |
-| `test_result_interpretation`        | `varchar(255)` | Interpretation of the test result.             |
-| `test_result_interpretation_code`   | `varchar(255)` | Code for the test result interpretation.       |
-| `test_result_interpretation_system` | `varchar(255)` | Coding system for the test result interpretation. |
-| `test_result_reference_range_low_value` | `numeric`    | Lower bound of the reference range.            |
-| `test_result_reference_range_low_units` | `varchar(50)`| Units for the lower bound of the reference range. |
-| `test_result_reference_range_high_value`| `numeric`    | Upper bound of the reference range.            |
-| `test_result_reference_range_high_units`| `varchar(50)`| Units for the upper bound of the reference range. |
-| `specimen_type`                     | `varchar(255)` | Type of specimen.                              |
-| `specimen_collection_date`          | `date`         | Date of specimen collection.                   |
-| `performing_lab`                    | `varchar(255)` | Performing laboratory.                         |
+| Column Name                              | Data Type      | Description                                        |
+| :--------------------------------------- | :------------- | :------------------------------------------------- |
+| `uuid`                                   | `varchar(200)` | Primary key, unique identifier for the lab record. |
+| `eicr_id`                                | `varchar(200)` | Foreign key, references `ecr_data.eicr_id`.        |
+| `test_type`                              | `varchar(255)` | Type of test performed.                            |
+| `test_type_code`                         | `varchar(255)` | Code for the test type.                            |
+| `test_type_system`                       | `varchar(255)` | Coding system for the test type.                   |
+| `test_result_qualitative`                | `varchar(255)` | Qualitative test result.                           |
+| `test_result_quantitative`               | `numeric`      | Quantitative test result.                          |
+| `test_result_units`                      | `varchar(50)`  | Units for the quantitative test result.            |
+| `test_result_code`                       | `varchar(255)` | Code for the test result.                          |
+| `test_result_code_display`               | `varchar(255)` | Display name for the test result code.             |
+| `test_result_code_system`                | `varchar(255)` | Coding system for the test result code.            |
+| `test_result_interpretation`             | `varchar(255)` | Interpretation of the test result.                 |
+| `test_result_interpretation_code`        | `varchar(255)` | Code for the test result interpretation.           |
+| `test_result_interpretation_system`      | `varchar(255)` | Coding system for the test result interpretation.  |
+| `test_result_reference_range_low_value`  | `numeric`      | Lower bound of the reference range.                |
+| `test_result_reference_range_low_units`  | `varchar(50)`  | Units for the lower bound of the reference range.  |
+| `test_result_reference_range_high_value` | `numeric`      | Upper bound of the reference range.                |
+| `test_result_reference_range_high_units` | `varchar(50)`  | Units for the upper bound of the reference range.  |
+| `specimen_type`                          | `varchar(255)` | Type of specimen.                                  |
+| `specimen_collection_date`               | `date`         | Date of specimen collection.                       |
+| `performing_lab`                         | `varchar(255)` | Performing laboratory.                             |
 
 #### `patient_address` Table
 
 This table stores patient address information.
 
-| Column Name   | Data Type      | Description                               |
-| :------------ | :------------- | :---------------------------------------- |
-| `uuid`        | `varchar(200)` | Primary key, unique identifier for the address record. |
-| `use`         | `varchar(50)`  | Purpose of the address (e.g., "home", "work"). |
-| `type`        | `varchar(50)`  | Type of address (e.g., "physical", "postal"). |
-| `text`        | `varchar(255)` | Full text representation of the address.  |
-| `line`        | `varchar(255)` | Street address line.                      |
-| `city`        | `varchar(100)` | City.                                     |
-| `district`    | `varchar(100)` | District.                                 |
-| `state`       | `varchar(100)` | State.                                    |
-| `postal_code` | `varchar(20)`  | Postal code.                              |
-| `country`     | `varchar(100)` | Country.                                  |
-| `period_start`| `datetime`     | Start date of the address's validity period. |
-| `period_end`  | `datetime`     | End date of the address's validity period. |
-| `eicr_id`     | `varchar(200)` | Foreign key, references `ecr_data.eicr_id`. |
+| Column Name    | Data Type      | Description                                            |
+| :------------- | :------------- | :----------------------------------------------------- |
+| `uuid`         | `varchar(200)` | Primary key, unique identifier for the address record. |
+| `use`          | `varchar(50)`  | Purpose of the address (e.g., "home", "work").         |
+| `type`         | `varchar(50)`  | Type of address (e.g., "physical", "postal").          |
+| `text`         | `varchar(255)` | Full text representation of the address.               |
+| `line`         | `varchar(255)` | Street address line.                                   |
+| `city`         | `varchar(100)` | City.                                                  |
+| `district`     | `varchar(100)` | District.                                              |
+| `state`        | `varchar(100)` | State.                                                 |
+| `postal_code`  | `varchar(20)`  | Postal code.                                           |
+| `country`      | `varchar(100)` | Country.                                               |
+| `period_start` | `datetime`     | Start date of the address's validity period.           |
+| `period_end`   | `datetime`     | End date of the address's validity period.             |
+| `eicr_id`      | `varchar(200)` | Foreign key, references `ecr_data.eicr_id`.            |
 
 ## Inserting data
 
