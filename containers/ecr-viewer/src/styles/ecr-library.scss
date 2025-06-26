@@ -42,19 +42,22 @@
   isolation: isolate;
   min-height: 100%;
 
-  // Hide highlight color by matching th color on sorted column - per design
-  &.usa-table th {
-    &[aria-sort="descending"] {
-      background-color: #dfe1e2;
-    }
-    &[aria-sort="ascending"] {
-      background-color: #dfe1e2;
-    }
-  }
-
   a,
   u {
     text-decoration: none;
+  }
+
+  thead {
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+
+    th {
+      background-color: color("base-lighter");
+      border-bottom: 1px solid var(--Base-base, #71767a);
+
+      &:first-child {
+        padding-left: 2rem;
+      }
+    }
   }
 
   tbody {
@@ -118,19 +121,6 @@
 
     .patient-name-content {
       grid-area: content;
-    }
-  }
-
-  thead {
-    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
-
-    th {
-      background-color: color("base-lighter");
-      border-bottom: 1px solid var(--Base-base, #71767a);
-
-      &:first-child {
-        padding-left: 2rem;
-      }
     }
   }
 
