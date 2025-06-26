@@ -60,14 +60,20 @@ export const ToolTipElement = ({
   const Icon = () => (
     <InfoOutline
       aria-label="description"
-      className="tooltip-icon text-secondary flex-align-center line-height-sans-1"
+      className="tooltip-icon text-secondary flex-align-center"
     />
   );
 
   return toolTip ? (
     <div className="display-flex flex-align-baseline">
       {children}
-      <ForceClient loading={<Icon />}>
+      <ForceClient
+        loading={
+          <span className="margin-left-05">
+            <Icon />
+          </span>
+        }
+      >
         <Tooltip
           label={toolTip}
           asCustom={TooltipDiv}

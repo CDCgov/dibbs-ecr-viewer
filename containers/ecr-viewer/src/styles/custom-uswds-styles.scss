@@ -342,6 +342,10 @@
   }
 }
 
+.usa-tooltip {
+  line-height: 1;
+}
+
 .usa-tooltip__body {
   max-width: 700px;
   min-width: min(450px, 0.25 * (100vw - 16rem));
@@ -350,6 +354,7 @@
   font-weight: normal;
   padding-left: 1rem;
   padding-right: 1rem;
+  line-height: 1.3;
 }
 
 .short-tooltip + .usa-tooltip__body {
