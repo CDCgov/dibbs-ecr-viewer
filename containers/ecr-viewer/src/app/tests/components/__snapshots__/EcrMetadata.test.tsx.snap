@@ -35,84 +35,150 @@ exports[`ECR Metadata should match snapshot 1`] = `
                   <th
                     class="width-25p"
                   >
-                    <span
-                      class="usa-tooltip"
-                      data-testid="tooltipWrapper"
+                    <div
+                      class="display-flex flex-align-baseline"
                     >
-                      <div
-                        aria-describedby="[object Object]"
-                        class="usa-tooltip__trigger usa-tooltip"
-                        data-testid="triggerElement"
-                        tabindex="0"
-                        title=""
-                      >
-                        Reportable Condition
-                      </div>
+                      Reportable Condition
                       <span
-                        aria-hidden="true"
-                        class="usa-tooltip__body"
-                        data-testid="tooltipBody"
-                        id="[object Object]"
-                        role="tooltip"
-                        title="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR."
+                        class="usa-tooltip"
+                        data-testid="tooltipWrapper"
                       >
-                        List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.
+                        <div
+                          aria-describedby="[object Object]"
+                          class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                          data-testid="triggerElement"
+                          tabindex="0"
+                          title=""
+                        >
+                          <svg
+                            aria-label="description"
+                            class="usa-icon tooltip-icon text-secondary flex-align-center"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </div>
+                        <span
+                          aria-hidden="true"
+                          class="usa-tooltip__body"
+                          data-testid="tooltipBody"
+                          id="[object Object]"
+                          role="tooltip"
+                          title="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR."
+                        >
+                          List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </th>
                   <th>
-                    <span
-                      class="usa-tooltip"
-                      data-testid="tooltipWrapper"
+                    <div
+                      class="display-flex flex-align-baseline"
                     >
-                      <div
-                        aria-describedby="[object Object]"
-                        class="usa-tooltip__trigger usa-tooltip"
-                        data-testid="triggerElement"
-                        tabindex="0"
-                        title=""
-                      >
-                        RCKMS Rule Summary
-                      </div>
+                      RCKMS Rule Summary
                       <span
-                        aria-hidden="true"
-                        class="usa-tooltip__body"
-                        data-testid="tooltipBody"
-                        id="[object Object]"
-                        role="tooltip"
-                        title="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System)."
+                        class="usa-tooltip"
+                        data-testid="tooltipWrapper"
                       >
-                        Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).
+                        <div
+                          aria-describedby="[object Object]"
+                          class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                          data-testid="triggerElement"
+                          tabindex="0"
+                          title=""
+                        >
+                          <svg
+                            aria-label="description"
+                            class="usa-icon tooltip-icon text-secondary flex-align-center"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </div>
+                        <span
+                          aria-hidden="true"
+                          class="usa-tooltip__body"
+                          data-testid="tooltipBody"
+                          id="[object Object]"
+                          role="tooltip"
+                          title="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System)."
+                        >
+                          Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </th>
                   <th
                     class="width-25p"
                   >
-                    <span
-                      class="usa-tooltip"
-                      data-testid="tooltipWrapper"
+                    <div
+                      class="display-flex flex-align-baseline"
                     >
-                      <div
-                        aria-describedby="[object Object]"
-                        class="usa-tooltip__trigger usa-tooltip"
-                        data-testid="triggerElement"
-                        tabindex="0"
-                        title=""
-                      >
-                        Jurisdiction Sent eCR
-                      </div>
+                      Jurisdiction Sent eCR
                       <span
-                        aria-hidden="true"
-                        class="usa-tooltip__body"
-                        data-testid="tooltipBody"
-                        id="[object Object]"
-                        role="tooltip"
-                        title="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR."
+                        class="usa-tooltip"
+                        data-testid="tooltipWrapper"
                       >
-                        List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR.
+                        <div
+                          aria-describedby="[object Object]"
+                          class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                          data-testid="triggerElement"
+                          tabindex="0"
+                          title=""
+                        >
+                          <svg
+                            aria-label="description"
+                            class="usa-icon tooltip-icon text-secondary flex-align-center"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </div>
+                        <span
+                          aria-hidden="true"
+                          class="usa-tooltip__body"
+                          data-testid="tooltipBody"
+                          id="[object Object]"
+                          role="tooltip"
+                          title="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR."
+                        >
+                          List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR.
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </th>
                 </tr>
               </thead>
@@ -168,30 +234,52 @@ exports[`ECR Metadata should match snapshot 1`] = `
                 data-testid="table"
               >
                 <caption>
-                  <span
-                    class="usa-tooltip"
-                    data-testid="tooltipWrapper"
+                  <div
+                    class="display-flex flex-align-baseline"
                   >
-                    <div
-                      aria-describedby="[object Object]"
-                      class="usa-tooltip__trigger usa-tooltip"
-                      data-testid="triggerElement"
-                      tabindex="0"
-                      title=""
-                    >
-                      eICR Processing Info
-                    </div>
+                    eICR Processing Info
                     <span
-                      aria-hidden="true"
-                      class="usa-tooltip__body"
-                      data-testid="tooltipBody"
-                      id="[object Object]"
-                      role="tooltip"
-                      title="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version."
+                      class="usa-tooltip"
+                      data-testid="tooltipWrapper"
                     >
-                      Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.
+                      <div
+                        aria-describedby="[object Object]"
+                        class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                        data-testid="triggerElement"
+                        tabindex="0"
+                        title=""
+                      >
+                        <svg
+                          aria-label="description"
+                          class="usa-icon tooltip-icon text-secondary flex-align-center"
+                          focusable="false"
+                          height="1em"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0V0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                          />
+                        </svg>
+                      </div>
+                      <span
+                        aria-hidden="true"
+                        class="usa-tooltip__body"
+                        data-testid="tooltipBody"
+                        id="[object Object]"
+                        role="tooltip"
+                        title="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version."
+                      >
+                        Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version.
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </caption>
                 <thead>
                   <tr>
@@ -482,35 +570,57 @@ Echo Base, CA
         <div
           class="gutter-3"
         >
-          <span
-            class="usa-tooltip"
-            data-testid="tooltipWrapper"
+          <div
+            class="display-flex flex-align-baseline"
           >
-            <div
-              aria-describedby="[object Object]"
-              class="usa-tooltip__trigger usa-tooltip short-tooltip"
-              data-testid="triggerElement"
-              tabindex="0"
-              title=""
+            <h4
+              class="usa-summary-box__heading padding-y-105"
+              id="eicr-custodian-details"
             >
-              <h4
-                class="usa-summary-box__heading padding-y-105"
-                id="eicr-custodian-details"
-              >
-                eICR Custodian Details
-              </h4>
-            </div>
+              eICR Custodian Details
+            </h4>
             <span
-              aria-hidden="true"
-              class="usa-tooltip__body"
-              data-testid="tooltipBody"
-              id="[object Object]"
-              role="tooltip"
-              title="Person or organization that generated the eICR Document."
+              class="usa-tooltip"
+              data-testid="tooltipWrapper"
             >
-              Person or organization that generated the eICR Document.
+              <div
+                aria-describedby="[object Object]"
+                class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
+                data-testid="triggerElement"
+                tabindex="0"
+                title=""
+              >
+                <svg
+                  aria-label="description"
+                  class="usa-icon tooltip-icon text-secondary flex-align-center"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                  />
+                </svg>
+              </div>
+              <span
+                aria-hidden="true"
+                class="usa-tooltip__body"
+                data-testid="tooltipBody"
+                id="[object Object]"
+                role="tooltip"
+                title="Person or organization that generated the eICR Document."
+              >
+                Person or organization that generated the eICR Document.
+              </span>
             </span>
-          </span>
+          </div>
           <div
             class="usa-summary-box__text"
           >
