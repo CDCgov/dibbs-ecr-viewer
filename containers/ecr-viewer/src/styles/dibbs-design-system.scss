@@ -1,4 +1,5 @@
 // from https://github.com/CDCgov/dibbs-design-system/blob/main/sass/design_system.scss
+// pagination styles removed as in the viewer we want link-y buttons vs button-y buttons
 
 @use "variables" as *;
 @use "uswds-core" as *;
@@ -298,6 +299,13 @@ ul.usa-sidenav
   font-size: 2rem;
 }
 
+.usa-step-indicator__segment--current:before,
+.usa-step-indicator__segment--complete:before {
+  box-shadow:
+    inset 0 0 0 0 color("primary-darker"),
+    0 0 0 0.25rem white;
+}
+
 .usa-alert__heading {
   &.h1 {
     font-size: 2.125rem;
@@ -334,13 +342,6 @@ ul.usa-sidenav
     font-weight: bold;
     line-height: 1.2;
   }
-}
-
-.usa-step-indicator__segment--current:before,
-.usa-step-indicator__segment--complete:before {
-  box-shadow:
-    inset 0 0 0 0 color("primary-darker"),
-    0 0 0 0.25rem white;
 }
 
 .usa-alert__text {
