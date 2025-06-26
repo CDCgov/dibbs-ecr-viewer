@@ -41,6 +41,7 @@
   border-collapse: separate;
   // font-family: "Source Sans Pro Web";
   isolation: isolate;
+  min-height: 100%;
 
   // Hide highlight color by matching th color on sorted column - per design
   &.usa-table th {
@@ -66,6 +67,10 @@
 
     tr {
       position: relative;
+
+      &:last-child {
+        height: 100%;
+      }
 
       &:first-child td {
         border-top: none;
@@ -145,6 +150,7 @@
 
 .ecr-pagination-drop-shadow {
   box-shadow: 0 -0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 // ==== Filter styling ===== //
