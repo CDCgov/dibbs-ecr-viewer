@@ -33,7 +33,7 @@ const ErrorPage = ({
         <div className="text-semibold font-sans-md margin-top-1">
           {subTitle}
         </div>
-        <div className="bg-info-lighter border border-info-light radius-md font-sans-md line-height-sans-4 padding-3 margin-top-2 width-tablet error-message-content">
+        <div className="bg-primary-lighter border border-info-light radius-md font-sans-md line-height-sans-4 padding-3 margin-top-2 width-tablet error-message-content">
           {children}
         </div>
         <BackButton className="margin-top-3 font-sans-md text-primary" />
