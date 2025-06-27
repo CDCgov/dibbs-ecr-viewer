@@ -5,7 +5,7 @@
       "examples": {
         "success": {
           "value": {
-            "default_configs": ["all.json", "test_config.json"],
+            "default_configs": ["all.json", "test-config.json"],
             "custom_configs": []
           }
         }

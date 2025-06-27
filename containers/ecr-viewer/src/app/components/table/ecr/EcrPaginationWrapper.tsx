@@ -31,14 +31,14 @@ const EcrPaginationWrapper = ({
   const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
   return (
-    <div className="main-container height-ecr-library flex-column flex-align-center">
+    <div className="main-container flex-column flex-align-center flex-1 bg-white">
       {children}
       <PaginationBar
         currentPage={currentPage}
         totalCount={totalCount}
         itemsPerPage={itemsPerPage}
         itemType="eCRs"
-        classNames="ecr-pagination-drop-shadow"
+        classNames="ecr-pagination-drop-shadow bg-white"
         onItemsPerPageHandler={(value) => {
           // Write the cookie for future visits
           Cookies.set("itemsPerPage", value, {

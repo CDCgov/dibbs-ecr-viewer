@@ -13,6 +13,7 @@ import {
 } from "fhir/r4";
 import { DateTime } from "luxon";
 
+import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import { evaluateData, noData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -27,7 +28,6 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable from "@/app/view-data/components/EvaluateTable";
-import { ExpandCollapseAccordion } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 import {
@@ -305,7 +305,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
 
   return (
     <ExpandCollapseAccordion
-      className="accordion-rr margin-bottom-3"
+      className="accordion-rr"
       descriptor="employment details"
       items={jobObs.map((obs) => {
         const getComponentValue = (code: string) => {

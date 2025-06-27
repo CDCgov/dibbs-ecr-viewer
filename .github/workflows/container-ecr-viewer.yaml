@@ -153,11 +153,19 @@ jobs:
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
 
       - name: Run Playwright tests - Migrations
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:migrations
+
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+        shell: bash
+        run: |
+          echo "Saving $CONTAINER logs"
+          docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
       - name: Docker down
         working-directory: ./containers/${{env.CONTAINER}}
@@ -179,7 +187,7 @@ jobs:
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
 
       - name: Seed standard user and COVID program
         working-directory: ./containers/${{env.CONTAINER}}
@@ -188,6 +196,14 @@ jobs:
       - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e
+
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+        shell: bash
+        run: |
+          echo "Saving $CONTAINER logs"
+          docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
       - name: Docker down
         working-directory: ./containers/${{env.CONTAINER}}
@@ -216,11 +232,19 @@ jobs:
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
+        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
 
       - name: Run Playwright tests - Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:integrated
+
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+        shell: bash
+        run: |
+          echo "Saving $CONTAINER logs"
+          docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
       - name: Docker down
         working-directory: ./containers/${{env.CONTAINER}}
@@ -236,19 +260,23 @@ jobs:
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}/e2e
+        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
         shell: bash
         run: |
-          echo "Saving $container logs"
-          docker compose --profile "*" logs --timestamps >& e2e-run.log
+          echo "Saving $CONTAINER logs"
+          docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
       - name: Archive docker logs
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: logs
-          path: ./containers/${{env.CONTAINER}}/e2e/e2e-run.log
+          path: ./containers/${{env.CONTAINER}}/tests/e2e/e2e-run.log
           retention-days: 5
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
 
   integration-tests:
     strategy:
@@ -288,7 +316,7 @@ jobs:
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
+        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
 
       - name: Run integration tests - ${{ matrix.db_type }}
         working-directory: ./containers/${{env.CONTAINER}}
