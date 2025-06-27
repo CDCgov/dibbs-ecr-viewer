@@ -89,17 +89,13 @@ export const UserTable = ({
     }
 
     // Standard users not assigned to any program areas
-    if (
-      user_type === "standard" &&
-      program_areas.length === 0 &&
-      filterProgramAreas[NO_PROGRAM_AREA_OPTION]
-    ) {
-      return true;
+    if (user_type === "standard" && program_areas.length === 0) {
+      return filterProgramAreas[NO_PROGRAM_AREA_OPTION];
     }
 
     // Admin users must have All program areas (Admin) selected
-    if (user_type === "admin" && filterProgramAreas[ALL_PROGRAM_AREAS_OPTION]) {
-      return true;
+    if (user_type === "admin") {
+      return filterProgramAreas[ALL_PROGRAM_AREAS_OPTION];
     }
 
     return program_areas.some((program) => filterProgramAreas[program.name]);
