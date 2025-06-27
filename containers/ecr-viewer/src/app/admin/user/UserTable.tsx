@@ -297,11 +297,11 @@ const FilterByProgramArea = ({
       <div className="display-flex flex-column">
         <SelectDeselectAllCheckbox
           groupName="program area"
-          onChange={handleSelectDeselectAll}
+          onToggle={handleSelectDeselectAll}
           isAllSelected={isAllSelected}
         />
         <div className="border-top-1px border-base-lighter margin-x-105"></div>
-        {/* (Scroll) Filter by Program Area checkboxes */}
+        {/* Filter by Program Area checkboxes */}
         <CheckboxOptions
           groupName="program area"
           filterItems={filterProgramAreas}

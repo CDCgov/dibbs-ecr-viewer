@@ -334,17 +334,17 @@ export const CustomDateInput = ({
  * Checkbox to Select/Deselect all depending on checked status.
  * @param props - The properties for the Select/Deselect all checkbox.
  * @param props.groupName - The name of the group that's being selected/deselected.
- * @param props.onChange - The callback function to handle the `onChange` event when the checkbox is clicked.
+ * @param props.onToggle - The callback function to handle the toggle event when the checkbox is clicked.
  * @param props.isAllSelected - Indicates whether all are selected.
  * @returns The rendered Select/Deselect all checkbox component.
  */
 export const SelectDeselectAllCheckbox = ({
   groupName,
-  onChange,
+  onToggle,
   isAllSelected,
 }: {
   groupName: string;
-  onChange: () => void;
+  onToggle: () => void;
   isAllSelected: boolean;
 }) => {
   return (
@@ -354,7 +354,7 @@ export const SelectDeselectAllCheckbox = ({
         className="usa-checkbox__input"
         type="checkbox"
         value="all"
-        onChange={onChange}
+        onChange={onToggle}
         checked={isAllSelected}
       />
       <label
