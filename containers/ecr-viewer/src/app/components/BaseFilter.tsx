@@ -427,7 +427,13 @@ const CheckboxInput = ({
         checked={checked}
       />
       <label
-        className={classNames("usa-checkbox__label", "line-height-sans-6", "font-sans-xs", "margin-y-0", classNamesLabel)}
+        className={classNames(
+          "usa-checkbox__label",
+          "line-height-sans-6",
+          "font-sans-xs",
+          "margin-y-0",
+          classNamesLabel,
+        )}
         htmlFor={id}
       >
         {name}
