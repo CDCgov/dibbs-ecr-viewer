@@ -214,7 +214,7 @@ const AccordionLoadingSkeleton = () => {
 
   return (
     <Accordion
-      className="info-container"
+      className="accordion-primary accordion-ecr-section"
       items={accordionItems}
       multiselectable={true}
     />

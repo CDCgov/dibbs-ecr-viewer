@@ -55,7 +55,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
       </div>
     </div>
     <div
-      class="usa-accordion info-container"
+      class="usa-accordion accordion-primary accordion-ecr-section"
       data-allow-multiple="true"
       data-testid="accordion"
     >

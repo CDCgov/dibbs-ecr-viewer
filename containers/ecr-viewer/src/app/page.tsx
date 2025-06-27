@@ -73,11 +73,9 @@ const HomePage = async ({
 
   return (
     <div className="display-flex flex-column height-viewport-header-footer">
-      <main className="overflow-auto height-full">
+      <main className="overflow-auto height-full display-flex flex-column">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
-          <h2 className="margin-bottom-0 text-bold font-sans-xl">
-            eCR library
-          </h2>
+          <h2 className="margin-bottom-0 text-bold">eCR library</h2>
           <LibrarySearch
             initSearchTerm={config.search}
             className="margin-left-auto"

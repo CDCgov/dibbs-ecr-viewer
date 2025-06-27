@@ -3,11 +3,11 @@
 exports[`EcrPaginationWrapper should match snapshot 1`] = `
 <div>
   <div
-    class="main-container height-ecr-library flex-column flex-align-center"
+    class="main-container flex-column flex-align-center flex-1 bg-white"
   >
     <br />
     <div
-      class="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center ecr-pagination-drop-shadow"
+      class="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center ecr-pagination-drop-shadow bg-white"
     >
       <div
         class="flex-1"
