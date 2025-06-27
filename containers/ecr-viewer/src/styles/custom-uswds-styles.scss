@@ -324,6 +324,7 @@
 }
 
 .usa-tooltip {
+  // allow the icon to center without line height padding
   line-height: 1;
 }
 
@@ -335,6 +336,7 @@
   font-weight: normal;
   padding-left: 1rem;
   padding-right: 1rem;
+  // make sure the tooltip text is human readable
   line-height: 1.3;
 }
 
