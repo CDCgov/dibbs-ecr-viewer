@@ -185,35 +185,57 @@ exports[`Encounter should match snapshot 1`] = `
         <div
           class="gutter-3"
         >
-          <span
-            class="usa-tooltip"
-            data-testid="tooltipWrapper"
+          <div
+            class="display-flex flex-align-baseline"
           >
-            <div
-              aria-describedby="[object Object]"
-              class="usa-tooltip__trigger usa-tooltip short-tooltip"
-              data-testid="triggerElement"
-              tabindex="0"
-              title=""
+            <h4
+              class="usa-summary-box__heading padding-y-105"
+              id="facility-details"
             >
-              <h4
-                class="usa-summary-box__heading padding-y-105"
-                id="facility-details"
-              >
-                Facility Details
-              </h4>
-            </div>
+              Facility Details
+            </h4>
             <span
-              aria-hidden="true"
-              class="usa-tooltip__body"
-              data-testid="tooltipBody"
-              id="[object Object]"
-              role="tooltip"
-              title="Specific healthcare facility where the encounter took place."
+              class="usa-tooltip"
+              data-testid="tooltipWrapper"
             >
-              Specific healthcare facility where the encounter took place.
+              <div
+                aria-describedby="[object Object]"
+                class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
+                data-testid="triggerElement"
+                tabindex="0"
+                title=""
+              >
+                <svg
+                  aria-label="description"
+                  class="usa-icon tooltip-icon text-secondary flex-align-center"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                  />
+                </svg>
+              </div>
+              <span
+                aria-hidden="true"
+                class="usa-tooltip__body"
+                data-testid="tooltipBody"
+                id="[object Object]"
+                role="tooltip"
+                title="Specific healthcare facility where the encounter took place."
+              >
+                Specific healthcare facility where the encounter took place.
+              </span>
             </span>
-          </span>
+          </div>
           <div
             class="usa-summary-box__text"
           >
@@ -319,35 +341,57 @@ Echo Base, MA 00123
         <div
           class="gutter-3"
         >
-          <span
-            class="usa-tooltip"
-            data-testid="tooltipWrapper"
+          <div
+            class="display-flex flex-align-baseline"
           >
-            <div
-              aria-describedby="[object Object]"
-              class="usa-tooltip__trigger usa-tooltip short-tooltip"
-              data-testid="triggerElement"
-              tabindex="0"
-              title=""
+            <h4
+              class="usa-summary-box__heading padding-y-105"
+              id="provider-details"
             >
-              <h4
-                class="usa-summary-box__heading padding-y-105"
-                id="provider-details"
-              >
-                Provider Details
-              </h4>
-            </div>
+              Provider Details
+            </h4>
             <span
-              aria-hidden="true"
-              class="usa-tooltip__body"
-              data-testid="tooltipBody"
-              id="[object Object]"
-              role="tooltip"
-              title="Person or organization that provided care during the encounter."
+              class="usa-tooltip"
+              data-testid="tooltipWrapper"
             >
-              Person or organization that provided care during the encounter.
+              <div
+                aria-describedby="[object Object]"
+                class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
+                data-testid="triggerElement"
+                tabindex="0"
+                title=""
+              >
+                <svg
+                  aria-label="description"
+                  class="usa-icon tooltip-icon text-secondary flex-align-center"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                  />
+                </svg>
+              </div>
+              <span
+                aria-hidden="true"
+                class="usa-tooltip__body"
+                data-testid="tooltipBody"
+                id="[object Object]"
+                role="tooltip"
+                title="Person or organization that provided care during the encounter."
+              >
+                Person or organization that provided care during the encounter.
+              </span>
             </span>
-          </span>
+          </div>
           <div
             class="usa-summary-box__text"
           >
