@@ -428,7 +428,7 @@ describe("Utils", () => {
       render(<ToolTipElement toolTip="Tooltip">Item Title</ToolTipElement>);
       const tip = screen.getByTestId("triggerElement");
       expect(tip.className).toInclude("short-tooltip");
-      expect(tip.textContent).toInclude("Item Title");
+      expect(screen.getByText("Item Title")).toBeVisible();
     });
     it("should not make the tool tip short if the tip has more than 100 character", () => {
       const toolTip =
