@@ -263,18 +263,14 @@ const FilterByProgramArea = ({
   filterProgramAreas: FilterProgramAreasType;
   setFilterProgramAreas: Dispatch<SetStateAction<FilterProgramAreasType>>;
 }) => {
-  const handleSelectDeselectAll = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const { checked } = event.target;
+  const handleSelectDeselectAll = () => {
     const updatedProgramAreas = Object.keys(filterProgramAreas).reduce(
       (acc, programName) => {
-        acc[programName] = checked;
+        acc[programName] = !isAllSelected;
         return acc;
       },
-      {} as FilterProgramAreasType,
+      {} as FilterProgramAreasType
     );
-
     setFilterProgramAreas(updatedProgramAreas);
   };
 

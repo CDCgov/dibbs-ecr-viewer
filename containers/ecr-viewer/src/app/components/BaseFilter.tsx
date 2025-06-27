@@ -344,7 +344,7 @@ export const SelectDeselectAllCheckbox = ({
   isAllSelected,
 }: {
   groupName: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: () => void;
   isAllSelected: boolean;
 }) => {
   return (

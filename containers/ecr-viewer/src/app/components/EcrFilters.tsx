@@ -100,13 +100,15 @@ const FilterReportableConditions = ({
     });
   };
 
-  // Check/Uncheck all boxes based on Select all checkbox
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { checked } = event.target;
+  const isAllSelected = Object.values(filterConditions).every(
+    (val) => val === true
+  );
 
+  // Check/Uncheck all boxes based on Select all checkbox
+  const handleSelectAll = () => {
     const updatedConditions = Object.keys(filterConditions).reduce(
       (dict, condition) => {
-        dict[condition] = checked;
+        dict[condition] = !isAllSelected;
         return dict;
       },
       {} as { [key: string]: boolean },
@@ -114,10 +116,6 @@ const FilterReportableConditions = ({
 
     setFilterConditions(updatedConditions);
   };
-
-  const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true,
-  );
 
   return (
     <Filter
