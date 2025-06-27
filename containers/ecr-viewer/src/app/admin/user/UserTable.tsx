@@ -35,7 +35,7 @@ const USER_TYPE_OPTIONS: Record<string, string> = {
 const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
 const ALL_PROGRAM_AREAS_OPTION: string = "All program areas (Admin)";
 
-type FilterProgramAreasType = { [key: string]: boolean };
+type FilterProgramAreasType = Record<string, boolean>;
 
 /**
  *
@@ -77,37 +77,32 @@ export const UserTable = ({
   );
   const detailsRef = useDetailsRef();
 
-  const filteredProgramAreaNames = Object.keys(filterProgramAreas).filter(
-    (name) => filterProgramAreas[name] === true,
-  );
   const isAllSelected = Object.values(filterProgramAreas).every(
     (prog) => prog === true,
   );
 
   // If no program areas are selected, do not show any users including admins
   const filteredUsers = users.filter(({ user_type, program_areas }) => {
-    const matchUserType =
-      filterUserTypeOption === "all" || filterUserTypeOption === user_type;
+    // Match user type
+    if (filterUserTypeOption !== "all" && filterUserTypeOption !== user_type) {
+      return false
+    }
 
-    const userHasNoProgramAreas =
-      user_type === "standard" && program_areas.length === 0;
-    const matchNoProgramAreas =
-      filteredProgramAreaNames.includes(NO_PROGRAM_AREA_OPTION) &&
-      userHasNoProgramAreas;
+    // Standard users not assigned to any program areas
+    if (
+      user_type === "standard" &&
+      program_areas.length === 0 &&
+      filterProgramAreas[NO_PROGRAM_AREA_OPTION]
+    ) {
+      return true;
+    }
 
-    const matchAdmin =
-      user_type === "admin" &&
-      filteredProgramAreaNames.some(
-        (name) => name === ALL_PROGRAM_AREAS_OPTION,
-      );
+    // Admin users must have All program areas (Admin) selected
+    if (user_type === "admin" && filterProgramAreas[ALL_PROGRAM_AREAS_OPTION]) {
+      return true;
+    }
 
-    const matchProgramAreas =
-      matchAdmin ||
-      matchNoProgramAreas ||
-      program_areas.some((program) =>
-        filteredProgramAreaNames.includes(program.name),
-      );
-    return matchUserType && matchProgramAreas;
+    return program_areas.some((program) => filterProgramAreas[program.name]);
   });
 
   const tableHeaders: TableColumn<ListedUser>[] = [

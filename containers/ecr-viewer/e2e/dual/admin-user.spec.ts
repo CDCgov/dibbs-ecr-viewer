@@ -316,7 +316,8 @@ const createRandomUser = async (
   await page.waitForURL("/ecr-viewer/admin/user/create");
 
   const random = Math.floor(Math.random() * 1000);
-  await page.getByLabel("Email").fill(`${browserName}-${random}@user.com`);
+  const email = `${browserName}-${random}@user.com`;
+  await page.getByLabel("Email").fill(email);
 
   if (userType === "admin") {
     const adminRadio = page.getByLabel("Admin");
@@ -341,10 +342,10 @@ const createRandomUser = async (
   await page.waitForURL("/ecr-viewer/admin/user");
 
   await expect(
-    page.getByText(`${random}@user.com successfully saved`),
+    page.getByText(`${email} successfully saved`),
   ).toBeVisible();
 
-  return `${random}@user.com`;
+  return email;
 };
 
 const deleteProgramArea = async (page: Page, program: string) => {
