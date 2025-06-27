@@ -341,9 +341,7 @@ const createRandomUser = async (
   await page.getByRole("button", { name: "Save user" }).first().click();
   await page.waitForURL("/ecr-viewer/admin/user");
 
-  await expect(
-    page.getByText(`${email} successfully saved`),
-  ).toBeVisible();
+  await expect(page.getByText(`${email} successfully saved`)).toBeVisible();
 
   return email;
 };

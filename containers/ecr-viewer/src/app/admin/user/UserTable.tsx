@@ -85,7 +85,7 @@ export const UserTable = ({
   const filteredUsers = users.filter(({ user_type, program_areas }) => {
     // Match user type
     if (filterUserTypeOption !== "all" && filterUserTypeOption !== user_type) {
-      return false
+      return false;
     }
 
     // Standard users not assigned to any program areas
