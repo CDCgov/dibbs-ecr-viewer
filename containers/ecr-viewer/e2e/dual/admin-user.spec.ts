@@ -284,14 +284,6 @@ const createRandomProgramArea = async (page: Page) => {
   await checkboxCond.scrollIntoViewIfNeeded();
   await checkboxCond.dispatchEvent("click");
 
-  // Edge case if randomly adds a condition that's already in a different program area
-  const confirmModal = page.getByText(/Are you sure you want to add/i);
-  try {
-    await confirmModal.waitFor({ timeout: 1000 });
-    await page.getByRole("button", { name: /Yes, add condition/i }).click();
-  } catch (e) {
-    // Confirmation modal did not appear
-  }
   const conditionName = await checkboxCond.inputValue();
 
   await page.getByLabel("Program area name").fill(`Program ${conditionName}`);
