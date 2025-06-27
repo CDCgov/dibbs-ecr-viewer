@@ -10,15 +10,18 @@ const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jest-environment-jsdom",
   modulePathIgnorePatterns: ["<rootDir>/.next"],
-  testPathIgnorePatterns: ["<rootDir>/e2e"],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
+  testPathIgnorePatterns: ["<rootDir>/test/e2e"],
   collectCoverage: true,
   testMatch:
     process.env.TEST_TYPE === "integration"
-      ? ["<rootDir>/integration/**/?(*.)+(spec|test).[jt]s?(x)"]
-      : ["<rootDir>/src/**/?(*.)+(spec|test).[jt]s?(x)"],
+      ? ["<rootDir>/tests/integration/**/?(*.)+(spec|test).[jt]s?(x)"]
+      : ["<rootDir>/tests/unit/**/?(*.)+(spec|test).[jt]s?(x)"],
   setupFiles:
     process.env.TEST_TYPE === "integration"
-      ? ["<rootDir>/integration/setup.ts"]
+      ? ["<rootDir>/tests/integration/setup.ts"]
       : [],
 };
 
