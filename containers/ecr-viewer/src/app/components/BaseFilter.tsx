@@ -356,7 +356,6 @@ export const SelectDeselectAllCheckbox = ({
       checked={isAllSelected}
       onChange={() => onToggle()}
       classNamesDiv="padding-bottom-1 padding-x-105"
-      classNamesLabel="line-height-sans-6 font-sans-xs margin-y-0"
     />
   );
 };
@@ -388,13 +387,14 @@ export const CheckboxOptions = ({
           value={item}
           checked={filterItems[item]}
           onChange={onChange}
-          classNamesLabel="line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+          classNamesLabel="minw-40"
         />
       ))}
     </div>
   );
 };
 
+// Custom checkbox component to allow more customized styling
 type CheckboxInputProps = {
   id: string;
   name: string;
@@ -427,7 +427,7 @@ const CheckboxInput = ({
         checked={checked}
       />
       <label
-        className={classNames("usa-checkbox__label", classNamesLabel)}
+        className={classNames("usa-checkbox__label", "line-height-sans-6", "font-sans-xs", "margin-y-0", classNamesLabel)}
         htmlFor={id}
       >
         {name}
