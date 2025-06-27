@@ -97,8 +97,8 @@ export const UserTable = ({
     }
 
     // Admin users must have All program areas (Admin) selected
-    if (user_type === "admin" && filterProgramAreas[ALL_PROGRAM_AREAS_OPTION]) {
-      return true;
+    if (user_type === "admin") {
+      return filterProgramAreas[ALL_PROGRAM_AREAS_OPTION];
     }
 
     return program_areas.some((program) => filterProgramAreas[program.name]);
