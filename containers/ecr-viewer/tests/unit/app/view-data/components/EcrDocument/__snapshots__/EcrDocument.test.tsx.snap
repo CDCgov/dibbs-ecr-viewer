@@ -535,28 +535,50 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          <span
-                            class="usa-tooltip"
-                            data-testid="tooltipWrapper"
+                          <div
+                            class="display-flex flex-align-baseline"
                           >
-                            <div
-                              class="usa-tooltip__trigger usa-tooltip"
-                              data-testid="triggerElement"
-                              tabindex="0"
-                              title=""
-                            >
-                              Patient IDs
-                            </div>
+                            Patient IDs
                             <span
-                              aria-hidden="true"
-                              class="usa-tooltip__body"
-                              data-testid="tooltipBody"
-                              role="tooltip"
-                              title="Unique patient identifier(s) from their medical record. For example, a patient's social security number or medical record number."
+                              class="usa-tooltip"
+                              data-testid="tooltipWrapper"
                             >
-                              Unique patient identifier(s) from their medical record. For example, a patient's social security number or medical record number.
+                              <div
+                                class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                                data-testid="triggerElement"
+                                tabindex="0"
+                                title=""
+                              >
+                                <svg
+                                  aria-label="description"
+                                  class="usa-icon tooltip-icon text-secondary flex-align-center"
+                                  focusable="false"
+                                  height="1em"
+                                  role="img"
+                                  viewBox="0 0 24 24"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0V0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  />
+                                </svg>
+                              </div>
+                              <span
+                                aria-hidden="true"
+                                class="usa-tooltip__body"
+                                data-testid="tooltipBody"
+                                role="tooltip"
+                                title="Unique patient identifier(s) from their medical record. For example, a patient's social security number or medical record number."
+                              >
+                                Unique patient identifier(s) from their medical record. For example, a patient's social security number or medical record number.
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
@@ -1077,28 +1099,50 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          <span
-                            class="usa-tooltip"
-                            data-testid="tooltipWrapper"
+                          <div
+                            class="display-flex flex-align-baseline"
                           >
-                            <div
-                              class="usa-tooltip__trigger usa-tooltip"
-                              data-testid="triggerElement"
-                              tabindex="0"
-                              title=""
-                            >
-                              Miscellaneous Notes
-                            </div>
+                            Miscellaneous Notes
                             <span
-                              aria-hidden="true"
-                              class="usa-tooltip__body"
-                              data-testid="tooltipBody"
-                              role="tooltip"
-                              title="Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR."
+                              class="usa-tooltip"
+                              data-testid="tooltipWrapper"
                             >
-                              Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.
+                              <div
+                                class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                                data-testid="triggerElement"
+                                tabindex="0"
+                                title=""
+                              >
+                                <svg
+                                  aria-label="description"
+                                  class="usa-icon tooltip-icon text-secondary flex-align-center"
+                                  focusable="false"
+                                  height="1em"
+                                  role="img"
+                                  viewBox="0 0 24 24"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0V0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  />
+                                </svg>
+                              </div>
+                              <span
+                                aria-hidden="true"
+                                class="usa-tooltip__body"
+                                data-testid="tooltipBody"
+                                role="tooltip"
+                                title="Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR."
+                              >
+                                Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
@@ -1480,28 +1524,50 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          <span
-                            class="usa-tooltip"
-                            data-testid="tooltipWrapper"
+                          <div
+                            class="display-flex flex-align-baseline"
                           >
-                            <div
-                              class="usa-tooltip__trigger usa-tooltip"
-                              data-testid="triggerElement"
-                              tabindex="0"
-                              title=""
-                            >
-                              eICR ID
-                            </div>
+                            eICR ID
                             <span
-                              aria-hidden="true"
-                              class="usa-tooltip__body"
-                              data-testid="tooltipBody"
-                              role="tooltip"
-                              title="Unique document ID for the eICR that originates from the medical record. Different from the Document ID that NBS creates for all incoming records."
+                              class="usa-tooltip"
+                              data-testid="tooltipWrapper"
                             >
-                              Unique document ID for the eICR that originates from the medical record. Different from the Document ID that NBS creates for all incoming records.
+                              <div
+                                class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                                data-testid="triggerElement"
+                                tabindex="0"
+                                title=""
+                              >
+                                <svg
+                                  aria-label="description"
+                                  class="usa-icon tooltip-icon text-secondary flex-align-center"
+                                  focusable="false"
+                                  height="1em"
+                                  role="img"
+                                  viewBox="0 0 24 24"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0V0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  />
+                                </svg>
+                              </div>
+                              <span
+                                aria-hidden="true"
+                                class="usa-tooltip__body"
+                                data-testid="tooltipBody"
+                                role="tooltip"
+                                title="Unique document ID for the eICR that originates from the medical record. Different from the Document ID that NBS creates for all incoming records."
+                              >
+                                Unique document ID for the eICR that originates from the medical record. Different from the Document ID that NBS creates for all incoming records.
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"

@@ -3,6 +3,8 @@ import React from "react";
 
 import { Tooltip } from "@trussworks/react-uswds";
 
+import { InfoOutline } from "@/app/components/Icon";
+
 import { ForceClient } from "./ForceClient";
 
 type CustomDivProps = React.PropsWithChildren<{
@@ -54,16 +56,34 @@ export const ToolTipElement = ({
   // fundamentally a problem with uswds's Tooltip as it assigns an
   // SSR-unfriendly random id. If this is fixed (PR open that has been sitting for a while...),
   // then we can remove this.
+
+  const Icon = () => (
+    <InfoOutline
+      aria-label="description"
+      className="tooltip-icon text-secondary flex-align-center"
+    />
+  );
+
   return toolTip ? (
-    <ForceClient loading={children}>
-      <Tooltip
-        label={toolTip}
-        asCustom={TooltipDiv}
-        className={`usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
+    <div className="display-flex flex-align-baseline">
+      {children}
+      <ForceClient
+        loading={
+          // margin is on the span and not the icon so the tooltip is centered correctly
+          <span className="margin-left-05">
+            <Icon />
+          </span>
+        }
       >
-        {children}
-      </Tooltip>
-    </ForceClient>
+        <Tooltip
+          label={toolTip}
+          asCustom={TooltipDiv}
+          className={`margin-left-05 usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
+        >
+          <Icon />
+        </Tooltip>
+      </ForceClient>
+    </div>
   ) : (
     <>{children}</>
   );

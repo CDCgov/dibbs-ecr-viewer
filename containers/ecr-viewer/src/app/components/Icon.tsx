@@ -13,6 +13,7 @@ export const Event = UswdsIcon.Event;
 export const ExpandMore = UswdsIcon.ExpandMore;
 export const Folder = UswdsIcon.Folder;
 export const HighlightOff = UswdsIcon.HighlightOff;
+export const InfoOutline = UswdsIcon.InfoOutline;
 export const NavigateBefore = UswdsIcon.NavigateBefore;
 export const NavigateNext = UswdsIcon.NavigateNext;
 export const Person = UswdsIcon.Person;
