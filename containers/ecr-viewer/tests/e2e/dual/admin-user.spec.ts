@@ -243,7 +243,15 @@ test.describe("user management page", () => {
     ).not.toBeVisible();
 
     // No program areas (Standard) should show standard users with no program areas
-    // await checkboxAllProgramAreas.dispatchEvent("click");
+    await checkboxAllProgramAreas.dispatchEvent("click");
+    const checkboxNoProgramAreas = page.getByLabel(
+      "No program areas (Standard)"
+    );
+    await checkboxNoProgramAreas.dispatchEvent("click");
+    await expect(page.getByRole("table").getByText(userStandard3)).toBeVisible();
+    await expect(page.getByText(userAdmin)).not.toBeVisible();
+    await expect(page.getByText(userStandard1)).not.toBeVisible();
+    await expect(page.getByText(userStandard2)).not.toBeVisible();
 
     // Escape and reset
     await page.keyboard.press("Escape");

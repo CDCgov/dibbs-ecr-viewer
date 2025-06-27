@@ -57,12 +57,9 @@ export const UserTable = ({
   const sortedProgramAreas = [...programAreas].sort((a, b) =>
     a.name.localeCompare(b.name),
   );
-  const anyUsersNoPrograms = users.some(
-    (user) => user.user_type === "standard" && user.program_areas.length === 0,
-  );
   const initFilterProgramAreaState: FilterProgramAreasType = {
     [ALL_PROGRAM_AREAS_OPTION]: true,
-    ...(anyUsersNoPrograms ? { [NO_PROGRAM_AREA_OPTION]: true } : {}),
+    [NO_PROGRAM_AREA_OPTION]: true,
     ...sortedProgramAreas.reduce((acc, program) => {
       acc[program.name] = true;
       return acc;
