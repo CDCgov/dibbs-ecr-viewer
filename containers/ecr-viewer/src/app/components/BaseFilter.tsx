@@ -395,7 +395,6 @@ export const CheckboxOptions = ({
   );
 };
 
-
 type CheckboxInputProps = {
   id: string;
   name: string;
