@@ -17,12 +17,12 @@ from app.utils import (
 
 def test_load_processing_config_success():
     test_config_path = (
-        Path(__file__).parent.parent / "app" / "default_configs" / "test_config.json"
+        Path(__file__).parent.parent / "app" / "default_configs" / "test-config.json"
     )
     with open(test_config_path) as file:
         test_config = json.load(file)
 
-    config = load_processing_config("test_config.json")
+    config = load_processing_config("test-config.json")
     assert config == test_config
 
 

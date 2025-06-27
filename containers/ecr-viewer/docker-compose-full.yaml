@@ -38,7 +38,6 @@ services:
       context: ../orchestration
     depends_on:
       [
-        validation-service,
         fhir-converter-service,
         ingestion-service,
         trigger-code-reference-service,
@@ -51,14 +50,6 @@ services:
       driver: "json-file"
     env_file:
       - ../orchestration/.env
-  validation-service:
-    platform: linux/amd64
-    build:
-      context: ../validation
-    ports:
-      - "${VALIDATION_PORT_NUMBER}:8080"
-    logging:
-      driver: "json-file"
   fhir-converter-service:
     platform: linux/amd64
     build:

@@ -1,14 +1,6 @@
 {
   "workflow": [
     {
-      "service": "validation",
-      "url": "${VALIDATION_URL}",
-      "endpoint": "/validate",
-      "params": {
-        "include_error_types": "error"
-      }
-    },
-    {
       "service": "fhir_converter",
       "url": "${FHIR_CONVERTER_URL}",
       "endpoint": "/convert-to-fhir"

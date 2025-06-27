@@ -192,8 +192,7 @@ def _socket_response_is_valid(**kwargs) -> bool:
     """
     Utility function that indicates whether a websocket endpoint can return
     data that the orchestration service processed. If the service sent back
-    a 200, or the validation service verified the message's integrity, the
-    socket can continue.
+    a 200 the socket can continue.
     """
     response = kwargs["response"]
     body = response.json()

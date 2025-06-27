@@ -20,4 +20,3 @@ The Docker files that need to be changed are
 - containers/ingestion/DockerFile
 - containers/message-parser/DockerFile
 - containers/tabulation/DockerFile
-- containers/validation/DockerFile
