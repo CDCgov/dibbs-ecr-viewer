@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 import { Button, Label } from "@trussworks/react-uswds";
+import classNames from "classnames";
 
 import { toKebabCase, toSentenceCase } from "@/app/utils/format-utils";
 
@@ -348,22 +349,15 @@ export const SelectDeselectAllCheckbox = ({
   isAllSelected: boolean;
 }) => {
   return (
-    <div className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105">
-      <input
-        id={`${groupName}-all`}
-        className="usa-checkbox__input"
-        type="checkbox"
-        value="all"
-        onChange={onToggle}
-        checked={isAllSelected}
-      />
-      <label
-        className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
-        htmlFor={`${groupName}-all`}
-      >
-        {isAllSelected ? "Deselect all" : "Select all"}
-      </label>
-    </div>
+    <CheckboxInput
+      id={`${groupName}-all`}
+      name={isAllSelected ? "Deselect all" : "Select all"}
+      value="all"
+      checked={isAllSelected}
+      onChange={() => onToggle()}
+      classNamesDiv="padding-bottom-1 padding-x-105"
+      classNamesLabel="line-height-sans-6 font-sans-xs margin-y-0"
+    />
   );
 };
 
@@ -387,23 +381,58 @@ export const CheckboxOptions = ({
   return (
     <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105">
       {Object.keys(filterItems).map((item) => (
-        <div className="checkbox-color usa-checkbox" key={item}>
-          <input
-            id={`${groupName}-${item}`}
-            className="usa-checkbox__input"
-            type="checkbox"
-            value={item}
-            onChange={onChange}
-            checked={filterItems[item]}
-          />
-          <label
-            className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
-            htmlFor={`${groupName}-${item}`}
-          >
-            {item}
-          </label>
-        </div>
+        <CheckboxInput
+          key={item}
+          id={`${groupName}-${item}`}
+          name={item}
+          value={item}
+          checked={filterItems[item]}
+          onChange={onChange}
+          classNamesLabel="line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+        />
       ))}
+    </div>
+  );
+};
+
+
+type CheckboxInputProps = {
+  id: string;
+  name: string;
+  value: string;
+  checked: boolean;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  classNamesDiv?: string;
+  classNamesLabel?: string;
+};
+
+const CheckboxInput = ({
+  id,
+  name,
+  value,
+  checked,
+  onChange,
+  classNamesDiv = "",
+  classNamesLabel = "",
+}: CheckboxInputProps) => {
+  return (
+    <div
+      className={classNames("checkbox-color", "usa-checkbox", classNamesDiv)}
+    >
+      <input
+        id={id}
+        className="usa-checkbox__input"
+        type="checkbox"
+        value={value}
+        onChange={onChange}
+        checked={checked}
+      />
+      <label
+        className={classNames("usa-checkbox__label", classNamesLabel)}
+        htmlFor={id}
+      >
+        {name}
+      </label>
     </div>
   );
 };
