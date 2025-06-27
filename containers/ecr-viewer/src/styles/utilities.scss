@@ -5,6 +5,14 @@
 // These typically expand the builtin set provided by uswds, so use
 // those first, then if needed add one following their naming conventions.
 
+@use "variables" as *;
+
+// ==== background coloe ==== //
+
+.bg-container {
+  background-color: $background;
+}
+
 // ==== flex ==== //
 
 .flex-shrink-0 {

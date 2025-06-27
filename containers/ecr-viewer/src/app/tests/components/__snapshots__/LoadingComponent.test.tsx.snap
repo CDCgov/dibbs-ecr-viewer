@@ -597,7 +597,7 @@ exports[`Snapshot test for EcrLoadingSkeleton should match snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="usa-accordion info-container"
+                class="usa-accordion accordion-primary accordion-ecr-section"
                 data-allow-multiple="true"
                 data-testid="accordion"
               >

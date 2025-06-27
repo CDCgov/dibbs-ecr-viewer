@@ -36,7 +36,7 @@ export default async function RootLayout({
       <html lang="en">
         <head />
         <body className="overflow-x-auto">
-          <div className="minw-55rem position-relative isolate">
+          <div className="minw-main position-relative isolate">
             <AuthSessionProvider initSession={initSession}>
               {isUsingNextAuth && <AutoSignout />}
               <ToastProvider>

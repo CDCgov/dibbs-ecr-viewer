@@ -27,7 +27,7 @@ export const LabAccordion = ({
 
   return (
     <Accordion
-      className="accordion-rr margin-bottom-3"
+      className="accordion-rr"
       items={uniqueIdItems}
       multiselectable={true}
     />

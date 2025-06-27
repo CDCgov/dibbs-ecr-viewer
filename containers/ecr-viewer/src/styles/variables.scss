@@ -1,0 +1,49 @@
+// From https://github.com/CDCgov/dibbs-design-system/blob/main/sass/_variables.scss
+
+@use "uswds-settings" as *;
+@use "tokens" as *;
+
+// Pulled from the Design System Figma
+// https://www.figma.com/design/GHKuvdgY2CbfBRZKmetZNB/--DIBBs-Design-System?node-id=0-1&t=Mg5hMzBQIji0cBdB-1
+
+// Design system spacing
+$application-max-width: 45rem;
+$application-wide-max-width: 90rem;
+$application-content-margins: 13.75rem;
+$application-content-margins-wide: 10rem;
+$application-content-width-wide: calc(
+  $application-wide-max-width - 2 * $application-content-margins-wide
+);
+
+$header-content-height: 3rem;
+$footer-content-height: 5rem;
+$default-table-padding: 1.5rem;
+$site-alert-height: 2.5rem;
+
+// Design System Color Tokens
+$text-primary: black;
+$text-secondary: $gray-500;
+$text-inactive: $gray-20;
+$text-inactive-dark: $gray-600;
+
+$destructive-primary: #d54309; // primary error / info color
+$destructive-dark: #b51d09; // error hover
+$destructive-darker: #6f3331; // error active
+
+// non-opaque color meter read of rgb(from $blue-cool-50 r g b / 5%) then made as minimally
+// light while maintaining 4.5:1 contrast ratio with the primary color as text on it;
+$background: #fcfcfd;
+$background-dark: $gray-200;
+$background-darker: $gray-300;
+$background-darkest: $gray-500;
+
+$border: $gray-400;
+$border-light: $gray-300;
+$border-dark: $gray-500;
+// Semantic tokens
+$hover-neutral: $gray-200;
+
+$drop-shadow: $gray-200;
+$focus-outline: $blue-40v;
+
+$overlay-background: rgba(0, 0, 0, 0.5);
