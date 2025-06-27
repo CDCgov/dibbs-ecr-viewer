@@ -8,13 +8,13 @@ import {
   Radio,
 } from "@trussworks/react-uswds";
 
+import { ExpandCollapseAccordionControlled } from "@/app/components/ExpandCollapseAccordion";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { makePlural, toKebabCase, toTitleCase } from "@/app/utils/format-utils";
-import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
 export type UserType = "admin" | "standard";
