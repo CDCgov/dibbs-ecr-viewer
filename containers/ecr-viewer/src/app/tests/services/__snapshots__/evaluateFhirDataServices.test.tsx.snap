@@ -268,7 +268,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when all fields present 1`] = `
 <ExpandCollapseAccordion
-  className="accordion-rr margin-bottom-3"
+  className="accordion-rr"
   descriptor="employment details"
   items={
     [
@@ -403,7 +403,7 @@ Nowhereville, KS",
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when multiple jobs and sort correctly 1`] = `
 <ExpandCollapseAccordion
-  className="accordion-rr margin-bottom-3"
+  className="accordion-rr"
   descriptor="employment details"
   items={
     [
@@ -582,7 +582,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when no workplace info 1`] = `
 <ExpandCollapseAccordion
-  className="accordion-rr margin-bottom-3"
+  className="accordion-rr"
   descriptor="employment details"
   items={
     [
@@ -649,7 +649,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when partial info 1`] = `
 <ExpandCollapseAccordion
-  className="accordion-rr margin-bottom-3"
+  className="accordion-rr"
   descriptor="employment details"
   items={
     [

@@ -270,7 +270,7 @@ End: 05/13/2000 9:57 AM UTC
         class="usa-summary-box__text condition-details-accordion"
       >
         <div
-          class="usa-accordion"
+          class="usa-accordion accordion-primary"
           data-testid="accordion"
         >
           <h4
