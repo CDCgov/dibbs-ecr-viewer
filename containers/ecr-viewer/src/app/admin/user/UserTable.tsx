@@ -269,7 +269,7 @@ const FilterByProgramArea = ({
         acc[programName] = !isAllSelected;
         return acc;
       },
-      {} as FilterProgramAreasType
+      {} as FilterProgramAreasType,
     );
     setFilterProgramAreas(updatedProgramAreas);
   };

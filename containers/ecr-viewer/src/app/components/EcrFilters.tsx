@@ -101,7 +101,7 @@ const FilterReportableConditions = ({
   };
 
   const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true
+    (val) => val === true,
   );
 
   // Check/Uncheck all boxes based on Select all checkbox
