@@ -11,7 +11,6 @@ from app.handlers.request_builders.ingestion import (
     build_ingestion_dob_request,
     build_ingestion_name_request,
     build_ingestion_phone_request,
-    build_validation_request,
 )
 from app.handlers.request_builders.message_parser import (
     build_message_parser_message_request,
@@ -24,7 +23,6 @@ from app.handlers.response_builders.ecr_viewer import unpack_save_fhir_data_resp
 from app.handlers.response_builders.fhir_converter import unpack_fhir_converter_response
 from app.handlers.response_builders.ingestion import (
     unpack_ingestion_standardization,
-    unpack_validation_response,
 )
 from app.handlers.response_builders.message_parser import (
     unpack_fhir_to_phdc_response,
@@ -39,7 +37,6 @@ from app.utils import format_service_url
 
 # Locations of the various services the service will delegate
 SERVICE_URLS = {
-    "validation": os.environ.get("VALIDATION_URL"),
     "ingestion": os.environ.get("INGESTION_URL"),
     "fhir_converter": os.environ.get("FHIR_CONVERTER_URL"),
     "message_parser": os.environ.get("MESSAGE_PARSER_URL"),
@@ -52,7 +49,6 @@ SERVICE_URLS = {
 # functions--lets the workflow config drive the API loop with no need
 # to change function signatures
 ENDPOINT_TO_REQUEST_BODY = {
-    "validate": build_validation_request,
     "convert-to-fhir": build_fhir_converter_request,
     "geocode_bundle": build_geocoding_request,
     "standardize_names": build_ingestion_name_request,
@@ -64,7 +60,6 @@ ENDPOINT_TO_REQUEST_BODY = {
     "save-fhir-data": build_save_fhir_data_body,
 }
 ENDPOINT_TO_RESPONSE = {
-    "validate": unpack_validation_response,
     "convert-to-fhir": unpack_fhir_converter_response,
     "geocode_bundle": unpack_ingestion_standardization,
     "standardize_names": unpack_ingestion_standardization,
@@ -196,8 +191,8 @@ async def call_apis(
                 detail=error_detail,
             )
 
-        # Validation and save_bundle do not contain any updates to the data
-        if service not in ["validation", "save_bundle"]:
+        # Save_bundle does not contain any updates to the data
+        if service not in ["save_bundle"]:
             current_message = service_response.msg_content
         name = step.get("name", service)
         responses[name] = response

@@ -3,34 +3,6 @@ import os
 from app.models import OrchestrationRequest
 
 
-def build_validation_request(
-    input_msg: str,
-    orchestration_request: OrchestrationRequest,
-    workflow_params: dict | None = None,
-) -> dict:
-    """
-    Helper function for constructing the input payload for an API call to
-    the DIBBs validation service. This handler simply reorders and formats
-    the parameters into an acceptable input for the validator.
-
-    :param input_msg: The data the user sent for workflow processing, as
-      a string.
-    :param orchestration_request: The request the client initially sent
-      to the orchestration service. This request bundles a number of
-      parameter settings into one dictionary that each handler can
-      accept for consistency.
-    :param workflow_params: Optionally, a set of configuration parameters
-      included in the workflow config for the validation step of a workflow.
-    :return: A dictionary ready to send to the validation service.
-    """
-    return {
-        "message_type": orchestration_request.get("message_type"),
-        "include_error_types": workflow_params.get("include_error_types"),
-        "message": orchestration_request.get("message"),
-        "rr_data": orchestration_request.get("rr_data"),
-    }
-
-
 def build_ingestion_name_request(
     input_msg: str,
     orchestration_request: OrchestrationRequest,

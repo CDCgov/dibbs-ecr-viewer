@@ -40,4 +40,4 @@ local-dev:
 
 support-services:
 	@echo "Starting support services..."
-	docker compose up postgres ecr-viewer validation-service fhir-converter-service ingestion-service trigger-code-reference-service message-parser-service -d && docker compose logs
+	docker compose up postgres ecr-viewer fhir-converter-service ingestion-service trigger-code-reference-service message-parser-service -d && docker compose logs
