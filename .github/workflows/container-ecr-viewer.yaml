@@ -159,6 +159,14 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:migrations
 
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+        shell: bash
+        run: |
+          echo "Saving $CONTAINER logs"
+          docker compose --profile "*" logs --timestamps >& e2e-run.log
+
       - name: Docker down
         working-directory: ./containers/${{env.CONTAINER}}
         run: docker compose --profile "*" down
@@ -188,6 +196,14 @@ jobs:
       - name: Run Playwright tests - Non-Integrated
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e
+
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+        shell: bash
+        run: |
+          echo "Saving $CONTAINER logs"
+          docker compose --profile "*" logs --timestamps >& e2e-run.log
 
       - name: Docker down
         working-directory: ./containers/${{env.CONTAINER}}
@@ -222,6 +238,14 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:integrated
 
+      - name: Get docker logs
+        if: ${{ !cancelled() }}
+        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+        shell: bash
+        run: |
+          echo "Saving $CONTAINER logs"
+          docker compose --profile "*" logs --timestamps >& e2e-run.log
+
       - name: Docker down
         working-directory: ./containers/${{env.CONTAINER}}
         run: docker compose --profile "*" down
@@ -239,7 +263,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
         shell: bash
         run: |
-          echo "Saving $container logs"
+          echo "Saving $CONTAINER logs"
           docker compose --profile "*" logs --timestamps >& e2e-run.log
 
       - name: Archive docker logs
@@ -249,6 +273,10 @@ jobs:
           name: logs
           path: ./containers/${{env.CONTAINER}}/tests/e2e/e2e-run.log
           retention-days: 5
+
+      - name: Docker down
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: docker compose --profile "*" down
 
   integration-tests:
     strategy:
