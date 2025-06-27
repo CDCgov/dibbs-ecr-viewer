@@ -13,7 +13,7 @@ const customJestConfig = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  testPathIgnorePatterns: ["<rootDir>/test/e2e"],
+  testPathIgnorePatterns: ["<rootDir>/tests/e2e"],
   collectCoverage: true,
   testMatch:
     process.env.TEST_TYPE === "integration"
