@@ -6,12 +6,6 @@ from unittest.mock import patch
 import httpx
 import pytest
 from lxml import etree
-from starlette.testclient import TestClient
-
-from app.config import get_settings
-from app.main import app
-
-get_settings()
 
 ORCHESTRATION_URL = "http://localhost:8080"
 PROCESS_ZIP_ENDPOINT = ORCHESTRATION_URL + "/process-zip"
@@ -26,7 +20,6 @@ def test_health_check(setup):
     """
     port_number_strings = [
         "ORCHESTRATION_PORT_NUMBER",
-        "VALIDATION_PORT_NUMBER",
         "FHIR_CONVERTER_PORT_NUMBER",
         "INGESTION_PORT_NUMBER",
         "MESSAGE_PARSER_PORT_NUMBER",
@@ -162,7 +155,7 @@ def test_success_save_to_ecr_viewer(setup):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "sample-orchestration-config.json",
+            "config_file_name": "integrated.json",
         }
         files = {"upload_file": ("file.zip", file)}
         orchestration_response = httpx.post(
@@ -289,48 +282,3 @@ def test_process_message_hl7(setup):
         f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
-
-
-@pytest.mark.asyncio
-@pytest.mark.integration
-async def test_websocket_process_message_endpoint(setup):
-    expected_response_message = {
-        "validate": {
-            "status": "success",
-            "status_code": 200,
-            "response": {
-                "message_valid": True,
-                "validation_results": {
-                    "fatal": [],
-                    "errors": [],
-                    "warnings": [],
-                    "information": [],
-                    "message_ids": {
-                        "eicr": {
-                            "extension": None,
-                            "root": "c34356e3-e6e7-4905-b239-c26c6e493921",
-                        },
-                        "rr": {},
-                    },
-                },
-            },
-        },
-    }
-
-    # Pull in and read test zip file
-    with open(
-        Path(__file__).parent.parent / "assets" / "test_zip.zip",
-        "rb",
-    ) as file:
-        test_zip = file.read()
-
-    # Create fake websocket connection
-    with TestClient(app) as client:
-        with client.websocket_connect("/process-ws") as websocket:
-            # Send zip into fake connection, triggering process-ws endpoint
-            websocket.send_bytes(test_zip)
-
-            # Pull response message from websocket connection like frontend would
-            messages = websocket.receive_json()
-
-    assert messages == expected_response_message

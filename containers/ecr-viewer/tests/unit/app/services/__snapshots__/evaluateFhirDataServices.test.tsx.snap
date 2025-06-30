@@ -1,0 +1,806 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
+<JsonTable
+  className="caption-data-title margin-y-0"
+  jsonTableData={
+    {
+      "resultName": "Encounter Care Team",
+      "tables": [
+        [
+          {
+            "Dates": {
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
+            },
+            "Name": {
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
+            },
+            "Role": {
+              "value": "attender",
+            },
+          },
+        ],
+      ],
+    }
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
+{
+  "availableData": [
+    {
+      "table": true,
+      "title": "Hospital Discharge Diagnosis",
+      "value": <EvaluateTable
+        caption="Hospital Discharge Diagnosis"
+        columns={
+          [
+            {
+              "columnName": "Problem",
+              "infoPath": "conditionCode",
+            },
+            {
+              "applyToValue": [Function],
+              "columnName": "Date/Time",
+              "infoPath": "conditionOnsetDateTime",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "code": "problem-item-list",
+                      "display": "Problem List Item",
+                      "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                    },
+                  ],
+                },
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "code": "840539006",
+                    "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "system": "http://snomed.info/sct",
+                  },
+                ],
+              },
+              "extension": [
+                {
+                  "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  "valueCoding": {
+                    "code": "840539006",
+                    "system": "http://snomed.info/sct",
+                  },
+                },
+              ],
+              "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67",
+                },
+              ],
+              "meta": {
+                "source": "ecr",
+              },
+              "onsetDateTime": "2025-02-05",
+              "resourceType": "Condition",
+              "subject": {
+                "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
+              },
+            },
+          ]
+        }
+      />,
+    },
+  ],
+  "unavailableData": [
+    {
+      "table": true,
+      "title": "Hospital Admission Diagnosis",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data when present and match snapshot 1`] = `
+{
+  "availableData": [
+    {
+      "table": true,
+      "title": "Hospital Admission Diagnosis",
+      "value": <EvaluateTable
+        caption="Hospital Admission Diagnosis"
+        columns={
+          [
+            {
+              "columnName": "Problem",
+              "infoPath": "conditionCode",
+            },
+            {
+              "applyToValue": [Function],
+              "columnName": "Date/Time",
+              "infoPath": "conditionOnsetDateTime",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "code": "problem-item-list",
+                      "display": "Problem List Item",
+                      "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                    },
+                  ],
+                },
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "code": "840539006",
+                    "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "system": "http://snomed.info/sct",
+                  },
+                ],
+              },
+              "extension": [
+                {
+                  "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  "valueCoding": {
+                    "code": "840539006",
+                    "system": "http://snomed.info/sct",
+                  },
+                },
+              ],
+              "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67",
+                },
+              ],
+              "meta": {
+                "source": "ecr",
+              },
+              "onsetDateTime": "2025-02-05",
+              "resourceType": "Condition",
+              "subject": {
+                "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
+              },
+            },
+          ]
+        }
+      />,
+    },
+    {
+      "table": true,
+      "title": "Hospital Discharge Diagnosis",
+      "value": <EvaluateTable
+        caption="Hospital Discharge Diagnosis"
+        columns={
+          [
+            {
+              "columnName": "Problem",
+              "infoPath": "conditionCode",
+            },
+            {
+              "applyToValue": [Function],
+              "columnName": "Date/Time",
+              "infoPath": "conditionOnsetDateTime",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "code": "problem-item-list",
+                      "display": "Problem List Item",
+                      "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                    },
+                  ],
+                },
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "code": "840539006",
+                    "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                    "system": "http://snomed.info/sct",
+                  },
+                ],
+              },
+              "extension": [
+                {
+                  "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  "valueCoding": {
+                    "code": "840539006",
+                    "system": "http://snomed.info/sct",
+                  },
+                },
+              ],
+              "id": "d42c4a1f-f700-61bf-62a0-c034257d6a79",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:ab1791b0-5c71-11e3-9c78-0800200c9a67",
+                },
+              ],
+              "meta": {
+                "source": "ecr",
+              },
+              "onsetDateTime": "2025-02-05",
+              "resourceType": "Condition",
+              "subject": {
+                "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
+              },
+            },
+          ]
+        }
+      />,
+    },
+  ],
+  "unavailableData": [],
+}
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when all fields present 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": true,
+                "title": "Workplace Information",
+                "value": [
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Address",
+                        "titleNormal": true,
+                        "value": "123 Test St
+Nowhereville, KS",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Schedule",
+                        "titleNormal": true,
+                        "value": "~schedule~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Hours",
+                        "titleNormal": true,
+                        "value": "~hours~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Days",
+                        "titleNormal": true,
+                        "value": "~days~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Duties",
+                        "titleNormal": true,
+                        "value": "~duties~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Pay Grade",
+                        "titleNormal": true,
+                        "value": "~pay grade~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Employment Type",
+                        "titleNormal": true,
+                        "value": "~employment type~",
+                      }
+                    }
+                  />,
+                ],
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when multiple jobs and sort correctly 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12346",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2015 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12347",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2018 - 01/04/2022",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Past
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when no workplace info 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when partial info 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": true,
+                "title": "Workplace Information",
+                "value": [
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Address",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Schedule",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Hours",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Days",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Duties",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Pay Grade",
+                        "titleNormal": true,
+                        "value": "~pay grade~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Employment Type",
+                        "titleNormal": true,
+                        "value": "~employment type~",
+                      }
+                    }
+                  />,
+                ],
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;

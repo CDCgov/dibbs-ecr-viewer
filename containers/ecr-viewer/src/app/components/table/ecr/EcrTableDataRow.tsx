@@ -67,11 +67,11 @@ export const EcrTableDataRow = ({
         aria-setsize={numEcrs}
         aria-posinset={index + 1}
         aria-expanded={item.related_ecrs.length > 0 ? isExpanded : undefined}
-        layout="position"
+        layout={true}
         transition={transition}
         key={`row-${item.ecrId}`}
       >
-        <td role="gridcell">
+        <motion.td role="gridcell" layout="position">
           <div className="patient-name-cell">
             {item.related_ecrs.length > 0 && (
               <Button
@@ -102,11 +102,19 @@ export const EcrTableDataRow = ({
               DOB: {item.patient_date_of_birth}
             </div>
           </div>
-        </td>
-        <td role="gridcell">{item.date_created}</td>
-        <td role="gridcell">{item.patient_report_date || noData}</td>
-        <td role="gridcell">{conditionsList}</td>
-        <td role="gridcell">{summariesList}</td>
+        </motion.td>
+        <motion.td layout="position" role="gridcell">
+          {item.date_created}
+        </motion.td>
+        <motion.td layout="position" role="gridcell">
+          {item.patient_report_date || noData}
+        </motion.td>
+        <motion.td layout="position" role="gridcell">
+          {conditionsList}
+        </motion.td>
+        <motion.td layout="position" role="gridcell">
+          {summariesList}
+        </motion.td>
       </motion.tr>
 
       {isExpanded && <RelatedRows item={item} patientName={patientName} />}

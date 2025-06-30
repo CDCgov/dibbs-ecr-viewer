@@ -20,12 +20,12 @@ def test_list_loaded_configs():
 
 def test_get_specific_config():
     test_config_path = (
-        Path(__file__).parent.parent / "app" / "default_configs" / "test_config.json"
+        Path(__file__).parent.parent / "app" / "default_configs" / "test-config.json"
     )
     with open(test_config_path) as file:
         test_config = json.load(file)
 
-    response = client.get("/configs/test_config.json")
+    response = client.get("/configs/test-config.json")
     assert response.status_code == 200
     assert response.json() == {
         "message": "Config found!",

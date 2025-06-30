@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import {
   LabReportElementData,
   isLabReportElementDataList,
@@ -10,7 +11,6 @@ import {
 } from "@/app/view-data/component-utils";
 
 import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
-import { ExpandCollapseAccordion } from "./ExpandCollapseAccordion";
 
 interface LabInfoProps {
   labResults: DisplayDataProps[] | LabReportElementData[];

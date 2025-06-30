@@ -3,36 +3,6 @@ from httpx import Response
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 
 
-def unpack_validation_response(response: Response) -> ServiceHandlerResponse:
-    """
-    Helper function for processing a response from the DIBBs validation
-    service. If the message is valid, with no errors in data structure,
-    just report that to the calling orchestrator so we can continue the
-    workflow. If the message isn't valid but the service succeeded (status
-    code 200), tell the caller what the errors were so they can abort
-    and inform the user.
-
-    :param response: The response returned by a POST request to the validation
-      service.
-    :return: A ServiceHandlerResponse with any validation errors the data
-      generated, or an instruction to continue to the next service.
-    """
-    match response.status_code:
-        case 200:
-            validator_response = response.json()
-            return ServiceHandlerResponse(
-                response.status_code,
-                validator_response.get("validation_results"),
-                validator_response.get("message_valid"),
-            )
-        case _:
-            return ServiceHandlerResponse(
-                response.status_code,
-                f"Validation service failed: {response.text}",
-                False,
-            )
-
-
 def unpack_ingestion_standardization(response: Response) -> ServiceHandlerResponse:
     """
     Helper function for processing a response from the ingestion standardization

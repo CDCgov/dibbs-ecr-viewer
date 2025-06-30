@@ -38,8 +38,5 @@ flag_management:
     - name: "trigger-code-reference"
       paths:
         - "containers/trigger-code-reference"
-    - name: "validation"
-      paths:
-        - "containers/validation"
 ignore:
   - "**/tests"

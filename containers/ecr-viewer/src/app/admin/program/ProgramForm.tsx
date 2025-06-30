@@ -10,6 +10,7 @@ import {
   TextInput,
 } from "@trussworks/react-uswds";
 
+import { ExpandCollapseAccordionControlled } from "@/app/components/ExpandCollapseAccordion";
 import { Search } from "@/app/components/Icon";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
@@ -19,7 +20,6 @@ import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { makePlural, toKebabCase } from "@/app/utils/format-utils";
-import { ExpandCollapseAccordionControlled } from "@/app/view-data/components/ExpandCollapseAccordion";
 import { AccordionItem } from "@/app/view-data/types";
 
 interface FormCondition extends ListedCondition {

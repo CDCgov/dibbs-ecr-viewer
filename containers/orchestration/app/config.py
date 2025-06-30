@@ -11,7 +11,6 @@ class Settings(BaseSettings):
     """
 
     fhir_converter_url: str
-    validation_url: str
     message_parser_url: str
     ingestion_url: str
     trigger_code_reference_url: str
