@@ -140,3 +140,65 @@ This table stores patient address information. Note that the primary key for thi
 | `period_start` | `datetime`     | NULL        |               | Start date of the address's validity period                                                   |
 | `period_end`   | `datetime`     | NULL        |               | End date of the address's validity period                                                     |
 | `eicr_id`      | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id` |
+
+
+
+
+
+### `user` Table
+
+This table stores user information.
+
+| Column Name        | Data Type          | Nullability | Default Value | Description                           |
+| :----------------- | :----------------- | :---------- | :------------ | :------------------------------------ |
+| `uuid`             | `varchar(200)`     | NOT NULL    |               | Primary key, unique identifier for the user |
+| `email`            | `varchar(200)`     | NOT NULL    |               | User's email address, must be unique  |
+| `name`             | `varchar(200)`     | NULL        |               | User's full name                      |
+| `date_of_last_login` | `datetime`         | NULL        |               | Date and time of user's last login    |
+| `user_type`        | `varchar(12)`      | NOT NULL    |               | Type of user (e.g., admin, standard)  |
+| `status`           | `varchar(12)`      | NOT NULL    | active        | User's account status                 |
+| `date_created`     | `datetime`         | NOT NULL    | Current timestamp | Date and time when the user record was created |
+| `author_uuid`      | `varchar(200)`     | NOT NULL    |               | Foreign key, references `user.uuid`, creator of the user record |
+
+
+
+
+### `program_area` Table
+
+This table stores information about program areas.
+
+| Column Name        | Data Type          | Nullability | Default Value | Description                           |
+| :----------------- | :----------------- | :---------- | :------------ | :------------------------------------ |
+| `uuid`             | `varchar(200)`     | NOT NULL    |               | Primary key, unique identifier for the program area |
+| `name`             | `varchar(200)`     | NOT NULL    |               | Name of the program area, must be unique |
+| `date_created`     | `datetime`         | NOT NULL    | Current timestamp | Date and time when the program area record was created |
+| `author_uuid`      | `varchar(200)`     | NOT NULL    |               | Foreign key, references `user.uuid`, creator of the program area record |
+
+
+
+
+### `user_program_area` Table
+
+This table links users to program areas. Note that the primary key for this table is a compound primary key consisting of `user_uuid` and `program_area_uuid`.
+
+| Column Name       | Data Type      | Nullability | Default Value | Description                               |
+| :---------------- | :------------- | :---------- | :------------ | :---------------------------------------- |
+| `user_uuid`       | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references `user.uuid` |
+| `program_area_uuid` | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references `program_area.uuid` |
+
+
+
+
+### `condition_reference` Table
+
+This table stores reference information for conditions.
+
+| Column Name      | Data Type      | Nullability | Default Value | Description                               |
+| :--------------- | :------------- | :---------- | :------------ | :---------------------------------------- |
+| `code`           | `varchar(20)`  | NOT NULL    |               | Primary key, unique code for the condition |
+| `concept_name`   | `varchar(200)` | NULL        |               | Name of the concept                       |
+| `condition_name` | `varchar(200)` | NOT NULL    |               | Name of the condition                     |
+| `condition_category` | `varchar(200)` | NULL        |               | Category of the condition                 |
+| `program_area_uuid` | `varchar(200)` | NULL        |               | Foreign key, references `program_area.uuid` |
+
+
