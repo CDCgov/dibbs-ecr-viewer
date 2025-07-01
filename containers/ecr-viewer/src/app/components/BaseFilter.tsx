@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 import { Button, Label } from "@trussworks/react-uswds";
+import classNames from "classnames";
 
 import { toKebabCase, toSentenceCase } from "@/app/utils/format-utils";
 
@@ -326,6 +327,117 @@ export const CustomDateInput = ({
           onDateChange(date);
         }}
       />
+    </div>
+  );
+};
+
+/**
+ * Checkbox to Select/Deselect all depending on checked status.
+ * @param props - The properties for the Select/Deselect all checkbox.
+ * @param props.groupName - The name of the group that's being selected/deselected.
+ * @param props.onToggle - The callback function to handle the toggle event when the checkbox is clicked.
+ * @param props.isAllSelected - Indicates whether all are selected.
+ * @returns The rendered Select/Deselect all checkbox component.
+ */
+export const SelectDeselectAllCheckbox = ({
+  groupName,
+  onToggle,
+  isAllSelected,
+}: {
+  groupName: string;
+  onToggle: () => void;
+  isAllSelected: boolean;
+}) => {
+  return (
+    <CheckboxInput
+      id={`${groupName}-all`}
+      name={isAllSelected ? "Deselect all" : "Select all"}
+      value="all"
+      checked={isAllSelected}
+      onChange={() => onToggle()}
+      classNamesDiv="padding-bottom-1 padding-x-105"
+    />
+  );
+};
+
+/**
+ * A group of checkbox button components, given a set of options.
+ * @param props - The properties for the Checkbox group component.
+ * @param props.groupName - The name of the checkbox buttons group.
+ * @param props.filterItems - The option currently selected.
+ * @param props.onChange - The callback function to handle the `onChange` event when the checkbox is clicked.
+ * @returns The rendered checkbox group component.
+ */
+export const CheckboxOptions = ({
+  groupName,
+  filterItems,
+  onChange,
+}: {
+  groupName: string;
+  filterItems: { [key: string]: boolean };
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) => {
+  return (
+    <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105">
+      {Object.keys(filterItems).map((item) => (
+        <CheckboxInput
+          key={item}
+          id={`${groupName}-${item}`}
+          name={item}
+          value={item}
+          checked={filterItems[item]}
+          onChange={onChange}
+          classNamesLabel="minw-40"
+        />
+      ))}
+    </div>
+  );
+};
+
+// Custom checkbox component to allow more customized styling
+type CheckboxInputProps = {
+  id: string;
+  name: string;
+  value: string;
+  checked: boolean;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  classNamesDiv?: string;
+  classNamesLabel?: string;
+};
+
+const CheckboxInput = ({
+  id,
+  name,
+  value,
+  checked,
+  onChange,
+  classNamesDiv = "",
+  classNamesLabel = "",
+}: CheckboxInputProps) => {
+  return (
+    <div
+      className={classNames("checkbox-color", "usa-checkbox", classNamesDiv)}
+    >
+      <input
+        id={id}
+        className="usa-checkbox__input"
+        type="checkbox"
+        value={value}
+        onChange={onChange}
+        checked={checked}
+      />
+      <label
+        className={classNames(
+          "usa-checkbox__label",
+          "line-height-sans-6",
+          "font-sans-xs",
+          "margin-y-0",
+          classNamesLabel,
+        )}
+        htmlFor={id}
+      >
+        {name}
+      </label>
     </div>
   );
 };

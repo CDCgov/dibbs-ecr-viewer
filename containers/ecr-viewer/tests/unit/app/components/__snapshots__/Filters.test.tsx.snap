@@ -675,7 +675,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
                       value="all"
                     />
                     <label
-                      class="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
+                      class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0"
                       for="condition-all"
                     >
                       Deselect all
@@ -698,7 +698,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
                         value="Condition1"
                       />
                       <label
-                        class="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
+                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
                         for="condition-Condition1"
                       >
                         Condition1
@@ -715,7 +715,7 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
                         value="Condition2"
                       />
                       <label
-                        class="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
+                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
                         for="condition-Condition2"
                       >
                         Condition2

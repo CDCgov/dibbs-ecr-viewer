@@ -1,16 +1,21 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { Accordion } from "@trussworks/react-uswds";
 
-import { Filter, RadioDateOptions } from "@/app/components/BaseFilter";
+import {
+  CheckboxOptions,
+  Filter,
+  RadioDateOptions,
+  SelectDeselectAllCheckbox,
+} from "@/app/components/BaseFilter";
 import {
   DetailsSidePanel,
   DetailsTrigger,
   useDetailsRef,
 } from "@/app/components/DetailsSidePanel";
 import FilterGroup from "@/app/components/FilterGroup";
-import { Person } from "@/app/components/Icon";
+import { Folder, Person } from "@/app/components/Icon";
 import {
   PaginatedSortableTable,
   TableColumn,
@@ -27,6 +32,10 @@ const USER_TYPE_OPTIONS: Record<string, string> = {
   admin: "Admin",
   standard: "Standard",
 };
+const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
+const ALL_PROGRAM_AREAS_OPTION: string = "All program areas (Admin)";
+
+type FilterProgramAreasType = Record<string, boolean>;
 
 /**
  *
@@ -45,15 +54,49 @@ export const UserTable = ({
   programAreas: ListedProgramArea[];
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
+  const sortedProgramAreas = [...programAreas].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
+  const initFilterProgramAreaState: FilterProgramAreasType = {
+    [ALL_PROGRAM_AREAS_OPTION]: true,
+    [NO_PROGRAM_AREA_OPTION]: true,
+    ...sortedProgramAreas.reduce((acc, program) => {
+      acc[program.name] = true;
+      return acc;
+    }, {} as FilterProgramAreasType),
+  };
+
   const [selectedUser, setSelectedUser] = useState<ListedUser | null>(null);
   const [filterUserTypeOption, setFilterUserTypeOption] =
     useState<string>("all");
+  const [filterProgramAreas, setFilterProgramAreas] = useState(
+    initFilterProgramAreaState,
+  );
   const detailsRef = useDetailsRef();
 
-  const filteredUsers = users.filter(
-    ({ user_type }) =>
-      filterUserTypeOption === "all" || filterUserTypeOption === user_type,
+  const isAllSelected = Object.values(filterProgramAreas).every(
+    (prog) => prog === true,
   );
+
+  // If no program areas are selected, do not show any users including admins
+  const filteredUsers = users.filter(({ user_type, program_areas }) => {
+    // Match user type
+    if (filterUserTypeOption !== "all" && filterUserTypeOption !== user_type) {
+      return false;
+    }
+
+    // Standard users not assigned to any program areas
+    if (user_type === "standard" && program_areas.length === 0) {
+      return filterProgramAreas[NO_PROGRAM_AREA_OPTION];
+    }
+
+    // Admin users must have All program areas (Admin) selected
+    if (user_type === "admin") {
+      return filterProgramAreas[ALL_PROGRAM_AREAS_OPTION];
+    }
+
+    return program_areas.some((program) => filterProgramAreas[program.name]);
+  });
 
   const tableHeaders: TableColumn<ListedUser>[] = [
     {
@@ -151,14 +194,20 @@ export const UserTable = ({
         ]}
       />
       <FilterGroup
-        resetEnabled={filterUserTypeOption !== "all"}
+        resetEnabled={filterUserTypeOption !== "all" || !isAllSelected}
         resetHandler={() => {
           setFilterUserTypeOption("all");
+          setFilterProgramAreas(initFilterProgramAreaState);
         }}
       >
         <FilterByUserType
           filterUserTypeOption={filterUserTypeOption}
           setFilterUserTypeOption={setFilterUserTypeOption}
+        />
+        <FilterByProgramArea
+          isAllSelected={isAllSelected}
+          filterProgramAreas={filterProgramAreas}
+          setFilterProgramAreas={setFilterProgramAreas}
         />
       </FilterGroup>
       <PaginatedSortableTable
@@ -194,6 +243,65 @@ const FilterByUserType = ({
           classNames="padding-bottom-1"
         />
       </div>
+    </Filter>
+  );
+};
+
+const FilterByProgramArea = ({
+  isAllSelected,
+  filterProgramAreas,
+  setFilterProgramAreas,
+}: {
+  isAllSelected: boolean;
+  filterProgramAreas: FilterProgramAreasType;
+  setFilterProgramAreas: Dispatch<SetStateAction<FilterProgramAreasType>>;
+}) => {
+  const handleSelectDeselectAll = () => {
+    const updatedProgramAreas = Object.keys(filterProgramAreas).reduce(
+      (acc, programName) => {
+        acc[programName] = !isAllSelected;
+        return acc;
+      },
+      {} as FilterProgramAreasType,
+    );
+    setFilterProgramAreas(updatedProgramAreas);
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = event.target;
+    setFilterProgramAreas((prev) => {
+      return { ...prev, [value]: checked };
+    });
+  };
+
+  return (
+    <Filter
+      isActive={!isAllSelected}
+      type="program area"
+      title="Program area"
+      resetHandler={() => {}}
+      icon={Folder}
+      tag={
+        Object.values(filterProgramAreas).filter((prog) => prog === true)
+          .length || "0"
+      }
+    >
+      {/* Select All checkbox */}
+      <div className="display-flex flex-column">
+        <SelectDeselectAllCheckbox
+          groupName="program area"
+          onToggle={handleSelectDeselectAll}
+          isAllSelected={isAllSelected}
+        />
+        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        {/* Filter by Program Area checkboxes */}
+        <CheckboxOptions
+          groupName="program area"
+          filterItems={filterProgramAreas}
+          onChange={handleCheckboxChange}
+        />
+      </div>
+      <div className="border-top-1px border-base-lighter margin-x-neg-105"></div>
     </Filter>
   );
 };
