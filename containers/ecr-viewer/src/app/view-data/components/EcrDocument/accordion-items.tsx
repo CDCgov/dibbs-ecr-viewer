@@ -16,10 +16,12 @@ import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import Demographics from "@/app/view-data/components/Demographics";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import EncounterDetails from "@/app/view-data/components/Encounter";
 import LabInfo from "@/app/view-data/components/LabInfo";
+import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { AccordionItem } from "@/app/view-data/types";
@@ -70,6 +72,8 @@ export const getEcrDocumentAccordionItems = (
     );
   };
 
+  const pregnancyData: DisplayDataProps[] = [];
+
   const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
@@ -80,7 +84,10 @@ export const getEcrDocumentAccordionItems = (
             <>
               <Demographics demographicsData={demographicsData.availableData} />
               {socialData.availableData.length > 0 && (
-                <SocialHistory socialData={socialData.availableData} />
+                <div>
+                  <SocialHistory socialData={socialData.availableData} />
+                  <PregnancyInfo pregnancyData={pregnancyData} />
+                </div>
               )}
             </>
           ) : (

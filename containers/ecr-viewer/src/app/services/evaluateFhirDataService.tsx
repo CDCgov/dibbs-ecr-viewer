@@ -482,6 +482,29 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
 };
 
 /**
+ * Evaluate pregnancy data from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing pregnancy data.
+ * @returns An array of evaluated and formatted pregnancy data.
+ */
+// export const evaluatePregnancyData = (fhirBundle: Bundle) => {
+//   const pregnancyData: DisplayDataProps[] = [
+//     {
+//       title: "Pregnancy Status",
+//       value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
+//     },
+//     {
+//       title: "Estimated Due Date",
+//       value: evaluateValue(fhirBundle, fhirPathMappings.patientEDD),
+//     },
+//     {
+//       title: "Number of Pregnancies",
+//       value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyCount),
+//     },
+//   ];
+//   return evaluateData(pregnancyData);
+// };
+
+/**
  * Evaluates demographic data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing demographic data.
  * @returns An array of evaluated and formatted demographic data.
