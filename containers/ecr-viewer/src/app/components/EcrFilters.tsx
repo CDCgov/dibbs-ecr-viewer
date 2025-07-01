@@ -16,6 +16,8 @@ import {
   RadioDateOption,
   RadioDateOptions,
   CustomDateInput,
+  SelectDeselectAllCheckbox,
+  CheckboxOptions,
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
 import { Coronavirus, Event } from "./Icon";
@@ -98,13 +100,15 @@ const FilterReportableConditions = ({
     });
   };
 
-  // Check/Uncheck all boxes based on Select all checkbox
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { checked } = event.target;
+  const isAllSelected = Object.values(filterConditions).every(
+    (val) => val === true,
+  );
 
+  // Check/Uncheck all boxes based on Select all checkbox
+  const handleSelectAll = () => {
     const updatedConditions = Object.keys(filterConditions).reduce(
       (dict, condition) => {
-        dict[condition] = checked;
+        dict[condition] = !isAllSelected;
         return dict;
       },
       {} as { [key: string]: boolean },
@@ -112,10 +116,6 @@ const FilterReportableConditions = ({
 
     setFilterConditions(updatedConditions);
   };
-
-  const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true,
-  );
 
   return (
     <Filter
@@ -135,45 +135,18 @@ const FilterReportableConditions = ({
     >
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <div className="checkbox-color usa-checkbox padding-bottom-1 padding-x-105">
-          <input
-            id="condition-all"
-            className="usa-checkbox__input"
-            type="checkbox"
-            value="all"
-            onChange={handleSelectAll}
-            checked={isAllSelected}
-          />
-          <label
-            className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label"
-            htmlFor="condition-all"
-          >
-            {isAllSelected ? "Deselect all" : "Select all"}
-          </label>
-        </div>
+        <SelectDeselectAllCheckbox
+          groupName="condition"
+          onToggle={handleSelectAll}
+          isAllSelected={isAllSelected}
+        />
         <div className="border-top-1px border-base-lighter margin-x-105"></div>
-
-        {/* (Scroll) Filter Conditions checkboxes */}
-        <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105">
-          {Object.keys(filterConditions).map((condition) => (
-            <div className="checkbox-color usa-checkbox" key={condition}>
-              <input
-                id={`condition-${condition}`}
-                className="usa-checkbox__input"
-                type="checkbox"
-                value={condition}
-                onChange={handleCheckboxChange}
-                checked={filterConditions[condition]}
-              />
-              <label
-                className="line-height-sans-6 font-sans-xs margin-y-0 usa-checkbox__label minw-40"
-                htmlFor={`condition-${condition}`}
-              >
-                {condition}
-              </label>
-            </div>
-          ))}
-        </div>
+        {/* Filter Conditions checkboxes */}
+        <CheckboxOptions
+          groupName="condition"
+          filterItems={filterConditions}
+          onChange={handleCheckboxChange}
+        />
       </div>
       <div className="border-top-1px border-base-lighter"></div>
     </Filter>
