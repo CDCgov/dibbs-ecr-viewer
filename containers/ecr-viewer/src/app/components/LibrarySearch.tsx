@@ -27,7 +27,7 @@ const LibrarySearch = ({
 }: LibrarySearchProps) => {
   const [searchTerm, setSearchTerm] = useState<string | undefined>();
   const prevSearchTermRef = useRef(searchTerm);
-  const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
+  const { updateQueryParam, pushQueryUpdate, deleteQueryParam } = useLibraryQueryParam();
 
     useEffect(() => {
         setSearchTerm(initSearchTerm);
@@ -39,7 +39,7 @@ const LibrarySearch = ({
         const prev = prevSearchTermRef.current;
 
         if (prev !== "" && searchTerm === "") {
-            updateQueryParam("search", "");
+            deleteQueryParam("search");
             pushQueryUpdate();
         }
 
@@ -48,17 +48,21 @@ const LibrarySearch = ({
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        updateQueryParam("search", searchTerm ?? '');
+        const searchParams = new URLSearchParams(window.location.search);
+        const currentQuerySearch = searchParams.get("search") || "";
 
-      pushQueryUpdate();
-  };
+        if ((searchTerm ?? "") === currentQuerySearch) return;
+
+        updateQueryParam("search", searchTerm ?? "");
+        pushQueryUpdate();
+    };
 
   return (
     <Search
       placeholder="Search by patient"
       onSubmit={handleSubmit}
       onChange={(e) => setSearchTerm(e.target.value)}
-      value={ searchTerm ?? ""}
+      defaultValue={ initSearchTerm ?? ""}
       size="small"
       large={true}
       className={className}
