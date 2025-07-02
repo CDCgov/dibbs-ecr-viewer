@@ -71,6 +71,35 @@ test.describe("ecr library page", () => {
       ).toEqual(1);
     });
 
+    test("Hitting escape in the search box should clear all searches ", async ({ page }) => {
+      await page.goto("/ecr-viewer");
+      await expect(
+          page.getByLabel("Filter by reportable condition"),
+      ).toContainText(totalNumOfConditions);
+
+      const searchBox = page.getByRole("searchbox");
+      await searchBox.fill("Yoda");
+      await page.getByRole("button", { name: "search" }).click();
+
+      await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
+      await expect(
+          page.getByRole("gridcell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
+      ).toBeVisible();
+      expect(
+          (await page.locator("tbody > tr").allTextContents()).length,
+      ).toEqual(1);
+
+      // Hit Escape to clear search
+      await searchBox.focus();
+      await page.keyboard.press("Escape");
+
+      // Verify all eCRs are visible again
+      await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
+      expect(
+          (await page.locator("tbody > tr").allTextContents()).length,
+      ).toEqual(3);
+    });
+
     test("Search and reportable condition should filter results", async ({
       page,
     }) => {
