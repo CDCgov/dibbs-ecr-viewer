@@ -71,10 +71,12 @@ test.describe("ecr library page", () => {
       ).toEqual(1);
     });
 
-    test("Hitting escape in the search box should clear all searches ", async ({ page }) => {
+    test("Hitting escape in the search box should clear all searches ", async ({
+      page,
+    }) => {
       await page.goto("/ecr-viewer");
       await expect(
-          page.getByLabel("Filter by reportable condition"),
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
 
       const searchBox = page.getByRole("searchbox");
@@ -83,10 +85,10 @@ test.describe("ecr library page", () => {
 
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
       await expect(
-          page.getByRole("gridcell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
+        page.getByRole("gridcell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
       ).toBeVisible();
       expect(
-          (await page.locator("tbody > tr").allTextContents()).length,
+        (await page.locator("tbody > tr").allTextContents()).length,
       ).toEqual(1);
 
       // Hit Escape to clear search
@@ -96,7 +98,7 @@ test.describe("ecr library page", () => {
       // Verify all eCRs are visible again
       await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
       expect(
-          (await page.locator("tbody > tr").allTextContents()).length,
+        (await page.locator("tbody > tr").allTextContents()).length,
       ).toEqual(3);
     });
 

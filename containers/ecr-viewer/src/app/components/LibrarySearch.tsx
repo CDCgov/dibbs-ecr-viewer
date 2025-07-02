@@ -27,48 +27,49 @@ const LibrarySearch = ({
 }: LibrarySearchProps) => {
   const [searchTerm, setSearchTerm] = useState<string | undefined>();
   const prevSearchTermRef = useRef(searchTerm);
-  const { updateQueryParam, pushQueryUpdate, deleteQueryParam } = useLibraryQueryParam();
+  const { updateQueryParam, pushQueryUpdate, deleteQueryParam } =
+    useLibraryQueryParam();
 
-    useEffect(() => {
-        setSearchTerm(initSearchTerm);
-    }, [initSearchTerm]);
+  useEffect(() => {
+    setSearchTerm(initSearchTerm);
+  }, [initSearchTerm]);
 
-    // UseEffect for detecting when the search input has been cleared through either clicking the X or hitting ESC
-    // and re-triggering the search
-    useEffect(() => {
-        const prev = prevSearchTermRef.current;
+  // UseEffect for detecting when the search input has been cleared through either clicking the X or hitting ESC
+  // and re-triggering the search
+  useEffect(() => {
+    const prev = prevSearchTermRef.current;
 
-        if (prev !== "" && searchTerm === "") {
-            deleteQueryParam("search");
-            pushQueryUpdate();
-        }
+    if (prev !== "" && searchTerm === "") {
+      deleteQueryParam("search");
+      pushQueryUpdate();
+    }
 
-        prevSearchTermRef.current = searchTerm;
-    }, [searchTerm]);
+    prevSearchTermRef.current = searchTerm;
+  }, [searchTerm]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const searchParams = new URLSearchParams(window.location.search);
-        const currentQuerySearch = searchParams.get("search") || "";
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const searchParams = new URLSearchParams(window.location.search);
+    const currentQuerySearch = searchParams.get("search") || "";
 
-        if ((searchTerm ?? "") === currentQuerySearch) return;
+    if ((searchTerm ?? "") === currentQuerySearch) return;
 
-        updateQueryParam("search", searchTerm ?? "");
-        pushQueryUpdate();
-    };
+    updateQueryParam("search", searchTerm ?? "");
+    pushQueryUpdate();
+  };
 
   return (
     <Search
       placeholder="Search by patient"
       onSubmit={handleSubmit}
       onChange={(e) => setSearchTerm(e.target.value)}
-      defaultValue={ initSearchTerm ?? ""}
+      defaultValue={initSearchTerm ?? ""}
       size="small"
       large={true}
       className={className}
       inputProps={{
-          className: textBoxClassName,
-    }}
+        className: textBoxClassName,
+      }}
     />
   );
 };
