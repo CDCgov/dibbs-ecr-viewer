@@ -8,6 +8,7 @@ import UserAdminPage from "@/app/admin/user/page";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import {
   isAdmin,
+  ListedUser,
   listUsers,
   notFoundUnlessAdmin,
 } from "@/app/services/userService";
@@ -24,6 +25,59 @@ jest.mock("@/app/services/programAreaService");
 jest.mock("@/app/services/listConditionsService", () => ({
   listConditionReferences: jest.fn().mockResolvedValue([]),
 }));
+
+const mockUsers: ListedUser[] = [
+  {
+    uuid: "123",
+    email: "admin@admin.com",
+    name: "Adam Admin",
+    date_of_last_login: new Date("2025-04-15T10:30:00Z"),
+    user_type: "admin",
+    status: "Active",
+    date_created: new Date("2025-01-01T09:00:00Z"),
+    author_uuid: "123",
+    program_areas: [],
+  },
+  {
+    uuid: "234",
+    email: "sallystandard@standard.com",
+    name: "Sally Standard",
+    date_of_last_login: new Date("2025-04-15T10:30:00Z"),
+    user_type: "standard",
+    status: "Active",
+    date_created: new Date("2025-01-01T09:00:00Z"),
+    author_uuid: "123",
+    program_areas: [
+      {
+        program_area_uuid: "456",
+        user_uuid: "234",
+        name: "Program Area Two",
+      },
+      {
+        program_area_uuid: "789",
+        user_uuid: "234",
+        name: "Program Area Three",
+      },
+    ],
+  },
+  {
+    uuid: "345",
+    email: "stevenstandard@standard.com",
+    name: "Steven Standard",
+    date_of_last_login: null,
+    user_type: "standard",
+    status: "Active",
+    date_created: new Date("2025-01-02T09:00:00Z"),
+    author_uuid: "123",
+    program_areas: [
+      {
+        program_area_uuid: "789",
+        user_uuid: "345",
+        name: "Program Area Three",
+      },
+    ],
+  },
+];
 
 const mockPrograms: FormProgram[] = [
   {
@@ -73,54 +127,16 @@ describe("User Admin Page", () => {
   it("should check user is an admin", async () => {
     (isAdmin as unknown as jest.Mock).mockReturnValue(false);
     (listUsers as jest.Mock).mockResolvedValue([]);
+    (listProgramAreas as jest.Mock).mockResolvedValue([]);
 
     render(await UserAdminPage());
     expect(notFoundUnlessAdmin).toHaveBeenCalled();
   });
 
   it("should list users when available", async () => {
-    (isAdmin as unknown as jest.Mock).mockReturnValue(true);
-    (listUsers as jest.Mock).mockResolvedValue([
-      {
-        uuid: "123",
-        email: "test@test.test",
-        name: "User Test",
-        date_of_last_login: new Date("2025-04-15T10:30:00Z"),
-        user_type: "Admin",
-        status: "Active",
-        date_created: new Date("2025-01-01T09:00:00Z"),
-        author_uuid: "456",
-        program_areas: [
-          {
-            program_area_uuid: "zz01",
-            user_uuid: "123",
-            name: "Program A",
-          },
-          {
-            program_area_uuid: "zz02",
-            user_uuid: "123",
-            name: "Program B",
-          },
-        ],
-      },
-      {
-        uuid: "234",
-        email: "foo@foo.foo",
-        name: "User Foo",
-        date_of_last_login: new Date("2025-04-16T10:30:00Z"),
-        user_type: "Standard",
-        status: "Active",
-        date_created: new Date("2025-01-02T09:00:00Z"),
-        author_uuid: "456",
-        program_areas: [
-          {
-            program_area_uuid: "zz02",
-            user_uuid: "123",
-            name: "Program B",
-          },
-        ],
-      },
-    ]);
+    (notFoundUnlessAdmin as unknown as jest.Mock).mockReturnValue(true);
+    (listUsers as jest.Mock).mockResolvedValue(mockUsers);
+    (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
 
     const { container } = render(await UserAdminPage());
     expect(notFound).not.toHaveBeenCalled();
