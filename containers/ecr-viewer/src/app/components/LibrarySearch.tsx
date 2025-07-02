@@ -63,7 +63,7 @@ const LibrarySearch = ({
       placeholder="Search by patient"
       onSubmit={handleSubmit}
       onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
-      defaultValue={ initSearchTerm ?? ""}
+      defaultValue={initSearchTerm ?? ""}
       size="small"
       large={true}
       className={className}
