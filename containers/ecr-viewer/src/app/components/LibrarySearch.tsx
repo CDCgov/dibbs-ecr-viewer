@@ -62,13 +62,8 @@ const LibrarySearch = ({
     <Search
       placeholder="Search by patient"
       onSubmit={handleSubmit}
-<<<<<<< Updated upstream
-      onChange={(e) => setSearchTerm(e.target.value)}
-      defaultValue={initSearchTerm ?? ""}
-=======
       onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
       defaultValue={ initSearchTerm ?? ""}
->>>>>>> Stashed changes
       size="small"
       large={true}
       className={className}
