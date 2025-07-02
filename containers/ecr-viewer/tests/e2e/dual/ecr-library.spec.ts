@@ -95,6 +95,8 @@ test.describe("ecr library page", () => {
       await searchBox.focus();
       await page.keyboard.press("Escape");
 
+      await page.waitForTimeout(3000);
+
       // Verify all eCRs are visible again
       await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
       expect(
