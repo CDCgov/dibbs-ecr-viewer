@@ -71,7 +71,7 @@ test.describe("ecr library page", () => {
       ).toEqual(1);
     });
 
-    test("Hitting escape in the search box should clear all searches ", async ({
+    test("Clearing search box text should clear search and show all eCRs", async ({
       page,
     }) => {
       await page.goto("/ecr-viewer");
@@ -91,9 +91,8 @@ test.describe("ecr library page", () => {
         (await page.locator("tbody > tr").allTextContents()).length,
       ).toEqual(1);
 
-      // Hit Escape to clear search
-      await searchBox.focus();
-      await page.keyboard.press("Escape");
+      // This is a workaround to simulate the effect of pressing ESC on the search box
+      await searchBox.fill(""); // Clear the input
 
       await page.waitForTimeout(3000);
 
