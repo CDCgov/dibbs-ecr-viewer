@@ -646,6 +646,12 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     const expectedTable = clinicalInfo.getAllByTestId("table");
     expect(expectedTable[0]).toBeInTheDocument();
     expect(expectedTable.length).toEqual(1);
+
+    // Check 2 active problems, each with different problem statuses;
+    const rows = expectedActiveProblemsElement.querySelectorAll("tr");
+    expect(rows.length).toBe(3); // 1 header + 2 rows
+    expect(clinicalInfo.getAllByText("Active")).toHaveLength(1);
+    expect(clinicalInfo.getAllByText("Recurrence")).toHaveLength(1);
   });
 
   it("eCR Viewer renders vital signs given FHIR bundle with vital signs info", () => {

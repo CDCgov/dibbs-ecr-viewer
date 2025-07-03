@@ -21,6 +21,12 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="table-header"
           scope="col"
         >
+          Status
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
           Onset Date/Time
         </th>
         <th
@@ -43,6 +49,11 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           Malignant neoplasm of lower-inner quadrant of left breast in female, estrogen receptor positive
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
         </td>
         <td
           class="text-top text-pre-line"
@@ -77,7 +88,7 @@ exports[`Active Problems Table should match snapshot 1`] = `
       >
         <td
           class="p-list"
-          colspan="4"
+          colspan="5"
         >
           <div
             class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
@@ -90,6 +101,11 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           Headache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
         </td>
         <td
           class="text-top text-pre-line"
@@ -124,6 +140,11 @@ exports[`Active Problems Table should match snapshot 1`] = `
         <td
           class="text-top text-pre-line"
         >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
           08/19/2018 1:00 PM
         </td>
         <td
@@ -146,6 +167,11 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           Headache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
         </td>
         <td
           class="text-top text-pre-line"
@@ -176,6 +202,11 @@ exports[`Active Problems Table should match snapshot 1`] = `
           class="text-top text-pre-line"
         >
           Backache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
         </td>
         <td
           class="text-top text-pre-line"
