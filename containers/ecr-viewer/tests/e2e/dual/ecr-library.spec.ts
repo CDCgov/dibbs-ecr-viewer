@@ -91,10 +91,9 @@ test.describe("ecr library page", () => {
         (await page.locator("tbody > tr").allTextContents()).length,
       ).toEqual(1);
 
-      // This is a workaround to simulate the effect of pressing ESC on the search box
+      // This is a workaround to simulate the effect of pressing ESC on the search box which clears it to empty string.
+      // Playwright's functions for simulating key presses did not work for this test for some reason
       await searchBox.fill(""); // Clear the input
-
-      await page.waitForTimeout(3000);
 
       // Verify all eCRs are visible again
       await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
