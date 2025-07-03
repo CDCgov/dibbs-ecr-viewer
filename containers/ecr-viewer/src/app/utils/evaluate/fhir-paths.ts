@@ -107,7 +107,7 @@ export type PathTypes = {
   resolve: unknown;
   activeProblems: Condition;
   activeProblemsDisplay: string;
-  activeProblemsStatus: ValueX;
+  activeProblemsStatus: string;
   activeProblemsOnsetDate: string;
   activeProblemsOnsetAge: ValueX;
   activeProblemsComments: string;
@@ -465,8 +465,8 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Condition.code.coding.display.first()",
   },
   activeProblemsStatus: {
-    type: "ValueX",
-    path: "Condition.clinicalStatus.coding[0].display",
+    type: "string",
+    path: "Condition.clinicalStatus.coding.display",
   },
   activeProblemsOnsetDate: { type: "string", path: "Condition.onsetDateTime" },
   activeProblemsOnsetAge: { type: "ValueX", path: "Condition.onsetAge.value" },
