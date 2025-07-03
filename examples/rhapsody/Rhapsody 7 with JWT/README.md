@@ -7,7 +7,7 @@ In order for this route's output communication point to create a JWT for API aut
 
 ```bash
 # Generate a private key
-openssl genrsa -out private_key.pem 2048
+openssl genrsa -out private_key.pem 4096
 
 # Extract the public key from the private key
 openssl rsa -in private_key.pem -pubout -out public_key.pem
