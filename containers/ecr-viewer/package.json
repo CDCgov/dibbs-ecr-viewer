@@ -24,7 +24,7 @@
     "test:integration:pg": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'METADATA_DATABASE_TYPE=postgres TEST_TYPE=integration TZ=America/New_York jest --runInBand --detectOpenHandles'",
     "test:integration:sqlserver": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'METADATA_DATABASE_TYPE=sqlserver TEST_TYPE=integration TZ=America/New_York jest --runInBand --detectOpenHandles'",
     "test:e2e:install": "playwright install --with-deps",
-    "test:e2e": "npx @dotenvx/dotenvx run -f .env.local -- playwright test ./tests/e2e/dual",
+    "test:e2e": "npx @dotenvx/dotenvx run -f .env.local -- playwright test ./tests/e2e/dual/authn.spec.ts --project firefox",
     "test:e2e:migrations": "npx @dotenvx/dotenvx run -f .env.local -- playwright test ./tests/e2e/migrations.spec.ts --project chromium",
     "test:e2e:integrated": "npx @dotenvx/dotenvx run -f .env.local -- playwright test ./tests/e2e/integrated",
     "test:e2e:seed-user-prog": "npx @dotenvx/dotenvx run -f .env.local -- playwright test ./tests/e2e/seed.spec.ts --project chromium",

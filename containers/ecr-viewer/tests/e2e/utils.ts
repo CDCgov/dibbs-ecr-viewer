@@ -13,7 +13,7 @@ const logInToKeycloak = async (page: Page) => {
 };
 
 // Stores the token in the session storage and reloads the page
-const setSessionStorage = async (page: Page, tokens) => {
+const setSessionStorage = async (page: Page, tokens: any) => {
   const cacheKeys = Object.keys(tokens);
   for (const key of cacheKeys) {
     const value = JSON.stringify(tokens[key]);
@@ -27,7 +27,7 @@ const setSessionStorage = async (page: Page, tokens) => {
   await page.reload();
 };
 
-let token;
+let token: any;
 /**
  * Helper to lot into via Azure AD and go to the viewer page
  * @param page page

@@ -7,7 +7,12 @@ test.describe("auth", () => {
     page,
   }) => {
     await logIn(page);
-    await expect(page.getByText("Sign Out")).toBeVisible();
+
+    await page
+      .getByRole("button", { name: "User Menu" })
+      .click({ timeout: 5000 });
+
+    await expect(page.getByRole("button", { name: "Sign Out" })).toBeVisible();
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
@@ -24,7 +29,7 @@ test.describe("auth", () => {
     await logIn(
       page,
       "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
-      "Patient Name",
+      "Facility Details",
     );
 
     // via regular auth, should be able to navigate to library
@@ -40,7 +45,7 @@ test.describe("auth", () => {
     await logIn(
       page,
       "/ecr-viewer/view-data?id=1234&auth=hi",
-      "The eCR Viewer couldn't retrieve the associated eCR file",
+      "eCR retrieval failed",
     );
     await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=1234",

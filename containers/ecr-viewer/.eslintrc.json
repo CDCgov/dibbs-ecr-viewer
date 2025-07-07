@@ -87,7 +87,7 @@
   },
   "overrides": [
     {
-      "files": ["*.test*", "**/tests/**/*"],
+      "files": ["./tests/**/*"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "jsdoc/require-jsdoc": "off"
