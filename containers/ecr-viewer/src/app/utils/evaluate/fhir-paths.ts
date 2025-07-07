@@ -73,6 +73,8 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
+  patientNationality: string;
+  patientCountryResidence: string;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -313,6 +315,14 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientMaritalStatus: {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').maritalStatus",
+  },
+  patientNationality: {
+    type: "string",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).valueCodeableConcept.coding.display",
+  },
+  patientCountryResidence: {
+    type: "string",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).valueCodeableConcept.coding.display",
   },
 
   // eCR Metadata

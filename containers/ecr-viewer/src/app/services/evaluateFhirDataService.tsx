@@ -457,7 +457,7 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
       title: "Sexual Orientation",
       value: evaluateValue(
         fhirBundle,
-        fhirPathMappings.patientSexualOrientation,
+        fhirPathMappings.patientSexualOrientation
       ),
     },
     {
@@ -476,6 +476,14 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     {
       title: "Marital Status",
       value: evaluateValue(fhirBundle, fhirPathMappings.patientMaritalStatus),
+    },
+    {
+      title: "Nationality",
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientNationality),
+    },
+    {
+      title: "Country of Residence",
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientCountryResidence),
     },
   ];
   return evaluateData(socialData);
