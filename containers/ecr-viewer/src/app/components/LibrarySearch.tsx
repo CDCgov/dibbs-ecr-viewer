@@ -25,14 +25,10 @@ const LibrarySearch = ({
   className,
   textBoxClassName,
 }: LibrarySearchProps) => {
-  const [searchTerm, setSearchTerm] = useState<string | undefined>();
+  const [searchTerm, setSearchTerm] = useState(initSearchTerm ?? "");
   const prevSearchTermRef = useRef(searchTerm);
   const { updateQueryParam, pushQueryUpdate, deleteQueryParam } =
     useLibraryQueryParam();
-
-  useEffect(() => {
-    setSearchTerm(initSearchTerm);
-  }, [initSearchTerm]);
 
   // UseEffect for detecting when the search input has been cleared through either clicking the X or hitting ESC
   // and re-triggering the search
@@ -49,12 +45,8 @@ const LibrarySearch = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const searchParams = new URLSearchParams(window.location.search);
-    const currentQuerySearch = searchParams.get("search") || "";
 
-    if ((searchTerm ?? "") === currentQuerySearch) return;
-
-    updateQueryParam("search", searchTerm ?? "");
+    updateQueryParam("search", searchTerm);
     pushQueryUpdate();
   };
 
@@ -62,7 +54,10 @@ const LibrarySearch = ({
     <Search
       placeholder="Search by patient"
       onSubmit={handleSubmit}
-      onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
+      // This cast is required due to the strange nature of the USWDS element and how it bubbles up the input event through the form
+      onChange={(e: React.FormEvent<HTMLFormElement>) =>
+        setSearchTerm((e.target as HTMLInputElement).value)
+      }
       defaultValue={initSearchTerm ?? ""}
       size="small"
       large={true}
