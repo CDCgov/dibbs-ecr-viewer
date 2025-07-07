@@ -54,7 +54,9 @@ const LibrarySearch = ({
     <Search
       placeholder="Search by patient"
       onSubmit={handleSubmit}
-      onChange={(e: React.FormEvent<HTMLFormElement>) => setSearchTerm((e.target as HTMLInputElement).value)}
+      onChange={(e: React.FormEvent<HTMLFormElement>) =>
+        setSearchTerm((e.target as HTMLInputElement).value)
+      }
       defaultValue={initSearchTerm ?? ""}
       size="small"
       large={true}
