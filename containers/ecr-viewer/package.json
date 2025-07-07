@@ -33,7 +33,7 @@
     "convert-seed-data:build": "CONVERT_FLAGS=--build npm run convert-seed-data"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.806.0",
+    "@aws-sdk/client-s3": "^3.842.0",
     "@azure/storage-blob": "^12.27.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "@google-cloud/storage": "^7.16.0",
