@@ -55,7 +55,9 @@ const LibrarySearch = ({
       placeholder="Search by patient"
       onSubmit={handleSubmit}
       // This cast is required due to the strange nature of the USWDS element and how it bubbles up the input event through the form
-      onChange={(e: React.FormEvent<HTMLFormElement>) => setSearchTerm((e.target as HTMLInputElement).value)}
+      onChange={(e: React.FormEvent<HTMLFormElement>) =>
+        setSearchTerm((e.target as HTMLInputElement).value)
+      }
       defaultValue={initSearchTerm ?? ""}
       size="small"
       large={true}
