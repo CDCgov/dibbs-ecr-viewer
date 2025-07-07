@@ -4,17 +4,24 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { dbIsValid } from "./api/migrate-db/migrate";
-import EcrPaginationWrapper from "./components/EcrPaginationWrapper";
-import EcrTableContent from "./components/EcrTableContent";
-import { EcrTableHeader } from "./components/EcrTableHeader";
-import { EcrTableLoading } from "./components/EcrTableLoading";
-import { MetadataDbInvalid } from "./components/ErrorPage";
-import Filters from "./components/Filters";
-import Header from "./components/Header";
+import Filters from "./components/EcrFilters";
+import {
+  MetadataDbInvalid,
+  StandardUserNoPrograms,
+} from "./components/ErrorPage";
 import LibrarySearch from "./components/LibrarySearch";
+import { NoDataRow } from "./components/table/NoDataRow";
+import { EcrTableLoading } from "./components/table/TableContentLoading";
+import EcrPaginationWrapper from "./components/table/ecr/EcrPaginationWrapper";
+import EcrTableContent from "./components/table/ecr/EcrTableContent";
+import { EcrTableHeader } from "./components/table/ecr/EcrTableHeader";
 import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
+import {
+  getLoggedInUser,
+  listLoggedInUserProgramAreas,
+} from "./services/userService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
 
@@ -34,13 +41,22 @@ const HomePage = async ({
   } else if (!(await dbIsValid())) {
     return <MetadataDbInvalid />;
   }
+  const user = await getLoggedInUser();
+  if (!user) {
+    notFound();
+  } else if (user.user_type === "standard") {
+    const progAreas = await listLoggedInUserProgramAreas();
+    if (progAreas.length === 0) {
+      return <StandardUserNoPrograms />;
+    }
+  }
 
   const cookieStore = cookies();
   const config = getLibraryConfig(searchParams, cookieStore);
   const filterConditionsArr = config.condition?.split("|");
   const filterDates = returnParamDates(config.dateRange, config.dates);
 
-  const tableHeaders = INITIAL_HEADERS.map((header) => {
+  const tableHeaders: typeof INITIAL_HEADERS = INITIAL_HEADERS.map((header) => {
     return {
       ...header,
       sortDirection: header.id === config.columnId ? config.direction : "",
@@ -56,13 +72,10 @@ const HomePage = async ({
   const allConditions = await getAllConditions();
 
   return (
-    <div className="display-flex flex-column height-viewport">
-      <Header />
-      <main className="overflow-auto height-full">
+    <div className="display-flex flex-column height-viewport-header-footer">
+      <main className="overflow-auto height-full display-flex flex-column">
         <div className="margin-x-3 padding-y-105 display-flex flex-align-center">
-          <h2 className="margin-bottom-0 text-bold font-sans-xl">
-            eCR Library
-          </h2>
+          <h2 className="margin-bottom-0 text-bold">eCR library</h2>
           <LibrarySearch
             initSearchTerm={config.search}
             className="margin-left-auto"
@@ -137,14 +150,10 @@ const EcrTableWrapper = ({ children }: { children: React.ReactNode }) => {
 
 const EcrTableNoData = () => (
   <tbody>
-    <tr>
-      <td colSpan={999} className="text-middle text-center height-card">
-        <span className="text-bold font-body-lg" tabIndex={0}>
-          No eCRs found. We couldn't find any eCRs matching your filter or
-          search criteria.
-        </span>
-      </td>
-    </tr>
+    <NoDataRow>
+      No eCRs found. We couldn't find any eCRs matching your filter or search
+      criteria.
+    </NoDataRow>
   </tbody>
 );
 

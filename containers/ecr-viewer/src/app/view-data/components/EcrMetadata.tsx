@@ -17,7 +17,7 @@ import { ToolTipElement } from "./ToolTipElement";
 interface EcrMetadataProps {
   rrDetails: ReportableConditions;
   eicrDetails: DisplayDataProps[];
-  eRSDProcessingInfo: ERSDInfo;
+  eRSDProcessingInfo: ERSDInfo | undefined;
   eCRCustodianDetails: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
@@ -50,15 +50,16 @@ const EcrMetadata = ({
       <AccordionSubSection title="RR Details">
         <ReportabilitySummary rrDetails={rrDetails} />
         <div className="section__line_gray" />
-        {eRSDProcessingInfo.success ? (
+        {eRSDProcessingInfo?.success ? (
           <div>
             <div className="header-data-title">{eRSDWarningTooltip}</div>
             <p className="text-italic text-base padding-bottom-0">
               eICR processed
             </p>
+            <div className="section__line_gray"></div>
           </div>
         ) : (
-          eRSDProcessingInfo.eRSDWarning && (
+          eRSDProcessingInfo?.eRSDWarning && (
             <div>
               <Table
                 bordered={false}
@@ -92,10 +93,10 @@ const EcrMetadata = ({
                   </tr>
                 </tbody>
               </Table>
+              <div className="section__line_gray"></div>
             </div>
           )
         )}
-        <div className="section__line_gray"></div>
       </AccordionSubSection>
 
       <AccordionSubSection title="eICR Details">

@@ -7,6 +7,7 @@ import {
   Element,
   FhirResource,
   ObservationReferenceRange,
+  Period,
   Quantity,
   Reference,
   Resource,
@@ -15,9 +16,14 @@ import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import {
+  formatDateTime,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
+import {
   formatCodeableConcept,
   formatQuantity,
   formatRange,
+  formatReference,
 } from "@/app/services/formatService";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
@@ -61,13 +67,19 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
         "Reference",
         "Observation.referenceRange",
       ].includes(nodeInfo.fhirNodeDataType);
+    } else if (expectedType === "TimeX") {
+      valid = ["Period"].includes(nodeInfo.fhirNodeDataType);
     } else {
       valid =
         expectedType.toLowerCase() ===
         nodeInfo.path.toLowerCase().replace(".", "");
     }
     extras.path = nodeInfo;
-  } else if (actualType !== expectedType && expectedType !== "ValueX") {
+  } else if (
+    actualType !== expectedType &&
+    expectedType !== "ValueX" &&
+    expectedType !== "TimeX"
+  ) {
     valid = false;
   }
   if (!valid) {
@@ -221,8 +233,13 @@ export const evaluateValue = (
 ): string => {
   const [fhirPath, type] =
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
+
   const originalValue =
     evaluateOneAndCheck<ValueX>(entry, fhirPath, type) || "";
+
+  if (type === "TimeX" && typeof originalValue === "string") {
+    return formatDateTime(originalValue) || "";
+  }
 
   if (
     typeof originalValue === "string" ||
@@ -247,7 +264,11 @@ export const evaluateValue = (
     const range = formatRange(originalValue);
     value = range || originalValue.text || "";
   } else if (isReference(originalValue, originalValuePath)) {
-    value = originalValue?.reference || "";
+    value = formatReference(originalValue) || "";
+  } else if (isPeriod(originalValue, originalValuePath)) {
+    // Note: there are two period formatters, start/end is more commonly used, but
+    // we may need to think in the future about making this more flexible
+    value = formatStartEndDateTime(originalValue);
   } else if (typeof originalValue === "object") {
     console.error(`Not implemented for ${originalValuePath}`);
   }
@@ -265,6 +286,7 @@ const isObservationReferenceRange = (
   p: string,
 ): v is ObservationReferenceRange => p === "Observation.referenceRange";
 const isReference = (v: object, p: string): v is Reference => p === "Reference";
+const isPeriod = (v: object, p: string): v is Period => p === "Period";
 
 /**
  * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource

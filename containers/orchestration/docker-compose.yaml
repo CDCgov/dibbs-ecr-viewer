@@ -25,16 +25,31 @@ services:
       service: ecr-viewer
     profiles: ["", "azure", "aws", "sqlserver"]
     environment:
-      - CONFIG_NAME=AZURE_PG_NON_INTEGRATED
+      - CONFIG_NAME=AZURE_PG_DUAL
       - METADATA_DATABASE_SCHEMA=core
       - METADATA_DATABASE_MIGRATION_SECRET=test
+      - |
+        NBS_API_PUB_KEY=
+        -----BEGIN PUBLIC KEY-----
+        MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnlA1YmmbydxQdBh7DAq0
+        wUfsjR25eWZOB995mHclT3C46oLat3YLu70akLfoMXd9YcJe0d4q3sP7tS1J4QDO
+        IkfapvK3ClDJR2VUERTzR9yQ+1B1Sd+MSful/V3aP9L6wPRAJmsmziizUBz+X0oN
+        WTkGP/xi0F/IlyBfh2sk89JKKmgXSFbgDTD7+8L5WeRY5koR0KfDJLBcyerrcIPW
+        1FyD8RbkUH78yJXc+/ThXKBNpsDTvV0k/4zqLSADIEmhQFkW8oYOfF4ufBGSnGdZ
+        gPoWbKHtlK+m1sFWMq0hAtJsNKsJQocPAEO2NIxRCX4k6X9HfvCYVniDI4OdVz0V
+        jTF+galQDAybgtYc9ZN8ROpePDVkCANHzniBJFOwzv2yekreqdX7M399uLB+ztDX
+        Iz2RpZbGkgspl4TWvvB+eN64DJykmExImIw1nFc/6AVd3jhKSnCrckpGV3XaF8lW
+        WMA6au0RXjmRa4YxO/uQbFZeFkM7aQtQK/CxqdBfG0SACcIMwU2S7Kb5+c9Hs687
+        LI8j7j0oVyCiAyJ44Mi70i4A2GedyM6kzdixTmszin+c4tT8mYjmEMpJle6GLBIa
+        aqEy3CVEqecFIo4ypfoo4GjTqvv/JjtxwBl1FPC+HzFkOjSoLbrDmn64NnQhXlC9
+        kd+ONf43CmqDSTa3atSFq4sCAwEAAQ==
+        -----END PUBLIC KEY-----
   orchestration-service:
     platform: linux/amd64
     build:
       context: .
     depends_on:
       [
-        validation-service,
         fhir-converter-service,
         ingestion-service,
         trigger-code-reference-service,
@@ -49,17 +64,6 @@ services:
       - .env
     extra_hosts:
       - host.docker.internal:host-gateway
-    environment:
-      - OTEL_TRACES_EXPORTER=none
-      - OTEL_METRICS_EXPORTER=none
-  validation-service:
-    platform: linux/amd64
-    build:
-      context: ../validation
-    ports:
-      - "${VALIDATION_PORT_NUMBER}:8080"
-    logging:
-      driver: "json-file"
   fhir-converter-service:
     platform: linux/amd64
     build:
@@ -95,50 +99,8 @@ services:
       - "${TRIGGER_CODE_REFERENCE_PORT_NUMBER}:8080"
     logging:
       driver: "json-file"
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: "jaeger"
-    volumes:
-      - "./jaeger-ui.json:/etc/jaeger/jaeger-ui.json"
-    command: --query.ui-config /etc/jaeger/jaeger-ui.json
-    ports:
-      - "16686:16686" # serves frontend and queries
-  prometheus:
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    volumes:
-      - "./prometheus.yaml:/etc/prometheus/prometheus.yaml"
-      - "prom_data:/prometheus"
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    container_name: "otel-collector"
-    volumes:
-      - "./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml"
-    command: ["--config=/etc/otelcol-contrib/config.yaml"]
-    ports:
-      - "8888:8888" # Prometheus metrics exposed by collector
-      - "8889:8889" # Endpoint prometheus will scrape
-      - "4317:4317" # gRPC OTLP receiver
-      - "4318:4318" # HTTP OTLP receiver
-    depends_on:
-      - jaeger
-      - prometheus
-  grafana:
-    image: grafana/grafana-oss
-    ports:
-      - "4000:3000"
-    volumes:
-      - ./grafana.ini:/etc/grafana/grafana.ini
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
-      - ./grafana/datasources/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      - grafana_data:/var/lib/grafana
-    depends_on:
-      - prometheus
 
 volumes:
-  prom_data:
-  grafana_data:
   db:
   azure-data:
   aws-data:

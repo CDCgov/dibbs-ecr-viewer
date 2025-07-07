@@ -32,20 +32,11 @@ flag_management:
     - name: "message-parser"
       paths:
         - "containers/message-parser"
-    - name: "message-refiner"
-      paths:
-        - "containers/message-refiner"
     - name: "orchestration"
       paths:
         - "containers/orchestration"
-    - name: "record-linkage"
-      paths:
-        - "containers/record-linkage"
     - name: "trigger-code-reference"
       paths:
         - "containers/trigger-code-reference"
-    - name: "validation"
-      paths:
-        - "containers/validation"
 ignore:
   - "**/tests"

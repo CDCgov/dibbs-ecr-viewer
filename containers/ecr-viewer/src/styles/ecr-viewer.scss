@@ -1,27 +1,30 @@
 // This file contains declarations used in the styling of the ecr-viewer page
 
 @use "uswds-core" as *;
+@use "common" as *;
+@use "variables" as *;
 
 // ===== Variables ===== //
-
-$ecr-viewer-container-max-width: 80rem;
-$ecr-viewer-container-min-width: 40rem;
-$ecr-viewer-gap: 3rem;
+$ecr-viewer-gap: 2rem;
 $nav-wrapper-width: 15.625rem;
 $main-container-padding: 1rem;
-$main-min-width: $ecr-viewer-container-min-width + $ecr-viewer-gap +
+$main-min-width: $content-container-min-width + $ecr-viewer-gap +
   $nav-wrapper-width + $main-container-padding * 2;
 
 html {
   --patient-banner-buffer: 3.1rem;
 }
 
+main {
+  border-top: 0 !important;
+}
+
 // ===== Page styling ===== //
 
 .ecr-viewer-container {
   width: 100%;
-  max-width: $ecr-viewer-container-max-width;
-  min-width: $ecr-viewer-container-min-width;
+  max-width: $content-container-max-width;
+  min-width: $content-container-min-width;
 
   // Make sure items we link to don't get stuck behind patient banner
   *[id] {
@@ -40,8 +43,8 @@ html {
 }
 
 .width-main {
-  max-width: $main-min-width + $ecr-viewer-container-max-width -
-    $ecr-viewer-container-min-width;
+  max-width: $main-min-width + $content-container-max-width -
+    $content-container-min-width;
   min-width: $main-min-width;
   width: 100%;
 }
@@ -57,6 +60,12 @@ html {
   border-left: 1px solid #005ea2;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+}
+
+.section__line_light_gray {
+  border-top: 1px solid #f0f0f0;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .section__line_gray {
@@ -162,12 +171,58 @@ html {
   margin-bottom: 8px;
 }
 
-.info-container > .usa-accordion__heading > .usa-accordion__button {
-  font-size: 2rem;
-  background-size: 2.25rem;
+.accordion-primary {
+  &.accordion-ecr-section {
+    margin-bottom: 2rem;
+    --padding: clamp(1.25rem, 5%, 2.75rem);
+    & > .usa-accordion__heading {
+      font-size: 2rem;
 
-  &[aria-expanded="false"] {
-    margin-bottom: 2.5rem;
+      & > .usa-accordion__button {
+        padding-left: var(--padding);
+        padding-right: var(--padding);
+        background-position-x: calc(100% - var(--padding));
+      }
+    }
+
+    & > .usa-accordion__content {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+    }
+  }
+
+  & > .usa-accordion__heading {
+    & > .usa-accordion__button {
+      background-size: 1.5em;
+      background-color: color("primary");
+      color: white;
+      @include add-background-svg("usa-icons-bg/remove--white");
+
+      &[aria-expanded="false"] {
+        @include add-background-svg("usa-icons-bg/add--white");
+      }
+    }
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    margin-top: 3rem;
+  }
+
+  // remove the bottom border from the last-est child in the accordion
+  & > .usa-accordion__content {
+    .section__line_gray:last-child {
+      padding-top: 0;
+      padding-bottom: 0;
+      border: none;
+    }
+
+    :not(:last-child) .section__line_gray:last-child {
+      border-top: 1px solid #dfe1e2;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
   }
 }
 
@@ -199,30 +254,36 @@ html {
     }
   }
 
-  .usa-prose > table {
-    overflow-wrap: break-word;
-    width: calc(100% + 2.5rem);
-    margin-right: -1.25rem;
-    margin-left: -1.25rem;
-    margin-top: -1rem;
-    margin-bottom: 1rem;
-    border-bottom: #1b1b1b 1px solid;
-
-    &.lab-results-table-from-div {
-      border-bottom: none;
-      margin-bottom: 0;
+  .usa-prose {
+    &:has(.lab-results-table-from-div) {
+      overflow-x: auto;
     }
 
-    thead th {
-      background-color: #f0f0f0;
-    }
+    > table {
+      overflow-wrap: break-word;
+      width: calc(100% + 2.5rem);
+      margin-right: -1.25rem;
+      margin-left: -1.25rem;
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      border-bottom: #1b1b1b 1px solid;
 
-    tr td {
-      border-bottom: 0;
-    }
+      &.lab-results-table-from-div {
+        border-bottom: none;
+        margin-bottom: 3rem;
 
-    .hideableData {
-      border-top: color("base-lighter") 1px solid;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      thead th {
+        background-color: #f0f0f0;
+      }
+
+      tr td {
+        border-bottom: 0;
+      }
     }
   }
 }
@@ -285,6 +346,7 @@ html {
 
 .nav-wrapper {
   padding-top: 2rem;
+  padding-bottom: 2rem;
   width: $nav-wrapper-width;
   min-width: $nav-wrapper-width;
   position: sticky;
@@ -338,11 +400,15 @@ html {
 
 .patient-banner {
   display: flex;
-  padding: 0.85rem 1.5rem;
+  // x padding should match overall header
+  padding: 0.85rem clamp(1rem, 6.25vw, 5rem);
   align-items: center;
   gap: 12px;
+  box-shadow:
+    0 0 4px color("primary-dark"),
+    0 0 2px color("primary-darker");
 
-  background: var(--Info-info-darker, #2e6276);
+  background: color("primary-dark");
 
   color: var(--White, #fff);
 

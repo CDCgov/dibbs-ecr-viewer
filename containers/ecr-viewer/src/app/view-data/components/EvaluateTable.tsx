@@ -16,10 +16,12 @@ export type Mapping = {
 export interface ColumnInfoInput {
   columnName: string;
   infoPath?: string;
-  value?: string;
+  value?: ReactNode;
   className?: string;
   hiddenBaseText?: string;
   applyToValue?: (value: string) => ReactNode;
+  evaluateEntry?: (el: Element) => ReactNode;
+  sortFn?: (a: string, b: string) => number;
 }
 
 interface TableProps {
@@ -52,6 +54,21 @@ const EvaluateTable = ({
   fixed = true,
   outerBorder = true,
 }: TableProps): React.JSX.Element => {
+  const tableRowData = resources.map((entry) =>
+    evaluateTableRowData(columns, mappings, entry),
+  );
+
+  columns.forEach(({ sortFn }, i) => {
+    if (!sortFn) return;
+
+    tableRowData.sort((aRow, bRow) => {
+      const a = aRow.rowCellsData[i].data;
+      const b = bRow.rowCellsData[i].data;
+      if (typeof a !== "string" || typeof b !== "string") return 0;
+      return sortFn(a, b);
+    });
+  });
+
   return (
     <BaseTable
       columns={columns}
@@ -60,10 +77,10 @@ const EvaluateTable = ({
       fixed={fixed}
       outerBorder={outerBorder}
     >
-      {resources.map((entry, index) => (
+      {tableRowData.map((row, index) => (
         <EvaluateTableRow
           key={index}
-          tableRowData={evaluateTableRowData(columns, mappings, entry)}
+          tableRowData={row}
           numCols={columns.length}
         />
       ))}
@@ -157,8 +174,9 @@ const evaluateTableRowData = (
   const rowCellsData = columns.map((column) =>
     evaluateTableRowCell(column, entry, mappings),
   );
-  const hiddenRow = rowCellsData.find(({ hiddenRow }) => !!hiddenRow)
-    ?.hiddenRow;
+  const hiddenRow = rowCellsData.find(
+    ({ hiddenRow }) => !!hiddenRow,
+  )?.hiddenRow;
 
   // This row is entirely empty, skip it
   if (rowCellsData.every(({ data }) => !data))
@@ -179,27 +197,29 @@ export const evaluateTableRowCell = (
   entry: Element,
   mappings: Mapping,
 ) => {
-  let strData: string;
+  let data: ReactNode;
   let hiddenRow: ReactNode = null;
   let hidden = false;
   if (column?.value) {
-    strData = column.value;
+    data = column.value;
   } else if (column?.infoPath) {
-    strData = evaluateValue(entry, mappings[column.infoPath]).replaceAll(
-      "<br/>",
-      "\n",
-    );
+    const strData: string = evaluateValue(
+      entry,
+      mappings[column.infoPath],
+    ).replaceAll("<br/>", "\n");
+    if (strData && column.applyToValue) {
+      data = column.applyToValue(strData);
+    } else {
+      data = strData;
+    }
+  } else if (column?.evaluateEntry) {
+    data = column.evaluateEntry(entry);
   } else {
     throw new Error(
-      `No value or infoPath provided to EvaluateTable column: ${JSON.stringify(
+      `No value, infoPath, or evaluateEntry provided to EvaluateTable column: ${JSON.stringify(
         column,
       )}`,
     );
-  }
-
-  let data: ReactNode = strData;
-  if (strData && column.applyToValue) {
-    data = column.applyToValue(strData);
   }
 
   if (data && column.hiddenBaseText) {

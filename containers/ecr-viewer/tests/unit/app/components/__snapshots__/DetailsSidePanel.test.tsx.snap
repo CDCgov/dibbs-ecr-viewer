@@ -1,0 +1,1261 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DetailsSidePanel renders details side panel 1`] = `
+<body
+  class="usa-js-modal--active"
+  data-modal-count="1"
+  style="padding-right: 0px;"
+>
+  <div
+    aria-hidden="true"
+    data-modal-hidden="1"
+  >
+    <div>
+      <button
+        class="usa-button usa-button--unstyled action-text"
+        data-close-modal="true"
+        data-open-modal="true"
+        data-testid="button"
+        type="button"
+      >
+        Click me
+      </button>
+      ,
+    </div>
+  </div>
+  <div
+    aria-describedby="details-sidepanel-r:id-description"
+    aria-labelledby="details-sidepanel-r:id-heading"
+    class="usa-modal-wrapper is-visible isolate"
+    id="details-sidepanel-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="details-sidepanel-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal sidepanel-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <div>
+              <div
+                class="border-bottom border-base-lightest"
+              >
+                <h2
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
+                  id="details-sidepanel-r:id-heading"
+                >
+                  Title
+                </h2>
+                <p
+                  class="text-base margin-bottom-2 margin-top-1"
+                >
+                  Subtitle
+                </p>
+              </div>
+              <section>
+                <div
+                  class="display-flex flex-justify flex-align-center"
+                >
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
+                <dl>
+                  <dt>
+                    detail 1
+                  </dt>
+                  <dd>
+                    <p>
+                      Hi there
+                    </p>
+                  </dd>
+                </dl>
+              </section>
+            </div>
+            <div
+              class="usa-modal__footer border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1"
+              data-testid="modalFooter"
+            >
+              <div>
+                <h3
+                  class="margin-top-0"
+                >
+                  Remove 
+                  item
+                </h3>
+                <p>
+                  I will really be deleted
+                </p>
+              </div>
+              <div>
+                <button
+                  class="usa-button usa-button--outline text-no-wrap"
+                  data-open-modal="true"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove 
+                  item
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            aria-controls="details-sidepanel-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-focus=""
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    aria-describedby="delete-confirm-r:id-description"
+    aria-hidden="true"
+    aria-labelledby="delete-confirm-r:id-heading"
+    class="usa-modal-wrapper is-hidden isolate"
+    data-modal-hidden="1"
+    id="delete-confirm-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="delete-confirm-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal delete-confirm-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <h2
+              class="usa-modal__heading"
+              id="delete-confirm-r:id-heading"
+            >
+              Delete me?
+            </h2>
+            <p>
+              Really?
+            </p>
+            <p>
+              Me?
+            </p>
+            <div
+              class="usa-modal__footer"
+              data-testid="modalFooter"
+            >
+              <p>
+                Are you sure you want to continue?
+              </p>
+              <ul
+                class="usa-button-group flex-justify-end"
+              >
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button usa-button--outline padding-105"
+                    data-close-modal="true"
+                    data-focus="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </li>
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button"
+                    data-close-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Yes, remove 
+                    item
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button
+            aria-controls="delete-confirm-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DetailsSidePanel renders details side panel 2`] = `
+<body
+  class="usa-js-modal--active"
+  data-modal-count="1"
+  style="padding-right: 0px;"
+>
+  <div
+    aria-hidden="true"
+    data-modal-hidden="1"
+  />
+  <div
+    aria-hidden="true"
+    data-modal-hidden="1"
+  >
+    <div>
+      <button
+        class="usa-button usa-button--unstyled action-text"
+        data-close-modal="true"
+        data-open-modal="true"
+        data-testid="button"
+        type="button"
+      >
+        Click me
+      </button>
+      ,
+    </div>
+  </div>
+  <div
+    aria-describedby="details-sidepanel-r:id-description"
+    aria-labelledby="details-sidepanel-r:id-heading"
+    class="usa-modal-wrapper is-visible isolate"
+    id="details-sidepanel-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="details-sidepanel-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal sidepanel-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <div>
+              <div
+                class="border-bottom border-base-lightest"
+              >
+                <h2
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
+                  id="details-sidepanel-r:id-heading"
+                >
+                  Title
+                </h2>
+                <p
+                  class="text-base margin-bottom-2 margin-top-1"
+                >
+                  Subtitle
+                </p>
+              </div>
+              <section>
+                <div
+                  class="display-flex flex-justify flex-align-center"
+                >
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
+                <dl>
+                  <dt>
+                    detail 1
+                  </dt>
+                  <dd>
+                    <p>
+                      Hi there
+                    </p>
+                  </dd>
+                </dl>
+              </section>
+            </div>
+            <div
+              class="usa-modal__footer border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1"
+              data-testid="modalFooter"
+            >
+              <div>
+                <h3
+                  class="margin-top-0"
+                >
+                  Remove 
+                  item
+                </h3>
+                <p>
+                  I will really be deleted
+                </p>
+              </div>
+              <div>
+                <button
+                  class="usa-button usa-button--outline text-no-wrap"
+                  data-open-modal="true"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove 
+                  item
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            aria-controls="details-sidepanel-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-focus=""
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    aria-describedby="delete-confirm-r:id-description"
+    aria-hidden="true"
+    aria-labelledby="delete-confirm-r:id-heading"
+    class="usa-modal-wrapper is-hidden isolate"
+    data-modal-hidden="1"
+    id="delete-confirm-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="delete-confirm-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal delete-confirm-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <h2
+              class="usa-modal__heading"
+              id="delete-confirm-r:id-heading"
+            >
+              Delete me?
+            </h2>
+            <p>
+              Really?
+            </p>
+            <p>
+              Me?
+            </p>
+            <div
+              class="usa-modal__footer"
+              data-testid="modalFooter"
+            >
+              <p>
+                Are you sure you want to continue?
+              </p>
+              <ul
+                class="usa-button-group flex-justify-end"
+              >
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button usa-button--outline padding-105"
+                    data-close-modal="true"
+                    data-focus="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </li>
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button"
+                    data-close-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Yes, remove 
+                    item
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button
+            aria-controls="delete-confirm-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DetailsSidePanel renders details side panel 3`] = `
+<body
+  class="usa-js-modal--active"
+  data-modal-count="2"
+  style="padding-right: 0px;"
+>
+  <div
+    aria-hidden="true"
+    data-modal-hidden="2"
+  />
+  <div
+    aria-hidden="true"
+    data-modal-hidden="2"
+  >
+    <div>
+      <button
+        class="usa-button usa-button--unstyled action-text"
+        data-close-modal="true"
+        data-open-modal="true"
+        data-testid="button"
+        type="button"
+      >
+        Click me
+      </button>
+      ,
+    </div>
+  </div>
+  <div
+    aria-describedby="details-sidepanel-r:id-description"
+    aria-hidden="true"
+    aria-labelledby="details-sidepanel-r:id-heading"
+    class="usa-modal-wrapper is-visible isolate"
+    data-modal-hidden="1"
+    id="details-sidepanel-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="details-sidepanel-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal sidepanel-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <div>
+              <div
+                class="border-bottom border-base-lightest"
+              >
+                <h2
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
+                  id="details-sidepanel-r:id-heading"
+                >
+                  Title
+                </h2>
+                <p
+                  class="text-base margin-bottom-2 margin-top-1"
+                >
+                  Subtitle
+                </p>
+              </div>
+              <section>
+                <div
+                  class="display-flex flex-justify flex-align-center"
+                >
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
+                <dl>
+                  <dt>
+                    detail 1
+                  </dt>
+                  <dd>
+                    <p>
+                      Hi there
+                    </p>
+                  </dd>
+                </dl>
+              </section>
+            </div>
+            <div
+              class="usa-modal__footer border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1"
+              data-testid="modalFooter"
+            >
+              <div>
+                <h3
+                  class="margin-top-0"
+                >
+                  Remove 
+                  item
+                </h3>
+                <p>
+                  I will really be deleted
+                </p>
+              </div>
+              <div>
+                <button
+                  class="usa-button usa-button--outline text-no-wrap"
+                  data-open-modal="true"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove 
+                  item
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            aria-controls="details-sidepanel-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-focus=""
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    aria-describedby="delete-confirm-r:id-description"
+    aria-labelledby="delete-confirm-r:id-heading"
+    class="usa-modal-wrapper is-visible isolate"
+    data-modal-hidden="1"
+    id="delete-confirm-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="delete-confirm-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal delete-confirm-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <h2
+              class="usa-modal__heading"
+              id="delete-confirm-r:id-heading"
+            >
+              Delete me?
+            </h2>
+            <p>
+              Really?
+            </p>
+            <p>
+              Me?
+            </p>
+            <div
+              class="usa-modal__footer"
+              data-testid="modalFooter"
+            >
+              <p>
+                Are you sure you want to continue?
+              </p>
+              <ul
+                class="usa-button-group flex-justify-end"
+              >
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button usa-button--outline padding-105"
+                    data-close-modal="true"
+                    data-focus="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </li>
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button"
+                    data-close-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Yes, remove 
+                    item
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button
+            aria-controls="delete-confirm-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DetailsSidePanel renders details side panel 4`] = `
+<body
+  class="usa-js-modal--active"
+  data-modal-count="1"
+  style="padding-right: 0px;"
+>
+  <div
+    aria-hidden="true"
+    data-modal-hidden="1"
+  />
+  <div
+    aria-hidden="true"
+    data-modal-hidden="1"
+  >
+    <div>
+      <button
+        class="usa-button usa-button--unstyled action-text"
+        data-close-modal="true"
+        data-open-modal="true"
+        data-testid="button"
+        type="button"
+      >
+        Click me
+      </button>
+      ,
+    </div>
+  </div>
+  <div
+    aria-describedby="details-sidepanel-r:id-description"
+    aria-labelledby="details-sidepanel-r:id-heading"
+    class="usa-modal-wrapper is-visible isolate"
+    id="details-sidepanel-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="details-sidepanel-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal sidepanel-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <div>
+              <div
+                class="border-bottom border-base-lightest"
+              >
+                <h2
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
+                  id="details-sidepanel-r:id-heading"
+                >
+                  Title
+                </h2>
+                <p
+                  class="text-base margin-bottom-2 margin-top-1"
+                >
+                  Subtitle
+                </p>
+              </div>
+              <section>
+                <div
+                  class="display-flex flex-justify flex-align-center"
+                >
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
+                <dl>
+                  <dt>
+                    detail 1
+                  </dt>
+                  <dd>
+                    <p>
+                      Hi there
+                    </p>
+                  </dd>
+                </dl>
+              </section>
+            </div>
+            <div
+              class="usa-modal__footer border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1"
+              data-testid="modalFooter"
+            >
+              <div>
+                <h3
+                  class="margin-top-0"
+                >
+                  Remove 
+                  item
+                </h3>
+                <p>
+                  I will really be deleted
+                </p>
+              </div>
+              <div>
+                <button
+                  class="usa-button usa-button--outline text-no-wrap"
+                  data-open-modal="true"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove 
+                  item
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            aria-controls="details-sidepanel-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-focus=""
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    aria-describedby="delete-confirm-r:id-description"
+    aria-labelledby="delete-confirm-r:id-heading"
+    class="usa-modal-wrapper is-hidden isolate"
+    id="delete-confirm-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="delete-confirm-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal delete-confirm-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <h2
+              class="usa-modal__heading"
+              id="delete-confirm-r:id-heading"
+            >
+              Delete me?
+            </h2>
+            <p>
+              Really?
+            </p>
+            <p>
+              Me?
+            </p>
+            <div
+              class="usa-modal__footer"
+              data-testid="modalFooter"
+            >
+              <p>
+                Are you sure you want to continue?
+              </p>
+              <ul
+                class="usa-button-group flex-justify-end"
+              >
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button usa-button--outline padding-105"
+                    data-close-modal="true"
+                    data-focus="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </li>
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button"
+                    data-close-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Yes, remove 
+                    item
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button
+            aria-controls="delete-confirm-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DetailsSidePanel renders details side panel 5`] = `
+<body
+  class="usa-js-modal--active"
+  data-modal-count="2"
+  style="padding-right: 0px;"
+>
+  <div
+    aria-hidden="true"
+    data-modal-hidden="2"
+  />
+  <div
+    aria-hidden="true"
+    data-modal-hidden="2"
+  >
+    <div>
+      <button
+        class="usa-button usa-button--unstyled action-text"
+        data-close-modal="true"
+        data-open-modal="true"
+        data-testid="button"
+        type="button"
+      >
+        Click me
+      </button>
+      ,
+    </div>
+  </div>
+  <div
+    aria-describedby="details-sidepanel-r:id-description"
+    aria-hidden="true"
+    aria-labelledby="details-sidepanel-r:id-heading"
+    class="usa-modal-wrapper is-visible isolate"
+    data-modal-hidden="1"
+    id="details-sidepanel-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="details-sidepanel-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal sidepanel-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <div>
+              <div
+                class="border-bottom border-base-lightest"
+              >
+                <h2
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
+                  id="details-sidepanel-r:id-heading"
+                >
+                  Title
+                </h2>
+                <p
+                  class="text-base margin-bottom-2 margin-top-1"
+                >
+                  Subtitle
+                </p>
+              </div>
+              <section>
+                <div
+                  class="display-flex flex-justify flex-align-center"
+                >
+                  <h3
+                    id="details-sidepanel-r:id-description"
+                  >
+                    Item
+                     information
+                  </h3>
+                </div>
+                <dl>
+                  <dt>
+                    detail 1
+                  </dt>
+                  <dd>
+                    <p>
+                      Hi there
+                    </p>
+                  </dd>
+                </dl>
+              </section>
+            </div>
+            <div
+              class="usa-modal__footer border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1"
+              data-testid="modalFooter"
+            >
+              <div>
+                <h3
+                  class="margin-top-0"
+                >
+                  Remove 
+                  item
+                </h3>
+                <p>
+                  I will really be deleted
+                </p>
+              </div>
+              <div>
+                <button
+                  class="usa-button usa-button--outline text-no-wrap"
+                  data-open-modal="true"
+                  data-testid="button"
+                  type="button"
+                >
+                  Remove 
+                  item
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            aria-controls="details-sidepanel-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-focus=""
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    aria-describedby="delete-confirm-r:id-description"
+    aria-labelledby="delete-confirm-r:id-heading"
+    class="usa-modal-wrapper is-visible isolate"
+    id="delete-confirm-r:id"
+    role="dialog"
+    style="z-index: 99999;"
+  >
+    <div
+      aria-controls="delete-confirm-r:id"
+      class="usa-modal-overlay"
+      data-testid="modalOverlay"
+    >
+      <div
+        class="usa-modal delete-confirm-modal"
+        data-testid="modalWindow"
+        tabindex="-1"
+      >
+        <div
+          class="usa-modal__content"
+        >
+          <div
+            class="usa-modal__main"
+          >
+            <h2
+              class="usa-modal__heading"
+              id="delete-confirm-r:id-heading"
+            >
+              Delete me?
+            </h2>
+            <p>
+              Really?
+            </p>
+            <p>
+              Me?
+            </p>
+            <div
+              class="usa-modal__footer"
+              data-testid="modalFooter"
+            >
+              <p>
+                Are you sure you want to continue?
+              </p>
+              <ul
+                class="usa-button-group flex-justify-end"
+              >
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button usa-button--outline padding-105"
+                    data-close-modal="true"
+                    data-focus="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </li>
+                <li
+                  class="usa-button-group__item"
+                >
+                  <button
+                    class="usa-button"
+                    data-close-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Yes, remove 
+                    item
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button
+            aria-controls="delete-confirm-r:id"
+            aria-label="Close this window"
+            class="usa-button usa-modal__close"
+            data-close-modal="true"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

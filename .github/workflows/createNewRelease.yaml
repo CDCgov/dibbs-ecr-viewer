@@ -106,18 +106,8 @@ jobs:
       - name: Update Container Documentation
         env:
           APP_VERSION: ${{ needs.build-containers-for-release.outputs.version }}
-          # Record Linkage
-          MPI_DBNAME: testdb
-          MPI_PASSWORD: pw
-          MPI_DB_TYPE: postgres
-          MPI_HOST: localhost
-          MPI_USER: postgres
-          MPI_PORT: 5432
-          MPI_PATIENT_TABLE: patient
-          MPI_PERSON_TABLE: person
           # Orchestration
           TRIGGER_CODE_REFERENCE_URL: http://localhost:8086
-          VALIDATION_URL: http://localhost:8081
           FHIR_CONVERTER_URL: http://localhost:8082
           INGESTION_URL: http://localhost:8083
           MESSAGE_PARSER_URL: http://localhost:8085
@@ -180,12 +170,15 @@ jobs:
       - name: Copy to latest folder - copy ecr-viewer docs to main deployment folder
         run: |
           rm -rf ./all-docs/latest
+          rm -rf ./docs/latest
           mkdir -p ./all-docs/latest/containers
           cp -r ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers/* ./all-docs/latest/containers
-          cp -r ./all-docs/latest/containers/ecr-viewer ./docs/
+          cp -r ./all-docs/latest/containers/ecr-viewer/* ./docs/
 
       - name: Commit New Documentation
         uses: EndBug/add-and-commit@v9
         with:
-          add: docs
+          add: |
+            - docs
+            - all-docs
           message: Automated update of docs for ${{ needs.build-containers-for-release.outputs.version }} release.

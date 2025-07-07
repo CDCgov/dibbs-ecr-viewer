@@ -1,7 +1,6 @@
 import React from "react";
 
 import { BackButton } from "./BackButton";
-import Header from "./Header";
 import { Error } from "./Icon";
 
 /**
@@ -20,8 +19,7 @@ const ErrorPage = ({
   subTitle?: string;
   children: React.ReactNode;
 }) => (
-  <div className="height-viewport width-viewport display-flex flex-column">
-    <Header />
+  <div className="height-viewport-header-footer width-viewport display-flex flex-column">
     <main className="display-flex flex-justify-center height-full">
       <div className="display-inline-block margin-y-auto">
         <h2 className="font-family-serif font-serif-xl margin-bottom-0">
@@ -35,7 +33,7 @@ const ErrorPage = ({
         <div className="text-semibold font-sans-md margin-top-1">
           {subTitle}
         </div>
-        <div className="bg-info-lighter border border-info-light radius-md font-sans-md line-height-sans-4 padding-3 margin-top-2 width-tablet error-message-content">
+        <div className="bg-primary-lighter border border-info-light radius-md font-sans-md line-height-sans-4 padding-3 margin-top-2 width-tablet error-message-content">
           {children}
         </div>
         <BackButton className="margin-top-3 font-sans-md text-primary" />
@@ -84,6 +82,18 @@ export const MetadataDbInvalid = () => (
     <p>
       The database backing this page isn't fully set up. Reach out to your eCR
       Viewer admin to complete setup.
+    </p>
+  </ErrorPage>
+);
+
+/**
+ * @returns The metadata db invalid error page JSX component.
+ */
+export const StandardUserNoPrograms = () => (
+  <ErrorPage title="Your user setup is incomplete">
+    <p>
+      To be able to view eCRs, you must be added to at least one program area.
+      Reach out out to your eCR Viewer admin to complete setup.
     </p>
   </ErrorPage>
 );

@@ -145,9 +145,11 @@ invalid_rr_data_response = {
 @mock.patch("app.service.open")
 @mock.patch("app.service.subprocess.run")
 @mock.patch("app.service.Path")
+@mock.patch("app.service.os.remove")
 @mock.patch("app.main.resolve_references")
 def test_convert_valid_request(
     patched_resolve_references,
+    patched_os_remove,
     patched_file_path,
     patched_subprocess_run,
     patched_open,
@@ -175,11 +177,13 @@ def test_convert_valid_request(
 @mock.patch("app.service.open")
 @mock.patch("app.service.subprocess.run")
 @mock.patch("app.service.Path")
+@mock.patch("app.service.os.remove")
 @mock.patch("app.main.add_rr_data_to_eicr")
 @mock.patch("app.main.resolve_references")
 def test_convert_valid_request_with_rr_data(
     patched_resolve_references,
     patched_add_rr_data_to_eicr,
+    patched_os_remove,
     patched_file_path,
     patched_subprocess_run,
     patched_open,
@@ -199,9 +203,11 @@ def test_convert_valid_request_with_rr_data(
 @mock.patch("app.service.open")
 @mock.patch("app.service.subprocess.run")
 @mock.patch("app.service.Path")
+@mock.patch("app.service.os.remove")
 @mock.patch("app.main.resolve_references")
 def test_convert_conversion_failure(
     patched_resolve_references,
+    patched_os_remove,
     patched_file_path,
     patched_subprocess_run,
     patched_open,
@@ -356,6 +362,29 @@ def test_add_rr_to_ecr_rr_already_present(capfd):
 
     out, err = capfd.readouterr()
     assert "This eCR has already been merged with RR data." in out
+
+
+def test_add_rr_to_ecr_rr_remove_extra_rr(capfd):
+    with open("./tests/test_files/3.1/CDA_eICR.xml") as fp:
+        eicr = fp.read()
+    with open("./tests/test_files/3.1/CDA_RR.xml") as fp:
+        rr = fp.read()
+
+    ecr = add_rr_data_to_eicr(rr, eicr)
+    root = etree.fromstring(ecr)
+
+    # RR section ("88085-6") should appear only once
+    code_RR_loinc = root.xpath(
+        './/hl7:*[@code="88085-6"]', namespaces={"hl7": "urn:hl7-org:v3"}
+    )
+    assert len(code_RR_loinc) == 1
+
+    # RR section from eICR (v>3.1) should not exist (should have been removed)
+    rr_from_eicr = root.xpath(
+        './/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]',
+        namespaces={"hl7": "urn:hl7-org:v3"},
+    )
+    assert len(rr_from_eicr) == 0
 
 
 def test_standardize_hl7_datetimes():

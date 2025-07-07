@@ -9,6 +9,7 @@ import {
   Period,
   Quantity,
   Range,
+  Reference,
   RelatedPerson,
 } from "fhir/r4";
 
@@ -319,10 +320,11 @@ export const formatPatientContactList = (
  * available value in the following order:
  * 1) `undefined` if the `CodeableConcept` is falsy
  * 2) `CodeableConcept.text`
- * 3) value of the first `coding` with a `display` value
- * 4) `code` and `system` values of the first `coding` with a `code` and `system values.
- * 5) `code` of the first `coding` with a `code` value
- * 6) `undefined`
+ * 3) value of first LOINC coding with a `display` value
+ * 4) value of the first `coding` with a `display` value
+ * 5) `code` and `system` values of the first `coding` with a `code` and `system values.
+ * 6) `code` of the first `coding` with a `code` value
+ * 7) `undefined`
  * @param codeableConcept - The CodeableConcept to get the display value from.
  * @returns - The human-readable display value of the CodeableConcept.
  */
@@ -337,6 +339,13 @@ export const formatCodeableConcept = (
 
   if (text) {
     return text;
+  }
+
+  const firstLoincCodingWithDisplay = coding?.find(
+    (c) => c.display && c.system === "http://loinc.org",
+  );
+  if (firstLoincCodingWithDisplay?.display) {
+    return firstLoincCodingWithDisplay.display;
   }
 
   const firstCodingWithDisplay = coding?.find((c) => c.display);
@@ -400,6 +409,18 @@ export const formatRange = (data: Range | undefined): string | undefined => {
   } else if (high) {
     return `<=${high}`;
   }
+};
+
+/**
+ * Returns the value of a Reference. While this function is currently very simple, it exists to futureproof a change in how we format references.
+ * @param reference the reference being formatted
+ * @returns .reference value of the supplied reference
+ */
+export const formatReference = (
+  reference: Reference | undefined,
+): string | undefined => {
+  if (!reference) return;
+  return reference.reference;
 };
 
 /**

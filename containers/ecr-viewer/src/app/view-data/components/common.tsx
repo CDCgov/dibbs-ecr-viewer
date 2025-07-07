@@ -104,8 +104,8 @@ export const returnProblemsTable = (
   fhirBundle: Bundle,
   problemsArray: Condition[],
 ): React.JSX.Element | undefined => {
-  problemsArray = problemsArray.filter(
-    (entry) => entry.code?.coding?.some((c: Coding) => c?.display),
+  problemsArray = problemsArray.filter((entry) =>
+    entry.code?.coding?.some((c: Coding) => c?.display),
   );
 
   if (problemsArray.length === 0) {
@@ -117,6 +117,7 @@ export const returnProblemsTable = (
       columnName: "Active Problem",
       infoPath: "activeProblemsDisplay",
     },
+    { columnName: "Status", infoPath: "activeProblemsStatus" },
     { columnName: "Onset Date/Time", infoPath: "activeProblemsOnsetDate" },
     { columnName: "Onset Age", infoPath: "activeProblemsOnsetAge" },
     {

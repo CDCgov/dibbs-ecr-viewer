@@ -1,0 +1,234 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Active Problems Table should match snapshot 1`] = `
+<div>
+  <table
+    class="usa-table usa-table--borderless width-full table-caption-margin margin-y-0 border-top border-left border-right"
+    data-testid="table"
+  >
+    <caption>
+      Problems List
+    </caption>
+    <thead>
+      <tr>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Active Problem
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Status
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Onset Date/Time
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Onset Age
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Comments
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Malignant neoplasm of lower-inner quadrant of left breast in female, estrogen receptor positive
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          12/14/2022
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          123 years
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <button
+            aria-controls="hidden-comment-r:id"
+            aria-expanded="false"
+            class="usa-button usa-button--unstyled"
+            data-test-id="comment-button"
+            data-testid="button"
+            type="button"
+          >
+            View
+             
+            comment
+          </button>
+        </td>
+      </tr>
+      <tr
+        hidden=""
+        id="hidden-comment-r:id"
+      >
+        <td
+          class="p-list"
+          colspan="5"
+        >
+          <div
+            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+          />
+          Test note
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Headache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          152 years
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Backache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          08/19/2018 1:00 PM
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          141 years
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Headache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          1 year
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Backache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          06/28/1877
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          1 month, 3 days
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

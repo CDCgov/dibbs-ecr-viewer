@@ -1,7 +1,5 @@
 import React from "react";
 
-import Header from "@/app/components/Header";
-
 import PatientBanner from "./PatientBanner";
 
 /**
@@ -23,7 +21,6 @@ export const ECRViewerLayout = ({
 }) => {
   return (
     <main className="width-full minw-main">
-      <Header />
       <PatientBanner name={patientName} dob={patientDOB} />
       <div className="main-container">
         <div className="width-main padding-main">

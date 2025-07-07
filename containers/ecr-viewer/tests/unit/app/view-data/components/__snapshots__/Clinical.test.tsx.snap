@@ -1,0 +1,619 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test for Clinical Notes should match snapshot for non table notes 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="clinical-notes"
+          >
+            Clinical Notes
+          </h4>
+          <div
+            class="usa-summary-box__text clinical_info_container"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Miscellaneous Notes
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  <p>
+                    This patient was only recently discharged for a recurrent GI bleed as described
+                  </p>
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Snapshot test for Clinical Notes should match snapshot for table notes 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="clinical-notes"
+          >
+            Clinical Notes
+          </h4>
+          <div
+            class="usa-summary-box__text clinical_info_container"
+          >
+            <div>
+              <div>
+                <div
+                  class="grid-col-auto text-pre-line"
+                >
+                  <table
+                    class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 border-top border-left border-right"
+                    data-testid="table"
+                  >
+                    <caption>
+                      <div
+                        class="display-flex flex-align-baseline"
+                      >
+                        <div
+                          class="data-title"
+                        >
+                          Miscellaneous Notes
+                        </div>
+                        <span
+                          class="usa-tooltip"
+                          data-testid="tooltipWrapper"
+                        >
+                          <div
+                            aria-describedby="[object Object]"
+                            class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                            data-testid="triggerElement"
+                            tabindex="0"
+                            title=""
+                          >
+                            <svg
+                              aria-label="description"
+                              class="usa-icon tooltip-icon text-secondary flex-align-center"
+                              focusable="false"
+                              height="1em"
+                              role="img"
+                              viewBox="0 0 24 24"
+                              width="1em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </div>
+                          <span
+                            aria-hidden="true"
+                            class="usa-tooltip__body"
+                            data-testid="tooltipBody"
+                            id="[object Object]"
+                            role="tooltip"
+                            title="Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR."
+                          >
+                            Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.
+                          </span>
+                        </span>
+                      </div>
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th
+                          class="table-header bg-gray-5 minw-10"
+                          scope="col"
+                        >
+                          Active Problems
+                        </th>
+                        <th
+                          class="table-header bg-gray-5 minw-10"
+                          scope="col"
+                        >
+                          Noted Date
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          Parkinson's syndrome
+                        </td>
+                        <td>
+                          07/25/2022
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Essential hypertension
+                        </td>
+                        <td>
+                          07/21/2022
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="treatment-details"
+          >
+            Treatment Details
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              data-testid="treatment-details"
+            >
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="grid-col-auto width-full text-pre-line"
+                >
+                  <table
+                    class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0 border-top border-left border-right"
+                    data-testid="table"
+                  >
+                    <caption>
+                      Procedures
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th
+                          class="table-header"
+                          scope="col"
+                        >
+                          Name
+                        </th>
+                        <th
+                          class="table-header"
+                          scope="col"
+                        >
+                          Date/Time Performed
+                        </th>
+                        <th
+                          class="table-header"
+                          scope="col"
+                        >
+                          Status
+                        </th>
+                        <th
+                          class="table-header"
+                          scope="col"
+                        >
+                          Details
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          HC INFECTIOUS DISEASE PATHOGEN SPECIFIC RNA SARS-COV-2/INF A&B/RSV UPPER RESP SPEC DETECTED OR NOT
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          06/24/2022 12:50 PM EDT
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          completed
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          <button
+                            aria-controls="hidden-comment-r:id"
+                            aria-expanded="false"
+                            class="usa-button usa-button--unstyled"
+                            data-test-id="comment-button"
+                            data-testid="button"
+                            type="button"
+                          >
+                            View
+                             
+                            details
+                          </button>
+                        </td>
+                      </tr>
+                      <tr
+                        hidden=""
+                        id="hidden-comment-r:id"
+                      >
+                        <td
+                          class="p-list"
+                          colspan="4"
+                        >
+                          <div
+                            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                          />
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Reason
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Struck by nonvenomous lizards, sequela
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          Colonic polypectomy
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          11/15/2020
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          final
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          <button
+                            aria-controls="hidden-comment-r:id"
+                            aria-expanded="false"
+                            class="usa-button usa-button--unstyled"
+                            data-test-id="comment-button"
+                            data-testid="button"
+                            type="button"
+                          >
+                            View
+                             
+                            details
+                          </button>
+                        </td>
+                      </tr>
+                      <tr
+                        hidden=""
+                        id="hidden-comment-r:id"
+                      >
+                        <td
+                          class="p-list"
+                          colspan="4"
+                        >
+                          <div
+                            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                          />
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Body Site
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Abdomen and pelvis
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          LOINC codes are better
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          Start: 11/01/2016 10:34 PM
+End: 11/02/2016 2:43 AM
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          completed
+                        </td>
+                        <td
+                          class="text-top text-pre-line"
+                        >
+                          <button
+                            aria-controls="hidden-comment-r:id"
+                            aria-expanded="false"
+                            class="usa-button usa-button--unstyled"
+                            data-test-id="comment-button"
+                            data-testid="button"
+                            type="button"
+                          >
+                            View
+                             
+                            details
+                          </button>
+                        </td>
+                      </tr>
+                      <tr
+                        hidden=""
+                        id="hidden-comment-r:id"
+                      >
+                        <td
+                          class="p-list"
+                          colspan="4"
+                        >
+                          <div
+                            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                          />
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Reason
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Routine general medical examination at a health care facility
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Method
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                the way we felt like it
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Complication
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Nausea
+Heartburn
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Priority
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                call black please
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Specimen
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                anal polyp
+bile duct
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Product
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Colonoscope
+ID: (01)51022222233336(11)141231(17)150707(10)A213B1(21)1234
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Medication
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Atenolol 25 MG Oral Tablet
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Service Location
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                1002 Healthcare Drive
+Ann Arbor, MI
+99999, US
+                              </div>
+                            </div>
+                            <div
+                              class="section__line_gray"
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="grid-row"
+                            >
+                              <div
+                                class="data-title padding-right-1"
+                              >
+                                Organization
+                              </div>
+                              <div
+                                class="grid-col maxw7 text-pre-line p-list"
+                              >
+                                Good Health Hospital
+1000 Hospital Lane
+Ann Arbor, MI
+99999, US
+Work: 555-555-1212
+Work Fax: 555-555-3333
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

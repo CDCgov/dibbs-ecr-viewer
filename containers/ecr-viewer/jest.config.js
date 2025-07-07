@@ -10,17 +10,26 @@ const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jest-environment-jsdom",
   modulePathIgnorePatterns: ["<rootDir>/.next"],
-  testPathIgnorePatterns: ["<rootDir>/e2e"],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
+  testPathIgnorePatterns: ["<rootDir>/tests/e2e"],
   collectCoverage: true,
   testMatch:
     process.env.TEST_TYPE === "integration"
-      ? ["<rootDir>/integration/**/?(*.)+(spec|test).[jt]s?(x)"]
-      : ["<rootDir>/src/**/?(*.)+(spec|test).[jt]s?(x)"],
+      ? ["<rootDir>/tests/integration/**/?(*.)+(spec|test).[jt]s?(x)"]
+      : ["<rootDir>/tests/unit/**/?(*.)+(spec|test).[jt]s?(x)"],
   setupFiles:
     process.env.TEST_TYPE === "integration"
-      ? ["<rootDir>/integration/setup.ts"]
+      ? ["<rootDir>/tests/integration/setup.ts"]
       : [],
 };
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig);
+// We need to override transformIgnorePatterns after creating the jest config
+// because next/jest overrides transformIgnorePatterns to ignore node_modules.
+// See here for more info: https://stackoverflow.com/a/72926763
+// eslint-disable-next-line jsdoc/require-jsdoc
+module.exports = async () => ({
+  ...(await createJestConfig(customJestConfig)()),
+  transformIgnorePatterns: ["node_modules/(?!(jose|@azure)/)"],
+});

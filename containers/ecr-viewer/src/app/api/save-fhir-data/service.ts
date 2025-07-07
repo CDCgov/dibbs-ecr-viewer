@@ -193,7 +193,7 @@ const saveExtendedMetadata = async (
     .insertInto("ecr_data")
     .values({
       eicr_id: ecrId,
-      set_id: metadata.eicr_set_id || ecrId,
+      set_id: metadata.set_id || ecrId,
       last_name: metadata.last_name,
       first_name: metadata.first_name,
       birth_date: metadata.birth_date,
@@ -217,10 +217,10 @@ const saveExtendedMetadata = async (
       rr_id: metadata.rr_id,
       processing_status: metadata.processing_status,
       eicr_version_number: metadata.eicr_version_number,
-      authoring_date: asDate(metadata.authoring_datetime),
+      authoring_date: asDate(metadata.authoring_date),
       authoring_provider: metadata.provider_id,
       provider_id: metadata.provider_id,
-      facility_id: metadata.facility_id_number,
+      facility_id: metadata.facility_id,
       facility_name: metadata.facility_name,
       encounter_type: metadata.encounter_type,
       encounter_start_date: asDate(metadata.encounter_start_date),
@@ -246,23 +246,10 @@ const saveExtendedMetadata = async (
   }
   if (metadata.labs) {
     for (const lab of metadata.labs) {
-      // some fields need renaming
-      const {
-        test_result_ref_range_low: test_result_reference_range_low_value,
-        test_result_ref_range_high: test_result_reference_range_high_value,
-        test_result_ref_range_low_units: test_result_reference_range_low_units,
-        test_result_ref_range_high_units:
-          test_result_reference_range_high_units,
-        ...labValues
-      } = lab;
       await trx
         .insertInto("ecr_labs")
         .values({
-          ...labValues,
-          test_result_reference_range_low_value,
-          test_result_reference_range_high_value,
-          test_result_reference_range_low_units,
-          test_result_reference_range_high_units,
+          ...lab,
           eicr_id: ecrId,
           specimen_collection_date: asDate(lab.specimen_collection_date),
         })
@@ -287,11 +274,11 @@ const saveCoreMetadata = async (
     .insertInto("ecr_data")
     .values({
       eicr_id: ecrId,
-      set_id: metadata.eicr_set_id || ecrId,
+      set_id: metadata.set_id || ecrId,
       last_name: metadata.last_name,
       first_name: metadata.first_name,
       birth_date: metadata.birth_date,
-      encounter_start_date: new Date(metadata.report_date),
+      encounter_start_date: asDate(metadata.encounter_start_date),
       eicr_version_number: metadata.eicr_version_number,
     })
     .execute();
@@ -308,6 +295,7 @@ const saveRR = async (
   // Loop through each condition/rule object in rr array
   for (const rrItem of metadata.rr) {
     const rr_conditions_uuid = randomUUID();
+
     // Insert condition into ecr_rr_conditions
     await trx
       .insertInto("ecr_rr_conditions")
@@ -315,6 +303,7 @@ const saveRR = async (
         uuid: rr_conditions_uuid,
         eicr_id: ecrId,
         condition: rrItem.condition,
+        condition_code: rrItem.condition_code,
       })
       .execute();
     // Loop through the rule summaries array
@@ -326,7 +315,7 @@ const saveRR = async (
           .values({
             uuid: randomUUID(),
             ecr_rr_conditions_id: rr_conditions_uuid,
-            rule_summary: summary.summary,
+            rule_summary: summary.rule_summary,
           })
           .execute();
       }

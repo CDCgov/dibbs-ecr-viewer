@@ -7,20 +7,20 @@ export default defineConfig({
   testDir:
     process.env.CONFIG_NAME?.endsWith("DUAL") ||
     process.env.CONFIG_NAME?.endsWith("NON_INTEGRATED")
-      ? "./e2e/dual"
-      : "./e2e/integrated",
-  globalSetup: require.resolve("./e2e/global-setup"),
-  globalTeardown: require.resolve("./e2e/global-teardown"),
+      ? "./tests/e2e/dual"
+      : "./tests/e2e/integrated",
+  globalSetup: require.resolve("./tests/e2e/global-setup"),
+  globalTeardown: require.resolve("./tests/e2e/global-teardown"),
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: "html",
+  reporter: [["list"], ["html"]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -29,7 +29,7 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   expect: {
-    timeout: 15_000,
+    timeout: 5_000,
   },
   /* Configure projects for major browsers */
   projects: [

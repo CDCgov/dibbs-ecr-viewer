@@ -441,6 +441,53 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:a9d3f2b7-1c8a-4bd2-93e0-74f6217bbdfa",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "a9d3f2b7-1c8a-4bd2-93e0-74f6217bbdfa",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "246455001",
+              "display": "Recurrence",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-item-list",
+                "display": "Problem List Item",
+                "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "448915004",
+              "system": "http://snomed.info/sct",
+              "display": "Cleft hard palate"
+            }
+          ]
+        },
+        "onsetDateTime": "2021-04-13",
+        "subject": {
+          "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
+        },
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/a9d3f2b7-1c8a-4bd2-93e0-74f6217bbdfa"
+      }
+    },
+    {
       "fullUrl": "urn:uuid:b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
       "resource": {
         "resourceType": "Procedure",
@@ -581,6 +628,47 @@
       "request": {
         "method": "PUT",
         "url": "MedicationAdministration/367be6b3-75f2-2053-63e4-f0a6f1d6bff1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:ab1791b0-5c71-11db-b0de-0800200c9a54"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "display": "Employee desk distance from mail sorter"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/f35db4f9-0d60-4d3d-ac02-75affb3f2059"
+        },
+        "valueQuantity": {
+          "value": 2,
+          "unit": "m"
+        },
+        "effectivePeriod": {
+          "start": "2020-11-01"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/26d05bcc-1b0f-fc8a-a85e-4c6c6512478f"
       }
     }
   ]

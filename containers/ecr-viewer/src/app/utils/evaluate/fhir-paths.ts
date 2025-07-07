@@ -35,6 +35,8 @@ export type ValueX =
   | Reference
   | ObservationReferenceRange;
 
+export type TimeX = string | Period;
+
 /**
  * Mapping from the FHIR path key to the expected type upon valuation.
  */
@@ -84,6 +86,9 @@ export type PathTypes = {
   encounterDiagnosis: EncounterDiagnosis;
   encounterType: string;
   encounterID: Identifier;
+  hospitalEncounterDiagnosisRef: Reference;
+  conditionCode: CodeableConcept;
+  conditionOnsetDateTime: string;
   facilityContact: string;
   facilityContactAddress: string;
   facilityLocation: string;
@@ -91,21 +96,23 @@ export type PathTypes = {
   facilityAddress: Address;
   facilityType: ValueX;
   compositionEncounterRef: string;
-  encounterIndividualRef: string;
+  encounterAttendingRefs: EncounterParticipant;
   encounterParticipants: EncounterParticipant;
   rrDetails: Observation;
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
   vitalSignType: CodeableConcept;
-  vitalSignValue: ValueX;
+  value: ValueX;
   vitalSignDateTime: ValueX;
   resolve: unknown;
   activeProblems: Condition;
   activeProblemsDisplay: string;
+  activeProblemsStatus: string;
   activeProblemsOnsetDate: string;
   activeProblemsOnsetAge: ValueX;
   activeProblemsComments: string;
   historyOfPresentIllness: string;
+  emergencyOutbreakInfo: Observation;
   planOfTreatment: string;
   plannedProcedures: CarePlanActivity;
   plannedProcedureName: string;
@@ -124,10 +131,23 @@ export type PathTypes = {
   immunizationsManufacturerName: string;
   immunizationsLotNumber: unknown;
   procedures: Procedure;
-  procedureName: string;
-  procedureDate: string;
-  procedureReason: string;
+  procedureHistoryRefs: Reference;
+  procedureName: CodeableConcept;
+  procedureDate: TimeX;
+  procedureStatus: string;
+  procedureReason: CodeableConcept;
+  procedureLocationRef: Reference;
+  procedureOrgRef: Reference;
+  procedureBodySite: CodeableConcept;
+  procedureOutcome: CodeableConcept;
+  procedureComplication: CodeableConcept;
+  procedureProductRef: Reference;
+  procedureMedRef: Reference;
+  procedureSpecimen: CodeableConcept;
+  procedureMethod: CodeableConcept;
+  procedurePriority: CodeableConcept;
   diagnosticReports: DiagnosticReport;
+  diagnosticReportStatus: string;
   observations: Observation;
   labResultDiv: string;
   specimenCollectionTime: string;
@@ -143,6 +163,7 @@ export type PathTypes = {
   observationAntibiotic: string;
   observationOrganismMethod: string;
   observationSusceptibility: string;
+  observationResultStatus: string;
   organizations: Organization;
   patientTravelHistory: Observation;
   travelHistoryStartDate: string;
@@ -350,6 +371,21 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Identifier",
     path: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].identifier",
   },
+
+  hospitalEncounterDiagnosisRef: {
+    type: "Reference",
+    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = %code).entry",
+  },
+
+  conditionCode: {
+    type: "CodeableConcept",
+    path: "Condition.code",
+  },
+  conditionOnsetDateTime: {
+    type: "string",
+    path: "Condition.onsetDateTime",
+  },
+
   facilityContact: {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Location')[0].telecom.where(system = 'phone')[0].value",
@@ -374,14 +410,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
   },
-
   compositionEncounterRef: {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
   },
-  encounterIndividualRef: {
-    type: "string",
-    path: "Encounter.participant.where(type.coding.code = 'ATND').individual.reference",
+  encounterAttendingRefs: {
+    type: "EncounterParticipant",
+    path: "Encounter.participant.where(type.coding.code = 'ATND')",
   },
   encounterParticipants: {
     type: "EncounterParticipant",
@@ -393,12 +428,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
   },
 
-  // Clinical Data
-  clinicalReasonForVisit: {
-    type: "ValueX",
-    path: "Bundle.entry.resource.section.where(title.lower() = 'reason for visit')[0].extension[0].value",
-  },
-
   // Vitals
   patientVitalSigns: {
     type: "Observation",
@@ -408,7 +437,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "CodeableConcept",
     path: "code",
   },
-  vitalSignValue: {
+  value: {
     type: "ValueX",
     path: "value",
   },
@@ -423,6 +452,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Clinical Info
+  clinicalReasonForVisit: {
+    type: "ValueX",
+    path: "Bundle.entry.resource.section.where(title.lower() = 'reason for visit')[0].extension[0].value",
+  },
   activeProblems: {
     type: "Condition",
     path: "Bundle.entry.resource.where(resourceType = 'Condition').where(category.coding.code = 'problem-item-list')",
@@ -431,12 +464,20 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Condition.code.coding.display.first()",
   },
+  activeProblemsStatus: {
+    type: "string",
+    path: "Condition.clinicalStatus.coding.display",
+  },
   activeProblemsOnsetDate: { type: "string", path: "Condition.onsetDateTime" },
   activeProblemsOnsetAge: { type: "ValueX", path: "Condition.onsetAge.value" },
   activeProblemsComments: { type: "string", path: "Condition.note[0].text" },
   historyOfPresentIllness: {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = '10164-2').text.`div`.first()",
+  },
+  emergencyOutbreakInfo: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information')",
   },
 
   // Treatment Details
@@ -467,7 +508,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.section.where(code.coding[0].code = '29549-3').entry.reference",
   },
 
-  // CareTEam
+  // CareTeam
   careTeamParticipants: {
     type: "CareTeamParticipant",
     path: "Bundle.entry.resource.where(resourceType = 'CareTeam').participant",
@@ -503,23 +544,64 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Immunization.manufacturer.name",
   },
   immunizationsLotNumber: { type: "unknown", path: "Immunization.lotNumber" },
+
+  // === Procedure ===
   procedures: {
     type: "Procedure",
     path: "Bundle.entry.resource.where(resourceType = 'Procedure')",
   },
-
-  // Procedure
-  procedureName: {
-    type: "string",
-    path: "Procedure.code.coding.iif(where(system = 'http://loinc.org').display.exists(), where(system = 'http://loinc.org').display, display.first())",
+  procedureHistoryRefs: {
+    type: "Reference",
+    path: "Bundle.entry.resource.section.where(code.coding[0].code = '47519-4').entry.where(reference.startsWith('Observation/'))",
   },
-  procedureDate: { type: "string", path: "Procedure.performedDateTime" },
-  procedureReason: { type: "string", path: "Procedure.reason.display" },
 
-  // Lab Info
+  // core fields
+  procedureName: {
+    type: "CodeableConcept",
+    path: "code",
+  },
+  procedureDate: {
+    type: "TimeX",
+    path: "Procedure.performed | Observation.effective",
+  },
+  procedureStatus: { type: "string", path: "status" },
+
+  // extra details
+  procedureReason: { type: "CodeableConcept", path: "Procedure.reasonCode" },
+  procedureLocationRef: { type: "Reference", path: "Procedure.location" },
+  procedureOrgRef: { type: "Reference", path: "Procedure.performer.actor" },
+  procedureBodySite: { type: "CodeableConcept", path: "bodySite" },
+  procedureOutcome: { type: "CodeableConcept", path: "Observation.value" },
+  procedureComplication: {
+    type: "CodeableConcept",
+    path: "Procedure.complication",
+  },
+  procedureProductRef: { type: "Reference", path: "Procedure.usedReference" },
+  procedureMedRef: {
+    type: "Reference",
+    path: "Procedure.extension.where(url = 'medicationAdministration').value",
+  },
+  procedureSpecimen: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'specimen').value",
+  },
+  procedureMethod: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'http://hl7.org/fhir/StructureDefinition/procedure-method').value | Observation.method",
+  },
+  procedurePriority: {
+    type: "CodeableConcept",
+    path: "Procedure.extension.where(url = 'priorityCode').value",
+  },
+
+  // === Lab Info ===
   diagnosticReports: {
     type: "DiagnosticReport",
     path: "Bundle.entry.resource.where(resourceType = 'DiagnosticReport')",
+  },
+  diagnosticReportStatus: {
+    type: "string",
+    path: "iif(extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding[0].display.exists(), extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding[0].display, status)",
   },
   observations: {
     type: "Observation",
@@ -566,6 +648,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "extension.where(url = 'methodCode originalText').valueString",
   },
   observationSusceptibility: { type: "string", path: "valueString" },
+  observationResultStatus: {
+    type: "string",
+    path: "iif(extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding[0].display.exists(), extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding[0].display, status)",
+  },
 
   // Organization
   organizations: {

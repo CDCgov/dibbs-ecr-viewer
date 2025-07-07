@@ -39,39 +39,40 @@
 .table-ecr-library {
   font-size: 1rem;
   border-collapse: separate;
-  font-family: "Source Sans Pro Web";
-
-  // Hide highlight color by matching th color on sorted column - per design
-  &.usa-table th {
-    &[aria-sort="descending"] {
-      background-color: #dfe1e2;
-    }
-    &[aria-sort="ascending"] {
-      background-color: #dfe1e2;
-    }
-  }
-
-  a {
-    color: var(--Primary-primary, #005ea2);
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 700;
-  }
+  isolation: isolate;
+  min-height: 100%;
 
   a,
   u {
     text-decoration: none;
   }
 
+  thead {
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+
+    th {
+      background-color: color("base-lighter");
+      border-bottom: 1px solid var(--Base-base, #71767a);
+
+      &:first-child {
+        padding-left: 2rem;
+      }
+    }
+  }
+
   tbody {
     isolation: isolate;
 
     td {
-      border-bottom: 0;
+      border-bottom: none;
     }
 
     tr {
       position: relative;
+
+      &:last-child {
+        height: 100%;
+      }
 
       &:first-child td {
         border-top: none;
@@ -85,7 +86,7 @@
         }
 
         &:nth-child(even) td {
-          background-color: color("base-lightest");
+          background-color: color("gray-cool-3");
         }
 
         td:first-child {
@@ -123,19 +124,6 @@
     }
   }
 
-  thead {
-    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
-
-    th {
-      background-color: color("base-lighter");
-      border-bottom: 1px solid var(--Base-base, #71767a);
-
-      &:first-child {
-        padding-left: 2rem;
-      }
-    }
-  }
-
   @media (prefers-reduced-motion: no-preference) {
     .expand-icon {
       transition: transform 0.2s ease-in-out;
@@ -149,16 +137,9 @@
   height: calc(100% - 4rem);
 }
 
-.height-ecr-library {
-  height: calc(100% - 2.45rem - 1.5rem - 4.45rem);
-}
-
-.pagination-bar {
-  .usa-pagination {
-    margin: 0;
-  }
-
+.ecr-pagination-drop-shadow {
   box-shadow: 0 -0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 // ==== Filter styling ===== //
@@ -192,29 +173,29 @@
 }
 
 .filters-applied {
-  box-shadow: inset 0 0 0 2px color("primary");
-  background-color: color("primary-lighter");
+  box-shadow: inset 0 0 0 2px color("secondary");
+  background-color: color("secondary-lighter");
   font-weight: bold;
 
   span svg {
-    fill: color("primary");
+    fill: color("secondary");
   }
 
   &:hover {
-    box-shadow: inset 0 0 0 2px color("primary-dark");
-    background-color: color("primary-light");
+    box-shadow: inset 0 0 0 2px color("secondary-dark");
+    background-color: color("secondary-light");
 
     span svg {
-      fill: color("primary-dark");
+      fill: color("secondary-dark");
     }
   }
 
   &:active {
-    box-shadow: inset 0 0 0 2px color("primary");
-    background-color: color("primary-lighter");
+    box-shadow: inset 0 0 0 2px color("secondary");
+    background-color: color("secondary-lighter");
 
     span svg {
-      fill: color("primary");
+      fill: color("secondary");
     }
   }
 }

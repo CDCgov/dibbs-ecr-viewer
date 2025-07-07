@@ -15,64 +15,273 @@
   overflow: visible;
 }
 
-.usa-button.usa-pagination__button:hover {
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
+// used primarily in the admin pages
+.usa-accordion.accordion-dibbs {
+  .usa-accordion__button {
+    background-color: color("base-lightest");
+    border-radius: 0.25rem;
+    color: color("base-darker");
+    @include add-background-svg("usa-icons/arrow_drop_down");
+
+    &[aria-expanded="true"] {
+      @include add-background-svg("usa-icons/arrow_drop_up");
+      border-end-end-radius: 0;
+      border-end-start-radius: 0;
+    }
+  }
+
+  .usa-accordion__content {
+    border-radius: 0 0 0.25rem;
+    border: 1px solid color("base-lightest");
+    border-top: none;
+    box-shadow: 0px 2px 3px 0px #f3f3f3;
+    background-color: color("white");
+  }
+}
+
+@keyframes progress {
+  100% {
+    width: 0;
+  }
+}
+
+.usa-alert.toast {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #4070f4;
+    animation: progress var(--toast-timeout) linear forwards;
+    z-index: 2;
+  }
+
+  &.usa-alert--success::before {
+    background-color: color("success");
+  }
+
+  &.usa-alert--warning::before {
+    background-color: color("warning");
+  }
+
+  &.usa-alert--error::before {
+    background-color: color("error");
+  }
+
+  &.usa-alert--info::before {
+    background-color: color("info");
+  }
+}
+
+.usa-checkbox {
+  background: none;
+}
+
+.usa-checkbox__label {
+  display: flex;
+  align-items: center;
 }
 
 .usa-header {
-  background-color: #172e51;
   color: white;
+  height: 5.5rem;
+  line-height: 0;
+  margin-top: 0;
+  padding: 0;
+  padding-top: 1.5rem;
 
-  .usa-logo {
-    margin-left: 0px;
-
-    a {
-      color: white;
-    }
+  h1 {
+    margin: auto auto auto 0.75rem !important;
+    font-size: 1.5rem;
+    font-weight: 200;
+    @include u-font-family("serif");
   }
 
   .usa-navbar {
     border-bottom: none;
   }
 
-  @media (min-width: 64em) {
-    .usa-logo {
-      margin-bottom: 1.5rem;
-      margin-top: 1.5rem;
-    }
+  .usa-nav__link {
+    padding: 1rem 0.5rem !important;
+    margin: 0 0.5rem;
+    height: 2.2rem;
+    text-decoration: none;
+    min-width: fit-content;
+  }
 
-    .usa-nav-container {
-      margin-left: 0px;
-      padding: 0.5rem 1.5rem;
+  .person-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    fill: color("blue-cool-5");
+  }
 
-      &::after {
-        content: none;
-      }
-    }
+  a {
+    font-weight: 400 !important;
+    font-size: 1.125rem !important;
+    color: color("blue-cool-5") !important;
+    text-decoration: none;
+  }
+
+  .usa-nav__link:hover::after {
+    background-color: color("blue-cool-30");
+    width: 91%;
+    left: 0.5rem;
   }
 
   .usa-nav-container {
-    margin-left: 0px;
-    padding: 0.5rem 1.5rem;
-
+    height: 2.5rem;
+    margin: 0 clamp(1rem, 6.25vw, 5rem) 1.5rem;
+    padding: 0;
+    align-items: flex-end;
+    justify-content: space-between;
+    display: flex;
     &::after {
       content: none;
     }
   }
 
-  h1 {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 2rem;
+  .user-menu-button {
+    background-color: color("blue-cool-80") !important;
+    border: 0;
+    padding: 0;
+  }
+
+  .user-menu-button:hover {
+    cursor: pointer;
+  }
+
+  .user-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+    width: auto;
+    min-width: 12.5rem;
+    height: 7.625rem;
+    background-color: color("white");
+    border-radius: 5px;
+    box-shadow: 0 2px 4px color("black");
+    padding: 0.8125rem;
+
+    .sign-out-button {
+      color: color("blue-cool-60");
+      background: none !important;
+      font-weight: 400;
+      font-size: 1.125rem;
+      padding: 0;
+    }
+
+    .sign-out-button:hover {
+      color: color("blue-cool-70");
+    }
+
+    .user-email {
+      color: color("ink") !important;
+      margin: 0.7rem 0 0.6rem 0;
+      padding-top: 0.1rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .user-role {
+      color: color("base") !important;
+      border-bottom: 1px solid color("gray-30");
+      font-size: 1.125rem;
+      padding-top: 1rem;
+      padding-bottom: 1.2rem;
+      margin: 0rem 0 1rem 0;
+    }
+  }
+
+  .user-menu-container {
+    position: relative;
+    z-index: 1000;
   }
 }
 
-.usa-prose > h5 {
-  font-family: "Source Sans Pro Web";
-  font-size: 1rem;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+.usa-footer {
+  height: 5.5rem;
+  background-color: color("blue-cool-80");
+  padding: 0;
+  padding-top: 1.25rem;
+
+  .usa-footer__primary-section {
+    background-color: color("blue-cool-80");
+  }
+
+  .footer-content {
+    margin: 0 clamp(1rem, 6.25vw, 5rem) 1.25rem;
+    height: 3rem;
+  }
+
+  p {
+    font-weight: 400;
+    color: color("blue-cool-5");
+  }
+
+  a {
+    font-weight: 700;
+    color: color("blue-cool-5");
+  }
+}
+
+.usa-modal-overlay:has(.usa-modal.sidepanel-modal) {
+  padding: 0;
+  text-align: right;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.usa-modal.sidepanel-modal {
+  height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0;
+  max-width: clamp(40rem, 50vw, 60rem);
+  overflow-y: auto;
+
+  .usa-modal__content {
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .usa-modal__main {
+    margin: -2rem 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .usa-modal__heading {
+    font-size: 2.5rem;
+  }
+
+  .usa-modal__close {
+    z-index: 30;
+  }
+
+  dt {
+    text-transform: uppercase;
+    color: color("base");
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  dd {
+    margin-bottom: 2rem;
+    margin-inline-start: 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .usa-summary-box {
@@ -97,6 +306,26 @@
   td {
     padding: 0.75rem;
   }
+
+  td {
+    border-color: color("base-light");
+  }
+}
+
+.usa-input {
+  border: 1px solid color("base");
+  border-radius: 0.25rem;
+
+  &#search-field {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.usa-tooltip {
+  // allow the icon to center without line height padding
+  line-height: 1;
 }
 
 .usa-tooltip__body {
@@ -107,6 +336,8 @@
   font-weight: normal;
   padding-left: 1rem;
   padding-right: 1rem;
+  // make sure the tooltip text is human readable
+  line-height: 1.3;
 }
 
 .short-tooltip + .usa-tooltip__body {

@@ -21,7 +21,7 @@ Before running the orchestration unit tests, make sure you have all the services
 2. `eval "$(pyenv init -)"`
 3. `source .venv/bin/activate`
 4. `pip install -r requirements.txt -r dev-requirements.txt`
-5. `python -m pytest --cov-report xml --cov=. -m "not integration" tests/`
+5. `python -m  pytest -m "not integration" tests/`
 
 #### Running Integration Tests
 
@@ -42,7 +42,7 @@ To run the Orchestration service with Docker, follow these steps.
 Docker version 20.10.21, build baeda1f
 ```
 
-2. Download a copy of the Docker image from the PHDI repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/orchestration:latest`.
+2. Download a copy of the Docker image from the dibbs-ecr-viewer repository by running `docker pull ghcr.io/cdcgov/dibbs-ecr-viewer/orchestration:latest`.
 3. Run the service with ` docker run -p 8080:8080 orchestration:latest`.
 
 Congratulations, the Orchestration service should now be running on `localhost:8080`!
@@ -52,19 +52,23 @@ Congratulations, the Orchestration service should now be running on `localhost:8
 We recommend running the Orchestration service from a container, but if that isn’t feasible for a given use case, you can also run the service directly from Python using the steps below.
 
 1. Ensure that both Git and Python 3.13 or higher are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+2. Clone the dibbs-ecr-viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/orchestration/`.
 4. Make a fresh virtual environment with `python -m venv .venv`.
 5. Activate the virtual environment with `source .venv/bin/activate` (MacOS and Linux), `venv\Scripts\activate` (Windows Command Prompt), or `.venv\Scripts\Activate.ps1` (Windows Power Shell).
 6. Install all of the Python dependencies for the Orchestration service with `pip install -r requirements.txt` into your virtual environment.
 7. Run the Orchestration service on `localhost:8080` with `python -m uvicorn app.main:app --host 0.0.0.0 --port 8080`.
 
+#### Running with multiple workers
+
+`uvicorn` uses one worker by default, to set more workers, set the `WEB_CONCURRENCY` environtment variable. Typically 2-4 workers per CPU are recommended in production; when in doubt, `2 * num_cores + 1` is a good heuristic for picking the number of workers.
+
 ### Building the Docker Image
 
-To build the Docker image for the Orchestration service from source instead of downloading it from the PHDI repository follow these steps.
+To build the Docker image for the Orchestration service from source instead of downloading it from the dibbs-ecr-viewer repository follow these steps.
 
 1. Ensure that both [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/get-docker/) are installed.
-2. Clone the PHDI repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
+2. Clone the dibbs-ecr-viewer repository with `git clone https://github.com/CDCgov/dibbs-ecr-viewer`.
 3. Navigate to `/dibbs-ecr-viewer/containers/orchestration/`.
 4. Run `docker build -t orchestration .`.
 
@@ -107,24 +111,13 @@ For more information on the endpoint go to the documentation [here](https://cdcg
 graph TD
     subgraph Main Services
         A[Orchestration Service]
-        A --> B[Validation Service]
-        A --> C[FHIR Converter Service]
-        A --> D[Ingestion Service]
-        A --> E[Trigger Code Reference Service]
-        A --> F[Message Parser Service]
-        A --> G[ECR Viewer]
-        G --> H[ECR Viewer DB]
+        A --> B[FHIR Converter Service]
+        A --> C[Ingestion Service]
+        A --> D[Trigger Code Reference Service]
+        A --> E[Message Parser Service]
+        A --> F[ECR Viewer]
+        F --> G[ECR Viewer DB]
     end
-
-    subgraph Observability
-        direction TB
-        I[Jaeger] --> J[Prometheus]
-        K[OpenTelemetry Collector] --> J
-        K --> I
-        L[Grafana] --> J
-    end
-
-    A --> I
 
     M[Python]
     N[Uvicorn]
@@ -136,7 +129,6 @@ graph TD
 
     style A fill:#f9f,stroke:#333,stroke-width:4px,color:#000
     style Main Services fill:#bbf,stroke:#333,stroke-width:2px
-    style Observability fill:#bbf,stroke:#333,stroke-width:2px,color:#000
 ```
 
 #### Application API

@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import { Kysely, LogConfig } from "kysely";
 
 import { dialect as postgres } from "./dialects/postgres";
 import { dialect as sqlserver } from "./dialects/sqlserver";
@@ -22,13 +22,14 @@ export const getDbRaw = (): Kysely<AnyDb> => {
   }
 
   const db_type = dbDialect();
+  const log: LogConfig = ["error"];
   let db;
   switch (db_type) {
     case "sqlserver":
-      db = new Kysely(sqlserver);
+      db = new Kysely({ ...sqlserver, log });
       break;
     case "postgres":
-      db = new Kysely(postgres);
+      db = new Kysely({ ...postgres, log });
       break;
     default:
       throw new Error(`unknown db type: ${db_type}`);

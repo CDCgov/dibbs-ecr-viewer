@@ -1,45 +1,6 @@
 import NextAuth from "next-auth";
-import AzureAdProvider from "next-auth/providers/azure-ad";
-import { Provider } from "next-auth/providers/index";
-import KeycloakProvider from "next-auth/providers/keycloak";
 
-export interface ProviderDetails {
-  id: string;
-  name: string;
-}
-
-const keycloak = () => {
-  if (
-    process.env.AUTH_PROVIDER?.toLowerCase() === "keycloak" &&
-    process.env.AUTH_CLIENT_ID &&
-    process.env.AUTH_CLIENT_SECRET
-  )
-    return KeycloakProvider({
-      clientId: process.env.AUTH_CLIENT_ID,
-      clientSecret: process.env.AUTH_CLIENT_SECRET,
-      issuer: process.env.AUTH_ISSUER,
-    });
-};
-const azure = () => {
-  if (
-    process.env.AUTH_PROVIDER?.toLowerCase() === "ad" &&
-    process.env.AUTH_CLIENT_ID &&
-    process.env.AUTH_CLIENT_SECRET
-  )
-    return AzureAdProvider({
-      clientId: process.env.AUTH_CLIENT_ID,
-      clientSecret: process.env.AUTH_CLIENT_SECRET,
-      tenantId: process.env.AUTH_ISSUER,
-    });
-};
-const providers = [keycloak(), azure()].filter(
-  (p) => p !== undefined,
-) as Provider[];
-
-export const providerMap: ProviderDetails[] = providers.map((provider) => ({
-  id: provider.id,
-  name: provider.name,
-}));
+import { providers } from "./providers";
 
 export const handler = NextAuth({
   providers,
@@ -58,5 +19,11 @@ export const handler = NextAuth({
   },
   pages: {
     signIn: `${process.env.BASE_PATH}/signin`,
+  },
+  session: {
+    maxAge: (Number(process.env.AUTH_SESSION_DURATION_MIN) || 30) * 60, // default: 30 minutes
+  },
+  jwt: {
+    maxAge: 16 * 60 * 60, // 16 hours
   },
 });

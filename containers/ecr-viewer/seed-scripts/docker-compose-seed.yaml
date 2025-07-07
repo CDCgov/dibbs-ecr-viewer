@@ -9,6 +9,8 @@ services:
       context: ../../fhir-converter/
     ports:
       - "8082:8080"
+    environment:
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
 
   ingestion-service:
     platform: linux/amd64
@@ -21,6 +23,7 @@ services:
     environment:
       SMARTY_AUTH_ID: ${SMARTY_AUTH_ID}
       SMARTY_AUTH_TOKEN: ${SMARTY_AUTH_TOKEN}
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-3}
 
   message-parser-service:
     platform: linux/amd64
@@ -28,6 +31,8 @@ services:
       context: ../../message-parser
     ports:
       - "8085:8080"
+    environment:
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
     logging:
       driver: "json-file"
 
@@ -37,6 +42,8 @@ services:
       context: ../../trigger-code-reference
     ports:
       - "8086:8080"
+    environment:
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
     logging:
       driver: "json-file"
 
@@ -58,6 +65,7 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     environment:
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
       - ECR_VIEWER_URL=http://host.docker.internal:3000/ecr-viewer
     healthcheck:
       test: ["CMD", "curl", "-f", "http://orchestration-service:8080/"]
@@ -70,12 +78,20 @@ services:
     depends_on:
       orchestration-service:
         condition: service_healthy
+      keycloak:
+        condition: service_healthy
     ports:
       - "8081:8081"
     volumes:
       - ./baseECR:/code/baseECR
     environment:
-      - CONFIG_NAME=${CONFIG_NAME}
+      - CONFIG_NAME
       - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
+      - UPLOAD_URL=${UPLOAD_URL:-http://host.docker.internal:3000/ecr-viewer/api/process-ecr}
+      - AUTH_CLIENT_ID
+      - AUTH_CLIENT_SECRET
+      - AUTH_ISSUER
+      - AUTH_USER
+      - AUTH_PASSWORD
     extra_hosts:
       - host.docker.internal:host-gateway

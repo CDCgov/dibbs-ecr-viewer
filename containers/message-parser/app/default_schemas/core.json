@@ -4,7 +4,7 @@
     "data_type": "string",
     "nullable": false
   },
-  "eicr_set_id": {
+  "set_id": {
     "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').identifier.where(type.coding.code = '55751-2').where(use='official').value",
     "data_type": "string",
     "nullable": true
@@ -38,6 +38,14 @@
       "category": "Personal info"
     }
   },
+  "encounter_start_date": {
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
+    "data_type": "date",
+    "nullable": true,
+    "metadata": {
+      "category": "RR Reportability Information"
+    }
+  },
   "rr": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
     "data_type": "array",
@@ -59,12 +67,20 @@
           "category": "RR Reportability Information"
         }
       },
+      "condition_code": {
+        "fhir_path": "iif(Observation.valueCodeableConcept.text.exists(), Observation.valueCodeableConcept.coding.where(system = 'http://snomed.info/sct').code)",
+        "data_type": "string",
+        "nullable": true,
+        "metadata": {
+          "category": "RR Reportability Information"
+        }
+      },
       "rule_summaries": {
         "fhir_path": "Observation.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
         "data_type": "array",
         "nullable": true,
         "secondary_schema": {
-          "summary": {
+          "rule_summary": {
             "fhir_path": "valueString",
             "data_type": "string",
             "nullable": true
@@ -74,14 +90,6 @@
           "category": "RR Reportability Information"
         }
       }
-    }
-  },
-  "report_date": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
-    "data_type": "date",
-    "nullable": true,
-    "metadata": {
-      "category": "RR Reportability Information"
     }
   }
 }

@@ -129,8 +129,8 @@ export const getLabJsonObject = (
 
   // Get specified lab report (by reference value)
   if (observationRefVal) {
-    return labsJson.filter(
-      (obj) => obj.resultId?.includes(observationRefVal),
+    return labsJson.filter((obj) =>
+      obj.resultId?.includes(observationRefVal),
     )[0];
   }
 
@@ -394,6 +394,11 @@ export const evaluateDiagnosticReportData = (
         const device = evaluateReference<Device>(fhirBundle, ref);
         return safeParse(device?.deviceName?.[0]?.name ?? "");
       },
+      className: "minw-10 width-20",
+    },
+    {
+      columnName: "Result Status",
+      infoPath: "observationResultStatus",
       className: "minw-10 width-20",
     },
     {
@@ -703,6 +708,13 @@ function getFormattedLabsContent(
     {
       title: "Result Type",
       value: returnFieldValueFromLabHtmlString(labReportJson, "Result Type"),
+      className: "lab-text-content",
+    },
+    {
+      title: "Result Status",
+      value:
+        evaluateValue(report, fhirPathMappings.diagnosticReportStatus) ||
+        noData,
       className: "lab-text-content",
     },
     {

@@ -141,7 +141,8 @@ const SideNav: React.FC = () => {
 
   useEffect(() => {
     // Select all heading tags on the page
-    const headingElements = document.querySelectorAll(headingSelector);
+    const headingElements =
+      document.querySelector("main")?.querySelectorAll(headingSelector) || [];
     // Extract the text content from each heading and store it in the state
     const headings: HeadingObject[] = Array.from(headingElements).map(
       (heading) => {

@@ -1,0 +1,616 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Program Admin Page Creating programs should render a create program page 1`] = `
+<div>
+  <main
+    class="main-container"
+  >
+    <div
+      class="content-container margin-top-3 position-relative"
+    >
+      <a
+        class="action-text display-inline-flex flex-align-center"
+        href="/admin/program"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon square-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Back to 
+        program area
+         management
+      </a>
+      <div
+        class="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container"
+      >
+        <div
+          class="minh-5 margin-bottom-1"
+        />
+        <div
+          class="display-flex flex-justify margin-bottom-2"
+        >
+          <h2
+            class="margin-0"
+          >
+            Create program area
+          </h2>
+          <div>
+            <button
+              class="usa-button margin-0"
+              data-testid="button"
+              disabled=""
+              form="r:id"
+              type="submit"
+            >
+              Save 
+              program area
+            </button>
+          </div>
+        </div>
+      </div>
+      <form
+        class="margin-top-3 isolate"
+        id="r:id"
+      >
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            Name program area
+          </legend>
+          <span>
+            Required fields are marked with an asterisk (
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+            )
+          </span>
+          <label
+            class="usa-label"
+          >
+            Program area name
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+            <input
+              class="usa-input"
+              data-testid="textInput"
+              id="name"
+              name="name"
+              required=""
+              type="text"
+              value=""
+            />
+          </label>
+        </fieldset>
+        <fieldset
+          class="dibbs-fieldset"
+        >
+          <legend>
+            Add conditions
+          </legend>
+          <span>
+            Select a minimum of 1 condition
+            <abbr
+              class="usa-hint usa-hint--required"
+              title="required"
+            >
+              *
+            </abbr>
+          </span>
+          <div
+            class="display-flex flex-justify margin-top-3"
+          >
+            <p
+              class="text-bold font-size-md margin-y-0"
+            >
+              0
+               condition
+              s
+               selected
+            </p>
+            <div
+              class="live-search"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon square-3 text-base"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                />
+              </svg>
+              <input
+                aria-label="Search conditions"
+                class="usa-input"
+                data-testid="textInput"
+                id="condition-search"
+                name="condition-search"
+                placeholder="Search conditions"
+                type="search"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="display-flex"
+          >
+            <div
+              class="margin-left-auto padding-top-1"
+            >
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Expand all 
+                condition categories
+              </button>
+              <span
+                class="vertical-line"
+              />
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Collapse all 
+                condition categories
+              </button>
+            </div>
+          </div>
+          <div
+            class="usa-accordion accordion-dibbs margin-top-3 margin-bottom-1"
+            data-allow-multiple="true"
+            data-testid="accordion"
+          >
+            <h3
+              class="usa-accordion__heading"
+            >
+              <button
+                aria-controls="category"
+                aria-expanded="true"
+                class="usa-accordion__button"
+                data-testid="accordionButton_category"
+                type="button"
+              >
+                <div
+                  class="display-flex flex-justify flex-align-center"
+                >
+                  <div>
+                    <strong>
+                      category
+                    </strong>
+                    <br />
+                    <span
+                      class="text-base"
+                    >
+                      RCKMS condition category
+                    </span>
+                  </div>
+                  <span>
+                    0
+                    /
+                    2
+                     conditions selected
+                  </span>
+                </div>
+              </button>
+            </h3>
+            <div
+              class="usa-accordion__content usa-prose"
+              data-testid="accordionItem_category"
+              id="category"
+            >
+              <button
+                aria-controls="condition-456 condition-789"
+                class="usa-button usa-button--outline margin-top-0"
+                data-testid="button"
+                type="button"
+              >
+                Select
+                 all
+              </button>
+              <button
+                aria-controls="condition-456 condition-789"
+                class="usa-button usa-button--outline margin-top-0"
+                data-testid="button"
+                type="button"
+              >
+                Deselect
+                 all
+              </button>
+              <div
+                class="display-flex flex-justify"
+              >
+                <div
+                  class="usa-checkbox"
+                  data-testid="checkbox"
+                >
+                  <input
+                    class="usa-checkbox__input"
+                    id="condition-456"
+                    name="conditions"
+                    type="checkbox"
+                    value="456"
+                  />
+                  <label
+                    class="usa-checkbox__label"
+                    for="condition-456"
+                  >
+                    <div>
+                      <p
+                        class="margin-0"
+                      >
+                        condition 1
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div
+                class="section__line_light_gray"
+              />
+              <div
+                class="display-flex flex-justify"
+              >
+                <div
+                  class="usa-checkbox"
+                  data-testid="checkbox"
+                >
+                  <input
+                    class="usa-checkbox__input"
+                    id="condition-789"
+                    name="conditions"
+                    type="checkbox"
+                    value="789"
+                  />
+                  <label
+                    class="usa-checkbox__label"
+                    for="condition-789"
+                  >
+                    <div>
+                      <p
+                        class="margin-0"
+                      >
+                        condition 2
+                      </p>
+                    </div>
+                  </label>
+                </div>
+                <span
+                  class="text-base line-height-13"
+                >
+                  Condition in 
+                </span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div
+          class="display-flex flex-justify-end margin-y-4"
+        >
+          <button
+            class="usa-button margin-0"
+            data-testid="button"
+            disabled=""
+            form="r:id"
+            type="submit"
+          >
+            Save 
+            program area
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`Program Admin Page should list program areas when available 1`] = `
+<div>
+  <main
+    class="main-container"
+  >
+    <div
+      class="content-container margin-top-10"
+    >
+      <div
+        class="display-flex flex-justify"
+      >
+        <h2
+          class="margin-bottom-5"
+        >
+          Program management
+        </h2>
+        <div>
+          <a
+            class="usa-button"
+            href="/admin/program/create"
+          >
+            Create program area
+          </a>
+        </div>
+      </div>
+      <div>
+        <div>
+          <table
+            class="usa-table usa-table--borderless width-full table-radius-md"
+            data-testid="table"
+          >
+            <thead>
+              <tr>
+                <th
+                  aria-sort="ascending"
+                  data-sortable="true"
+                  id="name-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <button
+                    aria-description="Sort by Program area"
+                    class="usa-button usa-button--unstyled sort-button usa-button"
+                    data-testid="button"
+                    id="name-sort-button"
+                    type="button"
+                  >
+                    <span
+                      class="text-ink"
+                    >
+                      Program area
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon square-3"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                      />
+                    </svg>
+                  </button>
+                </th>
+                <th
+                  data-sortable="false"
+                  id="conditions-header"
+                  role="columnheader"
+                  scope="col"
+                  style="padding-top: 1.25rem;"
+                >
+                  <div
+                    class="display-flex"
+                  >
+                    Number of conditions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <button
+                    class="usa-button usa-button--unstyled action-text"
+                    data-close-modal="true"
+                    data-open-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Program Area One
+                  </button>
+                </td>
+                <td>
+                  0 conditions
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="usa-button usa-button--unstyled action-text"
+                    data-close-modal="true"
+                    data-open-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Program Area Three
+                  </button>
+                </td>
+                <td>
+                  2 conditions
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="usa-button usa-button--unstyled action-text"
+                    data-close-modal="true"
+                    data-open-modal="true"
+                    data-testid="button"
+                    type="button"
+                  >
+                    Program Area Two
+                  </button>
+                </td>
+                <td>
+                  1 condition
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            class="pagination-bar width-full padding-x-3 padding-y-105 flex-align-self-stretch display-flex flex-align-center"
+          >
+            <div
+              class="flex-1"
+            >
+              Showing 
+              1
+              -
+              3
+               of 
+              3
+               
+              program areas
+            </div>
+            <nav
+              aria-label="Pagination"
+              class="usa-pagination flex-1"
+            >
+              <ul
+                class="usa-pagination__list"
+              >
+                <li
+                  class="usa-pagination__item usa-pagination__arrow"
+                >
+                  <button
+                    aria-label="Previous page"
+                    class="usa-button usa-button--unstyled usa-pagination__link usa-pagination__previous-page text-bold visibility-hidden"
+                    data-testid="pagination-previous"
+                    hidden=""
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon text-ink"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                      />
+                    </svg>
+                    <span
+                      class="usa-pagination__link-text"
+                    >
+                      Previous
+                    </span>
+                  </button>
+                </li>
+                <li
+                  class="usa-pagination__item usa-pagination__page-no"
+                >
+                  <button
+                    aria-current="page"
+                    aria-label="Page 1"
+                    class="usa-button usa-button--unstyled usa-pagination__button text-bold usa-current"
+                    data-testid="pagination-page-number"
+                    type="button"
+                  >
+                    1
+                  </button>
+                </li>
+                <li
+                  class="usa-pagination__item usa-pagination__arrow"
+                >
+                  <button
+                    aria-label="Next page"
+                    class="usa-button usa-button--unstyled usa-pagination__link usa-pagination__next-page text-bold visibility-hidden"
+                    data-testid="pagination-next"
+                    hidden=""
+                    type="button"
+                  >
+                    <span
+                      class="usa-pagination__link-text"
+                    >
+                      Next
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="usa-icon text-ink"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+            <div
+              class="display-flex flex-align-center flex-1 flex-justify-end"
+            >
+              <label
+                class="usa-label margin-top-0 margin-right-1025"
+                data-testid="label"
+                for="input-select"
+              >
+                Program areas
+                 per page
+              </label>
+              <select
+                class="usa-select styled width-11075 margin-top-0"
+                data-testid="Select"
+                id="input-select"
+                name="input-select"
+              >
+                <option
+                  value="10"
+                >
+                  10
+                </option>
+                <option
+                  value="25"
+                >
+                  25
+                </option>
+                <option
+                  value="50"
+                >
+                  50
+                </option>
+                <option
+                  value="75"
+                >
+                  75
+                </option>
+                <option
+                  value="100"
+                >
+                  100
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+`;

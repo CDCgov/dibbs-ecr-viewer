@@ -8,7 +8,7 @@
     "eCR Storage - GCP",
     "eCR Library Metadata"
   ],
-  "projectDocuments": ["guide.md"],
+  "projectDocuments": ["guides/*.md"],
   "entryPoints": ["environment.d.ts"],
   "out": "./docs",
   "highlightLanguages": [
@@ -16,11 +16,13 @@
     "console",
     "css",
     "html",
+    "http",
     "javascript",
     "json",
     "jsonc",
     "json5",
     "mermaid",
+    "powershell",
     "yaml",
     "tsx",
     "typescript"

@@ -3,7 +3,7 @@
 import { Button } from "@trussworks/react-uswds";
 import { signIn } from "next-auth/react";
 
-import { ProviderDetails } from "@/app/api/auth/auth";
+import { ProviderDetails } from "@/app/api/auth/providers";
 import { ArrowForward } from "@/app/components/Icon";
 
 interface RedirectProps {

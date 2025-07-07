@@ -12,12 +12,12 @@ from app.service import convert_to_fhir, resolve_references
 description = (Path(__file__).parent.parent / "README.md").read_text(encoding="utf-8")
 
 app = FastAPI(
-    title="PHDI FHIR Converter Service",
+    title="DIBBS eCR Viewer FHIR Converter Service",
     version=os.getenv("APP_VERSION", "1.0.0"),
     contact={
         "name": "CDC Public Health Data Infrastructure",
         "url": "https://cdcgov.github.io/dibbs-ecr-viewer/",
-        "email": "dmibuildingblocks@cdc.gov",
+        "email": "dibbs@cdc.gov",
     },
     license_info={
         "name": "Creative Commons Zero v1.0 Universal",
@@ -119,9 +119,28 @@ def add_rr_data_to_eicr(rr, ecr):
     rr = etree.fromstring(rr)
     ecr = etree.fromstring(ecr)
 
-    if ecr.xpath('//*[@code="88085-6"]'):
+    # Check for eICR Processing Status entry (required & only available in RR)
+    if ecr.xpath('//*[@root="2.16.840.1.113883.10.20.15.2.3.29"]'):
         print("This eCR has already been merged with RR data.")
         return etree.tostring(ecr, encoding="unicode", method="xml")
+
+    # If eICR >=R3, remove (optional) RR section that came from eICR
+    # This is duplicate/incomplete info from RR
+    ecr_version = ecr.xpath(
+        'string(//*[@root="2.16.840.1.113883.10.20.15.2"]/@extension)'
+    )
+    if ecr_version >= "2021-01-01":
+        namespaces = {"hl7": "urn:hl7-org:v3"}
+        rr_from_eicr_arr = ecr.xpath(
+            '//hl7:component[hl7:section/hl7:templateId[@root="2.16.840.1.113883.10.20.15.2.2.5" and @extension="2021-01-01"]]',
+            namespaces=namespaces,
+        )
+
+        if rr_from_eicr_arr:
+            rr_from_eicr = rr_from_eicr_arr[0]
+            rr_parent = rr_from_eicr.getparent()
+            if rr_parent is not None:
+                rr_parent.remove(rr_from_eicr)
 
     # Create the tags for elements we'll be looking for
     rr_tags = [

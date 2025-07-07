@@ -1,5 +1,5 @@
 # syntax=docker.io/docker/dockerfile:1.7-labs
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 
 ARG APP_VERSION
 
@@ -36,8 +36,6 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# COPY --from=builder /app/public ./public
-
 # Set the correct permission for prerender cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
@@ -46,6 +44,7 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 USER nextjs
 
