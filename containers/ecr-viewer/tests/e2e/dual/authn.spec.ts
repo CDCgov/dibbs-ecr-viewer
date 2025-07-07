@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-import { logIn, nbsAuthParam } from "../utils";
+import { getKeycloakToken, logIn, nbsAuthParam } from "../utils";
 
 test.describe("auth", () => {
   test("should require a login on main page and allow sign out", async ({
