@@ -1,5 +1,5 @@
 name: Trigger Deploy to AWS Dev
-run-name: "Trigger Deploy - Container Tag: ${{ inputs.container_tag }}, Dev ID: dev${{ inputs.dev_id }}, Config Name: ${{ inputs.config_name }}, Terraform Branch: ${{ inputs.tf_branch }}, Event Type: ${{ inputs.event_type }} to AWS Dev by @${{ github.actor }}"
+run-name: "Trigger Deploy - Container Tag: ${{ inputs.container_tag }}, Terraform Branch: ${{ inputs.tf_branch }}, Event Type: ${{ inputs.event_type }} to AWS Dev by @${{ github.actor }}"
 
 on:
   workflow_dispatch:
@@ -24,7 +24,7 @@ jobs:
   trigger_aws_dev_workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to AWS dev
+      - name: Deploy to AWS Dev
         env:
           TF_BRANCH: ${{ github.event.inputs.tf_branch }}
           EVENT_TYPE: ${{ github.event.inputs.event_type }}
@@ -48,7 +48,7 @@ jobs:
             exit 1
           fi
           echo "View your workflow run at: https://github.com/skylight-hq/dibbs-tf-envs/actions"
-          echo "Successfully triggered the workflow"
+          echo "Successfully triggered the workflow."
           echo "Service: $service"
           echo "Repository: $repo_owner/$repo_name"
           echo "Container Tag: $container_tag"
