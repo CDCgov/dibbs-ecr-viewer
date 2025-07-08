@@ -179,7 +179,7 @@ describe("user service", () => {
 
   it("should create a standard user", async () => {
     // admin created in prior test
-    userId = await createUser(userEmail, "standard");
+    userId = await createUser({ email: userEmail, userType: "standard" });
     expect(userId).toMatch(UUID_REGEX);
 
     // see standard user listed

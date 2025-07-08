@@ -36,6 +36,9 @@ export const seedUserProgramData = async () => {
 
   await createInitialAdminUser("admin@admin.com");
   const progId = await createProgramArea("test", ["123"]);
-  const userId = await createUser("standard@standard.com", "standard");
+  const userId = await createUser({
+    email: "standard@standard.com",
+    userType: "standard",
+  });
   await updateUserProgramAreas(userId, [progId]);
 };

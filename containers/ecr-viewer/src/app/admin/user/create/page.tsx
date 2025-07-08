@@ -24,7 +24,7 @@ const CreateUserPage = async () => {
         "use server";
         revalidatePath("/ecr-viewer/admin/user");
 
-        const res = await createUserAction(email, userType);
+        const res = await createUserAction({ email, userType });
 
         if (res.payload) {
           const userUUID = res.payload;

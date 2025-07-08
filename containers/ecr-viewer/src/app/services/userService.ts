@@ -16,6 +16,7 @@ import {
 } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
+import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 
 const getUserByEmail = async (
@@ -147,21 +148,28 @@ export const isUserEcrAuthed = async (
  * @param user_type Type of user to create ("admin" or "standard")
  * @returns UUID of the created user
  */
-export const createUser = async (
-  email: string,
-  user_type: "admin" | "standard",
-): Promise<string> => {
-  const creatingUser = await getCheckAdmin("create new users");
+export const createUser = audit(
+  "user",
+  "create",
+  async ({
+    email,
+    userType,
+  }: {
+    email: string;
+    userType: "admin" | "standard";
+  }): Promise<string> => {
+    const creatingUser = await getCheckAdmin("create new users");
 
-  try {
-    const uuid = randomUUID();
-    return await createUserQuery(email, user_type, uuid, creatingUser.uuid);
-  } catch (error: unknown) {
-    const message = "Failed to create new user";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-};
+    try {
+      const uuid = randomUUID();
+      return await createUserQuery(email, userType, uuid, creatingUser.uuid);
+    } catch (error: unknown) {
+      const message = "Failed to create new user";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 /**
  * Create an initial admin user with the given email. If any active
