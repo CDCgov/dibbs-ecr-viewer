@@ -23,12 +23,15 @@ describe("Travel History", () => {
 describe("Disabiity Status", () => {
   it("should display a table ", () => {
     const { container } = render(
-      returnDisabilityStatusTable(BundlePatient as unknown as Bundle)
+      returnDisabilityStatusTable(BundlePatient as unknown as Bundle),
     );
     // Don't want IDs to dynamically update in this test
     const cleanedContainer = container.innerHTML
       .replace(/id="[^"]*"/g, 'id="id-tooltip"')
-      .replace(/aria-describedby="[^"]*"/g, 'aria-describedby="aria-desc-tooltip"');
+      .replace(
+        /aria-describedby="[^"]*"/g,
+        'aria-describedby="aria-desc-tooltip"',
+      );
     expect(cleanedContainer).toMatchSnapshot();
   });
   it("should display nothing when no travel history is available", () => {

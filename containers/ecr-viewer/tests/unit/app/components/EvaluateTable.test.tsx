@@ -251,7 +251,7 @@ describe("BaseTable", () => {
     expect(tableElement).toHaveClass("custom-class-2");
   });
   it("should render table with tooltip in second column", () => {
-    const tooltipTextContent = "This is the column 2 tooltip text."
+    const tooltipTextContent = "This is the column 2 tooltip text.";
     render(
       <BaseTable
         columns={[
@@ -265,7 +265,7 @@ describe("BaseTable", () => {
           <td>Row 1, Col 1</td>
           <td>Row 1, Col 2</td>
         </tr>
-      </BaseTable>
+      </BaseTable>,
     );
 
     expect(screen.getByText(tooltipTextContent)).toBeInTheDocument();
