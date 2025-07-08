@@ -99,7 +99,7 @@ export const returnDisabilityStatusTable = (
 ): React.JSX.Element | undefined => {
   const disabilityObs = evaluateAll(
     bundle,
-    fhirPathMappings.patientDisabilityStatus
+    fhirPathMappings.patientDisabilityStatus,
   );
   if (disabilityObs.length === 0) {
     return undefined;

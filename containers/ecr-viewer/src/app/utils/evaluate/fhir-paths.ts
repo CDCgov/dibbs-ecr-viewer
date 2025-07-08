@@ -345,7 +345,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "effectiveDateTime",
   },
 
-
   // eCR Metadata
   eicrIdentifier: {
     type: "string",
