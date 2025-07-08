@@ -75,6 +75,10 @@ export type PathTypes = {
   patientMaritalStatus: ValueX;
   patientNationality: string;
   patientCountryResidence: string;
+  patientDisabilityStatus: Observation;
+  disabilityStatusQuestion: string;
+  disabilityStatusValue: string;
+  disabilityStatusDate: Period;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -324,6 +328,23 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).valueCodeableConcept.coding.display",
   },
+  patientDisabilityStatus: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+  },
+  disabilityStatusQuestion: {
+    type: "string",
+    path: "code.coding.display",
+  },
+  disabilityStatusValue: {
+    type: "string",
+    path: "valueBoolean",
+  },
+  disabilityStatusDate: {
+    type: "Date",
+    path: "effectiveDateTime",
+  },
+
 
   // eCR Metadata
   eicrIdentifier: {
