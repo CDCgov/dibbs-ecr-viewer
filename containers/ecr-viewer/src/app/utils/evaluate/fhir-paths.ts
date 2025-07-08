@@ -77,8 +77,8 @@ export type PathTypes = {
   patientCountryResidence: string;
   patientDisabilityStatus: Observation;
   disabilityStatusQuestion: string;
-  disabilityStatusValue: string;
-  disabilityStatusDate: Period;
+  disabilityStatusValue: boolean;
+  disabilityStatusDate: string;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -337,11 +337,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "code.coding.display",
   },
   disabilityStatusValue: {
-    type: "string",
+    type: "boolean",
     path: "valueBoolean",
   },
   disabilityStatusDate: {
-    type: "Date",
+    type: "string",
     path: "effectiveDateTime",
   },
 
