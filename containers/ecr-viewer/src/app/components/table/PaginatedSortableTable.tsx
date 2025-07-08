@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import PaginationBar from "@/app/components/pagination/PaginationBar";
 import { PAGE_SIZES } from "@/app/constants";
 import { noData } from "@/app/utils/data-utils";
+import { stringSort } from "@/app/utils/format-utils";
 
 import { NoDataRow } from "./NoDataRow";
 import { SortDirection, SortableHeader, TableHeader } from "./SortableHeader";
@@ -55,7 +56,14 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
   const sortedItems = [...items];
   if (!!sortColumn) {
     sortedItems.sort((a, b) => {
-      const diff = (a[sortColumn.id] || "") < (b[sortColumn.id] || "") ? -1 : 1;
+      const aVal = a[sortColumn.id] || "";
+      const bVal = b[sortColumn.id] || "";
+      const diff =
+        typeof aVal === "string" && typeof bVal === "string"
+          ? stringSort(aVal, bVal)
+          : aVal < bVal
+            ? -1
+            : 1;
       return sortColumn.sortDirection === "ASC" ? diff : diff * -1;
     });
   }
