@@ -65,7 +65,6 @@ export type PathTypes = {
   patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
-  patientPregnancyStatus: ValueX;
   patientAlcoholUse: ValueX;
   patientAlcoholIntake: ValueX;
   patientAlcoholComment: ValueX;
@@ -73,6 +72,18 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
+  pregnancyStatus: string; // Good
+  // pregnancyStatusCollectedDate: string; // Not converted
+  // pregnancyDeterminationMethod: string; // Not converted
+  // pregnancyDeterminationMethodDate: string; // Not converted
+  // estimatedGestationalAge: string; // Good for front end but missing extension determination extension, and because estimated delivery date has the wrong type we can't use this.
+  // lastMenstrualPeriodDate: Period;  // Converted,  but using the wrong type
+  // estimatedDeliveryDate: string; // Converted end but missing extension determination extension, and has the wrong type
+  // deliveryDateDeterminationMethod: string; // Not converted
+  // pregnancyOutcome: string; //Converted but in the wrong place
+  // deliveryDate: string; // Not converted
+  postpartumStatus: string; // Good, but some minor changes can be made to the converted observation
+  postPartumStatusCollectedDate: string; // Same as above
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -282,10 +293,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '75274-1').where(category.coding.code = 'social-history').value",
   },
-  patientPregnancyStatus: {
-    type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').value",
-  },
   patientAlcoholUse: {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '11331-6' and system = 'http://loinc.org')).value",
@@ -313,6 +320,20 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientMaritalStatus: {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').maritalStatus",
+  },
+
+  // Pregnancy Data
+  pregnancyStatus: {
+    type: "string",
+    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3')).valueCodeableConcept.coding.display",
+  },
+  postpartumStatus: {
+    type: "string",
+    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3')).valueCodeableConcept.coding.display",
+  },
+  postPartumStatusCollectedDate: {
+    type: "TimeX",
+    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3')).effectiveDateTime",
   },
 
   // eCR Metadata

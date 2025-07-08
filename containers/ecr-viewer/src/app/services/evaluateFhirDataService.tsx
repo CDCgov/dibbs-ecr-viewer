@@ -445,10 +445,10 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
       title: "Homeless Status",
       value: evaluateValue(fhirBundle, fhirPathMappings.patientHomelessStatus),
     },
-    {
-      title: "Pregnancy Status",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
-    },
+    // {
+    //   title: "Pregnancy Status",
+    //   value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
+    // },
     {
       title: "Alcohol Use",
       value: evaluateAlcoholUse(fhirBundle),
