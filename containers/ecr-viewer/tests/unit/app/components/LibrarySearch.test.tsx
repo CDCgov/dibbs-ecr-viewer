@@ -58,17 +58,14 @@ describe("Library Search", () => {
     expect(mockPush).toHaveBeenCalledExactlyOnceWith("?search=Em");
   });
 
-  it("should keep the page back if the same term is searched", async () => {
+  it("should not push again when submitting the same search term twice", async () => {
     const user = userEvent.setup();
-    mockSearchParams.append("page", "4");
     mockSearchParams.append("search", "Em");
 
     render(<LibrarySearch initSearchTerm="Em" />);
-    const searchBox = screen.getByRole("searchbox");
     const searchButton = screen.getByRole("button");
 
-    await user.clear(searchBox);
-    await user.type(searchBox, "Em");
+    // Submit the same term again
     await user.click(searchButton);
 
     expect(mockPush).not.toHaveBeenCalled();

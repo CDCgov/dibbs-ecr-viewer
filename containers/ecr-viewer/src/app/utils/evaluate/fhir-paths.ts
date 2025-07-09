@@ -73,8 +73,13 @@ export type PathTypes = {
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
   pregnancyStatus: Observation;
-
   postpartumStatus: Observation;
+  patientNationality: ValueX;
+  patientCountryResidence: ValueX;
+  patientDisabilityStatus: Observation;
+  disabilityStatusQuestion: string;
+  disabilityStatusValue: ValueX;
+  disabilityStatusDate: TimeX;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -109,6 +114,7 @@ export type PathTypes = {
   resolve: unknown;
   activeProblems: Condition;
   activeProblemsDisplay: string;
+  activeProblemsStatus: string;
   activeProblemsOnsetDate: string;
   activeProblemsOnsetAge: ValueX;
   activeProblemsComments: string;
@@ -312,6 +318,30 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').maritalStatus",
   },
+  patientNationality: {
+    type: "ValueX",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).value",
+  },
+  patientCountryResidence: {
+    type: "ValueX",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).value",
+  },
+  patientDisabilityStatus: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+  },
+  disabilityStatusQuestion: {
+    type: "string",
+    path: "code.coding.display",
+  },
+  disabilityStatusValue: {
+    type: "ValueX",
+    path: "value",
+  },
+  disabilityStatusDate: {
+    type: "TimeX",
+    path: "effective",
+  },
 
   // Pregnancy Data
   pregnancyStatus: {
@@ -471,6 +501,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   activeProblemsDisplay: {
     type: "string",
     path: "Condition.code.coding.display.first()",
+  },
+  activeProblemsStatus: {
+    type: "string",
+    path: "Condition.clinicalStatus.coding.display",
   },
   activeProblemsOnsetDate: { type: "string", path: "Condition.onsetDateTime" },
   activeProblemsOnsetAge: { type: "ValueX", path: "Condition.onsetAge.value" },

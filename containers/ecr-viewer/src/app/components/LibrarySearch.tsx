@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
+
 import { Search } from "@trussworks/react-uswds";
 
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
@@ -23,24 +25,46 @@ const LibrarySearch = ({
   className,
   textBoxClassName,
 }: LibrarySearchProps) => {
-  const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
+  const [searchTerm, setSearchTerm] = useState(initSearchTerm ?? "");
+  const prevSearchTermRef = useRef(searchTerm);
+  const { updateQueryParam, pushQueryUpdate, deleteQueryParam } =
+    useLibraryQueryParam();
+
+  // UseEffect for detecting when the search input has been cleared through either clicking the X or hitting ESC
+  // and re-triggering the search
+  useEffect(() => {
+    const prev = prevSearchTermRef.current;
+
+    if (prev !== "" && searchTerm === "") {
+      deleteQueryParam("search");
+      pushQueryUpdate();
+    }
+
+    prevSearchTermRef.current = searchTerm;
+  }, [searchTerm]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    updateQueryParam("search", searchTerm);
+    pushQueryUpdate();
+  };
 
   return (
     <Search
       placeholder="Search by patient"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const searchTerm = (
-          e.currentTarget.elements.namedItem("search-field") as HTMLInputElement
-        )?.value;
-        updateQueryParam("search", searchTerm);
-        pushQueryUpdate();
-      }}
-      defaultValue={initSearchTerm}
+      onSubmit={handleSubmit}
+      // This cast is required due to the strange nature of the USWDS element and how it bubbles up the input event through the form
+      onChange={(e: React.FormEvent<HTMLFormElement>) =>
+        setSearchTerm((e.target as HTMLInputElement).value)
+      }
+      defaultValue={initSearchTerm ?? ""}
       size="small"
       large={true}
       className={className}
-      inputProps={{ className: textBoxClassName }}
+      inputProps={{
+        className: textBoxClassName,
+      }}
     />
   );
 };
