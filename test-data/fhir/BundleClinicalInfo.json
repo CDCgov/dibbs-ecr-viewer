@@ -262,7 +262,9 @@
             }
           ]
         },
-        "effectiveDateTime": "2025-02-04T13:48:00-04:00",
+        "effectivePeriod": {
+          "start": "2025-02-04T13:48:00-04:00"
+        },
         "valueQuantity": {
           "value": 140,
           "unit": "[lb_av]"
