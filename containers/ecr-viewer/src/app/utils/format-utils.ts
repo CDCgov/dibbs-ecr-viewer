@@ -81,3 +81,12 @@ export function extractNumbersAndPeriods(inputValues: string[]): string[] {
 export const makePlural = (value: number): "s" | "" => {
   return value !== 1 ? "s" : "";
 };
+
+/**
+ * Function to pass to the `sort` method which will sort strings in a consistent, case
+ * insensitive order
+ * @param a first string
+ * @param b second string
+ * @returns number indicating order
+ */
+export const stringSort = (a: string, b: string) => a.localeCompare(b);

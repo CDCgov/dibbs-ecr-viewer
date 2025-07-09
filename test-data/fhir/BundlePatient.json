@@ -238,7 +238,7 @@
         "effectiveDateTime": "2025-02-04",
         "valueString": "1-2 DRINKS 2 TO 4 TIMES A MONTH",
         "subject": {
-          "reference": "Patient/11111111-2222-461d-9523-8d9ee26eab84"
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
       },
       "request": {
@@ -288,7 +288,7 @@
           "unit": "/d"
         },
         "subject": {
-          "reference": "Patient/11111111-2222-461d-9523-8d9ee26eab84"
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
       },
       "request": {
@@ -343,12 +343,218 @@
           ]
         },
         "subject": {
-          "reference": "Patient/11111111-2222-461d-9523-8d9ee26eab84"
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
       },
       "request": {
         "method": "PUT",
         "url": "Observation/b467f663-f4f5-78af-a677-05b5545d8716"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c241ed7b-dc3d-7055-5d3e-a307f8494b07",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c241ed7b-dc3d-7055-5d3e-a307f8494b07",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:3adc7f4d-ff0a-4b38-9252-bd65edbe3dfg"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "77983-5",
+              "system": "http://loinc.org",
+              "display": "Country of usual residence"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "GB",
+              "system": "urn:oid:1.0.3166.1.2.2",
+              "display": "United Kingdom of Great Britain and Northern Ireland"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/c241ed7b-dc3d-7055-5d3e-a307f8494b07"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:962570d9-01a7-db34-f8c9-57168e44510d",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "962570d9-01a7-db34-f8c9-57168e44510d",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:3adc7f4d-ff0a-4b38-9252-bd65edbe3dfa"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "186034007",
+              "system": "http://snomed.info/sct",
+              "display": "Ethnicity / related nationality data (observable entity)"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "AU",
+              "system": "urn:oid:1.0.3166.1.2.2",
+              "display": "Australia"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/962570d9-01a7-db34-f8c9-57168e44510d"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7bdd3e8f-3ec3-05e6-907b-980211b39b3a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "7bdd3e8f-3ec3-05e6-907b-980211b39b3a",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:c09ac074-605e-47bd-8b1c-735e7321fbc2"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "69856-3",
+              "system": "http://loinc.org",
+              "display": "Are you deaf, or do you have serious difficulty hearing [HHS.ACA Section 4302]"
+            }
+          ]
+        },
+        "effectiveDateTime": "2020-11-09",
+        "valueBoolean": true,
+        "subject": {
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/7bdd3e8f-3ec3-05e6-907b-980211b39b3a"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e4c7d1a2-91f0-47cb-8a6b-bfba298df60a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "e4c7d1a2-91f0-47cb-8a6b-bfba298df60a",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:c09ac074-605e-47bd-8b1c-735e7321fbc2"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "69857-1",
+              "system": "http://loinc.org",
+              "display": "Are you blind or do you have serious difficulty seeing, even when wearing glasses?"
+            }
+          ]
+        },
+        "effectiveDateTime": "2020-11-09",
+        "valueBoolean": false,
+        "subject": {
+          "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/e4c7d1a2-91f0-47cb-8a6b-bfba298df60a"
       }
     },
     {

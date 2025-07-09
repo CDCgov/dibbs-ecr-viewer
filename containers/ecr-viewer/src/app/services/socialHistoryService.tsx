@@ -3,13 +3,14 @@ import { Bundle, Observation } from "fhir/r4";
 import { noData } from "@/app/utils/data-utils";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
-import {
+import { toSentenceCase } from "@/app/utils/format-utils";
+import EvaluateTable, {
   ColumnInfoInput,
   evaluateTableRowCell,
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
-import { formatDate } from "./formatDateService";
+import { formatDate, formatDateTime } from "./formatDateService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 
 type TravelHistoryColumn = Omit<ColumnInfoInput, "applyToValue"> & {
@@ -86,4 +87,49 @@ const createTravelHistoryTables = (
     });
 
   return tables;
+};
+
+/**
+ * Returns a table displaying disability status survey observations.
+ * @param bundle - The FHIR bundle containing disability status observation data.
+ * @returns The JSX element representing the disabilit status table, or undefined if no disability status observations are found.
+ */
+export const returnDisabilityStatusTable = (
+  bundle: Bundle,
+): React.JSX.Element | undefined => {
+  const disabilityObs = evaluateAll(
+    bundle,
+    fhirPathMappings.patientDisabilityStatus,
+  );
+  if (disabilityObs.length === 0) {
+    return undefined;
+  }
+
+  const columnInfo: ColumnInfoInput[] = [
+    {
+      columnName: "HHS Disability Data Standard Survey",
+      infoPath: "disabilityStatusQuestion",
+      tooltipText:
+        "These questions are used on the American Community Survey (ACS) to measure disability, and were developed by a federal interagency committee.",
+    },
+    {
+      columnName: "Status",
+      infoPath: "disabilityStatusValue",
+      applyToValue: toSentenceCase,
+    },
+    {
+      columnName: "Dates",
+      infoPath: "disabilityStatusDate",
+      applyToValue: formatDateTime,
+    },
+  ];
+
+  return (
+    <EvaluateTable
+      resources={disabilityObs}
+      columns={columnInfo}
+      className="margin-y-1"
+      fixed={false}
+    />
+  );
 };
