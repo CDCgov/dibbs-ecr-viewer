@@ -25,6 +25,7 @@ describe("Disabiity Status", () => {
     const { container } = render(
       returnDisabilityStatusTable(BundlePatient as unknown as Bundle),
     );
+    // TODO: Remove this once #595 is merged
     // Don't want IDs to dynamically update in this test
     const cleanedContainer = container.innerHTML
       .replace(/id="[^"]*"/g, 'id="id-tooltip"')

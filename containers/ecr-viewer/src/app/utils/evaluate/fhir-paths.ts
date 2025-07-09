@@ -77,8 +77,8 @@ export type PathTypes = {
   patientCountryResidence: string;
   patientDisabilityStatus: Observation;
   disabilityStatusQuestion: string;
-  disabilityStatusValue: boolean;
-  disabilityStatusDate: string;
+  disabilityStatusValue: ValueX;
+  disabilityStatusDate: TimeX;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -321,12 +321,12 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Bundle.entry.resource.where(resourceType = 'Patient').maritalStatus",
   },
   patientNationality: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).valueCodeableConcept.coding.display",
+    type: "ValueX",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).value",
   },
   patientCountryResidence: {
-    type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).valueCodeableConcept.coding.display",
+    type: "ValueX",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).value",
   },
   patientDisabilityStatus: {
     type: "Observation",
@@ -337,12 +337,12 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "code.coding.display",
   },
   disabilityStatusValue: {
-    type: "boolean",
-    path: "valueBoolean",
+    type: "ValueX",
+    path: "value",
   },
   disabilityStatusDate: {
-    type: "string",
-    path: "effectiveDateTime",
+    type: "TimeX",
+    path: "effective",
   },
 
   // eCR Metadata
