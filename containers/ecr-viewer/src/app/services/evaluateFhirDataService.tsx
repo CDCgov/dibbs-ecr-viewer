@@ -52,7 +52,10 @@ import {
   formatReference,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
-import { evaluateTravelHistoryTable } from "./socialHistoryService";
+import {
+  evaluateTravelHistoryTable,
+  returnDisabilityStatusTable,
+} from "./socialHistoryService";
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.
@@ -476,6 +479,22 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     {
       title: "Marital Status",
       value: evaluateValue(fhirBundle, fhirPathMappings.patientMaritalStatus),
+    },
+    {
+      title: "Nationality",
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientNationality),
+    },
+    {
+      title: "Country of Residence",
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings.patientCountryResidence,
+      ),
+    },
+    {
+      title: "Disability Status",
+      value: returnDisabilityStatusTable(fhirBundle),
+      fullWidthContent: true,
     },
   ];
   return evaluateData(socialData);
