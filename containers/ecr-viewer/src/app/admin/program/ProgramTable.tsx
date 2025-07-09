@@ -14,7 +14,7 @@ import { ConditionReference } from "@/app/data/metadataDb/types/core";
 import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { makePlural } from "@/app/utils/format-utils";
+import { makePlural, stringSort } from "@/app/utils/format-utils";
 
 /**
  *
@@ -89,7 +89,7 @@ export const ProgramTable = ({
                 <ul className="add-list-reset">
                   {selectedProgramArea?.conditions
                     .sort((a, b) =>
-                      a.condition_name < b.condition_name ? -1 : 1,
+                      stringSort(a.condition_name, b.condition_name),
                     )
                     .map(({ condition_name, code }) => (
                       <li
