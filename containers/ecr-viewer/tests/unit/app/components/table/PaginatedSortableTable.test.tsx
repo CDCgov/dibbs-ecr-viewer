@@ -15,7 +15,7 @@ describe("PaginatedSoratableTable", () => {
   const items = [
     {
       uuid: "123",
-      one: "one",
+      one: "One",
       two: 5,
       three: new Date("2012-01-01"),
       four: [1, 2, 3],
@@ -104,7 +104,7 @@ describe("PaginatedSoratableTable", () => {
         .getAllByRole("row")
         .slice(1)
         .map((row) => row.firstChild?.textContent),
-    ).toStrictEqual(["four", "one"]);
+    ).toStrictEqual(["four", "One"]);
 
     // reverse column one sort
     await user.click(screen.getByRole("button", { name: "Column One" }));
@@ -137,7 +137,7 @@ describe("PaginatedSoratableTable", () => {
         .getAllByRole("row")
         .slice(1)
         .map((row) => row.firstChild?.textContent),
-    ).toStrictEqual(["three", "one"]);
+    ).toStrictEqual(["three", "One"]);
   });
 
   it("paginates items", async () => {
@@ -156,7 +156,7 @@ describe("PaginatedSoratableTable", () => {
         .getAllByRole("row")
         .slice(1)
         .map((row) => row.firstChild?.textContent),
-    ).toStrictEqual(["four", "one"]);
+    ).toStrictEqual(["four", "One"]);
 
     const user = userEvent.setup();
     await user.selectOptions(
@@ -171,6 +171,6 @@ describe("PaginatedSoratableTable", () => {
         .getAllByRole("row")
         .slice(1)
         .map((row) => row.firstChild?.textContent),
-    ).toStrictEqual(["four", "one", "three", "two"]);
+    ).toStrictEqual(["four", "One", "three", "two"]);
   });
 });

@@ -235,7 +235,7 @@ export const evaluateValue = (
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
 
   const originalValue =
-    evaluateOneAndCheck<ValueX>(entry, fhirPath, type) || "";
+    evaluateOneAndCheck<ValueX>(entry, fhirPath, type) ?? "";
 
   if (type === "TimeX" && typeof originalValue === "string") {
     return formatDateTime(originalValue) || "";
