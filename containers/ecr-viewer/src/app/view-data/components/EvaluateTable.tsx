@@ -8,6 +8,7 @@ import { evaluateValue } from "@/app/utils/evaluate";
 import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
 
 import EvaluateTableRow from "./EvaluateTableRow";
+import { ToolTipElement } from "./ToolTipElement";
 
 export type Mapping = {
   [key: string]: string | FhirPath<string>;
@@ -19,6 +20,7 @@ export interface ColumnInfoInput {
   value?: ReactNode;
   className?: string;
   hiddenBaseText?: string;
+  tooltipText?: string;
   applyToValue?: (value: string) => ReactNode;
   evaluateEntry?: (el: Element) => ReactNode;
   sortFn?: (a: string, b: string) => number;
@@ -152,7 +154,13 @@ const BaseTableHeaders = ({
           scope="col"
           className={classNames("table-header", column.className)}
         >
-          {column.columnName}
+          {column.tooltipText ? (
+            <ToolTipElement toolTip={column.tooltipText}>
+              {column.columnName}
+            </ToolTipElement>
+          ) : (
+            column.columnName
+          )}
         </th>
       ))}
     </tr>
