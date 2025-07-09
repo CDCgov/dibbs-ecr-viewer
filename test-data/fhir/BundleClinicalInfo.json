@@ -441,6 +441,53 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:a9d3f2b7-1c8a-4bd2-93e0-74f6217bbdfa",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "a9d3f2b7-1c8a-4bd2-93e0-74f6217bbdfa",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "246455001",
+              "display": "Recurrence",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-item-list",
+                "display": "Problem List Item",
+                "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "448915004",
+              "system": "http://snomed.info/sct",
+              "display": "Cleft hard palate"
+            }
+          ]
+        },
+        "onsetDateTime": "2021-04-13",
+        "subject": {
+          "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
+        },
+        "meta": {
+          "source": ["ecr"]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/a9d3f2b7-1c8a-4bd2-93e0-74f6217bbdfa"
+      }
+    },
+    {
       "fullUrl": "urn:uuid:b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
       "resource": {
         "resourceType": "Procedure",

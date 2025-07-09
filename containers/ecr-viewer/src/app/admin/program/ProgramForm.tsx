@@ -19,7 +19,7 @@ import Modal from "@/app/components/modal/Modal";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
-import { makePlural, toKebabCase } from "@/app/utils/format-utils";
+import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
 import { AccordionItem } from "@/app/view-data/types";
 
 interface FormCondition extends ListedCondition {
@@ -39,7 +39,7 @@ const groupByCategory = (conditions: FormCondition[]) => {
     acc[category] ||= [] as FormCondition[];
     acc[category].push(cur);
     acc[category].sort((a, b) =>
-      a.condition_name < b.condition_name ? -1 : 1,
+      stringSort(a.condition_name, b.condition_name),
     );
     return acc;
   }, {} as ConditionCategories);
@@ -204,7 +204,7 @@ const ConditionFieldSet = ({
   };
 
   const accordionItems: AccordionItem[] = Object.keys(conditionCategories)
-    .sort()
+    .sort(stringSort)
     .filter((category) => filteredConditionCategories[category].length > 0)
     .map((category) => {
       const conditions = filteredConditionCategories[category];

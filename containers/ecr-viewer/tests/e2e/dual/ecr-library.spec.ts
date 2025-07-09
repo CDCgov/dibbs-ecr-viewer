@@ -71,6 +71,37 @@ test.describe("ecr library page", () => {
       ).toEqual(1);
     });
 
+    test("Clearing search box text should clear search and show all eCRs", async ({
+      page,
+    }) => {
+      await page.goto("/ecr-viewer");
+      await expect(
+        page.getByLabel("Filter by reportable condition"),
+      ).toContainText(totalNumOfConditions);
+
+      const searchBox = page.getByRole("searchbox");
+      await searchBox.fill("Yoda");
+      await page.getByRole("button", { name: "search" }).click();
+
+      await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
+      await expect(
+        page.getByRole("gridcell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
+      ).toBeVisible();
+      expect(
+        (await page.locator("tbody > tr").allTextContents()).length,
+      ).toEqual(1);
+
+      // This is a workaround to simulate the effect of pressing ESC on the search box which clears it to empty string.
+      // Playwright's functions for simulating key presses did not work for this test for some reason
+      await searchBox.fill(""); // Clear the input
+
+      // Verify all eCRs are visible again
+      await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
+      expect(
+        (await page.locator("tbody > tr").allTextContents()).length,
+      ).toEqual(3);
+    });
+
     test("Search and reportable condition should filter results", async ({
       page,
     }) => {

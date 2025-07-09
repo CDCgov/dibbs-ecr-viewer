@@ -110,7 +110,7 @@ exports[`PaginatedSoratableTable matches snapshot 1`] = `
         </tr>
         <tr>
           <td>
-            one
+            One
           </td>
           <td>
             01/01/2012
