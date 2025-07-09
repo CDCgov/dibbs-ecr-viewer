@@ -1,34 +1,16 @@
-import { Bundle } from "fhir/r4";
+import { ReactNode } from "react";
 
-import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-// import { evaluateOne } from "@/app/utils/evaluate";
-// import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import { evaluateData } from "@/app/utils/data-utils";
 import {
   AccordionSection,
   AccordionSubSection,
 } from "@/app/view-data/component-utils";
-import { AccordionItem as AccordionItemProps } from "@/app/view-data/types";
 
-import { DataTableDisplay, DisplayDataProps } from "./DataDisplay";
+import { DataDisplay } from "./DataDisplay";
 
 interface PregnancyInfoProps {
-  pregnancyData: AccordionItemProps[];
+  pregnancyData: ReactNode;
 }
-
-const getFormattedPregnancyContent = (fhirBundle: Bundle) => {
-  const content: DisplayDataProps[] = [
-    // {
-    //   title: "Pregnancy Status",
-    //   value: evaluateOne(fhirBundle, fhirPathMappings.pregnancyStatus),
-    // }
-  ];
-
-  return content;
-};
-
-// const evaluatePregnancyData = () => {
-//   const content = getFormattedPregnancyContent();
-// }
 
 /**
  * PregnancyInfo component displays pregnancy-related information.
@@ -37,17 +19,13 @@ const getFormattedPregnancyContent = (fhirBundle: Bundle) => {
  * @returns The rendered component.
  */
 const PregnancyInfo: React.FC<PregnancyInfoProps> = ({ pregnancyData }) => {
+  const dataDisplay = evaluateData([
+    { title: "Pregnancy", value: pregnancyData, fullWidthContent: true },
+  ]).availableData[0];
   return (
     <AccordionSection>
       <AccordionSubSection title="Pregnancy Info">
-        {pregnancyData.map((item, index) => {
-          return <DataTableDisplay item={item} key={index} />;
-        })}
-        <ExpandCollapseAccordion
-          className="accordion-rr margin-bottom-3"
-          items={pregnancyData}
-          descriptor="labs"
-        />
+        <DataDisplay item={dataDisplay} />
       </AccordionSubSection>
     </AccordionSection>
   );

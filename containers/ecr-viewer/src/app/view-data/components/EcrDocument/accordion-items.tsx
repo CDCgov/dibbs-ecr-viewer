@@ -10,18 +10,18 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
   evaluateHospitalEncounterData,
+  evaluatePregnancyData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import Demographics from "@/app/view-data/components/Demographics";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import EncounterDetails from "@/app/view-data/components/Encounter";
 import LabInfo from "@/app/view-data/components/LabInfo";
-// import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
+import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { AccordionItem } from "@/app/view-data/types";
@@ -38,6 +38,7 @@ export const getEcrDocumentAccordionItems = (
 ): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(fhirBundle);
   const socialData = evaluateSocialData(fhirBundle);
+  const pregnancyData = evaluatePregnancyData(fhirBundle);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
   const providerData = evaluateProviderData(fhirBundle);
@@ -71,22 +72,24 @@ export const getEcrDocumentAccordionItems = (
       (array) => Array.isArray(array) && array.length > 0,
     );
   };
-
-  const pregnancyData: DisplayDataProps[] = [];
-
   const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
       content: (
         <>
           {demographicsData.availableData.length > 0 ||
-          socialData.availableData.length > 0 ? (
+          socialData.availableData.length > 0 ||
+          pregnancyData !== undefined ? (
             <>
               <Demographics demographicsData={demographicsData.availableData} />
               {socialData.availableData.length > 0 && (
                 <div>
                   <SocialHistory socialData={socialData.availableData} />
-                  {/* <PregnancyInfo pregnancyData={pregnancyData} /> */}
+                </div>
+              )}
+              {pregnancyData !== undefined && (
+                <div>
+                  <PregnancyInfo pregnancyData={pregnancyData} />
                 </div>
               )}
             </>

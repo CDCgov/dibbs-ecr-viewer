@@ -72,18 +72,9 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
-  pregnancyStatus: string; // Good
-  // pregnancyStatusCollectedDate: string; // Not converted
-  // pregnancyDeterminationMethod: string; // Not converted
-  // pregnancyDeterminationMethodDate: string; // Not converted
-  // estimatedGestationalAge: string; // Good for front end but missing extension determination extension, and because estimated delivery date has the wrong type we can't use this.
-  // lastMenstrualPeriodDate: Period;  // Converted,  but using the wrong type
-  // estimatedDeliveryDate: string; // Converted end but missing extension determination extension, and has the wrong type
-  // deliveryDateDeterminationMethod: string; // Not converted
-  // pregnancyOutcome: string; //Converted but in the wrong place
-  // deliveryDate: string; // Not converted
-  postpartumStatus: string; // Good, but some minor changes can be made to the converted observation
-  postPartumStatusCollectedDate: string; // Same as above
+  pregnancyStatus: Observation;
+
+  postpartumStatus: Observation;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -324,16 +315,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   // Pregnancy Data
   pregnancyStatus: {
-    type: "string",
-    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3')).valueCodeableConcept.coding.display",
+    type: "Observation",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation')",
   },
+
   postpartumStatus: {
-    type: "string",
-    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3')).valueCodeableConcept.coding.display",
-  },
-  postPartumStatusCollectedDate: {
-    type: "TimeX",
-    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3')).effectiveDateTime",
+    type: "Observation",
+    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '249197004'))",
   },
 
   // eCR Metadata

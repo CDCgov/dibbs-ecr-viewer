@@ -6,6 +6,7 @@ import {
   Condition,
   Encounter,
   Location,
+  Observation,
   Organization,
   Practitioner,
   PractitionerRole,
@@ -289,6 +290,124 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     .join("\n\n");
 };
 
+const getObservationDate = (obs: Observation): Date | undefined => {
+  if (obs.effectivePeriod) {
+    if (obs.effectivePeriod.start) {
+      return new Date(obs.effectivePeriod.start);
+    } else if (obs.effectivePeriod.end) {
+      return new Date(obs.effectivePeriod.end);
+    } else if (obs.effectiveDateTime) {
+      return new Date(obs.effectiveDateTime);
+    } else if (obs.effectiveInstant) {
+      return new Date(obs.effectiveInstant);
+    } else {
+      return undefined;
+    }
+  }
+};
+
+const sortPregnancyObservations = (
+  a: { observation: Observation },
+  b: { observation: Observation },
+) => {
+  const date_a = getObservationDate(a.observation);
+  const date_b = getObservationDate(b.observation);
+  if (date_a && date_b) {
+    return date_b.getTime() - date_a.getTime(); // Sort descending
+  } else if (date_a) {
+    return -1; // a comes before b
+  } else if (date_b) {
+    return 1; // b comes before a
+  } else {
+    return 0; // No change in order
+  }
+};
+
+/**
+ * Evaluate pregnancy data from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing pregnancy data.
+ * @returns An array of evaluated and formatted pregnancy data.
+ */
+export const evaluatePregnancyData = (fhirBundle: Bundle) => {
+  const pregnancyStatusObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.pregnancyStatus,
+  );
+  const postpartumStatusObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.postpartumStatus,
+  );
+  const allPregnancyObservations = [
+    ...pregnancyStatusObservations.map((ob) => {
+      return { type: "Pregnancy Status", observation: ob };
+    }),
+    ...postpartumStatusObservations.map((ob) => {
+      return { type: "Postpartum Status", observation: ob };
+    }),
+  ].sort(sortPregnancyObservations);
+
+  if (allPregnancyObservations.length === 0) return;
+
+  return (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="pregnancy info"
+      items={allPregnancyObservations.map((obs) => {
+        const data = [];
+        const { type, observation } = obs;
+        if (type === "Pregnancy Status") {
+          data.push({
+            title: "Status",
+            value: evaluateValue(observation, "valueCodeableConcept"),
+          });
+        } else if (type === "Postpartum Status") {
+          data.push({
+            title: "Status",
+            value: evaluateValue(observation, "valueCodeableConcept"),
+          });
+
+          if (observation.effectivePeriod) {
+            data.push({
+              title: "Effective Period",
+              value: formatPeriodDate(observation.effectivePeriod),
+            });
+          } else if (observation.effectiveDateTime) {
+            data.push({
+              title: "Effective Date",
+              value: formatDate(observation.effectiveDateTime),
+            });
+          } else if (observation.effectiveInstant) {
+            data.push({
+              title: "Effective Date",
+              value: formatDate(observation.effectiveInstant),
+            });
+          }
+        }
+
+        const content = (
+          <>
+            {data.map((d) => {
+              return <DataDisplay item={d} />;
+            })}
+          </>
+        );
+
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span className="text-base">{type}</span>
+            </div>
+          ),
+          expanded: false,
+          content,
+          id: `${Math.random()}`,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
+};
+
 /**
  * Evaluates occupation history information from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing alcohol use data.
@@ -445,10 +564,6 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
       title: "Homeless Status",
       value: evaluateValue(fhirBundle, fhirPathMappings.patientHomelessStatus),
     },
-    // {
-    //   title: "Pregnancy Status",
-    //   value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
-    // },
     {
       title: "Alcohol Use",
       value: evaluateAlcoholUse(fhirBundle),
@@ -480,29 +595,6 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
   ];
   return evaluateData(socialData);
 };
-
-/**
- * Evaluate pregnancy data from the FHIR bundle and formats it into structured data for display.
- * @param fhirBundle - The FHIR bundle containing pregnancy data.
- * @returns An array of evaluated and formatted pregnancy data.
- */
-// export const evaluatePregnancyData = (fhirBundle: Bundle) => {
-//   const pregnancyData: DisplayDataProps[] = [
-//     {
-//       title: "Pregnancy Status",
-//       value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
-//     },
-//     {
-//       title: "Estimated Due Date",
-//       value: evaluateValue(fhirBundle, fhirPathMappings.patientEDD),
-//     },
-//     {
-//       title: "Number of Pregnancies",
-//       value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyCount),
-//     },
-//   ];
-//   return evaluateData(pregnancyData);
-// };
 
 /**
  * Evaluates demographic data from the FHIR bundle and formats it into structured data for display.

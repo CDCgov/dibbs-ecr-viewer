@@ -231,7 +231,6 @@ export const evaluateValue = (
   entry: FhirData,
   path: string | FhirPath<string>,
 ): string => {
-  console.log("Evaluating path:", path);
   const [fhirPath, type] =
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
 
