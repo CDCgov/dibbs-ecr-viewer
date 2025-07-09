@@ -31,7 +31,6 @@ The following instructions will guide you through this list.
 - Verified that the eCR FHIR bundle is available in blob storage
 - Verified that the processed eCR is visible in the viewer
 
-
 ## Authentication Setup for API Testing
 
 Most `/ecr-viewer/api/` routes require authentication to be used. The exceptions are public routes such as the health check and authentication routes.
@@ -52,7 +51,7 @@ ssh-keygen -t rsa -b 4096 -f private_key.pem -N ""
 2. Extract the public key:
 
 ```shell
-# For MacOS/Linux  
+# For MacOS/Linux
 ssh-keygen -y -f private_key.pem > public_key.pub
 ```
 
@@ -67,16 +66,17 @@ export NBS_API_PUB_KEY="$(cat public_key.pub)"
 Use your private key to generate a JWT token for API requests. The token should be sent on the `Authorization` header of requests.
 
 **Example using Node.js:**
-```javascript
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
 
-const privateKey = fs.readFileSync('private_key.pem');
+```javascript
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+
+const privateKey = fs.readFileSync("private_key.pem");
 const payload = {
-    exp: Math.floor(Date.now() / 1000) + (60 * 60), // 1 hour expiration
-    iat: Math.floor(Date.now() / 1000)
+  exp: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour expiration
+  iat: Math.floor(Date.now() / 1000),
 };
-const token = jwt.sign(payload, privateKey, { algorithm: 'RS256' });
+const token = jwt.sign(payload, privateKey, { algorithm: "RS256" });
 ```
 
 ### Non-Integrated Authentication
@@ -205,11 +205,11 @@ Content-Type: {2}
         $Data = $enc.GetString($bytes)
         $body = $FormTemplate -f $boundary, $NewName, $ContentType, $Data
         $FormContentType = "multipart/form-data; boundary=$boundary"
-        
+
         $headers = @{
             "Authorization" = "Bearer $AuthToken"
         }
-        
+
         Try {
             $Result = Invoke-RestMethod -Uri $Uri -Method POST -ContentType $FormContentType -Body $body -Headers $headers -DisableKeepAlive
         } Catch {
