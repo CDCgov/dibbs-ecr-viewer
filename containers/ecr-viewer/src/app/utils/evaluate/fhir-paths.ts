@@ -73,8 +73,8 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
-  patientNationality: string;
-  patientCountryResidence: string;
+  patientNationality: ValueX;
+  patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
   disabilityStatusQuestion: string;
   disabilityStatusValue: ValueX;
