@@ -204,11 +204,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientCounty: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').address.first().county",
+    path: "Bundle.entry.resource.where(resourceType = 'Patient').address.county",
   },
   patientCountry: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').address.first().country",
+    path: "Bundle.entry.resource.where(resourceType = 'Patient').address.country",
   },
 
   patientIds: {
@@ -492,7 +492,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   activeProblemsDisplay: {
     type: "string",
-    path: "Condition.code.coding.display.first()",
+    path: "Condition.code.coding.display",
   },
   activeProblemsStatus: {
     type: "string",
@@ -503,7 +503,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   activeProblemsComments: { type: "string", path: "Condition.note[0].text" },
   historyOfPresentIllness: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = '10164-2').text.`div`.first()",
+    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = '10164-2').text.`div`",
   },
   emergencyOutbreakInfo: {
     type: "Observation",
@@ -513,7 +513,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Treatment Details
   planOfTreatment: {
     type: "string",
-    path: "Bundle.entry.resource.section.where(title = 'Plan of Treatment').text.first().`div`",
+    path: "Bundle.entry.resource.section.where(title = 'Plan of Treatment').text.`div`",
   },
   plannedProcedures: {
     type: "CarePlanActivity",
@@ -558,7 +558,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   immunizationsName: {
     type: "string",
-    path: "Immunization.vaccineCode.coding.display.first()",
+    path: "Immunization.vaccineCode.coding.display",
   },
   immunizationsAdminDate: {
     type: "string",
@@ -639,7 +639,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   labResultDiv: {
     type: "string",
-    path: "Bundle.entry.resource.section.where(code.coding[0].code = '30954-2').text.`div`.first()",
+    path: "Bundle.entry.resource.section.where(code.coding[0].code = '30954-2').text.`div`",
   },
   specimenCollectionTime: {
     type: "string",
@@ -657,7 +657,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Observation.extension[0].extension.where(url = 'observation entry reference value').valueString",
   },
-  observationComponent: { type: "string", path: "code.coding.display.first()" },
+  observationComponent: { type: "string", path: "code.coding.display" },
   observationValue: {
     type: "string",
     path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",
@@ -668,10 +668,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   observationDeviceReference: { type: "string", path: "device.reference" },
   observationNote: { type: "string", path: "note.text" },
-  observationOrganism: { type: "string", path: "code.coding.display.first()" },
+  observationOrganism: { type: "string", path: "code.coding.display" },
   observationAntibiotic: {
     type: "string",
-    path: "code.coding.display.first()",
+    path: "code.coding.display",
   },
   observationOrganismMethod: {
     type: "string",
