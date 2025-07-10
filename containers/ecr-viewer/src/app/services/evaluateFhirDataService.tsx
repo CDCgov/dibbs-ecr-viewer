@@ -382,7 +382,9 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
             },
             {
               title: "Effective Date",
-              value: formatDate(evaluateValue(observation, "effectivePeriod")),
+              value: formatStartEndDateTime(
+                evaluateOne(observation, fhirPathMappings.effectivePeriod),
+              ),
             },
           ];
         } else if (type === "Postpartum Status") {

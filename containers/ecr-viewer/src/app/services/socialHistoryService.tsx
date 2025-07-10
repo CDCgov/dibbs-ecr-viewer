@@ -114,12 +114,12 @@ export const returnDisabilityStatusTable = (
     },
     {
       columnName: "Status",
-      infoPath: "disabilityStatusValue",
+      infoPath: "valueX",
       applyToValue: toSentenceCase,
     },
     {
       columnName: "Dates",
-      infoPath: "disabilityStatusDate",
+      infoPath: "effectiveX",
       applyToValue: formatDateTime,
     },
   ];

@@ -79,8 +79,6 @@ export type PathTypes = {
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
   disabilityStatusQuestion: string;
-  disabilityStatusValue: ValueX;
-  disabilityStatusDate: TimeX;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -110,8 +108,6 @@ export type PathTypes = {
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
   vitalSignType: CodeableConcept;
-  value: ValueX;
-  vitalSignDateTime: ValueX;
   resolve: unknown;
   activeProblems: Condition;
   activeProblemsDisplay: string;
@@ -179,6 +175,7 @@ export type PathTypes = {
   travelHistoryLocation: string;
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
+  effectivePeriod: Period;
   effectiveX: TimeX;
   valueX: ValueX;
 };
@@ -337,14 +334,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "code.coding.display",
   },
-  disabilityStatusValue: {
-    type: "ValueX",
-    path: "value",
-  },
-  disabilityStatusDate: {
-    type: "TimeX",
-    path: "effective",
-  },
 
   // Pregnancy Data
   lastMenstrualPeriod: {
@@ -480,14 +469,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   vitalSignType: {
     type: "CodeableConcept",
     path: "code",
-  },
-  value: {
-    type: "ValueX",
-    path: "value",
-  },
-  vitalSignDateTime: {
-    type: "TimeX",
-    path: "effective",
   },
 
   resolve: {
@@ -726,6 +707,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Generic Observation
+  effectivePeriod: {
+    type: "Period",
+    path: "effectivePeriod",
+  },
   valueX: {
     type: "ValueX",
     path: "value",
