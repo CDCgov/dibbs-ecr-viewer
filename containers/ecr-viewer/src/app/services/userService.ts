@@ -282,7 +282,8 @@ export const updateUser = audit(
     await getCheckAdmin("update users");
 
     try {
-      await updateUserQuery(trx, uuid, updates);
+      Object.keys(updates).length > 0 &&
+        (await updateUserQuery(trx, uuid, updates));
       await updateUserProgramAreasQuery(trx, uuid, programs);
     } catch (error: unknown) {
       const message = "Failed to update user";
