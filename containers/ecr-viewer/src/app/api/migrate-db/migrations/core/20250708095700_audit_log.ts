@@ -39,6 +39,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
-  await _db.schema.dropIndex("audit_log_date_index").execute();
+  // dropping the table drops the index
   await _db.schema.dropTable("audit_log").ifExists().execute();
 }
