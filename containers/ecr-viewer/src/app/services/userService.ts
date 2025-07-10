@@ -147,6 +147,7 @@ export const isUserEcrAuthed = async (
  * @param params Function parameters
  * @param params.email Email of the user to add
  * @param params.user_type Type of user to create ("admin" or "standard")
+ * @param params.programs Array of program areas the user should be assigned to
  * @returns UUID of the created user
  */
 export const createUser = audit(
@@ -210,7 +211,7 @@ export const createInitialAdminUser = async (
 };
 
 const createUserQuery = async (
-  trx: Kysely<Core>,
+  db: Kysely<Core>,
   email: string,
   user_type: "admin" | "standard",
   uuid: string,
@@ -221,7 +222,7 @@ const createUserQuery = async (
     if (user.status === "active") {
       throw new UserFacingError("User already exists and is active");
     } else {
-      await updateUserQuery(trx, user.uuid, { status: "active", user_type });
+      await updateUserQuery(db, user.uuid, { status: "active", user_type });
       return user.uuid;
     }
   }
@@ -233,7 +234,7 @@ const createUserQuery = async (
     author_uuid,
   };
 
-  await trx.insertInto("user").values(newUser).execute();
+  await db.insertInto("user").values(newUser).execute();
   return uuid;
 };
 
@@ -258,8 +259,10 @@ export const getUser = async (uuid: string): Promise<User | undefined> => {
 
 /**
  * Update a user with the the given id.
- * @param uuid id of the user to update
- * @param updates objecct with fields to update in their record. UUID fields should not be updated.
+ * @param params parameters
+ * @param params.uuid id of the user to update
+ * @param params.updates object with fields to update in their record. UUID fields should not be updated.
+ * @param params.programs array of program areas the user should be assigned to
  */
 export const updateUser = audit(
   "user",
