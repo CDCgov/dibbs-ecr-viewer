@@ -76,7 +76,6 @@ export type PathTypes = {
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
-  disabilityStatusQuestion: string;
   disabilityStatusValue: ValueX;
   disabilityStatusDate: TimeX;
   eicrIdentifier: string;
@@ -160,13 +159,10 @@ export type PathTypes = {
   specimenReceivedTime: string;
   specimenSource: string;
   observationReferenceValue: string;
-  observationComponent: string;
   observationValue: string;
   observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
   observationNote: string;
-  observationOrganism: string;
-  observationAntibiotic: string;
   observationOrganismMethod: string;
   observationSusceptibility: string;
   observationResultStatus: string;
@@ -177,6 +173,7 @@ export type PathTypes = {
   travelHistoryLocation: string;
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
+  codeableConceptDisplay: string;
 };
 
 export type FhirPathKeys = keyof PathTypes;
@@ -332,10 +329,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientDisabilityStatus: {
     type: "Observation",
     path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
-  },
-  disabilityStatusQuestion: {
-    type: "string",
-    path: "code.coding.display",
   },
   disabilityStatusValue: {
     type: "ValueX",
@@ -657,7 +650,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Observation.extension.extension.where(url = 'observation entry reference value').valueString",
   },
-  observationComponent: { type: "string", path: "code.coding.display" },
   observationValue: {
     type: "string",
     path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",
@@ -668,11 +660,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   observationDeviceReference: { type: "string", path: "device.reference" },
   observationNote: { type: "string", path: "note.text" },
-  observationOrganism: { type: "string", path: "code.coding.display" },
-  observationAntibiotic: {
-    type: "string",
-    path: "code.coding.display",
-  },
   observationOrganismMethod: {
     type: "string",
     path: "extension.where(url = 'methodCode originalText').valueString",
@@ -709,6 +696,12 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   stampedImmunizations: {
     type: "Immunization",
     path: "entry.resource.where(extension('https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code').valueCoding.code = %snomedCode and resourceType = 'Immunization')",
+  },
+
+  // Generic CodeableConcept
+  codeableConceptDisplay: {
+    type: "string",
+    path: "code.coding.display",
   },
 };
 

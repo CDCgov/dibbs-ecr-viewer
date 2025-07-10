@@ -374,7 +374,7 @@ export const evaluateDiagnosticReportData = (
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "Component",
-      infoPath: "observationComponent",
+      infoPath: "codeableConceptDisplay",
       className: "minw-10 width-40",
     },
     {
@@ -446,9 +446,12 @@ export const evaluateOrganismsReportData = (
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "Organism",
-      value: evaluateValue(observation, fhirPathMappings.observationOrganism),
+      value: evaluateValue(
+        observation,
+        fhirPathMappings.codeableConceptDisplay,
+      ),
     },
-    { columnName: "Antibiotic", infoPath: "observationAntibiotic" },
+    { columnName: "Antibiotic", infoPath: "codeableConceptDisplay" },
     { columnName: "Method", infoPath: "observationOrganismMethod" },
     { columnName: "Susceptibility", infoPath: "observationSusceptibility" },
   ];
