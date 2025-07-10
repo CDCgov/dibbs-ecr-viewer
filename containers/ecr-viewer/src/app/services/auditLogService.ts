@@ -2,7 +2,7 @@ import "server-only";
 
 import { randomUUID, createHash } from "node:crypto";
 
-import { Kysely } from "kysely";
+import { Transaction } from "kysely";
 import { cookies, headers } from "next/headers";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -22,9 +22,11 @@ type Action = "query" | "view" | "create" | "update" | "delete";
  * @param fn Function to audit upon succesful completion. Must have only one argument, which is an object. The wrapper will inject a second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
-// need the any to infer the function type, which ignoring then confuses jsdoc
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, jsdoc/require-jsdoc
-export const audit = <Func extends (...args: any) => any>(
+export const audit = <
+  // need the any to infer the function type, which ignoring then confuses jsdoc
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, jsdoc/require-jsdoc
+  Func extends (params: any, trx: Transaction<Core>) => Promise<any>,
+>(
   subject: Subject,
   action: Action,
   fn: Func,
@@ -51,7 +53,7 @@ export const audit = <Func extends (...args: any) => any>(
 };
 
 const createAuditRecord = async (
-  trx: Kysely<Core>,
+  trx: Transaction<Core>,
   subject: Subject,
   action: Action,
   params: object,

@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
-import { Kysely } from "kysely";
+import { Kysely, Transaction } from "kysely";
 import { notFound } from "next/navigation";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -160,7 +160,7 @@ export const createUser = audit(
       email: string;
       userType: "admin" | "standard";
     },
-    trx: Kysely<Core>,
+    trx: Transaction<Core>,
   ): Promise<string> => {
     const creatingUser = await getCheckAdmin("create new users");
 
