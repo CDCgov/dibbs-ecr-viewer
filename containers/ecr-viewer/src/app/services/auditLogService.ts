@@ -13,8 +13,8 @@ import { getLoggedInUser } from "./userService";
 type Subject = "ecr" | "user" | "program_area";
 type Action = "query" | "view" | "create" | "update" | "delete";
 
-type AuditableFn<Param extends Record<string, unknown>, Ret> = (
-  params: Param,
+type AuditableFn<Params extends Record<string, unknown>, Ret> = (
+  params: Params,
   trx: Transaction<Core>,
 ) => Promise<Ret>;
 
@@ -27,12 +27,12 @@ type AuditableFn<Param extends Record<string, unknown>, Ret> = (
  * @param fn Function to audit upon succesful completion. Must be called with only one argument, which is an object. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
-export const audit = <Param extends Record<string, unknown>, Ret>(
+export const audit = <Params extends Record<string, unknown>, Ret>(
   subject: Subject,
   action: Action,
-  fn: AuditableFn<Param, Ret>,
+  fn: AuditableFn<Params, Ret>,
 ) => {
-  return async (params: Param): Promise<Ret> => {
+  return async (params: Params): Promise<Ret> => {
     return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {

@@ -35,7 +35,7 @@ export const makeServerAction =
         if (e instanceof UserFacingError) {
           return { error: e.message };
         } else {
-          console.error({ message: "Unknown error", error: e });
+          console.error({ message: "Internal server error", error: e });
           return { error: "Action failed" };
         }
       }
