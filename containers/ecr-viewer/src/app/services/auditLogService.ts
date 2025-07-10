@@ -13,35 +13,26 @@ import { getLoggedInUser } from "./userService";
 type Subject = "ecr" | "user" | "program_area";
 type Action = "query" | "view" | "create" | "update" | "delete";
 
+type AuditableFn<Param extends Record<string, unknown>, Ret> = (
+  params: Param,
+  trx: Transaction<Core>,
+) => Promise<Ret>;
+
 /**
  * Wrap a function with audit logging. After the function succesfully runs, an
  * audit log record will be created with the subject, action, actor (user uuid or token),
  * parameters passed to the function, and other request metadata.
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
- * @param fn Function to audit upon succesful completion. Must have only one argument, which is an object. The wrapper will inject a second argument of a Kysely transaction, which should be used as the database in any queries the function executes
+ * @param fn Function to audit upon succesful completion. Must be called with only one argument, which is an object. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
-export const audit = <
-  // need the any to infer the function type, which ignoring then confuses jsdoc
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, jsdoc/require-jsdoc
-  Func extends (params: any, trx: Transaction<Core>) => Promise<any>,
->(
+export const audit = <Param extends Record<string, unknown>, Ret>(
   subject: Subject,
   action: Action,
-  fn: Func,
+  fn: AuditableFn<Param, Ret>,
 ) => {
-  return async (
-    params: Parameters<Func>[0],
-  ): Promise<Awaited<ReturnType<Func>>> => {
-    console.log({ params, subject, action });
-    // TODO PR: make this static
-    if (typeof params !== "object") {
-      throw new Error(
-        `Audited function must have a single argument of object type, got: ${params}`,
-      );
-    }
-
+  return async (params: Param): Promise<Ret> => {
     return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {
