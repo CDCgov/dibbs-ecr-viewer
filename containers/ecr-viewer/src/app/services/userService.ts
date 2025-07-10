@@ -144,25 +144,35 @@ export const isUserEcrAuthed = async (
  * Create a user with the given email and user type. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
- * @param email Email of the user to add
- * @param user_type Type of user to create ("admin" or "standard")
+ * @param params Function parameters
+ * @param params.email Email of the user to add
+ * @param params.user_type Type of user to create ("admin" or "standard")
  * @returns UUID of the created user
  */
 export const createUser = audit(
   "user",
   "create",
-  async ({
-    email,
-    userType,
-  }: {
-    email: string;
-    userType: "admin" | "standard";
-  }): Promise<string> => {
+  async (
+    {
+      email,
+      userType,
+    }: {
+      email: string;
+      userType: "admin" | "standard";
+    },
+    trx: Kysely<Core>,
+  ): Promise<string> => {
     const creatingUser = await getCheckAdmin("create new users");
 
     try {
       const uuid = randomUUID();
-      return await createUserQuery(email, userType, uuid, creatingUser.uuid);
+      return await createUserQuery(
+        trx,
+        email,
+        userType,
+        uuid,
+        creatingUser.uuid,
+      );
     } catch (error: unknown) {
       const message = "Failed to create new user";
       console.error({ message, error });
@@ -188,7 +198,7 @@ export const createInitialAdminUser = async (
 
   try {
     const uuid = randomUUID();
-    return await createUserQuery(email, "admin", uuid, uuid);
+    return await createUserQuery(getDb<Core>(), email, "admin", uuid, uuid);
   } catch (error: unknown) {
     const message = "Failed to create initial admin user";
     console.error({ message, error });
@@ -197,6 +207,7 @@ export const createInitialAdminUser = async (
 };
 
 const createUserQuery = async (
+  trx: Kysely<Core>,
   email: string,
   user_type: "admin" | "standard",
   uuid: string,
@@ -219,7 +230,7 @@ const createUserQuery = async (
     author_uuid,
   };
 
-  await getDb<Core>().insertInto("user").values(newUser).execute();
+  await trx.insertInto("user").values(newUser).execute();
   return uuid;
 };
 

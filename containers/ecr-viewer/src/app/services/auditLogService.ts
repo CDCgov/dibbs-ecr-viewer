@@ -2,6 +2,7 @@ import "server-only";
 
 import { randomUUID, createHash } from "node:crypto";
 
+import { Kysely } from "kysely";
 import { cookies, headers } from "next/headers";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -18,7 +19,7 @@ type Action = "query" | "view" | "create" | "update" | "delete";
  * parameters passed to the function, and other request metadata.
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
- * @param fn Function to audit upon succesful completion. Must have only one argument, which is an object
+ * @param fn Function to audit upon succesful completion. Must have only one argument, which is an object. The wrapper will inject a second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
 // need the any to infer the function type, which ignoring then confuses jsdoc
@@ -29,25 +30,31 @@ export const audit = <Func extends (...args: any) => any>(
   fn: Func,
 ) => {
   return async (
-    ...args: Parameters<Func>
+    params: Parameters<Func>[0],
   ): Promise<Awaited<ReturnType<Func>>> => {
-    console.log({ args, subject, action });
+    console.log({ params, subject, action });
     // TODO PR: make this static
-    if (args.length !== 1 || typeof args[0] !== "object") {
+    if (typeof params !== "object") {
       throw new Error(
-        `Audited function must have a single argument of object type, got: ${args}`,
+        `Audited function must have a single argument of object type, got: ${params}`,
       );
     }
-    const res = await fn(args[0]);
-    await createAuditRecord(subject, action, args);
-    return res;
+
+    return await getDb<Core>()
+      .transaction()
+      .execute(async (trx) => {
+        const res = await fn(params, trx);
+        await createAuditRecord(trx, subject, action, params);
+        return res;
+      });
   };
 };
 
 const createAuditRecord = async (
+  trx: Kysely<Core>,
   subject: Subject,
   action: Action,
-  args: object,
+  params: object,
 ) => {
   const uuid = randomUUID();
   const user = await getLoggedInUser();
@@ -61,7 +68,7 @@ const createAuditRecord = async (
     subject,
     action,
     actor: user?.uuid || apiToken || "unknown",
-    parameter_json: JSON.stringify(args),
+    parameter_json: JSON.stringify(params),
     metadata_json: JSON.stringify({
       userAgent: reqHeaders.get("User-Agent"),
     }),
@@ -70,7 +77,8 @@ const createAuditRecord = async (
   const checksum = createHash("sha256")
     .update(JSON.stringify(values))
     .digest("hex");
-  await getDb<Core>()
+
+  await trx
     .insertInto("audit_log")
     .values({ ...values, checksum })
     .execute();
