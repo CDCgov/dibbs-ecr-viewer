@@ -14,7 +14,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   await _db.schema
     .createTable("audit_log")
-    .addColumn("uuid", "varchar(200)", (cb) => cb.primaryKey())
+    .addColumn("uuid", "varchar(200)", (cb) => cb.unique())
     .addColumn("subject", "varchar(200)", (cb) => cb.notNull())
     .addColumn("action", "varchar(200)", (cb) => cb.notNull())
     .addColumn("actor", getSql("maxVarchar"), (cb) => cb.notNull())
@@ -24,12 +24,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     .addColumn("parameter_json", getSql("maxVarchar"), (cb) => cb.notNull())
     .addColumn("metadata_json", getSql("maxVarchar"), (cb) => cb.notNull())
     .addColumn("checksum", getSql("maxVarchar"), (cb) => cb.notNull())
-    .execute();
-
-  await _db.schema
-    .createIndex("audit_log_date_index")
-    .on("audit_log")
-    .column("date")
+    .addPrimaryKeyConstraint("audit_log_pkey_date_uuid", ["date", "uuid"])
     .execute();
 }
 
@@ -39,6 +34,5 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
-  // dropping the table drops the index
   await _db.schema.dropTable("audit_log").ifExists().execute();
 }

@@ -13,10 +13,10 @@ import { getLoggedInUser } from "./userService";
 type Subject = "ecr" | "user" | "program_area";
 type Action = "query" | "view" | "create" | "update" | "delete";
 
-type AuditableFn<Params extends Record<string, unknown>, Ret> = (
-  params: Params,
-  trx: Transaction<Core>,
-) => Promise<Ret>;
+type AuditableFn<
+  Params extends Record<string, unknown>,
+  Ret extends string | void,
+> = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
 
 /**
  * Wrap a function with audit logging. After the function succesfully runs, an
@@ -24,10 +24,13 @@ type AuditableFn<Params extends Record<string, unknown>, Ret> = (
  * parameters passed to the function, and other request metadata.
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
- * @param fn Function to audit upon succesful completion. Must be called with only one argument, which is an object. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
+ * @param fn Function to audit upon succesful completion. Must be called with only one argument, which is an object with all of the parameters. It can return either the UUID of the subject or void. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
-export const audit = <Params extends Record<string, unknown>, Ret>(
+export const audit = <
+  Params extends Record<string, unknown>,
+  Ret extends string | void,
+>(
   subject: Subject,
   action: Action,
   fn: AuditableFn<Params, Ret>,
@@ -38,9 +41,12 @@ export const audit = <Params extends Record<string, unknown>, Ret>(
     return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {
-        const res = await fn(params, trx);
-        await createAuditRecord(trx, user, subject, action, params);
-        return res;
+        const uuid = await fn(params, trx);
+        await createAuditRecord(trx, user, subject, action, {
+          uuid,
+          ...params,
+        });
+        return uuid;
       });
   };
 };
