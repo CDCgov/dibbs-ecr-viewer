@@ -105,7 +105,6 @@ export type PathTypes = {
   rrDetails: Observation;
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
-  vitalSignType: CodeableConcept;
   vitalSignDateTime: ValueX;
   resolve: unknown;
   activeProblems: Condition;
@@ -135,7 +134,6 @@ export type PathTypes = {
   immunizationsLotNumber: unknown;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
-  procedureName: CodeableConcept;
   procedureDate: TimeX;
   procedureStatus: string;
   procedureReason: CodeableConcept;
@@ -172,6 +170,7 @@ export type PathTypes = {
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
   codeableConceptDisplay: string;
+  code: CodeableConcept;
   valueX: ValueX;
 };
 
@@ -451,10 +450,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "Bundle.entry.resource.Observation.where(category.coding.code = 'vital-signs')",
   },
-  vitalSignType: {
-    type: "CodeableConcept",
-    path: "code",
-  },
   vitalSignDateTime: {
     type: "TimeX",
     path: "effective",
@@ -570,10 +565,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // core fields
-  procedureName: {
-    type: "CodeableConcept",
-    path: "code",
-  },
   procedureDate: {
     type: "TimeX",
     path: "Procedure.performed | Observation.effective",
@@ -696,6 +687,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Generic Observation
+  code: {
+    type: "CodeableConcept",
+    path: "code",
+  },
   valueX: {
     type: "ValueX",
     path: "value",

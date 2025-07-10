@@ -397,7 +397,7 @@ export const returnProceduresTable = (
   }
 
   const columnInfo: ColumnInfoInput[] = [
-    { columnName: "Name", infoPath: "procedureName" },
+    { columnName: "Name", infoPath: "code" },
     {
       columnName: "Date/Time Performed",
       infoPath: "procedureDate",
@@ -558,7 +558,7 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
   const columns = [
     {
       columnName: "Vital Reading",
-      infoPath: "vitalSignType",
+      infoPath: "code",
       applyToValue: toSentenceCase,
     },
     { columnName: "Result", infoPath: "valueX" },
