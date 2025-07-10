@@ -1,5 +1,6 @@
 import { getDb } from "@/app/data/metadataDb/database";
 import {
+  AuditLog,
   Core,
   NewCoreECR,
   NewECRConditions,
@@ -11,34 +12,43 @@ import {
  * @param ecr - the NewECR to be persisted
  * @returns promise
  */
-export async function createCoreEcr(ecr: NewCoreECR): Promise<void> {
+export const createCoreEcr = async (ecr: NewCoreECR): Promise<void> => {
   await getDb<Core>().insertInto("ecr_data").values(ecr).execute();
-}
+};
 
 /**
  * Creates an eCR condition object
  * @param condition - the NewECRConditions to be created
  * @returns promise
  */
-export async function createEcrCondition(
+export const createEcrCondition = async (
   condition: NewECRConditions,
-): Promise<void> {
+): Promise<void> => {
   await getDb<Core>()
     .insertInto("ecr_rr_conditions")
     .values(condition)
     .execute();
-}
+};
 
 /**
  * Creates an eCR rule summary object
  * @param rule_summary - the NewECRRuleSummaries record to be created
  * @returns promise
  */
-export async function createEcrRule(
+export const createEcrRule = async (
   rule_summary: NewECRRuleSummaries,
-): Promise<void> {
+): Promise<void> => {
   await getDb<Core>()
     .insertInto("ecr_rr_rule_summaries")
     .values(rule_summary)
     .execute();
-}
+};
+
+export const getLastAuditLog = async (): Promise<AuditLog> => {
+  return await getDb<Core>()
+    .selectFrom("audit_log")
+    .selectAll()
+    .orderBy("date desc")
+    .limit(1)
+    .executeTakeFirstOrThrow();
+};

@@ -95,6 +95,7 @@ export interface audit_log {
   checksum: string;
 }
 
+export type AuditLog = Selectable<audit_log>;
 export type NewAuditLog = Insertable<audit_log>;
 
 export interface Core {
