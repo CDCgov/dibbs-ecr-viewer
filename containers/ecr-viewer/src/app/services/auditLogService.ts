@@ -6,7 +6,7 @@ import { Transaction } from "kysely";
 import { cookies, headers } from "next/headers";
 
 import { getDb } from "@/app/data/metadataDb/database";
-import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
+import { Core, NewAuditLog, User } from "@/app/data/metadataDb/types/core";
 
 import { getLoggedInUser } from "./userService";
 
@@ -33,11 +33,13 @@ export const audit = <Params extends Record<string, unknown>, Ret>(
   fn: AuditableFn<Params, Ret>,
 ) => {
   return async (params: Params): Promise<Ret> => {
+    // get user outside of the transactio to avoid some sqlserver strangeness
+    const user = await getLoggedInUser();
     return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {
         const res = await fn(params, trx);
-        await createAuditRecord(trx, subject, action, params);
+        await createAuditRecord(trx, user, subject, action, params);
         return res;
       });
   };
@@ -45,12 +47,12 @@ export const audit = <Params extends Record<string, unknown>, Ret>(
 
 const createAuditRecord = async (
   trx: Transaction<Core>,
+  user: User | undefined,
   subject: Subject,
   action: Action,
   params: object,
 ) => {
   const uuid = randomUUID();
-  const user = await getLoggedInUser();
   const reqHeaders = headers();
   const reqCookies = cookies();
   const apiToken =
