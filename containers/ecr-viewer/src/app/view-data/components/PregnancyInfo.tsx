@@ -20,7 +20,7 @@ interface PregnancyInfoProps {
  */
 const PregnancyInfo: React.FC<PregnancyInfoProps> = ({ pregnancyData }) => {
   const dataDisplay = evaluateData([
-    { title: "Pregnancy", value: pregnancyData, fullWidthContent: true },
+    { value: pregnancyData, fullWidthContent: true },
   ]).availableData[0];
   return (
     <AccordionSection>

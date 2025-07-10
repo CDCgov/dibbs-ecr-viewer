@@ -356,35 +356,30 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
       className="accordion-rr"
       descriptor="pregnancy info"
       items={allPregnancyObservations.map((obs) => {
-        const data = [];
+        let data: DisplayDataProps[] = [];
         const { type, observation } = obs;
         if (type === "Pregnancy Status") {
-          data.push({
-            title: "Status",
-            value: evaluateValue(observation, "valueCodeableConcept"),
-          });
+          data = [
+            {
+              title: "Status",
+              value: evaluateValue(observation, "valueCodeableConcept"),
+            },
+            {
+              title: "Effective Date",
+              value: formatDate(evaluateValue(observation, "effectivePeriod")),
+            },
+          ];
         } else if (type === "Postpartum Status") {
-          data.push({
-            title: "Status",
-            value: evaluateValue(observation, "valueCodeableConcept"),
-          });
-
-          if (observation.effectivePeriod) {
-            data.push({
-              title: "Effective Period",
-              value: formatPeriodDate(observation.effectivePeriod),
-            });
-          } else if (observation.effectiveDateTime) {
-            data.push({
+          data = [
+            {
+              title: "Status",
+              value: evaluateValue(observation, "valueCodeableConcept"),
+            },
+            {
               title: "Effective Date",
-              value: formatDate(observation.effectiveDateTime),
-            });
-          } else if (observation.effectiveInstant) {
-            data.push({
-              title: "Effective Date",
-              value: formatDate(observation.effectiveInstant),
-            });
-          }
+              value: formatDate(evaluateValue(observation, "effective")),
+            },
+          ];
         }
 
         const content = (
