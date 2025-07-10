@@ -25,6 +25,12 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     .addColumn("metadata_json", getSql("maxVarchar"), (cb) => cb.notNull())
     .addColumn("checksum", getSql("maxVarchar"), (cb) => cb.notNull())
     .execute();
+
+  await _db.schema
+    .createIndex("audit_log_date_index")
+    .on("audit_log")
+    .column("date")
+    .execute();
 }
 
 /**
@@ -33,5 +39,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
+  await _db.schema.dropIndex("audit_log_date_index").execute();
   await _db.schema.dropTable("audit_log").ifExists().execute();
 }
