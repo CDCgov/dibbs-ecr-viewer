@@ -21,7 +21,6 @@ import {
   listUsers,
   notFoundUnlessAdmin,
   updateUser,
-  updateUserProgramAreas,
 } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
@@ -179,7 +178,11 @@ describe("user service", () => {
 
   it("should create a standard user", async () => {
     // admin created in prior test
-    userId = await createUser({ email: userEmail, userType: "standard" });
+    userId = await createUser({
+      email: userEmail,
+      userType: "standard",
+      programs: [],
+    });
     expect(userId).toMatch(UUID_REGEX);
 
     // see standard user listed
@@ -218,7 +221,11 @@ describe("user service", () => {
 
   it("should update a user", async () => {
     // standard user created in prior test
-    await updateUser(userId!, { name: "Olga Nunes" });
+    await updateUser({
+      uuid: userId!,
+      updates: { name: "Olga Nunes" },
+      programs: [],
+    });
 
     // see standard user listed with name
     const users = await listUsers();
@@ -251,10 +258,12 @@ describe("user service", () => {
 
   it("should update a user's program areas", async () => {
     // standard user created in prior test
-    await updateUser(userId!, { name: "Olga Nunes" });
     const progId = await createProgramArea("Disease", ["123"]);
-
-    await updateUserProgramAreas(userId!, [progId]);
+    await updateUser({
+      uuid: userId!,
+      updates: { name: "Olga Nunes" },
+      programs: [progId],
+    });
 
     const progAreas = await listUserProgramAreas(userId!);
 
