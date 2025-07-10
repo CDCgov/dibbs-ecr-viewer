@@ -188,7 +188,7 @@ export interface FhirPath<K> {
   name: K;
 }
 
-// Make sure the "type" here matches the type-land type descrived in `PathTypes`
+// Make sure the "type" here matches the type-land type described in `PathTypes`
 // "name" field is added programmatically below
 const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientNameList: {
