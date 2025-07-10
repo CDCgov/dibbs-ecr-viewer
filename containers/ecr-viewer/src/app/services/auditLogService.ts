@@ -42,10 +42,9 @@ export const audit = <
       .transaction()
       .execute(async (trx) => {
         const uuid = await fn(params, trx);
-        await createAuditRecord(trx, user, subject, action, {
-          uuid,
-          ...params,
-        });
+        // if we get a uuid result, use that, but don't override a param uuid with undefined
+        const logParams = uuid ? { ...params, uuid } : params;
+        await createAuditRecord(trx, user, subject, action, logParams);
         return uuid;
       });
   };
