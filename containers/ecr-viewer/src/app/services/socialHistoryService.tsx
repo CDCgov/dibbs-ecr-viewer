@@ -119,7 +119,7 @@ export const returnDisabilityStatusTable = (
     },
     {
       columnName: "Dates",
-      infoPath: "disabilityStatusDate",
+      infoPath: "effectiveX",
       applyToValue: formatDateTime,
     },
   ];

@@ -76,7 +76,6 @@ export type PathTypes = {
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
-  disabilityStatusDate: TimeX;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -105,7 +104,6 @@ export type PathTypes = {
   rrDetails: Observation;
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
-  vitalSignDateTime: ValueX;
   resolve: unknown;
   activeProblems: Condition;
   activeProblemsDisplay: string;
@@ -170,6 +168,7 @@ export type PathTypes = {
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
   codeableConceptDisplay: string;
+  effectiveX: TimeX;
   code: CodeableConcept;
   valueX: ValueX;
 };
@@ -328,10 +327,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
   },
-  disabilityStatusDate: {
-    type: "TimeX",
-    path: "effective",
-  },
 
   // eCR Metadata
   eicrIdentifier: {
@@ -449,10 +444,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientVitalSigns: {
     type: "Observation",
     path: "Bundle.entry.resource.Observation.where(category.coding.code = 'vital-signs')",
-  },
-  vitalSignDateTime: {
-    type: "TimeX",
-    path: "effective",
   },
 
   resolve: {
@@ -690,6 +681,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   code: {
     type: "CodeableConcept",
     path: "code",
+  },
+  effectiveX: {
+    type: "TimeX",
+    path: "effective",
   },
   valueX: {
     type: "ValueX",

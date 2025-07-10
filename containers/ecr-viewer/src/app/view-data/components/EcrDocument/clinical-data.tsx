@@ -564,7 +564,7 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
     { columnName: "Result", infoPath: "valueX" },
     {
       columnName: "Date/Time",
-      infoPath: "vitalSignDateTime",
+      infoPath: "effectiveX",
       applyToValue: formatDateTime,
     },
   ];
