@@ -297,15 +297,15 @@ const getObservationDate = (obs: Observation): Date | undefined => {
   if (obs.effectivePeriod) {
     if (obs.effectivePeriod.start) {
       return new Date(obs.effectivePeriod.start);
-    } else if (obs.effectivePeriod.end) {
-      return new Date(obs.effectivePeriod.end);
-    } else if (obs.effectiveDateTime) {
-      return new Date(obs.effectiveDateTime);
-    } else if (obs.effectiveInstant) {
-      return new Date(obs.effectiveInstant);
-    } else {
-      return undefined;
     }
+    if (obs.effectivePeriod.end) {
+      return new Date(obs.effectivePeriod.end);
+    }
+  }
+  if (obs.effectiveDateTime) {
+    return new Date(obs.effectiveDateTime);
+  } else if (obs.effectiveInstant) {
+    return new Date(obs.effectiveInstant);
   }
 };
 
@@ -332,6 +332,10 @@ const sortPregnancyObservations = (
  * @returns An array of evaluated and formatted pregnancy data.
  */
 export const evaluatePregnancyData = (fhirBundle: Bundle) => {
+  const lastMenstrualPeriodObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.lastMenstrualPeriod,
+  );
   const pregnancyStatusObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.pregnancyStatus,
@@ -341,6 +345,9 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
     fhirPathMappings.postpartumStatus,
   );
   const allPregnancyObservations = [
+    ...lastMenstrualPeriodObservations.map((ob) => {
+      return { type: "Last Menstrual Period", observation: ob };
+    }),
     ...pregnancyStatusObservations.map((ob) => {
       return { type: "Pregnancy Status", observation: ob };
     }),
@@ -358,7 +365,16 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
       items={allPregnancyObservations.map((obs) => {
         let data: DisplayDataProps[] = [];
         const { type, observation } = obs;
-        if (type === "Pregnancy Status") {
+        if (type === "Last Menstrual Period") {
+          data = [
+            {
+              title: "Last Menstrual Period",
+              value: formatDate(
+                evaluateValue(observation, fhirPathMappings.effectiveX),
+              ),
+            },
+          ];
+        } else if (type === "Pregnancy Status") {
           data = [
             {
               title: "Status",
@@ -377,7 +393,9 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
             },
             {
               title: "Effective Date",
-              value: formatDate(evaluateValue(observation, "effective")),
+              value: formatDate(
+                evaluateValue(observation, fhirPathMappings.effectiveX),
+              ),
             },
           ];
         }

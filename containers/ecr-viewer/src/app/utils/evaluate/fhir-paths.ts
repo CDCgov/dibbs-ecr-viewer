@@ -72,6 +72,7 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
+  lastMenstrualPeriod: Observation;
   pregnancyStatus: Observation;
   postpartumStatus: Observation;
   patientNationality: ValueX;
@@ -178,6 +179,8 @@ export type PathTypes = {
   travelHistoryLocation: string;
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
+  effectiveX: TimeX;
+  valueX: ValueX;
 };
 
 export type FhirPathKeys = keyof PathTypes;
@@ -344,11 +347,14 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Pregnancy Data
+  lastMenstrualPeriod: {
+    type: "Observation",
+    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
+  },
   pregnancyStatus: {
     type: "Observation",
     path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation')",
   },
-
   postpartumStatus: {
     type: "Observation",
     path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '249197004'))",
@@ -717,6 +723,16 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   stampedImmunizations: {
     type: "Immunization",
     path: "entry.resource.where(extension('https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code').valueCoding.code = %snomedCode and resourceType = 'Immunization')",
+  },
+
+  // Generic Observation
+  valueX: {
+    type: "ValueX",
+    path: "value",
+  },
+  effectiveX: {
+    type: "TimeX",
+    path: "effective",
   },
 };
 
