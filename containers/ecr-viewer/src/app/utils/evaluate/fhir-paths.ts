@@ -192,64 +192,64 @@ export interface FhirPath<K> {
 const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientNameList: {
     type: "HumanName",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').name",
+    path: "Bundle.entry.resource.Patient.name",
   },
   patientAddressList: {
     type: "Address",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').address",
+    path: "Bundle.entry.resource.Patient.address",
   },
   patientTelecom: {
     type: "ContactPoint",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').telecom",
+    path: "Bundle.entry.resource.Patient.telecom",
   },
   patientCounty: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').address.county",
+    path: "Bundle.entry.resource.Patient.address.county",
   },
   patientCountry: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').address.country",
+    path: "Bundle.entry.resource.Patient.address.country",
   },
 
   patientIds: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
+    path: "Bundle.entry.resource.Patient.identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
   },
   patientDOB: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').birthDate",
+    path: "Bundle.entry.resource.Patient.birthDate",
   },
   patientVitalStatus: {
     type: "boolean",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').deceasedBoolean",
+    path: "Bundle.entry.resource.Patient.deceasedBoolean",
   },
   patientDOD: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').deceasedDate",
+    path: "Bundle.entry.resource.Patient.deceasedDate",
   },
   patientGender: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').gender",
+    path: "Bundle.entry.resource.Patient.gender",
   },
   patientRace: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'ombCategory').value",
+    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'ombCategory').value",
   },
   patientRaceDetailed: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'detailed').value",
+    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'detailed').value",
   },
   patientEthnicity: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'ombCategory').value",
+    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'ombCategory').value",
   },
   patientEthnicityDetailed: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'detailed').value",
+    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'detailed').value",
   },
   patientCommunication: {
     type: "PatientCommunication",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').communication",
+    path: "Bundle.entry.resource.Patient.communication",
   },
   patientProficiencyExtension: {
     type: "Extension",
@@ -257,81 +257,81 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientTribalAffiliation: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url = 'TribeName').value",
+    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url = 'TribeName').value",
   },
   patientEmergencyContact: {
     type: "PatientContact",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').contact",
+    path: "Bundle.entry.resource.Patient.contact",
   },
   patientGuardian: {
     type: "RelatedPerson",
-    path: "Bundle.entry.resource.where(resourceType = 'RelatedPerson')",
+    path: "Bundle.entry.resource.RelatedPerson",
   },
 
   // Social History
   patientOccupation: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork')",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork')",
   },
   patientOccupationHistory: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob')",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob')",
   },
   patientEmploymentStatus: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '74165-2')",
+    path: "Bundle.entry.resource.Observation.where(code.coding.code = '74165-2')",
   },
   patientTobaccoUse: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '72166-2').where(category.coding.code = 'social-history').value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.code = '72166-2').where(category.coding.code = 'social-history').value",
   },
   patientHomelessStatus: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '75274-1').where(category.coding.code = 'social-history').value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.code = '75274-1').where(category.coding.code = 'social-history').value",
   },
   patientPregnancyStatus: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').value",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').value",
   },
   patientAlcoholUse: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '11331-6' and system = 'http://loinc.org')).value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.where(code = '11331-6' and system = 'http://loinc.org')).value",
   },
   patientAlcoholIntake: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '74013-4' and system = 'http://loinc.org')).value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.where(code = '74013-4' and system = 'http://loinc.org')).value",
   },
   patientAlcoholComment: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.display = 'Alcohol Comment').value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.display = 'Alcohol Comment').value",
   },
   patientSexualOrientation: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.code = '76690-7').value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.code = '76690-7').value",
   },
   patientGenderIdentity: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
+    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
   },
   patientReligion: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/StructureDefinition/patient-religion').value",
+    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/StructureDefinition/patient-religion').value",
   },
   patientMaritalStatus: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Patient').maritalStatus",
+    path: "Bundle.entry.resource.Patient.maritalStatus",
   },
   patientNationality: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).value",
   },
   patientCountryResidence: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).value",
+    path: "Bundle.entry.resource.Observation.where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).value",
   },
   patientDisabilityStatus: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
   },
   disabilityStatusQuestion: {
     type: "string",
@@ -349,62 +349,62 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // eCR Metadata
   eicrIdentifier: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').id",
+    path: "Bundle.entry.resource.Composition.id",
   },
   eicrReleaseVersion: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').extension.where(url = 'https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').value",
+    path: "Bundle.entry.resource.Composition.extension.where(url = 'https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').value",
   },
   eicrCustodianRef: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').custodian.reference",
+    path: "Bundle.entry.resource.Composition.custodian.reference",
   },
   dateTimeEcrCreated: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').date",
+    path: "Bundle.entry.resource.Composition.date",
   },
   ehrSoftware: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Device').where(property.type.coding.code = 'software').version.value",
+    path: "Bundle.entry.resource.Device.where(property.type.coding.code = 'software').version.value",
   },
   ehrManufacturerModel: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Device').where(property.type.coding.code = 'software').manufacturer",
+    path: "Bundle.entry.resource.Device.where(property.type.coding.code = 'software').manufacturer",
   },
   eICRProcessingStatus: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation').code.coding.code",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation').code.coding.code",
   },
   eICRProcessingStatusReason: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-reason-observation')",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-reason-observation')",
   },
   compositionAuthorRefs: {
     type: "Reference",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').author",
+    path: "Bundle.entry.resource.Composition.author",
   },
 
   // Encounter Info
   encounterPeriod: {
     type: "Period",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').period",
+    path: "Bundle.entry.resource.Encounter.period",
   },
   encounterDiagnosis: {
     type: "EncounterDiagnosis",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').diagnosis",
+    path: "Bundle.entry.resource.Encounter.diagnosis",
   },
   encounterType: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').class.display",
+    path: "Bundle.entry.resource.Encounter.class.display",
   },
   encounterID: {
     type: "Identifier",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').identifier",
+    path: "Bundle.entry.resource.Encounter.identifier",
   },
 
   hospitalEncounterDiagnosisRef: {
     type: "Reference",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = %code).entry",
+    path: "Bundle.entry.resource.Composition.section.where(code.coding.code = %code).entry",
   },
 
   conditionCode: {
@@ -418,31 +418,31 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   facilityContact: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Location').telecom.where(system = 'phone').value",
+    path: "Bundle.entry.resource.Location.telecom.where(system = 'phone').value",
   },
   facilityContactAddress: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').serviceProvider.reference",
+    path: "Bundle.entry.resource.Encounter.serviceProvider.reference",
   },
   facilityLocation: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').location.location.reference",
+    path: "Bundle.entry.resource.Encounter.location.location.reference",
   },
   facilityName: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').location.location.display",
+    path: "Bundle.entry.resource.Encounter.location.location.display",
   },
   facilityAddress: {
     type: "Address",
-    path: "Bundle.entry.resource.where(resourceType = 'Location').address",
+    path: "Bundle.entry.resource.Location.address",
   },
   facilityType: {
     type: "ValueX",
-    path: "Bundle.entry.resource.where(resourceType = 'Encounter').location.extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
+    path: "Bundle.entry.resource.Encounter.location.extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
   },
   compositionEncounterRef: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
+    path: "Bundle.entry.resource.Composition.encounter.reference",
   },
   encounterAttendingRefs: {
     type: "EncounterParticipant",
@@ -461,7 +461,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Vitals
   patientVitalSigns: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(category.coding.code = 'vital-signs')",
+    path: "Bundle.entry.resource.Observation.where(category.coding.code = 'vital-signs')",
   },
   vitalSignType: {
     type: "CodeableConcept",
@@ -488,7 +488,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   activeProblems: {
     type: "Condition",
-    path: "Bundle.entry.resource.where(resourceType = 'Condition').where(category.coding.code = 'problem-item-list')",
+    path: "Bundle.entry.resource.Condition.where(category.coding.code = 'problem-item-list')",
   },
   activeProblemsDisplay: {
     type: "string",
@@ -503,11 +503,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   activeProblemsComments: { type: "string", path: "Condition.note.text" },
   historyOfPresentIllness: {
     type: "string",
-    path: "Bundle.entry.resource.where(resourceType = 'Composition').section.where(code.coding.code = '10164-2').text.`div`",
+    path: "Bundle.entry.resource.Composition.section.where(code.coding.code = '10164-2').text.`div`",
   },
   emergencyOutbreakInfo: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information')",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information')",
   },
 
   // Treatment Details
@@ -517,7 +517,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   plannedProcedures: {
     type: "CarePlanActivity",
-    path: "Bundle.entry.resource.where(resourceType = 'CarePlan').activity",
+    path: "Bundle.entry.resource.CarePlan.activity",
   },
   plannedProcedureName: {
     type: "string",
@@ -541,7 +541,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // CareTeam
   careTeamParticipants: {
     type: "CareTeamParticipant",
-    path: "Bundle.entry.resource.where(resourceType = 'CareTeam').participant",
+    path: "Bundle.entry.resource.CareTeam.participant",
   },
   careTeamParticipantMemberName: { type: "string", path: "member.name" },
   careTeamParticipantRole: { type: "string", path: "role.text" },
@@ -554,7 +554,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Immunization Info
   immunizations: {
     type: "Immunization",
-    path: "Bundle.entry.resource.where(resourceType = 'Immunization')",
+    path: "Bundle.entry.resource.Immunization",
   },
   immunizationsName: {
     type: "string",
@@ -578,7 +578,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // === Procedure ===
   procedures: {
     type: "Procedure",
-    path: "Bundle.entry.resource.where(resourceType = 'Procedure')",
+    path: "Bundle.entry.resource.Procedure",
   },
   procedureHistoryRefs: {
     type: "Reference",
@@ -627,7 +627,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // === Lab Info ===
   diagnosticReports: {
     type: "DiagnosticReport",
-    path: "Bundle.entry.resource.where(resourceType = 'DiagnosticReport')",
+    path: "Bundle.entry.resource.DiagnosticReport",
   },
   diagnosticReportStatus: {
     type: "string",
@@ -635,7 +635,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   observations: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation')",
+    path: "Bundle.entry.resource.Observation",
   },
   labResultDiv: {
     type: "string",
@@ -686,13 +686,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Organization
   organizations: {
     type: "Organization",
-    path: "Bundle.entry.resource.where(resourceType = 'Organization')",
+    path: "Bundle.entry.resource.Organization",
   },
 
   // Travel History
   patientTravelHistory: {
     type: "Observation",
-    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-travel-history')",
+    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-travel-history')",
   },
   travelHistoryStartDate: { type: "string", path: "effectivePeriod.start" },
   travelHistoryEndDate: { type: "string", path: "effectivePeriod.end" },
