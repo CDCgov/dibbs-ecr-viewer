@@ -49,6 +49,6 @@ export const getLastAuditLog = async (): Promise<AuditLog> => {
     .selectFrom("audit_log")
     .selectAll()
     .orderBy("date desc")
-    .limit(1)
+    .fetch(1)
     .executeTakeFirstOrThrow();
 };
