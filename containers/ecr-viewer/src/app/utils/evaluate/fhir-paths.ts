@@ -480,8 +480,8 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "value",
   },
   vitalSignDateTime: {
-    type: "ValueX",
-    path: "effectiveDateTime",
+    type: "TimeX",
+    path: "effective",
   },
 
   resolve: {

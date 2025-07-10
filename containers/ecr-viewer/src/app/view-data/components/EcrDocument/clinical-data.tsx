@@ -164,8 +164,9 @@ const evaluateAdministeredMedication = (
     evaluateReference<MedicationAdministration>(fhirBundle, ref),
   );
 
-  return administeredMedications.reduce<AdministeredMedicationTableData[]>(
-    (data, medicationAdministration) => {
+  return administeredMedications
+    .filter(notEmpty)
+    .map((medicationAdministration) => {
       let medication: Medication | undefined;
       if (medicationAdministration?.medicationReference?.reference) {
         medication = evaluateReference(
@@ -174,16 +175,13 @@ const evaluateAdministeredMedication = (
         );
       }
 
-      data.push({
+      return {
         date:
           medicationAdministration?.effectiveDateTime ??
           medicationAdministration?.effectivePeriod?.start,
         name: formatCodeableConcept(medication?.code),
-      });
-      return data;
-    },
-    [],
-  );
+      };
+    });
 };
 
 type ModifiedCareTeamParticipant = Omit<
