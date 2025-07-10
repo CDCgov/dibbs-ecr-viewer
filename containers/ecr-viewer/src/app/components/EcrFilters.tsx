@@ -125,7 +125,7 @@ const FilterReportableConditions = ({
       icon={Coronavirus}
       tag={
         Object.keys(filterConditions).filter(
-          (key) => filterConditions[key] === true,
+          (key) => filterConditions[key] === true
         ).length || "0"
       }
       submitHandler={() => {
@@ -140,7 +140,9 @@ const FilterReportableConditions = ({
           onToggle={handleSelectAll}
           isAllSelected={isAllSelected}
         />
-        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        {allConditions.length > 0 && (
+          <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        )}
         {/* Filter Conditions checkboxes */}
         <CheckboxOptions
           groupName="condition"
