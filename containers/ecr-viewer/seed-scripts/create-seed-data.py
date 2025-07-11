@@ -48,8 +48,8 @@ def _process_files():
         data={
             "client_id": os.getenv("AUTH_CLIENT_ID"),
             "client_secret": os.getenv("AUTH_CLIENT_SECRET"),
-            "username": os.getenv("AUTH_USER"),
-            "password": os.getenv("AUTH_PASSWORD"),
+            "username": os.getenv("AUTH_ADMIN_USER"),
+            "password": os.getenv("AUTH_ADMIN_PASSWORD"),
             "grant_type": "password",
             "scope": "openid email profile",
         },

@@ -22,15 +22,14 @@ test.describe("auth", () => {
   test("should require a login on main page even if valid auth token provided", async ({
     page,
   }) => {
-    await logIn(page, `/ecr-viewer?${nbsAuthParam}`);
+    await logIn(page, { url: `/ecr-viewer?${nbsAuthParam}` });
   });
 
   test("should require a login on view-data page", async ({ page }) => {
-    await logIn(
-      page,
-      "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
-      "Facility Details",
-    );
+    await logIn(page, {
+      url: "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+      expectedHeading: "Facility Details",
+    });
 
     // via regular auth, should be able to navigate to library
     await expect(page.getByText("Back to eCR Library")).toBeVisible();
@@ -42,11 +41,10 @@ test.describe("auth", () => {
   test("should require a login on view-data page when invalid token provided", async ({
     page,
   }) => {
-    await logIn(
-      page,
-      "/ecr-viewer/view-data?id=1234&auth=hi",
-      "eCR retrieval failed",
-    );
+    await logIn(page, {
+      url: "/ecr-viewer/view-data?id=1234&auth=hi",
+      expectedHeading: "eCR retrieval failed",
+    });
     await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=1234",
     );

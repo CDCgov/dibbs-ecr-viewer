@@ -1,14 +1,16 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import { Page, expect, APIRequestContext } from "@playwright/test";
-/**
- * Helper to lot into via keycloak and go to the viewer page
- * @param page page
- */
-const logInToKeycloak = async (page: Page) => {
-  await page
-    .getByRole("textbox", { name: "username" })
-    .fill("ecr-viewer-admin");
-  await page.getByRole("textbox", { name: "password" }).fill("pw");
+
+type UserType = "ADMIN" | "STANDARD";
+
+// Helper to lot into via keycloak and go to the viewer page
+const logInToKeycloak = async (
+  page: Page,
+  userName: string,
+  password: string,
+) => {
+  await page.getByRole("textbox", { name: "username" }).fill(userName!);
+  await page.getByRole("textbox", { name: "password" }).fill(password!);
   await page.getByRole("button", { name: "Sign in" }).click();
 };
 
@@ -28,11 +30,8 @@ const setSessionStorage = async (page: Page, tokens: any) => {
 };
 
 let token: any;
-/**
- * Helper to lot into via Azure AD and go to the viewer page
- * @param page page
- */
-const logInToAd = async (page: Page) => {
+// Helper to lot into via Azure AD and go to the viewer page
+const logInToAd = async (page: Page, userName: string, password: string) => {
   if (token) {
     await setSessionStorage(page, token);
   }
@@ -62,14 +61,27 @@ const logInToAd = async (page: Page) => {
 /**
  * Helper to lot into ecr viewer
  * @param page page
- * @param url optionally, the url to go to to force login
- * @param expectHeading optionally, the heading text to expect upon successful login
+ * @param config config object
+ * @param config.url optionally, the url to go to to force login
+ * @param config.expectedHeading optionally, the heading text to expect upon successful login
+ * @param config.userType optionally, the user type to log in with. Default "ADMIN"
  */
 export const logIn = async (
   page: Page,
-  url = "/ecr-viewer/",
-  expectHeading = "eCR library",
+  config: {
+    url?: string;
+    expectedHeading?: string;
+    userType?: UserType;
+  } = {},
 ) => {
+  const {
+    url = "/ecr-viewer/",
+    expectedHeading = "eCR library",
+    userType = "ADMIN",
+  } = config;
+  const userName = process.env[`AUTH_${userType}_USER`];
+  const password = process.env[`AUTH_${userType}_PASSWORD`];
+
   await page.goto(url);
 
   // Not using NBS auth, strip out search param token
@@ -85,17 +97,17 @@ export const logIn = async (
 
   switch (process.env.AUTH_PROVIDER) {
     case "keycloak": {
-      await logInToKeycloak(page);
+      await logInToKeycloak(page, userName!, password!);
       break;
     }
     case "ad": {
-      await logInToAd(page);
+      await logInToAd(page, userName!, password!);
       break;
     }
   }
 
   await expect(
-    page.getByRole("heading", { name: expectHeading }).first(),
+    page.getByRole("heading", { name: expectedHeading }).first(),
   ).toBeVisible();
 };
 
@@ -113,8 +125,8 @@ export const getKeycloakToken = async (request: APIRequestContext) => {
   const form = new FormData();
   form.append("client_id", process.env.AUTH_CLIENT_ID!);
   form.append("client_secret", process.env.AUTH_CLIENT_SECRET!);
-  form.append("username", process.env.AUTH_USER!);
-  form.append("password", process.env.AUTH_PASSWORD!);
+  form.append("username", process.env.AUTH_ADMIN_USER!);
+  form.append("password", process.env.AUTH_ADMIN_PASSWORD!);
   form.append("grant_type", "password");
   form.append("scope", "openid email profile");
   const resp = await request.post(

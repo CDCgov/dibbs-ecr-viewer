@@ -1,11 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, Page } from "@playwright/test";
 
-import { logInToKeycloak } from "./utils";
+import { logIn } from "../utils";
 
 test.describe("user management page", () => {
   test("should pass accessiblity", async ({ page }) => {
-    await logInToKeycloak({ page });
+    await logIn(page);
 
     await page.goto("/ecr-viewer/admin/user");
 
@@ -62,7 +62,7 @@ test.describe("user management page", () => {
     page,
     browserName,
   }) => {
-    await logInToKeycloak({ page });
+    await logIn(page);
 
     // Create programs
     const program1 = await createRandomProgramArea(page);
@@ -151,7 +151,7 @@ test.describe("user management page", () => {
   });
 
   test("filter by user type or program area", async ({ page, browserName }) => {
-    await logInToKeycloak({ page });
+    await logIn(page);
 
     // Create programs
     const program1 = await createRandomProgramArea(page);
@@ -271,7 +271,7 @@ test.describe("user management page", () => {
   });
 
   test("it should not show to non-admin", async ({ page }) => {
-    await logInToKeycloak({ page }, undefined, "ecr-viewer-standard");
+    await logIn(page, { userType: "STANDARD" });
     await page.goto("/ecr-viewer/admin/user");
 
     await expect(

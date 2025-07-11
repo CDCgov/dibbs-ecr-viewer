@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { logInToKeycloak } from "./dual/utils";
+import { logIn } from "./utils";
 
 // This test is not really a test, but more of a seed script to add a
 // standard user with access to the covid program area. It is run as part of
@@ -8,7 +8,7 @@ import { logInToKeycloak } from "./dual/utils";
 
 test("seed standard user and covid program", async ({ page }) => {
   test.setTimeout(60000); // keycloak is slow
-  await logInToKeycloak({ page });
+  await logIn(page);
 
   await page.goto("/ecr-viewer/admin/program");
 
