@@ -14,7 +14,12 @@ import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { makePlural, toKebabCase, toTitleCase } from "@/app/utils/format-utils";
+import {
+  makePlural,
+  stringSort,
+  toKebabCase,
+  toTitleCase,
+} from "@/app/utils/format-utils";
 import { AccordionItem } from "@/app/view-data/types";
 
 export type UserType = "admin" | "standard";
@@ -62,7 +67,7 @@ export const UserForm = ({
     initValues.userType || "standard",
   );
   const [programs, setPrograms] = useState(
-    [...initValues.programs].sort((a, b) => (a.name < b.name ? -1 : 1)),
+    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name)),
   );
 
   const { createToast } = React.useContext(ToastContext);

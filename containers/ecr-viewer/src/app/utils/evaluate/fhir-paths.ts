@@ -73,6 +73,12 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
+  patientNationality: ValueX;
+  patientCountryResidence: ValueX;
+  patientDisabilityStatus: Observation;
+  disabilityStatusQuestion: string;
+  disabilityStatusValue: ValueX;
+  disabilityStatusDate: TimeX;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -315,6 +321,30 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "Bundle.entry.resource.where(resourceType = 'Patient').maritalStatus",
   },
+  patientNationality: {
+    type: "ValueX",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).value",
+  },
+  patientCountryResidence: {
+    type: "ValueX",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).value",
+  },
+  patientDisabilityStatus: {
+    type: "Observation",
+    path: "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+  },
+  disabilityStatusQuestion: {
+    type: "string",
+    path: "code.coding.display",
+  },
+  disabilityStatusValue: {
+    type: "ValueX",
+    path: "value",
+  },
+  disabilityStatusDate: {
+    type: "TimeX",
+    path: "effective",
+  },
 
   // eCR Metadata
   eicrIdentifier: {
@@ -442,8 +472,8 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "value",
   },
   vitalSignDateTime: {
-    type: "ValueX",
-    path: "effectiveDateTime",
+    type: "TimeX",
+    path: "effective",
   },
 
   resolve: {

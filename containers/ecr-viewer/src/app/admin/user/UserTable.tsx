@@ -24,7 +24,11 @@ import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
-import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
+import {
+  makePlural,
+  stringSort,
+  toSentenceCase,
+} from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 const USER_TYPE_OPTIONS: Record<string, string> = {
@@ -55,7 +59,7 @@ export const UserTable = ({
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const sortedProgramAreas = [...programAreas].sort((a, b) =>
-    a.name.localeCompare(b.name),
+    stringSort(a.name, b.name),
   );
   const initFilterProgramAreaState: FilterProgramAreasType = {
     [ALL_PROGRAM_AREAS_OPTION]: true,
@@ -132,7 +136,7 @@ export const UserTable = ({
           ? "All program areas"
           : pas
               .map(({ name }) => name)
-              .sort()
+              .sort(stringSort)
               .join(", ") || "No program areas assigned",
     },
     {
@@ -301,7 +305,6 @@ const FilterByProgramArea = ({
           onChange={handleCheckboxChange}
         />
       </div>
-      <div className="border-top-1px border-base-lighter margin-x-neg-105"></div>
     </Filter>
   );
 };
