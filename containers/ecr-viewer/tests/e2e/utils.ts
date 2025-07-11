@@ -4,7 +4,7 @@ import { Page, expect, APIRequestContext } from "@playwright/test";
 type UserType = "ADMIN" | "STANDARD";
 
 /**
- * Helper to lot into ecr viewer
+ * Helper to log into ecr viewer
  * @param page page
  * @param config config object
  * @param config.url optionally, the url to go to to force login
@@ -57,7 +57,7 @@ export const logIn = async (
   ).toBeVisible();
 };
 
-// Helper to lot into via keycloak and go to the viewer page
+// Helper to log into via keycloak and go to the viewer page
 const logInToKeycloak = async (
   page: Page,
   userName: string,
@@ -68,7 +68,7 @@ const logInToKeycloak = async (
   await page.getByRole("button", { name: "Sign in" }).click();
 };
 
-// Helper to lot into via Azure AD and go to the viewer page
+// Helper to log into via Azure AD and go to the viewer page
 const logInToAd = async (page: Page, userName: string, password: string) => {
   await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
   await page.getByRole("button", { name: "Next" }).click();

@@ -52,7 +52,7 @@ test("seed standard user and covid program", async ({ page }) => {
       page.getByRole("heading", { name: "Create user" }),
     ).toBeVisible();
 
-    await page.getByLabel("Email").fill("ecr-viewer@standard.com");
+    await page.getByLabel("Email").fill(process.env.AUTH_STANDARD_USER!);
 
     const adminRadio = page.getByLabel("Standard");
     await adminRadio.scrollIntoViewIfNeeded();
