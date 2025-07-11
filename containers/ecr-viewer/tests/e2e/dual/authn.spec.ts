@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-import { getKeycloakToken, logIn, nbsAuthParam } from "../utils";
+import { getToken, logIn, nbsAuthParam } from "../utils";
 
 test.describe("auth", () => {
   test("should require a login on main page and allow sign out", async ({
@@ -88,7 +88,7 @@ test.describe("auth", () => {
   test("should authenticate on api route if IDP auth token header provided", async ({
     request,
   }) => {
-    const token = await getKeycloakToken(request);
+    const token = await getToken(request);
     const resp = await request.post(`/ecr-viewer/api/migrate-db`, {
       headers: { Authorization: `Bearer ${token}` },
     });

@@ -3,61 +3,6 @@ import { Page, expect, APIRequestContext } from "@playwright/test";
 
 type UserType = "ADMIN" | "STANDARD";
 
-// Helper to lot into via keycloak and go to the viewer page
-const logInToKeycloak = async (
-  page: Page,
-  userName: string,
-  password: string,
-) => {
-  await page.getByRole("textbox", { name: "username" }).fill(userName!);
-  await page.getByRole("textbox", { name: "password" }).fill(password!);
-  await page.getByRole("button", { name: "Sign in" }).click();
-};
-
-// Stores the token in the session storage and reloads the page
-const setSessionStorage = async (page: Page, tokens: any) => {
-  const cacheKeys = Object.keys(tokens);
-  for (const key of cacheKeys) {
-    const value = JSON.stringify(tokens[key]);
-    await page.context().addInitScript(
-      (arr) => {
-        window.sessionStorage.setItem(arr[0], arr[1]);
-      },
-      [key, value],
-    );
-  }
-  await page.reload();
-};
-
-let token: any;
-// Helper to lot into via Azure AD and go to the viewer page
-const logInToAd = async (page: Page, userName: string, password: string) => {
-  if (token) {
-    await setSessionStorage(page, token);
-  }
-  process.env.AZURE_CLIENT_ID = process.env.AUTH_CLIENT_ID;
-  process.env.AZURE_TENANT_ID = process.env.AUTH_ISSUER;
-  process.env.AZURE_CLIENT_SECRET = process.env.AUTH_CLIENT_SECRET;
-  const tokenCredential = new DefaultAzureCredential();
-  token = await tokenCredential.getToken(".default");
-  console.log({ token });
-
-  // const pca = new PublicClientApplication({auth: {
-  //   clientId: process.env.AUTH_CLIENT_ID!,
-  //   authority: `https://login.microsoftonline.com/${process.env.AUTH_ISSUER}`
-  // }});
-
-  // const usernamePasswordRequest = {
-  //   scopes: ['user.read', 'User.ReadBasic.All'],
-  //   username: 'b06be871-38e8-4ba7-bd74-01e91635629c',
-  //   password: process.env.AUTH_CLIENT_SECRET!,
-  // };
-  // await pca.acquireTokenByUsernamePassword(usernamePasswordRequest);
-  // tokenCache = pca.getTokenCache().getKVStore();
-
-  await setSessionStorage(page, token);
-};
-
 /**
  * Helper to lot into ecr viewer
  * @param page page
@@ -79,8 +24,6 @@ export const logIn = async (
     expectedHeading = "eCR library",
     userType = "ADMIN",
   } = config;
-  const userName = process.env[`AUTH_${userType}_USER`];
-  const password = process.env[`AUTH_${userType}_PASSWORD`];
 
   await page.goto(url);
 
@@ -94,6 +37,9 @@ export const logIn = async (
   );
 
   await page.getByRole("button").click();
+
+  const userName = process.env[`AUTH_${userType}_USER`];
+  const password = process.env[`AUTH_${userType}_PASSWORD`];
 
   switch (process.env.AUTH_PROVIDER) {
     case "keycloak": {
@@ -111,17 +57,45 @@ export const logIn = async (
   ).toBeVisible();
 };
 
+// Helper to lot into via keycloak and go to the viewer page
+const logInToKeycloak = async (
+  page: Page,
+  userName: string,
+  password: string,
+) => {
+  await page.getByRole("textbox", { name: "username" }).fill(userName!);
+  await page.getByRole("textbox", { name: "password" }).fill(password!);
+  await page.getByRole("button", { name: "Sign in" }).click();
+};
+
+// Helper to lot into via Azure AD and go to the viewer page
+const logInToAd = async (page: Page, userName: string, password: string) => {
+  await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
+  await page.getByRole("button", { name: "Next" }).click();
+
+  await page.getByRole("textbox", { name: "password" }).fill(password!);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.getByRole("button", { name: "No" }).click();
+};
+
 /**
  * non-expiring auth search param for testing local nbs auth
  */
 export const nbsAuthParam = `auth=${process.env.DUMMY_NBS_JWT}`;
 
-/**
- * Get an auth token from keycloak
- * @param request api request context from test
- * @returns token
- */
-export const getKeycloakToken = async (request: APIRequestContext) => {
+export const getToken = async (request: APIRequestContext) => {
+  switch (process.env.AUTH_PROVIDER) {
+    case "keycloak": {
+      return await getKeycloakToken(request);
+    }
+    case "ad": {
+      return await getAdToken();
+    }
+  }
+};
+
+// Helper to get an auth token from keycloak
+const getKeycloakToken = async (request: APIRequestContext) => {
   const form = new FormData();
   form.append("client_id", process.env.AUTH_CLIENT_ID!);
   form.append("client_secret", process.env.AUTH_CLIENT_SECRET!);
@@ -135,4 +109,16 @@ export const getKeycloakToken = async (request: APIRequestContext) => {
   );
   const body = await resp.json();
   return body.access_token;
+};
+
+// Helper to get azure auth token
+const getAdToken = async () => {
+  process.env.AZURE_CLIENT_ID = process.env.AUTH_CLIENT_ID;
+  process.env.AZURE_TENANT_ID = process.env.AUTH_ISSUER;
+  process.env.AZURE_CLIENT_SECRET = process.env.AUTH_CLIENT_SECRET;
+  const tokenCredential = new DefaultAzureCredential();
+  const tokenInfo = await tokenCredential.getToken(
+    `${process.env.AUTH_CLIENT_ID}/.default`,
+  );
+  return tokenInfo.token;
 };

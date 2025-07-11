@@ -6,6 +6,7 @@ import zipfile
 
 import grequests
 import requests as rqsts
+from azure.identity import DefaultAzureCredential
 
 MIGRATION_URL = "http://host.docker.internal:3000/ecr-viewer/api/migrate-db"
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
@@ -43,19 +44,29 @@ def _process_files():
     subfolders = subfolders_raw.split(",")
 
     print("Requesting API token...")
-    token_req = rqsts.post(
-        f"{os.getenv('AUTH_ISSUER').replace('localhost', 'host.docker.internal')}/protocol/openid-connect/token",
-        data={
-            "client_id": os.getenv("AUTH_CLIENT_ID"),
-            "client_secret": os.getenv("AUTH_CLIENT_SECRET"),
-            "username": os.getenv("AUTH_ADMIN_USER"),
-            "password": os.getenv("AUTH_ADMIN_PASSWORD"),
-            "grant_type": "password",
-            "scope": "openid email profile",
-        },
-    )
-    assert token_req.status_code == 200, f"{token_req.json()}"
-    token = token_req.json()["access_token"]
+    if os.getenv("AUTH_PROVIDER") == "keycloak":
+        token_req = rqsts.post(
+            f"{os.getenv('AUTH_ISSUER').replace('localhost', 'host.docker.internal')}/protocol/openid-connect/token",
+            data={
+                "client_id": os.getenv("AUTH_CLIENT_ID"),
+                "client_secret": os.getenv("AUTH_CLIENT_SECRET"),
+                "username": os.getenv("AUTH_ADMIN_USER"),
+                "password": os.getenv("AUTH_ADMIN_PASSWORD"),
+                "grant_type": "password",
+                "scope": "openid email profile",
+            },
+        )
+        assert token_req.status_code == 200, f"{token_req.json()}"
+        token = token_req.json()["access_token"]
+    elif os.getenv("AUTH_PROVIDER") == "ad":
+        os.environ["AZURE_CLIENT_ID"] = os.getenv("AUTH_CLIENT_ID")
+        os.environ["AZURE_TENANT_ID"] = os.getenv("AUTH_ISSUER")
+        os.environ["AZURE_CLIENT_SECRET"] = os.getenv("AUTH_CLIENT_SECRET")
+        default_credential = DefaultAzureCredential()
+        token = default_credential.get_token(
+            f"{os.getenv('AUTH_CLIENT_ID')}/.default"
+        ).token
+
     headers = {"Authorization": f"Bearer {token}"}
 
     print("Requesting db migration...")

@@ -133,8 +133,10 @@ jobs:
           sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
           sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_SECRET }}/' .env.local
           sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
-          echo "AZURE_AD_USER=${{ secrets.AZURE_AD_USER }}" >> .env.local
-          echo "AZURE_AD_PASSWORD=${{ secrets.AZURE_AD_PASSWORD }}" >> .env.local
+          sed -i 's/AUTH_ADMIN_USER=.*$/AUTH_ADMIN_USER=${{ secrets.AZURE_ADMIN_USER }}/' .env.local
+          sed -i 's/AUTH_ADMIN_PASSWROD=.*$/AUTH_ADMIN_PASSWROD=${{ secrets.AZURE_ADMIN_PASSWORD }}/' .env.local
+          sed -i 's/AUTH_STANDARD_USER=.*$/AUTH_STANDARD_USER=${{ secrets.AZURE_STANDARD_USER }}/' .env.local
+          sed -i 's/AUTH_STANDARD_PASSWROD=.*$/AUTH_STANDARD_PASSWROD=${{ secrets.AZURE_STANDARD_PASSWORD }}/' .env.local
 
       - name: Set UPLOAD_URL to ${{ matrix.endpoint }}
         working-directory: ./containers/${{env.CONTAINER}}
