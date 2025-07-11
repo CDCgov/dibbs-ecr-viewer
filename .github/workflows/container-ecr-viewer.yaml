@@ -175,7 +175,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-migrations
+          name: playwright-report-migrations-${{ matrix.config }}
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
@@ -213,7 +213,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-${{ matrix.config_name }}
+          name: playwright-report-${{ matrix.config }}
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
@@ -221,41 +221,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: lighthouse-report-${{ matrix.config_name }}
+          name: lighthouse-report-${{ matrix.config }}
           path: containers/${{env.CONTAINER}}/lighthouse/
-          retention-days: 5
-
-      - name: Set CONFIG_NAME to AWS_INTEGRATED
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          sed -i 's/AWS_SQLSERVER_DUAL/AWS_INTEGRATED/' .env.local
-
-      - name: Run local docker and wait for it to be ready
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
-
-      - name: Run Playwright tests - Integrated
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:integrated
-
-      - name: Get docker logs
-        if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
-        shell: bash
-        run: |
-          echo "Saving $CONTAINER logs"
-          docker compose --profile "*" logs --timestamps &>> e2e-run.log
-
-      - name: Docker down
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: docker compose --profile "*" down
-
-      - name: Upload playwright report - integrated
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report-integrated
-          path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
       - name: Get docker logs
