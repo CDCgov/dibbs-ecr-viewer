@@ -226,19 +226,19 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientRace: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'ombCategory').value",
+    path: "Bundle.entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('ombCategory').value",
   },
   patientRaceDetailed: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension.where(url = 'detailed').value",
+    path: "Bundle.entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('detailed').value",
   },
   patientEthnicity: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'ombCategory').value",
+    path: "Bundle.entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('ombCategory').value",
   },
   patientEthnicityDetailed: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension.where(url = 'detailed').value",
+    path: "Bundle.entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('detailed').value",
   },
   patientCommunication: {
     type: "PatientCommunication",
@@ -246,11 +246,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientProficiencyExtension: {
     type: "Extension",
-    path: "extension.where(url = 'http://hl7.org/fhir/StructureDefinition/patient-proficiency')",
+    path: "extension('http://hl7.org/fhir/StructureDefinition/patient-proficiency')",
   },
   patientTribalAffiliation: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url = 'TribeName').value",
+    path: "Bundle.entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension('TribeName').value",
   },
   patientEmergencyContact: {
     type: "PatientContact",
@@ -304,11 +304,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientGenderIdentity: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
+    path: "Bundle.entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
   },
   patientReligion: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Patient.extension.where(url = 'http://hl7.org/fhir/StructureDefinition/patient-religion').value",
+    path: "Bundle.entry.resource.Patient.extension('http://hl7.org/fhir/StructureDefinition/patient-religion').value",
   },
   patientMaritalStatus: {
     type: "ValueX",
@@ -334,7 +334,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   eicrReleaseVersion: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Composition.extension.where(url = 'https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').value",
+    path: "Bundle.entry.resource.Composition.extension('https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').value",
   },
   eicrCustodianRef: {
     type: "string",
@@ -415,7 +415,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   facilityType: {
     type: "ValueX",
-    path: "Bundle.entry.resource.Encounter.location.extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
+    path: "Bundle.entry.resource.Encounter.location.extension('http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
   },
   compositionEncounterRef: {
     type: "string",
@@ -489,7 +489,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   plannedProcedureOrderedDate: {
     type: "string",
-    path: "extension.where(url = 'dibbs.orderedDate').valueString",
+    path: "extension('dibbs.orderedDate').valueString",
   },
   plannedProcedureScheduledDate: {
     type: "string",
@@ -511,7 +511,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   careTeamParticipantRole: { type: "string", path: "role.text" },
   careTeamParticipantStatus: {
     type: "string",
-    path: "modifierExtension.where(url = 'participant.status').valueString",
+    path: "modifierextension('participant.status').valueString",
   },
   careTeamParticipantPeriod: { type: "string", path: "period.text" },
 
@@ -569,19 +569,19 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   procedureProductRef: { type: "Reference", path: "Procedure.usedReference" },
   procedureMedRef: {
     type: "Reference",
-    path: "Procedure.extension.where(url = 'medicationAdministration').value",
+    path: "Procedure.extension('medicationAdministration').value",
   },
   procedureSpecimen: {
     type: "CodeableConcept",
-    path: "Procedure.extension.where(url = 'specimen').value",
+    path: "Procedure.extension('specimen').value",
   },
   procedureMethod: {
     type: "CodeableConcept",
-    path: "Procedure.extension.where(url = 'http://hl7.org/fhir/StructureDefinition/procedure-method').value | Observation.method",
+    path: "Procedure.extension('http://hl7.org/fhir/StructureDefinition/procedure-method').value | Observation.method",
   },
   procedurePriority: {
     type: "CodeableConcept",
-    path: "Procedure.extension.where(url = 'priorityCode').value",
+    path: "Procedure.extension('priorityCode').value",
   },
 
   // === Lab Info ===
@@ -591,7 +591,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   diagnosticReportStatus: {
     type: "string",
-    path: "iif(extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display.exists(), extension.where(url = 'http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display, status)",
+    path: "iif(extension('http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display.exists(), extension('http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display, status)",
   },
   observations: {
     type: "Observation",
@@ -603,19 +603,19 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   specimenCollectionTime: {
     type: "string",
-    path: "Observation.extension.extension.where(url = 'specimen collection time').valueDateTime",
+    path: "Observation.extension.extension('specimen collection time').valueDateTime",
   },
   specimenReceivedTime: {
     type: "string",
-    path: "Observation.extension.extension.where(url = 'specimen receive time').valueDateTime",
+    path: "Observation.extension.extension('specimen receive time').valueDateTime",
   },
   specimenSource: {
     type: "string",
-    path: "Observation.extension.extension.where(url = 'specimen source').valueString",
+    path: "Observation.extension.extension('specimen source').valueString",
   },
   observationReferenceValue: {
     type: "string",
-    path: "Observation.extension.extension.where(url = 'observation entry reference value').valueString",
+    path: "Observation.extension.extension('observation entry reference value').valueString",
   },
   observationValue: {
     type: "string",
@@ -629,12 +629,12 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   observationNote: { type: "string", path: "note.text" },
   observationOrganismMethod: {
     type: "string",
-    path: "extension.where(url = 'methodCode originalText').valueString",
+    path: "extension('methodCode originalText').valueString",
   },
   observationSusceptibility: { type: "string", path: "valueString" },
   observationResultStatus: {
     type: "string",
-    path: "iif(extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display.exists(), extension.where(url = 'http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display, status)",
+    path: "iif(extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display.exists(), extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display, status)",
   },
 
   // Organization
