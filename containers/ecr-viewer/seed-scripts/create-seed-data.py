@@ -68,6 +68,7 @@ def _process_files():
         ).token
 
     headers = {"Authorization": f"Bearer {token}"}
+    print(f"headers: {headers}")
 
     print("Requesting db migration...")
     rs = rqsts.post(
