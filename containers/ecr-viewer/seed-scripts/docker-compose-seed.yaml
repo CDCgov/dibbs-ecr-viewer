@@ -94,5 +94,6 @@ services:
       - AUTH_ISSUER
       - AUTH_ADMIN_USER
       - AUTH_ADMIN_PASSWORD
+      - DUMMY_NBS_JWT
     extra_hosts:
       - host.docker.internal:host-gateway
