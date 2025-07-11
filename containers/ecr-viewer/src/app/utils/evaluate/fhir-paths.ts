@@ -487,9 +487,12 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "detail.code.coding.display",
   },
+  /**
+   * the shorthand `extension(url)` will only work where there is also a `resourceType`, i.e, a `Resource`. This path is used on `CarePlan.activity` which is merely a `BackboneElement`.
+   */
   plannedProcedureOrderedDate: {
     type: "string",
-    path: "extension('dibbs.orderedDate').valueString",
+    path: "extension.where(url = 'dibbs.orderedDate').valueString",
   },
   plannedProcedureScheduledDate: {
     type: "string",
@@ -627,9 +630,12 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   observationDeviceReference: { type: "string", path: "device.reference" },
   observationNote: { type: "string", path: "note.text" },
+  /**
+   * the shorthand `extension(url)` will only work where there is also a `resourceType`, i.e, a `Resource`. This path is used on `Observation.component` which is merely a `BackboneElement`.
+   */
   observationOrganismMethod: {
     type: "string",
-    path: "extension('methodCode originalText').valueString",
+    path: "extension.where(url = 'methodCode originalText').valueString",
   },
   observationSusceptibility: { type: "string", path: "valueString" },
   observationResultStatus: {
@@ -681,6 +687,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "CodeableConcept",
     path: "code",
   },
+
+  /**
+   * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
+   * the value of the choice element if it is on a resource, e.g. `Observation`. Otherwise it will return an empty
+   * list. For all other non-resource elements you will either specify the full name of the element, e.g.
+   * `valueString`.
+   */
   effectiveX: {
     type: "TimeX",
     path: "effective",
