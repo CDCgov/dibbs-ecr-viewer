@@ -1,14 +1,17 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// for main e2e tests, pick the test dir based on the config
+const testDir =
+  process.env.CONFIG_NAME?.endsWith("DUAL") ||
+  process.env.CONFIG_NAME?.endsWith("NON_INTEGRATED")
+    ? "./tests/e2e/dual"
+    : "./tests/e2e/integrated";
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir:
-    process.env.CONFIG_NAME?.endsWith("DUAL") ||
-    process.env.CONFIG_NAME?.endsWith("NON_INTEGRATED")
-      ? "./tests/e2e/dual"
-      : "./tests/e2e/integrated",
+  testDir: "./tests/e2e", // base test dir
   globalSetup: require.resolve("./tests/e2e/global-setup"),
   globalTeardown: require.resolve("./tests/e2e/global-teardown"),
   /* Run tests in files in parallel */
@@ -36,18 +39,33 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      testDir,
     },
 
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
-      testIgnore: [/lighthouse.spec.ts/, /migrations.spect.ts/],
+      testIgnore: [/lighthouse.spec.ts/],
+      testDir,
     },
 
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
-      testIgnore: [/lighthouse.spec.ts/, /migrations.spect.ts/],
+      testIgnore: [/lighthouse.spec.ts/],
+      testDir,
+    },
+
+    {
+      name: "migrations",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: [/migrations.spec.ts/],
+    },
+
+    {
+      name: "seed",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: [/seed.spec.ts/],
     },
   ],
   webServer: {

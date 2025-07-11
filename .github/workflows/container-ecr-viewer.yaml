@@ -86,7 +86,7 @@ jobs:
           - config: AWS_SQLSERVER_DUAL
             azure_ad: true
             schema: extended
-            endpoint: process-zip
+            endpoint: process-ecr
           - config: AZURE_PG_DUAL
             azure_ad: false
             schema: core
@@ -142,10 +142,6 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           echo "UPLOAD_URL=http://host.docker.internal:3000/ecr-viewer/api/${{ matrix.endpoint }}" >> .env.local
-
-      - name: Run seed data conversion
-        run: npm run convert-seed-data
-        working-directory: ./containers/${{env.CONTAINER}}
 
       - name: Install dependencies
         working-directory: ./containers/${{env.CONTAINER}}

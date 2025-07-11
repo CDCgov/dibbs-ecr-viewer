@@ -20,7 +20,12 @@ const headers = {
   Authorization: `Bearer ${process.env.DUMMY_NBS_JWT}`,
 };
 
+// don't run if no database
 test.describe("migrations", () => {
+  test.skip(
+    !process.env.METADATA_DATABASE_SCHEMA,
+    "No migrations if no metadata db",
+  );
   test.beforeEach(({ page }) => logIn(page));
 
   test("should follow whole flow through up and down", async ({

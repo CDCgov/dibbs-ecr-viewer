@@ -7,6 +7,10 @@ import { logIn } from "./utils";
 // the `convert-seed-data` npm script.
 
 test("seed standard user and covid program", async ({ page }) => {
+  test.skip(
+    !process.env.METADATA_DATABASE_SCHEMA,
+    "No seeding if no metadata db",
+  );
   test.setTimeout(60000); // keycloak is slow
   await logIn(page);
 
