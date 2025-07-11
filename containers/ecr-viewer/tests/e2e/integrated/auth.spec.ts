@@ -57,7 +57,7 @@ test.describe("integrated - nbs auth", () => {
     // This means we got past auth and failed on a bad migration call - this is good
     expect(await resp.json()).toEqual(
       expect.objectContaining({
-        message: "Validation error",
+        message: "No database set up to migrate",
       }),
     );
     expect(resp.ok()).toBeFalsy();
