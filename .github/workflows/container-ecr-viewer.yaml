@@ -87,7 +87,7 @@ jobs:
             azure_ad: true
             schema: extended
             endpoint: process-ecr
-          - config: AZURE_PG_DUAL
+          - config: GCP_PG_DUAL
             azure_ad: false
             schema: core
             endpoint: process-zip

@@ -26,20 +26,12 @@ test.describe("migrations", () => {
     !process.env.METADATA_DATABASE_SCHEMA,
     "No migrations if no metadata db",
   );
-  test.beforeEach(({ page }) => logIn(page));
 
   test("should follow whole flow through up and down", async ({
     page,
     request,
   }) => {
-    await page.goto("/ecr-viewer");
-
-    await expect(
-      page.getByText("eCR Viewer setup is incomplete"),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "eCR Library" }),
-    ).not.toBeVisible();
+    await logIn(page, { expectedHeading: "eCR Viewer setup is incomplete" });
 
     const noSecret = await request.post(`/ecr-viewer/api/migrate-db`, {
       headers,
