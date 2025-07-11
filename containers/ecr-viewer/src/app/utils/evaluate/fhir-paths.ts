@@ -91,7 +91,6 @@ export type PathTypes = {
   encounterID: Identifier;
   hospitalEncounterDiagnosisRef: Reference;
   conditionCode: CodeableConcept;
-  conditionOnsetDateTime: string;
   facilityContact: string;
   facilityContactAddress: string;
   facilityLocation: string;
@@ -108,7 +107,6 @@ export type PathTypes = {
   activeProblems: Condition;
   activeProblemsDisplay: string;
   activeProblemsStatus: string;
-  activeProblemsOnsetDate: string;
   activeProblemsOnsetAge: ValueX;
   activeProblemsComments: string;
   historyOfPresentIllness: string;
@@ -168,6 +166,7 @@ export type PathTypes = {
   travelHistoryPurpose: string;
   stampedImmunizations: Immunization;
   codeableConceptDisplay: string;
+  conditionOnsetDate: string;
   effectiveX: TimeX;
   code: CodeableConcept;
   valueX: ValueX;
@@ -393,10 +392,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "CodeableConcept",
     path: "Condition.code",
   },
-  conditionOnsetDateTime: {
-    type: "string",
-    path: "Condition.onsetDateTime",
-  },
 
   facilityContact: {
     type: "string",
@@ -468,7 +463,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Condition.clinicalStatus.coding.display",
   },
-  activeProblemsOnsetDate: { type: "string", path: "Condition.onsetDateTime" },
   activeProblemsOnsetAge: { type: "ValueX", path: "Condition.onsetAge.value" },
   activeProblemsComments: { type: "string", path: "Condition.note.text" },
   historyOfPresentIllness: {
@@ -671,13 +665,18 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.where(extension('https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code').valueCoding.code = %snomedCode and resourceType = 'Immunization')",
   },
 
-  // Generic CodeableConcept
+  // Generic
+
   codeableConceptDisplay: {
     type: "string",
     path: "code.coding.display",
   },
 
-  // Generic Observation
+  conditionOnsetDate: {
+    type: "string",
+    path: "Condition.onsetDateTime",
+  },
+
   code: {
     type: "CodeableConcept",
     path: "code",
@@ -692,14 +691,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 };
 
-const fhirPathMappings: { [K in FhirPathKeys]: FhirPath<K> } = (
+type FhirPathMappings = { [K in FhirPathKeys]: FhirPath<K> };
+
+const fhirPathMappings: FhirPathMappings = (
   Object.keys(_fhirPathMappings) as FhirPathKeys[]
-).reduce(
-  (acc, cur) => {
-    acc[cur].name = cur;
-    return acc;
-  },
-  _fhirPathMappings as { [K in FhirPathKeys]: FhirPath<K> },
-);
+).reduce((acc, cur) => {
+  acc[cur].name = cur;
+  return acc;
+}, _fhirPathMappings as FhirPathMappings);
 
 export default fhirPathMappings;

@@ -51,7 +51,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
             {
               "applyToValue": [Function],
               "columnName": "Date/Time",
-              "infoPath": "conditionOnsetDateTime",
+              "infoPath": "conditionOnsetDate",
             },
           ]
         }
@@ -135,7 +135,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
             {
               "applyToValue": [Function],
               "columnName": "Date/Time",
-              "infoPath": "conditionOnsetDateTime",
+              "infoPath": "conditionOnsetDate",
             },
           ]
         }
@@ -205,7 +205,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
             {
               "applyToValue": [Function],
               "columnName": "Date/Time",
-              "infoPath": "conditionOnsetDateTime",
+              "infoPath": "conditionOnsetDate",
             },
           ]
         }

@@ -689,7 +689,7 @@ export const evaluateEncounterDiagnosisData = (
     },
     {
       columnName: "Date/Time",
-      infoPath: "conditionOnsetDateTime",
+      infoPath: "conditionOnsetDate",
       applyToValue: formatDateTime,
     },
   ];

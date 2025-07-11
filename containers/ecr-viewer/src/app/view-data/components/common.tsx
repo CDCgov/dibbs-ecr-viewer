@@ -118,7 +118,7 @@ export const returnProblemsTable = (
       infoPath: "activeProblemsDisplay",
     },
     { columnName: "Status", infoPath: "activeProblemsStatus" },
-    { columnName: "Onset Date/Time", infoPath: "activeProblemsOnsetDate" },
+    { columnName: "Onset Date/Time", infoPath: "conditionOnsetDate" },
     { columnName: "Onset Age", infoPath: "activeProblemsOnsetAge" },
     {
       columnName: "Comments",
