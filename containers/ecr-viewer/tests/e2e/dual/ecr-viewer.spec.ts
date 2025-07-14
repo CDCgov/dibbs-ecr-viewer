@@ -1,9 +1,13 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-import { nbsAuthParam } from "../utils";
+import { logIn, nbsAuthParam } from "../utils";
 
 test.describe("viewer page", () => {
+  if (process.env.CONFIG_NAME.endsWith("NON_INTEGRATED")) {
+    test.beforeEach(({ page }) => logIn(page));
+  }
+
   test("should not have any automatically detectable accessibility issues", async ({
     page,
   }) => {

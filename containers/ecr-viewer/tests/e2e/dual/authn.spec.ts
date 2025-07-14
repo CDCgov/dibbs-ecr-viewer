@@ -22,6 +22,10 @@ test.describe("auth", () => {
   test("should require a login on main page even if valid auth token provided", async ({
     page,
   }) => {
+    test.skip(
+      process.env.CONFIG_NAME.endsWith("_NON_INTEGRATED"),
+      "Only applies to dual",
+    );
     await logIn(page, { url: `/ecr-viewer?${nbsAuthParam}` });
   });
 
@@ -41,6 +45,10 @@ test.describe("auth", () => {
   test("should require a login on view-data page when invalid token provided", async ({
     page,
   }) => {
+    test.skip(
+      process.env.CONFIG_NAME.endsWith("_NON_INTEGRATED"),
+      "Only applies to dual",
+    );
     await logIn(page, {
       url: "/ecr-viewer/view-data?id=1234&auth=hi",
       expectedHeading: "eCR retrieval failed",
@@ -53,6 +61,10 @@ test.describe("auth", () => {
   test("should not require a login on view-data page when valid token provided", async ({
     page,
   }) => {
+    test.skip(
+      process.env.CONFIG_NAME.endsWith("_NON_INTEGRATED"),
+      "Only applies to dual",
+    );
     await page.goto(
       `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
     );
