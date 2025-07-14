@@ -44,6 +44,7 @@ To generate the required keys for integrated authentication:
 1. Generate a private key:
 
 **For Windows using PuttyGen:**
+
 - Download and open [PuttyGen](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 - Select "RSA" and set key size to 4096 bits
 - Click "Generate" and move mouse to create randomness
@@ -51,6 +52,7 @@ To generate the required keys for integrated authentication:
 - Copy the public key from the text box and save as "public_key.pub"
 
 **For MacOS/Linux using ssh-keygen:**
+
 ```shell
 ssh-keygen -t rsa -b 4096 -f private_key.pem -N ""
 ```
