@@ -71,6 +71,11 @@ test.describe("auth", () => {
   test("should authenticate on api route if NBS auth token header provided", async ({
     request,
   }) => {
+    test.skip(
+      !process.env.CONFIG_NAME.endsWith("DUAL"),
+      "NBS auth only works in dual mode",
+    );
+
     const resp = await request.post(`/ecr-viewer/api/migrate-db`, {
       headers: {
         Authorization: `Bearer ${process.env.DUMMY_NBS_JWT}`,

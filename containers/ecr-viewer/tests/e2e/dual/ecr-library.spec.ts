@@ -8,8 +8,6 @@ test.describe("ecr library page", () => {
 
   test.describe("eCR Library page", () => {
     test("has title", async ({ page }) => {
-      await page.goto("/ecr-viewer");
-
       await expect(page).toHaveTitle(/DIBBs eCR Viewer/);
     });
 
@@ -25,7 +23,6 @@ test.describe("ecr library page", () => {
   test.describe("eCR Library Filtering", () => {
     const totalNumOfConditions = "2";
     test("Set reportable condition filter to zika", async ({ page }) => {
-      await page.goto("/ecr-viewer");
       await expect(
         page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
@@ -54,7 +51,6 @@ test.describe("ecr library page", () => {
     });
 
     test("Search should filter results ", async ({ page }) => {
-      await page.goto("/ecr-viewer");
       await expect(
         page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
@@ -74,7 +70,6 @@ test.describe("ecr library page", () => {
     test("Clearing search box text should clear search and show all eCRs", async ({
       page,
     }) => {
-      await page.goto("/ecr-viewer");
       await expect(
         page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
@@ -105,7 +100,6 @@ test.describe("ecr library page", () => {
     test("Search and reportable condition should filter results", async ({
       page,
     }) => {
-      await page.goto("/ecr-viewer");
       await expect(
         page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
@@ -173,7 +167,6 @@ test.describe("ecr library page", () => {
     test("when selecting an old date range, eCRs should be filtered out", async ({
       page,
     }) => {
-      await page.goto("/ecr-viewer");
       await expect(
         page.getByLabel("Filter by reportable condition"),
       ).toContainText(totalNumOfConditions);
@@ -195,8 +188,6 @@ test.describe("ecr library page", () => {
   });
 
   test("eCR sorting", async ({ page }) => {
-    await page.goto("/ecr-viewer");
-
     for (const [header, colIndex] of [
       ["Patient", "1"],
       ["Received date", "2"],
@@ -241,7 +232,6 @@ test.describe("ecr library page", () => {
 
   test.describe("eCR grouping", () => {
     test("expanding group", async ({ page }) => {
-      await page.goto("/ecr-viewer");
       await expect(
         page.getByRole("button", { name: "View Related eCRs" }),
       ).toBeVisible();

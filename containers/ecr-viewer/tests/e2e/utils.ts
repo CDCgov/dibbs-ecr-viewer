@@ -117,6 +117,7 @@ export const getToken = async (request: APIRequestContext) => {
     }
   }
   apiToken = token;
+  return apiToken;
 };
 
 // Helper to get an auth token from keycloak

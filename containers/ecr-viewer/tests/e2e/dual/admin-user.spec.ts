@@ -13,6 +13,10 @@ test.describe("user management page", () => {
       page.getByRole("heading", { name: "User management" }),
     ).toBeVisible();
 
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
+
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
     }).analyze();
@@ -43,9 +47,9 @@ test.describe("user management page", () => {
     ).toBeVisible();
 
     // open up side panel
-    await page.getByText("ecr-viewer@admin.com").click();
+    await page.getByText(process.env.AUTH_ADMIN_USER!).click();
     await expect(
-      page.getByRole("heading", { name: "Ecr Admin" }),
+      page.getByRole("dialog").getByText(process.env.AUTH_ADMIN_USER!),
     ).toBeVisible();
 
     // axe struggles with the modal background, but all manual testing
@@ -75,7 +79,9 @@ test.describe("user management page", () => {
 
     // Check that user has been successfully/correctly created
     await page.waitForURL("/ecr-viewer/admin/user");
-    await page.getByTestId("Select").selectOption("50"); // Increase user table pagination for testing
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
     await expect(page.getByRole("button", { name: user })).toBeVisible();
     await expect(page.getByText(`${user} successfully saved`)).toBeVisible();
     const row = page.locator("tr", {
@@ -158,7 +164,10 @@ test.describe("user management page", () => {
     const program2 = await createRandomProgramArea(page);
 
     // Create users
-    await page.getByTestId("Select").selectOption("50"); // Increase user table pagination for testing
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
     const userAdmin = await createRandomUser(browserName, page, "admin", []);
     const userStandard1 = await createRandomUser(
       browserName,
