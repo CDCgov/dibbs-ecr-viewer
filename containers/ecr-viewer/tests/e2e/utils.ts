@@ -1,7 +1,9 @@
 import { DefaultAzureCredential } from "@azure/identity";
-import { Page, expect, APIRequestContext } from "@playwright/test";
+import { Page, expect, APIRequestContext, Cookie } from "@playwright/test";
 
 type UserType = "ADMIN" | "STANDARD";
+
+const cookies: { [key in UserType]?: Cookie[] } = {};
 
 /**
  * Helper to log into ecr viewer
@@ -25,31 +27,41 @@ export const logIn = async (
     userType = "ADMIN",
   } = config;
 
+  if (cookies[userType]) {
+    // set cookies to previouslty saved ones
+    await page.context().addCookies(cookies[userType]!);
+  }
+
   await page.goto(url);
 
-  // Not using NBS auth, strip out search param token
-  let newUrl = url.replace(/&?auth\=[^&]+/, "");
-  if (newUrl.endsWith("?")) {
-    newUrl = newUrl.replace("?", "/");
-  }
-  await page.waitForURL(
-    `/ecr-viewer/signin?callbackUrl=${encodeURIComponent(newUrl)}`,
-  );
-
-  await page.getByRole("button").click();
-
-  const userName = process.env[`AUTH_${userType}_USER`];
-  const password = process.env[`AUTH_${userType}_PASSWORD`];
-
-  switch (process.env.AUTH_PROVIDER) {
-    case "keycloak": {
-      await logInToKeycloak(page, userName!, password!);
-      break;
+  if (!cookies[userType]) {
+    // Not using NBS auth, strip out search param token
+    let newUrl = url.replace(/&?auth\=[^&]+/, "");
+    if (newUrl.endsWith("?")) {
+      newUrl = newUrl.replace("?", "/");
     }
-    case "ad": {
-      await logInToAd(page, userName!, password!);
-      break;
+    await page.waitForURL(
+      `/ecr-viewer/signin?callbackUrl=${encodeURIComponent(newUrl)}`,
+    );
+
+    await page.getByRole("button").click();
+
+    const userName = process.env[`AUTH_${userType}_USER`];
+    const password = process.env[`AUTH_${userType}_PASSWORD`];
+
+    switch (process.env.AUTH_PROVIDER) {
+      case "keycloak": {
+        await logInToKeycloak(page, userName!, password!);
+        break;
+      }
+      case "ad": {
+        await logInToAd(page, userName!, password!);
+        break;
+      }
     }
+
+    // save cookies
+    cookies[userType] = await page.context().cookies();
   }
 
   await expect(
@@ -83,15 +95,26 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
  */
 export const nbsAuthParam = `auth=${process.env.DUMMY_NBS_JWT}`;
 
+let apiToken = "";
+
 export const getToken = async (request: APIRequestContext) => {
+  if (apiToken) return apiToken;
+
+  let token: string;
   switch (process.env.AUTH_PROVIDER) {
     case "keycloak": {
-      return await getKeycloakToken(request);
+      token = await getKeycloakToken(request);
+      break;
     }
     case "ad": {
-      return await getAdToken();
+      token = await getAdToken();
+      break;
+    }
+    default: {
+      throw new Error("unknown auth provider");
     }
   }
+  apiToken = token;
 };
 
 // Helper to get an auth token from keycloak

@@ -8,7 +8,8 @@ import { logIn } from "./utils";
 
 test("seed standard user and covid program", async ({ page }) => {
   test.skip(
-    !process.env.METADATA_DATABASE_SCHEMA,
+    process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
+      !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
     "No seeding if no metadata db",
   );
   test.setTimeout(60000); // keycloak is slow
