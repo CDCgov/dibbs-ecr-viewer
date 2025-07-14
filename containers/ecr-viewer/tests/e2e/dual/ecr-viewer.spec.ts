@@ -53,8 +53,10 @@ test.describe("viewer page", () => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
-      const navLinks = await nav.getByTestId("sidenav-link").all();
-      expect(navLinks.length).toBe(21);
+      const navLinksLoc = nav.getByTestId("sidenav-link");
+      await expect(navLinksLoc).toHaveCount(21);
+      const navLinks = await navLinksLoc.all();
+      expect(navLinks.length).toBe(21); // sanity check
 
       // Make sure after collapsing and reopening, nav links still work
       await page.getByText("Collapse all sections").click();
@@ -84,13 +86,16 @@ test.describe("viewer page", () => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
-      const navLinks = await nav.getByTestId("sidenav-link");
-      const numLinks = (await navLinks.all()).length;
+      const navLinksLoc = nav.getByTestId("sidenav-link");
+      await expect(navLinksLoc).toHaveCount(21);
+      const numLinks = (await navLinksLoc.all()).length;
       let navIndex = 0;
       while (navIndex < numLinks) {
         await page.mouse.wheel(0, 12);
 
-        const className = await navLinks.nth(navIndex)?.getAttribute("class");
+        const className = await navLinksLoc
+          .nth(navIndex)
+          ?.getAttribute("class");
         if (className === "usa-current") {
           navIndex += 1;
         }
