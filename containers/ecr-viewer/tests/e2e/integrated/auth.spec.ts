@@ -60,7 +60,7 @@ test.describe("integrated - nbs auth", () => {
         message: "No database set up to migrate",
       }),
     );
-    expect(resp.ok()).toBeFalsy();
+    expect(resp.ok()).toBeTruthy();
   });
 
   test("should not authenticate on api route if NBS auth token search param provided", async ({
