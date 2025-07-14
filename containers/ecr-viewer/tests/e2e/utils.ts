@@ -59,14 +59,16 @@ export const logIn = async (
         break;
       }
     }
-
-    // save cookies
-    cookies[userType] = await page.context().cookies();
   }
 
   await expect(
     page.getByRole("heading", { name: expectedHeading }).first(),
   ).toBeVisible();
+
+  if (!cookies[userType]) {
+    // save cookies
+    cookies[userType] = await page.context().cookies();
+  }
 };
 
 // Helper to log into via keycloak and go to the viewer page
