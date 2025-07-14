@@ -18,10 +18,11 @@ describe("AdminMedTable", () => {
           {
             name: "aspirin tablet 325 mg",
             date: "09/29/2022",
-            therapeuticResponse: "Improved condition" },
+            therapeuticResponse: "Improved condition",
+          },
           { name: "aleve tablet 325 mg", date: "09/29/2022 4:53" },
         ]}
-      />
+      />,
     );
 
     expect(screen.getByText("Administered Medications")).toBeVisible();
