@@ -1,3 +1,6 @@
+// While this file is housed in the `dual` folder, it is copied over and also run on integrated e2e
+// tests, so needs to always work with either IDP or NBS auth
+
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
@@ -57,6 +60,8 @@ test.describe("viewer page", () => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
+      // use a test id here to avoid a lot of special casing around the back to
+      // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
       await expect(navLinksLoc).toHaveCount(21);
       const navLinks = await navLinksLoc.all();
@@ -90,6 +95,8 @@ test.describe("viewer page", () => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
+      // use a test id here to avoid a lot of special casing around the back to
+      // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
       await expect(navLinksLoc).toHaveCount(21);
       const numLinks = (await navLinksLoc.all()).length;

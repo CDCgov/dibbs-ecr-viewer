@@ -3,6 +3,8 @@ import { Page, expect, APIRequestContext, Cookie } from "@playwright/test";
 
 type UserType = "ADMIN" | "STANDARD";
 
+// Instead of going to IDP to log in on every page, store the cookies
+// globally and re-use once logged in
 const cookies: { [key in UserType]?: Cookie[] } = {};
 
 /**
@@ -97,6 +99,8 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
  */
 export const nbsAuthParam = `auth=${process.env.DUMMY_NBS_JWT}`;
 
+// Instead of going to IDP to to get a token on every request, store the token
+// globally and re-use once acquired
 let apiToken = "";
 
 export const getToken = async (request: APIRequestContext) => {
