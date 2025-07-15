@@ -197,7 +197,7 @@ Function Import-ApiForm {
     BEGIN{
     $FormTemplate = @'
 --{0}
-Content-Disposition: form-data; name="upload_file"; filename="{1}"
+Content-Disposition: form-data; name="ecr"; filename="{1}"
 Content-Type: {2}
 
 {3}
@@ -248,7 +248,7 @@ $headers = @{
 Invoke-WebRequest -Uri "https://{{ dibbs-url }}/ecr-viewer/api/process-ecr" `
     -Method Post `
     -UseBasicParsing `
-    -Form @{ upload_file = Get-Item $FilePath } `
+    -Form @{ ecr = Get-Item $FilePath } `
     -Headers $headers
 ```
 
@@ -259,7 +259,7 @@ Invoke-WebRequest -Uri "https://{{ dibbs-url }}/ecr-viewer/api/process-ecr" `
 
 ```bash
 curl {{ dibbs-url }}/ecr-viewer/api/process-ecr ^
-    --form upload_file=@"{{ path to file }}";type=application/zip ^
+    --form ecr=@"{{ path to file }}";type=application/zip ^
     --header 'Authorization: Bearer {{jwt-token}}'
 ```
 
@@ -270,7 +270,7 @@ curl {{ dibbs-url }}/ecr-viewer/api/process-ecr ^
 
 ```bash
 curl {{ dibbs-url }}/ecr-viewer/api/process-ecr \
-    --form 'upload_file=@"{{ path to file }}";type=application/zip' \
+    --form 'ecr=@"{{ path to file }}";type=application/zip' \
     --header 'Authorization: Bearer {{jwt-token}}'
 ```
 
