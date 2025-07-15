@@ -193,11 +193,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientCounty: {
     type: "string",
-    path: "entry.resource.Patient.address.county",
+    path: "entry.resource.Patient.address.first().county",
   },
   patientCountry: {
     type: "string",
-    path: "entry.resource.Patient.address.country",
+    path: "entry.resource.Patient.address.first().country",
   },
 
   patientIds: {
@@ -386,7 +386,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   facilityContact: {
     type: "string",
-    path: "entry.resource.Location.telecom.where(system = 'phone').value",
+    path: "entry.resource.Location.first().telecom.where(system = 'phone').value",
   },
   facilityContactAddress: {
     type: "string",
@@ -402,7 +402,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   facilityAddress: {
     type: "Address",
-    path: "entry.resource.Location.address",
+    path: "entry.resource.Location.first().address",
   },
   facilityType: {
     type: "ValueX",
