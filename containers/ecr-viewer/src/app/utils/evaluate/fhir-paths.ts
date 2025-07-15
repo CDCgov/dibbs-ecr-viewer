@@ -501,7 +501,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   careTeamParticipantRole: { type: "string", path: "role.text" },
   careTeamParticipantStatus: {
     type: "string",
-    path: "modifierExtension(url = 'participant.status').valueString",
+    path: "modifierExtension.where(url = 'participant.status').valueString",
   },
   careTeamParticipantPeriod: { type: "string", path: "period.text" },
 
