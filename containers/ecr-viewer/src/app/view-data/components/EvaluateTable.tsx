@@ -235,7 +235,6 @@ export const evaluateTableRowCell = (
     hidden = true;
     data = column.hiddenBaseText;
   }
-  column.columnName === "Name" && console.log({ column, entry, data });
 
   return { data, hidden, hiddenRow };
 };

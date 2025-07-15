@@ -10,7 +10,7 @@ import BundleWithMiscNotes from "../../../../../../../test-data/fhir/BundleMiscN
 import BundleNoActiveProblems from "../../../../../../../test-data/fhir/BundleNoActiveProblems.json";
 import BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import BundleWithPendingResultsOnly from "../../../../../../../test-data/fhir/BundlePendingResultsOnly.json";
-import BundleWithScheduledOrdersOnly from "../../../../../../../test-data/fhir/BundleScheduledOrdersOnly.json";
+import BundleWithScheduledApptsOnly from "../../../../../../../test-data/fhir/BundleScheduledApptsOnly.json";
 import BundleWithSexualOrientation from "../../../../../../../test-data/fhir/BundleSexualOrientation.json";
 import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
 import BundleWithTravelHistoryEmpty from "../../../../../../../test-data/fhir/BundleTravelHistoryEmpty.json";
@@ -106,9 +106,9 @@ describe("Utils", () => {
         "Plan of Treatment",
       );
     });
-    it("Should return Plan of Treatment when only scheduled orders", () => {
+    it("Should return Plan of Treatment when only scheduled appointments", () => {
       const actual = evaluateClinicalData(
-        BundleWithScheduledOrdersOnly as unknown as Bundle,
+        BundleWithScheduledApptsOnly as unknown as Bundle,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",

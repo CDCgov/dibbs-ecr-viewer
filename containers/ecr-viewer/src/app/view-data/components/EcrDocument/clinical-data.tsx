@@ -307,7 +307,6 @@ const evaluatePlanOfTreatment = (
   fhirBundle: Bundle,
 ): React.ReactNode | undefined => {
   const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
-  console.log(plans);
   const activities = [];
   const procs = [];
   const meds = [];
@@ -320,7 +319,6 @@ const evaluatePlanOfTreatment = (
         fhirBundle,
         plan.reference.reference,
       );
-      console.log({ req });
       if (req) {
         procs.push(req);
       }
