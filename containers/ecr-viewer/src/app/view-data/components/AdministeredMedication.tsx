@@ -35,12 +35,7 @@ export const AdministeredMedication = ({
   ];
 
   return (
-    <BaseTable
-      columns={columns}
-      caption="Administered Medications"
-      className="margin-y-0"
-      fixed={false}
-    >
+    <BaseTable columns={columns} className="margin-y-0" fixed={false}>
       {medicationData.map((entry, index: number) => (
         <tr key={`table-row-${index}`}>
           <td>{entry?.name ?? noData}</td>

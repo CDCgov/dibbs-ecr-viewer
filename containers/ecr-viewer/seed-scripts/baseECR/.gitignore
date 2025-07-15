@@ -3,3 +3,4 @@
 !star-wars/**
 bundle.json
 .DS_Store
+**/.DS_Store

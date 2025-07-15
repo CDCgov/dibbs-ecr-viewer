@@ -4,7 +4,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
-import { CarePlanActivity } from "fhir/r4b";
 
 import BundleCareTeam from "../../../../../../../test-data/fhir/BundleCareTeam.json";
 import BundleWithMiscNotes from "../../../../../../../test-data/fhir/BundleMiscNotes.json";
@@ -26,7 +25,6 @@ import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   evaluateClinicalData,
   returnCareTeamTable,
-  returnPlannedProceduresTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
 import {
   TooltipDiv,
@@ -162,42 +160,6 @@ describe("Utils", () => {
       );
 
       expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
-    });
-  });
-
-  describe("Planned Procedures Table", () => {
-    it("should return table when data is provided", () => {
-      const carePlanActivities = [
-        {
-          detail: {
-            scheduledString: "02/01/2024",
-            code: {
-              coding: [
-                {
-                  display: "activity 1",
-                },
-              ],
-            },
-          },
-          extension: [
-            {
-              url: "dibbs.orderedDate",
-              valueString: "01/01/2024",
-            },
-          ],
-        },
-      ] as CarePlanActivity[];
-      const actual = returnPlannedProceduresTable(carePlanActivities);
-      render(actual!);
-
-      expect(screen.getByText("activity 1")).toBeInTheDocument();
-      expect(screen.getByText("01/01/2024")).toBeInTheDocument();
-      expect(screen.getByText("02/01/2024")).toBeInTheDocument();
-    });
-    it("should not return table when data is provided", () => {
-      const actual = returnPlannedProceduresTable([]);
-
-      expect(actual).toBeUndefined();
     });
   });
 

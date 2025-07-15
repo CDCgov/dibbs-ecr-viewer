@@ -119,11 +119,14 @@ export type PathTypes = {
   activeProblemsComments: string;
   historyOfPresentIllness: string;
   emergencyOutbreakInfo: Observation;
-  planOfTreatment: string;
-  plannedProcedures: CarePlanActivity;
-  plannedProcedureName: string;
-  plannedProcedureOrderedDate: string;
-  plannedProcedureScheduledDate: string;
+  planOfTreatment: CarePlanActivity;
+  authoredOn: TimeX;
+  plannedActivityName: CodeableConcept;
+  plannedActivityType: string;
+  plannedActivityTime: TimeX;
+  plannedServiceRequestName: CodeableConcept;
+  plannedServiceRequestTime: TimeX;
+  plannedMedicationName: CodeableConcept;
   adminMedicationsRefs: string;
   careTeamParticipants: CareTeamParticipant;
   careTeamParticipantMemberName: string;
@@ -512,24 +515,36 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   // Treatment Details
   planOfTreatment: {
-    type: "string",
-    path: "Bundle.entry.resource.section.where(title = 'Plan of Treatment').text.first().`div`",
-  },
-  plannedProcedures: {
     type: "CarePlanActivity",
-    path: "Bundle.entry.resource.where(resourceType = 'CarePlan').activity",
+    path: "entry.resource.CarePlan.activity",
   },
-  plannedProcedureName: {
-    type: "string",
-    path: "detail.code.coding[0].display",
+  authoredOn: {
+    type: "TimeX",
+    path: "authoredOn",
   },
-  plannedProcedureOrderedDate: {
-    type: "string",
-    path: "extension.where(url = 'dibbs.orderedDate').valueString",
+  plannedActivityName: {
+    type: "CodeableConcept",
+    path: "detail.code",
   },
-  plannedProcedureScheduledDate: {
+  plannedActivityType: {
     type: "string",
-    path: "detail.scheduledString",
+    path: "detail.kind",
+  },
+  plannedActivityTime: {
+    type: "TimeX",
+    path: "detail.scheduled",
+  },
+  plannedServiceRequestName: {
+    type: "CodeableConcept",
+    path: "code",
+  },
+  plannedServiceRequestTime: {
+    type: "TimeX",
+    path: "occurrence",
+  },
+  plannedMedicationName: {
+    type: "CodeableConcept",
+    path: "medicationCodeableConcept",
   },
 
   // Administered Medications

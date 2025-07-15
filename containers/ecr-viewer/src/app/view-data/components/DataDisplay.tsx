@@ -12,7 +12,6 @@ export interface DisplayDataProps {
   toolTip?: string;
   value?: ReactNode;
   dividerLine?: boolean;
-  table?: boolean;
   fullWidthContent?: boolean;
   titleNormal?: boolean;
 }

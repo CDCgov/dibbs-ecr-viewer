@@ -1,21 +1,21 @@
 import {
   Bundle,
-  CarePlanActivity,
   CareTeamParticipant,
   Device,
   Element,
   Location,
   Medication,
   MedicationAdministration,
+  MedicationRequest,
   Observation,
   Organization,
   Period,
   Practitioner,
   Reference,
+  ServiceRequest,
 } from "fhir/r4";
 
 import {
-  formatDate,
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
@@ -96,23 +96,24 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
+      fullWidthContent: true,
       value: returnProceduresTable(fhirBundle),
     },
     {
-      title: "Planned Procedures",
-      value: returnPlannedProceduresTable(
-        evaluateAll(fhirBundle, fhirPathMappings.plannedProcedures),
-      ),
+      title: "Plan of Treatment",
+      fullWidthContent: true,
+      value: evaluatePlanOfTreatment(fhirBundle),
     },
-    evaluatePlanOfTreatment(fhirBundle, "Plan of Treatment"),
     {
       title: "Administered Medications",
+      fullWidthContent: true,
       value: administeredMedication?.length && (
         <AdministeredMedication medicationData={administeredMedication} />
       ),
     },
     {
       title: "Care Team",
+      fullWidthContent: true,
       value: returnCareTeamTable(fhirBundle),
     },
   ];
@@ -255,7 +256,6 @@ export const returnCareTeamTable = (
     <EvaluateTable
       resources={modifiedCareTeamParticipants}
       columns={columnInfo}
-      caption="Care Team"
       className="margin-y-0"
       fixed={false}
     />
@@ -299,77 +299,86 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
         captionIsTitle={true}
       />
     ),
-    table: true,
+    fullWidthContent: true,
   };
-};
-
-/**
- * Generates a formatted table representing the list of planned procedures
- * @param carePlanActivities - An array containing the list of procedures.
- * @returns - A formatted table React element representing the list of planned procedures, or undefined if the procedures array is empty.
- */
-export const returnPlannedProceduresTable = (
-  carePlanActivities: CarePlanActivity[],
-): React.JSX.Element | undefined => {
-  carePlanActivities = carePlanActivities.filter(
-    (entry) => entry.detail?.code?.coding?.[0]?.display,
-  );
-
-  if (carePlanActivities.length === 0) {
-    return undefined;
-  }
-
-  const columnInfo: ColumnInfoInput[] = [
-    { columnName: "Procedure Name", infoPath: "plannedProcedureName" },
-    {
-      columnName: "Ordered Date",
-      infoPath: "plannedProcedureOrderedDate",
-      applyToValue: formatDate,
-    },
-    {
-      columnName: "Scheduled Date",
-      infoPath: "plannedProcedureScheduledDate",
-      applyToValue: formatDate,
-    },
-  ];
-
-  return (
-    <EvaluateTable
-      resources={carePlanActivities}
-      columns={columnInfo}
-      caption="Planned Procedures"
-      className="margin-y-0"
-    />
-  );
 };
 
 const evaluatePlanOfTreatment = (
   fhirBundle: Bundle,
-  title: string,
-): DisplayDataProps => {
-  const content = evaluateValue(fhirBundle, fhirPathMappings.planOfTreatment);
-  const tables = formatTablesToJSON(content);
+): React.ReactNode | undefined => {
+  const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
+  console.log(plans);
+  const activities = [];
+  const procs = [];
+  const meds = [];
 
-  if (tables.length === 0)
-    return {
-      title,
-      value: undefined,
-    };
+  for (const plan of plans) {
+    if (plan.detail) {
+      activities.push(plan);
+    } else if (plan.reference?.reference?.startsWith("ServiceRequest/")) {
+      const req = evaluateReference<ServiceRequest>(
+        fhirBundle,
+        plan.reference.reference,
+      );
+      console.log({ req });
+      if (req) {
+        procs.push(req);
+      }
+    } else if (plan.reference?.reference?.startsWith("MedicationRequest/")) {
+      const req = evaluateReference<MedicationRequest>(
+        fhirBundle,
+        plan.reference.reference,
+      );
+      if (req) {
+        meds.push(req);
+      }
+    }
+  }
 
-  return {
-    title,
-    value: (
-      <>
-        <div className="data-title margin-bottom-1">{title}</div>
-        {tables.map((table, index) => (
-          <JsonTable
-            key={`plan-of-treatment-table_${index}`}
-            jsonTableData={table}
-          />
-        ))}
-      </>
-    ),
-  };
+  if (activities.length === 0 && procs.length === 0 && meds.length === 0) {
+    return undefined;
+  }
+
+  return (
+    <>
+      {activities.length > 0 && (
+        <EvaluateTable
+          resources={activities}
+          caption="Planned Activities & Appointments"
+          columns={[
+            { columnName: "Name", infoPath: "plannedActivityName" },
+            { columnName: "Scheduled Time", infoPath: "plannedActivityTime" },
+            { columnName: "Type", infoPath: "plannedActivityType" },
+          ]}
+        />
+      )}
+      {procs.length > 0 && (
+        <EvaluateTable
+          resources={procs}
+          caption="Planned Procedures & Orders"
+          columns={[
+            { columnName: "Name", infoPath: "plannedServiceRequestName" },
+            {
+              columnName: "Scheduled Time",
+              infoPath: "plannedServiceRequestTime",
+            },
+            { columnName: "Ordered On", infoPath: "authoredOn" },
+          ]}
+        />
+      )}
+      {meds.length > 0 && (
+        <EvaluateTable
+          resources={meds}
+          caption="Planned Medications & Immunizations"
+          columns={[
+            { columnName: "Name", infoPath: "plannedMedicationName" },
+            { columnName: "Ordered On", infoPath: "authoredOn" },
+            // Add dosage info
+          ]}
+        />
+      )}
+    </>
+  );
 };
 
 /**
@@ -425,7 +434,6 @@ export const returnProceduresTable = (
     <EvaluateTable
       resources={procBundle}
       columns={columnInfo}
-      caption="Procedures"
       className="margin-y-0"
     />
   );
