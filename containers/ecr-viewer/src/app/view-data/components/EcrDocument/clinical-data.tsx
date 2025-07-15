@@ -175,16 +175,13 @@ const evaluateAdministeredMedication = (
         );
       }
 
-      const therapeuticResponses = medicationAdministration.extension
-        ?.filter(
-          (ext) =>
-            ext.url ===
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-therapeutic-medication-response-extension",
-        )
-        .map((ext) => formatCodeableConcept(ext.valueCodeableConcept) ?? "");
+      const therapeuticResponses = evaluateAll(
+        medicationAdministration,
+        fhirPathMappings.adminMedicationTherapeuticResponseObs
+      ).map((c) => formatCodeableConcept(c) ?? "");
       const therapeuticResponseText =
-        therapeuticResponses?.join("\n ") ?? undefined;
-
+        therapeuticResponses.length > 0 ? therapeuticResponses.join("\n") : undefined;
+      
       return {
         date:
           medicationAdministration?.effectiveDateTime ??
