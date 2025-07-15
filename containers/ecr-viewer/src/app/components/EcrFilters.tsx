@@ -140,7 +140,9 @@ const FilterReportableConditions = ({
           onToggle={handleSelectAll}
           isAllSelected={isAllSelected}
         />
-        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        {allConditions.length > 0 && (
+          <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        )}
         {/* Filter Conditions checkboxes */}
         <CheckboxOptions
           groupName="condition"
