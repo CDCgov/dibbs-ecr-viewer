@@ -27,7 +27,7 @@ The following instructions will guide you through this list.
 
 - Verified that the eCR Viewer health check is available
 - Verified that the metadata database is up to date (if using one)
-- Verified that the process-ecr endpoint run was successful
+- Verified that the `process-ecr` endpoint run was successful
 - Verified that the eCR FHIR bundle is available in blob storage
 - Verified that the processed eCR is visible in the viewer
 
