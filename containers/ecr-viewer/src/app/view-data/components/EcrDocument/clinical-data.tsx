@@ -177,11 +177,13 @@ const evaluateAdministeredMedication = (
 
       const therapeuticResponses = evaluateAll(
         medicationAdministration,
-        fhirPathMappings.adminMedicationTherapeuticResponseObs
+        fhirPathMappings.adminMedicationTherapeuticResponseObs,
       ).map((c) => formatCodeableConcept(c) ?? "");
       const therapeuticResponseText =
-        therapeuticResponses.length > 0 ? therapeuticResponses.join("\n") : undefined;
-      
+        therapeuticResponses.length > 0
+          ? therapeuticResponses.join("\n")
+          : undefined;
+
       return {
         date:
           medicationAdministration?.effectiveDateTime ??
