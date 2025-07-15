@@ -774,6 +774,11 @@
             'url': str,
           }),
           'resource': dict({
+            'activity': list([
+              dict({
+                'reference': dict,
+              }),
+            ]),
             'id': str,
             'intent': 'proposal',
             'meta': dict({
@@ -1012,6 +1017,59 @@
             }),
             'resourceType': 'Observation',
             'status': 'final',
+          }),
+        }),
+        dict({
+          'fullUrl': str,
+          'request': dict({
+            'method': 'PUT',
+            'url': str,
+          }),
+          'resource': dict({
+            'authoredOn': '2005-03-29T22:44:11-05:00',
+            'code': dict({
+              'coding': list([
+                dict({
+                  'code': '73761001',
+                  'display': 'Colonoscopy',
+                  'system': 'http://snomed.info/sct',
+                }),
+              ]),
+            }),
+            'id': str,
+            'identifier': list([
+              dict({
+                'system': 'urn:ietf:rfc:3986',
+                'value': 'urn:uuid:9a6d1bac-17d3-4195-89c4-1121bc809b5a',
+              }),
+            ]),
+            'meta': dict({
+              'source': 'ecr',
+            }),
+            'occurrenceDateTime': '2012-05-12',
+            'requester': dict({
+              'reference': str,
+            }),
+            'resourceType': 'ServiceRequest',
+            'subject': dict({
+              'reference': str,
+            }),
+          }),
+        }),
+        dict({
+          'fullUrl': str,
+          'request': dict({
+            'method': 'PUT',
+            'url': str,
+          }),
+          'resource': dict({
+            'meta': dict({
+              'profile': list([
+                'http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner',
+              ]),
+              'source': 'ecr',
+            }),
+            'resourceType': 'Practitioner',
           }),
         }),
         dict({
