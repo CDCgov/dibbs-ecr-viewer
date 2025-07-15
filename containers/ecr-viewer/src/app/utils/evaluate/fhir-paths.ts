@@ -675,6 +675,12 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   // Generic
 
+  /**
+   * Instead of getting the display directly, ideally we would want to get the whole
+   * CodeableConcept so we can use our own logic to get the most appropriate string representation.
+   * However `code` only works if the resource has the FHIR path info on it, i.e. it is an object
+   * returned by an `evaluate` function.
+   */
   codeableConceptDisplay: {
     type: "string",
     path: "code.coding.display",
