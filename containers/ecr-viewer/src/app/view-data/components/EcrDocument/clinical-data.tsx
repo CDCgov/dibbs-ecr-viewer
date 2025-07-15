@@ -453,7 +453,7 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
     },
     {
       title: "Outcome",
-      value: evaluateValue(procedure, fhirPathMappings.procedureOutcome),
+      value: evaluateValue(procedure, fhirPathMappings.valueX),
     },
     {
       title: "Complication",

@@ -46,7 +46,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
           [
             {
               "columnName": "Problem",
-              "infoPath": "conditionCode",
+              "infoPath": "code",
             },
             {
               "applyToValue": [Function],
@@ -130,7 +130,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
           [
             {
               "columnName": "Problem",
-              "infoPath": "conditionCode",
+              "infoPath": "code",
             },
             {
               "applyToValue": [Function],
@@ -200,7 +200,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
           [
             {
               "columnName": "Problem",
-              "infoPath": "conditionCode",
+              "infoPath": "code",
             },
             {
               "applyToValue": [Function],

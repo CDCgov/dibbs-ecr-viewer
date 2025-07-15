@@ -403,7 +403,7 @@ export const evaluateDiagnosticReportData = (
     },
     {
       columnName: "Lab Comment",
-      infoPath: "observationNote",
+      infoPath: "noteText",
       hiddenBaseText: "comment",
       applyToValue: (v) => safeParse(v),
       className: "minw-10 width-20",

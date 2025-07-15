@@ -685,7 +685,7 @@ export const evaluateEncounterDiagnosisData = (
   const dxColumns = [
     {
       columnName: "Problem",
-      infoPath: "conditionCode",
+      infoPath: "code",
     },
     {
       columnName: "Date/Time",

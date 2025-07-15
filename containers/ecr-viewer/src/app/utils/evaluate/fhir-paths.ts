@@ -90,7 +90,6 @@ export type PathTypes = {
   encounterType: string;
   encounterID: Identifier;
   hospitalEncounterDiagnosisRef: Reference;
-  conditionCode: CodeableConcept;
   facilityContact: string;
   facilityContactAddress: string;
   facilityLocation: string;
@@ -105,10 +104,8 @@ export type PathTypes = {
   patientVitalSigns: Observation;
   resolve: unknown;
   activeProblems: Condition;
-  activeProblemsDisplay: string;
   activeProblemsStatus: string;
   activeProblemsOnsetAge: ValueX;
-  activeProblemsComments: string;
   historyOfPresentIllness: string;
   emergencyOutbreakInfo: Observation;
   planOfTreatment: string;
@@ -123,7 +120,7 @@ export type PathTypes = {
   careTeamParticipantStatus: string;
   careTeamParticipantPeriod: string;
   immunizations: Immunization;
-  immunizationsName: string;
+  immunizationsName: CodeableConcept;
   immunizationsAdminDate: string;
   immunizationsDoseNumber: ValueX;
   immunizationsManufacturerName: string;
@@ -136,7 +133,6 @@ export type PathTypes = {
   procedureLocationRef: Reference;
   procedureOrgRef: Reference;
   procedureBodySite: CodeableConcept;
-  procedureOutcome: CodeableConcept;
   procedureComplication: CodeableConcept;
   procedureProductRef: Reference;
   procedureMedRef: Reference;
@@ -154,7 +150,6 @@ export type PathTypes = {
   observationValue: string;
   observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
-  observationNote: string;
   observationOrganismMethod: string;
   observationSusceptibility: string;
   observationResultStatus: string;
@@ -163,12 +158,13 @@ export type PathTypes = {
   travelHistoryStartDate: string;
   travelHistoryEndDate: string;
   travelHistoryLocation: string;
-  travelHistoryPurpose: string;
+  travelHistoryPurpose: ValueX;
   stampedImmunizations: Immunization;
   codeableConceptDisplay: string;
   conditionOnsetDate: string;
   effectiveX: TimeX;
   code: CodeableConcept;
+  noteText: string;
   valueX: ValueX;
 };
 
@@ -388,11 +384,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Composition.section.where(code.coding.code = %code).entry",
   },
 
-  conditionCode: {
-    type: "CodeableConcept",
-    path: "Condition.code",
-  },
-
   facilityContact: {
     type: "string",
     path: "entry.resource.Location.telecom.where(system = 'phone').value",
@@ -423,11 +414,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   encounterAttendingRefs: {
     type: "EncounterParticipant",
-    path: "Encounter.participant.where(type.coding.code = 'ATND')",
+    path: "participant.where(type.coding.code = 'ATND')",
   },
   encounterParticipants: {
     type: "EncounterParticipant",
-    path: "Encounter.participant",
+    path: "participant",
   },
 
   rrDetails: {
@@ -455,16 +446,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Condition",
     path: "entry.resource.Condition.where(category.coding.code = 'problem-item-list')",
   },
-  activeProblemsDisplay: {
-    type: "string",
-    path: "Condition.code.coding.display",
-  },
   activeProblemsStatus: {
     type: "string",
-    path: "Condition.clinicalStatus.coding.display",
+    path: "clinicalStatus.coding.display",
   },
-  activeProblemsOnsetAge: { type: "ValueX", path: "Condition.onsetAge.value" },
-  activeProblemsComments: { type: "string", path: "Condition.note.text" },
+  activeProblemsOnsetAge: { type: "ValueX", path: "onsetAge.value" },
   historyOfPresentIllness: {
     type: "string",
     path: "entry.resource.Composition.section.where(code.coding.code = '10164-2').text.`div`",
@@ -515,7 +501,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   careTeamParticipantRole: { type: "string", path: "role.text" },
   careTeamParticipantStatus: {
     type: "string",
-    path: "modifierExtension.where(url = 'participant.status').valueString",
+    path: "modifierExtension(url = 'participant.status').valueString",
   },
   careTeamParticipantPeriod: { type: "string", path: "period.text" },
 
@@ -525,23 +511,23 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Immunization",
   },
   immunizationsName: {
-    type: "string",
-    path: "Immunization.vaccineCode.coding.display",
+    type: "CodeableConcept",
+    path: "vaccineCode",
   },
   immunizationsAdminDate: {
     type: "string",
-    path: "Immunization.occurrenceDateTime",
+    path: "occurrenceDateTime",
   },
   immunizationsDoseNumber: {
     // TODO #469: This should strictly speaking be "number", but conversion is buggy
     type: "ValueX",
-    path: "Immunization.protocolApplied.where(doseNumberPositiveInt.exists()).doseNumberPositiveInt",
+    path: "protocolApplied.where(doseNumberPositiveInt.exists()).doseNumberPositiveInt",
   },
   immunizationsManufacturerName: {
     type: "string",
-    path: "Immunization.manufacturer.name",
+    path: "manufacturer.name",
   },
-  immunizationsLotNumber: { type: "unknown", path: "Immunization.lotNumber" },
+  immunizationsLotNumber: { type: "unknown", path: "lotNumber" },
 
   // === Procedure ===
   procedures: {
@@ -556,36 +542,35 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // core fields
   procedureDate: {
     type: "TimeX",
-    path: "Procedure.performed | Observation.effective",
+    path: "performed | effective",
   },
   procedureStatus: { type: "string", path: "status" },
 
   // extra details
-  procedureReason: { type: "CodeableConcept", path: "Procedure.reasonCode" },
-  procedureLocationRef: { type: "Reference", path: "Procedure.location" },
-  procedureOrgRef: { type: "Reference", path: "Procedure.performer.actor" },
+  procedureReason: { type: "CodeableConcept", path: "reasonCode" },
+  procedureLocationRef: { type: "Reference", path: "location" },
+  procedureOrgRef: { type: "Reference", path: "performer.actor" },
   procedureBodySite: { type: "CodeableConcept", path: "bodySite" },
-  procedureOutcome: { type: "CodeableConcept", path: "Observation.value" },
   procedureComplication: {
     type: "CodeableConcept",
-    path: "Procedure.complication",
+    path: "complication",
   },
-  procedureProductRef: { type: "Reference", path: "Procedure.usedReference" },
+  procedureProductRef: { type: "Reference", path: "usedReference" },
   procedureMedRef: {
     type: "Reference",
-    path: "Procedure.extension('medicationAdministration').value",
+    path: "extension('medicationAdministration').value",
   },
   procedureSpecimen: {
     type: "CodeableConcept",
-    path: "Procedure.extension('specimen').value",
+    path: "extension('specimen').value",
   },
   procedureMethod: {
     type: "CodeableConcept",
-    path: "Procedure.extension('http://hl7.org/fhir/StructureDefinition/procedure-method').value | Observation.method",
+    path: "extension('http://hl7.org/fhir/StructureDefinition/procedure-method').value | method",
   },
   procedurePriority: {
     type: "CodeableConcept",
-    path: "Procedure.extension('priorityCode').value",
+    path: "extension('priorityCode').value",
   },
 
   // === Lab Info ===
@@ -607,19 +592,19 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   specimenCollectionTime: {
     type: "string",
-    path: "Observation.extension.extension('specimen collection time').valueDateTime",
+    path: "extension.extension('specimen collection time').valueDateTime",
   },
   specimenReceivedTime: {
     type: "string",
-    path: "Observation.extension.extension('specimen receive time').valueDateTime",
+    path: "extension.extension('specimen receive time').valueDateTime",
   },
   specimenSource: {
     type: "string",
-    path: "Observation.extension.extension('specimen source').valueString",
+    path: "extension.extension('specimen source').valueString",
   },
   observationReferenceValue: {
     type: "string",
-    path: "Observation.extension.extension('observation entry reference value').valueString",
+    path: "extension.extension('observation entry reference value').valueString",
   },
   observationValue: {
     type: "string",
@@ -630,7 +615,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "referenceRange",
   },
   observationDeviceReference: { type: "string", path: "device.reference" },
-  observationNote: { type: "string", path: "note.text" },
   /**
    * The shorthand `extension(url)` will only work where there is also a `resourceType`, i.e, a `Resource`. This
    * path is used on `Observation.component` which is merely a `BackboneElement`.
@@ -663,8 +647,8 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "component.where(code.coding.code = 'LOC').valueCodeableConcept.text",
   },
   travelHistoryPurpose: {
-    type: "string",
-    path: "component.where(code.coding.code = '280147009').valueCodeableConcept.coding.display",
+    type: "ValueX",
+    path: "component.where(code.coding.code = '280147009').value",
   },
 
   // Stamped
@@ -685,17 +669,14 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "code.coding.display",
   },
-
   conditionOnsetDate: {
     type: "string",
-    path: "Condition.onsetDateTime",
+    path: "onsetDateTime",
   },
-
   code: {
     type: "CodeableConcept",
     path: "code",
   },
-
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
    * the value of the choice element if it is on a resource, e.g. `Observation`. Otherwise it will return an empty
@@ -706,6 +687,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "TimeX",
     path: "effective",
   },
+  noteText: { type: "string", path: "note.text" },
   valueX: {
     type: "ValueX",
     path: "value",
