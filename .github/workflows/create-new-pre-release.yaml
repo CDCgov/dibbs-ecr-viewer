@@ -75,13 +75,15 @@ jobs:
   deploy-container-to-aws-test-env:
     needs:
       - build-containers-for-release
-    uses: ./.github/workflows/trigger-dev-aws-workflow.yaml
+    uses: ./.github/workflows/trigger-dev-workflow.yaml
     with:
       container_tag: ${{ needs.build-containers-for-release.outputs.version }}
+      environment: aws
 
   deploy-container-to-azure-test-env:
     needs:
       - build-containers-for-release
-    uses: ./.github/workflows/trigger-dev-azure-workflow.yaml
+    uses: ./.github/workflows/trigger-dev-workflow.yaml
     with:
       container_tag: ${{ needs.build-containers-for-release.outputs.version }}
+      environment: azure

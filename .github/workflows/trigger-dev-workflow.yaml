@@ -1,5 +1,5 @@
-name: Trigger Deploy to Azure Dev
-run-name: "Trigger Deploy - Azure - Container Tag: ${{ inputs.container_tag }}, Terraform Branch: ${{ inputs.tf_branch }}, Event Type: ${{ inputs.event_type }} to Azure Dev by @${{ github.actor }}"
+name: Trigger Deploy to Dev Environment
+run-name: "Trigger Deploy - Container Tag: ${{ inputs.container_tag }}, Environment: ${{ inputs.environment }}, Terraform Branch: ${{ inputs.tf_branch }} by @${{ github.actor }}"
 
 on:
   workflow_dispatch:
@@ -13,11 +13,12 @@ on:
         description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
         required: false
         default: main
-      event_type:
+      environment:
         type: choice
         options:
-          - trigger-dibbs-ecr-viewer-azure-dev-deploys
-        description: "The event type to trigger the workflow."
+          - aws
+          - azure
+        description: "The clould environment to deploy to."
         required: true
   workflow_call:
     inputs:
@@ -30,27 +31,26 @@ on:
         description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
         required: false
         default: main
-      event_type:
+      environment:
         type: string
-        default: trigger-dibbs-ecr-viewer-azure-dev-deploys
-        description: "The event type to trigger the workflow."
-        required: false
+        description: "The clould environment to deploy to (\"aws\" or \"azure\")."
+        required: true
 
 jobs:
-  trigger_azure_dev_workflow:
+  trigger_dev_workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Azure Dev
+      - name: Deploy to ${{ inputs.environment }} Dev
         env:
           TF_BRANCH: ${{ inputs.tf_branch }}
-          EVENT_TYPE: ${{ inputs.event_type }}
+          ENVIRONMENT: ${{ inputs.environment }}
           CONTAINER_TAG: ${{ inputs.container_tag }}
         run: |
           service="dibbs-ecr-viewer"
           repo_owner="skylight-hq"
           repo_name="dibbs-tf-envs"
           tf_branch="$TF_BRANCH"
-          event_type="$EVENT_TYPE"
+          event_type="trigger-dibbs-ecr-viewer-$ENVIRONMENT-dev-deploys"
           container_tag="$CONTAINER_TAG"
           response="$(curl -L -w '%{http_code}\n' -o /dev/null \
             -X POST \
