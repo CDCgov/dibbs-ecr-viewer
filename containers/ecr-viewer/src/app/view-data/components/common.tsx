@@ -115,14 +115,14 @@ export const returnProblemsTable = (
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "Active Problem",
-      infoPath: "activeProblemsDisplay",
+      infoPath: "code",
     },
     { columnName: "Status", infoPath: "activeProblemsStatus" },
-    { columnName: "Onset Date/Time", infoPath: "activeProblemsOnsetDate" },
+    { columnName: "Onset Date/Time", infoPath: "conditionOnsetDate" },
     { columnName: "Onset Age", infoPath: "activeProblemsOnsetAge" },
     {
       columnName: "Comments",
-      infoPath: "activeProblemsComments",
+      infoPath: "noteText",
       applyToValue: (v) => safeParse(v),
       hiddenBaseText: "comment",
     },
