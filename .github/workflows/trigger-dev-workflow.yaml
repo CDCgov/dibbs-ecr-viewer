@@ -42,9 +42,9 @@ jobs:
     steps:
       - name: Deploy to AWS Dev
         env:
-          TF_BRANCH: ${{ github.event.inputs.tf_branch }}
-          EVENT_TYPE: ${{ github.event.inputs.event_type }}
-          CONTAINER_TAG: ${{ github.event.inputs.container_tag }}
+          TF_BRANCH: ${{ inputs.tf_branch }}
+          EVENT_TYPE: ${{ inputs.event_type }}
+          CONTAINER_TAG: ${{ inputs.container_tag }}
         run: |
           service="dibbs-ecr-viewer"
           repo_owner="skylight-hq"
