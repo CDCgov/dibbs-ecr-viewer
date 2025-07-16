@@ -30,7 +30,7 @@ export const logIn = async (
   } = config;
 
   if (cookies[userType]) {
-    // set cookies to previouslty saved ones
+    // set cookies to previously saved ones
     await page.context().addCookies(cookies[userType]!);
   }
 
@@ -106,22 +106,19 @@ let apiToken = "";
 export const getToken = async (request: APIRequestContext) => {
   if (apiToken) return apiToken;
 
-  let token: string;
   switch (process.env.AUTH_PROVIDER) {
     case "keycloak": {
-      token = await getKeycloakToken(request);
-      break;
+      apiToken = await getKeycloakToken(request);
+      return apiToken;
     }
     case "ad": {
-      token = await getAdToken();
-      break;
+      apiToken = await getAdToken();
+      return apiToken;
     }
     default: {
       throw new Error("unknown auth provider");
     }
   }
-  apiToken = token;
-  return apiToken;
 };
 
 // Helper to get an auth token from keycloak
