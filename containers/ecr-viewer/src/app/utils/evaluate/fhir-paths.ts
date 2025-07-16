@@ -163,9 +163,9 @@ export type PathTypes = {
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
   stampedImmunizations: Immunization;
-  effectiveX: TimeX;
   codeableConceptDisplay: string;
   conditionOnsetDate: string;
+  effectivePeriod: Period;
   effectiveX: TimeX;
   code: CodeableConcept;
   noteText: string;
@@ -694,6 +694,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   code: {
     type: "CodeableConcept",
     path: "code",
+  },
+  effectivePeriod: {
+    type: "Period",
+    path: "effectivePeriod",
   },
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
