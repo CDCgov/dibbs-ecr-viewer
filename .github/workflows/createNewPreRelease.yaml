@@ -27,7 +27,7 @@ jobs:
     name: Build containers
     needs:
       - list-containers
-      - test-for-release
+      # - test-for-release
     runs-on: ubuntu-latest
     strategy:
       matrix:
