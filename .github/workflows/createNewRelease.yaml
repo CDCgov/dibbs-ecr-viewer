@@ -1,31 +1,17 @@
 name: Create New Release
 on:
   release:
-    types: [published]
+    types: [released]
 
-# Run all tests before making a release
 jobs:
   list-containers:
     uses: ./.github/workflows/listContainers.yaml
 
-  test-for-release:
-    needs:
-      - list-containers
-    strategy:
-      matrix:
-        container: ${{fromJson(needs.list-containers.outputs.all-containers)}}
-    uses: ./.github/workflows/run-container-workflow.yaml
-    with:
-      container: ${{ matrix.container }}
-      ref_name: ${{ github.ref_name }}
-    secrets: inherit
-
   # Rebuild all containers for the new release
-  build-containers-for-release:
-    name: Build containers
+  tag-containers-for-release:
+    name: Tag containers
     needs:
       - list-containers
-      - test-for-release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -57,7 +43,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=raw,value=latest,enable=${{ !github.event.release.prerelease }}
+            type=raw,value=latest
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -75,7 +61,7 @@ jobs:
   generate-and-update-python-container-docs:
     needs:
       - list-containers
-      - build-containers-for-release
+      - tag-containers-for-release
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -127,7 +113,7 @@ jobs:
 
   generate-and-update-ecr-viewer-container-docs:
     needs:
-      - build-containers-for-release
+      - tag-containers-for-release
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -149,7 +135,7 @@ jobs:
 
   commit-docs:
     needs:
-      - build-containers-for-release
+      - tag-containers-for-release
       - generate-and-update-python-container-docs
       - generate-and-update-ecr-viewer-container-docs
     permissions:
