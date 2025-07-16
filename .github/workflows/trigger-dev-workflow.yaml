@@ -19,6 +19,22 @@ on:
           - trigger-dibbs-ecr-viewer-aws-dev-deploys
         description: "The event type to trigger the workflow."
         required: true
+  workflow_call:
+    inputs:
+      container_tag:
+        type: string
+        description: "The container tag to deploy. Example: `5.0.0`"
+        required: true
+      tf_branch:
+        type: string
+        description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
+        required: false
+        default: main
+      event_type:
+        type: string
+        default: trigger-dibbs-ecr-viewer-aws-dev-deploys
+        description: "The event type to trigger the workflow."
+        required: false
 
 jobs:
   trigger_aws_dev_workflow:
