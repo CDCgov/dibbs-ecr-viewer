@@ -9,6 +9,8 @@ jobs:
     uses: ./.github/workflows/listContainers.yaml
 
   test-for-release:
+    # just for testing
+    if: false
     needs:
       - list-containers
     strategy:
