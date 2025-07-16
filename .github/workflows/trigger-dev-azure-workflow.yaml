@@ -37,7 +37,7 @@ on:
         required: false
 
 jobs:
-  trigger_aws_dev_workflow:
+  trigger_azure_dev_workflow:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Azure Dev
