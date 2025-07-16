@@ -128,6 +128,7 @@ export type PathTypes = {
   plannedServiceRequestTime: TimeX;
   plannedMedicationName: CodeableConcept;
   adminMedicationsRefs: string;
+  adminMedicationTherapeuticResponseObs: CodeableConcept;
   careTeamParticipants: CareTeamParticipant;
   careTeamParticipantMemberName: string;
   careTeamParticipantRole: string;
@@ -551,6 +552,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   adminMedicationsRefs: {
     type: "string",
     path: "Bundle.entry.resource.section.where(code.coding[0].code = '29549-3').entry.reference",
+  },
+  adminMedicationTherapeuticResponseObs: {
+    type: "CodeableConcept",
+    path: "extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-therapeutic-medication-response-extension').valueCodeableConcept",
   },
 
   // CareTeam

@@ -176,11 +176,21 @@ const evaluateAdministeredMedication = (
         );
       }
 
+      const therapeuticResponses = evaluateAll(
+        medicationAdministration,
+        fhirPathMappings.adminMedicationTherapeuticResponseObs,
+      ).map((c) => formatCodeableConcept(c) ?? "");
+      const therapeuticResponseText =
+        therapeuticResponses.length > 0
+          ? therapeuticResponses.join("\n")
+          : undefined;
+
       return {
         date:
           medicationAdministration?.effectiveDateTime ??
           medicationAdministration?.effectivePeriod?.start,
         name: formatCodeableConcept(medication?.code),
+        therapeuticResponse: therapeuticResponseText,
       };
     });
 };
