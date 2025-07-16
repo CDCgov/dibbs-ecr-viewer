@@ -63,11 +63,7 @@ ssh-keygen -t rsa -b 4096 -f private_key.pem -N ""
 ssh-keygen -y -f private_key.pem > public_key.pub
 ```
 
-3. Set the public key as the `NBS_API_PUB_KEY` environment variable:
-
-```shell
-export NBS_API_PUB_KEY="$(cat public_key.pub)"
-```
+3. Set the public key as the `NBS_API_PUB_KEY` environment variable in your deployment configuration (Docker container, Kubernetes, etc.) using the content of your `public_key.pub` file.
 
 ### Generating a JWT for Testing
 
@@ -171,6 +167,8 @@ curl {{ dibbs-url }}/ecr-viewer/api/migrate-db --form migration_secret={{ migrat
 </details>
 
 ### 3. Pipeline Run
+
+**Note:** This walkthrough focuses on testing with zip files for simplicity, but the `process-ecr` endpoint also accepts individual eCR XML files, separate eCR and RR files, or inline string content. For more details on all supported formats and additional parameters, see the [API Documentation](api-documentation.md#process-ecr).
 
 Now, we need to verify that an eCR can run through the DIBBs pipeline. Below, you'll need to replace `{{path-to-eCR-zip-file}}` with the actual link to your sample eCR/RR zip file and `{{jwt-token}}` with your generated JWT token.
 
