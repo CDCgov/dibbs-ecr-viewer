@@ -407,7 +407,7 @@ export const returnProceduresTable = (
   }
 
   const columnInfo: ColumnInfoInput[] = [
-    { columnName: "Name", infoPath: "procedureName" },
+    { columnName: "Name", infoPath: "code" },
     {
       columnName: "Date/Time Performed",
       infoPath: "procedureDate",
@@ -463,7 +463,7 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
     },
     {
       title: "Outcome",
-      value: evaluateValue(procedure, fhirPathMappings.procedureOutcome),
+      value: evaluateValue(procedure, fhirPathMappings.valueX),
     },
     {
       title: "Complication",
@@ -568,7 +568,7 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
   const columns = [
     {
       columnName: "Vital Reading",
-      infoPath: "vitalSignType",
+      infoPath: "code",
       applyToValue: toSentenceCase,
     },
     { columnName: "Result", infoPath: "valueX" },
