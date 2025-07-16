@@ -22,7 +22,7 @@ const SocialHistory: React.FC<SocialHistoryProps> = ({ socialData }) => {
     <AccordionSection>
       <AccordionSubSection title="Social History">
         {socialData.map((item, index) => {
-          if (item.fullWidthContent) {
+          if (item.table) {
             return <DataTableDisplay item={item} key={index} />;
           } else {
             return <DataDisplay item={item} key={index} />;

@@ -442,7 +442,7 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     {
       title: "Travel History",
       value: evaluateTravelHistoryTable(fhirBundle),
-      fullWidthContent: true,
+      table: true,
     },
     {
       title: "Homeless Status",

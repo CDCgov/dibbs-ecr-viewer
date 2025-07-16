@@ -624,7 +624,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                     </div>
                     <div>
                       <div
-                        class="grid-row flex-column"
+                        class="grid-row"
                       >
                         <div
                           class="data-title padding-right-1"
@@ -632,7 +632,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Travel History
                         </div>
                         <div
-                          class="grid-col width-full text-pre-line p-list text-italic text-base"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
