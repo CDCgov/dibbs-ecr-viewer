@@ -91,7 +91,7 @@ jobs:
 
       - name: Update Container Documentation
         env:
-          APP_VERSION: ${{ needs.build-containers-for-release.outputs.version }}
+          APP_VERSION: ${{ needs.tag-containers-for-release.outputs.version }}
           # Orchestration
           TRIGGER_CODE_REFERENCE_URL: http://localhost:8086
           FHIR_CONVERTER_URL: http://localhost:8082
@@ -104,12 +104,12 @@ jobs:
           cp $GITHUB_WORKSPACE/utils/make_openapi_json.py .
           pip install -r requirements.txt
           python make_openapi_json.py
-          redoc-cli build -o $GITHUB_WORKSPACE/docs/${{ needs.build-containers-for-release.outputs.version }}/containers/$CONTAINER.html openapi.json
+          redoc-cli build -o $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/$CONTAINER.html openapi.json
 
       - uses: actions/upload-artifact@v4
         with:
           name: container-docs-${{ matrix.container }}
-          path: ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+          path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
 
   generate-and-update-ecr-viewer-container-docs:
     needs:
@@ -123,15 +123,15 @@ jobs:
           fetch-depth: "0"
       - name: Update Container Documentation
         env:
-          APP_VERSION: ${{ needs.build-containers-for-release.outputs.version }}
+          APP_VERSION: ${{ needs.tag-containers-for-release.outputs.version }}
         run: |
           cd $GITHUB_WORKSPACE/containers/ecr-viewer
           npm ci
-          npm run docs -- --out $GITHUB_WORKSPACE/docs/${{ needs.build-containers-for-release.outputs.version }}/containers/ecr-viewer
+          npm run docs -- --out $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/ecr-viewer
       - uses: actions/upload-artifact@v4
         with:
           name: container-docs-ecr-viewer
-          path: ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+          path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
 
   commit-docs:
     needs:
@@ -151,14 +151,14 @@ jobs:
         with:
           pattern: container-docs-*
           merge-multiple: true
-          path: ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+          path: ./all-docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
 
       - name: Copy to latest folder - copy ecr-viewer docs to main deployment folder
         run: |
           rm -rf ./all-docs/latest
           rm -rf ./docs/latest
           mkdir -p ./all-docs/latest/containers
-          cp -r ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers/* ./all-docs/latest/containers
+          cp -r ./all-docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/* ./all-docs/latest/containers
           cp -r ./all-docs/latest/containers/ecr-viewer/* ./docs/
 
       - name: Commit New Documentation
@@ -167,4 +167,4 @@ jobs:
           add: |
             - docs
             - all-docs
-          message: Automated update of docs for ${{ needs.build-containers-for-release.outputs.version }} release.
+          message: Automated update of docs for ${{ needs.tag-containers-for-release.outputs.version }} release.
