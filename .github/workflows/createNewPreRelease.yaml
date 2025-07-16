@@ -71,6 +71,8 @@ jobs:
             APP_VERSION: ${{ steps.meta.outputs.version }}
 
   deploy-container-to-aws-test-env:
+    needs:
+      - build-containers-for-release
     uses: ./.github/workflows/trigger-dev-workflow.yaml
     with:
       container_tag: ${{ needs.build-containers-for-release.outputs.version }}
