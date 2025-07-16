@@ -1,5 +1,5 @@
-name: Trigger Deploy to AWS Dev
-run-name: "Trigger Deploy - Container Tag: ${{ inputs.container_tag }}, Terraform Branch: ${{ inputs.tf_branch }}, Event Type: ${{ inputs.event_type }} to AWS Dev by @${{ github.actor }}"
+name: Trigger Deploy to Azure Dev
+run-name: "Trigger Deploy - Azure - Container Tag: ${{ inputs.container_tag }}, Terraform Branch: ${{ inputs.tf_branch }}, Event Type: ${{ inputs.event_type }} to Azure Dev by @${{ github.actor }}"
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ on:
       event_type:
         type: choice
         options:
-          - trigger-dibbs-ecr-viewer-aws-dev-deploys
+          - trigger-dibbs-ecr-viewer-azure-dev-deploys
         description: "The event type to trigger the workflow."
         required: true
   workflow_call:
@@ -32,7 +32,7 @@ on:
         default: main
       event_type:
         type: string
-        default: trigger-dibbs-ecr-viewer-aws-dev-deploys
+        default: trigger-dibbs-ecr-viewer-azure-dev-deploys
         description: "The event type to trigger the workflow."
         required: false
 
@@ -40,7 +40,7 @@ jobs:
   trigger_aws_dev_workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to AWS Dev
+      - name: Deploy to Azure Dev
         env:
           TF_BRANCH: ${{ inputs.tf_branch }}
           EVENT_TYPE: ${{ inputs.event_type }}
