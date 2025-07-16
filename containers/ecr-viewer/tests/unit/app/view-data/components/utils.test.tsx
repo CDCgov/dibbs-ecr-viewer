@@ -10,6 +10,7 @@ import BundleWithMiscNotes from "../../../../../../../test-data/fhir/BundleMiscN
 import BundleNoActiveProblems from "../../../../../../../test-data/fhir/BundleNoActiveProblems.json";
 import BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import BundleWithPendingResultsOnly from "../../../../../../../test-data/fhir/BundlePendingResultsOnly.json";
+import BundleWithPlannedMedsOnly from "../../../../../../../test-data/fhir/BundlePlannedMedsOnly.json";
 import BundleWithScheduledApptsOnly from "../../../../../../../test-data/fhir/BundleScheduledApptsOnly.json";
 import BundleWithSexualOrientation from "../../../../../../../test-data/fhir/BundleSexualOrientation.json";
 import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
@@ -105,6 +106,10 @@ describe("Utils", () => {
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
       );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
     });
     it("Should return Plan of Treatment when only scheduled appointments", () => {
       const actual = evaluateClinicalData(
@@ -113,6 +118,22 @@ describe("Utils", () => {
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
       );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
+    });
+    it("Should return Plan of Treatment when only ordered meds", () => {
+      const actual = evaluateClinicalData(
+        BundleWithPlannedMedsOnly as unknown as Bundle,
+      );
+      expect(actual.treatmentData.availableData[0].title).toEqual(
+        "Plan of Treatment",
+      );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
     });
   });
 

@@ -127,6 +127,7 @@ export type PathTypes = {
   plannedServiceRequestName: CodeableConcept;
   plannedServiceRequestTime: TimeX;
   plannedMedicationName: CodeableConcept;
+  plannedMedicationDosage: ValueX;
   adminMedicationsRefs: string;
   adminMedicationTherapeuticResponseObs: CodeableConcept;
   careTeamParticipants: CareTeamParticipant;
@@ -546,6 +547,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   plannedMedicationName: {
     type: "CodeableConcept",
     path: "medicationCodeableConcept",
+  },
+  plannedMedicationDosage: {
+    type: "ValueX",
+    path: "dosageInstruction.doseAndRate.dose",
   },
 
   // Administered Medications

@@ -381,7 +381,7 @@ const evaluatePlanOfTreatment = (
           columns={[
             { columnName: "Name", infoPath: "plannedMedicationName" },
             { columnName: "Ordered On", infoPath: "authoredOn" },
-            // Add dosage info
+            { columnName: "Dosage", infoPath: "plannedMedicationDosage" },
           ]}
         />
       )}
