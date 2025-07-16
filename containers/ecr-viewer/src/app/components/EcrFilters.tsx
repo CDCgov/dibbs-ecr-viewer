@@ -64,6 +64,13 @@ const Filters = (props: FilterProps) => {
   );
 };
 
+const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
+
+type FilterConditionsType = {
+  [NO_CONDITIONS_REPORTED_OPTION]: boolean;
+  [key: string]: boolean;
+};
+
 /**
  * Functional component for filtering eCRs in the Library based on reportable conditions.
  * @param props - props to pass to FilterReportableConditions
@@ -79,18 +86,23 @@ const FilterReportableConditions = ({
 }: FilterProps) => {
   const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
-  const initFilterState = allConditions.reduce(
-    (dict: { [key: string]: boolean }, condition: string) => {
-      dict[condition] = initConditions.includes(condition);
-      return dict;
-    },
-    {} as { [key: string]: boolean },
+  const initFilterState = {
+    [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(NO_CONDITIONS_REPORTED_OPTION),
+    ...allConditions.reduce(
+      (dict: { [key: string]: boolean }, condition: string) => {
+        dict[condition] = initConditions.includes(condition);
+        return dict;
+      },
+      {} as { [key: string]: boolean },
+    ),
+  };
+
+  const [filterConditions, setFilterConditions] = useState<FilterConditionsType>(initFilterState);
+
+  // 3. Computed values
+  const isAllSelected = Object.values(filterConditions).every(
+    (val) => val === true,
   );
-
-  const [filterConditions, setFilterConditions] = useState(initFilterState);
-
-  // Keep state in sync with updated params while maintaining correct focus on submit
-  useEffect(() => setFilterConditions(initFilterState), [initConditions]);
 
   // Build list of conditions to filter on
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,41 +110,54 @@ const FilterReportableConditions = ({
     setFilterConditions((prev) => {
       return { ...prev, [value]: checked };
     });
-  };
+  }
 
-  const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true,
-  );
-
-  // Check/Uncheck all boxes based on Select all checkbox
   const handleSelectAll = () => {
-    const updatedConditions = Object.keys(filterConditions).reduce(
-      (dict, condition) => {
-        dict[condition] = !isAllSelected;
-        return dict;
-      },
-      {} as { [key: string]: boolean },
-    );
-
+    const newSelectAllState = !isAllSelected;
+  
+    const updatedConditions: FilterConditionsType = {
+      [NO_CONDITIONS_REPORTED_OPTION]: newSelectAllState,
+      ...Object.fromEntries(
+        Object.entries(filterConditions)
+          .filter(([key]) => key !== NO_CONDITIONS_REPORTED_OPTION)
+          .map(([key]) => [key, newSelectAllState])
+      ),
+    };
     setFilterConditions(updatedConditions);
   };
 
+   // Keep state in sync with updated params while maintaining correct focus on submit
+  useEffect(() => setFilterConditions(initFilterState), [initConditions]);
+
+  const activeConditions = Object.keys(filterConditions).filter(
+   (key) => filterConditions[key] === true,
+  );
+
+  const noConditionsReportedOption = {
+    [NO_CONDITIONS_REPORTED_OPTION]: filterConditions[NO_CONDITIONS_REPORTED_OPTION]
+  };
+
+  const regularConditions = Object.fromEntries(
+    Object.entries(filterConditions).filter(
+      ([key]) => key !== NO_CONDITIONS_REPORTED_OPTION
+    )
+  );
+
   return (
-    <Filter
-      type="reportable condition"
-      isActive={!isAllSelected}
-      resetHandler={() => setFilterConditions(initFilterState)}
-      icon={Coronavirus}
-      tag={
-        Object.keys(filterConditions).filter(
-          (key) => filterConditions[key] === true,
-        ).length || "0"
-      }
-      submitHandler={() => {
-        updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
-        pushQueryUpdate();
-      }}
-    >
+  <Filter
+    type="reportable condition"
+    isActive={!isAllSelected}
+    resetHandler={() => setFilterConditions(initFilterState)}
+    icon={Coronavirus}
+    tag={activeConditions.length}
+    submitHandler={() => {
+      const conditionsToSubmit = isAllSelected 
+        ? { ...filterConditions, [NO_CONDITIONS_REPORTED_OPTION]: true }
+        : filterConditions;
+      updateQueryParam(ParamName.Condition, conditionsToSubmit, false);
+      pushQueryUpdate();
+    }}
+  >
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
         <SelectDeselectAllCheckbox
@@ -140,19 +165,21 @@ const FilterReportableConditions = ({
           onToggle={handleSelectAll}
           isAllSelected={isAllSelected}
         />
-        {allConditions.length > 0 && (
-          <div className="border-top-1px border-base-lighter margin-x-105"></div>
-        )}
-        {/* Filter Conditions checkboxes */}
+        <div className="border-top-1px border-base-lighter margin-x-105"></div>
         <CheckboxOptions
           groupName="condition"
-          filterItems={filterConditions}
+          filterItems={noConditionsReportedOption}
+          onChange={handleCheckboxChange}
+        />
+        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        <CheckboxOptions
+          groupName="condition"
+          filterItems={regularConditions}
           onChange={handleCheckboxChange}
         />
       </div>
-      <div className="border-top-1px border-base-lighter"></div>
-    </Filter>
-  );
+  </Filter>
+);
 };
 
 /**
