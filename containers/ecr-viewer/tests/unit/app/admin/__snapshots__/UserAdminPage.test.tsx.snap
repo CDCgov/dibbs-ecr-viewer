@@ -419,7 +419,8 @@ exports[`User Admin Page Creating users should render a create user page with no
               <p
                 class="usa-alert__text"
               >
-                When you create a user, they won't have access to any eCRs until you create a program area. 
+                When you create a user, they won't have access to any eCRs until you create a program area.
+                 
                 <a
                   class="usa-link"
                   href="/ecr-viewer/admin/program/create"
