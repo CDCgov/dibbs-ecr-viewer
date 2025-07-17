@@ -1,7 +1,7 @@
 // NOTE: this file assume it is running on a deployment with an un-set-up DB
 import { test, expect } from "@playwright/test";
 
-import { logInToKeycloak } from "./dual/utils";
+import { getToken, logIn } from "./utils";
 
 const toForm = (obj: Record<string, string>) => {
   const form = new FormData();
@@ -9,32 +9,34 @@ const toForm = (obj: Record<string, string>) => {
   // orchestration service (not worth it at this time, this could change
   // down the road)
   form.append("skip_condition_update", "true");
-  form.append("init_admin_email", "ecr-viewer@admin.com"); // keycloak email
+  form.append("init_admin_email", process.env.AUTH_ADMIN_USER!);
   for (const [k, v] of Object.entries(obj)) {
     form.append(k, v);
   }
   return form;
 };
 
-const headers = {
-  Authorization: `Bearer ${process.env.DUMMY_NBS_JWT}`,
-};
-
+// don't run if no database
 test.describe("migrations", () => {
-  test.beforeEach(logInToKeycloak);
+  test.skip(
+    process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
+      !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
+    "No migrations if no metadata db",
+  );
 
   test("should follow whole flow through up and down", async ({
     page,
     request,
   }) => {
-    await page.goto("/ecr-viewer");
+    await logIn(page, { expectedHeading: "eCR Viewer setup is incomplete" });
 
-    await expect(
-      page.getByText("eCR Viewer setup is incomplete"),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "eCR Library" }),
-    ).not.toBeVisible();
+    const token = process.env.CONFIG_NAME.endsWith("_DUAL")
+      ? process.env.DUMMY_NBS_JWT
+      : await getToken(request);
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
 
     const noSecret = await request.post(`/ecr-viewer/api/migrate-db`, {
       headers,

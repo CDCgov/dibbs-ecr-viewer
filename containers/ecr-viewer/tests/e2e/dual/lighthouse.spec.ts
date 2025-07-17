@@ -8,7 +8,7 @@ import {
   playwrightLighthouseResult,
 } from "playwright-lighthouse";
 
-import { logInToKeycloak } from "./utils";
+import { logIn } from "../utils";
 
 const lighthouseTest = test.extend<
   {},
@@ -80,7 +80,7 @@ const lighthouseTest = test.extend<
 });
 
 lighthouseTest.describe("lighthouse", async () => {
-  lighthouseTest.beforeEach(logInToKeycloak);
+  lighthouseTest.beforeEach(({ page }) => logIn(page));
 
   lighthouseTest(
     "home page",
