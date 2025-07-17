@@ -1,65 +1,49 @@
-import { Observation, Period } from "fhir/r4";
+import { Observation } from "fhir/r4";
 
 import { evaluateOne } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 
-const getObservationDate = (obs: Observation): Date | undefined => {
-  const date = evaluateOne(obs, fhirPathMappings.effectiveX);
+const ONGOING_DATE = new Date("9999-01-01");
 
-  if (date) {
-    if (typeof date === "string") {
-      return new Date(date);
-    } else if (date.start && !date.end) {
-      return new Date("9999-01-01"); // Ongoing, arbitrary date in the future
-    } else if (date.end) {
-      return new Date(date.end);
-    }
+const parseDate = (dateString: string | undefined): Date | undefined =>
+  dateString ? new Date(dateString) : undefined;
+
+const getObservationDates = (obs: Observation) => {
+  const dateElement = evaluateOne(obs, fhirPathMappings.effectiveX);
+
+  if (!dateElement) return { effective: undefined, start: undefined };
+
+  if (typeof dateElement === "string") {
+    return { effective: new Date(dateElement), start: undefined };
   }
+
+  // Handle Period objects
+  const start = parseDate(dateElement.start);
+  const effective =
+    dateElement.start && !dateElement.end
+      ? ONGOING_DATE
+      : parseDate(dateElement.end);
+
+  return { effective, start };
 };
 
-const compareObservationsByDate = (a: Observation, b: Observation) => {
-  let date_a = getObservationDate(a);
-  let date_b = getObservationDate(b);
-  if (date_a && date_b) {
-    const difference = date_b.getTime() - date_a.getTime(); // Sort descending
+const compareDates = (a: Date | undefined, b: Date | undefined): number => {
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+  return b.getTime() - a.getTime(); // Descending
+};
 
-    if (difference === 0) {
-      // If the same date, check if they have start dates, they do, use that
+const compareObservationsByDate = (a: Observation, b: Observation): number => {
+  const datesA = getObservationDates(a);
+  const datesB = getObservationDates(b);
 
-      const dateElement_a = evaluateOne(a, fhirPathMappings.effectiveX);
-      const dateElement_b = evaluateOne(b, fhirPathMappings.effectiveX);
-
-      const start_a = (dateElement_a as Period).start;
-      const start_b = (dateElement_b as Period).start;
-
-      date_a = start_a ? new Date(start_a) : undefined;
-      date_b = start_b ? new Date(start_b) : undefined;
-
-      if (date_a && date_b) {
-        return date_b.getTime() - date_a.getTime();
-      } else if (date_a) {
-        return -1; // a comes before b
-      } else if (date_b) {
-        return 1; // b comes before a
-      } else {
-        return 0;
-      }
-    } else {
-      return difference;
-    }
-  } else if (date_a) {
-    return -1; // a comes before b
-  } else if (date_b) {
-    return 1; // b comes before a
-  } else {
-    return 0; // No change in order
-  }
+  const effectiveDiff = compareDates(datesA.effective, datesB.effective);
+  return effectiveDiff || compareDates(datesA.start, datesB.start);
 };
 
 /**
  * Return an descending order (most recent first) list of observations by `effective[x]` (period or DateTime).
- *
- * If observation has `effectivePeriod` the start date will be used if present, otherwise the end date.
  * @param observationArray Array of observations
  * @returns Ordered list of observations by effective[x]
  */
