@@ -9,8 +9,6 @@ jobs:
     uses: ./.github/workflows/list-containers.yaml
 
   test-for-release:
-    # just for testing
-    if: false
     needs:
       - list-containers
     strategy:
@@ -27,7 +25,7 @@ jobs:
     name: Build containers
     needs:
       - list-containers
-      # - test-for-release
+      - test-for-release
     runs-on: ubuntu-latest
     strategy:
       matrix:
