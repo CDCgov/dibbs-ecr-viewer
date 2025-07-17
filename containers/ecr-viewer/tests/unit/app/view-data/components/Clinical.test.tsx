@@ -730,7 +730,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
 
     const expectedTable = clinicalInfo.getAllByTestId("table");
     expect(expectedTable[0]).toBeInTheDocument();
-    expect(expectedTable.length).toEqual(4);
+    expect(expectedTable.length).toEqual(3);
   });
 
   it("eCR Viewer renders emergency outbreak info given FHIR bundle with emergency outbreak info", () => {
@@ -779,7 +779,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
 
     const expectedTable = clinicalInfo.getAllByTestId("table");
     expect(expectedTable[0]).toBeInTheDocument();
-    expect(expectedTable.length).toEqual(7);
+    expect(expectedTable.length).toEqual(6);
 
     const expectedVitalSignsElement = clinicalInfo.getByTestId("vital-signs");
     expect(expectedVitalSignsElement).toBeInTheDocument();

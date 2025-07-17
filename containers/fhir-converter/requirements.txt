@@ -3,6 +3,5 @@ hl7
 httpx>=0.28.1
 lxml
 pydantic>=2.0.0
-syrupy>=4.8.2
 uuid
 uvicorn[standard]>=0.34.3

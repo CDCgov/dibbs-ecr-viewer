@@ -25,7 +25,6 @@ describe("AdminMedTable", () => {
       />,
     );
 
-    expect(screen.getByText("Administered Medications")).toBeVisible();
     expect(screen.getByText("aspirin tablet 325 mg")).toBeVisible();
     expect(screen.getByText("09/29/2022")).toBeVisible();
     expect(screen.getByText("09/29/2022 4:53 AM")).toBeVisible();

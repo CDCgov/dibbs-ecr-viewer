@@ -115,7 +115,7 @@ describe("evaluate", () => {
 
   describe("evaluateOne", () => {
     it("should return undefined if no result", () => {
-      const res = evaluateOne({}, fhirPathMappings.plannedProcedureOrderedDate);
+      const res = evaluateOne({}, fhirPathMappings.observationOrganismMethod);
       expect(res).toBeUndefined();
     });
 
@@ -124,12 +124,12 @@ describe("evaluate", () => {
         {
           extension: [
             {
-              url: "dibbs.orderedDate",
+              url: "methodCode originalText",
               valueString: "first",
             },
           ],
         },
-        fhirPathMappings.plannedProcedureOrderedDate,
+        fhirPathMappings.observationOrganismMethod,
       );
       expect(res).toEqual("first");
     });
@@ -143,16 +143,16 @@ describe("evaluate", () => {
         {
           extension: [
             {
-              url: "dibbs.orderedDate",
+              url: "methodCode originalText",
               valueString: "first",
             },
             {
-              url: "dibbs.orderedDate",
+              url: "methodCode originalText",
               valueString: "second",
             },
           ],
         },
-        fhirPathMappings.plannedProcedureOrderedDate,
+        fhirPathMappings.observationOrganismMethod,
       );
       expect(res).toEqual("first");
     });

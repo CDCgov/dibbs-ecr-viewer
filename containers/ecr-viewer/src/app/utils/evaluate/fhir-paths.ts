@@ -108,11 +108,14 @@ export type PathTypes = {
   activeProblemsOnsetAge: ValueX;
   historyOfPresentIllness: string;
   emergencyOutbreakInfo: Observation;
-  planOfTreatment: string;
-  plannedProcedures: CarePlanActivity;
-  plannedProcedureName: string;
-  plannedProcedureOrderedDate: string;
-  plannedProcedureScheduledDate: string;
+  planOfTreatment: CarePlanActivity;
+  authoredOn: TimeX;
+  plannedActivityName: CodeableConcept;
+  plannedActivityType: string;
+  plannedActivityTime: TimeX;
+  plannedServiceRequestTime: TimeX;
+  plannedMedicationName: CodeableConcept;
+  plannedMedicationDosage: ValueX;
   adminMedicationsRefs: string;
   adminMedicationTherapeuticResponseObs: CodeableConcept;
   careTeamParticipants: CareTeamParticipant;
@@ -463,28 +466,36 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   // Treatment Details
   planOfTreatment: {
-    type: "string",
-    path: "entry.resource.section.where(title = 'Plan of Treatment').text.`div`",
-  },
-  plannedProcedures: {
     type: "CarePlanActivity",
     path: "entry.resource.CarePlan.activity",
   },
-  plannedProcedureName: {
-    type: "string",
-    path: "detail.code.coding.display",
+  authoredOn: {
+    type: "TimeX",
+    path: "authoredOn",
   },
-  /**
-   * the shorthand `extension(url)` will only work where there is also a `resourceType`, i.e, a `Resource`. This
-   * path is used on `CarePlan.activity` which is merely a `BackboneElement`.
-   */
-  plannedProcedureOrderedDate: {
-    type: "string",
-    path: "extension.where(url = 'dibbs.orderedDate').valueString",
+  plannedActivityName: {
+    type: "CodeableConcept",
+    path: "detail.code",
   },
-  plannedProcedureScheduledDate: {
+  plannedActivityType: {
     type: "string",
-    path: "detail.scheduledString",
+    path: "detail.kind",
+  },
+  plannedActivityTime: {
+    type: "TimeX",
+    path: "detail.scheduled",
+  },
+  plannedServiceRequestTime: {
+    type: "TimeX",
+    path: "occurrence",
+  },
+  plannedMedicationName: {
+    type: "CodeableConcept",
+    path: "medicationCodeableConcept",
+  },
+  plannedMedicationDosage: {
+    type: "ValueX",
+    path: "dosageInstruction.doseAndRate.dose",
   },
 
   // Administered Medications
