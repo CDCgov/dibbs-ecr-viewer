@@ -7,7 +7,7 @@ jobs:
   list-containers:
     uses: ./.github/workflows/list-containers.yaml
 
-  # Rebuild all containers for the new release
+  # Rebuild all containers for the new release with latest tag
   tag-containers-for-release:
     name: Tag containers
     needs:
