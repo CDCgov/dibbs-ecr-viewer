@@ -338,22 +338,28 @@ export const generateFilterConditionsStatement = (
   filterConditions?: string[] | undefined,
 ) => {
   if (!filterConditions) return trueStmt(eb);
-  if (filterConditions.length === 0
-    || filterConditions.every(condition => condition === '')) {
+  if (
+    filterConditions.length === 0 ||
+    filterConditions.every((condition) => condition === "")
+  ) {
     return falseStmt(eb);
   }
 
   // Check if "No conditions reported" is selected
   const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
-  const includeNoConditions = filterConditions.includes(NO_CONDITIONS_REPORTED_OPTION);
-  const actualConditions = filterConditions.filter(condition => condition !== NO_CONDITIONS_REPORTED_OPTION);
+  const includeNoConditions = filterConditions.includes(
+    NO_CONDITIONS_REPORTED_OPTION,
+  );
+  const actualConditions = filterConditions.filter(
+    (condition) => condition !== NO_CONDITIONS_REPORTED_OPTION,
+  );
 
   // If only "No conditions reported" is selected
   if (includeNoConditions && actualConditions.length === 0) {
     return eb("ecr_data.eicr_id", "not in", (subQb) =>
       subQb
         .selectFrom("ecr_rr_conditions as erc_sub")
-        .select("erc_sub.eicr_id")
+        .select("erc_sub.eicr_id"),
     );
   }
 
@@ -379,12 +385,11 @@ export const generateFilterConditionsStatement = (
   // If both "No conditions reported" AND actual conditions are selected
   if (includeNoConditions && actualConditions.length > 0) {
     return eb.or([
-
       // Include eCRs with no conditions
       eb("ecr_data.eicr_id", "not in", (subQb) =>
         subQb
           .selectFrom("ecr_rr_conditions as erc_sub")
-          .select("erc_sub.eicr_id")
+          .select("erc_sub.eicr_id"),
       ),
 
       // Include eCRs with selected conditions

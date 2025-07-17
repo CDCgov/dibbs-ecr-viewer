@@ -87,7 +87,9 @@ const FilterReportableConditions = ({
   const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
   const initFilterState = {
-    [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(NO_CONDITIONS_REPORTED_OPTION),
+    [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(
+      NO_CONDITIONS_REPORTED_OPTION,
+    ),
     ...allConditions.reduce(
       (dict: { [key: string]: boolean }, condition: string) => {
         dict[condition] = initConditions.includes(condition);
@@ -97,7 +99,8 @@ const FilterReportableConditions = ({
     ),
   };
 
-  const [filterConditions, setFilterConditions] = useState<FilterConditionsType>(initFilterState);
+  const [filterConditions, setFilterConditions] =
+    useState<FilterConditionsType>(initFilterState);
 
   // 3. Computed values
   const isAllSelected = Object.values(filterConditions).every(
@@ -110,54 +113,55 @@ const FilterReportableConditions = ({
     setFilterConditions((prev) => {
       return { ...prev, [value]: checked };
     });
-  }
+  };
 
   const handleSelectAll = () => {
     const newSelectAllState = !isAllSelected;
-  
+
     const updatedConditions: FilterConditionsType = {
       [NO_CONDITIONS_REPORTED_OPTION]: newSelectAllState,
       ...Object.fromEntries(
         Object.entries(filterConditions)
           .filter(([key]) => key !== NO_CONDITIONS_REPORTED_OPTION)
-          .map(([key]) => [key, newSelectAllState])
+          .map(([key]) => [key, newSelectAllState]),
       ),
     };
     setFilterConditions(updatedConditions);
   };
 
-   // Keep state in sync with updated params while maintaining correct focus on submit
+  // Keep state in sync with updated params while maintaining correct focus on submit
   useEffect(() => setFilterConditions(initFilterState), [initConditions]);
 
   const activeConditions = Object.keys(filterConditions).filter(
-   (key) => filterConditions[key] === true,
+    (key) => filterConditions[key] === true,
   );
 
   const noConditionsReportedOption = {
-    [NO_CONDITIONS_REPORTED_OPTION]: filterConditions[NO_CONDITIONS_REPORTED_OPTION]
+    [NO_CONDITIONS_REPORTED_OPTION]:
+      filterConditions[NO_CONDITIONS_REPORTED_OPTION],
   };
 
   const regularConditions = Object.fromEntries(
     Object.entries(filterConditions).filter(
-      ([key]) => key !== NO_CONDITIONS_REPORTED_OPTION
-    )
+      ([key]) => key !== NO_CONDITIONS_REPORTED_OPTION,
+    ),
   );
 
   return (
-  <Filter
-    type="reportable condition"
-    isActive={!isAllSelected}
-    resetHandler={() => setFilterConditions(initFilterState)}
-    icon={Coronavirus}
-    tag={activeConditions.length}
-    submitHandler={() => {
-      const conditionsToSubmit = isAllSelected 
-        ? { ...filterConditions, [NO_CONDITIONS_REPORTED_OPTION]: true }
-        : filterConditions;
-      updateQueryParam(ParamName.Condition, conditionsToSubmit, false);
-      pushQueryUpdate();
-    }}
-  >
+    <Filter
+      type="reportable condition"
+      isActive={!isAllSelected}
+      resetHandler={() => setFilterConditions(initFilterState)}
+      icon={Coronavirus}
+      tag={activeConditions.length}
+      submitHandler={() => {
+        const conditionsToSubmit = isAllSelected
+          ? { ...filterConditions, [NO_CONDITIONS_REPORTED_OPTION]: true }
+          : filterConditions;
+        updateQueryParam(ParamName.Condition, conditionsToSubmit, false);
+        pushQueryUpdate();
+      }}
+    >
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
         <SelectDeselectAllCheckbox
@@ -178,8 +182,8 @@ const FilterReportableConditions = ({
           onChange={handleCheckboxChange}
         />
       </div>
-  </Filter>
-);
+    </Filter>
+  );
 };
 
 /**
