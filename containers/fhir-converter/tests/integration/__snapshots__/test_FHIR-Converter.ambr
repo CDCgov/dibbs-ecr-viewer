@@ -774,30 +774,6 @@
             'url': str,
           }),
           'resource': dict({
-            'activity': list([
-              dict({
-                'reference': dict,
-              }),
-            ]),
-            'id': str,
-            'intent': 'proposal',
-            'meta': dict({
-              'source': 'ecr',
-            }),
-            'resourceType': 'CarePlan',
-            'status': 'unknown',
-            'subject': dict({
-              'reference': str,
-            }),
-          }),
-        }),
-        dict({
-          'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
-          'resource': dict({
             'address': list([
               dict({
                 'city': 'Beaverton',
@@ -1017,6 +993,30 @@
             }),
             'resourceType': 'Observation',
             'status': 'final',
+          }),
+        }),
+        dict({
+          'fullUrl': str,
+          'request': dict({
+            'method': 'PUT',
+            'url': str,
+          }),
+          'resource': dict({
+            'activity': list([
+              dict({
+                'reference': dict,
+              }),
+            ]),
+            'id': str,
+            'intent': 'proposal',
+            'meta': dict({
+              'source': 'ecr',
+            }),
+            'resourceType': 'CarePlan',
+            'status': 'unknown',
+            'subject': dict({
+              'reference': str,
+            }),
           }),
         }),
         dict({
