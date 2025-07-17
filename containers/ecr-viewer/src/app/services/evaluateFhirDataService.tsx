@@ -294,18 +294,16 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
 };
 
 const getObservationDate = (obs: Observation): Date | undefined => {
-  if (obs.effectivePeriod) {
-    if (obs.effectivePeriod.start) {
-      return new Date(obs.effectivePeriod.start);
+  const date = evaluateOne(obs, fhirPathMappings.effectiveX);
+
+  if (date) {
+    if (typeof date === "string") {
+      return new Date(date);
+    } else if (date.start) {
+      return new Date(date.start);
+    } else if (date.end) {
+      return new Date(date.end);
     }
-    if (obs.effectivePeriod.end) {
-      return new Date(obs.effectivePeriod.end);
-    }
-  }
-  if (obs.effectiveDateTime) {
-    return new Date(obs.effectiveDateTime);
-  } else if (obs.effectiveInstant) {
-    return new Date(obs.effectiveInstant);
   }
 };
 
