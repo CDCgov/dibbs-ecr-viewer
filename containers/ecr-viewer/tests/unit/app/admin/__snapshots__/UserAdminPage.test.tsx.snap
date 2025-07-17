@@ -37,7 +37,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           class="minh-5 margin-bottom-1"
         />
         <div
-          class="display-flex flex-justify margin-bottom-2"
+          class="display-flex flex-justify flex-align-center margin-bottom-2"
         >
           <h2
             class="margin-0"
@@ -405,7 +405,7 @@ exports[`User Admin Page Creating users should render a create user page with no
           class="minh-5 margin-bottom-1"
         >
           <div
-            class="usa-alert usa-alert--warning"
+            class="usa-alert usa-alert--warning usa-alert--no-icon"
             data-testid="alert"
           >
             <div
@@ -432,7 +432,7 @@ exports[`User Admin Page Creating users should render a create user page with no
           </div>
         </div>
         <div
-          class="display-flex flex-justify margin-bottom-2"
+          class="display-flex flex-justify flex-align-center margin-bottom-2"
         >
           <h2
             class="margin-0"

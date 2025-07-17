@@ -31,6 +31,7 @@ const CreateUserPage = async () => {
             type="warning"
             heading="You haven't made any program areas"
             headingLevel="h4"
+            noIcon={true}
           >
             When you create a user, they won't have access to any eCRs until you
             create a program area.{" "}
