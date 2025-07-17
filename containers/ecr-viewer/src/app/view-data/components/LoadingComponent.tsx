@@ -10,11 +10,11 @@ import {
 import { BackButton } from "@/app/components/BackButton";
 import { range } from "@/app/utils/data-utils";
 import { toKebabCase } from "@/app/utils/format-utils";
+import { AccordionItem } from "@/app/view-data/types";
 import {
   AccordionSection,
   AccordionSubSection,
-} from "@/app/view-data/component-utils";
-import { AccordionItem } from "@/app/view-data/types";
+} from "@/app/view-data/utils/component-utils";
 
 import { ECRViewerLayout } from "./ECRViewerLayout";
 

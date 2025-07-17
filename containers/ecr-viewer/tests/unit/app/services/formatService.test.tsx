@@ -3,7 +3,6 @@ import {
   ContactPoint,
   HumanName,
   PatientContact,
-  Period,
 } from "fhir/r4";
 
 import {
@@ -17,7 +16,6 @@ import {
   formatAge,
   formatQuantity,
   formatRange,
-  sortByPeriod,
 } from "@/app/services/formatService";
 
 describe("FormatService tests", () => {
@@ -711,61 +709,6 @@ describe("FormatService tests", () => {
 
     it("should high only", () => {
       expect(formatRange({ high: { value: 1.234 } })).toBe("<=1.234");
-    });
-  });
-
-  describe("sortByPeriod", () => {
-    const low = "2000-01-04";
-    const mid = "2010-02-05";
-    const high = "2020-03-06";
-    const getter = (v: Period) => v;
-
-    it("should prioritize ongoing periods", () => {
-      const arr = [{ start: low }, { start: high }, { start: low }];
-      sortByPeriod(arr, getter);
-      expect(arr).toStrictEqual([
-        { start: high },
-        { start: low },
-        { start: low },
-      ]);
-    });
-
-    it("should prioritize ongoing periods over ended ones", () => {
-      const arr = [{ start: low, end: mid }, { start: high }, { start: low }];
-      sortByPeriod(arr, getter);
-      expect(arr).toStrictEqual([
-        { start: high },
-        { start: low },
-        { start: low, end: mid },
-      ]);
-    });
-
-    it("should prioritize newer start when end is the same", () => {
-      const arr = [
-        { start: low, end: mid },
-        { start: high, end: mid },
-        { start: low },
-      ];
-      sortByPeriod(arr, getter);
-      expect(arr).toStrictEqual([
-        { start: low },
-        { start: high, end: mid },
-        { start: low, end: mid },
-      ]);
-    });
-
-    it("should prioritize newer end", () => {
-      const arr = [
-        { start: low, end: mid },
-        { start: low, end: high },
-        { start: low },
-      ];
-      sortByPeriod(arr, getter);
-      expect(arr).toStrictEqual([
-        { start: low },
-        { start: low, end: high },
-        { start: low, end: mid },
-      ]);
     });
   });
 });

@@ -29,6 +29,7 @@ import {
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
+import { sortObservationsByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import {
   formatDate,
@@ -47,7 +48,6 @@ import {
   formatPatientContactList,
   formatAge,
   formatPhoneNumber,
-  sortByPeriod,
   formatCurrentAddress,
   formatReference,
 } from "./formatService";
@@ -277,15 +277,16 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     usualIndustryComp?.valueCodeableConcept,
   );
 
-  sortByPeriod(employmentObs, (obs) => obs.effectivePeriod);
-  const employmentStatus = formatCodeableConcept(
-    employmentObs?.[0]?.valueCodeableConcept,
+  const sortedEmploymentObs = sortObservationsByDate(employmentObs);
+  const currentEmploymentStatus = evaluateValue(
+    sortedEmploymentObs,
+    fhirPathMappings.valueX,
   );
 
   return [
     occTitle,
     usualIndustry && `Industry: ${usualIndustry}`,
-    employmentStatus && `Status: ${employmentStatus}`,
+    currentEmploymentStatus && `Status: ${currentEmploymentStatus}`,
     occDates && `Dates: ${occDates}`,
   ]
     .filter(Boolean)
@@ -304,13 +305,13 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
   );
   if (jobObs.length === 0) return;
 
-  sortByPeriod(jobObs, (o) => o.effectivePeriod);
+  const sortedJobsObs = sortObservationsByDate(jobObs);
 
   return (
     <ExpandCollapseAccordion
       className="accordion-rr"
       descriptor="employment details"
-      items={jobObs.map((obs) => {
+      items={sortedJobsObs.map((obs) => {
         const getComponentValue = (code: string) => {
           return (
             evaluateValue(

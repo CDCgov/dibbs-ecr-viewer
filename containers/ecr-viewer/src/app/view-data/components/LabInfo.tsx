@@ -8,7 +8,7 @@ import {
 import {
   AccordionSection,
   AccordionSubSection,
-} from "@/app/view-data/component-utils";
+} from "@/app/view-data/utils/component-utils";
 
 import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 
