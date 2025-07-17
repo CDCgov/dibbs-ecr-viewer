@@ -18,6 +18,7 @@ import { ServerActionResult } from "@/app/services/errorService";
  * @param props.formTouched Whether the form has been touched (editted)
  * @param props.itemType The type of item the form is about (e.g. "user")
  * @param props.itemHomeRoute Route to redirect to upon successful submission or to go back to
+ * @param props.banner markup to display as a banner above the form title
  * @returns form with header and submit buttons
  */
 export const FormPageContent = <T,>({
@@ -26,6 +27,7 @@ export const FormPageContent = <T,>({
   formValid,
   formTouched,
   itemHomeRoute,
+  banner,
   children,
   submitAction,
 }: {
@@ -34,6 +36,7 @@ export const FormPageContent = <T,>({
   formValid: boolean;
   formTouched: boolean;
   itemHomeRoute: string;
+  banner?: ReactNode;
   children: ReactNode;
   submitAction: () => Promise<ServerActionResult<T>>;
 }) => {
@@ -58,6 +61,8 @@ export const FormPageContent = <T,>({
         </Link>
         <div className="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container">
           <div className="minh-5 margin-bottom-1">
+            {banner}
+
             {formTouched && !submitting && !error && (
               <Alert
                 type="warning"
