@@ -1,11 +1,7 @@
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
 import { createProgramArea } from "@/app/services/programAreaService";
-import {
-  createInitialAdminUser,
-  createUser,
-  updateUserProgramAreas,
-} from "@/app/services/userService";
+import { createInitialAdminUser, createUser } from "@/app/services/userService";
 
 /**
  * Seed the user and program tables with:
@@ -36,6 +32,9 @@ export const seedUserProgramData = async () => {
 
   await createInitialAdminUser("admin@admin.com");
   const progId = await createProgramArea("test", ["123"]);
-  const userId = await createUser("standard@standard.com", "standard");
-  await updateUserProgramAreas(userId, [progId]);
+  await createUser({
+    email: "standard@standard.com",
+    userType: "standard",
+    programs: [progId],
+  });
 };

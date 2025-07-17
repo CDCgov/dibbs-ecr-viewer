@@ -6,12 +6,7 @@ import {
   deleteProgramArea,
   updateProgramArea,
 } from "./programAreaService";
-import {
-  createUser,
-  deleteUser,
-  updateUser,
-  updateUserProgramAreas,
-} from "./userService";
+import { createUser, deleteUser, updateUser } from "./userService";
 
 // The server actions are segregated from the general service as everything in a "use server"
 // file is turned into an action and we want to be more selective about what is compiled as such
@@ -19,9 +14,6 @@ import {
 // user
 export const createUserAction = makeServerAction(createUser);
 export const updateUserAction = makeServerAction(updateUser);
-export const updateUserProgramAreasAction = makeServerAction(
-  updateUserProgramAreas,
-);
 export const deleteUserAction = makeServerAction(deleteUser);
 
 // program area

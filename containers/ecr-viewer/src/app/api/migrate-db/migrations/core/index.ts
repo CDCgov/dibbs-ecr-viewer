@@ -4,4 +4,5 @@ export default {
   "20250428110000_condition_ref.ts": require("./20250428110000_condition_ref"),
   "20250505100700_ecr_fks.ts": require("./20250505100700_ecr_fks"),
   "20250522120000_condition_fk.ts": require("./20250522120000_condition_fk"),
+  "20250708095700_audit_log.ts": require("./20250708095700_audit_log"),
 };
