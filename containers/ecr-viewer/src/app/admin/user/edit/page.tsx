@@ -3,10 +3,7 @@ import { notFound } from "next/navigation";
 
 import { UserForm, UserType } from "@/app/admin/user/UserForm";
 import { listProgramAreas } from "@/app/services/programAreaService";
-import {
-  updateUserAction,
-  updateUserProgramAreasAction,
-} from "@/app/services/serverActionService";
+import { updateUserAction } from "@/app/services/serverActionService";
 import {
   getUser,
   listUserProgramAreas,
@@ -61,14 +58,14 @@ const EditUserPage = async ({
         "use server";
         revalidatePath("/ecr-viewer/admin/user");
 
-        const res = await updateUserAction(uuid, {
-          email,
-          user_type: userType,
+        const res = await updateUserAction({
+          uuid,
+          updates: {
+            email,
+            user_type: userType,
+          },
+          programs,
         });
-
-        if (!res.error) {
-          return await updateUserProgramAreasAction(uuid, programs);
-        }
         return { error: res.error };
       }}
     />

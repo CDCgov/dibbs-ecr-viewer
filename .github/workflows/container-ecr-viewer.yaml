@@ -78,15 +78,24 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  convert-data:
+  e2e-tests:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - config: AWS_SQLSERVER_NON_INTEGRATED
+          - config: AWS_SQLSERVER_DUAL
+            azure_ad: true
             schema: extended
+            endpoint: process-ecr
+          - config: GCP_PG_DUAL
+            azure_ad: false
+            schema: core
+            endpoint: process-zip
+          - config: AWS_INTEGRATED
+            azure_ad: false
             endpoint: process-zip
           - config: AZURE_PG_NON_INTEGRATED
+            azure_ad: true
             schema: core
             endpoint: process-ecr
     runs-on: ubuntu-latest
@@ -116,26 +125,23 @@ jobs:
         run: |
           echo "METADATA_DATABASE_SCHEMA=${{ matrix.schema }}" >> .env.local
 
+      - name: Set up Azure AD
+        if: ${{ matrix.azure_ad }}
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: |
+          sed -i 's/AUTH_PROVIDER=.*$/AUTH_PROVIDER=ad/' .env.local
+          sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
+          sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_SECRET }}/' .env.local
+          sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
+          sed -i 's/AUTH_ADMIN_USER=.*$/AUTH_ADMIN_USER=${{ secrets.AZURE_ADMIN_USER }}/' .env.local
+          sed -i 's/AUTH_ADMIN_PASSWORD=.*$/AUTH_ADMIN_PASSWORD=${{ secrets.AZURE_ADMIN_PASSWORD }}/' .env.local
+          sed -i 's/AUTH_STANDARD_USER=.*$/AUTH_STANDARD_USER=${{ secrets.AZURE_STANDARD_USER }}/' .env.local
+          sed -i 's/AUTH_STANDARD_PASSWORD=.*$/AUTH_STANDARD_PASSWORD=${{ secrets.AZURE_STANDARD_PASSWORD }}/' .env.local
+
       - name: Set UPLOAD_URL to ${{ matrix.endpoint }}
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           echo "UPLOAD_URL=http://host.docker.internal:3000/ecr-viewer/api/${{ matrix.endpoint }}" >> .env.local
-
-      - name: Run seed data conversion
-        run: npm run convert-seed-data
-        working-directory: ./containers/${{env.CONTAINER}}
-
-  e2e-tests:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{env.NODE_VERSION}}
 
       - name: Install dependencies
         working-directory: ./containers/${{env.CONTAINER}}
@@ -144,12 +150,6 @@ jobs:
       - name: Install Playwright Browsers
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:install
-
-      - name: Set up env vars
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
@@ -175,7 +175,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-migrations
+          name: playwright-report-migrations-${{ matrix.config }}
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
@@ -193,7 +193,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e:seed-user-prog
 
-      - name: Run Playwright tests - Non-Integrated
+      - name: Run Playwright tests
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run test:e2e
 
@@ -209,11 +209,11 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: docker compose --profile "*" down
 
-      - name: Upload playwright report - Non-Integrated
+      - name: Upload playwright report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.config }}
           path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
@@ -221,41 +221,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: lighthouse-report
+          name: lighthouse-report-${{ matrix.config }}
           path: containers/${{env.CONTAINER}}/lighthouse/
-          retention-days: 5
-
-      - name: Set CONFIG_NAME to AWS_INTEGRATED
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          sed -i 's/AWS_SQLSERVER_DUAL/AWS_INTEGRATED/' .env.local
-
-      - name: Run local docker and wait for it to be ready
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
-
-      - name: Run Playwright tests - Integrated
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:integrated
-
-      - name: Get docker logs
-        if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
-        shell: bash
-        run: |
-          echo "Saving $CONTAINER logs"
-          docker compose --profile "*" logs --timestamps &>> e2e-run.log
-
-      - name: Docker down
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: docker compose --profile "*" down
-
-      - name: Upload playwright report - integrated
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report-integrated
-          path: containers/${{env.CONTAINER}}/playwright-report/
           retention-days: 5
 
       - name: Get docker logs
@@ -267,10 +234,10 @@ jobs:
           docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
       - name: Archive docker logs
-        if: ${{ !cancelled() }}
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs
+          name: logs-${{ matrix.config }}
           path: ./containers/${{env.CONTAINER}}/tests/e2e/e2e-run.log
           retention-days: 5
 

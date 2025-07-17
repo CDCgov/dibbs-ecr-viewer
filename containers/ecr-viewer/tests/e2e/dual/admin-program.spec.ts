@@ -1,10 +1,10 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-import { logInToKeycloak } from "./utils";
+import { logIn } from "../utils";
 
 test.describe("program management page", () => {
-  test.beforeEach(logInToKeycloak);
+  test.beforeEach(({ page }) => logIn(page));
 
   test("should pass accessiblity", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/program");

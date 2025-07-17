@@ -35,6 +35,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
         >
           <a
             class="usa-current"
+            data-testid="sidenav-link"
             href="#section-1"
           >
             Section 1
@@ -45,6 +46,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
         >
           <a
             class=""
+            data-testid="sidenav-link"
             href="#section-2"
           >
             Section 2
@@ -62,6 +64,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
             >
               <a
                 class=""
+                data-testid="sidenav-link"
                 href="#section-3"
               >
                 Section 3
@@ -79,6 +82,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
                 >
                   <a
                     class=""
+                    data-testid="sidenav-link"
                     href="#section-4"
                   >
                     Section 4
@@ -91,6 +95,7 @@ exports[`SectionConfig should match the snapshot 1`] = `
             >
               <a
                 class=""
+                data-testid="sidenav-link"
                 href="#section-2---2"
               >
                 Section 2 - 2

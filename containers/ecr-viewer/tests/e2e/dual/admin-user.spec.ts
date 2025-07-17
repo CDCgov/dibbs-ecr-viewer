@@ -1,17 +1,21 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, Page } from "@playwright/test";
 
-import { logInToKeycloak } from "./utils";
+import { logIn } from "../utils";
 
 test.describe("user management page", () => {
   test("should pass accessiblity", async ({ page }) => {
-    await logInToKeycloak({ page });
+    await logIn(page);
 
     await page.goto("/ecr-viewer/admin/user");
 
     await expect(
       page.getByRole("heading", { name: "User management" }),
     ).toBeVisible();
+
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
 
     const accessibilityScanResultsBase = await new AxeBuilder({
       page,
@@ -43,9 +47,9 @@ test.describe("user management page", () => {
     ).toBeVisible();
 
     // open up side panel
-    await page.getByText("ecr-viewer@admin.com").click();
+    await page.getByText(process.env.AUTH_ADMIN_USER!).click();
     await expect(
-      page.getByRole("heading", { name: "Ecr Admin" }),
+      page.getByRole("dialog").getByText(process.env.AUTH_ADMIN_USER!),
     ).toBeVisible();
 
     // axe struggles with the modal background, but all manual testing
@@ -62,7 +66,7 @@ test.describe("user management page", () => {
     page,
     browserName,
   }) => {
-    await logInToKeycloak({ page });
+    await logIn(page);
 
     // Create programs
     const program1 = await createRandomProgramArea(page);
@@ -75,7 +79,9 @@ test.describe("user management page", () => {
 
     // Check that user has been successfully/correctly created
     await page.waitForURL("/ecr-viewer/admin/user");
-    await page.getByTestId("Select").selectOption("50"); // Increase user table pagination for testing
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
     await expect(page.getByRole("button", { name: user })).toBeVisible();
     await expect(page.getByText(`${user} successfully saved`)).toBeVisible();
     const row = page.locator("tr", {
@@ -151,14 +157,17 @@ test.describe("user management page", () => {
   });
 
   test("filter by user type or program area", async ({ page, browserName }) => {
-    await logInToKeycloak({ page });
+    await logIn(page);
 
     // Create programs
     const program1 = await createRandomProgramArea(page);
     const program2 = await createRandomProgramArea(page);
 
     // Create users
-    await page.getByTestId("Select").selectOption("50"); // Increase user table pagination for testing
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
     const userAdmin = await createRandomUser(browserName, page, "admin", []);
     const userStandard1 = await createRandomUser(
       browserName,
@@ -271,7 +280,7 @@ test.describe("user management page", () => {
   });
 
   test("it should not show to non-admin", async ({ page }) => {
-    await logInToKeycloak({ page }, undefined, "ecr-viewer-standard");
+    await logIn(page, { userType: "STANDARD" });
     await page.goto("/ecr-viewer/admin/user");
 
     await expect(
