@@ -36,7 +36,7 @@ export const audit = <
   fn: AuditableFn<Params, Ret>,
 ) => {
   return async (params: Params): Promise<Ret> => {
-    // get user outside of the transactio to avoid some sqlserver strangeness
+    // get user outside of the transaction to avoid some sqlserver strangeness
     const user = await getLoggedInUser();
     return await getDb<Core>()
       .transaction()
