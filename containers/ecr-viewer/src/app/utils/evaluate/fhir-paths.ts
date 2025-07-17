@@ -113,7 +113,6 @@ export type PathTypes = {
   plannedActivityName: CodeableConcept;
   plannedActivityType: string;
   plannedActivityTime: TimeX;
-  plannedServiceRequestName: CodeableConcept;
   plannedServiceRequestTime: TimeX;
   plannedMedicationName: CodeableConcept;
   plannedMedicationDosage: ValueX;
@@ -485,10 +484,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   plannedActivityTime: {
     type: "TimeX",
     path: "detail.scheduled",
-  },
-  plannedServiceRequestName: {
-    type: "CodeableConcept",
-    path: "code",
   },
   plannedServiceRequestTime: {
     type: "TimeX",

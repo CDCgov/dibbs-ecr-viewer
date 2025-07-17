@@ -365,7 +365,7 @@ const evaluatePlanOfTreatment = (
           resources={procs}
           caption="Planned Procedures & Orders"
           columns={[
-            { columnName: "Name", infoPath: "plannedServiceRequestName" },
+            { columnName: "Name", infoPath: "code" },
             {
               columnName: "Scheduled Time",
               infoPath: "plannedServiceRequestTime",
