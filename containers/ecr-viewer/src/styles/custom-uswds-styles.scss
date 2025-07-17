@@ -108,30 +108,47 @@
   }
 
   .usa-nav__link {
-    padding: 1rem 0.5rem !important;
-    margin: 0 0.5rem;
+    padding: 1rem 0rem !important;
+    margin: 0 1rem;
     height: 2.2rem;
     text-decoration: none;
     min-width: fit-content;
+
+    &.active-page {
+      font-weight: 800;
+      @include add-bar(0.5, "primary", "bottom", 0, 2);
+
+      &::after {
+        background-color: color("blue-cool-30");
+        left: 0;
+        right: 0;
+      }
+    }
+
+    &:hover {
+      font-weight: 600;
+      letter-spacing: normal;
+
+      &::after {
+        background-color: color("blue-cool-30");
+        left: 0;
+        right: 0;
+      }
+    }
   }
 
   .person-icon {
     width: 1.75rem;
     height: 1.75rem;
-    fill: color("blue-cool-5");
+    fill: color("primary-lightest");
   }
 
   a {
-    font-weight: 400 !important;
+    font-weight: 400;
+    letter-spacing: 0.018rem;
     font-size: 1.125rem !important;
-    color: color("blue-cool-5") !important;
+    color: color("primary-lightest") !important;
     text-decoration: none;
-  }
-
-  .usa-nav__link:hover::after {
-    background-color: color("blue-cool-30");
-    width: 91%;
-    left: 0.5rem;
   }
 
   .usa-nav-container {
