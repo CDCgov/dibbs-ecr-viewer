@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { dbDialect } from "@/app/data/metadataDb/utils/db-config";
 import { createInitialAdminUser } from "@/app/services/userService";
 
 import { migrateDown, migrateUp } from "./migrate";
@@ -38,6 +39,13 @@ interface MigrationResponse {
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<MigrationResponse>> {
+  if (!dbDialect()) {
+    return NextResponse.json(
+      { message: "No database set up to migrate" },
+      { status: 200 }, // success in the sense there's nothing to do
+    );
+  }
+
   if (!process.env.METADATA_DATABASE_MIGRATION_SECRET) {
     console.error("No migration secret found!");
     return NextResponse.json(

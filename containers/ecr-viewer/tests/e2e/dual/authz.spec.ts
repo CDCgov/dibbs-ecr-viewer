@@ -1,11 +1,10 @@
 import { test, expect } from "@playwright/test";
 
-import { logInToKeycloak } from "./utils";
+import { logIn } from "../utils";
 
 test.describe("standard user authorization", () => {
   test.beforeEach(
-    async ({ page }) =>
-      await logInToKeycloak({ page }, undefined, "ecr-viewer-standard"),
+    async ({ page }) => await logIn(page, { userType: "STANDARD" }),
   );
 
   test("header", async ({ page }) => {

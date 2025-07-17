@@ -1,14 +1,19 @@
 import { expect, test } from "@playwright/test";
 
-import { logInToKeycloak } from "./dual/utils";
+import { logIn } from "./utils";
 
 // This test is not really a test, but more of a seed script to add a
 // standard user with access to the covid program area. It is run as part of
 // the `convert-seed-data` npm script.
 
 test("seed standard user and covid program", async ({ page }) => {
+  test.skip(
+    process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
+      !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
+    "No seeding if no metadata db",
+  );
   test.setTimeout(60000); // keycloak is slow
-  await logInToKeycloak({ page });
+  await logIn(page);
 
   await page.goto("/ecr-viewer/admin/program");
 
@@ -48,7 +53,7 @@ test("seed standard user and covid program", async ({ page }) => {
       page.getByRole("heading", { name: "Create user" }),
     ).toBeVisible();
 
-    await page.getByLabel("Email").fill("ecr-viewer@standard.com");
+    await page.getByLabel("Email").fill(process.env.AUTH_STANDARD_USER!);
 
     const adminRadio = page.getByLabel("Standard");
     await adminRadio.scrollIntoViewIfNeeded();
