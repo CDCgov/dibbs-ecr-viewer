@@ -337,8 +337,8 @@ export const generateFilterConditionsStatement = (
   eb: ExpressionBuilder<Core, "ecr_data">,
   filterConditions?: string[] | undefined,
 ) => {
-  if (!filterConditions 
-    || filterConditions.length === 0
+  if (!filterConditions) return trueStmt(eb);
+  if (filterConditions.length === 0
     || filterConditions.every(condition => condition === '')) {
     return falseStmt(eb);
   }
