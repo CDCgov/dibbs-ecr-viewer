@@ -6,7 +6,7 @@ on:
 # Run all tests before making a release
 jobs:
   list-containers:
-    uses: ./.github/workflows/listContainers.yaml
+    uses: ./.github/workflows/list-containers.yaml
 
   test-for-release:
     # just for testing
