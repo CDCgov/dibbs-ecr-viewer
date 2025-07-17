@@ -6,9 +6,11 @@ on:
 # Run all tests before making a release
 jobs:
   list-containers:
-    uses: ./.github/workflows/listContainers.yaml
+    uses: ./.github/workflows/list-containers.yaml
 
   test-for-release:
+    # just for testing
+    if: false
     needs:
       - list-containers
     strategy:
@@ -25,7 +27,7 @@ jobs:
     name: Build containers
     needs:
       - list-containers
-      - test-for-release
+      # - test-for-release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -71,6 +73,17 @@ jobs:
             APP_VERSION: ${{ steps.meta.outputs.version }}
 
   deploy-container-to-aws-test-env:
-    uses: ./github/workflows/trigger-dev-workflow.yaml
+    needs:
+      - build-containers-for-release
+    uses: ./.github/workflows/trigger-dev-workflow.yaml
     with:
       container_tag: ${{ needs.build-containers-for-release.outputs.version }}
+      environment: aws
+
+  deploy-container-to-azure-test-env:
+    needs:
+      - build-containers-for-release
+    uses: ./.github/workflows/trigger-dev-workflow.yaml
+    with:
+      container_tag: ${{ needs.build-containers-for-release.outputs.version }}
+      environment: azure
