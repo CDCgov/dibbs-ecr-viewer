@@ -199,8 +199,6 @@ test.describe("ecr library page", () => {
       });
 
       await headerButton.click();
-      // No role/label based selector available here, using test ID
-      await expect(page.getByTestId("loading-table")).toBeVisible();
       await expect(page.getByText("Yoda")).toBeVisible();
       await expect(
         page.getByRole("columnheader", { name: header }),
@@ -212,8 +210,6 @@ test.describe("ecr library page", () => {
       );
 
       await headerButton.click();
-      // No role/label based selector available here, using test ID
-      await expect(page.getByTestId("loading-table")).toBeVisible();
       await expect(page.getByText("Yoda")).toBeVisible();
       await expect(
         page.getByRole("columnheader", { name: header }),

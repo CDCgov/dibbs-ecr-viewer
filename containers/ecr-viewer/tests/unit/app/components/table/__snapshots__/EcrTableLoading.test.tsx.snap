@@ -2,9 +2,7 @@
 
 exports[`EcrTableLoading Snapshot test should match snapshot 1`] = `
 <div>
-  <tbody
-    data-testid="loading-table"
-  >
+  <tbody>
     <tr>
       <td>
         <div
