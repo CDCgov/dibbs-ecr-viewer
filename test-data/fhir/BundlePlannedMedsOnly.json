@@ -3,16 +3,30 @@
   "type": "batch",
   "entry": [
     {
-      "fullUrl": "urn:uuid:f39379e9-1ceb-46f4-8a28-79c05997ca26",
+      "fullUrl": "urn:uuid:19afc0ed-2b2f-446c-9715-5ec9646442ea",
       "resource": {
         "resourceType": "Composition",
-        "id": "f39379e9-1ceb-46f4-8a28-79c05997ca26",
+        "id": "19afc0ed-2b2f-446c-9715-5ec9646442ea",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
           ],
           "source": ["ecr"]
         },
+        "identifier": [
+          {
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "code": "55751-2",
+                  "display": "Initial Public Health Case Report",
+                  "system": "http://loinc.org"
+                }
+              ]
+            }
+          }
+        ],
         "status": "final",
         "type": {
           "coding": [
@@ -23,7 +37,7 @@
             }
           ]
         },
-        "date": "2022-10-04T17:01:48-07:00",
+        "date": "1892-09-04T12:01:43-07:00",
         "title": "Initial Public Health Case Report",
         "section": [
           {
@@ -31,7 +45,7 @@
             "title": "Plan of Treatment",
             "text": {
               "status": "generated",
-              "div": "<table><caption>Pending Results</caption> <thead><tr><th>Name</th><th>Type</th><th>Priority</th><th>Associated Diagnoses</th><th>Date/Time</th></tr></thead><tbody><tr><!-- data-id: procedure11 --><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr><tr data-id='procedure12'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>04/01/1851 12:16 PM CST</td></tr></tbody></table>documented as of this encounter"
+              "div": "<table><caption>Scheduled Orders</caption> <thead><tr><th>Name</th><th>Type</th><th>Priority</th><th>Associated Diagnoses</th><th>Date/Time</th></tr></thead><tbody><tr><!-- data-id: procedure11 --><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr><tr data-id='procedure12'><td>PCR SARS-CoV-2 and Influenza A/B</td><td>Lab</td><td>Routine</td><td></td><td>08/22/1887 2:11 PM CST</td></tr></tbody></table>documented as of this encounter"
             },
             "code": {
               "coding": [
@@ -65,7 +79,7 @@
         "activity": [
           {
             "reference": {
-              "reference": "ServiceRequest/c85c8602-76f8-1866-3bb7-20be7950ef7a"
+              "reference": "MedicationRequest/c85c8602-76f8-1866-3bb7-20be7950ef7a"
             }
           }
         ]
@@ -78,7 +92,7 @@
     {
       "fullUrl": "urn:uuid:c85c8602-76f8-1866-3bb7-20be7950ef7a",
       "resource": {
-        "resourceType": "ServiceRequest",
+        "resourceType": "MedicationRequest",
         "id": "c85c8602-76f8-1866-3bb7-20be7950ef7a",
         "identifier": [
           {
@@ -87,23 +101,42 @@
           }
         ],
         "status": "active",
-        "code": {
+        "medicationCodeableConcept": {
           "coding": [
             {
-              "code": "80825-3",
-              "system": "http://loinc.org",
-              "display": "Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method"
+              "code": "212033",
+              "display": "aspirin tablet 325 mg",
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
             }
           ]
         },
-        "occurrenceDateTime": "2020-11-08",
+        "authoredOn": "2020-11-08",
+        "dispenseRequest": {
+          "numberOfRepeatsAllowed": 2
+        },
+        "dosageInstruction": [
+          {
+            "site": {
+              "coding": [
+                {
+                  "code": "abdomen"
+                }
+              ]
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": { "value": "1", "unit": "pill" }
+              }
+            ]
+          }
+        ],
         "subject": {
           "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
         }
       },
       "request": {
         "method": "PUT",
-        "url": "ServiceRequest/c85c8602-76f8-1866-3bb7-20be7950ef7a"
+        "url": "MedicationRequest/c85c8602-76f8-1866-3bb7-20be7950ef7a"
       }
     }
   ]

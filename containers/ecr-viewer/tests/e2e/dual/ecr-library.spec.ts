@@ -199,12 +199,12 @@ test.describe("ecr library page", () => {
       });
 
       await headerButton.click();
-      // No role/label based selector available here, using test ID
-      await expect(page.getByTestId("loading-table")).toBeVisible();
+
       await expect(page.getByText("Yoda")).toBeVisible();
       await expect(
         page.getByRole("columnheader", { name: header }),
       ).toHaveAttribute("aria-sort", "ascending");
+      await expect(page.getByTestId("loading-table")).not.toBeVisible();
       const ascContents = await Promise.all(
         (await page.locator(`tr > td:nth-child(${colIndex})`).all()).map((td) =>
           td.innerText(),
@@ -212,12 +212,11 @@ test.describe("ecr library page", () => {
       );
 
       await headerButton.click();
-      // No role/label based selector available here, using test ID
-      await expect(page.getByTestId("loading-table")).toBeVisible();
       await expect(page.getByText("Yoda")).toBeVisible();
       await expect(
         page.getByRole("columnheader", { name: header }),
       ).toHaveAttribute("aria-sort", "descending");
+      await expect(page.getByTestId("loading-table")).not.toBeVisible();
       const descContents = await Promise.all(
         (await page.locator(`tr > td:nth-child(${colIndex})`).all()).map((td) =>
           td.innerText(),

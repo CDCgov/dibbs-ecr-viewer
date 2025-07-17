@@ -2,10 +2,7 @@ import { revalidatePath } from "next/cache";
 
 import { UserForm } from "@/app/admin/user/UserForm";
 import { listProgramAreas } from "@/app/services/programAreaService";
-import {
-  createUserAction,
-  updateUserProgramAreasAction,
-} from "@/app/services/serverActionService";
+import { createUserAction } from "@/app/services/serverActionService";
 import { notFoundUnlessAdmin } from "@/app/services/userService";
 
 /**
@@ -24,12 +21,7 @@ const CreateUserPage = async () => {
         "use server";
         revalidatePath("/ecr-viewer/admin/user");
 
-        const res = await createUserAction(email, userType);
-
-        if (res.payload) {
-          const userUUID = res.payload;
-          return await updateUserProgramAreasAction(userUUID, programs);
-        }
+        const res = await createUserAction({ email, userType, programs });
         return { error: res.error };
       }}
     />

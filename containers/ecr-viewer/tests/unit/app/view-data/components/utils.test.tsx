@@ -4,14 +4,14 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
-import { CarePlanActivity } from "fhir/r4b";
 
 import BundleCareTeam from "../../../../../../../test-data/fhir/BundleCareTeam.json";
 import BundleWithMiscNotes from "../../../../../../../test-data/fhir/BundleMiscNotes.json";
 import BundleNoActiveProblems from "../../../../../../../test-data/fhir/BundleNoActiveProblems.json";
 import BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import BundleWithPendingResultsOnly from "../../../../../../../test-data/fhir/BundlePendingResultsOnly.json";
-import BundleWithScheduledOrdersOnly from "../../../../../../../test-data/fhir/BundleScheduledOrdersOnly.json";
+import BundleWithPlannedMedsOnly from "../../../../../../../test-data/fhir/BundlePlannedMedsOnly.json";
+import BundleWithScheduledApptsOnly from "../../../../../../../test-data/fhir/BundleScheduledApptsOnly.json";
 import BundleWithSexualOrientation from "../../../../../../../test-data/fhir/BundleSexualOrientation.json";
 import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
 import BundleWithTravelHistoryEmpty from "../../../../../../../test-data/fhir/BundleTravelHistoryEmpty.json";
@@ -26,7 +26,6 @@ import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   evaluateClinicalData,
   returnCareTeamTable,
-  returnPlannedProceduresTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
 import {
   TooltipDiv,
@@ -107,14 +106,34 @@ describe("Utils", () => {
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
       );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
     });
-    it("Should return Plan of Treatment when only scheduled orders", () => {
+    it("Should return Plan of Treatment when only scheduled appointments", () => {
       const actual = evaluateClinicalData(
-        BundleWithScheduledOrdersOnly as unknown as Bundle,
+        BundleWithScheduledApptsOnly as unknown as Bundle,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
       );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
+    });
+    it("Should return Plan of Treatment when only ordered meds", () => {
+      const actual = evaluateClinicalData(
+        BundleWithPlannedMedsOnly as unknown as Bundle,
+      );
+      expect(actual.treatmentData.availableData[0].title).toEqual(
+        "Plan of Treatment",
+      );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
     });
   });
 
@@ -162,42 +181,6 @@ describe("Utils", () => {
       );
 
       expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
-    });
-  });
-
-  describe("Planned Procedures Table", () => {
-    it("should return table when data is provided", () => {
-      const carePlanActivities = [
-        {
-          detail: {
-            scheduledString: "02/01/2024",
-            code: {
-              coding: [
-                {
-                  display: "activity 1",
-                },
-              ],
-            },
-          },
-          extension: [
-            {
-              url: "dibbs.orderedDate",
-              valueString: "01/01/2024",
-            },
-          ],
-        },
-      ] as CarePlanActivity[];
-      const actual = returnPlannedProceduresTable(carePlanActivities);
-      render(actual!);
-
-      expect(screen.getByText("activity 1")).toBeInTheDocument();
-      expect(screen.getByText("01/01/2024")).toBeInTheDocument();
-      expect(screen.getByText("02/01/2024")).toBeInTheDocument();
-    });
-    it("should not return table when data is provided", () => {
-      const actual = returnPlannedProceduresTable([]);
-
-      expect(actual).toBeUndefined();
     });
   });
 

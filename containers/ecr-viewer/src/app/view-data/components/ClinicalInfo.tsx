@@ -7,7 +7,7 @@ import {
   AccordionSubSection,
 } from "@/app/view-data/utils/component-utils";
 
-import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
+import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface ClinicalProps {
   reasonForVisitDetails: DisplayDataProps[];
@@ -107,7 +107,7 @@ const TreatmentDetails = ({ details }: { details: DisplayDataProps[] }) => {
       <AccordionSubSection title="Treatment Details">
         <div data-testid="treatment-details">
           {data.map((item, index) => (
-            <DataTableDisplay item={item} key={index} />
+            <DataDisplay item={item} key={index} />
           ))}
         </div>
       </AccordionSubSection>

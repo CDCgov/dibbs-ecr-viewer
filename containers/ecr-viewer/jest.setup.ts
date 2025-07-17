@@ -29,6 +29,11 @@ jest.mock("next/navigation", () => ({
   notFound: jest.fn(),
 }));
 
+jest.mock("next/headers", () => ({
+  headers: jest.fn().mockReturnValue(new Headers()),
+  cookies: jest.fn().mockReturnValue({ get: () => null }),
+}));
+
 // Make sure the auto-generated IDs are stable for snapshot testing
 jest.mock("react", () => ({
   ...jest.requireActual("react"),

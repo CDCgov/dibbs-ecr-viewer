@@ -14,7 +14,7 @@ import {
 import {
   createInitialAdminUser,
   listUserProgramAreas,
-  updateUserProgramAreas,
+  updateUser,
 } from "@/app/services/userService";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
@@ -154,7 +154,7 @@ describe("program area service", () => {
     const id = await createProgramArea("test", ["123"]);
     const afterCreate = await listProgramAreas();
 
-    await updateUserProgramAreas(adminId!, [id, progId!]);
+    await updateUser({ uuid: adminId!, updates: {}, programs: [id, progId!] });
     const beforeUserProgramAreas = await listUserProgramAreas(adminId!);
     expect(beforeUserProgramAreas).toBeArrayOfSize(2);
 

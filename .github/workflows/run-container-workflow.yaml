@@ -31,8 +31,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh workflow run .github/workflows/container-${{ inputs.container }}.yaml --ref ${{ inputs.ref_name }}
-          sleep 5
+          sleep 15
           RUN_ID=$(gh run list --workflow=container-${{ inputs.container }}.yaml --event=workflow_dispatch --branch ${{ inputs.ref_name }} --json databaseId --limit 1 --jq '.[0].databaseId')
+          echo $RUN_ID
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Wait for container workflow to complete
