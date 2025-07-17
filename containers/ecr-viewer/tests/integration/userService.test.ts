@@ -21,10 +21,10 @@ import {
   listUsers,
   notFoundUnlessAdmin,
   updateUser,
-  updateUserProgramAreas,
 } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
+import { getLastAuditLog } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
 
 export const makePromiseResolveWithStatus = (
@@ -179,8 +179,24 @@ describe("user service", () => {
 
   it("should create a standard user", async () => {
     // admin created in prior test
-    userId = await createUser(userEmail, "standard");
+    userId = await createUser({
+      email: userEmail,
+      userType: "standard",
+      programs: [],
+    });
     expect(userId).toMatch(UUID_REGEX);
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("user");
+    expect(log.action).toEqual("create");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      email: userEmail,
+      userType: "standard",
+      programs: [],
+      uuid: userId,
+    });
 
     // see standard user listed
     const users = await listUsers();
@@ -218,7 +234,22 @@ describe("user service", () => {
 
   it("should update a user", async () => {
     // standard user created in prior test
-    await updateUser(userId!, { name: "Olga Nunes" });
+    await updateUser({
+      uuid: userId!,
+      updates: { name: "Olga Nunes" },
+      programs: [],
+    });
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("user");
+    expect(log.action).toEqual("update");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      updates: { name: "Olga Nunes" },
+      programs: [],
+      uuid: userId!,
+    });
 
     // see standard user listed with name
     const users = await listUsers();
@@ -251,10 +282,23 @@ describe("user service", () => {
 
   it("should update a user's program areas", async () => {
     // standard user created in prior test
-    await updateUser(userId!, { name: "Olga Nunes" });
     const progId = await createProgramArea("Disease", ["123"]);
+    await updateUser({
+      uuid: userId!,
+      updates: { name: "Olga Nunes" },
+      programs: [progId],
+    });
 
-    await updateUserProgramAreas(userId!, [progId]);
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("user");
+    expect(log.action).toEqual("update");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      updates: { name: "Olga Nunes" },
+      programs: [progId],
+      uuid: userId!,
+    });
 
     const progAreas = await listUserProgramAreas(userId!);
 
