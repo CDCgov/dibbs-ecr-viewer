@@ -33,7 +33,7 @@ on:
         default: main
       environment:
         type: string
-        description: "The clould environment to deploy to (\"aws\" or \"azure\")."
+        description: 'The clould environment to deploy to ("aws" or "azure").'
         required: true
 
 jobs:
