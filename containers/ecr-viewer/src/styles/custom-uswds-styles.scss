@@ -107,28 +107,34 @@
     border-bottom: none;
   }
 
-  a.usa-nav__link {
-    padding: 1rem 0rem;
-    margin: 0 1rem;
-    height: 2.2rem;
+  a {
     text-decoration: none;
-    min-width: fit-content;
+    font-weight: 400;
+    font-size: 1.125rem;
+    color: color("primary-lightest");
 
-    &:hover,
-    &.active-page {
-      font-weight: 600;
-      letter-spacing: normal;
-      @include add-bar(0.5, "blue-cool-30", "bottom", 0, 2);
+    &.usa-nav__link {
+      padding: 1rem 0rem;
+      margin: 0 1rem;
+      height: 2.2rem;
+      letter-spacing: 0.018rem;
+      min-width: fit-content;
 
-      &::after {
-        // background-color: color("blue-cool-30");
-        left: 0;
-        right: 0;
+      &:hover,
+      &.active-page {
+        font-weight: 600;
+        letter-spacing: normal;
+        @include add-bar(0.5, "blue-cool-30", "bottom", 0, 2);
+
+        &::after {
+          left: 0;
+          right: 0;
+        }
       }
-    }
 
-    &:hover {
-      color: color("blue-cool-30");
+      &:hover {
+        color: color("blue-cool-30");
+      }
     }
   }
 
@@ -136,14 +142,6 @@
     width: 1.75rem;
     height: 1.75rem;
     fill: color("primary-lightest");
-  }
-
-  a {
-    font-weight: 400;
-    letter-spacing: 0.018rem;
-    font-size: 1.125rem;
-    color: color("primary-lightest");
-    text-decoration: none;
   }
 
   .usa-nav-container {
