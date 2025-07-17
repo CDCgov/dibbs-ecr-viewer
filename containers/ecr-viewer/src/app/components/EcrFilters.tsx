@@ -153,7 +153,7 @@ const FilterReportableConditions = ({
       isActive={!isAllSelected}
       resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
-      tag={activeConditions.length}
+      tag={activeConditions.length || "0"}
       submitHandler={() => {
         const conditionsToSubmit = isAllSelected
           ? { ...filterConditions, [NO_CONDITIONS_REPORTED_OPTION]: true }
