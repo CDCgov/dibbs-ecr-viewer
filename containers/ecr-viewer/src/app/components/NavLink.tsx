@@ -20,7 +20,8 @@ const NavLink = ({ href, children }: { href: string; children: ReactNode }) => {
     <Link
       href={href}
       className={classnames("usa-nav__link", {
-        "active-page": pathname.includes(href),
+        "active-page":
+          pathname === href || (href.length > 1 && pathname.includes(href)),
       })}
     >
       {children}
