@@ -1,31 +1,17 @@
 name: Create New Release
 on:
   release:
-    types: [published]
+    types: [released]
 
-# Run all tests before making a release
 jobs:
   list-containers:
-    uses: ./.github/workflows/listContainers.yaml
+    uses: ./.github/workflows/list-containers.yaml
 
-  test-for-release:
+  # Rebuild all containers for the new release with latest tag
+  tag-containers-for-release:
+    name: Tag containers
     needs:
       - list-containers
-    strategy:
-      matrix:
-        container: ${{fromJson(needs.list-containers.outputs.all-containers)}}
-    uses: ./.github/workflows/run-container-workflow.yaml
-    with:
-      container: ${{ matrix.container }}
-      ref_name: ${{ github.ref_name }}
-    secrets: inherit
-
-  # Rebuild all containers for the new release
-  build-containers-for-release:
-    name: Build containers
-    needs:
-      - list-containers
-      - test-for-release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -52,12 +38,10 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/${{matrix.container-to-build}}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=raw,value=latest,enable=${{ !github.event.release.prerelease }}
+            type=raw,value=latest
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -75,7 +59,7 @@ jobs:
   generate-and-update-python-container-docs:
     needs:
       - list-containers
-      - build-containers-for-release
+      - tag-containers-for-release
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -105,7 +89,7 @@ jobs:
 
       - name: Update Container Documentation
         env:
-          APP_VERSION: ${{ needs.build-containers-for-release.outputs.version }}
+          APP_VERSION: ${{ needs.tag-containers-for-release.outputs.version }}
           # Orchestration
           TRIGGER_CODE_REFERENCE_URL: http://localhost:8086
           FHIR_CONVERTER_URL: http://localhost:8082
@@ -118,16 +102,16 @@ jobs:
           cp $GITHUB_WORKSPACE/utils/make_openapi_json.py .
           pip install -r requirements.txt
           python make_openapi_json.py
-          redoc-cli build -o $GITHUB_WORKSPACE/docs/${{ needs.build-containers-for-release.outputs.version }}/containers/$CONTAINER.html openapi.json
+          redoc-cli build -o $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/$CONTAINER.html openapi.json
 
       - uses: actions/upload-artifact@v4
         with:
           name: container-docs-${{ matrix.container }}
-          path: ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+          path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
 
   generate-and-update-ecr-viewer-container-docs:
     needs:
-      - build-containers-for-release
+      - tag-containers-for-release
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -137,19 +121,19 @@ jobs:
           fetch-depth: "0"
       - name: Update Container Documentation
         env:
-          APP_VERSION: ${{ needs.build-containers-for-release.outputs.version }}
+          APP_VERSION: ${{ needs.tag-containers-for-release.outputs.version }}
         run: |
           cd $GITHUB_WORKSPACE/containers/ecr-viewer
           npm ci
-          npm run docs -- --out $GITHUB_WORKSPACE/docs/${{ needs.build-containers-for-release.outputs.version }}/containers/ecr-viewer
+          npm run docs -- --out $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/ecr-viewer
       - uses: actions/upload-artifact@v4
         with:
           name: container-docs-ecr-viewer
-          path: ./docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+          path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
 
   commit-docs:
     needs:
-      - build-containers-for-release
+      - tag-containers-for-release
       - generate-and-update-python-container-docs
       - generate-and-update-ecr-viewer-container-docs
     permissions:
@@ -165,14 +149,14 @@ jobs:
         with:
           pattern: container-docs-*
           merge-multiple: true
-          path: ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers
+          path: ./all-docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
 
       - name: Copy to latest folder - copy ecr-viewer docs to main deployment folder
         run: |
           rm -rf ./all-docs/latest
           rm -rf ./docs/latest
           mkdir -p ./all-docs/latest/containers
-          cp -r ./all-docs/${{ needs.build-containers-for-release.outputs.version }}/containers/* ./all-docs/latest/containers
+          cp -r ./all-docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/* ./all-docs/latest/containers
           cp -r ./all-docs/latest/containers/ecr-viewer/* ./docs/
 
       - name: Commit New Documentation
@@ -181,4 +165,4 @@ jobs:
           add: |
             - docs
             - all-docs
-          message: Automated update of docs for ${{ needs.build-containers-for-release.outputs.version }} release.
+          message: Automated update of docs for ${{ needs.tag-containers-for-release.outputs.version }} release.
