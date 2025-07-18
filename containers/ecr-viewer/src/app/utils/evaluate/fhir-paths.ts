@@ -326,15 +326,15 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Pregnancy Data
   lastMenstrualPeriod: {
     type: "Observation",
-    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
   },
   pregnancyStatus: {
     type: "Observation",
-    path: "Bundle.entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation')",
+    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation')",
   },
   postpartumStatus: {
     type: "Observation",
-    path: "Bundle.entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '249197004'))",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '249197004'))",
   },
 
   // eCR Metadata
