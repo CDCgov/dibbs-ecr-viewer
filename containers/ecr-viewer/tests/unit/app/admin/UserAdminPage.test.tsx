@@ -155,6 +155,17 @@ describe("User Admin Page", () => {
       expect(results).toHaveNoViolations();
     });
 
+    it("should render a create user page with no programs", async () => {
+      (listProgramAreas as jest.Mock).mockResolvedValue([]);
+      const { container } = render(await CreateUserPage());
+      expect(container).toMatchSnapshot();
+      let results;
+      await act(async () => {
+        results = await axe(container);
+      });
+      expect(results).toHaveNoViolations();
+    });
+
     it("when creating an admin user, should not be able to choose program area access", async () => {
       const setPrograms = jest.fn();
       const numProgramsSelected = mockPrograms.filter((p) => p.checked).length;

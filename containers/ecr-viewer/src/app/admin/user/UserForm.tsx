@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 
 import {
   Button,
@@ -47,12 +47,14 @@ const sortedIds = (programs: FormProgram[]) => {
  * @param props.initValues Initial values the form is set to
  * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.submitAction Handler for the submitted data
+ * @param props.banner markup to display as a banner above the form title
  * @returns Program area add/edit form
  */
 export const UserForm = ({
   action,
   initValues,
   submitAction,
+  banner,
 }: {
   action: string;
   initValues: FormValues;
@@ -61,6 +63,7 @@ export const UserForm = ({
     userType: UserType,
     programs: string[],
   ) => Promise<ServerActionResult<void>>;
+  banner?: ReactNode;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
@@ -91,6 +94,7 @@ export const UserForm = ({
       itemHomeRoute="/admin/user"
       formValid={valid}
       formTouched={touched}
+      banner={banner}
       submitAction={async () => {
         const res = await submitAction(
           email.trim(),

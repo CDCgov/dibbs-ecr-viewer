@@ -45,37 +45,41 @@
   }
 }
 
-.usa-alert.toast {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.usa-alert {
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 
-  &::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background-color: #4070f4;
-    animation: progress var(--toast-timeout) linear forwards;
-    z-index: 2;
-  }
+  &.toast {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-  &.usa-alert--success::before {
-    background-color: color("success");
-  }
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 100%;
+      background-color: #4070f4;
+      animation: progress var(--toast-timeout) linear forwards;
+      z-index: 2;
+    }
 
-  &.usa-alert--warning::before {
-    background-color: color("warning");
-  }
+    &.usa-alert--success::before {
+      background-color: color("success");
+    }
 
-  &.usa-alert--error::before {
-    background-color: color("error");
-  }
+    &.usa-alert--warning::before {
+      background-color: color("warning");
+    }
 
-  &.usa-alert--info::before {
-    background-color: color("info");
+    &.usa-alert--error::before {
+      background-color: color("error");
+    }
+
+    &.usa-alert--info::before {
+      background-color: color("info");
+    }
   }
 }
 
