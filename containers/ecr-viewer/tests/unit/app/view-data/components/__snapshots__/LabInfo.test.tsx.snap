@@ -1188,7 +1188,21 @@ Coruscant, MA
                           class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
                         />
                         <p>
-                          Lab comment
+                          <span
+                            id="r:id"
+                          >
+                            A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A r
+                            ... 
+                          </span>
+                          <button
+                            aria-controls="r:id"
+                            aria-expanded="false"
+                            class="usa-button usa-button--unstyled"
+                            data-testid="button"
+                            type="button"
+                          >
+                            View more
+                          </button>
                         </p>
                       </td>
                     </tr>
