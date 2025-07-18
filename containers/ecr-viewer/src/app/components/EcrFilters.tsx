@@ -87,14 +87,16 @@ const FilterReportableConditions = ({
   const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
   const initFilterState = allConditions.reduce(
-      (dict: { [key: string]: boolean }, condition: string) => {
-        dict[condition] = initConditions.includes(condition);
-        return dict;
-      },
-      {[NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(
-      NO_CONDITIONS_REPORTED_OPTION,
-    )} as FilterConditionsType,
-    );
+    (dict: { [key: string]: boolean }, condition: string) => {
+      dict[condition] = initConditions.includes(condition);
+      return dict;
+    },
+    {
+      [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(
+        NO_CONDITIONS_REPORTED_OPTION,
+      ),
+    } as FilterConditionsType,
+  );
 
   const [filterConditions, setFilterConditions] =
     useState<FilterConditionsType>(initFilterState);
