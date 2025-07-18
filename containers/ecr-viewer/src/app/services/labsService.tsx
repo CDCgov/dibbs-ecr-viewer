@@ -35,6 +35,7 @@ import {
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
+import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import { AccordionItem } from "@/app/view-data/types";
@@ -405,7 +406,7 @@ export const evaluateDiagnosticReportData = (
       columnName: "Lab Comment",
       infoPath: "noteText",
       hiddenBaseText: "comment",
-      applyToValue: (v) => safeParse(v),
+      applyToValue: (v) => <FieldValue>{safeParse(v)}</FieldValue>,
       className: "minw-10 width-20",
     },
   ];

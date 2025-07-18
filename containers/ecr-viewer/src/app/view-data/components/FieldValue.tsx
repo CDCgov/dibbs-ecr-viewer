@@ -28,18 +28,20 @@ export const FieldValue: React.FC<{
   return hidden ? (
     fieldValue
   ) : (
-    <>
+    <div className="position-relative field-height">
       <span id={id}>{children}&nbsp;</span>
-      <Button
-        type="button"
-        unstyled={true}
-        onClick={() => setHidden(true)}
-        aria-expanded="true"
-        aria-controls={id}
-      >
-        View less
-      </Button>
-    </>
+      <div className="bg-white position-sticky bottom-0 left-0">
+        <Button
+          type="button"
+          unstyled={true}
+          onClick={() => setHidden(true)}
+          aria-expanded="true"
+          aria-controls={id}
+        >
+          View less
+        </Button>
+      </div>
+    </div>
   );
 };
 
