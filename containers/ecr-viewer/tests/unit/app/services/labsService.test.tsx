@@ -574,9 +574,17 @@ describe("LabsService tests", () => {
 
       expect(screen.getByText("Hide comment")).toBeInTheDocument();
 
-      expect(screen.getByText("View more")).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: "View more" }));
-      expect(screen.getByText("View less")).toBeInTheDocument();
+      expect(
+        screen.getByText(/View more \([0-9,]+ characters total\)/),
+      ).toBeInTheDocument();
+      await user.click(
+        screen.getByRole("button", {
+          name: /View more \([0-9,]+ characters total\)/,
+        }),
+      );
+      expect(
+        screen.getByText(/View less \([0-9,]+ characters total\)/),
+      ).toBeInTheDocument();
     });
   });
 

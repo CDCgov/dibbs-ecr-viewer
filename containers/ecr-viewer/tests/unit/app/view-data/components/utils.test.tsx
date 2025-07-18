@@ -220,7 +220,9 @@ describe("Utils", () => {
         expect(
           screen.getByText(FiveHundredOneChars.substring(0, 300) + "..."),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(FiveHundredOneChars.substring(300)),
         ).not.toBeInTheDocument();
@@ -233,11 +235,17 @@ describe("Utils", () => {
 
         render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
-        await user.click(screen.getByText("View more"));
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        );
 
         expect(screen.getByText(FiveHundredOneChars)).toBeInTheDocument();
-        expect(screen.getByText("View less")).toBeInTheDocument();
-        expect(screen.queryByText("View more")).not.toBeInTheDocument();
+        expect(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
+        expect(
+          screen.queryByText(/View more \([0-9,]+ characters total\)/),
+        ).not.toBeInTheDocument();
         expect(screen.queryByText("...")).not.toBeInTheDocument();
       });
       it("should hide text when view less is clicked", async () => {
@@ -248,15 +256,21 @@ describe("Utils", () => {
 
         render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
-        await user.click(screen.getByText("View more"));
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        );
         expect(screen.getByText(FiveHundredOneChars)).toBeInTheDocument();
 
-        await user.click(screen.getByText("View less"));
+        await user.click(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        );
 
         expect(
           screen.getByText(FiveHundredOneChars.substring(0, 300) + "..."),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(FiveHundredOneChars.substring(300)),
         ).not.toBeInTheDocument();
@@ -297,7 +311,9 @@ describe("Utils", () => {
             OneHundredTwentyFiveCharStrings[2].substring(0, 50) + "...",
           ),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(OneHundredTwentyFiveCharStrings[2].substring(50)),
         ).not.toBeInTheDocument();
@@ -330,13 +346,17 @@ describe("Utils", () => {
 
         render(<DataDisplay item={{ title: "field", value: LongReactNode }} />);
 
-        await user.click(screen.getByText("View more"));
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        );
 
         OneHundredTwentyFiveCharStrings.forEach((str) =>
           expect(screen.getByText(str)).toBeInTheDocument(),
         );
         expect(screen.getByText("this is more text")).toBeInTheDocument();
-        expect(screen.getByText("View less")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
       });
       it("should only show first 300 characters when ReactNode element when view less is clicked", async () => {
         const user = userEvent.setup();
@@ -361,8 +381,12 @@ describe("Utils", () => {
         render(
           <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
         );
-        await user.click(screen.getByText("View more"));
-        await user.click(screen.getByText("View less"));
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        );
+        await user.click(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        );
 
         expect(
           screen.getByText(OneHundredTwentyFiveCharStrings[0]),
@@ -375,7 +399,9 @@ describe("Utils", () => {
             OneHundredTwentyFiveCharStrings[2].substring(0, 50) + "...",
           ),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(OneHundredTwentyFiveCharStrings[2].substring(50)),
         ).not.toBeInTheDocument();
