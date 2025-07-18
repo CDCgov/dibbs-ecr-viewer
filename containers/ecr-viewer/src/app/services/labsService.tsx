@@ -154,11 +154,11 @@ const getReportResultId = (
 };
 
 /**
- * Retrieves the JSON representation of a lab report from the labs HTML string.
+ * Retrieves the JSON representation of all lab reports from the labs HTML string.
  * @param jsonLabs - All json lab reports from the HTML
- * @param report - The LabReport object containing information about the lab report.
+ * @param report - The DiagnosticReport object containing information about the lab report.
  * @param fhirBundle - The FHIR Bundle object containing relevant FHIR resources.
- * @returns The JSON representation of the lab report.
+ * @returns The JSON representation of the lab reports.
  */
 export const getJsonLab = (
   jsonLabs: HtmlTableJson[],
@@ -188,9 +188,7 @@ export const getAllLabJsonObjects = (fhirBundle: Bundle): HtmlTableJson[] => {
  * @param labReportJson - A JSON object representing the lab report HTML string
  * @returns True if the result name includes "abnormal" (case insensitive), otherwise false. Will also return false if lab does not have JSON object.
  */
-export const checkAbnormalTag = (
-  labReportJson: HtmlTableJson | undefined,
-): boolean => {
+export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
   if (!labReportJson) {
     return false;
   }
