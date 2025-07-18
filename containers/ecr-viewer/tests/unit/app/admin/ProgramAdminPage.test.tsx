@@ -65,6 +65,7 @@ describe("Program Admin Page", () => {
             condition_name: "condition",
             condition_category: "category",
             program_area_uuid: "456",
+            is_duplicate: false,
           },
         ],
       },
@@ -77,9 +78,10 @@ describe("Program Admin Page", () => {
           {
             code: "456",
             concept_name: "condition 1 (disease)",
-            condition_name: "condition 1",
+            condition_name: "condition 1 (condition)",
             condition_category: "category",
             program_area_uuid: "789",
+            is_duplicate: true,
           },
           {
             code: "789",
@@ -87,6 +89,7 @@ describe("Program Admin Page", () => {
             condition_name: "condition 2",
             condition_category: "category",
             program_area_uuid: "789",
+            is_duplicate: false,
           },
         ],
       },
@@ -104,7 +107,9 @@ describe("Program Admin Page", () => {
       screen.getByRole("button", { name: "Program Area Three" }),
     );
     expect(screen.getByText("Program area information")).toBeInTheDocument();
-    expect(screen.getByText("condition 1")).toBeInTheDocument();
+    expect(screen.getByText("condition 1 (condition)")).toBeInTheDocument();
+    // subtitle due to duplicate status
+    expect(screen.getByText("condition 1 (disease)")).toBeInTheDocument();
   });
 
   describe("Creating programs", () => {

@@ -26,6 +26,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "456",
+        is_duplicate: false,
       },
     ],
   },
@@ -41,6 +42,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "789",
+        is_duplicate: false,
       },
       {
         code: "789",
@@ -48,6 +50,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "789",
+        is_duplicate: false,
       },
     ],
   },
