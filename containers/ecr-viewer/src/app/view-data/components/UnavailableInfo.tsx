@@ -118,9 +118,9 @@ const UnavailableSection = ({
   return (
     data.length > 0 && (
       <AccordionSubSection title={title} idPrefix="unavailable-">
-        {data.map((item, index) => (
+        {data.map(({ title, toolTip }, index) => (
           <DataDisplay
-            item={{ ...item, value: "No data" }}
+            item={{ title, toolTip, value: "No data" }}
             className="text-italic text-base"
             key={index}
           />
