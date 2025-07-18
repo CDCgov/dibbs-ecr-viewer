@@ -367,9 +367,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
           data = [
             {
               title: "Last Menstrual Period",
-              value: formatDate(
-                evaluateValue(observation, fhirPathMappings.effectiveX),
-              ),
+              value: evaluateValue(observation, fhirPathMappings.effectiveX),
             },
           ];
         } else if (type === "Pregnancy Status") {
@@ -380,9 +378,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
             },
             {
               title: "Effective Date",
-              value: formatStartEndDateTime(
-                evaluateOne(observation, fhirPathMappings.effectivePeriod),
-              ),
+              value: evaluateValue(observation, fhirPathMappings.effectiveX),
             },
           ];
         } else if (type === "Postpartum Status") {
@@ -393,9 +389,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
             },
             {
               title: "Effective Date",
-              value: formatDate(
-                evaluateValue(observation, fhirPathMappings.effectiveX),
-              ),
+              value: evaluateValue(observation, fhirPathMappings.effectiveX),
             },
           ];
         }
