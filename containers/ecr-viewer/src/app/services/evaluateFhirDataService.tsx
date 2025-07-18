@@ -410,7 +410,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
           ),
           expanded: false,
           content,
-          id: `${Math.random()}`,
+          id: observation.id ?? `${Math.random()}`,
           headingLevel: "h5",
         };
       })}
