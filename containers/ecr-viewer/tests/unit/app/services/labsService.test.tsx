@@ -12,7 +12,6 @@ import {
   evaluateOrganismsReportData,
   evaluateDiagnosticReportData,
   evaluateObservationTable,
-  isLabReportElementDataList,
   evaluateLabOrganizationData,
   ResultObject,
   combineOrgAndReportData,
@@ -30,7 +29,6 @@ import {
   evaluateOneAndCheck,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { AccordionItem } from "@/app/view-data/types";
 
 const BundleLab = _BundleLab as unknown as Bundle;
@@ -246,60 +244,24 @@ describe("LabsService tests", () => {
         expect(result).toEqual(expectedResult);
       });
 
-      it("returns correct Json Object for table without data-id", () => {
+      it("returns undefined for table without data-id", () => {
         const labReportWithoutIds = evaluateOneAndCheck<DiagnosticReport>(
           BundleLabNoLabIds,
           "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
           "DiagnosticReport",
         );
-        const labReportJsonObjectWithoutId = {
-          resultId: undefined,
-          resultName: "",
-          tables: [
-            [
-              {
-                "Lab Test Name": {
-                  metadata: {},
-                  value: <span>SARS-CoV-2, NAA CL</span>,
-                },
-                "Lab Test Result Date": {
-                  metadata: {},
-                  value: <span>2000-02-04T21:02:00.000Z</span>,
-                },
-                "Lab Test Result Value": {
-                  metadata: {},
-                  value: <span>POS</span>,
-                },
-              },
-              {
-                "Lab Test Name": {
-                  metadata: {},
-                  value: <span>Symptomatic as defined by CDC?</span>,
-                },
-                "Lab Test Result Date": {
-                  metadata: {},
-                  value: <span>2000-02-04T21:02:00.000Z</span>,
-                },
-                "Lab Test Result Value": {
-                  metadata: {},
-                  value: <span>YES</span>,
-                },
-              },
-            ],
-          ],
-        };
 
-        const jsonLabs = getAllLabJsonObjects(BundleLab);
+        const jsonLabs = getAllLabJsonObjects(BundleLabNoLabIds);
         const result = getJsonLab(
           jsonLabs,
           labReportWithoutIds!,
           BundleLabNoLabIds,
         );
 
-        expect(result).toStrictEqual(labReportJsonObjectWithoutId);
+        expect(result).toBeUndefined();
       });
 
-      it("returns empty object if lab results html contains no tables", () => {
+      it("returns undefined if lab results html contains no tables", () => {
         const jsonLabs = getAllLabJsonObjects(BundleLab);
         const result = getJsonLab(
           jsonLabs,
@@ -307,7 +269,7 @@ describe("LabsService tests", () => {
           BundleLabInvalidResultsDiv,
         );
 
-        expect(result).toStrictEqual({});
+        expect(result).toBeUndefined();
       });
     });
 
@@ -598,13 +560,13 @@ describe("LabsService tests", () => {
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
     });
 
-    it("should return a list of DisplayDataProps if the lab results in the HTML table do not have ID's", () => {
+    it("should return a list of LabReportElementData even if the lab results in the HTML table do not have ID's", () => {
       const result = evaluateLabInfoData(
         BundleLabNoLabIds,
         evaluateAll(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
       );
-      expect(result[0]).toHaveProperty("title");
-      expect(result[0]).toHaveProperty("value");
+      expect(result[0]).toHaveProperty("diagnosticReportDataItems");
+      expect(result[0]).toHaveProperty("organizationDisplayDataProps");
     });
 
     it("should properly count the number of labs", () => {
@@ -612,7 +574,6 @@ describe("LabsService tests", () => {
         BundleLab,
         evaluateAll(BundleLab, fhirPathMappings.diagnosticReports),
       );
-      expect(isLabReportElementDataList(result)).toBeTrue();
       const props = (result[0] as LabReportElementData)
         .organizationDisplayDataProps;
       expect(props[3].title).toEqual("Number of Results");
@@ -771,26 +732,6 @@ describe("LabsService tests", () => {
       expect(
         findIdenticalOrg(orgMappings, matchedOrg2)?.telecom?.[0].value,
       ).not.toBeDefined();
-    });
-  });
-
-  describe("isLabReportElementDataList", () => {
-    it("returns true when the input is a list of LabReportElementData", () => {
-      const actual = isLabReportElementDataList([
-        {
-          diagnosticReportDataItems: [{} as AccordionItem],
-          organizationId: "test-id",
-          organizationDisplayDataProps: [{} as DisplayDataProps],
-        },
-      ]);
-      expect(actual).toBe(true);
-    });
-
-    it("returns false when the input is NOT a list of LabReportElementData", () => {
-      const actual = isLabReportElementDataList([
-        { title: "test-title", value: "test-value" },
-      ]);
-      expect(actual).toBe(false);
     });
   });
 });

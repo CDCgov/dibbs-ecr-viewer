@@ -123,8 +123,8 @@ describe("LabInfo", () => {
     });
 
     it("should not render any results if no table data is present", () => {
-      render(<LabInfo labResults={[{}]} />);
-      expect(screen.getByText("Lab Results")).toBeInTheDocument();
+      render(<LabInfo labResults={[]} />);
+      expect(screen.queryByText("Lab Results")).not.toBeInTheDocument();
       expect(
         screen.queryByTestId("accordionButton_all-lab-results"),
       ).not.toBeInTheDocument();

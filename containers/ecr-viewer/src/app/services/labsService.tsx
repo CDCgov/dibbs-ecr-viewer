@@ -71,7 +71,7 @@ export const evaluateLabInfoData = (
   fhirBundle: Bundle,
   labReports: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5",
-): LabReportElementData[] | DisplayDataProps[] => {
+): LabReportElementData[] => {
   // the keys are the organization id, the value is an array of jsx elements of diagnsotic reports
   let organizationItems: ResultObject = {};
   const jsonLabs = getAllLabJsonObjects(fhirBundle);
@@ -117,25 +117,6 @@ export const evaluateLabInfoData = (
 };
 
 /**
- * Checks if a given list is of type LabReportElementData[].
- * Used to determine how to render lab results.
- * @param labResults - Object to be checked.
- * @returns True if the list is of type LabReportElementData[], false otherwise.
- */
-export const isLabReportElementDataList = (
-  labResults: DisplayDataProps[] | LabReportElementData[],
-): labResults is LabReportElementData[] => {
-  const asLabReportElementList = labResults as LabReportElementData[];
-  return (
-    asLabReportElementList &&
-    asLabReportElementList.length > 0 &&
-    asLabReportElementList[0].diagnosticReportDataItems !== undefined &&
-    asLabReportElementList[0].organizationId !== undefined &&
-    asLabReportElementList[0].organizationDisplayDataProps !== undefined
-  );
-};
-
-/**
  * Extracts an array of `Observation` resources from a given FHIR bundle based on a list of observation references.
  * @param report - The lab report containing the results to be processed.
  * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
@@ -167,7 +148,6 @@ const getReportResultId = (
       observation,
       fhirPathMappings.observationReferenceValue,
     );
-    console.log({ observation, refVal, extension: observation.extension });
     return extractNumbersAndPeriods(refVal);
   });
   return [...new Set(observationRefValsArray)].join(", "); // should only be 1
@@ -200,10 +180,7 @@ export const getJsonLab = (
 export const getAllLabJsonObjects = (fhirBundle: Bundle): HtmlTableJson[] => {
   // Get lab reports HTML String (for all lab reports) & convert to JSON
   const labsString = evaluateValue(fhirBundle, fhirPathMappings.labResultDiv);
-  const labsJson = formatTablesToJSON(labsString);
-
-  console.log({ labsJson });
-  return labsJson;
+  return formatTablesToJSON(labsString);
 };
 
 /**
