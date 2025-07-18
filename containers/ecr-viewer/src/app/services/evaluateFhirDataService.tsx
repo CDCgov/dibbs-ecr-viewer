@@ -15,7 +15,12 @@ import {
 import { DateTime } from "luxon";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { evaluateData, noData } from "@/app/utils/data-utils";
+import {
+  CompleteData,
+  evaluateData,
+  isDataAvailable,
+  noData,
+} from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateOne,
@@ -329,7 +334,8 @@ const sortPregnancyObservations = (
  * @param fhirBundle - The FHIR bundle containing pregnancy data.
  * @returns An array of evaluated and formatted pregnancy data.
  */
-export const evaluatePregnancyData = (fhirBundle: Bundle) => {
+export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
+  const pregnancySectionDataDisplay: DisplayDataProps[] = [];
   const lastMenstrualPeriodObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.lastMenstrualPeriod,
@@ -344,78 +350,82 @@ export const evaluatePregnancyData = (fhirBundle: Bundle) => {
   );
   const allPregnancyObservations = [
     ...lastMenstrualPeriodObservations.map((ob) => {
-      return { type: "Last Menstrual Period", observation: ob };
+      return {
+        type: "Last Menstrual Period",
+        observation: ob,
+        data: [
+          {
+            title: "Last Menstrual Period",
+            value: evaluateValue(ob, fhirPathMappings.effectiveX),
+          },
+        ].filter(isDataAvailable),
+      };
     }),
     ...pregnancyStatusObservations.map((ob) => {
-      return { type: "Pregnancy Status", observation: ob };
+      return {
+        type: "Pregnancy Status",
+        observation: ob,
+        data: [
+          {
+            title: "Status",
+            value: evaluateValue(ob, "valueCodeableConcept"),
+          },
+          {
+            title: "Effective Date",
+            value: evaluateValue(ob, fhirPathMappings.effectiveX),
+          },
+        ].filter(isDataAvailable),
+      };
     }),
     ...postpartumStatusObservations.map((ob) => {
-      return { type: "Postpartum Status", observation: ob };
+      return {
+        type: "Postpartum Status",
+        observation: ob,
+        data: [
+          {
+            title: "Status",
+            value: evaluateValue(ob, "valueCodeableConcept"),
+          },
+          {
+            title: "Effective Date",
+            value: evaluateValue(ob, fhirPathMappings.effectiveX),
+          },
+        ].filter(isDataAvailable),
+      };
     }),
   ].sort(sortPregnancyObservations);
 
-  if (allPregnancyObservations.length === 0) return;
+  if (allPregnancyObservations.length === 0)
+    return evaluateData(pregnancySectionDataDisplay);
 
-  return (
+  const pregnancyElement = (
     <ExpandCollapseAccordion
       className="accordion-rr"
       descriptor="pregnancy info"
       items={allPregnancyObservations.map((obs) => {
-        let data: DisplayDataProps[] = [];
-        const { type, observation } = obs;
-        if (type === "Last Menstrual Period") {
-          data = [
-            {
-              title: "Last Menstrual Period",
-              value: evaluateValue(observation, fhirPathMappings.effectiveX),
-            },
-          ];
-        } else if (type === "Pregnancy Status") {
-          data = [
-            {
-              title: "Status",
-              value: evaluateValue(observation, "valueCodeableConcept"),
-            },
-            {
-              title: "Effective Date",
-              value: evaluateValue(observation, fhirPathMappings.effectiveX),
-            },
-          ];
-        } else if (type === "Postpartum Status") {
-          data = [
-            {
-              title: "Status",
-              value: evaluateValue(observation, "valueCodeableConcept"),
-            },
-            {
-              title: "Effective Date",
-              value: evaluateValue(observation, fhirPathMappings.effectiveX),
-            },
-          ];
-        }
-
-        const content = (
-          <>
-            {data.map((d) => {
-              return <DataDisplay item={d} />;
-            })}
-          </>
-        );
+        const content = obs.data.map((d) => <DataDisplay item={d} />);
 
         return {
           title: (
             <div className="display-flex flex-row flex-no-wrap flex-justify">
-              <span className="text-base">{type}</span>
+              <span className="text-base">{obs.type}</span>
             </div>
           ),
           expanded: false,
           content,
-          id: observation.id ?? `${Math.random()}`,
+          id: obs.observation.id ?? `${Math.random()}`,
           headingLevel: "h5",
         };
       })}
     />
   );
+
+  return evaluateData([
+    {
+      value: pregnancyElement,
+      fullWidthContent: true,
+    },
+  ]);
 };
 
 /**

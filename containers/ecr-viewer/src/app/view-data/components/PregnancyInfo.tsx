@@ -1,15 +1,12 @@
-import { ReactNode } from "react";
-
-import { evaluateData } from "@/app/utils/data-utils";
 import {
   AccordionSection,
   AccordionSubSection,
 } from "@/app/view-data/component-utils";
 
-import { DataDisplay } from "./DataDisplay";
+import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface PregnancyInfoProps {
-  pregnancyData: ReactNode;
+  pregnancyData: DisplayDataProps;
 }
 
 /**
@@ -19,13 +16,10 @@ interface PregnancyInfoProps {
  * @returns The rendered component.
  */
 const PregnancyInfo: React.FC<PregnancyInfoProps> = ({ pregnancyData }) => {
-  const dataDisplay = evaluateData([
-    { value: pregnancyData, fullWidthContent: true },
-  ]).availableData[0];
   return (
     <AccordionSection>
       <AccordionSubSection title="Pregnancy Info">
-        <DataDisplay item={dataDisplay} />
+        <DataDisplay item={pregnancyData} />
       </AccordionSubSection>
     </AccordionSection>
   );
