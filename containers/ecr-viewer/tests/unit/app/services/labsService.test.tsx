@@ -1,11 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 
-import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
-import BundleLabInvalidResultsDiv from "../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
-import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import _BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
+import _BundleLabInvalidResultsDiv from "../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
+import _BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import {
-  getLabJsonObject,
   getObservations,
   checkAbnormalTag,
   searchResultRecord,
@@ -21,6 +20,8 @@ import {
   findIdenticalOrg,
   returnAnalysisTime,
   LabReportElementData,
+  getJsonLab,
+  getAllLabJsonObjects,
 } from "@/app/services/labsService";
 import { noData } from "@/app/utils/data-utils";
 import {
@@ -32,10 +33,15 @@ import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { AccordionItem } from "@/app/view-data/types";
 
+const BundleLab = _BundleLab as unknown as Bundle;
+const BundleLabInvalidResultsDiv =
+  _BundleLabInvalidResultsDiv as unknown as Bundle;
+const BundleLabNoLabIds = _BundleLabNoLabIds as unknown as Bundle;
+
 const pathLabReportNormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'c090d379-9aea-f26e-4ddc-378223841e3b')";
 const labReportNormal = evaluateOneAndCheck<DiagnosticReport>(
-  BundleLab as Bundle,
+  BundleLab,
   pathLabReportNormal,
   "DiagnosticReport",
 );
@@ -165,19 +171,21 @@ const labReportNormalJsonObject = {
 const pathLabReportAbnormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '68477c03-5689-f9e5-c267-a3c7bdff6fe0')";
 const labReportAbnormal = evaluateOneAndCheck<DiagnosticReport>(
-  BundleLab as Bundle,
+  BundleLab,
   pathLabReportAbnormal,
   "DiagnosticReport",
 );
-const labReportAbnormalJsonObject = getLabJsonObject(
-  labReportAbnormal,
-  BundleLab as unknown as Bundle,
+const jsonLabs = getAllLabJsonObjects(BundleLab);
+const labReportAbnormalJsonObject = getJsonLab(
+  jsonLabs,
+  labReportAbnormal!,
+  BundleLab,
 );
 
 const pathLabOrganismsTableAndNarr =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'b0f590a6-4bf5-7add-9716-2bd3ba6defb2')";
 const labOrganismsTableAndNarr = evaluateOneAndCheck<DiagnosticReport>(
-  BundleLab as Bundle,
+  BundleLab,
   pathLabOrganismsTableAndNarr,
   "DiagnosticReport",
 );
@@ -197,13 +205,13 @@ describe("LabsService tests", () => {
             code: {},
             status: "entered-in-error",
           },
-          BundleLab as unknown as Bundle,
+          BundleLab,
         );
 
         const expectedObservationPath =
           "Bundle.entry.resource.where(resourceType = 'Observation').where(id = '1c0f3367-0588-c90e-fed0-0d8c15c5ac1b')";
         const expectedResult = evaluateAllAndCheck<Observation>(
-          BundleLab as Bundle,
+          BundleLab,
           expectedObservationPath,
           "Observation",
         );
@@ -222,7 +230,7 @@ describe("LabsService tests", () => {
             code: {},
             status: "final",
           },
-          BundleLab as unknown as Bundle,
+          BundleLab,
         );
         expect(result).toStrictEqual([]);
       });
@@ -232,17 +240,15 @@ describe("LabsService tests", () => {
       it("returns correct Json Object for table with data-id", () => {
         const expectedResult = labReportNormalJsonObject;
 
-        const result = getLabJsonObject(
-          labReportNormal,
-          BundleLab as unknown as Bundle,
-        );
+        const jsonLabs = getAllLabJsonObjects(BundleLab);
+        const result = getJsonLab(jsonLabs, labReportNormal!, BundleLab);
 
         expect(result).toEqual(expectedResult);
       });
 
       it("returns correct Json Object for table without data-id", () => {
         const labReportWithoutIds = evaluateOneAndCheck<DiagnosticReport>(
-          BundleLabNoLabIds as Bundle,
+          BundleLabNoLabIds,
           "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '97d3b36a-f833-2f3c-b456-abeb1fd342e4')",
           "DiagnosticReport",
         );
@@ -283,18 +289,22 @@ describe("LabsService tests", () => {
           ],
         };
 
-        const result = getLabJsonObject(
-          labReportWithoutIds,
-          BundleLabNoLabIds as Bundle,
+        const jsonLabs = getAllLabJsonObjects(BundleLab);
+        const result = getJsonLab(
+          jsonLabs,
+          labReportWithoutIds!,
+          BundleLabNoLabIds,
         );
 
         expect(result).toStrictEqual(labReportJsonObjectWithoutId);
       });
 
       it("returns empty object if lab results html contains no tables", () => {
-        const result = getLabJsonObject(
-          labReportNormal,
-          BundleLabInvalidResultsDiv as unknown as Bundle,
+        const jsonLabs = getAllLabJsonObjects(BundleLab);
+        const result = getJsonLab(
+          jsonLabs,
+          labReportNormal!,
+          BundleLabInvalidResultsDiv,
         );
 
         expect(result).toStrictEqual({});
@@ -483,7 +493,7 @@ describe("LabsService tests", () => {
       it("should return the correct organisms table when the data exists for a lab report", () => {
         const result = evaluateOrganismsReportData(
           labOrganismsTableAndNarr,
-          BundleLab as unknown as Bundle,
+          BundleLab,
         )!;
         render(result);
 
@@ -494,10 +504,7 @@ describe("LabsService tests", () => {
         expect(screen.getAllByText("MIC")).toHaveLength(3);
       });
       it("should return undefined if lab organisms data does not exist for a lab report", () => {
-        const result = evaluateOrganismsReportData(
-          labReportNormal,
-          BundleLab as unknown as Bundle,
-        );
+        const result = evaluateOrganismsReportData(labReportNormal, BundleLab);
 
         expect(result).toBeUndefined();
       });
@@ -507,13 +514,10 @@ describe("LabsService tests", () => {
   describe("Evaluate Diagnostic Report", () => {
     it("should evaluate diagnostic report results", () => {
       const report = evaluateAll(
-        BundleLab as Bundle,
+        BundleLab,
         fhirPathMappings.diagnosticReports,
       )[0];
-      const actual = evaluateDiagnosticReportData(
-        report,
-        BundleLab as unknown as Bundle,
-      );
+      const actual = evaluateDiagnosticReportData(report, BundleLab);
 
       render(actual);
 
@@ -541,13 +545,10 @@ describe("LabsService tests", () => {
     });
     it("should evaluate test method results", () => {
       const report = evaluateAll(
-        BundleLab as Bundle,
+        BundleLab,
         fhirPathMappings.diagnosticReports,
       )[0];
-      const actual = evaluateDiagnosticReportData(
-        report,
-        BundleLab as unknown as Bundle,
-      );
+      const actual = evaluateDiagnosticReportData(report, BundleLab);
 
       render(actual);
 
@@ -557,13 +558,10 @@ describe("LabsService tests", () => {
     });
     it("should display comment", () => {
       const report = evaluateAll(
-        BundleLab as Bundle,
+        BundleLab,
         fhirPathMappings.diagnosticReports,
       )[2];
-      const actual = evaluateDiagnosticReportData(
-        report,
-        BundleLab as unknown as Bundle,
-      );
+      const actual = evaluateDiagnosticReportData(report, BundleLab);
       render(actual!);
 
       expect(screen.getByText("View comment")).toBeInTheDocument();
@@ -574,7 +572,7 @@ describe("LabsService tests", () => {
     it("should return a matching org", () => {
       const result = evaluateLabOrganizationData(
         "14394818-a1e9-4882-ca8b-FAKE793bb5cc",
-        BundleLab as unknown as Bundle,
+        BundleLab,
         0,
       );
       expect(result[0].value).toEqual("Tatooine Hospital");
@@ -585,10 +583,7 @@ describe("LabsService tests", () => {
           {} as AccordionItem,
         ],
       };
-      const result = combineOrgAndReportData(
-        testResultObject,
-        BundleLab as unknown as Bundle,
-      );
+      const result = combineOrgAndReportData(testResultObject, BundleLab);
       expect(result[0].organizationDisplayDataProps).toBeArray();
     });
   });
@@ -596,8 +591,8 @@ describe("LabsService tests", () => {
   describe("Evaluate the lab info section", () => {
     it("should return a list of LabReportElementData if the lab results in the HTML table have ID's", () => {
       const result = evaluateLabInfoData(
-        BundleLab as unknown as Bundle,
-        evaluateAll(BundleLab as Bundle, fhirPathMappings.diagnosticReports),
+        BundleLab,
+        evaluateAll(BundleLab, fhirPathMappings.diagnosticReports),
       );
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
@@ -605,11 +600,8 @@ describe("LabsService tests", () => {
 
     it("should return a list of DisplayDataProps if the lab results in the HTML table do not have ID's", () => {
       const result = evaluateLabInfoData(
-        BundleLabNoLabIds as unknown as Bundle,
-        evaluateAll(
-          BundleLabNoLabIds as Bundle,
-          fhirPathMappings.diagnosticReports,
-        ),
+        BundleLabNoLabIds,
+        evaluateAll(BundleLabNoLabIds, fhirPathMappings.diagnosticReports),
       );
       expect(result[0]).toHaveProperty("title");
       expect(result[0]).toHaveProperty("value");
@@ -617,8 +609,8 @@ describe("LabsService tests", () => {
 
     it("should properly count the number of labs", () => {
       const result = evaluateLabInfoData(
-        BundleLab as Bundle,
-        evaluateAll(BundleLab as Bundle, fhirPathMappings.diagnosticReports),
+        BundleLab,
+        evaluateAll(BundleLab, fhirPathMappings.diagnosticReports),
       );
       expect(isLabReportElementDataList(result)).toBeTrue();
       const props = (result[0] as LabReportElementData)
