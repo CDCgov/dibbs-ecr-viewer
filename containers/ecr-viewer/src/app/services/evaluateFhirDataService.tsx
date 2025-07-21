@@ -707,7 +707,9 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
   const facilityData = [
     {
       title: "Facility Name",
-      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
+      value:
+        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
+        location?.name,
     },
     {
       title: "Facility Address",

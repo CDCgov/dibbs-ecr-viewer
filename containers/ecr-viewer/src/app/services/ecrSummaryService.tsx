@@ -1,6 +1,12 @@
 import React from "react";
 
-import { Bundle, Condition, DomainResource, Organization } from "fhir/r4";
+import {
+  Bundle,
+  Condition,
+  DomainResource,
+  Location,
+  Organization,
+} from "fhir/r4";
 
 import { evaluateData } from "@/app/utils/data-utils";
 import {
@@ -118,7 +124,12 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Name",
-      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
+      value:
+        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
+        evaluateOneReference<Location>(
+          fhirBundle,
+          fhirPathMappings.facilityLocationRef,
+        )?.name,
     },
     {
       title: "Facility Contact",
