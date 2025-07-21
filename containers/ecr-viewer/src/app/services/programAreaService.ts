@@ -7,6 +7,7 @@ import {
   Core,
   ProgramArea,
 } from "@/app/data/metadataDb/types/core";
+import { stringSort } from "@/app/utils/format-utils";
 
 import { UserFacingError } from "./errorService";
 import { getCheckAdmin } from "./userService";
@@ -159,7 +160,7 @@ export const deleteProgramArea = async (uuid: string): Promise<void> => {
 };
 
 export type ListedProgramArea = ProgramArea & {
-  conditions: ConditionReference[];
+  conditions: (ConditionReference & { is_duplicate: boolean })[];
 };
 
 /**
@@ -181,12 +182,25 @@ export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
           .selectFrom("condition_reference")
           .selectAll()
           .execute();
-        return programAreas.map((pa) => ({
-          ...pa,
-          conditions: conditionRefs.filter(
-            ({ program_area_uuid }) => program_area_uuid === pa.uuid,
-          ),
-        }));
+
+        const conditions = conditionRefs
+          .map((c) => ({
+            ...c,
+            is_duplicate: conditionRefs.some(
+              ({ condition_name, code }) =>
+                c.condition_name === condition_name && c.code !== code,
+            ),
+          }))
+          .sort((a, b) => stringSort(a.condition_name, b.condition_name));
+
+        return programAreas
+          .map((pa) => ({
+            ...pa,
+            conditions: conditions.filter(
+              ({ program_area_uuid }) => program_area_uuid === pa.uuid,
+            ),
+          }))
+          .sort((a, b) => stringSort(a.name, b.name));
       });
   } catch (error: unknown) {
     const message = "Failed to list program areas";
