@@ -16,6 +16,7 @@ import {
   RenderableNode,
   arrayToElement,
   noData,
+  notEmpty,
   safeParse,
 } from "@/app/utils/data-utils";
 import {
@@ -35,8 +36,7 @@ import {
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
-import { JsonTable } from "@/app/view-data/components/JsonTable";
-import { LabAccordion } from "@/app/view-data/components/LabAccordion";
+import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { AccordionItem } from "@/app/view-data/types";
 
 import { formatDateTime } from "./formatDateService";
@@ -62,22 +62,59 @@ export interface LabReportElementData {
 }
 
 /**
- * Checks if a given list is of type LabReportElementData[].
- * Used to determine how to render lab results.
- * @param labResults - Object to be checked.
- * @returns True if the list is of type LabReportElementData[], false otherwise.
+ * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
+ * @param fhirBundle - The FHIR bundle containing lab and RR data.
+ * @param labReports - An array of DiagnosticReport objects
+ * @param accordionHeadingLevel - Heading level for the title of AccordionLabResults.
+ * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
-export const isLabReportElementDataList = (
-  labResults: DisplayDataProps[] | LabReportElementData[],
-): labResults is LabReportElementData[] => {
-  const asLabReportElementList = labResults as LabReportElementData[];
-  return (
-    asLabReportElementList &&
-    asLabReportElementList.length > 0 &&
-    asLabReportElementList[0].diagnosticReportDataItems !== undefined &&
-    asLabReportElementList[0].organizationId !== undefined &&
-    asLabReportElementList[0].organizationDisplayDataProps !== undefined
-  );
+export const evaluateLabInfoData = (
+  fhirBundle: Bundle,
+  labReports: DiagnosticReport[],
+  accordionHeadingLevel: HeadingLevel = "h5",
+): LabReportElementData[] => {
+  // the keys are the organization id, the value is an array of jsx elements of diagnsotic reports
+  let organizationItems: ResultObject = {};
+  const jsonLabs = getAllLabJsonObjects(fhirBundle);
+
+  for (const report of labReports) {
+    const labReportJson = getJsonLab(jsonLabs, report, fhirBundle);
+
+    const content: Array<React.JSX.Element> = getLabsContent(
+      report,
+      fhirBundle,
+      labReportJson,
+    );
+    const organizationId = (report.performer?.[0].reference ?? "").replace(
+      "Organization/",
+      "",
+    );
+    const title = formatCodeableConcept(report.code) ?? "Unknown";
+    const item = {
+      title: (
+        <>
+          {title}
+          {checkAbnormalTag(labReportJson) && (
+            <Tag background="#B50909" className="margin-left-105">
+              Abnormal
+            </Tag>
+          )}
+        </>
+      ),
+      content,
+      expanded: false,
+      id: toKebabCase(title),
+      headingLevel: accordionHeadingLevel,
+    };
+
+    organizationItems = groupItemByOrgId(
+      organizationItems,
+      organizationId,
+      item,
+    );
+  }
+
+  return combineOrgAndReportData(organizationItems, fhirBundle);
 };
 
 /**
@@ -98,20 +135,13 @@ export const getObservations = (
     .map((obsRef) =>
       evaluateReference<Observation>(fhirBundle, obsRef.reference),
     )
-    .filter((obs): obs is Observation => obs !== undefined);
+    .filter(notEmpty);
 };
 
-/**
- * Retrieves the JSON representation of a lab report from the labs HTML string.
- * @param report - The LabReport object containing information about the lab report.
- * @param fhirBundle - The FHIR Bundle object containing relevant FHIR resources.
- * @returns The JSON representation of the lab report.
- */
-export const getLabJsonObject = (
-  report: DiagnosticReport | undefined,
+const getReportResultId = (
+  report: DiagnosticReport,
   fhirBundle: Bundle,
-): HtmlTableJson => {
-  if (!report) return {} as HtmlTableJson;
+): string | undefined => {
   // Get reference value (result ID) from Observations
   const observations = getObservations(report, fhirBundle);
   const observationRefValsArray = observations.flatMap((observation) => {
@@ -121,26 +151,37 @@ export const getLabJsonObject = (
     );
     return extractNumbersAndPeriods(refVal);
   });
-  const observationRefVal = [...new Set(observationRefValsArray)].join(", "); // should only be 1
+  return [...new Set(observationRefValsArray)].join(", "); // should only be 1
+};
 
-  // Get lab reports HTML String (for all lab reports) & convert to JSON
-  const labsString = evaluateValue(fhirBundle, fhirPathMappings.labResultDiv);
-  const labsJson = formatTablesToJSON(labsString);
+/**
+ * Retrieves the JSON representation of all lab reports from the labs HTML string.
+ * @param jsonLabs - All json lab reports from the HTML
+ * @param report - The DiagnosticReport object containing information about the lab report.
+ * @param fhirBundle - The FHIR Bundle object containing relevant FHIR resources.
+ * @returns The JSON representation of the lab reports.
+ */
+export const getJsonLab = (
+  jsonLabs: HtmlTableJson[],
+  report: DiagnosticReport,
+  fhirBundle: Bundle,
+): HtmlTableJson | undefined => {
+  const resultId = getReportResultId(report, fhirBundle);
+  if (!resultId) return;
 
   // Get specified lab report (by reference value)
-  if (observationRefVal) {
-    return labsJson.filter((obj) =>
-      obj.resultId?.includes(observationRefVal),
-    )[0];
-  }
+  return jsonLabs.filter((obj) => obj.resultId?.includes(resultId))?.[0];
+};
 
-  // If there is no reference value, return all lab results
-  // In these eCRs we are seeing all results in one table
-  if (labsJson.length > 0) {
-    return labsJson[0];
-  }
-
-  return {} as HtmlTableJson;
+/**
+ * Retrieves the JSON representation of a lab report from the labs HTML string.
+ * @param fhirBundle - The FHIR Bundle object containing relevant FHIR resources.
+ * @returns The JSON representation of the lab report.
+ */
+export const getAllLabJsonObjects = (fhirBundle: Bundle): HtmlTableJson[] => {
+  // Get lab reports HTML String (for all lab reports) & convert to JSON
+  const labsString = evaluateValue(fhirBundle, fhirPathMappings.labResultDiv);
+  return formatTablesToJSON(labsString);
 };
 
 /**
@@ -148,7 +189,7 @@ export const getLabJsonObject = (
  * @param labReportJson - A JSON object representing the lab report HTML string
  * @returns True if the result name includes "abnormal" (case insensitive), otherwise false. Will also return false if lab does not have JSON object.
  */
-export const checkAbnormalTag = (labReportJson: HtmlTableJson): boolean => {
+export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
   if (!labReportJson) {
     return false;
   }
@@ -271,7 +312,7 @@ const returnReceivedTime = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 export const returnFieldValueFromLabHtmlString = (
-  labReportJson: HtmlTableJson,
+  labReportJson: HtmlTableJson | undefined,
   fieldName: string,
 ): RenderableNode => {
   if (!labReportJson) {
@@ -294,7 +335,7 @@ export const returnFieldValueFromLabHtmlString = (
  * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
  */
 export const returnAnalysisTime = (
-  labReportJson: HtmlTableJson,
+  labReportJson: HtmlTableJson | undefined,
   fieldName: string,
 ): RenderableNode => {
   const fieldVal = returnFieldValueFromLabHtmlString(labReportJson, fieldName);
@@ -405,7 +446,7 @@ export const evaluateDiagnosticReportData = (
       columnName: "Lab Comment",
       infoPath: "noteText",
       hiddenBaseText: "comment",
-      applyToValue: (v) => safeParse(v),
+      applyToValue: (v) => <FieldValue>{safeParse(v)}</FieldValue>,
       className: "minw-10 width-20",
     },
   ];
@@ -461,66 +502,6 @@ export const evaluateOrganismsReportData = (
       outerBorder={false}
     />
   );
-};
-
-/**
- * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
- * @param fhirBundle - The FHIR bundle containing lab and RR data.
- * @param labReports - An array of DiagnosticReport objects
- * @param accordionHeadingLevel - Heading level for the title of AccordionLabResults.
- * @returns An array of the Diagnostic reports Elements and Organization Display Data
- */
-export const evaluateLabInfoData = (
-  fhirBundle: Bundle,
-  labReports: DiagnosticReport[],
-  accordionHeadingLevel: HeadingLevel = "h5",
-): LabReportElementData[] | DisplayDataProps[] => {
-  // the keys are the organization id, the value is an array of jsx elements of diagnsotic reports
-  let organizationItems: ResultObject = {};
-
-  for (const report of labReports) {
-    const labReportJson = getLabJsonObject(report, fhirBundle);
-
-    // If there is no result ID we just display the HTML as is
-    if (labReportJson.resultId === undefined) {
-      return getUnformattedLabsContent(fhirBundle, accordionHeadingLevel);
-    }
-
-    const content: Array<React.JSX.Element> = getFormattedLabsContent(
-      report,
-      fhirBundle,
-      labReportJson,
-    );
-    const organizationId = (report.performer?.[0].reference ?? "").replace(
-      "Organization/",
-      "",
-    );
-    const title = formatCodeableConcept(report.code) ?? "Unknown";
-    const item = {
-      title: (
-        <>
-          {title}
-          {checkAbnormalTag(labReportJson) && (
-            <Tag background="#B50909" className="margin-left-105">
-              Abnormal
-            </Tag>
-          )}
-        </>
-      ),
-      content,
-      expanded: false,
-      id: toKebabCase(title),
-      headingLevel: accordionHeadingLevel,
-    };
-
-    organizationItems = groupItemByOrgId(
-      organizationItems,
-      organizationId,
-      item,
-    );
-  }
-
-  return combineOrgAndReportData(organizationItems, fhirBundle);
 };
 
 /**
@@ -642,16 +623,17 @@ const groupItemByOrgId = (
  * Retrieves the content for a lab report.
  * @param report - The DiagnosticReport resource.
  * @param fhirBundle - The FHIR Bundle.
- * @param labReportJson - The JSON representation of the lab results HTML.
+ * @param labReportJson - The JSON representation of the lab results from HTML.
  * @returns An array of JSX elements representing the lab report content.
  */
-function getFormattedLabsContent(
+function getLabsContent(
   report: DiagnosticReport,
   fhirBundle: Bundle,
-  labReportJson: HtmlTableJson,
+  labReportJson?: HtmlTableJson,
 ) {
   const labTableDiagnostic = evaluateDiagnosticReportData(report, fhirBundle);
   const labTableOrganisms = evaluateOrganismsReportData(report, fhirBundle);
+
   const rrInfo: DisplayDataProps[] = [
     {
       title: "Analysis Time",
@@ -743,51 +725,4 @@ function getFormattedLabsContent(
     }),
   );
   return content;
-}
-
-/**
- * Retrieves lab results from HTML table in the fhir bundle and returns them as an array of DisplayDataProps.
- * @param fhirBundle - The FHIR bundle containing lab data.
- * @param accordionHeadingLevel - Heading level for the Accordion menu title.
- * @returns An array of DisplayDataProps containing the lab results.
- * Note: Even though we only need one DisplayDataProps object for the lab results, returning as an array makes the result of evaluateLabInfoData easier to work with.
- */
-function getUnformattedLabsContent(
-  fhirBundle: Bundle,
-  accordionHeadingLevel: HeadingLevel = "h5",
-): DisplayDataProps[] {
-  const bundle = evaluateValue(fhirBundle, fhirPathMappings.labResultDiv);
-  const tableJson = formatTablesToJSON(bundle);
-
-  if (tableJson.length === 0) {
-    return [];
-  }
-
-  return [
-    {
-      title: "Lab Results",
-      value: (
-        <LabAccordion
-          items={[
-            {
-              title: "All Lab Results",
-              content: tableJson.map((table, index) => (
-                <JsonTable
-                  key={`lab-result-table_${index}`}
-                  jsonTableData={table}
-                  outerBorder={false}
-                  className="lab-results-table-from-div"
-                />
-              )),
-              headingLevel: accordionHeadingLevel,
-              className: "padding-bottom-0",
-              id: "all-lab-results",
-              expanded: false,
-            },
-          ]}
-        />
-      ),
-      dividerLine: false,
-    } as DisplayDataProps,
-  ];
 }
