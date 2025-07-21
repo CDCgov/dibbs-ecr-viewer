@@ -108,15 +108,11 @@ export const formatAddress = (
   return [
     includeUse && use && toSentenceCase(use) + ":",
     (line?.map(toTitleCase) || []).filter(Boolean).join("\n"),
-    [
-      [toTitleCase(city), toTitleCase(district), state]
-        .filter(Boolean)
-        .join(", "),
-      postalCode,
-    ]
+    [[toTitleCase(city), state].filter(Boolean).join(", "), postalCode]
       .filter(Boolean)
       .join(" "),
     country,
+    district && `County: ${toTitleCase(district)}`,
     includePeriod && period && `Dates: ${formatPeriodDate(period)}`,
   ]
     .filter(Boolean)

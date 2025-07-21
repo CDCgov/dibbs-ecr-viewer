@@ -481,7 +481,7 @@ describe("FormatService tests", () => {
       ];
       const actual = formatPatientContactList(contact);
       expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, Los Angele, CA 90210\nUSA\nHome: 555-995-9999`,
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA 90210\nUSA\nCounty: Los Angele\nHome: 555-995-9999`,
       );
     });
     it("should return multiple emergency contacts", () => {
@@ -547,7 +547,7 @@ describe("FormatService tests", () => {
       ];
       const actual = formatPatientContactList(contact);
       expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, Los Angele, CA 90210\nUSA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA 90210\nUSA\nCounty: Los Angele\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
       );
     });
     it("should not return empty space when address is not available in", () => {

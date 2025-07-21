@@ -557,7 +557,7 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       value: evaluatePatientAddress(fhirBundle),
     },
     {
-      title: "Current County",
+      title: "Recent County",
       value: findCurrentAddress(
         evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
       )?.district,
