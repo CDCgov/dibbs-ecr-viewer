@@ -85,8 +85,8 @@ describe("program area service", () => {
         author_uuid: expect.any(String),
         date_created: expect.any(Date),
         conditions: [
-          { ...cond123, program_area_uuid: progId },
-          { ...cond456, program_area_uuid: progId },
+          { ...cond123, program_area_uuid: progId, is_duplicate: false },
+          { ...cond456, program_area_uuid: progId, is_duplicate: false },
         ],
       },
     ]);

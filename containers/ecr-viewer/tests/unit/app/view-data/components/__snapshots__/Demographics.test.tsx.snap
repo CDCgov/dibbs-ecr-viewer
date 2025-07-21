@@ -220,31 +220,12 @@ exports[`Demographics should match snapshot 1`] = `
                 <div
                   class="data-title padding-right-1"
                 >
-                  County
+                  Current County
                 </div>
                 <div
                   class="grid-col maxw7 text-pre-line p-list"
                 >
                   test
-                </div>
-              </div>
-              <div
-                class="section__line_gray"
-              />
-            </div>
-            <div>
-              <div
-                class="grid-row"
-              >
-                <div
-                  class="data-title padding-right-1"
-                >
-                  Country
-                </div>
-                <div
-                  class="grid-col maxw7 text-pre-line p-list"
-                >
-                  USA
                 </div>
               </div>
               <div

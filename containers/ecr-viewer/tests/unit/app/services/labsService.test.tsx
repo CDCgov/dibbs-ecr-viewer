@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
@@ -555,7 +556,7 @@ describe("LabsService tests", () => {
         screen.getAllByText("LAB DEVICE: BIOFIRE® FILMARRAY® 2.0 SYSTEM"),
       ).not.toBeEmpty();
     });
-    it("should display comment", () => {
+    it("should display comment", async () => {
       const report = evaluateAll(
         BundleLab as Bundle,
         fhirPathMappings.diagnosticReports,
@@ -567,6 +568,15 @@ describe("LabsService tests", () => {
       render(actual!);
 
       expect(screen.getByText("View comment")).toBeInTheDocument();
+
+      const user = userEvent.setup();
+      await user.click(screen.getByRole("button", { name: "View comment" }));
+
+      expect(screen.getByText("Hide comment")).toBeInTheDocument();
+
+      expect(screen.getByText("View more")).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: "View more" }));
+      expect(screen.getByText("View less")).toBeInTheDocument();
     });
   });
 

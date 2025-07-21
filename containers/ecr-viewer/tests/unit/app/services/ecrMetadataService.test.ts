@@ -62,7 +62,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
       {
         title: "Custodian Address",
-        value: "2222 Sandy Sand Lane\nMos Eisley, TN\n00044, USA",
+        value: "2222 Sandy Sand Lane\nMos Eisley, TN 00044\nUSA\nCounty: Sand",
       },
       {
         title: "Custodian Contact",
@@ -234,7 +234,9 @@ describe("Evaluate Ecr Metadata", () => {
       },
       {
         title: "Author Facility Address",
-        value: ["2222 Sandy Sand Lane\nMos Eisley, TN\n00044, USA"],
+        value: [
+          "2222 Sandy Sand Lane\nMos Eisley, TN 00044\nUSA\nCounty: Sand",
+        ],
       },
       {
         title: "Author Facility Contact",
@@ -268,7 +270,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
       {
         title: "Author Facility Address",
-        value: ["1 River Way\nFerrix City, AZ\n00123, USA"],
+        value: ["1 River Way\nFerrix City, AZ 00123\nUSA\nCounty: Ferrix"],
       },
       {
         title: "Author Facility Contact",
@@ -292,7 +294,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
       {
         title: "Author Address",
-        value: ["1 River Way\nFerrix City, AZ\n00123, USA"],
+        value: ["1 River Way\nFerrix City, AZ 00123\nUSA\nCounty: Ferrix"],
       },
       {
         title: "Author Contact",
@@ -304,7 +306,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
       {
         title: "Author Facility Address",
-        value: ["1 River Way\nFerrix City, AZ\n00123, USA"],
+        value: ["1 River Way\nFerrix City, AZ 00123\nUSA\nCounty: Ferrix"],
       },
       {
         title: "Author Facility Contact",
