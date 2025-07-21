@@ -101,6 +101,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: Bail out if dependabot and azure ad
+        if: ${{ matrix.azure_ad && github.actor == 'mcmcgrath13'}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.setFailed(`Dependabot can't run e2e tests against azure AD due to lack of access to secrets 🔐 - skipping. Run manually if needed for PR review.`
+            )
+
       - name: Checkout
         uses: actions/checkout@v4
 
