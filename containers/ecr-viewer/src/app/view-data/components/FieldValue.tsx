@@ -4,7 +4,7 @@ import React, { ReactNode, useState, useId } from "react";
 import { Button } from "@trussworks/react-uswds";
 
 /**
- * Functional component for displaying a value. If the value has a length greater than 500 characters, it will be split after 300 characters with a view more button to view the entire value.
+ * Functional component for displaying a value. If the value has a length greater than 500 characters, it will be split after 300 characters with a view more button to view the entire value. Once expanded, a `view less` button will be stickily viewable on the bottom of the container of the content, which as a max height set to avoid taking over the entire experience.
  * @param value - props for the component
  * @param value.children - the value to be displayed in the value
  * @returns - A React element representing the display of the value
@@ -28,18 +28,20 @@ export const FieldValue: React.FC<{
   return hidden ? (
     fieldValue
   ) : (
-    <>
+    <div className="position-relative field-height">
       <span id={id}>{children}&nbsp;</span>
-      <Button
-        type="button"
-        unstyled={true}
-        onClick={() => setHidden(true)}
-        aria-expanded="true"
-        aria-controls={id}
-      >
-        View less
-      </Button>
-    </>
+      <div className="bg-white position-sticky bottom-0 left-0">
+        <Button
+          type="button"
+          unstyled={true}
+          onClick={() => setHidden(true)}
+          aria-expanded="true"
+          aria-controls={id}
+        >
+          View less
+        </Button>
+      </div>
+    </div>
   );
 };
 

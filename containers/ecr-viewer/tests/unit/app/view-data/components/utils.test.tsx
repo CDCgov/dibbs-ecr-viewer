@@ -27,6 +27,7 @@ import {
   evaluateClinicalData,
   returnCareTeamTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
+import { FieldValue } from "@/app/view-data/components/FieldValue";
 import {
   TooltipDiv,
   ToolTipElement,
@@ -198,16 +199,14 @@ describe("Utils", () => {
     });
   });
 
-  describe("DataDisplay", () => {
+  describe("FieldValue", () => {
     describe("string value", () => {
       it("should display text up to 500 characters", () => {
         const FiveHundredChars =
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz";
         expect(FiveHundredChars).toHaveLength(500);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredChars }} />,
-        );
+        render(<FieldValue>{FiveHundredChars}</FieldValue>);
 
         expect(screen.getByText(FiveHundredChars)).toBeInTheDocument();
       });
@@ -216,9 +215,7 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
         expect(
           screen.getByText(FiveHundredOneChars.substring(0, 300) + "..."),
@@ -234,9 +231,7 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
         await user.click(screen.getByText("View more"));
 
@@ -251,9 +246,7 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
         await user.click(screen.getByText("View more"));
         expect(screen.getByText(FiveHundredOneChars)).toBeInTheDocument();
