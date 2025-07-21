@@ -215,6 +215,15 @@ export const findCurrentAddress = (
   return address;
 };
 
+/**
+ * Format the most current home address.
+ * @param addresses - List of addresses.
+ * @returns A string with the formatted current address or an empty string if no address.
+ */
+export const formatCurrentAddress = (
+  addresses: Address[] | Address | undefined,
+): string | undefined => formatAddress(findCurrentAddress(addresses));
+
 const VALID_PHONE_NUMBER_REGEX = /^\d{3}-\d{3}-\d{4}( \D\w*)?$/;
 /**
  * Formats a phone number into a standard format of XXX-XXX-XXXX x123.

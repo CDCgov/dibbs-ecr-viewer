@@ -49,6 +49,7 @@ import {
   formatAge,
   sortByPeriod,
   findCurrentAddress,
+  formatCurrentAddress,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import {
@@ -331,8 +332,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
         const workplaceInfo = [
           {
             title: "Address",
-            value:
-              formatAddress(findCurrentAddress(employer?.address)) || noData,
+            value: formatCurrentAddress(employer?.address) || noData,
           },
           {
             title: "Schedule",

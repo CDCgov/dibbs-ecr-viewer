@@ -28,10 +28,9 @@ import {
 } from "./evaluateFhirDataService";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
 import {
-  findCurrentAddress,
-  formatAddress,
   formatCodeableConcept,
   formatContactPoint,
+  formatCurrentAddress,
   formatPatientContactList,
 } from "./formatService";
 import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
@@ -84,10 +83,8 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Patient Address",
-      value: formatAddress(
-        findCurrentAddress(
-          evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
-        ),
+      value: formatCurrentAddress(
+        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
       ),
     },
     {
