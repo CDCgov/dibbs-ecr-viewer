@@ -315,7 +315,7 @@ describe("ecrSummaryService Tests", () => {
       );
 
       expect(guardian?.value).toEqual(
-        `Grandparent\nLuthen Rael\n1357 Galactic Drive\nSometown, OR\n94949, US\nHome: 123-456-6909`,
+        `Grandparent\nLuthen Rael\n1357 Galactic Drive\nSometown, OR 94949\nUS\nHome: 123-456-6909`,
       );
     });
   });

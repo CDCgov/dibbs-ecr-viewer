@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
-import { Kysely } from "kysely";
+import { Kysely, Transaction } from "kysely";
 import { notFound } from "next/navigation";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -16,6 +16,7 @@ import {
 } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
+import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 
 const getUserByEmail = async (
@@ -143,25 +144,46 @@ export const isUserEcrAuthed = async (
  * Create a user with the given email and user type. The currently logged in user
  * must be an admin and not actively exist, otherwise an error will be thrown. If
  * exists, but is not active. They will be reactivated with the user type passed.
- * @param email Email of the user to add
- * @param user_type Type of user to create ("admin" or "standard")
+ * @param params Function parameters
+ * @param params.email Email of the user to add
+ * @param params.user_type Type of user to create ("admin" or "standard")
+ * @param params.programs Array of program areas the user should be assigned to
  * @returns UUID of the created user
  */
-export const createUser = async (
-  email: string,
-  user_type: "admin" | "standard",
-): Promise<string> => {
-  const creatingUser = await getCheckAdmin("create new users");
+export const createUser = audit(
+  "user",
+  "create",
+  async (
+    {
+      email,
+      userType,
+      programs,
+    }: {
+      email: string;
+      userType: "admin" | "standard";
+      programs: string[];
+    },
+    trx: Transaction<Core>,
+  ): Promise<string> => {
+    const creatingUser = await getCheckAdmin("create new users");
 
-  try {
-    const uuid = randomUUID();
-    return await createUserQuery(email, user_type, uuid, creatingUser.uuid);
-  } catch (error: unknown) {
-    const message = "Failed to create new user";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-};
+    try {
+      const uuid = await createUserQuery(
+        trx,
+        email,
+        userType,
+        randomUUID(),
+        creatingUser.uuid,
+      );
+      await updateUserProgramAreasQuery(trx, uuid, programs);
+      return uuid;
+    } catch (error: unknown) {
+      const message = "Failed to create new user";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 /**
  * Create an initial admin user with the given email. If any active
@@ -180,7 +202,7 @@ export const createInitialAdminUser = async (
 
   try {
     const uuid = randomUUID();
-    return await createUserQuery(email, "admin", uuid, uuid);
+    return await createUserQuery(getDb<Core>(), email, "admin", uuid, uuid);
   } catch (error: unknown) {
     const message = "Failed to create initial admin user";
     console.error({ message, error });
@@ -189,6 +211,7 @@ export const createInitialAdminUser = async (
 };
 
 const createUserQuery = async (
+  db: Kysely<Core>,
   email: string,
   user_type: "admin" | "standard",
   uuid: string,
@@ -199,7 +222,7 @@ const createUserQuery = async (
     if (user.status === "active") {
       throw new UserFacingError("User already exists and is active");
     } else {
-      await updateUserQuery(user.uuid, { status: "active", user_type });
+      await updateUserQuery(db, user.uuid, { status: "active", user_type });
       return user.uuid;
     }
   }
@@ -211,7 +234,7 @@ const createUserQuery = async (
     author_uuid,
   };
 
-  await getDb<Core>().insertInto("user").values(newUser).execute();
+  await db.insertInto("user").values(newUser).execute();
   return uuid;
 };
 
@@ -236,33 +259,46 @@ export const getUser = async (uuid: string): Promise<User | undefined> => {
 
 /**
  * Update a user with the the given id.
- * @param uuid id of the user to update
- * @param updates objecct with fields to update in their record. UUID fields should not be updated.
+ * @param params parameters
+ * @param params.uuid id of the user to update
+ * @param params.updates object with fields to update in their record. UUID fields should not be updated.
+ * @param params.programs array of program areas the user should be assigned to
  */
-export const updateUser = async (
-  uuid: string,
-  updates: Omit<UserUpdate, "uuid" | "author_uuid">,
-): Promise<void> => {
-  await getCheckAdmin("update users");
+export const updateUser = audit(
+  "user",
+  "update",
+  async (
+    {
+      uuid,
+      updates,
+      programs,
+    }: {
+      uuid: string;
+      updates: Omit<UserUpdate, "uuid" | "author_uuid">;
+      programs: string[];
+    },
+    trx: Transaction<Core>,
+  ): Promise<void> => {
+    await getCheckAdmin("update users");
 
-  try {
-    await updateUserQuery(uuid, updates);
-  } catch (error: unknown) {
-    const message = "Failed to update user";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-};
+    try {
+      Object.keys(updates).length > 0 &&
+        (await updateUserQuery(trx, uuid, updates));
+      await updateUserProgramAreasQuery(trx, uuid, programs);
+    } catch (error: unknown) {
+      const message = "Failed to update user";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 const updateUserQuery = async (
+  db: Kysely<Core>,
   uuid: string,
   updates: Omit<UserUpdate, "uuid" | "author_uuid">,
 ) => {
-  await getDb<Core>()
-    .updateTable("user")
-    .set(updates)
-    .where("uuid", "=", uuid)
-    .execute();
+  await db.updateTable("user").set(updates).where("uuid", "=", uuid).execute();
 };
 
 /**
@@ -309,31 +345,21 @@ const listUserProgramAreasQuery = async (
 
 /**
  * Update a user with the the given id's program areas to the given set.
+ * @param trx Kysely transaction
  * @param uuid id of the user to update
  * @param programAreaUuids UUIDs of program areas the user is assigned to.
  */
-export const updateUserProgramAreas = async (
+const updateUserProgramAreasQuery = async (
+  trx: Transaction<Core>,
   uuid: string,
   programAreaUuids: string[],
 ): Promise<void> => {
-  await getCheckAdmin("update user program areas");
-
-  try {
-    await getDb<Core>()
-      .transaction()
-      .execute(async (db) => {
-        await deleteUserProgramAreas(db, uuid);
-        for (const program_area_uuid of programAreaUuids) {
-          await db
-            .insertInto("user_program_area")
-            .values({ user_uuid: uuid, program_area_uuid })
-            .execute();
-        }
-      });
-  } catch (error: unknown) {
-    const message = "Failed to update user";
-    console.error({ message, error });
-    throw new UserFacingError(message);
+  await deleteUserProgramAreas(trx, uuid);
+  for (const program_area_uuid of programAreaUuids) {
+    await trx
+      .insertInto("user_program_area")
+      .values({ user_uuid: uuid, program_area_uuid })
+      .execute();
   }
 };
 
@@ -353,8 +379,12 @@ export const deleteUser = async (uuid: string): Promise<void> => {
   await getCheckAdmin("delete users");
 
   try {
-    await updateUserQuery(uuid, { status: "deleted" });
-    await deleteUserProgramAreas(getDb<Core>(), uuid);
+    await getDb<Core>()
+      .transaction()
+      .execute(async (trx) => {
+        await updateUserQuery(trx, uuid, { status: "deleted" });
+        await deleteUserProgramAreas(trx, uuid);
+      });
   } catch (error: unknown) {
     const message = "Failed to delete user";
     console.error({ message, error });

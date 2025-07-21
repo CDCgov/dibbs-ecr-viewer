@@ -4,14 +4,14 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
-import { CarePlanActivity } from "fhir/r4b";
 
 import BundleCareTeam from "../../../../../../../test-data/fhir/BundleCareTeam.json";
 import BundleWithMiscNotes from "../../../../../../../test-data/fhir/BundleMiscNotes.json";
 import BundleNoActiveProblems from "../../../../../../../test-data/fhir/BundleNoActiveProblems.json";
 import BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import BundleWithPendingResultsOnly from "../../../../../../../test-data/fhir/BundlePendingResultsOnly.json";
-import BundleWithScheduledOrdersOnly from "../../../../../../../test-data/fhir/BundleScheduledOrdersOnly.json";
+import BundleWithPlannedMedsOnly from "../../../../../../../test-data/fhir/BundlePlannedMedsOnly.json";
+import BundleWithScheduledApptsOnly from "../../../../../../../test-data/fhir/BundleScheduledApptsOnly.json";
 import BundleWithSexualOrientation from "../../../../../../../test-data/fhir/BundleSexualOrientation.json";
 import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
 import BundleWithTravelHistoryEmpty from "../../../../../../../test-data/fhir/BundleTravelHistoryEmpty.json";
@@ -26,8 +26,8 @@ import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import {
   evaluateClinicalData,
   returnCareTeamTable,
-  returnPlannedProceduresTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
+import { FieldValue } from "@/app/view-data/components/FieldValue";
 import {
   TooltipDiv,
   ToolTipElement,
@@ -107,14 +107,34 @@ describe("Utils", () => {
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
       );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
     });
-    it("Should return Plan of Treatment when only scheduled orders", () => {
+    it("Should return Plan of Treatment when only scheduled appointments", () => {
       const actual = evaluateClinicalData(
-        BundleWithScheduledOrdersOnly as unknown as Bundle,
+        BundleWithScheduledApptsOnly as unknown as Bundle,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
       );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
+    });
+    it("Should return Plan of Treatment when only ordered meds", () => {
+      const actual = evaluateClinicalData(
+        BundleWithPlannedMedsOnly as unknown as Bundle,
+      );
+      expect(actual.treatmentData.availableData[0].title).toEqual(
+        "Plan of Treatment",
+      );
+      const { container } = render(
+        <DataDisplay item={actual.treatmentData.availableData[0]} />,
+      );
+      expect(container).toMatchSnapshot();
     });
   });
 
@@ -161,43 +181,7 @@ describe("Utils", () => {
         BundleWithPatient as unknown as Bundle,
       );
 
-      expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
-    });
-  });
-
-  describe("Planned Procedures Table", () => {
-    it("should return table when data is provided", () => {
-      const carePlanActivities = [
-        {
-          detail: {
-            scheduledString: "02/01/2024",
-            code: {
-              coding: [
-                {
-                  display: "activity 1",
-                },
-              ],
-            },
-          },
-          extension: [
-            {
-              url: "dibbs.orderedDate",
-              valueString: "01/01/2024",
-            },
-          ],
-        },
-      ] as CarePlanActivity[];
-      const actual = returnPlannedProceduresTable(carePlanActivities);
-      render(actual!);
-
-      expect(screen.getByText("activity 1")).toBeInTheDocument();
-      expect(screen.getByText("01/01/2024")).toBeInTheDocument();
-      expect(screen.getByText("02/01/2024")).toBeInTheDocument();
-    });
-    it("should not return table when data is provided", () => {
-      const actual = returnPlannedProceduresTable([]);
-
-      expect(actual).toBeUndefined();
+      expect(actual).toEqual("1 Main St\nCloud City, CA 00000\nUS");
     });
   });
 
@@ -215,16 +199,14 @@ describe("Utils", () => {
     });
   });
 
-  describe("DataDisplay", () => {
+  describe("FieldValue", () => {
     describe("string value", () => {
       it("should display text up to 500 characters", () => {
         const FiveHundredChars =
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz";
         expect(FiveHundredChars).toHaveLength(500);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredChars }} />,
-        );
+        render(<FieldValue>{FiveHundredChars}</FieldValue>);
 
         expect(screen.getByText(FiveHundredChars)).toBeInTheDocument();
       });
@@ -233,9 +215,7 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
         expect(
           screen.getByText(FiveHundredOneChars.substring(0, 300) + "..."),
@@ -251,9 +231,7 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
         await user.click(screen.getByText("View more"));
 
@@ -268,9 +246,7 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
         await user.click(screen.getByText("View more"));
         expect(screen.getByText(FiveHundredOneChars)).toBeInTheDocument();

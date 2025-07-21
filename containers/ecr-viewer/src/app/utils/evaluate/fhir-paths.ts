@@ -7,7 +7,6 @@ import {
   Condition,
   ContactPoint,
   DiagnosticReport,
-  EncounterDiagnosis,
   EncounterParticipant,
   Extension,
   HumanName,
@@ -44,8 +43,6 @@ export type PathTypes = {
   patientNameList: HumanName;
   patientAddressList: Address;
   patientTelecom: ContactPoint;
-  patientCounty: string;
-  patientCountry: string;
   patientIds: string;
   patientDOB: string;
   patientVitalStatus: boolean;
@@ -88,15 +85,13 @@ export type PathTypes = {
   eICRProcessingStatusReason: Observation;
   compositionAuthorRefs: Reference;
   encounterPeriod: Period;
-  encounterDiagnosis: EncounterDiagnosis;
+  encounterDiagnosisRef: Reference;
   encounterType: string;
   encounterID: Identifier;
   hospitalEncounterDiagnosisRef: Reference;
-  facilityContact: string;
-  facilityContactAddress: string;
-  facilityLocation: string;
+  facilityOrgRef: string;
+  facilityLocationRef: string;
   facilityName: string;
-  facilityAddress: Address;
   facilityType: ValueX;
   compositionEncounterRef: string;
   encounterAttendingRefs: EncounterParticipant;
@@ -110,11 +105,14 @@ export type PathTypes = {
   activeProblemsOnsetAge: ValueX;
   historyOfPresentIllness: string;
   emergencyOutbreakInfo: Observation;
-  planOfTreatment: string;
-  plannedProcedures: CarePlanActivity;
-  plannedProcedureName: string;
-  plannedProcedureOrderedDate: string;
-  plannedProcedureScheduledDate: string;
+  planOfTreatment: CarePlanActivity;
+  authoredOn: TimeX;
+  plannedActivityName: CodeableConcept;
+  plannedActivityType: string;
+  plannedActivityTime: TimeX;
+  plannedServiceRequestTime: TimeX;
+  plannedMedicationName: CodeableConcept;
+  plannedMedicationDosage: ValueX;
   adminMedicationsRefs: string;
   adminMedicationTherapeuticResponseObs: CodeableConcept;
   careTeamParticipants: CareTeamParticipant;
@@ -194,14 +192,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientTelecom: {
     type: "ContactPoint",
     path: "entry.resource.Patient.telecom",
-  },
-  patientCounty: {
-    type: "string",
-    path: "entry.resource.Patient.address.first().county",
-  },
-  patientCountry: {
-    type: "string",
-    path: "entry.resource.Patient.address.first().country",
   },
 
   patientIds: {
@@ -380,9 +370,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Period",
     path: "entry.resource.Encounter.period",
   },
-  encounterDiagnosis: {
-    type: "EncounterDiagnosis",
-    path: "entry.resource.Encounter.diagnosis",
+  encounterDiagnosisRef: {
+    type: "Reference",
+    path: "entry.resource.Encounter.diagnosis.condition",
   },
   encounterType: {
     type: "string",
@@ -398,25 +388,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Composition.section.where(code.coding.code = %code).entry",
   },
 
-  facilityContact: {
-    type: "string",
-    path: "entry.resource.Location.first().telecom.where(system = 'phone').value",
-  },
-  facilityContactAddress: {
+  facilityOrgRef: {
     type: "string",
     path: "entry.resource.Encounter.serviceProvider.reference",
   },
-  facilityLocation: {
+  facilityLocationRef: {
     type: "string",
     path: "entry.resource.Encounter.location.location.reference",
   },
   facilityName: {
     type: "string",
     path: "entry.resource.Encounter.location.location.display",
-  },
-  facilityAddress: {
-    type: "Address",
-    path: "entry.resource.Location.first().address",
   },
   facilityType: {
     type: "ValueX",
@@ -476,28 +458,36 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   // Treatment Details
   planOfTreatment: {
-    type: "string",
-    path: "entry.resource.section.where(title = 'Plan of Treatment').text.`div`",
-  },
-  plannedProcedures: {
     type: "CarePlanActivity",
     path: "entry.resource.CarePlan.activity",
   },
-  plannedProcedureName: {
-    type: "string",
-    path: "detail.code.coding.display",
+  authoredOn: {
+    type: "TimeX",
+    path: "authoredOn",
   },
-  /**
-   * the shorthand `extension(url)` will only work where there is also a `resourceType`, i.e, a `Resource`. This
-   * path is used on `CarePlan.activity` which is merely a `BackboneElement`.
-   */
-  plannedProcedureOrderedDate: {
-    type: "string",
-    path: "extension.where(url = 'dibbs.orderedDate').valueString",
+  plannedActivityName: {
+    type: "CodeableConcept",
+    path: "detail.code",
   },
-  plannedProcedureScheduledDate: {
+  plannedActivityType: {
     type: "string",
-    path: "detail.scheduledString",
+    path: "detail.kind",
+  },
+  plannedActivityTime: {
+    type: "TimeX",
+    path: "detail.scheduled",
+  },
+  plannedServiceRequestTime: {
+    type: "TimeX",
+    path: "occurrence",
+  },
+  plannedMedicationName: {
+    type: "CodeableConcept",
+    path: "medicationCodeableConcept",
+  },
+  plannedMedicationDosage: {
+    type: "ValueX",
+    path: "dosageInstruction.doseAndRate.dose",
   },
 
   // Administered Medications

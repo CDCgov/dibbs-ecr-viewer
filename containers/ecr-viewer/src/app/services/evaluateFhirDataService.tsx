@@ -1,7 +1,6 @@
 import "server-only"; // FHIR evaluation should be done server side
 
 import {
-  Address,
   Bundle,
   Condition,
   Encounter,
@@ -23,7 +22,9 @@ import {
 } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateAllReferences,
   evaluateOne,
+  evaluateOneReference,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -52,10 +53,9 @@ import {
   formatNameList,
   formatPatientContactList,
   formatAge,
-  formatPhoneNumber,
   sortByPeriod,
+  findCurrentAddress,
   formatCurrentAddress,
-  formatReference,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import {
@@ -689,12 +689,10 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       value: evaluatePatientAddress(fhirBundle),
     },
     {
-      title: "County",
-      value: evaluateOne(fhirBundle, fhirPathMappings.patientCounty),
-    },
-    {
-      title: "Country",
-      value: evaluateOne(fhirBundle, fhirPathMappings.patientCountry),
+      title: "Recent County",
+      value: findCurrentAddress(
+        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
+      )?.district,
     },
     {
       title: "Contact",
@@ -800,17 +798,11 @@ export const evaluateEncounterDiagnosisData = (
   code: string,
   caption: string,
 ) => {
-  const dxRefs = evaluateAll(
+  const dx = evaluateAllReferences<Condition>(
     fhirBundle,
     fhirPathMappings.hospitalEncounterDiagnosisRef,
     { code },
   );
-
-  const dx: Condition[] = dxRefs
-    .map((x) => {
-      return evaluateReference<Condition>(fhirBundle, formatReference(x));
-    })
-    .filter((x): x is Condition => Boolean(x));
 
   if (dx.length === 0) return;
 
@@ -835,34 +827,33 @@ export const evaluateEncounterDiagnosisData = (
  * @returns An array of evaluated and formatted facility data.
  */
 export const evaluateFacilityData = (fhirBundle: Bundle) => {
-  const referenceString = evaluateOne(
+  const location = evaluateOneReference<Location>(
     fhirBundle,
-    fhirPathMappings.facilityContactAddress,
+    fhirPathMappings.facilityLocationRef,
   );
-
-  const facilityContactAddress: Address | undefined =
-    evaluateReference<Organization>(fhirBundle, referenceString)?.address?.[0];
+  const org = evaluateOneReference<Organization>(
+    fhirBundle,
+    fhirPathMappings.facilityOrgRef,
+  );
 
   const facilityData = [
     {
       title: "Facility Name",
-      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
+      value:
+        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
+        location?.name,
     },
     {
       title: "Facility Address",
-      value: formatAddress(
-        evaluateOne(fhirBundle, fhirPathMappings.facilityAddress),
-      ),
+      value: formatAddress(location?.address),
     },
     {
       title: "Facility Contact Address",
-      value: formatAddress(facilityContactAddress),
+      value: formatAddressList(org?.address),
     },
     {
       title: "Facility Contact",
-      value: formatPhoneNumber(
-        evaluateOne(fhirBundle, fhirPathMappings.facilityContact),
-      ),
+      value: formatContactPoint(org?.telecom),
     },
     {
       title: "Facility Type",
@@ -882,12 +873,11 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
  * @returns An array of evaluated and formatted provider data.
  */
 export const evaluateProviderData = (fhirBundle: Bundle) => {
-  const encounterRef = evaluateOne(
+  const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
     fhirPathMappings.compositionEncounterRef,
   );
 
-  const encounter = evaluateReference<Encounter>(fhirBundle, encounterRef);
   const encounterAttendingRefs = evaluateAll(
     encounter,
     fhirPathMappings.encounterAttendingRefs,
@@ -994,13 +984,9 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
  * @returns Facility id
  */
 export const evaluateFacilityId = (fhirBundle: Bundle) => {
-  const encounterLocationRef = evaluateOne(
+  const location = evaluateOneReference<Location>(
     fhirBundle,
-    fhirPathMappings.facilityLocation,
-  );
-  const location = evaluateReference<Location>(
-    fhirBundle,
-    encounterLocationRef,
+    fhirPathMappings.facilityLocationRef,
   );
 
   return location?.identifier?.[0].value;
@@ -1040,17 +1026,11 @@ export const evaluatePractitionerRoleReference = (
  * @returns Comma delimited list of encounter diagnoses
  */
 export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
-  const diagnoses = evaluateAll(
+  return evaluateAllReferences<Condition>(
     fhirBundle,
-    fhirPathMappings.encounterDiagnosis,
-  );
-
-  return diagnoses
-    .map((diagnosis) => {
-      const reference = diagnosis.condition?.reference;
-      const condition = evaluateReference<Condition>(fhirBundle, reference);
-      return formatCodeableConcept(condition?.code);
-    })
+    fhirPathMappings.encounterDiagnosisRef,
+  )
+    .map((condition) => formatCodeableConcept(condition?.code))
     .filter(Boolean)
     .join(", ");
 };

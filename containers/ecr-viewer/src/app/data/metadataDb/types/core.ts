@@ -84,6 +84,20 @@ export interface condition_reference {
 export type ConditionReference = Selectable<condition_reference>;
 export type NewConditionReference = Insertable<condition_reference>;
 
+export interface audit_log {
+  uuid: string;
+  subject: string;
+  action: string;
+  actor: string;
+  date: Generated<Date>;
+  parameter_json: string;
+  metadata_json: string;
+  checksum: string;
+}
+
+export type AuditLog = Selectable<audit_log>;
+export type NewAuditLog = Insertable<audit_log>;
+
 export interface Core {
   ecr_data: ecr_data;
   ecr_rr_conditions: ecr_rr_conditions;
@@ -92,4 +106,5 @@ export interface Core {
   program_area: program_area;
   user_program_area: user_program_area;
   condition_reference: condition_reference;
+  audit_log: audit_log;
 }

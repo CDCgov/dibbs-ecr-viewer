@@ -15,7 +15,7 @@ ignore_mutable_fields_regex_mapping = {
     ".*fullUrl": (str,),
     ".*url": (str,),
     ".*div": (str,),
-    ".*reference": (str,),
+    ".*reference": (str, dict),
 }
 match_excluding_mutable_fields = path_type(
     mapping=ignore_mutable_fields_regex_mapping, regex=True

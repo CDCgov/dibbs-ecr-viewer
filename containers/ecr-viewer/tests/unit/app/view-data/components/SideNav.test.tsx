@@ -113,9 +113,11 @@ describe("SectionConfig", () => {
       </main>,
     );
     expect(container.innerHTML).toContain(
-      '<a href="#section-1" class="usa-current">',
+      '<a href="#section-1" class="usa-current" data-testid="sidenav-link">',
     );
-    expect(container.innerHTML).toContain('<a href="#section-2" class="">');
+    expect(container.innerHTML).toContain(
+      '<a href="#section-2" class="" data-testid="sidenav-link">',
+    );
   });
 });
 

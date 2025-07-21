@@ -35,6 +35,10 @@ describe("error service", () => {
     });
 
     it("should handle unexpected errors", async () => {
+      const errLog: any[] = [];
+      jest.spyOn(console, "error").mockImplementation((err) => {
+        errLog.push(err);
+      });
       let errMsg = "";
       try {
         await myFn("failure");
@@ -46,6 +50,9 @@ describe("error service", () => {
       expect(res.error).toEqual("Action failed");
       expect(res.payload).toBeUndefined();
       expect(errMsg).toEqual("Whoops");
+      expect(errLog).toHaveLength(1);
+      expect(errLog[0]?.message).toEqual("Internal server error");
+      expect(errLog[0]?.error).not.toBeEmpty();
     });
   });
 });
