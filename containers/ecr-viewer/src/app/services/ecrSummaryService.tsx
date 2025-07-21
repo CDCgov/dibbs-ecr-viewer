@@ -1,9 +1,13 @@
 import React from "react";
 
-import { Bundle, Condition, DomainResource } from "fhir/r4";
+import { Bundle, Condition, DomainResource, Organization } from "fhir/r4";
 
 import { evaluateData } from "@/app/utils/data-utils";
-import { evaluateAll, evaluateOne } from "@/app/utils/evaluate";
+import {
+  evaluateAll,
+  evaluateOne,
+  evaluateOneReference,
+} from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -24,11 +28,11 @@ import {
 } from "./evaluateFhirDataService";
 import { formatDate, formatStartEndDateTime } from "./formatDateService";
 import {
+  findCurrentAddress,
+  formatAddress,
   formatCodeableConcept,
   formatContactPoint,
-  formatCurrentAddress,
   formatPatientContactList,
-  formatPhoneNumber,
 } from "./formatService";
 import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
 import { getReportabilitySummaries } from "./reportabilityService";
@@ -80,8 +84,10 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Patient Address",
-      value: formatCurrentAddress(
-        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
+      value: formatAddress(
+        findCurrentAddress(
+          evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
+        ),
       ),
     },
     {
@@ -119,8 +125,11 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Contact",
-      value: formatPhoneNumber(
-        evaluateOne(fhirBundle, fhirPathMappings.facilityContact),
+      value: formatContactPoint(
+        evaluateOneReference<Organization>(
+          fhirBundle,
+          fhirPathMappings.facilityOrgRef,
+        )?.telecom,
       ),
     },
   ]);

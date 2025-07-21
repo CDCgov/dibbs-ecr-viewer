@@ -168,8 +168,7 @@ exports[`LabInfo when labResults is LabReportElementData[] should match snapshot
                   class="grid-col maxw7 text-pre-line p-list"
                 >
                   501 S. Sand Street
-Mos Eisley, CO
-00055
+Mos Eisley, CO 00055
                 </div>
               </div>
               <div
@@ -1002,8 +1001,8 @@ Mos Eisley, CO
                 >
                   Apt 37
 555 Medical Drive
-Coruscant, MA
-00010, USA
+Coruscant, Empire, MA 00010
+USA
                 </div>
               </div>
               <div

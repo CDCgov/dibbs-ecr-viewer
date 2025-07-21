@@ -11,13 +11,13 @@ import {
   formatContactPoint,
   formatAddress,
   formatPhoneNumber,
-  formatCurrentAddress,
   formatPatientContactList,
   formatCodeableConcept,
   formatAge,
   formatQuantity,
   formatRange,
   sortByPeriod,
+  findCurrentAddress,
 } from "@/app/services/formatService";
 
 describe("FormatService tests", () => {
@@ -261,7 +261,7 @@ describe("FormatService tests", () => {
         postalCode: "00000",
         country: "USA",
       });
-      expect(actual).toEqual("123 Main Street\nUnit 2\nCity, ST\n00000, USA");
+      expect(actual).toEqual("123 Main Street\nUnit 2\nCity, ST 00000\nUSA");
     });
     it("should skip undefined values", () => {
       const actual = formatAddress({
@@ -270,7 +270,7 @@ describe("FormatService tests", () => {
         postalCode: "00000",
         country: "USA",
       });
-      expect(actual).toEqual("123 Main Street\nUnit 2\nST\n00000, USA");
+      expect(actual).toEqual("123 Main Street\nUnit 2\nST 00000\nUSA");
     });
 
     it("should return empty string if no values are available", () => {
@@ -300,7 +300,7 @@ describe("FormatService tests", () => {
         { includeUse: true },
       );
       expect(actual).toEqual(
-        "Home:\n123 Main Street\nUnit 2\nCity, ST\n00000, USA",
+        "Home:\n123 Main Street\nUnit 2\nCity, ST 00000\nUSA",
       );
     });
 
@@ -318,7 +318,7 @@ describe("FormatService tests", () => {
         { includePeriod: true },
       );
       expect(actual).toEqual(
-        "123 Main Street\nUnit 2\nCity, ST\n00000, USA\nDates: 03/13/2024 - 04/14/2024",
+        "123 Main Street\nUnit 2\nCity, ST 00000\nUSA\nDates: 03/13/2024 - 04/14/2024",
       );
     });
 
@@ -336,7 +336,7 @@ describe("FormatService tests", () => {
         { includePeriod: true },
       );
       expect(actual).toEqual(
-        "123 Main Street\nUnit 2\nCity, ST\n00000, USA\nDates: 03/13/2024 - Present",
+        "123 Main Street\nUnit 2\nCity, ST 00000\nUSA\nDates: 03/13/2024 - Present",
       );
     });
 
@@ -354,7 +354,7 @@ describe("FormatService tests", () => {
         { includePeriod: true },
       );
       expect(actual).toEqual(
-        "123 Main Street\nUnit 2\nCity, ST\n00000, USA\nDates: Unknown - 03/13/2024",
+        "123 Main Street\nUnit 2\nCity, ST 00000\nUSA\nDates: Unknown - 03/13/2024",
       );
     });
 
@@ -368,32 +368,32 @@ describe("FormatService tests", () => {
         use: "home",
         period: { start: "03/13/2024" },
       });
-      expect(actual).toEqual("123 Main Street\nUnit 2\nCity, ST\n00000, USA");
+      expect(actual).toEqual("123 Main Street\nUnit 2\nCity, ST 00000\nUSA");
     });
   });
 
-  describe("formatCurrentAddress", () => {
+  describe("findCurrentAddress", () => {
     const base = {
       line: ["123 Main St"],
     };
 
     it("should return empty when no addresses available", () => {
-      const actual = formatCurrentAddress([]);
+      const actual = findCurrentAddress([]);
 
-      expect(actual).toEqual("");
+      expect(actual).toBeUndefined();
     });
 
     it("should return first address when no use or period", () => {
-      const actual = formatCurrentAddress([
+      const actual = findCurrentAddress([
         { ...base, city: "1" },
         { ...base, city: "2" },
       ]);
 
-      expect(actual).toEqual("123 Main St\n1");
+      expect(actual?.city).toEqual("1");
     });
 
     it("should return first home address when no current period", () => {
-      const actual = formatCurrentAddress([
+      const actual = findCurrentAddress([
         { ...base, use: "work", city: "1" },
         { ...base, use: "home", city: "2" },
         { ...base, use: "home", city: "3" },
@@ -405,11 +405,11 @@ describe("FormatService tests", () => {
         },
       ]);
 
-      expect(actual).toEqual("123 Main St\n2");
+      expect(actual?.city).toEqual("2");
     });
 
     it("should return current home address", () => {
-      const actual = formatCurrentAddress([
+      const actual = findCurrentAddress([
         { ...base, use: "work", city: "1" },
         { ...base, use: "home", city: "2" },
         { ...base, use: "home", city: "3", period: { start: "2024-03-13" } },
@@ -421,7 +421,7 @@ describe("FormatService tests", () => {
         },
       ]);
 
-      expect(actual).toEqual("123 Main St\n3");
+      expect(actual?.city).toEqual("3");
     });
   });
 
@@ -481,7 +481,7 @@ describe("FormatService tests", () => {
       ];
       const actual = formatPatientContactList(contact);
       expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999`,
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, Los Angele, CA 90210\nUSA\nHome: 555-995-9999`,
       );
     });
     it("should return multiple emergency contacts", () => {
@@ -547,7 +547,7 @@ describe("FormatService tests", () => {
       ];
       const actual = formatPatientContactList(contact);
       expect(actual).toEqual(
-        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, CA\n90210, USA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
+        `Sister\nAnastasia Bubbletea Pizza\n999 Single Court\nBeverly Hills, Los Angele, CA 90210\nUSA\nHome: 555-995-9999\n\nBrother\nAlberto Bonanza Bartholomew Eggbert\nHome: 555-995-1000\nHome Fax: 555-995-1001`,
       );
     });
     it("should not return empty space when address is not available in", () => {
