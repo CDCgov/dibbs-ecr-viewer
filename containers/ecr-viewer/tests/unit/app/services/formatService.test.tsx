@@ -689,6 +689,12 @@ describe("FormatService tests", () => {
         "1.234 mmol/L",
       );
     });
+
+    it("should handle numeric unit", () => {
+      expect(formatQuantity({ value: 1.234, unit: "10*3uL" })).toBe(
+        "1.234 10*3uL",
+      );
+    });
   });
 
   describe("formatRange", () => {
