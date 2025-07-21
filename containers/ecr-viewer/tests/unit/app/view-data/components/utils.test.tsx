@@ -181,7 +181,7 @@ describe("Utils", () => {
         BundleWithPatient as unknown as Bundle,
       );
 
-      expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
+      expect(actual).toEqual("1 Main St\nCloud City, CA 00000\nUS");
     });
   });
 
