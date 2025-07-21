@@ -388,8 +388,7 @@ exports[`LabInfo when labResults is LabReportElementData[] should match snapshot
                   class="grid-col maxw7 text-pre-line p-list"
                 >
                   501 S. Sand Street
-Mos Eisley, CO
-00055
+Mos Eisley, CO 00055
                 </div>
               </div>
               <div
@@ -1222,8 +1221,9 @@ Mos Eisley, CO
                 >
                   Apt 37
 555 Medical Drive
-Coruscant, MA
-00010, USA
+Coruscant, MA 00010
+USA
+County: Empire
                 </div>
               </div>
               <div
@@ -1408,7 +1408,21 @@ Coruscant, MA
                           class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
                         />
                         <p>
-                          Lab comment
+                          <span
+                            id="r:id"
+                          >
+                            A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A really long Lab comment. A r
+                            ... 
+                          </span>
+                          <button
+                            aria-controls="r:id"
+                            aria-expanded="false"
+                            class="usa-button usa-button--unstyled"
+                            data-testid="button"
+                            type="button"
+                          >
+                            View more
+                          </button>
                         </p>
                       </td>
                     </tr>

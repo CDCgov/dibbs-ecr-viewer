@@ -1,9 +1,19 @@
 import React from "react";
 
-import { Bundle, Condition, DomainResource } from "fhir/r4";
+import {
+  Bundle,
+  Condition,
+  DomainResource,
+  Location,
+  Organization,
+} from "fhir/r4";
 
 import { evaluateData } from "@/app/utils/data-utils";
-import { evaluateAll, evaluateOne } from "@/app/utils/evaluate";
+import {
+  evaluateAll,
+  evaluateOne,
+  evaluateOneReference,
+} from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -28,7 +38,6 @@ import {
   formatContactPoint,
   formatCurrentAddress,
   formatPatientContactList,
-  formatPhoneNumber,
 } from "./formatService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilitySummaries } from "./reportabilityService";
@@ -115,12 +124,20 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Name",
-      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
+      value:
+        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
+        evaluateOneReference<Location>(
+          fhirBundle,
+          fhirPathMappings.facilityLocationRef,
+        )?.name,
     },
     {
       title: "Facility Contact",
-      value: formatPhoneNumber(
-        evaluateOne(fhirBundle, fhirPathMappings.facilityContact),
+      value: formatContactPoint(
+        evaluateOneReference<Organization>(
+          fhirBundle,
+          fhirPathMappings.facilityOrgRef,
+        )?.telecom,
       ),
     },
   ]);

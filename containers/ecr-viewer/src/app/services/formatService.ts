@@ -78,6 +78,7 @@ type AddressConfig = { includeUse?: boolean; includePeriod?: boolean };
  * @param address.city - The city name.
  * @param address.state - The state or region name.
  * @param address.postalCode - The ZIP code or postal code.
+ * @param address.district - The county or district.
  * @param address.country - The country name.
  * @param address.use - Optional address use.
  * @param address.period - Optional address use.
@@ -87,7 +88,16 @@ type AddressConfig = { includeUse?: boolean; includePeriod?: boolean };
  * @returns The formatted address string.
  */
 export const formatAddress = (
-  { line, city, state, postalCode, country, use, period }: Address = {},
+  {
+    line,
+    city,
+    state,
+    postalCode,
+    district,
+    country,
+    use,
+    period,
+  }: Address = {},
   config: AddressConfig = {},
 ): string => {
   const { includeUse, includePeriod } = {
@@ -98,8 +108,11 @@ export const formatAddress = (
   return [
     includeUse && use && toSentenceCase(use) + ":",
     (line?.map(toTitleCase) || []).filter(Boolean).join("\n"),
-    [toTitleCase(city), state].filter(Boolean).join(", "),
-    [postalCode, country].filter(Boolean).join(", "),
+    [[toTitleCase(city), state].filter(Boolean).join(", "), postalCode]
+      .filter(Boolean)
+      .join(" "),
+    country,
+    district && `County: ${toTitleCase(district)}`,
     includePeriod && period && `Dates: ${formatPeriodDate(period)}`,
   ]
     .filter(Boolean)
@@ -170,11 +183,11 @@ export const sortByPeriod = <T>(
  * @param addresses - List of addresses.
  * @returns A string with the formatted current address or an empty string if no address.
  */
-export const formatCurrentAddress = (
+export const findCurrentAddress = (
   addresses: Address[] | Address | undefined,
-): string => {
-  if (!addresses) return "";
-  if (!Array.isArray(addresses)) return formatAddress(addresses);
+): Address | undefined => {
+  if (!addresses) return;
+  if (!Array.isArray(addresses)) return addresses;
 
   // current home address is first pick
   let address = addresses.find(
@@ -195,8 +208,17 @@ export const formatCurrentAddress = (
     address = addresses[0];
   }
 
-  return formatAddress(address);
+  return address;
 };
+
+/**
+ * Format the most current home address.
+ * @param addresses - List of addresses.
+ * @returns A string with the formatted current address or an empty string if no address.
+ */
+export const formatCurrentAddress = (
+  addresses: Address[] | Address | undefined,
+): string | undefined => formatAddress(findCurrentAddress(addresses));
 
 const VALID_PHONE_NUMBER_REGEX = /^\d{3}-\d{3}-\d{4}( \D\w*)?$/;
 /**
@@ -305,7 +327,7 @@ export const formatPatientContactList = (
       const contactName = formatNameList(contact.name);
       const address = includeAllAddresses
         ? formatAddressList(contact.address)
-        : formatCurrentAddress(contact.address);
+        : formatAddress(findCurrentAddress(contact.address));
       const phoneNumbers = formatContactPoint(contact.telecom);
 
       return [relationship, contactName, address, phoneNumbers]
