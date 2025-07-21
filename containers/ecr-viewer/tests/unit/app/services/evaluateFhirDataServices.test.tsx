@@ -81,13 +81,13 @@ describe("evaluateFhirDataServices tests", () => {
 Luthen Rael
 Home:
 1357 Galactic Drive
-Sometown, OR
-94949, US
+Sometown, OR 94949
+US
 
 Work:
 123 Galactic Drive
-Sometown, OR
-94949, US
+Sometown, OR 94949
+US
 Home: 123-456-6909`,
     );
   });
@@ -191,7 +191,7 @@ Home: 123-456-6909`,
   describe("Evaluate Patient Address", () => {
     it("should return the 1 address", () => {
       const actual = evaluatePatientAddress(BundleWithPatient);
-      expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
+      expect(actual).toEqual("1 Main St\nCloud City, CA 00000\nUS");
     });
     it("should return all 3 of the addresses", () => {
       const actual = evaluatePatientAddress(
@@ -200,18 +200,18 @@ Home: 123-456-6909`,
       expect(actual).toEqual(
         "Home:\n" +
           "1 Mos Espa\n" +
-          "Tatooine, CA\n" +
-          "93523-2800, US\n" +
+          "Tatooine, CA 93523-2800\n" +
+          "US\n" +
           "\n" +
           "Vacation:\n" +
           "10 Canyon Valley\n" +
-          "Ben's Mesa, TN\n" +
-          "00047, America\n" +
+          "Ben's Mesa, TN 00047\n" +
+          "America\n" +
           "\n" +
           "Work:\n" +
           "1 Main St\n" +
-          "Death Star, AZ\n" +
-          "00001, USA",
+          "Death Star, AZ 00001\n" +
+          "USA",
       );
     });
   });

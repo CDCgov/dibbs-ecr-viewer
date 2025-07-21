@@ -58,13 +58,10 @@ export const UserTable = ({
   programAreas: ListedProgramArea[];
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
-  const sortedProgramAreas = [...programAreas].sort((a, b) =>
-    stringSort(a.name, b.name),
-  );
   const initFilterProgramAreaState: FilterProgramAreasType = {
     [ALL_PROGRAM_AREAS_OPTION]: true,
     [NO_PROGRAM_AREA_OPTION]: true,
-    ...sortedProgramAreas.reduce((acc, program) => {
+    ...programAreas.reduce((acc, program) => {
       acc[program.name] = true;
       return acc;
     }, {} as FilterProgramAreasType),

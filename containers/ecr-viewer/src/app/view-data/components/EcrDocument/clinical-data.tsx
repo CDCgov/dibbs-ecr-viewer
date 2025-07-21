@@ -30,6 +30,7 @@ import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateAllReferences,
   evaluateOne,
   evaluateReference,
   evaluateValue,
@@ -154,45 +155,38 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
 const evaluateAdministeredMedication = (
   fhirBundle: Bundle,
 ): AdministeredMedicationTableData[] => {
-  const administeredMedicationReferences = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.adminMedicationsRefs,
-  );
-  if (!administeredMedicationReferences?.length) {
-    return [];
-  }
-  const administeredMedications = administeredMedicationReferences.map((ref) =>
-    evaluateReference<MedicationAdministration>(fhirBundle, ref),
-  );
+  const administeredMedications =
+    evaluateAllReferences<MedicationAdministration>(
+      fhirBundle,
+      fhirPathMappings.adminMedicationsRefs,
+    );
 
-  return administeredMedications
-    .filter(notEmpty)
-    .map((medicationAdministration) => {
-      let medication: Medication | undefined;
-      if (medicationAdministration?.medicationReference?.reference) {
-        medication = evaluateReference(
-          fhirBundle,
-          medicationAdministration.medicationReference.reference,
-        );
-      }
+  return administeredMedications.map((medicationAdministration) => {
+    let medication: Medication | undefined;
+    if (medicationAdministration?.medicationReference?.reference) {
+      medication = evaluateReference(
+        fhirBundle,
+        medicationAdministration.medicationReference.reference,
+      );
+    }
 
-      const therapeuticResponses = evaluateAll(
-        medicationAdministration,
-        fhirPathMappings.adminMedicationTherapeuticResponseObs,
-      ).map((c) => formatCodeableConcept(c) ?? "");
-      const therapeuticResponseText =
-        therapeuticResponses.length > 0
-          ? therapeuticResponses.join("\n")
-          : undefined;
+    const therapeuticResponses = evaluateAll(
+      medicationAdministration,
+      fhirPathMappings.adminMedicationTherapeuticResponseObs,
+    ).map((c) => formatCodeableConcept(c) ?? "");
+    const therapeuticResponseText =
+      therapeuticResponses.length > 0
+        ? therapeuticResponses.join("\n")
+        : undefined;
 
-      return {
-        date:
-          medicationAdministration?.effectiveDateTime ??
-          medicationAdministration?.effectivePeriod?.start,
-        name: formatCodeableConcept(medication?.code),
-        therapeuticResponse: therapeuticResponseText,
-      };
-    });
+    return {
+      date:
+        medicationAdministration?.effectiveDateTime ??
+        medicationAdministration?.effectivePeriod?.start,
+      name: formatCodeableConcept(medication?.code),
+      therapeuticResponse: therapeuticResponseText,
+    };
+  });
 };
 
 type ModifiedCareTeamParticipant = Omit<
@@ -401,13 +395,10 @@ export const returnProceduresTable = (
   const procedures = evaluateAll(fhirBundle, fhirPathMappings.procedures);
 
   // References to Observations in the procedure history section
-  const obsRefs = evaluateAll(
+  const obs = evaluateAllReferences<Observation>(
     fhirBundle,
     fhirPathMappings.procedureHistoryRefs,
   );
-  const obs = obsRefs
-    .map((r) => evaluateReference<Observation>(fhirBundle, r.reference))
-    .filter(notEmpty);
 
   if (procedures.length === 0 && obs.length === 0) {
     return undefined;

@@ -25,6 +25,7 @@ import {
   formatRange,
   formatReference,
 } from "@/app/services/formatService";
+import { notEmpty } from "@/app/utils/data-utils";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
@@ -302,9 +303,13 @@ const isPeriod = (v: object, p: string): v is Period => p === "Period";
  */
 export const evaluateReference = <T extends Resource>(
   fhirBundle: Bundle,
-  ref?: string,
+  ref?: string | Reference,
 ): T | undefined => {
+  if (typeof ref !== "string") {
+    ref = formatReference(ref);
+  }
   if (!ref) return undefined;
+
   const [resourceType, id] = ref.split("/");
   const result = evaluateOneAndCheck<T>(
     fhirBundle,
@@ -323,4 +328,42 @@ export const evaluateReference = <T extends Resource>(
   }
 
   return result;
+};
+
+type RefPathTypes = {
+  [K in keyof PathTypes]: PathTypes[K] extends string | Reference ? K : never;
+}[keyof PathTypes];
+
+/**
+ * Evaluates a reference and then fetches the referred to resource
+ * @param fhirBundle - The FHIR bundle containing resources.
+ * @param pathToRef - A fhir path mapping that returns a string reference
+ * @param context - Optional context to evaluate the reference with
+ * @returns The referred to resource or undefined
+ */
+export const evaluateOneReference = <T extends Resource>(
+  fhirBundle: Bundle,
+  pathToRef: FhirPath<RefPathTypes>,
+  context?: Context,
+): T | undefined => {
+  const ref = evaluateOne(fhirBundle, pathToRef, context);
+  return evaluateReference<T>(fhirBundle, ref);
+};
+
+/**
+ * Evaluates all references and then fetches the referred to resources
+ * @param fhirBundle - The FHIR bundle containing resources.
+ * @param pathToRef - A fhir path mapping that returns a string reference
+ * @param context - Optional context to evaluate the reference with
+ * @returns The referred to resource or undefined
+ */
+export const evaluateAllReferences = <T extends Resource>(
+  fhirBundle: Bundle,
+  pathToRef: FhirPath<RefPathTypes>,
+  context?: Context,
+): T[] => {
+  const refs = evaluateAll(fhirBundle, pathToRef, context);
+  return refs
+    .map((ref) => evaluateReference<T>(fhirBundle, ref))
+    .filter(notEmpty);
 };

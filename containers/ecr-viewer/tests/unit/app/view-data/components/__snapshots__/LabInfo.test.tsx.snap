@@ -16,111 +16,331 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
         >
           <h4
             class="usa-summary-box__heading padding-y-105"
-            id="lab-results"
+            id="lab-results-from-unknown-organization"
           >
-            Lab Results
+            Lab Results from Unknown Organization
           </h4>
           <div
             class="usa-summary-box__text"
           >
-            <div
-              data-testid="lab-results"
-            >
+            <div>
               <div
                 class="grid-row"
               >
                 <div
-                  class="grid-col-auto width-full text-pre-line"
+                  class="data-title padding-right-1"
                 >
+                  Number of Results
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  1
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
+            <div
+              class="display-flex"
+            >
+              <div
+                class="margin-left-auto padding-top-1"
+              >
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  type="button"
+                >
+                  Expand all 
+                  labs
+                </button>
+                <span
+                  class="vertical-line"
+                />
+                <button
+                  class="usa-button usa-button--unstyled"
+                  data-testid="button"
+                  type="button"
+                >
+                  Collapse all 
+                  labs
+                </button>
+              </div>
+            </div>
+            <div
+              class="usa-accordion accordion-rr margin-bottom-3"
+              data-allow-multiple="true"
+              data-testid="accordion"
+            >
+              <h5
+                class="usa-accordion__heading side-nav-ignore"
+              >
+                <button
+                  aria-controls="sars-cov-2-covid-19-rna-presence-in-respiratory-system-specimen-by-naa-with-probe-detection-r:id-0"
+                  aria-expanded="false"
+                  class="usa-accordion__button"
+                  data-testid="accordionButton_sars-cov-2-covid-19-rna-presence-in-respiratory-system-specimen-by-naa-with-probe-detection-r:id-0"
+                  type="button"
+                >
+                  SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory system specimen by NAA with probe detection
+                </button>
+              </h5>
+              <div
+                class="usa-accordion__content usa-prose side-nav-ignore"
+                data-testid="accordionItem_sars-cov-2-covid-19-rna-presence-in-respiratory-system-specimen-by-naa-with-probe-detection-r:id-0"
+                hidden=""
+                id="sars-cov-2-covid-19-rna-presence-in-respiratory-system-specimen-by-naa-with-probe-detection-r:id-0"
+              >
+                <div>
                   <div
-                    class="usa-accordion accordion-rr"
-                    data-allow-multiple="true"
-                    data-testid="accordion"
+                    class="grid-row"
                   >
-                    <h5
-                      class="usa-accordion__heading side-nav-ignore padding-bottom-0"
-                    >
-                      <button
-                        aria-controls="all-lab-results-r:id-0"
-                        aria-expanded="false"
-                        class="usa-accordion__button"
-                        data-testid="accordionButton_all-lab-results-r:id-0"
-                        type="button"
-                      >
-                        All Lab Results
-                      </button>
-                    </h5>
                     <div
-                      class="usa-accordion__content usa-prose side-nav-ignore padding-bottom-0"
-                      data-testid="accordionItem_all-lab-results-r:id-0"
-                      hidden=""
-                      id="all-lab-results-r:id-0"
+                      class="data-title padding-right-1"
                     >
-                      <table
-                        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 lab-results-table-from-div"
-                        data-testid="table"
+                      Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
                       >
-                        <thead>
-                          <tr>
-                            <th
-                              class="table-header bg-gray-5 minw-10"
-                              scope="col"
-                            >
-                              Lab Test Name
-                            </th>
-                            <th
-                              class="table-header bg-gray-5 minw-10"
-                              scope="col"
-                            >
-                              Lab Test Result Value
-                            </th>
-                            <th
-                              class="table-header bg-gray-5 minw-10"
-                              scope="col"
-                            >
-                              Lab Test Result Date
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <span>
-                                SARS-CoV-2, NAA CL
-                              </span>
-                            </td>
-                            <td>
-                              <span>
-                                POS
-                              </span>
-                            </td>
-                            <td>
-                              <span>
-                                2000-02-04T21:02:00.000Z
-                              </span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <span>
-                                Symptomatic as defined by CDC?
-                              </span>
-                            </td>
-                            <td>
-                              <span>
-                                YES
-                              </span>
-                            </td>
-                            <td>
-                              <span>
-                                2000-02-04T21:02:00.000Z
-                              </span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                        No data
+                      </span>
                     </div>
                   </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Specimen (Source)
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Authorizing Provider
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Type
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Status
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      final
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Narrative
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
                 </div>
               </div>
             </div>
@@ -168,8 +388,7 @@ exports[`LabInfo when labResults is LabReportElementData[] should match snapshot
                   class="grid-col maxw7 text-pre-line p-list"
                 >
                   501 S. Sand Street
-Mos Eisley, CO
-00055
+Mos Eisley, CO 00055
                 </div>
               </div>
               <div
@@ -1002,8 +1221,9 @@ Mos Eisley, CO
                 >
                   Apt 37
 555 Medical Drive
-Coruscant, MA
-00010, USA
+Coruscant, MA 00010
+USA
+County: Empire
                 </div>
               </div>
               <div
