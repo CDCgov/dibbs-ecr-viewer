@@ -159,7 +159,7 @@ export const saveFhirMetadata = async (
 
         // Add audit log here manually to make sure we log at the point when we know
         // things are good, log only the ecr, and if in the off change audit logging fails, we get the response we expect
-        await createAuditRecord(trx, "ecr", "create", { ecrId });
+        await createAuditRecord(trx, "ecr", "create", { eicr_id: ecrId });
 
         return {
           message: "Success. Saved metadata to database.",

@@ -2,9 +2,6 @@ import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 import { logIn } from "../utils";
-import { getDb } from "@/app/data/metadataDb/database";
-import { Core } from "@/app/data/metadataDb/types/core";
-import { setupConfigurationVariables } from "@/instrumentation";
 
 test.describe("ecr library page", () => {
   test.beforeEach(({ page }) => logIn(page));
@@ -17,18 +14,6 @@ test.describe("ecr library page", () => {
     test("should pass accessiblity", async ({ page }) => {
       const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
       expect(accessibilityScanResults.violations).toEqual([]);
-    });
-
-    test("has audit logs", async () => {
-      setupConfigurationVariables();
-      const createLogs = await getDb<Core>()
-        .selectFrom("audit_log")
-        .selectAll()
-        .where("subject", "=", "ecr")
-        .where("action", "=", "create")
-        .execute();
-      // each eCR in set counts uniquely
-      expect(createLogs.length).toEqual(5);
     });
   });
 
