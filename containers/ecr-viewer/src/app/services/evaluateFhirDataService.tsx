@@ -425,8 +425,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       className="accordion-rr"
       descriptor="pregnancy info"
       items={allPregnancyObservations.map((obs) => {
-        const content = obs.data.map((d) => <DataDisplay item={d} />);
-
+        const id = obs.observation.id ?? `${Math.random()}`;
+        const content = obs.data.map((d, i) => (
+          <DataDisplay key={`${id}-${i}`} item={d} />
+        ));
         return {
           title: (
             <div className="display-flex flex-row flex-no-wrap flex-justify">
@@ -435,7 +437,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
           ),
           expanded: false,
           content,
-          id: obs.observation.id ?? `${Math.random()}`,
+          id,
           headingLevel: "h5",
         };
       })}

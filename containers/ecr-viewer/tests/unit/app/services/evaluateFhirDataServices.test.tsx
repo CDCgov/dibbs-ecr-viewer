@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { prettyDOM, render, screen } from "@testing-library/react";
 import { Bundle, BundleEntry, Practitioner } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
@@ -27,6 +27,7 @@ import {
   evaluateOccupationHistory,
   evaluateHospitalEncounterData,
   evaluateProviderData,
+  evaluatePregnancyData,
 } from "@/app/services/evaluateFhirDataService";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
@@ -1470,6 +1471,147 @@ Home: 123-456-6909`,
         toolTip:
           "Using the date eCR was created as a proxy for date of encounter. No encounter date available.",
       });
+    });
+  });
+
+  describe("Evaluate pregnancy data", () => {
+    it("should have no available data when there is no data", () => {
+      const actual = evaluatePregnancyData(undefined as any);
+
+      expect(actual.availableData).toBeEmpty();
+      expect(actual.unavailableData).not.toBeEmpty();
+    });
+
+    it("should have last menstrual period data when it exists", () => {
+      const pregnancyBundle: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "test_obs",
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "8665-2",
+                    system: "http://loinc.org",
+                    display: "Last menstrual period start date",
+                  },
+                ],
+              },
+              effectiveDateTime: "2020-01-05T10:15:00",
+            },
+          },
+        ],
+      };
+      const actual = evaluatePregnancyData(pregnancyBundle);
+      console.debug(prettyDOM());
+      render(actual.availableData[0].value);
+      expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
+    });
+
+    it("should have last menstrual period data when it exists", () => {
+      const pregnancyBundle: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "test_obs",
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "8665-2",
+                    system: "http://loinc.org",
+                    display: "Last menstrual period start date",
+                  },
+                ],
+              },
+              effectiveDateTime: "2020-01-05T10:15:00",
+            },
+          },
+        ],
+      };
+      const actual = evaluatePregnancyData(pregnancyBundle);
+      console.debug(prettyDOM());
+      render(actual.availableData[0].value);
+      expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
+    });
+
+    it("should have pregnancy status data when it exists", () => {
+      const pregnancyBundle: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation",
+                ],
+                source: "ecr",
+              },
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "ASSERTION",
+                    system: "urn:oid:2.16.840.1.113883.5.4",
+                  },
+                ],
+              },
+              valueCodeableConcept: {
+                coding: [
+                  {
+                    code: "77386006",
+                    system: "http://snomed.info/sct",
+                  },
+                ],
+              },
+              effectivePeriod: {
+                start: "2017-08-26",
+              },
+            },
+          },
+        ],
+      };
+      const actual = evaluatePregnancyData(pregnancyBundle);
+      console.debug(prettyDOM());
+      render(actual.availableData[0].value);
+      expect(screen.getAllByText("Pregnancy Status").length).toEqual(1);
+    });
+
+    it("should have postpartum status data when it exists", () => {
+      const pregnancyBundle: Bundle = {
+        resourceType: "Bundle",
+        type: "batch",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              code: {
+                coding: [
+                  {
+                    code: "249197004",
+                    system: "http://snomed.info/sct",
+                  },
+                ],
+              },
+              effectiveDateTime: "2020-01-05T10:15:00",
+            },
+          },
+        ],
+      };
+      const actual = evaluatePregnancyData(pregnancyBundle);
+      console.debug(prettyDOM());
+      render(actual.availableData[0].value);
+      expect(screen.getAllByText("Postpartum Status").length).toEqual(1);
     });
   });
 });
