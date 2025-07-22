@@ -1,4 +1,4 @@
-import { prettyDOM, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { Bundle, BundleEntry, Practitioner } from "fhir/r4";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
@@ -1507,7 +1507,6 @@ Home: 123-456-6909`,
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      console.debug(prettyDOM());
       render(actual.availableData[0].value);
       expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
     });
@@ -1537,7 +1536,6 @@ Home: 123-456-6909`,
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      console.debug(prettyDOM());
       render(actual.availableData[0].value);
       expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
     });
@@ -1581,7 +1579,6 @@ Home: 123-456-6909`,
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      console.debug(prettyDOM());
       render(actual.availableData[0].value);
       expect(screen.getAllByText("Pregnancy Status").length).toEqual(1);
     });
@@ -1609,7 +1606,6 @@ Home: 123-456-6909`,
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      console.debug(prettyDOM());
       render(actual.availableData[0].value);
       expect(screen.getAllByText("Postpartum Status").length).toEqual(1);
     });
