@@ -1,12 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-import { logInToKeycloak } from "./utils";
+import { logIn } from "../utils";
 
 test.describe("program management page", () => {
-  test.beforeEach(logInToKeycloak);
+  test.beforeEach(({ page }) => logIn(page));
 
-  test("should pass accessiblity", async ({ page }) => {
+  test("should pass accessibility", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/program");
 
     await expect(
@@ -129,7 +129,7 @@ test.describe("program management page", () => {
       page.getByRole("button", { name: "Save program area" }).first(),
     ).toBeDisabled();
 
-    const newConditionName = conditionName + " editted";
+    const newConditionName = conditionName + " edited";
     await page.getByLabel("Program area name").fill(newConditionName);
 
     await page
@@ -165,7 +165,7 @@ test.describe("program management page", () => {
     await expect(page.locator("body")).not.toHaveAttribute("data-modal-count");
 
     await expect(
-      page.getByText(`${newConditionName} succesfully removed`),
+      page.getByText(`${newConditionName} successfully removed`),
     ).toBeVisible();
 
     // Dismiss any toasts

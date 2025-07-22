@@ -235,7 +235,7 @@ describe("saveFhirData - extended", () => {
   });
 
   it("should return an error and roll back fhir data when db save fails", async () => {
-    let rolledback = false;
+    let rolledBack = false;
     const badMetadata = {
       last_name: null,
       first_name: null,
@@ -253,7 +253,7 @@ describe("saveFhirData - extended", () => {
       badMetadata,
       makePromiseResolveWithStatus(200),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
@@ -266,12 +266,12 @@ describe("saveFhirData - extended", () => {
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
     expect(resp.status).toEqual(500);
-    expect(rolledback).toBeTrue();
+    expect(rolledBack).toBeTrue();
     expect(res).toHaveLength(0);
   });
 
   it("should return an error and roll back db when fhir bundle save fails", async () => {
-    let rolledback = false;
+    let rolledBack = false;
     jest.spyOn(console, "error").mockImplementation();
     const resp = await saveFhirMetadata(
       "1-2-3-4-5-6",
@@ -279,7 +279,7 @@ describe("saveFhirData - extended", () => {
       baseExtendedMetadata,
       makePromiseResolveWithStatus(500),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
@@ -292,7 +292,7 @@ describe("saveFhirData - extended", () => {
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
     expect(resp.status).toEqual(500);
-    expect(rolledback).toBeFalse();
+    expect(rolledBack).toBeFalse();
     expect(res).toHaveLength(0);
   });
 });

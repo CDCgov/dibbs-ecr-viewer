@@ -6,6 +6,7 @@ import zipfile
 
 import grequests
 import requests as rqsts
+from azure.identity import DefaultAzureCredential
 
 MIGRATION_URL = "http://host.docker.internal:3000/ecr-viewer/api/migrate-db"
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +14,7 @@ BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 def _get_args():
     parser = argparse.ArgumentParser(
-        description="Zip subfolders and upload them to the ECR Viewer API.",
+        description="Zip subfolders and upload them to the eCR Viewer API.",
     )
     return parser.parse_args()
 
@@ -43,25 +44,48 @@ def _process_files():
     subfolders = subfolders_raw.split(",")
 
     print("Requesting API token...")
-    token_req = rqsts.post(
-        f"{os.getenv('AUTH_ISSUER').replace('localhost', 'host.docker.internal')}/protocol/openid-connect/token",
-        data={
-            "client_id": os.getenv("AUTH_CLIENT_ID"),
-            "client_secret": os.getenv("AUTH_CLIENT_SECRET"),
-            "username": os.getenv("AUTH_USER"),
-            "password": os.getenv("AUTH_PASSWORD"),
-            "grant_type": "password",
-            "scope": "openid email profile",
-        },
-    )
-    assert token_req.status_code == 200, f"{token_req.json()}"
-    token = token_req.json()["access_token"]
+    config_name = os.getenv("CONFIG_NAME")
+    if config_name.endswith("INTEGRATED") and not config_name.endswith(
+        "NON_INTEGRATED"
+    ):
+        print("using integrated auth")
+        token = os.getenv("DUMMY_NBS_JWT")
+    elif os.getenv("AUTH_PROVIDER") == "keycloak":
+        print("using keycloak auth")
+        token_req = rqsts.post(
+            f"{os.getenv('AUTH_ISSUER').replace('localhost', 'host.docker.internal')}/protocol/openid-connect/token",
+            data={
+                "client_id": os.getenv("AUTH_CLIENT_ID"),
+                "client_secret": os.getenv("AUTH_CLIENT_SECRET"),
+                "username": os.getenv("AUTH_ADMIN_USER"),
+                "password": os.getenv("AUTH_ADMIN_PASSWORD"),
+                "grant_type": "password",
+                "scope": "openid email profile",
+            },
+        )
+        assert token_req.status_code == 200, f"{token_req.json()}"
+        token = token_req.json()["access_token"]
+    elif os.getenv("AUTH_PROVIDER") == "ad":
+        print("using ad auth")
+        os.environ["AZURE_CLIENT_ID"] = os.getenv("AUTH_CLIENT_ID")
+        os.environ["AZURE_TENANT_ID"] = os.getenv("AUTH_ISSUER")
+        os.environ["AZURE_CLIENT_SECRET"] = os.getenv("AUTH_CLIENT_SECRET")
+        default_credential = DefaultAzureCredential()
+        token = default_credential.get_token(
+            f"{os.getenv('AUTH_CLIENT_ID')}/.default"
+        ).token
+    else:
+        raise "Unknown auth setup"
+
     headers = {"Authorization": f"Bearer {token}"}
 
     print("Requesting db migration...")
     rs = rqsts.post(
         MIGRATION_URL,
-        data={"migration_secret": "test", "init_admin_email": "ecr-viewer@admin.com"},
+        data={
+            "migration_secret": "test",
+            "init_admin_email": os.getenv("AUTH_ADMIN_USER"),
+        },
         headers=headers,
     )
     assert rs.status_code == 200, f"{rs.json()}"

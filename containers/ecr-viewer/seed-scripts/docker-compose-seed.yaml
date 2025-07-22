@@ -88,10 +88,12 @@ services:
       - CONFIG_NAME
       - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
       - UPLOAD_URL=${UPLOAD_URL:-http://host.docker.internal:3000/ecr-viewer/api/process-ecr}
+      - AUTH_PROVIDER
       - AUTH_CLIENT_ID
       - AUTH_CLIENT_SECRET
       - AUTH_ISSUER
-      - AUTH_USER
-      - AUTH_PASSWORD
+      - AUTH_ADMIN_USER
+      - AUTH_ADMIN_PASSWORD
+      - DUMMY_NBS_JWT
     extra_hosts:
       - host.docker.internal:host-gateway

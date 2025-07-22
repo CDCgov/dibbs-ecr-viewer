@@ -11,6 +11,7 @@ type AdministeredMedicationProps = {
 export type AdministeredMedicationTableData = {
   name?: string;
   date?: string;
+  therapeuticResponse?: string;
 };
 
 /**
@@ -32,19 +33,19 @@ export const AdministeredMedication = ({
       columnName: "Medication Start Date/Time",
       className: "bg-gray-5 minw-15",
     },
+    {
+      columnName: "Therapeutic Response Observation",
+      className: "bg-gray-5 minw-15",
+    },
   ];
 
   return (
-    <BaseTable
-      columns={columns}
-      caption="Administered Medications"
-      className="margin-y-0"
-      fixed={false}
-    >
+    <BaseTable columns={columns} className="margin-y-0" fixed={false}>
       {medicationData.map((entry, index: number) => (
         <tr key={`table-row-${index}`}>
           <td>{entry?.name ?? noData}</td>
           <td>{formatDateTime(entry?.date) ?? noData}</td>
+          <td>{entry?.therapeuticResponse ?? noData}</td>
         </tr>
       ))}
     </BaseTable>

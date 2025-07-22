@@ -79,7 +79,7 @@ describe("EcrSummary tests", () => {
         ],
         immunizationDetails: [
           {
-            title: "Relevant immmunizations",
+            title: "Relevant immunizations",
             value: "table would be here",
             dividerLine: true,
           },

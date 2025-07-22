@@ -8,7 +8,7 @@ import { metadataDatabaseHealthCheck } from "@/app/data/metadataDb/database";
 export const revalidate = 10;
 
 /**
- * Health check for ECR Viwer
+ * Health check for eCR Viewer
  * @returns Response with status OK.
  */
 export async function GET() {

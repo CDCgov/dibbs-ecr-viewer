@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Snapshot test for ECR Document Given no data, info message for empty sections should appear 1`] = `
+exports[`Snapshot test for eCR Document Given no data, info message for empty sections should appear 1`] = `
 <div>
   <div
     class="margin-top-10"
@@ -440,26 +440,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          County
-                        </div>
-                        <div
-                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
-                        >
-                          No data
-                        </div>
-                      </div>
-                      <div
-                        class="section__line_gray"
-                      />
-                    </div>
-                    <div>
-                      <div
-                        class="grid-row"
-                      >
-                        <div
-                          class="data-title padding-right-1"
-                        >
-                          Country
+                          Recent County
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
@@ -667,25 +648,6 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          Pregnancy Status
-                        </div>
-                        <div
-                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
-                        >
-                          No data
-                        </div>
-                      </div>
-                      <div
-                        class="section__line_gray"
-                      />
-                    </div>
-                    <div>
-                      <div
-                        class="grid-row"
-                      >
-                        <div
-                          class="data-title padding-right-1"
-                        >
                           Alcohol Use
                         </div>
                         <div
@@ -738,7 +700,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                     </div>
                     <div>
                       <div
-                        class="grid-row flex-column"
+                        class="grid-row"
                       >
                         <div
                           class="data-title padding-right-1"
@@ -746,7 +708,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Occupation History
                         </div>
                         <div
-                          class="grid-col width-full text-pre-line p-list text-italic text-base"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -833,7 +795,7 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                     </div>
                     <div>
                       <div
-                        class="grid-row flex-column"
+                        class="grid-row"
                       >
                         <div
                           class="data-title padding-right-1"
@@ -841,7 +803,77 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           Disability Status
                         </div>
                         <div
-                          class="grid-col width-full text-pre-line p-list text-italic text-base"
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                        >
+                          No data
+                        </div>
+                      </div>
+                      <div
+                        class="section__line_gray"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="gutter-3"
+                >
+                  <h4
+                    class="usa-summary-box__heading padding-y-105"
+                  >
+                    Pregnancy Info
+                  </h4>
+                  <div
+                    class="usa-summary-box__text"
+                  >
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="data-title padding-right-1"
+                        >
+                          Last Menstrual Period
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                        >
+                          No data
+                        </div>
+                      </div>
+                      <div
+                        class="section__line_gray"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="data-title padding-right-1"
+                        >
+                          Pregnancy Status
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                        >
+                          No data
+                        </div>
+                      </div>
+                      <div
+                        class="section__line_gray"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="data-title padding-right-1"
+                        >
+                          Postpartum Status
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
                         >
                           No data
                         </div>
@@ -1474,25 +1506,6 @@ exports[`Snapshot test for ECR Document Given no data, info message for empty se
                           class="data-title padding-right-1"
                         >
                           Procedures
-                        </div>
-                        <div
-                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
-                        >
-                          No data
-                        </div>
-                      </div>
-                      <div
-                        class="section__line_gray"
-                      />
-                    </div>
-                    <div>
-                      <div
-                        class="grid-row"
-                      >
-                        <div
-                          class="data-title padding-right-1"
-                        >
-                          Planned Procedures
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"

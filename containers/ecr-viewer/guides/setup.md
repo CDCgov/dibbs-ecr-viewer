@@ -154,7 +154,7 @@ See our [Rhapsody examples](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main
 
 ### From API
 
-Data can be added directly via API requeset to eCR Viewer's `/process-ecr` endpoint. See the [API documentation](./api-documentation.md) for more details.
+Data can be added directly via API request to eCR Viewer's `/process-ecr` endpoint. See the [API documentation](./api-documentation.md) for more details.
 
 ```bash
 # zip file

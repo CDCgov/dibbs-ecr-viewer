@@ -8,7 +8,7 @@ interface UserSession {
 }
 
 /**
- * Server side helper for whether this user is logged in. For client side, see `useLoggedInUser`.
+ * Server side helper for whether this user is logged in. For client side, see `useIsLoggedInUser`.
  * A user can have access to an ecr page without being a logged in user if
  * they are authenticated via an NBS jwt.
  * @returns whether the user is logged in

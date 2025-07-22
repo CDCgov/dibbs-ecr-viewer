@@ -1,3 +1,4 @@
+azure-identity
 grequests
 requests
 gevent>=23.9

@@ -92,7 +92,7 @@ const createTravelHistoryTables = (
 /**
  * Returns a table displaying disability status survey observations.
  * @param bundle - The FHIR bundle containing disability status observation data.
- * @returns The JSX element representing the disabilit status table, or undefined if no disability status observations are found.
+ * @returns The JSX element representing the disability status table, or undefined if no disability status observations are found.
  */
 export const returnDisabilityStatusTable = (
   bundle: Bundle,
@@ -108,18 +108,18 @@ export const returnDisabilityStatusTable = (
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "HHS Disability Data Standard Survey",
-      infoPath: "disabilityStatusQuestion",
+      infoPath: "code",
       tooltipText:
         "These questions are used on the American Community Survey (ACS) to measure disability, and were developed by a federal interagency committee.",
     },
     {
       columnName: "Status",
-      infoPath: "disabilityStatusValue",
+      infoPath: "valueX",
       applyToValue: toSentenceCase,
     },
     {
       columnName: "Dates",
-      infoPath: "disabilityStatusDate",
+      infoPath: "effectiveX",
       applyToValue: formatDateTime,
     },
   ];

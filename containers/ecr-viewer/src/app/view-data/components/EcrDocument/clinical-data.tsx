@@ -1,21 +1,21 @@
 import {
   Bundle,
-  CarePlanActivity,
   CareTeamParticipant,
   Device,
   Element,
   Location,
   Medication,
   MedicationAdministration,
+  MedicationRequest,
   Observation,
   Organization,
   Period,
   Practitioner,
   Reference,
+  ServiceRequest,
 } from "fhir/r4";
 
 import {
-  formatDate,
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
@@ -30,6 +30,7 @@ import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateAllReferences,
   evaluateOne,
   evaluateReference,
   evaluateValue,
@@ -96,23 +97,24 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
   const treatmentData: DisplayDataProps[] = [
     {
       title: "Procedures",
+      fullWidthContent: true,
       value: returnProceduresTable(fhirBundle),
     },
     {
-      title: "Planned Procedures",
-      value: returnPlannedProceduresTable(
-        evaluateAll(fhirBundle, fhirPathMappings.plannedProcedures),
-      ),
+      title: "Plan of Treatment",
+      fullWidthContent: true,
+      value: evaluatePlanOfTreatment(fhirBundle),
     },
-    evaluatePlanOfTreatment(fhirBundle, "Plan of Treatment"),
     {
       title: "Administered Medications",
+      fullWidthContent: true,
       value: administeredMedication?.length && (
         <AdministeredMedication medicationData={administeredMedication} />
       ),
     },
     {
       title: "Care Team",
+      fullWidthContent: true,
       value: returnCareTeamTable(fhirBundle),
     },
   ];
@@ -153,35 +155,38 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
 const evaluateAdministeredMedication = (
   fhirBundle: Bundle,
 ): AdministeredMedicationTableData[] => {
-  const administeredMedicationReferences = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.adminMedicationsRefs,
-  );
-  if (!administeredMedicationReferences?.length) {
-    return [];
-  }
-  const administeredMedications = administeredMedicationReferences.map((ref) =>
-    evaluateReference<MedicationAdministration>(fhirBundle, ref),
-  );
+  const administeredMedications =
+    evaluateAllReferences<MedicationAdministration>(
+      fhirBundle,
+      fhirPathMappings.adminMedicationsRefs,
+    );
 
-  return administeredMedications
-    .filter(notEmpty)
-    .map((medicationAdministration) => {
-      let medication: Medication | undefined;
-      if (medicationAdministration?.medicationReference?.reference) {
-        medication = evaluateReference(
-          fhirBundle,
-          medicationAdministration.medicationReference.reference,
-        );
-      }
+  return administeredMedications.map((medicationAdministration) => {
+    let medication: Medication | undefined;
+    if (medicationAdministration?.medicationReference?.reference) {
+      medication = evaluateReference(
+        fhirBundle,
+        medicationAdministration.medicationReference.reference,
+      );
+    }
 
-      return {
-        date:
-          medicationAdministration?.effectiveDateTime ??
-          medicationAdministration?.effectivePeriod?.start,
-        name: formatCodeableConcept(medication?.code),
-      };
-    });
+    const therapeuticResponses = evaluateAll(
+      medicationAdministration,
+      fhirPathMappings.adminMedicationTherapeuticResponseObs,
+    ).map((c) => formatCodeableConcept(c) ?? "");
+    const therapeuticResponseText =
+      therapeuticResponses.length > 0
+        ? therapeuticResponses.join("\n")
+        : undefined;
+
+    return {
+      date:
+        medicationAdministration?.effectiveDateTime ??
+        medicationAdministration?.effectivePeriod?.start,
+      name: formatCodeableConcept(medication?.code),
+      therapeuticResponse: therapeuticResponseText,
+    };
+  });
 };
 
 type ModifiedCareTeamParticipant = Omit<
@@ -255,7 +260,6 @@ export const returnCareTeamTable = (
     <EvaluateTable
       resources={modifiedCareTeamParticipants}
       columns={columnInfo}
-      caption="Care Team"
       className="margin-y-0"
       fixed={false}
     />
@@ -299,77 +303,84 @@ export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
         captionIsTitle={true}
       />
     ),
-    table: true,
+    fullWidthContent: true,
   };
-};
-
-/**
- * Generates a formatted table representing the list of planned procedures
- * @param carePlanActivities - An array containing the list of procedures.
- * @returns - A formatted table React element representing the list of planned procedures, or undefined if the procedures array is empty.
- */
-export const returnPlannedProceduresTable = (
-  carePlanActivities: CarePlanActivity[],
-): React.JSX.Element | undefined => {
-  carePlanActivities = carePlanActivities.filter(
-    (entry) => entry.detail?.code?.coding?.[0]?.display,
-  );
-
-  if (carePlanActivities.length === 0) {
-    return undefined;
-  }
-
-  const columnInfo: ColumnInfoInput[] = [
-    { columnName: "Procedure Name", infoPath: "plannedProcedureName" },
-    {
-      columnName: "Ordered Date",
-      infoPath: "plannedProcedureOrderedDate",
-      applyToValue: formatDate,
-    },
-    {
-      columnName: "Scheduled Date",
-      infoPath: "plannedProcedureScheduledDate",
-      applyToValue: formatDate,
-    },
-  ];
-
-  return (
-    <EvaluateTable
-      resources={carePlanActivities}
-      columns={columnInfo}
-      caption="Planned Procedures"
-      className="margin-y-0"
-    />
-  );
 };
 
 const evaluatePlanOfTreatment = (
   fhirBundle: Bundle,
-  title: string,
-): DisplayDataProps => {
-  const content = evaluateValue(fhirBundle, fhirPathMappings.planOfTreatment);
-  const tables = formatTablesToJSON(content);
+): React.ReactNode | undefined => {
+  const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
+  const activities = [];
+  const procs = [];
+  const meds = [];
 
-  if (tables.length === 0)
-    return {
-      title,
-      value: undefined,
-    };
+  for (const plan of plans) {
+    if (plan.detail) {
+      activities.push(plan);
+    } else if (plan.reference?.reference?.startsWith("ServiceRequest/")) {
+      const req = evaluateReference<ServiceRequest>(
+        fhirBundle,
+        plan.reference.reference,
+      );
+      if (req) {
+        procs.push(req);
+      }
+    } else if (plan.reference?.reference?.startsWith("MedicationRequest/")) {
+      const req = evaluateReference<MedicationRequest>(
+        fhirBundle,
+        plan.reference.reference,
+      );
+      if (req) {
+        meds.push(req);
+      }
+    }
+  }
 
-  return {
-    title,
-    value: (
-      <>
-        <div className="data-title margin-bottom-1">{title}</div>
-        {tables.map((table, index) => (
-          <JsonTable
-            key={`plan-of-treatment-table_${index}`}
-            jsonTableData={table}
-          />
-        ))}
-      </>
-    ),
-  };
+  if (activities.length === 0 && procs.length === 0 && meds.length === 0) {
+    return undefined;
+  }
+
+  return (
+    <>
+      {activities.length > 0 && (
+        <EvaluateTable
+          resources={activities}
+          caption="Planned Activities & Appointments"
+          columns={[
+            { columnName: "Name", infoPath: "plannedActivityName" },
+            { columnName: "Scheduled Time", infoPath: "plannedActivityTime" },
+            { columnName: "Type", infoPath: "plannedActivityType" },
+          ]}
+        />
+      )}
+      {procs.length > 0 && (
+        <EvaluateTable
+          resources={procs}
+          caption="Planned Procedures & Orders"
+          columns={[
+            { columnName: "Name", infoPath: "code" },
+            {
+              columnName: "Scheduled Time",
+              infoPath: "plannedServiceRequestTime",
+            },
+            { columnName: "Ordered On", infoPath: "authoredOn" },
+          ]}
+        />
+      )}
+      {meds.length > 0 && (
+        <EvaluateTable
+          resources={meds}
+          caption="Planned Medications & Immunizations"
+          columns={[
+            { columnName: "Name", infoPath: "plannedMedicationName" },
+            { columnName: "Ordered On", infoPath: "authoredOn" },
+            { columnName: "Dosage", infoPath: "plannedMedicationDosage" },
+          ]}
+        />
+      )}
+    </>
+  );
 };
 
 /**
@@ -384,20 +395,17 @@ export const returnProceduresTable = (
   const procedures = evaluateAll(fhirBundle, fhirPathMappings.procedures);
 
   // References to Observations in the procedure history section
-  const obsRefs = evaluateAll(
+  const obs = evaluateAllReferences<Observation>(
     fhirBundle,
     fhirPathMappings.procedureHistoryRefs,
   );
-  const obs = obsRefs
-    .map((r) => evaluateReference<Observation>(fhirBundle, r.reference))
-    .filter(notEmpty);
 
   if (procedures.length === 0 && obs.length === 0) {
     return undefined;
   }
 
   const columnInfo: ColumnInfoInput[] = [
-    { columnName: "Name", infoPath: "procedureName" },
+    { columnName: "Name", infoPath: "code" },
     {
       columnName: "Date/Time Performed",
       infoPath: "procedureDate",
@@ -425,7 +433,6 @@ export const returnProceduresTable = (
     <EvaluateTable
       resources={procBundle}
       columns={columnInfo}
-      caption="Procedures"
       className="margin-y-0"
     />
   );
@@ -453,7 +460,7 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
     },
     {
       title: "Outcome",
-      value: evaluateValue(procedure, fhirPathMappings.procedureOutcome),
+      value: evaluateValue(procedure, fhirPathMappings.valueX),
     },
     {
       title: "Complication",
@@ -558,13 +565,13 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
   const columns = [
     {
       columnName: "Vital Reading",
-      infoPath: "vitalSignType",
+      infoPath: "code",
       applyToValue: toSentenceCase,
     },
-    { columnName: "Result", infoPath: "value" },
+    { columnName: "Result", infoPath: "valueX" },
     {
       columnName: "Date/Time",
-      infoPath: "vitalSignDateTime",
+      infoPath: "effectiveX",
       applyToValue: formatDateTime,
     },
   ];
@@ -604,7 +611,7 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
         lines.push("Type: " + coding.display);
       }
 
-      const value = evaluateValue(outbreakInfo, fhirPathMappings.value);
+      const value = evaluateValue(outbreakInfo, fhirPathMappings.valueX);
       if (value) {
         lines.push("Result: " + value);
       }

@@ -16,6 +16,7 @@ import { evaluateReference } from "@/app/utils/evaluate";
 import { makePlural } from "@/app/utils/format-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
+import { FieldValue } from "./FieldValue";
 
 type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
   manufacturer?: Reference & {
@@ -115,15 +116,15 @@ export const returnProblemsTable = (
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "Active Problem",
-      infoPath: "activeProblemsDisplay",
+      infoPath: "code",
     },
     { columnName: "Status", infoPath: "activeProblemsStatus" },
-    { columnName: "Onset Date/Time", infoPath: "activeProblemsOnsetDate" },
+    { columnName: "Onset Date/Time", infoPath: "conditionOnsetDate" },
     { columnName: "Onset Age", infoPath: "activeProblemsOnsetAge" },
     {
       columnName: "Comments",
-      infoPath: "activeProblemsComments",
-      applyToValue: (v) => safeParse(v),
+      infoPath: "noteText",
+      applyToValue: (v) => <FieldValue>{safeParse(v)}</FieldValue>,
       hiddenBaseText: "comment",
     },
   ];

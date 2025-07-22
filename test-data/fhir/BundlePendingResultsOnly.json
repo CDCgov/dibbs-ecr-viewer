@@ -42,9 +42,68 @@
                 }
               ]
             },
-            "mode": "snapshot"
+            "mode": "snapshot",
+            "entry": [
+              {
+                "reference": "CarePlan/49200334-0c15-5a04-bf2c-b96a087ec490"
+              }
+            ]
           }
         ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:49200334-0c15-5a04-bf2c-b96a087ec490",
+      "resource": {
+        "resourceType": "CarePlan",
+        "id": "49200334-0c15-5a04-bf2c-b96a087ec490",
+        "status": "unknown",
+        "intent": "proposal",
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "activity": [
+          {
+            "reference": {
+              "reference": "ServiceRequest/c85c8602-76f8-1866-3bb7-20be7950ef7a"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "CarePlan/49200334-0c15-5a04-bf2c-b96a087ec490"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c85c8602-76f8-1866-3bb7-20be7950ef7a",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "c85c8602-76f8-1866-3bb7-20be7950ef7a",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:b52bee94-c34b-4e2c-8c15-5ad9d6def205"
+          }
+        ],
+        "status": "active",
+        "code": {
+          "coding": [
+            {
+              "code": "80825-3",
+              "system": "http://loinc.org",
+              "display": "Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method"
+            }
+          ]
+        },
+        "occurrenceDateTime": "2020-11-08",
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "ServiceRequest/c85c8602-76f8-1866-3bb7-20be7950ef7a"
       }
     }
   ]

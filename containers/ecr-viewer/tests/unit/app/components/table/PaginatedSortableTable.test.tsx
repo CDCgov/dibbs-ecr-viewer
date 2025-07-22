@@ -11,7 +11,7 @@ jest.mock("@/app/constants", () => ({
   PAGE_SIZES: [2, 5],
 }));
 
-describe("PaginatedSoratableTable", () => {
+describe("PaginatedSortableTable", () => {
   const items = [
     {
       uuid: "123",

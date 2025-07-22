@@ -46,12 +46,12 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
           [
             {
               "columnName": "Problem",
-              "infoPath": "conditionCode",
+              "infoPath": "code",
             },
             {
               "applyToValue": [Function],
               "columnName": "Date/Time",
-              "infoPath": "conditionOnsetDateTime",
+              "infoPath": "conditionOnsetDate",
             },
           ]
         }
@@ -130,12 +130,12 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
           [
             {
               "columnName": "Problem",
-              "infoPath": "conditionCode",
+              "infoPath": "code",
             },
             {
               "applyToValue": [Function],
               "columnName": "Date/Time",
-              "infoPath": "conditionOnsetDateTime",
+              "infoPath": "conditionOnsetDate",
             },
           ]
         }
@@ -200,12 +200,12 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
           [
             {
               "columnName": "Problem",
-              "infoPath": "conditionCode",
+              "infoPath": "code",
             },
             {
               "applyToValue": [Function],
               "columnName": "Date/Time",
-              "infoPath": "conditionOnsetDateTime",
+              "infoPath": "conditionOnsetDate",
             },
           ]
         }

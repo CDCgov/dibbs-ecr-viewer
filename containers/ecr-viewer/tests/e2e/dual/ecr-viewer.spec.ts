@@ -1,19 +1,24 @@
+// While this file is housed in the `dual` folder, it is copied over and also run on integrated e2e
+// tests, so needs to always work with either IDP or NBS auth
+
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-import { logInToKeycloak } from "./utils";
+import { logIn, nbsAuthParam } from "../utils";
 
 test.describe("viewer page", () => {
-  test.beforeEach(logInToKeycloak);
+  if (process.env.CONFIG_NAME.endsWith("NON_INTEGRATED")) {
+    test.beforeEach(({ page }) => logIn(page));
+  }
 
   test("should not have any automatically detectable accessibility issues", async ({
     page,
   }) => {
-    // Set timetout to 2 minutes because the first call to local stack s3 can take ~1:30
+    // Set timeout to 2 minutes because the first call to local stack s3 can take ~1:30
     test.setTimeout(120_000);
 
     await page.goto(
-      "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+      `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
     );
     await page.getByText("Patient Name").first().waitFor();
 
@@ -22,12 +27,11 @@ test.describe("viewer page", () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  // TODO: we need seed data with structured labs to get this running again
-  test.skip("fully expanded should not have any automatically detectable accessibility issues", async ({
+  test("fully expanded should not have any automatically detectable accessibility issues", async ({
     page,
   }) => {
     await page.goto(
-      "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+      `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
     );
     await page.getByRole("button", { name: "Expand all labs" }).click();
 
@@ -46,17 +50,21 @@ test.describe("viewer page", () => {
   test.describe("side nav", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(
-        "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+        `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
       );
       await page.getByText("Patient Name").first().waitFor();
     });
 
-    test("clicking each link scrolls and higlighlights", async ({ page }) => {
+    test("clicking each link scrolls and highlights", async ({ page }) => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
-      const navLinks = await nav.getByRole("link").all();
-      expect(navLinks.length).toBe(22);
+      // use a test id here to avoid a lot of special casing around the back to
+      // library link, which may or may not exist based on the config
+      const navLinksLoc = nav.getByTestId("sidenav-link");
+      await expect(navLinksLoc).toHaveCount(21);
+      const navLinks = await navLinksLoc.all();
+      expect(navLinks.length).toBe(21); // sanity check
 
       // Make sure after collapsing and reopening, nav links still work
       await page.getByText("Collapse all sections").click();
@@ -68,8 +76,6 @@ test.describe("viewer page", () => {
       // make sure clicking each link scrolls the heading and highlights the corresponding
       // side nav item
       for (const navLink of navLinks) {
-        const linkText = await navLink.innerText();
-        if (linkText === "Back to eCR Library") continue;
         await navLink.scrollIntoViewIfNeeded();
         await navLink.click();
         await expect(
@@ -88,13 +94,18 @@ test.describe("viewer page", () => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
-      const navLinks = await nav.getByRole("link");
-      const numLinks = (await navLinks.all()).length;
-      let navIndex = 1; // skip "back to library" link
+      // use a test id here to avoid a lot of special casing around the back to
+      // library link, which may or may not exist based on the config
+      const navLinksLoc = nav.getByTestId("sidenav-link");
+      await expect(navLinksLoc).toHaveCount(21);
+      const numLinks = (await navLinksLoc.all()).length;
+      let navIndex = 0;
       while (navIndex < numLinks) {
         await page.mouse.wheel(0, 12);
 
-        const className = await navLinks.nth(navIndex)?.getAttribute("class");
+        const className = await navLinksLoc
+          .nth(navIndex)
+          ?.getAttribute("class");
         if (className === "usa-current") {
           navIndex += 1;
         }

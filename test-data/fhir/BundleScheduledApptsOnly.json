@@ -56,9 +56,45 @@
                 }
               ]
             },
-            "mode": "snapshot"
+            "mode": "snapshot",
+            "entry": [
+              {
+                "reference": "CarePlan/49200334-0c15-5a04-bf2c-b96a087ec490"
+              }
+            ]
           }
         ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:49200334-0c15-5a04-bf2c-b96a087ec490",
+      "resource": {
+        "resourceType": "CarePlan",
+        "id": "49200334-0c15-5a04-bf2c-b96a087ec490",
+        "status": "unknown",
+        "intent": "proposal",
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "activity": [
+          {
+            "detail": {
+              "kind": "Appointment",
+              "scheduledString": "2020-01-01",
+              "code": {
+                "coding": [
+                  {
+                    "code": "A dr's appointment"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "CarePlan/49200334-0c15-5a04-bf2c-b96a087ec490"
       }
     }
   ]
