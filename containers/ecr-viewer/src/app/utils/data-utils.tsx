@@ -92,7 +92,7 @@ export const removeHtmlElements = (element: string): string => {
 
 /**
  * Collapses an array of values into one element.
- * @param vals - An array of strings and elments.
+ * @param vals - An array of strings and elements.
  * @returns - One string or element.
  */
 export const arrayToElement = (vals: RenderableNode[]) => {

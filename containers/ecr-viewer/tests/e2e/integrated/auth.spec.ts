@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 import { nbsAuthParam } from "../utils";
 
-// all integrated tests should start with 'integrated -' in order to match succesfully in npm run test:e2e:integrated
+// all integrated tests should start with 'integrated -' in order to match successfully in npm run test:e2e:integrated
 // test:e2e:integrated is only required since CONFIG_NAME needs to be changed. This can be removed when dual boot (nbs auth & idp auth) is supported
 test.describe("integrated - nbs auth", () => {
   test("should redirect to not found when no token", async ({ page }) => {

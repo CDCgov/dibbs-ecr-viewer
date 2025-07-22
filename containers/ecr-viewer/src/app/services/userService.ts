@@ -92,7 +92,7 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
 /**
  * Given an ecrId return not found if the user is not authorized to see it.
  * @param ecrId ID of the ecr to authorize
- * @returns whether the loggen in user can see this eCR
+ * @returns whether the logged in user can see this eCR
  */
 export const isLoggedInUserEcrAuthed = async (
   ecrId: string,
@@ -392,8 +392,8 @@ export const deleteUser = async (uuid: string): Promise<void> => {
   }
 };
 
-export type NamedUserPogramArea = UserProgramArea & { name: string };
-export type ListedUser = User & { program_areas: NamedUserPogramArea[] };
+export type NamedUserProgramArea = UserProgramArea & { name: string };
+export type ListedUser = User & { program_areas: NamedUserProgramArea[] };
 
 /**
  * List all active users. The logged in user must be an admin.

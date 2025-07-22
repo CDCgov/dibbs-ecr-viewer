@@ -14,7 +14,7 @@ BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 def _get_args():
     parser = argparse.ArgumentParser(
-        description="Zip subfolders and upload them to the ECR Viewer API.",
+        description="Zip subfolders and upload them to the eCR Viewer API.",
     )
     return parser.parse_args()
 

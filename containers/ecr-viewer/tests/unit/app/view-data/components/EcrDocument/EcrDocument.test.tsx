@@ -7,7 +7,7 @@ import { axe } from "jest-axe";
 import { EcrDocument } from "@/app/view-data/components/EcrDocument";
 import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
 
-describe("Snapshot test for ECR Document", () => {
+describe("Snapshot test for eCR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {
     const bundleEmpty: Bundle = {
       resourceType: "Bundle",

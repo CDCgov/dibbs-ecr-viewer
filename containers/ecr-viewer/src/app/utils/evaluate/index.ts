@@ -96,7 +96,7 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
 
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
- * escape hatch during testing when not using a `fhirPathmapping`.
+ * escape hatch during testing when not using a `fhirPathMapping`.
  * @see {@link evaluateAll} for retrieving all results for a `FhirPath`
  * @see {@link evaluateOne} for retrieving a singleton result for a `FhirPath`
  * @see {@link evaluateValue} for retrieving a singleton result and formatting it as a string
@@ -134,7 +134,7 @@ export const evaluateAllAndCheck = <Result>(
 
 /**
  * Evaluates a FHIRPath expression on the provided FHIR data. This should only be used as an
- * escape hatch during testing when not using a `fhirPathmapping`.
+ * escape hatch during testing when not using a `fhirPathMapping`.
  * @see {@link evaluateOne} for retrieving a singleton result for a `FhirPath`
  * @see {@link evaluateValue} for retrieving a singleton result and formatting it as a string
  * @param args - The same arguments as `evaluateAllAndCheck`.
@@ -218,7 +218,7 @@ export const evaluateOne = <K extends keyof PathTypes>(
 /**
  * Evaluates the FHIR path and formats it as an appropriate string value (may be empty). Supports
  * choice elements (e.g. using `.value` in path to get valueString or valueCoding) or
- * elemnts of type string, number, boolean, Coding, CodeableConcept, or Quantity.
+ * elements of type string, number, boolean, Coding, CodeableConcept, or Quantity.
  *
  * Expects a single element to be returned from the path. If more than one is evaluated, the
  * first will be returned and an error will be logged to the console with information
