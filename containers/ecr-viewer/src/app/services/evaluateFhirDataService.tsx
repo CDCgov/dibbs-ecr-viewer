@@ -335,7 +335,7 @@ const sortPregnancyObservations = (
  * @returns An array of evaluated and formatted pregnancy data.
  */
 export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
-  const pregnancySectionDataDisplay: DisplayDataProps[] = [];
+  // TODO: Ideally the `unavailableData` list would include all subfields of the different observations. However the unavailable data section will need to be modified to handle nested fields like this (this also applies to the occupational history in social history). This function will likely need to be rewritten for the changes to the pregnancy section front-end, and whenever the un unavailable data section can handle nested sub-fields.
   const lastMenstrualPeriodObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.lastMenstrualPeriod,
@@ -348,6 +348,28 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     fhirBundle,
     fhirPathMappings.postpartumStatus,
   );
+
+  const unavailableData = [];
+
+  if (lastMenstrualPeriodObservations.length === 0) {
+    unavailableData.push({
+      title: "Last Menstrual Period",
+      value: undefined,
+    });
+  }
+  if (pregnancyStatusObservations.length === 0) {
+    unavailableData.push({
+      title: "Pregnancy Status",
+      value: undefined,
+    });
+  }
+  if (postpartumStatusObservations.length === 0) {
+    unavailableData.push({
+      title: "Postpartum Status",
+      value: undefined,
+    });
+  }
+
   const allPregnancyObservations = [
     ...lastMenstrualPeriodObservations.map((ob) => {
       return {
@@ -396,7 +418,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
   ].sort(sortPregnancyObservations);
 
   if (allPregnancyObservations.length === 0)
-    return evaluateData(pregnancySectionDataDisplay);
+    return { availableData: [], unavailableData };
 
   const pregnancyElement = (
     <ExpandCollapseAccordion
@@ -420,12 +442,15 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     />
   );
 
-  return evaluateData([
-    {
-      value: pregnancyElement,
-      fullWidthContent: true,
-    },
-  ]);
+  return {
+    availableData: [
+      {
+        value: pregnancyElement,
+        fullWidthContent: true,
+      },
+    ],
+    unavailableData,
+  };
 };
 
 /**

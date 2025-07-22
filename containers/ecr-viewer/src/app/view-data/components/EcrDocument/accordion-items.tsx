@@ -54,7 +54,7 @@ export const getEcrDocumentAccordionItems = (
     const unavailableDataArrays = [
       demographicsData.unavailableData,
       socialData.unavailableData,
-      // pregnancyData.unavailableData,
+      pregnancyData.unavailableData,
       encounterData.unavailableData,
       hospitalEncounterData.unavailableData,
       clinicalData.reasonForVisitDetails.unavailableData,
@@ -201,6 +201,7 @@ export const getEcrDocumentAccordionItems = (
             <UnavailableInfo
               demographicsUnavailableData={demographicsData.unavailableData}
               socialUnavailableData={socialData.unavailableData}
+              pregnancyUnavailableData={pregnancyData.unavailableData}
               encounterUnavailableData={encounterData.unavailableData}
               hospitalEncounterUnavailableData={
                 hospitalEncounterData.unavailableData

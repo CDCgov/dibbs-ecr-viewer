@@ -10,6 +10,7 @@ import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 interface UnavailableInfoProps {
   demographicsUnavailableData: DisplayDataProps[];
   socialUnavailableData: DisplayDataProps[];
+  pregnancyUnavailableData: DisplayDataProps[];
   encounterUnavailableData: DisplayDataProps[];
   hospitalEncounterUnavailableData: DisplayDataProps[];
   facilityUnavailableData: DisplayDataProps[];
@@ -28,6 +29,7 @@ interface UnavailableInfoProps {
  * @param props The properties for unavailable information
  * @param props.demographicsUnavailableData The unavailable demographic data
  * @param props.socialUnavailableData The unavailable social data
+ * @param props.pregnancyUnavailableData The unavailable pregnancy data
  * @param props.encounterUnavailableData The unavailable encounter data
  * @param props.hospitalEncounterUnavailableData The unavailable hospital encounter diagnosis data
  * @param props.facilityUnavailableData The unavailable facility data
@@ -44,6 +46,7 @@ interface UnavailableInfoProps {
 const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
   demographicsUnavailableData,
   socialUnavailableData,
+  pregnancyUnavailableData,
   encounterUnavailableData,
   hospitalEncounterUnavailableData,
   facilityUnavailableData,
@@ -63,6 +66,10 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
         data={demographicsUnavailableData}
       />
       <UnavailableSection title="Social History" data={socialUnavailableData} />
+      <UnavailableSection
+        title="Pregnancy Info"
+        data={pregnancyUnavailableData}
+      />
       <UnavailableSection
         title="Encounter Details"
         data={encounterUnavailableData}
