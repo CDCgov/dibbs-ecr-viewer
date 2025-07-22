@@ -286,7 +286,7 @@ export const RadioDateOptions = ({
  *  A custom date input component for selecting a date.
  * @param props - The properties for the CustomDateInput component.
  * @param props.label - The label of the custom date input component.
- * @param props.onDateChange - The function that is culled when the date changes.
+ * @param props.onDateChange - The function that is called when the date changes.
  * @param props.defaultValue - The default value of the date input.
  * @param props.isRequired - Boolean indicating whether or not the date is required.
  * @param props.minValue - The minimum value of the date input.
