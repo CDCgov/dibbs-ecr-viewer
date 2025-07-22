@@ -86,20 +86,19 @@ const FilterReportableConditions = ({
 }: FilterProps) => {
   const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
-  const initFilterState = allConditions.reduce(
-    (dict: { [key: string]: boolean }, condition: string) => {
-      dict[condition] = initConditions.includes(condition);
-      return dict;
-    },
-    {
-      [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(
-        NO_CONDITIONS_REPORTED_OPTION,
-      ),
-    } as FilterConditionsType,
-  );
+  const initFilterState: FilterConditionsType = {
+    [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(NO_CONDITIONS_REPORTED_OPTION),
+    ...allConditions.reduce(
+      (dict: { [key: string]: boolean }, condition: string) => {
+        dict[condition] = initConditions.includes(condition);
+        return dict;
+      },
+      {} as { [key: string]: boolean },
+    ),
+  };
 
   const [filterConditions, setFilterConditions] =
-    useState<FilterConditionsType>(initFilterState);
+    useState<FilterConditionsType>(initFilterState as FilterConditionsType);
 
   // 3. Computed values
   const isAllSelected = Object.values(filterConditions).every(
