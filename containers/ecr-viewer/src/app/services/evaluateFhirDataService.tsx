@@ -339,15 +339,56 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
   const lastMenstrualPeriodObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.lastMenstrualPeriod,
-  );
+  ).map((ob) => {
+    return {
+      type: "Last Menstrual Period",
+      observation: ob,
+      data: [
+        {
+          title: "Last Menstrual Period",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
   const pregnancyStatusObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.pregnancyStatus,
-  );
+  ).map((ob) => {
+    return {
+      type: "Pregnancy Status",
+      observation: ob,
+      data: [
+        {
+          title: "Status",
+          value: evaluateValue(ob, "valueCodeableConcept"),
+        },
+        {
+          title: "Effective Date",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
   const postpartumStatusObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.postpartumStatus,
-  );
+  ).map((ob) => {
+    return {
+      type: "Postpartum Status",
+      observation: ob,
+      data: [
+        {
+          title: "Status",
+          value: evaluateValue(ob, "valueCodeableConcept"),
+        },
+        {
+          title: "Effective Date",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
 
   const unavailableData = [];
 
@@ -371,50 +412,9 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
   }
 
   const allPregnancyObservations = [
-    ...lastMenstrualPeriodObservations.map((ob) => {
-      return {
-        type: "Last Menstrual Period",
-        observation: ob,
-        data: [
-          {
-            title: "Last Menstrual Period",
-            value: evaluateValue(ob, fhirPathMappings.effectiveX),
-          },
-        ].filter(isDataAvailable),
-      };
-    }),
-    ...pregnancyStatusObservations.map((ob) => {
-      return {
-        type: "Pregnancy Status",
-        observation: ob,
-        data: [
-          {
-            title: "Status",
-            value: evaluateValue(ob, "valueCodeableConcept"),
-          },
-          {
-            title: "Effective Date",
-            value: evaluateValue(ob, fhirPathMappings.effectiveX),
-          },
-        ].filter(isDataAvailable),
-      };
-    }),
-    ...postpartumStatusObservations.map((ob) => {
-      return {
-        type: "Postpartum Status",
-        observation: ob,
-        data: [
-          {
-            title: "Status",
-            value: evaluateValue(ob, "valueCodeableConcept"),
-          },
-          {
-            title: "Effective Date",
-            value: evaluateValue(ob, fhirPathMappings.effectiveX),
-          },
-        ].filter(isDataAvailable),
-      };
-    }),
+    ...lastMenstrualPeriodObservations,
+    ...pregnancyStatusObservations,
+    ...postpartumStatusObservations,
   ].sort(sortPregnancyObservations);
 
   if (allPregnancyObservations.length === 0)
