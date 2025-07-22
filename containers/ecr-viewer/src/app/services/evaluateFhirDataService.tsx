@@ -335,7 +335,7 @@ const sortPregnancyObservations = (
  * @returns An array of evaluated and formatted pregnancy data.
  */
 export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
-  // TODO: Ideally the `unavailableData` list would include all subfields of the different observations. However the unavailable data section will need to be modified to handle nested fields like this (this also applies to the occupational history in social history). This function will likely need to be rewritten for the changes to the pregnancy section front-end, and whenever the un unavailable data section can handle nested sub-fields.
+  // TODO: Ideally the `unavailableData` list would include all subfields of the different observations. However the unavailable data section will need to be modified to handle nested fields like this (this also applies to the occupational history in social history). This function will likely need to be rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data section can handle nested sub-fields.
   const lastMenstrualPeriodObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.lastMenstrualPeriod,
