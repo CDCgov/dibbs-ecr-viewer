@@ -8,14 +8,21 @@ import { cookies, headers } from "next/headers";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog, User } from "@/app/data/metadataDb/types/core";
 
-import { getLoggedInUser } from "./userService";
+import { getLoggedInUser } from "./loggedInUserService";
 
 type Subject = "ecr" | "user" | "program_area";
-type Action = "query" | "view" | "create" | "update" | "delete";
+type Action =
+  | "query"
+  | "view"
+  | "create"
+  | "update"
+  | "delete"
+  | "signin"
+  | "signout";
 
 type AuditableFn<
   Params extends Record<string, unknown>,
-  Ret extends string | void,
+  Ret extends string | boolean | void,
 > = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
 
 /**
@@ -29,7 +36,7 @@ type AuditableFn<
  */
 export const audit = <
   Params extends Record<string, unknown>,
-  Ret extends string | void,
+  Ret extends string | boolean | void,
 >(
   subject: Subject,
   action: Action,
@@ -43,25 +50,37 @@ export const audit = <
       .execute(async (trx) => {
         const uuid = await fn(params, trx);
         // if we get a uuid result, use that, but don't override a param uuid with undefined
-        const logParams = uuid ? { ...params, uuid } : params;
-        await createAuditRecord(trx, user, subject, action, logParams);
+        console.log({ uuid });
+        const logParams =
+          typeof uuid === "string" ? { ...params, uuid } : params;
+        await createAuditRecord<Params>(trx, user, subject, action, logParams);
         return uuid;
       });
   };
 };
 
-const createAuditRecord = async (
+const createAuditRecord = async <Params extends Record<string, unknown>>(
   trx: Transaction<Core>,
   user: User | undefined,
   subject: Subject,
   action: Action,
-  params: object,
+  params: Params,
 ) => {
   const uuid = randomUUID();
   const reqHeaders = headers();
   const reqCookies = cookies();
   const apiToken =
     reqHeaders.get("Authorization") || reqCookies.get("auth-token")?.value;
+
+  // Otherwise we get an auth token as the actor as they
+  // aren't yet actually fully logged in
+  if (action === "signin" && (params?.user as Record<string, string>)?.email) {
+    user = await trx
+      .selectFrom("user")
+      .selectAll()
+      .where("email", "=", (params.user as Record<string, string>).email)
+      .executeTakeFirst();
+  }
 
   const values: Omit<NewAuditLog, "checksum"> = {
     uuid,

@@ -1,5 +1,4 @@
 import "server-only";
-import { cache } from "react";
 import { randomUUID } from "node:crypto";
 
 import { Kysely, Transaction } from "kysely";
@@ -14,48 +13,10 @@ import {
   UserUpdate,
   UserProgramArea,
 } from "@/app/data/metadataDb/types/core";
-import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-
-const getUserByEmail = async (
-  email: string | null | undefined,
-): Promise<User | undefined> => {
-  if (!email) return;
-
-  return await getDb<Core>()
-    .selectFrom("user")
-    .selectAll()
-    .where("email", "=", email)
-    .executeTakeFirst();
-};
-
-/**
- * Get the db User object for the currently logged in user.
- *
- * We should think about caching this in the future, so once we
- * start using this and other crud in UI we re-use the db call.
- * @returns Logged in User or undefined
- */
-export const getLoggedInUser = cache(async () => {
-  const { email, name } = (await getLoggedInUserSession()) || {};
-  if (!email) return;
-
-  try {
-    // Update the last log in and user's name to match the IDP
-    await getDb<Core>()
-      .updateTable("user")
-      .set({ date_of_last_login: new Date(), name })
-      .where("email", "=", email)
-      .execute();
-
-    return await getUserByEmail(email);
-  } catch (error: unknown) {
-    console.error({ error, message: "Failed to get logged in user" });
-    return undefined;
-  }
-});
+import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
 /**
  * @param user User to check is an admin

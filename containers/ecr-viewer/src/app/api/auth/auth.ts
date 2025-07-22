@@ -1,4 +1,8 @@
-import NextAuth from "next-auth";
+import { Transaction } from "kysely";
+import NextAuth, { CallbacksOptions, EventCallbacks } from "next-auth";
+
+import { Core } from "@/app/data/metadataDb/types/core";
+import { audit } from "@/app/services/auditLogService";
 
 import { providers } from "./providers";
 
@@ -16,6 +20,36 @@ export const handler = NextAuth({
       else if (new URL(url).origin === baseUrl) return url;
       return defaultUrl;
     },
+    signIn: audit(
+      "user",
+      "signin",
+      async (
+        params: Parameters<CallbacksOptions["signIn"]>[0],
+        txn: Transaction<Core>,
+      ) => {
+        if (params.user?.email) {
+          // Update the last log in and user's name to match the IDP
+          await txn
+            .updateTable("user")
+            .set({ date_of_last_login: new Date(), name: params.user.name })
+            .where("email", "=", params.user.email)
+            .execute();
+          return true;
+        } else {
+          return false;
+        }
+      },
+    ),
+  },
+  events: {
+    signOut: audit(
+      "user",
+      "signout",
+      async (
+        _params: Parameters<EventCallbacks["signOut"]>[0],
+        _txn: Transaction<Core>,
+      ) => {},
+    ),
   },
   pages: {
     signIn: `${process.env.BASE_PATH}/signin`,

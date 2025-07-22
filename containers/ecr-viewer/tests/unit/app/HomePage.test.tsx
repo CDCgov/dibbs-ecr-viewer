@@ -6,10 +6,8 @@ import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { DEFAULT_ITEMS_PER_PAGE } from "@/app/constants";
 import HomePage from "@/app/page";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
-import {
-  getLoggedInUser,
-  listLoggedInUserProgramAreas,
-} from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
+import { listLoggedInUserProgramAreas } from "@/app/services/userService";
 import { returnParamDates } from "@/app/utils/date-utils";
 
 jest.mock("@/app/services/listEcrDataService", () => {

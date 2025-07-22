@@ -5,7 +5,8 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import NavLinks from "@/app/components/NavLinks";
 import { User } from "@/app/data/metadataDb/types/core";
-import { getLoggedInUser, isAdmin } from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
+import { isAdmin } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 jest.mock("@/app/utils/auth-utils", () => ({
