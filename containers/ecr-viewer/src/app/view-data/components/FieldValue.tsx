@@ -25,7 +25,7 @@ export const FieldValue: React.FC<{
 
   const formattedLength = Intl.NumberFormat().format(valueLength);
 
-  const viewMoreButon = (
+  const viewMoreButton = (
     <Button
       type="button"
       unstyled={true}
@@ -37,7 +37,7 @@ export const FieldValue: React.FC<{
     </Button>
   );
 
-  const fieldValue = trimField(children, cutLength, viewMoreButon).value;
+  const fieldValue = trimField(children, cutLength, viewMoreButton).value;
 
   return hidden ? (
     fieldValue
