@@ -298,6 +298,7 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     .join("\n\n");
 };
 
+// TODO: Temporary logic to order pregnancy observations. A separate ticket to combine this with the `sortByPeriod` function to make a more general-purpose sorting function is incoming: PR #992
 const getObservationDate = (obs: Observation): Date | undefined => {
   const date = evaluateOne(obs, fhirPathMappings.effectiveX);
 
