@@ -1,22 +1,71 @@
 import { test, expect } from "@playwright/test";
 
 import { getToken, logIn, nbsAuthParam } from "../utils";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
+import { setupConfigurationVariables } from "@/instrumentation";
 
 test.describe("auth", () => {
   test("should require a login on main page and allow sign out", async ({
     page,
   }) => {
     await logIn(page);
+    const logInTime = Date.now();
 
     await page
       .getByRole("button", { name: "User Menu" })
       .click({ timeout: 5000 });
 
-    await expect(page.getByRole("button", { name: "Sign Out" })).toBeVisible();
+    try {
+      await expect(
+        page.getByRole("button", { name: "Sign Out" }),
+      ).toBeVisible();
+    } catch {
+      // try again - sometimes the button doesn't seem to hydrate fast enough
+      await page
+        .getByRole("button", { name: "User Menu" })
+        .click({ timeout: 5000 });
+      await expect(
+        page.getByRole("button", { name: "Sign Out" }),
+      ).toBeVisible();
+    }
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
+    const logOutTime = Date.now();
     await expect(page.getByText("You need to sign in")).toBeVisible();
+
+    setupConfigurationVariables();
+    const signinLogs = await getDb<Core>()
+      .selectFrom("audit_log")
+      .selectAll()
+      .where("subject", "=", "user")
+      .where("action", "=", "signin")
+      .execute();
+    const signoutLogs = await getDb<Core>()
+      .selectFrom("audit_log")
+      .selectAll()
+      .where("subject", "=", "user")
+      .where("action", "=", "signout")
+      .execute();
+
+    // Log in and logout for our user within 5 seconds of the recorded time
+    expect(
+      signinLogs.filter(
+        ({ parameter_json, date }) =>
+          JSON.parse(parameter_json).user.email ===
+            process.env.AUTH_ADMIN_USER &&
+          Math.abs(date.valueOf() - logInTime) < 5000,
+      ).length,
+    ).toBeGreaterThan(0);
+    expect(
+      signoutLogs.filter(
+        ({ parameter_json, date }) =>
+          JSON.parse(parameter_json).token.email ===
+            process.env.AUTH_ADMIN_USER &&
+          Math.abs(date.valueOf() - logOutTime) < 5000,
+      ).length,
+    ).toBeGreaterThan(0);
   });
 
   test("should require a login on main page even if valid auth token provided", async ({
