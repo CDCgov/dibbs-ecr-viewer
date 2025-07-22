@@ -66,6 +66,19 @@ test.describe("auth", () => {
           Math.abs(date.valueOf() - logOutTime) < 5000,
       ).length,
     ).toBeGreaterThan(0);
+
+    // make sure the last log in time and name were updated
+    const user = await getDb<Core>()
+      .selectFrom("user")
+      .selectAll()
+      .where("email", "=", process.env.AUTH_ADMIN_USER!)
+      .executeTakeFirstOrThrow();
+
+    expect(user.date_of_last_login).not.toBeNull();
+    expect(
+      Math.abs(user.date_of_last_login!.valueOf() - logInTime),
+    ).toBeLessThan(5000);
+    expect(user.name).not.toBeNull();
   });
 
   test("should require a login on main page even if valid auth token provided", async ({
