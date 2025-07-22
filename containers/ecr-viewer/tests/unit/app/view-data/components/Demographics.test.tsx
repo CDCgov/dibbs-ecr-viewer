@@ -33,12 +33,8 @@ describe("Demographics", () => {
         value: "test address",
       },
       {
-        title: "County",
+        title: "Current County",
         value: "test",
-      },
-      {
-        title: "Country",
-        value: "USA",
       },
       { title: "Contact", value: "test contact" },
       {

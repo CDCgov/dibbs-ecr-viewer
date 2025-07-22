@@ -23,7 +23,7 @@ import {
 import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
+import { ListedUser, NamedUserProgramArea } from "@/app/services/userService";
 import {
   makePlural,
   stringSort,
@@ -58,13 +58,10 @@ export const UserTable = ({
   programAreas: ListedProgramArea[];
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
-  const sortedProgramAreas = [...programAreas].sort((a, b) =>
-    stringSort(a.name, b.name),
-  );
   const initFilterProgramAreaState: FilterProgramAreasType = {
     [ALL_PROGRAM_AREAS_OPTION]: true,
     [NO_PROGRAM_AREA_OPTION]: true,
-    ...sortedProgramAreas.reduce((acc, program) => {
+    ...programAreas.reduce((acc, program) => {
       acc[program.name] = true;
       return acc;
     }, {} as FilterProgramAreasType),
@@ -131,7 +128,7 @@ export const UserTable = ({
       value: "Program areas",
       dataSortable: false,
       sortDirection: "",
-      formatter: (pas: NamedUserPogramArea[], user) =>
+      formatter: (pas: NamedUserProgramArea[], user) =>
         user.user_type === "admin"
           ? "All program areas"
           : pas

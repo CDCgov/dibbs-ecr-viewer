@@ -14,7 +14,7 @@ import { ConditionReference } from "@/app/data/metadataDb/types/core";
 import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { makePlural, stringSort } from "@/app/utils/format-utils";
+import { makePlural } from "@/app/utils/format-utils";
 
 /**
  *
@@ -87,18 +87,23 @@ export const ProgramTable = ({
                 "No conditions assigned"
               ) : (
                 <ul className="add-list-reset">
-                  {selectedProgramArea?.conditions
-                    .sort((a, b) =>
-                      stringSort(a.condition_name, b.condition_name),
-                    )
-                    .map(({ condition_name, code }) => (
+                  {selectedProgramArea?.conditions.map(
+                    ({ condition_name, code, is_duplicate, concept_name }) => (
                       <li
                         key={code}
                         className="border-bottom border-base-lightest padding-y-1"
                       >
-                        {condition_name}
+                        <p className="margin-0">{condition_name}</p>
+                        {is_duplicate && (
+                          <p className="margin-0">
+                            <i className="text-base">
+                              {concept_name || `SNOMED ${code}`}
+                            </i>
+                          </p>
+                        )}
                       </li>
-                    ))}
+                    ),
+                  )}
                 </ul>
               ),
           },

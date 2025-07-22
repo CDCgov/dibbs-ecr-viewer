@@ -53,6 +53,11 @@ td {
   min-height: calc(100vh - 11rem);
 }
 
+.field-height {
+  max-height: clamp(20rem, 70vh, 50rem);
+  overflow: auto;
+}
+
 @keyframes shimmer {
   to {
     background-position-x: 0%;

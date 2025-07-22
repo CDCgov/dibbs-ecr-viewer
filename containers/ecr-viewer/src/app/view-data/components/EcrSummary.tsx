@@ -30,7 +30,7 @@ export interface ConditionSummary {
  * @param props.encounterDetails - Array of title and values to be displayed in encounter details section
  * @param props.conditionSummary - Array of condition details
  * @param props.snomed - SNOMED code being requested
- * @returns a react element for ECR Summary
+ * @returns a react element for eCR Summary
  */
 const EcrSummary: React.FC<EcrSummaryProps> = ({
   patientDetails,

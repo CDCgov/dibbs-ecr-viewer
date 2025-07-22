@@ -581,8 +581,8 @@ ID: (01)51022222233336(11)141231(17)150707(10)A213B1(21)1234
                                   class="grid-col maxw7 text-pre-line p-list"
                                 >
                                   1002 Healthcare Drive
-Ann Arbor, MI
-99999, US
+Ann Arbor, MI 99999
+US
                                 </div>
                               </div>
                               <div
@@ -603,8 +603,8 @@ Ann Arbor, MI
                                 >
                                   Good Health Hospital
 1000 Hospital Lane
-Ann Arbor, MI
-99999, US
+Ann Arbor, MI 99999
+US
 Work: 555-555-1212
 Work Fax: 555-555-3333
                                 </div>

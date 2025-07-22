@@ -61,7 +61,7 @@ const FilterGroup = ({
   }, []);
 
   // When a filter is open, close it if the escape key is hit or a click happens
-  // outside the <Filter /> component (implemented by stopping click propogation on <Filter />)
+  // outside the <Filter /> component (implemented by stopping click propagation on <Filter />)
   useEffect(() => {
     if (filterBoxOpen !== FILTER_CLOSED && filterBoxOpen !== FILTER_SUBMITTED) {
       const handleEscapeFilters = (event: KeyboardEvent) => {

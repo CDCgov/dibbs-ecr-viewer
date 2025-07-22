@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 /**
- * Footer component for the ECR Viewer.
+ * Footer component for the eCR Viewer.
  * This component renders the footer section of the application. It uses USWDS (U.S. Web Design System)
  * classes for styling with some customization.
  * @returns The footer section of the application.

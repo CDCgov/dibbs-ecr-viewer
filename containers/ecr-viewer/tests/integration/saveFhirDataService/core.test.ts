@@ -40,21 +40,21 @@ describe("saveFhirData - core", () => {
   });
 
   it("should save without any rr", async () => {
-    let rolledback = false;
+    let rolledBack = false;
     const resp = await saveFhirMetadata(
       "1-2-3-4",
       "core",
       baseCoreMetadata,
       makePromiseResolveWithStatus(200),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
 
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
-    expect(rolledback).toBeFalse();
+    expect(rolledBack).toBeFalse();
   });
 
   it("should save with rr without rule summaries", async () => {
@@ -146,7 +146,7 @@ describe("saveFhirData - core", () => {
   });
 
   it("should return an error and roll back fhir bundle when db save fails", async () => {
-    let rolledback = false;
+    let rolledBack = false;
     jest.spyOn(console, "error").mockImplementation();
     const badMetadata = {
       last_name: null,
@@ -164,7 +164,7 @@ describe("saveFhirData - core", () => {
       badMetadata,
       makePromiseResolveWithStatus(200),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
@@ -177,12 +177,12 @@ describe("saveFhirData - core", () => {
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
     expect(resp.status).toEqual(500);
-    expect(rolledback).toBeTrue();
+    expect(rolledBack).toBeTrue();
     expect(res).toHaveLength(0);
   });
 
   it("should return an error and roll back db when fhir bundle save fails", async () => {
-    let rolledback = false;
+    let rolledBack = false;
     jest.spyOn(console, "error").mockImplementation();
     const resp = await saveFhirMetadata(
       "1-2-3-4-5-6",
@@ -190,7 +190,7 @@ describe("saveFhirData - core", () => {
       baseCoreMetadata,
       makePromiseResolveWithStatus(500),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
@@ -203,25 +203,25 @@ describe("saveFhirData - core", () => {
 
     expect(resp.message).toEqual("Failed to insert metadata to database.");
     expect(resp.status).toEqual(500);
-    expect(rolledback).toBeFalse();
+    expect(rolledBack).toBeFalse();
     expect(res).toHaveLength(0);
   });
 
   it("should 409 if same eCR inserted twice", async () => {
-    let rolledback = false;
+    let rolledBack = false;
     const resp1 = await saveFhirMetadata(
       "1-2-3-4",
       "core",
       baseCoreMetadata,
       makePromiseResolveWithStatus(200),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
 
     expect(resp1.status).toEqual(200);
-    expect(rolledback).toBeFalse();
+    expect(rolledBack).toBeFalse();
 
     const resp2 = await saveFhirMetadata(
       "1-2-3-4",
@@ -229,30 +229,30 @@ describe("saveFhirData - core", () => {
       baseCoreMetadata,
       makePromiseResolveWithStatus(200),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
 
     expect(resp2.status).toEqual(409);
-    expect(rolledback).toBeFalse();
+    expect(rolledBack).toBeFalse();
   });
 
   it("should 400 with unknown schema", async () => {
-    let rolledback = false;
+    let rolledBack = false;
     const resp = await saveFhirMetadata(
       "1-2-3-4",
       "unknown" as "core", // appease typescript
       baseCoreMetadata,
       makePromiseResolveWithStatus(200),
       () => {
-        rolledback = true;
+        rolledBack = true;
         return makePromiseResolveWithStatus(200);
       },
     );
 
     expect(resp.message).toEqual("Unknown metadataType: unknown");
     expect(resp.status).toEqual(400);
-    expect(rolledback).toBeFalse();
+    expect(rolledBack).toBeFalse();
   });
 });

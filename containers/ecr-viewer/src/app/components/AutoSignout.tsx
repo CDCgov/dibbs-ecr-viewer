@@ -64,13 +64,13 @@ export const AutoSignout = () => {
       const signoutTimeout = setTimeout(signOutGoHome, timeToExpire * 1000);
 
       // decrement time each second
-      const countdownInternval = setInterval(
+      const countdownInterval = setInterval(
         () => setTimeToExpireSecs((prior) => prior - 1),
         1000,
       );
       return () => {
         clearTimeout(signoutTimeout);
-        clearInterval(countdownInternval);
+        clearInterval(countdownInterval);
       };
     }
   }, [data]);
