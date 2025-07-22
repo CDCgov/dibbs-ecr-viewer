@@ -179,7 +179,7 @@ export const saveFhirMetadata = async (
 /**
  * @async
  * @function saveExtendedMetaData
- * @param trx kyseley transaction
+ * @param trx Kysely transaction
  * @param metadata - The FHIR bundle metadata to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
@@ -260,7 +260,7 @@ const saveExtendedMetadata = async (
 
 /**
  * Saves a FHIR bundle metadata to a postgres database.
- * @param trx kyseley transaction
+ * @param trx Kysely transaction
  * @param metadata - The FHIR bundle metadata to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
  * @returns An object containing the status and message.

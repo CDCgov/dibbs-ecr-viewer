@@ -20,7 +20,7 @@ Display an eCR
 
 **Method** : `GET`
 
-**Auth required** : Yes, via `auth` param or broswer login flow
+**Auth required** : Yes, via `auth` param or browser login flow
 
 **Permissions required** : None
 
@@ -224,7 +224,7 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
 
 ### Success Response
 
-**Condition** : migration was succesfully applied.
+**Condition** : migration was successfully applied.
 
 **Code** : `200 OK`
 

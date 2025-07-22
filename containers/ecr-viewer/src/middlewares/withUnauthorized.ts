@@ -1,4 +1,4 @@
-// Adapted from 'next-auth' to work with chained middleware approadh
+// Adapted from 'next-auth' to work with chained middleware approach
 
 import { NextRequest, NextResponse } from "next/server";
 

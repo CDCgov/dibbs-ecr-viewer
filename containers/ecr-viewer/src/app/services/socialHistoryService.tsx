@@ -92,7 +92,7 @@ const createTravelHistoryTables = (
 /**
  * Returns a table displaying disability status survey observations.
  * @param bundle - The FHIR bundle containing disability status observation data.
- * @returns The JSX element representing the disabilit status table, or undefined if no disability status observations are found.
+ * @returns The JSX element representing the disability status table, or undefined if no disability status observations are found.
  */
 export const returnDisabilityStatusTable = (
   bundle: Bundle,

@@ -239,7 +239,7 @@ describe("orchestrationRequest", () => {
         "bundle-only.json",
       );
     });
-    it("should use bundle-metadata-extended.json when metadata db esists and metadata is extended ", async () => {
+    it("should use bundle-metadata-extended.json when metadata db exists and metadata is extended ", async () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "extended";
 
@@ -250,7 +250,7 @@ describe("orchestrationRequest", () => {
         "bundle-metadata-extended.json",
       );
     });
-    it("should use bundle-metadata-core.json when metadata db esists and metadata is core ", async () => {
+    it("should use bundle-metadata-core.json when metadata db exists and metadata is core ", async () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "core";
 

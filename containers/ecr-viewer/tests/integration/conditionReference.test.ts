@@ -52,7 +52,7 @@ const programArea = {
 };
 
 describe("condition_reference table", () => {
-  it("should retrieve all inserted conditiosn", async () => {
+  it("should retrieve all inserted conditions", async () => {
     const db = getDb<Core>();
 
     await db.insertInto("condition_reference").values(condition1).execute();
