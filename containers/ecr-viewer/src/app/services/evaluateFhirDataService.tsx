@@ -5,6 +5,7 @@ import {
   Condition,
   Encounter,
   Location,
+  Observation,
   Organization,
   Practitioner,
   PractitionerRole,
@@ -13,7 +14,12 @@ import {
 import { DateTime } from "luxon";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { evaluateData, noData } from "@/app/utils/data-utils";
+import {
+  CompleteData,
+  evaluateData,
+  isDataAvailable,
+  noData,
+} from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateAllReferences,
@@ -292,6 +298,168 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     .join("\n\n");
 };
 
+// TODO: Temporary logic to order pregnancy observations. A separate ticket to combine this with the `sortByPeriod` function to make a more general-purpose sorting function is incoming: PR #992
+const getObservationDate = (obs: Observation): Date | undefined => {
+  const date = evaluateOne(obs, fhirPathMappings.effectiveX);
+
+  if (date) {
+    if (typeof date === "string") {
+      return new Date(date);
+    } else if (date.start) {
+      return new Date(date.start);
+    } else if (date.end) {
+      return new Date(date.end);
+    }
+  }
+};
+
+const sortPregnancyObservations = (
+  a: { observation: Observation },
+  b: { observation: Observation },
+) => {
+  const date_a = getObservationDate(a.observation);
+  const date_b = getObservationDate(b.observation);
+  if (date_a && date_b) {
+    return date_b.getTime() - date_a.getTime(); // Sort descending
+  } else if (date_a) {
+    return -1; // a comes before b
+  } else if (date_b) {
+    return 1; // b comes before a
+  } else {
+    return 0; // No change in order
+  }
+};
+
+/**
+ * Evaluate pregnancy data from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing pregnancy data.
+ * @returns An array of evaluated and formatted pregnancy data.
+ */
+export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
+  // TODO: Ideally the `unavailableData` list would include all subfields of the different observations.
+  // However the unavailable data section will need to be modified to handle nested fields like this (this
+  // also applies to the occupational history in social history). This function will likely need to be
+  // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
+  // section can handle nested sub-fields.
+  const lastMenstrualPeriodObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.lastMenstrualPeriod,
+  ).map((ob) => {
+    return {
+      type: "Last Menstrual Period",
+      observation: ob,
+      data: [
+        {
+          title: "Last Menstrual Period",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
+  const pregnancyStatusObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.pregnancyStatus,
+  ).map((ob) => {
+    return {
+      type: "Pregnancy Status",
+      observation: ob,
+      data: [
+        {
+          title: "Status",
+          value: evaluateValue(ob, "valueCodeableConcept"),
+        },
+        {
+          title: "Effective Date",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
+  const postpartumStatusObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.postpartumStatus,
+  ).map((ob) => {
+    return {
+      type: "Postpartum Status",
+      observation: ob,
+      data: [
+        {
+          title: "Status",
+          value: evaluateValue(ob, "valueCodeableConcept"),
+        },
+        {
+          title: "Effective Date",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
+
+  const unavailableData = [];
+
+  if (lastMenstrualPeriodObservations.length === 0) {
+    unavailableData.push({
+      title: "Last Menstrual Period",
+      value: undefined,
+    });
+  }
+  if (pregnancyStatusObservations.length === 0) {
+    unavailableData.push({
+      title: "Pregnancy Status",
+      value: undefined,
+    });
+  }
+  if (postpartumStatusObservations.length === 0) {
+    unavailableData.push({
+      title: "Postpartum Status",
+      value: undefined,
+    });
+  }
+
+  const allPregnancyObservations = [
+    ...lastMenstrualPeriodObservations,
+    ...pregnancyStatusObservations,
+    ...postpartumStatusObservations,
+  ].sort(sortPregnancyObservations);
+
+  if (allPregnancyObservations.length === 0)
+    return { availableData: [], unavailableData };
+
+  const pregnancyElement = (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="pregnancy info"
+      items={allPregnancyObservations.map((obs) => {
+        const id = obs.observation.id ?? `${Math.random()}`;
+        const content = obs.data.map((d, i) => (
+          <DataDisplay key={`${id}-${i}`} item={d} />
+        ));
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span className="text-base">{obs.type}</span>
+            </div>
+          ),
+          expanded: false,
+          content,
+          id,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
+
+  return {
+    availableData: [
+      {
+        value: pregnancyElement,
+        fullWidthContent: true,
+      },
+    ],
+    unavailableData,
+  };
+};
+
 /**
  * Evaluates occupation history information from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing alcohol use data.
@@ -447,10 +615,6 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     {
       title: "Homeless Status",
       value: evaluateValue(fhirBundle, fhirPathMappings.patientHomelessStatus),
-    },
-    {
-      title: "Pregnancy Status",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
     },
     {
       title: "Alcohol Use",
