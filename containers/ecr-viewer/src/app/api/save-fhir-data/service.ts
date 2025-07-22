@@ -30,7 +30,7 @@ interface SaveResponse {
  * @async
  * @function saveFhirData
  * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @param saveSource - The location to save the FHIR bundle.
  * @returns An object containing the status and message.
  */
@@ -59,7 +59,7 @@ export const saveFhirData = async (
 /**
  * @async
  * @function deleteFhirData
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @param saveSource - The location to save the FHIR bundle.
  * @returns An object containing the status and message.
  */
@@ -84,7 +84,7 @@ export const deleteFhirData = async (
 };
 
 /**
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @param metadataType - Whether metadata is persisted using the "core" or "extended" schema
  * @param metadata - The metadata to be saved.
  * @param fhirDataPromise - promise that resolves to whether the fhir bundle saved
@@ -126,7 +126,7 @@ export const saveFhirMetadata = async (
           };
         }
 
-        // Insert main ECR metadata
+        // Insert main eCR metadata
         if (metadataType === "core") {
           await saveCoreMetadata(trx, metadata as BundleMetadata, ecrId);
         } else if (metadataType === "extended") {
@@ -181,7 +181,7 @@ export const saveFhirMetadata = async (
  * @function saveExtendedMetaData
  * @param trx Kysely transaction
  * @param metadata - The FHIR bundle metadata to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
 const saveExtendedMetadata = async (
@@ -262,7 +262,7 @@ const saveExtendedMetadata = async (
  * Saves a FHIR bundle metadata to a postgres database.
  * @param trx Kysely transaction
  * @param metadata - The FHIR bundle metadata to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @returns An object containing the status and message.
  */
 const saveCoreMetadata = async (
@@ -327,7 +327,7 @@ const saveRR = async (
  * @async
  * @function saveWithMetadata
  * @param fhirBundle - The FHIR bundle to be saved.
- * @param ecrId - The unique identifier for the Electronic Case Reporting (ECR) associated with the FHIR bundle.
+ * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @param saveSource - The location to save the FHIR bundle.
  * @param metadata - The metadata to be saved with the FHIR bundle.
  * @returns An object containing the status and message.

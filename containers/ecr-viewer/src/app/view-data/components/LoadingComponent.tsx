@@ -105,7 +105,7 @@ export const SideNavLoadingSkeleton = () => {
   );
 };
 /**
- * Renders ECR Summary of the loading state
+ * Renders eCR Summary of the loading state
  * @returns A JSX component with rows of blobs.
  */
 const EcrSummaryLoadingSkeleton = () => {
@@ -223,7 +223,7 @@ const AccordionLoadingSkeleton = () => {
 
 /**
  * Creates the loading skeleton for the main ecr page
- * @returns ECR page loading skeleton
+ * @returns eCR page loading skeleton
  */
 export const EcrLoadingSkeleton = () => {
   return (

@@ -10,7 +10,7 @@ import { Person } from "./Icon";
 import { SignOutButton } from "./SignOutButton";
 
 /**
- * User Menu component for the ECR Viewer project.
+ * User Menu component for the eCR Viewer project.
  * This component renders a dropdown menu that contains user information
  * and a sign-out button
  * @param props Component props.

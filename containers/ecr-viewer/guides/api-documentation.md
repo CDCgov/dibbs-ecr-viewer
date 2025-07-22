@@ -26,7 +26,7 @@ Display an eCR
 
 ### Example Architecture
 
-![NBS -> ECR Viewer sequence diagram](./assets/nbs-ecr-viewer-arch.png)
+![NBS -> eCR Viewer sequence diagram](./assets/nbs-ecr-viewer-arch.png)
 
 ### Success Response
 

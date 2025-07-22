@@ -44,8 +44,8 @@
     }
   },
   "ecr.json": {
-    "summary": "Parsing Schema for ECR",
-    "description": "This is the default parsing schema for the ECR message format stored in ecr.json.",
+    "summary": "Parsing Schema for eCR",
+    "description": "This is the default parsing schema for the eCR message format stored in ecr.json.",
     "value": {
       "parsing_schema_name": "ecr.json",
       "message_format": "fhir",
