@@ -37,6 +37,7 @@ export const handler = NextAuth({
               .where("email", "=", params.user.email)
               .execute();
           } catch (e) {
+            // Don't stop login flow if the db isn't in a valid state
             if (await dbIsValid()) {
               throw e;
             }
