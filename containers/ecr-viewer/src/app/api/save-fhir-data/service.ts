@@ -18,6 +18,7 @@ import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
 import { Extended } from "@/app/data/metadataDb/types/extended";
 import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
+import { createAuditRecord } from "@/app/services/auditLogService";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
@@ -155,6 +156,10 @@ export const saveFhirMetadata = async (
             )}`,
           );
         }
+
+        // Add audit log here manually to make sure we log at the point when we know
+        // things are good, log only the ecr, and if in the off change audit logging fails, we get the response we expect
+        await createAuditRecord(trx, "ecr", "create", { ecrId });
 
         return {
           message: "Success. Saved metadata to database.",
