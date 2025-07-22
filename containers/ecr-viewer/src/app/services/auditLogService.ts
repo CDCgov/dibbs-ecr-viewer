@@ -50,7 +50,6 @@ export const audit = <
       .execute(async (trx) => {
         const uuid = await fn(params, trx);
         // if we get a uuid result, use that, but don't override a param uuid with undefined
-        console.log({ uuid });
         const logParams =
           typeof uuid === "string" ? { ...params, uuid } : params;
         await createAuditRecord<Params>(trx, user, subject, action, logParams);
@@ -72,7 +71,7 @@ const createAuditRecord = async <Params extends Record<string, unknown>>(
   const apiToken =
     reqHeaders.get("Authorization") || reqCookies.get("auth-token")?.value;
 
-  // Otherwise we get an auth token as the actor as they
+  // Override user on signin log, otherwise we get an auth token as the actor as they
   // aren't yet actually fully logged in
   if (action === "signin" && (params?.user as Record<string, string>)?.email) {
     user = await trx

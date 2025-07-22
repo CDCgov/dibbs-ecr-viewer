@@ -14,8 +14,10 @@ jest.mock("@/app/utils/auth-utils", () => ({
 }));
 
 jest.mock("@/app/services/userService", () => ({
-  getLoggedInUser: jest.fn(),
   isAdmin: jest.fn(),
+}));
+jest.mock("@/app/services/loggedInUserService", () => ({
+  getLoggedInUser: jest.fn(),
 }));
 
 jest.mock("@/app/components/UserMenu", () => (props: any) => (

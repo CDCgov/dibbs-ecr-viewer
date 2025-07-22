@@ -18,6 +18,7 @@ jest.mock("@/app/services/listEcrDataService", () => {
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/api/migrate-db/migrate");
 jest.mock("@/app/services/listConditionsService");
+jest.mock("@/app/services/loggedInUserService");
 jest.mock("@/app/services/userService");
 jest.mock("@/app/components/EcrFilters");
 jest.mock("@/app/components/LibrarySearch");

@@ -25,11 +25,11 @@ export const handler = NextAuth({
       "signin",
       async (
         params: Parameters<CallbacksOptions["signIn"]>[0],
-        txn: Transaction<Core>,
+        trx: Transaction<Core>,
       ) => {
         if (params.user?.email) {
           // Update the last log in and user's name to match the IDP
-          await txn
+          await trx
             .updateTable("user")
             .set({ date_of_last_login: new Date(), name: params.user.name })
             .where("email", "=", params.user.email)
@@ -47,7 +47,7 @@ export const handler = NextAuth({
       "signout",
       async (
         _params: Parameters<EventCallbacks["signOut"]>[0],
-        _txn: Transaction<Core>,
+        _trx: Transaction<Core>,
       ) => {},
     ),
   },
