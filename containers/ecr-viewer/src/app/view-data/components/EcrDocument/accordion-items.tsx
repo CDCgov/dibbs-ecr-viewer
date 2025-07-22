@@ -10,6 +10,7 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
   evaluateHospitalEncounterData,
+  evaluatePregnancyData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
 import { evaluateAll } from "@/app/utils/evaluate";
@@ -20,6 +21,7 @@ import Demographics from "@/app/view-data/components/Demographics";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import EncounterDetails from "@/app/view-data/components/Encounter";
 import LabInfo from "@/app/view-data/components/LabInfo";
+import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { AccordionItem } from "@/app/view-data/types";
@@ -36,6 +38,7 @@ export const getEcrDocumentAccordionItems = (
 ): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(fhirBundle);
   const socialData = evaluateSocialData(fhirBundle);
+  const pregnancyData = evaluatePregnancyData(fhirBundle);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
   const providerData = evaluateProviderData(fhirBundle);
@@ -51,6 +54,7 @@ export const getEcrDocumentAccordionItems = (
     const unavailableDataArrays = [
       demographicsData.unavailableData,
       socialData.unavailableData,
+      pregnancyData.unavailableData,
       encounterData.unavailableData,
       hospitalEncounterData.unavailableData,
       clinicalData.reasonForVisitDetails.unavailableData,
@@ -69,18 +73,27 @@ export const getEcrDocumentAccordionItems = (
       (array) => Array.isArray(array) && array.length > 0,
     );
   };
-
   const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
       content: (
         <>
           {demographicsData.availableData.length > 0 ||
-          socialData.availableData.length > 0 ? (
+          socialData.availableData.length > 0 ||
+          pregnancyData.availableData.length ? (
             <>
               <Demographics demographicsData={demographicsData.availableData} />
               {socialData.availableData.length > 0 && (
-                <SocialHistory socialData={socialData.availableData} />
+                <div>
+                  <SocialHistory socialData={socialData.availableData} />
+                </div>
+              )}
+              {pregnancyData.availableData.length > 0 && (
+                <div>
+                  <PregnancyInfo
+                    pregnancyData={pregnancyData.availableData[0]}
+                  />
+                </div>
               )}
             </>
           ) : (
@@ -188,6 +201,7 @@ export const getEcrDocumentAccordionItems = (
             <UnavailableInfo
               demographicsUnavailableData={demographicsData.unavailableData}
               socialUnavailableData={socialData.unavailableData}
+              pregnancyUnavailableData={pregnancyData.unavailableData}
               encounterUnavailableData={encounterData.unavailableData}
               hospitalEncounterUnavailableData={
                 hospitalEncounterData.unavailableData

@@ -62,7 +62,6 @@ export type PathTypes = {
   patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
-  patientPregnancyStatus: ValueX;
   patientAlcoholUse: ValueX;
   patientAlcoholIntake: ValueX;
   patientAlcoholComment: ValueX;
@@ -70,6 +69,9 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
+  lastMenstrualPeriod: Observation;
+  pregnancyStatus: Observation;
+  postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
@@ -269,10 +271,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "entry.resource.Observation.where(code.coding.code = '75274-1').where(category.coding.code = 'social-history').value",
   },
-  patientPregnancyStatus: {
-    type: "ValueX",
-    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').value",
-  },
   patientAlcoholUse: {
     type: "ValueX",
     path: "entry.resource.Observation.where(code.coding.where(code = '11331-6' and system = 'http://loinc.org')).value",
@@ -312,6 +310,20 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientDisabilityStatus: {
     type: "Observation",
     path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+  },
+
+  // Pregnancy Data
+  lastMenstrualPeriod: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
+  },
+  pregnancyStatus: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation')",
+  },
+  postpartumStatus: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '249197004'))",
   },
 
   // eCR Metadata
