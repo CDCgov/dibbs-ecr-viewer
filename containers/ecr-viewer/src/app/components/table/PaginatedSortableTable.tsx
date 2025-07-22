@@ -29,7 +29,7 @@ export interface TableColumn<T> extends TableHeader {
  * A client side controlled paginated and sorted table. For use with smaller data.
  * @param props React Props
  * @param props.items Items to fill table rows
- * @param props.initHeaders Header specifiction
+ * @param props.initHeaders Header specification
  * @param props.itemType Type of item being displayed
  * @returns client side paginated sortable table
  */

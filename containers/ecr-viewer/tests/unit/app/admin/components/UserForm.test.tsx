@@ -26,6 +26,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "456",
+        is_duplicate: false,
       },
     ],
   },
@@ -41,6 +42,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "789",
+        is_duplicate: false,
       },
       {
         code: "789",
@@ -48,6 +50,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "789",
+        is_duplicate: false,
       },
     ],
   },
@@ -65,7 +68,7 @@ describe("UserForm", () => {
       />,
     );
 
-    // no user info inputed yet
+    // no user info inputted yet
     const submitButtons = screen.getAllByRole("button", {
       name: "Save user",
     });
@@ -99,21 +102,21 @@ describe("UserForm", () => {
     await user.click(buttonStandardUser[0]);
 
     // select all programs
-    const butonSelectAll = screen.getAllByRole("button", {
+    const buttonSelectAll = screen.getAllByRole("button", {
       name: "Select all",
     })[0];
-    expect(butonSelectAll).not.toBeDisabled();
-    await user.click(butonSelectAll);
+    expect(buttonSelectAll).not.toBeDisabled();
+    await user.click(buttonSelectAll);
     for (const checkbox of checkboxes) {
       expect(checkbox).toBeChecked();
     }
 
     // deselect all programs
-    const butonDeselectAll = screen.getAllByRole("button", {
+    const buttonDeselectAll = screen.getAllByRole("button", {
       name: "Deselect all",
     })[0];
-    expect(butonDeselectAll).not.toBeDisabled();
-    await user.click(butonDeselectAll);
+    expect(buttonDeselectAll).not.toBeDisabled();
+    await user.click(buttonDeselectAll);
     for (const checkbox of checkboxes) {
       expect(checkbox).not.toBeChecked();
     }

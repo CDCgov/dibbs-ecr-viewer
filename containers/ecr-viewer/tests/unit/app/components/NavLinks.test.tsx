@@ -1,8 +1,9 @@
 import React from "react";
 
 import { render, screen } from "@testing-library/react";
-
 import "@testing-library/jest-dom";
+import { usePathname } from "next/navigation";
+
 import NavLinks from "@/app/components/NavLinks";
 import { User } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUser, isAdmin } from "@/app/services/userService";
@@ -47,6 +48,7 @@ const mockStandardUser: User = {
 
 describe("NavLinks component", () => {
   it("renders admin navigation links and user menu for an admin user", async () => {
+    (usePathname as jest.Mock).mockReturnValue("/admin/user");
     (getLoggedInUserSession as jest.Mock).mockResolvedValue(mockAdminUser);
     (getLoggedInUser as jest.Mock).mockResolvedValue(mockAdminUser);
     (isAdmin as unknown as jest.Mock).mockReturnValue(true);
@@ -55,8 +57,13 @@ describe("NavLinks component", () => {
 
     // Navigation links
     expect(screen.getByText("eCR library")).toBeInTheDocument();
+    expect(screen.getByText("eCR library")).not.toHaveClass("active-page");
     expect(screen.getByText("User management")).toBeInTheDocument();
+    expect(screen.getByText("User management")).toHaveClass("active-page");
     expect(screen.getByText("Program management")).toBeInTheDocument();
+    expect(screen.getByText("Program management")).not.toHaveClass(
+      "active-page",
+    );
 
     // User menu
     expect(screen.getByTestId("user-menu")).toHaveTextContent("Kyle Katarn");

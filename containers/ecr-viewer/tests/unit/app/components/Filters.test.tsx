@@ -739,7 +739,7 @@ describe("Filter Opening/Closing Controls", () => {
     // Selection should not persist because filter was not applied
     expect(screen.getByText("Last year")).toBeInTheDocument();
 
-    // condtion should be open
+    // condition should be open
     expect(
       screen.getByText("Filter by reportable condition"),
     ).toBeInTheDocument();
@@ -752,7 +752,7 @@ describe("Filter Opening/Closing Controls", () => {
       }),
     ).not.toBeChecked();
 
-    // condtion should be closed
+    // condition should be closed
     expect(screen.queryByText("Select all")).not.toBeInTheDocument();
   });
 });

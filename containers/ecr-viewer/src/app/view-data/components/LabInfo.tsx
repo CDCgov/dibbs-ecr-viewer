@@ -1,19 +1,16 @@
 import React from "react";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import {
-  LabReportElementData,
-  isLabReportElementDataList,
-} from "@/app/services/labsService";
+import { LabReportElementData } from "@/app/services/labsService";
 import {
   AccordionSection,
   AccordionSubSection,
 } from "@/app/view-data/component-utils";
 
-import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
+import { DataDisplay } from "./DataDisplay";
 
 interface LabInfoProps {
-  labResults: DisplayDataProps[] | LabReportElementData[];
+  labResults: LabReportElementData[];
 }
 
 /**
@@ -25,25 +22,10 @@ interface LabInfoProps {
 export const LabInfo = ({ labResults }: LabInfoProps) => {
   return (
     <AccordionSection>
-      {labResults &&
-        (isLabReportElementDataList(labResults) ? (
-          (labResults as LabReportElementData[]).map((res, i) => (
-            <LabResultDetail key={i} labResult={res} />
-          ))
-        ) : (
-          <HtmlLabResult labResult={labResults[0] as DisplayDataProps} />
-        ))}
+      {labResults.map((res, i) => (
+        <LabResultDetail key={i} labResult={res} />
+      ))}
     </AccordionSection>
-  );
-};
-
-const HtmlLabResult = ({ labResult }: { labResult: DisplayDataProps }) => {
-  return (
-    <AccordionSubSection title="Lab Results">
-      <div data-testid="lab-results">
-        <DataTableDisplay item={labResult} />
-      </div>
-    </AccordionSubSection>
   );
 };
 

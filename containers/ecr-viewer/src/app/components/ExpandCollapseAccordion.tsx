@@ -12,7 +12,7 @@ import { ExpandCollapseButtons } from "./ExpandCollapseButtons";
  * Accordion where expand all/collapse all buttons are added above items
  * @param props react props
  * @param props.items accordion items to display
- * @param props.descriptor desciptor for expand/collapse button labels
+ * @param props.descriptor descriptor for expand/collapse button labels
  * @param props.className optionally, classes to pass to the Accordion component
  * @returns expandable/collapsable accordion
  */
@@ -64,7 +64,7 @@ export const ExpandCollapseAccordion = ({
  * Accordion where expand all/collapse all buttons are added above items
  * @param props react props
  * @param props.items accordion items to display
- * @param props.descriptor desciptor for expand/collapse button labels
+ * @param props.descriptor descriptor for expand/collapse button labels
  * @param props.handleToggle handler for toggling one accordion item
  * @param props.handleToggleAll handler for toggling all accordion items
  * @param props.className optionally, classes to pass to the Accordion component

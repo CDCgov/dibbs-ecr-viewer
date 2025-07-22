@@ -18,15 +18,15 @@ describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
     let labInfoJsx: React.ReactElement;
     beforeAll(() => {
-      const labinfoOrg = evaluateLabInfoData(
+      const labInfoOrg = evaluateLabInfoData(
         BundleLab as unknown as Bundle,
         evaluateAll(BundleLab as Bundle, fhirPathMappings.diagnosticReports),
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
-      labinfoOrg[0].organizationDisplayDataProps[0].value = "";
+      labInfoOrg[0].organizationDisplayDataProps[0].value = "";
 
-      labInfoJsx = <LabInfo labResults={labinfoOrg} />;
+      labInfoJsx = <LabInfo labResults={labInfoOrg} />;
     });
     it("all should be collapsed by default", () => {
       render(labInfoJsx);
@@ -101,7 +101,7 @@ describe("LabInfo", () => {
 
   describe("when labResults is DisplayDataProps[]", () => {
     it("should be collapsed by default", () => {
-      const labinfo = evaluateLabInfoData(
+      const labInfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluateAll(
           BundleLabNoLabIds as Bundle,
@@ -109,7 +109,7 @@ describe("LabInfo", () => {
         ),
       );
 
-      render(<LabInfo labResults={labinfo} />);
+      render(<LabInfo labResults={labInfo} />);
       screen
         .getAllByTestId("accordionButton", { exact: false })
         .forEach((button) => {
@@ -123,16 +123,13 @@ describe("LabInfo", () => {
     });
 
     it("should not render any results if no table data is present", () => {
-      render(<LabInfo labResults={[{}]} />);
-      expect(screen.getByText("Lab Results")).toBeInTheDocument();
-      expect(
-        screen.queryByTestId("accordionButton_all-lab-results"),
-      ).not.toBeInTheDocument();
+      render(<LabInfo labResults={[]} />);
+      expect(screen.queryByText("Lab Results")).not.toBeInTheDocument();
       expect(screen.queryByTestId("table")).not.toBeInTheDocument();
     });
 
     it("should match snapshot test", () => {
-      const labinfo = evaluateLabInfoData(
+      const labInfo = evaluateLabInfoData(
         BundleLabNoLabIds as unknown as Bundle,
         evaluateAll(
           BundleLabNoLabIds as Bundle,
@@ -140,7 +137,7 @@ describe("LabInfo", () => {
         ),
       );
 
-      const { container } = render(<LabInfo labResults={labinfo} />);
+      const { container } = render(<LabInfo labResults={labInfo} />);
       expect(container).toMatchSnapshot();
     });
   });

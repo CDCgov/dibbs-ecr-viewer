@@ -235,7 +235,7 @@ describe("BaseTable", () => {
   it("should render table with correct class name", () => {
     const { container } = render(
       <BaseTable
-        columns={[{ columnName: "column1" }, { columnName: "colunmn2" }]}
+        columns={[{ columnName: "column1" }, { columnName: "column2" }]}
         caption="Table Test"
         className="custom-class-1 custom-class-2"
       >
@@ -256,7 +256,7 @@ describe("BaseTable", () => {
       <BaseTable
         columns={[
           { columnName: "column1" },
-          { columnName: "colunmn2", tooltipText: tooltipTextContent },
+          { columnName: "column2", tooltipText: tooltipTextContent },
         ]}
         caption="Table Test"
         className="custom-class-1 custom-class-2"

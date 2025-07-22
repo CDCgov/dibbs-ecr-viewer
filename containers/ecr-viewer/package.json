@@ -54,7 +54,7 @@
     "pg": "^8.15.6",
     "postcss-discard-comments": "^7.0.3",
     "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-preset-env": "^10.1.5",
+    "postcss-preset-env": "^10.2.4",
     "react": "^18",
     "react-dom": "^18",
     "sanitize-html": "^2.14.0",

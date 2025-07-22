@@ -14,7 +14,7 @@
           }
         },
         "ecr.json": {
-          "summary": "ECR schema response",
+          "summary": "eCR schema response",
           "value": {
             "message": "Parsing succeeded!",
             "parsed_values": {

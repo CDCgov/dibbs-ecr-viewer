@@ -57,7 +57,7 @@ const sortedCodes = (conditions: FormCondition[]) => {
  * @param props React props
  * @param props.initValues Initial values the form is set to
  * @param props.action Action of the form (e.g. "Create", "Edit")
- * @param props.progUuid UUID of the program being editted. Optional
+ * @param props.progUuid UUID of the program being edited. Optional
  * @param props.submitAction Handler for the submitted data
  * @returns Program area add/edit form
  */

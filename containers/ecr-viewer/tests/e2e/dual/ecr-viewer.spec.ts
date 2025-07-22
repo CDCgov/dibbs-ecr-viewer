@@ -14,7 +14,7 @@ test.describe("viewer page", () => {
   test("should not have any automatically detectable accessibility issues", async ({
     page,
   }) => {
-    // Set timetout to 2 minutes because the first call to local stack s3 can take ~1:30
+    // Set timeout to 2 minutes because the first call to local stack s3 can take ~1:30
     test.setTimeout(120_000);
 
     await page.goto(
@@ -27,8 +27,7 @@ test.describe("viewer page", () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  // TODO: we need seed data with structured labs to get this running again
-  test.skip("fully expanded should not have any automatically detectable accessibility issues", async ({
+  test("fully expanded should not have any automatically detectable accessibility issues", async ({
     page,
   }) => {
     await page.goto(
@@ -56,7 +55,7 @@ test.describe("viewer page", () => {
       await page.getByText("Patient Name").first().waitFor();
     });
 
-    test("clicking each link scrolls and higlighlights", async ({ page }) => {
+    test("clicking each link scrolls and highlights", async ({ page }) => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 

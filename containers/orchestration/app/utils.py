@@ -91,10 +91,10 @@ def unzip_ws(file_bytes) -> dict:
 
 def unzip_http(upload_file: UploadFile) -> dict:
     """
-    Extracts and processes ECR data from an uploaded zip file.
+    Extracts and processes eCR data from an uploaded zip file.
 
     :param upload_file: The uploaded zip file.
-    :return: ECR data extracted from the zip file.
+    :return: eCR data extracted from the zip file.
     """
     zipped_file = ZipFile(io.BytesIO(upload_file.file.read()), "r")
     return search_for_ecr_data(zipped_file)
