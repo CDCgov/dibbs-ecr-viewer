@@ -27,8 +27,7 @@ test.describe("viewer page", () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  // TODO: we need seed data with structured labs to get this running again
-  test.skip("fully expanded should not have any automatically detectable accessibility issues", async ({
+  test("fully expanded should not have any automatically detectable accessibility issues", async ({
     page,
   }) => {
     await page.goto(

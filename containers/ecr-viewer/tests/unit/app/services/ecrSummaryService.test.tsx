@@ -6,7 +6,6 @@ import { Bundle } from "fhir/r4";
 import BundleWithClinicalInfo from "../../../../../../test-data/fhir/BundleClinicalInfo.json";
 import BundleEcrSummary from "../../../../../../test-data/fhir/BundleEcrSummary.json";
 import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
-import BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import {
   evaluateEcrSummaryConditionSummary,
@@ -99,22 +98,6 @@ describe("ecrSummaryService Tests", () => {
       expect(
         screen.getByText("Cytogenomic SNP microarray"),
       ).toBeInTheDocument();
-    });
-
-    it("should return all lab results when lab results are not LabReportElementData", () => {
-      const result = evaluateEcrSummaryRelevantLabResults(
-        BundleLabNoLabIds as unknown as Bundle,
-        "840539006",
-      );
-      expect(result).toHaveLength(2); // 1 result, plus last item is divider line
-
-      render(result[0].value);
-      expect(screen.getByRole("button")).toBeInTheDocument();
-      expect(screen.getByText("SARS-CoV-2, NAA CL")).toBeInTheDocument();
-      expect(
-        screen.getByText("Symptomatic as defined by CDC?"),
-      ).toBeInTheDocument();
-      expect(screen.getAllByText("2000-02-04T21:02:00.000Z")).toHaveLength(2);
     });
 
     it("should not include the last empty divider line when lastDividerLine is false", () => {

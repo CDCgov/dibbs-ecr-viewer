@@ -407,7 +407,7 @@ export const formatQuantity = (
   if (!data || !data.value) return;
   let unit = data.unit || "";
   unit = UNIT_MAP.get(unit) || unit;
-  const firstLetterRegex = /^[a-z]/i;
+  const firstLetterRegex = /^[a-zA-Z0-9]/i;
   if (unit?.match(firstLetterRegex)) {
     unit = " " + unit;
   }
