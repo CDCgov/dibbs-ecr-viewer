@@ -73,7 +73,6 @@ test.describe("auth", () => {
       .selectAll()
       .where("email", "=", process.env.AUTH_ADMIN_USER!)
       .executeTakeFirstOrThrow();
-
     expect(user.date_of_last_login).not.toBeNull();
     expect(
       Math.abs(user.date_of_last_login!.valueOf() - logInTime),
