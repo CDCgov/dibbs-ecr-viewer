@@ -5,8 +5,10 @@ import { randomUUID, createHash } from "node:crypto";
 import { Transaction } from "kysely";
 import { cookies, headers } from "next/headers";
 
+import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog, User } from "@/app/data/metadataDb/types/core";
+import { dbDialect } from "@/app/data/metadataDb/utils/db-config";
 
 import { getLoggedInUser } from "./loggedInUserService";
 
@@ -52,7 +54,29 @@ export const audit = <
         // if we get a uuid result, use that, but don't override a param uuid with undefined
         const logParams =
           typeof uuid === "string" ? { ...params, uuid } : params;
-        await createAuditRecord<Params>(trx, user, subject, action, logParams);
+
+        try {
+          await createAuditRecord<Params>(
+            trx,
+            user,
+            subject,
+            action,
+            logParams,
+          );
+        } catch (error: unknown) {
+          // avoid getting stuck in a loop where we can't migrate/show migration issues
+          // because of audit logging
+          if (await dbIsValid()) {
+            throw error;
+          } else {
+            // There is a db, but it isn't valid
+            !!dbDialect() &&
+              console.warn({
+                message: "Audit logging failed as db is not in a valid state",
+                error,
+              });
+          }
+        }
         return uuid;
       });
   };

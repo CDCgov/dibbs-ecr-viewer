@@ -1,6 +1,7 @@
 import { Transaction } from "kysely";
 import NextAuth, { CallbacksOptions, EventCallbacks } from "next-auth";
 
+import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { Core } from "@/app/data/metadataDb/types/core";
 import { audit } from "@/app/services/auditLogService";
 
@@ -29,11 +30,17 @@ export const handler = NextAuth({
       ) => {
         if (params.user?.email) {
           // Update the last log in and user's name to match the IDP
-          await trx
-            .updateTable("user")
-            .set({ date_of_last_login: new Date(), name: params.user.name })
-            .where("email", "=", params.user.email)
-            .execute();
+          try {
+            await trx
+              .updateTable("user")
+              .set({ date_of_last_login: new Date(), name: params.user.name })
+              .where("email", "=", params.user.email)
+              .execute();
+          } catch (e) {
+            if (await dbIsValid()) {
+              throw e;
+            }
+          }
           return true;
         } else {
           return false;
