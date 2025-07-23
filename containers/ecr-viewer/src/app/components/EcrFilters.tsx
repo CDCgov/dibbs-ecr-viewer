@@ -102,7 +102,7 @@ const FilterReportableConditions = ({
     });
   };
 
-    // Check/Uncheck all boxes based on Select all checkbox
+  // Check/Uncheck all boxes based on Select all checkbox
   const handleSelectAll = () => {
     const updatedConditions = Object.keys(filterConditions).reduce(
       (dict, condition) => {
@@ -160,7 +160,8 @@ const FilterReportableConditions = ({
         <CheckboxOptions
           groupName="condition"
           filterItems={{
-            [NO_CONDITIONS_REPORTED_OPTION]: filterConditions[NO_CONDITIONS_REPORTED_OPTION] || false
+            [NO_CONDITIONS_REPORTED_OPTION]:
+              filterConditions[NO_CONDITIONS_REPORTED_OPTION] || false,
           }}
           onChange={handleCheckboxChange}
         />

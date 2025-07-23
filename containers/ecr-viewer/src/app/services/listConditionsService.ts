@@ -38,7 +38,7 @@ export const getAllConditions = async (): Promise<string[]> => {
       )
       .execute();
 
-      const actualConditions = result.map((row) => row.condition);
+    const actualConditions = result.map((row) => row.condition);
 
     return ["No conditions reported", ...actualConditions];
   } catch (error: unknown) {
