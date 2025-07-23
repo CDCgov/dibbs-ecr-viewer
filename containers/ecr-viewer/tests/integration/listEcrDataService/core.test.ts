@@ -480,7 +480,7 @@ describe("generate filter conditions statement", () => {
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual("@1 = @2");
     }
-    expect(params).toStrictEqual([]);
+    expect(params).toStrictEqual([true, false]);
   });
 
   it("should return TRUE if no conditions are provided", () => {

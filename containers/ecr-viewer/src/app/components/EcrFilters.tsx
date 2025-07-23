@@ -177,6 +177,9 @@ const FilterReportableConditions = ({
           onChange={handleCheckboxChange}
         />
       </div>
+      <div 
+        className="border-top-1px border-base-lighter"
+      />
     </Filter>
   );
 };

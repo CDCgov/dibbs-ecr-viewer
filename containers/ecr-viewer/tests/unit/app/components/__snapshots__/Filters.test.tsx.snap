@@ -691,6 +691,29 @@ exports[`Filter by Reportable Conditions Component renders correctly after openi
                       class="checkbox-color usa-checkbox"
                     >
                       <input
+                        class="usa-checkbox__input"
+                        id="condition-No conditions reported"
+                        type="checkbox"
+                        value="No conditions reported"
+                      />
+                      <label
+                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+                        for="condition-No conditions reported"
+                      >
+                        No conditions reported
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    class="border-top-1px border-base-lighter margin-x-105"
+                  />
+                  <div
+                    class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
+                  >
+                    <div
+                      class="checkbox-color usa-checkbox"
+                    >
+                      <input
                         checked=""
                         class="usa-checkbox__input"
                         id="condition-Condition1"
