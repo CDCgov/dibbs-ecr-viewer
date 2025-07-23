@@ -1,6 +1,7 @@
 import { Observation } from "fhir/r4";
 
-import { sortObservationsByDate } from "@/app/view-data/utils/fhir-data-utils";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 describe("sortObservationsByDate", () => {
   it("should prioritize ongoing periods", () => {
@@ -30,7 +31,7 @@ describe("sortObservationsByDate", () => {
     };
 
     const arr = [newest, ongoing, oldest];
-    sortObservationsByDate(arr);
+    sortResourcesByDate(arr, fhirPathMappings.effectiveX);
     expect(arr).toEqual([ongoing, newest, oldest]);
   });
 
@@ -61,7 +62,7 @@ describe("sortObservationsByDate", () => {
     };
 
     const arr = [oldest, middle, newest];
-    sortObservationsByDate(arr);
+    sortResourcesByDate(arr, fhirPathMappings.effectiveX);
     expect(arr).toEqual([newest, oldest, middle]);
   });
 
@@ -92,7 +93,7 @@ describe("sortObservationsByDate", () => {
     };
 
     const arr = [oldest, middle, newest];
-    sortObservationsByDate(arr);
+    sortResourcesByDate(arr, fhirPathMappings.effectiveX);
     expect(arr).toEqual([middle, oldest, newest]);
   });
 });

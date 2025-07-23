@@ -29,7 +29,7 @@ import {
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
-import { sortObservationsByDate } from "@/app/view-data/utils/fhir-data-utils";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import {
   formatDate,
@@ -277,7 +277,10 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     usualIndustryComp?.valueCodeableConcept,
   );
 
-  const sortedEmploymentObs = sortObservationsByDate(employmentObs);
+  const sortedEmploymentObs = sortResourcesByDate(
+    employmentObs,
+    fhirPathMappings.effectiveX,
+  );
   const currentEmploymentStatus = evaluateValue(
     sortedEmploymentObs,
     fhirPathMappings.valueX,
@@ -305,7 +308,10 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
   );
   if (jobObs.length === 0) return;
 
-  const sortedJobsObs = sortObservationsByDate(jobObs);
+  const sortedJobsObs = sortResourcesByDate(
+    jobObs,
+    fhirPathMappings.effectiveX,
+  );
 
   return (
     <ExpandCollapseAccordion

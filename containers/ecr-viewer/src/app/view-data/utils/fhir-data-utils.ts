@@ -1,15 +1,18 @@
-import { Observation } from "fhir/r4";
+import { FhirResource, Period } from "fhir/r4";
 
 import { evaluateOne } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import { FhirPath, PathTypes } from "@/app/utils/evaluate/fhir-paths";
 
 const ONGOING_DATE = new Date("9999-01-01");
 
 const parseDate = (dateString: string | undefined): Date | undefined =>
   dateString ? new Date(dateString) : undefined;
 
-const getObservationDates = (obs: Observation) => {
-  const dateElement = evaluateOne(obs, fhirPathMappings.effectiveX);
+const getDates = <K extends keyof PathTypes>(
+  obs: FhirResource,
+  datePath: FhirPath<K>,
+) => {
+  const dateElement = evaluateOne(obs, datePath) as Period | string;
 
   if (!dateElement) return { effective: undefined, start: undefined };
 
@@ -17,7 +20,6 @@ const getObservationDates = (obs: Observation) => {
     return { effective: new Date(dateElement), start: undefined };
   }
 
-  // Handle Period objects
   const start = parseDate(dateElement.start);
   const effective =
     dateElement.start && !dateElement.end
@@ -34,18 +36,30 @@ const compareDates = (a: Date | undefined, b: Date | undefined): number => {
   return b.getTime() - a.getTime(); // Descending
 };
 
-const compareObservationsByDate = (a: Observation, b: Observation): number => {
-  const datesA = getObservationDates(a);
-  const datesB = getObservationDates(b);
+const compareResourcesByDate = <K extends keyof PathTypes>(
+  a: FhirResource,
+  b: FhirResource,
+  datePath: FhirPath<K>,
+): number => {
+  const datesA = getDates(a, datePath);
+  const datesB = getDates(b, datePath);
 
   const effectiveDiff = compareDates(datesA.effective, datesB.effective);
   return effectiveDiff || compareDates(datesA.start, datesB.start);
 };
 
 /**
- * Return an descending order (most recent first) list of observations by `effective[x]` (period or DateTime).
- * @param observationArray Array of observations
- * @returns Ordered list of observations by effective[x]
+ * Return an descending order (most recent first) list of resources by the date specified by `datePath`.
+ * @param resourceArray - Array of FHIR resources of the same type
+ * @param datePath - FHIR path to either a Period or a date string on the resource
+ * @returns Ordered list of resources by the date specified
  */
-export const sortObservationsByDate = (observationArray: Observation[]) =>
-  observationArray.sort(compareObservationsByDate);
+export const sortResourcesByDate = <
+  T extends FhirResource,
+  K extends keyof PathTypes,
+>(
+  resourceArray: T[],
+  datePath: FhirPath<K>,
+): T[] => {
+  return resourceArray.sort((a, b) => compareResourcesByDate(a, b, datePath));
+};

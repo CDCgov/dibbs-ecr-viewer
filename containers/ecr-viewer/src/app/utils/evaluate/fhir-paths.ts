@@ -710,7 +710,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 };
 
-type FhirPathMappings = { [K in FhirPathKeys]: FhirPath<K> };
+export type FhirPathMappings = { [K in FhirPathKeys]: FhirPath<K> };
 
 const fhirPathMappings: FhirPathMappings = (
   Object.keys(_fhirPathMappings) as FhirPathKeys[]
