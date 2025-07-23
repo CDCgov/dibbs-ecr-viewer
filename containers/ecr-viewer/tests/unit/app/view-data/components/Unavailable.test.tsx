@@ -12,7 +12,7 @@ describe("UnavailableInfo", () => {
         value: "",
       },
       {
-        title: "Preffered Language",
+        title: "Preferred Language",
         value: "",
       },
     ];
@@ -22,15 +22,25 @@ describe("UnavailableInfo", () => {
         value: "",
       },
       {
-        title: "Pregnancy Status",
-        value: "",
-      },
-      {
         title: "Alcohol Use",
         value: "",
       },
       {
         title: "Sexual Orientation",
+        value: "",
+      },
+    ];
+    const pregnancyUnavailableData = [
+      {
+        title: "Last Menstrual Period",
+        value: "",
+      },
+      {
+        title: "Pregnancy Status",
+        value: "",
+      },
+      {
+        title: "Postpartum Status",
         value: "",
       },
     ];
@@ -154,6 +164,7 @@ describe("UnavailableInfo", () => {
       <UnavailableInfo
         demographicsUnavailableData={demographicsUnavailability}
         socialUnavailableData={socialUnavailability}
+        pregnancyUnavailableData={pregnancyUnavailableData}
         encounterUnavailableData={encounterUnavailableData}
         hospitalEncounterUnavailableData={hospitalEncounterUnavailableData}
         facilityUnavailableData={facilityUnavailableData}

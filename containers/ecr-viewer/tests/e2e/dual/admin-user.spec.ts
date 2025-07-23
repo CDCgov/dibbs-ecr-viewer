@@ -4,7 +4,7 @@ import { test, expect, Page } from "@playwright/test";
 import { logIn } from "../utils";
 
 test.describe("user management page", () => {
-  test("should pass accessiblity", async ({ page }) => {
+  test("should pass accessibility", async ({ page }) => {
     await logIn(page);
 
     await page.goto("/ecr-viewer/admin/user");
@@ -145,7 +145,7 @@ test.describe("user management page", () => {
 
     await page.getByRole("button", { name: "Yes, remove user" }).click();
     await expect(
-      page.getByText(`${newEmail} succesfully removed`),
+      page.getByText(`${newEmail} successfully removed`),
     ).toBeVisible();
 
     // Dismiss any toasts
@@ -213,19 +213,19 @@ test.describe("user management page", () => {
     await expect(page.getByText("All program areas (Admin)")).toBeVisible();
     await expect(page.getByText("No program areas (Standard)")).toBeVisible();
 
-    const checkboxfilterProgram1 = page.getByLabel(`${program1}`, {
+    const checkboxFilterProgram1 = page.getByLabel(`${program1}`, {
       exact: true,
     });
-    await checkboxfilterProgram1.dispatchEvent("click");
+    await checkboxFilterProgram1.dispatchEvent("click");
     await expect(
       page.getByRole("table").getByText(userStandard1),
     ).not.toBeVisible();
 
-    await checkboxfilterProgram1.dispatchEvent("click");
-    const checkboxfilterProgram2 = page.getByLabel(`${program2}`, {
+    await checkboxFilterProgram1.dispatchEvent("click");
+    const checkboxFilterProgram2 = page.getByLabel(`${program2}`, {
       exact: true,
     });
-    await checkboxfilterProgram2.dispatchEvent("click");
+    await checkboxFilterProgram2.dispatchEvent("click");
     await expect(
       page.getByRole("table").getByText(userStandard2),
     ).not.toBeVisible();

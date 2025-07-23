@@ -1,4 +1,4 @@
-"use client"; // Icon needs to be included in clent side bundle
+"use client"; // Icon needs to be included in client side bundle
 import { Icon as UswdsIcon } from "@trussworks/react-uswds";
 
 export const ArrowBack = UswdsIcon.ArrowBack;

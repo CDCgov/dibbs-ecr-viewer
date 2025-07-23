@@ -4,7 +4,7 @@ import React, { ReactNode, useState, useId } from "react";
 import { Button } from "@trussworks/react-uswds";
 
 /**
- * Functional component for displaying a value. If the value has a length greater than 500 characters, it will be split after 300 characters with a view more button to view the entire value.
+ * Functional component for displaying a value. If the value has a length greater than 500 characters, it will be split after 300 characters with a view more button to view the entire value. Once expanded, a `view less` button will be stickily viewable on the bottom of the container of the content, which as a max height set to avoid taking over the entire experience.
  * @param value - props for the component
  * @param value.children - the value to be displayed in the value
  * @returns - A React element representing the display of the value
@@ -23,23 +23,39 @@ export const FieldValue: React.FC<{
     return children;
   }
 
-  const fieldValue = trimField(children, cutLength, setHidden).value;
+  const formattedLength = Intl.NumberFormat().format(valueLength);
+
+  const viewMoreButton = (
+    <Button
+      type="button"
+      unstyled={true}
+      onClick={() => setHidden(false)}
+      aria-expanded="false"
+      aria-controls={id}
+    >
+      View more ({formattedLength} characters total)
+    </Button>
+  );
+
+  const fieldValue = trimField(children, cutLength, viewMoreButton).value;
 
   return hidden ? (
     fieldValue
   ) : (
-    <>
+    <div className="position-relative field-height">
       <span id={id}>{children}&nbsp;</span>
-      <Button
-        type="button"
-        unstyled={true}
-        onClick={() => setHidden(true)}
-        aria-expanded="true"
-        aria-controls={id}
-      >
-        View less
-      </Button>
-    </>
+      <div className="bg-white position-sticky bottom-0 left-0">
+        <Button
+          type="button"
+          unstyled={true}
+          onClick={() => setHidden(true)}
+          aria-expanded="true"
+          aria-controls={id}
+        >
+          View less ({formattedLength} characters total)
+        </Button>
+      </div>
+    </div>
   );
 };
 
@@ -65,13 +81,13 @@ const getReactNodeLength = (value: React.ReactNode): number => {
  * Create an element with `remainingLength` length followed by a view more button
  * @param value - the value that will be cut
  * @param remainingLength - the length of how long the returned element will be
- * @param setHidden - a function used to signify that the view more button has been clicked.
+ * @param viewMoreButton - a button to view more of the content.
  * @returns - an object with the shortened value and the length left over.
  */
 const trimField = (
   value: React.ReactNode,
   remainingLength: number,
-  setHidden: (val: boolean) => void,
+  viewMoreButton: ReactNode,
 ): { value: React.ReactNode; remainingLength: number } => {
   const id = useId();
   if (remainingLength < 1) {
@@ -84,15 +100,7 @@ const trimField = (
         value: (
           <>
             <span id={id}>{cutString}...&nbsp;</span>
-            <Button
-              type="button"
-              unstyled={true}
-              onClick={() => setHidden(false)}
-              aria-expanded="false"
-              aria-controls={id}
-            >
-              View more
-            </Button>
+            {viewMoreButton}
           </>
         ),
         remainingLength: 0,
@@ -105,7 +113,7 @@ const trimField = (
   } else if (Array.isArray(value)) {
     const newValArr = [];
     for (let i = 0; i < value.length; i++) {
-      const splitVal = trimField(value[i], remainingLength, setHidden);
+      const splitVal = trimField(value[i], remainingLength, viewMoreButton);
       remainingLength = splitVal.remainingLength;
       newValArr.push(
         <React.Fragment key={`arr-${i}-${splitVal.value}`}>
@@ -121,7 +129,7 @@ const trimField = (
     } else {
       childrenCopy = value.props.children;
     }
-    const split = trimField(childrenCopy, remainingLength, setHidden);
+    const split = trimField(childrenCopy, remainingLength, viewMoreButton);
     const newElement = React.cloneElement(
       value,
       { ...value.props },

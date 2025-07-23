@@ -1,9 +1,19 @@
 import React from "react";
 
-import { Bundle, Condition, DomainResource } from "fhir/r4";
+import {
+  Bundle,
+  Condition,
+  DomainResource,
+  Location,
+  Organization,
+} from "fhir/r4";
 
 import { evaluateData } from "@/app/utils/data-utils";
-import { evaluateAll, evaluateOne } from "@/app/utils/evaluate";
+import {
+  evaluateAll,
+  evaluateOne,
+  evaluateOneReference,
+} from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
@@ -28,9 +38,8 @@ import {
   formatContactPoint,
   formatCurrentAddress,
   formatPatientContactList,
-  formatPhoneNumber,
 } from "./formatService";
-import { evaluateLabInfoData, isLabReportElementDataList } from "./labsService";
+import { evaluateLabInfoData } from "./labsService";
 import { getReportabilitySummaries } from "./reportabilityService";
 
 /**
@@ -115,12 +124,20 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Name",
-      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
+      value:
+        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
+        evaluateOneReference<Location>(
+          fhirBundle,
+          fhirPathMappings.facilityLocationRef,
+        )?.name,
     },
     {
       title: "Facility Contact",
-      value: formatPhoneNumber(
-        evaluateOne(fhirBundle, fhirPathMappings.facilityContact),
+      value: formatContactPoint(
+        evaluateOneReference<Organization>(
+          fhirBundle,
+          fhirPathMappings.facilityOrgRef,
+        )?.telecom,
       ),
     },
   ]);
@@ -275,33 +292,29 @@ export const evaluateEcrSummaryRelevantLabResults = (
     fhirPathMappings.diagnosticReports,
   );
   const labsWithCode = getRelevantResources(labReports, snomedCode);
+  const labsWithCodeIds = new Set(labsWithCode.map((lab) => lab.id));
 
   const observationsList = evaluateAll(
     fhirBundle,
     fhirPathMappings.observations,
   );
-  const obsIdsWithCode: (string | undefined)[] = getRelevantResources(
-    observationsList,
-    snomedCode,
-  ).map((entry) => entry.id);
+  const relevantObsIds = new Set(
+    getRelevantResources(observationsList, snomedCode).map((entry) => entry.id),
+  );
 
-  const labsFromObsWithCode = (() => {
-    const obsIds = new Set(obsIdsWithCode);
-    const labsWithCodeIds = new Set(labsWithCode.map((lab) => lab.id));
+  const labsFromObsWithCode = labReports.filter((lab) => {
+    // already accounted for - skip
+    if (labsWithCodeIds.has(lab.id)) {
+      return false;
+    }
 
-    return labReports.filter((lab) => {
-      if (labsWithCodeIds.has(lab.id)) {
-        return false;
+    return lab.result?.some((result) => {
+      if (result.reference) {
+        const referenceId = result.reference.replace(/^Observation\//, "");
+        return relevantObsIds.has(referenceId);
       }
-
-      return lab.result?.some((result) => {
-        if (result.reference) {
-          const referenceId = result.reference.replace(/^Observation\//, "");
-          return obsIds.has(referenceId);
-        }
-      });
     });
-  })();
+  });
 
   const relevantLabs = labsWithCode.concat(labsFromObsWithCode);
 
@@ -314,16 +327,12 @@ export const evaluateEcrSummaryRelevantLabResults = (
     "h4",
   );
 
-  if (isLabReportElementDataList(relevantLabElements)) {
-    resultsArray = relevantLabElements.flatMap((element) =>
-      element.diagnosticReportDataItems.map((reportItem) => ({
-        value: <LabAccordion items={[reportItem]} />,
-        dividerLine: false,
-      })),
-    );
-  } else {
-    resultsArray.push(...relevantLabElements);
-  }
+  resultsArray = relevantLabElements.flatMap((element) =>
+    element.diagnosticReportDataItems.map((reportItem) => ({
+      value: <LabAccordion items={[reportItem]} />,
+      dividerLine: false,
+    })),
+  );
 
   if (lastDividerLine) {
     resultsArray.push({ dividerLine: true });

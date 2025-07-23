@@ -27,6 +27,7 @@ import {
   evaluateClinicalData,
   returnCareTeamTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
+import { FieldValue } from "@/app/view-data/components/FieldValue";
 import {
   TooltipDiv,
   ToolTipElement,
@@ -180,7 +181,7 @@ describe("Utils", () => {
         BundleWithPatient as unknown as Bundle,
       );
 
-      expect(actual).toEqual("1 Main St\nCloud City, CA\n00000, US");
+      expect(actual).toEqual("1 Main St\nCloud City, CA 00000\nUS");
     });
   });
 
@@ -198,16 +199,14 @@ describe("Utils", () => {
     });
   });
 
-  describe("DataDisplay", () => {
+  describe("FieldValue", () => {
     describe("string value", () => {
       it("should display text up to 500 characters", () => {
         const FiveHundredChars =
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz";
         expect(FiveHundredChars).toHaveLength(500);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredChars }} />,
-        );
+        render(<FieldValue>{FiveHundredChars}</FieldValue>);
 
         expect(screen.getByText(FiveHundredChars)).toBeInTheDocument();
       });
@@ -216,14 +215,14 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
         expect(
           screen.getByText(FiveHundredOneChars.substring(0, 300) + "..."),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(FiveHundredOneChars.substring(300)),
         ).not.toBeInTheDocument();
@@ -234,15 +233,19 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
+
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
         );
 
-        await user.click(screen.getByText("View more"));
-
         expect(screen.getByText(FiveHundredOneChars)).toBeInTheDocument();
-        expect(screen.getByText("View less")).toBeInTheDocument();
-        expect(screen.queryByText("View more")).not.toBeInTheDocument();
+        expect(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
+        expect(
+          screen.queryByText(/View more \([0-9,]+ characters total\)/),
+        ).not.toBeInTheDocument();
         expect(screen.queryByText("...")).not.toBeInTheDocument();
       });
       it("should hide text when view less is clicked", async () => {
@@ -251,19 +254,23 @@ describe("Utils", () => {
           "xVP5yPfQAbNOFOOl8Vi1ytfcQ39Cz0dl73SBMj6xQHuCwRRO1FmS7v5wqD55U914tsDfqTtsEQ0mISsLoiMZbco4iwb2xU3nNL6YAneY0tMqsJdb55JWHSI2uqyuuwIvjjZY5Jl9vIda6lLoYke3ywsQFR6nlEFCipJMF9vA9OQqkZljCYirZJu4kZTENk6V1Yirwuzw9L6uV3avK6VhMK6o8qZbxLkDFnMgjzx8kf25tz98mU5m6Rp8zNcY2cf02xA2aV27WfeWvy5TS73SzJK8a9cFZxCe5xsHtAkVqNa4UzGINwt6i2mLN4kuGgmk7GZGoMaOcNyaOr80TfgpWVjqLMobAXvjv1JHBXLXHczFG8jKQtU3U3FoAxTu39CPcjuq43BWsNej1inbzexa7e9njXZUvZGa3z5Nep4vlrQQtV8F5jZFGHvdlhLr1ZdRJE8sAQEi9nWHviYHSYCVR1ijVNtcHVj9JKkJZ5FAn1a9hDFVq2Tz1";
         expect(FiveHundredOneChars).toHaveLength(501);
 
-        render(
-          <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
-        );
+        render(<FieldValue>{FiveHundredOneChars}</FieldValue>);
 
-        await user.click(screen.getByText("View more"));
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        );
         expect(screen.getByText(FiveHundredOneChars)).toBeInTheDocument();
 
-        await user.click(screen.getByText("View less"));
+        await user.click(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        );
 
         expect(
           screen.getByText(FiveHundredOneChars.substring(0, 300) + "..."),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(FiveHundredOneChars.substring(300)),
         ).not.toBeInTheDocument();
@@ -304,7 +311,9 @@ describe("Utils", () => {
             OneHundredTwentyFiveCharStrings[2].substring(0, 50) + "...",
           ),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(OneHundredTwentyFiveCharStrings[2].substring(50)),
         ).not.toBeInTheDocument();
@@ -337,13 +346,17 @@ describe("Utils", () => {
 
         render(<DataDisplay item={{ title: "field", value: LongReactNode }} />);
 
-        await user.click(screen.getByText("View more"));
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        );
 
         OneHundredTwentyFiveCharStrings.forEach((str) =>
           expect(screen.getByText(str)).toBeInTheDocument(),
         );
         expect(screen.getByText("this is more text")).toBeInTheDocument();
-        expect(screen.getByText("View less")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
       });
       it("should only show first 300 characters when ReactNode element when view less is clicked", async () => {
         const user = userEvent.setup();
@@ -368,8 +381,12 @@ describe("Utils", () => {
         render(
           <DataDisplay item={{ title: "field", value: FiveHundredOneChars }} />,
         );
-        await user.click(screen.getByText("View more"));
-        await user.click(screen.getByText("View less"));
+        await user.click(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        );
+        await user.click(
+          screen.getByText(/View less \([0-9,]+ characters total\)/),
+        );
 
         expect(
           screen.getByText(OneHundredTwentyFiveCharStrings[0]),
@@ -382,7 +399,9 @@ describe("Utils", () => {
             OneHundredTwentyFiveCharStrings[2].substring(0, 50) + "...",
           ),
         ).toBeInTheDocument();
-        expect(screen.getByText("View more")).toBeInTheDocument();
+        expect(
+          screen.getByText(/View more \([0-9,]+ characters total\)/),
+        ).toBeInTheDocument();
         expect(
           screen.queryByText(OneHundredTwentyFiveCharStrings[2].substring(50)),
         ).not.toBeInTheDocument();

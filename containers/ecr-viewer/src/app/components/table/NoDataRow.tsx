@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 /**
  * Layout component to use when signaling no data in a table
  * @param props react props
- * @param props.children Content of the rolw
+ * @param props.children Content of the row
  * @returns accessible no data table row
  */
 export const NoDataRow = ({ children }: { children: ReactNode }) => (

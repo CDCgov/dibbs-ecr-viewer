@@ -7,7 +7,6 @@ import {
   Condition,
   ContactPoint,
   DiagnosticReport,
-  EncounterDiagnosis,
   EncounterParticipant,
   Extension,
   HumanName,
@@ -44,8 +43,6 @@ export type PathTypes = {
   patientNameList: HumanName;
   patientAddressList: Address;
   patientTelecom: ContactPoint;
-  patientCounty: string;
-  patientCountry: string;
   patientIds: string;
   patientDOB: string;
   patientVitalStatus: boolean;
@@ -65,7 +62,6 @@ export type PathTypes = {
   patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
-  patientPregnancyStatus: ValueX;
   patientAlcoholUse: ValueX;
   patientAlcoholIntake: ValueX;
   patientAlcoholComment: ValueX;
@@ -73,6 +69,9 @@ export type PathTypes = {
   patientGenderIdentity: ValueX;
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
+  lastMenstrualPeriod: Observation;
+  pregnancyStatus: Observation;
+  postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
@@ -86,15 +85,13 @@ export type PathTypes = {
   eICRProcessingStatusReason: Observation;
   compositionAuthorRefs: Reference;
   encounterPeriod: Period;
-  encounterDiagnosis: EncounterDiagnosis;
+  encounterDiagnosisRef: Reference;
   encounterType: string;
   encounterID: Identifier;
   hospitalEncounterDiagnosisRef: Reference;
-  facilityContact: string;
-  facilityContactAddress: string;
-  facilityLocation: string;
+  facilityOrgRef: string;
+  facilityLocationRef: string;
   facilityName: string;
-  facilityAddress: Address;
   facilityType: ValueX;
   compositionEncounterRef: string;
   encounterAttendingRefs: EncounterParticipant;
@@ -195,14 +192,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ContactPoint",
     path: "entry.resource.Patient.telecom",
   },
-  patientCounty: {
-    type: "string",
-    path: "entry.resource.Patient.address.first().county",
-  },
-  patientCountry: {
-    type: "string",
-    path: "entry.resource.Patient.address.first().country",
-  },
 
   patientIds: {
     type: "string",
@@ -282,10 +271,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "entry.resource.Observation.where(code.coding.code = '75274-1').where(category.coding.code = 'social-history').value",
   },
-  patientPregnancyStatus: {
-    type: "ValueX",
-    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').value",
-  },
   patientAlcoholUse: {
     type: "ValueX",
     path: "entry.resource.Observation.where(code.coding.where(code = '11331-6' and system = 'http://loinc.org')).value",
@@ -325,6 +310,20 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientDisabilityStatus: {
     type: "Observation",
     path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+  },
+
+  // Pregnancy Data
+  lastMenstrualPeriod: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
+  },
+  pregnancyStatus: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation')",
+  },
+  postpartumStatus: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '249197004'))",
   },
 
   // eCR Metadata
@@ -370,9 +369,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Period",
     path: "entry.resource.Encounter.period",
   },
-  encounterDiagnosis: {
-    type: "EncounterDiagnosis",
-    path: "entry.resource.Encounter.diagnosis",
+  encounterDiagnosisRef: {
+    type: "Reference",
+    path: "entry.resource.Encounter.diagnosis.condition",
   },
   encounterType: {
     type: "string",
@@ -388,25 +387,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Composition.section.where(code.coding.code = %code).entry",
   },
 
-  facilityContact: {
-    type: "string",
-    path: "entry.resource.Location.first().telecom.where(system = 'phone').value",
-  },
-  facilityContactAddress: {
+  facilityOrgRef: {
     type: "string",
     path: "entry.resource.Encounter.serviceProvider.reference",
   },
-  facilityLocation: {
+  facilityLocationRef: {
     type: "string",
     path: "entry.resource.Encounter.location.location.reference",
   },
   facilityName: {
     type: "string",
     path: "entry.resource.Encounter.location.location.display",
-  },
-  facilityAddress: {
-    type: "Address",
-    path: "entry.resource.Location.first().address",
   },
   facilityType: {
     type: "ValueX",

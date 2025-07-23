@@ -92,6 +92,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "456",
+        is_duplicate: false,
       },
     ],
   },
@@ -107,6 +108,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "789",
+        is_duplicate: false,
       },
       {
         code: "789",
@@ -114,6 +116,7 @@ const mockPrograms: FormProgram[] = [
         condition_name: "condition",
         condition_category: "category",
         program_area_uuid: "789",
+        is_duplicate: false,
       },
     ],
   },
@@ -146,6 +149,17 @@ describe("User Admin Page", () => {
   describe("Creating users", () => {
     it("should render a create user page", async () => {
       (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
+      const { container } = render(await CreateUserPage());
+      expect(container).toMatchSnapshot();
+      let results;
+      await act(async () => {
+        results = await axe(container);
+      });
+      expect(results).toHaveNoViolations();
+    });
+
+    it("should render a create user page with no programs", async () => {
+      (listProgramAreas as jest.Mock).mockResolvedValue([]);
       const { container } = render(await CreateUserPage());
       expect(container).toMatchSnapshot();
       let results;

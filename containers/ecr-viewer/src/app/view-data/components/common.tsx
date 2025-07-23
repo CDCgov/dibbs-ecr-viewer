@@ -16,6 +16,7 @@ import { evaluateReference } from "@/app/utils/evaluate";
 import { makePlural } from "@/app/utils/format-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
+import { FieldValue } from "./FieldValue";
 
 type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
   manufacturer?: Reference & {
@@ -123,7 +124,7 @@ export const returnProblemsTable = (
     {
       columnName: "Comments",
       infoPath: "noteText",
-      applyToValue: (v) => safeParse(v),
+      applyToValue: (v) => <FieldValue>{safeParse(v)}</FieldValue>,
       hiddenBaseText: "comment",
     },
   ];

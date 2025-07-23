@@ -242,7 +242,7 @@ describe("evaluate value", () => {
     expect(actual).toEqual("N");
   });
   describe("Quantity", () => {
-    it("should provide the value and string unit with a space inbetween", () => {
+    it("should provide the value and string unit with a space in between", () => {
       const actual = evaluateValue(
         {
           resourceType: "Observation",

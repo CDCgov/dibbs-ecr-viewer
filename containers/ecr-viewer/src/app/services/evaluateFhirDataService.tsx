@@ -1,11 +1,11 @@
 import "server-only"; // FHIR evaluation should be done server side
 
 import {
-  Address,
   Bundle,
   Condition,
   Encounter,
   Location,
+  Observation,
   Organization,
   Practitioner,
   PractitionerRole,
@@ -14,10 +14,17 @@ import {
 import { DateTime } from "luxon";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { evaluateData, noData } from "@/app/utils/data-utils";
+import {
+  CompleteData,
+  evaluateData,
+  isDataAvailable,
+  noData,
+} from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateAllReferences,
   evaluateOne,
+  evaluateOneReference,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -48,8 +55,8 @@ import {
   formatPatientContactList,
   formatAge,
   formatPhoneNumber,
+  findCurrentAddress,
   formatCurrentAddress,
-  formatReference,
 } from "./formatService";
 import { HtmlTableJsonRow } from "./htmlTableService";
 import {
@@ -181,11 +188,11 @@ export const calculatePatientAge = (
 
   // If date is provided by caller, use that.
   if (givenDate) {
-    return calcuateAge(DateTime.fromJSDate(new Date(givenDate)), patientDOB);
+    return calculateAge(DateTime.fromJSDate(new Date(givenDate)), patientDOB);
   }
 
   // Default to current date if no encounter date is available
-  return calcuateAge(DateTime.now(), patientDOB);
+  return calculateAge(DateTime.now(), patientDOB);
 };
 
 /**
@@ -194,7 +201,7 @@ export const calculatePatientAge = (
  * @param earlierDate DateTime earlier in time
  * @returns An `Age`
  */
-const calcuateAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
+const calculateAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
   const { years, months, days } = laterDate
     .diff(earlierDate, ["years", "months", "days"])
     .toObject();
@@ -294,6 +301,168 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
   ]
     .filter(Boolean)
     .join("\n\n");
+};
+
+// TODO: Temporary logic to order pregnancy observations. A separate ticket to combine this with the `sortByPeriod` function to make a more general-purpose sorting function is incoming: PR #992
+const getObservationDate = (obs: Observation): Date | undefined => {
+  const date = evaluateOne(obs, fhirPathMappings.effectiveX);
+
+  if (date) {
+    if (typeof date === "string") {
+      return new Date(date);
+    } else if (date.start) {
+      return new Date(date.start);
+    } else if (date.end) {
+      return new Date(date.end);
+    }
+  }
+};
+
+const sortPregnancyObservations = (
+  a: { observation: Observation },
+  b: { observation: Observation },
+) => {
+  const date_a = getObservationDate(a.observation);
+  const date_b = getObservationDate(b.observation);
+  if (date_a && date_b) {
+    return date_b.getTime() - date_a.getTime(); // Sort descending
+  } else if (date_a) {
+    return -1; // a comes before b
+  } else if (date_b) {
+    return 1; // b comes before a
+  } else {
+    return 0; // No change in order
+  }
+};
+
+/**
+ * Evaluate pregnancy data from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing pregnancy data.
+ * @returns An array of evaluated and formatted pregnancy data.
+ */
+export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
+  // TODO: Ideally the `unavailableData` list would include all subfields of the different observations.
+  // However the unavailable data section will need to be modified to handle nested fields like this (this
+  // also applies to the occupational history in social history). This function will likely need to be
+  // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
+  // section can handle nested sub-fields.
+  const lastMenstrualPeriodObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.lastMenstrualPeriod,
+  ).map((ob) => {
+    return {
+      type: "Last Menstrual Period",
+      observation: ob,
+      data: [
+        {
+          title: "Last Menstrual Period",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
+  const pregnancyStatusObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.pregnancyStatus,
+  ).map((ob) => {
+    return {
+      type: "Pregnancy Status",
+      observation: ob,
+      data: [
+        {
+          title: "Status",
+          value: evaluateValue(ob, "valueCodeableConcept"),
+        },
+        {
+          title: "Effective Date",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
+  const postpartumStatusObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.postpartumStatus,
+  ).map((ob) => {
+    return {
+      type: "Postpartum Status",
+      observation: ob,
+      data: [
+        {
+          title: "Status",
+          value: evaluateValue(ob, "valueCodeableConcept"),
+        },
+        {
+          title: "Effective Date",
+          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        },
+      ].filter(isDataAvailable),
+    };
+  });
+
+  const unavailableData = [];
+
+  if (lastMenstrualPeriodObservations.length === 0) {
+    unavailableData.push({
+      title: "Last Menstrual Period",
+      value: undefined,
+    });
+  }
+  if (pregnancyStatusObservations.length === 0) {
+    unavailableData.push({
+      title: "Pregnancy Status",
+      value: undefined,
+    });
+  }
+  if (postpartumStatusObservations.length === 0) {
+    unavailableData.push({
+      title: "Postpartum Status",
+      value: undefined,
+    });
+  }
+
+  const allPregnancyObservations = [
+    ...lastMenstrualPeriodObservations,
+    ...pregnancyStatusObservations,
+    ...postpartumStatusObservations,
+  ].sort(sortPregnancyObservations);
+
+  if (allPregnancyObservations.length === 0)
+    return { availableData: [], unavailableData };
+
+  const pregnancyElement = (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="pregnancy info"
+      items={allPregnancyObservations.map((obs) => {
+        const id = obs.observation.id ?? `${Math.random()}`;
+        const content = obs.data.map((d, i) => (
+          <DataDisplay key={`${id}-${i}`} item={d} />
+        ));
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span className="text-base">{obs.type}</span>
+            </div>
+          ),
+          expanded: false,
+          content,
+          id,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
+
+  return {
+    availableData: [
+      {
+        value: pregnancyElement,
+        fullWidthContent: true,
+      },
+    ],
+    unavailableData,
+  };
 };
 
 /**
@@ -456,10 +625,6 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
       value: evaluateValue(fhirBundle, fhirPathMappings.patientHomelessStatus),
     },
     {
-      title: "Pregnancy Status",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientPregnancyStatus),
-    },
-    {
       title: "Alcohol Use",
       value: evaluateAlcoholUse(fhirBundle),
     },
@@ -564,12 +729,10 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       value: evaluatePatientAddress(fhirBundle),
     },
     {
-      title: "County",
-      value: evaluateOne(fhirBundle, fhirPathMappings.patientCounty),
-    },
-    {
-      title: "Country",
-      value: evaluateOne(fhirBundle, fhirPathMappings.patientCountry),
+      title: "Recent County",
+      value: findCurrentAddress(
+        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
+      )?.district,
     },
     {
       title: "Contact",
@@ -675,17 +838,11 @@ export const evaluateEncounterDiagnosisData = (
   code: string,
   caption: string,
 ) => {
-  const dxRefs = evaluateAll(
+  const dx = evaluateAllReferences<Condition>(
     fhirBundle,
     fhirPathMappings.hospitalEncounterDiagnosisRef,
     { code },
   );
-
-  const dx: Condition[] = dxRefs
-    .map((x) => {
-      return evaluateReference<Condition>(fhirBundle, formatReference(x));
-    })
-    .filter((x): x is Condition => Boolean(x));
 
   if (dx.length === 0) return;
 
@@ -710,34 +867,33 @@ export const evaluateEncounterDiagnosisData = (
  * @returns An array of evaluated and formatted facility data.
  */
 export const evaluateFacilityData = (fhirBundle: Bundle) => {
-  const referenceString = evaluateOne(
+  const location = evaluateOneReference<Location>(
     fhirBundle,
-    fhirPathMappings.facilityContactAddress,
+    fhirPathMappings.facilityLocationRef,
   );
-
-  const facilityContactAddress: Address | undefined =
-    evaluateReference<Organization>(fhirBundle, referenceString)?.address?.[0];
+  const org = evaluateOneReference<Organization>(
+    fhirBundle,
+    fhirPathMappings.facilityOrgRef,
+  );
 
   const facilityData = [
     {
       title: "Facility Name",
-      value: evaluateOne(fhirBundle, fhirPathMappings.facilityName),
+      value:
+        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
+        location?.name,
     },
     {
       title: "Facility Address",
-      value: formatAddress(
-        evaluateOne(fhirBundle, fhirPathMappings.facilityAddress),
-      ),
+      value: formatAddress(location?.address),
     },
     {
       title: "Facility Contact Address",
-      value: formatAddress(facilityContactAddress),
+      value: formatAddressList(org?.address),
     },
     {
       title: "Facility Contact",
-      value: formatPhoneNumber(
-        evaluateOne(fhirBundle, fhirPathMappings.facilityContact),
-      ),
+      value: formatContactPoint(org?.telecom),
     },
     {
       title: "Facility Type",
@@ -757,12 +913,11 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
  * @returns An array of evaluated and formatted provider data.
  */
 export const evaluateProviderData = (fhirBundle: Bundle) => {
-  const encounterRef = evaluateOne(
+  const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
     fhirPathMappings.compositionEncounterRef,
   );
 
-  const encounter = evaluateReference<Encounter>(fhirBundle, encounterRef);
   const encounterAttendingRefs = evaluateAll(
     encounter,
     fhirPathMappings.encounterAttendingRefs,
@@ -869,13 +1024,9 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
  * @returns Facility id
  */
 export const evaluateFacilityId = (fhirBundle: Bundle) => {
-  const encounterLocationRef = evaluateOne(
+  const location = evaluateOneReference<Location>(
     fhirBundle,
-    fhirPathMappings.facilityLocation,
-  );
-  const location = evaluateReference<Location>(
-    fhirBundle,
-    encounterLocationRef,
+    fhirPathMappings.facilityLocationRef,
   );
 
   return location?.identifier?.[0].value;
@@ -915,23 +1066,17 @@ export const evaluatePractitionerRoleReference = (
  * @returns Comma delimited list of encounter diagnoses
  */
 export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
-  const diagnoses = evaluateAll(
+  return evaluateAllReferences<Condition>(
     fhirBundle,
-    fhirPathMappings.encounterDiagnosis,
-  );
-
-  return diagnoses
-    .map((diagnosis) => {
-      const reference = diagnosis.condition?.reference;
-      const condition = evaluateReference<Condition>(fhirBundle, reference);
-      return formatCodeableConcept(condition?.code);
-    })
+    fhirPathMappings.encounterDiagnosisRef,
+  )
+    .map((condition) => formatCodeableConcept(condition?.code))
     .filter(Boolean)
     .join(", ");
 };
 
 /**
- * Evaluate patient's prefered language
+ * Evaluate patient's preferred language
  * @param fhirBundle - The FHIR bundle containing resources.
  * @returns String containing language, proficiency, and mode
  */
@@ -940,12 +1085,12 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
     fhirBundle,
     fhirPathMappings.patientCommunication,
   );
-  const preferedPatientCommunication = patientCommunication.filter(
+  const preferredPatientCommunication = patientCommunication.filter(
     (communication) => communication.preferred,
   );
 
-  if (preferedPatientCommunication.length > 0) {
-    patientCommunication = preferedPatientCommunication;
+  if (preferredPatientCommunication.length > 0) {
+    patientCommunication = preferredPatientCommunication;
   }
 
   return patientCommunication
@@ -956,7 +1101,7 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
         communication,
         fhirPathMappings.patientProficiencyExtension,
       );
-      const languageProficency = evaluateValue(
+      const languageProficiency = evaluateValue(
         patientProficiencyExtension,
         "extension.where(url = 'level').value",
       );
@@ -965,7 +1110,7 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
         "extension.where(url = 'type').value",
       );
 
-      return [patientLanguage, languageProficency, languageMode]
+      return [patientLanguage, languageProficiency, languageMode]
         .filter(Boolean)
         .join("\n");
     })
