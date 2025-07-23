@@ -1,18 +1,26 @@
-import { FhirResource, Period } from "fhir/r4";
+import { FhirResource } from "fhir/r4";
 
 import { evaluateOne } from "@/app/utils/evaluate";
 import { FhirPath, PathTypes } from "@/app/utils/evaluate/fhir-paths";
+
+type DatePathTypes = {
+  [K in keyof PathTypes]: PathTypes[K] extends
+    | string
+    | { start?: string; end?: string }
+    ? K
+    : never;
+}[keyof PathTypes];
 
 const ONGOING_DATE = new Date("9999-01-01");
 
 const parseDate = (dateString: string | undefined): Date | undefined =>
   dateString ? new Date(dateString) : undefined;
 
-const getDates = <K extends keyof PathTypes>(
-  obs: FhirResource,
-  datePath: FhirPath<K>,
+const getDates = (
+  resource: FhirResource,
+  datePath: FhirPath<DatePathTypes>,
 ) => {
-  const dateElement = evaluateOne(obs, datePath) as Period | string;
+  const dateElement = evaluateOne(resource, datePath);
 
   if (!dateElement) return { effective: undefined, start: undefined };
 
@@ -43,10 +51,10 @@ const compareDates = (a: Date | undefined, b: Date | undefined): number => {
  * @param datePath HIR path to either a Period or a date string on the resources given.
  * @returns if the date is undefined for both resources 0, if b's date is undefined 1, if a's date is undefined -1, otherwise returns the difference. between b's dates and a's date.
  */
-export const compareResourcesByDate = <K extends keyof PathTypes>(
+export const compareResourcesByDate = (
   a: FhirResource,
   b: FhirResource,
-  datePath: FhirPath<K>,
+  datePath: FhirPath<DatePathTypes>,
 ): number => {
   const datesA = getDates(a, datePath);
   const datesB = getDates(b, datePath);
@@ -61,12 +69,9 @@ export const compareResourcesByDate = <K extends keyof PathTypes>(
  * @param datePath - FHIR path to either a Period or a date string on the resource
  * @returns Ordered list of resources by the date specified
  */
-export const sortResourcesByDate = <
-  T extends FhirResource,
-  K extends keyof PathTypes,
->(
+export const sortResourcesByDate = <T extends FhirResource>(
   resourceArray: T[],
-  datePath: FhirPath<K>,
+  datePath: FhirPath<DatePathTypes>,
 ): T[] => {
   return resourceArray.sort((a, b) => compareResourcesByDate(a, b, datePath));
 };
