@@ -8,7 +8,7 @@ const ONGOING_DATE = new Date("9999-01-01");
 const parseDate = (dateString: string | undefined): Date | undefined =>
   dateString ? new Date(dateString) : undefined;
 
-const getDates = <K extends keyof PathTypes>(
+const getDates = <K extends FhirPathKeys>(
   obs: FhirResource,
   datePath: FhirPath<K>,
 ) => {
