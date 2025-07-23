@@ -12,6 +12,7 @@ jest.mock("@/app/utils/auth-utils", () => ({
   isLoggedInUser: jest.fn().mockResolvedValue(true),
 }));
 jest.mock("@/app/services/userService");
+jest.mock("@/app/services/loggedInUserService");
 jest.mock("@/app/services/listEcrDataService");
 
 jest.mock("next/navigation", () => ({
