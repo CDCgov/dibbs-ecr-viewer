@@ -64,8 +64,6 @@ const Filters = (props: FilterProps) => {
   );
 };
 
-const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
-
 /**
  * Functional component for filtering eCRs in the Library based on reportable conditions.
  * @param props - props to pass to FilterReportableConditions
@@ -81,19 +79,15 @@ const FilterReportableConditions = ({
 }: FilterProps) => {
   const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
-  const initFilterState: { [key: string]: boolean } = {
-    [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(NO_CONDITIONS_REPORTED_OPTION),
-    ...allConditions.reduce(
-      (dict: { [key: string]: boolean }, condition: string) => {
-        dict[condition] = initConditions.includes(condition);
-        return dict;
-      },
-      {} as { [key: string]: boolean },
-    ),
-  };
+  const initFilterState = allConditions.reduce(
+    (dict: { [key: string]: boolean }, condition: string) => {
+      dict[condition] = initConditions.includes(condition);
+      return dict;
+    },
+    {} as { [key: string]: boolean },
+  );
 
-  const [filterConditions, setFilterConditions] =
-    useState<{ [key: string]: boolean }>(initFilterState);
+  const [filterConditions, setFilterConditions] = useState(initFilterState);
 
   // 3. Computed values
   const isAllSelected = Object.values(filterConditions).every(
@@ -108,17 +102,16 @@ const FilterReportableConditions = ({
     });
   };
 
+    // Check/Uncheck all boxes based on Select all checkbox
   const handleSelectAll = () => {
-    const newSelectAllState = !isAllSelected;
+    const updatedConditions = Object.keys(filterConditions).reduce(
+      (dict, condition) => {
+        dict[condition] = !isAllSelected;
+        return dict;
+      },
+      {} as { [key: string]: boolean },
+    );
 
-    const updatedConditions: { [key: string]: boolean } = {
-      [NO_CONDITIONS_REPORTED_OPTION]: newSelectAllState,
-      ...Object.fromEntries(
-        Object.entries(filterConditions)
-          .filter(([key]) => key !== NO_CONDITIONS_REPORTED_OPTION)
-          .map(([key]) => [key, newSelectAllState]),
-      ),
-    };
     setFilterConditions(updatedConditions);
   };
 
@@ -129,10 +122,7 @@ const FilterReportableConditions = ({
     (key) => filterConditions[key] === true,
   );
 
-  const noConditionsReportedOption = {
-    [NO_CONDITIONS_REPORTED_OPTION]:
-      filterConditions[NO_CONDITIONS_REPORTED_OPTION],
-  };
+  const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
 
   const regularConditions = Object.fromEntries(
     Object.entries(filterConditions).filter(
@@ -162,13 +152,24 @@ const FilterReportableConditions = ({
           onToggle={handleSelectAll}
           isAllSelected={isAllSelected}
         />
-        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        {allConditions.length > 0 && (
+          <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        )}
+
+        {/* No conditions reported */}
         <CheckboxOptions
           groupName="condition"
-          filterItems={noConditionsReportedOption}
+          filterItems={{
+            [NO_CONDITIONS_REPORTED_OPTION]: filterConditions[NO_CONDITIONS_REPORTED_OPTION] || false
+          }}
           onChange={handleCheckboxChange}
         />
-        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+
+        {Object.keys(regularConditions).length > 0 && (
+          <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        )}
+
+        {/* Filter Conditions checkboxes */}
         <CheckboxOptions
           groupName="condition"
           filterItems={regularConditions}
