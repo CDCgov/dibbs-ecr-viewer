@@ -13,7 +13,9 @@ import { formatDateTime } from "@/app/services/formatDateService";
 import { formatAge } from "@/app/services/formatService";
 import { safeParse } from "@/app/utils/data-utils";
 import { evaluateReference } from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { makePlural } from "@/app/utils/format-utils";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 import { FieldValue } from "./FieldValue";
@@ -79,15 +81,14 @@ export const returnImmunizations = (
     },
   );
 
-  modifiedImmunizations.sort(
-    (a, b) =>
-      new Date(b.occurrenceDateTime ?? "").getTime() -
-      new Date(a.occurrenceDateTime ?? "").getTime(),
+  const sortedModifiedImmunizations = sortResourcesByDate(
+    modifiedImmunizations,
+    fhirPathMappings.occurrenceX,
   );
 
   return (
     <EvaluateTable
-      resources={modifiedImmunizations}
+      resources={sortedModifiedImmunizations}
       columns={columnInfo}
       caption={caption}
       className={classNames("margin-y-0", className)}
