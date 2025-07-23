@@ -41,11 +41,11 @@ export const getAllConditions = async (): Promise<string[]> => {
     const actualConditions = result.map((row) => row.condition);
 
     const hasEcrsWithNoConditions = await checkForEcrsWithNoConditions();
-    
+
     if (hasEcrsWithNoConditions) {
       return ["No conditions reported", ...actualConditions];
     }
-    
+
     return actualConditions;
   } catch (error: unknown) {
     console.error("Error fetching data: ", error);
@@ -56,7 +56,7 @@ export const getAllConditions = async (): Promise<string[]> => {
 const checkForEcrsWithNoConditions = async (): Promise<boolean> => {
   try {
     const db = getDb<Core>();
-    
+
     const allEcrIds = await db
       .selectFrom("ecr_data")
       .select("eicr_id")
@@ -69,11 +69,11 @@ const checkForEcrsWithNoConditions = async (): Promise<boolean> => {
       .execute();
 
     const ecrIdsWithConditionsSet = new Set(
-      ecrIdsWithConditions.map(row => row.eicr_id)
+      ecrIdsWithConditions.map((row) => row.eicr_id),
     );
-    
+
     // Check if any eCRs have no conditions
-    return allEcrIds.some(row => !ecrIdsWithConditionsSet.has(row.eicr_id));
+    return allEcrIds.some((row) => !ecrIdsWithConditionsSet.has(row.eicr_id));
   } catch (error: unknown) {
     console.error("Error checking for eCRs with no conditions: ", error);
     return false;
