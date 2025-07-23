@@ -38,21 +38,19 @@
               }),
             ]),
             'id': str,
-            'identifier': list([
-              dict({
-                'type': dict({
-                  'coding': list([
-                    dict({
-                      'code': '28570-0',
-                      'display': 'Procedure Note',
-                      'system': 'http://loinc.org',
-                    }),
-                  ]),
-                }),
-                'use': 'official',
-                'value': 'sTT988',
+            'identifier': dict({
+              'type': dict({
+                'coding': list([
+                  dict({
+                    'code': '28570-0',
+                    'display': 'Procedure Note',
+                    'system': 'http://loinc.org',
+                  }),
+                ]),
               }),
-            ]),
+              'use': 'official',
+              'value': 'sTT988',
+            }),
             'meta': dict({
               'profile': list([
                 'http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition',
@@ -757,18 +755,6 @@
         }),
         dict({
           'fullUrl': str,
-          'resource': dict({
-            'meta': dict({
-              'source': 'ecr',
-            }),
-            'resourceType': 'CareTeam',
-            'subject': dict({
-              'reference': str,
-            }),
-          }),
-        }),
-        dict({
-          'fullUrl': str,
           'request': dict({
             'method': 'PUT',
             'url': str,
@@ -842,11 +828,18 @@
             'code': dict({
               'coding': list([
                 dict({
-                  'code': 'ASSERTION',
-                  'system': 'urn:oid:2.16.840.1.113883.5.4',
+                  'code': '82810-3',
+                  'display': 'Pregnancy status',
+                  'system': 'http://loinc.org',
                 }),
               ]),
             }),
+            'extension': list([
+              dict({
+                'url': str,
+                'valueDateTime': '2022-03-17T14:54:00-04:00',
+              }),
+            ]),
             'id': str,
             'meta': dict({
               'profile': list([
@@ -1070,22 +1063,6 @@
               'source': 'ecr',
             }),
             'resourceType': 'Practitioner',
-          }),
-        }),
-        dict({
-          'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
-          'resource': dict({
-            'meta': dict({
-              'profile': list([
-                'http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults',
-              ]),
-              'source': 'ecr',
-            }),
-            'resourceType': 'Observation',
           }),
         }),
       ]),
