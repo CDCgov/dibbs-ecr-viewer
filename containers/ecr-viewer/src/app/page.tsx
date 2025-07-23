@@ -84,9 +84,7 @@ const HomePage = async ({
         </div>
         <Filters
           allConditions={allConditions}
-          initConditions={
-            filterConditionsArr ?? [...allConditions, "No conditions reported"]
-          }
+          initConditions={filterConditionsArr ?? allConditions}
           initCustomDate={config.dates}
           initDateRange={config.dateRange}
         />
