@@ -37,7 +37,10 @@ export const getAllConditions = async (): Promise<string[]> => {
           .where("user_program_area.user_uuid", "=", user.uuid),
       )
       .execute();
-    return result.map((row) => row.condition);
+
+      const actualConditions = result.map((row) => row.condition);
+
+    return ["No conditions reported", ...actualConditions];
   } catch (error: unknown) {
     console.error("Error fetching data: ", error);
     throw new Error("Error fetching data");
