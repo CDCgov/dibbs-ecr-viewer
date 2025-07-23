@@ -9,6 +9,7 @@ import {
   Observation,
   Organization,
   Reference,
+  Specimen,
 } from "fhir/r4";
 import { Coding, ObservationComponent } from "fhir/r4b";
 
@@ -21,6 +22,7 @@ import {
 } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -232,78 +234,6 @@ export function searchResultRecord(
   const res = [...new Set(resultsArray.filter(Boolean))];
   return arrayToElement(res);
 }
-
-/**
- * Extracts and consolidates the specimen source descriptions from observations within a lab report.
- * @param report - The lab report containing the results to be processed.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
- */
-const returnSpecimenSource = (
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
-): RenderableNode => {
-  const observations = getObservations(report, fhirBundle);
-  const specimenSource = observations.flatMap((observation) => {
-    return evaluateAll(observation, fhirPathMappings.specimenSource);
-  });
-  if (!specimenSource || specimenSource.length === 0) {
-    return noData;
-  }
-  return [...new Set(specimenSource)].join(", ");
-};
-
-/**
- * Extracts and formats the specimen collection time(s) from observations within a lab report.
- * @param report - The lab report containing the results to be processed.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
- */
-const returnCollectionTime = (
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
-): RenderableNode => {
-  const observations = getObservations(report, fhirBundle);
-  const collectionTime = observations.flatMap((observation) => {
-    const rawTime = evaluateAll(
-      observation,
-      fhirPathMappings.specimenCollectionTime,
-    );
-    return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
-  });
-
-  if (!collectionTime || collectionTime.length === 0) {
-    return noData;
-  }
-
-  return [...new Set(collectionTime)].join(", ");
-};
-
-/**
- * Extracts and formats the specimen received time(s) from observations within a lab report.
- * @param report - The lab report containing the results to be processed.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
- */
-const returnReceivedTime = (
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
-): RenderableNode => {
-  const observations = getObservations(report, fhirBundle);
-  const receivedTime = observations.flatMap((observation) => {
-    const rawTime = evaluateAll(
-      observation,
-      fhirPathMappings.specimenReceivedTime,
-    );
-    return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
-  });
-
-  if (!receivedTime || receivedTime.length === 0) {
-    return noData;
-  }
-
-  return [...new Set(receivedTime)].join(", ");
-};
 
 /**
  * Extracts and formats a field value from within a lab report (sourced from HTML string).
@@ -633,6 +563,11 @@ function getLabsContent(
 ) {
   const labTableDiagnostic = evaluateDiagnosticReportData(report, fhirBundle);
   const labTableOrganisms = evaluateOrganismsReportData(report, fhirBundle);
+  const labSpecimen = evaluateReference<Specimen>(
+    fhirBundle,
+    report.specimen?.[0]?.reference,
+  );
+  console.log({ labSpecimen });
 
   const rrInfo: DisplayDataProps[] = [
     {
@@ -642,25 +577,36 @@ function getLabsContent(
     },
     {
       title: "Collection Time",
-      value: returnCollectionTime(report, fhirBundle),
+      value: evaluateValue(
+        labSpecimen,
+        fhirPathMappings.specimenCollectionTime,
+      ),
       className: "lab-text-content",
     },
     {
       title: "Received Time",
-      value: returnReceivedTime(report, fhirBundle),
+      value: formatDateTime(
+        evaluateValue(labSpecimen, fhirPathMappings.specimenReceivedTime),
+      ),
       className: "lab-text-content",
     },
     {
       title: "Specimen (Source)",
-      value: returnSpecimenSource(report, fhirBundle),
+      value: formatCodeableConcept(
+        evaluateOne(labSpecimen, fhirPathMappings.specimenSource),
+      ),
       className: "lab-text-content",
     },
     {
       title: "Anatomical Location/Laterality",
-      value: returnFieldValueFromLabHtmlString(
-        labReportJson,
-        "Anatomical Location / Laterality",
-      ),
+      value:
+        formatCodeableConcept(
+          evaluateOne(labSpecimen, fhirPathMappings.specimenBodySite),
+        ) ||
+        returnFieldValueFromLabHtmlString(
+          labReportJson,
+          "Anatomical Location / Laterality",
+        ),
       className: "lab-text-content",
     },
     {

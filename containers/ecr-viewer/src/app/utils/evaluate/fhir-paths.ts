@@ -144,9 +144,10 @@ export type PathTypes = {
   diagnosticReportStatus: string;
   observations: Observation;
   labResultDiv: string;
-  specimenCollectionTime: string;
+  specimenCollectionTime: TimeX;
   specimenReceivedTime: string;
-  specimenSource: string;
+  specimenSource: CodeableConcept;
+  specimenBodySite: CodeableConcept;
   observationReferenceValue: string;
   observationValue: string;
   observationReferenceRange: ObservationReferenceRange;
@@ -598,16 +599,20 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.section.where(code.coding.code = '30954-2').text.`div`",
   },
   specimenCollectionTime: {
-    type: "string",
-    path: "extension.extension('specimen collection time').valueDateTime",
+    type: "TimeX",
+    path: "Specimen.collection.collected",
   },
   specimenReceivedTime: {
     type: "string",
-    path: "extension.extension('specimen receive time').valueDateTime",
+    path: "Specimen.receivedTime",
   },
   specimenSource: {
-    type: "string",
-    path: "extension.extension('specimen source').valueString",
+    type: "CodeableConcept",
+    path: "Specimen.type",
+  },
+  specimenBodySite: {
+    type: "CodeableConcept",
+    path: "Specimen.collection.bodySite",
   },
   observationReferenceValue: {
     type: "string",
