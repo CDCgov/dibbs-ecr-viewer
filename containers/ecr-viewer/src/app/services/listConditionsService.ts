@@ -1,7 +1,7 @@
 import { getDb } from "@/app/data/metadataDb/database";
 import { ConditionReference, Core } from "@/app/data/metadataDb/types/core";
 
-import { getLoggedInUser } from "./userService";
+import { getLoggedInUser } from "./loggedInUserService";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.

@@ -1,4 +1,5 @@
-import { getLoggedInUser, isAdmin } from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
+import { isAdmin } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import NavLink from "./NavLink";

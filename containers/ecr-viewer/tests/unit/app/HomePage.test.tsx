@@ -6,10 +6,8 @@ import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { DEFAULT_ITEMS_PER_PAGE } from "@/app/constants";
 import HomePage from "@/app/page";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
-import {
-  getLoggedInUser,
-  listLoggedInUserProgramAreas,
-} from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
+import { listLoggedInUserProgramAreas } from "@/app/services/userService";
 import { returnParamDates } from "@/app/utils/date-utils";
 
 jest.mock("@/app/services/listEcrDataService", () => {
@@ -20,6 +18,7 @@ jest.mock("@/app/services/listEcrDataService", () => {
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/api/migrate-db/migrate");
 jest.mock("@/app/services/listConditionsService");
+jest.mock("@/app/services/loggedInUserService");
 jest.mock("@/app/services/userService");
 jest.mock("@/app/components/EcrFilters");
 jest.mock("@/app/components/LibrarySearch");
