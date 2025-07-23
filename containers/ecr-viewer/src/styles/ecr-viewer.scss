@@ -243,6 +243,10 @@ main {
     &:has(> button[aria-expanded="true"]) {
       border-radius: 0.25rem 0.25rem 0 0;
     }
+
+    &:not(:first-child) {
+      margin-top: 1rem;
+    }
   }
 
   .usa-accordion__button {
