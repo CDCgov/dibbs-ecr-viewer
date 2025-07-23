@@ -100,7 +100,7 @@ describe("Filter by Reportable Conditions Component", () => {
 
     // Should have correct number of checkboxes
     const checkboxes = screen.getAllByRole("checkbox");
-    expect(checkboxes).toHaveLength(3); // 2 conditions + select all
+    expect(checkboxes).toHaveLength(4); // 2 conditions + no conditions + select all 
 
     // Conditions should be listed
     expect(await screen.findByLabelText("Condition1")).toBeInTheDocument();

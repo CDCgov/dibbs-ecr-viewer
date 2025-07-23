@@ -471,20 +471,19 @@ describe("generate filter conditions statement", () => {
     expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
   });
 
-  it("should only look for eCRs with no conditions when de-selecting all conditions on filter", () => {
+  it("should return FALSE when de-selecting all conditions on filter", () => {
     const { sql, params } = getWhere((eb) =>
       generateFilterConditionsStatement(eb, [""]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '"test_ev_schema"."ecr_data"."eicr_id" not in (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."condition" is not null)',
+        "$1 = $2"
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '"test_ev_schema"."ecr_data"."eicr_id" not in (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."condition" is not null)',
+        "@1 = @2"
       );
     }
-
     expect(params).toStrictEqual([]);
   });
 
