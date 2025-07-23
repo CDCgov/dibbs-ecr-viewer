@@ -36,7 +36,14 @@ const compareDates = (a: Date | undefined, b: Date | undefined): number => {
   return b.getTime() - a.getTime(); // Descending
 };
 
-const compareResourcesByDate = <K extends keyof PathTypes>(
+/**
+ * Compare two FHIR resources by the date specified by the `datePath`.
+ * @param a - A FHIR resource
+ * @param b - A FHIR resource
+ * @param datePath HIR path to either a Period or a date string on the resources given.
+ * @returns if the date is undefined for both resources 0, if b's date is undefined 1, if a's date is undefined -1, otherwise returns the difference. between b's dates and a's date.
+ */
+export const compareResourcesByDate = <K extends keyof PathTypes>(
   a: FhirResource,
   b: FhirResource,
   datePath: FhirPath<K>,

@@ -5,7 +5,6 @@ import {
   Condition,
   Encounter,
   Location,
-  Observation,
   Organization,
   Practitioner,
   PractitionerRole,
@@ -36,7 +35,10 @@ import {
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
-import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
+import {
+  compareResourcesByDate,
+  sortResourcesByDate,
+} from "@/app/view-data/utils/fhir-data-utils";
 
 import {
   formatDate,
@@ -302,38 +304,6 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     .join("\n\n");
 };
 
-// TODO: Temporary logic to order pregnancy observations. A separate ticket to combine this with the `sortByPeriod` function to make a more general-purpose sorting function is incoming: PR #992
-const getObservationDate = (obs: Observation): Date | undefined => {
-  const date = evaluateOne(obs, fhirPathMappings.effectiveX);
-
-  if (date) {
-    if (typeof date === "string") {
-      return new Date(date);
-    } else if (date.start) {
-      return new Date(date.start);
-    } else if (date.end) {
-      return new Date(date.end);
-    }
-  }
-};
-
-const sortPregnancyObservations = (
-  a: { observation: Observation },
-  b: { observation: Observation },
-) => {
-  const date_a = getObservationDate(a.observation);
-  const date_b = getObservationDate(b.observation);
-  if (date_a && date_b) {
-    return date_b.getTime() - date_a.getTime(); // Sort descending
-  } else if (date_a) {
-    return -1; // a comes before b
-  } else if (date_b) {
-    return 1; // b comes before a
-  } else {
-    return 0; // No change in order
-  }
-};
-
 /**
  * Evaluate pregnancy data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing pregnancy data.
@@ -424,7 +394,13 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     ...lastMenstrualPeriodObservations,
     ...pregnancyStatusObservations,
     ...postpartumStatusObservations,
-  ].sort(sortPregnancyObservations);
+  ].sort((a, b) =>
+    compareResourcesByDate(
+      a.observation,
+      b.observation,
+      fhirPathMappings.effectiveX,
+    ),
+  );
 
   if (allPregnancyObservations.length === 0)
     return { availableData: [], unavailableData };
