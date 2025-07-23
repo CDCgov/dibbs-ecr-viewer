@@ -66,11 +66,6 @@ const Filters = (props: FilterProps) => {
 
 const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
 
-type FilterConditionsType = {
-  [NO_CONDITIONS_REPORTED_OPTION]: boolean;
-  [key: string]: boolean;
-};
-
 /**
  * Functional component for filtering eCRs in the Library based on reportable conditions.
  * @param props - props to pass to FilterReportableConditions
@@ -86,7 +81,7 @@ const FilterReportableConditions = ({
 }: FilterProps) => {
   const { updateQueryParam, pushQueryUpdate } = useLibraryQueryParam();
 
-  const initFilterState: FilterConditionsType = {
+  const initFilterState: { [key: string]: boolean } = {
     [NO_CONDITIONS_REPORTED_OPTION]: initConditions.includes(NO_CONDITIONS_REPORTED_OPTION),
     ...allConditions.reduce(
       (dict: { [key: string]: boolean }, condition: string) => {
@@ -98,7 +93,7 @@ const FilterReportableConditions = ({
   };
 
   const [filterConditions, setFilterConditions] =
-    useState<FilterConditionsType>(initFilterState as FilterConditionsType);
+    useState<{ [key: string]: boolean }>(initFilterState);
 
   // 3. Computed values
   const isAllSelected = Object.values(filterConditions).every(
@@ -116,7 +111,7 @@ const FilterReportableConditions = ({
   const handleSelectAll = () => {
     const newSelectAllState = !isAllSelected;
 
-    const updatedConditions: FilterConditionsType = {
+    const updatedConditions: { [key: string]: boolean } = {
       [NO_CONDITIONS_REPORTED_OPTION]: newSelectAllState,
       ...Object.fromEntries(
         Object.entries(filterConditions)
