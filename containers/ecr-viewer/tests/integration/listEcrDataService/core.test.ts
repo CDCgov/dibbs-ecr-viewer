@@ -476,13 +476,9 @@ describe("generate filter conditions statement", () => {
       generateFilterConditionsStatement(eb, [""]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        "$1 = $2"
-      );
+      expect(sql).toEqual("$1 = $2");
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        "@1 = @2"
-      );
+      expect(sql).toEqual("@1 = @2");
     }
     expect(params).toStrictEqual([]);
   });
