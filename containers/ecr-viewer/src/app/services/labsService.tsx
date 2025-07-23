@@ -82,11 +82,7 @@ export const evaluateLabInfoData = (
   for (const report of labReports) {
     const labReportJson = getJsonLab(jsonLabs, report, fhirBundle);
 
-    const content: Array<React.JSX.Element> = getLabsContent(
-      report,
-      fhirBundle,
-      labReportJson,
-    );
+    const content = getLabsContent(report, fhirBundle, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
       "Organization/",
       "",
@@ -398,21 +394,15 @@ export const evaluateOrganismsReportData = (
   let components: ObservationComponent[] = [];
   let observation: Observation | undefined;
 
-  report.result?.find((obsRef: Reference) => {
-    const obs = evaluateReference<Observation>(
-      fhirBundle,
-      obsRef.reference ?? "",
-    );
+  report.result?.forEach((obsRef: Reference) => {
+    const obs = evaluateReference<Observation>(fhirBundle, obsRef.reference);
     if (obs?.component) {
       observation = obs;
-      return true;
     }
-    return false;
   });
 
-  if (observation === undefined) {
-    return undefined;
-  }
+  if (observation === undefined) return;
+
   components = observation.component!;
   const columnInfo: ColumnInfoInput[] = [
     {
@@ -556,18 +546,17 @@ const groupItemByOrgId = (
  * @param labReportJson - The JSON representation of the lab results from HTML.
  * @returns An array of JSX elements representing the lab report content.
  */
-function getLabsContent(
+const getLabsContent = (
   report: DiagnosticReport,
   fhirBundle: Bundle,
   labReportJson?: HtmlTableJson,
-) {
+) => {
   const labTableDiagnostic = evaluateDiagnosticReportData(report, fhirBundle);
   const labTableOrganisms = evaluateOrganismsReportData(report, fhirBundle);
   const labSpecimen = evaluateReference<Specimen>(
     fhirBundle,
     report.specimen?.[0]?.reference,
   );
-  console.log({ labSpecimen });
 
   const rrInfo: DisplayDataProps[] = [
     {
@@ -577,24 +566,25 @@ function getLabsContent(
     },
     {
       title: "Collection Time",
-      value: evaluateValue(
-        labSpecimen,
-        fhirPathMappings.specimenCollectionTime,
-      ),
+      value:
+        evaluateValue(labSpecimen, fhirPathMappings.specimenCollectionTime) ||
+        noData,
       className: "lab-text-content",
     },
     {
       title: "Received Time",
-      value: formatDateTime(
-        evaluateValue(labSpecimen, fhirPathMappings.specimenReceivedTime),
-      ),
+      value:
+        formatDateTime(
+          evaluateValue(labSpecimen, fhirPathMappings.specimenReceivedTime),
+        ) || noData,
       className: "lab-text-content",
     },
     {
       title: "Specimen (Source)",
-      value: formatCodeableConcept(
-        evaluateOne(labSpecimen, fhirPathMappings.specimenSource),
-      ),
+      value:
+        formatCodeableConcept(
+          evaluateOne(labSpecimen, fhirPathMappings.specimenSource),
+        ) || noData,
       className: "lab-text-content",
     },
     {
@@ -649,26 +639,17 @@ function getLabsContent(
       title: "Narrative",
       value: returnFieldValueFromLabHtmlString(labReportJson, "Narrative"),
       className: "lab-text-content",
+      dividerLine: false,
     },
   ];
-  const content: Array<React.JSX.Element> = [];
-  if (labTableDiagnostic)
-    content.push(
-      <React.Fragment key="lab-table-diagnostic">
-        {labTableDiagnostic}
-      </React.Fragment>,
-    );
-  if (labTableOrganisms) {
-    content.push(
-      <React.Fragment key="lab-table-organisms">
-        {labTableOrganisms}
-      </React.Fragment>,
-    );
-  }
-  content.push(
-    ...rrInfo.map((item) => {
-      return <DataDisplay key={`${item.title}-${item.value}`} item={item} />;
-    }),
+
+  return (
+    <>
+      {labTableDiagnostic}
+      {labTableOrganisms}
+      {rrInfo.map((item) => (
+        <DataDisplay key={`${item.title}-${item.value}`} item={item} />
+      ))}
+    </>
   );
-  return content;
-}
+};

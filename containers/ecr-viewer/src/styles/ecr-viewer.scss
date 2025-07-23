@@ -227,13 +227,22 @@ main {
 }
 
 .accordion-rr {
-  border: #111111 1px solid;
-  border-radius: 0.25rem;
   overflow: hidden;
   margin-top: 1rem;
+  border: none;
+  border-radius: 0;
 
   &:focus-within {
     border: #2491ff 0.25rem solid;
+  }
+
+  .usa-accordion__heading {
+    border: #111111 1px solid;
+    border-radius: 0.25rem;
+
+    &:has(> button[aria-expanded="true"]) {
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
   }
 
   .usa-accordion__button {
@@ -242,7 +251,8 @@ main {
     font-weight: normal;
     background-color: color("white");
     @include add-background-svg("usa-icons/remove");
-    border-bottom: #111111 1px solid;
+    // border-bottom: #111111 1px solid;
+    border-radius: 0.25rem;
 
     &:hover {
       background-color: #f0f0f0;
@@ -252,6 +262,12 @@ main {
       border-bottom: 0;
       @include add-background-svg("usa-icons/add");
     }
+  }
+
+  > div {
+    border: #111111 1px solid;
+    border-radius: 0 0 0.25rem 0.25rem;
+    border-top: none;
   }
 
   .usa-prose {
