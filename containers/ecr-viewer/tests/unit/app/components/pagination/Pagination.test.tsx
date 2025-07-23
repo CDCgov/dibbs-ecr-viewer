@@ -252,7 +252,7 @@ describe("Pagination component", () => {
     );
   });
 
-  it("can click onClickNext, onClickPrevious and onClickPagenumber", () => {
+  it("can click onClickNext, onClickPrevious and onClickPageNumber", () => {
     const mockOnClickNext = jest.fn();
     const mockOnClickPrevious = jest.fn();
     const mockOnClickPageNumber = jest.fn();

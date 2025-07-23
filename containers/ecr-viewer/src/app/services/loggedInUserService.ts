@@ -31,6 +31,7 @@ export const getUserByEmail = async (
  *
  * We should think about caching this in the future, so once we
  * start using this and other crud in UI we re-use the db call.
+ * @param trx Optionally, the transaction to run the query in
  * @returns Logged in User or undefined
  */
 export const getLoggedInUser = cache(async (trx?: Transaction<Core>) => {

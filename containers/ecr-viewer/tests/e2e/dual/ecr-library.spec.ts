@@ -11,7 +11,7 @@ test.describe("ecr library page", () => {
       await expect(page).toHaveTitle(/DIBBs eCR Viewer/);
     });
 
-    test("should pass accessiblity", async ({ page }) => {
+    test("should pass accessibility", async ({ page }) => {
       const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
       expect(accessibilityScanResults.violations).toEqual([]);
     });

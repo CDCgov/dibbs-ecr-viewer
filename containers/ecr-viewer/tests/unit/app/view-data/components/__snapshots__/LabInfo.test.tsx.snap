@@ -1421,7 +1421,9 @@ County: Empire
                             data-testid="button"
                             type="button"
                           >
-                            View more
+                            View more (
+                            3,699
+                             characters total)
                           </button>
                         </p>
                       </td>

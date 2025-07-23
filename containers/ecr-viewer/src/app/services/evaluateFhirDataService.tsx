@@ -187,11 +187,11 @@ export const calculatePatientAge = (
 
   // If date is provided by caller, use that.
   if (givenDate) {
-    return calcuateAge(DateTime.fromJSDate(new Date(givenDate)), patientDOB);
+    return calculateAge(DateTime.fromJSDate(new Date(givenDate)), patientDOB);
   }
 
   // Default to current date if no encounter date is available
-  return calcuateAge(DateTime.now(), patientDOB);
+  return calculateAge(DateTime.now(), patientDOB);
 };
 
 /**
@@ -200,7 +200,7 @@ export const calculatePatientAge = (
  * @param earlierDate DateTime earlier in time
  * @returns An `Age`
  */
-const calcuateAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
+const calculateAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
   const { years, months, days } = laterDate
     .diff(earlierDate, ["years", "months", "days"])
     .toObject();
@@ -1068,7 +1068,7 @@ export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
 };
 
 /**
- * Evaluate patient's prefered language
+ * Evaluate patient's preferred language
  * @param fhirBundle - The FHIR bundle containing resources.
  * @returns String containing language, proficiency, and mode
  */
@@ -1077,12 +1077,12 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
     fhirBundle,
     fhirPathMappings.patientCommunication,
   );
-  const preferedPatientCommunication = patientCommunication.filter(
+  const preferredPatientCommunication = patientCommunication.filter(
     (communication) => communication.preferred,
   );
 
-  if (preferedPatientCommunication.length > 0) {
-    patientCommunication = preferedPatientCommunication;
+  if (preferredPatientCommunication.length > 0) {
+    patientCommunication = preferredPatientCommunication;
   }
 
   return patientCommunication
@@ -1093,7 +1093,7 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
         communication,
         fhirPathMappings.patientProficiencyExtension,
       );
-      const languageProficency = evaluateValue(
+      const languageProficiency = evaluateValue(
         patientProficiencyExtension,
         "extension.where(url = 'level').value",
       );
@@ -1102,7 +1102,7 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
         "extension.where(url = 'type').value",
       );
 
-      return [patientLanguage, languageProficency, languageMode]
+      return [patientLanguage, languageProficiency, languageMode]
         .filter(Boolean)
         .join("\n");
     })

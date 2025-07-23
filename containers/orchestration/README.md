@@ -115,8 +115,8 @@ graph TD
         A --> C[Ingestion Service]
         A --> D[Trigger Code Reference Service]
         A --> E[Message Parser Service]
-        A --> F[ECR Viewer]
-        F --> G[ECR Viewer DB]
+        A --> F[eCR Viewer]
+        F --> G[eCR Viewer DB]
     end
 
     M[Python]

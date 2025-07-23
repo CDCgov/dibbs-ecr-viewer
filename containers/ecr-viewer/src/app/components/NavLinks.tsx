@@ -1,9 +1,8 @@
-import Link from "next/link";
-
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
 import { isAdmin } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
+import NavLink from "./NavLink";
 import UserMenu from "./UserMenu";
 
 /**
@@ -22,15 +21,9 @@ const NavLinks = async () => {
     <div className="display-flex flex-row">
       {isAdmin(dbUser) && (
         <>
-          <Link href="/" className="usa-nav__link">
-            eCR library
-          </Link>
-          <Link href="/admin/user" className="usa-nav__link">
-            User management
-          </Link>
-          <Link href="/admin/program" className="usa-nav__link">
-            Program management
-          </Link>
+          <NavLink href="/">eCR library</NavLink>
+          <NavLink href="/admin/user">User management</NavLink>
+          <NavLink href="/admin/program">Program management</NavLink>
         </>
       )}
       <UserMenu user={dbUser || sessionUser} />

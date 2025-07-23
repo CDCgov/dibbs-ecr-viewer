@@ -27,7 +27,7 @@ type AuditableFn<
 > = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
 
 /**
- * Wrap a function with audit logging. After the function succesfully runs, an
+ * Wrap a function with audit logging. After the function successfully runs, an
  * audit log record will be created with the subject, action, actor (user uuid or token),
  * parameters passed to the function, and other request metadata.
  * @param subject Subject of the action being audited (e.g. "user")

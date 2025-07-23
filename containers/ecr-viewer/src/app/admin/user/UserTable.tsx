@@ -23,7 +23,7 @@ import {
 import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { ListedUser, NamedUserPogramArea } from "@/app/services/userService";
+import { ListedUser, NamedUserProgramArea } from "@/app/services/userService";
 import {
   makePlural,
   stringSort,
@@ -128,7 +128,7 @@ export const UserTable = ({
       value: "Program areas",
       dataSortable: false,
       sortDirection: "",
-      formatter: (pas: NamedUserPogramArea[], user) =>
+      formatter: (pas: NamedUserProgramArea[], user) =>
         user.user_type === "admin"
           ? "All program areas"
           : pas

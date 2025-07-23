@@ -49,7 +49,7 @@ exports[`UnavailableInfo should match snapshot 1`] = `
                 <div
                   class="data-title padding-right-1"
                 >
-                  Preffered Language
+                  Preferred Language
                 </div>
                 <div
                   class="grid-col maxw7 text-pre-line p-list text-italic text-base"
