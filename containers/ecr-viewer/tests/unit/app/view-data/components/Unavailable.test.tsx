@@ -12,7 +12,7 @@ describe("UnavailableInfo", () => {
         value: "",
       },
       {
-        title: "Preffered Language",
+        title: "Preferred Language",
         value: "",
       },
     ];

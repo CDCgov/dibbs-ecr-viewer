@@ -104,7 +104,7 @@ const AccordionCheckBox = ({
  * expansion/collapsing of the items from outside the item itself.
  * @param props React props
  * @param props.items The accordion item descriptors
- * @param props.className optional class to ad to the outer accodion div
+ * @param props.className optional class to ad to the outer accordion div
  * @param props.toggleItem function to handle the toggling of an items visibility
  * @returns The component
  */

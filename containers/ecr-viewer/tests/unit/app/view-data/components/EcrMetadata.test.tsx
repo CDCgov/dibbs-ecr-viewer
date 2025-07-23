@@ -102,7 +102,7 @@ const eicrAuthorDetails = [
   ],
 ];
 
-describe("ECR Metadata", () => {
+describe("eCR Metadata", () => {
   beforeAll(() => {
     const mockChildMethod = jest.fn();
     jest.spyOn(React, "useRef").mockReturnValue({

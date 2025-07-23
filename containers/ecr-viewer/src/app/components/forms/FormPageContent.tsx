@@ -15,7 +15,7 @@ import { ServerActionResult } from "@/app/services/errorService";
  * @param props.formValid Whether the form is valid
  * @param props.submitAction Handler to run on submission
  * @param props.children Content of the form, typically a series of `FieldSet`
- * @param props.formTouched Whether the form has been touched (editted)
+ * @param props.formTouched Whether the form has been touched (edited)
  * @param props.itemType The type of item the form is about (e.g. "user")
  * @param props.itemHomeRoute Route to redirect to upon successful submission or to go back to
  * @param props.banner markup to display as a banner above the form title

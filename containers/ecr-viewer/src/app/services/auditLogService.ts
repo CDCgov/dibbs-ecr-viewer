@@ -27,12 +27,12 @@ type AuditableFn<
 > = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
 
 /**
- * Wrap a function with audit logging. After the function succesfully runs, an
+ * Wrap a function with audit logging. After the function successfully runs, an
  * audit log record will be created with the subject, action, actor (user uuid or token),
  * parameters passed to the function, and other request metadata.
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
- * @param fn Function to audit upon succesful completion. Must be called with only one argument, which is an object with all of the parameters. It can return either the UUID of the subject or void. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
+ * @param fn Function to audit upon successful completion. Must be called with only one argument, which is an object with all of the parameters. It can return either the UUID of the subject or void. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
 export const audit = <

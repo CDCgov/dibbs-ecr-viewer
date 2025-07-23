@@ -20,7 +20,7 @@ describe("Travel History", () => {
   });
 });
 
-describe("Disabiity Status", () => {
+describe("Disability Status", () => {
   it("should display a table ", () => {
     const { container } = render(
       returnDisabilityStatusTable(BundlePatient as unknown as Bundle),

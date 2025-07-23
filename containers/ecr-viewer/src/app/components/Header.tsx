@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 /**
- * Header component for the ECR Viewer project.
+ * Header component for the eCR Viewer project.
  * This component renders the header section of the application, including the
  * navigation container, navbar, and logo. It uses USWDS (U.S. Web Design System)
  * classes for styling with some customization.

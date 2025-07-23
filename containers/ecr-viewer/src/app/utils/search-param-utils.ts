@@ -65,7 +65,7 @@ const getSearchParam = <Config, K extends string & keyof Config>(
 
 // ==== Common Validation Helpers ====
 
-// helper to check date paramaters are valid, used for both params
+// helper to check date parameters are valid, used for both params
 const checkDates: ValidationFn = (searchParams: URLSearchParams) => {
   const dateRange = searchParams.get("dateRange");
   const datesParam = searchParams.get("dates");
@@ -123,7 +123,7 @@ export const LIBRARY_SEARCH_PARAMS: ParamSpec<LibraryConfig> = {
         (h) => h.id,
       );
       if (!validIds.includes(param)) {
-        // if we're deleteing the column, doesn't make sense to keep the direciton
+        // if we're deleting the column, doesn't make sense to keep the direction
         searchParams.delete("columnId");
         searchParams.delete("direction");
       }

@@ -73,7 +73,7 @@ export const evaluateLabInfoData = (
   labReports: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] => {
-  // the keys are the organization id, the value is an array of jsx elements of diagnsotic reports
+  // the keys are the organization id, the value is an array of jsx elements of diagnostic reports
   let organizationItems: ResultObject = {};
   const jsonLabs = getAllLabJsonObjects(fhirBundle);
 
@@ -506,7 +506,7 @@ export const evaluateOrganismsReportData = (
 
 /**
  * Combines the org display data with the diagnostic report elements
- * @param organizationItems - Object contianing the keys of org data, values of the diagnostic report elements
+ * @param organizationItems - Object containing the keys of org data, values of the diagnostic report elements
  * @param fhirBundle - The FHIR bundle containing lab and RR data.
  * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
@@ -530,7 +530,7 @@ export const combineOrgAndReportData = (
 };
 
 /**
- * Finds the Orgnization that matches the id and creates a DisplayDataProps array
+ * Finds the Organization that matches the id and creates a DisplayDataProps array
  * @param id - id of the organization
  * @param fhirBundle - The FHIR bundle containing lab and RR data.
  * @param labReportCount - A number representing the amount of lab reports for a specific organization
@@ -714,7 +714,7 @@ function getLabsContent(
     );
   if (labTableOrganisms) {
     content.push(
-      <React.Fragment key="lab-table-oragnisms">
+      <React.Fragment key="lab-table-organisms">
         {labTableOrganisms}
       </React.Fragment>,
     );

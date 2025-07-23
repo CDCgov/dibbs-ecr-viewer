@@ -38,7 +38,7 @@ export const isSuccessResponse = (resp: Response): resp is SuccessResponse =>
   resp.status === 200;
 
 /**
- * Get the fhir data for a given ECR ID
+ * Get the fhir data for a given eCR ID
  * @param ecr_id The id of the ecr to fetch
  * @returns NextResponse with the ecr or error data
  */
