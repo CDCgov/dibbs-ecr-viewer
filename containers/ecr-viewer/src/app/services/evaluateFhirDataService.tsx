@@ -54,7 +54,6 @@ import {
   formatNameList,
   formatPatientContactList,
   formatAge,
-  formatPhoneNumber,
   findCurrentAddress,
   formatCurrentAddress,
 } from "./formatService";
