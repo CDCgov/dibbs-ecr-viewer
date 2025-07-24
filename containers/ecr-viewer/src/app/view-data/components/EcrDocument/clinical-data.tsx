@@ -362,7 +362,7 @@ const evaluatePlanOfTreatment = (
             { columnName: "Name", infoPath: "code" },
             {
               columnName: "Scheduled Time",
-              infoPath: "plannedServiceRequestTime",
+              infoPath: "occurrenceX",
             },
             { columnName: "Ordered On", infoPath: "authoredOn" },
           ]}

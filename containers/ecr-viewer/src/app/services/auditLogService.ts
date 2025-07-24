@@ -7,9 +7,9 @@ import { cookies, headers } from "next/headers";
 
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
-import { Core, NewAuditLog, User } from "@/app/data/metadataDb/types/core";
+import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
 
-import { getLoggedInUser } from "./loggedInUserService";
+import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
 type Subject = "ecr" | "user" | "program_area";
 type Action =
@@ -32,7 +32,7 @@ type AuditableFn<
  * parameters passed to the function, and other request metadata.
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
- * @param fn Function to audit upon successful completion. Must be called with only one argument, which is an object with all of the parameters. It can return either the UUID of the subject or void. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
+ * @param fn Function to audit upon successful completion. Must be called with only one argument, which is an object with all of the parameters. If it returns a string, it is assumed to be the `uuid` of the subject and will be added to the params as such. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
 export const audit = <
@@ -44,8 +44,6 @@ export const audit = <
   fn: AuditableFn<Params, Ret>,
 ) => {
   return async (params: Params): Promise<Ret> => {
-    // get user outside of the transaction to avoid some sqlserver strangeness
-    const user = await getLoggedInUser();
     return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {
@@ -55,13 +53,7 @@ export const audit = <
           typeof uuid === "string" ? { ...params, uuid } : params;
 
         try {
-          await createAuditRecord<Params>(
-            trx,
-            user,
-            subject,
-            action,
-            logParams,
-          );
+          await createAuditRecord<Params>(trx, subject, action, logParams);
         } catch (error: unknown) {
           // avoid getting stuck in a loop where we can't migrate/show migration issues
           // because of audit logging
@@ -80,9 +72,16 @@ export const audit = <
   };
 };
 
-const createAuditRecord = async <Params extends Record<string, unknown>>(
+/**
+ * Create an audit record on a transaction. This is a lower level function and should rarely
+ * directly be used. See `audit` for a wrapepr to use in most cases
+ * @param trx kysely transaction
+ * @param subject Subject of the action being audited (e.g. "user")
+ * @param action Action being done (e.g. "create")
+ * @param params Parameters being logged
+ */
+export const createAuditRecord = async <Params extends Record<string, unknown>>(
   trx: Transaction<Core>,
-  user: User | undefined,
   subject: Subject,
   action: Action,
   params: Params,
@@ -95,13 +94,10 @@ const createAuditRecord = async <Params extends Record<string, unknown>>(
 
   // Override user on signin log, otherwise we get an auth token as the actor as they
   // aren't yet actually fully logged in
-  if (action === "signin" && (params?.user as Record<string, string>)?.email) {
-    user = await trx
-      .selectFrom("user")
-      .selectAll()
-      .where("email", "=", (params.user as Record<string, string>).email)
-      .executeTakeFirst();
-  }
+  const user =
+    action === "signin" && (params?.user as Record<string, string>)?.email
+      ? await getUserByEmail((params.user as Record<string, string>).email, trx)
+      : await getLoggedInUser(trx);
 
   const values: Omit<NewAuditLog, "checksum"> = {
     uuid,

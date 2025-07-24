@@ -331,7 +331,9 @@ export const evaluateReference = <T extends Resource>(
 };
 
 type RefPathTypes = {
-  [K in keyof PathTypes]: PathTypes[K] extends string | Reference ? K : never;
+  [K in keyof PathTypes]: PathTypes[K] extends string | { reference?: string }
+    ? K
+    : never;
 }[keyof PathTypes];
 
 /**
