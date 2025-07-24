@@ -2,12 +2,14 @@
  * @jest-environment node
  */
 
+import { getLastAuditLog } from "../helpers/core";
 import { buildExtended, clearExtended, dropExisting } from "../helpers/ddl";
 import { saveFhirMetadata } from "@/app/api/save-fhir-data/service";
 import { BundleExtendedMetadata } from "@/app/api/save-fhir-data/types";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Extended } from "@/app/data/metadataDb/types/extended";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
   patient_id: "12345",
@@ -103,6 +105,14 @@ afterAll(async () => {
   await dropExisting();
 });
 
+jest.mock("@/app/utils/auth-utils");
+beforeEach(() => {
+  (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+    name: "Adam Admin",
+    email: "admin@admin.com",
+  });
+});
+
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -122,6 +132,15 @@ describe("saveFhirData - extended", () => {
     );
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual("unknown");
+    expect(log.subject).toEqual("ecr");
+    expect(log.action).toEqual("create");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      eicr_id: "1-2-3-4",
+    });
   });
 
   it("should save with rr without rule summaries", async () => {

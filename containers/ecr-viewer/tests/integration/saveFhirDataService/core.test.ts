@@ -2,12 +2,14 @@
  * @jest-environment node
  */
 
+import { getLastAuditLog } from "../helpers/core";
 import { buildCore, clearCore, dropExisting } from "../helpers/ddl";
 import { saveFhirMetadata } from "@/app/api/save-fhir-data/service";
 import { BundleMetadata } from "@/app/api/save-fhir-data/types";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const baseCoreMetadata: BundleMetadata = {
   last_name: "lname",
@@ -28,6 +30,14 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dropExisting();
+});
+
+jest.mock("@/app/utils/auth-utils");
+beforeEach(() => {
+  (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+    name: "Adam Admin",
+    email: "admin@admin.com",
+  });
 });
 
 afterEach(() => {
@@ -55,6 +65,15 @@ describe("saveFhirData - core", () => {
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
     expect(rolledBack).toBeFalse();
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual("unknown");
+    expect(log.subject).toEqual("ecr");
+    expect(log.action).toEqual("create");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      eicr_id: "1-2-3-4",
+    });
   });
 
   it("should save with rr without rule summaries", async () => {
