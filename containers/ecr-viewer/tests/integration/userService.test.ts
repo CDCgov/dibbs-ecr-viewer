@@ -326,10 +326,7 @@ describe("user service", () => {
     expect(delete_log.subject).toEqual("user");
     expect(delete_log.action).toEqual("delete");
     expect(JSON.parse(delete_log.parameter_json)).toStrictEqual({
-      email: userEmail,
-      userType: "standard",
-      programs: [],
-      uuid: userId!,
+      userId: userId!,
     });
 
     // see only admin user listed
