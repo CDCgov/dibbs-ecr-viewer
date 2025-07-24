@@ -39,6 +39,7 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { AccordionItem } from "@/app/view-data/types";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import { formatDateTime } from "./formatDateService";
 import {
@@ -91,14 +92,21 @@ export const evaluateLabInfoData = (
     const title = formatCodeableConcept(report.code) ?? "Unknown";
     const item = {
       title: (
-        <>
-          {title}
-          {checkAbnormalTag(labReportJson) && (
-            <Tag background="#B50909" className="margin-left-105">
-              Abnormal
-            </Tag>
-          )}
-        </>
+        <div className="display-flex flex-row flex-justify flex-align-center gap-05">
+          <span>
+            {title}
+            {checkAbnormalTag(labReportJson) && (
+              <Tag background="#B50909" className="margin-left-105">
+                Abnormal
+              </Tag>
+            )}
+          </span>
+
+          {/** inline style due to existing css rules on this button text */}
+          <span className="text-base" style={{ fontSize: "1rem" }}>
+            {evaluateValue(report, fhirPathMappings.effectiveX)}
+          </span>
+        </div>
       ),
       content,
       expanded: false,
@@ -128,24 +136,52 @@ export const getObservations = (
   report: DiagnosticReport,
   fhirBundle: Bundle,
 ): Array<Observation> => {
-  return (report.result || [])
-    .map((obsRef) =>
-      evaluateReference<Observation>(fhirBundle, obsRef.reference),
-    )
-    .filter(notEmpty);
+  return sortResourcesByDate(
+    (report.result || [])
+      .map((obsRef) =>
+        evaluateReference<Observation>(fhirBundle, obsRef.reference),
+      )
+      .filter(notEmpty),
+    fhirPathMappings.effectiveX,
+  );
 };
 
-// TODO: continue this once sorting helpers in
 const ensureReportHasDateTime = (
   report: DiagnosticReport,
   obs: Observation[],
 ) => {
-  let start: Date;
-  let end: Date;
-  for (const ob of obs) {
-    const time = evaluateOne(ob, fhirPathMappings.effectiveX);
-    if (typeof time === "string") {
+  if (report.effectivePeriod) {
+    if (report.effectivePeriod.start === report.effectivePeriod.end) {
+      report.effectiveDateTime = report.effectivePeriod.start;
+      report.effectivePeriod = undefined;
     }
+  }
+  if (report.effectiveDateTime) return;
+
+  let startDate: string | undefined;
+  let endDate: string | undefined;
+  const newestObsDate = evaluateOne(obs.at(0), fhirPathMappings.effectiveX);
+  if (typeof newestObsDate === "string") {
+    endDate = newestObsDate;
+  } else {
+    startDate = newestObsDate?.start;
+    endDate = newestObsDate?.end;
+  }
+
+  const oldestObsDate = evaluateOne(obs.at(0), fhirPathMappings.effectiveX);
+  if (typeof oldestObsDate === "string") {
+    startDate = oldestObsDate;
+  } else {
+    startDate = oldestObsDate?.start || startDate;
+  }
+
+  if (startDate === endDate) {
+    report.effectiveDateTime = startDate;
+  } else {
+    report.effectivePeriod = {
+      start: startDate,
+      end: endDate,
+    };
   }
 };
 
@@ -545,6 +581,11 @@ const getLabsContent = (
   );
 
   const rrInfo: DisplayDataProps[] = [
+    {
+      title: "Observation Time",
+      value: evaluateValue(report, fhirPathMappings.effectiveX) || noData,
+      className: "lab-text-content",
+    },
     {
       title: "Analysis Time",
       value: returnAnalysisTime(labReportJson, "Analysis Time"),

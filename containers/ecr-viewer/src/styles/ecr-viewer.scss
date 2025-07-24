@@ -232,13 +232,10 @@ main {
   border: none;
   border-radius: 0;
 
-  &:focus-within {
-    border: #2491ff 0.25rem solid;
-  }
-
   .usa-accordion__heading {
     border: #111111 1px solid;
     border-radius: 0.25rem;
+    padding: 2px; // a bit of padding to allow the focus state some room
 
     &:has(> button[aria-expanded="true"]) {
       border-radius: 0.25rem 0.25rem 0 0;
