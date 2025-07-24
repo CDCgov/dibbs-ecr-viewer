@@ -197,8 +197,8 @@ describe("listEcrData - core", () => {
       sortColumn,
       sortDirection,
       filterDates: {
-        startDate: filterDates.startDate,
-        endDate: filterDates.endDate,
+        startDate: filterDates.startDate.toISOString(),
+        endDate: filterDates.endDate.toISOString(),
       },
     });
 
