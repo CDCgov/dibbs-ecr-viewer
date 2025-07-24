@@ -186,11 +186,11 @@ describe("user service", () => {
     expect(userId).toMatch(UUID_REGEX);
 
     // check audit log
-    const create_log = await getLastAuditLog();
-    expect(create_log.actor).toEqual(adminId!);
-    expect(create_log.subject).toEqual("user");
-    expect(create_log.action).toEqual("create");
-    expect(JSON.parse(create_log.parameter_json)).toStrictEqual({
+    const createLog = await getLastAuditLog();
+    expect(createLog.actor).toEqual(adminId!);
+    expect(createLog.subject).toEqual("user");
+    expect(createLog.action).toEqual("create");
+    expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
       email: userEmail,
       userType: "standard",
       programs: [],
