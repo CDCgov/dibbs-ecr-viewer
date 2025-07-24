@@ -32,7 +32,7 @@ type AuditableFn<
  * parameters passed to the function, and other request metadata.
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
- * @param fn Function to audit upon succesful completion. Must be called with only one argument, which is an object with all of the parameters. If it returns a string, it is assumed to be the `uuid` of the subject and will be added to the params as such. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
+ * @param fn Function to audit upon successful completion. Must be called with only one argument, which is an object with all of the parameters. If it returns a string, it is assumed to be the `uuid` of the subject and will be added to the params as such. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
 export const audit = <
