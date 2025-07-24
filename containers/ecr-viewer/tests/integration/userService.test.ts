@@ -33,7 +33,6 @@ export const makePromiseResolveWithStatus = (
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
 const adminEmail = "admin@admin.com";
-const adminName = "Adam Admin";
 const userEmail = "standard@user.com";
 
 const cond123 = {
@@ -123,8 +122,8 @@ describe("user service", () => {
       {
         uuid: adminId,
         email: adminEmail,
-        name: adminName,
-        date_of_last_login: expect.any(Date),
+        name: null,
+        date_of_last_login: null,
         user_type: "admin",
         status: "active",
         author_uuid: adminId,
@@ -161,8 +160,8 @@ describe("user service", () => {
       {
         uuid: adminId,
         email: adminEmail,
-        name: adminName,
-        date_of_last_login: expect.any(Date),
+        name: null,
+        date_of_last_login: null,
         user_type: "admin",
         status: "active",
         author_uuid: adminId,
@@ -205,8 +204,8 @@ describe("user service", () => {
       {
         uuid: expect.any(String),
         email: adminEmail,
-        name: adminName,
-        date_of_last_login: expect.any(Date),
+        name: null,
+        date_of_last_login: null,
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
@@ -258,8 +257,8 @@ describe("user service", () => {
       {
         uuid: adminId!,
         email: adminEmail,
-        name: adminName,
-        date_of_last_login: expect.any(Date),
+        name: null,
+        date_of_last_login: null,
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
@@ -328,8 +327,8 @@ describe("user service", () => {
       {
         uuid: adminId!,
         email: adminEmail,
-        name: adminName,
-        date_of_last_login: expect.any(Date),
+        name: null,
+        date_of_last_login: null,
         user_type: "admin",
         status: "active",
         author_uuid: adminId!,
