@@ -14,7 +14,7 @@ import {
 } from "@/app/services/listEcrDataService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
-const testDateRange = {
+const filterDates = {
   startDate: new Date("12-01-2024"),
   endDate: new Date("12-03-2024"),
 };
@@ -96,20 +96,20 @@ describe("listEcrData - extended", () => {
   it("should return empty array when no data is found", async () => {
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
 
-    const actual = await listEcrData(
+    const actual = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
 
     expect(actual).toBeEmpty();
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
   });
 
@@ -128,13 +128,13 @@ describe("listEcrData - extended", () => {
     });
 
     // Act
-    const actual = await listEcrData(
-      0,
-      10,
-      "report_date",
-      "DESC",
-      testDateRange,
-    );
+    const actual = await listEcrData({
+      startIndex: 0,
+      itemsPerPage: 10,
+      sortColumn: "report_date",
+      sortDirection: "DESC",
+      filterDates,
+    });
     // Assert
     expect(actual).toStrictEqual([
       {
@@ -157,7 +157,7 @@ describe("listEcrData - extended", () => {
       },
     ]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrExtended();
@@ -188,18 +188,18 @@ describe("listEcrData - extended", () => {
     });
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
-    const actual: EcrDisplay[] = await listEcrData(
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+    const actual: EcrDisplay[] = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
     expect(actual).toStrictEqual([]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrExtended();
@@ -225,15 +225,15 @@ describe("listEcrData - extended", () => {
 
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
-    const actual: EcrDisplay[] = await listEcrData(
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+    const actual: EcrDisplay[] = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
     expect(actual).toStrictEqual([
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
@@ -255,7 +255,7 @@ describe("listEcrData - extended", () => {
       },
     ]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrExtended();
@@ -279,18 +279,18 @@ describe("listEcrData - extended", () => {
 
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
-    const actual: EcrDisplay[] = await listEcrData(
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+    const actual: EcrDisplay[] = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
     expect(actual).toStrictEqual([]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrExtended();
@@ -306,19 +306,19 @@ describe("get total extended ecr count", () => {
   afterAll(async () => await clearEcrExtended());
 
   it("should call db to get all ecrs", async () => {
-    const actual = await getTotalEcrCount(testDateRange);
+    const actual = await getTotalEcrCount(filterDates);
     expect(actual).toEqual(1);
   });
   it("should use search term in count query", async () => {
-    const actual = await getTotalEcrCount(testDateRange, "blah", undefined);
+    const actual = await getTotalEcrCount(filterDates, "blah", undefined);
     expect(actual).toEqual(0);
   });
   it("should escape the search term in count query", async () => {
-    const actual = await getTotalEcrCount(testDateRange, "O'Riley", undefined);
+    const actual = await getTotalEcrCount(filterDates, "O'Riley", undefined);
     expect(actual).toEqual(0);
   });
   it("should use filter conditions in count query", async () => {
-    const actual = await getTotalEcrCount(testDateRange, "", [
+    const actual = await getTotalEcrCount(filterDates, "", [
       "Anthrax (disorder)",
     ]);
     expect(actual).toEqual(0);

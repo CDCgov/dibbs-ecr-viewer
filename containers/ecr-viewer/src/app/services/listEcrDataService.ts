@@ -3,6 +3,7 @@ import {
   ExpressionBuilder,
   OrderByExpression,
   SelectQueryBuilder,
+  Transaction,
 } from "kysely";
 
 import { getDb } from "@/app/data/metadataDb/database";
@@ -10,6 +11,8 @@ import { getSql } from "@/app/data/metadataDb/dialects/common";
 import { ecr_data, Core, User } from "@/app/data/metadataDb/types/core";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
+import { audit } from "./auditLogService";
+import { UserFacingError } from "./errorService";
 import { formatDate, formatDateTime } from "./formatDateService";
 import { getLoggedInUser } from "./loggedInUserService";
 
@@ -57,7 +60,55 @@ export interface EcrDisplay {
  * @param filterConditions - The condition(s) to filter on
  * @returns A promise resolving to a list of eCR metadata
  */
-export async function listEcrData(
+export const listEcrData = audit(
+  "ecr",
+  "query",
+  async (
+    {
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+      searchTerm,
+      filterConditions,
+    }: {
+      startIndex: number;
+      itemsPerPage: number;
+      sortColumn: string;
+      sortDirection: string;
+      filterDates: DateRangePeriod;
+      searchTerm?: string;
+      filterConditions?: string[];
+    },
+    trx: Transaction<Core>,
+  ): Promise<EcrDisplay[]> => {
+    const user = await getLoggedInUser();
+
+    try {
+      const ecrList = await createSearchQuery(
+        trx,
+        user!,
+        startIndex,
+        itemsPerPage,
+        sortColumn,
+        sortDirection,
+        filterDates,
+        searchTerm,
+        filterConditions,
+      );
+      return processMetadata(ecrList);
+    } catch (error: unknown) {
+      const message = "Failed to query eCRs";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
+
+const createSearchQuery = async (
+  db: Kysely<Core>,
+  user: User,
   startIndex: number,
   itemsPerPage: number,
   sortColumn: string,
@@ -65,63 +116,50 @@ export async function listEcrData(
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
-): Promise<EcrDisplay[]> {
-  const user = await getLoggedInUser();
+) => {
+  const mainQuery = db.with("ecr_sets", (db) =>
+    db
+      .selectFrom("ecr_data")
+      .$call((qb) => limitEcrDataToUser(user, qb))
+      .select(({ eb }) => [
+        "ecr_data.set_id",
+        eb.fn
+          .max(eb.cast<number>("ecr_data.eicr_version_number", "integer"))
+          .as("max_version_number"),
+      ])
+      .groupBy(["ecr_data.set_id"])
+      .where((eb) =>
+        generateWhereStatement(eb, filterDates, searchTerm, filterConditions),
+      ),
+  );
 
-  const res = await getDb<Core>()
-    .transaction()
-    .execute(async (trx) => {
-      const mainQuery = trx.with("ecr_sets", (db) =>
-        db
-          .selectFrom("ecr_data")
-          .$call((qb) => limitEcrDataToUser(user, qb))
-          .select(({ eb }) => [
-            "ecr_data.set_id",
-            eb.fn
-              .max(eb.cast<number>("ecr_data.eicr_version_number", "integer"))
-              .as("max_version_number"),
-          ])
-          .groupBy(["ecr_data.set_id"])
-          .where((eb) =>
-            generateWhereStatement(
-              eb,
-              filterDates,
-              searchTerm,
-              filterConditions,
-            ),
+  const ecrQuery = mainQuery.with("ecrs", (db) =>
+    db
+      .selectFrom("ecr_sets")
+      .leftJoin("ecr_data", (join) =>
+        join
+          .onRef("ecr_data.set_id", "=", "ecr_sets.set_id")
+          .on("ecr_sets.max_version_number", "=", (eb) =>
+            eb.cast<number>("ecr_data.eicr_version_number", "integer"),
           ),
-      );
+      )
+      .select([
+        "ecr_data.eicr_id",
+        "ecr_data.first_name",
+        "ecr_data.last_name",
+        "ecr_data.birth_date",
+        "ecr_data.encounter_start_date",
+        "ecr_data.date_created",
+        "ecr_data.set_id",
+        "ecr_data.eicr_version_number",
+      ])
+      .orderBy(generateSortStatement(sortColumn, sortDirection))
+      .offset(startIndex)
+      .fetch(itemsPerPage),
+  );
 
-      const ecrQuery = mainQuery.with("ecrs", (db) =>
-        db
-          .selectFrom("ecr_sets")
-          .leftJoin("ecr_data", (join) =>
-            join
-              .onRef("ecr_data.set_id", "=", "ecr_sets.set_id")
-              .on("ecr_sets.max_version_number", "=", (eb) =>
-                eb.cast<number>("ecr_data.eicr_version_number", "integer"),
-              ),
-          )
-          .select([
-            "ecr_data.eicr_id",
-            "ecr_data.first_name",
-            "ecr_data.last_name",
-            "ecr_data.birth_date",
-            "ecr_data.encounter_start_date",
-            "ecr_data.date_created",
-            "ecr_data.set_id",
-            "ecr_data.eicr_version_number",
-          ])
-          .orderBy(generateSortStatement(sortColumn, sortDirection))
-          .offset(startIndex)
-          .fetch(itemsPerPage),
-      );
-
-      return await getMetaModelData(ecrQuery as unknown as Kysely<EcrsCte>);
-    });
-
-  return processMetadata(res);
-}
+  return await getMetaModelData(ecrQuery as unknown as Kysely<EcrsCte>);
+};
 
 const limitEcrDataToUser = (
   user: User | undefined,

@@ -161,14 +161,14 @@ describe("EcrTableContent", () => {
     );
 
     expect(mockedListEcrData).toHaveBeenCalledTimes(1);
-    expect(mockedListEcrData).toHaveBeenCalledWith(
-      0,
-      25,
-      "date_created",
-      "DESC",
-      mockDateRange,
-      "blah",
-      ["Anthrax (disorder)"],
-    );
+    expect(mockedListEcrData).toHaveBeenCalledWith({
+      startIndex: 0,
+      itemsPerPage: 25,
+      sortColumn: "date_created",
+      sortDirection: "DESC",
+      filterDates: mockDateRange,
+      searchTerm: "blah",
+      filterConditions: ["Anthrax (disorder)"],
+    });
   });
 });
