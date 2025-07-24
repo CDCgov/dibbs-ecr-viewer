@@ -191,12 +191,15 @@ describe("listEcrData - core", () => {
     const log = await getLastAuditLog();
     expect(log.subject).toEqual("ecr");
     expect(log.action).toEqual("query");
-    expect(JSON.parse(log.parameter_json)).toEqual({
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
       startIndex,
       itemsPerPage,
       sortColumn,
       sortDirection,
-      filterDates,
+      filterDates: {
+        startDate: filterDates.startDate,
+        endDate: filterDates.endDate,
+      },
     });
 
     expect(actual).toBeEmpty();
