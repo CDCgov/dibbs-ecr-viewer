@@ -64,14 +64,13 @@ export const compareResourcesByDate = (
 };
 
 /**
- * Return an descending order (most recent first) list of resources by the date specified by `datePath`.
+ * Sorts in-place an array of FHIR resources in descending order (most recent first) list of resources by the date specified by `datePath`.
  * @param resourceArray - Array of FHIR resources of the same type
  * @param datePath - FHIR path to either a Period or a date string on the resource
- * @returns Ordered list of resources by the date specified
  */
 export const sortResourcesByDate = <T extends FhirResource>(
   resourceArray: T[],
   datePath: FhirPath<DatePathTypes>,
-): T[] => {
-  return resourceArray.sort((a, b) => compareResourcesByDate(a, b, datePath));
+) => {
+  resourceArray.sort((a, b) => compareResourcesByDate(a, b, datePath));
 };

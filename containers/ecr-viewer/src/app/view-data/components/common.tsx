@@ -81,14 +81,11 @@ export const returnImmunizations = (
     },
   );
 
-  const sortedModifiedImmunizations = sortResourcesByDate(
-    modifiedImmunizations,
-    fhirPathMappings.occurrenceX,
-  );
+  sortResourcesByDate(modifiedImmunizations, fhirPathMappings.occurrenceX);
 
   return (
     <EvaluateTable
-      resources={sortedModifiedImmunizations}
+      resources={modifiedImmunizations}
       columns={columnInfo}
       caption={caption}
       className={classNames("margin-y-0", className)}

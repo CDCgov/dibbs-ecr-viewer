@@ -285,12 +285,9 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     usualIndustryComp?.valueCodeableConcept,
   );
 
-  const sortedEmploymentObs = sortResourcesByDate(
-    employmentObs,
-    fhirPathMappings.effectiveX,
-  );
+  sortResourcesByDate(employmentObs, fhirPathMappings.effectiveX);
   const currentEmploymentStatus = evaluateValue(
-    sortedEmploymentObs,
+    employmentObs,
     fhirPathMappings.valueX,
   );
 
@@ -452,16 +449,13 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
   );
   if (jobObs.length === 0) return;
 
-  const sortedJobsObs = sortResourcesByDate(
-    jobObs,
-    fhirPathMappings.effectiveX,
-  );
+  sortResourcesByDate(jobObs, fhirPathMappings.effectiveX);
 
   return (
     <ExpandCollapseAccordion
       className="accordion-rr"
       descriptor="employment details"
-      items={sortedJobsObs.map((obs) => {
+      items={jobObs.map((obs) => {
         const getComponentValue = (code: string) => {
           return (
             evaluateValue(
