@@ -339,16 +339,12 @@ const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
 export const deleteUser = audit(
   "user",
   "delete",
-  async ({ uuid }: { uuid: string }): Promise<void> => {
+  async ({ uuid }: { uuid: string }, trx: Transaction<Core>): Promise<void> => {
     await getCheckAdmin("delete users");
 
     try {
-      await getDb<Core>()
-        .transaction()
-        .execute(async (trx) => {
-          await updateUserQuery(trx, uuid, { status: "deleted" });
-          await deleteUserProgramAreas(trx, uuid);
-        });
+      await updateUserQuery(trx, uuid, { status: "deleted" });
+      await deleteUserProgramAreas(trx, uuid);
     } catch (error: unknown) {
       const message = "Failed to delete user";
       console.error({ message, error });
