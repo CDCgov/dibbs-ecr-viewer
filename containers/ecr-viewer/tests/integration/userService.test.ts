@@ -318,14 +318,16 @@ describe("user service", () => {
 
   it("should delete a user", async () => {
     // standard user created in prior test
-    await deleteUser(userId!);
+    await deleteUser({ uuid: userId! });
 
     // check audit log
     const delete_log = await getLastAuditLog();
     expect(delete_log.actor).toEqual(adminId!);
     expect(delete_log.subject).toEqual("user");
     expect(delete_log.action).toEqual("delete");
-    expect(JSON.parse(delete_log.parameter_json)).toStrictEqual(userId!);
+    expect(JSON.parse(delete_log.parameter_json)).toStrictEqual({
+      uuid: userId!,
+    });
 
     // see only admin user listed
     const users = await listUsers();
