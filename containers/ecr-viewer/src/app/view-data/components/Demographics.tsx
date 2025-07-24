@@ -3,7 +3,7 @@ import React from "react";
 import {
   AccordionSection,
   AccordionSubSection,
-} from "@/app/view-data/component-utils";
+} from "@/app/view-data/utils/component-utils";
 
 import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 

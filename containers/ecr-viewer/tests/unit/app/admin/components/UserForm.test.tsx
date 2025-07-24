@@ -12,6 +12,7 @@ jest.mock("@/app/components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
 }));
 jest.mock("@/app/services/userService");
+jest.mock("@/app/services/loggedInUserService");
 
 const mockPrograms: FormProgram[] = [
   {

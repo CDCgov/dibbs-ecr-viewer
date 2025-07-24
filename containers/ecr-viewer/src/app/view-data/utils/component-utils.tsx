@@ -3,8 +3,7 @@ import React, { ReactNode } from "react";
 import classNames from "classnames";
 
 import { toKebabCase } from "@/app/utils/format-utils";
-
-import { ToolTipElement } from "./components/ToolTipElement";
+import { ToolTipElement } from "@/app/view-data/components/ToolTipElement";
 
 type AccordionSectionProps = {
   children: ReactNode;

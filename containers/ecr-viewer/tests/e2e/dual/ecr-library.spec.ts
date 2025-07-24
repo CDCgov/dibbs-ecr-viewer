@@ -12,10 +12,7 @@ test.describe("ecr library page", () => {
     });
 
     test("should pass accessibility", async ({ page }) => {
-      await page.goto("/ecr-viewer");
-
       const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
-
       expect(accessibilityScanResults.violations).toEqual([]);
     });
   });
