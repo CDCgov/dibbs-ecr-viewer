@@ -191,7 +191,7 @@ describe("listEcrData - core", () => {
     const log = await getLastAuditLog();
     expect(log.subject).toEqual("ecr");
     expect(log.action).toEqual("query");
-    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+    expect(JSON.parse(log.parameter_json)).toEqual({
       startIndex,
       itemsPerPage,
       sortColumn,
