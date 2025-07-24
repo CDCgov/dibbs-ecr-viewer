@@ -21,6 +21,7 @@ jest.mock("@/app/components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
 }));
 jest.mock("@/app/services/userService");
+jest.mock("@/app/services/loggedInUserService");
 jest.mock("@/app/services/programAreaService");
 jest.mock("@/app/services/listConditionsService", () => ({
   listConditionReferences: jest.fn().mockResolvedValue([]),

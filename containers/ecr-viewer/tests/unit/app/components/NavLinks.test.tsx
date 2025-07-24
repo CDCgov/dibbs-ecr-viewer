@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 
 import NavLinks from "@/app/components/NavLinks";
 import { User } from "@/app/data/metadataDb/types/core";
-import { getLoggedInUser, isAdmin } from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
+import { isAdmin } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 jest.mock("@/app/utils/auth-utils", () => ({
@@ -14,8 +15,10 @@ jest.mock("@/app/utils/auth-utils", () => ({
 }));
 
 jest.mock("@/app/services/userService", () => ({
-  getLoggedInUser: jest.fn(),
   isAdmin: jest.fn(),
+}));
+jest.mock("@/app/services/loggedInUserService", () => ({
+  getLoggedInUser: jest.fn(),
 }));
 
 jest.mock("@/app/components/UserMenu", () => (props: any) => (
