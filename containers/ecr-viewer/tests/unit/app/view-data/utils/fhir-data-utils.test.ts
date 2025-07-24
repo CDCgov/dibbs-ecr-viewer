@@ -3,7 +3,7 @@ import { Observation } from "fhir/r4";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
-describe("sortObservationsByDate", () => {
+describe("sortResourcesByDate", () => {
   it("should prioritize ongoing periods", () => {
     const oldest: Observation = {
       resourceType: "Observation",
