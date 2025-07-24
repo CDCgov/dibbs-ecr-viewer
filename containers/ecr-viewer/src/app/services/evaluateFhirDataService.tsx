@@ -312,7 +312,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
   // also applies to the occupational history in social history). This function will likely need to be
   // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
   // section can handle nested sub-fields.
-  const lastMenstrualPeriodObservations = evaluateAll(
+  const lastMenstrualPeriodObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.lastMenstrualPeriod,
   ).map((ob) => {
@@ -327,7 +327,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       ].filter(isDataAvailable),
     };
   });
-  const pregnancyStatusObservations = evaluateAll(
+  const pregnancyStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.pregnancyStatus,
   ).map((ob) => {
@@ -346,7 +346,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       ].filter(isDataAvailable),
     };
   });
-  const postpartumStatusObservations = evaluateAll(
+  const postpartumStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.postpartumStatus,
   ).map((ob) => {
@@ -368,29 +368,30 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
 
   const unavailableData = [];
 
-  if (lastMenstrualPeriodObservations.length === 0) {
+  if (lastMenstrualPeriodObservationEntries.length === 0) {
     unavailableData.push({
       title: "Last Menstrual Period",
       value: undefined,
     });
   }
-  if (pregnancyStatusObservations.length === 0) {
+  if (pregnancyStatusObservationEntries.length === 0) {
     unavailableData.push({
       title: "Pregnancy Status",
       value: undefined,
     });
   }
-  if (postpartumStatusObservations.length === 0) {
+  if (postpartumStatusObservationEntries.length === 0) {
     unavailableData.push({
       title: "Postpartum Status",
       value: undefined,
     });
   }
 
+  // Using `compareResourcesByDate` because we want to apply the consistent date ordering we are using elsewhere, but we're not sorting `Observation[]`, but instead an object containing an `Observation`.
   const allPregnancyObservations = [
-    ...lastMenstrualPeriodObservations,
-    ...pregnancyStatusObservations,
-    ...postpartumStatusObservations,
+    ...lastMenstrualPeriodObservationEntries,
+    ...pregnancyStatusObservationEntries,
+    ...postpartumStatusObservationEntries,
   ].sort((a, b) =>
     compareResourcesByDate(
       a.observation,

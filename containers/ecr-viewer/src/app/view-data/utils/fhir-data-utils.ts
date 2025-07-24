@@ -46,6 +46,8 @@ const compareDates = (a: Date | undefined, b: Date | undefined): number => {
 
 /**
  * Compare two FHIR resources by the date specified by the `datePath`.
+ *
+ * This is useful when you want to sort by a FHIR resource's date but you are working with more complicated data structures than `Resource[]`.
  * @param a - A FHIR resource
  * @param b - A FHIR resource
  * @param datePath HIR path to either a Period or a date string on the resources given.
