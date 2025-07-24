@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@trussworks/react-uswds";
-import { signOut } from "next-auth/react";
 
 import { useIsLoggedInUser } from "./AuthSessionProvider";
+import { signOutGoHome } from "./AutoSignout";
 
 /**
  * @returns Sign out button if user is signed in
@@ -16,7 +16,7 @@ export const SignOutButton = () => {
         type="button"
         unstyled={true}
         className="flex-align-self-center sign-out-button action-text"
-        onClick={() => signOut({ callbackUrl: `/ecr-viewer` })}
+        onClick={signOutGoHome}
       >
         Sign Out
       </Button>

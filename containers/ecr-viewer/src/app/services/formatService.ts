@@ -6,7 +6,6 @@ import {
   ContactPoint,
   HumanName,
   PatientContact,
-  Period,
   Quantity,
   Range,
   Reference,
@@ -140,42 +139,6 @@ export const formatAddressList = (
   } else {
     return formatAddress(addresses);
   }
-};
-
-/**
- * Sort an array of items from most recent to least recent in place
- * Un-ended periods first, then reverse chronological by end date with start date as tie break
- * @param items list of items to sort
- * @param periodGetter function to get the period from an item
- */
-export const sortByPeriod = <T>(
-  items: T[],
-  periodGetter: (item: T) => Period | undefined,
-) => {
-  items.sort((a, b) => {
-    const aPeriod = periodGetter(a);
-    const bPeriod = periodGetter(b);
-    const aEnd = aPeriod?.end || "";
-    const aStart = aPeriod?.start || "";
-    const bEnd = bPeriod?.end || "";
-    const bStart = bPeriod?.start || "";
-
-    if (!aEnd) {
-      if (!bEnd) {
-        return aStart > bStart ? -1 : 1;
-      } else {
-        return -1;
-      }
-    } else if (!bEnd) {
-      return 1;
-    } else {
-      if (aEnd === bEnd) {
-        return aStart > bStart ? -1 : 1;
-      } else {
-        return aEnd > bEnd ? -1 : 1;
-      }
-    }
-  });
 };
 
 /**

@@ -5,7 +5,6 @@ import {
   Condition,
   Encounter,
   Location,
-  Observation,
   Organization,
   Practitioner,
   PractitionerRole,
@@ -36,6 +35,10 @@ import {
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
+import {
+  compareResourcesByDate,
+  sortResourcesByDate,
+} from "@/app/view-data/utils/fhir-data-utils";
 
 import {
   formatDate,
@@ -53,7 +56,6 @@ import {
   formatNameList,
   formatPatientContactList,
   formatAge,
-  sortByPeriod,
   findCurrentAddress,
   formatCurrentAddress,
 } from "./formatService";
@@ -283,51 +285,20 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
     usualIndustryComp?.valueCodeableConcept,
   );
 
-  sortByPeriod(employmentObs, (obs) => obs.effectivePeriod);
-  const employmentStatus = formatCodeableConcept(
-    employmentObs?.[0]?.valueCodeableConcept,
+  sortResourcesByDate(employmentObs, fhirPathMappings.effectiveX);
+  const currentEmploymentStatus = evaluateValue(
+    employmentObs,
+    fhirPathMappings.valueX,
   );
 
   return [
     occTitle,
     usualIndustry && `Industry: ${usualIndustry}`,
-    employmentStatus && `Status: ${employmentStatus}`,
+    currentEmploymentStatus && `Status: ${currentEmploymentStatus}`,
     occDates && `Dates: ${occDates}`,
   ]
     .filter(Boolean)
     .join("\n\n");
-};
-
-// TODO: Temporary logic to order pregnancy observations. A separate ticket to combine this with the `sortByPeriod` function to make a more general-purpose sorting function is incoming: PR #992
-const getObservationDate = (obs: Observation): Date | undefined => {
-  const date = evaluateOne(obs, fhirPathMappings.effectiveX);
-
-  if (date) {
-    if (typeof date === "string") {
-      return new Date(date);
-    } else if (date.start) {
-      return new Date(date.start);
-    } else if (date.end) {
-      return new Date(date.end);
-    }
-  }
-};
-
-const sortPregnancyObservations = (
-  a: { observation: Observation },
-  b: { observation: Observation },
-) => {
-  const date_a = getObservationDate(a.observation);
-  const date_b = getObservationDate(b.observation);
-  if (date_a && date_b) {
-    return date_b.getTime() - date_a.getTime(); // Sort descending
-  } else if (date_a) {
-    return -1; // a comes before b
-  } else if (date_b) {
-    return 1; // b comes before a
-  } else {
-    return 0; // No change in order
-  }
 };
 
 /**
@@ -341,7 +312,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
   // also applies to the occupational history in social history). This function will likely need to be
   // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
   // section can handle nested sub-fields.
-  const lastMenstrualPeriodObservations = evaluateAll(
+  const lastMenstrualPeriodObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.lastMenstrualPeriod,
   ).map((ob) => {
@@ -356,7 +327,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       ].filter(isDataAvailable),
     };
   });
-  const pregnancyStatusObservations = evaluateAll(
+  const pregnancyStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.pregnancyStatus,
   ).map((ob) => {
@@ -375,7 +346,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       ].filter(isDataAvailable),
     };
   });
-  const postpartumStatusObservations = evaluateAll(
+  const postpartumStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.postpartumStatus,
   ).map((ob) => {
@@ -397,30 +368,37 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
 
   const unavailableData = [];
 
-  if (lastMenstrualPeriodObservations.length === 0) {
+  if (lastMenstrualPeriodObservationEntries.length === 0) {
     unavailableData.push({
       title: "Last Menstrual Period",
       value: undefined,
     });
   }
-  if (pregnancyStatusObservations.length === 0) {
+  if (pregnancyStatusObservationEntries.length === 0) {
     unavailableData.push({
       title: "Pregnancy Status",
       value: undefined,
     });
   }
-  if (postpartumStatusObservations.length === 0) {
+  if (postpartumStatusObservationEntries.length === 0) {
     unavailableData.push({
       title: "Postpartum Status",
       value: undefined,
     });
   }
 
+  // Using `compareResourcesByDate` because we want to apply the consistent date ordering we are using elsewhere, but we're not sorting `Observation[]`, but instead an object containing an `Observation`.
   const allPregnancyObservations = [
-    ...lastMenstrualPeriodObservations,
-    ...pregnancyStatusObservations,
-    ...postpartumStatusObservations,
-  ].sort(sortPregnancyObservations);
+    ...lastMenstrualPeriodObservationEntries,
+    ...pregnancyStatusObservationEntries,
+    ...postpartumStatusObservationEntries,
+  ].sort((a, b) =>
+    compareResourcesByDate(
+      a.observation,
+      b.observation,
+      fhirPathMappings.effectiveX,
+    ),
+  );
 
   if (allPregnancyObservations.length === 0)
     return { availableData: [], unavailableData };
@@ -472,7 +450,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
   );
   if (jobObs.length === 0) return;
 
-  sortByPeriod(jobObs, (o) => o.effectivePeriod);
+  sortResourcesByDate(jobObs, fhirPathMappings.effectiveX);
 
   return (
     <ExpandCollapseAccordion
