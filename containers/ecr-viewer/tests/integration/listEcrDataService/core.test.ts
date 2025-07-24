@@ -12,6 +12,7 @@ import {
   createCoreEcr,
   createEcrCondition,
   createEcrRule,
+  getLastAuditLog,
 } from "../helpers/core";
 import { buildCore, dropExisting, clearEcrCore } from "../helpers/ddl";
 import { seedUserProgramData } from "../helpers/seed";
@@ -63,8 +64,8 @@ const getWhere = (
     | ExpressionWrapper<Core, "ecr_data", SqlBool>
     | AndWrapper<Core, "ecr_data", SqlBool>,
 ) => {
-  const coredb = getDb<Core>();
-  const rawRes = coredb.selectFrom("ecr_data").where(ebCallBack).compile();
+  const coreDb = getDb<Core>();
+  const rawRes = coreDb.selectFrom("ecr_data").where(ebCallBack).compile();
   const start = `select from "${dbNamespace()}"."ecr_data" where `;
   return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };
 };
@@ -179,6 +180,18 @@ describe("listEcrData - core", () => {
     const sortDirection = "DESC";
 
     const actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+
+    // Check audit log
+    const log = await getLastAuditLog();
+    expect(log.subject).toEqual("ecr");
+    expect(log.action).toEqual("query");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
       startIndex,
       itemsPerPage,
       sortColumn,

@@ -75,7 +75,7 @@ export const audit = <
 
 /**
  * Create an audit record on a transaction. This is a lower level function and should rarely
- * directly be used. See `audit` for a wrapepr to use in most cases
+ * directly be used. See `audit` for a wrapper to use in most cases
  * @param trx kysely transaction
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
