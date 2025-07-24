@@ -187,11 +187,11 @@ describe("user service", () => {
     expect(userId).toMatch(UUID_REGEX);
 
     // check audit log
-    const log = await getLastAuditLog();
-    expect(log.actor).toEqual(adminId!);
-    expect(log.subject).toEqual("user");
-    expect(log.action).toEqual("create");
-    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+    const create_log = await getLastAuditLog();
+    expect(create_log.actor).toEqual(adminId!);
+    expect(create_log.subject).toEqual("user");
+    expect(create_log.action).toEqual("create");
+    expect(JSON.parse(create_log.parameter_json)).toStrictEqual({
       email: userEmail,
       userType: "standard",
       programs: [],
@@ -320,6 +320,18 @@ describe("user service", () => {
   it("should delete a user", async () => {
     // standard user created in prior test
     await deleteUser(userId!);
+
+    // check audit log
+    const delete_log = await getLastAuditLog();
+    expect(delete_log.actor).toEqual(adminId!);
+    expect(delete_log.subject).toEqual("user");
+    expect(delete_log.action).toEqual("delete");
+    expect(JSON.parse(delete_log.parameter_json)).toStrictEqual({
+      email: userEmail,
+      userType: "standard",
+      programs: [],
+      uuid: userId!,
+    });
 
     // see only admin user listed
     const users = await listUsers();
