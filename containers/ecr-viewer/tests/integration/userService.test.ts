@@ -321,11 +321,11 @@ describe("user service", () => {
     await deleteUser({ uuid: userId! });
 
     // check audit log
-    const delete_log = await getLastAuditLog();
-    expect(delete_log.actor).toEqual(adminId!);
-    expect(delete_log.subject).toEqual("user");
-    expect(delete_log.action).toEqual("delete");
-    expect(JSON.parse(delete_log.parameter_json)).toStrictEqual({
+    const deleteLog = await getLastAuditLog();
+    expect(deleteLog.actor).toEqual(adminId!);
+    expect(deleteLog.subject).toEqual("user");
+    expect(deleteLog.action).toEqual("delete");
+    expect(JSON.parse(deleteLog.parameter_json)).toStrictEqual({
       uuid: userId!,
     });
 
