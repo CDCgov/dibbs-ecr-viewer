@@ -325,9 +325,7 @@ describe("user service", () => {
     expect(delete_log.actor).toEqual(adminId!);
     expect(delete_log.subject).toEqual("user");
     expect(delete_log.action).toEqual("delete");
-    expect(JSON.parse(delete_log.parameter_json)).toStrictEqual({
-      userId: userId!,
-    });
+    expect(JSON.parse(delete_log.parameter_json)).toStrictEqual(userId!);
 
     // see only admin user listed
     const users = await listUsers();
