@@ -5,7 +5,7 @@ import { LabReportElementData } from "@/app/services/labsService";
 import {
   AccordionSection,
   AccordionSubSection,
-} from "@/app/view-data/component-utils";
+} from "@/app/view-data/utils/component-utils";
 
 import { DataDisplay } from "./DataDisplay";
 

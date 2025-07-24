@@ -17,7 +17,11 @@ const ACTIVE_EVENTS = ["click", "keydown", "scroll"];
 // Seconds out from session expiration at which we'll warn the user
 const WARNING_DURATION = 90;
 
-const signOutGoHome = () => signOut({ callbackUrl: "/ecr-viewer" });
+/**
+ * Sign out the user and go home
+ * @returns promise void
+ */
+export const signOutGoHome = () => signOut({ callbackUrl: "/ecr-viewer" });
 /**
  * Root layout for the view-data page
  * @returns laid out content

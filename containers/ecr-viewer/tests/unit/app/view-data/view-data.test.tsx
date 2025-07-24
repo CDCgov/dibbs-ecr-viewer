@@ -29,6 +29,7 @@ jest.mock("@/app/utils/auth-utils", () => ({
 }));
 
 jest.mock("@/app/services/userService");
+jest.mock("@/app/services/loggedInUserService");
 
 jest.mock("@/app/view-data/components/SideNav");
 

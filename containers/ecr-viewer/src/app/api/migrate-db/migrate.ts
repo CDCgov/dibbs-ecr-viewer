@@ -7,7 +7,11 @@ import {
 } from "kysely";
 
 import { getDbRaw } from "@/app/data/metadataDb/database";
-import { dbNamespace, dbSchema } from "@/app/data/metadataDb/utils/db-config";
+import {
+  dbDialect,
+  dbNamespace,
+  dbSchema,
+} from "@/app/data/metadataDb/utils/db-config";
 
 import coreMigrations from "./migrations/core";
 import extendedMigrations from "./migrations/extended";
@@ -70,7 +74,7 @@ export async function getMigrations(): Promise<readonly MigrationInfo[]> {
  * @returns true if there are no pending migrations
  */
 export async function dbIsValid(): Promise<boolean> {
-  return !(await hasPendingMigrations());
+  return !!dbDialect() && !(await hasPendingMigrations());
 }
 
 /**
