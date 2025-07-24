@@ -375,22 +375,26 @@ const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
  * user can indeed delete themselves.
  * @param uuid Email of the user to delete
  */
-export const deleteUser = async (uuid: string): Promise<void> => {
-  await getCheckAdmin("delete users");
+export const deleteUser = audit(
+  "user",
+  "delete",
+  async ({ uuid }: { uuid: string }): Promise<void> => {
+    await getCheckAdmin("delete users");
 
-  try {
-    await getDb<Core>()
-      .transaction()
-      .execute(async (trx) => {
-        await updateUserQuery(trx, uuid, { status: "deleted" });
-        await deleteUserProgramAreas(trx, uuid);
-      });
-  } catch (error: unknown) {
-    const message = "Failed to delete user";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-};
+    try {
+      await getDb<Core>()
+        .transaction()
+        .execute(async (trx) => {
+          await updateUserQuery(trx, uuid, { status: "deleted" });
+          await deleteUserProgramAreas(trx, uuid);
+        });
+    } catch (error: unknown) {
+      const message = "Failed to delete user";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 export type NamedUserProgramArea = UserProgramArea & { name: string };
 export type ListedUser = User & { program_areas: NamedUserProgramArea[] };
