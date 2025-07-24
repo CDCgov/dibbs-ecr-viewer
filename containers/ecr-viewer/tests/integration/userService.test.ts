@@ -370,7 +370,7 @@ describe("user service", () => {
     });
   });
 
-  describe("notFoundUnessAdmin", () => {
+  describe("notFoundUnlessAdmin", () => {
     it("should do nothing if user is an admin", async () => {
       await notFoundUnlessAdmin();
       expect(notFound).not.toHaveBeenCalled();
