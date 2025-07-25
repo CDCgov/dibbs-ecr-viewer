@@ -9,6 +9,7 @@ import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
 
+import { FhirDataResponse } from "./fhirDataService";
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
 type Subject = "ecr" | "user" | "program_area";
@@ -23,7 +24,7 @@ type Action =
 
 type AuditableFn<
   Params extends Record<string, unknown>,
-  Ret extends string | boolean | void,
+  Ret extends string | boolean | FhirDataResponse | void,
 > = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
 
 /**
@@ -37,7 +38,7 @@ type AuditableFn<
  */
 export const audit = <
   Params extends Record<string, unknown>,
-  Ret extends string | boolean | void,
+  Ret extends string | boolean | FhirDataResponse | void,
 >(
   subject: Subject,
   action: Action,

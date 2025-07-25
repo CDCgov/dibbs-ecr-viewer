@@ -31,6 +31,9 @@ jest.mock("@/app/data/blobStorage/utils", () => {
     streamToJson: (body: string) => body,
   };
 });
+jest.mock("@/app/services/auditLogService", () => ({
+  audit: jest.fn().mockImplementation((subject, action, fn) => fn),
+}));
 
 const defaultFhirBundle = "hi";
 const simpleResponse = {
@@ -46,7 +49,7 @@ describe("getFhirData", () => {
   it("should return a 500 response when METADATA_DATABASE_TYPE is invalid", async () => {
     (process.env.SOURCE as any) = "p0$+gre$";
 
-    const response = await getFhirData("123");
+    const response = await getFhirData({ ecr_id: "123" });
 
     jest.spyOn(console, "error").mockImplementation();
     expect(response.status).toEqual(500);
@@ -70,7 +73,7 @@ describe("getFhirData", () => {
         file: () => ({ download: () => "Some text" }),
       });
 
-      const response = await getFhirData("1234");
+      const response = await getFhirData({ ecr_id: "1234" });
 
       expect(response.payload).toEqual({ fhirBundle: "Some text" });
       expect(response.status).toEqual(200);
@@ -89,7 +92,7 @@ describe("getFhirData", () => {
         }),
       });
 
-      const response = await getFhirData("1234");
+      const response = await getFhirData({ ecr_id: "1234" });
 
       expect(response.payload).toEqual({ message: "eCR ID not found" });
       expect(response.status).toEqual(404);
@@ -103,7 +106,7 @@ describe("getFhirData", () => {
         }),
       });
 
-      const response = await getFhirData("1234");
+      const response = await getFhirData({ ecr_id: "1234" });
 
       expect(response.payload).toEqual({
         message: "Something went wrong!",
@@ -119,7 +122,7 @@ describe("getFhirData", () => {
         }),
       });
 
-      const response = await getFhirData("1234");
+      const response = await getFhirData({ ecr_id: "1234" });
 
       expect(response.payload).toEqual({
         message: "Internal Server Error.",
@@ -131,7 +134,7 @@ describe("getFhirData", () => {
       process.env.ECR_BUCKET_NAME = "";
       jest.spyOn(console, "error").mockImplementation(() => {});
 
-      const response = await getFhirData("1234");
+      const response = await getFhirData({ ecr_id: "1234" });
 
       expect(response.payload).toEqual({
         message: "Failed to download the FHIR data due to misconfiguration.",
@@ -161,7 +164,7 @@ describe("getS3", () => {
   it("should be called by getFhirData when source is S3", async () => {
     process.env.SOURCE = S3_SOURCE;
     s3Client.send = jest.fn().mockReturnValue({ Body: defaultFhirBundle });
-    const response = await getFhirData("123");
+    const response = await getFhirData({ ecr_id: "123" });
 
     expect(response.status).toEqual(200);
     expect(response.payload).toEqual(simpleResponse);
@@ -259,7 +262,7 @@ describe("getAzure", () => {
     blockBlobClient.download = jest
       .fn()
       .mockReturnValue({ readableStreamBody: defaultFhirBundle });
-    const response = await getFhirData("123");
+    const response = await getFhirData({ ecr_id: "123" });
 
     expect(response.status).toEqual(200);
     expect(response.payload).toEqual(simpleResponse);

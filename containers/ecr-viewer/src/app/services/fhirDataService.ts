@@ -13,6 +13,8 @@ import {
   streamToJson,
 } from "@/app/data/blobStorage/utils";
 
+import { audit } from "./auditLogService";
+
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
 interface Response {
@@ -27,7 +29,7 @@ interface ErrorResponse extends Response {
   payload: { message: string };
 }
 
-type FhirDataResponse = SuccessResponse | ErrorResponse;
+export type FhirDataResponse = SuccessResponse | ErrorResponse;
 
 /**
  * Determine if this is a success response from the fhir service
@@ -42,17 +44,21 @@ export const isSuccessResponse = (resp: Response): resp is SuccessResponse =>
  * @param ecr_id The id of the ecr to fetch
  * @returns NextResponse with the ecr or error data
  */
-export async function getFhirData(ecr_id: string | null) {
-  if (process.env.SOURCE === S3_SOURCE) {
-    return await getS3(ecr_id);
-  } else if (process.env.SOURCE === AZURE_SOURCE) {
-    return await getAzure(ecr_id);
-  } else if (process.env.SOURCE === GCP_SOURCE) {
-    return await getGcp(ecr_id);
-  } else {
-    return { payload: { message: "Invalid source" }, status: 500 };
-  }
-}
+export const getFhirData = audit(
+  "ecr",
+  "view",
+  async ({ ecr_id }: { ecr_id: string | null }) => {
+    if (process.env.SOURCE === S3_SOURCE) {
+      return await getS3(ecr_id);
+    } else if (process.env.SOURCE === AZURE_SOURCE) {
+      return await getAzure(ecr_id);
+    } else if (process.env.SOURCE === GCP_SOURCE) {
+      return await getGcp(ecr_id);
+    } else {
+      return { payload: { message: "Invalid source" }, status: 500 };
+    }
+  },
+);
 
 /**
  * Retrieves FHIR data from S3 based on eCR ID.
