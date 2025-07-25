@@ -556,7 +556,11 @@ describe("generate filter conditions statement with eCRs with no conditions repo
         '(not exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\") or exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\" and (\"erc_sub\".\"condition\" is not null and (\"erc_sub\".\"condition\" ilike $1 or \"erc_sub\".\"condition\" like @2 or \"erc_sub\".\"condition\" like @3))))',
       );
     }
-    expect(params).toStrictEqual(["%No conditions reported%", "%Condition1%", "%Condition2%"]);
+    expect(params).toStrictEqual([
+      "%No conditions reported%",
+      "%Condition1%",
+      "%Condition2%",
+    ]);
   });
 
   it("should display all conditions in date range by default if no filter has been added", () => {

@@ -362,11 +362,7 @@ export const generateFilterConditionsStatement = (
           eb
             .selectFrom("ecr_rr_conditions as erc_sub")
             .select("erc_sub.eicr_id")
-            .where(
-              "erc_sub.eicr_id",
-              "=",
-              eb.ref("ecr_data.eicr_id"),
-            ),
+            .where("erc_sub.eicr_id", "=", eb.ref("ecr_data.eicr_id")),
         ),
       ),
     );
@@ -383,14 +379,14 @@ export const generateFilterConditionsStatement = (
             subEb("erc_sub.condition", "is not", null).and(
               subEb.or(
                 filterConditions.map((condition) =>
-                  subEb("erc_sub.condition", getSql("like"), `%${condition}%`)
-                )
-              )
-            )
-          )
-      )
-    )
-  };
+                  subEb("erc_sub.condition", getSql("like"), `%${condition}%`),
+                ),
+              ),
+            ),
+          ),
+      ),
+    );
+  }
 
   // Single OR statement for all conditions
   return eb.or(queryConditions);
