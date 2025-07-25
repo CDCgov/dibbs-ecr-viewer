@@ -2,7 +2,6 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import { evaluateLabInfoData } from "@/app/services/labsService";
 import { AccordionItem } from "@/app/types";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
@@ -25,6 +24,7 @@ import {
   evaluateHospitalEncounterData,
   evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
+import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
 
 import { evaluateClinicalData } from "./clinical-data";
 

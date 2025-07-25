@@ -12,6 +12,17 @@ import {
 } from "fhir/r4";
 import { Coding, ObservationComponent } from "fhir/r4b";
 
+import { formatDateTime } from "@/app/services/formatDateService";
+import {
+  formatAddress,
+  formatCodeableConcept,
+  formatPhoneNumber,
+} from "@/app/services/formatService";
+import {
+  HtmlTableJson,
+  HtmlTableJsonRow,
+  formatTablesToJSON,
+} from "@/app/services/htmlTableService";
 import { AccordionItem } from "@/app/types";
 import {
   RenderableNode,
@@ -38,18 +49,6 @@ import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
-
-import { formatDateTime } from "./formatDateService";
-import {
-  formatAddress,
-  formatCodeableConcept,
-  formatPhoneNumber,
-} from "./formatService";
-import {
-  HtmlTableJson,
-  HtmlTableJsonRow,
-  formatTablesToJSON,
-} from "./htmlTableService";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];
