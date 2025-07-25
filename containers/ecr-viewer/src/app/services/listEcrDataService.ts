@@ -107,7 +107,7 @@ export const listEcrData = audit(
 );
 
 const createSearchQuery = async (
-  db: Kysely<Core>,
+  db: Transaction<Core>,
   user: User,
   startIndex: number,
   itemsPerPage: number,
