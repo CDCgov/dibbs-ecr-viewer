@@ -3,7 +3,6 @@ import React from "react";
 import { notFound } from "next/navigation";
 
 import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
-import { getFhirData, isSuccessResponse } from "@/app/services/fhirDataService";
 import { isLoggedInUserEcrAuthed } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
@@ -21,6 +20,7 @@ import {
   evaluatePatientDOB,
   evaluatePatientName,
 } from "./services/evaluateFhirDataService";
+import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 
 /**
  * Functional component for rendering the eCR Viewer page.

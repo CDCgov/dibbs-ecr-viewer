@@ -4,10 +4,13 @@ import { render, screen } from "@testing-library/react";
 import { notFound } from "next/navigation";
 
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import { getFhirData, isSuccessResponse } from "@/app/services/fhirDataService";
 import { isLoggedInUserEcrAuthed } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 import ECRViewerPage from "@/app/view-data/page";
+import {
+  getFhirData,
+  isSuccessResponse,
+} from "@/app/view-data/services/fhirDataService";
 
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/view-data/components/LoadingComponent", () => ({
