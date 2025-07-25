@@ -360,10 +360,10 @@ export const generateFilterConditionsStatement = (
       eb.not(
         eb.exists(
           eb
-            .selectFrom("ecr_rr_conditions")
-            .select("ecr_rr_conditions.eicr_id")
+            .selectFrom("ecr_rr_conditions as erc_sub")
+            .select("erc_sub.eicr_id")
             .where(
-              "ecr_rr_conditions.eicr_id",
+              "erc_sub.eicr_id",
               "=",
               eb.ref("ecr_data.eicr_id"),
             ),
@@ -376,13 +376,21 @@ export const generateFilterConditionsStatement = (
     queryConditions.push(
       eb.exists(
         eb
-          .selectFrom("ecr_rr_conditions")
-          .select("ecr_rr_conditions.eicr_id")
-          .where("ecr_rr_conditions.eicr_id", "=", eb.ref("ecr_data.eicr_id"))
-          .where("ecr_rr_conditions.condition", "in", actualConditions),
-      ),
-    );
-  }
+          .selectFrom("ecr_rr_conditions as erc_sub")
+          .select("erc_sub.eicr_id")
+          .whereRef("erc_sub.eicr_id", "=", "ecr_data.eicr_id")
+          .where((subEb) =>
+            subEb("erc_sub.condition", "is not", null).and(
+              subEb.or(
+                filterConditions.map((condition) =>
+                  subEb("erc_sub.condition", getSql("like"), `%${condition}%`)
+                )
+              )
+            )
+          )
+      )
+    )
+  };
 
   // Single OR statement for all conditions
   return eb.or(queryConditions);

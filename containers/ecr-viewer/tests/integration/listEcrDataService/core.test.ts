@@ -452,7 +452,7 @@ describe("generate search statement", () => {
   });
 });
 
-describe("generate filter conditions statement", () => {
+describe("generate filter conditions statement without eCRs with no conditions reported", () => {
   it("should add conditions in the filter statement", () => {
     const conditions = ["Condition1", "Condition2"];
     const { sql, params } = getWhere((eb) =>
@@ -513,6 +513,50 @@ describe("generate filter conditions statement", () => {
       testDateRange.startDate,
       testDateRange.endDate,
     ]);
+  });
+
+  it("should display all conditions in date range by default if no filter has been added", () => {
+    const { sql, params } = getWhere((eb) =>
+      generateWhereStatement(eb, testDateRange, "", undefined),
+    );
+    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+      expect(sql).toEqual(
+        '($1 = $2 and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and $5 = $6)',
+      );
+    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+      expect(sql).toEqual(
+        '(@1 = @2 and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and @5 = @6)',
+      );
+    }
+
+    expect(params).toStrictEqual([
+      true,
+      true,
+      testDateRange.startDate,
+      testDateRange.endDate,
+      true,
+      true,
+    ]);
+  });
+});
+
+describe("generate filter conditions statement with eCRs with no conditions reported", () => {
+  it("should add conditions in the filter statement", () => {
+    const conditions = ["No conditions reported", "Condition1", "Condition2"];
+    const { sql, params } = getWhere((eb) =>
+      generateFilterConditionsStatement(eb, conditions),
+    );
+
+    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+      expect(sql).toEqual(
+        '(not exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\") or exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\" and (\"erc_sub\".\"condition\" is not null and (\"erc_sub\".\"condition\" ilike $1 or \"erc_sub\".\"condition\" ilike $2 or \"erc_sub\".\"condition\" ilike $3))))',
+      );
+    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+      expect(sql).toEqual(
+        '(not exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\") or exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\" and (\"erc_sub\".\"condition\" is not null and (\"erc_sub\".\"condition\" ilike $1 or \"erc_sub\".\"condition\" like @2 or \"erc_sub\".\"condition\" like @3))))',
+      );
+    }
+    expect(params).toStrictEqual(["%No conditions reported%", "%Condition1%", "%Condition2%"]);
   });
 
   it("should display all conditions in date range by default if no filter has been added", () => {
