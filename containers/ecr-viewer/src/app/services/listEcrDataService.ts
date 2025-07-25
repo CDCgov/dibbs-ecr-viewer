@@ -83,12 +83,9 @@ export const listEcrData = audit(
     },
     trx: Transaction<Core>,
   ): Promise<EcrDisplay[]> => {
-    const user = await getLoggedInUser();
-
     try {
-      const ecrList = await createSearchQuery(
+      const ecrList = await executeSearchQuery(
         trx,
-        user!,
         startIndex,
         itemsPerPage,
         sortColumn,
@@ -106,9 +103,8 @@ export const listEcrData = audit(
   },
 );
 
-const createSearchQuery = async (
+const executeSearchQuery = async (
   db: Transaction<Core>,
-  user: User,
   startIndex: number,
   itemsPerPage: number,
   sortColumn: string,
@@ -117,6 +113,7 @@ const createSearchQuery = async (
   searchTerm?: string,
   filterConditions?: string[],
 ) => {
+  const user = await getLoggedInUser(db);
   const mainQuery = db.with("ecr_sets", (db) =>
     db
       .selectFrom("ecr_data")
