@@ -8,6 +8,26 @@ import {
   Organization,
 } from "fhir/r4";
 
+import {
+  evaluatePatientName,
+  evaluatePatientRace,
+  evaluatePatientEthnicity,
+  evaluateEncounterDiagnosis,
+  censorGender,
+  calculatePatientAge,
+} from "@/app/services/evaluateFhirDataService";
+import {
+  formatDate,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
+import {
+  formatCodeableConcept,
+  formatContactPoint,
+  formatCurrentAddress,
+  formatPatientContactList,
+} from "@/app/services/formatService";
+import { evaluateLabInfoData } from "@/app/services/labsService";
+import { getReportabilitySummaries } from "@/app/services/reportabilityService";
 import { evaluateData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -23,24 +43,6 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-
-import {
-  evaluatePatientName,
-  evaluatePatientRace,
-  evaluatePatientEthnicity,
-  evaluateEncounterDiagnosis,
-  censorGender,
-  calculatePatientAge,
-} from "./evaluateFhirDataService";
-import { formatDate, formatStartEndDateTime } from "./formatDateService";
-import {
-  formatCodeableConcept,
-  formatContactPoint,
-  formatCurrentAddress,
-  formatPatientContactList,
-} from "./formatService";
-import { evaluateLabInfoData } from "./labsService";
-import { getReportabilitySummaries } from "./reportabilityService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
