@@ -64,57 +64,64 @@ describe.each([
     setupNoConditionsEcr: false,
     expectedAdmin: ["condition1", "condition2", "condition3"],
     expectedStandard: ["condition1"],
-    expectedNoUser: []
+    expectedNoUser: [],
   },
   {
     scenario: "with eCRs that have no conditions",
-    setupNoConditionsEcr: true, 
-    expectedAdmin: ["No conditions reported", "condition1", "condition2", "condition3"],
+    setupNoConditionsEcr: true,
+    expectedAdmin: [
+      "No conditions reported",
+      "condition1",
+      "condition2",
+      "condition3",
+    ],
     expectedStandard: ["No conditions reported", "condition1"],
-    expectedNoUser: []
-  }
-])("Conditions service $scenario", ({ 
-  scenario, 
-  setupNoConditionsEcr, 
-  expectedAdmin, 
-  expectedStandard, 
-  expectedNoUser 
-}) => {
-  
-  beforeAll(async () => {
-    if (setupNoConditionsEcr) {
-      await createCoreEcr({
-        eicr_id: "00000",
-        set_id: "00000",
-        first_name: "first",
-        last_name: "last",
-        birth_date: "1970-01-01",
+    expectedNoUser: [],
+  },
+])(
+  "Conditions service $scenario",
+  ({
+    scenario,
+    setupNoConditionsEcr,
+    expectedAdmin,
+    expectedStandard,
+    expectedNoUser,
+  }) => {
+    beforeAll(async () => {
+      if (setupNoConditionsEcr) {
+        await createCoreEcr({
+          eicr_id: "00000",
+          set_id: "00000",
+          first_name: "first",
+          last_name: "last",
+          birth_date: "1970-01-01",
+        });
+      }
+    });
+
+    it("Should retrieve all unique conditions for admins", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        email: "admin@admin.com",
       });
-    }
-  });
 
-  it("Should retrieve all unique conditions for admins", async () => {
-    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-      email: "admin@admin.com",
+      const conditions = await getAllConditions();
+      expect(conditions).toStrictEqual(expectedAdmin);
     });
 
-    const conditions = await getAllConditions();
-    expect(conditions).toStrictEqual(expectedAdmin);
-  });
+    it("Should retrieve only unique conditions with authz for standard users", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        email: "standard@standard.com",
+      });
 
-  it("Should retrieve only unique conditions with authz for standard users", async () => {
-    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-      email: "standard@standard.com",
+      const conditions = await getAllConditions();
+      expect(conditions).toStrictEqual(expectedStandard);
     });
 
-    const conditions = await getAllConditions();
-    expect(conditions).toStrictEqual(expectedStandard);
-  });
+    it("Should retrieve no conditions if no user", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
 
-  it("Should retrieve no conditions if no user", async () => {
-    (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
-
-    const conditions = await getAllConditions();
-    expect(conditions).toStrictEqual(expectedNoUser);
-  });
-});
+      const conditions = await getAllConditions();
+      expect(conditions).toStrictEqual(expectedNoUser);
+    });
+  },
+);
