@@ -8,10 +8,8 @@ import { cookies, headers } from "next/headers";
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
-import { EcrDisplay } from "@/app/types";
 
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
-import { FhirDataResponse } from "./types";
 
 type Subject = "ecr" | "user" | "program_area";
 type Action =
@@ -23,10 +21,10 @@ type Action =
   | "signin"
   | "signout";
 
-type AuditableFn<
-  Params extends Record<string, unknown>,
-  Ret extends string | boolean | FhirDataResponse | EcrDisplay[] | void,
-> = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
+type AuditableFn<Params extends Record<string, unknown>, Ret> = (
+  params: Params,
+  trx: Transaction<Core>,
+) => Promise<Ret>;
 
 /**
  * Wrap a function with audit logging. After the function successfully runs, an
@@ -37,10 +35,7 @@ type AuditableFn<
  * @param fn Function to audit upon successful completion. Must be called with only one argument, which is an object with all of the parameters. If it returns a string, it is assumed to be the `uuid` of the subject and will be added to the params as such. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
-export const audit = <
-  Params extends Record<string, unknown>,
-  Ret extends string | boolean | FhirDataResponse | EcrDisplay[] | void,
->(
+export const audit = <Params extends Record<string, unknown>, Ret>(
   subject: Subject,
   action: Action,
   fn: AuditableFn<Params, Ret>,
