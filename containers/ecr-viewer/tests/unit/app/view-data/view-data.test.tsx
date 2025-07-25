@@ -17,7 +17,7 @@ jest.mock("@/app/view-data/components/LoadingComponent", () => ({
   EcrLoadingSkeleton: () => <div>Loading...</div>,
 }));
 
-jest.mock("@/app/services/fhirDataService", () => ({
+jest.mock("@/app/view-data/services/fhirDataService", () => ({
   getFhirData: jest.fn(),
   isSuccessResponse: jest.fn(),
 }));
