@@ -88,3 +88,50 @@ describe("Conditions service", () => {
     expect(conditions).toStrictEqual([]);
   });
 });
+
+describe("Conditions service with 'No conditions reported'", () => {
+  beforeAll(async () => {
+    await createCoreEcr({
+      eicr_id: "00000",
+      set_id: "00000",
+      first_name: "first",
+      last_name: "last",
+      birth_date: "1970-01-01",
+    });
+  })
+  it("Should retrieve all unique conditions for admins", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "admin@admin.com",
+    });
+
+    const conditions = await getAllConditions();
+    expect(conditions).toStrictEqual([
+      "No conditions reported",
+      "condition1",
+      "condition2",
+      "condition3",
+    ]);
+  });
+
+  it("Should retrieve only unique conditions with authz for standard users", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "standard@standard.com",
+    });
+
+    const conditions = await getAllConditions();
+    expect(conditions).toStrictEqual([
+      "No conditions reported",
+      "condition1"
+    ]);
+  });
+
+  it("Should retrieve no conditions if no user", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
+
+    const conditions = await getAllConditions();
+    expect(conditions).toStrictEqual([]);
+  });
+});
+
+
+

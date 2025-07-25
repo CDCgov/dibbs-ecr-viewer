@@ -11,8 +11,8 @@ import { ecr_data, Core, User } from "@/app/data/metadataDb/types/core";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
-import { getLoggedInUser } from "./loggedInUserService";
 import { NO_CONDITIONS_REPORTED_OPTION } from "./listConditionsService";
+import { getLoggedInUser } from "./loggedInUserService";
 
 export interface RelatedEcr {
   eicr_id: string;
