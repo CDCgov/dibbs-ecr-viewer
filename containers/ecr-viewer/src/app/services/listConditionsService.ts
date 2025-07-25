@@ -3,6 +3,8 @@ import { ConditionReference, Core } from "@/app/data/metadataDb/types/core";
 
 import { getLoggedInUser } from "./loggedInUserService";
 
+export const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
+
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.
  * @returns Array of conditions
@@ -12,74 +14,58 @@ export const getAllConditions = async (): Promise<string[]> => {
   if (!user) return [];
 
   try {
-    const result = await getDb<Core>()
-      .selectFrom("ecr_rr_conditions")
-      .select("condition")
-      .distinct()
-      .orderBy("condition")
-      .$if(user.user_type !== "admin", (qb) =>
-        qb
-          .innerJoin(
-            "condition_reference",
-            "condition_reference.code",
-            "ecr_rr_conditions.condition_code",
-          )
-          .innerJoin(
-            "program_area",
-            "program_area.uuid",
-            "condition_reference.program_area_uuid",
-          )
-          .innerJoin(
-            "user_program_area",
-            "user_program_area.program_area_uuid",
-            "program_area.uuid",
-          )
-          .where("user_program_area.user_uuid", "=", user.uuid),
-      )
-      .execute();
+    const db = getDb<Core>();
+    const result = await db.transaction().execute(async (transaction) => {
+      const conditionsResult = await transaction
+        .selectFrom("ecr_rr_conditions")
+        .select("condition")
+        .distinct()
+        .orderBy("condition")
+        .$if(user.user_type !== "admin", (qb) =>
+          qb
+            .innerJoin(
+              "condition_reference",
+              "condition_reference.code",
+              "ecr_rr_conditions.condition_code",
+            )
+            .innerJoin(
+              "program_area",
+              "program_area.uuid",
+              "condition_reference.program_area_uuid",
+            )
+            .innerJoin(
+              "user_program_area",
+              "user_program_area.program_area_uuid",
+              "program_area.uuid",
+            )
+            .where("user_program_area.user_uuid", "=", user.uuid),
+        )
+        .execute();
 
-    const actualConditions = result.map((row) => row.condition);
+      const hasNoConditionsResult = await transaction
+        .selectFrom("ecr_data")
+        .leftJoin("ecr_rr_conditions", "ecr_data.eicr_id", "ecr_rr_conditions.eicr_id")
+        .select("ecr_data.eicr_id")
+        .where("ecr_rr_conditions.uuid", "is", null)
+        .limit(1)
+        .executeTakeFirst();
 
-    const hasEcrsWithNoConditions = await checkForEcrsWithNoConditions();
+      const actualConditions = conditionsResult.map((row) => row.condition);
+      const hasNoConditions = hasNoConditionsResult !== undefined;
 
-    if (hasEcrsWithNoConditions) {
-      return ["No conditions reported", ...actualConditions];
-    }
+      if (hasNoConditions) {
+        return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
+      }
 
-    return actualConditions;
+      return actualConditions;
+    });
+
+    return result;
   } catch (error: unknown) {
     console.error("Error fetching data: ", error);
     throw new Error("Error fetching data");
   }
 };
-
-const checkForEcrsWithNoConditions = async (): Promise<boolean> => {
-  try {
-    const db = getDb<Core>();
-
-    const allEcrIds = await db
-      .selectFrom("ecr_data")
-      .select("eicr_id")
-      .execute();
-
-    const ecrIdsWithConditions = await db
-      .selectFrom("ecr_rr_conditions")
-      .select("eicr_id")
-      .distinct()
-      .execute();
-
-    const ecrIdsWithConditionsSet = new Set(
-      ecrIdsWithConditions.map((row) => row.eicr_id),
-    );
-
-    // Check if any eCRs have no conditions
-    return allEcrIds.some((row) => !ecrIdsWithConditionsSet.has(row.eicr_id));
-  } catch (error: unknown) {
-    console.error("Error checking for eCRs with no conditions: ", error);
-    return false;
-  }
-};
-
 export interface ListedCondition extends ConditionReference {
   program_area_name: string | null;
 }

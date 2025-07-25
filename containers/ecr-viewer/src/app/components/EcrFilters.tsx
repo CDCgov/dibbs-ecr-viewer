@@ -89,7 +89,6 @@ const FilterReportableConditions = ({
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
 
-  // 3. Computed values
   const isAllSelected = Object.values(filterConditions).every(
     (val) => val === true,
   );
@@ -141,7 +140,7 @@ const FilterReportableConditions = ({
         const conditionsToSubmit = isAllSelected
           ? { ...filterConditions, [NO_CONDITIONS_REPORTED_OPTION]: true }
           : filterConditions;
-        updateQueryParam(ParamName.Condition, conditionsToSubmit, false);
+        updateQueryParam(ParamName.Condition, conditionsToSubmit);
         pushQueryUpdate();
       }}
     >

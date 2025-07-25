@@ -12,6 +12,7 @@ import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { formatDate, formatDateTime } from "./formatDateService";
 import { getLoggedInUser } from "./loggedInUserService";
+import { NO_CONDITIONS_REPORTED_OPTION } from "./listConditionsService";
 
 export interface RelatedEcr {
   eicr_id: string;
@@ -345,8 +346,6 @@ export const generateFilterConditionsStatement = (
     return falseStmt(eb);
   }
 
-  // Check if "No conditions reported" is selected
-  const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
   const includeNoConditions = filterConditions.includes(
     NO_CONDITIONS_REPORTED_OPTION,
   );
@@ -354,63 +353,35 @@ export const generateFilterConditionsStatement = (
     (condition) => condition !== NO_CONDITIONS_REPORTED_OPTION,
   );
 
-  // If only "No conditions reported" is selected
-  if (includeNoConditions && actualConditions.length === 0) {
-    return eb("ecr_data.eicr_id", "not in", (subQb) =>
-      subQb
-        .selectFrom("ecr_rr_conditions as erc_sub")
-        .select("erc_sub.eicr_id"),
+  const queryConditions = [];
+
+  if (includeNoConditions) {
+    queryConditions.push(
+      eb.not(
+        eb.exists(
+          eb
+            .selectFrom("ecr_rr_conditions")
+            .select("ecr_rr_conditions.eicr_id")
+            .where("ecr_rr_conditions.eicr_id", "=", eb.ref("ecr_data.eicr_id"))
+        )
+      )
     );
   }
 
-  // If only actual conditions are selected (no "No conditions reported")
-  if (!includeNoConditions && actualConditions.length > 0) {
-    return eb.exists(
-      eb
-        .selectFrom("ecr_rr_conditions as erc_sub")
-        .select("erc_sub.eicr_id")
-        .whereRef("erc_sub.eicr_id", "=", "ecr_data.eicr_id")
-        .where((subEb) =>
-          subEb("erc_sub.condition", "is not", null).and(
-            subEb.or(
-              actualConditions.map((condition) =>
-                subEb("erc_sub.condition", getSql("like"), `%${condition}%`),
-              ),
-            ),
-          ),
-        ),
-    );
-  }
-
-  // If both "No conditions reported" AND actual conditions are selected
-  if (includeNoConditions && actualConditions.length > 0) {
-    return eb.or([
-      // Include eCRs with no conditions
-      eb("ecr_data.eicr_id", "not in", (subQb) =>
-        subQb
-          .selectFrom("ecr_rr_conditions as erc_sub")
-          .select("erc_sub.eicr_id"),
-      ),
-
-      // Include eCRs with selected conditions
+  if (actualConditions.length > 0) {
+    queryConditions.push(
       eb.exists(
         eb
-          .selectFrom("ecr_rr_conditions as erc_sub")
-          .select("erc_sub.eicr_id")
-          .whereRef("erc_sub.eicr_id", "=", "ecr_data.eicr_id")
-          .where((subEb) =>
-            subEb("erc_sub.condition", "is not", null).and(
-              subEb.or(
-                actualConditions.map((condition) =>
-                  subEb("erc_sub.condition", getSql("like"), `%${condition}%`),
-                ),
-              ),
-            ),
-          ),
-      ),
-    ]);
+          .selectFrom("ecr_rr_conditions")
+          .select("ecr_rr_conditions.eicr_id")
+          .where("ecr_rr_conditions.eicr_id", "=", eb.ref("ecr_data.eicr_id"))
+          .where("ecr_rr_conditions.condition", "in", actualConditions)
+      )
+    );
   }
-  return trueStmt(eb);
+
+  // Single OR statement for all conditions
+  return eb.or(queryConditions);
 };
 
 /**
