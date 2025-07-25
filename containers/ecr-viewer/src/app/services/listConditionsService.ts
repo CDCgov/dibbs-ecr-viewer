@@ -55,15 +55,13 @@ export const getAllConditions = async (): Promise<string[]> => {
         .executeTakeFirst();
 
       const actualConditions = conditionsResult.map((row) => row.condition);
-      const hasNoConditions = hasNoConditionsResult !== undefined;
+      const hasEcrWithNoConditions = hasNoConditionsResult !== undefined;
 
-      if (hasNoConditions) {
+      if (hasEcrWithNoConditions) {
         return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
       }
-
       return actualConditions;
     });
-
     return result;
   } catch (error: unknown) {
     console.error("Error fetching data: ", error);

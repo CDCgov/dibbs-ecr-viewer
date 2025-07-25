@@ -122,6 +122,11 @@ const FilterReportableConditions = ({
   );
 
   const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
+  const noConditions = Object.fromEntries(
+    Object.entries(filterConditions).filter(
+      ([key]) => key === NO_CONDITIONS_REPORTED_OPTION,
+    ),
+  );
 
   const regularConditions = Object.fromEntries(
     Object.entries(filterConditions).filter(
@@ -137,10 +142,7 @@ const FilterReportableConditions = ({
       icon={Coronavirus}
       tag={activeConditions.length || "0"}
       submitHandler={() => {
-        const conditionsToSubmit = isAllSelected
-          ? { ...filterConditions, [NO_CONDITIONS_REPORTED_OPTION]: true }
-          : filterConditions;
-        updateQueryParam(ParamName.Condition, conditionsToSubmit);
+        updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
       }}
     >
@@ -158,14 +160,11 @@ const FilterReportableConditions = ({
         {/* No conditions reported */}
         <CheckboxOptions
           groupName="condition"
-          filterItems={{
-            [NO_CONDITIONS_REPORTED_OPTION]:
-              filterConditions[NO_CONDITIONS_REPORTED_OPTION] || false,
-          }}
+          filterItems={noConditions}
           onChange={handleCheckboxChange}
         />
 
-        {Object.keys(regularConditions).length > 0 && (
+        {Object.keys(noConditions).length > 0 && (
           <div className="border-top-1px border-base-lighter margin-x-105"></div>
         )}
 
