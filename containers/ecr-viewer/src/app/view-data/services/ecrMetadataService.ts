@@ -1,12 +1,7 @@
 import { Bundle, Observation, Organization } from "fhir/r4";
 
 import { formatDateTime } from "@/app/services/formatDateService";
-import {
-  formatAddress,
-  formatCodeableConcept,
-  formatContactPoint,
-  formatName,
-} from "@/app/services/formatService";
+import { formatCodeableConcept } from "@/app/services/formatService";
 import {
   CompleteData,
   noData,
@@ -27,6 +22,7 @@ import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
+import { formatAddress, formatContactPoint, formatName } from "./formatService";
 import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
