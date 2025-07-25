@@ -2,7 +2,6 @@ import React from "react";
 
 import { Bundle } from "fhir/r4";
 
-import { evaluateEcrMetadata } from "@/app/services/ecrMetadataService";
 import {
   evaluateDemographicsData,
   evaluateSocialData,
@@ -25,6 +24,7 @@ import LabInfo from "@/app/view-data/components/LabInfo";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
+import { evaluateEcrMetadata } from "@/app/view-data/services/ecrMetadataService";
 
 import { evaluateClinicalData } from "./clinical-data";
 
