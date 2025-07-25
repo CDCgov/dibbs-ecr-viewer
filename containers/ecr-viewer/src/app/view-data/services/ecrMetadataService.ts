@@ -7,7 +7,6 @@ import {
   formatContactPoint,
   formatName,
 } from "@/app/services/formatService";
-import { getReportabilitySummaries } from "@/app/services/reportabilityService";
 import {
   CompleteData,
   noData,
@@ -28,6 +27,7 @@ import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
+import { getReportabilitySummaries } from "./reportabilityService";
 
 export interface ReportableConditions {
   [condition: string]: {

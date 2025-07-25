@@ -18,7 +18,6 @@ import {
   formatCurrentAddress,
   formatPatientContactList,
 } from "@/app/services/formatService";
-import { getReportabilitySummaries } from "@/app/services/reportabilityService";
 import { evaluateData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -44,6 +43,7 @@ import {
   calculatePatientAge,
 } from "./evaluateFhirDataService";
 import { evaluateLabInfoData } from "./labsService";
+import { getReportabilitySummaries } from "./reportabilityService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
