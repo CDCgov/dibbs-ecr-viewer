@@ -362,9 +362,13 @@ export const generateFilterConditionsStatement = (
           eb
             .selectFrom("ecr_rr_conditions")
             .select("ecr_rr_conditions.eicr_id")
-            .where("ecr_rr_conditions.eicr_id", "=", eb.ref("ecr_data.eicr_id"))
-        )
-      )
+            .where(
+              "ecr_rr_conditions.eicr_id",
+              "=",
+              eb.ref("ecr_data.eicr_id"),
+            ),
+        ),
+      ),
     );
   }
 
@@ -375,8 +379,8 @@ export const generateFilterConditionsStatement = (
           .selectFrom("ecr_rr_conditions")
           .select("ecr_rr_conditions.eicr_id")
           .where("ecr_rr_conditions.eicr_id", "=", eb.ref("ecr_data.eicr_id"))
-          .where("ecr_rr_conditions.condition", "in", actualConditions)
-      )
+          .where("ecr_rr_conditions.condition", "in", actualConditions),
+      ),
     );
   }
 

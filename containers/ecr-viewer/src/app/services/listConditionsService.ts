@@ -44,7 +44,11 @@ export const getAllConditions = async (): Promise<string[]> => {
 
       const hasNoConditionsResult = await transaction
         .selectFrom("ecr_data")
-        .leftJoin("ecr_rr_conditions", "ecr_data.eicr_id", "ecr_rr_conditions.eicr_id")
+        .leftJoin(
+          "ecr_rr_conditions",
+          "ecr_data.eicr_id",
+          "ecr_rr_conditions.eicr_id",
+        )
         .select("ecr_data.eicr_id")
         .where("ecr_rr_conditions.uuid", "is", null)
         .limit(1)
