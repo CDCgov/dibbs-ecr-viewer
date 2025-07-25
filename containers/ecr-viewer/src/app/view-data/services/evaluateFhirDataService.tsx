@@ -33,10 +33,6 @@ import {
   formatCurrentAddress,
 } from "@/app/services/formatService";
 import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
-import {
-  evaluateTravelHistoryTable,
-  returnDisabilityStatusTable,
-} from "@/app/services/socialHistoryService";
 import { Age } from "@/app/services/types";
 import {
   CompleteData,
@@ -64,6 +60,11 @@ import {
   compareResourcesByDate,
   sortResourcesByDate,
 } from "@/app/view-data/utils/fhir-data-utils";
+
+import {
+  evaluateTravelHistoryTable,
+  returnDisabilityStatusTable,
+} from "./socialHistoryService";
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.
