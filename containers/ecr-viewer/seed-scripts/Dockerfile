@@ -1,4 +1,4 @@
-FROM python:3.13.3-alpine
+FROM python:3.14.0rc1-alpine
 
 # Set the working directory in the container
 WORKDIR /code
