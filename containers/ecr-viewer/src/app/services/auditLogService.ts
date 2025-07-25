@@ -8,8 +8,8 @@ import { cookies, headers } from "next/headers";
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
+import { EcrDisplay } from "@/app/types";
 
-import { EcrDisplay } from "./listEcrDataService";
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
 type Subject = "ecr" | "user" | "program_area";

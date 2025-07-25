@@ -22,7 +22,6 @@ import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   MetadataModel,
-  EcrDisplay,
   generateFilterConditionsStatement,
   generateSearchStatement,
   generateWhereStatement,
@@ -31,6 +30,7 @@ import {
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
+import { EcrDisplay } from "@/app/types";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const filterDates = {

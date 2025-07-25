@@ -12,10 +12,10 @@ import { createExtendedEcr } from "../helpers/extended";
 import { seedUserProgramData } from "../helpers/seed";
 import { NewExtendedECR } from "@/app/data/metadataDb/types/extended";
 import {
-  EcrDisplay,
   getTotalEcrCount,
   listEcrData,
 } from "@/app/services/listEcrDataService";
+import { EcrDisplay } from "@/app/types";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const filterDates = {

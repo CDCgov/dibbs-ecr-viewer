@@ -4,7 +4,8 @@ import { axe } from "jest-axe";
 import router from "next-router-mock";
 
 import EcrTableContent from "@/app/components/table/ecr/EcrTableContent";
-import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
+import { listEcrData } from "@/app/services/listEcrDataService";
+import { EcrDisplay } from "@/app/types";
 import { range } from "@/app/utils/data-utils";
 
 jest.mock("@/app/data/metadataDb/database");
