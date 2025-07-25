@@ -8,6 +8,7 @@ import { cookies, headers } from "next/headers";
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
+import { EcrDisplay } from "@/app/types";
 
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
@@ -23,7 +24,7 @@ type Action =
 
 type AuditableFn<
   Params extends Record<string, unknown>,
-  Ret extends string | boolean | void,
+  Ret extends string | boolean | EcrDisplay[] | void,
 > = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
 
 /**
@@ -37,7 +38,7 @@ type AuditableFn<
  */
 export const audit = <
   Params extends Record<string, unknown>,
-  Ret extends string | boolean | void,
+  Ret extends string | boolean | EcrDisplay[] | void,
 >(
   subject: Subject,
   action: Action,
