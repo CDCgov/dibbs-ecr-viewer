@@ -15,11 +15,12 @@ import {
 
 import { audit } from "./auditLogService";
 
+const UNKNOWN_ECR_ID = "eCR ID not found";
+
 interface Response {
   status: number;
   payload: object;
 }
-
 interface SuccessResponse extends Response {
   status: 200;
   payload: { fhirBundle: Bundle };
@@ -29,8 +30,6 @@ interface ErrorResponse extends Response {
 }
 
 type FhirDataResponse = SuccessResponse | ErrorResponse;
-
-const UNKNOWN_ECR_ID = "eCR ID not found";
 
 /**
  * Determine if this is a success response from the fhir service
