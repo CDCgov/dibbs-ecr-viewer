@@ -173,20 +173,12 @@ describe("process Metadata", () => {
 });
 
 describe("listEcrData - core", () => {
-  it("should return empty array when no data is found", async () => {
-    const startIndex = 0;
-    const itemsPerPage = 25;
-    const sortColumn = "date_created";
-    const sortDirection = "DESC";
-
-    const actual = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
-      filterDates,
-    });
-
+  const checkAuditLog = async (
+    startIndex: number,
+    itemsPerPage: number,
+    sortColumn: string,
+    sortDirection: string,
+  ) => {
     // Check audit log
     const log = await getLastAuditLog();
     expect(log.subject).toEqual("ecr");
@@ -201,7 +193,22 @@ describe("listEcrData - core", () => {
         endDate: filterDates.endDate.toISOString(),
       },
     });
+  };
 
+  it("should return empty array when no data is found", async () => {
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+
+    const actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toBeEmpty();
 
     const actualCount = await getTotalEcrCount(filterDates);
@@ -233,6 +240,7 @@ describe("listEcrData - core", () => {
       sortDirection,
       filterDates,
     });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
@@ -295,6 +303,7 @@ describe("listEcrData - core", () => {
       sortDirection,
       filterDates,
     });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([]);
 
     const actualCount = await getTotalEcrCount(filterDates);
@@ -332,6 +341,7 @@ describe("listEcrData - core", () => {
       sortDirection,
       filterDates,
     });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
@@ -386,6 +396,7 @@ describe("listEcrData - core", () => {
       sortDirection,
       filterDates,
     });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([]);
 
     const actualCount = await getTotalEcrCount(filterDates);

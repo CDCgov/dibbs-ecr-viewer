@@ -2,7 +2,11 @@
  * @jest-environment node
  */
 
-import { createEcrCondition, createEcrRule } from "../helpers/core";
+import {
+  createEcrCondition,
+  createEcrRule,
+  getLastAuditLog,
+} from "../helpers/core";
 import { buildExtended, dropExisting, clearEcrExtended } from "../helpers/ddl";
 import { createExtendedEcr } from "../helpers/extended";
 import { seedUserProgramData } from "../helpers/seed";
@@ -93,6 +97,27 @@ afterAll(async () => {
 });
 
 describe("listEcrData - extended", () => {
+  const checkAuditLog = async (
+    startIndex: number,
+    itemsPerPage: number,
+    sortColumn: string,
+    sortDirection: string,
+  ) => {
+    // Check audit log
+    const log = await getLastAuditLog();
+    expect(log.subject).toEqual("ecr");
+    expect(log.action).toEqual("query");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates: {
+        startDate: filterDates.startDate.toISOString(),
+        endDate: filterDates.endDate.toISOString(),
+      },
+    });
+  };
   it("should return empty array when no data is found", async () => {
     const startIndex = 0;
     const itemsPerPage = 25;
@@ -106,7 +131,7 @@ describe("listEcrData - extended", () => {
       sortDirection,
       filterDates,
     });
-
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toBeEmpty();
 
     const actualCount = await getTotalEcrCount(filterDates);
@@ -128,14 +153,19 @@ describe("listEcrData - extended", () => {
     });
 
     // Act
+    const startIndex = 0;
+    const itemsPerPage = 10;
+    const sortColumn = "report_date";
+    const sortDirection = "DESC";
     const actual = await listEcrData({
-      startIndex: 0,
-      itemsPerPage: 10,
-      sortColumn: "report_date",
-      sortDirection: "DESC",
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
       filterDates,
     });
     // Assert
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
@@ -197,6 +227,7 @@ describe("listEcrData - extended", () => {
       sortDirection,
       filterDates,
     });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([]);
 
     const actualCount = await getTotalEcrCount(filterDates);
@@ -234,6 +265,7 @@ describe("listEcrData - extended", () => {
       sortDirection,
       filterDates,
     });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
@@ -288,6 +320,7 @@ describe("listEcrData - extended", () => {
       sortDirection,
       filterDates,
     });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([]);
 
     const actualCount = await getTotalEcrCount(filterDates);
