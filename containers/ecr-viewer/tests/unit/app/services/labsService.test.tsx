@@ -23,6 +23,7 @@ import {
   getJsonLab,
   getAllLabJsonObjects,
 } from "@/app/services/labsService";
+import { AccordionItem } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -30,7 +31,6 @@ import {
   evaluateOneAndCheck,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
-import { AccordionItem } from "@/app/view-data/types";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const BundleLabInvalidResultsDiv =

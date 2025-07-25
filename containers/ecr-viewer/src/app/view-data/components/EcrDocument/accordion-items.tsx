@@ -13,6 +13,7 @@ import {
   evaluatePregnancyData,
 } from "@/app/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/services/labsService";
+import { AccordionItem } from "@/app/types";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toKebabCase } from "@/app/utils/format-utils";
@@ -24,7 +25,6 @@ import LabInfo from "@/app/view-data/components/LabInfo";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
-import { AccordionItem } from "@/app/view-data/types";
 
 import { evaluateClinicalData } from "./clinical-data";
 

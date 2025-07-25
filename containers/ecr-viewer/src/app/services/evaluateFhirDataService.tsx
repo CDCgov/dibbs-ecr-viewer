@@ -64,6 +64,7 @@ import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
 } from "./socialHistoryService";
+import { Age } from "./types";
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.
@@ -161,12 +162,6 @@ export const evaluateEncounterId = (fhirBundle: Bundle) => {
  */
 export const evaluatePatientDOB = (fhirBundle: Bundle) =>
   formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB));
-
-export interface Age {
-  years: number;
-  months: number;
-  days: number;
-}
 
 /**
  * Calculates the patient's age at a specific point in time or the current date.

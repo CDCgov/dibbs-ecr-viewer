@@ -18,8 +18,8 @@ import {
   toTitleCase,
 } from "@/app/utils/format-utils";
 
-import { Age } from "./evaluateFhirDataService";
 import { formatPeriodDate } from "./formatDateService";
+import { Age } from "./types";
 
 /**
  * Formats a person's name: <use>: <prefix> <given> <family> <suffix>.
@@ -83,7 +83,7 @@ type AddressConfig = { includeUse?: boolean; includePeriod?: boolean };
  * @param address.period - Optional address use.
  * @param config - Configuration object to customize formatting
  * @param config.includeUse - Include the use (e.g. `Home:`) on the address if available (default: false)
- * @param config.includePeriod - Include the perios (e.g. `Dates: 12/11/2023 - Present`) on the address if available (default: false)
+ * @param config.includePeriod - Include the periods (e.g. `Dates: 12/11/2023 - Present`) on the address if available (default: false)
  * @returns The formatted address string.
  */
 export const formatAddress = (
@@ -397,7 +397,7 @@ export const formatRange = (data: Range | undefined): string | undefined => {
 };
 
 /**
- * Returns the value of a Reference. While this function is currently very simple, it exists to futureproof a change in how we format references.
+ * Returns the value of a Reference. While this function is currently very simple, it exists to future-proof a change in how we format references.
  * @param reference the reference being formatted
  * @returns .reference value of the supplied reference
  */

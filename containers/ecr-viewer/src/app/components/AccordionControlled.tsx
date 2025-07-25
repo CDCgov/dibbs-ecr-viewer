@@ -9,7 +9,7 @@ import React, { ReactNode } from "react";
 import { Checkbox } from "@trussworks/react-uswds";
 import classnames from "classnames";
 
-import { AccordionItem as AccordionItemProps } from "@/app/view-data/types";
+import { AccordionItem as AccordionItemProps } from "@/app/types";
 
 interface AccordionCheckboxProps {
   id: string;

@@ -12,6 +12,7 @@ import {
 } from "fhir/r4";
 import { Coding, ObservationComponent } from "fhir/r4b";
 
+import { AccordionItem } from "@/app/types";
 import {
   RenderableNode,
   arrayToElement,
@@ -37,7 +38,6 @@ import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
-import { AccordionItem } from "@/app/view-data/types";
 
 import { formatDateTime } from "./formatDateService";
 import {
