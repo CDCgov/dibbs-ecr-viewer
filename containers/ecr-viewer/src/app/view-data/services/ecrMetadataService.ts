@@ -1,6 +1,5 @@
 import { Bundle, Observation, Organization } from "fhir/r4";
 
-import { evaluatePractitionerRoleReference } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import {
   formatAddress,
@@ -27,6 +26,8 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+
+import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 
 export interface ReportableConditions {
   [condition: string]: {

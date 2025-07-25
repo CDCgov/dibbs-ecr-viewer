@@ -14,6 +14,31 @@ import { DateTime } from "luxon";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import {
+  formatDate,
+  formatDateTime,
+  formatPeriodDate,
+  formatStartEndDate,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
+import {
+  formatAddress,
+  formatAddressList,
+  formatCodeableConcept,
+  formatContactPoint,
+  formatName,
+  formatNameList,
+  formatPatientContactList,
+  formatAge,
+  findCurrentAddress,
+  formatCurrentAddress,
+} from "@/app/services/formatService";
+import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
+import {
+  evaluateTravelHistoryTable,
+  returnDisabilityStatusTable,
+} from "@/app/services/socialHistoryService";
+import { Age } from "@/app/services/types";
+import {
   CompleteData,
   evaluateData,
   isDataAvailable,
@@ -39,32 +64,6 @@ import {
   compareResourcesByDate,
   sortResourcesByDate,
 } from "@/app/view-data/utils/fhir-data-utils";
-
-import {
-  formatDate,
-  formatDateTime,
-  formatPeriodDate,
-  formatStartEndDate,
-  formatStartEndDateTime,
-} from "./formatDateService";
-import {
-  formatAddress,
-  formatAddressList,
-  formatCodeableConcept,
-  formatContactPoint,
-  formatName,
-  formatNameList,
-  formatPatientContactList,
-  formatAge,
-  findCurrentAddress,
-  formatCurrentAddress,
-} from "./formatService";
-import { HtmlTableJsonRow } from "./htmlTableService";
-import {
-  evaluateTravelHistoryTable,
-  returnDisabilityStatusTable,
-} from "./socialHistoryService";
-import { Age } from "./types";
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.
@@ -798,7 +797,7 @@ export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
  * @param caption - A string to set the caption for the UI element
  * @returns An array of evaluated and formatted hospital encounter data.
  */
-export const evaluateEncounterDiagnosisData = (
+const evaluateEncounterDiagnosisData = (
   fhirBundle: Bundle,
   code: string,
   caption: string,

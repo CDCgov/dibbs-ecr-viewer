@@ -9,14 +9,6 @@ import {
 } from "fhir/r4";
 
 import {
-  evaluatePatientName,
-  evaluatePatientRace,
-  evaluatePatientEthnicity,
-  evaluateEncounterDiagnosis,
-  censorGender,
-  calculatePatientAge,
-} from "@/app/services/evaluateFhirDataService";
-import {
   formatDate,
   formatStartEndDateTime,
 } from "@/app/services/formatDateService";
@@ -43,6 +35,15 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
+
+import {
+  evaluatePatientName,
+  evaluatePatientRace,
+  evaluatePatientEthnicity,
+  evaluateEncounterDiagnosis,
+  censorGender,
+  calculatePatientAge,
+} from "./evaluateFhirDataService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
