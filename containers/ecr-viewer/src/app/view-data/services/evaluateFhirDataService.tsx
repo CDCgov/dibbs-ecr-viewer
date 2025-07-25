@@ -33,7 +33,7 @@ import {
   formatCurrentAddress,
 } from "@/app/services/formatService";
 import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
-import { Age } from "@/app/services/types";
+import { Age } from "@/app/types";
 import {
   CompleteData,
   evaluateData,

@@ -12,6 +12,7 @@ import {
   RelatedPerson,
 } from "fhir/r4";
 
+import { Age } from "@/app/types";
 import {
   makePlural,
   toSentenceCase,
@@ -19,7 +20,6 @@ import {
 } from "@/app/utils/format-utils";
 
 import { formatPeriodDate } from "./formatDateService";
-import { Age } from "./types";
 
 /**
  * Formats a person's name: <use>: <prefix> <given> <family> <suffix>.
