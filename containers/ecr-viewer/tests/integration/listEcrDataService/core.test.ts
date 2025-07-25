@@ -553,7 +553,7 @@ describe("generate filter conditions statement with eCRs with no conditions repo
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '(not exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\") or exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\" and (\"erc_sub\".\"condition\" is not null and (\"erc_sub\".\"condition\" ilike $1 or \"erc_sub\".\"condition\" like @2 or \"erc_sub\".\"condition\" like @3))))',
+        '(not exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\") or exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\" and (\"erc_sub\".\"condition\" is not null and (\"erc_sub\".\"condition\" like @1 or \"erc_sub\".\"condition\" like @2 or \"erc_sub\".\"condition\" like @3))))',
       );
     }
     expect(params).toStrictEqual([

@@ -51,7 +51,6 @@ export const getAllConditions = async (): Promise<string[]> => {
         )
         .select("ecr_data.eicr_id")
         .where("ecr_rr_conditions.uuid", "is", null)
-        .limit(1)
         .executeTakeFirst();
 
       const actualConditions = conditionsResult.map((row) => row.condition);
