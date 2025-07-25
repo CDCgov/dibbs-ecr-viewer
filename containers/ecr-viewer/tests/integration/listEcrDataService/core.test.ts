@@ -179,7 +179,6 @@ describe("listEcrData - core", () => {
     sortColumn: string,
     sortDirection: string,
   ) => {
-    // Check audit log
     const log = await getLastAuditLog();
     expect(log.subject).toEqual("ecr");
     expect(log.action).toEqual("query");
