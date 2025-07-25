@@ -8,6 +8,7 @@ import { cookies, headers } from "next/headers";
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
+import { EcrDisplay } from "@/app/types";
 
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 import { FhirDataResponse } from "./types";
@@ -24,7 +25,7 @@ type Action =
 
 type AuditableFn<
   Params extends Record<string, unknown>,
-  Ret extends string | boolean | FhirDataResponse | void,
+  Ret extends string | boolean | FhirDataResponse | EcrDisplay[] | void,
 > = (params: Params, trx: Transaction<Core>) => Promise<Ret>;
 
 /**
@@ -38,7 +39,7 @@ type AuditableFn<
  */
 export const audit = <
   Params extends Record<string, unknown>,
-  Ret extends string | boolean | FhirDataResponse | void,
+  Ret extends string | boolean | FhirDataResponse | EcrDisplay[] | void,
 >(
   subject: Subject,
   action: Action,
@@ -75,7 +76,7 @@ export const audit = <
 
 /**
  * Create an audit record on a transaction. This is a lower level function and should rarely
- * directly be used. See `audit` for a wrapepr to use in most cases
+ * directly be used. See `audit` for a wrapper to use in most cases
  * @param trx kysely transaction
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
