@@ -1,7 +1,6 @@
 import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobClient, BlobDownloadResponseParsed } from "@azure/storage-blob";
 import { ApiError } from "@google-cloud/storage";
-import { Bundle } from "fhir/r4";
 
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
@@ -14,22 +13,9 @@ import {
 } from "@/app/data/blobStorage/utils";
 
 import { audit } from "./auditLogService";
+import { FhirDataResponse, SuccessResponse, Response } from "./types";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
-
-interface Response {
-  status: number;
-  payload: object;
-}
-interface SuccessResponse extends Response {
-  status: 200;
-  payload: { fhirBundle: Bundle };
-}
-interface ErrorResponse extends Response {
-  payload: { message: string };
-}
-
-export type FhirDataResponse = SuccessResponse | ErrorResponse;
 
 /**
  * Determine if this is a success response from the fhir service

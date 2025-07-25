@@ -9,8 +9,8 @@ import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
 
-import { FhirDataResponse } from "./fhirDataService";
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
+import { FhirDataResponse } from "./types";
 
 type Subject = "ecr" | "user" | "program_area";
 type Action =
