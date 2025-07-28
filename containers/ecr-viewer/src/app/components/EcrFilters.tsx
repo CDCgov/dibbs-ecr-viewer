@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { Label } from "@trussworks/react-uswds";
+
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDateTime } from "@/app/services/formatDateService";
 import {
@@ -10,12 +12,12 @@ import {
   DateRangeOptions,
   dateRangeLabels,
 } from "@/app/utils/date-utils";
+import { toKebabCase } from "@/app/utils/format-utils";
 
 import {
   Filter,
   RadioDateOption,
   RadioDateOptions,
-  CustomDateInput,
   SelectDeselectAllCheckbox,
   CheckboxOptions,
 } from "./BaseFilter";
@@ -34,6 +36,55 @@ interface FilterProps {
   initCustomDate: string;
   initDateRange: DateRangeOption;
 }
+
+/**
+ *  A custom date input component for selecting a date.
+ * @param props - The properties for the CustomDateInput component.
+ * @param props.label - The label of the custom date input component.
+ * @param props.onDateChange - The function that is called when the date changes.
+ * @param props.defaultValue - The default value of the date input.
+ * @param props.isRequired - Boolean indicating whether or not the date is required.
+ * @param props.minValue - The minimum value of the date input.
+ * @returns A JSX element containing a date input field and corresponding label.
+ */
+export const CustomDateInput = ({
+  label,
+  onDateChange,
+  defaultValue,
+  isRequired,
+  minValue,
+}: {
+  label: string;
+  onDateChange: (date: string) => void;
+  defaultValue: string;
+  isRequired: boolean;
+  minValue?: string;
+}) => {
+  const today = new Date().toLocaleDateString("en-CA");
+  const id = toKebabCase(label);
+  return (
+    <div>
+      <Label htmlFor={id} className="margin-top-1">
+        {label}
+      </Label>
+      <input
+        id={id}
+        data-testid={id}
+        type="date"
+        className="usa-input width-card margin-top-0 border-base-dark"
+        defaultValue={defaultValue}
+        min={minValue}
+        max={today}
+        required={isRequired}
+        aria-label={label}
+        onChange={(e) => {
+          const date = e.target.value;
+          onDateChange(date);
+        }}
+      />
+    </div>
+  );
+};
 
 /**
  * Functional component that renders Filters section in eCR Library.
