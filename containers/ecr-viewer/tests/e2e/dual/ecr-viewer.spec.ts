@@ -5,8 +5,10 @@ import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 import { logIn, nbsAuthParam } from "../utils";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 
-test.describe("viewer page", () => {
+describe("viewer page", () => {
   if (process.env.CONFIG_NAME.endsWith("NON_INTEGRATED")) {
     test.beforeEach(({ page }) => logIn(page));
   }
@@ -25,6 +27,21 @@ test.describe("viewer page", () => {
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 
     expect(accessibilityScanResults.violations).toEqual([]);
+
+    const logs = await getDb<Core>()
+      .selectFrom("audit_log")
+      .selectAll()
+      .where("subject", "=", "ecr")
+      .where("action", "=", "view")
+      .execute();
+
+    expect(
+      logs.filter(
+        ({ parameter_json }) =>
+          JSON.parse(parameter_json).ecr_id ===
+          "db734647-fc99-424c-a864-7e3cda82e703",
+      ).length,
+    ).toBeGreaterThan(0);
   });
 
   test("fully expanded should not have any automatically detectable accessibility issues", async ({
