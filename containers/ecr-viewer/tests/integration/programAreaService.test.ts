@@ -163,7 +163,7 @@ describe("program area service", () => {
     const beforeUserProgramAreas = await listUserProgramAreas(adminId!);
     expect(beforeUserProgramAreas).toBeArrayOfSize(2);
 
-    await deleteProgramArea({uuid: id});
+    await deleteProgramArea({ uuid: id });
 
     const afterDelete = await listProgramAreas();
 
