@@ -47,7 +47,7 @@ export const isSuccessResponse = (resp: Response): resp is SuccessResponse =>
 export const getFhirData = audit(
   "ecr",
   "view",
-  async ({ ecr_id }: { ecr_id: string | null }) => {
+  async ({ eicr_id }: { eicr_id: string | null }) => {
     if (process.env.SOURCE === S3_SOURCE) {
       return await getS3(ecr_id);
     } else if (process.env.SOURCE === AZURE_SOURCE) {
