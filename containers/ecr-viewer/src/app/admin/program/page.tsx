@@ -36,7 +36,7 @@ const ProgramAdminPage = async () => {
             programAreas={programAreas}
             deleteAction={async (uuid) => {
               "use server";
-              const res = await deleteProgramAreaAction(uuid);
+              const res = await deleteProgramAreaAction({uuid});
               revalidatePath("/ecr-viewer/admin/program");
               return res;
             }}
