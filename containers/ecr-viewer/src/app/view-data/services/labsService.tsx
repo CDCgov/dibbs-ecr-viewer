@@ -13,7 +13,11 @@ import {
 import { Coding, ObservationComponent } from "fhir/r4b";
 
 import { formatDateTime } from "@/app/services/formatDateService";
-import { formatCodeableConcept } from "@/app/services/formatService";
+import {
+  formatAddress,
+  formatCodeableConcept,
+  formatPhoneNumber,
+} from "@/app/services/formatService";
 import {
   HtmlTableJson,
   HtmlTableJsonRow,
@@ -45,8 +49,6 @@ import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
-
-import { formatAddress, formatPhoneNumber } from "./formatService";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];

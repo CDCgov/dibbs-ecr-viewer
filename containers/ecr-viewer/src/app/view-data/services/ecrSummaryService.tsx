@@ -12,7 +12,12 @@ import {
   formatDate,
   formatStartEndDateTime,
 } from "@/app/services/formatDateService";
-import { formatCodeableConcept } from "@/app/services/formatService";
+import {
+  formatCodeableConcept,
+  formatContactPoint,
+  formatCurrentAddress,
+  formatPatientContactList,
+} from "@/app/services/formatService";
 import { evaluateData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -37,11 +42,6 @@ import {
   censorGender,
   calculatePatientAge,
 } from "./evaluateFhirDataService";
-import {
-  formatContactPoint,
-  formatCurrentAddress,
-  formatPatientContactList,
-} from "./formatService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilitySummaries } from "./reportabilityService";
 

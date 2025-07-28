@@ -19,7 +19,13 @@ import {
   formatDateTime,
   formatStartEndDate,
 } from "@/app/services/formatDateService";
-import { formatCodeableConcept } from "@/app/services/formatService";
+import {
+  formatAddress,
+  formatAddressList,
+  formatCodeableConcept,
+  formatContactPoint,
+  formatName,
+} from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
 import {
@@ -47,12 +53,6 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import {
-  formatAddress,
-  formatAddressList,
-  formatContactPoint,
-  formatName,
-} from "@/app/view-data/services/formatService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.

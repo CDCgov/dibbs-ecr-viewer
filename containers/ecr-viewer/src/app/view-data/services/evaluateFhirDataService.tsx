@@ -20,7 +20,18 @@ import {
   formatStartEndDate,
   formatStartEndDateTime,
 } from "@/app/services/formatDateService";
-import { formatCodeableConcept } from "@/app/services/formatService";
+import {
+  formatAddress,
+  formatAddressList,
+  formatCodeableConcept,
+  formatContactPoint,
+  formatName,
+  formatNameList,
+  formatPatientContactList,
+  formatAge,
+  findCurrentAddress,
+  formatCurrentAddress,
+} from "@/app/services/formatService";
 import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import { Age } from "@/app/types";
 import {
@@ -50,17 +61,6 @@ import {
   sortResourcesByDate,
 } from "@/app/view-data/utils/fhir-data-utils";
 
-import {
-  findCurrentAddress,
-  formatAddress,
-  formatAddressList,
-  formatAge,
-  formatContactPoint,
-  formatCurrentAddress,
-  formatName,
-  formatNameList,
-  formatPatientContactList,
-} from "./formatService";
 import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,

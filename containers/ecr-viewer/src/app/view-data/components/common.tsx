@@ -9,12 +9,12 @@ import {
 } from "fhir/r4";
 
 import { formatDateTime } from "@/app/services/formatDateService";
+import { formatAge } from "@/app/services/formatService";
 import { safeParse } from "@/app/utils/data-utils";
 import { evaluateReference } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { makePlural } from "@/app/utils/format-utils";
 import { calculatePatientAge } from "@/app/view-data/services/evaluateFhirDataService";
-import { formatAge } from "@/app/view-data/services/formatService";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
