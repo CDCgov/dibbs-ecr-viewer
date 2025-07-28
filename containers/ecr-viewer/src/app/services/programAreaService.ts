@@ -1,6 +1,8 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
+import { Transaction } from "kysely";
+
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   ConditionReference,
@@ -36,6 +38,8 @@ export const createProgramArea = async (
     await getDb<Core>()
       .transaction()
       .execute(async (db) => {
+        await checkDupeName(db, name, uuid);
+
         await db
           .insertInto("program_area")
           .values({ uuid, author_uuid: creatingUser.uuid, name })
@@ -52,9 +56,30 @@ export const createProgramArea = async (
 
     return uuid;
   } catch (error: unknown) {
+    if (error instanceof UserFacingError) {
+      throw error;
+    }
     const message = "Failed to create program area";
     console.error({ message, error });
     throw new UserFacingError(message);
+  }
+};
+
+const checkDupeName = async (
+  db: Transaction<Core>,
+  name: string,
+  uuid: string,
+) => {
+  const dupe = await db
+    .selectFrom("program_area")
+    .where((eb) =>
+      eb(eb.fn<string>("lower", [eb.ref("name")]), "=", name.toLowerCase()),
+    )
+    .where("uuid", "!=", uuid)
+    .executeTakeFirst();
+
+  if (!!dupe) {
+    throw new UserFacingError("Program area name is already in use.");
   }
 };
 
@@ -98,6 +123,7 @@ export const updateProgramArea = async (
       .transaction()
       .execute(async (db) => {
         if (!!name) {
+          await checkDupeName(db, name, uuid);
           await db
             .updateTable("program_area")
             .set({ name })
@@ -121,6 +147,9 @@ export const updateProgramArea = async (
         }
       });
   } catch (error: unknown) {
+    if (error instanceof UserFacingError) {
+      throw error;
+    }
     const message = "Failed to update program area";
     console.error({ message, error });
     throw new UserFacingError(message);

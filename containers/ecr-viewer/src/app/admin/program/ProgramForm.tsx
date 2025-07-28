@@ -88,12 +88,18 @@ export const ProgramForm = ({
   );
   const numConditionsSelected = selectedConditions.length;
 
+  const nameIsDupe = initValues.conditions
+    .map(({ program_area_name }) => program_area_name?.toLowerCase())
+    .filter(notEmpty)
+    .filter((n) => n !== initValues.name?.toLowerCase())
+    .includes(name.toLowerCase());
+
   const initSelectedConditions = sortedCodes(initValues.conditions);
   const touched =
     (name && name !== initValues.name) ||
     selectedConditions.length !== initSelectedConditions.length ||
     selectedConditions.some((c, i) => initSelectedConditions[i] !== c);
-  const valid = !!name.trim() && numConditionsSelected > 0;
+  const valid = !!name.trim() && numConditionsSelected > 0 && !nameIsDupe;
 
   return (
     <FormPageContent
@@ -108,13 +114,7 @@ export const ProgramForm = ({
         return res;
       }}
     >
-      <NameFieldSet
-        name={name}
-        setName={setName}
-        programNames={initValues.conditions
-          .map(({ program_area_name }) => program_area_name)
-          .filter(notEmpty)}
-      />
+      <NameFieldSet name={name} setName={setName} nameIsDupe={nameIsDupe} />
       <ConditionFieldSet
         progUuid={progUuid}
         conditionCategories={conditionCategories}
@@ -128,14 +128,12 @@ export const ProgramForm = ({
 const NameFieldSet = ({
   name,
   setName,
-  programNames,
+  nameIsDupe,
 }: {
   name: string;
   setName: (n: string) => void;
-  programNames: string[];
+  nameIsDupe: boolean;
 }) => {
-  const nameIsDupe = programNames.includes(name);
-
   return (
     <FieldSet legend="Name program area">
       <span>
@@ -146,10 +144,14 @@ const NameFieldSet = ({
           Program area name
           <RequiredMarker />
           {nameIsDupe && (
-            <p className="usa-error-message">
-              This program name already exists. Please pick a different program
-              name
-            </p>
+            <>
+              <p className="usa-error-message margin-0">
+                This program name already exists.
+              </p>
+              <p className="usa-error-message margin-0">
+                Please pick a different program name.
+              </p>
+            </>
           )}
           <TextInput
             type="text"
