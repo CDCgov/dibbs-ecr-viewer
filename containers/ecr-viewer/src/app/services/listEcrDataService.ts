@@ -12,7 +12,7 @@ import { ecr_data, Core, User } from "@/app/data/metadataDb/types/core";
 import { EcrDisplay, RelatedEcr } from "@/app/types";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
-import { audit } from "./auditLogService";
+import { auditWithTrx } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 import { formatDate, formatDateTime } from "./formatDateService";
 import { getLoggedInUser } from "./loggedInUserService";
@@ -41,7 +41,7 @@ export interface MetadataModel {
  * @param filterConditions - The condition(s) to filter on
  * @returns A promise resolving to a list of eCR metadata
  */
-export const listEcrData = audit(
+export const listEcrData = auditWithTrx(
   "ecr",
   "query",
   async (

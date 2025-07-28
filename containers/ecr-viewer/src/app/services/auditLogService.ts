@@ -8,6 +8,7 @@ import { cookies, headers } from "next/headers";
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
+import { dbDialect } from "@/app/data/metadataDb/utils/db-config";
 
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
@@ -21,51 +22,86 @@ type Action =
   | "signin"
   | "signout";
 
-type AuditableFn<Params extends Record<string, unknown>, Ret> = (
+const auditTransaction = async <Params extends Record<string, unknown>, Ret>(
+  subject: Subject,
+  action: Action,
   params: Params,
-  trx: Transaction<Core>,
-) => Promise<Ret>;
+  executeFn: (trx: Transaction<Core>) => Promise<Ret>,
+): Promise<Ret> => {
+  return await getDb<Core>()
+    .transaction()
+    .execute(async (trx) => {
+      const result = await executeFn(trx);
+      const logParams =
+        typeof result === "string" ? { ...params, uuid: result } : params;
+
+      try {
+        await createAuditRecord<Params>(trx, subject, action, logParams);
+      } catch (error: unknown) {
+        if (await dbIsValid()) {
+          throw error;
+        } else {
+          console.warn({
+            message: "Audit logging failed as db is not in a valid state",
+            error,
+          });
+        }
+      }
+      return result;
+    });
+};
 
 /**
  * Wrap a function with audit logging. After the function successfully runs, an
  * audit log record will be created with the subject, action, actor (user uuid or token),
  * parameters passed to the function, and other request metadata.
+ *
+ * This is for functions that do not query the database, e.g. `getFhirData()`.
+ * @param subject Subject of the action being audited (e.g. "ecr")
+ * @param action Action being done (e.g. "view")
+ * @param fn Function to audit upon successful completion. Must be called with only one argument, which is an object with all of the parameters. If it returns a string, it is assumed to be the `uuid` of the subject and will be added to the params as such. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
+ * @returns Wrapped function
+ */
+export const auditWithoutTrx = <Params extends Record<string, unknown>, Ret>(
+  subject: Subject,
+  action: Action,
+  fn: (params: Params) => Promise<Ret>,
+) => {
+  return async (params: Params): Promise<Ret> => {
+    if (!dbDialect()) {
+      return await fn(params);
+    }
+
+    return await auditTransaction(subject, action, params, async (_) => {
+      return await fn(params);
+    });
+  };
+};
+
+/**
+ * Wrap a function with audit logging. After the function successfully runs, an
+ * audit log record will be created with the subject, action, actor (user uuid or token),
+ * parameters passed to the function, and other request metadata.
+ *
+ * This is for functions that query a database, e.g. `createUser()`.
  * @param subject Subject of the action being audited (e.g. "user")
  * @param action Action being done (e.g. "create")
  * @param fn Function to audit upon successful completion. Must be called with only one argument, which is an object with all of the parameters. If it returns a string, it is assumed to be the `uuid` of the subject and will be added to the params as such. The wrapper will inject the second argument of a Kysely transaction, which should be used as the database in any queries the function executes
  * @returns Wrapped function
  */
-export const audit = <Params extends Record<string, unknown>, Ret>(
+export const auditWithTrx = <Params extends Record<string, unknown>, Ret>(
   subject: Subject,
   action: Action,
-  fn: AuditableFn<Params, Ret>,
+  fn: (params: Params, trx: Transaction<Core>) => Promise<Ret>,
 ) => {
   return async (params: Params): Promise<Ret> => {
-    return await getDb<Core>()
-      .transaction()
-      .execute(async (trx) => {
-        const uuid = await fn(params, trx);
-        // if we get a uuid result, use that, but don't override a param uuid with undefined
-        const logParams =
-          typeof uuid === "string" ? { ...params, uuid } : params;
+    if (!dbDialect()) {
+      throw new Error("Database required for transaction-based operations");
+    }
 
-        try {
-          await createAuditRecord<Params>(trx, subject, action, logParams);
-        } catch (error: unknown) {
-          // avoid getting stuck in a loop where we can't migrate/show migration issues
-          // because of audit logging
-          if (await dbIsValid()) {
-            throw error;
-          } else {
-            // There is a db, but it isn't valid
-            console.warn({
-              message: "Audit logging failed as db is not in a valid state",
-              error,
-            });
-          }
-        }
-        return uuid;
-      });
+    return await auditTransaction(subject, action, params, async (trx) => {
+      return await fn(params, trx);
+    });
   };
 };
 

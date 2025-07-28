@@ -3,7 +3,7 @@ import NextAuth, { CallbacksOptions, EventCallbacks } from "next-auth";
 
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { Core } from "@/app/data/metadataDb/types/core";
-import { audit } from "@/app/services/auditLogService";
+import { auditWithTrx } from "@/app/services/auditLogService";
 
 import { providers } from "./providers";
 
@@ -21,7 +21,7 @@ export const handler = NextAuth({
       else if (new URL(url).origin === baseUrl) return url;
       return defaultUrl;
     },
-    signIn: audit(
+    signIn: auditWithTrx(
       "user",
       "signin",
       async (
@@ -50,7 +50,7 @@ export const handler = NextAuth({
     ),
   },
   events: {
-    signOut: audit(
+    signOut: auditWithTrx(
       "user",
       "signout",
       async (
