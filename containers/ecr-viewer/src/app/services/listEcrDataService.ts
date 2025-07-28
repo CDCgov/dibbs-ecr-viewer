@@ -405,7 +405,7 @@ export const generateFilterDateStatement = (
  * @param direction - The direction to sort by
  * @returns custom type format object for use by kysely
  */
-export const generateSortStatement = (
+const generateSortStatement = (
   columnName: string,
   direction: string,
 ): OrderByExpression<Core, "ecr_data", {}>[] => {
