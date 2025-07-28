@@ -3,7 +3,7 @@ import React, { useId, useState } from "react";
 
 import classnames from "classnames";
 
-import { AccordionItem } from "@/app/view-data/types";
+import { AccordionItem } from "@/app/types";
 
 import Accordion from "./AccordionControlled";
 import { ExpandCollapseButtons } from "./ExpandCollapseButtons";

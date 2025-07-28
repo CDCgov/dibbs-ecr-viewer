@@ -2,8 +2,8 @@ import React from "react";
 
 import { Accordion, Tag } from "@trussworks/react-uswds";
 
+import { AccordionItem } from "@/app/types";
 import { toKebabCase } from "@/app/utils/format-utils";
-import { AccordionItem } from "@/app/view-data/types";
 
 import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 
