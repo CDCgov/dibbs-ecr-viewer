@@ -150,33 +150,31 @@ export const updateProgramArea = audit(
  * @param uuid id of the program area to delete
  */
 export const deleteProgramArea = audit(
-    "program_area",
-    "delete",
-    async ({uuid}: {uuid:string}, trx: Transaction<Core>): Promise<void> => {
-  await getCheckAdmin("delete program areas");
+  "program_area",
+  "delete",
+  async ({ uuid }: { uuid: string }, trx: Transaction<Core>): Promise<void> => {
+    await getCheckAdmin("delete program areas");
 
-  try {
+    try {
       await trx
-          .updateTable("condition_reference")
-          .set({ program_area_uuid: null })
-          .where("program_area_uuid", "=", uuid)
-          .execute();
-
-      await trx
-          .deleteFrom("user_program_area")
-          .where("program_area_uuid", "=", uuid)
-          .execute();
+        .updateTable("condition_reference")
+        .set({ program_area_uuid: null })
+        .where("program_area_uuid", "=", uuid)
+        .execute();
 
       await trx
-          .deleteFrom("program_area")
-          .where("uuid", "=", uuid)
-          .execute();
-  } catch (error: unknown) {
-    const message = "Failed to delete program area";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-});
+        .deleteFrom("user_program_area")
+        .where("program_area_uuid", "=", uuid)
+        .execute();
+
+      await trx.deleteFrom("program_area").where("uuid", "=", uuid).execute();
+    } catch (error: unknown) {
+      const message = "Failed to delete program area";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 export type ListedProgramArea = ProgramArea & {
   conditions: (ConditionReference & { is_duplicate: boolean })[];
