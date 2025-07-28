@@ -1,6 +1,8 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
+import { Transaction } from "kysely";
+
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   ConditionReference,
@@ -12,7 +14,6 @@ import { stringSort } from "@/app/utils/format-utils";
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 import { getCheckAdmin } from "./userService";
-import { Transaction } from "kysely";
 
 /**
  * Create a program area with the given name. The currently logged in user
