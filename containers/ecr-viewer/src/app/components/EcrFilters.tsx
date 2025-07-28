@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDateTime } from "@/app/services/formatDateService";
 import {
@@ -121,7 +122,6 @@ const FilterReportableConditions = ({
     (key) => filterConditions[key] === true,
   );
 
-  const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
   const noConditions = Object.fromEntries(
     Object.entries(filterConditions).filter(
       ([key]) => key === NO_CONDITIONS_REPORTED_OPTION,

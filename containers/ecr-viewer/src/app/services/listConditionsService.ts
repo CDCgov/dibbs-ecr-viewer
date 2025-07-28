@@ -1,9 +1,8 @@
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import { ConditionReference, Core } from "@/app/data/metadataDb/types/core";
 
 import { getLoggedInUser } from "./loggedInUserService";
-
-export const NO_CONDITIONS_REPORTED_OPTION = "No conditions reported";
 
 /**
  * Retrieves all unique conditions from the ecr_rr_conditions table.
