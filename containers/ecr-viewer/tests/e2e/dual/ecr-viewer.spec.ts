@@ -8,7 +8,7 @@ import { logIn, nbsAuthParam } from "../utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
 
-describe("viewer page", () => {
+test.describe("viewer page", () => {
   if (process.env.CONFIG_NAME.endsWith("NON_INTEGRATED")) {
     test.beforeEach(({ page }) => logIn(page));
   }
