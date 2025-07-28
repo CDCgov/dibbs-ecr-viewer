@@ -547,7 +547,7 @@ describe.each([
 
     it("should add date range in the filter statement", () => {
       const { sql, params } = getWhere((eb) =>
-        generateFilterDateStatement(eb, testDateRange),
+        generateFilterDateStatement(eb, filterDates),
       );
       if (process.env.METADATA_DATABASE_TYPE === "postgres") {
         expect(sql).toEqual(
@@ -560,14 +560,14 @@ describe.each([
       }
 
       expect(params).toStrictEqual([
-        testDateRange.startDate,
-        testDateRange.endDate,
+        filterDates.startDate,
+        filterDates.endDate,
       ]);
     });
 
     it("should display all conditions in date range by default if no filter has been added", () => {
       const { sql, params } = getWhere((eb) =>
-        generateWhereStatement(eb, testDateRange, "", undefined),
+        generateWhereStatement(eb, filterDates, "", undefined),
       );
       if (process.env.METADATA_DATABASE_TYPE === "postgres") {
         expect(sql).toEqual(
@@ -582,8 +582,8 @@ describe.each([
       expect(params).toStrictEqual([
         true,
         true,
-        testDateRange.startDate,
-        testDateRange.endDate,
+        filterDates.startDate,
+        filterDates.endDate,
         true,
         true,
       ]);
