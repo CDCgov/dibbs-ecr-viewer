@@ -12,6 +12,7 @@ import {
   createCoreEcr,
   createEcrCondition,
   createEcrRule,
+  getLastAuditLog,
 } from "../helpers/core";
 import { buildCore, dropExisting, clearEcrCore } from "../helpers/ddl";
 import { seedUserProgramData } from "../helpers/seed";
@@ -21,7 +22,6 @@ import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   MetadataModel,
-  EcrDisplay,
   generateFilterConditionsStatement,
   generateSearchStatement,
   generateWhereStatement,
@@ -30,9 +30,10 @@ import {
   listEcrData,
   generateFilterDateStatement,
 } from "@/app/services/listEcrDataService";
+import { EcrDisplay } from "@/app/types";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
-const testDateRange = {
+const filterDates = {
   startDate: new Date("12-01-2024"),
   endDate: new Date("12-03-2024"),
 };
@@ -63,8 +64,8 @@ const getWhere = (
     | ExpressionWrapper<Core, "ecr_data", SqlBool>
     | AndWrapper<Core, "ecr_data", SqlBool>,
 ) => {
-  const coredb = getDb<Core>();
-  const rawRes = coredb.selectFrom("ecr_data").where(ebCallBack).compile();
+  const coreDb = getDb<Core>();
+  const rawRes = coreDb.selectFrom("ecr_data").where(ebCallBack).compile();
   const start = `select from "${dbNamespace()}"."ecr_data" where `;
   return { sql: rawRes.sql.slice(start.length), params: rawRes.parameters };
 };
@@ -172,23 +173,44 @@ describe("process Metadata", () => {
 });
 
 describe("listEcrData - core", () => {
+  const checkAuditLog = async (
+    startIndex: number,
+    itemsPerPage: number,
+    sortColumn: string,
+    sortDirection: string,
+  ) => {
+    const log = await getLastAuditLog();
+    expect(log.subject).toEqual("ecr");
+    expect(log.action).toEqual("query");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates: {
+        startDate: filterDates.startDate.toISOString(),
+        endDate: filterDates.endDate.toISOString(),
+      },
+    });
+  };
+
   it("should return empty array when no data is found", async () => {
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
 
-    const actual = await listEcrData(
+    const actual = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
-
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toBeEmpty();
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
   });
 
@@ -208,15 +230,16 @@ describe("listEcrData - core", () => {
 
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
-    const actual: EcrDisplay[] = await listEcrData(
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+    const actual: EcrDisplay[] = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
@@ -238,7 +261,7 @@ describe("listEcrData - core", () => {
       },
     ]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrCore();
@@ -270,18 +293,19 @@ describe("listEcrData - core", () => {
 
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
-    const actual: EcrDisplay[] = await listEcrData(
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+    const actual: EcrDisplay[] = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrCore();
@@ -307,15 +331,16 @@ describe("listEcrData - core", () => {
 
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
-    const actual: EcrDisplay[] = await listEcrData(
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+    const actual: EcrDisplay[] = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
@@ -337,7 +362,7 @@ describe("listEcrData - core", () => {
       },
     ]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrCore();
@@ -361,18 +386,19 @@ describe("listEcrData - core", () => {
 
     const startIndex = 0;
     const itemsPerPage = 25;
-    const columnName = "date_created";
-    const direction = "DESC";
-    const actual: EcrDisplay[] = await listEcrData(
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+    const actual: EcrDisplay[] = await listEcrData({
       startIndex,
       itemsPerPage,
-      columnName,
-      direction,
-      testDateRange,
-    );
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
     expect(actual).toStrictEqual([]);
 
-    const actualCount = await getTotalEcrCount(testDateRange);
+    const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
 
     await clearEcrCore();
@@ -390,19 +416,19 @@ describe("get total core ecr count", () => {
   });
 
   it("should call db to get all ecrs", async () => {
-    const actual = await getTotalEcrCount(testDateRange);
+    const actual = await getTotalEcrCount(filterDates);
     expect(actual).toEqual(1);
   });
   it("should use search term in count query", async () => {
-    const actual = await getTotalEcrCount(testDateRange, "blah", undefined);
+    const actual = await getTotalEcrCount(filterDates, "blah", undefined);
     expect(actual).toEqual(0);
   });
   it("should escape the search term in count query", async () => {
-    const actual = await getTotalEcrCount(testDateRange, "O'Riley", undefined);
+    const actual = await getTotalEcrCount(filterDates, "O'Riley", undefined);
     expect(actual).toEqual(0);
   });
   it("should use filter conditions in count query", async () => {
-    const actual = await getTotalEcrCount(testDateRange, "", [
+    const actual = await getTotalEcrCount(filterDates, "", [
       "Anthrax (disorder)",
     ]);
     expect(actual).toEqual(0);
@@ -451,7 +477,7 @@ describe("generate search statement", () => {
     expect(params).toStrictEqual([true, true]);
   });
 });
-//---------------------------------------------------------------------------------------------
+
 describe.each([
   {
     scenario: "without eCRs with no conditions reported",
@@ -568,7 +594,7 @@ describe.each([
 describe("generate where statement", () => {
   it("should generate where statement using search and filter statements", () => {
     const { sql, params } = getWhere((eb) =>
-      generateWhereStatement(eb, testDateRange, "blah", ["Anthrax (disorder)"]),
+      generateWhereStatement(eb, filterDates, "blah", ["Anthrax (disorder)"]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -583,14 +609,14 @@ describe("generate where statement", () => {
     expect(params).toStrictEqual([
       "%blah%",
       "%blah%",
-      testDateRange.startDate,
-      testDateRange.endDate,
+      filterDates.startDate,
+      filterDates.endDate,
       "%Anthrax (disorder)%",
     ]);
   });
   it("should generate where statement using search statement (no conditions filter provided)", () => {
     const { sql, params } = getWhere((eb) =>
-      generateWhereStatement(eb, testDateRange, "blah", undefined),
+      generateWhereStatement(eb, filterDates, "blah", undefined),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -605,15 +631,15 @@ describe("generate where statement", () => {
     expect(params).toStrictEqual([
       "%blah%",
       "%blah%",
-      testDateRange.startDate,
-      testDateRange.endDate,
+      filterDates.startDate,
+      filterDates.endDate,
       true,
       true,
     ]);
   });
   it("should generate where statement using filter conditions statement (no search provided)", () => {
     const { sql, params } = getWhere((eb) =>
-      generateWhereStatement(eb, testDateRange, "", ["Anthrax (disorder)"]),
+      generateWhereStatement(eb, filterDates, "", ["Anthrax (disorder)"]),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -628,8 +654,8 @@ describe("generate where statement", () => {
     expect(params).toStrictEqual([
       true,
       true,
-      testDateRange.startDate,
-      testDateRange.endDate,
+      filterDates.startDate,
+      filterDates.endDate,
       "%Anthrax (disorder)%",
     ]);
   });

@@ -41,7 +41,7 @@ const EcrTableContent = async ({
 }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
 
-  const data = await listEcrData(
+  const data = await listEcrData({
     startIndex,
     itemsPerPage,
     sortColumn,
@@ -49,7 +49,7 @@ const EcrTableContent = async ({
     filterDates,
     searchTerm,
     filterConditions,
-  );
+  });
 
   return (
     <LayoutGroup>
