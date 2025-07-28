@@ -281,7 +281,10 @@ describe("user service", () => {
 
   it("should update a user's program areas", async () => {
     // standard user created in prior test
-    const progId = await createProgramArea({name:"Disease", conditions:["123"]});
+    const progId = await createProgramArea({
+      name: "Disease",
+      conditions: ["123"],
+    });
     await updateUser({
       uuid: userId!,
       updates: { name: "Olga Nunes" },

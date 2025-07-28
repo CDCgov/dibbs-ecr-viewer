@@ -72,7 +72,10 @@ describe("program area service", () => {
   it("should create a program area", async () => {
     const progName = "Fun Times";
     const conditionCodes = ["123", "456"];
-    progId = await createProgramArea({name: progName, conditions: conditionCodes});
+    progId = await createProgramArea({
+      name: progName,
+      conditions: conditionCodes,
+    });
     expect(progId).toMatch(UUID_REGEX);
 
     // see program area listed
@@ -105,15 +108,17 @@ describe("program area service", () => {
 
     // program with name already exists
     jest.spyOn(console, "error").mockImplementation();
-    await expect(createProgramArea({name: progName, conditions: []})).rejects.toThrow();
+    await expect(
+      createProgramArea({ name: progName, conditions: [] }),
+    ).rejects.toThrow();
   });
 
   it("should update a program area name", async () => {
     const progName = "Sad Times";
-    const id = await createProgramArea({name: progName, conditions: ["123"]});
+    const id = await createProgramArea({ name: progName, conditions: ["123"] });
 
     const beforeNameConds = await listConditionReferences();
-    await updateProgramArea({uuid: id, name: "Happy Days" });
+    await updateProgramArea({ uuid: id, name: "Happy Days" });
     const afterNameConds = await listConditionReferences();
     const afterNameProgramAreas = await listProgramAreas();
     expect(
@@ -129,19 +134,19 @@ describe("program area service", () => {
     // program with name already exists
     jest.spyOn(console, "error").mockImplementation();
     await expect(
-      updateProgramArea({uuid: id, name: "Fun Times" }),
+      updateProgramArea({ uuid: id, name: "Fun Times" }),
     ).rejects.toThrow();
   });
 
   it("should update a program area conditions", async () => {
     const progName = "Sad Times";
-    const id = await createProgramArea({name: progName, conditions:["123"]});
+    const id = await createProgramArea({ name: progName, conditions: ["123"] });
 
     const beforeConds = await listConditionReferences();
     const beforeCond = beforeConds.filter((c) => c.program_area_uuid === id);
     expect(beforeCond).toBeArrayOfSize(1);
     expect(beforeCond[0]).toHaveProperty("code", "123");
-    await updateProgramArea({uuid: id, conditions: ["789"] });
+    await updateProgramArea({ uuid: id, conditions: ["789"] });
     const afterConds = await listConditionReferences();
     expect(beforeConds).not.toStrictEqual(afterConds);
     const cond = afterConds.filter((c) => c.program_area_uuid === id);
@@ -151,7 +156,7 @@ describe("program area service", () => {
 
   it("should delete a program area", async () => {
     const beforeCreate = await listProgramAreas();
-    const id = await createProgramArea({name: "test", conditions:["123"]});
+    const id = await createProgramArea({ name: "test", conditions: ["123"] });
     const afterCreate = await listProgramAreas();
 
     await updateUser({ uuid: adminId!, updates: {}, programs: [id, progId!] });
