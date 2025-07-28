@@ -234,6 +234,7 @@ export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
   if (!labReportJson) {
     return false;
   }
+  // TODO: get from "Lab Interpretation" Observation
   const labResultName = labReportJson.resultName;
 
   return labResultName?.toLowerCase().includes("abnormal") ?? false;
@@ -429,14 +430,24 @@ export const evaluateOrganismsReportData = (
       columnName: "Organism",
       value: evaluateValue(observation, fhirPathMappings.code),
     },
-    { columnName: "Antibiotic", infoPath: "codeableConceptDisplay" },
-    { columnName: "Method", infoPath: "observationOrganismMethod" },
-    { columnName: "Susceptibility", infoPath: "observationSusceptibility" },
+    {
+      columnName: "Antibiotic",
+      infoPath: "codeableConceptDisplay",
+    },
+    {
+      columnName: "Method",
+      infoPath: "observationOrganismMethod",
+    },
+    {
+      columnName: "Susceptibility",
+      infoPath: "valueX",
+    },
   ];
 
   return (
     <EvaluateTable
       resources={components}
+      resourceBasePath="Observation.component"
       columns={columnInfo}
       className="margin-y-0"
       outerBorder={false}

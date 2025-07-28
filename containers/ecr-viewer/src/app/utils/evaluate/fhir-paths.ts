@@ -151,8 +151,7 @@ export type PathTypes = {
   observationValue: string;
   observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
-  observationOrganismMethod: string;
-  observationSusceptibility: string;
+  observationOrganismMethod: ValueX;
   observationResultStatus: string;
   organizations: Organization;
   patientTravelHistory: Observation;
@@ -612,7 +611,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   observationReferenceValue: {
     type: "string",
-    path: "extension.extension('observation entry reference value').valueString",
+    path: "extension('observation entry reference value').valueString",
   },
   observationValue: {
     type: "string",
@@ -628,10 +627,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
    * path is used on `Observation.component` which is merely a `BackboneElement`.
    */
   observationOrganismMethod: {
-    type: "string",
-    path: "extension.where(url = 'methodCode originalText').valueString",
+    type: "ValueX",
+    path: "extension('methodCode').value",
   },
-  observationSusceptibility: { type: "string", path: "valueString" },
   observationResultStatus: {
     type: "string",
     path: "iif(extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display.exists(), extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display, status)",
