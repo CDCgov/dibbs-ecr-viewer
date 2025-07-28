@@ -147,7 +147,7 @@ describe("ProgramForm", () => {
     await user.clear(nameInput);
     await user.type(nameInput, "A program area");
     expect(submitButtons[0]).toBeDisabled();
-    expect(screen.getByText("This program name already exists.")).toBeVisible();
+    expect(screen.getByText(/This program name already exists./)).toBeVisible();
   });
 
   it("should render a filled out form", async () => {

@@ -83,7 +83,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
             data-testid="formGroup"
           >
             <label
-              class="usa-label"
+              class="usa-label maxw-full"
             >
               Program area name
               <abbr
