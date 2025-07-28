@@ -541,6 +541,11 @@ describe("generate filter conditions statement without eCRs with no conditions r
 });
 
 describe("generate filter conditions statement with eCRs with no conditions reported", () => {
+  const testDateRange = {
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+  };
+  
   it("should add conditions in the filter statement", () => {
     const conditions = ["No conditions reported", "Condition1", "Condition2"];
     const { sql, params } = getWhere((eb) =>
