@@ -41,19 +41,19 @@ export const isSuccessResponse = (resp: Response): resp is SuccessResponse =>
 
 /**
  * Get the fhir data for a given eCR ID
- * @param ecr_id The id of the ecr to fetch
- * @returns NextResponse with the ecr or error data
+ * @param eicr_id The id of the eICR to fetch
+ * @returns NextResponse with the eCR or error data
  */
 export const getFhirData = audit(
   "ecr",
   "view",
   async ({ eicr_id }: { eicr_id: string | null }) => {
     if (process.env.SOURCE === S3_SOURCE) {
-      return await getS3(ecr_id);
+      return await getS3(eicr_id);
     } else if (process.env.SOURCE === AZURE_SOURCE) {
-      return await getAzure(ecr_id);
+      return await getAzure(eicr_id);
     } else if (process.env.SOURCE === GCP_SOURCE) {
-      return await getGcp(ecr_id);
+      return await getGcp(eicr_id);
     } else {
       return { payload: { message: "Invalid source" }, status: 500 };
     }

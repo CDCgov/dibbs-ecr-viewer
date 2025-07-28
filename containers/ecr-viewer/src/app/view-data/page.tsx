@@ -45,7 +45,7 @@ const ECRViewerPage = async ({
     if (!authed) notFound();
   }
 
-  const resp = await getFhirData({ ecr_id: fhirId });
+  const resp = await getFhirData({ eicr_id: fhirId });
   if (!isSuccessResponse(resp)) {
     if (resp.status === 404) {
       return <RetrievalFailed />;
