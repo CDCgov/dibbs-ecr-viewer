@@ -56,10 +56,10 @@ export const createProgramArea = async (
 
     return uuid;
   } catch (error: unknown) {
+    let message = "Failed to create program area";
     if (error instanceof UserFacingError) {
-      throw error;
+      message = `${message}. ${error.message}`;
     }
-    const message = "Failed to create program area";
     console.error({ message, error });
     throw new UserFacingError(message);
   }
@@ -79,7 +79,7 @@ const checkDupeName = async (
     .executeTakeFirst();
 
   if (!!dupe) {
-    throw new UserFacingError("Program area name is already in use.");
+    throw new UserFacingError("This program area name already exists.");
   }
 };
 
@@ -147,10 +147,10 @@ export const updateProgramArea = async (
         }
       });
   } catch (error: unknown) {
+    let message = "Failed to update program area";
     if (error instanceof UserFacingError) {
-      throw error;
+      message = `${message}. ${error.message}`;
     }
-    const message = "Failed to update program area";
     console.error({ message, error });
     throw new UserFacingError(message);
   }
