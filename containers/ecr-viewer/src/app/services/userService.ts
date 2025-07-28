@@ -14,7 +14,7 @@ import {
   UserProgramArea,
 } from "@/app/data/metadataDb/types/core";
 
-import { auditWithTrx } from "./auditLogService";
+import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
@@ -111,7 +111,7 @@ export const isUserEcrAuthed = async (
  * @param params.programs Array of program areas the user should be assigned to
  * @returns UUID of the created user
  */
-export const createUser = auditWithTrx(
+export const createUser = audit(
   "user",
   "create",
   async (
@@ -225,7 +225,7 @@ export const getUser = async (uuid: string): Promise<User | undefined> => {
  * @param params.updates object with fields to update in their record. UUID fields should not be updated.
  * @param params.programs array of program areas the user should be assigned to
  */
-export const updateUser = auditWithTrx(
+export const updateUser = audit(
   "user",
   "update",
   async (
@@ -336,7 +336,7 @@ const deleteUserProgramAreas = async (db: Kysely<Core>, uuid: string) => {
  * user can indeed delete themselves.
  * @param uuid Email of the user to delete
  */
-export const deleteUser = auditWithTrx(
+export const deleteUser = audit(
   "user",
   "delete",
   async ({ uuid }: { uuid: string }, trx: Transaction<Core>): Promise<void> => {

@@ -13,7 +13,7 @@ import {
   streamToJson,
 } from "@/app/data/blobStorage/utils";
 
-import { auditWithoutTrx } from "./auditLogService";
+import { audit } from "./auditLogService";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 
@@ -44,7 +44,7 @@ export const isSuccessResponse = (resp: Response): resp is SuccessResponse =>
  * @param ecr_id The id of the ecr to fetch
  * @returns NextResponse with the ecr or error data
  */
-export const getFhirData = auditWithoutTrx(
+export const getFhirData = audit(
   "ecr",
   "view",
   async ({ ecr_id }: { ecr_id: string | null }) => {

@@ -32,7 +32,7 @@ jest.mock("@/app/data/blobStorage/utils", () => {
   };
 });
 jest.mock("@/app/services/auditLogService", () => ({
-  auditWithoutTrx: jest.fn().mockImplementation((subject, action, fn) => fn),
+  audit: jest.fn().mockImplementation((subject, action, fn) => fn),
 }));
 
 const defaultFhirBundle = "hi";
