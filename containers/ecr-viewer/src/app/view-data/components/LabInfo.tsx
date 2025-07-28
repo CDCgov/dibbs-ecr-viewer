@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { LabReportElementData } from "@/app/services/labsService";
+import { LabReportElementData } from "@/app/view-data/services/labsService";
 import {
   AccordionSection,
   AccordionSubSection,

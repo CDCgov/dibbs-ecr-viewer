@@ -20,9 +20,9 @@ import Modal from "@/app/components/modal/Modal";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
+import { AccordionItem } from "@/app/types";
 import { notEmpty } from "@/app/utils/data-utils";
 import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
-import { AccordionItem } from "@/app/view-data/types";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;

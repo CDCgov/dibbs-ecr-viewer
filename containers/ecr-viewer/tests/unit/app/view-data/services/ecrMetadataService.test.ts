@@ -1,16 +1,16 @@
 import { Bundle } from "fhir/r4";
 
-import BundleWithEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import BundleErsdWarningNoDetail from "../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
-import BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
-import BundleMultipleAuthors from "../../../../../../test-data/fhir/BundleMultipleAuthor.json";
-import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
-import sample_ecr from "../../../../../../test-data/fhir/sample_ecr.json";
+import BundleWithEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import BundleErsdWarningNoDetail from "../../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
+import BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
+import BundleMultipleAuthors from "../../../../../../../test-data/fhir/BundleMultipleAuthor.json";
+import BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
+import sample_ecr from "../../../../../../../test-data/fhir/sample_ecr.json";
+import { noData } from "@/app/utils/data-utils";
 import {
   evaluateEcrMetadata,
   unknownWarning,
-} from "@/app/services/ecrMetadataService";
-import { noData } from "@/app/utils/data-utils";
+} from "@/app/view-data/services/ecrMetadataService";
 
 describe("Evaluate Ecr Metadata", () => {
   it("should have no available data where there is no data", () => {

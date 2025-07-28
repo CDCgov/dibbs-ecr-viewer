@@ -1,12 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, BundleEntry, Practitioner } from "fhir/r4";
 
-import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import * as _BundleWithPatient from "../../../../../../test-data/fhir/BundlePatient.json";
-import * as _BundleWithDeceasedPatient from "../../../../../../test-data/fhir/BundlePatientDeceased.json";
-import BundlePatientMultiple from "../../../../../../test-data/fhir/BundlePatientMultiple.json";
-import * as _BundlePatientWithCovid from "../../../../../../test-data/fhir/BundlePatientWithCovid.json";
-import BundlePractitionerRole from "../../../../../../test-data/fhir/BundlePractitionerRole.json";
+import BundleEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import * as _BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
+import * as _BundleWithDeceasedPatient from "../../../../../../../test-data/fhir/BundlePatientDeceased.json";
+import BundlePatientMultiple from "../../../../../../../test-data/fhir/BundlePatientMultiple.json";
+import * as _BundlePatientWithCovid from "../../../../../../../test-data/fhir/BundlePatientWithCovid.json";
+import BundlePractitionerRole from "../../../../../../../test-data/fhir/BundlePractitionerRole.json";
+import { formatAge } from "@/app/services/formatService";
+import { evaluateValue } from "@/app/utils/evaluate";
+import mappings from "@/app/utils/evaluate/fhir-paths";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -28,10 +31,7 @@ import {
   evaluateHospitalEncounterData,
   evaluateProviderData,
   evaluatePregnancyData,
-} from "@/app/services/evaluateFhirDataService";
-import { formatAge } from "@/app/services/formatService";
-import { evaluateValue } from "@/app/utils/evaluate";
-import mappings from "@/app/utils/evaluate/fhir-paths";
+} from "@/app/view-data/services/evaluateFhirDataService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;

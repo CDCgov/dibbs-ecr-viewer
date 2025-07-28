@@ -8,6 +8,16 @@ import {
   Organization,
 } from "fhir/r4";
 
+import {
+  formatDate,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
+import {
+  formatCodeableConcept,
+  formatContactPoint,
+  formatCurrentAddress,
+  formatPatientContactList,
+} from "@/app/services/formatService";
 import { evaluateData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -32,13 +42,6 @@ import {
   censorGender,
   calculatePatientAge,
 } from "./evaluateFhirDataService";
-import { formatDate, formatStartEndDateTime } from "./formatDateService";
-import {
-  formatCodeableConcept,
-  formatContactPoint,
-  formatCurrentAddress,
-  formatPatientContactList,
-} from "./formatService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilitySummaries } from "./reportabilityService";
 

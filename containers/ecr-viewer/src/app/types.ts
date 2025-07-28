@@ -1,3 +1,7 @@
+import { Accordion } from "@trussworks/react-uswds";
+
+export type AccordionItem = React.ComponentProps<typeof Accordion>["items"][0];
+
 export interface RelatedEcr {
   eicr_id: string;
   date_created: Date;
