@@ -38,55 +38,6 @@ interface FilterProps {
 }
 
 /**
- *  A custom date input component for selecting a date.
- * @param props - The properties for the CustomDateInput component.
- * @param props.label - The label of the custom date input component.
- * @param props.onDateChange - The function that is called when the date changes.
- * @param props.defaultValue - The default value of the date input.
- * @param props.isRequired - Boolean indicating whether or not the date is required.
- * @param props.minValue - The minimum value of the date input.
- * @returns A JSX element containing a date input field and corresponding label.
- */
-export const CustomDateInput = ({
-  label,
-  onDateChange,
-  defaultValue,
-  isRequired,
-  minValue,
-}: {
-  label: string;
-  onDateChange: (date: string) => void;
-  defaultValue: string;
-  isRequired: boolean;
-  minValue?: string;
-}) => {
-  const today = new Date().toLocaleDateString("en-CA");
-  const id = toKebabCase(label);
-  return (
-    <div>
-      <Label htmlFor={id} className="margin-top-1">
-        {label}
-      </Label>
-      <input
-        id={id}
-        data-testid={id}
-        type="date"
-        className="usa-input width-card margin-top-0 border-base-dark"
-        defaultValue={defaultValue}
-        min={minValue}
-        max={today}
-        required={isRequired}
-        aria-label={label}
-        onChange={(e) => {
-          const date = e.target.value;
-          onDateChange(date);
-        }}
-      />
-    </div>
-  );
-};
-
-/**
  * Functional component that renders Filters section in eCR Library.
  * Includes Filter component for reportable conditions.
  * @param props - props to pass to Filters
@@ -216,6 +167,45 @@ const FilterReportableConditions = ({
  * - Updates the browser's query string when the filter is applied.
  */
 const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
+  const CustomDateInput = ({
+    label,
+    onDateChange,
+    defaultValue,
+    isRequired,
+    minValue,
+  }: {
+    label: string;
+    onDateChange: (date: string) => void;
+    defaultValue: string;
+    isRequired: boolean;
+    minValue?: string;
+  }) => {
+    const today = new Date().toLocaleDateString("en-CA");
+    const id = toKebabCase(label);
+    return (
+      <div>
+        <Label htmlFor={id} className="margin-top-1">
+          {label}
+        </Label>
+        <input
+          id={id}
+          data-testid={id}
+          type="date"
+          className="usa-input width-card margin-top-0 border-base-dark"
+          defaultValue={defaultValue}
+          min={minValue}
+          max={today}
+          required={isRequired}
+          aria-label={label}
+          onChange={(e) => {
+            const date = e.target.value;
+            onDateChange(date);
+          }}
+        />
+      </div>
+    );
+  };
+
   const today = new Date().toLocaleDateString("en-CA");
   const { deleteQueryParam, updateQueryParam, pushQueryUpdate } =
     useLibraryQueryParam();
