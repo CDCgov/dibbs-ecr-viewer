@@ -32,12 +32,15 @@ const auditTransaction = async <Params extends Record<string, unknown>, Ret>(
     .transaction()
     .execute(async (trx) => {
       const result = await executeFn(trx);
+      // If we get a UUID result, use that, but don't override a param UUID with undefined.
       const logParams =
         typeof result === "string" ? { ...params, uuid: result } : params;
 
       try {
         await createAuditRecord<Params>(trx, subject, action, logParams);
       } catch (error: unknown) {
+        // Avoid getting stuck in a loop where we can't migrate/show migration issues
+        // because of audit logging.
         if (await dbIsValid()) {
           throw error;
         } else {
