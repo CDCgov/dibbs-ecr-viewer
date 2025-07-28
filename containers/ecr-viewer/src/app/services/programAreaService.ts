@@ -70,10 +70,11 @@ const checkDupeName = async (
   name: string,
   uuid: string,
 ) => {
-  const dupe = await db
+  const dupe = db
     .selectFrom("program_area")
+    .selectAll()
     .where((eb) =>
-      eb(eb.fn<string>("lower", [eb.ref("name")]), "=", name.toLowerCase()),
+      eb(eb.fn<string>("LOWER", [eb.ref("name")]), "=", name.toLowerCase()),
     )
     .where("uuid", "!=", uuid)
     .executeTakeFirst();

@@ -140,18 +140,14 @@ const NameFieldSet = ({
         Required fields are marked with an asterisk (<RequiredMarker />)
       </span>
       <FormGroup error={nameIsDupe}>
-        <label className="usa-label">
+        <label className="usa-label maxw-full">
           Program area name
           <RequiredMarker />
           {nameIsDupe && (
-            <>
-              <p className="usa-error-message margin-0">
-                This program name already exists.
-              </p>
-              <p className="usa-error-message margin-0">
-                Please pick a different program name.
-              </p>
-            </>
+            <p className="usa-error-message margin-0">
+              Please pick a different program name. This program name already
+              exists.
+            </p>
           )}
           <TextInput
             type="text"
