@@ -168,7 +168,7 @@ const ensureReportHasDateTime = (
     endDate = newestObsDate?.end;
   }
 
-  const oldestObsDate = evaluateOne(obs.at(0), fhirPathMappings.effectiveX);
+  const oldestObsDate = evaluateOne(obs.at(-1), fhirPathMappings.effectiveX);
   if (typeof oldestObsDate === "string") {
     startDate = oldestObsDate;
   } else {
@@ -234,7 +234,6 @@ export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
   if (!labReportJson) {
     return false;
   }
-  // TODO: get from "Lab Interpretation" Observation
   const labResultName = labReportJson.resultName;
 
   return labResultName?.toLowerCase().includes("abnormal") ?? false;
@@ -386,7 +385,8 @@ export const evaluateDiagnosticReportData = (
   const dxObs = obs.filter((observation) => {
     if (observation.component) return false;
     const hasValidCoding = observation.code?.coding?.some(
-      (c: Coding) => c?.display && c.display !== "Lab Interpretation",
+      (c: Coding) =>
+        !(c?.display === "Lab Interpretation" || c?.code === "56850-1"),
     );
     return !!hasValidCoding;
   });
@@ -612,25 +612,20 @@ const getLabsContent = (
     {
       title: "Received Time",
       value:
-        formatDateTime(
-          evaluateValue(labSpecimen, fhirPathMappings.specimenReceivedTime),
-        ) || noData,
+        evaluateValue(labSpecimen, fhirPathMappings.specimenReceivedTime) ||
+        noData,
       className: "lab-text-content",
     },
     {
       title: "Specimen (Source)",
       value:
-        formatCodeableConcept(
-          evaluateOne(labSpecimen, fhirPathMappings.specimenSource),
-        ) || noData,
+        evaluateValue(labSpecimen, fhirPathMappings.specimenSource) || noData,
       className: "lab-text-content",
     },
     {
       title: "Anatomical Location/Laterality",
       value:
-        formatCodeableConcept(
-          evaluateOne(labSpecimen, fhirPathMappings.specimenBodySite),
-        ) ||
+        evaluateValue(labSpecimen, fhirPathMappings.specimenBodySite) ||
         returnFieldValueFromLabHtmlString(
           labReportJson,
           "Anatomical Location / Laterality",

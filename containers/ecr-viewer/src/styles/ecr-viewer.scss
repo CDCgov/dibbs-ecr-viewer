@@ -252,7 +252,6 @@ main {
     font-weight: normal;
     background-color: color("white");
     @include add-background-svg("usa-icons/remove");
-    // border-bottom: #111111 1px solid;
     border-radius: 0.25rem;
 
     &:hover {

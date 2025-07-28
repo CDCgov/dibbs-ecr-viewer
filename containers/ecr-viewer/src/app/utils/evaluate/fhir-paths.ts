@@ -144,7 +144,7 @@ export type PathTypes = {
   observations: Observation;
   labResultDiv: string;
   specimenCollectionTime: TimeX;
-  specimenReceivedTime: string;
+  specimenReceivedTime: TimeX;
   specimenSource: CodeableConcept;
   specimenBodySite: CodeableConcept;
   observationReferenceValue: string;
@@ -598,7 +598,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "Specimen.collection.collected",
   },
   specimenReceivedTime: {
-    type: "string",
+    type: "TimeX",
     path: "Specimen.receivedTime",
   },
   specimenSource: {
