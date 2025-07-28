@@ -4,6 +4,7 @@ import React, { RefObject, useRef, useState } from "react";
 import {
   Button,
   Checkbox,
+  FormGroup,
   ModalHeading,
   ModalRef,
   RequiredMarker,
@@ -19,6 +20,7 @@ import Modal from "@/app/components/modal/Modal";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
+import { notEmpty } from "@/app/utils/data-utils";
 import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
 import { AccordionItem } from "@/app/view-data/types";
 
@@ -106,7 +108,13 @@ export const ProgramForm = ({
         return res;
       }}
     >
-      <NameFieldSet name={name} setName={setName} />
+      <NameFieldSet
+        name={name}
+        setName={setName}
+        programNames={initValues.conditions
+          .map(({ program_area_name }) => program_area_name)
+          .filter(notEmpty)}
+      />
       <ConditionFieldSet
         progUuid={progUuid}
         conditionCategories={conditionCategories}
@@ -120,27 +128,39 @@ export const ProgramForm = ({
 const NameFieldSet = ({
   name,
   setName,
+  programNames,
 }: {
   name: string;
   setName: (n: string) => void;
+  programNames: string[];
 }) => {
+  const nameIsDupe = programNames.includes(name);
+
   return (
     <FieldSet legend="Name program area">
       <span>
         Required fields are marked with an asterisk (<RequiredMarker />)
       </span>
-      <label className="usa-label">
-        Program area name
-        <RequiredMarker />
-        <TextInput
-          type="text"
-          required={true}
-          id="name"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </label>
+      <FormGroup error={nameIsDupe}>
+        <label className="usa-label">
+          Program area name
+          <RequiredMarker />
+          {nameIsDupe && (
+            <p className="usa-error-message">
+              This program name already exists. Please pick a different program
+              name
+            </p>
+          )}
+          <TextInput
+            type="text"
+            required={true}
+            id="name"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </label>
+      </FormGroup>
     </FieldSet>
   );
 };
