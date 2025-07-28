@@ -12,7 +12,6 @@ import {
   RelatedPerson,
 } from "fhir/r4";
 
-import { Age } from "@/app/types";
 import {
   makePlural,
   toSentenceCase,
@@ -407,6 +406,12 @@ export const formatReference = (
   if (!reference) return;
   return reference.reference;
 };
+
+export interface Age {
+  years: number;
+  months: number;
+  days: number;
+}
 
 /**
  * Takes a patient's age and formats it into a string. If the patient is 2 years or older

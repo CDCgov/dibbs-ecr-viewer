@@ -22,9 +22,3 @@ export interface EcrDisplay {
   eicr_version_number: string | undefined;
   related_ecrs: RelatedEcr[];
 }
-
-export interface Age {
-  years: number;
-  months: number;
-  days: number;
-}

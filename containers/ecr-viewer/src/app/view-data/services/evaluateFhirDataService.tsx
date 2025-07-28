@@ -31,9 +31,9 @@ import {
   formatAge,
   findCurrentAddress,
   formatCurrentAddress,
+  Age,
 } from "@/app/services/formatService";
 import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
-import { Age } from "@/app/types";
 import {
   CompleteData,
   evaluateData,
