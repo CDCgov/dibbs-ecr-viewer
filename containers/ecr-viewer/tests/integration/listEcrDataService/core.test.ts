@@ -451,147 +451,119 @@ describe("generate search statement", () => {
     expect(params).toStrictEqual([true, true]);
   });
 });
-
-describe("generate filter conditions statement without eCRs with no conditions reported", () => {
-  it("should add conditions in the filter statement", () => {
-    const conditions = ["Condition1", "Condition2"];
-    const { sql, params } = getWhere((eb) =>
-      generateFilterConditionsStatement(eb, conditions),
-    );
-
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2)))',
+//---------------------------------------------------------------------------------------------
+describe.each([
+  {
+    scenario: "without eCRs with no conditions reported",
+    includeNoConditions: false,
+    testConditions: ["Condition1", "Condition2"],
+    expectedPostgresSQL:
+      'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2)))',
+    expectedSqlServerSQL:
+      'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
+  },
+  {
+    scenario: "with eCRs with no conditions reported",
+    includeNoConditions: true,
+    testConditions: ["No conditions reported", "Condition1", "Condition2"],
+    expectedPostgresSQL:
+      '(not exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id") or exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2))))',
+    expectedSqlServerSQL:
+      '(not exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id") or exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2))))',
+  },
+])(
+  "generate filter conditions statement $scenario",
+  ({
+    scenario,
+    includeNoConditions,
+    testConditions,
+    expectedPostgresSQL,
+    expectedSqlServerSQL,
+  }) => {
+    it("should add conditions in the filter statement", () => {
+      const { sql, params } = getWhere((eb) =>
+        generateFilterConditionsStatement(eb, testConditions),
       );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
+
+      if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+        expect(sql).toEqual(expectedPostgresSQL);
+      } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+        expect(sql).toEqual(expectedSqlServerSQL);
+      }
+      expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
+    });
+
+    it("should return FALSE when de-selecting all conditions on filter", () => {
+      if (!includeNoConditions) {
+        const { sql, params } = getWhere((eb) =>
+          generateFilterConditionsStatement(eb, [""]),
+        );
+        if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+          expect(sql).toEqual("$1 = $2");
+        } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+          expect(sql).toEqual("@1 = @2");
+        }
+        expect(params).toStrictEqual([true, false]);
+      }
+    });
+
+    it("should return TRUE if no conditions are provided", () => {
+      const { sql, params } = getWhere((eb) =>
+        generateFilterConditionsStatement(eb),
       );
-    }
-    expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
-  });
+      if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+        expect(sql).toEqual("$1 = $2");
+      } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+        expect(sql).toEqual("@1 = @2");
+      }
+      expect(params).toStrictEqual([true, true]);
+    });
 
-  it("should return FALSE when de-selecting all conditions on filter", () => {
-    const { sql, params } = getWhere((eb) =>
-      generateFilterConditionsStatement(eb, [""]),
-    );
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual("$1 = $2");
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual("@1 = @2");
-    }
-    expect(params).toStrictEqual([true, false]);
-  });
-
-  it("should return TRUE if no conditions are provided", () => {
-    const { sql, params } = getWhere((eb) =>
-      generateFilterConditionsStatement(eb),
-    );
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual("$1 = $2");
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual("@1 = @2");
-    }
-    expect(params).toStrictEqual([true, true]);
-  });
-
-  it("should add date range in the filter statement", () => {
-    const { sql, params } = getWhere((eb) =>
-      generateFilterDateStatement(eb, testDateRange),
-    );
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."date_created" >= $1 and "test_ev_schema"."ecr_data"."date_created" <= $2)',
+    it("should add date range in the filter statement", () => {
+      const { sql, params } = getWhere((eb) =>
+        generateFilterDateStatement(eb, testDateRange),
       );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."date_created" >= @1 and "test_ev_schema"."ecr_data"."date_created" <= @2)',
-      );
-    }
+      if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+        expect(sql).toEqual(
+          '("test_ev_schema"."ecr_data"."date_created" >= $1 and "test_ev_schema"."ecr_data"."date_created" <= $2)',
+        );
+      } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+        expect(sql).toEqual(
+          '("test_ev_schema"."ecr_data"."date_created" >= @1 and "test_ev_schema"."ecr_data"."date_created" <= @2)',
+        );
+      }
 
-    expect(params).toStrictEqual([
-      testDateRange.startDate,
-      testDateRange.endDate,
-    ]);
-  });
+      expect(params).toStrictEqual([
+        testDateRange.startDate,
+        testDateRange.endDate,
+      ]);
+    });
 
-  it("should display all conditions in date range by default if no filter has been added", () => {
-    const { sql, params } = getWhere((eb) =>
-      generateWhereStatement(eb, testDateRange, "", undefined),
-    );
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        '($1 = $2 and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and $5 = $6)',
+    it("should display all conditions in date range by default if no filter has been added", () => {
+      const { sql, params } = getWhere((eb) =>
+        generateWhereStatement(eb, testDateRange, "", undefined),
       );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        '(@1 = @2 and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and @5 = @6)',
-      );
-    }
+      if (process.env.METADATA_DATABASE_TYPE === "postgres") {
+        expect(sql).toEqual(
+          '($1 = $2 and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and $5 = $6)',
+        );
+      } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
+        expect(sql).toEqual(
+          '(@1 = @2 and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and @5 = @6)',
+        );
+      }
 
-    expect(params).toStrictEqual([
-      true,
-      true,
-      testDateRange.startDate,
-      testDateRange.endDate,
-      true,
-      true,
-    ]);
-  });
-});
-
-describe("generate filter conditions statement with eCRs with no conditions reported", () => {
-  const testDateRange = {
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-  };
-  
-  it("should add conditions in the filter statement", () => {
-    const conditions = ["No conditions reported", "Condition1", "Condition2"];
-    const { sql, params } = getWhere((eb) =>
-      generateFilterConditionsStatement(eb, conditions),
-    );
-
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        '(not exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\") or exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\" and (\"erc_sub\".\"condition\" is not null and (\"erc_sub\".\"condition\" ilike $1 or \"erc_sub\".\"condition\" ilike $2 or \"erc_sub\".\"condition\" ilike $3))))',
-      );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        '(not exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\") or exists (select \"erc_sub\".\"eicr_id\" from \"test_ev_schema\".\"ecr_rr_conditions\" as \"erc_sub\" where \"erc_sub\".\"eicr_id\" = \"test_ev_schema\".\"ecr_data\".\"eicr_id\" and (\"erc_sub\".\"condition\" is not null and (\"erc_sub\".\"condition\" like @1 or \"erc_sub\".\"condition\" like @2 or \"erc_sub\".\"condition\" like @3))))',
-      );
-    }
-    expect(params).toStrictEqual([
-      "%No conditions reported%",
-      "%Condition1%",
-      "%Condition2%",
-    ]);
-  });
-
-  it("should display all conditions in date range by default if no filter has been added", () => {
-    const { sql, params } = getWhere((eb) =>
-      generateWhereStatement(eb, testDateRange, "", undefined),
-    );
-    if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-      expect(sql).toEqual(
-        '($1 = $2 and ("test_ev_schema"."ecr_data"."date_created" >= $3 and "test_ev_schema"."ecr_data"."date_created" <= $4) and $5 = $6)',
-      );
-    } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-      expect(sql).toEqual(
-        '(@1 = @2 and ("test_ev_schema"."ecr_data"."date_created" >= @3 and "test_ev_schema"."ecr_data"."date_created" <= @4) and @5 = @6)',
-      );
-    }
-
-    expect(params).toStrictEqual([
-      true,
-      true,
-      testDateRange.startDate,
-      testDateRange.endDate,
-      true,
-      true,
-    ]);
-  });
-});
+      expect(params).toStrictEqual([
+        true,
+        true,
+        testDateRange.startDate,
+        testDateRange.endDate,
+        true,
+        true,
+      ]);
+    });
+  },
+);
 
 describe("generate where statement", () => {
   it("should generate where statement using search and filter statements", () => {

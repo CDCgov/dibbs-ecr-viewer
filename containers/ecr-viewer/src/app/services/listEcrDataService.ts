@@ -378,7 +378,7 @@ export const generateFilterConditionsStatement = (
           .where((subEb) =>
             subEb("erc_sub.condition", "is not", null).and(
               subEb.or(
-                filterConditions.map((condition) =>
+                actualConditions.map((condition) =>
                   subEb("erc_sub.condition", getSql("like"), `%${condition}%`),
                 ),
               ),
