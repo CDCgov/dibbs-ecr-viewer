@@ -35,7 +35,7 @@ const UserAdminPage = async () => {
             deleteAction={async (uuid) => {
               "use server";
               revalidatePath("/ecr-viewer/admin/user");
-              return await deleteUserAction(uuid);
+              return await deleteUserAction({ uuid });
             }}
           />
         </div>

@@ -4,7 +4,8 @@ import { axe } from "jest-axe";
 import router from "next-router-mock";
 
 import EcrTableContent from "@/app/components/table/ecr/EcrTableContent";
-import { EcrDisplay, listEcrData } from "@/app/services/listEcrDataService";
+import { listEcrData } from "@/app/services/listEcrDataService";
+import { EcrDisplay } from "@/app/types";
 import { range } from "@/app/utils/data-utils";
 
 jest.mock("@/app/data/metadataDb/database");
@@ -161,14 +162,14 @@ describe("EcrTableContent", () => {
     );
 
     expect(mockedListEcrData).toHaveBeenCalledTimes(1);
-    expect(mockedListEcrData).toHaveBeenCalledWith(
-      0,
-      25,
-      "date_created",
-      "DESC",
-      mockDateRange,
-      "blah",
-      ["Anthrax (disorder)"],
-    );
+    expect(mockedListEcrData).toHaveBeenCalledWith({
+      startIndex: 0,
+      itemsPerPage: 25,
+      sortColumn: "date_created",
+      sortDirection: "DESC",
+      filterDates: mockDateRange,
+      searchTerm: "blah",
+      filterConditions: ["Anthrax (disorder)"],
+    });
   });
 });

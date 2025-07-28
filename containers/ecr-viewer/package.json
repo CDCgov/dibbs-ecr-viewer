@@ -1,9 +1,11 @@
 {
   "name": "ecr-viewer",
-  "packageManager": "npm@11.1.0",
   "description": "The DIBBs eCR Viewer app offers a REST API for processing FHIR messages into an HTML page with key insights.",
-  "version": "1.0.1",
   "private": true,
+  "engines": {
+    "node": "^24",
+    "npm": "^11"
+  },
   "scripts": {
     "docs": "typedoc --customCss guides/assets/styles.css",
     "dev": "next dev",
@@ -105,7 +107,7 @@
     "jest-extended": "^4.0.2",
     "jest-fail-on-console": "^3.3.1",
     "lighthouse": "^12.5.1",
-    "next-router-mock": "^0.9.13",
+    "next-router-mock": "^1.0.2",
     "playwright-lighthouse": "^4.0.0",
     "postcss": "^8.4.38",
     "prettier": "3.5.3",

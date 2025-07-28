@@ -8,7 +8,7 @@ import Link from "next/link";
 import { ExpandMore } from "@/app/components/Icon";
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
-import { EcrDisplay, RelatedEcr } from "@/app/services/listEcrDataService";
+import { EcrDisplay, RelatedEcr } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
 import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
 import { saveToSessionStorage } from "@/app/utils/storage-utils";

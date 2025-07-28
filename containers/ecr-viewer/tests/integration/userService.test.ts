@@ -144,7 +144,7 @@ describe("user service", () => {
     expect(warning[0]).toContain("Active admin user already exists");
 
     // admin deletes themself
-    await deleteUser(adminId!);
+    await deleteUser({ uuid: adminId! });
 
     // Current user isn't an admin any more!
     await expect(listUsers()).rejects.toThrow();
@@ -186,11 +186,11 @@ describe("user service", () => {
     expect(userId).toMatch(UUID_REGEX);
 
     // check audit log
-    const log = await getLastAuditLog();
-    expect(log.actor).toEqual(adminId!);
-    expect(log.subject).toEqual("user");
-    expect(log.action).toEqual("create");
-    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+    const createLog = await getLastAuditLog();
+    expect(createLog.actor).toEqual(adminId!);
+    expect(createLog.subject).toEqual("user");
+    expect(createLog.action).toEqual("create");
+    expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
       email: userEmail,
       userType: "standard",
       programs: [],
@@ -318,7 +318,16 @@ describe("user service", () => {
 
   it("should delete a user", async () => {
     // standard user created in prior test
-    await deleteUser(userId!);
+    await deleteUser({ uuid: userId! });
+
+    // check audit log
+    const deleteLog = await getLastAuditLog();
+    expect(deleteLog.actor).toEqual(adminId!);
+    expect(deleteLog.subject).toEqual("user");
+    expect(deleteLog.action).toEqual("delete");
+    expect(JSON.parse(deleteLog.parameter_json)).toStrictEqual({
+      uuid: userId!,
+    });
 
     // see only admin user listed
     const users = await listUsers();
@@ -357,7 +366,7 @@ describe("user service", () => {
     });
   });
 
-  describe("notFoundUnessAdmin", () => {
+  describe("notFoundUnlessAdmin", () => {
     it("should do nothing if user is an admin", async () => {
       await notFoundUnlessAdmin();
       expect(notFound).not.toHaveBeenCalled();
