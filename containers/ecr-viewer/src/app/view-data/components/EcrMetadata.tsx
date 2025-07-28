@@ -5,7 +5,7 @@ import { Table } from "@trussworks/react-uswds";
 import {
   ERSDInfo,
   ReportableConditions,
-} from "@/app/services/ecrMetadataService";
+} from "@/app/view-data/services/ecrMetadataService";
 import {
   AccordionSection,
   AccordionSubSection,

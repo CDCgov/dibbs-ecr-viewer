@@ -8,9 +8,9 @@ import {
 } from "@trussworks/react-uswds";
 
 import { BackButton } from "@/app/components/BackButton";
+import { AccordionItem } from "@/app/types";
 import { range } from "@/app/utils/data-utils";
 import { toKebabCase } from "@/app/utils/format-utils";
-import { AccordionItem } from "@/app/view-data/types";
 import {
   AccordionSection,
   AccordionSubSection,

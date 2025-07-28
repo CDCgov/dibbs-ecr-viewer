@@ -1,5 +1,7 @@
 import { Bundle, Observation } from "fhir/r4";
 
+import { formatDate, formatDateTime } from "@/app/services/formatDateService";
+import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import { noData } from "@/app/utils/data-utils";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
@@ -9,9 +11,6 @@ import EvaluateTable, {
   evaluateTableRowCell,
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
-
-import { formatDate, formatDateTime } from "./formatDateService";
-import { HtmlTableJsonRow } from "./htmlTableService";
 
 type TravelHistoryColumn = Omit<ColumnInfoInput, "applyToValue"> & {
   applyToValue?: (val: string) => string | undefined;
