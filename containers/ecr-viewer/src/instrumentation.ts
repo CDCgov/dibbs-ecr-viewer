@@ -5,7 +5,7 @@ import {
 } from "./app/data/blobStorage/utils";
 
 /**
- * The register function will be callled once when nextjs server is instantiated
+ * The register function will be called once when nextjs server is instantiated
  */
 export async function register() {
   setupConfigurationVariables();
