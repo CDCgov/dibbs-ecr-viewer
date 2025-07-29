@@ -27,21 +27,6 @@ test.describe("viewer page", () => {
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 
     expect(accessibilityScanResults.violations).toEqual([]);
-
-    const logs = await getDb<Core>()
-      .selectFrom("audit_log")
-      .selectAll()
-      .where("subject", "=", "ecr")
-      .where("action", "=", "view")
-      .execute();
-
-    expect(
-      logs.filter(
-        ({ parameter_json }) =>
-          JSON.parse(parameter_json).ecr_id ===
-          "db734647-fc99-424c-a864-7e3cda82e703",
-      ).length,
-    ).toBeGreaterThan(0);
   });
 
   test("fully expanded should not have any automatically detectable accessibility issues", async ({
@@ -130,5 +115,31 @@ test.describe("viewer page", () => {
 
       expect(navIndex).toBe(numLinks);
     });
+  });
+
+  test("audit logging", async ({ page }) => {
+    test.skip(
+      process.env.CONFIG_NAME.endsWith("_NON_INTEGRATED"),
+      "Only applies to dual",
+    );
+
+    await page.goto(
+      `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
+    );
+
+    const logs = await getDb<Core>()
+      .selectFrom("audit_log")
+      .selectAll()
+      .where("subject", "=", "ecr")
+      .where("action", "=", "view")
+      .execute();
+
+    expect(
+      logs.filter(
+        ({ parameter_json }) =>
+          JSON.parse(parameter_json).ecr_id ===
+          "db734647-fc99-424c-a864-7e3cda82e703",
+      ).length,
+    ).toBeGreaterThan(0);
   });
 });
