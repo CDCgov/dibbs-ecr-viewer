@@ -253,7 +253,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Social History
   patientOccupation: {
     type: "Observation",
-    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork')",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '21843-8'))",
   },
   patientOccupationHistory: {
     type: "Observation",

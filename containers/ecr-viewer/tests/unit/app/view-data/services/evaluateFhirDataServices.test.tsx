@@ -317,6 +317,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "21843-8",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -349,6 +350,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "21843-8",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -388,6 +390,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "21843-8",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -415,6 +418,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "74165-2",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -436,6 +440,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "21843-8",
+                    system: "http://loinc.org",
                   },
                 ],
               },
