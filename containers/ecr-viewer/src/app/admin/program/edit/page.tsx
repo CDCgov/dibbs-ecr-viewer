@@ -43,7 +43,7 @@ const EditProgramPage = async ({
       submitAction={async (name, conditions) => {
         "use server";
         revalidatePath("/ecr-viewer/admin/program");
-        return await updateProgramAreaAction(uuid, { name, conditions });
+        return await updateProgramAreaAction({ uuid, name, conditions });
       }}
     />
   );

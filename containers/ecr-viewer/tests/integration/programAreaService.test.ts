@@ -18,6 +18,7 @@ import {
 } from "@/app/services/userService";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
+import { getLastAuditLog } from "./helpers/core";
 
 const cond123 = {
   code: "123",
@@ -72,8 +73,22 @@ describe("program area service", () => {
   it("should create a program area", async () => {
     const progName = "Fun Times";
     const conditionCodes = ["123", "456"];
-    progId = await createProgramArea(progName, conditionCodes);
+    progId = await createProgramArea({
+      name: progName,
+      conditions: conditionCodes,
+    });
     expect(progId).toMatch(UUID_REGEX);
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("program_area");
+    expect(log.action).toEqual("create");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      name: "Fun Times",
+      conditions: conditionCodes,
+      uuid: progId,
+    });
 
     // see program area listed
     const programAreas = await listProgramAreas();
@@ -105,17 +120,30 @@ describe("program area service", () => {
 
     // program with name already exists
     jest.spyOn(console, "error").mockImplementation();
-    await expect(createProgramArea(progName, [])).rejects.toThrow();
+    await expect(
+      createProgramArea({ name: progName, conditions: [] }),
+    ).rejects.toThrow();
   });
 
   it("should update a program area name", async () => {
     const progName = "Sad Times";
-    const id = await createProgramArea(progName, ["123"]);
+    const id = await createProgramArea({ name: progName, conditions: ["123"] });
 
     const beforeNameConds = await listConditionReferences();
-    await updateProgramArea(id, { name: "Happy Days" });
+    await updateProgramArea({ uuid: id, name: "Happy Days" });
     const afterNameConds = await listConditionReferences();
     const afterNameProgramAreas = await listProgramAreas();
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("program_area");
+    expect(log.action).toEqual("update");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      name: "Happy Days",
+      uuid: id,
+    });
+
     expect(
       // eslint-disable-next-line unused-imports/no-unused-vars
       beforeNameConds.map(({ program_area_name, ...cond }) => cond),
@@ -129,20 +157,32 @@ describe("program area service", () => {
     // program with name already exists
     jest.spyOn(console, "error").mockImplementation();
     await expect(
-      updateProgramArea(id, { name: "Fun Times" }),
+      updateProgramArea({ uuid: id, name: "Fun Times" }),
     ).rejects.toThrow();
   });
 
   it("should update a program area conditions", async () => {
     const progName = "Sad Times";
-    const id = await createProgramArea(progName, ["123"]);
+    const id = await createProgramArea({ name: progName, conditions: ["123"] });
 
     const beforeConds = await listConditionReferences();
     const beforeCond = beforeConds.filter((c) => c.program_area_uuid === id);
     expect(beforeCond).toBeArrayOfSize(1);
     expect(beforeCond[0]).toHaveProperty("code", "123");
-    await updateProgramArea(id, { conditions: ["789"] });
+    await updateProgramArea({ uuid: id, conditions: ["789"] });
+
     const afterConds = await listConditionReferences();
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("program_area");
+    expect(log.action).toEqual("update");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      conditions: ["789"],
+      uuid: id,
+    });
+
     expect(beforeConds).not.toStrictEqual(afterConds);
     const cond = afterConds.filter((c) => c.program_area_uuid === id);
     expect(cond).toBeArrayOfSize(1);
@@ -151,14 +191,23 @@ describe("program area service", () => {
 
   it("should delete a program area", async () => {
     const beforeCreate = await listProgramAreas();
-    const id = await createProgramArea("test", ["123"]);
+    const id = await createProgramArea({ name: "test", conditions: ["123"] });
     const afterCreate = await listProgramAreas();
 
     await updateUser({ uuid: adminId!, updates: {}, programs: [id, progId!] });
     const beforeUserProgramAreas = await listUserProgramAreas(adminId!);
     expect(beforeUserProgramAreas).toBeArrayOfSize(2);
 
-    await deleteProgramArea(id);
+    await deleteProgramArea({ uuid: id });
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("program_area");
+    expect(log.action).toEqual("delete");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      uuid: id,
+    });
 
     const afterDelete = await listProgramAreas();
 
