@@ -153,27 +153,30 @@ const FilterReportableConditions = ({
           onToggle={handleSelectAll}
           isAllSelected={isAllSelected}
         />
-        {allConditions.length > 0 && (
-          <div className="border-top-1px border-base-lighter margin-x-105"></div>
-        )}
 
-        {/* No conditions reported */}
-        <CheckboxOptions
-          groupName="condition"
-          filterItems={noConditions}
-          onChange={handleCheckboxChange}
-        />
-
+        {/* No conditions reported checkbox */}
         {Object.keys(noConditions).length > 0 && (
-          <div className="border-top-1px border-base-lighter margin-x-105"></div>
+          <>
+            <div className="border-top-1px border-base-lighter margin-x-105"></div>
+            <CheckboxOptions
+              groupName="condition"
+              filterItems={noConditions}
+              onChange={handleCheckboxChange}
+            />
+          </>
         )}
 
         {/* Filter Conditions checkboxes */}
-        <CheckboxOptions
-          groupName="condition"
-          filterItems={regularConditions}
-          onChange={handleCheckboxChange}
-        />
+        {Object.keys(regularConditions).length > 0 && (
+          <>
+            <div className="border-top-1px border-base-lighter"></div>
+            <CheckboxOptions
+              groupName="condition"
+              filterItems={regularConditions}
+              onChange={handleCheckboxChange}
+            />
+          </>
+        )}
       </div>
       <div className="border-top-1px border-base-lighter" />
     </Filter>

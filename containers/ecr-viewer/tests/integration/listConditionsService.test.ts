@@ -5,6 +5,7 @@
 import { getAllConditions } from "@/app/services/listConditionsService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { createCoreEcr, createEcrCondition } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
 import { seedUserProgramData } from "./helpers/seed";
@@ -70,12 +71,12 @@ describe.each([
     scenario: "with eCRs that have no conditions",
     setupNoConditionsEcr: true,
     expectedAdmin: [
-      "No conditions reported",
+      NO_CONDITIONS_REPORTED_OPTION,
       "condition1",
       "condition2",
       "condition3",
     ],
-    expectedStandard: ["No conditions reported", "condition1"], // TODO
+    expectedStandard: [NO_CONDITIONS_REPORTED_OPTION, "condition1"],
     expectedNoUser: [],
   },
 ])(
