@@ -70,7 +70,7 @@ const checkDupeName = async (
   name: string,
   uuid: string,
 ) => {
-  const dupe = db
+  const dupe = await db
     .selectFrom("program_area")
     .selectAll()
     .where((eb) =>
