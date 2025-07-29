@@ -387,7 +387,7 @@ export const evaluateDiagnosticReportData = (
     if (observation.component) return false;
     const hasValidCoding = observation.code?.coding?.some(
       (c: Coding) =>
-        !(c?.display === "Lab Interpretation" || c?.code === "56850-1"),
+        !(c?.code === "56850-1" || c?.display === "Lab Interpretation"),
     );
     return !!hasValidCoding;
   });
