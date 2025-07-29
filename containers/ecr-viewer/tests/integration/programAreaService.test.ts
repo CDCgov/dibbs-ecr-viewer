@@ -81,7 +81,6 @@ describe("program area service", () => {
 
     // check audit log
     const log = await getLastAuditLog();
-    console.log("AUDIT LOG: ", log);
     expect(log.actor).toEqual(adminId!);
     expect(log.subject).toEqual("program_area");
     expect(log.action).toEqual("create");
@@ -134,6 +133,17 @@ describe("program area service", () => {
     await updateProgramArea({ uuid: id, name: "Happy Days" });
     const afterNameConds = await listConditionReferences();
     const afterNameProgramAreas = await listProgramAreas();
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("program_area");
+    expect(log.action).toEqual("update");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      name: "Happy Days",
+      uuid: id,
+    });
+
     expect(
       // eslint-disable-next-line unused-imports/no-unused-vars
       beforeNameConds.map(({ program_area_name, ...cond }) => cond),
@@ -160,7 +170,19 @@ describe("program area service", () => {
     expect(beforeCond).toBeArrayOfSize(1);
     expect(beforeCond[0]).toHaveProperty("code", "123");
     await updateProgramArea({ uuid: id, conditions: ["789"] });
+
     const afterConds = await listConditionReferences();
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("program_area");
+    expect(log.action).toEqual("update");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      conditions:["789"],
+      uuid: id,
+    });
+
     expect(beforeConds).not.toStrictEqual(afterConds);
     const cond = afterConds.filter((c) => c.program_area_uuid === id);
     expect(cond).toBeArrayOfSize(1);
@@ -177,6 +199,15 @@ describe("program area service", () => {
     expect(beforeUserProgramAreas).toBeArrayOfSize(2);
 
     await deleteProgramArea({ uuid: id });
+
+    // check audit log
+    const log = await getLastAuditLog();
+    expect(log.actor).toEqual(adminId!);
+    expect(log.subject).toEqual("program_area");
+    expect(log.action).toEqual("delete");
+    expect(JSON.parse(log.parameter_json)).toStrictEqual({
+      uuid: id,
+    });
 
     const afterDelete = await listProgramAreas();
 
