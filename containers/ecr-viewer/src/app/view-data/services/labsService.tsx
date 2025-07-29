@@ -150,6 +150,8 @@ const ensureReportHasDateTime = (
   obs: Observation[],
 ) => {
   if (report.effectivePeriod) {
+    // The ecr xml requires a period, but in practice the start and end are often the same
+    // so we collapse them where we can as it's easier to digest the data
     if (report.effectivePeriod.start === report.effectivePeriod.end) {
       report.effectiveDateTime = report.effectivePeriod.start;
       report.effectivePeriod = undefined;

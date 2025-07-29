@@ -595,19 +595,19 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   specimenCollectionTime: {
     type: "TimeX",
-    path: "Specimen.collection.collected",
+    path: "collection.collected",
   },
   specimenReceivedTime: {
     type: "TimeX",
-    path: "Specimen.receivedTime",
+    path: "receivedTime",
   },
   specimenSource: {
     type: "CodeableConcept",
-    path: "Specimen.type",
+    path: "type",
   },
   specimenBodySite: {
     type: "CodeableConcept",
-    path: "Specimen.collection.bodySite",
+    path: "collection.bodySite",
   },
   observationReferenceValue: {
     type: "string",
