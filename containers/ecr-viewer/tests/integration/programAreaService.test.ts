@@ -18,7 +18,7 @@ import {
 } from "@/app/services/userService";
 
 import { buildCore, dropExisting } from "./helpers/ddl";
-import {getLastAuditLog} from "./helpers/core";
+import { getLastAuditLog } from "./helpers/core";
 
 const cond123 = {
   code: "123",
@@ -81,12 +81,12 @@ describe("program area service", () => {
 
     // check audit log
     const log = await getLastAuditLog();
-    console.log("AUDIT LOG: ", log)
+    console.log("AUDIT LOG: ", log);
     expect(log.actor).toEqual(adminId!);
     expect(log.subject).toEqual("program_area");
     expect(log.action).toEqual("create");
     expect(JSON.parse(log.parameter_json)).toStrictEqual({
-       name: "Fun Times" ,
+      name: "Fun Times",
       conditions: conditionCodes,
       uuid: progId,
     });
