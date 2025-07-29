@@ -261,7 +261,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientEmploymentStatus: {
     type: "Observation",
-    path: "entry.resource.Observation.where(code.coding.code = '74165-2')",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '74165-2'))",
   },
   patientTobaccoUse: {
     type: "ValueX",
