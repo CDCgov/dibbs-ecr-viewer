@@ -703,6 +703,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "11341-5",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -851,6 +852,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "11341-5",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -921,6 +923,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "11341-5",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -1005,6 +1008,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "11341-5",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -1018,6 +1022,7 @@ Home: 123-456-6909`,
                     coding: [
                       {
                         code: "86188-0",
+                        system: "http://loinc.org",
                       },
                     ],
                   },
@@ -1030,6 +1035,7 @@ Home: 123-456-6909`,
                     coding: [
                       {
                         code: "87729-0",
+                        system: "http://loinc.org",
                       },
                     ],
                   },
@@ -1052,6 +1058,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "11341-5",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -1064,6 +1071,7 @@ Home: 123-456-6909`,
                     coding: [
                       {
                         code: "86188-0",
+                        system: "http://loinc.org",
                       },
                     ],
                   },
@@ -1076,6 +1084,7 @@ Home: 123-456-6909`,
                     coding: [
                       {
                         code: "87729-0",
+                        system: "http://loinc.org",
                       },
                     ],
                   },
@@ -1098,6 +1107,7 @@ Home: 123-456-6909`,
                 coding: [
                   {
                     code: "11341-5",
+                    system: "http://loinc.org",
                   },
                 ],
               },
@@ -1110,6 +1120,7 @@ Home: 123-456-6909`,
                     coding: [
                       {
                         code: "86188-0",
+                        system: "http://loinc.org",
                       },
                     ],
                   },
@@ -1122,6 +1133,7 @@ Home: 123-456-6909`,
                     coding: [
                       {
                         code: "87729-0",
+                        system: "http://loinc.org",
                       },
                     ],
                   },
