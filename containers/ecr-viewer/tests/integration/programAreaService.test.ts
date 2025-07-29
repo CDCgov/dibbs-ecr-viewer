@@ -179,7 +179,7 @@ describe("program area service", () => {
     expect(log.subject).toEqual("program_area");
     expect(log.action).toEqual("update");
     expect(JSON.parse(log.parameter_json)).toStrictEqual({
-      conditions:["789"],
+      conditions: ["789"],
       uuid: id,
     });
 
