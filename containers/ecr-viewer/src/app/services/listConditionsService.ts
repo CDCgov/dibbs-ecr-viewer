@@ -53,9 +53,8 @@ export const getAllConditions = async (): Promise<string[]> => {
         .executeTakeFirst();
 
       const actualConditions = conditionsResult.map((row) => row.condition);
-      const hasEcrWithNoConditions = hasNoConditionsResult !== undefined;
 
-      if (hasEcrWithNoConditions) {
+      if (!!hasNoConditionsResult) {
         return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
       }
       return actualConditions;
