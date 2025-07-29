@@ -41,7 +41,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
   const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
     (condition) => {
       const hasImmunizationDetails = condition.immunizationDetails.length > 0;
-      const hasLabDetails = condition.labDetails.length > 0;
+      const hasClinicalDetails = condition.clinicalDetails.length > 0;
       return {
         title: condition.title,
         id: toKebabCase(condition.title),
@@ -54,7 +54,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
               <DataDisplay item={item} key={`condition-${i}`} />
             ))}
             {hasImmunizationDetails ||
-              (hasLabDetails && (
+              (hasClinicalDetails && (
                 <>
                   <h5
                     className="text-bold margin-top-0 margin-bottom-1"
@@ -69,7 +69,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
                       ))}
                     </div>
                   )}
-                  {hasLabDetails && (
+                  {hasClinicalDetails && (
                     <div className="margin-top-0">
                       {condition.clinicalDetails.map((item, i) => (
                         <DataTableDisplay item={item} key={`detail-${i}`} />
