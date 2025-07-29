@@ -119,8 +119,10 @@ test.describe("viewer page", () => {
 
   test("audit logging", async ({ page }) => {
     test.skip(
-      process.env.CONFIG_NAME.endsWith("_NON_INTEGRATED"),
-      "Only applies to dual",
+      ["AWS_INTEGRATED", "AZURE_INTEGRATED", "GCP_INTEGRATED"].includes(
+        process.env.CONFIG_NAME,
+      ),
+      "Does not apply to integrated configurations.",
     );
 
     await page.goto(
