@@ -15,11 +15,6 @@ import BundleWithScheduledApptsOnly from "../../../../../../../test-data/fhir/Bu
 import BundleWithSexualOrientation from "../../../../../../../test-data/fhir/BundleSexualOrientation.json";
 import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
 import BundleWithTravelHistoryEmpty from "../../../../../../../test-data/fhir/BundleTravelHistoryEmpty.json";
-import {
-  evaluateSocialData,
-  evaluatePatientName,
-  evaluatePatientAddress,
-} from "@/app/services/evaluateFhirDataService";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
@@ -33,6 +28,11 @@ import {
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
+import {
+  evaluateSocialData,
+  evaluatePatientName,
+  evaluatePatientAddress,
+} from "@/app/view-data/services/evaluateFhirDataService";
 
 describe("Utils", () => {
   describe("Evaluate Social Data", () => {
