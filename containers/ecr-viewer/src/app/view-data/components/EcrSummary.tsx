@@ -38,14 +38,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
   conditionSummary,
   snomed,
 }) => {
-  const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary
-    .filter(
-      (condition) =>
-        condition.immunizationDetails.length > 0 &&
-        condition.clinicalDetails.length > 0 &&
-        condition.labDetails.length > 0,
-    )
-    .map((condition) => {
+  const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
+    (condition) => {
       return {
         title: condition.title,
         id: toKebabCase(condition.title),
@@ -89,7 +83,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           </>
         ),
       };
-    });
+    },
+  );
   return (
     <div
       className="usa-summary-box padding-3"
