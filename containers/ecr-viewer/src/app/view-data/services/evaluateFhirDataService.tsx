@@ -14,6 +14,27 @@ import { DateTime } from "luxon";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import {
+  formatDate,
+  formatDateTime,
+  formatPeriodDate,
+  formatStartEndDate,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
+import {
+  formatAddress,
+  formatAddressList,
+  formatCodeableConcept,
+  formatContactPoint,
+  formatName,
+  formatNameList,
+  formatPatientContactList,
+  formatAge,
+  findCurrentAddress,
+  formatCurrentAddress,
+  Age,
+} from "@/app/services/formatService";
+import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
+import {
   CompleteData,
   evaluateData,
   isDataAvailable,
@@ -40,26 +61,6 @@ import {
   sortResourcesByDate,
 } from "@/app/view-data/utils/fhir-data-utils";
 
-import {
-  formatDate,
-  formatDateTime,
-  formatPeriodDate,
-  formatStartEndDate,
-  formatStartEndDateTime,
-} from "./formatDateService";
-import {
-  formatAddress,
-  formatAddressList,
-  formatCodeableConcept,
-  formatContactPoint,
-  formatName,
-  formatNameList,
-  formatPatientContactList,
-  formatAge,
-  findCurrentAddress,
-  formatCurrentAddress,
-} from "./formatService";
-import { HtmlTableJsonRow } from "./htmlTableService";
 import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
@@ -161,12 +162,6 @@ export const evaluateEncounterId = (fhirBundle: Bundle) => {
  */
 export const evaluatePatientDOB = (fhirBundle: Bundle) =>
   formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB));
-
-export interface Age {
-  years: number;
-  months: number;
-  days: number;
-}
 
 /**
  * Calculates the patient's age at a specific point in time or the current date.
@@ -803,7 +798,7 @@ export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
  * @param caption - A string to set the caption for the UI element
  * @returns An array of evaluated and formatted hospital encounter data.
  */
-export const evaluateEncounterDiagnosisData = (
+const evaluateEncounterDiagnosisData = (
   fhirBundle: Bundle,
   code: string,
   caption: string,

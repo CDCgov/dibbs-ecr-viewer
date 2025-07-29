@@ -5,7 +5,7 @@ import { Grid, GridContainer } from "@trussworks/react-uswds";
 
 import Accordion from "@/app/components/AccordionControlled";
 import { ExpandCollapseButtons } from "@/app/components/ExpandCollapseButtons";
-import { AccordionItem } from "@/app/view-data/types";
+import { AccordionItem } from "@/app/types";
 
 /**
  * The body of the eCR document

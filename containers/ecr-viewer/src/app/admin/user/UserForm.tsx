@@ -14,13 +14,13 @@ import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
+import { AccordionItem } from "@/app/types";
 import {
   makePlural,
   stringSort,
   toKebabCase,
   toTitleCase,
 } from "@/app/utils/format-utils";
-import { AccordionItem } from "@/app/view-data/types";
 
 export type UserType = "admin" | "standard";
 

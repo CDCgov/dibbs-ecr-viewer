@@ -3,7 +3,7 @@ import React, { useId } from "react";
 import { Accordion } from "@trussworks/react-uswds";
 import classNames from "classnames";
 
-import { AccordionItem } from "@/app/view-data/types";
+import { AccordionItem } from "@/app/types";
 
 /**
  * Accordion component for displaying lab results.

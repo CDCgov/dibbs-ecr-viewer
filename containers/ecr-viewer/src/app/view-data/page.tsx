@@ -3,16 +3,6 @@ import React from "react";
 import { notFound } from "next/navigation";
 
 import { GenericError, RetrievalFailed } from "@/app/components/ErrorPage";
-import {
-  evaluateEcrSummaryConditionSummary,
-  evaluateEcrSummaryEncounterDetails,
-  evaluateEcrSummaryPatientDetails,
-} from "@/app/services/ecrSummaryService";
-import {
-  evaluatePatientDOB,
-  evaluatePatientName,
-} from "@/app/services/evaluateFhirDataService";
-import { getFhirData, isSuccessResponse } from "@/app/services/fhirDataService";
 import { isLoggedInUserEcrAuthed } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
@@ -21,6 +11,16 @@ import EcrDocument from "./components/EcrDocument";
 import { getEcrDocumentAccordionItems } from "./components/EcrDocument/accordion-items";
 import EcrSummary from "./components/EcrSummary";
 import SideNav from "./components/SideNav";
+import {
+  evaluateEcrSummaryConditionSummary,
+  evaluateEcrSummaryEncounterDetails,
+  evaluateEcrSummaryPatientDetails,
+} from "./services/ecrSummaryService";
+import {
+  evaluatePatientDOB,
+  evaluatePatientName,
+} from "./services/evaluateFhirDataService";
+import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 
 /**
  * Functional component for rendering the eCR Viewer page.

@@ -12,8 +12,7 @@ import {
   S3_SOURCE,
   streamToJson,
 } from "@/app/data/blobStorage/utils";
-
-import { audit } from "./auditLogService";
+import { audit } from "@/app/services/auditLogService";
 
 const UNKNOWN_ECR_ID = "eCR ID not found";
 

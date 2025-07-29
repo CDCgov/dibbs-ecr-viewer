@@ -12,7 +12,11 @@ import {
   GCP_SOURCE,
   S3_SOURCE,
 } from "@/app/data/blobStorage/utils";
-import { getAzure, getFhirData, getS3 } from "@/app/services/fhirDataService";
+import {
+  getAzure,
+  getFhirData,
+  getS3,
+} from "@/app/view-data/services/fhirDataService";
 
 jest.mock("@/app/data/blobStorage/s3Client");
 jest.mock("@/app/data/blobStorage/gcpClient", () => ({
