@@ -2,9 +2,17 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 
-import _BundleLab from "../../../../../../test-data/fhir/BundleLab.json";
-import _BundleLabInvalidResultsDiv from "../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
-import _BundleLabNoLabIds from "../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
+import _BundleLabInvalidResultsDiv from "../../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
+import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import { AccordionItem } from "@/app/types";
+import { noData } from "@/app/utils/data-utils";
+import {
+  evaluateAll,
+  evaluateAllAndCheck,
+  evaluateOneAndCheck,
+} from "@/app/utils/evaluate";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import {
   checkAbnormalTag,
   searchResultRecord,
@@ -21,15 +29,7 @@ import {
   getJsonLab,
   getAllLabJsonObjects,
   getObservations,
-} from "@/app/services/labsService";
-import { noData } from "@/app/utils/data-utils";
-import {
-  evaluateAll,
-  evaluateAllAndCheck,
-  evaluateOneAndCheck,
-} from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
-import { AccordionItem } from "@/app/view-data/types";
+} from "@/app/view-data/services/labsService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const BundleLabInvalidResultsDiv =

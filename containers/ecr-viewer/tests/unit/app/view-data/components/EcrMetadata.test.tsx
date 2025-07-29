@@ -3,12 +3,12 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 
+import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import {
   ERSDInfo,
   ReportableConditions,
-} from "@/app/services/ecrMetadataService";
-import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
-import EcrMetadata from "@/app/view-data/components/EcrMetadata";
+} from "@/app/view-data/services/ecrMetadataService";
 
 const rrConditionsList: ReportableConditions = {
   "Disease caused by severe acute respiratory syndrome coronavirus 2(disorder)":
