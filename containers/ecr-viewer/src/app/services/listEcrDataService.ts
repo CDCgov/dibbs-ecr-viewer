@@ -18,7 +18,6 @@ import { UserFacingError } from "./errorService";
 import { formatDate, formatDateTime } from "./formatDateService";
 import { getLoggedInUser } from "./loggedInUserService";
 
-
 export interface MetadataModel {
   eicr_id: string;
   conditions: string[];
