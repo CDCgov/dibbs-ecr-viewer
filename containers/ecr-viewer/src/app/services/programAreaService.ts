@@ -1,6 +1,8 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
+import { Transaction } from "kysely";
+
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   ConditionReference,
@@ -9,6 +11,7 @@ import {
 } from "@/app/data/metadataDb/types/core";
 import { stringSort } from "@/app/utils/format-utils";
 
+import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 import { getCheckAdmin } from "./userService";
 
@@ -19,44 +22,48 @@ import { getCheckAdmin } from "./userService";
  * @param conditions list of condition codes to associate with the program area
  * @returns UUID of the created program area
  */
-export const createProgramArea = async (
-  name: string,
-  conditions: string[],
-): Promise<string> => {
-  const creatingUser = await getCheckAdmin("create program areas");
+export const createProgramArea = audit(
+  "program_area",
+  "create",
+  async (
+    {
+      name,
+      conditions,
+    }: {
+      name: string;
+      conditions: string[];
+    },
+    trx: Transaction<Core>,
+  ): Promise<string> => {
+    const creatingUser = await getCheckAdmin("create program areas");
 
-  if (name.trim().length < 2 || conditions.length === 0) {
-    throw new UserFacingError(
-      "Invalid program area. Must have a non-empty name and at least one condition assigned.",
-    );
-  }
+    if (name.trim().length < 2 || conditions.length === 0) {
+      throw new UserFacingError(
+        "Invalid program area. Must have a non-empty name and at least one condition assigned.",
+      );
+    }
 
-  try {
-    const uuid = randomUUID();
-    await getDb<Core>()
-      .transaction()
-      .execute(async (db) => {
-        await db
-          .insertInto("program_area")
-          .values({ uuid, author_uuid: creatingUser.uuid, name })
-          .execute();
+    try {
+      const uuid = randomUUID();
+      await trx
+        .insertInto("program_area")
+        .values({ uuid, author_uuid: creatingUser.uuid, name })
+        .execute();
 
-        if (conditions.length > 0) {
-          await db
-            .updateTable("condition_reference")
-            .set({ program_area_uuid: uuid })
-            .where("code", "in", conditions)
-            .execute();
-        }
-      });
+      await trx
+        .updateTable("condition_reference")
+        .set({ program_area_uuid: uuid })
+        .where("code", "in", conditions)
+        .execute();
 
-    return uuid;
-  } catch (error: unknown) {
-    const message = "Failed to create program area";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-};
+      return uuid;
+    } catch (error: unknown) {
+      const message = "Failed to create program area";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 /**
  * Get program area with the given uuid
@@ -87,77 +94,87 @@ export const getProgramArea = async (
  * @param updates.conditions list of condition codes to associate with the program (must be full
  * list - if an empty list is passed, the program will have no conditions associated after this call). Optional.
  */
-export const updateProgramArea = async (
-  uuid: string,
-  { name, conditions }: { name?: string; conditions?: string[] },
-): Promise<void> => {
-  await getCheckAdmin("update program areas");
+export const updateProgramArea = audit(
+  "program_area",
+  "update",
+  async (
+    {
+      uuid,
+      name,
+      conditions,
+    }: {
+      uuid: string;
+      name?: string;
+      conditions?: string[];
+    },
+    trx: Transaction<Core>,
+  ): Promise<void> => {
+    await getCheckAdmin("update program areas");
 
-  try {
-    await getDb<Core>()
-      .transaction()
-      .execute(async (db) => {
-        if (!!name) {
-          await db
-            .updateTable("program_area")
-            .set({ name })
-            .where("uuid", "=", uuid)
-            .execute();
-        }
+    try {
+      if (!!name) {
+        await trx
+          .updateTable("program_area")
+          .set({ name })
+          .where("uuid", "=", uuid)
+          .execute();
+      }
 
-        if (!!conditions) {
-          await db
+      if (!!conditions) {
+        await trx
+          .updateTable("condition_reference")
+          .set({ program_area_uuid: null })
+          .where("program_area_uuid", "=", uuid)
+          .execute();
+
+        // Then assign the new ones, if any
+        if (conditions.length > 0) {
+          await trx
             .updateTable("condition_reference")
-            .set({ program_area_uuid: null })
-            .where("program_area_uuid", "=", uuid)
+            .set({ program_area_uuid: uuid })
+            .where("code", "in", conditions)
             .execute();
-          if (conditions.length > 0) {
-            await db
-              .updateTable("condition_reference")
-              .set({ program_area_uuid: uuid })
-              .where("code", "in", conditions)
-              .execute();
-          }
         }
-      });
-  } catch (error: unknown) {
-    const message = "Failed to update program area";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-};
+      }
+    } catch (error: unknown) {
+      const message = "Failed to update program area";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 /**
  * Delete program area by id and remove any references in the conditions table.
  * The deleting user must be an admin.
  * @param uuid id of the program area to delete
  */
-export const deleteProgramArea = async (uuid: string): Promise<void> => {
-  await getCheckAdmin("delete program areas");
+export const deleteProgramArea = audit(
+  "program_area",
+  "delete",
+  async ({ uuid }: { uuid: string }, trx: Transaction<Core>): Promise<void> => {
+    await getCheckAdmin("delete program areas");
 
-  try {
-    await getDb<Core>()
-      .transaction()
-      .execute(async (db) => {
-        await db
-          .updateTable("condition_reference")
-          .set({ program_area_uuid: null })
-          .where("program_area_uuid", "=", uuid)
-          .execute();
+    try {
+      await trx
+        .updateTable("condition_reference")
+        .set({ program_area_uuid: null })
+        .where("program_area_uuid", "=", uuid)
+        .execute();
 
-        await db
-          .deleteFrom("user_program_area")
-          .where("program_area_uuid", "=", uuid)
-          .execute();
+      await trx
+        .deleteFrom("user_program_area")
+        .where("program_area_uuid", "=", uuid)
+        .execute();
 
-        await db.deleteFrom("program_area").where("uuid", "=", uuid).execute();
-      });
-  } catch (error: unknown) {
-    const message = "Failed to delete program area";
-    console.error({ message, error });
-    throw new UserFacingError(message);
-  }
-};
+      await trx.deleteFrom("program_area").where("uuid", "=", uuid).execute();
+    } catch (error: unknown) {
+      const message = "Failed to delete program area";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
+  },
+);
 
 export type ListedProgramArea = ProgramArea & {
   conditions: (ConditionReference & { is_duplicate: boolean })[];

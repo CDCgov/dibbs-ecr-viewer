@@ -8,13 +8,13 @@ import {
   Reference,
 } from "fhir/r4";
 
-import { calculatePatientAge } from "@/app/services/evaluateFhirDataService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { formatAge } from "@/app/services/formatService";
 import { safeParse } from "@/app/utils/data-utils";
 import { evaluateReference } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { makePlural } from "@/app/utils/format-utils";
+import { calculatePatientAge } from "@/app/view-data/services/evaluateFhirDataService";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";

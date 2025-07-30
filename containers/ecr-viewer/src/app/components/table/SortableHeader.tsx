@@ -13,10 +13,7 @@ export interface TableHeader {
   sortDirection: SortDirection;
 }
 
-export type SortHandlerFn = (
-  columnId: string,
-  direction: SortDirection,
-) => void;
+type SortHandlerFn = (columnId: string, direction: SortDirection) => void;
 
 interface TableHeaderCellProps {
   column: TableHeader;

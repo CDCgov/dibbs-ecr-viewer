@@ -1,6 +1,6 @@
 import { Observation } from "fhir/r4";
 
-import { getReportabilitySummaries } from "@/app/services/reportabilityService";
+import { getReportabilitySummaries } from "@/app/view-data/services/reportabilityService";
 
 describe("ReportabilityService", () => {
   describe("Evaluate Rule Summaries", () => {

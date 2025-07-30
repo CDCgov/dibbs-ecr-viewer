@@ -8,10 +8,22 @@ import {
   DiagnosticReport,
   Observation,
   Organization,
-  Reference,
+  Specimen,
 } from "fhir/r4";
 import { Coding, ObservationComponent } from "fhir/r4b";
 
+import { formatDateTime } from "@/app/services/formatDateService";
+import {
+  formatAddress,
+  formatCodeableConcept,
+  formatPhoneNumber,
+} from "@/app/services/formatService";
+import {
+  HtmlTableJson,
+  HtmlTableJsonRow,
+  formatTablesToJSON,
+} from "@/app/services/htmlTableService";
+import { AccordionItem } from "@/app/types";
 import {
   RenderableNode,
   arrayToElement,
@@ -21,6 +33,7 @@ import {
 } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -37,19 +50,7 @@ import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
-import { AccordionItem } from "@/app/view-data/types";
-
-import { formatDateTime } from "./formatDateService";
-import {
-  formatAddress,
-  formatCodeableConcept,
-  formatPhoneNumber,
-} from "./formatService";
-import {
-  HtmlTableJson,
-  HtmlTableJsonRow,
-  formatTablesToJSON,
-} from "./htmlTableService";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];
@@ -78,13 +79,11 @@ export const evaluateLabInfoData = (
   const jsonLabs = getAllLabJsonObjects(fhirBundle);
 
   for (const report of labReports) {
-    const labReportJson = getJsonLab(jsonLabs, report, fhirBundle);
+    const obs = getObservations(report, fhirBundle);
+    const labReportJson = getJsonLab(jsonLabs, obs);
 
-    const content: Array<React.JSX.Element> = getLabsContent(
-      report,
-      fhirBundle,
-      labReportJson,
-    );
+    ensureReportHasDateTime(report, obs);
+    const content = getLabsContent(report, obs, fhirBundle, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
       "Organization/",
       "",
@@ -92,14 +91,21 @@ export const evaluateLabInfoData = (
     const title = formatCodeableConcept(report.code) ?? "Unknown";
     const item = {
       title: (
-        <>
-          {title}
-          {checkAbnormalTag(labReportJson) && (
-            <Tag background="#B50909" className="margin-left-105">
-              Abnormal
-            </Tag>
-          )}
-        </>
+        <div className="display-flex flex-row flex-justify flex-align-center gap-05">
+          <span>
+            {title}
+            {checkAbnormalTag(labReportJson) && (
+              <Tag background="#B50909" className="margin-left-105">
+                Abnormal
+              </Tag>
+            )}
+          </span>
+
+          {/** inline style due to existing css rules on this button text */}
+          <span className="text-base" style={{ fontSize: "1rem" }}>
+            {evaluateValue(report, fhirPathMappings.effectiveX)}
+          </span>
+        </div>
       ),
       content,
       expanded: false,
@@ -129,21 +135,59 @@ export const getObservations = (
   report: DiagnosticReport,
   fhirBundle: Bundle,
 ): Array<Observation> => {
-  if (!report || !Array.isArray(report.result) || report.result.length === 0)
-    return [];
-  return report.result
-    .map((obsRef) =>
-      evaluateReference<Observation>(fhirBundle, obsRef.reference),
-    )
-    .filter(notEmpty);
+  return sortResourcesByDate(
+    (report.result || [])
+      .map((obsRef) =>
+        evaluateReference<Observation>(fhirBundle, obsRef.reference),
+      )
+      .filter(notEmpty),
+    fhirPathMappings.effectiveX,
+  );
 };
 
-const getReportResultId = (
+const ensureReportHasDateTime = (
   report: DiagnosticReport,
-  fhirBundle: Bundle,
-): string | undefined => {
+  obs: Observation[],
+) => {
+  if (report.effectivePeriod) {
+    // The ecr xml requires a period, but in practice the start and end are often the same
+    // so we collapse them where we can as it's easier to digest the data
+    if (report.effectivePeriod.start === report.effectivePeriod.end) {
+      report.effectiveDateTime = report.effectivePeriod.start;
+      report.effectivePeriod = undefined;
+    }
+  }
+  if (report.effectiveDateTime) return;
+
+  let startDate: string | undefined;
+  let endDate: string | undefined;
+  const newestObsDate = evaluateOne(obs.at(0), fhirPathMappings.effectiveX);
+  if (typeof newestObsDate === "string") {
+    endDate = newestObsDate;
+  } else {
+    startDate = newestObsDate?.start;
+    endDate = newestObsDate?.end;
+  }
+
+  const oldestObsDate = evaluateOne(obs.at(-1), fhirPathMappings.effectiveX);
+  if (typeof oldestObsDate === "string") {
+    startDate = oldestObsDate;
+  } else {
+    startDate = oldestObsDate?.start || startDate;
+  }
+
+  if (startDate === endDate) {
+    report.effectiveDateTime = startDate;
+  } else {
+    report.effectivePeriod = {
+      start: startDate,
+      end: endDate,
+    };
+  }
+};
+
+const getReportResultId = (observations: Observation[]): string | undefined => {
   // Get reference value (result ID) from Observations
-  const observations = getObservations(report, fhirBundle);
   const observationRefValsArray = observations.flatMap((observation) => {
     const refVal = evaluateAll(
       observation,
@@ -157,16 +201,14 @@ const getReportResultId = (
 /**
  * Retrieves the JSON representation of all lab reports from the labs HTML string.
  * @param jsonLabs - All json lab reports from the HTML
- * @param report - The DiagnosticReport object containing information about the lab report.
- * @param fhirBundle - The FHIR Bundle object containing relevant FHIR resources.
+ * @param observations - The DiagnosticReport's observation resources.
  * @returns The JSON representation of the lab reports.
  */
 export const getJsonLab = (
   jsonLabs: HtmlTableJson[],
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
+  observations: Observation[],
 ): HtmlTableJson | undefined => {
-  const resultId = getReportResultId(report, fhirBundle);
+  const resultId = getReportResultId(observations);
   if (!resultId) return;
 
   // Get specified lab report (by reference value)
@@ -234,78 +276,6 @@ export function searchResultRecord(
 }
 
 /**
- * Extracts and consolidates the specimen source descriptions from observations within a lab report.
- * @param report - The lab report containing the results to be processed.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
- */
-const returnSpecimenSource = (
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
-): RenderableNode => {
-  const observations = getObservations(report, fhirBundle);
-  const specimenSource = observations.flatMap((observation) => {
-    return evaluateAll(observation, fhirPathMappings.specimenSource);
-  });
-  if (!specimenSource || specimenSource.length === 0) {
-    return noData;
-  }
-  return [...new Set(specimenSource)].join(", ");
-};
-
-/**
- * Extracts and formats the specimen collection time(s) from observations within a lab report.
- * @param report - The lab report containing the results to be processed.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
- */
-const returnCollectionTime = (
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
-): RenderableNode => {
-  const observations = getObservations(report, fhirBundle);
-  const collectionTime = observations.flatMap((observation) => {
-    const rawTime = evaluateAll(
-      observation,
-      fhirPathMappings.specimenCollectionTime,
-    );
-    return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
-  });
-
-  if (!collectionTime || collectionTime.length === 0) {
-    return noData;
-  }
-
-  return [...new Set(collectionTime)].join(", ");
-};
-
-/**
- * Extracts and formats the specimen received time(s) from observations within a lab report.
- * @param report - The lab report containing the results to be processed.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
- */
-const returnReceivedTime = (
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
-): RenderableNode => {
-  const observations = getObservations(report, fhirBundle);
-  const receivedTime = observations.flatMap((observation) => {
-    const rawTime = evaluateAll(
-      observation,
-      fhirPathMappings.specimenReceivedTime,
-    );
-    return rawTime.map((dateTimeString) => formatDateTime(dateTimeString));
-  });
-
-  if (!receivedTime || receivedTime.length === 0) {
-    return noData;
-  }
-
-  return [...new Set(receivedTime)].join(", ");
-};
-
-/**
  * Extracts and formats a field value from within a lab report (sourced from HTML string).
  * @param labReportJson - A JSON object representing the lab report HTML string
  * @param fieldName - A string containing the field name for which the value is being searched.
@@ -363,54 +333,16 @@ export const returnAnalysisTime = (
 };
 
 /**
- * Evaluates and generates a table of observations based on the provided DiagnosticReport,
- * FHIR bundle, mappings, and column information.
- * @param report - The DiagnosticReport containing observations to be evaluated.
- * @param fhirBundle - The FHIR bundle containing observation data.
- * @param columnInfo - An array of column information objects specifying column names and information paths.
- * @returns The JSX representation of the evaluated observation table, or undefined if there are no observations.
- */
-export function evaluateObservationTable(
-  report: DiagnosticReport,
-  fhirBundle: Bundle,
-  columnInfo: ColumnInfoInput[],
-): React.JSX.Element | undefined {
-  const observations = (
-    report.result?.map((obsRef) =>
-      evaluateReference<Observation>(fhirBundle, obsRef.reference),
-    ) ?? []
-  ).filter((observation): observation is Observation => {
-    if (!observation) return false;
-    if (observation.component) return false;
-    const hasValidCoding = observation.code?.coding?.some(
-      (c: Coding) => c?.display && c.display !== "Lab Interpretation",
-    );
-    return !!hasValidCoding;
-  });
-
-  if (observations.length > 0) {
-    return (
-      <EvaluateTable
-        resources={observations}
-        columns={columnInfo}
-        className="margin-y-0"
-        outerBorder={false}
-      />
-    );
-  }
-}
-
-/**
  * Evaluates diagnostic report data and generates the lab observations for each report.
- * @param report - An object containing an array of result references.
+ * @param obs - An object containing an array of result observations.
  * @param fhirBundle - The FHIR bundle containing diagnostic report data.
  * @returns - An array of React elements representing the lab observations.
  */
 export const evaluateDiagnosticReportData = (
-  report: DiagnosticReport | undefined,
+  obs: Observation[],
   fhirBundle: Bundle,
 ): React.JSX.Element | undefined => {
-  if (!report) return undefined;
+  if (!obs.length) return undefined;
 
   const columnInfo: ColumnInfoInput[] = [
     {
@@ -450,53 +382,73 @@ export const evaluateDiagnosticReportData = (
       className: "minw-10 width-20",
     },
   ];
-  return evaluateObservationTable(report, fhirBundle, columnInfo);
+
+  const dxObs = obs.filter((observation) => {
+    if (observation.component) return false;
+    const hasValidCoding = observation.code?.coding?.some(
+      (c: Coding) =>
+        !(c?.code === "56850-1" || c?.display === "Lab Interpretation"),
+    );
+    return !!hasValidCoding;
+  });
+
+  if (dxObs.length > 0) {
+    return (
+      <EvaluateTable
+        resources={dxObs}
+        columns={columnInfo}
+        className="margin-y-0"
+        outerBorder={false}
+      />
+    );
+  }
 };
 
 /**
  * Evaluates lab organisms data and generates a lab table for each report.
- * @param report - An object containing an array of lab result references. If it exists, one of the Observations in the report will contain all the lab organisms table data.
- * @param fhirBundle - The FHIR bundle containing diagnostic report data.
+ * @param obs - An array of observations on the diagnostic report
  * @returns - An array of React elements representing the lab organisms table.
  */
 export const evaluateOrganismsReportData = (
-  report: DiagnosticReport | undefined,
-  fhirBundle: Bundle,
+  obs: Observation[],
 ): React.JSX.Element | undefined => {
-  if (!report) return undefined;
+  if (!obs.length) return undefined;
 
   let components: ObservationComponent[] = [];
   let observation: Observation | undefined;
 
-  report.result?.find((obsRef: Reference) => {
-    const obs = evaluateReference<Observation>(
-      fhirBundle,
-      obsRef.reference ?? "",
-    );
-    if (obs?.component) {
-      observation = obs;
-      return true;
+  obs.forEach((ob) => {
+    if (ob?.component) {
+      observation = ob;
     }
-    return false;
   });
 
-  if (observation === undefined) {
-    return undefined;
-  }
+  if (observation === undefined) return;
+
   components = observation.component!;
   const columnInfo: ColumnInfoInput[] = [
     {
       columnName: "Organism",
       value: evaluateValue(observation, fhirPathMappings.code),
     },
-    { columnName: "Antibiotic", infoPath: "codeableConceptDisplay" },
-    { columnName: "Method", infoPath: "observationOrganismMethod" },
-    { columnName: "Susceptibility", infoPath: "observationSusceptibility" },
+    {
+      columnName: "Antibiotic",
+      infoPath: "codeableConceptDisplay",
+    },
+    {
+      columnName: "Method",
+      infoPath: "observationOrganismMethod",
+    },
+    {
+      columnName: "Susceptibility",
+      infoPath: "valueX",
+    },
   ];
 
   return (
     <EvaluateTable
       resources={components}
+      resourceBasePath="Observation.component"
       columns={columnInfo}
       className="margin-y-0"
       outerBorder={false}
@@ -622,19 +574,30 @@ const groupItemByOrgId = (
 /**
  * Retrieves the content for a lab report.
  * @param report - The DiagnosticReport resource.
+ * @param obs - The observations associated with the report
  * @param fhirBundle - The FHIR Bundle.
  * @param labReportJson - The JSON representation of the lab results from HTML.
  * @returns An array of JSX elements representing the lab report content.
  */
-function getLabsContent(
+const getLabsContent = (
   report: DiagnosticReport,
+  obs: Observation[],
   fhirBundle: Bundle,
   labReportJson?: HtmlTableJson,
-) {
-  const labTableDiagnostic = evaluateDiagnosticReportData(report, fhirBundle);
-  const labTableOrganisms = evaluateOrganismsReportData(report, fhirBundle);
+) => {
+  const labTableDiagnostic = evaluateDiagnosticReportData(obs, fhirBundle);
+  const labTableOrganisms = evaluateOrganismsReportData(obs);
+  const labSpecimen = evaluateReference<Specimen>(
+    fhirBundle,
+    report.specimen?.[0]?.reference,
+  );
 
   const rrInfo: DisplayDataProps[] = [
+    {
+      title: "Observation Time",
+      value: evaluateValue(report, fhirPathMappings.effectiveX) || noData,
+      className: "lab-text-content",
+    },
     {
       title: "Analysis Time",
       value: returnAnalysisTime(labReportJson, "Analysis Time"),
@@ -642,25 +605,32 @@ function getLabsContent(
     },
     {
       title: "Collection Time",
-      value: returnCollectionTime(report, fhirBundle),
+      value:
+        evaluateValue(labSpecimen, fhirPathMappings.specimenCollectionTime) ||
+        noData,
       className: "lab-text-content",
     },
     {
       title: "Received Time",
-      value: returnReceivedTime(report, fhirBundle),
+      value:
+        evaluateValue(labSpecimen, fhirPathMappings.specimenReceivedTime) ||
+        noData,
       className: "lab-text-content",
     },
     {
       title: "Specimen (Source)",
-      value: returnSpecimenSource(report, fhirBundle),
+      value:
+        evaluateValue(labSpecimen, fhirPathMappings.specimenSource) || noData,
       className: "lab-text-content",
     },
     {
       title: "Anatomical Location/Laterality",
-      value: returnFieldValueFromLabHtmlString(
-        labReportJson,
-        "Anatomical Location / Laterality",
-      ),
+      value:
+        evaluateValue(labSpecimen, fhirPathMappings.specimenBodySite) ||
+        returnFieldValueFromLabHtmlString(
+          labReportJson,
+          "Anatomical Location / Laterality",
+        ),
       className: "lab-text-content",
     },
     {
@@ -703,26 +673,17 @@ function getLabsContent(
       title: "Narrative",
       value: returnFieldValueFromLabHtmlString(labReportJson, "Narrative"),
       className: "lab-text-content",
+      dividerLine: false,
     },
   ];
-  const content: Array<React.JSX.Element> = [];
-  if (labTableDiagnostic)
-    content.push(
-      <React.Fragment key="lab-table-diagnostic">
-        {labTableDiagnostic}
-      </React.Fragment>,
-    );
-  if (labTableOrganisms) {
-    content.push(
-      <React.Fragment key="lab-table-organisms">
-        {labTableOrganisms}
-      </React.Fragment>,
-    );
-  }
-  content.push(
-    ...rrInfo.map((item) => {
-      return <DataDisplay key={`${item.title}-${item.value}`} item={item} />;
-    }),
+
+  return (
+    <>
+      {labTableDiagnostic}
+      {labTableOrganisms}
+      {rrInfo.map((item) => (
+        <DataDisplay key={`${item.title}-${item.value}`} item={item} />
+      ))}
+    </>
   );
-  return content;
-}
+};
