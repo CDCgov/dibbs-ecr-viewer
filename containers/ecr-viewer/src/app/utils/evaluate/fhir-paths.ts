@@ -279,9 +279,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '74013-4')).value",
   },
+  // This should ideally follow the same code/system pattern as the other paths. However we believe this is likely a custom coding
   patientAlcoholComment: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.display = 'Alcohol Comment').value",
+    path: "entry.resource.Observation.where(code.coding.exists(code = 'X-SDOH-19222')).value",
   },
   patientSexualOrientation: {
     type: "ValueX",
@@ -435,7 +436,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Clinical Info
   clinicalReasonForVisit: {
     type: "ValueX",
-    path: "entry.resource.Composition.section.where(code.coding.exists(system = 'http://loinc.org' and code = '29299-5')).extension.value",
+    path: "entry.resource.Composition.section.where(code.coding.exists(system = 'http://loinc.org' and code = '29299-5')).extension('http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12').value",
   },
   activeProblems: {
     type: "Condition",
