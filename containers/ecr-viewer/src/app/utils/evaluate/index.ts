@@ -104,6 +104,7 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
  * @param path - The FHIRPath expression to evaluate.
  * @param expectedType - Optionally, the type of the expected result as a string.
  * @param [context] - Optional context object to provide additional data for evaluation.
+ * @param base - Optionally, the base path leading to the resource being evaluated.
  * @returns - An array containing the result of the evaluation.
  */
 export const evaluateAllAndCheck = <Result>(
@@ -111,6 +112,7 @@ export const evaluateAllAndCheck = <Result>(
   path: string,
   expectedType: string,
   context?: Context,
+  base?: string,
 ): Result[] => {
   if (!fhirData) return [];
   const fhirDataIdentifier: string =
@@ -122,7 +124,7 @@ export const evaluateAllAndCheck = <Result>(
   if (!evaluateCache.has(key)) {
     const result = fhirPathEvaluate(
       fhirData,
-      path,
+      base ? { expression: path, base } : path,
       context,
       fhirpath_r4_model,
     ) as Result[];
@@ -226,17 +228,19 @@ export const evaluateOne = <K extends keyof PathTypes>(
  * @see {@link evaluateOne} if you want the structured underlying data in its original form
  * @param entry - The FHIR resource to evaluate.
  * @param path - The path within the resource to extract the value from.
+ * @param base - Optionally, the base fhir path which lead to the resource (e.g. "Observation.component")
  * @returns - The evaluated value as a string.
  */
 export const evaluateValue = (
   entry: FhirData,
   path: string | FhirPath<string>,
+  base?: string,
 ): string => {
   const [fhirPath, type] =
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
 
   const originalValue =
-    evaluateOneAndCheck<ValueX>(entry, fhirPath, type) ?? "";
+    evaluateOneAndCheck<ValueX>(entry, fhirPath, type, undefined, base) ?? "";
 
   if (type === "TimeX" && typeof originalValue === "string") {
     return formatDateTime(originalValue) || "";
