@@ -20,7 +20,7 @@ const CreateProgramPage = async () => {
       submitAction={async (name, conditions) => {
         "use server";
         revalidatePath("/ecr-viewer/admin/program");
-        return await createProgramAreaAction(name, conditions);
+        return await createProgramAreaAction({ name, conditions });
       }}
     />
   );

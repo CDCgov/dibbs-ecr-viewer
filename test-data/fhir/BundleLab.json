@@ -107,6 +107,11 @@
             "reference": "Observation/ab1ecbd4-6de0-4f78-cea6-a880a15e88bb"
           }
         ],
+        "specimen": [
+          {
+            "reference": "Specimen/ab1ecbe4-6de0-4f78-cea6-a880a15e88bc"
+          }
+        ],
         "meta": {
           "source": ["ecr"]
         }
@@ -114,6 +119,39 @@
       "request": {
         "method": "PUT",
         "url": "DiagnosticReport/68477c03-5689-f9e5-c267-a3c7bdff6fe0"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:ab1ecbe4-6de0-4f78-cea6-a880a15e88bc",
+      "resource": {
+        "resourceType": "Specimen",
+        "id": "ab1ecbe4-6de0-4f78-cea6-a880a15e88bc",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "AX123"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "receivedTime": "2000-02-04T20:51:36Z",
+        "collection": {
+          "collectedDateTime": "2000-02-04T20:51:00Z"
+        },
+        "type": {
+          "coding": [
+            {
+              "display": "Stool",
+              "code": "123456",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Specimen/ab1ecbe4-6de0-4f78-cea6-a880a15e88bc"
       }
     },
     {
@@ -166,6 +204,11 @@
             "reference": "Observation/75bf8f82-8b28-b1bd-e366-cf55b2de0ad9"
           }
         ],
+        "specimen": [
+          {
+            "reference": "Specimen/ab1ecbf4-6de0-4f78-cea6-a880a15e88bd"
+          }
+        ],
         "meta": {
           "source": ["ecr"]
         }
@@ -173,6 +216,39 @@
       "request": {
         "method": "PUT",
         "url": "DiagnosticReport/c090d379-9aea-f26e-4ddc-378223841e3b"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:ab1ecbf4-6de0-4f78-cea6-a880a15e88bd",
+      "resource": {
+        "resourceType": "Specimen",
+        "id": "ab1ecbf4-6de0-4f78-cea6-a880a15e88bd",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "AX123"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "receivedTime": "2000-02-04T20:51:36Z",
+        "collection": {
+          "collectedDateTime": "2000-02-04T20:51:00Z"
+        },
+        "type": {
+          "coding": [
+            {
+              "display": "Stool",
+              "code": "123456",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Specimen/ab1ecbf4-6de0-4f78-cea6-a880a15e88bd"
       }
     },
     {
@@ -233,6 +309,11 @@
             "reference": "Observation/e2c3a705-9129-e79b-a79f-61281fa74db6"
           }
         ],
+        "specimen": [
+          {
+            "reference": "Specimen/ab1ecb14-6de0-4f78-cea6-a880a15e88be"
+          }
+        ],
         "meta": {
           "source": ["ecr"]
         }
@@ -240,6 +321,39 @@
       "request": {
         "method": "PUT",
         "url": "DiagnosticReport/b0f590a6-4bf5-7add-9716-2bd3ba6defb2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:ab1ecb14-6de0-4f78-cea6-a880a15e88be",
+      "resource": {
+        "resourceType": "Specimen",
+        "id": "ab1ecb14-6de0-4f78-cea6-a880a15e88be",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "AX123"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
+        },
+        "receivedTime": "2000-02-03T19:46:00Z",
+        "collection": {
+          "collectedDateTime": "1824-05-05T16:55:00Z"
+        },
+        "type": {
+          "coding": [
+            {
+              "display": "Blood",
+              "code": "123456",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Specimen/ab1ecb14-6de0-4f78-cea6-a880a15e88be"
       }
     },
     {
@@ -281,25 +395,6 @@
         },
         "effectiveDateTime": "1824-10-31T21:13:00Z",
         "valueString": "Abnormal",
-        "extension": [
-          {
-            "url": "http://hl7.org/fhir/R4/specimen.html",
-            "extension": [
-              {
-                "url": "specimen source",
-                "valueString": "Stool"
-              },
-              {
-                "url": "specimen collection time",
-                "valueDateTime": "2000-02-04T20:51:00Z"
-              },
-              {
-                "url": "specimen receive time",
-                "valueDateTime": "2000-02-04T20:51:36Z"
-              }
-            ]
-          }
-        ],
         "subject": {
           "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
         }
@@ -370,25 +465,8 @@
         ],
         "extension": [
           {
-            "url": "http://hl7.org/fhir/R4/specimen.html",
-            "extension": [
-              {
-                "url": "specimen source",
-                "valueString": "Stool"
-              },
-              {
-                "url": "specimen collection time",
-                "valueDateTime": "2000-02-04T20:51:00Z"
-              },
-              {
-                "url": "specimen receive time",
-                "valueDateTime": "2000-02-04T20:51:36Z"
-              },
-              {
-                "url": "observation entry reference value",
-                "valueString": "#Result.1.2.3.4.6.Comp1"
-              }
-            ]
+            "url": "observation entry reference value",
+            "valueString": "#Result.1.2.3.4.6.Comp1"
           },
           {
             "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
@@ -462,25 +540,8 @@
         ],
         "extension": [
           {
-            "url": "http://hl7.org/fhir/R4/specimen.html",
-            "extension": [
-              {
-                "url": "specimen source",
-                "valueString": "Stool"
-              },
-              {
-                "url": "specimen collection time",
-                "valueDateTime": "2000-02-04T20:51:00Z"
-              },
-              {
-                "url": "specimen receive time",
-                "valueDateTime": "2000-02-04T20:51:36Z"
-              },
-              {
-                "url": "observation entry reference value",
-                "valueString": "#Result.1.2.3.4.6.Comp2"
-              }
-            ]
+            "url": "observation entry reference value",
+            "valueString": "#Result.1.2.3.4.6.Comp2"
           }
         ],
         "subject": {
@@ -547,25 +608,8 @@
         ],
         "extension": [
           {
-            "url": "http://hl7.org/fhir/R4/specimen.html",
-            "extension": [
-              {
-                "url": "specimen source",
-                "valueString": "Stool"
-              },
-              {
-                "url": "specimen collection time",
-                "valueDateTime": "2000-02-04T20:51:00Z"
-              },
-              {
-                "url": "specimen receive time",
-                "valueDateTime": "2000-02-04T20:51:36Z"
-              },
-              {
-                "url": "observation entry reference value",
-                "valueString": "#Result.1.2.3.4.5.Comp1"
-              }
-            ]
+            "url": "observation entry reference value",
+            "valueString": "#Result.1.2.3.4.5.Comp1"
           }
         ],
         "subject": {
@@ -632,25 +676,8 @@
         ],
         "extension": [
           {
-            "url": "http://hl7.org/fhir/R4/specimen.html",
-            "extension": [
-              {
-                "url": "specimen source",
-                "valueString": "Stool"
-              },
-              {
-                "url": "specimen collection time",
-                "valueDateTime": "2000-02-04T20:51:00Z"
-              },
-              {
-                "url": "specimen receive time",
-                "valueDateTime": "2000-02-04T20:51:36Z"
-              },
-              {
-                "url": "observation entry reference value",
-                "valueString": "#Result.1.2.3.4.5.Comp2"
-              }
-            ]
+            "url": "observation entry reference value",
+            "valueString": "#Result.1.2.3.4.5.Comp2"
           }
         ],
         "subject": {
@@ -717,25 +744,8 @@
         "effectiveDateTime": "2000-02-03T19:57:02Z",
         "extension": [
           {
-            "url": "http://hl7.org/fhir/R4/specimen.html",
-            "extension": [
-              {
-                "url": "specimen source",
-                "valueString": "Blood"
-              },
-              {
-                "url": "specimen collection time",
-                "valueDateTime": "1824-05-05T16:55:00Z"
-              },
-              {
-                "url": "specimen receive time",
-                "valueDateTime": "2000-02-03T19:46:00Z"
-              },
-              {
-                "url": "observation entry reference value",
-                "valueString": "#Result.1.2.3.4.7.Narrative"
-              }
-            ]
+            "url": "observation entry reference value",
+            "valueString": "#Result.1.2.3.4.7.Narrative"
           },
           {
             "url": "http://terminology.hl7.org/ValueSet/v2-0085",
@@ -811,25 +821,8 @@
         ],
         "extension": [
           {
-            "url": "http://hl7.org/fhir/R4/specimen.html",
-            "extension": [
-              {
-                "url": "specimen source",
-                "valueString": "Blood"
-              },
-              {
-                "url": "specimen collection time",
-                "valueDateTime": "1824-05-05T16:55:00Z"
-              },
-              {
-                "url": "specimen receive time",
-                "valueDateTime": "2000-02-03T19:46:00Z"
-              },
-              {
-                "url": "observation entry reference value",
-                "valueString": "#Result.1.2.3.4.7.Comp2"
-              }
-            ]
+            "url": "observation entry reference value",
+            "valueString": "#Result.1.2.3.4.7.Comp2"
           }
         ],
         "performer": [
@@ -909,7 +902,7 @@
             "valueString": "0.25: Susceptible",
             "extension": [
               {
-                "url": "methodCode originalText",
+                "url": "methodCode",
                 "valueString": "MIC"
               }
             ]
@@ -925,7 +918,7 @@
             "valueString": "0.05: Intermediate",
             "extension": [
               {
-                "url": "methodCode originalText",
+                "url": "methodCode",
                 "valueString": "MIC"
               }
             ]
@@ -943,7 +936,7 @@
             "valueString": "0.75: Resistant",
             "extension": [
               {
-                "url": "methodCode originalText",
+                "url": "methodCode",
                 "valueString": "MIC"
               }
             ]

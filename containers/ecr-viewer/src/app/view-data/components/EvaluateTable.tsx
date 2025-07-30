@@ -34,6 +34,7 @@ interface TableProps {
   className?: string;
   fixed?: boolean;
   outerBorder?: boolean;
+  resourceBasePath?: string;
 }
 /**
  * Formats a table based on the provided resources, mappings, columns, and caption.
@@ -45,6 +46,7 @@ interface TableProps {
  * @param props.className - (Optional) Classnames to be applied to table.
  * @param props.fixed - Determines whether to fix the width of the table columns. Default is true.
  * @param props.outerBorder - Determines whether to include an outer border for the table. Default is true
+ * @param props.resourceBasePath - Optionally, a fhir path indicating the base path for the resources (e.g. "Observation.component")
  * @returns - A formatted table React element.
  */
 const EvaluateTable = ({
@@ -55,9 +57,10 @@ const EvaluateTable = ({
   className,
   fixed = true,
   outerBorder = true,
+  resourceBasePath,
 }: TableProps): React.JSX.Element => {
   const tableRowData = resources.map((entry) =>
-    evaluateTableRowData(columns, mappings, entry),
+    evaluateTableRowData(columns, mappings, entry, resourceBasePath),
   );
 
   columns.forEach(({ sortFn }, i) => {
@@ -172,15 +175,17 @@ const BaseTableHeaders = ({
  * @param columns - An array of column objects defining the structure of the row.
  * @param mappings - An object containing mappings for column data.
  * @param entry - The data entry object for the row.
+ * @param resourceBasePath Optionally, base fhir path leading to the resource entry
  * @returns - A TableRowData object for use with EvaluateTableRow.
  */
 const evaluateTableRowData = (
   columns: ColumnInfoInput[],
   mappings: Mapping,
   entry: Element,
+  resourceBasePath?: string,
 ) => {
   const rowCellsData = columns.map((column) =>
-    evaluateTableRowCell(column, entry, mappings),
+    evaluateTableRowCell(column, entry, mappings, resourceBasePath),
   );
   const hiddenRow = rowCellsData.find(
     ({ hiddenRow }) => !!hiddenRow,
@@ -198,12 +203,14 @@ const evaluateTableRowData = (
  * @param column column descriptor
  * @param entry fhir data to extract value from
  * @param mappings mappings to use in evaluating data
+ * @param resourceBasePath Optionally, base fhir path leading to the resource entry
  * @returns data, hidden status, and hiddenRow
  */
 export const evaluateTableRowCell = (
   column: ColumnInfoInput,
   entry: Element,
   mappings: Mapping,
+  resourceBasePath?: string,
 ) => {
   let data: ReactNode;
   let hiddenRow: ReactNode = null;
@@ -214,6 +221,7 @@ export const evaluateTableRowCell = (
     const strData: string = evaluateValue(
       entry,
       mappings[column.infoPath],
+      resourceBasePath,
     ).replaceAll("<br/>", "\n");
     if (strData && column.applyToValue) {
       data = column.applyToValue(strData);

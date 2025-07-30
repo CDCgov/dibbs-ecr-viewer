@@ -110,7 +110,7 @@
     "next-router-mock": "^1.0.2",
     "playwright-lighthouse": "^4.0.0",
     "postcss": "^8.4.38",
-    "prettier": "3.5.3",
+    "prettier": "3.6.2",
     "sass": "^1.69.5",
     "typedoc": "^0.28.1",
     "typedoc-plugin-mermaid": "^1.12.0",
