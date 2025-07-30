@@ -121,7 +121,10 @@ describe("program area service", () => {
     // program with name already exists
     jest.spyOn(console, "error").mockImplementation();
     await expect(
-      createProgramArea({ name: progName.toUpperCase(), conditions: conditionCodes }),
+      createProgramArea({
+        name: progName.toUpperCase(),
+        conditions: conditionCodes,
+      }),
     ).rejects.toThrow(
       "Failed to create program area. This program area name already exists.",
     );
@@ -158,7 +161,9 @@ describe("program area service", () => {
 
     // program with name already exists
     jest.spyOn(console, "error").mockImplementation();
-    await expect(updateProgramArea({uuid: id, name: "Fun TIMES" })).rejects.toThrow(
+    await expect(
+      updateProgramArea({ uuid: id, name: "Fun TIMES" }),
+    ).rejects.toThrow(
       "Failed to update program area. This program area name already exists.",
     );
   });
