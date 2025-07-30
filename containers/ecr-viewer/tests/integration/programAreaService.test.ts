@@ -17,8 +17,8 @@ import {
   updateUser,
 } from "@/app/services/userService";
 
-import { buildCore, dropExisting } from "./helpers/ddl";
 import { getLastAuditLog } from "./helpers/core";
+import { buildCore, dropExisting } from "./helpers/ddl";
 
 const cond123 = {
   code: "123",
