@@ -135,8 +135,8 @@ export const updateProgramArea = audit(
     await getCheckAdmin("update program areas");
 
     try {
-      await checkDupeName(trx, name, uuid);
       if (!!name) {
+        await checkDupeName(trx, name, uuid);
         await trx
           .updateTable("program_area")
           .set({ name })
