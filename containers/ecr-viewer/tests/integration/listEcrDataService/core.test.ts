@@ -481,30 +481,40 @@ describe("generate search statement", () => {
 describe.each([
   {
     scenario: "without eCRs with no conditions reported",
-    includeNoConditions: false,
     testConditions: ["Condition1", "Condition2"],
-    expectedPostgresSQL:
-      'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2)))',
-    expectedSqlServerSQL:
-      'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
+    expectedPostgresSQL: 'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2)))',
+    expectedSqlServerSQL: 'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
+    expectedParams: ["%Condition1%", "%Condition2%"]
   },
   {
     scenario: "with eCRs with no conditions reported",
-    includeNoConditions: true,
     testConditions: ["No conditions reported", "Condition1", "Condition2"],
-    expectedPostgresSQL:
-      '(not exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id") or exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2))))',
-    expectedSqlServerSQL:
-      '(not exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id") or exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2))))',
+    expectedPostgresSQL: '(not exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id") or exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" ilike $1 or "erc_sub"."condition" ilike $2))))',
+    expectedSqlServerSQL: '(not exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id") or exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2))))',
+    expectedParams: ["%Condition1%", "%Condition2%"]
+  },
+  {
+    scenario: "when de-selecting all",
+    testConditions: [""],
+    expectedPostgresSQL: '$1 = $2',
+    expectedSqlServerSQL: '@1 = @2',
+    expectedParams: [true, false]
+  },
+    {
+    scenario: "when selecting all",
+    testConditions: undefined,
+    expectedPostgresSQL: '$1 = $2',
+    expectedSqlServerSQL: '@1 = @2',
+    expectedParams: [true, true]
   },
 ])(
   "generate filter conditions statement $scenario",
   ({
     scenario,
-    includeNoConditions,
     testConditions,
     expectedPostgresSQL,
     expectedSqlServerSQL,
+    expectedParams
   }) => {
     it("should add conditions in the filter statement", () => {
       const { sql, params } = getWhere((eb) =>
@@ -516,33 +526,7 @@ describe.each([
       } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
         expect(sql).toEqual(expectedSqlServerSQL);
       }
-      expect(params).toStrictEqual(["%Condition1%", "%Condition2%"]);
-    });
-
-    it("should return FALSE when de-selecting all conditions on filter", () => {
-      if (!includeNoConditions) {
-        const { sql, params } = getWhere((eb) =>
-          generateFilterConditionsStatement(eb, [""]),
-        );
-        if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-          expect(sql).toEqual("$1 = $2");
-        } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-          expect(sql).toEqual("@1 = @2");
-        }
-        expect(params).toStrictEqual([true, false]);
-      }
-    });
-
-    it("should return TRUE if no conditions are provided", () => {
-      const { sql, params } = getWhere((eb) =>
-        generateFilterConditionsStatement(eb),
-      );
-      if (process.env.METADATA_DATABASE_TYPE === "postgres") {
-        expect(sql).toEqual("$1 = $2");
-      } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
-        expect(sql).toEqual("@1 = @2");
-      }
-      expect(params).toStrictEqual([true, true]);
+      expect(params).toStrictEqual(expectedParams);
     });
 
     it("should add date range in the filter statement", () => {
