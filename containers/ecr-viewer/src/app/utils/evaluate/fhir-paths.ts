@@ -265,19 +265,19 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientTobaccoUse: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.code = '72166-2').where(category.coding.code = 'social-history').value",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '72166-2')).value",
   },
   patientHomelessStatus: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.code = '75274-1').where(category.coding.code = 'social-history').value",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '75274-1')).value",
   },
   patientAlcoholUse: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.where(code = '11331-6' and system = 'http://loinc.org')).value",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '11331-6')).value",
   },
   patientAlcoholIntake: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.where(code = '74013-4' and system = 'http://loinc.org')).value",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '74013-4')).value",
   },
   patientAlcoholComment: {
     type: "ValueX",
@@ -285,7 +285,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientSexualOrientation: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.code = '76690-7').value",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '76690-7')).value",
   },
   patientGenderIdentity: {
     type: "ValueX",
@@ -301,11 +301,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientNationality: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.where(code = '186034007' and system = 'http://snomed.info/sct')).value",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '186034007')).value",
   },
   patientCountryResidence: {
     type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.where(code = '77983-5' and system = 'http://loinc.org')).value",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '77983-5')).value",
   },
   patientDisabilityStatus: {
     type: "Observation",
@@ -319,7 +319,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   pregnancyStatus: {
     type: "Observation",
-    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation')",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3'))",
   },
   postpartumStatus: {
     type: "Observation",
@@ -345,11 +345,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   ehrSoftware: {
     type: "ValueX",
-    path: "entry.resource.Device.where(property.type.coding.code = 'software').version.value",
+    path: "entry.resource.Device.where(property.type.coding.exists(system = 'http://hl7.org/fhir/device-category' and code = 'software')).version.value",
   },
   ehrManufacturerModel: {
     type: "string",
-    path: "entry.resource.Device.where(property.type.coding.code = 'software').manufacturer",
+    path: "entry.resource.Device.where(property.type.coding.exists(system = 'http://hl7.org/fhir/device-category' and code = 'software')).manufacturer",
   },
   eICRProcessingStatus: {
     type: "string",
@@ -357,7 +357,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   eICRProcessingStatusReason: {
     type: "Observation",
-    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-reason-observation')",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'urn:oid:2.16.840.1.114222.4.5.232' and code = 'RR6'))",
   },
   compositionAuthorRefs: {
     type: "Reference",
@@ -424,7 +424,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Vitals
   patientVitalSigns: {
     type: "Observation",
-    path: "entry.resource.Observation.where(category.coding.code = 'vital-signs')",
+    path: "entry.resource.Observation.where(category.coding.exists(system = 'http://terminology.hl7.org/CodeSystem/observation-category' and code = 'vital-signs'))",
   },
 
   resolve: {
@@ -435,11 +435,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Clinical Info
   clinicalReasonForVisit: {
     type: "ValueX",
-    path: "entry.resource.section.where(title.lower() = 'reason for visit').extension.value",
+    path: "entry.resource.Composition.section.where(code.coding.exists(system = 'http://loinc.org' and code = '29299-5')).extension.value",
   },
   activeProblems: {
     type: "Condition",
-    path: "entry.resource.Condition.where(category.coding.code = 'problem-item-list')",
+    path: "entry.resource.Condition.where(category.coding.exists(system = 'http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category' and code = 'problem-item-list'))",
   },
   activeProblemsStatus: {
     type: "string",
@@ -448,7 +448,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   activeProblemsOnsetAge: { type: "ValueX", path: "onsetAge.value" },
   historyOfPresentIllness: {
     type: "string",
-    path: "entry.resource.Composition.section.where(code.coding.code = '10164-2').text.`div`",
+    path: "entry.resource.Composition.section.where(code.coding.exists(system = 'http://loinc.org' and code = '10164-2')).text.`div`",
   },
   emergencyOutbreakInfo: {
     type: "Observation",
@@ -488,7 +488,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Administered Medications
   adminMedicationsRefs: {
     type: "string",
-    path: "entry.resource.section.where(code.coding.code = '29549-3').entry.reference",
+    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '29549-3')).entry.reference",
   },
   adminMedicationTherapeuticResponseObs: {
     type: "CodeableConcept",
@@ -591,7 +591,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   labResultDiv: {
     type: "string",
-    path: "entry.resource.section.where(code.coding.code = '30954-2').text.`div`",
+    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '30954-2')).text.`div`",
   },
   specimenCollectionTime: {
     type: "string",
@@ -641,7 +641,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Travel History
   patientTravelHistory: {
     type: "Observation",
-    path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-travel-history')",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '420008001'))",
   },
   travelHistoryStartDate: { type: "string", path: "effectivePeriod.start" },
   travelHistoryEndDate: { type: "string", path: "effectivePeriod.end" },

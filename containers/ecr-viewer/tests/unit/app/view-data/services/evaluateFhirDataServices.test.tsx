@@ -1576,8 +1576,8 @@ Home: 123-456-6909`,
               code: {
                 coding: [
                   {
-                    code: "ASSERTION",
-                    system: "urn:oid:2.16.840.1.113883.5.4",
+                    code: "82810-3",
+                    system: "http://loinc.org",
                   },
                 ],
               },
