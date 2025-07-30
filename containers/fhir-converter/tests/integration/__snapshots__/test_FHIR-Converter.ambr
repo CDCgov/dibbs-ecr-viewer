@@ -899,7 +899,7 @@
             ]),
             'meta': dict({
               'profile': list([
-                'http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults',
+                'http://hl7.org/fhir/StructureDefinition/Observation',
               ]),
               'source': 'ecr',
             }),

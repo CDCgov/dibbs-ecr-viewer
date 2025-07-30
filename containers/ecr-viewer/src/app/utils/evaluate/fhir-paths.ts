@@ -143,15 +143,15 @@ export type PathTypes = {
   diagnosticReportStatus: string;
   observations: Observation;
   labResultDiv: string;
-  specimenCollectionTime: string;
-  specimenReceivedTime: string;
-  specimenSource: string;
+  specimenCollectionTime: TimeX;
+  specimenReceivedTime: TimeX;
+  specimenSource: CodeableConcept;
+  specimenBodySite: CodeableConcept;
   observationReferenceValue: string;
   observationValue: string;
   observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
-  observationOrganismMethod: string;
-  observationSusceptibility: string;
+  observationOrganismMethod: ValueX;
   observationResultStatus: string;
   organizations: Organization;
   patientTravelHistory: Observation;
@@ -595,20 +595,24 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '30954-2')).text.`div`",
   },
   specimenCollectionTime: {
-    type: "string",
-    path: "extension.extension('specimen collection time').valueDateTime",
+    type: "TimeX",
+    path: "collection.collected",
   },
   specimenReceivedTime: {
-    type: "string",
-    path: "extension.extension('specimen receive time').valueDateTime",
+    type: "TimeX",
+    path: "receivedTime",
   },
   specimenSource: {
-    type: "string",
-    path: "extension.extension('specimen source').valueString",
+    type: "CodeableConcept",
+    path: "type",
+  },
+  specimenBodySite: {
+    type: "CodeableConcept",
+    path: "collection.bodySite",
   },
   observationReferenceValue: {
     type: "string",
-    path: "extension.extension('observation entry reference value').valueString",
+    path: "extension('observation entry reference value').valueString",
   },
   observationValue: {
     type: "string",
@@ -624,10 +628,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
    * path is used on `Observation.component` which is merely a `BackboneElement`.
    */
   observationOrganismMethod: {
-    type: "string",
-    path: "extension.where(url = 'methodCode originalText').valueString",
+    type: "ValueX",
+    path: "extension('methodCode').value",
   },
-  observationSusceptibility: { type: "string", path: "valueString" },
   observationResultStatus: {
     type: "string",
     path: "iif(extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display.exists(), extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display, status)",
