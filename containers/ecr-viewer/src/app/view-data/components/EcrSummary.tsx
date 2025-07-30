@@ -53,31 +53,30 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
             {condition.conditionDetails.map((item, i) => (
               <DataDisplay item={item} key={`condition-${i}`} />
             ))}
-            {hasImmunizationDetails ||
-              (hasClinicalDetails && (
-                <>
-                  <h5
-                    className="text-bold margin-top-0 margin-bottom-1"
-                    id="relevant-clinical"
-                  >
-                    Clinical Sections Relevant to Reportable Condition
-                  </h5>
-                  {hasImmunizationDetails && (
-                    <div className="margin-top-0">
-                      {condition.immunizationDetails.map((item, i) => (
-                        <DataTableDisplay item={item} key={`imx-${i}`} />
-                      ))}
-                    </div>
-                  )}
-                  {hasClinicalDetails && (
-                    <div className="margin-top-0">
-                      {condition.clinicalDetails.map((item, i) => (
-                        <DataTableDisplay item={item} key={`detail-${i}`} />
-                      ))}
-                    </div>
-                  )}
-                </>
-              ))}
+            {(hasImmunizationDetails || hasClinicalDetails) && (
+              <>
+                <h5
+                  className="text-bold margin-top-0 margin-bottom-1"
+                  id="relevant-clinical"
+                >
+                  Clinical Sections Relevant to Reportable Condition
+                </h5>
+                {hasImmunizationDetails && (
+                  <div className="margin-top-0">
+                    {condition.immunizationDetails.map((item, i) => (
+                      <DataTableDisplay item={item} key={`imx-${i}`} />
+                    ))}
+                  </div>
+                )}
+                {hasClinicalDetails && (
+                  <div className="margin-top-0">
+                    {condition.clinicalDetails.map((item, i) => (
+                      <DataTableDisplay item={item} key={`detail-${i}`} />
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
             {condition.labDetails.length > 0 && (
               <>
                 <h5
