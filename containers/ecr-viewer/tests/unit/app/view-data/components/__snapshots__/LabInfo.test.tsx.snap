@@ -84,7 +84,17 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                   data-testid="accordionButton_sars-cov-2-covid-19-rna-presence-in-respiratory-system-specimen-by-naa-with-probe-detection-r:id-0"
                   type="button"
                 >
-                  SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory system specimen by NAA with probe detection
+                  <div
+                    class="display-flex flex-row flex-justify flex-align-center gap-05"
+                  >
+                    <span>
+                      SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory system specimen by NAA with probe detection
+                    </span>
+                    <span
+                      class="text-base"
+                      style="font-size: 1rem;"
+                    />
+                  </div>
                 </button>
               </h5>
               <div
@@ -93,6 +103,29 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                 hidden=""
                 id="sars-cov-2-covid-19-rna-presence-in-respiratory-system-specimen-by-naa-with-probe-detection-r:id-0"
               >
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Observation Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
                 <div>
                   <div
                     class="grid-row"
@@ -338,9 +371,6 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                       </span>
                     </div>
                   </div>
-                  <div
-                    class="section__line_gray"
-                  />
                 </div>
               </div>
             </div>
@@ -456,14 +486,26 @@ Mos Eisley, CO 00055
                   data-testid="accordionButton_stool-pathogens-naat-12-to-25-targets-r:id-0"
                   type="button"
                 >
-                  STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS
-                  <span
-                    class="usa-tag margin-left-105"
-                    data-testid="tag"
-                    style="background: rgb(181, 9, 9);"
+                  <div
+                    class="display-flex flex-row flex-justify flex-align-center gap-05"
                   >
-                    Abnormal
-                  </span>
+                    <span>
+                      STOOL PATHOGENS, NAAT, 12 TO 25 TARGETS
+                      <span
+                        class="usa-tag margin-left-105"
+                        data-testid="tag"
+                        style="background: rgb(181, 9, 9);"
+                      >
+                        Abnormal
+                      </span>
+                    </span>
+                    <span
+                      class="text-base"
+                      style="font-size: 1rem;"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </span>
+                  </div>
                 </button>
               </h5>
               <div
@@ -591,6 +633,25 @@ Mos Eisley, CO 00055
                     </tr>
                   </tbody>
                 </table>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Observation Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
                 <div>
                   <div
                     class="grid-row"
@@ -808,9 +869,6 @@ Mos Eisley, CO 00055
                       </span>
                     </div>
                   </div>
-                  <div
-                    class="section__line_gray"
-                  />
                 </div>
               </div>
               <h5
@@ -823,7 +881,19 @@ Mos Eisley, CO 00055
                   data-testid="accordionButton_stool-pathogens-12-to-25-targets-r:id-1"
                   type="button"
                 >
-                  Stool Pathogens 12 To 25 Targets
+                  <div
+                    class="display-flex flex-row flex-justify flex-align-center gap-05"
+                  >
+                    <span>
+                      Stool Pathogens 12 To 25 Targets
+                    </span>
+                    <span
+                      class="text-base"
+                      style="font-size: 1rem;"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </span>
+                  </div>
                 </button>
               </h5>
               <div
@@ -951,6 +1021,25 @@ Mos Eisley, CO 00055
                     </tr>
                   </tbody>
                 </table>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Observation Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
                 <div>
                   <div
                     class="grid-row"
@@ -1168,9 +1257,6 @@ Mos Eisley, CO 00055
                       </span>
                     </div>
                   </div>
-                  <div
-                    class="section__line_gray"
-                  />
                 </div>
               </div>
             </div>
@@ -1291,7 +1377,19 @@ County: Empire
                   data-testid="accordionButton_cytogenomic-snp-microarray-r:id-0"
                   type="button"
                 >
-                  Cytogenomic SNP microarray
+                  <div
+                    class="display-flex flex-row flex-justify flex-align-center gap-05"
+                  >
+                    <span>
+                      Cytogenomic SNP microarray
+                    </span>
+                    <span
+                      class="text-base"
+                      style="font-size: 1rem;"
+                    >
+                      05/05/1824 11:58 AM GMT-4:56:02
+                    </span>
+                  </div>
                 </button>
               </h5>
               <div
@@ -1578,6 +1676,25 @@ County: Empire
                     <div
                       class="data-title padding-right-1"
                     >
+                      Observation Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      05/05/1824 11:58 AM GMT-4:56:02
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
                       Analysis Time
                     </div>
                     <div
@@ -1791,9 +1908,6 @@ County: Empire
                       </p>
                     </div>
                   </div>
-                  <div
-                    class="section__line_gray"
-                  />
                 </div>
               </div>
             </div>
