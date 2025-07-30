@@ -1,4 +1,4 @@
-import { Bundle, Observation, Patient } from "fhir/r4";
+import { Bundle, Observation, Patient, Resource } from "fhir/r4";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
@@ -122,16 +122,16 @@ describe("evaluate", () => {
     it("should return value if one result", () => {
       const res = evaluateOne(
         {
-          extension: [
+          resourceType: "Procedure",
+          reasonCode: [
             {
-              url: "methodCode originalText",
-              valueString: "first",
+              text: "first",
             },
           ],
-        },
-        fhirPathMappings.observationOrganismMethod,
+        } as Resource,
+        fhirPathMappings.procedureReason,
       );
-      expect(res).toEqual("first");
+      expect(res?.text).toEqual("first");
     });
 
     it("should return first value and log error if multiple results", () => {
@@ -141,20 +141,19 @@ describe("evaluate", () => {
 
       const res = evaluateOne(
         {
-          extension: [
+          resourceType: "Procedure",
+          reasonCode: [
             {
-              url: "methodCode originalText",
-              valueString: "first",
+              text: "first",
             },
             {
-              url: "methodCode originalText",
-              valueString: "second",
+              text: "second",
             },
           ],
-        },
-        fhirPathMappings.observationOrganismMethod,
+        } as Resource,
+        fhirPathMappings.procedureReason,
       );
-      expect(res).toEqual("first");
+      expect(res?.text).toEqual("first");
     });
   });
 });

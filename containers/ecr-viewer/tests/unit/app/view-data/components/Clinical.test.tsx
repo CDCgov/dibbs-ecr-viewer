@@ -556,6 +556,7 @@ describe("Snapshot test for Clinical Notes", () => {
                     coding: [
                       {
                         code: "10164-2",
+                        system: "http://loinc.org",
                       },
                     ],
                   },

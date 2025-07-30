@@ -14,13 +14,11 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import {
-  getObservations,
   checkAbnormalTag,
   searchResultRecord,
   returnFieldValueFromLabHtmlString,
   evaluateOrganismsReportData,
   evaluateDiagnosticReportData,
-  evaluateObservationTable,
   evaluateLabOrganizationData,
   ResultObject,
   combineOrgAndReportData,
@@ -30,6 +28,7 @@ import {
   LabReportElementData,
   getJsonLab,
   getAllLabJsonObjects,
+  getObservations,
 } from "@/app/view-data/services/labsService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
@@ -177,8 +176,7 @@ const labReportAbnormal = evaluateOneAndCheck<DiagnosticReport>(
 const jsonLabs = getAllLabJsonObjects(BundleLab);
 const labReportAbnormalJsonObject = getJsonLab(
   jsonLabs,
-  labReportAbnormal!,
-  BundleLab,
+  getObservations(labReportAbnormal!, BundleLab),
 );
 
 const pathLabOrganismsTableAndNarr =
@@ -240,7 +238,10 @@ describe("LabsService tests", () => {
         const expectedResult = labReportNormalJsonObject;
 
         const jsonLabs = getAllLabJsonObjects(BundleLab);
-        const result = getJsonLab(jsonLabs, labReportNormal!, BundleLab);
+        const result = getJsonLab(
+          jsonLabs,
+          getObservations(labReportNormal!, BundleLab),
+        );
 
         expect(result).toEqual(expectedResult);
       });
@@ -255,8 +256,7 @@ describe("LabsService tests", () => {
         const jsonLabs = getAllLabJsonObjects(BundleLabNoLabIds);
         const result = getJsonLab(
           jsonLabs,
-          labReportWithoutIds!,
-          BundleLabNoLabIds,
+          getObservations(labReportWithoutIds!, BundleLabNoLabIds),
         );
 
         expect(result).toBeUndefined();
@@ -266,8 +266,7 @@ describe("LabsService tests", () => {
         const jsonLabs = getAllLabJsonObjects(BundleLab);
         const result = getJsonLab(
           jsonLabs,
-          labReportNormal!,
-          BundleLabInvalidResultsDiv,
+          getObservations(labReportNormal!, BundleLabInvalidResultsDiv),
         );
 
         expect(result).toBeUndefined();
@@ -455,8 +454,7 @@ describe("LabsService tests", () => {
     describe("evaluateOrganismsReportData", () => {
       it("should return the correct organisms table when the data exists for a lab report", () => {
         const result = evaluateOrganismsReportData(
-          labOrganismsTableAndNarr,
-          BundleLab,
+          getObservations(labOrganismsTableAndNarr!, BundleLab),
         )!;
         render(result);
 
@@ -467,7 +465,9 @@ describe("LabsService tests", () => {
         expect(screen.getAllByText("MIC")).toHaveLength(3);
       });
       it("should return undefined if lab organisms data does not exist for a lab report", () => {
-        const result = evaluateOrganismsReportData(labReportNormal, BundleLab);
+        const result = evaluateOrganismsReportData(
+          getObservations(labReportNormal!, BundleLab),
+        );
 
         expect(result).toBeUndefined();
       });
@@ -480,7 +480,10 @@ describe("LabsService tests", () => {
         BundleLab,
         fhirPathMappings.diagnosticReports,
       )[0];
-      const actual = evaluateDiagnosticReportData(report, BundleLab);
+      const actual = evaluateDiagnosticReportData(
+        getObservations(report, BundleLab),
+        BundleLab,
+      );
 
       render(actual);
 
@@ -499,10 +502,9 @@ describe("LabsService tests", () => {
         },
         status: "final",
       };
-      const actual = evaluateObservationTable(
-        diagnosticReport,
+      const actual = evaluateDiagnosticReportData(
+        getObservations(diagnosticReport, null as unknown as Bundle),
         null as unknown as Bundle,
-        [],
       );
       expect(actual).toBeUndefined();
     });
@@ -511,7 +513,10 @@ describe("LabsService tests", () => {
         BundleLab,
         fhirPathMappings.diagnosticReports,
       )[0];
-      const actual = evaluateDiagnosticReportData(report, BundleLab);
+      const actual = evaluateDiagnosticReportData(
+        getObservations(report, BundleLab),
+        BundleLab,
+      );
 
       render(actual);
 
@@ -524,7 +529,10 @@ describe("LabsService tests", () => {
         BundleLab,
         fhirPathMappings.diagnosticReports,
       )[2];
-      const actual = evaluateDiagnosticReportData(report, BundleLab);
+      const actual = evaluateDiagnosticReportData(
+        getObservations(report, BundleLab),
+        BundleLab,
+      );
       render(actual!);
 
       expect(screen.getByText("View comment")).toBeInTheDocument();
