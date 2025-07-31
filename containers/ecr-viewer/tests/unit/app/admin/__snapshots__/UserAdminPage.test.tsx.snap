@@ -902,9 +902,11 @@ exports[`User Admin Page should list users when available 1`] = `
             </thead>
             <tbody>
               <tr>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   <button
-                    class="usa-button usa-button--unstyled action-text"
+                    class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
                     data-close-modal="true"
                     data-open-modal="true"
                     data-testid="button"
@@ -913,20 +915,28 @@ exports[`User Admin Page should list users when available 1`] = `
                     admin@admin.com
                   </button>
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   Admin
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   All program areas
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   04/15/2025 6:30 AM EDT
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   <button
-                    class="usa-button usa-button--unstyled action-text"
+                    class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
                     data-close-modal="true"
                     data-open-modal="true"
                     data-testid="button"
@@ -935,20 +945,28 @@ exports[`User Admin Page should list users when available 1`] = `
                     sallystandard@standard.com
                   </button>
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   Standard
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   Program Area Three, Program Area Two
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   04/15/2025 6:30 AM EDT
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   <button
-                    class="usa-button usa-button--unstyled action-text"
+                    class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
                     data-close-modal="true"
                     data-open-modal="true"
                     data-testid="button"
@@ -957,13 +975,19 @@ exports[`User Admin Page should list users when available 1`] = `
                     stevenstandard@standard.com
                   </button>
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   Standard
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   Program Area Three
                 </td>
-                <td />
+                <td
+                  class="overflow-wrap-anywhere"
+                />
               </tr>
             </tbody>
           </table>

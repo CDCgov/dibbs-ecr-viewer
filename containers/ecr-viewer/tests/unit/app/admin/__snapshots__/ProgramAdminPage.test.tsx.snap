@@ -415,9 +415,11 @@ exports[`Program Admin Page should list program areas when available 1`] = `
             </thead>
             <tbody>
               <tr>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   <button
-                    class="usa-button usa-button--unstyled action-text"
+                    class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
                     data-close-modal="true"
                     data-open-modal="true"
                     data-testid="button"
@@ -426,14 +428,18 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                     Program Area One
                   </button>
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   0 conditions
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   <button
-                    class="usa-button usa-button--unstyled action-text"
+                    class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
                     data-close-modal="true"
                     data-open-modal="true"
                     data-testid="button"
@@ -442,14 +448,18 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                     Program Area Three
                   </button>
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   2 conditions
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   <button
-                    class="usa-button usa-button--unstyled action-text"
+                    class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
                     data-close-modal="true"
                     data-open-modal="true"
                     data-testid="button"
@@ -458,7 +468,9 @@ exports[`Program Admin Page should list program areas when available 1`] = `
                     Program Area Two
                   </button>
                 </td>
-                <td>
+                <td
+                  class="overflow-wrap-anywhere"
+                >
                   1 condition
                 </td>
               </tr>

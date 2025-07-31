@@ -47,7 +47,7 @@ export const DetailsTrigger = ({
     <ModalToggleButton
       type="button"
       modalRef={detailsRef}
-      className={classnames("action-text", className)}
+      className={classnames("overflow-wrap-anywhere","action-text", className)}
       unstyled={true}
       onClick={() => {
         // move the initial focus to the close button
@@ -128,7 +128,7 @@ export const DetailsSidePanel = ({
           <div className="border-bottom border-base-lightest">
             <ModalHeading
               id={`details-sidepanel-${id}-heading`}
-              className="font-sans-3xl margin-bottom-0"
+              className="font-sans-3xl margin-bottom-0 overflow-wrap-break-word"
             >
               {title}
             </ModalHeading>
@@ -156,7 +156,7 @@ export const DetailsSidePanel = ({
               {details.map(({ title, value }, i) => (
                 <React.Fragment key={`detail-${i}`}>
                   <dt>{title}</dt>
-                  <dd>{value}</dd>
+                  <dd className="overflow-wrap-anywhere">{value}</dd>
                 </React.Fragment>
               ))}
             </dl>
@@ -190,7 +190,8 @@ export const DetailsSidePanel = ({
         aria-labelledby={`delete-confirm-${id}-heading`}
         aria-describedby={`delete-confirm-${id}-description`}
       >
-        <ModalHeading id={`delete-confirm-${id}-heading`}>
+        <ModalHeading id={`delete-confirm-${id}-heading`}
+        className="overflow-wrap-anywhere">
           {deleteModalTitle}
         </ModalHeading>
         {deleteModalBody}
