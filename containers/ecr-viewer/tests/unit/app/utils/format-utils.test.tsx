@@ -1,6 +1,7 @@
 import {
   toKebabCase,
   extractNumbersAndPeriods,
+  toReadableListString,
   toSentenceCase,
   toTitleCase,
 } from "@/app/utils/format-utils";
@@ -91,6 +92,24 @@ describe("FormatService tests", () => {
     it("should return undefined if string is empty", () => {
       const result = toTitleCase(undefined);
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe("toReadableListString", () => {
+    it("returns an empty string for an empty array", () => {
+      expect(toReadableListString([])).toBe("");
+    });
+
+    it("returns the single string if array has one item", () => {
+      expect(toReadableListString(["apples"])).toBe("apples");
+    });
+
+    it("joins items with 'and' if array has two items", () => {
+      expect(toReadableListString(["apples", "bananas"])).toBe("apples and bananas");
+    });
+
+    it("joins items with commas and 'and' if array has 3 or more items", () => {
+      expect(toReadableListString(["apples", "bananas", "carrots", "dahlias"])).toBe("apples, bananas, carrots, and dahlias");
     });
   });
 });
