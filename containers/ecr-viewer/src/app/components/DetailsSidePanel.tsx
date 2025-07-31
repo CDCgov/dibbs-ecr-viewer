@@ -47,7 +47,7 @@ export const DetailsTrigger = ({
     <ModalToggleButton
       type="button"
       modalRef={detailsRef}
-      className={classnames("overflow-wrap-anywhere","action-text", className)}
+      className={classnames("overflow-wrap-anywhere", "action-text", className)}
       unstyled={true}
       onClick={() => {
         // move the initial focus to the close button
@@ -190,8 +190,10 @@ export const DetailsSidePanel = ({
         aria-labelledby={`delete-confirm-${id}-heading`}
         aria-describedby={`delete-confirm-${id}-description`}
       >
-        <ModalHeading id={`delete-confirm-${id}-heading`}
-        className="overflow-wrap-anywhere">
+        <ModalHeading
+          id={`delete-confirm-${id}-heading`}
+          className="overflow-wrap-anywhere"
+        >
           {deleteModalTitle}
         </ModalHeading>
         {deleteModalBody}
