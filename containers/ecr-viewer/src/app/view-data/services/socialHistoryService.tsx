@@ -13,7 +13,7 @@ import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
-import { UnstyledList } from "@/app/view-data/components/UnstyledList";
+import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -79,7 +79,7 @@ const evaluateTravelHistoryDetails = (
     {
       title: "Transportation Details",
       value: transportObs.length && (
-        <UnstyledList
+        <UnstyledDividedList
           items={transportObs.map((o, i) => (
             <TransportationDetails
               transportObs={o}
@@ -93,7 +93,7 @@ const evaluateTravelHistoryDetails = (
     {
       title: "Exposure Details",
       value: exposureObs.length && (
-        <UnstyledList
+        <UnstyledDividedList
           items={exposureObs.map((o, i) => (
             <ExposureDetails
               fhirBundle={fhirBundle}
@@ -175,7 +175,7 @@ export const evaluateExposureDetails = (fhirBundle: Bundle) => {
   if (!exposureObservations.length) return undefined;
 
   return (
-    <UnstyledList
+    <UnstyledDividedList
       items={exposureObservations.map((o, i) => (
         <ExposureDetails
           fhirBundle={fhirBundle}

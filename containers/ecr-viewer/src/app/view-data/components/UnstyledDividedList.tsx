@@ -6,7 +6,7 @@ import { ReactNode } from "react";
  * @param props.items Items to render as a list
  * @returns unstyled list component
  */
-export const UnstyledList = ({ items }: { items: ReactNode[] }) => {
+export const UnstyledDividedList = ({ items }: { items: ReactNode[] }) => {
   return (
     <ul className="add-list-reset padding-x-4">
       {items.map((item, i) => (
