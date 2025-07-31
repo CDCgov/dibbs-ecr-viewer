@@ -106,5 +106,5 @@ export const toReadableListString = (arr: Array<string>) => {
   } else if (arr.length > 2) {
     return `${arr.slice(0, -1).join(", ")}, and ${arr[arr.length - 1]}`;
   }
-  return ""
+  return "";
 };

@@ -105,11 +105,15 @@ describe("FormatService tests", () => {
     });
 
     it("joins items with 'and' if array has two items", () => {
-      expect(toReadableListString(["apples", "bananas"])).toBe("apples and bananas");
+      expect(toReadableListString(["apples", "bananas"])).toBe(
+        "apples and bananas",
+      );
     });
 
     it("joins items with commas and 'and' if array has 3 or more items", () => {
-      expect(toReadableListString(["apples", "bananas", "carrots", "dahlias"])).toBe("apples, bananas, carrots, and dahlias");
+      expect(
+        toReadableListString(["apples", "bananas", "carrots", "dahlias"]),
+      ).toBe("apples, bananas, carrots, and dahlias");
     });
   });
 });

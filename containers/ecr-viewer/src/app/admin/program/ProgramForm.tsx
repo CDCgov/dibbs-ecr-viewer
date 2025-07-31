@@ -20,7 +20,12 @@ import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { AccordionItem } from "@/app/types";
-import { makePlural, stringSort, toKebabCase, toReadableListString } from "@/app/utils/format-utils";
+import {
+  makePlural,
+  stringSort,
+  toKebabCase,
+  toReadableListString,
+} from "@/app/utils/format-utils";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;
@@ -434,7 +439,7 @@ const ConfirmationModal = ({
     ...new Set(
       categoryConditions
         .map((c) => c?.program_area_name)
-        .filter((p) => p !== null)
+        .filter((p) => p !== null),
     ),
   ].sort(stringSort);
 
