@@ -1,5 +1,6 @@
 import React from "react";
 
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,8 +22,14 @@ const MOCK_PROPS = {
   initDateRange: DEFAULT_DATE_RANGE,
 };
 
-function renderFilters() {
-  return render(<Filters {...MOCK_PROPS} />);
+function renderFilters(customConditions: string[] /*= MOCK_CONDITIONS*/) {
+  const props = {
+    allConditions: customConditions,
+    initConditions: customConditions,
+    initCustomDate: "",
+    initDateRange: DEFAULT_DATE_RANGE,
+  };
+  return render(<Filters {...props} />);
 }
 
 describe("Filter by Reportable Conditions Component", () => {
@@ -290,6 +297,106 @@ describe("Filter by Reportable Conditions Component", () => {
     );
   });
 });
+
+describe.each([
+  {
+    description: `only '${NO_CONDITIONS_REPORTED_OPTION}'`,
+    conditions: [NO_CONDITIONS_REPORTED_OPTION],
+    expectedElements: {
+      noConditionsReported: true,
+      regularConditions: false,
+    },
+  },
+  {
+    description: "only regular conditions", 
+    conditions: ["Condition1", "Condition2"],
+    expectedElements: {
+      noConditionsReported: false,
+      regularConditions: true, 
+    },
+  },
+  {
+    description: `'${NO_CONDITIONS_REPORTED_OPTION}' and conditions`,
+    conditions: [NO_CONDITIONS_REPORTED_OPTION, "Condition1", "Condition2"],
+    expectedElements: {
+      noConditionsReported: true,
+      regularConditions: true,
+    },
+  },
+  {
+    description: "no filterable conditions",
+    conditions: [],
+    expectedElements: {
+      noConditionsReported: false,
+      regularConditions: false,
+    },
+  }
+])(
+  "Filter by Reportable Conditions Component with $description",
+  ({ conditions, description, expectedElements }) => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      global.fetch = global.fetch = jest.fn().mockImplementation(() => {
+        return Promise.resolve({
+          ok: true,
+          json: () => {
+            return Promise.resolve(conditions);
+          },
+        } as Response);
+      });
+
+      const conditionsParam = conditions.length > 0 ? `condition=${conditions.join("|")}` : "";
+      const mockSearchParams = {
+        current: new URLSearchParams(conditionsParam),
+      };
+      (useSearchParams as jest.Mock).mockImplementation(
+        () => mockSearchParams.current,
+      );
+
+      const mockPush = jest.fn().mockImplementation((path: string) => {
+        const url = new URL(path, "https://example.com");
+        mockSearchParams.current = new URLSearchParams(url.search);
+      });
+      (useRouter as jest.Mock).mockImplementation(() => {
+        return { push: mockPush };
+      });
+    });
+
+    it(`should ${expectedElements.noConditionsReported ? 'show' : 'hide'} '${NO_CONDITIONS_REPORTED_OPTION}' and ${expectedElements.regularConditions ? 'show' : 'hide'} regular conditions`, async () => {
+      const user = userEvent.setup();
+      const conditionsProps = {
+        allConditions: conditions,
+        initConditions: conditions,
+        initCustomDate: "",
+        initDateRange: DEFAULT_DATE_RANGE,
+      }
+
+      render(<Filters {...conditionsProps} />)
+
+      const toggleFilterButton = screen.getByRole("button", {
+        name: /Filter by reportable condition/i,
+      });
+
+      await user.click(toggleFilterButton);
+
+      if (expectedElements.noConditionsReported) {
+        expect(await screen.findByLabelText(/No conditions reported/i)).toBeInTheDocument();
+      } else {
+        expect(screen.queryByLabelText(/No conditions reported/i)).not.toBeInTheDocument();
+      }
+
+      const regularConditions = conditions.filter(c => c !== NO_CONDITIONS_REPORTED_OPTION);
+      if (expectedElements.regularConditions) {
+        for (const condition of regularConditions) {
+          expect(await screen.findByLabelText(new RegExp(condition, 'i'))).toBeInTheDocument();
+        }
+      } else {
+        expect(screen.queryByLabelText(/Condition1/i)).not.toBeInTheDocument();
+      }
+    });
+  }
+);
 
 describe("Filter by Date Component", () => {
   // NOTE: Tests look for Last Year = local dev default. The prod default is Last 24 hours.
