@@ -48,13 +48,13 @@ export const getAllConditions = async (): Promise<string[]> => {
           "ecr_data.eicr_id",
           "ecr_rr_conditions.eicr_id",
         )
-        .select("ecr_data.eicr_id")
+        .select((eb) => eb.fn.count("ecr_data.eicr_id").as("count"))
         .where("ecr_rr_conditions.uuid", "is", null)
         .executeTakeFirst();
 
       const actualConditions = conditionsResult.map((row) => row.condition);
 
-      if (!!hasNoConditionsResult) {
+      if (Number(hasNoConditionsResult?.count) > 0) {
         return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
       }
       return actualConditions;
