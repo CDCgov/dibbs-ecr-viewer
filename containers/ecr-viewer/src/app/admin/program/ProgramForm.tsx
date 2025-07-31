@@ -430,6 +430,17 @@ const ConfirmationModal = ({
   onConfirm: () => void;
   modalRef: RefObject<ModalRef>;
 }) => {
+  const prevProgramAreas = Array.from(new Set(categoryConditions.map(c => c.program_area_name)));
+  const prevProgramAreasStr = (() => {
+    if (prevProgramAreas.length === 1) {
+      return prevProgramAreas[0];
+    } else if (prevProgramAreas.length === 2) {
+      return prevProgramAreas.join(" and ");
+    } else if (prevProgramAreas.length > 2) {
+      return `${(prevProgramAreas.slice(0, -1)).join(", ")}, and ${prevProgramAreas[prevProgramAreas.length - 1]}`;
+    };
+  })();
+
   return (
     <Modal
       id="confirm-condition"
@@ -464,8 +475,8 @@ const ConfirmationModal = ({
             <div id="confirm-condition-description">
               <p>
                 A condition can only live in one program area. If you add the
-                below conditions to this program area, they will be removed from
-                their current program area.
+                below conditions to this program area, they will be removed
+                {prevProgramAreasStr && <> from {prevProgramAreasStr}</>}.
               </p>
 
               <ul>
@@ -474,7 +485,7 @@ const ConfirmationModal = ({
                     <li key={condition_name}>
                       {condition_name}, {program_area_name}
                     </li>
-                  ),
+                  )
                 )}
               </ul>
             </div>
