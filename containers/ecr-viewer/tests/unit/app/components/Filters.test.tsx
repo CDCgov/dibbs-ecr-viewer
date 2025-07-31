@@ -24,10 +24,9 @@ const MOCK_PROPS = {
 
 function renderFilters(customConditions: string[] = MOCK_CONDITIONS) {
   const props = {
+    ...MOCK_PROPS,
     allConditions: customConditions,
     initConditions: customConditions,
-    initCustomDate: "",
-    initDateRange: DEFAULT_DATE_RANGE,
   };
   return render(<Filters {...props} />);
 }
