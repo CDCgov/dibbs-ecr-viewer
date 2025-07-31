@@ -250,7 +250,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientGuardian: {
     type: "RelatedPerson",
-    path: "entry.resource.RelatedPerson",
+    path: "entry.resource.RelatedPerson.where(relationship.coding.exists(system = 'http://terminology.hl7.org/CodeSystem/v3-RoleCode' and code = 'GUARD'))",
   },
 
   // Social History

@@ -8,11 +8,11 @@ import { ReactNode } from "react";
  */
 export const UnstyledList = ({ items }: { items: ReactNode[] }) => {
   return (
-    <ul className="add-list-reset">
+    <ul className="add-list-reset padding-x-4">
       {items.map((item, i) => (
         <li
           key={`list-item-${i}`}
-          className={i > 0 ? "margin-top-4" : undefined}
+          className={`padding-y-2 ${i > 0 ? "border-top border-base-lightest" : ""}`}
         >
           {item}
         </li>
