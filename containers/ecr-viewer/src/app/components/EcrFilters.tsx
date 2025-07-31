@@ -169,7 +169,7 @@ const FilterReportableConditions = ({
         {/* Filter Conditions checkboxes */}
         {Object.keys(regularConditions).length > 0 && (
           <>
-            <div className="border-top-1px border-base-lighter"></div>
+            <div className="border-top-1px border-base-lighter margin-x-105"></div>
             <CheckboxOptions
               groupName="condition"
               filterItems={regularConditions}
