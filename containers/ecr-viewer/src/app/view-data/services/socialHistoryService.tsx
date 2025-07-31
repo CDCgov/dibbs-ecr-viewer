@@ -1,20 +1,19 @@
-import { Bundle, Observation } from "fhir/r4";
+import { Bundle, Element, Observation, RelatedPerson } from "fhir/r4";
 
-import { formatDate, formatDateTime } from "@/app/services/formatDateService";
-import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
-import { noData } from "@/app/utils/data-utils";
-import { evaluateAll } from "@/app/utils/evaluate";
+import { formatPatientContactList } from "@/app/services/formatService";
+import { noData, notEmpty } from "@/app/utils/data-utils";
+import {
+  evaluateAll,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
+import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
   ColumnInfoInput,
-  evaluateTableRowCell,
 } from "@/app/view-data/components/EvaluateTable";
-import { JsonTable } from "@/app/view-data/components/JsonTable";
-
-type TravelHistoryColumn = Omit<ColumnInfoInput, "applyToValue"> & {
-  applyToValue?: (val: string) => string | undefined;
-};
+import { UnstyledList } from "@/app/view-data/components/UnstyledList";
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -22,70 +21,262 @@ type TravelHistoryColumn = Omit<ColumnInfoInput, "applyToValue"> & {
  * @returns - A formatted table representing the patient's travel history, or undefined if no relevant data is found.
  */
 export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
-  const travelHistory = evaluateAll(
+  const travelHistoryObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.patientTravelHistory,
   );
+  if (!travelHistoryObservations.length) return undefined;
 
-  const columns: TravelHistoryColumn[] = [
+  const columns: ColumnInfoInput[] = [
     {
       columnName: "Location",
       infoPath: "travelHistoryLocation",
     },
     {
-      columnName: "Start Date",
-      infoPath: "travelHistoryStartDate",
-      applyToValue: formatDate,
-    },
-    {
-      columnName: "End Date",
-      infoPath: "travelHistoryEndDate",
-      applyToValue: formatDate,
+      columnName: "Date",
+      infoPath: "effectiveX",
     },
     {
       columnName: "Purpose",
       infoPath: "travelHistoryPurpose",
     },
+    {
+      columnName: "Details",
+      hiddenBaseText: "details",
+      evaluateEntry: (el) => evaluateTravelHistoryDetails(fhirBundle, el),
+    },
   ];
 
-  const tables = createTravelHistoryTables(travelHistory, columns);
+  return (
+    <EvaluateTable resources={travelHistoryObservations} columns={columns} />
+  );
+};
 
-  if (!tables.length) return undefined;
+const evaluateTravelHistoryDetails = (
+  fhirBundle: Bundle,
+  travelObs: Element,
+) => {
+  const memberRefs = evaluateAll(
+    travelObs,
+    fhirPathMappings.travelHistoryMember,
+  );
+  const obs = memberRefs
+    .map((ref) => evaluateReference<Observation>(fhirBundle, ref))
+    .filter(notEmpty);
+
+  const transportObs = obs.filter(
+    (o) => o.code?.coding?.[0]?.code === "424483007",
+  );
+  const exposureObs = obs.filter((o) =>
+    o.category?.some(
+      (c) =>
+        c.coding?.[0]?.system ===
+        "http://terminology.hl7.org/ValueSet/v3-ActClassExposure",
+    ),
+  );
+
+  const content = [
+    {
+      title: "Transportation Details",
+      value: transportObs.length && (
+        <UnstyledList
+          items={transportObs.map((o, i) => (
+            <TransportationDetails
+              transportObs={o}
+              key={`transport-obs-${i}`}
+            />
+          ))}
+        />
+      ),
+      fullWidthContent: true,
+    },
+    {
+      title: "Exposure Details",
+      value: exposureObs.length && (
+        <UnstyledList
+          items={exposureObs.map((o, i) => (
+            <ExposureDetails
+              fhirBundle={fhirBundle}
+              exposureObs={o}
+              key={`exposure-obs-${i}`}
+            />
+          ))}
+        />
+      ),
+      fullWidthContent: true,
+    },
+  ].filter(({ value }) => !!value);
+
+  if (content.length === 0) return;
+
+  return content.map(({ title, ...props }, i) => (
+    <DataDisplay
+      key={title}
+      item={{ title, ...props, dividerLine: i < content.length - 1 }}
+    />
+  ));
+};
+
+const TransportationDetails = ({
+  transportObs,
+}: {
+  transportObs: Observation;
+}) => {
+  const baseInfo = [
+    {
+      title: "Transportation Vehicle Type",
+      value: evaluateValue(transportObs, fhirPathMappings.valueX),
+    },
+    {
+      title: "Dates",
+      value: evaluateValue(transportObs, fhirPathMappings.effectiveX),
+    },
+  ];
+
+  const components = transportObs.component || [];
+  for (const component of components) {
+    baseInfo.push({
+      title: evaluateValue(
+        component,
+        fhirPathMappings.code,
+        "Observation.component",
+      ),
+      value: evaluateValue(
+        component,
+        fhirPathMappings.valueX,
+        "Observation.component",
+      ),
+    });
+  }
+
+  return baseInfo.map(({ title, value }, i) => (
+    <DataDisplay
+      key={`wi-${i}`}
+      item={{
+        title,
+        value,
+        dividerLine: false,
+        titleNormal: true,
+      }}
+    />
+  ));
+};
+
+/**
+ * Returns formatted exposure observations.
+ * @param fhirBundle - The FHIR bundle containing exposure observation data.
+ * @returns The JSX element representing the exposure details, or undefined if no exposure observations are found.
+ */
+export const evaluateExposureDetails = (fhirBundle: Bundle) => {
+  const exposureObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.exposureObservations,
+  );
+  if (!exposureObservations.length) return undefined;
 
   return (
-    <JsonTable
-      jsonTableData={{ tables: [tables], resultName: "Travel History" }}
-      className="caption-data-title margin-y-0"
+    <UnstyledList
+      items={exposureObservations.map((o, i) => (
+        <ExposureDetails
+          fhirBundle={fhirBundle}
+          exposureObs={o}
+          key={`exposure-${i}`}
+        />
+      ))}
     />
   );
 };
 
-const createTravelHistoryTables = (
-  history: Observation[],
-  columns: TravelHistoryColumn[],
-) => {
-  const tables = history
-    .map((activity) => {
-      const row: HtmlTableJsonRow = {};
+const ExposureDetails = ({
+  fhirBundle,
+  exposureObs,
+}: {
+  fhirBundle: Bundle;
+  exposureObs: Observation;
+}) => {
+  const baseInfo = [
+    {
+      title: "Exposure Type",
+      value: evaluateValue(exposureObs, fhirPathMappings.code) || noData,
+    },
+    {
+      title: "Specific Exposure",
+      value: evaluateValue(exposureObs, fhirPathMappings.valueX) || noData,
+    },
+    {
+      title: "Dates",
+      value: evaluateValue(exposureObs, fhirPathMappings.effectiveX) || noData,
+    },
+  ];
 
-      // Populate the row by iterating over the columns
-      columns.forEach((column) => {
-        const value = evaluateTableRowCell(column, activity, fhirPathMappings);
-        // casting is fine because of constrained applyToValue type
-        const data = value.data as string | undefined;
-
-        // Assign the value to the row
-        row[column.columnName] = { value: data || noData };
-      });
-
-      return row;
-    })
-    .filter((row) => {
-      // Filter out rows with only noData values
-      return Object.values(row).some(({ value }) => value !== noData);
+  const exposureAgent = evaluateValue(
+    exposureObs,
+    fhirPathMappings.exposureAgent,
+  );
+  if (exposureAgent) {
+    baseInfo.push({
+      title: "Exposure Agent",
+      value: exposureAgent,
     });
+  }
 
-  return tables;
+  const exposureAddress = evaluateValue(
+    exposureObs,
+    fhirPathMappings.exposureAddress,
+  );
+  if (exposureAddress) {
+    baseInfo.push({
+      title: "Location",
+      value: exposureAddress,
+    });
+  }
+
+  const relatedThings = (exposureObs?.focus || [])
+    .map((ref) => evaluateReference<RelatedPerson>(fhirBundle, ref))
+    .filter(notEmpty);
+
+  for (const thing of relatedThings) {
+    const animalSpecies = evaluateValue(thing, fhirPathMappings.animalSpecies);
+    if (animalSpecies) {
+      baseInfo.push({
+        title: "Animal Species",
+        value: animalSpecies,
+      });
+    } else {
+      // We've got a human
+      const contactInfo = formatPatientContactList([thing]);
+      if (contactInfo) {
+        baseInfo.push({
+          title: "Contact",
+          value: contactInfo,
+        });
+      }
+    }
+
+    return baseInfo.map(({ title, value }, i) => (
+      <DataDisplay
+        key={`wi-${i}`}
+        item={{
+          title,
+          value,
+          dividerLine: false,
+          titleNormal: true,
+        }}
+      />
+    ));
+  }
+
+  return baseInfo.map(({ title, value }, i) => (
+    <DataDisplay
+      key={`wi-${i}`}
+      item={{
+        title,
+        value,
+        dividerLine: false,
+        titleNormal: true,
+      }}
+    />
+  ));
 };
 
 /**
@@ -119,7 +310,6 @@ export const returnDisabilityStatusTable = (
     {
       columnName: "Dates",
       infoPath: "effectiveX",
-      applyToValue: formatDateTime,
     },
   ];
 

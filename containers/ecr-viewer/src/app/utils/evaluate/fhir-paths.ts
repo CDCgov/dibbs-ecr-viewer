@@ -155,10 +155,13 @@ export type PathTypes = {
   observationResultStatus: string;
   organizations: Organization;
   patientTravelHistory: Observation;
-  travelHistoryStartDate: string;
-  travelHistoryEndDate: string;
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
+  travelHistoryMember: Reference;
+  exposureObservations: Observation;
+  exposureAgent: ValueX;
+  exposureAddress: ValueX;
+  animalSpecies: ValueX;
   stampedImmunizations: Immunization;
   codeableConceptDisplay: string;
   conditionOnsetDate: string;
@@ -647,15 +650,35 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '420008001'))",
   },
-  travelHistoryStartDate: { type: "string", path: "effectivePeriod.start" },
-  travelHistoryEndDate: { type: "string", path: "effectivePeriod.end" },
   travelHistoryLocation: {
-    type: "string",
-    path: "component.where(code.coding.code = 'LOC').valueCodeableConcept.text",
+    type: "ValueX",
+    path: "iif(component.where(code.coding.code = 'LOC').value.exists(), component.where(code.coding.code = 'LOC').value, component.where(code.coding.code = 'LOC').extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-address-extension').value)",
   },
   travelHistoryPurpose: {
     type: "ValueX",
     path: "component.where(code.coding.code = '280147009').value",
+  },
+  travelHistoryMember: {
+    type: "Reference",
+    path: "hasMember",
+  },
+
+  // Exposure Details
+  exposureObservations: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(category.coding.system = 'http://terminology.hl7.org/ValueSet/v3-ActClassExposure')",
+  },
+  exposureAgent: {
+    type: "ValueX",
+    path: "component.where(code.coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' and code.coding.code = 'EXPAGNT').value",
+  },
+  exposureAddress: {
+    type: "ValueX",
+    path: "extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-address-extension').value",
+  },
+  animalSpecies: {
+    type: "ValueX",
+    path: "extension('http://hl7.org/fhir/StructureDefinition/practitioner-animalSpecies').value",
   },
 
   // Stamped
