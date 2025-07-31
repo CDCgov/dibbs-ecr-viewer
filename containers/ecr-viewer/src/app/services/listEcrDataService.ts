@@ -309,7 +309,7 @@ export const getTotalEcrCount = async (
         filterDates,
         searchTerm,
         filterConditions,
-        user?.user_type === 'admin',
+        user?.user_type === "admin",
       ),
     )
     .executeTakeFirst();
@@ -370,7 +370,6 @@ export const generateFilterConditionsStatement = (
   filterConditions?: string[] | undefined,
   isAdmin: boolean = false,
 ) => {
-
   if (!filterConditions) return trueStmt(eb);
   if (
     filterConditions.length === 0 ||
@@ -379,7 +378,8 @@ export const generateFilterConditionsStatement = (
     return falseStmt(eb);
   }
 
-  const includeNoConditions = isAdmin && filterConditions.includes(NO_CONDITIONS_REPORTED_OPTION);
+  const includeNoConditions =
+    isAdmin && filterConditions.includes(NO_CONDITIONS_REPORTED_OPTION);
 
   const actualConditions = filterConditions.filter(
     (condition) => condition !== NO_CONDITIONS_REPORTED_OPTION,

@@ -648,13 +648,7 @@ describe("generate where statement", () => {
   });
   it("should generate where statement using filter conditions statement (no search provided)", () => {
     const { sql, params } = getWhere((eb) =>
-      generateWhereStatement(
-        eb,
-        filterDates,
-        "",
-        ["Anthrax (disorder)"],
-        true,
-      ),
+      generateWhereStatement(eb, filterDates, "", ["Anthrax (disorder)"], true),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
