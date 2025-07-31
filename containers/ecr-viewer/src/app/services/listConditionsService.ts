@@ -14,7 +14,7 @@ export const getAllConditions = async (): Promise<string[]> => {
 
   try {
     const db = getDb<Core>();
-    const result = await db.transaction().execute(async (transaction) => {
+    return await db.transaction().execute(async (transaction) => {
       const conditionsResult = await transaction
         .selectFrom("ecr_rr_conditions")
         .select("condition")
@@ -59,7 +59,6 @@ export const getAllConditions = async (): Promise<string[]> => {
       }
       return actualConditions;
     });
-    return result;
   } catch (error: unknown) {
     console.error("Error fetching data: ", error);
     throw new Error("Error fetching data");
