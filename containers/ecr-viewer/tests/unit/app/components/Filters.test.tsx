@@ -232,9 +232,7 @@ describe.each([
       });
     }
 
-    if (
-      conditions.length > 0
-    ) {
+    if (conditions.length > 0) {
       it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
         const user = userEvent.setup();
         renderFilters(conditions);
