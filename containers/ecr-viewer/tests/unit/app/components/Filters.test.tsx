@@ -233,8 +233,7 @@ describe.each([
     }
 
     if (
-      expectedElements.noConditionsReported ||
-      expectedElements.regularConditions
+      conditions.length > 0
     ) {
       it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
         const user = userEvent.setup();
