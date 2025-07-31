@@ -113,7 +113,7 @@ const executeSearchQuery = async (
           filterDates,
           searchTerm,
           filterConditions,
-          user,
+          user?.user_type === "admin",
         ),
       ),
   );
