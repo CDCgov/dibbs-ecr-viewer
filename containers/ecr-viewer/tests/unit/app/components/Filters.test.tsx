@@ -342,6 +342,202 @@ describe.each([
   },
 );
 
+describe("Filter by Date Component", () => {
+  // NOTE: Tests look for Last Year = local dev default. The prod default is Last 24 hours.
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    const mockSearchParams = { current: new URLSearchParams("") };
+    (useSearchParams as jest.Mock).mockImplementation(
+      () => mockSearchParams.current,
+    );
+
+    const mockPush = jest.fn().mockImplementation((path: string) => {
+      const url = new URL(path, "https://example.com");
+      mockSearchParams.current = new URLSearchParams(url.search);
+    });
+    (useRouter as jest.Mock).mockImplementation(() => {
+      return { push: mockPush };
+    });
+
+    global.fetch = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(["Condition1", "Condition2"]),
+      } as unknown as Response),
+    );
+  });
+
+  it("Renders correctly after opening Filter by Date box", async () => {
+    const user = userEvent.setup();
+    const { container } = renderFilters();
+
+    const toggleFilterButton = await screen.findByRole("button", {
+      name: /Filter by received date/i,
+    });
+    await user.click(toggleFilterButton);
+
+    expect(container).toMatchSnapshot();
+  });
+
+  it("Toggles Filter by Date combo box visibility", async () => {
+    const user = userEvent.setup();
+    renderFilters();
+    const toggleButton = await screen.findByRole("button", {
+      name: /Filter by received date/i,
+    });
+
+    // Initially closed
+    expect(screen.queryByText(/Filter by received date/)).toBeNull();
+    expect(screen.queryByText(/Last year/)).toBeInTheDocument();
+
+    // Open on click
+    await user.click(toggleButton);
+    expect(screen.getByText(/Filter by received date/)).toBeInTheDocument();
+    const applyFilterButton = screen.getByRole("button", {
+      name: /Apply filter/i,
+    });
+    expect(applyFilterButton).toBeInTheDocument();
+
+    // Close on click
+    await user.click(toggleButton);
+    expect(screen.queryByText(/Filter by received date/)).toBeNull();
+  });
+
+  it("Updates filter date range when selection is made", async () => {
+    const user = userEvent.setup();
+    const { rerender } = renderFilters();
+    const toggleButton = screen.getByRole("button", {
+      name: /Filter by received date/i,
+    });
+    await user.click(toggleButton);
+
+    // Check default state is "Last year" (local dev default)
+    const defaultRadio = screen.getByRole("radio", {
+      name: "Last year",
+    });
+    expect(defaultRadio).toBeChecked();
+
+    // Change selection to "Last 7 days"
+    const radioLast7Days = screen.getByRole("radio", {
+      name: "Last 7 days",
+    });
+    await user.click(radioLast7Days);
+
+    const applyFilterButton = screen.getByRole("button", {
+      name: /Apply filter for received date/i,
+    });
+    await user.click(applyFilterButton);
+
+    // Only one radio button can be checked at a time.
+    await user.click(toggleButton);
+    expect(radioLast7Days).toBeChecked();
+
+    const defaultRadioAfter = screen.getByRole("radio", {
+      name: "Last year",
+    });
+    expect(defaultRadioAfter).not.toBeChecked();
+
+    // Filter by Date button should be titled "Last 7 days"
+    expect(
+      screen.getByRole("button", {
+        name: /Filter by received date/i,
+      }),
+    ).toHaveTextContent("Last 7 days");
+
+    // Query should persist over a reload
+    rerender(<Filters {...MOCK_PROPS} />);
+    expect(
+      screen.getByRole("button", {
+        name: /Filter by received date/i,
+      }),
+    ).toHaveTextContent("Last 7 days");
+  });
+
+  it("updates aria-label with selected date range", async () => {
+    const user = userEvent.setup();
+    renderFilters();
+
+    const toggleButton = screen.getByRole("button", {
+      name: /Filter by received date/i,
+    });
+
+    expect(toggleButton.getAttribute("aria-label")).toBe(
+      "Filter by received date, Last year selected",
+    );
+    await user.click(toggleButton);
+
+    // Change selection to "Last 7 days"
+    const radioLast7Days = screen.getByRole("radio", {
+      name: "Last 7 days",
+    });
+    await user.click(radioLast7Days);
+
+    const applyFilterButton = screen.getByRole("button", {
+      name: /Apply filter For received date/i,
+    });
+    await user.click(applyFilterButton);
+    expect(toggleButton.getAttribute("aria-label")).toBe(
+      "Filter by received date, Last 7 days selected",
+    );
+  });
+
+  it("Navigates with the correct query string on applying filters", async () => {
+    const user = userEvent.setup();
+    const mockPush = jest.fn();
+    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+
+    renderFilters();
+    const toggleButton = screen.getByRole("button", {
+      name: /Filter by received date/i,
+    });
+    await user.click(toggleButton);
+
+    const radio = screen.getByRole("radio", {
+      name: "Last 7 days",
+    });
+    await user.click(radio);
+    expect(radio).toBeChecked();
+
+    const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
+    await user.click(applyButton);
+
+    expect(toggleButton).toHaveFocus();
+
+    // Should have date range in search param
+    expect(mockPush).toHaveBeenCalledWith(
+      expect.stringContaining("dateRange=last-7-days"),
+    );
+  });
+
+  it("If a date range is checked but button is closed without applying filter, filters should reset", async () => {
+    const user = userEvent.setup();
+    renderFilters();
+    const toggleButton = screen.getByRole("button", {
+      name: /Filter by received date/i,
+    });
+
+    await user.click(toggleButton);
+
+    // Click different date option, but user closes button before applying filter
+    const radio = screen.getByRole("radio", {
+      name: "Last 7 days",
+    });
+    await user.click(radio);
+    expect(radio).toBeChecked();
+
+    await user.click(toggleButton);
+
+    // Selection should not persist because filter was not applied
+    expect(screen.getByText("Last year")).toBeInTheDocument();
+    await user.click(toggleButton);
+    const radioAfterReset = screen.getByRole("radio", {
+      name: "Last 7 days",
+    });
+    expect(radioAfterReset).not.toBeChecked();
+  });
+});
+
 describe("Filter by Date Component - custom dates", () => {
   afterEach(() => {
     jest.restoreAllMocks();

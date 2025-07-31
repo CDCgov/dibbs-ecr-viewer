@@ -76,7 +76,7 @@ describe.each([
       "condition2",
       "condition3",
     ],
-    expectedStandard: [NO_CONDITIONS_REPORTED_OPTION, "condition1"],
+    expectedStandard: ["condition1"],
     expectedNoUser: [],
   },
 ])(

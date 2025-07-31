@@ -41,22 +41,25 @@ export const getAllConditions = async (): Promise<string[]> => {
         )
         .execute();
 
-      const hasNoConditionsResult = await transaction
-        .selectFrom("ecr_data")
-        .leftJoin(
-          "ecr_rr_conditions",
-          "ecr_data.eicr_id",
-          "ecr_rr_conditions.eicr_id",
-        )
-        .select((eb) => eb.fn.count("ecr_data.eicr_id").as("count"))
-        .where("ecr_rr_conditions.uuid", "is", null)
-        .executeTakeFirst();
-
       const actualConditions = conditionsResult.map((row) => row.condition);
 
-      if (Number(hasNoConditionsResult?.count) > 0) {
-        return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
+      if (user.user_type === "admin") {
+        const hasNoConditionsResult = await transaction
+          .selectFrom("ecr_data")
+          .leftJoin(
+            "ecr_rr_conditions",
+            "ecr_data.eicr_id",
+            "ecr_rr_conditions.eicr_id",
+          )
+          .select((eb) => eb.fn.count("ecr_data.eicr_id").as("count"))
+          .where("ecr_rr_conditions.uuid", "is", null)
+          .executeTakeFirst();
+
+        if (Number(hasNoConditionsResult?.count) > 0) {
+          return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
+        }
       }
+      
       return actualConditions;
     });
   } catch (error: unknown) {
