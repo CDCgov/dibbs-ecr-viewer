@@ -309,7 +309,7 @@ export const getTotalEcrCount = async (
         filterDates,
         searchTerm,
         filterConditions,
-        user,
+        user?.user_type === 'admin',
       ),
     )
     .executeTakeFirst();
@@ -323,7 +323,7 @@ export const getTotalEcrCount = async (
  * @param filterDates - The date (range) to filter on
  * @param searchTerm - Optional search term used to filter
  * @param filterConditions - Optional array of reportable conditions used to filter
- * @param user - The logged in user
+ * @param isAdmin - The logged in user is an admin
  * @returns - expression wrapper for use in where
  */
 export const generateWhereStatement = (
@@ -331,11 +331,11 @@ export const generateWhereStatement = (
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
-  user?: User | undefined,
+  isAdmin: boolean = false,
 ) => {
   return generateSearchStatement(eb, searchTerm)
     .and(generateFilterDateStatement(eb, filterDates))
-    .and(generateFilterConditionsStatement(eb, filterConditions, user));
+    .and(generateFilterConditionsStatement(eb, filterConditions, isAdmin));
 };
 
 /**
@@ -362,15 +362,15 @@ export const generateSearchStatement = (
  * A custom type format for statement filtering conditions
  * @param eb expression builder
  * @param filterConditions - Optional array of reportable conditions used to filter
- * @param user - The logged in user
+ * @param isAdmin - The logged in user is an admin
  * @returns expression wrapper for use in where
  */
 export const generateFilterConditionsStatement = (
   eb: ExpressionBuilder<Core, "ecr_data">,
   filterConditions?: string[] | undefined,
-  user?: User | undefined,
+  isAdmin: boolean = false,
 ) => {
-  if (!user) return falseStmt(eb);
+
   if (!filterConditions) return trueStmt(eb);
   if (
     filterConditions.length === 0 ||
@@ -379,9 +379,7 @@ export const generateFilterConditionsStatement = (
     return falseStmt(eb);
   }
 
-  const includeNoConditions =
-    user.user_type === "admin" &&
-    filterConditions.includes(NO_CONDITIONS_REPORTED_OPTION);
+  const includeNoConditions = isAdmin && filterConditions.includes(NO_CONDITIONS_REPORTED_OPTION);
 
   const actualConditions = filterConditions.filter(
     (condition) => condition !== NO_CONDITIONS_REPORTED_OPTION,

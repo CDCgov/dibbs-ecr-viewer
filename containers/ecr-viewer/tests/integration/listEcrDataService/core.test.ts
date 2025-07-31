@@ -57,41 +57,6 @@ const relatedEcr = {
   date_created: new Date("2024-12-01T11:00:00Z"),
 };
 
-const mockAdmin = {
-  uuid: "123",
-  email: "admin@admin.com",
-  name: "Adam Admin",
-  date_of_last_login: new Date("2025-04-15T10:30:00Z"),
-  user_type: "admin",
-  status: "Active",
-  date_created: new Date("2025-01-01T09:00:00Z"),
-  author_uuid: "123",
-  program_areas: [],
-};
-
-const mockStandardUser = {
-  uuid: "234",
-  email: "sallystandard@standard.com",
-  name: "Sally Standard",
-  date_of_last_login: new Date("2025-04-15T10:30:00Z"),
-  user_type: "standard",
-  status: "Active",
-  date_created: new Date("2025-01-01T09:00:00Z"),
-  author_uuid: "123",
-  program_areas: [
-    {
-      program_area_uuid: "456",
-      user_uuid: "234",
-      name: "Program Area Two",
-    },
-    {
-      program_area_uuid: "789",
-      user_uuid: "234",
-      name: "Program Area Three",
-    },
-  ],
-};
-
 const getWhere = (
   ebCallBack: (
     eb: ExpressionBuilder<Core, "ecr_data">,
@@ -107,7 +72,6 @@ const getWhere = (
 
 jest.mock("@/app/utils/auth-utils");
 
-// TODO
 beforeEach(() => {
   (getLoggedInUserSession as jest.Mock).mockResolvedValue({
     name: "Adam Admin",
@@ -523,7 +487,7 @@ describe.each([
     expectedSqlServerSQL:
       'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
     expectedParams: ["%Condition1%", "%Condition2%"],
-    user: mockAdmin,
+    isAdmin: true,
   },
   {
     scenario: "with eCRs with no conditions reported - admin",
@@ -533,7 +497,7 @@ describe.each([
     expectedSqlServerSQL:
       '(not exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id") or exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2))))',
     expectedParams: ["%Condition1%", "%Condition2%"],
-    user: mockAdmin,
+    isAdmin: true,
   },
   {
     scenario: "with eCRs with no conditions reported - standard user",
@@ -543,7 +507,7 @@ describe.each([
     expectedSqlServerSQL:
       'exists (select "erc_sub"."eicr_id" from "test_ev_schema"."ecr_rr_conditions" as "erc_sub" where "erc_sub"."eicr_id" = "test_ev_schema"."ecr_data"."eicr_id" and ("erc_sub"."condition" is not null and ("erc_sub"."condition" like @1 or "erc_sub"."condition" like @2)))',
     expectedParams: ["%Condition1%", "%Condition2%"],
-    user: mockStandardUser,
+    isAdmin: false,
   },
   {
     scenario: "when de-selecting all",
@@ -551,7 +515,7 @@ describe.each([
     expectedPostgresSQL: "$1 = $2",
     expectedSqlServerSQL: "@1 = @2",
     expectedParams: [true, false],
-    user: mockAdmin,
+    isAdmin: true,
   },
   {
     scenario: "when selecting all",
@@ -559,7 +523,7 @@ describe.each([
     expectedPostgresSQL: "$1 = $2",
     expectedSqlServerSQL: "@1 = @2",
     expectedParams: [true, true],
-    user: mockAdmin,
+    isAdmin: true,
   },
 ])(
   "generate filter conditions statement $scenario",
@@ -569,11 +533,11 @@ describe.each([
     expectedPostgresSQL,
     expectedSqlServerSQL,
     expectedParams,
-    user,
+    isAdmin,
   }) => {
     it("should add conditions in the filter statement", () => {
       const { sql, params } = getWhere((eb) =>
-        generateFilterConditionsStatement(eb, testConditions, user),
+        generateFilterConditionsStatement(eb, testConditions, isAdmin),
       );
 
       if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -606,7 +570,7 @@ describe.each([
 
     it("should display all conditions in date range by default if no filter has been added", () => {
       const { sql, params } = getWhere((eb) =>
-        generateWhereStatement(eb, filterDates, "", undefined, user),
+        generateWhereStatement(eb, filterDates, "", undefined, isAdmin),
       );
       if (process.env.METADATA_DATABASE_TYPE === "postgres") {
         expect(sql).toEqual(
@@ -638,7 +602,7 @@ describe("generate where statement", () => {
         filterDates,
         "blah",
         ["Anthrax (disorder)"],
-        mockAdmin,
+        true,
       ),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
@@ -661,7 +625,7 @@ describe("generate where statement", () => {
   });
   it("should generate where statement using search statement (no conditions filter provided)", () => {
     const { sql, params } = getWhere((eb) =>
-      generateWhereStatement(eb, filterDates, "blah", undefined, mockAdmin),
+      generateWhereStatement(eb, filterDates, "blah", undefined, true),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
@@ -689,7 +653,7 @@ describe("generate where statement", () => {
         filterDates,
         "",
         ["Anthrax (disorder)"],
-        mockAdmin,
+        true,
       ),
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
