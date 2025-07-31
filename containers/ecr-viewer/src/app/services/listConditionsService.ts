@@ -59,7 +59,7 @@ export const getAllConditions = async (): Promise<string[]> => {
           return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
         }
       }
-      
+
       return actualConditions;
     });
   } catch (error: unknown) {

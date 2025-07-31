@@ -108,7 +108,13 @@ const executeSearchQuery = async (
       ])
       .groupBy(["ecr_data.set_id"])
       .where((eb) =>
-        generateWhereStatement(eb, filterDates, searchTerm, filterConditions, user),
+        generateWhereStatement(
+          eb,
+          filterDates,
+          searchTerm,
+          filterConditions,
+          user,
+        ),
       ),
   );
 
@@ -298,7 +304,13 @@ export const getTotalEcrCount = async (
     .$call((qb) => limitEcrDataToUser(user, qb))
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
-      generateWhereStatement(eb, filterDates, searchTerm, filterConditions, user),
+      generateWhereStatement(
+        eb,
+        filterDates,
+        searchTerm,
+        filterConditions,
+        user,
+      ),
     )
     .executeTakeFirst();
 
@@ -319,7 +331,7 @@ export const generateWhereStatement = (
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
-  user?: User | undefined
+  user?: User | undefined,
 ) => {
   return generateSearchStatement(eb, searchTerm)
     .and(generateFilterDateStatement(eb, filterDates))
@@ -367,9 +379,9 @@ export const generateFilterConditionsStatement = (
     return falseStmt(eb);
   }
 
-  const includeNoConditions = user.user_type === 'admin' && filterConditions.includes(
-    NO_CONDITIONS_REPORTED_OPTION,
-  );
+  const includeNoConditions =
+    user.user_type === "admin" &&
+    filterConditions.includes(NO_CONDITIONS_REPORTED_OPTION);
 
   const actualConditions = filterConditions.filter(
     (condition) => condition !== NO_CONDITIONS_REPORTED_OPTION,

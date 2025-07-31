@@ -165,7 +165,7 @@ describe.each([
         //--------- CHECKING BUTTON
         await user.click(checkbox);
         expect(checkbox).toBeChecked();
-        
+
         // Applying filter and re-opening filter box should include Condition1 back to filter
         await user.click(toggleApplyButton);
         await user.click(toggleFilterButton);
@@ -266,7 +266,9 @@ describe.each([
         expect(checkboxAfterReset).toBeChecked();
 
         const tagAfterReset = screen.getByTestId("filter-tag");
-        expect(tagAfterReset.textContent).toContain(conditions.length.toString());
+        expect(tagAfterReset.textContent).toContain(
+          conditions.length.toString(),
+        );
       });
 
       it("Query should persist over a reload", async () => {
@@ -282,9 +284,11 @@ describe.each([
         await user.click(checkbox);
         expect(checkbox).not.toBeChecked();
 
-        const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
+        const applyButton = screen.getByRole("button", {
+          name: /Apply Filter/i,
+        });
         await user.click(applyButton);
-        
+
         const props = {
           ...MOCK_PROPS,
           allConditions: conditions,
@@ -313,7 +317,9 @@ describe.each([
         await user.click(checkbox);
         expect(checkbox).not.toBeChecked();
 
-        const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
+        const applyButton = screen.getByRole("button", {
+          name: /Apply Filter/i,
+        });
         await user.click(applyButton);
 
         expect(toggleFilterButton).toHaveFocus();
