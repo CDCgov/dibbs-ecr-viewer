@@ -108,7 +108,7 @@ const executeSearchQuery = async (
       ])
       .groupBy(["ecr_data.set_id"])
       .where((eb) =>
-        generateWhereStatement(eb, filterDates, searchTerm, filterConditions),
+        generateWhereStatement(eb, filterDates, searchTerm, filterConditions, user),
       ),
   );
 
@@ -298,7 +298,7 @@ export const getTotalEcrCount = async (
     .$call((qb) => limitEcrDataToUser(user, qb))
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
-      generateWhereStatement(eb, filterDates, searchTerm, filterConditions),
+      generateWhereStatement(eb, filterDates, searchTerm, filterConditions, user),
     )
     .executeTakeFirst();
 
@@ -318,10 +318,11 @@ export const generateWhereStatement = (
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
+  user?: User | undefined
 ) => {
   return generateSearchStatement(eb, searchTerm)
     .and(generateFilterDateStatement(eb, filterDates))
-    .and(generateFilterConditionsStatement(eb, filterConditions));
+    .and(generateFilterConditionsStatement(eb, filterConditions, user));
 };
 
 /**
@@ -353,7 +354,9 @@ export const generateSearchStatement = (
 export const generateFilterConditionsStatement = (
   eb: ExpressionBuilder<Core, "ecr_data">,
   filterConditions?: string[] | undefined,
+  user?: User | undefined,
 ) => {
+  if (!user) return falseStmt(eb);
   if (!filterConditions) return trueStmt(eb);
   if (
     filterConditions.length === 0 ||
@@ -362,9 +365,10 @@ export const generateFilterConditionsStatement = (
     return falseStmt(eb);
   }
 
-  const includeNoConditions = filterConditions.includes(
+  const includeNoConditions = user.user_type === 'admin' && filterConditions.includes(
     NO_CONDITIONS_REPORTED_OPTION,
   );
+
   const actualConditions = filterConditions.filter(
     (condition) => condition !== NO_CONDITIONS_REPORTED_OPTION,
   );
@@ -403,7 +407,6 @@ export const generateFilterConditionsStatement = (
       ),
     );
   }
-
   // Single OR statement for all conditions
   return eb.or(queryConditions);
 };
@@ -432,7 +435,7 @@ export const generateFilterDateStatement = (
  * @param direction - The direction to sort by
  * @returns custom type format object for use by kysely
  */
-const generateSortStatement = (
+export const generateSortStatement = (
   columnName: string,
   direction: string,
 ): OrderByExpression<Core, "ecr_data", {}>[] => {

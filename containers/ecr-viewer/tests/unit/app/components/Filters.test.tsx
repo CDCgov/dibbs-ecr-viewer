@@ -35,38 +35,22 @@ describe.each([
   {
     description: `only '${NO_CONDITIONS_REPORTED_OPTION}'`,
     conditions: [NO_CONDITIONS_REPORTED_OPTION],
-    expectedElements: {
-      noConditionsReported: true,
-      regularConditions: false,
-    },
   },
   {
     description: "only regular conditions",
     conditions: ["Condition1", "Condition2"],
-    expectedElements: {
-      noConditionsReported: false,
-      regularConditions: true,
-    },
   },
   {
     description: `'${NO_CONDITIONS_REPORTED_OPTION}' and conditions`,
     conditions: [NO_CONDITIONS_REPORTED_OPTION, "Condition1", "Condition2"],
-    expectedElements: {
-      noConditionsReported: true,
-      regularConditions: true,
-    },
   },
   {
     description: "no filterable conditions",
     conditions: [],
-    expectedElements: {
-      noConditionsReported: false,
-      regularConditions: false,
-    },
   },
 ])(
   "Filter by Reportable Conditions Component with $description",
-  ({ conditions, description, expectedElements }) => {
+  ({ conditions }) => {
     beforeEach(() => {
       jest.clearAllMocks();
 
@@ -162,8 +146,8 @@ describe.each([
 
       //--------- UNCHECKING BUTTON
       // Checkbox should initialize as checked
-      if (expectedElements.regularConditions) {
-        const checkbox = screen.getByLabelText("Condition1");
+      if (conditions.length > 0) {
+        const checkbox = screen.getByLabelText(conditions[0]);
         expect(checkbox).toBeChecked();
 
         await user.click(checkbox);
@@ -189,27 +173,27 @@ describe.each([
       }
     });
 
-    if (expectedElements.regularConditions) {
+    if (conditions.length > 0) {
       it("updates tag displaying number of conditions to filter on", async () => {
         const user = userEvent.setup();
-        renderFilters();
+        renderFilters(conditions);
         const toggleFilterButton = screen.getByRole("button", {
           name: /Filter by reportable condition/i,
         });
         await user.click(toggleFilterButton);
-        const checkbox = screen.getByLabelText("Condition1");
+        const checkbox = screen.getByLabelText(conditions[0]);
         await user.click(checkbox);
         expect(checkbox).not.toBeChecked();
-        // Tag should change to show "1" condition
+        // Tag should change to show all but 1 condition
         const tag = screen.getByTestId("filter-tag");
-        expect(tag.textContent).toContain("1"); // TODO
-        // Tag should revert to show "2" (all) conditions
+        expect(tag.textContent).toContain((conditions.length - 1).toString());
+        // Tag should revert to show all conditions
         await user.click(checkbox);
         expect(checkbox).toBeChecked();
-        expect(tag.textContent).toContain("2");
+        expect(tag.textContent).toContain(conditions.length.toString());
       });
     }
-    if (expectedElements.regularConditions) {
+    if (conditions.length > 0) {
       it("updates aria-label with number of conditions to filter on", async () => {
         const user = userEvent.setup();
         renderFilters(conditions);
@@ -218,7 +202,7 @@ describe.each([
         });
         await user.click(toggleFilterButton);
 
-        const checkbox = screen.getByLabelText("Condition1");
+        const checkbox = screen.getByLabelText(conditions[0]);
         await user.click(checkbox);
 
         expect(toggleFilterButton.getAttribute("aria-label")).toBe(
