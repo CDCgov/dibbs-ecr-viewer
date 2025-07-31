@@ -251,16 +251,15 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
   fhirBundle: Bundle,
   snomedCode: string,
 ): DisplayDataProps[] => {
-  const noData: string = "No matching clinical data found in this eCR";
   if (!snomedCode) {
-    return [{ value: noData, dividerLine: true }];
+    return [];
   }
 
   const problemsList = evaluateAll(fhirBundle, fhirPathMappings.activeProblems);
   const problemsListFiltered = getRelevantResources(problemsList, snomedCode);
 
   if (problemsListFiltered.length === 0) {
-    return [{ value: noData, dividerLine: true }];
+    return [];
   }
 
   const problemsElement = returnProblemsTable(
@@ -283,11 +282,10 @@ export const evaluateEcrSummaryRelevantLabResults = (
   snomedCode: string,
   lastDividerLine: boolean = true,
 ): DisplayDataProps[] => {
-  const noData: string = "No matching lab results found in this eCR";
   let resultsArray: DisplayDataProps[] = [];
 
   if (!snomedCode) {
-    return [{ value: noData, dividerLine: true }];
+    return [];
   }
 
   const labReports = evaluateAll(
@@ -322,7 +320,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
   const relevantLabs = labsWithCode.concat(labsFromObsWithCode);
 
   if (relevantLabs.length === 0) {
-    return [{ value: noData, dividerLine: true }];
+    return [];
   }
   const relevantLabElements = evaluateLabInfoData(
     fhirBundle,
