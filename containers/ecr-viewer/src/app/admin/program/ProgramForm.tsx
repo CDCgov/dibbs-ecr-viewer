@@ -482,7 +482,7 @@ const ConfirmationModal = ({
                     <li key={condition_name}>
                       {condition_name}, {program_area_name}
                     </li>
-                  )
+                  ),
                 )}
               </ul>
             </div>
