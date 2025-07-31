@@ -311,6 +311,7 @@ export const getTotalEcrCount = async (
  * @param filterDates - The date (range) to filter on
  * @param searchTerm - Optional search term used to filter
  * @param filterConditions - Optional array of reportable conditions used to filter
+ * @param user - The logged in user
  * @returns - expression wrapper for use in where
  */
 export const generateWhereStatement = (
@@ -349,6 +350,7 @@ export const generateSearchStatement = (
  * A custom type format for statement filtering conditions
  * @param eb expression builder
  * @param filterConditions - Optional array of reportable conditions used to filter
+ * @param user - The logged in user
  * @returns expression wrapper for use in where
  */
 export const generateFilterConditionsStatement = (
