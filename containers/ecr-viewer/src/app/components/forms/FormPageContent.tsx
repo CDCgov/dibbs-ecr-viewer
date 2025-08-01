@@ -52,14 +52,15 @@ export const FormPageContent = <T,>({
   return (
     <main className="main-container">
       <div className="content-container margin-top-3 position-relative">
-        <Link
-          href={itemHomeRoute}
-          className="action-text display-inline-flex flex-align-center"
-        >
-          <ArrowBack aria-hidden={true} className="square-3" />
-          Back to {itemType} management
-        </Link>
         <div className="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container">
+          <Link
+            href={itemHomeRoute}
+            className="action-text display-inline-flex flex-align-center margin-bottom-1"
+          >
+            <ArrowBack aria-hidden={true} className="square-3" />
+            Back to {itemType} management
+          </Link>
+
           <div className="minh-5 margin-bottom-1">
             {banner}
 
