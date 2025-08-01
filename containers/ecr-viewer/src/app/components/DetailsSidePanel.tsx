@@ -190,9 +190,7 @@ export const DetailsSidePanel = ({
         aria-labelledby={`delete-confirm-${id}-heading`}
         aria-describedby={`delete-confirm-${id}-description`}
       >
-        <ModalHeading
-          id={`delete-confirm-${id}-heading`}
-        >
+        <ModalHeading id={`delete-confirm-${id}-heading`}>
           {deleteModalTitle}
         </ModalHeading>
         {deleteModalBody}
