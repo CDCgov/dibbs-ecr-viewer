@@ -1,0 +1,814 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Database Documentation | eCR Viewer</title><meta name="description" content="Documentation for eCR Viewer"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">eCR Viewer</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="" aria-current="page">Database Documentation</a></li></ul></div><div class="tsd-panel tsd-typography"><h1 id="database-documentation" class="tsd-anchor-link">Database Documentation<a href="#database-documentation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1><p>This document provides an overview of the database schema used by the DIBBS eCR Viewer, including both the core and extended schemas, and information about supported database types.</p>
+<h2 id="supported-database-types" class="tsd-anchor-link">Supported Database Types<a href="#supported-database-types" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The DIBBS eCR Viewer supports the following relational database types for storing metadata:</p>
+<ul>
+<li><strong>SQL Server</strong></li>
+<li><strong>PostgreSQL</strong></li>
+</ul>
+<h2 id="core-schema" class="tsd-anchor-link">Core Schema<a href="#core-schema" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The core schema contains essential data related to eCRs and their associated conditions and rule summaries. This schema is fundamental to the operation of the eCR Viewer.</p>
+<h3 id="ecr_data-table" class="tsd-anchor-link"><code>ecr_data</code> Table<a href="#ecr_data-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores the primary eCR data.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>eicr_id</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique identifier for the eICR</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>set_id</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Identifier for a set of related eICRs</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>eicr_version_number</code></td>
+<td style="text-align:left"><code>varchar(50)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Version number of the eICR</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fhir_reference_link</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Reference link to the FHIR resource</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>last_name</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's last name</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>first_name</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's first name</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>birth_date</code></td>
+<td style="text-align:left"><code>date</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's birth date</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>encounter_start_date</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Start date and time of the patient encounter</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date_created</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">Current timestamp</td>
+<td style="text-align:left">Date and time when the record was created</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ecr_rr_conditions-table" class="tsd-anchor-link"><code>ecr_rr_conditions</code> Table<a href="#ecr_rr_conditions-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores conditions associated with eCRs.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique identifier for the condition record</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>eicr_id</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>ecr_data.eicr_id</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>condition</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Description of the condition</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ecr_rr_rule_summaries-table" class="tsd-anchor-link"><code>ecr_rr_rule_summaries</code> Table<a href="#ecr_rr_rule_summaries-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores rule summaries related to eCR conditions.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique identifier for the rule summary record</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>ecr_rr_conditions_id</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>ecr_rr_conditions.uuid</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rule_summary</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Summary of the rule applied</td>
+</tr>
+</tbody>
+</table>
+<h2 id="extended-schema" class="tsd-anchor-link">Extended Schema<a href="#extended-schema" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The extended schema builds upon the core schema by adding additional demographic, clinical, and administrative data points to the <code>ecr_data</code> table, and introduces new tables for laboratory results and patient addresses. This schema provides a more comprehensive view of the eCR data.</p>
+<h3 id="alterations-to-ecr_data-table" class="tsd-anchor-link">Alterations to <code>ecr_data</code> Table<a href="#alterations-to-ecr_data-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The following columns are added to the <code>ecr_data</code> table in the extended schema:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>gender</code></td>
+<td style="text-align:left"><code>varchar(100)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's gender</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>birth_sex</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's birth sex</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>race</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's race</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>ethnicity</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's ethnicity</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>latitude</code></td>
+<td style="text-align:left"><code>numeric</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Latitude of patient's location</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>longitude</code></td>
+<td style="text-align:left"><code>numeric</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Longitude of patient's location</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>homelessness_status</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's homelessness status</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>disabilities</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's disabilities</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>tribal_affiliation</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's tribal affiliation</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>tribal_enrollment_status</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's tribal enrollment status</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>current_job_title</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's current job title</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>current_job_industry</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's current job industry</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>usual_occupation</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's usual occupation</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>usual_industry</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's usual industry</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>preferred_language</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's preferred language</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>pregnancy_status</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Patient's pregnancy status</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rr_id</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Response Report ID</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>processing_status</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Processing status of the eCR</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>authoring_date</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Date of authoring</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>authoring_provider</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Authoring provider</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>provider_id</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Provider ID</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>facility_id</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Facility ID</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>facility_name</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Facility name</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>encounter_type</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Type of encounter</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>encounter_end_date</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">End date and time of the patient encounter</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>reason_for_visit</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Reason for visit (Multiple values are concatenated into a single comma-separated string)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>active_problems</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Active problems (Multiple values are concatenated into a single comma-separated string)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ecr_labs-table" class="tsd-anchor-link"><code>ecr_labs</code> Table<a href="#ecr_labs-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores laboratory results associated with eCRs. Note that the primary key for this table is a compound primary key consisting of <code>uuid</code> and <code>eicr_id</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [uuid, eicr_id], unique identifier for the lab record</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>eicr_id</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [uuid, eicr_id], Foreign key, references <code>ecr_data.eicr_id</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_type</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Type of test performed</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_type_code</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Code for the test type</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_type_system</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Coding system for the test type</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_qualitative</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Qualitative test result</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_quantitative</code></td>
+<td style="text-align:left"><code>numeric</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Quantitative test result</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_units</code></td>
+<td style="text-align:left"><code>varchar(50)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Units for the quantitative test result</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_code</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Code for the test result</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_code_display</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Display name for the test result code</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_code_system</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Coding system for the test result code</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_interpretation</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Interpretation of the test result</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_interpretation_code</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Code for the test result interpretation</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_interpretation_system</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Coding system for the test result interpretation</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_reference_range_low_value</code></td>
+<td style="text-align:left"><code>numeric</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Lower bound of the reference range</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_reference_range_low_units</code></td>
+<td style="text-align:left"><code>varchar(50)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Units for the lower bound of the reference range</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_reference_range_high_value</code></td>
+<td style="text-align:left"><code>numeric</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Upper bound of the reference range</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_result_reference_range_high_units</code></td>
+<td style="text-align:left"><code>varchar(50)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Units for the upper bound of the reference range</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>specimen_type</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Type of specimen</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>specimen_collection_date</code></td>
+<td style="text-align:left"><code>date</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Date of specimen collection</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>performing_lab</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Performing laboratory</td>
+</tr>
+</tbody>
+</table>
+<h3 id="patient_address-table" class="tsd-anchor-link"><code>patient_address</code> Table<a href="#patient_address-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores patient address information. Note that the primary key for this table is a compound primary key consisting of <code>uuid</code> and <code>eicr_id</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [uuid, eicr_id], unique identifier for the address record</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>use</code></td>
+<td style="text-align:left"><code>varchar(50)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Purpose of the address (e.g., &quot;home&quot;, &quot;work&quot;)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>type</code></td>
+<td style="text-align:left"><code>varchar(50)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Type of address (e.g., &quot;physical&quot;, &quot;postal&quot;)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>text</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Full text representation of the address</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>line</code></td>
+<td style="text-align:left"><code>varchar(255)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Street address line</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>city</code></td>
+<td style="text-align:left"><code>varchar(100)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">City</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>district</code></td>
+<td style="text-align:left"><code>varchar(100)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">District</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>state</code></td>
+<td style="text-align:left"><code>varchar(100)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">State</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>postal_code</code></td>
+<td style="text-align:left"><code>varchar(20)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Postal code</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>country</code></td>
+<td style="text-align:left"><code>varchar(100)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Country</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>period_start</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Start date of the address's validity period</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>period_end</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">End date of the address's validity period</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>eicr_id</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [uuid, eicr_id], Foreign key, references <code>ecr_data.eicr_id</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-table" class="tsd-anchor-link"><code>user</code> Table<a href="#user-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores user information.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique identifier for the user</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>email</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">User's email address, must be unique</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">User's full name</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date_of_last_login</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Date and time of user's last login</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>user_type</code></td>
+<td style="text-align:left"><code>varchar(12)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Type of user (e.g., admin, standard)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>status</code></td>
+<td style="text-align:left"><code>varchar(12)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">active</td>
+<td style="text-align:left">User's account status</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date_created</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">Current timestamp</td>
+<td style="text-align:left">Date and time when the user record was created</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>author_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>user.uuid</code>, creator of the user record</td>
+</tr>
+</tbody>
+</table>
+<h3 id="program_area-table" class="tsd-anchor-link"><code>program_area</code> Table<a href="#program_area-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores information about program areas.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique identifier for the program area</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Name of the program area, must be unique</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date_created</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">Current timestamp</td>
+<td style="text-align:left">Date and time when the program area record was created</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>author_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>user.uuid</code>, creator of the program area record</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user_program_area-table" class="tsd-anchor-link"><code>user_program_area</code> Table<a href="#user_program_area-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table links users to program areas. Note that the primary key for this table is a compound primary key consisting of <code>user_uuid</code> and <code>program_area_uuid</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>user_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references <code>user.uuid</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>program_area_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references <code>program_area.uuid</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="condition_reference-table" class="tsd-anchor-link"><code>condition_reference</code> Table<a href="#condition_reference-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>This table stores reference information for conditions.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>code</code></td>
+<td style="text-align:left"><code>varchar(20)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique code for the condition</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>concept_name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Name of the concept</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>condition_name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Name of the condition</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>condition_category</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Category of the condition</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>program_area_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>program_area.uuid</code></td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#database-documentation"><span>Database <wbr/>Documentation</span></a><ul><li><a href="#supported-database-types"><span>Supported <wbr/>Database <wbr/>Types</span></a></li><li><a href="#core-schema"><span>Core <wbr/>Schema</span></a></li><li><ul><li><a href="#ecr_data-table"><span>ecr_<wbr/>data <wbr/>Table</span></a></li><li><a href="#ecr_rr_conditions-table"><span>ecr_<wbr/>rr_<wbr/>conditions <wbr/>Table</span></a></li><li><a href="#ecr_rr_rule_summaries-table"><span>ecr_<wbr/>rr_<wbr/>rule_<wbr/>summaries <wbr/>Table</span></a></li></ul></li><li><a href="#extended-schema"><span>Extended <wbr/>Schema</span></a></li><li><ul><li><a href="#alterations-to-ecr_data-table"><span>Alterations to ecr_<wbr/>data <wbr/>Table</span></a></li><li><a href="#ecr_labs-table"><span>ecr_<wbr/>labs <wbr/>Table</span></a></li><li><a href="#patient_address-table"><span>patient_<wbr/>address <wbr/>Table</span></a></li><li><a href="#user-table"><span>user <wbr/>Table</span></a></li><li><a href="#program_area-table"><span>program_<wbr/>area <wbr/>Table</span></a></li><li><a href="#user_program_area-table"><span>user_<wbr/>program_<wbr/>area <wbr/>Table</span></a></li><li><a href="#condition_reference-table"><span>condition_<wbr/>reference <wbr/>Table</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">eCR Viewer</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

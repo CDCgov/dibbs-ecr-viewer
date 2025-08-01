@@ -7,9 +7,9 @@
 <li><code>auth=[string]</code> where <code>auth</code> is the authentication token for the user. Only required if NBS_PUB_KEY is set and other auth not enabled.</li>
 </ul>
 <p><strong>Method</strong> : <code>GET</code></p>
-<p><strong>Auth required</strong> : Yes, via <code>auth</code> param or broswer login flow</p>
+<p><strong>Auth required</strong> : Yes, via <code>auth</code> param or browser login flow</p>
 <p><strong>Permissions required</strong> : None</p>
-<h3 id="example-architecture" class="tsd-anchor-link">Example Architecture<a href="#example-architecture" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p><img src="../media/nbs-ecr-viewer-arch.png" alt="NBS -&gt; ECR Viewer sequence diagram"></p>
+<h3 id="example-architecture" class="tsd-anchor-link">Example Architecture<a href="#example-architecture" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p><img src="../media/nbs-ecr-viewer-arch.png" alt="NBS -&gt; eCR Viewer sequence diagram"></p>
 <h3 id="success-response" class="tsd-anchor-link">Success Response<a href="#success-response" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>Condition</strong> : eCR exists and authentication is valid.</p>
 <p><strong>Code</strong> : <code>200 OK</code></p>
 <p><strong>Content</strong> : eCR will be displayed to the user</p>
@@ -98,7 +98,7 @@ the state of the application, including updating the conditions used in the view
 <pre><code class="sh"><span class="hl-3">curl</span><span class="hl-0"> </span><span class="hl-4">--location</span><span class="hl-0"> </span><span class="hl-5">&#39;&lt;DIBBS_URL&gt;/ecr-viewer/api/migrate-db&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--form </span><span class="hl-5">&#39;migration_secret=&lt;your migration secret&gt;&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--form </span><span class="hl-5">&#39;direction=down&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--header </span><span class="hl-5">&#39;Authorization: Bearer &lt;TOKEN&gt;&#39;</span>
 </code><button type="button">Copy</button></pre>
 
-<h3 id="success-response-3" class="tsd-anchor-link">Success Response<a href="#success-response-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>Condition</strong> : migration was succesfully applied.</p>
+<h3 id="success-response-3" class="tsd-anchor-link">Success Response<a href="#success-response-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>Condition</strong> : migration was successfully applied.</p>
 <p><strong>Code</strong> : <code>200 OK</code></p>
 <p><strong>Content</strong> : <code>message</code></p>
 <h3 id="error-responses-3" class="tsd-anchor-link">Error Responses<a href="#error-responses-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>Condition</strong> : URL parameters were invalid</p>
