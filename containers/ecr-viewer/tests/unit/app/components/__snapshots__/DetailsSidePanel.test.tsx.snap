@@ -12,7 +12,7 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
   >
     <div>
       <button
-        class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
+        class="usa-button usa-button--unstyled action-text"
         data-close-modal="true"
         data-open-modal="true"
         data-testid="button"
@@ -52,7 +52,7 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
                 class="border-bottom border-base-lightest"
               >
                 <h2
-                  class="usa-modal__heading font-sans-3xl margin-bottom-0 overflow-wrap-break-word"
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
                   id="details-sidepanel-r:id-heading"
                 >
                   Title
@@ -78,9 +78,7 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
                   <dt>
                     detail 1
                   </dt>
-                  <dd
-                    class="overflow-wrap-anywhere"
-                  >
+                  <dd>
                     <p>
                       Hi there
                     </p>
@@ -171,7 +169,7 @@ exports[`DetailsSidePanel renders details side panel 1`] = `
             class="usa-modal__main"
           >
             <h2
-              class="usa-modal__heading overflow-wrap-anywhere"
+              class="usa-modal__heading"
               id="delete-confirm-r:id-heading"
             >
               Delete me?
@@ -267,7 +265,7 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
   >
     <div>
       <button
-        class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
+        class="usa-button usa-button--unstyled action-text"
         data-close-modal="true"
         data-open-modal="true"
         data-testid="button"
@@ -307,7 +305,7 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
                 class="border-bottom border-base-lightest"
               >
                 <h2
-                  class="usa-modal__heading font-sans-3xl margin-bottom-0 overflow-wrap-break-word"
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
                   id="details-sidepanel-r:id-heading"
                 >
                   Title
@@ -333,9 +331,7 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
                   <dt>
                     detail 1
                   </dt>
-                  <dd
-                    class="overflow-wrap-anywhere"
-                  >
+                  <dd>
                     <p>
                       Hi there
                     </p>
@@ -426,7 +422,7 @@ exports[`DetailsSidePanel renders details side panel 2`] = `
             class="usa-modal__main"
           >
             <h2
-              class="usa-modal__heading overflow-wrap-anywhere"
+              class="usa-modal__heading"
               id="delete-confirm-r:id-heading"
             >
               Delete me?
@@ -522,7 +518,7 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
   >
     <div>
       <button
-        class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
+        class="usa-button usa-button--unstyled action-text"
         data-close-modal="true"
         data-open-modal="true"
         data-testid="button"
@@ -564,7 +560,7 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
                 class="border-bottom border-base-lightest"
               >
                 <h2
-                  class="usa-modal__heading font-sans-3xl margin-bottom-0 overflow-wrap-break-word"
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
                   id="details-sidepanel-r:id-heading"
                 >
                   Title
@@ -590,9 +586,7 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
                   <dt>
                     detail 1
                   </dt>
-                  <dd
-                    class="overflow-wrap-anywhere"
-                  >
+                  <dd>
                     <p>
                       Hi there
                     </p>
@@ -682,7 +676,7 @@ exports[`DetailsSidePanel renders details side panel 3`] = `
             class="usa-modal__main"
           >
             <h2
-              class="usa-modal__heading overflow-wrap-anywhere"
+              class="usa-modal__heading"
               id="delete-confirm-r:id-heading"
             >
               Delete me?
@@ -778,7 +772,7 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
   >
     <div>
       <button
-        class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
+        class="usa-button usa-button--unstyled action-text"
         data-close-modal="true"
         data-open-modal="true"
         data-testid="button"
@@ -818,7 +812,7 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
                 class="border-bottom border-base-lightest"
               >
                 <h2
-                  class="usa-modal__heading font-sans-3xl margin-bottom-0 overflow-wrap-break-word"
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
                   id="details-sidepanel-r:id-heading"
                 >
                   Title
@@ -844,9 +838,7 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
                   <dt>
                     detail 1
                   </dt>
-                  <dd
-                    class="overflow-wrap-anywhere"
-                  >
+                  <dd>
                     <p>
                       Hi there
                     </p>
@@ -935,7 +927,7 @@ exports[`DetailsSidePanel renders details side panel 4`] = `
             class="usa-modal__main"
           >
             <h2
-              class="usa-modal__heading overflow-wrap-anywhere"
+              class="usa-modal__heading"
               id="delete-confirm-r:id-heading"
             >
               Delete me?
@@ -1031,7 +1023,7 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
   >
     <div>
       <button
-        class="usa-button usa-button--unstyled overflow-wrap-anywhere action-text"
+        class="usa-button usa-button--unstyled action-text"
         data-close-modal="true"
         data-open-modal="true"
         data-testid="button"
@@ -1073,7 +1065,7 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
                 class="border-bottom border-base-lightest"
               >
                 <h2
-                  class="usa-modal__heading font-sans-3xl margin-bottom-0 overflow-wrap-break-word"
+                  class="usa-modal__heading font-sans-3xl margin-bottom-0"
                   id="details-sidepanel-r:id-heading"
                 >
                   Title
@@ -1099,9 +1091,7 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
                   <dt>
                     detail 1
                   </dt>
-                  <dd
-                    class="overflow-wrap-anywhere"
-                  >
+                  <dd>
                     <p>
                       Hi there
                     </p>
@@ -1190,7 +1180,7 @@ exports[`DetailsSidePanel renders details side panel 5`] = `
             class="usa-modal__main"
           >
             <h2
-              class="usa-modal__heading overflow-wrap-anywhere"
+              class="usa-modal__heading"
               id="delete-confirm-r:id-heading"
             >
               Delete me?

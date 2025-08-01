@@ -91,7 +91,7 @@ export const PaginatedSortableTable = <T extends { uuid: string }>({
             sortedItems.slice(startIndex, endIndex).map((item) => (
               <tr key={item.uuid}>
                 {initHeaders.map(({ id, formatter = (v) => v }) => (
-                  <td key={id} className="overflow-wrap-anywhere">
+                  <td key={id}>
                     {formatter(item[id], item) || noData}
                   </td>
                 ))}

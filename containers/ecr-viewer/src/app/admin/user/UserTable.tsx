@@ -334,7 +334,7 @@ const ProgramAreaContent = ({
         return {
           title: (
             <div className="display-flex flex-justify text-normal">
-              <span className="overflow-wrap-anywhere">{pa.name}</span>
+              <span>{pa.name}</span>
               <span className="display-flex flex-align-center margin-left-2 text-no-wrap">
                 {conditionNames.length} condition
                 {makePlural(conditionNames.length)}

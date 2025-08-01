@@ -98,36 +98,24 @@ exports[`PaginatedSortableTable matches snapshot 1`] = `
       </thead>
       <tbody>
         <tr>
-          <td
-            class="overflow-wrap-anywhere"
-          >
+          <td>
             four
           </td>
-          <td
-            class="overflow-wrap-anywhere"
-          >
+          <td>
             04/01/2012
           </td>
-          <td
-            class="overflow-wrap-anywhere"
-          >
+          <td>
             3 - 4
           </td>
         </tr>
         <tr>
-          <td
-            class="overflow-wrap-anywhere"
-          >
+          <td>
             One
           </td>
-          <td
-            class="overflow-wrap-anywhere"
-          >
+          <td>
             01/01/2012
           </td>
-          <td
-            class="overflow-wrap-anywhere"
-          >
+          <td>
             1, 2, 3
           </td>
         </tr>
