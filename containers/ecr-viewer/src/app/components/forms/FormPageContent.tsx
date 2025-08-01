@@ -89,7 +89,7 @@ export const FormPageContent = <T,>({
             )}
           </div>
 
-          <div className="display-flex flex-justify flex-align-center margin-bottom-2">
+          <div className="display-flex flex-justify flex-align-center margin-bottom-1">
             <h2 className="margin-0">{actionPhrase}</h2>
             <div>
               <SubmitButton
