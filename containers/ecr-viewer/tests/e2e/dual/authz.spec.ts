@@ -32,7 +32,7 @@ test.describe("standard user authorization", () => {
 
     await page.getByLabel("Filter by reportable condition").click();
     await expect(page.getByLabel("COVID-19")).toBeVisible();
-    // COVID and deselect all
+    // COVID, no conditions reported and deselect all
     expect(await page.getByRole("checkbox").all()).toHaveLength(2);
 
     // Only COVID eCR are listed
