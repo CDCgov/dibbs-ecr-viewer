@@ -1,3 +1,4 @@
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import { ConditionReference, Core } from "@/app/data/metadataDb/types/core";
 
@@ -12,38 +13,60 @@ export const getAllConditions = async (): Promise<string[]> => {
   if (!user) return [];
 
   try {
-    const result = await getDb<Core>()
-      .selectFrom("ecr_rr_conditions")
-      .select("condition")
-      .distinct()
-      .orderBy("condition")
-      .$if(user.user_type !== "admin", (qb) =>
-        qb
-          .innerJoin(
-            "condition_reference",
-            "condition_reference.code",
-            "ecr_rr_conditions.condition_code",
+    const db = getDb<Core>();
+    return await db.transaction().execute(async (transaction) => {
+      const conditionsResult = await transaction
+        .selectFrom("ecr_rr_conditions")
+        .select("condition")
+        .distinct()
+        .orderBy("condition")
+        .$if(user.user_type !== "admin", (qb) =>
+          qb
+            .innerJoin(
+              "condition_reference",
+              "condition_reference.code",
+              "ecr_rr_conditions.condition_code",
+            )
+            .innerJoin(
+              "program_area",
+              "program_area.uuid",
+              "condition_reference.program_area_uuid",
+            )
+            .innerJoin(
+              "user_program_area",
+              "user_program_area.program_area_uuid",
+              "program_area.uuid",
+            )
+            .where("user_program_area.user_uuid", "=", user.uuid),
+        )
+        .execute();
+
+      const actualConditions = conditionsResult.map((row) => row.condition);
+
+      if (user.user_type === "admin") {
+        const hasNoConditionsResult = await transaction
+          .selectFrom("ecr_data")
+          .leftJoin(
+            "ecr_rr_conditions",
+            "ecr_data.eicr_id",
+            "ecr_rr_conditions.eicr_id",
           )
-          .innerJoin(
-            "program_area",
-            "program_area.uuid",
-            "condition_reference.program_area_uuid",
-          )
-          .innerJoin(
-            "user_program_area",
-            "user_program_area.program_area_uuid",
-            "program_area.uuid",
-          )
-          .where("user_program_area.user_uuid", "=", user.uuid),
-      )
-      .execute();
-    return result.map((row) => row.condition);
+          .select((eb) => eb.fn.count("ecr_data.eicr_id").as("count"))
+          .where("ecr_rr_conditions.uuid", "is", null)
+          .executeTakeFirst();
+
+        if (Number(hasNoConditionsResult?.count) > 0) {
+          return [NO_CONDITIONS_REPORTED_OPTION, ...actualConditions];
+        }
+      }
+
+      return actualConditions;
+    });
   } catch (error: unknown) {
     console.error("Error fetching data: ", error);
     throw new Error("Error fetching data");
   }
 };
-
 export interface ListedCondition extends ConditionReference {
   program_area_name: string | null;
 }
