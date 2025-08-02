@@ -42,7 +42,7 @@ const cond789 = {
 let adminId;
 beforeAll(async () => {
   await buildCore();
-  adminId = await createInitialAdminUser("admin@admin.com");
+  adminId = await createInitialAdminUser({ email: "admin@admin.com" });
   for (const cond of [cond123, cond456, cond789]) {
     await getDb<Core>()
       .insertInto("condition_reference")

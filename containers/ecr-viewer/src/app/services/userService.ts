@@ -152,24 +152,26 @@ export const createUser = audit(
  * @param email Email of the user to add
  * @returns UUID of the created user
  */
-export const createInitialAdminUser = async (
-  email: string,
-): Promise<string | undefined> => {
-  const users = await listActiveUsersQuery(getDb<Core>());
-  if (users.some(({ user_type }) => user_type === "admin")) {
-    console.warn("Active admin user already exists. Skipping user creation.");
-    return;
-  }
+export const createInitialAdminUser = audit(
+  "user",
+  "create",
+  async ({ email }: { email: string }, trx: Transaction<Core>): Promise<string | undefined> => {
+    const users = await listActiveUsersQuery(getDb<Core>());
+    if (users.some(({ user_type }) => user_type === "admin")) {
+      console.warn("Active admin user already exists. Skipping user creation.");
+      return;
+    }
 
-  try {
-    const uuid = randomUUID();
-    return await createUserQuery(getDb<Core>(), email, "admin", uuid, uuid);
-  } catch (error: unknown) {
-    const message = "Failed to create initial admin user";
-    console.error({ message, error });
-    throw new UserFacingError(message);
+    try {
+      const uuid = randomUUID();
+      return await createUserQuery(trx, email, "admin", uuid, uuid);
+    } catch (error: unknown) {
+      const message = "Failed to create initial admin user";
+      console.error({ message, error });
+      throw new UserFacingError(message);
+    }
   }
-};
+);
 
 const createUserQuery = async (
   db: Kysely<Core>,

@@ -90,7 +90,7 @@ export async function POST(
     } else if (direction === "up") {
       await migrateUp();
       skip_condition_update !== "true" && (await updateConditions());
-      !!init_admin_email && (await createInitialAdminUser(init_admin_email));
+      !!init_admin_email && (await createInitialAdminUser({ email: init_admin_email }));
     } else {
       return NextResponse.json(
         {

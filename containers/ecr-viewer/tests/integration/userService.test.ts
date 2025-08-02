@@ -112,8 +112,16 @@ describe("user service", () => {
     jest.spyOn(console, "warn").mockImplementation((...args) => {
       warning = args;
     });
-    adminId = await createInitialAdminUser(adminEmail);
+    adminId = await createInitialAdminUser({ email: adminEmail });
     expect(adminId).toMatch(UUID_REGEX);
+
+    const createLog = await getLastAuditLog();
+    expect(createLog.subject).toEqual("user");
+    expect(createLog.action).toEqual("create");
+    expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
+      email: adminEmail,
+      uuid: adminId,
+    });
 
     // see admin listed
     const users = await listUsers();
@@ -133,13 +141,13 @@ describe("user service", () => {
     ]);
 
     // adding again with same email should do nothing
-    const notId = await createInitialAdminUser(adminEmail);
+    const notId = await createInitialAdminUser({ email: adminEmail });
     expect(notId).toBeUndefined();
     expect(warning[0]).toContain("Active admin user already exists");
     warning = [];
 
     // adding with different email should do nothing
-    const alsoNotId = await createInitialAdminUser("other@admin.com");
+    const alsoNotId = await createInitialAdminUser({ email: "other@admin.com" });
     expect(alsoNotId).toBeUndefined();
     expect(warning[0]).toContain("Active admin user already exists");
 
@@ -150,7 +158,7 @@ describe("user service", () => {
     await expect(listUsers()).rejects.toThrow();
 
     //admin re-adds themself, gets same id
-    const newId = await createInitialAdminUser(adminEmail);
+    const newId = await createInitialAdminUser({ email: adminEmail });
     expect(newId).toBe(adminId);
 
     // see admin listed
