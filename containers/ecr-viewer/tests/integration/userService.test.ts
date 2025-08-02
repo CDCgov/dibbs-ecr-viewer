@@ -147,7 +147,9 @@ describe("user service", () => {
     warning = [];
 
     // adding with different email should do nothing
-    const alsoNotId = await createInitialAdminUser({ email: "other@admin.com" });
+    const alsoNotId = await createInitialAdminUser({
+      email: "other@admin.com",
+    });
     expect(alsoNotId).toBeUndefined();
     expect(warning[0]).toContain("Active admin user already exists");
 

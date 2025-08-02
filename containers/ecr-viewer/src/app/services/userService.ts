@@ -155,7 +155,10 @@ export const createUser = audit(
 export const createInitialAdminUser = audit(
   "user",
   "create",
-  async ({ email }: { email: string }, trx: Transaction<Core>): Promise<string | undefined> => {
+  async (
+    { email }: { email: string },
+    trx: Transaction<Core>,
+  ): Promise<string | undefined> => {
     const users = await listActiveUsersQuery(getDb<Core>());
     if (users.some(({ user_type }) => user_type === "admin")) {
       console.warn("Active admin user already exists. Skipping user creation.");
@@ -170,7 +173,7 @@ export const createInitialAdminUser = audit(
       console.error({ message, error });
       throw new UserFacingError(message);
     }
-  }
+  },
 );
 
 const createUserQuery = async (
