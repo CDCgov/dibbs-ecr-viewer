@@ -22,7 +22,12 @@ import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { AccordionItem } from "@/app/types";
 import { notEmpty } from "@/app/utils/data-utils";
-import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
+import {
+  makePlural,
+  stringSort,
+  toKebabCase,
+  toReadableListString,
+} from "@/app/utils/format-utils";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;
@@ -99,7 +104,11 @@ export const ProgramForm = ({
     (name && name !== initValues.name) ||
     selectedConditions.length !== initSelectedConditions.length ||
     selectedConditions.some((c, i) => initSelectedConditions[i] !== c);
-  const valid = !!name.trim() && numConditionsSelected > 0 && !nameIsDupe;
+  const valid =
+    !!name.trim() &&
+    name.trim().length > 1 &&
+    numConditionsSelected > 0 &&
+    !nameIsDupe;
 
   return (
     <FormPageContent
@@ -448,6 +457,14 @@ const ConfirmationModal = ({
   onConfirm: () => void;
   modalRef: RefObject<ModalRef>;
 }) => {
+  const prevProgramAreas = [
+    ...new Set(
+      categoryConditions
+        .map((c) => c?.program_area_name)
+        .filter((p) => p !== null),
+    ),
+  ].sort(stringSort);
+
   return (
     <Modal
       id="confirm-condition"
@@ -482,8 +499,8 @@ const ConfirmationModal = ({
             <div id="confirm-condition-description">
               <p>
                 A condition can only live in one program area. If you add the
-                below conditions to this program area, they will be removed from
-                their current program area.
+                below conditions to this program area, they will be removed from{" "}
+                {toReadableListString(prevProgramAreas)}.
               </p>
 
               <ul>

@@ -6,6 +6,7 @@ import {
   Transaction,
 } from "kysely";
 
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import { getSql } from "@/app/data/metadataDb/dialects/common";
 import { ecr_data, Core, User } from "@/app/data/metadataDb/types/core";
@@ -107,7 +108,13 @@ const executeSearchQuery = async (
       ])
       .groupBy(["ecr_data.set_id"])
       .where((eb) =>
-        generateWhereStatement(eb, filterDates, searchTerm, filterConditions),
+        generateWhereStatement(
+          eb,
+          filterDates,
+          searchTerm,
+          filterConditions,
+          user?.user_type === "admin",
+        ),
       ),
   );
 
@@ -297,7 +304,13 @@ export const getTotalEcrCount = async (
     .$call((qb) => limitEcrDataToUser(user, qb))
     .select((eb) => eb.fn.count("ecr_data.set_id").distinct().as("count"))
     .where((eb) =>
-      generateWhereStatement(eb, filterDates, searchTerm, filterConditions),
+      generateWhereStatement(
+        eb,
+        filterDates,
+        searchTerm,
+        filterConditions,
+        user?.user_type === "admin",
+      ),
     )
     .executeTakeFirst();
 
@@ -310,6 +323,7 @@ export const getTotalEcrCount = async (
  * @param filterDates - The date (range) to filter on
  * @param searchTerm - Optional search term used to filter
  * @param filterConditions - Optional array of reportable conditions used to filter
+ * @param isAdmin - The logged in user is an admin
  * @returns - expression wrapper for use in where
  */
 export const generateWhereStatement = (
@@ -317,10 +331,11 @@ export const generateWhereStatement = (
   filterDates: DateRangePeriod,
   searchTerm?: string,
   filterConditions?: string[],
+  isAdmin: boolean = false,
 ) => {
   return generateSearchStatement(eb, searchTerm)
     .and(generateFilterDateStatement(eb, filterDates))
-    .and(generateFilterConditionsStatement(eb, filterConditions));
+    .and(generateFilterConditionsStatement(eb, filterConditions, isAdmin));
 };
 
 /**
@@ -347,38 +362,65 @@ export const generateSearchStatement = (
  * A custom type format for statement filtering conditions
  * @param eb expression builder
  * @param filterConditions - Optional array of reportable conditions used to filter
+ * @param isAdmin - The logged in user is an admin
  * @returns expression wrapper for use in where
  */
 export const generateFilterConditionsStatement = (
   eb: ExpressionBuilder<Core, "ecr_data">,
   filterConditions?: string[] | undefined,
+  isAdmin: boolean = false,
 ) => {
-  if (!filterConditions || filterConditions.length === 0) return trueStmt(eb);
+  if (!filterConditions) return trueStmt(eb);
+  if (
+    filterConditions.length === 0 ||
+    filterConditions.every((condition) => condition === "")
+  ) {
+    return falseStmt(eb);
+  }
 
-  if (filterConditions.every((item) => item === "")) {
-    return eb("ecr_data.eicr_id", "not in", (subQb) =>
-      subQb
-        .selectFrom("ecr_rr_conditions as erc_sub")
-        .select("erc_sub.eicr_id")
-        .where("erc_sub.condition", "is not", null),
+  const includeNoConditions =
+    isAdmin && filterConditions.includes(NO_CONDITIONS_REPORTED_OPTION);
+
+  const actualConditions = filterConditions.filter(
+    (condition) => condition !== NO_CONDITIONS_REPORTED_OPTION,
+  );
+
+  const queryConditions = [];
+
+  if (includeNoConditions) {
+    queryConditions.push(
+      eb.not(
+        eb.exists(
+          eb
+            .selectFrom("ecr_rr_conditions as erc_sub")
+            .select("erc_sub.eicr_id")
+            .where("erc_sub.eicr_id", "=", eb.ref("ecr_data.eicr_id")),
+        ),
+      ),
     );
   }
 
-  return eb.exists(
-    eb
-      .selectFrom("ecr_rr_conditions as erc_sub")
-      .select("erc_sub.eicr_id")
-      .whereRef("erc_sub.eicr_id", "=", "ecr_data.eicr_id")
-      .where((subEb) =>
-        subEb("erc_sub.condition", "is not", null).and(
-          subEb.or(
-            filterConditions.map((condition) =>
-              subEb("erc_sub.condition", getSql("like"), `%${condition}%`),
+  if (actualConditions.length > 0) {
+    queryConditions.push(
+      eb.exists(
+        eb
+          .selectFrom("ecr_rr_conditions as erc_sub")
+          .select("erc_sub.eicr_id")
+          .whereRef("erc_sub.eicr_id", "=", "ecr_data.eicr_id")
+          .where((subEb) =>
+            subEb("erc_sub.condition", "is not", null).and(
+              subEb.or(
+                actualConditions.map((condition) =>
+                  subEb("erc_sub.condition", getSql("like"), `%${condition}%`),
+                ),
+              ),
             ),
           ),
-        ),
       ),
-  );
+    );
+  }
+  // Single OR statement for all conditions
+  return eb.or(queryConditions);
 };
 
 /**
@@ -405,7 +447,7 @@ export const generateFilterDateStatement = (
  * @param direction - The direction to sort by
  * @returns custom type format object for use by kysely
  */
-const generateSortStatement = (
+export const generateSortStatement = (
   columnName: string,
   direction: string,
 ): OrderByExpression<Core, "ecr_data", {}>[] => {
