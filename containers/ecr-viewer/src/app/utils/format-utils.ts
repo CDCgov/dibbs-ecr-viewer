@@ -98,7 +98,7 @@ export const stringSort = (a: string, b: string) => a.localeCompare(b);
  * @param arr - An array of strings.
  * @returns A readable string list using commas and 'and', or empty string if array is empty.
  */
-export const toReadableListString = (arr: Array<string>) => {
+export const toReadableListString = (arr: string[]) => {
   if (arr.length === 1) {
     return arr[0];
   } else if (arr.length === 2) {
