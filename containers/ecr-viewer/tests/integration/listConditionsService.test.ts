@@ -2,10 +2,10 @@
  * @jest-environment node
  */
 
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { getAllConditions } from "@/app/services/listConditionsService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
-import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { createCoreEcr, createEcrCondition } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
 import { seedUserProgramData } from "./helpers/seed";
