@@ -20,7 +20,12 @@ import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { AccordionItem } from "@/app/types";
-import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
+import {
+  makePlural,
+  stringSort,
+  toKebabCase,
+  toReadableListString,
+} from "@/app/utils/format-utils";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;
@@ -430,6 +435,14 @@ const ConfirmationModal = ({
   onConfirm: () => void;
   modalRef: RefObject<ModalRef>;
 }) => {
+  const prevProgramAreas = [
+    ...new Set(
+      categoryConditions
+        .map((c) => c?.program_area_name)
+        .filter((p) => p !== null),
+    ),
+  ].sort(stringSort);
+
   return (
     <Modal
       id="confirm-condition"
@@ -464,8 +477,8 @@ const ConfirmationModal = ({
             <div id="confirm-condition-description">
               <p>
                 A condition can only live in one program area. If you add the
-                below conditions to this program area, they will be removed from
-                their current program area.
+                below conditions to this program area, they will be removed from{" "}
+                {toReadableListString(prevProgramAreas)}.
               </p>
 
               <ul>

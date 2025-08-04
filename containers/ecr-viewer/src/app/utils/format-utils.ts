@@ -90,3 +90,21 @@ export const makePlural = (value: number): "s" | "" => {
  * @returns number indicating order
  */
 export const stringSort = (a: string, b: string) => a.localeCompare(b);
+
+/**
+ * Converts an array of strings into a human-readable list.
+ * [a, b] => "a and b"
+ * [a, b, c] => "a, b, and c"
+ * @param arr - An array of strings.
+ * @returns A readable string list using commas and 'and', or empty string if array is empty.
+ */
+export const toReadableListString = (arr: string[]) => {
+  if (arr.length === 1) {
+    return arr[0];
+  } else if (arr.length === 2) {
+    return arr.join(" and ");
+  } else if (arr.length > 2) {
+    return `${arr.slice(0, -1).join(", ")}, and ${arr[arr.length - 1]}`;
+  }
+  return "";
+};
