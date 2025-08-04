@@ -48,6 +48,7 @@ export const FormPageContent = <T,>({
 
   const submitDisabled = !formValid || !formTouched || submitting;
   const actionPhrase = `${action} ${itemType}`;
+  console.log(action);
 
   return (
     <main className="main-container">
@@ -72,7 +73,7 @@ export const FormPageContent = <T,>({
                 aria-live="polite"
               >
                 You have unsaved changes.{" "}
-                {itemType === "program area" && (
+                {itemType === "program area" && action === "Create" && (
                   <>
                     To create a program area, you must add a program name and at
                     least one condition.
