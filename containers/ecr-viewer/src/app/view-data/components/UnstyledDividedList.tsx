@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 /**
- * An unstyled list of items with padding between them
+ * An unstyled list of items with padding and a faint line between them
  * @param props react props
  * @param props.items Items to render as a list
  * @returns unstyled list component

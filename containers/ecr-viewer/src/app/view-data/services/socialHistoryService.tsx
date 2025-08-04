@@ -133,6 +133,8 @@ const TransportationDetails = ({
     },
   ];
 
+  // Components of the transit obs are key/value pairs of data relevant
+  // to that transit type. We display them as we receive them from the eCR.
   const components = transportObs.component || [];
   for (const component of components) {
     baseInfo.push({
