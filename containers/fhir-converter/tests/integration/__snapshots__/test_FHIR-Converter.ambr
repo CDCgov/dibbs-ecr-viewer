@@ -797,6 +797,15 @@
                   }),
                 ]),
               }),
+              dict({
+                'coding': list([
+                  dict({
+                    'code': 'GUARD',
+                    'display': 'Guardian',
+                    'system': 'http://terminology.hl7.org/CodeSystem/v3-RoleCode',
+                  }),
+                ]),
+              }),
             ]),
             'resourceType': 'RelatedPerson',
             'telecom': list([
@@ -971,6 +980,9 @@
                     }),
                   ]),
                 }),
+                'valueCodeableConcept': dict({
+                  'text': 'Traveled to Singapore, Malaysia and Bali with<br xmlns="urn:hl7-org:v3" />my family.',
+                }),
               }),
             ]),
             'effectivePeriod': dict({
@@ -986,6 +998,9 @@
             }),
             'resourceType': 'Observation',
             'status': 'final',
+            'subject': dict({
+              'reference': str,
+            }),
           }),
         }),
         dict({
