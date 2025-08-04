@@ -80,7 +80,6 @@ export const FormPageContent = <T,>({
                 )}
               </Alert>
             )}
-            <></>
             {error && (
               <Alert
                 type="error"
