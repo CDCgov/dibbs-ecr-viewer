@@ -571,6 +571,15 @@
                 "display": "Grandparent"
               }
             ]
+          },
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+                "code": "GUARD",
+                "display": "Guardian"
+              }
+            ]
           }
         ],
         "name": [

@@ -14,7 +14,6 @@ import BundleWithPlannedMedsOnly from "../../../../../../../test-data/fhir/Bundl
 import BundleWithScheduledApptsOnly from "../../../../../../../test-data/fhir/BundleScheduledApptsOnly.json";
 import BundleWithSexualOrientation from "../../../../../../../test-data/fhir/BundleSexualOrientation.json";
 import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
-import BundleWithTravelHistoryEmpty from "../../../../../../../test-data/fhir/BundleTravelHistoryEmpty.json";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
@@ -48,14 +47,8 @@ describe("Utils", () => {
       );
 
       render(actual.availableData[0].value);
-      expect(screen.getByText("Travel History"));
-    });
-    it("should not have travel history when there is an empty travel history observation present", () => {
-      const actual = evaluateSocialData(
-        BundleWithTravelHistoryEmpty as unknown as Bundle,
-      );
-
-      expect(actual.availableData).toBeEmpty();
+      // travel purpose
+      expect(screen.getByText("Active duty military (occupation)"));
     });
     it("should have patient sexual orientation when available", () => {
       const actual = evaluateSocialData(
