@@ -40,6 +40,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
 }) => {
   const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
     (condition) => {
+      const hasImmunizationDetails = condition.immunizationDetails.length > 0;
+      const hasClinicalDetails = condition.clinicalDetails.length > 0;
       return {
         title: condition.title,
         id: toKebabCase(condition.title),
@@ -51,35 +53,48 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
             {condition.conditionDetails.map((item, i) => (
               <DataDisplay item={item} key={`condition-${i}`} />
             ))}
-            <h5
-              className="text-bold margin-top-0 margin-bottom-1"
-              id="relevant-clinical"
-            >
-              Clinical Sections Relevant to Reportable Condition
-            </h5>
-            {condition.immunizationDetails.length > 0 && (
-              <div className="margin-top-0">
-                {condition.immunizationDetails.map((item, i) => (
-                  <DataTableDisplay item={item} key={`imx-${i}`} />
-                ))}
-              </div>
+            {(hasImmunizationDetails || hasClinicalDetails) && (
+              <>
+                <h5
+                  className="text-bold margin-top-0 margin-bottom-1"
+                  id="relevant-clinical"
+                >
+                  Clinical Sections Relevant to Reportable Condition
+                </h5>
+                {hasImmunizationDetails && (
+                  <div className="margin-top-0">
+                    {condition.immunizationDetails.map((item, i) => (
+                      <DataTableDisplay item={item} key={`imx-${i}`} />
+                    ))}
+                  </div>
+                )}
+                {hasClinicalDetails && (
+                  <div className="margin-top-0">
+                    {condition.clinicalDetails.map((item, i) => (
+                      <DataTableDisplay item={item} key={`detail-${i}`} />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
-            <div className="margin-top-0">
-              {condition.clinicalDetails.map((item, i) => (
-                <DataTableDisplay item={item} key={`detail-${i}`} />
-              ))}
-            </div>
-            <h5
-              className="text-bold margin-0 margin-bottom-1"
-              id="relevant-labs"
-            >
-              Lab Results Relevant to Reportable Condition
-            </h5>
-            <div className="margin-top-0">
-              {condition.labDetails.map((item, index) => (
-                <DataTableDisplay item={item} key={`${item.title}-${index}`} />
-              ))}
-            </div>
+            {condition.labDetails.length > 0 && (
+              <>
+                <h5
+                  className="text-bold margin-0 margin-bottom-1"
+                  id="relevant-labs"
+                >
+                  Lab Results Relevant to Reportable Condition
+                </h5>
+                <div className="margin-top-0">
+                  {condition.labDetails.map((item, index) => (
+                    <DataTableDisplay
+                      item={item}
+                      key={`${item.title}-${index}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </>
         ),
       };
