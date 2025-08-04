@@ -1,5 +1,225 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only ordered meds 1`] = `
+<div>
+  <div>
+    <div
+      class="grid-row flex-column"
+    >
+      <div
+        class="data-title padding-right-1"
+      >
+        Plan of Treatment
+      </div>
+      <div
+        class="grid-col width-full text-pre-line p-list"
+      >
+        <table
+          class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
+          data-testid="table"
+        >
+          <caption>
+            Planned Medications & Immunizations
+          </caption>
+          <thead>
+            <tr>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Name
+              </th>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Ordered On
+              </th>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Dosage
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                class="text-top text-pre-line"
+              >
+                aspirin tablet 325 mg
+              </td>
+              <td
+                class="text-top text-pre-line"
+              >
+                11/08/2020
+              </td>
+              <td
+                class="text-top text-pre-line"
+              >
+                1 pill
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="section__line_gray"
+    />
+  </div>
+</div>
+`;
+
+exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only pending results 1`] = `
+<div>
+  <div>
+    <div
+      class="grid-row flex-column"
+    >
+      <div
+        class="data-title padding-right-1"
+      >
+        Plan of Treatment
+      </div>
+      <div
+        class="grid-col width-full text-pre-line p-list"
+      >
+        <table
+          class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
+          data-testid="table"
+        >
+          <caption>
+            Planned Procedures & Orders
+          </caption>
+          <thead>
+            <tr>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Name
+              </th>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Scheduled Time
+              </th>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Ordered On
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                class="text-top text-pre-line"
+              >
+                Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method
+              </td>
+              <td
+                class="text-top text-pre-line"
+              >
+                11/08/2020
+              </td>
+              <td
+                class="text-top text-pre-line"
+              >
+                <span
+                  class="text-italic text-base"
+                >
+                  No data
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="section__line_gray"
+    />
+  </div>
+</div>
+`;
+
+exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only scheduled appointments 1`] = `
+<div>
+  <div>
+    <div
+      class="grid-row flex-column"
+    >
+      <div
+        class="data-title padding-right-1"
+      >
+        Plan of Treatment
+      </div>
+      <div
+        class="grid-col width-full text-pre-line p-list"
+      >
+        <table
+          class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
+          data-testid="table"
+        >
+          <caption>
+            Planned Activities & Appointments
+          </caption>
+          <thead>
+            <tr>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Name
+              </th>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Scheduled Time
+              </th>
+              <th
+                class="table-header"
+                scope="col"
+              >
+                Type
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                class="text-top text-pre-line"
+              >
+                A dr's appointment
+              </td>
+              <td
+                class="text-top text-pre-line"
+              >
+                01/01/2020
+              </td>
+              <td
+                class="text-top text-pre-line"
+              >
+                Appointment
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="section__line_gray"
+    />
+  </div>
+</div>
+`;
+
 exports[`Snapshot test for eCR Document Given no data, info message for empty sections should appear 1`] = `
 <div>
   <div
