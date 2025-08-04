@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Filters from "@/app/components/EcrFilters";
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { DEFAULT_DATE_RANGE } from "@/app/utils/date-utils";
 
 jest.mock("next/navigation", () => ({
@@ -21,275 +22,317 @@ const MOCK_PROPS = {
   initDateRange: DEFAULT_DATE_RANGE,
 };
 
-function renderFilters() {
-  return render(<Filters {...MOCK_PROPS} />);
+function renderFilters(customConditions: string[] = MOCK_CONDITIONS) {
+  const props = {
+    ...MOCK_PROPS,
+    allConditions: customConditions,
+    initConditions: customConditions,
+  };
+  return render(<Filters {...props} />);
 }
 
-describe("Filter by Reportable Conditions Component", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe.each([
+  {
+    description: `only '${NO_CONDITIONS_REPORTED_OPTION}'`,
+    conditions: [NO_CONDITIONS_REPORTED_OPTION],
+  },
+  {
+    description: "only regular conditions",
+    conditions: ["Condition1", "Condition2"],
+  },
+  {
+    description: `'${NO_CONDITIONS_REPORTED_OPTION}' and conditions`,
+    conditions: [NO_CONDITIONS_REPORTED_OPTION, "Condition1", "Condition2"],
+  },
+  {
+    description: "no filterable conditions",
+    conditions: [],
+  },
+])(
+  "Filter by Reportable Conditions Component with $description",
+  ({ conditions }) => {
+    beforeEach(() => {
+      jest.clearAllMocks();
 
-    const mockSearchParams = {
-      current: new URLSearchParams("condition=Condition1|Condition2"),
-    };
-    (useSearchParams as jest.Mock).mockImplementation(
-      () => mockSearchParams.current,
-    );
+      const conditionsParam =
+        conditions.length > 0 ? `condition=${conditions.join("|")}` : "";
+      const mockSearchParams = {
+        current: new URLSearchParams(conditionsParam),
+      };
+      (useSearchParams as jest.Mock).mockImplementation(
+        () => mockSearchParams.current,
+      );
 
-    const mockPush = jest.fn().mockImplementation((path: string) => {
-      const url = new URL(path, "https://example.com");
-      mockSearchParams.current = new URLSearchParams(url.search);
-    });
-    (useRouter as jest.Mock).mockImplementation(() => {
-      return { push: mockPush };
-    });
+      const mockPush = jest.fn().mockImplementation((path: string) => {
+        const url = new URL(path, "https://example.com");
+        mockSearchParams.current = new URLSearchParams(url.search);
+      });
+      (useRouter as jest.Mock).mockImplementation(() => {
+        return { push: mockPush };
+      });
 
-    global.fetch = jest.fn().mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(["Condition1", "Condition2"]),
-      } as unknown as Response),
-    );
-  });
-
-  it("renders correctly after opening conditions filter box", async () => {
-    const user = userEvent.setup();
-    const { container } = renderFilters();
-
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
-    });
-    await user.click(toggleFilterButton);
-
-    expect(container).toMatchSnapshot();
-  });
-
-  it("Toggles filter by conditions combo box visibility", async () => {
-    const user = userEvent.setup();
-    renderFilters();
-    const toggleButton = await screen.findByRole("button", {
-      name: /Filter by reportable condition/i,
-    });
-
-    // Initially closed
-    expect(screen.queryByText(/Filter by reportable condition/)).toBeNull();
-
-    // Open on click
-    await user.click(toggleButton);
-    expect(
-      screen.getByText(/Filter by reportable condition/),
-    ).toBeInTheDocument();
-    const applyFilterButton = screen.getByRole("button", {
-      name: /Apply Filter/i,
-    });
-    expect(applyFilterButton).toBeInTheDocument();
-
-    // Close on click
-    await user.click(toggleButton);
-    expect(screen.queryByText(/Filter by reportable condition/)).toBeNull();
-  });
-
-  it("Fetches conditions on Filters component mount", async () => {
-    const user = userEvent.setup();
-    renderFilters();
-    const toggleButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
+      global.fetch = jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(conditions),
+        } as unknown as Response),
+      );
     });
 
-    await user.click(toggleButton);
+    it("renders correctly after opening conditions filter box", async () => {
+      const user = userEvent.setup();
+      const { container } = renderFilters(conditions);
 
-    // Should have correct number of checkboxes
-    const checkboxes = screen.getAllByRole("checkbox");
-    expect(checkboxes).toHaveLength(3); // 2 conditions + select all
+      const toggleFilterButton = screen.getByRole("button", {
+        name: /Filter by reportable condition/i,
+      });
+      await user.click(toggleFilterButton);
 
-    // Conditions should be listed
-    expect(await screen.findByLabelText("Condition1")).toBeInTheDocument();
-    expect(await screen.findByLabelText("Condition2")).toBeInTheDocument();
-  });
-
-  it("updates filterConditions state when a checkbox is checked and unchecked", async () => {
-    const user = userEvent.setup();
-    renderFilters();
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
+      expect(container).toMatchSnapshot();
     });
 
-    await user.click(toggleFilterButton);
+    it("Toggles filter by conditions combo box visibility", async () => {
+      const user = userEvent.setup();
+      renderFilters(conditions);
+      const toggleButton = await screen.findByRole("button", {
+        name: /Filter by reportable condition/i,
+      });
 
-    //--------- UNCHECKING BUTTON
-    // Checkbox should initialize as checked
-    const checkbox = screen.getByLabelText("Condition1");
-    expect(checkbox).toBeChecked();
+      // Initially closed
+      expect(screen.queryByText(/Filter by reportable condition/)).toBeNull();
 
-    await user.click(checkbox);
-    expect(checkbox).not.toBeChecked();
+      // Open on click
+      await user.click(toggleButton);
+      expect(
+        screen.getByText(/Filter by reportable condition/),
+      ).toBeInTheDocument();
+      const applyFilterButton = screen.getByRole("button", {
+        name: /Apply Filter/i,
+      });
+      expect(applyFilterButton).toBeInTheDocument();
 
-    // Applying filter and re-opening filter box should still filter out Condition1
-    const toggleApplyButton = screen.getByRole("button", {
-      name: /Apply filter/i,
-    });
-    await user.click(toggleApplyButton);
-
-    await user.click(toggleFilterButton);
-    expect(checkbox).not.toBeChecked();
-
-    //--------- CHECKING BUTTON
-    await user.click(checkbox);
-    expect(checkbox).toBeChecked();
-
-    // Applying filter and re-opening filter box should include Condition1 back to filter
-    await user.click(toggleApplyButton);
-    await user.click(toggleFilterButton);
-    expect(checkbox).toBeChecked();
-  });
-
-  it("updates tag displaying number of conditions to filter on", async () => {
-    const user = userEvent.setup();
-    renderFilters();
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
-    });
-    await user.click(toggleFilterButton);
-
-    const checkbox = screen.getByLabelText("Condition1");
-    await user.click(checkbox);
-    expect(checkbox).not.toBeChecked();
-
-    // Tag should change to show "1" condition
-    const tag = screen.getByTestId("filter-tag");
-    expect(tag.textContent).toContain("1");
-
-    // Tag should revert to show "2" (all) conditions
-    await user.click(checkbox);
-    expect(checkbox).toBeChecked();
-    expect(tag.textContent).toContain("2");
-  });
-
-  it("updates aria-label with number of conditions to filter on", async () => {
-    const user = userEvent.setup();
-    renderFilters();
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
-    });
-    await user.click(toggleFilterButton);
-
-    const checkbox = screen.getByLabelText("Condition1");
-    await user.click(checkbox);
-
-    expect(toggleFilterButton.getAttribute("aria-label")).toBe(
-      "Filter by reportable condition, 1 selected",
-    );
-
-    await user.click(checkbox);
-    expect(toggleFilterButton.getAttribute("aria-label")).toBe(
-      "Filter by reportable condition",
-    );
-  });
-
-  it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
-    const user = userEvent.setup();
-    renderFilters();
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
-    });
-    await user.click(toggleFilterButton);
-
-    // Click deselect all
-    const deselectAll = await screen.findByLabelText("Deselect all");
-    await user.click(deselectAll);
-
-    // Both checkboxes should be unchecked after "Deselect all" is clicked
-    const condition1Checkbox = screen.getByLabelText("Condition1");
-    const condition2Checkbox = screen.getByLabelText("Condition2");
-    expect(condition1Checkbox).not.toBeChecked();
-    expect(condition2Checkbox).not.toBeChecked();
-
-    // Click select all
-    const selectAll = await screen.findByLabelText("Select all");
-    await user.click(selectAll);
-
-    // Both checkboxes should be checked after selecting all
-    expect(condition1Checkbox).toBeChecked();
-    expect(condition2Checkbox).toBeChecked();
-  });
-
-  it("If a condition is checked but button is closed without applying filter, filters should reset", async () => {
-    const user = userEvent.setup();
-    renderFilters();
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
+      // Close on click
+      await user.click(toggleButton);
+      expect(screen.queryByText(/Filter by reportable condition/)).toBeNull();
     });
 
-    await user.click(toggleFilterButton);
+    it("Fetches conditions on Filters component mount", async () => {
+      const user = userEvent.setup();
+      renderFilters(conditions);
+      const toggleButton = screen.getByRole("button", {
+        name: /Filter by reportable condition/i,
+      });
 
-    // Uncheck condition1 (tag becomes "1"), but user closes button before applying filter
-    const checkbox = screen.getByLabelText("Condition1");
-    await user.click(checkbox);
-    expect(checkbox).not.toBeChecked();
+      await user.click(toggleButton);
 
-    const tag = screen.getByTestId("filter-tag");
-    expect(tag.textContent).toContain("1");
+      // Should have correct number of checkboxes
+      const checkboxes = screen.getAllByRole("checkbox");
+      expect(checkboxes).toHaveLength(conditions.length + 1); // conditions + select all
 
-    await user.click(toggleFilterButton);
-
-    // Opening button should reset to original state & reset tag back to "2"
-    await user.click(toggleFilterButton);
-    const checkboxAfterReset = screen.getByLabelText("Condition1");
-    expect(checkboxAfterReset).toBeChecked();
-
-    const tagAfterReset = screen.getByTestId("filter-tag");
-    expect(tagAfterReset.textContent).toContain("2");
-  });
-
-  it("Query should persist over a reload", async () => {
-    const user = userEvent.setup();
-    const { rerender } = renderFilters();
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
+      // Conditions should be listed
+      for (const condition of conditions) {
+        expect(await screen.findByLabelText(condition)).toBeInTheDocument();
+      }
     });
 
-    await user.click(toggleFilterButton);
+    if (conditions.length > 0) {
+      it("updates filterConditions state when a checkbox is checked and unchecked", async () => {
+        const user = userEvent.setup();
+        renderFilters(conditions);
+        const toggleFilterButton = screen.getByRole("button", {
+          name: /Filter by reportable condition/i,
+        });
 
-    const checkbox = screen.getByLabelText("Condition1");
-    await user.click(checkbox);
-    expect(checkbox).not.toBeChecked();
+        await user.click(toggleFilterButton);
 
-    const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
-    await user.click(applyButton);
+        //--------- UNCHECKING BUTTON
+        // Checkbox should initialize as checked
+        const checkbox = screen.getByLabelText(conditions[0]);
+        expect(checkbox).toBeChecked();
 
-    rerender(<Filters {...MOCK_PROPS} />);
-    await user.click(toggleFilterButton);
+        await user.click(checkbox);
+        expect(checkbox).not.toBeChecked();
 
-    const checkboxAfterReload = screen.getByLabelText("Condition1");
-    expect(checkboxAfterReload).not.toBeChecked();
-  });
+        // Applying filter and re-opening filter box should still filter out Condition1
+        const toggleApplyButton = screen.getByRole("button", {
+          name: /Apply filter/i,
+        });
+        await user.click(toggleApplyButton);
 
-  it("navigates with the correct query string on applying filters", async () => {
-    const user = userEvent.setup();
-    const mockPush = jest.fn();
-    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+        await user.click(toggleFilterButton);
+        expect(checkbox).not.toBeChecked();
 
-    renderFilters();
-    const toggleFilterButton = screen.getByRole("button", {
-      name: /Filter by reportable condition/i,
-    });
-    await user.click(toggleFilterButton);
+        //--------- CHECKING BUTTON
+        await user.click(checkbox);
+        expect(checkbox).toBeChecked();
 
-    const checkbox = screen.getByLabelText("Condition1");
-    await user.click(checkbox);
-    expect(checkbox).not.toBeChecked();
+        // Applying filter and re-opening filter box should include Condition1 back to filter
+        await user.click(toggleApplyButton);
+        await user.click(toggleFilterButton);
+        expect(checkbox).toBeChecked();
+      });
 
-    const applyButton = screen.getByRole("button", { name: /Apply Filter/i });
-    await user.click(applyButton);
+      it("updates tag displaying number of conditions to filter on", async () => {
+        const user = userEvent.setup();
+        renderFilters(conditions);
+        const toggleFilterButton = screen.getByRole("button", {
+          name: /Filter by reportable condition/i,
+        });
+        await user.click(toggleFilterButton);
+        const checkbox = screen.getByLabelText(conditions[0]);
+        await user.click(checkbox);
+        expect(checkbox).not.toBeChecked();
+        // Tag should change to show all but 1 condition
+        const tag = screen.getByTestId("filter-tag");
+        expect(tag.textContent).toContain((conditions.length - 1).toString());
+        // Tag should revert to show all conditions
+        await user.click(checkbox);
+        expect(checkbox).toBeChecked();
+        expect(tag.textContent).toContain(conditions.length.toString());
+      });
 
-    expect(toggleFilterButton).toHaveFocus();
+      it("updates aria-label with number of conditions to filter on", async () => {
+        const user = userEvent.setup();
+        renderFilters(conditions);
+        const toggleFilterButton = screen.getByRole("button", {
+          name: /Filter by reportable condition/i,
+        });
+        await user.click(toggleFilterButton);
 
-    // Should have other condition in search param
-    expect(mockPush).toHaveBeenCalledWith(
-      expect.stringContaining("condition=Condition2"),
-    );
-  });
-});
+        const checkbox = screen.getByLabelText(conditions[0]);
+        await user.click(checkbox);
+
+        expect(toggleFilterButton.getAttribute("aria-label")).toBe(
+          `Filter by reportable condition, ${conditions.length - 1} selected`,
+        );
+
+        await user.click(checkbox);
+        expect(toggleFilterButton.getAttribute("aria-label")).toBe(
+          "Filter by reportable condition",
+        );
+      });
+
+      it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
+        const user = userEvent.setup();
+        renderFilters(conditions);
+        const toggleFilterButton = screen.getByRole("button", {
+          name: /Filter by reportable condition/i,
+        });
+        await user.click(toggleFilterButton);
+
+        // Click deselect all
+        const deselectAll = await screen.findByLabelText("Deselect all");
+        await user.click(deselectAll);
+
+        // All checkboxes should be unchecked after "Deselect all" is clicked
+        for (const condition of conditions) {
+          const checkbox = screen.getByLabelText(condition);
+          expect(checkbox).not.toBeChecked();
+        }
+
+        // Click select all
+        const selectAll = await screen.findByLabelText("Select all");
+        await user.click(selectAll);
+
+        // All checkboxes should be checked after selecting all
+        for (const condition of conditions) {
+          const checkbox = screen.getByLabelText(condition);
+          expect(checkbox).toBeChecked();
+        }
+      });
+
+      it("If a condition is checked but button is closed without applying filter, filters should reset", async () => {
+        const user = userEvent.setup();
+        renderFilters(conditions);
+        const toggleFilterButton = screen.getByRole("button", {
+          name: /Filter by reportable condition/i,
+        });
+
+        await user.click(toggleFilterButton);
+
+        // Uncheck condition1 (tag becomes "1"), but user closes button before applying filter
+        const checkbox = screen.getByLabelText(conditions[0]);
+        await user.click(checkbox);
+        expect(checkbox).not.toBeChecked();
+
+        const tag = screen.getByTestId("filter-tag");
+        expect(tag.textContent).toContain((conditions.length - 1).toString());
+
+        await user.click(toggleFilterButton);
+
+        // Opening button should reset to original state & reset tag back to "2"
+        await user.click(toggleFilterButton);
+        const checkboxAfterReset = screen.getByLabelText(conditions[0]);
+        expect(checkboxAfterReset).toBeChecked();
+
+        const tagAfterReset = screen.getByTestId("filter-tag");
+        expect(tagAfterReset.textContent).toContain(
+          conditions.length.toString(),
+        );
+      });
+
+      it("Query should persist over a reload", async () => {
+        const user = userEvent.setup();
+        const { rerender } = renderFilters(conditions);
+        const toggleFilterButton = screen.getByRole("button", {
+          name: /Filter by reportable condition/i,
+        });
+
+        await user.click(toggleFilterButton);
+
+        const checkbox = screen.getByLabelText(conditions[0]);
+        await user.click(checkbox);
+        expect(checkbox).not.toBeChecked();
+
+        const applyButton = screen.getByRole("button", {
+          name: /Apply Filter/i,
+        });
+        await user.click(applyButton);
+
+        const props = {
+          ...MOCK_PROPS,
+          allConditions: conditions,
+          initConditions: conditions,
+        };
+
+        rerender(<Filters {...props} />);
+        await user.click(toggleFilterButton);
+
+        const checkboxAfterReload = screen.getByLabelText(conditions[0]);
+        expect(checkboxAfterReload).not.toBeChecked();
+      });
+
+      it("navigates with the correct query string on applying filters", async () => {
+        const user = userEvent.setup();
+        const mockPush = jest.fn();
+        (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+
+        renderFilters(conditions);
+        const toggleFilterButton = screen.getByRole("button", {
+          name: /Filter by reportable condition/i,
+        });
+        await user.click(toggleFilterButton);
+
+        const checkbox = screen.getByLabelText(conditions[0]);
+        await user.click(checkbox);
+        expect(checkbox).not.toBeChecked();
+
+        const applyButton = screen.getByRole("button", {
+          name: /Apply Filter/i,
+        });
+        await user.click(applyButton);
+
+        expect(toggleFilterButton).toHaveFocus();
+
+        // Should have other conditions in search param
+        const otherConditions = conditions.slice(1).join("%7C");
+        expect(mockPush).toHaveBeenCalledWith(
+          expect.stringContaining(`condition=${otherConditions}`),
+        );
+      });
+    }
+  },
+);
 
 describe("Filter by Date Component", () => {
   // NOTE: Tests look for Last Year = local dev default. The prod default is Last 24 hours.

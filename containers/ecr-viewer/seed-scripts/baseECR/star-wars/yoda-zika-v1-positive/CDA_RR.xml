@@ -531,136 +531,136 @@
                           </entryRelationship>
                         </observation>
                       </component>
+                      <!-- Reporting Timeframe -->
+                      <component typeCode="COMP">
+                        <observation classCode="OBS" moodCode="EVN">
+                          <!-- [RR R1S1] Reporting Timeframe -->
+                          <templateId root="2.16.840.1.113883.10.20.15.2.3.14" extension="2017-04-01" />
+                          <id root="8334d0bd-a404-4e12-9e9c-e278669e59ba" />
+                          <code code="RR4" codeSystem="2.16.840.1.114222.4.5.232"
+                            codeSystemName="PHIN Questions"
+                            displayName="Timeframe to report (urgency)" />
+                          <value xsi:type="PQ" value="24" unit="h">
+                            <translation code="LA6112-2"
+                              codeSystem="2.16.840.1.113883.6.1"
+                              codeSystemName="LOINC"
+                              displayName="Within 24 hours" />
+                          </value>
+                        </observation>
+                      </component>
+                      <!-- External Resource: Travel Related Zika -->
+                      <component typeCode="COMP">
+                        <act classCode="ACT" moodCode="EVN">
+                          <!-- [RR R1S1] External Resource -->
+                          <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
+                          <id root="37a3d003-fff3-4da4-9ee8-3a472918bd33" />
+                          <code code="RRVS13" displayName="Outbreak- or Cluster Related"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <priorityCode code="RRVS18" displayName="Immediate action requested"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <reference typeCode="REFR">
+                            <externalDocument classCode="DOC" moodCode="EVN">
+                              <!-- [RR R1 STU1] External Reference -->
+                              <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
+                              <code nullFlavor="OTH">
+                                <originalText>Travel-associated Zika virus case detected. Enhanced
+                                  surveillance and follow-up required.</originalText>
+                              </code>
+                              <text mediaType="text/html">
+                                <reference value="https://www.cdc.gov/zika/reporting/index.html" />
+                              </text>
+                            </externalDocument>
+                          </reference>
+                        </act>
+                      </component>
+                      <!-- External Resource: Additional Testing Requirements -->
+                      <component typeCode="COMP">
+                        <act classCode="ACT" moodCode="EVN">
+                          <!-- [RR R1S1] External Resource -->
+                          <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
+                          <id root="814d6c77-aa2c-4dfd-8f62-d5a0df4b5bbb" />
+                          <code code="RRVS9"
+                            displayName="Additional detection and/or laboratory testing needs"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <priorityCode code="RRVS16" displayName="Action requested"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <reference typeCode="REFR">
+                            <externalDocument classCode="DOC" moodCode="EVN">
+                              <!-- [RR R1 STU1] External Reference -->
+                              <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
+                              <code nullFlavor="OTH">
+                                <originalText>Additional specimen collection and testing guidance for Zika
+                                  virus</originalText>
+                              </code>
+                              <text mediaType="text/html">
+                                <reference value="https://www.cdc.gov/zika/laboratories/lab-guidance.html" />
+                              </text>
+                            </externalDocument>
+                          </reference>
+                        </act>
+                      </component>
+                      <!-- External Resource: Treatment Guidance -->
+                      <component typeCode="COMP">
+                        <act classCode="ACT" moodCode="EVN">
+                          <!-- [RR R1S1] External Resource -->
+                          <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
+                          <id root="6a5fc1e5-e687-424d-9154-9413cce6dffd" />
+                          <code code="RRVS10" displayName="Treatment and/or prevention"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <priorityCode code="RRVS15" displayName="Information only"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <reference typeCode="REFR">
+                            <externalDocument classCode="DOC" moodCode="EVN">
+                              <!-- [RR R1 STU1] External Reference -->
+                              <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
+                              <code nullFlavor="OTH">
+                                <originalText>Clinical guidance for Zika virus disease treatment and
+                                  prevention</originalText>
+                              </code>
+                              <text mediaType="text/html">
+                                <reference
+                                  value="https://www.cdc.gov/zika/hc-providers/clinical-guidance/index.html" />
+                              </text>
+                            </externalDocument>
+                          </reference>
+                        </act>
+                      </component>
+                      <!-- External Resource: PHA Contact Information -->
+                      <component typeCode="COMP">
+                        <act classCode="ACT" moodCode="EVN">
+                          <!-- [RR R1S1] External Resource -->
+                          <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
+                          <id root="43d036d6-c982-4003-b6fb-9e114b6965b9" />
+                          <code code="RRVS12" displayName="PHA Contact Information"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <priorityCode code="RRVS15" displayName="Information only"
+                            codeSystem="2.16.840.1.114222.4.5.274"
+                            codeSystemName="PHIN VS (CDC Local Coding System)" />
+                          <reference typeCode="REFR">
+                            <externalDocument classCode="DOC" moodCode="EVN">
+                              <!-- [RR R1 STU1] External Reference -->
+                              <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
+                              <code nullFlavor="OTH">
+                                <originalText>For additional questions about Zika virus reporting, contact
+                                  the Coruscant Department of Health</originalText>
+                              </code>
+                              <text mediaType="text/html">
+                                <reference value="https://www.health.coruscant.gov/zika/reporting" />
+                              </text>
+                            </externalDocument>
+                          </reference>
+                        </act>
+                      </component>
                     </organizer>
                   </entryRelationship>
                 </observation>
-              </component>
-              <!-- Reporting Timeframe -->
-              <component typeCode="COMP">
-                <observation classCode="OBS" moodCode="EVN">
-                  <!-- [RR R1S1] Reporting Timeframe -->
-                  <templateId root="2.16.840.1.113883.10.20.15.2.3.14" extension="2017-04-01" />
-                  <id root="8334d0bd-a404-4e12-9e9c-e278669e59ba" />
-                  <code code="RR4" codeSystem="2.16.840.1.114222.4.5.232"
-                    codeSystemName="PHIN Questions"
-                    displayName="Timeframe to report (urgency)" />
-                  <value xsi:type="PQ" value="24" unit="h">
-                    <translation code="LA6112-2"
-                      codeSystem="2.16.840.1.113883.6.1"
-                      codeSystemName="LOINC"
-                      displayName="Within 24 hours" />
-                  </value>
-                </observation>
-              </component>
-              <!-- External Resource: Travel Related Zika -->
-              <component typeCode="COMP">
-                <act classCode="ACT" moodCode="EVN">
-                  <!-- [RR R1S1] External Resource -->
-                  <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
-                  <id root="37a3d003-fff3-4da4-9ee8-3a472918bd33" />
-                  <code code="RRVS13" displayName="Outbreak- or Cluster Related"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <priorityCode code="RRVS18" displayName="Immediate action requested"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <reference typeCode="REFR">
-                    <externalDocument classCode="DOC" moodCode="EVN">
-                      <!-- [RR R1 STU1] External Reference -->
-                      <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
-                      <code nullFlavor="OTH">
-                        <originalText>Travel-associated Zika virus case detected. Enhanced
-                          surveillance and follow-up required.</originalText>
-                      </code>
-                      <text mediaType="text/html">
-                        <reference value="https://www.cdc.gov/zika/reporting/index.html" />
-                      </text>
-                    </externalDocument>
-                  </reference>
-                </act>
-              </component>
-              <!-- External Resource: Additional Testing Requirements -->
-              <component typeCode="COMP">
-                <act classCode="ACT" moodCode="EVN">
-                  <!-- [RR R1S1] External Resource -->
-                  <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
-                  <id root="814d6c77-aa2c-4dfd-8f62-d5a0df4b5bbb" />
-                  <code code="RRVS9"
-                    displayName="Additional detection and/or laboratory testing needs"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <priorityCode code="RRVS16" displayName="Action requested"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <reference typeCode="REFR">
-                    <externalDocument classCode="DOC" moodCode="EVN">
-                      <!-- [RR R1 STU1] External Reference -->
-                      <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
-                      <code nullFlavor="OTH">
-                        <originalText>Additional specimen collection and testing guidance for Zika
-                          virus</originalText>
-                      </code>
-                      <text mediaType="text/html">
-                        <reference value="https://www.cdc.gov/zika/laboratories/lab-guidance.html" />
-                      </text>
-                    </externalDocument>
-                  </reference>
-                </act>
-              </component>
-              <!-- External Resource: Treatment Guidance -->
-              <component typeCode="COMP">
-                <act classCode="ACT" moodCode="EVN">
-                  <!-- [RR R1S1] External Resource -->
-                  <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
-                  <id root="6a5fc1e5-e687-424d-9154-9413cce6dffd" />
-                  <code code="RRVS10" displayName="Treatment and/or prevention"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <priorityCode code="RRVS15" displayName="Information only"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <reference typeCode="REFR">
-                    <externalDocument classCode="DOC" moodCode="EVN">
-                      <!-- [RR R1 STU1] External Reference -->
-                      <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
-                      <code nullFlavor="OTH">
-                        <originalText>Clinical guidance for Zika virus disease treatment and
-                          prevention</originalText>
-                      </code>
-                      <text mediaType="text/html">
-                        <reference
-                          value="https://www.cdc.gov/zika/hc-providers/clinical-guidance/index.html" />
-                      </text>
-                    </externalDocument>
-                  </reference>
-                </act>
-              </component>
-              <!-- External Resource: PHA Contact Information -->
-              <component typeCode="COMP">
-                <act classCode="ACT" moodCode="EVN">
-                  <!-- [RR R1S1] External Resource -->
-                  <templateId root="2.16.840.1.113883.10.20.15.2.3.20" extension="2017-04-01" />
-                  <id root="43d036d6-c982-4003-b6fb-9e114b6965b9" />
-                  <code code="RRVS12" displayName="PHA Contact Information"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <priorityCode code="RRVS15" displayName="Information only"
-                    codeSystem="2.16.840.1.114222.4.5.274"
-                    codeSystemName="PHIN VS (CDC Local Coding System)" />
-                  <reference typeCode="REFR">
-                    <externalDocument classCode="DOC" moodCode="EVN">
-                      <!-- [RR R1 STU1] External Reference -->
-                      <templateId root="2.16.840.1.113883.10.20.15.2.3.17" extension="2017-04-01" />
-                      <code nullFlavor="OTH">
-                        <originalText>For additional questions about Zika virus reporting, contact
-                          the Coruscant Department of Health</originalText>
-                      </code>
-                      <text mediaType="text/html">
-                        <reference value="https://www.health.coruscant.gov/zika/reporting" />
-                      </text>
-                    </externalDocument>
-                  </reference>
-                </act>
               </component>
             </organizer>
           </entry>

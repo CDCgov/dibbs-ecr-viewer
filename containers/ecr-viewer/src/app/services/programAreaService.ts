@@ -45,6 +45,7 @@ export const createProgramArea = audit(
 
     try {
       const uuid = randomUUID();
+      await checkDupeName(trx, name, uuid);
       await trx
         .insertInto("program_area")
         .values({ uuid, author_uuid: creatingUser.uuid, name })
@@ -58,12 +59,34 @@ export const createProgramArea = audit(
 
       return uuid;
     } catch (error: unknown) {
-      const message = "Failed to create program area";
+      let message = "Failed to create program area";
+      if (error instanceof UserFacingError) {
+        message = `${message}. ${error.message}`;
+      }
       console.error({ message, error });
       throw new UserFacingError(message);
     }
   },
 );
+
+const checkDupeName = async (
+  db: Transaction<Core>,
+  name: string,
+  uuid: string,
+) => {
+  const dupe = await db
+    .selectFrom("program_area")
+    .selectAll()
+    .where((eb) =>
+      eb(eb.fn<string>("LOWER", [eb.ref("name")]), "=", name.toLowerCase()),
+    )
+    .where("uuid", "!=", uuid)
+    .executeTakeFirst();
+
+  if (!!dupe) {
+    throw new UserFacingError("This program area name already exists.");
+  }
+};
 
 /**
  * Get program area with the given uuid
@@ -113,6 +136,7 @@ export const updateProgramArea = audit(
 
     try {
       if (!!name) {
+        await checkDupeName(trx, name, uuid);
         await trx
           .updateTable("program_area")
           .set({ name })
@@ -137,7 +161,10 @@ export const updateProgramArea = audit(
         }
       }
     } catch (error: unknown) {
-      const message = "Failed to update program area";
+      let message = "Failed to update program area";
+      if (error instanceof UserFacingError) {
+        message = `${message}. ${error.message}`;
+      }
       console.error({ message, error });
       throw new UserFacingError(message);
     }

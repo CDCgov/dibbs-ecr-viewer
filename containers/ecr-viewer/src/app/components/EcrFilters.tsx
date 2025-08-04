@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDateTime } from "@/app/services/formatDateService";
 import {
@@ -89,8 +90,9 @@ const FilterReportableConditions = ({
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
 
-  // Keep state in sync with updated params while maintaining correct focus on submit
-  useEffect(() => setFilterConditions(initFilterState), [initConditions]);
+  const isAllSelected = Object.values(filterConditions).every(
+    (val) => val === true,
+  );
 
   // Build list of conditions to filter on
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,10 +101,6 @@ const FilterReportableConditions = ({
       return { ...prev, [value]: checked };
     });
   };
-
-  const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true,
-  );
 
   // Check/Uncheck all boxes based on Select all checkbox
   const handleSelectAll = () => {
@@ -117,17 +115,32 @@ const FilterReportableConditions = ({
     setFilterConditions(updatedConditions);
   };
 
+  // Keep state in sync with updated params while maintaining correct focus on submit
+  useEffect(() => setFilterConditions(initFilterState), [initConditions]);
+
+  const activeConditions = Object.keys(filterConditions).filter(
+    (key) => filterConditions[key] === true,
+  );
+
+  const noConditions = Object.fromEntries(
+    Object.entries(filterConditions).filter(
+      ([key]) => key === NO_CONDITIONS_REPORTED_OPTION,
+    ),
+  );
+
+  const regularConditions = Object.fromEntries(
+    Object.entries(filterConditions).filter(
+      ([key]) => key !== NO_CONDITIONS_REPORTED_OPTION,
+    ),
+  );
+
   return (
     <Filter
       type="reportable condition"
       isActive={!isAllSelected}
       resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
-      tag={
-        Object.keys(filterConditions).filter(
-          (key) => filterConditions[key] === true,
-        ).length || "0"
-      }
+      tag={activeConditions.length || "0"}
       submitHandler={() => {
         updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
@@ -140,17 +153,32 @@ const FilterReportableConditions = ({
           onToggle={handleSelectAll}
           isAllSelected={isAllSelected}
         />
-        {allConditions.length > 0 && (
-          <div className="border-top-1px border-base-lighter margin-x-105"></div>
+
+        {/* No conditions reported checkbox */}
+        {Object.keys(noConditions).length > 0 && (
+          <>
+            <div className="border-top-1px border-base-lighter margin-x-105"></div>
+            <CheckboxOptions
+              groupName="condition"
+              filterItems={noConditions}
+              onChange={handleCheckboxChange}
+            />
+          </>
         )}
+
         {/* Filter Conditions checkboxes */}
-        <CheckboxOptions
-          groupName="condition"
-          filterItems={filterConditions}
-          onChange={handleCheckboxChange}
-        />
+        {Object.keys(regularConditions).length > 0 && (
+          <>
+            <div className="border-top-1px border-base-lighter margin-x-105"></div>
+            <CheckboxOptions
+              groupName="condition"
+              filterItems={regularConditions}
+              onChange={handleCheckboxChange}
+            />
+          </>
+        )}
       </div>
-      <div className="border-top-1px border-base-lighter"></div>
+      <div className="border-top-1px border-base-lighter" />
     </Filter>
   );
 };
