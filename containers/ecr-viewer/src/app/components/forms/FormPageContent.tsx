@@ -71,10 +71,16 @@ export const FormPageContent = <T,>({
                 headingLevel="h4"
                 aria-live="polite"
               >
-                You have unsaved changes
+                You have unsaved changes.{" "}
+                {itemType === "program area" && (
+                  <>
+                    To create a program area, you must add a program name and at
+                    least one condition.
+                  </>
+                )}
               </Alert>
             )}
-
+            <></>
             {error && (
               <Alert
                 type="error"
