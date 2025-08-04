@@ -48,7 +48,6 @@ export const FormPageContent = <T,>({
 
   const submitDisabled = !formValid || !formTouched || submitting;
   const actionPhrase = `${action} ${itemType}`;
-  console.log(action);
 
   return (
     <main className="main-container">
