@@ -5,53 +5,63 @@ exports[`Disability Status should display a table  1`] = `"<table class="usa-tab
 exports[`Travel History should display a table  1`] = `
 <div>
   <table
-    class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0 border-top border-left border-right"
+    class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
     data-testid="table"
   >
-    <caption>
-      Travel History
-    </caption>
     <thead>
       <tr>
         <th
-          class="table-header bg-gray-5 minw-10"
+          class="table-header"
           scope="col"
         >
           Location
         </th>
         <th
-          class="table-header bg-gray-5 minw-10"
+          class="table-header"
           scope="col"
         >
-          Start Date
+          Date
         </th>
         <th
-          class="table-header bg-gray-5 minw-10"
-          scope="col"
-        >
-          End Date
-        </th>
-        <th
-          class="table-header bg-gray-5 minw-10"
+          class="table-header"
           scope="col"
         >
           Purpose
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Details
         </th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td
+          class="text-top text-pre-line"
+        >
           Traveled to Naboo, Tatooine and Alderaan
         </td>
-        <td>
-          01/18/1888
+        <td
+          class="text-top text-pre-line"
+        >
+          Start: 01/18/1888
+End: 02/18/1898
         </td>
-        <td>
-          02/18/1898
-        </td>
-        <td>
+        <td
+          class="text-top text-pre-line"
+        >
           Active duty military (occupation)
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
         </td>
       </tr>
     </tbody>
