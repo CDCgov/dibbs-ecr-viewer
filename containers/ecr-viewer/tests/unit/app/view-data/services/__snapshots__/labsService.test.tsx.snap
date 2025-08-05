@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`LabsService tests Labs Utils returnFieldValueFromLabHtmlString extracts correct field value from within a lab report 1`] = `
-<div>
+<React.Fragment>
   <p>
     <span>
       <i>
@@ -14,5 +14,5 @@ exports[`LabsService tests Labs Utils returnFieldValueFromLabHtmlString extracts
       09/28/2000 1:59:00 PM PDT
     </span>
   </p>
-</div>
+</React.Fragment>
 `;

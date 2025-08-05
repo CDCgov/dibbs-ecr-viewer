@@ -436,9 +436,7 @@ describe("LabsService tests", () => {
           fieldName,
         );
 
-        const { container } = render(result);
-
-        expect(container).toMatchSnapshot();
+        expect(result).toMatchSnapshot();
       });
 
       it("returns NoData if none are found for field name", () => {
