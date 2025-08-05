@@ -34,6 +34,10 @@ jest.mock("next/headers", () => ({
   cookies: jest.fn().mockReturnValue({ get: () => null }),
 }));
 
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
+
 // Make sure the auto-generated IDs are stable for snapshot testing
 jest.mock("react", () => ({
   ...jest.requireActual("react"),

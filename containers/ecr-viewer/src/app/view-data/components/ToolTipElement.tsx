@@ -5,8 +5,6 @@ import { Tooltip } from "@trussworks/react-uswds";
 
 import { InfoOutline } from "@/app/components/Icon";
 
-import { ForceClient } from "./ForceClient";
-
 type CustomDivProps = React.PropsWithChildren<{
   className?: string;
 }> &
@@ -52,37 +50,19 @@ export const ToolTipElement = ({
   toolTip,
   children,
 }: ToolTipProps): React.JSX.Element => {
-  // HACK: ForceClient is needed to prevent hydration mismatches. This is
-  // fundamentally a problem with uswds's Tooltip as it assigns an
-  // SSR-unfriendly random id. If this is fixed (PR open that has been sitting for a while...),
-  // then we can remove this.
-
-  const Icon = () => (
-    <InfoOutline
-      aria-label="description"
-      className="tooltip-icon text-secondary flex-align-center"
-    />
-  );
-
   return toolTip ? (
     <div className="display-flex flex-align-baseline">
       {children}
-      <ForceClient
-        loading={
-          // margin is on the span and not the icon so the tooltip is centered correctly
-          <span className="margin-left-05">
-            <Icon />
-          </span>
-        }
+      <Tooltip
+        label={toolTip}
+        asCustom={TooltipDiv}
+        className={`margin-left-05 usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
       >
-        <Tooltip
-          label={toolTip}
-          asCustom={TooltipDiv}
-          className={`margin-left-05 usa-tooltip${toolTip.length < 100 ? " short-tooltip" : ""}`}
-        >
-          <Icon />
-        </Tooltip>
-      </ForceClient>
+        <InfoOutline
+          aria-label="description"
+          className="tooltip-icon text-secondary flex-align-center"
+        />
+      </Tooltip>
     </div>
   ) : (
     <>{children}</>

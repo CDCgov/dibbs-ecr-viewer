@@ -19,6 +19,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
         >
           <h2
             class="margin-bottom-0"
+            id="ecr-document"
           >
             eCR Document
           </h2>
@@ -69,7 +70,9 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
           data-testid="accordionButton_patient-info_1"
           type="button"
         >
-          <span>
+          <span
+            id="patient-info"
+          >
             Patient Info
           </span>
         </button>
@@ -77,6 +80,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
       <div
         class="usa-accordion__content usa-prose"
         data-testid="accordionItem_patient-info_1"
+        id="patient-info_1"
       >
         <p
           class="text-italic padding-bottom-05"
@@ -94,7 +98,9 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
           data-testid="accordionButton_encounter-info_2"
           type="button"
         >
-          <span>
+          <span
+            id="encounter-info"
+          >
             Encounter Info
           </span>
         </button>
@@ -102,6 +108,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
       <div
         class="usa-accordion__content usa-prose"
         data-testid="accordionItem_encounter-info_2"
+        id="encounter-info_2"
       >
         <p
           class="text-italic padding-bottom-05"
@@ -119,7 +126,9 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
           data-testid="accordionButton_clinical-info_3"
           type="button"
         >
-          <span>
+          <span
+            id="clinical-info"
+          >
             Clinical Info
           </span>
         </button>
@@ -127,6 +136,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
       <div
         class="usa-accordion__content usa-prose"
         data-testid="accordionItem_clinical-info_3"
+        id="clinical-info_3"
       >
         <p
           class="text-italic padding-bottom-05"
@@ -144,7 +154,9 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
           data-testid="accordionButton_lab-info_4"
           type="button"
         >
-          <span>
+          <span
+            id="lab-info"
+          >
             Lab Info
           </span>
         </button>
@@ -152,6 +164,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
       <div
         class="usa-accordion__content usa-prose"
         data-testid="accordionItem_lab-info_4"
+        id="lab-info_4"
       >
         <p
           class="text-italic padding-bottom-05"
@@ -169,7 +182,9 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
           data-testid="accordionButton_ecr-metadata_5"
           type="button"
         >
-          <span>
+          <span
+            id="ecr-metadata"
+          >
             eCR Metadata
           </span>
         </button>
@@ -177,6 +192,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
       <div
         class="usa-accordion__content usa-prose"
         data-testid="accordionItem_ecr-metadata_5"
+        id="ecr-metadata_5"
       >
         <p
           class="text-italic padding-bottom-05"
@@ -194,7 +210,9 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
           data-testid="accordionButton_unavailable-info_6"
           type="button"
         >
-          <span>
+          <span
+            id="unavailable-info"
+          >
             Unavailable Info
           </span>
         </button>
@@ -202,6 +220,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
       <div
         class="usa-accordion__content usa-prose"
         data-testid="accordionItem_unavailable-info_6"
+        id="unavailable-info_6"
       >
         <div>
           <div
@@ -218,6 +237,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-demographics"
                   >
                     Demographics
                   </h4>
@@ -525,6 +545,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                               data-testid="tooltipWrapper"
                             >
                               <div
+                                aria-describedby="tooltip-r:id"
                                 class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                                 data-testid="triggerElement"
                                 tabindex="0"
@@ -553,6 +574,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                                 aria-hidden="true"
                                 class="usa-tooltip__body"
                                 data-testid="tooltipBody"
+                                id="tooltip-r:id"
                                 role="tooltip"
                                 title="Unique patient identifier(s) from their medical record. For example, a patient's social security number or medical record number."
                               >
@@ -578,6 +600,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-social-history"
                   >
                     Social History
                   </h4>
@@ -819,6 +842,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-pregnancy-info"
                   >
                     Pregnancy Info
                   </h4>
@@ -889,6 +913,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-encounter-details"
                   >
                     Encounter Details
                   </h4>
@@ -997,6 +1022,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-hospital-encounter-details"
                   >
                     Hospital Encounter Details
                   </h4>
@@ -1048,6 +1074,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-facility-details"
                   >
                     Facility Details
                   </h4>
@@ -1175,6 +1202,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-clinical-notes"
                   >
                     Clinical Notes
                   </h4>
@@ -1197,6 +1225,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                               data-testid="tooltipWrapper"
                             >
                               <div
+                                aria-describedby="tooltip-r:id"
                                 class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                                 data-testid="triggerElement"
                                 tabindex="0"
@@ -1225,6 +1254,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                                 aria-hidden="true"
                                 class="usa-tooltip__body"
                                 data-testid="tooltipBody"
+                                id="tooltip-r:id"
                                 role="tooltip"
                                 title="Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR."
                               >
@@ -1250,6 +1280,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-provider-details"
                   >
                     Provider Details
                   </h4>
@@ -1377,6 +1408,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-symptoms-and-problems"
                   >
                     Symptoms and Problems
                   </h4>
@@ -1428,6 +1460,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-diagnostics-and-vital-signs"
                   >
                     Diagnostics and  Vital Signs
                   </h4>
@@ -1460,6 +1493,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-immunizations"
                   >
                     Immunizations
                   </h4>
@@ -1492,6 +1526,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-treatment-details"
                   >
                     Treatment Details
                   </h4>
@@ -1581,6 +1616,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-ecr-metadata"
                   >
                     eCR Metadata
                   </h4>
@@ -1603,6 +1639,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                               data-testid="tooltipWrapper"
                             >
                               <div
+                                aria-describedby="tooltip-r:id"
                                 class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                                 data-testid="triggerElement"
                                 tabindex="0"
@@ -1631,6 +1668,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                                 aria-hidden="true"
                                 class="usa-tooltip__body"
                                 data-testid="tooltipBody"
+                                id="tooltip-r:id"
                                 role="tooltip"
                                 title="Unique document ID for the eICR that originates from the medical record. Different from the Document ID that NBS creates for all incoming records."
                               >
@@ -1827,6 +1865,7 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                 >
                   <h4
                     class="usa-summary-box__heading padding-y-105"
+                    id="unavailable-eicr-author-details-for-practitioner"
                   >
                     eICR Author Details for Practitioner
                   </h4>
