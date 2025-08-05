@@ -1,15 +1,15 @@
 import React from "react";
 
+import { render, screen } from "@testing-library/react";
+import { Bundle } from "fhir/r4";
+import { axe } from "jest-axe";
+
 import BundleCareTeam from "@/../../../test-data/fhir/BundleCareTeam.json";
 import BundleWithMiscNotes from "@/../../../test-data/fhir/BundleMiscNotes.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
 import BundleWithPendingResultsOnly from "@/../../../test-data/fhir/BundlePendingResultsOnly.json";
 import BundleWithPlannedMedsOnly from "@/../../../test-data/fhir/BundlePlannedMedsOnly.json";
 import BundleWithScheduledApptsOnly from "@/../../../test-data/fhir/BundleScheduledApptsOnly.json";
-import { render, screen } from "@testing-library/react";
-import { Bundle } from "fhir/r4";
-import { axe } from "jest-axe";
-
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import { EcrDocument } from "@/app/view-data/components/EcrDocument";
 import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";

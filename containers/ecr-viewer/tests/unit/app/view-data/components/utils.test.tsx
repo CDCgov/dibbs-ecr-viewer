@@ -1,11 +1,11 @@
 import React from "react";
 
-import BundleNoActiveProblems from "@/../../../test-data/fhir/BundleNoActiveProblems.json";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
 
+import BundleNoActiveProblems from "@/../../../test-data/fhir/BundleNoActiveProblems.json";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
