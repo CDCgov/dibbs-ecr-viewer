@@ -11,6 +11,7 @@ const nextConfig = {
     includePaths: [
       path.join(__dirname, "node_modules", "@uswds", "uswds", "packages"),
     ],
+    quietDeps: true,
   },
   experimental: {
     // Because of our deployment set up, the same-origin policy does not work
