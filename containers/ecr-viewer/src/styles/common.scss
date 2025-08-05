@@ -226,3 +226,8 @@ $table-border-radius-md: 0.5rem;
     right: 0;
   }
 }
+
+// ==== Wrap overflow text everywhere ===== //
+* {
+  overflow-wrap: anywhere;
+}
