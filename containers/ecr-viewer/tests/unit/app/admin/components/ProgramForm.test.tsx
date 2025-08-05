@@ -82,7 +82,7 @@ describe("ProgramForm", () => {
     expect(deselectButtons).toHaveLength(2);
     expect(deselectButtons[0]).not.toBeDisabled();
 
-    // select all in first cateogry and cancel
+    // select all in first category and cancel
     await user.click(selectButtons[0]);
     expect(
       screen.getByText(
@@ -94,14 +94,14 @@ describe("ProgramForm", () => {
       expect(checkbox).not.toBeChecked();
     }
 
-    // select the unassigned in first cateogry
+    // select the unassigned in first category
     await user.click(screen.getByRole("checkbox", { name: "condition 1" }));
     expect(submitButtons[0]).not.toBeDisabled();
     expect(checkboxes[0]).toBeChecked();
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
 
-    // select all in first cateogry and continue
+    // select all in first category and continue
     await user.click(selectButtons[0]);
     expect(
       screen.getByText(
@@ -123,7 +123,7 @@ describe("ProgramForm", () => {
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
 
-    // select the assigned in first cateogry
+    // select the assigned in first category
     await user.click(screen.getByRole("checkbox", { name: "condition 2" }));
     expect(
       screen.getByText("Are you sure you want to add condition 2?"),
@@ -142,6 +142,12 @@ describe("ProgramForm", () => {
     expect(checkboxes[0]).toBeChecked();
     expect(checkboxes[1]).toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
+
+    // change the name to match an already in-use name (but different case)
+    await user.clear(nameInput);
+    await user.type(nameInput, "A program area");
+    expect(submitButtons[0]).toBeDisabled();
+    expect(screen.getByText(/This program name already exists./)).toBeVisible();
   });
 
   it("should render a filled out form", async () => {
@@ -166,7 +172,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 1",
               condition_category: "first category",
               program_area_uuid: "789",
-              program_area_name: "A Program Area",
+              program_area_name: "I have a name",
             },
             {
               code: "765",
@@ -174,7 +180,7 @@ describe("ProgramForm", () => {
               condition_name: "condition 2",
               condition_category: "first category",
               program_area_uuid: "789",
-              program_area_name: "A Program Area",
+              program_area_name: "I have a name",
               checked: true,
             },
             {
