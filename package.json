@@ -7,11 +7,11 @@
   },
   "devDependencies": {
     "@dword-design/eslint-plugin-import-alias": "^5.1.1",
-    "@next/eslint-plugin-next": "^14.2.28",
+    "@next/eslint-plugin-next": "^15",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^15.2.0",
+    "eslint-config-next": "^15",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsdoc": "^50.6.6",
