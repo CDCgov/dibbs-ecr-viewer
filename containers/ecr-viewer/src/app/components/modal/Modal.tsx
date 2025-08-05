@@ -9,8 +9,10 @@ import React, {
   useEffect,
   useState,
   useRef,
-  forwardRef,
   useImperativeHandle,
+  RefObject,
+  JSX,
+  Ref,
 } from "react";
 
 import { Button } from "@trussworks/react-uswds";
@@ -27,6 +29,7 @@ import { ForceClient } from "@/app/view-data/components/ForceClient";
 // prop to allow event handling when the modal is closed for any reason
 // (e.g. escape, click on button, click on overlay)
 interface ModalComponentProps {
+  ref: RefObject<ModalRef | null>;
   id: string;
   children: React.ReactNode;
   className?: string;
@@ -35,7 +38,8 @@ interface ModalComponentProps {
   onClose?: () => void;
 }
 
-export type ModalProps = ModalComponentProps & JSX.IntrinsicElements["div"];
+export type ModalProps = ModalComponentProps &
+  Omit<JSX.IntrinsicElements["div"], "ref">;
 
 export type ModalRef = {
   modalId: string;
@@ -56,33 +60,21 @@ const incrementAttribute = (el: Element, attr: string) => {
 const getAttributeCount = (el: Element, attr: string) =>
   parseInt(el.getAttribute(attr) || "1");
 
-/**
- * A modal component which supports layered modals.
- *
- * Adapted from the @trussworks/react-uswds Modal to suit the needs of the viewer.
- * @param props React props
- * @param props.id component ID
- * @param props.children modal content
- * @param props.isLarge whether to make the modal big. Default false
- * @param props.zIndex z index of the modal. Should only be set if a modal can't be
- * placed in the markup in the correct view-order.
- * @param props.onClose Handler to call when modal closes
- * @param ref Reference to the modal
- * @returns Modal
- */
-export const ModalForwardRef: React.ForwardRefRenderFunction<
-  ModalRef,
-  ModalProps
-> = (
-  { id, children, isLarge = false, zIndex = 99999, onClose, ...divProps },
+const InnerModal = ({
   ref,
-): React.ReactElement => {
+  id,
+  children,
+  isLarge = false,
+  zIndex = 99999,
+  onClose,
+  ...divProps
+}: ModalProps): React.ReactElement => {
   const modalRootSelector = `[id="${id}"]`;
 
   const { isOpen, toggleModal } = useModal(modalRootSelector, onClose);
   const [mounted, setMounted] = useState(false);
-  const initialPaddingRef = useRef<string>();
-  const tempPaddingRef = useRef<string>();
+  const initialPaddingRef = useRef<string>("");
+  const tempPaddingRef = useRef<string>("");
   const modalEl = useRef<HTMLDivElement>(null);
   const wrapperEl = useRef<HTMLDivElement>(null);
 
@@ -95,7 +87,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
     toggleModal(e, false);
   };
 
-  useImperativeHandle(
+  useImperativeHandle<ModalRef, ModalRef>(
     ref,
     () => ({
       modalId: id,
@@ -213,7 +205,7 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
       <ModalWrapper
         role="dialog"
         id={id}
-        ref={wrapperEl}
+        wrapperRef={wrapperEl}
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
         isVisible={isOpen}
@@ -237,20 +229,27 @@ export const ModalForwardRef: React.ForwardRefRenderFunction<
   return ReactDOM.createPortal(modal, document.body);
 };
 
-const InnerModal = forwardRef(ModalForwardRef);
-
-const ClientSideModal: React.ForwardRefRenderFunction<ModalRef, ModalProps> = (
-  props,
-  ref,
-) => {
+/**
+ * A modal component which supports layered modals.
+ *
+ * Adapted from the @trussworks/react-uswds Modal to suit the needs of the viewer.
+ * @param props React props
+ * @param props.ref modal ref
+ * @param props.id component ID
+ * @param props.children modal content
+ * @param props.isLarge whether to make the modal big. Default false
+ * @param props.zIndex z index of the modal. Should only be set if a modal can't be
+ * placed in the markup in the correct view-order.
+ * @param props.onClose Handler to call when modal closes
+ * @returns Modal
+ */
+export const Modal = (props: ModalProps) => {
   return (
     <ForceClient loading={null}>
-      <InnerModal {...props} ref={ref} />
+      <InnerModal {...props} />
     </ForceClient>
   );
 };
-
-export const Modal = forwardRef(ClientSideModal);
 
 export default Modal;
 
@@ -338,6 +337,7 @@ const getScrollbarWidth = (): string => {
 // ========= ModalWindow ========== //
 
 interface ModalWindowProps {
+  ref: RefObject<HTMLDivElement | null>;
   modalId: string;
   children: React.ReactNode;
   handleClose: () => void;
@@ -345,13 +345,16 @@ interface ModalWindowProps {
   isLarge?: boolean;
 }
 
-const ModalWindowForwardRef: React.ForwardRefRenderFunction<
-  HTMLDivElement,
-  ModalWindowProps & JSX.IntrinsicElements["div"]
-> = (
-  { modalId, className, children, handleClose, isLarge = false, ...divProps },
+const ModalWindow = ({
   ref,
-): React.ReactElement => {
+  modalId,
+  className,
+  children,
+  handleClose,
+  isLarge = false,
+  ...divProps
+}: ModalWindowProps &
+  Omit<JSX.IntrinsicElements["div"], "ref">): React.ReactElement => {
   const classes = classnames(
     "usa-modal",
     {
@@ -370,10 +373,9 @@ const ModalWindowForwardRef: React.ForwardRefRenderFunction<
   );
 };
 
-const ModalWindow = forwardRef(ModalWindowForwardRef);
-
 // ======== ModalWrapper ========= //
 interface ModalWrapperProps {
+  wrapperRef: Ref<HTMLDivElement>;
   id: string;
   children: React.ReactNode;
   isVisible: boolean;
@@ -381,13 +383,16 @@ interface ModalWrapperProps {
   className?: string;
 }
 
-const ModalWrapperForwardRef: React.ForwardRefRenderFunction<
-  HTMLDivElement,
-  ModalWrapperProps & JSX.IntrinsicElements["div"]
-> = (
-  { id, children, isVisible, className, handleClose, ...divProps },
-  ref,
-): React.ReactElement => {
+const ModalWrapper = ({
+  wrapperRef,
+  id,
+  children,
+  isVisible,
+  className,
+  handleClose,
+  ...divProps
+}: ModalWrapperProps &
+  Omit<JSX.IntrinsicElements["div"], "ref">): React.ReactElement => {
   const classes = classnames(
     "usa-modal-wrapper",
     {
@@ -399,7 +404,13 @@ const ModalWrapperForwardRef: React.ForwardRefRenderFunction<
   );
 
   return (
-    <div {...divProps} ref={ref} id={id} className={classes} role="dialog">
+    <div
+      {...divProps}
+      ref={wrapperRef}
+      id={id}
+      className={classes}
+      role="dialog"
+    >
       <div
         data-testid="modalOverlay"
         className="usa-modal-overlay"
@@ -411,8 +422,6 @@ const ModalWrapperForwardRef: React.ForwardRefRenderFunction<
     </div>
   );
 };
-
-const ModalWrapper = forwardRef(ModalWrapperForwardRef);
 
 // =========== ModalCloseButton ========== //
 

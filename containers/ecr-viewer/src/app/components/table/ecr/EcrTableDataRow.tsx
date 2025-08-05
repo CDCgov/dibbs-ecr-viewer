@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 
 import { Button } from "@trussworks/react-uswds";
 import { motion, Transition } from "motion/react";

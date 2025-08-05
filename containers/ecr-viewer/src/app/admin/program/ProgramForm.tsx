@@ -455,7 +455,7 @@ const ConfirmationModal = ({
   categoryConditions: FormCondition[];
   onClose: () => void;
   onConfirm: () => void;
-  modalRef: RefObject<ModalRef>;
+  modalRef: RefObject<ModalRef | null>;
 }) => {
   const prevProgramAreas = [
     ...new Set(
