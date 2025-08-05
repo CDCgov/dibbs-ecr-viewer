@@ -13,7 +13,6 @@ import React, {
   RefObject,
   JSX,
   Ref,
-  forwardRef,
 } from "react";
 
 import { Button } from "@trussworks/react-uswds";
@@ -376,6 +375,7 @@ const ModalWindow = ({
 
 // ======== ModalWrapper ========= //
 interface ModalWrapperProps {
+  ref: Ref<HTMLDivElement>;
   id: string;
   children: React.ReactNode;
   isVisible: boolean;
@@ -383,17 +383,16 @@ interface ModalWrapperProps {
   className?: string;
 }
 
-const ForwardRefModalWrapper = (
-  {
-    id,
-    children,
-    isVisible,
-    className,
-    handleClose,
-    ...divProps
-  }: ModalWrapperProps & Omit<JSX.IntrinsicElements["div"], "ref">,
-  ref: Ref<HTMLDivElement>,
-): React.ReactElement => {
+const ModalWrapper = ({
+  ref,
+  id,
+  children,
+  isVisible,
+  className,
+  handleClose,
+  ...divProps
+}: ModalWrapperProps &
+  Omit<JSX.IntrinsicElements["div"], "ref">): React.ReactElement => {
   const classes = classnames(
     "usa-modal-wrapper",
     {
@@ -419,7 +418,7 @@ const ForwardRefModalWrapper = (
 };
 
 // forwardRef is still needed here due to the vagaries of FocusTrap
-const ModalWrapper = forwardRef(ForwardRefModalWrapper);
+// const ModalWrapper = forwardRef(ForwardRefModalWrapper);
 
 // =========== ModalCloseButton ========== //
 
