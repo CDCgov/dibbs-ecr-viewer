@@ -13,11 +13,12 @@ import React, {
   RefObject,
   JSX,
   Ref,
+  forwardRef,
 } from "react";
 
 import { Button } from "@trussworks/react-uswds";
 import classnames from "classnames";
-import FocusTrap from "focus-trap-react";
+import { FocusTrap } from "focus-trap-react";
 import ReactDOM from "react-dom";
 
 import { Close } from "@/app/components/Icon";
@@ -205,7 +206,7 @@ const InnerModal = ({
       <ModalWrapper
         role="dialog"
         id={id}
-        wrapperRef={wrapperEl}
+        ref={wrapperEl}
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
         isVisible={isOpen}
@@ -375,7 +376,6 @@ const ModalWindow = ({
 
 // ======== ModalWrapper ========= //
 interface ModalWrapperProps {
-  wrapperRef: Ref<HTMLDivElement>;
   id: string;
   children: React.ReactNode;
   isVisible: boolean;
@@ -383,16 +383,17 @@ interface ModalWrapperProps {
   className?: string;
 }
 
-const ModalWrapper = ({
-  wrapperRef,
-  id,
-  children,
-  isVisible,
-  className,
-  handleClose,
-  ...divProps
-}: ModalWrapperProps &
-  Omit<JSX.IntrinsicElements["div"], "ref">): React.ReactElement => {
+const ForwardRefModalWrapper = (
+  {
+    id,
+    children,
+    isVisible,
+    className,
+    handleClose,
+    ...divProps
+  }: ModalWrapperProps & Omit<JSX.IntrinsicElements["div"], "ref">,
+  ref: Ref<HTMLDivElement>,
+): React.ReactElement => {
   const classes = classnames(
     "usa-modal-wrapper",
     {
@@ -404,13 +405,7 @@ const ModalWrapper = ({
   );
 
   return (
-    <div
-      {...divProps}
-      ref={wrapperRef}
-      id={id}
-      className={classes}
-      role="dialog"
-    >
+    <div {...divProps} ref={ref} id={id} className={classes} role="dialog">
       <div
         data-testid="modalOverlay"
         className="usa-modal-overlay"
@@ -422,6 +417,8 @@ const ModalWrapper = ({
     </div>
   );
 };
+
+const ModalWrapper = forwardRef(ForwardRefModalWrapper);
 
 // =========== ModalCloseButton ========== //
 
