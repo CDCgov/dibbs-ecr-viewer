@@ -4,8 +4,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import Filters from "@/app/components/EcrFilters";
+import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { DEFAULT_DATE_RANGE } from "@/app/utils/date-utils";
 
 jest.mock("next/navigation", () => ({

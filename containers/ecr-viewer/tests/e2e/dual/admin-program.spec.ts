@@ -97,16 +97,14 @@ test.describe("program management page", () => {
     }
     expect(accessibilityScanResultsModal.violations).toEqual([]);
 
-    // re-submit to check failure state
+    // re-submit to check duplicate checking
     await page.getByRole("button", { name: "Yes, add condition" }).click();
     await page.getByLabel("Program area name").fill(conditionName);
-
-    await page
-      .getByRole("button", { name: "Save program area" })
-      .first()
-      .click();
-
-    await expect(page.getByText("Failed to create program area")).toBeVisible();
+    await expect(
+      page.getByText(
+        "Please pick a different program name. This program name already exists.",
+      ),
+    ).toBeVisible();
 
     // Go back to main table
     await page
