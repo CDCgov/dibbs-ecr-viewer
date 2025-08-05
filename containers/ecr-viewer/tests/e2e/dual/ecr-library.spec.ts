@@ -89,6 +89,9 @@ test.describe("ecr library page", () => {
 
       // Verify all eCRs are visible again
       await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
+      await expect(
+        page.getByRole("gridcell", { name: /Mon Mothma/ }),
+      ).toBeVisible();
       expect(
         (await page.locator("tbody > tr").allTextContents()).length,
       ).toEqual(3);
