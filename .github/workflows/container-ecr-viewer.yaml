@@ -196,7 +196,7 @@ jobs:
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ matrix.azure_ad && '' || 'localhost:8071/health/ready' }}
 
       - name: Seed standard user and COVID program
         working-directory: ./containers/${{env.CONTAINER}}
