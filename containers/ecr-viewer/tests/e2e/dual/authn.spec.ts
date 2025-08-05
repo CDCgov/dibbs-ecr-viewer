@@ -6,7 +6,7 @@ import { Core } from "@/app/data/metadataDb/types/core";
 import { setupConfigurationVariables } from "@/instrumentation";
 
 test.describe("auth", () => {
-  test.only("should require a login on main page and allow sign out", async ({
+  test("should require a login on main page and allow sign out", async ({
     page,
   }) => {
     const logInStartTime = Date.now();
