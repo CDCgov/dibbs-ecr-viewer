@@ -120,9 +120,8 @@ test.describe("viewer page", () => {
 
   test("audit logging", async ({ page }) => {
     test.skip(
-      ["AWS_INTEGRATED", "AZURE_INTEGRATED", "GCP_INTEGRATED"].includes(
-        process.env.CONFIG_NAME,
-      ),
+      process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
+        !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
       "Does not apply to integrated configurations.",
     );
 
