@@ -418,6 +418,7 @@ const ForwardRefModalWrapper = (
   );
 };
 
+// forwardRef is still needed here due to the vagaries of FocusTrap
 const ModalWrapper = forwardRef(ForwardRefModalWrapper);
 
 // =========== ModalCloseButton ========== //
