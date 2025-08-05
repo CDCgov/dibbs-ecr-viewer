@@ -28,6 +28,9 @@ const nextConfig = {
 
   // next auth useSession doesn't double mount nicely
   reactStrictMode: false,
+
+  // avoid jest error about multiple package-lock.json
+  outputFileTracingRoot: __dirname,
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

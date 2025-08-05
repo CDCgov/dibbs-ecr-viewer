@@ -1,43 +1,27 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
-{
-  "$$typeof": Symbol(react.transitional.element),
-  "_owner": null,
-  "_store": {},
-  "key": null,
-  "props": {
-    "className": "caption-data-title margin-y-0",
-    "jsonTableData": {
+<JsonTable
+  className="caption-data-title margin-y-0"
+  jsonTableData={
+    {
       "resultName": "Encounter Care Team",
       "tables": [
         [
           {
             "Dates": {
-              "value": {
-                "$$typeof": Symbol(react.transitional.element),
-                "_owner": null,
-                "_store": {},
-                "key": null,
-                "props": {
-                  "children": "No data",
-                  "className": "text-italic text-base",
-                },
-                "type": "span",
-              },
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
             },
             "Name": {
-              "value": {
-                "$$typeof": Symbol(react.transitional.element),
-                "_owner": null,
-                "_store": {},
-                "key": null,
-                "props": {
-                  "children": "No data",
-                  "className": "text-italic text-base",
-                },
-                "type": "span",
-              },
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
             },
             "Role": {
               "value": "attender",
@@ -45,10 +29,9 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
           },
         ],
       ],
-    },
-  },
-  "type": [Function],
-}
+    }
+  }
+/>
 `;
 
 exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
@@ -57,14 +40,10 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
     {
       "table": true,
       "title": "Hospital Discharge Diagnosis",
-      "value": {
-        "$$typeof": Symbol(react.transitional.element),
-        "_owner": null,
-        "_store": {},
-        "key": null,
-        "props": {
-          "caption": "Hospital Discharge Diagnosis",
-          "columns": [
+      "value": <EvaluateTable
+        caption="Hospital Discharge Diagnosis"
+        columns={
+          [
             {
               "columnName": "Problem",
               "infoPath": "code",
@@ -74,8 +53,10 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
               "columnName": "Date/Time",
               "infoPath": "conditionOnsetDate",
             },
-          ],
-          "resources": [
+          ]
+        }
+        resources={
+          [
             {
               "category": [
                 {
@@ -122,10 +103,9 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
                 "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
               },
             },
-          ],
-        },
-        "type": [Function],
-      },
+          ]
+        }
+      />,
     },
   ],
   "unavailableData": [
@@ -144,14 +124,10 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
     {
       "table": true,
       "title": "Hospital Admission Diagnosis",
-      "value": {
-        "$$typeof": Symbol(react.transitional.element),
-        "_owner": null,
-        "_store": {},
-        "key": null,
-        "props": {
-          "caption": "Hospital Admission Diagnosis",
-          "columns": [
+      "value": <EvaluateTable
+        caption="Hospital Admission Diagnosis"
+        columns={
+          [
             {
               "columnName": "Problem",
               "infoPath": "code",
@@ -161,8 +137,10 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
               "columnName": "Date/Time",
               "infoPath": "conditionOnsetDate",
             },
-          ],
-          "resources": [
+          ]
+        }
+        resources={
+          [
             {
               "category": [
                 {
@@ -209,22 +187,17 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
                 "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
               },
             },
-          ],
-        },
-        "type": [Function],
-      },
+          ]
+        }
+      />,
     },
     {
       "table": true,
       "title": "Hospital Discharge Diagnosis",
-      "value": {
-        "$$typeof": Symbol(react.transitional.element),
-        "_owner": null,
-        "_store": {},
-        "key": null,
-        "props": {
-          "caption": "Hospital Discharge Diagnosis",
-          "columns": [
+      "value": <EvaluateTable
+        caption="Hospital Discharge Diagnosis"
+        columns={
+          [
             {
               "columnName": "Problem",
               "infoPath": "code",
@@ -234,8 +207,10 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
               "columnName": "Date/Time",
               "infoPath": "conditionOnsetDate",
             },
-          ],
-          "resources": [
+          ]
+        }
+        resources={
+          [
             {
               "category": [
                 {
@@ -282,10 +257,9 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
                 "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
               },
             },
-          ],
-        },
-        "type": [Function],
-      },
+          ]
+        }
+      />,
     },
   ],
   "unavailableData": [],
