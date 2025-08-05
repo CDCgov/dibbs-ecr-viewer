@@ -831,7 +831,9 @@ Home: 123-456-6909`,
         ],
       };
 
-      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+      const result = evaluateOccupationHistory(bundle);
+      const { container } = render(result);
+      expect(container).toMatchSnapshot();
     });
 
     it("should match snapshot when no workplace info", () => {
@@ -902,7 +904,9 @@ Home: 123-456-6909`,
         ],
       };
 
-      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+      const result = evaluateOccupationHistory(bundle);
+      const { container } = render(result);
+      expect(container).toMatchSnapshot();
     });
 
     it("should match snapshot when partial info", () => {
@@ -987,7 +991,9 @@ Home: 123-456-6909`,
         ],
       };
 
-      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+      const result = evaluateOccupationHistory(bundle);
+      const { container } = render(result);
+      expect(container).toMatchSnapshot();
     });
 
     it("should match snapshot when multiple jobs and sort correctly", () => {
@@ -1146,7 +1152,9 @@ Home: 123-456-6909`,
         ],
       };
 
-      expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+      const result = evaluateOccupationHistory(bundle);
+      const { container } = render(result);
+      expect(container).toMatchSnapshot();
     });
   });
 

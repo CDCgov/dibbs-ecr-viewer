@@ -1,27 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
-<JsonTable
-  className="caption-data-title margin-y-0"
-  jsonTableData={
-    {
+{
+  "$$typeof": Symbol(react.transitional.element),
+  "_owner": null,
+  "_store": {},
+  "key": null,
+  "props": {
+    "className": "caption-data-title margin-y-0",
+    "jsonTableData": {
       "resultName": "Encounter Care Team",
       "tables": [
         [
           {
             "Dates": {
-              "value": <span
-                className="text-italic text-base"
-              >
-                No data
-              </span>,
+              "value": {
+                "$$typeof": Symbol(react.transitional.element),
+                "_owner": null,
+                "_store": {},
+                "key": null,
+                "props": {
+                  "children": "No data",
+                  "className": "text-italic text-base",
+                },
+                "type": "span",
+              },
             },
             "Name": {
-              "value": <span
-                className="text-italic text-base"
-              >
-                No data
-              </span>,
+              "value": {
+                "$$typeof": Symbol(react.transitional.element),
+                "_owner": null,
+                "_store": {},
+                "key": null,
+                "props": {
+                  "children": "No data",
+                  "className": "text-italic text-base",
+                },
+                "type": "span",
+              },
             },
             "Role": {
               "value": "attender",
@@ -29,9 +45,10 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
           },
         ],
       ],
-    }
-  }
-/>
+    },
+  },
+  "type": [Function],
+}
 `;
 
 exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
@@ -40,10 +57,14 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
     {
       "table": true,
       "title": "Hospital Discharge Diagnosis",
-      "value": <EvaluateTable
-        caption="Hospital Discharge Diagnosis"
-        columns={
-          [
+      "value": {
+        "$$typeof": Symbol(react.transitional.element),
+        "_owner": null,
+        "_store": {},
+        "key": null,
+        "props": {
+          "caption": "Hospital Discharge Diagnosis",
+          "columns": [
             {
               "columnName": "Problem",
               "infoPath": "code",
@@ -53,10 +74,8 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
               "columnName": "Date/Time",
               "infoPath": "conditionOnsetDate",
             },
-          ]
-        }
-        resources={
-          [
+          ],
+          "resources": [
             {
               "category": [
                 {
@@ -103,9 +122,10 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
                 "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
               },
             },
-          ]
-        }
-      />,
+          ],
+        },
+        "type": [Function],
+      },
     },
   ],
   "unavailableData": [
@@ -124,10 +144,14 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
     {
       "table": true,
       "title": "Hospital Admission Diagnosis",
-      "value": <EvaluateTable
-        caption="Hospital Admission Diagnosis"
-        columns={
-          [
+      "value": {
+        "$$typeof": Symbol(react.transitional.element),
+        "_owner": null,
+        "_store": {},
+        "key": null,
+        "props": {
+          "caption": "Hospital Admission Diagnosis",
+          "columns": [
             {
               "columnName": "Problem",
               "infoPath": "code",
@@ -137,10 +161,8 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
               "columnName": "Date/Time",
               "infoPath": "conditionOnsetDate",
             },
-          ]
-        }
-        resources={
-          [
+          ],
+          "resources": [
             {
               "category": [
                 {
@@ -187,17 +209,22 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
                 "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
               },
             },
-          ]
-        }
-      />,
+          ],
+        },
+        "type": [Function],
+      },
     },
     {
       "table": true,
       "title": "Hospital Discharge Diagnosis",
-      "value": <EvaluateTable
-        caption="Hospital Discharge Diagnosis"
-        columns={
-          [
+      "value": {
+        "$$typeof": Symbol(react.transitional.element),
+        "_owner": null,
+        "_store": {},
+        "key": null,
+        "props": {
+          "caption": "Hospital Discharge Diagnosis",
+          "columns": [
             {
               "columnName": "Problem",
               "infoPath": "code",
@@ -207,10 +234,8 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
               "columnName": "Date/Time",
               "infoPath": "conditionOnsetDate",
             },
-          ]
-        }
-        resources={
-          [
+          ],
+          "resources": [
             {
               "category": [
                 {
@@ -257,9 +282,10 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
                 "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28",
               },
             },
-          ]
-        }
-      />,
+          ],
+        },
+        "type": [Function],
+      },
     },
   ],
   "unavailableData": [],
@@ -267,540 +293,1034 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
 `;
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when all fields present 1`] = `
-<ExpandCollapseAccordion
-  className="accordion-rr"
-  descriptor="employment details"
-  items={
-    [
-      {
-        "content": <React.Fragment>
-          <DataDisplay
-            item={
-              {
-                "title": "Dates",
-                "value": "01/04/2020 - Present",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "title": "Industry",
-                "value": "~industry~",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "fullWidthContent": true,
-                "title": "Workplace Information",
-                "value": [
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Address",
-                        "titleNormal": true,
-                        "value": "123 Test St
-Nowhereville, KS",
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Schedule",
-                        "titleNormal": true,
-                        "value": "~schedule~",
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Hours",
-                        "titleNormal": true,
-                        "value": "~hours~",
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Days",
-                        "titleNormal": true,
-                        "value": "~days~",
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Duties",
-                        "titleNormal": true,
-                        "value": "~duties~",
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Pay Grade",
-                        "titleNormal": true,
-                        "value": "~pay grade~",
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Employment Type",
-                        "titleNormal": true,
-                        "value": "~employment type~",
-                      }
-                    }
-                  />,
-                ],
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "dividerLine": false,
-                "title": "Hazard",
-                "value": "~hazard~",
-              }
-            }
-          />
-        </React.Fragment>,
-        "expanded": false,
-        "headingLevel": "h5",
-        "id": "12345",
-        "title": <div
-          className="display-flex flex-row flex-no-wrap flex-justify"
+<div>
+  <div
+    class="display-flex"
+  >
+    <div
+      class="margin-left-auto padding-top-1"
+    >
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Expand all 
+        employment details
+      </button>
+      <span
+        class="vertical-line"
+      />
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Collapse all 
+        employment details
+      </button>
+    </div>
+  </div>
+  <div
+    class="usa-accordion accordion-rr"
+    data-allow-multiple="true"
+    data-testid="accordion"
+  >
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="12345-r:id-0"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_12345-r:id-0"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
         >
           <span />
           <span
-            className="font-size-xs text-base"
+            class="font-size-xs text-base"
           >
             Current
              Employment
           </span>
-        </div>,
-      },
-    ]
-  }
-/>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_12345-r:id-0"
+      hidden=""
+      id="12345-r:id-0"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Dates
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            01/04/2020 - Present
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Industry
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~industry~
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row flex-column"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Workplace Information
+          </div>
+          <div
+            class="grid-col width-full text-pre-line p-list"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Address
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  123 Test St
+Nowhereville, KS
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Schedule
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~schedule~
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Hours
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~hours~
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Days
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~days~
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Duties
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~duties~
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Pay Grade
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~pay grade~
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Employment Type
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~employment type~
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Hazard
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~hazard~
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 `;
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when multiple jobs and sort correctly 1`] = `
-<ExpandCollapseAccordion
-  className="accordion-rr"
-  descriptor="employment details"
-  items={
-    [
-      {
-        "content": <React.Fragment>
-          <DataDisplay
-            item={
-              {
-                "title": "Dates",
-                "value": "01/04/2020 - Present",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "title": "Industry",
-                "value": "~industry~",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "fullWidthContent": false,
-                "title": "Workplace Information",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "dividerLine": false,
-                "title": "Hazard",
-                "value": "~hazard~",
-              }
-            }
-          />
-        </React.Fragment>,
-        "expanded": false,
-        "headingLevel": "h5",
-        "id": "12346",
-        "title": <div
-          className="display-flex flex-row flex-no-wrap flex-justify"
+<div>
+  <div
+    class="display-flex"
+  >
+    <div
+      class="margin-left-auto padding-top-1"
+    >
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Expand all 
+        employment details
+      </button>
+      <span
+        class="vertical-line"
+      />
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Collapse all 
+        employment details
+      </button>
+    </div>
+  </div>
+  <div
+    class="usa-accordion accordion-rr"
+    data-allow-multiple="true"
+    data-testid="accordion"
+  >
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="12346-r:id-0"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_12346-r:id-0"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
         >
           <span />
           <span
-            className="font-size-xs text-base"
+            class="font-size-xs text-base"
           >
             Current
              Employment
           </span>
-        </div>,
-      },
-      {
-        "content": <React.Fragment>
-          <DataDisplay
-            item={
-              {
-                "title": "Dates",
-                "value": "01/04/2015 - Present",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "title": "Industry",
-                "value": "~industry~",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "fullWidthContent": false,
-                "title": "Workplace Information",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "dividerLine": false,
-                "title": "Hazard",
-                "value": "~hazard~",
-              }
-            }
-          />
-        </React.Fragment>,
-        "expanded": false,
-        "headingLevel": "h5",
-        "id": "12347",
-        "title": <div
-          className="display-flex flex-row flex-no-wrap flex-justify"
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_12346-r:id-0"
+      hidden=""
+      id="12346-r:id-0"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Dates
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            01/04/2020 - Present
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Industry
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~industry~
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Workplace Information
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            <span
+              class="text-italic text-base"
+            >
+              No data
+            </span>
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Hazard
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~hazard~
+          </div>
+        </div>
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="12347-r:id-1"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_12347-r:id-1"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
         >
           <span />
           <span
-            className="font-size-xs text-base"
+            class="font-size-xs text-base"
           >
             Current
              Employment
           </span>
-        </div>,
-      },
-      {
-        "content": <React.Fragment>
-          <DataDisplay
-            item={
-              {
-                "title": "Dates",
-                "value": "01/04/2018 - 01/04/2022",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "title": "Industry",
-                "value": "~industry~",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "fullWidthContent": false,
-                "title": "Workplace Information",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "dividerLine": false,
-                "title": "Hazard",
-                "value": "~hazard~",
-              }
-            }
-          />
-        </React.Fragment>,
-        "expanded": false,
-        "headingLevel": "h5",
-        "id": "12345",
-        "title": <div
-          className="display-flex flex-row flex-no-wrap flex-justify"
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_12347-r:id-1"
+      hidden=""
+      id="12347-r:id-1"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Dates
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            01/04/2015 - Present
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Industry
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~industry~
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Workplace Information
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            <span
+              class="text-italic text-base"
+            >
+              No data
+            </span>
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Hazard
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~hazard~
+          </div>
+        </div>
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="12345-r:id-2"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_12345-r:id-2"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
         >
           <span />
           <span
-            className="font-size-xs text-base"
+            class="font-size-xs text-base"
           >
             Past
              Employment
           </span>
-        </div>,
-      },
-    ]
-  }
-/>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_12345-r:id-2"
+      hidden=""
+      id="12345-r:id-2"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Dates
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            01/04/2018 - 01/04/2022
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Industry
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~industry~
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Workplace Information
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            <span
+              class="text-italic text-base"
+            >
+              No data
+            </span>
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Hazard
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~hazard~
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 `;
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when no workplace info 1`] = `
-<ExpandCollapseAccordion
-  className="accordion-rr"
-  descriptor="employment details"
-  items={
-    [
-      {
-        "content": <React.Fragment>
-          <DataDisplay
-            item={
-              {
-                "title": "Dates",
-                "value": "01/04/2020 - Present",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "title": "Industry",
-                "value": "~industry~",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "fullWidthContent": false,
-                "title": "Workplace Information",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "dividerLine": false,
-                "title": "Hazard",
-                "value": "~hazard~",
-              }
-            }
-          />
-        </React.Fragment>,
-        "expanded": false,
-        "headingLevel": "h5",
-        "id": "12345",
-        "title": <div
-          className="display-flex flex-row flex-no-wrap flex-justify"
+<div>
+  <div
+    class="display-flex"
+  >
+    <div
+      class="margin-left-auto padding-top-1"
+    >
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Expand all 
+        employment details
+      </button>
+      <span
+        class="vertical-line"
+      />
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Collapse all 
+        employment details
+      </button>
+    </div>
+  </div>
+  <div
+    class="usa-accordion accordion-rr"
+    data-allow-multiple="true"
+    data-testid="accordion"
+  >
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="12345-r:id-0"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_12345-r:id-0"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
         >
           <span />
           <span
-            className="font-size-xs text-base"
+            class="font-size-xs text-base"
           >
             Current
              Employment
           </span>
-        </div>,
-      },
-    ]
-  }
-/>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_12345-r:id-0"
+      hidden=""
+      id="12345-r:id-0"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Dates
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            01/04/2020 - Present
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Industry
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~industry~
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Workplace Information
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            <span
+              class="text-italic text-base"
+            >
+              No data
+            </span>
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Hazard
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~hazard~
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 `;
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when partial info 1`] = `
-<ExpandCollapseAccordion
-  className="accordion-rr"
-  descriptor="employment details"
-  items={
-    [
-      {
-        "content": <React.Fragment>
-          <DataDisplay
-            item={
-              {
-                "title": "Dates",
-                "value": "01/04/2020 - Present",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "title": "Industry",
-                "value": "~industry~",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "fullWidthContent": true,
-                "title": "Workplace Information",
-                "value": [
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Address",
-                        "titleNormal": true,
-                        "value": <span
-                          className="text-italic text-base"
-                        >
-                          No data
-                        </span>,
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Schedule",
-                        "titleNormal": true,
-                        "value": <span
-                          className="text-italic text-base"
-                        >
-                          No data
-                        </span>,
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Hours",
-                        "titleNormal": true,
-                        "value": <span
-                          className="text-italic text-base"
-                        >
-                          No data
-                        </span>,
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Days",
-                        "titleNormal": true,
-                        "value": <span
-                          className="text-italic text-base"
-                        >
-                          No data
-                        </span>,
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Duties",
-                        "titleNormal": true,
-                        "value": <span
-                          className="text-italic text-base"
-                        >
-                          No data
-                        </span>,
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Pay Grade",
-                        "titleNormal": true,
-                        "value": "~pay grade~",
-                      }
-                    }
-                  />,
-                  <DataDisplay
-                    item={
-                      {
-                        "dividerLine": false,
-                        "title": "Employment Type",
-                        "titleNormal": true,
-                        "value": "~employment type~",
-                      }
-                    }
-                  />,
-                ],
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "dividerLine": false,
-                "title": "Hazard",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-        </React.Fragment>,
-        "expanded": false,
-        "headingLevel": "h5",
-        "id": "12345",
-        "title": <div
-          className="display-flex flex-row flex-no-wrap flex-justify"
+<div>
+  <div
+    class="display-flex"
+  >
+    <div
+      class="margin-left-auto padding-top-1"
+    >
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Expand all 
+        employment details
+      </button>
+      <span
+        class="vertical-line"
+      />
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Collapse all 
+        employment details
+      </button>
+    </div>
+  </div>
+  <div
+    class="usa-accordion accordion-rr"
+    data-allow-multiple="true"
+    data-testid="accordion"
+  >
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="12345-r:id-0"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_12345-r:id-0"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
         >
           <span />
           <span
-            className="font-size-xs text-base"
+            class="font-size-xs text-base"
           >
             Current
              Employment
           </span>
-        </div>,
-      },
-    ]
-  }
-/>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_12345-r:id-0"
+      hidden=""
+      id="12345-r:id-0"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Dates
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            01/04/2020 - Present
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Industry
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            ~industry~
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row flex-column"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Workplace Information
+          </div>
+          <div
+            class="grid-col width-full text-pre-line p-list"
+          >
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Address
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  <span
+                    class="text-italic text-base"
+                  >
+                    No data
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Schedule
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  <span
+                    class="text-italic text-base"
+                  >
+                    No data
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Hours
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  <span
+                    class="text-italic text-base"
+                  >
+                    No data
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Days
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  <span
+                    class="text-italic text-base"
+                  >
+                    No data
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Duties
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  <span
+                    class="text-italic text-base"
+                  >
+                    No data
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Pay Grade
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~pay grade~
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="text-normal data-title padding-right-1"
+                >
+                  Employment Type
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  ~employment type~
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Hazard
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            <span
+              class="text-italic text-base"
+            >
+              No data
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 `;
