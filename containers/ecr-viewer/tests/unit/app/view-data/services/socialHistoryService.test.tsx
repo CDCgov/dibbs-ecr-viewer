@@ -1,8 +1,8 @@
+import BundlePatient from "@/../../../test-data/fhir/BundlePatient.json";
+import BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
 import { render } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 
-import BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
-import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
 import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,

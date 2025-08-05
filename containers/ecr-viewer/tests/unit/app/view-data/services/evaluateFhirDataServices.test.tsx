@@ -1665,15 +1665,27 @@ Home: 123-456-6909`,
       expect(actual.availableData).toBeEmpty();
       expect(actual.unavailableData).not.toBeEmpty();
     });
-    it("should have travel history when there is a travel history observation present", () => {
+
+    it("should have exposure contact when there is a exposure contact observation present", () => {
       const actual = evaluateSocialData(
         BundleWithTravelHistory as unknown as Bundle,
       );
 
       render(actual.availableData[0].value);
       // travel purpose
+      expect(screen.getByText("Wild mink (organism)"));
+    });
+
+    it("should have travel history when there is a travel history observation present", () => {
+      const actual = evaluateSocialData(
+        BundleWithTravelHistory as unknown as Bundle,
+      );
+
+      render(actual.availableData[1].value);
+      // travel purpose
       expect(screen.getByText("Active duty military (occupation)"));
     });
+
     it("should have patient sexual orientation when available", () => {
       const actual = evaluateSocialData(
         BundleWithSexualOrientation as unknown as Bundle,
@@ -1681,6 +1693,7 @@ Home: 123-456-6909`,
 
       expect(actual.availableData[0].value).toEqual("Other");
     });
+
     it("should return religion if available", () => {
       const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
       const ext = actual.availableData.filter(
@@ -1689,6 +1702,7 @@ Home: 123-456-6909`,
       expect(ext).toHaveLength(1);
       expect(ext[0].value).toEqual("Baptist");
     });
+
     it("should return marital status if available", () => {
       const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
       const ext = actual.availableData.filter(
