@@ -336,10 +336,10 @@ export const CustomDateInput = ({
 };
 
 /**
- * Button to Select/Deselect all depending on checked status.
- * @param props - The properties for the Select/Deselect all checkbox.
+ * Button to Select/Deselect all depending on form status.
+ * @param props - The properties for the Select/Deselect all button.
  * @param props.groupName - The name of the group that's being selected/deselected.
- * @param props.onToggle - The callback function to handle the toggle event when the checkbox is clicked.
+ * @param props.onToggle - The callback function to handle the toggle event when the button is clicked.
  * @param props.numSelected - How many any are selected.
  * @param props.numOptions - How many are selectable.
  * @returns The rendered Select/Deselect all checkbox component.

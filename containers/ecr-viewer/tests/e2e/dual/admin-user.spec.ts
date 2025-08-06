@@ -231,10 +231,10 @@ test.describe("user management page", () => {
     ).not.toBeVisible();
 
     // Deselect all programs: no users should show up
-    const checkboxSelectAll = page.getByLabel("Select all");
-    await checkboxSelectAll.dispatchEvent("click");
-    const checkboxDeselectAll = page.getByLabel("Deselect all");
-    await checkboxDeselectAll.dispatchEvent("click");
+    const buttonSelectAll = page.getByLabel("Select 2 program areas");
+    await buttonSelectAll.dispatchEvent("click");
+    const buttonDeselectAll = page.getByLabel("Deselect 2 program areas");
+    await buttonDeselectAll.dispatchEvent("click");
     await expect(
       page.getByText(
         "No users found. We couldn't find any users matching your filter criteria.",

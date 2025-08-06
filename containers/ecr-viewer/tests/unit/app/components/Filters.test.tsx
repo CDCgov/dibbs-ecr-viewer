@@ -212,7 +212,7 @@ describe.each([
         );
       });
 
-      it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
+      it("handles 'Select' and 'Deselect' button behavior", async () => {
         const user = userEvent.setup();
         renderFilters(conditions);
         const toggleFilterButton = screen.getByRole("button", {
@@ -224,7 +224,7 @@ describe.each([
         const deselectAll = await screen.findByText(/Deselect \d conditions?/);
         await user.click(deselectAll);
 
-        // All checkboxes should be unchecked after "Deselect all" is clicked
+        // All checkboxes should be unchecked after "Deselect" is clicked
         for (const condition of conditions) {
           const checkbox = screen.getByLabelText(condition);
           expect(checkbox).not.toBeChecked();
@@ -796,7 +796,7 @@ describe("Filter Opening/Closing Controls", () => {
     ).not.toBeChecked();
 
     // condition should be closed
-    expect(screen.queryByText("Select all")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Select/)).not.toBeInTheDocument();
   });
 });
 
