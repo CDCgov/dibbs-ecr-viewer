@@ -14,7 +14,7 @@ import { PageSearchParams } from "@/app/utils/search-param-utils";
 const resolveParams = (
   v: PageSearchParams,
 ): { searchParams: Promise<PageSearchParams> } => ({
-  searchParams: Promise.resolve(v)
+  searchParams: Promise.resolve(v),
 });
 
 jest.mock("@/app/services/listEcrDataService", () => {
