@@ -8,6 +8,7 @@ import { cookies, headers } from "next/headers";
 import { dbIsValid } from "@/app/api/migrate-db/migrate";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewAuditLog } from "@/app/data/metadataDb/types/core";
+import { dbDialect } from "@/app/data/metadataDb/utils/db-config";
 
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
@@ -41,6 +42,9 @@ export const audit = <Params extends Record<string, unknown>, Ret>(
   fn: AuditableFn<Params, Ret>,
 ) => {
   return async (params: Params): Promise<Ret> => {
+    if (!dbDialect()) {
+      return await fn(params, {} as Transaction<Core>);
+    }
     return await getDb<Core>()
       .transaction()
       .execute(async (trx) => {
