@@ -3,13 +3,13 @@
 exports[`Program Admin Page Creating programs should render a create program page 1`] = `
 <div>
   <main
-    class="main-container"
+    class="main-container display-flex flex-column flex-align-center"
   >
     <div
-      class="content-container margin-top-3 position-relative"
+      class="width-full border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container shadow-2 display-flex flex-justify-center"
     >
       <div
-        class="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container"
+        class="content-container"
       >
         <a
           class="action-text display-inline-flex flex-align-center margin-bottom-1"
@@ -56,6 +56,10 @@ exports[`Program Admin Page Creating programs should render a create program pag
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="content-container margin-top-3"
+    >
       <form
         class="margin-top-3 isolate"
         id="r:id"
