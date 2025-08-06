@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { Button } from "@trussworks/react-uswds";
-
 import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDateTime } from "@/app/services/formatDateService";
@@ -13,7 +11,6 @@ import {
   DateRangeOptions,
   dateRangeLabels,
 } from "@/app/utils/date-utils";
-import { makePlural } from "@/app/utils/format-utils";
 
 import {
   Filter,
@@ -21,6 +18,7 @@ import {
   RadioDateOptions,
   CustomDateInput,
   CheckboxOptions,
+  SelectDeselectAllButton,
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
 import { Coronavirus, Event } from "./Icon";
@@ -101,10 +99,10 @@ const FilterReportableConditions = ({
   };
 
   // Check/Uncheck all boxes based on Select all checkbox
-  const handleSelectAll = () => {
+  const handleSelectAll = (isSelect: boolean) => {
     const updatedConditions = Object.keys(filterConditions).reduce(
       (dict, condition) => {
-        dict[condition] = !isAllSelected;
+        dict[condition] = isSelect;
         return dict;
       },
       {} as { [key: string]: boolean },
@@ -142,24 +140,20 @@ const FilterReportableConditions = ({
       isActive={!isAllSelected}
       resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
-      tag={activeConditions.length || "0"}
+      tag={`${numSelected}`}
       submitHandler={() => {
         updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
       }}
     >
-      {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <Button
-          type="button"
-          unstyled={true}
-          className="action-text font-size-xs margin-x-105 margin-bottom-1"
-          onClick={handleSelectAll}
-        >
-          {numSelected > 0 ? "Deselect " : "Select "}
-          {numSelected > 0 ? numSelected : numConditions} condition
-          {makePlural(numSelected)}
-        </Button>
+        {/* Select/Deselect in bulk button */}
+        <SelectDeselectAllButton
+          groupName="condition"
+          onToggle={handleSelectAll}
+          numSelected={numSelected}
+          numOptions={numConditions}
+        />
 
         {numConditions > 0 && (
           <div className="border-top-1px border-base-lighter"></div>

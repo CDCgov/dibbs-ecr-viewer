@@ -10,7 +10,11 @@ import React, {
 import { Button, Label } from "@trussworks/react-uswds";
 import classNames from "classnames";
 
-import { toKebabCase, toSentenceCase } from "@/app/utils/format-utils";
+import {
+  makePlural,
+  toKebabCase,
+  toSentenceCase,
+} from "@/app/utils/format-utils";
 
 import {
   FILTER_CLOSED,
@@ -332,31 +336,38 @@ export const CustomDateInput = ({
 };
 
 /**
- * Checkbox to Select/Deselect all depending on checked status.
+ * Button to Select/Deselect all depending on checked status.
  * @param props - The properties for the Select/Deselect all checkbox.
  * @param props.groupName - The name of the group that's being selected/deselected.
  * @param props.onToggle - The callback function to handle the toggle event when the checkbox is clicked.
- * @param props.isAllSelected - Indicates whether all are selected.
+ * @param props.numSelected - How many any are selected.
+ * @param props.numOptions - How many are selectable.
  * @returns The rendered Select/Deselect all checkbox component.
  */
-export const SelectDeselectAllCheckbox = ({
+export const SelectDeselectAllButton = ({
   groupName,
   onToggle,
-  isAllSelected,
+  numSelected,
+  numOptions,
 }: {
   groupName: string;
-  onToggle: () => void;
-  isAllSelected: boolean;
+  onToggle: (isSelect: boolean) => void;
+  numSelected: number;
+  numOptions: number;
 }) => {
+  const isAnySelected = numSelected > 0;
+  const numBulkSelectable = isAnySelected ? numSelected : numOptions;
   return (
-    <CheckboxInput
-      id={`${groupName}-all`}
-      name={isAllSelected ? "Deselect all" : "Select all"}
-      value="all"
-      checked={isAllSelected}
-      onChange={() => onToggle()}
-      classNamesDiv="padding-bottom-1 padding-x-105"
-    />
+    <Button
+      type="button"
+      unstyled={true}
+      className="action-text font-size-xs margin-x-105 margin-bottom-1"
+      onClick={() => onToggle(!isAnySelected)}
+    >
+      {isAnySelected ? "Deselect " : "Select "}
+      {numBulkSelectable} {groupName}
+      {makePlural(numBulkSelectable)}
+    </Button>
   );
 };
 
