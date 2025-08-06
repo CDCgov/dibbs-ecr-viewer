@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { Button } from "@trussworks/react-uswds";
+
 import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDateTime } from "@/app/services/formatDateService";
@@ -11,13 +13,13 @@ import {
   DateRangeOptions,
   dateRangeLabels,
 } from "@/app/utils/date-utils";
+import { makePlural } from "@/app/utils/format-utils";
 
 import {
   Filter,
   RadioDateOption,
   RadioDateOptions,
   CustomDateInput,
-  SelectDeselectAllCheckbox,
   CheckboxOptions,
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
@@ -90,10 +92,6 @@ const FilterReportableConditions = ({
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
 
-  const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true,
-  );
-
   // Build list of conditions to filter on
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
@@ -122,6 +120,10 @@ const FilterReportableConditions = ({
     (key) => filterConditions[key] === true,
   );
 
+  const numConditions = allConditions.length;
+  const numSelected = activeConditions.length;
+  const isAllSelected = numSelected === numConditions;
+
   const noConditions = Object.fromEntries(
     Object.entries(filterConditions).filter(
       ([key]) => key === NO_CONDITIONS_REPORTED_OPTION,
@@ -148,16 +150,24 @@ const FilterReportableConditions = ({
     >
       {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <SelectDeselectAllCheckbox
-          groupName="condition"
-          onToggle={handleSelectAll}
-          isAllSelected={isAllSelected}
-        />
+        <Button
+          type="button"
+          unstyled={true}
+          className="action-text font-size-xs margin-x-105 margin-bottom-1"
+          onClick={handleSelectAll}
+        >
+          {numSelected > 0 ? "Deselect " : "Select "}
+          {numSelected > 0 ? numSelected : numConditions} condition
+          {makePlural(numSelected)}
+        </Button>
+
+        {numConditions > 0 && (
+          <div className="border-top-1px border-base-lighter"></div>
+        )}
 
         {/* No conditions reported checkbox */}
         {Object.keys(noConditions).length > 0 && (
           <>
-            <div className="border-top-1px border-base-lighter margin-x-105"></div>
             <CheckboxOptions
               groupName="condition"
               filterItems={noConditions}
