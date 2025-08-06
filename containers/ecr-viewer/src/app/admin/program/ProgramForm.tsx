@@ -193,6 +193,7 @@ const ConditionFieldSet = ({
       acc[cur] = conditionCategories[cur].filter(
         (c) =>
           !searchTerm ||
+          cur.toLowerCase().includes(searchTerm.toLowerCase()) ||
           c.condition_name.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       return acc;
@@ -431,10 +432,10 @@ const SearchField = ({
       <Search aria-hidden={true} className="square-3 text-base" />
       <TextInput
         type="search"
-        aria-label="Search conditions"
+        aria-label="Search condition or category"
         id="condition-search"
         name="condition-search"
-        placeholder="Search conditions"
+        placeholder="Search condition or category"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
