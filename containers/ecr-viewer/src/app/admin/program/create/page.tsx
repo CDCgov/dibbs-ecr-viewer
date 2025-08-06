@@ -22,6 +22,7 @@ const CreateProgramPage = async () => {
         revalidatePath("/ecr-viewer/admin/program");
         return await createProgramAreaAction({ name, conditions });
       }}
+      formTouchedMsg="You have unsaved changes. To create a program area, you must add a program name and at least one condition."
     />
   );
 };

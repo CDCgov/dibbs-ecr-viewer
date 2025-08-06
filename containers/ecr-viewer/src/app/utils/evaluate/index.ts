@@ -1,6 +1,7 @@
 import "server-only"; // fhirpath should only be used on the server
 
 import {
+  Address,
   Bundle,
   CodeableConcept,
   Coding,
@@ -20,6 +21,7 @@ import {
   formatStartEndDateTime,
 } from "@/app/services/formatDateService";
 import {
+  formatAddress,
   formatCodeableConcept,
   formatQuantity,
   formatRange,
@@ -67,6 +69,8 @@ const checkResult = <R>(results: R[], expectedType: string | undefined) => {
         "Quantity",
         "Reference",
         "Observation.referenceRange",
+        "Period",
+        "Address",
       ].includes(nodeInfo.fhirNodeDataType);
     } else if (expectedType === "TimeX") {
       valid = ["Period"].includes(nodeInfo.fhirNodeDataType);
@@ -274,6 +278,8 @@ export const evaluateValue = (
     // Note: there are two period formatters, start/end is more commonly used, but
     // we may need to think in the future about making this more flexible
     value = formatStartEndDateTime(originalValue);
+  } else if (isAddress(originalValue, originalValuePath)) {
+    value = formatAddress(originalValue);
   } else if (typeof originalValue === "object") {
     console.error(`Not implemented for ${originalValuePath}`);
   }
@@ -292,6 +298,7 @@ const isObservationReferenceRange = (
 ): v is ObservationReferenceRange => p === "Observation.referenceRange";
 const isReference = (v: object, p: string): v is Reference => p === "Reference";
 const isPeriod = (v: object, p: string): v is Period => p === "Period";
+const isAddress = (v: object, p: string): v is Address => p === "Address";
 
 /**
  * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource

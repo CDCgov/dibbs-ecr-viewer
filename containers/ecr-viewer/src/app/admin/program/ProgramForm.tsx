@@ -66,6 +66,7 @@ const sortedCodes = (conditions: FormCondition[]) => {
  * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.progUuid UUID of the program being edited. Optional
  * @param props.submitAction Handler for the submitted data
+ * @param props.formTouchedMsg Warning banner message when a user has touched the form.
  * @returns Program area add/edit form
  */
 export const ProgramForm = ({
@@ -73,6 +74,7 @@ export const ProgramForm = ({
   initValues,
   progUuid,
   submitAction,
+  formTouchedMsg,
 }: {
   action: string;
   initValues: FormValues;
@@ -81,6 +83,7 @@ export const ProgramForm = ({
     name: string,
     conditions: string[],
   ) => Promise<ServerActionResult<string | void>>;
+  formTouchedMsg?: string;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
@@ -117,6 +120,7 @@ export const ProgramForm = ({
       itemHomeRoute="/admin/program"
       formValid={valid}
       formTouched={touched}
+      formTouchedMsg={formTouchedMsg}
       submitAction={async () => {
         const res = await submitAction(name, selectedConditions);
         if (!res.error) createToast(`${name} successfully saved`, "success");
