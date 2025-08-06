@@ -107,7 +107,7 @@ export const FormPageContent = <T,>({
         </div>
       </div>
 
-      <div className="content-container margin-top-3 position-relative">
+      <div className="content-container margin-top-3">
         <form
           id={id}
           className="margin-top-3 isolate"
