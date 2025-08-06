@@ -13,6 +13,7 @@ const CreateUserPage = async () => {
   await notFoundUnlessAdmin();
 
   const programs = await listProgramAreas();
+  const formTouchedMsg = "To create a user, you must add an email and select a user type.";
 
   return (
     <UserForm
@@ -25,6 +26,7 @@ const CreateUserPage = async () => {
         const res = await createUserAction({ email, userType, programs });
         return { error: res.error };
       }}
+      formTouchedMsg={formTouchedMsg}
       banner={
         programs.length === 0 && (
           <Alert

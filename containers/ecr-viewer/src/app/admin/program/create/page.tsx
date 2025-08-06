@@ -12,6 +12,8 @@ const CreateProgramPage = async () => {
   await notFoundUnlessAdmin();
 
   const conditions = await listConditionReferences();
+  const formTouchedMsg =
+    "You have unsaved changes. To create a program area, you must add a program name and at least one condition.";
 
   return (
     <ProgramForm
@@ -22,6 +24,7 @@ const CreateProgramPage = async () => {
         revalidatePath("/ecr-viewer/admin/program");
         return await createProgramAreaAction({ name, conditions });
       }}
+      formTouchedMsg={formTouchedMsg}
     />
   );
 };

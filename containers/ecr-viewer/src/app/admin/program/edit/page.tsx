@@ -45,6 +45,7 @@ const EditProgramPage = async ({
         revalidatePath("/ecr-viewer/admin/program");
         return await updateProgramAreaAction({ uuid, name, conditions });
       }}
+      formTouchedMsg="You have unsaved changes."
     />
   );
 };

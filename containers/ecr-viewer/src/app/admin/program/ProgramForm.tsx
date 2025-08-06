@@ -66,6 +66,7 @@ const sortedCodes = (conditions: FormCondition[]) => {
  * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.progUuid UUID of the program being edited. Optional
  * @param props.submitAction Handler for the submitted data
+ * @param props.formTouchedMsg Warning banner message when a user has touched the form.
  * @returns Program area add/edit form
  */
 export const ProgramForm = ({
@@ -73,25 +74,25 @@ export const ProgramForm = ({
   initValues,
   progUuid,
   submitAction,
+  formTouchedMsg,
 }: {
   action: string;
   initValues: FormValues;
   progUuid?: string;
   submitAction: (
     name: string,
-    conditions: string[],
+    conditions: string[]
   ) => Promise<ServerActionResult<string | void>>;
+  formTouchedMsg?: string;
 }) => {
-  const unsavedChangesMsg =
-    "To create a program area, you must add a program name and at least one condition.";
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
-    groupByCategory(initValues.conditions),
+    groupByCategory(initValues.conditions)
   );
   const { createToast } = React.useContext(ToastContext);
 
   const selectedConditions = sortedCodes(
-    Object.values(conditionCategories).flatMap((id) => id),
+    Object.values(conditionCategories).flatMap((id) => id)
   );
   const numConditionsSelected = selectedConditions.length;
 
@@ -119,7 +120,7 @@ export const ProgramForm = ({
       itemHomeRoute="/admin/program"
       formValid={valid}
       formTouched={touched}
-      unsavedChangesMsg={unsavedChangesMsg}
+      formTouchedMsg={formTouchedMsg}
       submitAction={async () => {
         const res = await submitAction(name, selectedConditions);
         if (!res.error) createToast(`${name} successfully saved`, "success");

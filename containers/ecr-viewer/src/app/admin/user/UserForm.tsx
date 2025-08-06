@@ -48,6 +48,7 @@ const sortedIds = (programs: FormProgram[]) => {
  * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.submitAction Handler for the submitted data
  * @param props.banner markup to display as a banner above the form title
+ * @param props.formTouchedMsg Warning banner message when a user has touched the form.
  * @returns Program area add/edit form
  */
 export const UserForm = ({
@@ -55,24 +56,24 @@ export const UserForm = ({
   initValues,
   submitAction,
   banner,
+  formTouchedMsg,
 }: {
   action: string;
   initValues: FormValues;
   submitAction: (
     email: string,
     userType: UserType,
-    programs: string[],
+    programs: string[]
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
+  formTouchedMsg?: string
 }) => {
-  const unsavedChangesMsg =
-    "To create a user, you must add an email and select a user type.";
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
-    initValues.userType || "standard",
+    initValues.userType || "standard"
   );
   const [programs, setPrograms] = useState(
-    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name)),
+    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name))
   );
 
   const { createToast } = React.useContext(ToastContext);
@@ -97,12 +98,12 @@ export const UserForm = ({
       formValid={valid}
       formTouched={touched}
       banner={banner}
-      unsavedChangesMsg={unsavedChangesMsg}
+      formTouchedMsg={formTouchedMsg}
       submitAction={async () => {
         const res = await submitAction(
           email.trim(),
           userType,
-          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
+          userType === "admin" ? [] : selectedPrograms // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");

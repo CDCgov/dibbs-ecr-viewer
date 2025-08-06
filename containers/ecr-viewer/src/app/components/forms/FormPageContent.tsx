@@ -18,7 +18,7 @@ import { ServerActionResult } from "@/app/services/errorService";
  * @param props.formTouched Whether the form has been touched (edited)
  * @param props.itemType The type of item the form is about (e.g. "user")
  * @param props.itemHomeRoute Route to redirect to upon successful submission or to go back to
- * @param props.unsavedChangesMsg Warning banner message when a user has made unsaved changes during creation
+ * @param props.formTouchedMsg Warning banner message when a user has touched the form.
  * @param props.banner markup to display as a banner above the form title
  * @returns form with header and submit buttons
  */
@@ -28,7 +28,7 @@ export const FormPageContent = <T,>({
   formValid,
   formTouched,
   itemHomeRoute,
-  unsavedChangesMsg,
+  formTouchedMsg,
   banner,
   children,
   submitAction,
@@ -38,7 +38,7 @@ export const FormPageContent = <T,>({
   formValid: boolean;
   formTouched: boolean;
   itemHomeRoute: string;
-  unsavedChangesMsg?: string;
+  formTouchedMsg?: string;
   banner?: ReactNode;
   children: ReactNode;
   submitAction: () => Promise<ServerActionResult<T>>;
@@ -74,8 +74,7 @@ export const FormPageContent = <T,>({
                 headingLevel="h4"
                 aria-live="polite"
               >
-                You have unsaved changes.{" "}
-                {action === "Create" && unsavedChangesMsg}
+                {formTouchedMsg ?? "You have unsaved changes."}
               </Alert>
             )}
             {error && (
