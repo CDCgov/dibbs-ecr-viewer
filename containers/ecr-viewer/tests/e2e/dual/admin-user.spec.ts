@@ -231,9 +231,7 @@ test.describe("user management page", () => {
     ).not.toBeVisible();
 
     // Deselect all programs: no users should show up
-    const buttonSelectAll = page.getByLabel("Select 2 program areas");
-    await buttonSelectAll.dispatchEvent("click");
-    const buttonDeselectAll = page.getByLabel("Deselect 2 program areas");
+    const buttonDeselectAll = page.getByText(/Deselect \d+ program areas?/);
     await buttonDeselectAll.dispatchEvent("click");
     await expect(
       page.getByText(
