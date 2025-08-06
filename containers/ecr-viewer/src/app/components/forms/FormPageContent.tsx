@@ -62,7 +62,9 @@ export const FormPageContent = <T,>({
           </Link>
           <div
             className={
-              banner || formTouched || error ? "minh-5 margin-bottom-1" : ""
+              banner || formTouched || error
+                ? "minh-5 margin-bottom-1"
+                : undefined
             }
           >
             {banner}

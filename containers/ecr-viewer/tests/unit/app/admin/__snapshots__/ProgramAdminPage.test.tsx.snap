@@ -33,9 +33,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
           program area
            management
         </a>
-        <div
-          class="minh-5 margin-bottom-1"
-        />
+        <div />
         <div
           class="display-flex flex-justify flex-align-center margin-bottom-1"
         >

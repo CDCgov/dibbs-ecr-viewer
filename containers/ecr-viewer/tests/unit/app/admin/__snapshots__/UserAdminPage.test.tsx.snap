@@ -33,9 +33,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           user
            management
         </a>
-        <div
-          class="minh-5 margin-bottom-1"
-        />
+        <div />
         <div
           class="display-flex flex-justify flex-align-center margin-bottom-1"
         >
