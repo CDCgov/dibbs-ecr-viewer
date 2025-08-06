@@ -58,7 +58,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
       </div>
     </div>
     <div
-      class="content-container margin-top-3 position-relative"
+      class="content-container margin-top-3"
     >
       <form
         class="margin-top-3 isolate"

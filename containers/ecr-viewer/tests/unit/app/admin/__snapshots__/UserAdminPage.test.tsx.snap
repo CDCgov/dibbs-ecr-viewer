@@ -58,7 +58,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
       </div>
     </div>
     <div
-      class="content-container margin-top-3 position-relative"
+      class="content-container margin-top-3"
     >
       <form
         class="margin-top-3 isolate"
@@ -457,7 +457,7 @@ exports[`User Admin Page Creating users should render a create user page with no
       </div>
     </div>
     <div
-      class="content-container margin-top-3 position-relative"
+      class="content-container margin-top-3"
     >
       <form
         class="margin-top-3 isolate"
