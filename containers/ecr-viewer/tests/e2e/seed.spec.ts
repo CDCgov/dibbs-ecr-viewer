@@ -30,7 +30,7 @@ test("seed standard user and covid program", async ({ page }) => {
 
     await page.getByLabel("Program area name").fill("COVID");
 
-    await page.getByPlaceholder("Search conditions").fill("covid");
+    await page.getByPlaceholder("Search condition or category").fill("covid");
     await page.getByRole("button", { name: "Select all", exact: true }).click();
 
     await page
