@@ -220,9 +220,19 @@ describe.each([
         });
         await user.click(toggleFilterButton);
 
+        // Apply button should start disabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeDisabled();
+
         // Click deselect all
         const deselectAll = await screen.findByText(/Deselect \d conditions?/);
         await user.click(deselectAll);
+
+        // Apply button should now be enabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeEnabled();
 
         // All checkboxes should be unchecked after "Deselect" is clicked
         for (const condition of conditions) {
@@ -233,6 +243,11 @@ describe.each([
         // Click select all
         const selectAll = await screen.findByText(/Select \d conditions?/);
         await user.click(selectAll);
+
+        // Apply button should be back to disabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeDisabled();
 
         // All checkboxes should be checked after selecting all
         for (const condition of conditions) {
