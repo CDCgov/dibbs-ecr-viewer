@@ -126,8 +126,8 @@ describe.each([
       await user.click(toggleButton);
 
       // Should have correct number of checkboxes
-      const checkboxes = screen.getAllByRole("checkbox");
-      expect(checkboxes).toHaveLength(conditions.length + 1); // conditions + select all
+      const checkboxes = screen.queryAllByRole("checkbox");
+      expect(checkboxes).toHaveLength(conditions.length); // conditions + select all
 
       // Conditions should be listed
       for (const condition of conditions) {
@@ -221,7 +221,7 @@ describe.each([
         await user.click(toggleFilterButton);
 
         // Click deselect all
-        const deselectAll = await screen.findByLabelText("Deselect all");
+        const deselectAll = await screen.findByText(/Deselect \d conditions?/);
         await user.click(deselectAll);
 
         // All checkboxes should be unchecked after "Deselect all" is clicked
@@ -231,7 +231,7 @@ describe.each([
         }
 
         // Click select all
-        const selectAll = await screen.findByLabelText("Select all");
+        const selectAll = await screen.findByText(/Select \d conditions?/);
         await user.click(selectAll);
 
         // All checkboxes should be checked after selecting all
