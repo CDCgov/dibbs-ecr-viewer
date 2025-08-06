@@ -419,6 +419,9 @@ describe("Filter by Date Component", () => {
     });
     await user.click(toggleButton);
 
+    // Apply button should start disabled
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeDisabled();
+
     // Check default state is "Last year" (local dev default)
     const defaultRadio = screen.getByRole("radio", {
       name: "Last year",
@@ -434,6 +437,7 @@ describe("Filter by Date Component", () => {
     const applyFilterButton = screen.getByRole("button", {
       name: /Apply filter for received date/i,
     });
+    expect(applyFilterButton).toBeEnabled();
     await user.click(applyFilterButton);
 
     // Only one radio button can be checked at a time.
