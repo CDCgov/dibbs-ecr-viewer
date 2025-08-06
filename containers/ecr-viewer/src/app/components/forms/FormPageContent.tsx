@@ -58,18 +58,12 @@ export const FormPageContent = <T,>({
         <div className="content-container">
           <Link
             href={itemHomeRoute}
-            className="action-text display-inline-flex flex-align-center margin-bottom-1"
+            className="action-text display-inline-flex flex-align-center margin-bottom-1 margin-top-2"
           >
             <ArrowBack aria-hidden={true} className="square-3" />
             Back to {itemType} management
           </Link>
-          <div
-            className={
-              banner || formTouched || error
-                ? "minh-5 margin-bottom-1"
-                : undefined
-            }
-          >
+          <div>
             {banner}
 
             {formTouched && !submitting && !error && (
@@ -96,7 +90,7 @@ export const FormPageContent = <T,>({
             )}
           </div>
 
-          <div className="display-flex flex-justify flex-align-center margin-bottom-1">
+          <div className="display-flex flex-justify flex-align-center margin-bottom-2">
             <h2 className="margin-0">{actionPhrase}</h2>
             <div>
               <SubmitButton

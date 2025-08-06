@@ -12,7 +12,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
         class="content-container"
       >
         <a
-          class="action-text display-inline-flex flex-align-center margin-bottom-1"
+          class="action-text display-inline-flex flex-align-center margin-bottom-1 margin-top-2"
           href="/admin/program"
         >
           <svg
@@ -35,7 +35,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
         </a>
         <div />
         <div
-          class="display-flex flex-justify flex-align-center margin-bottom-1"
+          class="display-flex flex-justify flex-align-center margin-bottom-2"
         >
           <h2
             class="margin-0"
