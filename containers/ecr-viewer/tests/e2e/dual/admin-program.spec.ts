@@ -39,8 +39,8 @@ test.describe("program management page", () => {
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
     // search for a condition (but not too specifically due to randomness)
-    await page.getByPlaceholder("Search conditions").fill("i");
-    await expect(page.getByText("232 results")).toBeVisible();
+    await page.getByPlaceholder("Search condition or category").fill("i");
+    await expect(page.getByText("259 results")).toBeVisible();
 
     // Find a random condition (avoid clashes in parallel tests)
     const checkboxes = await page.getByRole("checkbox").all();
@@ -83,8 +83,8 @@ test.describe("program management page", () => {
     // Open create form to test already assigned modal
     await page.getByText("Create program area").click();
     // search for a condition again so checkbox is correct
-    await page.getByPlaceholder("Search conditions").fill("i");
-    await expect(page.getByText("232 results")).toBeVisible();
+    await page.getByPlaceholder("Search condition or category").fill("i");
+    await expect(page.getByText("259 results")).toBeVisible();
     await expect(page.getByText(`Condition in ${conditionName}`)).toBeVisible();
     await checkbox.scrollIntoViewIfNeeded();
     await checkbox.dispatchEvent("click");
@@ -97,16 +97,14 @@ test.describe("program management page", () => {
     }
     expect(accessibilityScanResultsModal.violations).toEqual([]);
 
-    // re-submit to check failure state
+    // re-submit to check duplicate checking
     await page.getByRole("button", { name: "Yes, add condition" }).click();
     await page.getByLabel("Program area name").fill(conditionName);
-
-    await page
-      .getByRole("button", { name: "Save program area" })
-      .first()
-      .click();
-
-    await expect(page.getByText("Failed to create program area")).toBeVisible();
+    await expect(
+      page.getByText(
+        "Please pick a different program name. This program name already exists.",
+      ),
+    ).toBeVisible();
 
     // Go back to main table
     await page

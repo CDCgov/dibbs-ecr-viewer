@@ -76,26 +76,31 @@ exports[`Program Admin Page Creating programs should render a create program pag
             </abbr>
             )
           </span>
-          <label
-            class="usa-label"
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
           >
-            Program area name
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
+            <label
+              class="usa-label maxw-full"
             >
-              *
-            </abbr>
-            <input
-              class="usa-input"
-              data-testid="textInput"
-              id="name"
-              name="name"
-              required=""
-              type="text"
-              value=""
-            />
-          </label>
+              Program area name
+              <abbr
+                class="usa-hint usa-hint--required"
+                title="required"
+              >
+                *
+              </abbr>
+              <input
+                class="usa-input"
+                data-testid="textInput"
+                id="name"
+                name="name"
+                required=""
+                type="text"
+                value=""
+              />
+            </label>
+          </div>
         </fieldset>
         <fieldset
           class="dibbs-fieldset"
@@ -141,12 +146,12 @@ exports[`Program Admin Page Creating programs should render a create program pag
                 />
               </svg>
               <input
-                aria-label="Search conditions"
+                aria-label="Search condition or category"
                 class="usa-input"
                 data-testid="textInput"
                 id="condition-search"
                 name="condition-search"
-                placeholder="Search conditions"
+                placeholder="Search condition or category"
                 type="search"
                 value=""
               />

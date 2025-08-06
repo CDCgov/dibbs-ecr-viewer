@@ -4,6 +4,7 @@ import React, { RefObject, useRef, useState } from "react";
 import {
   Button,
   Checkbox,
+  FormGroup,
   ModalHeading,
   ModalRef,
   RequiredMarker,
@@ -20,7 +21,13 @@ import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedCondition } from "@/app/services/listConditionsService";
 import { AccordionItem } from "@/app/types";
-import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
+import { notEmpty } from "@/app/utils/data-utils";
+import {
+  makePlural,
+  stringSort,
+  toKebabCase,
+  toReadableListString,
+} from "@/app/utils/format-utils";
 
 interface FormCondition extends ListedCondition {
   checked?: boolean;
@@ -86,12 +93,22 @@ export const ProgramForm = ({
   );
   const numConditionsSelected = selectedConditions.length;
 
+  const nameIsDupe = initValues.conditions
+    .map(({ program_area_name }) => program_area_name?.toLowerCase())
+    .filter(notEmpty)
+    .filter((n) => n !== initValues.name?.toLowerCase())
+    .includes(name.toLowerCase());
+
   const initSelectedConditions = sortedCodes(initValues.conditions);
   const touched =
     (name && name !== initValues.name) ||
     selectedConditions.length !== initSelectedConditions.length ||
     selectedConditions.some((c, i) => initSelectedConditions[i] !== c);
-  const valid = !!name.trim() && numConditionsSelected > 0;
+  const valid =
+    !!name.trim() &&
+    name.trim().length > 1 &&
+    numConditionsSelected > 0 &&
+    !nameIsDupe;
 
   return (
     <FormPageContent
@@ -106,7 +123,7 @@ export const ProgramForm = ({
         return res;
       }}
     >
-      <NameFieldSet name={name} setName={setName} />
+      <NameFieldSet name={name} setName={setName} nameIsDupe={nameIsDupe} />
       <ConditionFieldSet
         progUuid={progUuid}
         conditionCategories={conditionCategories}
@@ -120,27 +137,37 @@ export const ProgramForm = ({
 const NameFieldSet = ({
   name,
   setName,
+  nameIsDupe,
 }: {
   name: string;
   setName: (n: string) => void;
+  nameIsDupe: boolean;
 }) => {
   return (
     <FieldSet legend="Name program area">
       <span>
         Required fields are marked with an asterisk (<RequiredMarker />)
       </span>
-      <label className="usa-label">
-        Program area name
-        <RequiredMarker />
-        <TextInput
-          type="text"
-          required={true}
-          id="name"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </label>
+      <FormGroup error={nameIsDupe}>
+        <label className="usa-label maxw-full">
+          Program area name
+          <RequiredMarker />
+          {nameIsDupe && (
+            <p className="usa-error-message margin-0">
+              Please pick a different program name. This program name already
+              exists.
+            </p>
+          )}
+          <TextInput
+            type="text"
+            required={true}
+            id="name"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </label>
+      </FormGroup>
     </FieldSet>
   );
 };
@@ -166,6 +193,7 @@ const ConditionFieldSet = ({
       acc[cur] = conditionCategories[cur].filter(
         (c) =>
           !searchTerm ||
+          cur.toLowerCase().includes(searchTerm.toLowerCase()) ||
           c.condition_name.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       return acc;
@@ -404,10 +432,10 @@ const SearchField = ({
       <Search aria-hidden={true} className="square-3 text-base" />
       <TextInput
         type="search"
-        aria-label="Search conditions"
+        aria-label="Search condition or category"
         id="condition-search"
         name="condition-search"
-        placeholder="Search conditions"
+        placeholder="Search condition or category"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -430,6 +458,14 @@ const ConfirmationModal = ({
   onConfirm: () => void;
   modalRef: RefObject<ModalRef>;
 }) => {
+  const prevProgramAreas = [
+    ...new Set(
+      categoryConditions
+        .map((c) => c?.program_area_name)
+        .filter((p) => p !== null),
+    ),
+  ].sort(stringSort);
+
   return (
     <Modal
       id="confirm-condition"
@@ -464,8 +500,8 @@ const ConfirmationModal = ({
             <div id="confirm-condition-description">
               <p>
                 A condition can only live in one program area. If you add the
-                below conditions to this program area, they will be removed from
-                their current program area.
+                below conditions to this program area, they will be removed from{" "}
+                {toReadableListString(prevProgramAreas)}.
               </p>
 
               <ul>
