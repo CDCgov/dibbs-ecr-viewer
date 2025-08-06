@@ -50,9 +50,9 @@ export const FormPageContent = <T,>({
   const actionPhrase = `${action} ${itemType}`;
 
   return (
-    <main className="main-container">
-      <div className="content-container margin-top-3 position-relative">
-        <div className="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container">
+    <main className="main-container display-flex flex-column flex-align-center">
+      <div className="width-full border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container shadow-2 display-flex flex-justify-center">
+        <div className="content-container">
           <Link
             href={itemHomeRoute}
             className="action-text display-inline-flex flex-align-center margin-bottom-1"
@@ -105,7 +105,9 @@ export const FormPageContent = <T,>({
             </div>
           </div>
         </div>
+      </div>
 
+      <div className="content-container margin-top-3 position-relative">
         <form
           id={id}
           className="margin-top-3 isolate"
