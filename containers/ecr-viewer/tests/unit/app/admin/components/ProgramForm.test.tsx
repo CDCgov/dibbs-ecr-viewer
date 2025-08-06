@@ -240,8 +240,16 @@ describe("ProgramForm", () => {
     expect(checkboxes[2]).toBeChecked();
     expect(checkboxes[3]).not.toBeChecked();
 
+    // search on first category and clear
+    const searchField = screen.getByPlaceholderText(
+      "Search condition or category",
+    );
+    await user.type(searchField, "firs");
+    expect(screen.getByText("3 results")).toBeInTheDocument();
+    await user.clear(searchField);
+
     // search and deselect all on condition 1
-    await user.type(screen.getByPlaceholderText("Search conditions"), "2");
+    await user.type(searchField, "2");
     expect(screen.getByText("1 result")).toBeInTheDocument();
     const deselectButtons = screen.getAllByRole("button", {
       name: "Deselect all",
