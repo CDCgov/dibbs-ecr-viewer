@@ -5,7 +5,7 @@ import {
   AccordionSubSection,
 } from "@/app/view-data/utils/component-utils";
 
-import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
+import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface SocialHistoryProps {
   socialData: DisplayDataProps[];
@@ -21,13 +21,9 @@ const SocialHistory: React.FC<SocialHistoryProps> = ({ socialData }) => {
   return (
     <AccordionSection>
       <AccordionSubSection title="Social History">
-        {socialData.map((item, index) => {
-          if (item.table) {
-            return <DataTableDisplay item={item} key={index} />;
-          } else {
-            return <DataDisplay item={item} key={index} />;
-          }
-        })}
+        {socialData.map((item, index) => (
+          <DataDisplay item={item} key={index} />
+        ))}
       </AccordionSubSection>
     </AccordionSection>
   );
