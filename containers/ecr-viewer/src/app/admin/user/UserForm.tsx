@@ -63,17 +63,17 @@ export const UserForm = ({
   submitAction: (
     email: string,
     userType: UserType,
-    programs: string[]
+    programs: string[],
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
-  formTouchedMsg?: string
+  formTouchedMsg?: string;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
-    initValues.userType || "standard"
+    initValues.userType || "standard",
   );
   const [programs, setPrograms] = useState(
-    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name))
+    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name)),
   );
 
   const { createToast } = React.useContext(ToastContext);
@@ -103,7 +103,7 @@ export const UserForm = ({
         const res = await submitAction(
           email.trim(),
           userType,
-          userType === "admin" ? [] : selectedPrograms // admins should not be saved with assigned programs
+          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");

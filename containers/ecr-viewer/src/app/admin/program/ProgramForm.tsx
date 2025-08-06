@@ -81,18 +81,18 @@ export const ProgramForm = ({
   progUuid?: string;
   submitAction: (
     name: string,
-    conditions: string[]
+    conditions: string[],
   ) => Promise<ServerActionResult<string | void>>;
   formTouchedMsg?: string;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
-    groupByCategory(initValues.conditions)
+    groupByCategory(initValues.conditions),
   );
   const { createToast } = React.useContext(ToastContext);
 
   const selectedConditions = sortedCodes(
-    Object.values(conditionCategories).flatMap((id) => id)
+    Object.values(conditionCategories).flatMap((id) => id),
   );
   const numConditionsSelected = selectedConditions.length;
 
