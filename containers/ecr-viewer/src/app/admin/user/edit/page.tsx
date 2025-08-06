@@ -68,7 +68,6 @@ const EditUserPage = async ({
         });
         return { error: res.error };
       }}
-      formTouchedMsg="You have unsaved changes."
     />
   );
 };
