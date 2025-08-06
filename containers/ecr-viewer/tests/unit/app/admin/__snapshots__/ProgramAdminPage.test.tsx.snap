@@ -148,12 +148,12 @@ exports[`Program Admin Page Creating programs should render a create program pag
                 />
               </svg>
               <input
-                aria-label="Search conditions"
+                aria-label="Search condition or category"
                 class="usa-input"
                 data-testid="textInput"
                 id="condition-search"
                 name="condition-search"
-                placeholder="Search conditions"
+                placeholder="Search condition or category"
                 type="search"
                 value=""
               />

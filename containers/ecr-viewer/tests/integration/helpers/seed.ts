@@ -30,7 +30,7 @@ export const seedUserProgramData = async () => {
     })
     .execute();
 
-  await createInitialAdminUser("admin@admin.com");
+  await createInitialAdminUser({ email: "admin@admin.com" });
   const progId = await createProgramArea({ name: "test", conditions: ["123"] });
   await createUser({
     email: "standard@standard.com",
