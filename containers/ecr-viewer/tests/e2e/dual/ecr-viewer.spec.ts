@@ -5,6 +5,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 import { logIn, nbsAuthParam } from "../utils";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
+import { setupConfigurationVariables } from "@/instrumentation";
 
 test.describe("viewer page", () => {
   if (process.env.CONFIG_NAME.endsWith("NON_INTEGRATED")) {
@@ -113,5 +116,36 @@ test.describe("viewer page", () => {
 
       expect(navIndex).toBe(numLinks);
     });
+  });
+
+  test("audit logging", async ({ page }) => {
+    test.skip(
+      process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
+        !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
+      "Does not apply to integrated configurations.",
+    );
+
+    await page.goto(
+      `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
+    );
+    const viewTime = Date.now();
+    await expect(page.getByText("Master Minch Yoda").first()).toBeVisible();
+
+    setupConfigurationVariables();
+    const logs = await getDb<Core>()
+      .selectFrom("audit_log")
+      .selectAll()
+      .where("subject", "=", "ecr")
+      .where("action", "=", "view")
+      .execute();
+
+    expect(
+      logs.filter(
+        ({ parameter_json, date }) =>
+          JSON.parse(parameter_json).eicr_id ===
+            "db734647-fc99-424c-a864-7e3cda82e703" &&
+          Math.abs(date.valueOf() - viewTime) < 5000,
+      ).length,
+    ).toBeGreaterThan(0);
   });
 });
