@@ -65,6 +65,8 @@ export const UserForm = ({
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
 }) => {
+  const unsavedChangesMsg =
+    "To create a user, you must add an email and select a user type.";
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
     initValues.userType || "standard",
@@ -95,11 +97,12 @@ export const UserForm = ({
       formValid={valid}
       formTouched={touched}
       banner={banner}
+      unsavedChangesMsg={unsavedChangesMsg}
       submitAction={async () => {
         const res = await submitAction(
           email.trim(),
           userType,
-          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
+          userType === "admin" ? [] : selectedPrograms // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");

@@ -82,6 +82,8 @@ export const ProgramForm = ({
     conditions: string[],
   ) => Promise<ServerActionResult<string | void>>;
 }) => {
+  const unsavedChangesMsg =
+    "To create a program area, you must add a program name and at least one condition.";
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
     groupByCategory(initValues.conditions),
@@ -117,6 +119,7 @@ export const ProgramForm = ({
       itemHomeRoute="/admin/program"
       formValid={valid}
       formTouched={touched}
+      unsavedChangesMsg={unsavedChangesMsg}
       submitAction={async () => {
         const res = await submitAction(name, selectedConditions);
         if (!res.error) createToast(`${name} successfully saved`, "success");
