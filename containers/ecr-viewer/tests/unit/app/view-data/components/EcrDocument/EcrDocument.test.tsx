@@ -32,11 +32,12 @@ describe("Snapshot test for eCR Document", () => {
 
     const { container } = render(<EcrDocument initialAccordionItems={items} />);
 
-    expect(await axe(container)).toHaveNoViolations();
-    container.querySelectorAll("[id], [aria-describedby]").forEach((el) => {
-      el.removeAttribute("id");
-      el.removeAttribute("aria-describedby");
-    });
+    // ignore duplicate IDs due to mocking of `useId` to be consistent
+    expect(
+      await axe(container, {
+        rules: { "duplicate-id-aria": { enabled: false } },
+      }),
+    ).toHaveNoViolations();
 
     // This is an arbitrarily chosen test ID we expect one of the rendered accordion items to have.
     // There is nothing significant about "encounter-info_2" in particular.

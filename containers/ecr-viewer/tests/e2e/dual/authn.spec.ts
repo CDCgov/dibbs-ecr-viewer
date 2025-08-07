@@ -9,8 +9,9 @@ test.describe("auth", () => {
   test("should require a login on main page and allow sign out", async ({
     page,
   }) => {
+    const logInStartTime = Date.now();
     await logIn(page);
-    const logInTime = Date.now();
+    const logInEndTime = Date.now();
 
     await page
       .getByRole("button", { name: "User Menu" })
@@ -29,10 +30,10 @@ test.describe("auth", () => {
         page.getByRole("button", { name: "Sign Out" }),
       ).toBeVisible();
     }
+    const logOutStartTime = Date.now();
     await page.getByRole("button", { name: "Sign Out" }).click();
-
     await page.waitForURL("ecr-viewer/signin?callbackUrl=%2Fecr-viewer%2F");
-    const logOutTime = Date.now();
+    const logOutEndTime = Date.now();
     await expect(page.getByText("You need to sign in")).toBeVisible();
 
     setupConfigurationVariables();
@@ -55,7 +56,8 @@ test.describe("auth", () => {
         ({ parameter_json, date }) =>
           JSON.parse(parameter_json).user.email ===
             process.env.AUTH_ADMIN_USER &&
-          Math.abs(date.valueOf() - logInTime) < 5000,
+          date.valueOf() >= logInStartTime &&
+          date.valueOf() <= logInEndTime + 5000,
       ).length,
     ).toBeGreaterThan(0);
     expect(
@@ -63,7 +65,8 @@ test.describe("auth", () => {
         ({ parameter_json, date }) =>
           JSON.parse(parameter_json).token.email ===
             process.env.AUTH_ADMIN_USER &&
-          Math.abs(date.valueOf() - logOutTime) < 5000,
+          date.valueOf() >= logOutStartTime &&
+          date.valueOf() <= logOutEndTime + 5000,
       ).length,
     ).toBeGreaterThan(0);
 
@@ -74,9 +77,12 @@ test.describe("auth", () => {
       .where("email", "=", process.env.AUTH_ADMIN_USER!)
       .executeTakeFirstOrThrow();
     expect(user.date_of_last_login).not.toBeNull();
-    expect(
-      Math.abs(user.date_of_last_login!.valueOf() - logInTime),
-    ).toBeLessThan(5000);
+    expect(user.date_of_last_login!.valueOf()).toBeGreaterThanOrEqual(
+      logInStartTime,
+    );
+    expect(user.date_of_last_login!.valueOf()).toBeLessThanOrEqual(
+      logInEndTime + 5000,
+    );
     expect(user.name).not.toBeNull();
   });
 
