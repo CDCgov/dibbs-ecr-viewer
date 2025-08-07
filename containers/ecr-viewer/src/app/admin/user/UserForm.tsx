@@ -30,7 +30,7 @@ export type UserType = "admin" | "standard";
 export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
 }
- 
+
 export interface FormUser extends ListedUser {}
 
 interface FormValues {
@@ -95,7 +95,10 @@ export const UserForm = ({
     .filter((e) => e !== initValues.email?.toLowerCase())
     .includes(email.toLowerCase());
 
-  const valid = !!email && (userType === "admin" || userType === "standard") && !emailIsDupe;
+  const valid =
+    !!email &&
+    (userType === "admin" || userType === "standard") &&
+    !emailIsDupe;
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||
@@ -122,7 +125,11 @@ export const UserForm = ({
         return res;
       }}
     >
-      <EmailFieldSet email={email} setEmail={setEmail} emailIsDupe={emailIsDupe} />
+      <EmailFieldSet
+        email={email}
+        setEmail={setEmail}
+        emailIsDupe={emailIsDupe}
+      />
       <UserTypeFieldSet userType={userType} setUserType={setUserType} />
       <ProgramFieldSet
         programs={programs}

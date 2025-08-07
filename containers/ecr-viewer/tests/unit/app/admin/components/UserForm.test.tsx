@@ -56,9 +56,9 @@ const mockPrograms: FormProgram[] = [
     ],
   },
 ];
-const TEST_EMAIL = "TestUser@abc.com"
+const TEST_EMAIL = "TestUser@abc.com";
 const mockUsers: FormUser[] = [
-  { 
+  {
     uuid: "XYZ",
     name: "Test",
     date_created: new Date("2025-01-01"),
@@ -68,8 +68,8 @@ const mockUsers: FormUser[] = [
     user_type: "standard",
     status: "active",
     program_areas: [],
-  }
-]
+  },
+];
 
 describe("UserForm", () => {
   it("should render a blank form", async () => {
@@ -141,7 +141,11 @@ describe("UserForm", () => {
     await user.clear(emailInput);
     await user.type(emailInput, TEST_EMAIL.toLowerCase());
     expect(submitButtons[0]).toBeDisabled();
-    expect(screen.getByText(/This email already exists. Please add a different email./)).toBeVisible();
+    expect(
+      screen.getByText(
+        /This email already exists. Please add a different email./,
+      ),
+    ).toBeVisible();
   });
 
   it("should render a filled out form", async () => {
