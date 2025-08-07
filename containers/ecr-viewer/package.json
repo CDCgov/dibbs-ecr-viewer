@@ -44,7 +44,7 @@
     "classnames": "^2.5.1",
     "fhirpath": "^4.5.1",
     "focus-trap-react": "^11.0.4",
-    "html-react-parser": "^5.2.5",
+    "html-react-parser": "^5.2.6",
     "jose": "6.0.11",
     "js-cookie": "^3.0.5",
     "kysely": "^0.27.6",
