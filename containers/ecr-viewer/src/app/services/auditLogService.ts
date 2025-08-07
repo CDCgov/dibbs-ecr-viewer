@@ -88,8 +88,8 @@ export const createAuditRecord = async <Params extends Record<string, unknown>>(
   params: Params,
 ) => {
   const uuid = randomUUID();
-  const reqHeaders = headers();
-  const reqCookies = cookies();
+  const reqHeaders = await headers();
+  const reqCookies = await cookies();
   const apiToken =
     reqHeaders.get("Authorization") || reqCookies.get("auth-token")?.value;
 

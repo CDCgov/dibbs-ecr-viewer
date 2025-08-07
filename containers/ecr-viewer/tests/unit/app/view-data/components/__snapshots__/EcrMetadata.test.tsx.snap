@@ -44,7 +44,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                         data-testid="tooltipWrapper"
                       >
                         <div
-                          aria-describedby="[object Object]"
+                          aria-describedby="tooltip-r:id"
                           class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                           data-testid="triggerElement"
                           tabindex="0"
@@ -73,7 +73,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                           aria-hidden="true"
                           class="usa-tooltip__body"
                           data-testid="tooltipBody"
-                          id="[object Object]"
+                          id="tooltip-r:id"
                           role="tooltip"
                           title="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR."
                         >
@@ -92,7 +92,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                         data-testid="tooltipWrapper"
                       >
                         <div
-                          aria-describedby="[object Object]"
+                          aria-describedby="tooltip-r:id"
                           class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                           data-testid="triggerElement"
                           tabindex="0"
@@ -121,7 +121,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                           aria-hidden="true"
                           class="usa-tooltip__body"
                           data-testid="tooltipBody"
-                          id="[object Object]"
+                          id="tooltip-r:id"
                           role="tooltip"
                           title="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System)."
                         >
@@ -142,7 +142,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                         data-testid="tooltipWrapper"
                       >
                         <div
-                          aria-describedby="[object Object]"
+                          aria-describedby="tooltip-r:id"
                           class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                           data-testid="triggerElement"
                           tabindex="0"
@@ -171,7 +171,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                           aria-hidden="true"
                           class="usa-tooltip__body"
                           data-testid="tooltipBody"
-                          id="[object Object]"
+                          id="tooltip-r:id"
                           role="tooltip"
                           title="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR."
                         >
@@ -243,7 +243,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                       data-testid="tooltipWrapper"
                     >
                       <div
-                        aria-describedby="[object Object]"
+                        aria-describedby="tooltip-r:id"
                         class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                         data-testid="triggerElement"
                         tabindex="0"
@@ -272,7 +272,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                         aria-hidden="true"
                         class="usa-tooltip__body"
                         data-testid="tooltipBody"
-                        id="[object Object]"
+                        id="tooltip-r:id"
                         role="tooltip"
                         title="Can be used to help you identify healthcare providers that need to update their eRSD (Electronic Reporting and Surveillance Distribution) version."
                       >
@@ -584,7 +584,7 @@ Echo Base, CA
               data-testid="tooltipWrapper"
             >
               <div
-                aria-describedby="[object Object]"
+                aria-describedby="tooltip-r:id"
                 class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
                 data-testid="triggerElement"
                 tabindex="0"
@@ -613,7 +613,7 @@ Echo Base, CA
                 aria-hidden="true"
                 class="usa-tooltip__body"
                 data-testid="tooltipBody"
-                id="[object Object]"
+                id="tooltip-r:id"
                 role="tooltip"
                 title="Person or organization that generated the eICR Document."
               >

@@ -26,16 +26,16 @@ import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
  * Functional component for rendering the eCR Viewer page.
  * @param params react params
  * @param params.searchParams searchParams for page
- * @param params.searchParams.id ecr ID
  * @returns The main eCR Viewer JSX component.
  */
 const ECRViewerPage = async ({
   searchParams,
 }: {
-  searchParams: { id?: string; "snomed-code"?: string };
+  searchParams: Promise<{ id?: string; "snomed-code"?: string }>;
 }) => {
-  const fhirId = searchParams.id ?? "";
-  const snomedCode = searchParams["snomed-code"] ?? "";
+  const _searchParams = await searchParams;
+  const fhirId = _searchParams.id ?? "";
+  const snomedCode = _searchParams["snomed-code"] ?? "";
 
   const user = await getLoggedInUserSession();
   // If we have a user that means we're using IDP auth and not NBS Auth, so we

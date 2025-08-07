@@ -88,7 +88,7 @@ describe("condition_reference table", () => {
     await db.insertInto("user").values(adminUser).execute();
     await db.insertInto("program_area").values(programArea).execute();
 
-    await db
+    (await db
       .updateTable("condition_reference")
       .set({ program_area_uuid: progId })
       .where("code", "=", "123")
@@ -97,7 +97,7 @@ describe("condition_reference table", () => {
       await db
         .insertInto("condition_reference")
         .values({ code: "456", condition_name: "anthrax" })
-        .execute();
+        .execute());
 
     const conditions = await db
       .selectFrom("condition_reference")

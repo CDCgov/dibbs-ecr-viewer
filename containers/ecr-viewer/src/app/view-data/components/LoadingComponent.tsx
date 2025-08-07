@@ -89,9 +89,12 @@ export const SideNavLoadingSkeleton = () => {
         "Lab Info",
         "eCR Metadata",
         "Unavailable Info",
-      ].flatMap((title) => [
+      ].flatMap((title, i) => [
         <a>{title}</a>,
-        <SideNav items={[<SideNavLoadingItems />]} isSubnav={true}></SideNav>,
+        <SideNav
+          items={[<SideNavLoadingItems key={`item-${i}`} />]}
+          isSubnav={true}
+        ></SideNav>,
       ])}
       isSubnav={true}
     />,
