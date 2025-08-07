@@ -26,7 +26,7 @@ test.describe("ecr library page", () => {
 
       await page.getByLabel("Filter by reportable condition").click();
       // Add delay since conditions rerenders shortly after opening
-      await page.getByText("Deselect all").click({ delay: 200 });
+      await page.getByText("Deselect 2 conditions").click({ delay: 200 });
       await page.getByRole("group").getByText("Zika Virus Disease").click();
       await page.getByLabel("Apply filter").click();
       await expect(page.getByText("Showing 1-1")).toBeVisible();
@@ -101,7 +101,7 @@ test.describe("ecr library page", () => {
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
 
       await page.getByLabel("Filter by reportable condition").click();
-      await page.getByText("Deselect all").click();
+      await page.getByText("Deselect 2 conditions").click();
       await page.getByRole("group").getByText("COVID-19").click();
       await page.getByLabel("Apply filter").click();
 
