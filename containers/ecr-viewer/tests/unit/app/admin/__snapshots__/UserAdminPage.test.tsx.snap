@@ -71,26 +71,31 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           <span>
             Add the new user by their login email
           </span>
-          <label
-            class="usa-label"
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
           >
-            Email
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
+            <label
+              class="usa-label maxw-full"
             >
-              *
-            </abbr>
-            <input
-              class="usa-input"
-              data-testid="textInput"
-              id="email"
-              name="email"
-              required=""
-              type="email"
-              value=""
-            />
-          </label>
+              Email
+              <abbr
+                class="usa-hint usa-hint--required"
+                title="required"
+              >
+                *
+              </abbr>
+              <input
+                class="usa-input"
+                data-testid="textInput"
+                id="email"
+                name="email"
+                required=""
+                type="email"
+                value=""
+              />
+            </label>
+          </div>
         </fieldset>
         <fieldset
           class="dibbs-fieldset"
@@ -466,26 +471,31 @@ exports[`User Admin Page Creating users should render a create user page with no
           <span>
             Add the new user by their login email
           </span>
-          <label
-            class="usa-label"
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
           >
-            Email
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
+            <label
+              class="usa-label maxw-full"
             >
-              *
-            </abbr>
-            <input
-              class="usa-input"
-              data-testid="textInput"
-              id="email"
-              name="email"
-              required=""
-              type="email"
-              value=""
-            />
-          </label>
+              Email
+              <abbr
+                class="usa-hint usa-hint--required"
+                title="required"
+              >
+                *
+              </abbr>
+              <input
+                class="usa-input"
+                data-testid="textInput"
+                id="email"
+                name="email"
+                required=""
+                type="email"
+                value=""
+              />
+            </label>
+          </div>
         </fieldset>
         <fieldset
           class="dibbs-fieldset"

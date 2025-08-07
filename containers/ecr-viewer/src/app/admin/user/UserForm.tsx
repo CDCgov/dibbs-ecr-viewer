@@ -3,6 +3,7 @@ import React, { ReactNode, useState } from "react";
 
 import {
   Button,
+  FormGroup,
   RequiredMarker,
   TextInput,
   Radio,
@@ -15,23 +16,28 @@ import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { AccordionItem } from "@/app/types";
+import { notEmpty } from "@/app/utils/data-utils";
 import {
   makePlural,
   stringSort,
   toKebabCase,
   toTitleCase,
 } from "@/app/utils/format-utils";
+import { ListedUser } from "@/app/services/userService";
 
 export type UserType = "admin" | "standard";
 
 export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
 }
+ 
+export interface FormUser extends ListedUser {}
 
 interface FormValues {
   email?: string;
   userType?: UserType;
   programs: FormProgram[];
+  users: FormUser[];
 }
 
 const sortedIds = (programs: FormProgram[]) => {
@@ -83,7 +89,13 @@ export const UserForm = ({
 
   const initSelectedPrograms = sortedIds(initValues.programs);
 
-  const valid = !!email && (userType === "admin" || userType === "standard");
+  const emailIsDupe = initValues.users
+    .map(({ email: existingEmail }) => existingEmail?.toLowerCase())
+    .filter(notEmpty)
+    .filter((e) => e !== initValues.email?.toLowerCase())
+    .includes(email.toLowerCase());
+
+  const valid = !!email && (userType === "admin" || userType === "standard") && !emailIsDupe;
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||
@@ -110,7 +122,7 @@ export const UserForm = ({
         return res;
       }}
     >
-      <EmailFieldSet email={email} setEmail={setEmail} />
+      <EmailFieldSet email={email} setEmail={setEmail} emailIsDupe={emailIsDupe} />
       <UserTypeFieldSet userType={userType} setUserType={setUserType} />
       <ProgramFieldSet
         programs={programs}
@@ -125,25 +137,34 @@ export const UserForm = ({
 const EmailFieldSet = ({
   email,
   setEmail,
+  emailIsDupe,
 }: {
   email: string;
   setEmail: (n: string) => void;
+  emailIsDupe?: boolean;
 }) => {
   return (
     <FieldSet legend="Email">
       <span>Add the new user by their login email</span>
-      <label className="usa-label">
-        Email
-        <RequiredMarker />
-        <TextInput
-          type="email"
-          required={true}
-          id="email"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
+      <FormGroup error={emailIsDupe}>
+        <label className="usa-label maxw-full">
+          Email
+          <RequiredMarker />
+          {emailIsDupe && (
+            <p className="usa-error-message margin-0">
+              This email already exists. Please add a different email.
+            </p>
+          )}
+          <TextInput
+            type="email"
+            required={true}
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+      </FormGroup>
     </FieldSet>
   );
 };

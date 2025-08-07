@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { FormProgram, UserForm } from "@/app/admin/user/UserForm";
+import { FormProgram, FormUser, UserForm } from "@/app/admin/user/UserForm";
 
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/services/programAreaService");
@@ -56,6 +56,20 @@ const mockPrograms: FormProgram[] = [
     ],
   },
 ];
+const TEST_EMAIL = "TestUser@abc.com"
+const mockUsers: FormUser[] = [
+  { 
+    uuid: "XYZ",
+    name: "Test",
+    date_created: new Date("2025-01-01"),
+    author_uuid: "abc",
+    email: TEST_EMAIL,
+    date_of_last_login: new Date("2025-01-01"),
+    user_type: "standard",
+    status: "active",
+    program_areas: [],
+  }
+]
 
 describe("UserForm", () => {
   it("should render a blank form", async () => {
@@ -64,6 +78,7 @@ describe("UserForm", () => {
         action="Create"
         initValues={{
           programs: mockPrograms,
+          users: mockUsers,
         }}
         submitAction={async () => ({})}
       />,
@@ -121,6 +136,12 @@ describe("UserForm", () => {
     for (const checkbox of checkboxes) {
       expect(checkbox).not.toBeChecked();
     }
+
+    // change the email to match an already in-use email (but different case)
+    await user.clear(emailInput);
+    await user.type(emailInput, TEST_EMAIL.toLowerCase());
+    expect(submitButtons[0]).toBeDisabled();
+    expect(screen.getByText(/This email already exists. Please add a different email./)).toBeVisible();
   });
 
   it("should render a filled out form", async () => {
@@ -138,6 +159,7 @@ describe("UserForm", () => {
           email: "test@test.test",
           userType: "standard",
           programs: mockCheckedPrograms,
+          users: [],
         }}
         submitAction={mockSubmitAction}
       />,
