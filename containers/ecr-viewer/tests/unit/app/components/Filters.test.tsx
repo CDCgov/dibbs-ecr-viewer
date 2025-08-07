@@ -127,7 +127,7 @@ describe.each([
 
       // Should have correct number of checkboxes
       const checkboxes = screen.queryAllByRole("checkbox");
-      expect(checkboxes).toHaveLength(conditions.length); // conditions + select all
+      expect(checkboxes).toHaveLength(conditions.length);
 
       // Conditions should be listed
       for (const condition of conditions) {
