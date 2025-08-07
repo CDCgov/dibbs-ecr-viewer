@@ -33,7 +33,9 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           user
            management
         </a>
-        <div />
+        <div
+          class="margin-bottom-1"
+        />
         <div
           class="display-flex flex-justify flex-align-center margin-bottom-2"
         >
@@ -403,7 +405,9 @@ exports[`User Admin Page Creating users should render a create user page with no
           user
            management
         </a>
-        <div>
+        <div
+          class="margin-bottom-1"
+        >
           <div
             class="usa-alert usa-alert--warning usa-alert--no-icon"
             data-testid="alert"

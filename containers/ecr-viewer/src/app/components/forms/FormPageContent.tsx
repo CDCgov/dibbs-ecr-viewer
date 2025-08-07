@@ -63,7 +63,7 @@ export const FormPageContent = <T,>({
             <ArrowBack aria-hidden={true} className="square-3" />
             Back to {itemType} management
           </Link>
-          <div>
+          <div className="margin-bottom-1">
             {banner}
 
             {formTouched && !submitting && !error && (
