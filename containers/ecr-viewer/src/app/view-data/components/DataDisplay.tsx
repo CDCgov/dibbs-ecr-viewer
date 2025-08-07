@@ -66,10 +66,7 @@ export const DataDisplay = ({
   className?: string;
   themeColor?: string;
 }): React.JSX.Element => {
-  item.dividerLine =
-    item.dividerLine === null || item.dividerLine === undefined
-      ? true
-      : item.dividerLine;
+  const { dividerLine = true } = item;
   return (
     <div>
       <div
@@ -98,11 +95,7 @@ export const DataDisplay = ({
           <FieldValue>{item.value}</FieldValue>
         </div>
       </div>
-      {item.dividerLine ? (
-        <div className={`section__line_${themeColor}`} />
-      ) : (
-        ""
-      )}
+      {dividerLine ? <div className={`section__line_${themeColor}`} /> : ""}
     </div>
   );
 };

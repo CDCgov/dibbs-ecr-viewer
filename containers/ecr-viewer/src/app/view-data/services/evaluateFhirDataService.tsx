@@ -1,5 +1,6 @@
 import "server-only"; // FHIR evaluation should be done server side
 
+import { Tag } from "@trussworks/react-uswds";
 import {
   Bundle,
   Condition,
@@ -58,6 +59,7 @@ import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
+import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
 import {
   compareResourcesByDate,
   sortResourcesByDate,
@@ -310,6 +312,9 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     {
       title: "Last Menstrual Period",
       value: evaluateLastMenstrualPeriod(fhirBundle),
+      fullWidthContent: true,
+      toolTip:
+        "Last Menstrual Period represents the first day of the last menstrual period of the patient. This section lists multiple periods in collected in chronological order.",
     },
   ];
 
@@ -317,25 +322,23 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
 };
 
 const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
-  const observations = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.lastMenstrualPeriod,
+  const observations = sortResourcesByDate(
+    evaluateAll(fhirBundle, fhirPathMappings.lastMenstrualPeriod),
+    fhirPathMappings.effectiveX,
   );
+
+  console.log({ observations });
 
   if (observations.length === 0) return;
 
   const columns: ColumnInfoInput[] = [
     {
       columnName: "First Date of the Last Period",
-      infoPath: "effectiveX",
+      infoPath: "valueX",
     },
     {
       columnName: "Collection Date/Time",
-      value: "TODO",
-    },
-    {
-      columnName: "Performer",
-      value: "TODO",
+      infoPath: "effectiveX",
     },
   ];
 
@@ -348,23 +351,85 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
   // also applies to the occupational history in social history). This function will likely need to be
   // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
   // section can handle nested sub-fields.
+  const pregnancyOutcomeObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.pregnancyOutcome,
+  );
   const pregnancyStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.pregnancyStatus,
   ).map((ob) => {
+    const status = evaluateValue(ob, "valueCodeableConcept");
+    const fullId = `${ob.resourceType}/${ob.id}`;
+    const data: DisplayDataProps[] = [
+      {
+        title: "Status",
+        value: status,
+      },
+      {
+        title: "Effective Date/Time",
+        value: evaluateValue(ob, fhirPathMappings.effectiveX),
+      },
+      {
+        title: "Pregnancy Determination Date/Time",
+        value: evaluateValue(ob, fhirPathMappings.pregnancyDeterminationDate),
+      },
+      {
+        title: "Pregnancy Determination Method",
+        value: evaluateValue(ob, fhirPathMappings.method),
+      },
+    ];
+
+    ob.component?.forEach((component) =>
+      data.push({
+        title: evaluateValue(
+          component,
+          fhirPathMappings.code,
+          "Observation.component",
+        ),
+        value: evaluateValue(
+          component,
+          fhirPathMappings.valueX,
+          "Observation.component",
+        ),
+      }),
+    );
+
+    const outcomes = pregnancyOutcomeObservations
+      .filter((ob) => ob.focus?.some(({ reference }) => reference === fullId))
+      .map((o) => [
+        {
+          title: "Birth Order",
+          value: evaluateValue(o, fhirPathMappings.pregnancyBirthOrder),
+        },
+        {
+          title: "Outcome",
+          value: evaluateValue(o, fhirPathMappings.valueX),
+        },
+      ]);
+    outcomes.length > 0 &&
+      data.push({
+        title: "Outcomes",
+        fullWidthContent: true,
+        value: (
+          <UnstyledDividedList
+            items={outcomes.map((oItems) =>
+              oItems.map(({ title, value }, i) => (
+                <DataDisplay
+                  item={{ title, value, dividerLine: false, titleNormal: true }}
+                  key={`item-${i}`}
+                />
+              )),
+            )}
+          />
+        ),
+      });
+
     return {
       type: "Pregnancy Status",
+      tag: status,
       observation: ob,
-      data: [
-        {
-          title: "Status",
-          value: evaluateValue(ob, "valueCodeableConcept"),
-        },
-        {
-          title: "Effective Date",
-          value: evaluateValue(ob, fhirPathMappings.effectiveX),
-        },
-      ].filter(isDataAvailable),
+      data: data.filter(isDataAvailable),
     };
   });
   const postpartumStatusObservationEntries = evaluateAll(
@@ -373,6 +438,7 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
   ).map((ob) => {
     return {
       type: "Postpartum Status",
+      tag: "",
       observation: ob,
       data: [
         {
@@ -380,7 +446,7 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
           value: evaluateValue(ob, "valueCodeableConcept"),
         },
         {
-          title: "Effective Date",
+          title: "Effective Date/Time",
           value: evaluateValue(ob, fhirPathMappings.effectiveX),
         },
       ].filter(isDataAvailable),
@@ -424,15 +490,31 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
           items={allPregnancyObservations.map((obs) => {
             const id = obs.observation.id ?? `${Math.random()}`;
             const content = obs.data.map((d, i) => (
-              <DataDisplay key={`${id}-${i}`} item={d} />
+              <DataDisplay
+                key={`${id}-${i}`}
+                item={{ ...d, dividerLine: i + 1 < obs.data.length }}
+              />
             ));
             return {
               title: (
                 <div className="display-flex flex-row flex-no-wrap flex-justify">
-                  <span className="text-base">{obs.type}</span>
+                  <span>
+                    {obs.type}{" "}
+                    {obs.tag && (
+                      <Tag className="margin-left-105">{obs.tag}</Tag>
+                    )}
+                  </span>
+
+                  {/** inline style due to existing css rules on this button text */}
+                  <span className="text-base" style={{ fontSize: "1rem" }}>
+                    {evaluateValue(
+                      obs.observation,
+                      fhirPathMappings.effectiveX,
+                    )}
+                  </span>
                 </div>
               ),
-              expanded: false,
+              expanded: true,
               content,
               id,
               headingLevel: "h5",
