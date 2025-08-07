@@ -32,7 +32,7 @@ import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
 const HomePage = async ({
   searchParams,
 }: {
-  searchParams: PageSearchParams;
+  searchParams: Promise<PageSearchParams>;
 }) => {
   if (!process.env.METADATA_DATABASE_TYPE) {
     notFound();
@@ -49,8 +49,8 @@ const HomePage = async ({
     }
   }
 
-  const cookieStore = cookies();
-  const config = getLibraryConfig(searchParams, cookieStore);
+  const cookieStore = await cookies();
+  const config = getLibraryConfig(await searchParams, cookieStore);
   const filterConditionsArr = config.condition?.split("|");
   const filterDates = returnParamDates(config.dateRange, config.dates);
 

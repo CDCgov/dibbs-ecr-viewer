@@ -199,7 +199,7 @@ exports[`Encounter should match snapshot 1`] = `
               data-testid="tooltipWrapper"
             >
               <div
-                aria-describedby="[object Object]"
+                aria-describedby="tooltip-r:id"
                 class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
                 data-testid="triggerElement"
                 tabindex="0"
@@ -228,7 +228,7 @@ exports[`Encounter should match snapshot 1`] = `
                 aria-hidden="true"
                 class="usa-tooltip__body"
                 data-testid="tooltipBody"
-                id="[object Object]"
+                id="tooltip-r:id"
                 role="tooltip"
                 title="Specific healthcare facility where the encounter took place."
               >
@@ -355,7 +355,7 @@ Echo Base, MA 00123
               data-testid="tooltipWrapper"
             >
               <div
-                aria-describedby="[object Object]"
+                aria-describedby="tooltip-r:id"
                 class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
                 data-testid="triggerElement"
                 tabindex="0"
@@ -384,7 +384,7 @@ Echo Base, MA 00123
                 aria-hidden="true"
                 class="usa-tooltip__body"
                 data-testid="tooltipBody"
-                id="[object Object]"
+                id="tooltip-r:id"
                 role="tooltip"
                 title="Person or organization that provided care during the encounter."
               >

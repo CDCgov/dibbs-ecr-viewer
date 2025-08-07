@@ -46,7 +46,7 @@ export const logIn = async (
       `/ecr-viewer/signin?callbackUrl=${encodeURIComponent(newUrl)}`,
     );
 
-    await page.getByRole("button").click();
+    await page.getByRole("button", { name: /Sign in/ }).click();
 
     const userName = process.env[`AUTH_${userType}_USER`];
     const password = process.env[`AUTH_${userType}_PASSWORD`];

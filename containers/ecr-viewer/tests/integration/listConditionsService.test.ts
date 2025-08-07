@@ -82,6 +82,7 @@ describe.each([
 ])(
   "Conditions service $scenario",
   ({
+    // eslint-disable-next-line unused-imports/no-unused-vars
     scenario,
     setupNoConditionsEcr,
     expectedAdmin,

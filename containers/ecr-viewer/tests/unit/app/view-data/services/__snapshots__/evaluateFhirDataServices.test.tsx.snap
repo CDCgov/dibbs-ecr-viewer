@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <JsonTable
