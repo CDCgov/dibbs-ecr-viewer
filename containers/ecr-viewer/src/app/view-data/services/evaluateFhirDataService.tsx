@@ -480,7 +480,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
         },
       ]);
 
-    outcomes.length > 0 &&
+    if (outcomes.length > 0) {
       data.push({
         title: "Outcomes",
         fullWidthContent: true,
@@ -497,6 +497,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
           />
         ),
       });
+    }
 
     return {
       type: "Pregnancy Status",
