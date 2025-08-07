@@ -4,7 +4,7 @@
  *
  * The component has been adapted to move the state control from inside the component to the consuming site.
  */
-import React, { ReactNode } from "react";
+import React, { JSX, ReactNode } from "react";
 
 import { Checkbox } from "@trussworks/react-uswds";
 import classnames from "classnames";

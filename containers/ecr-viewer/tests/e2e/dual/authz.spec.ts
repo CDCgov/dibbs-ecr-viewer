@@ -33,12 +33,12 @@ test.describe("standard user authorization", () => {
     await page.getByLabel("Filter by reportable condition").click();
     await expect(page.getByLabel("COVID-19")).toBeVisible();
     // COVID, no conditions reported and deselect all
-    expect(await page.getByRole("checkbox").all()).toHaveLength(2);
+    await expect(page.getByRole("checkbox")).toHaveCount(1);
 
     // Only COVID eCR are listed
-    const rows = await page.getByRole("row").all();
-    expect(rows).toHaveLength(3); // header + two eCR
-    for (const row of rows) {
+    const rows = page.getByRole("row");
+    await expect(rows).toHaveCount(3); // header + two eCR
+    for (const row of await rows.all()) {
       if ((await row.getByRole("columnheader").count()) > 0) continue;
 
       expect(await row.getByText("COVID-19").count()).toBeGreaterThan(0);

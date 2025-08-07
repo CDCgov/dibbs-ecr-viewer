@@ -74,7 +74,7 @@ describe("FormPageContent", () => {
     await user.click(submitButtons[0]);
     expect(submitted).toBeFalse();
     expect(screen.queryByText("Submission failed")).not.toBeInTheDocument();
-    expect(screen.queryByText("You have unsaved changes")).toBeInTheDocument();
+    expect(screen.queryByText("You have unsaved changes.")).toBeInTheDocument();
     expect(router.pathname).not.toBe("/path/to/somewhere");
   });
 
@@ -111,7 +111,7 @@ describe("FormPageContent", () => {
     expect(submitted).toBeFalse();
     expect(screen.queryByText("Submission failed")).not.toBeInTheDocument();
     expect(
-      screen.queryByText("You have unsaved changes"),
+      screen.queryByText("You have unsaved changes."),
     ).not.toBeInTheDocument();
     expect(router.pathname).not.toBe("/path/to/somewhere");
   });

@@ -5,53 +5,395 @@ exports[`Disability Status should display a table  1`] = `"<table class="usa-tab
 exports[`Travel History should display a table  1`] = `
 <div>
   <table
-    class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0 border-top border-left border-right"
+    class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
     data-testid="table"
   >
-    <caption>
-      Travel History
-    </caption>
     <thead>
       <tr>
         <th
-          class="table-header bg-gray-5 minw-10"
+          class="table-header"
           scope="col"
         >
           Location
         </th>
         <th
-          class="table-header bg-gray-5 minw-10"
+          class="table-header"
           scope="col"
         >
-          Start Date
+          Date
         </th>
         <th
-          class="table-header bg-gray-5 minw-10"
-          scope="col"
-        >
-          End Date
-        </th>
-        <th
-          class="table-header bg-gray-5 minw-10"
+          class="table-header"
           scope="col"
         >
           Purpose
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Details
         </th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td
+          class="text-top text-pre-line"
+        >
           Traveled to Naboo, Tatooine and Alderaan
         </td>
-        <td>
-          01/18/1888
+        <td
+          class="text-top text-pre-line"
+        >
+          Start: 01/18/1888
+End: 02/18/1898
         </td>
-        <td>
-          02/18/1898
-        </td>
-        <td>
+        <td
+          class="text-top text-pre-line"
+        >
           Active duty military (occupation)
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Brazil
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Start: 01/19/1888
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Tatooine
+FJ
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Start: 01/01/1888
+End: 01/20/1888
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <button
+            aria-controls="hidden-comment-r:id"
+            aria-expanded="false"
+            class="usa-button usa-button--unstyled"
+            data-test-id="comment-button"
+            data-testid="button"
+            type="button"
+          >
+            View
+             
+            details
+          </button>
+        </td>
+      </tr>
+      <tr
+        hidden=""
+        id="hidden-comment-r:id"
+      >
+        <td
+          class="p-list"
+          colspan="4"
+        >
+          <div
+            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+          />
+          <div>
+            <div
+              class="grid-row flex-column"
+            >
+              <div
+                class="data-title padding-right-1"
+              >
+                Transportation Details
+              </div>
+              <div
+                class="grid-col width-full text-pre-line p-list"
+              >
+                <ul
+                  class="add-list-reset padding-x-4"
+                >
+                  <li
+                    class="padding-y-2 "
+                  >
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Transportation Vehicle Type
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Ocean liner, device (physical object)
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Dates
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Start: 01/01/1888
+End: 01/10/1888
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Ship Name
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Princess of the Sky
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Cabin Number
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          69B
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    class="padding-y-2 border-top border-base-lightest"
+                  >
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Transportation Vehicle Type
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Ocean liner, device (physical object)
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Dates
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Start: 01/10/1888
+End: 01/20/1888
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Ship Moniker
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Chariot of the Sea
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Cabin No.
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          14A
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="section__line_gray"
+            />
+          </div>
+          <div>
+            <div
+              class="grid-row flex-column"
+            >
+              <div
+                class="data-title padding-right-1"
+              >
+                Exposure Details
+              </div>
+              <div
+                class="grid-col width-full text-pre-line p-list"
+              >
+                <ul
+                  class="add-list-reset padding-x-4"
+                >
+                  <li
+                    class="padding-y-2 "
+                  >
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Exposure Type
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Lightsaber demo
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Specific Exposure
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Empire Arena
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Dates
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Start: 11/10/1989 6:00 PM
+End: 11/10/1989 9:30 PM
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Location
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          99 Stadium Road
+My City, AZ 08562
+US
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </td>
       </tr>
     </tbody>

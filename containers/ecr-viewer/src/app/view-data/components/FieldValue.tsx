@@ -71,7 +71,10 @@ const getReactNodeLength = (value: React.ReactNode): number => {
     let count = 0;
     value.forEach((val) => (count += getReactNodeLength(val)));
     return count;
-  } else if (React.isValidElement(value) && value.props.children) {
+  } else if (
+    React.isValidElement<{ children?: ReactNode }>(value) &&
+    value.props.children
+  ) {
     return getReactNodeLength(value.props.children);
   }
   return 0;
@@ -122,7 +125,10 @@ const trimField = (
       );
     }
     return { value: newValArr, remainingLength };
-  } else if (React.isValidElement(value) && value.props.children) {
+  } else if (
+    React.isValidElement<{ children?: ReactNode }>(value) &&
+    value.props.children
+  ) {
     let childrenCopy: ReactNode;
     if (Array.isArray(value.props.children)) {
       childrenCopy = [...value.props.children];

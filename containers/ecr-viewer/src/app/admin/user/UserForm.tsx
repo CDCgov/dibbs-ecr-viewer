@@ -48,6 +48,7 @@ const sortedIds = (programs: FormProgram[]) => {
  * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.submitAction Handler for the submitted data
  * @param props.banner markup to display as a banner above the form title
+ * @param props.formTouchedMsg Warning banner message when a user has touched the form.
  * @returns Program area add/edit form
  */
 export const UserForm = ({
@@ -55,6 +56,7 @@ export const UserForm = ({
   initValues,
   submitAction,
   banner,
+  formTouchedMsg,
 }: {
   action: string;
   initValues: FormValues;
@@ -64,6 +66,7 @@ export const UserForm = ({
     programs: string[],
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
+  formTouchedMsg?: string;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
@@ -95,6 +98,7 @@ export const UserForm = ({
       formValid={valid}
       formTouched={touched}
       banner={banner}
+      formTouchedMsg={formTouchedMsg}
       submitAction={async () => {
         const res = await submitAction(
           email.trim(),

@@ -9,6 +9,13 @@ import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
 import { listLoggedInUserProgramAreas } from "@/app/services/userService";
 import { returnParamDates } from "@/app/utils/date-utils";
+import { PageSearchParams } from "@/app/utils/search-param-utils";
+
+const resolveParams = (
+  v: PageSearchParams,
+): { searchParams: Promise<PageSearchParams> } => ({
+  searchParams: Promise.resolve(v),
+});
 
 jest.mock("@/app/services/listEcrDataService", () => {
   return {
@@ -51,7 +58,7 @@ describe("Home Page", () => {
       uuid: "1234",
       user_type: "admin",
     });
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
     expect(notFound).toHaveBeenCalled();
   });
   it("yes metadata database, should show the homepage", async () => {
@@ -59,7 +66,7 @@ describe("Home Page", () => {
       uuid: "1234",
       user_type: "admin",
     });
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
     expect(getTotalEcrCount).toHaveBeenCalledOnce();
     expect(notFound).not.toHaveBeenCalled();
   });
@@ -69,7 +76,7 @@ describe("Home Page", () => {
       uuid: "1234",
       user_type: "admin",
     });
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
     expect(getTotalEcrCount).not.toHaveBeenCalled();
     expect(notFound).not.toHaveBeenCalled();
     expect(
@@ -78,7 +85,7 @@ describe("Home Page", () => {
   });
   it("yes metadata database, no user, should not show the homepage", async () => {
     (getLoggedInUser as jest.Mock).mockResolvedValue(undefined);
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
     expect(notFound).toHaveBeenCalled();
   });
   it("yes metadata database, standard user with no program areas, should not show the homepage", async () => {
@@ -87,7 +94,7 @@ describe("Home Page", () => {
       user_type: "standard",
     });
     (listLoggedInUserProgramAreas as jest.Mock).mockResolvedValue([]);
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
     expect(getTotalEcrCount).not.toHaveBeenCalled();
     expect(notFound).not.toHaveBeenCalled();
     expect(
@@ -102,14 +109,14 @@ describe("Home Page", () => {
     (listLoggedInUserProgramAreas as jest.Mock).mockResolvedValue([
       { uuid: "4567" },
     ]);
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
     expect(getTotalEcrCount).toHaveBeenCalledOnce();
     expect(notFound).not.toHaveBeenCalled();
   });
   it("yes metadata database, no user, but not set up, should show error page", async () => {
     (dbIsValid as jest.Mock).mockResolvedValue(false);
     (getLoggedInUser as jest.Mock).mockResolvedValue(undefined);
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
     expect(getTotalEcrCount).not.toHaveBeenCalled();
     expect(notFound).not.toHaveBeenCalled();
     expect(
@@ -132,7 +139,7 @@ describe("Reading query params on home page", () => {
 
     (returnParamDates as jest.Mock).mockReturnValue(mockReturnDates);
 
-    render(await HomePage({ searchParams }));
+    render(await HomePage(resolveParams(searchParams)));
 
     expect(returnParamDates).toHaveBeenCalledWith("last-7-days", "");
     expect(returnParamDates).toHaveReturnedWith(mockReturnDates);
@@ -141,7 +148,7 @@ describe("Reading query params on home page", () => {
 
 describe("Reading cookie for itemsPerPage", () => {
   it("should use default if no query param or cookie", async () => {
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
 
     expect(
       screen.getByText(DEFAULT_ITEMS_PER_PAGE.toString()),
@@ -153,7 +160,7 @@ describe("Reading cookie for itemsPerPage", () => {
       get: jest.fn().mockReturnValue({ value: "2312" }),
     });
 
-    render(await HomePage({ searchParams: {} }));
+    render(await HomePage(resolveParams({})));
 
     expect(screen.getByText("2312")).toBeInTheDocument();
   });
@@ -164,7 +171,7 @@ describe("Reading cookie for itemsPerPage", () => {
       get: jest.fn().mockReturnValue({ value: "2312" }),
     });
 
-    render(await HomePage({ searchParams: { itemsPerPage } }));
+    render(await HomePage(resolveParams({ itemsPerPage })));
 
     expect(screen.getByText("432190")).toBeInTheDocument();
   });

@@ -664,25 +664,19 @@ exports[`Filter by Reportable Conditions Component with 'No conditions reported'
                 <div
                   class="display-flex flex-column"
                 >
-                  <div
-                    class="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
+                  <button
+                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
+                    data-testid="button"
+                    type="button"
                   >
-                    <input
-                      checked=""
-                      class="usa-checkbox__input"
-                      id="condition-all"
-                      type="checkbox"
-                      value="all"
-                    />
-                    <label
-                      class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0"
-                      for="condition-all"
-                    >
-                      Deselect all
-                    </label>
-                  </div>
+                    Deselect 
+                    3
+                     
+                    condition
+                    s
+                  </button>
                   <div
-                    class="border-top-1px border-base-lighter margin-x-105"
+                    class="border-top-1px border-base-lighter"
                   />
                   <div
                     class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
@@ -908,23 +902,17 @@ exports[`Filter by Reportable Conditions Component with no filterable conditions
                 <div
                   class="display-flex flex-column"
                 >
-                  <div
-                    class="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
+                  <button
+                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
+                    data-testid="button"
+                    type="button"
                   >
-                    <input
-                      checked=""
-                      class="usa-checkbox__input"
-                      id="condition-all"
-                      type="checkbox"
-                      value="all"
-                    />
-                    <label
-                      class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0"
-                      for="condition-all"
-                    >
-                      Deselect all
-                    </label>
-                  </div>
+                    Select 
+                    0
+                     
+                    condition
+                    s
+                  </button>
                 </div>
                 <div
                   class="border-top-1px border-base-lighter"
@@ -1061,25 +1049,18 @@ exports[`Filter by Reportable Conditions Component with only 'No conditions repo
                 <div
                   class="display-flex flex-column"
                 >
-                  <div
-                    class="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
+                  <button
+                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
+                    data-testid="button"
+                    type="button"
                   >
-                    <input
-                      checked=""
-                      class="usa-checkbox__input"
-                      id="condition-all"
-                      type="checkbox"
-                      value="all"
-                    />
-                    <label
-                      class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0"
-                      for="condition-all"
-                    >
-                      Deselect all
-                    </label>
-                  </div>
+                    Deselect 
+                    1
+                     
+                    condition
+                  </button>
                   <div
-                    class="border-top-1px border-base-lighter margin-x-105"
+                    class="border-top-1px border-base-lighter"
                   />
                   <div
                     class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
@@ -1264,23 +1245,20 @@ exports[`Filter by Reportable Conditions Component with only regular conditions 
                 <div
                   class="display-flex flex-column"
                 >
-                  <div
-                    class="checkbox-color usa-checkbox padding-bottom-1 padding-x-105"
+                  <button
+                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
+                    data-testid="button"
+                    type="button"
                   >
-                    <input
-                      checked=""
-                      class="usa-checkbox__input"
-                      id="condition-all"
-                      type="checkbox"
-                      value="all"
-                    />
-                    <label
-                      class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0"
-                      for="condition-all"
-                    >
-                      Deselect all
-                    </label>
-                  </div>
+                    Deselect 
+                    2
+                     
+                    condition
+                    s
+                  </button>
+                  <div
+                    class="border-top-1px border-base-lighter"
+                  />
                   <div
                     class="border-top-1px border-base-lighter margin-x-105"
                   />

@@ -252,6 +252,10 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
+.usa-modal-wrapper {
+  transition: none;
+}
+
 .usa-modal.sidepanel-modal {
   height: 100vh;
   margin: 0;
