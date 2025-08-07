@@ -38,7 +38,7 @@ export interface ReportableConditions {
 interface EcrMetadata {
   eicrDetails: CompleteData;
   ecrCustodianDetails: CompleteData;
-  rrDetails: ReportableConditions;
+  rrConditions: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
   eRSDProcessingInfo: ERSDInfo | undefined;
 }
@@ -72,11 +72,11 @@ export const unknownWarning: ERSDInfo = {
  * @returns An object containing evaluated and formatted eCR metadata.
  */
 export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
-  const rrDetails = evaluateAll(fhirBundle, fhirPathMappings.rrDetails);
+  const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
 
   const reportableConditionsList: ReportableConditions = {};
 
-  for (const condition of rrDetails) {
+  for (const condition of rrConditions) {
     const name =
       formatCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
@@ -96,7 +96,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       }
 
       condition.performer?.forEach((performer) =>
-        reportableConditionsList[name][trigger].add(performer.display),
+        reportableConditionsList[name][trigger].add(performer.display)
       );
     });
   }
@@ -236,10 +236,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   return {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
-    rrDetails: reportableConditionsList,
+    rrConditions: reportableConditionsList,
     eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details),
+      evaluateData(details)
     ),
   };
 };

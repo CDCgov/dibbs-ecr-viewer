@@ -19,7 +19,7 @@ describe("Evaluate Ecr Metadata", () => {
     expect(actual.eicrDetails.availableData).toBeEmpty();
     expect(actual.eicrDetails.unavailableData).not.toBeEmpty();
 
-    expect(actual.rrDetails.availableData).toBeUndefined();
+    expect(actual.rrConditions.availableData).toBeUndefined();
   });
   it("should have eicrDetails", () => {
     const actual = evaluateEcrMetadata(
@@ -71,12 +71,12 @@ describe("Evaluate Ecr Metadata", () => {
     ]);
     expect(actual.ecrCustodianDetails.unavailableData).toBeEmpty();
   });
-  it("should have rrDetails, and correctly handle human-readable condition name", () => {
+  it("should have rrConditions, and correctly handle human-readable condition name", () => {
     const actual = evaluateEcrMetadata(
-      BundleWithEcrMetadata as unknown as Bundle,
+      BundleWithEcrMetadata as unknown as Bundle
     );
 
-    expect(actual.rrDetails).toEqual({
+    expect(actual.rrConditions).toEqual({
       "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)":
         {
           "COVID-19 (as a diagnosis or active problem)": new Set([
