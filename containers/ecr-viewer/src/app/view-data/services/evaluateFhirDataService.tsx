@@ -518,6 +518,7 @@ const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
     {
       columnName: "First Date of the Last Period",
       infoPath: "valueX",
+      applyToValue: formatDateTime,
     },
     {
       columnName: "Collection Date/Time",

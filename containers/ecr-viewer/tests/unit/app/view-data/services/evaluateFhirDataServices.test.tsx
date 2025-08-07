@@ -12,6 +12,7 @@ import BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHisto
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
+import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -1549,42 +1550,15 @@ Home: 123-456-6909`,
                 ],
               },
               effectiveDateTime: "2020-01-05T10:15:00",
+              valueDateTime: "2020-01-01",
             },
           },
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      render(actual.availableData[0].value);
-      expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
-    });
-
-    it("should have last menstrual period data when it exists", () => {
-      const pregnancyBundle: Bundle = {
-        resourceType: "Bundle",
-        type: "batch",
-        entry: [
-          {
-            resource: {
-              resourceType: "Observation",
-              id: "test_obs",
-              status: "final",
-              code: {
-                coding: [
-                  {
-                    code: "8665-2",
-                    system: "http://loinc.org",
-                    display: "Last menstrual period start date",
-                  },
-                ],
-              },
-              effectiveDateTime: "2020-01-05T10:15:00",
-            },
-          },
-        ],
-      };
-      const actual = evaluatePregnancyData(pregnancyBundle);
-      render(actual.availableData[0].value);
-      expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
+      render(<PregnancyInfo pregnancyData={actual.availableData} />);
+      expect(screen.getByText("Last Menstrual Period")).toBeVisible();
+      expect(screen.getByText("01/01/2020")).toBeVisible();
     });
 
     it("should have pregnancy status data when it exists", () => {
@@ -1653,7 +1627,7 @@ Home: 123-456-6909`,
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      render(actual.availableData[0].value);
+      render(<PregnancyInfo pregnancyData={actual.availableData} />);
       expect(screen.getAllByText("Postpartum Status").length).toEqual(1);
     });
   });
