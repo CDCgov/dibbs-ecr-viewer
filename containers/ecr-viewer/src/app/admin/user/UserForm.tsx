@@ -15,6 +15,7 @@ import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
+import { ListedUser } from "@/app/services/userService";
 import { AccordionItem } from "@/app/types";
 import { notEmpty } from "@/app/utils/data-utils";
 import {
@@ -23,7 +24,6 @@ import {
   toKebabCase,
   toTitleCase,
 } from "@/app/utils/format-utils";
-import { ListedUser } from "@/app/services/userService";
 
 export type UserType = "admin" | "standard";
 
