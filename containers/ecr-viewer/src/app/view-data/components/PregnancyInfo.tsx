@@ -18,7 +18,10 @@ interface PregnancyInfoProps {
 const PregnancyInfo: React.FC<PregnancyInfoProps> = ({ pregnancyData }) => {
   return (
     <AccordionSection>
-      <AccordionSubSection title="Pregnancy Info">
+      <AccordionSubSection
+        title="Pregnancy Info"
+        toolTip="Pregnancy info displays the most recent observations at the top. This section may list multiple pregnancies."
+      >
         <DataDisplay item={pregnancyData} />
       </AccordionSubSection>
     </AccordionSection>

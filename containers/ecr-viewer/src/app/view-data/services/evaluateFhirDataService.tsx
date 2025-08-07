@@ -54,7 +54,9 @@ import {
   DataDisplay,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
-import EvaluateTable from "@/app/view-data/components/EvaluateTable";
+import EvaluateTable, {
+  ColumnInfoInput,
+} from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import {
   compareResourcesByDate,
@@ -303,26 +305,49 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
  * @returns An array of evaluated and formatted pregnancy data.
  */
 export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
+  const data = [
+    ...evaluatePregnancyStatus(fhirBundle),
+    {
+      title: "Last Menstrual Period",
+      value: evaluateLastMenstrualPeriod(fhirBundle),
+    },
+  ];
+
+  return evaluateData(data);
+};
+
+const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
+  const observations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.lastMenstrualPeriod,
+  );
+
+  if (observations.length === 0) return;
+
+  const columns: ColumnInfoInput[] = [
+    {
+      columnName: "First Date of the Last Period",
+      infoPath: "effectiveX",
+    },
+    {
+      columnName: "Collection Date/Time",
+      value: "TODO",
+    },
+    {
+      columnName: "Performer",
+      value: "TODO",
+    },
+  ];
+
+  return <EvaluateTable resources={observations} columns={columns} />;
+};
+
+const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
   // TODO: Ideally the `unavailableData` list would include all subfields of the different observations.
   // However the unavailable data section will need to be modified to handle nested fields like this (this
   // also applies to the occupational history in social history). This function will likely need to be
   // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
   // section can handle nested sub-fields.
-  const lastMenstrualPeriodObservationEntries = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.lastMenstrualPeriod,
-  ).map((ob) => {
-    return {
-      type: "Last Menstrual Period",
-      observation: ob,
-      data: [
-        {
-          title: "Last Menstrual Period",
-          value: evaluateValue(ob, fhirPathMappings.effectiveX),
-        },
-      ].filter(isDataAvailable),
-    };
-  });
   const pregnancyStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.pregnancyStatus,
@@ -362,22 +387,16 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     };
   });
 
-  const unavailableData = [];
+  const res: DisplayDataProps[] = [];
 
-  if (lastMenstrualPeriodObservationEntries.length === 0) {
-    unavailableData.push({
-      title: "Last Menstrual Period",
-      value: undefined,
-    });
-  }
   if (pregnancyStatusObservationEntries.length === 0) {
-    unavailableData.push({
+    res.push({
       title: "Pregnancy Status",
       value: undefined,
     });
   }
   if (postpartumStatusObservationEntries.length === 0) {
-    unavailableData.push({
+    res.push({
       title: "Postpartum Status",
       value: undefined,
     });
@@ -385,7 +404,6 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
 
   // Using `compareResourcesByDate` because we want to apply the consistent date ordering we are using elsewhere, but we're not sorting `Observation[]`, but instead an object containing an `Observation`.
   const allPregnancyObservations = [
-    ...lastMenstrualPeriodObservationEntries,
     ...pregnancyStatusObservationEntries,
     ...postpartumStatusObservationEntries,
   ].sort((a, b) =>
@@ -396,42 +414,36 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     ),
   );
 
-  if (allPregnancyObservations.length === 0)
-    return { availableData: [], unavailableData };
+  if (allPregnancyObservations.length > 0) {
+    res.push({
+      fullWidthContent: true,
+      value: (
+        <ExpandCollapseAccordion
+          className="accordion-rr"
+          descriptor="pregnancy info"
+          items={allPregnancyObservations.map((obs) => {
+            const id = obs.observation.id ?? `${Math.random()}`;
+            const content = obs.data.map((d, i) => (
+              <DataDisplay key={`${id}-${i}`} item={d} />
+            ));
+            return {
+              title: (
+                <div className="display-flex flex-row flex-no-wrap flex-justify">
+                  <span className="text-base">{obs.type}</span>
+                </div>
+              ),
+              expanded: false,
+              content,
+              id,
+              headingLevel: "h5",
+            };
+          })}
+        />
+      ),
+    });
+  }
 
-  const pregnancyElement = (
-    <ExpandCollapseAccordion
-      className="accordion-rr"
-      descriptor="pregnancy info"
-      items={allPregnancyObservations.map((obs) => {
-        const id = obs.observation.id ?? `${Math.random()}`;
-        const content = obs.data.map((d, i) => (
-          <DataDisplay key={`${id}-${i}`} item={d} />
-        ));
-        return {
-          title: (
-            <div className="display-flex flex-row flex-no-wrap flex-justify">
-              <span className="text-base">{obs.type}</span>
-            </div>
-          ),
-          expanded: false,
-          content,
-          id,
-          headingLevel: "h5",
-        };
-      })}
-    />
-  );
-
-  return {
-    availableData: [
-      {
-        value: pregnancyElement,
-        fullWidthContent: true,
-      },
-    ],
-    unavailableData,
-  };
+  return res;
 };
 
 /**
