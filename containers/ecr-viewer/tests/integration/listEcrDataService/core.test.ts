@@ -528,6 +528,7 @@ describe.each([
 ])(
   "generate filter conditions statement $scenario",
   ({
+    // eslint-disable-next-line unused-imports/no-unused-vars
     scenario,
     testConditions,
     expectedPostgresSQL,

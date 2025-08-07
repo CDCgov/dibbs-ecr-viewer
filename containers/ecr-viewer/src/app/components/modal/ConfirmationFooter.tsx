@@ -22,7 +22,7 @@ const ConfirmationFooter = ({
 }: {
   onConfirm: () => void;
   children: ReactNode;
-  modalRef: RefObject<ModalRef>;
+  modalRef: RefObject<ModalRef | null>;
 }) => {
   return (
     <ModalFooter>

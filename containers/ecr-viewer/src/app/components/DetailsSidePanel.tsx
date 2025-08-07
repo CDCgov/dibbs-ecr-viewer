@@ -39,7 +39,7 @@ export const DetailsTrigger = ({
   children,
 }: {
   onClick: () => void;
-  detailsRef: RefObject<ModalRef>;
+  detailsRef: RefObject<ModalRef | null>;
   className?: string;
   children: ReactNode;
 }) => {
@@ -99,7 +99,7 @@ export const DetailsSidePanel = ({
   deleteModalTitle,
   deleteModalBody,
 }: {
-  detailsRef: RefObject<ModalRef>;
+  detailsRef: RefObject<ModalRef | null>;
   details: Detail[];
   title: string;
   subtitle: string;

@@ -6,11 +6,18 @@ import { notFound } from "next/navigation";
 import BundleEcrMetadata from "../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import { isLoggedInUserEcrAuthed } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
+import { PageSearchParams } from "@/app/utils/search-param-utils";
 import ECRViewerPage from "@/app/view-data/page";
 import {
   getFhirData,
   isSuccessResponse,
 } from "@/app/view-data/services/fhirDataService";
+
+const resolveParams = (
+  v: PageSearchParams,
+): { searchParams: Promise<PageSearchParams> } => ({
+  searchParams: Promise.resolve(v),
+});
 
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/view-data/components/LoadingComponent", () => ({
@@ -53,7 +60,7 @@ describe("ECRViewerPage", () => {
     });
     (isSuccessResponse as unknown as jest.Mock).mockReturnValue(false);
 
-    const component = await ECRViewerPage({ searchParams: { id: "123" } });
+    const component = await ECRViewerPage(resolveParams({ id: "123" }));
     render(component);
 
     expect(await screen.findByText("eCR retrieval failed")).toBeInTheDocument();
@@ -66,7 +73,7 @@ describe("ECRViewerPage", () => {
     });
     (isSuccessResponse as unknown as jest.Mock).mockReturnValue(false);
 
-    const component = await ECRViewerPage({ searchParams: { id: "123" } });
+    const component = await ECRViewerPage(resolveParams({ id: "123" }));
     render(component);
 
     expect(
@@ -84,7 +91,7 @@ describe("ECRViewerPage", () => {
     });
     (isSuccessResponse as unknown as jest.Mock).mockReturnValue(true);
 
-    const component = await ECRViewerPage({ searchParams: { id: "123" } });
+    const component = await ECRViewerPage(resolveParams({ id: "123" }));
     render(component);
 
     expect(await screen.findByText("eCR Document")).toBeInTheDocument();
@@ -107,7 +114,7 @@ describe("ECRViewerPage", () => {
       });
       (isLoggedInUserEcrAuthed as jest.Mock).mockResolvedValue(false);
 
-      const component = await ECRViewerPage({ searchParams: { id: "123" } });
+      const component = await ECRViewerPage(resolveParams({ id: "123" }));
       render(component);
 
       expect(notFound).toHaveBeenCalled();
@@ -119,7 +126,7 @@ describe("ECRViewerPage", () => {
       });
       (isLoggedInUserEcrAuthed as jest.Mock).mockResolvedValue(true);
 
-      const component = await ECRViewerPage({ searchParams: { id: "123" } });
+      const component = await ECRViewerPage(resolveParams({ id: "123" }));
       render(component);
 
       expect(notFound).not.toHaveBeenCalled();

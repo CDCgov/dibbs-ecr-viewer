@@ -62,6 +62,7 @@ import {
 } from "@/app/view-data/utils/fhir-data-utils";
 
 import {
+  evaluateExposureDetails,
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
 } from "./socialHistoryService";
@@ -577,13 +578,18 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
 export const evaluateSocialData = (fhirBundle: Bundle) => {
   const socialData: DisplayDataProps[] = [
     {
+      title: "Exposure Contacts",
+      value: evaluateExposureDetails(fhirBundle),
+      fullWidthContent: true,
+    },
+    {
       title: "Tobacco Use",
       value: evaluateValue(fhirBundle, fhirPathMappings.patientTobaccoUse),
     },
     {
       title: "Travel History",
       value: evaluateTravelHistoryTable(fhirBundle),
-      table: true,
+      fullWidthContent: true,
     },
     {
       title: "Homeless Status",

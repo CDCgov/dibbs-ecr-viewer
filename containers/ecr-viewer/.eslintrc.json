@@ -47,6 +47,11 @@
           {
             "pattern": "@/**",
             "group": "parent"
+          },
+          {
+            "pattern": "@/../../../**",
+            "group": "parent",
+            "position": "before"
           }
         ],
         "pathGroupsExcludedImportTypes": [],
