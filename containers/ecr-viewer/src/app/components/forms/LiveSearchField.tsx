@@ -11,6 +11,7 @@ import { makePlural, toKebabCase } from "@/app/utils/format-utils";
  * @param props.setSearchTerm handler for search term change
  * @param props.label label of the field (also used for placeholder and id)
  * @param props.numResults Optionally, display this number of results when non-empty
+ * @param props.className Optionally, classname to pass to the outer div
  * @returns styled live search component
  */
 export const LiveSearchField = ({
@@ -18,14 +19,16 @@ export const LiveSearchField = ({
   setSearchTerm,
   label,
   numResults,
+  className,
 }: {
   searchTerm: string;
   setSearchTerm: (v: string) => void;
   label: string;
   numResults?: number;
+  className?: string;
 }) => {
   return (
-    <div className="live-search">
+    <div className={`live-search ${className}`}>
       {searchTerm && numResults && (
         <p aria-live="polite" className="result-count">
           {numResults} result{makePlural(numResults)}
