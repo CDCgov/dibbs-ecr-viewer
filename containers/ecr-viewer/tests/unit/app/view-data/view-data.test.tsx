@@ -16,7 +16,7 @@ import {
 const resolveParams = (
   v: PageSearchParams,
 ): { searchParams: Promise<PageSearchParams> } => ({
-  searchParams: Promise.resolve(v)
+  searchParams: Promise.resolve(v),
 });
 
 jest.mock("@/app/data/metadataDb/database");
