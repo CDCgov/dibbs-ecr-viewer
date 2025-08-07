@@ -96,7 +96,7 @@ export type PathTypes = {
   compositionEncounterRef: string;
   encounterAttendingRefs: EncounterParticipant;
   encounterParticipants: EncounterParticipant;
-  rrDetails: Observation;
+  rrConditions: Observation;
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
   resolve: unknown;
@@ -420,9 +420,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "participant",
   },
 
-  rrDetails: {
+  rrConditions: {
     type: "Observation",
-    path: "entry.resource.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+    path: "entry.resource.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation')",
   },
 
   // Vitals

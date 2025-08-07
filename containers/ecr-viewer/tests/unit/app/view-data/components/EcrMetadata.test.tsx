@@ -116,11 +116,11 @@ describe("eCR Metadata", () => {
     const { container } = render(
       <EcrMetadata
         eicrDetails={eicrDetails}
-        rrDetails={rrConditionsList}
+        rrConditions={rrConditionsList}
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />,
+      />
     );
     expect(container).toMatchSnapshot();
   });
@@ -128,11 +128,11 @@ describe("eCR Metadata", () => {
     const { container } = render(
       <EcrMetadata
         eicrDetails={eicrDetails}
-        rrDetails={rrConditionsList}
+        rrConditions={rrConditionsList}
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />,
+      />
     );
     // ignore duplicate ids due to mocking making all useId return the same
     expect(
@@ -143,15 +143,15 @@ describe("eCR Metadata", () => {
   });
 
   it("should let the user know that a reportable condition hasn't been found if there is no data available", () => {
-    const emptyRrDetails: ReportableConditions = {};
+    const emptyRrConditions: ReportableConditions = {};
     render(
       <EcrMetadata
         eicrDetails={eicrDetails}
-        rrDetails={emptyRrDetails}
+        rrConditions={emptyRrConditions}
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />,
+      />
     );
     expect(
       screen.getByText("Reportability Summary", { selector: "h5" }),
@@ -164,11 +164,11 @@ describe("eCR Metadata", () => {
     render(
       <EcrMetadata
         eicrDetails={eicrDetails}
-        rrDetails={rrConditionsList}
+        rrConditions={rrConditionsList}
         eRSDProcessingInfo={undefined}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />,
+      />
     );
     expect(screen.queryByText("Warning")).not.toBeInTheDocument();
   });

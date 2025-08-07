@@ -15,7 +15,7 @@ import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 import { ToolTipElement } from "./ToolTipElement";
 
 interface EcrMetadataProps {
-  rrDetails: ReportableConditions;
+  rrConditions: ReportableConditions;
   eicrDetails: DisplayDataProps[];
   eRSDProcessingInfo: ERSDInfo | undefined;
   eCRCustodianDetails: DisplayDataProps[];
@@ -31,7 +31,7 @@ const eRSDWarningTooltip = (
 /**
  * Functional component for displaying eCR metadata.
  * @param props - Props containing eCR metadata.
- * @param props.rrDetails - The reportable conditions details.
+ * @param props.rrConditions - The reportable conditions details.
  * @param props.eicrDetails - The eICR details.
  * @param props.eRSDProcessingInfo - The eICR processing success status & eRSD warning.
  * @param props.eCRCustodianDetails - The eCR custodian details.
@@ -39,7 +39,7 @@ const eRSDWarningTooltip = (
  * @returns The JSX element representing the eCR metadata.
  */
 const EcrMetadata = ({
-  rrDetails,
+  rrConditions,
   eicrDetails,
   eRSDProcessingInfo,
   eCRCustodianDetails,
@@ -48,7 +48,7 @@ const EcrMetadata = ({
   return (
     <AccordionSection>
       <AccordionSubSection title="RR Details">
-        <ReportabilitySummary rrDetails={rrDetails} />
+        <ReportabilitySummary rrConditions={rrConditions} />
         <div className="section__line_gray" />
         {eRSDProcessingInfo?.success ? (
           <div>
@@ -130,12 +130,12 @@ const EcrMetadata = ({
   );
 };
 
-type ReportabilitySummaryProps = Pick<EcrMetadataProps, "rrDetails">;
+type ReportabilitySummaryProps = Pick<EcrMetadataProps, "rrConditions">;
 
 const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
-  rrDetails,
+  rrConditions,
 }) => {
-  const rows = useConvertDictionaryToRows(rrDetails);
+  const rows = useConvertDictionaryToRows(rrConditions);
 
   if (rows.length === 0) {
     return (

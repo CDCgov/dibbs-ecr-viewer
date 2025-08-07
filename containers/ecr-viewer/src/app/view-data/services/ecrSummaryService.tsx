@@ -156,7 +156,7 @@ export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
   snomedCode?: string,
 ): ConditionSummary[] => {
-  const rrArray = evaluateAll(fhirBundle, fhirPathMappings.rrDetails);
+  const rrArray = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const conditionsList: {
     [index: string]: { ruleSummaries: Set<string>; snomedDisplay: string };
   } = {};
