@@ -48,7 +48,7 @@ const EditUserPage = async ({
   };
 
   const users = await listUsers();
-  const otherUsers = users.filter(({uuid: otherUuid}) => uuid !== otherUuid);
+  const otherUsers = users.filter(({ uuid: otherUuid }) => uuid !== otherUuid);
 
   return (
     <UserForm
@@ -57,7 +57,7 @@ const EditUserPage = async ({
         email: user.email,
         userType: isValidUserType(user.user_type) ? user.user_type : undefined,
         programs: initPrograms,
-        users: otherUsers
+        users: otherUsers,
       }}
       submitAction={async (email, userType, programs) => {
         "use server";
