@@ -53,17 +53,17 @@ export const FormPageContent = <T,>({
   const actionPhrase = `${action} ${itemType}`;
 
   return (
-    <main className="main-container">
-      <div className="content-container margin-top-3 position-relative">
-        <Link
-          href={itemHomeRoute}
-          className="action-text display-inline-flex flex-align-center"
-        >
-          <ArrowBack aria-hidden={true} className="square-3" />
-          Back to {itemType} management
-        </Link>
-        <div className="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container">
-          <div className="minh-5 margin-bottom-1">
+    <main className="main-container display-flex flex-column flex-align-center">
+      <div className="width-full border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container shadow-2 display-flex flex-justify-center">
+        <div className="content-container">
+          <Link
+            href={itemHomeRoute}
+            className="action-text display-inline-flex flex-align-center margin-bottom-1 margin-top-2"
+          >
+            <ArrowBack aria-hidden={true} className="square-3" />
+            Back to {itemType} management
+          </Link>
+          <div className="margin-bottom-1">
             {banner}
 
             {formTouched && !submitting && !error && (
@@ -101,7 +101,9 @@ export const FormPageContent = <T,>({
             </div>
           </div>
         </div>
+      </div>
 
+      <div className="content-container margin-top-3">
         <form
           id={id}
           className="margin-top-3 isolate"
