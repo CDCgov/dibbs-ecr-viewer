@@ -478,6 +478,10 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
           title: "Outcome",
           value: evaluateValue(o, fhirPathMappings.valueX),
         },
+        {
+          title: "Date/Time",
+          value: evaluateValue(o, fhirPathMappings.effectiveX),
+        },
       ]);
 
     if (outcomes.length > 0) {
