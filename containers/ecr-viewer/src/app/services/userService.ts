@@ -16,7 +16,7 @@ import {
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-import { getLoggedInUser } from "./loggedInUserService";
+import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
 /**
  * @param user User to check is an admin
@@ -128,7 +128,6 @@ export const createUser = audit(
   ): Promise<string> => {
     const creatingUser = await getCheckAdmin("create new users");
     const uuid = randomUUID();
-    const inactiveUser = await checkDupeEmail(trx, email, uuid);
     try {
       const createdUuid = await createUserQuery(
         trx,
@@ -136,7 +135,6 @@ export const createUser = audit(
         userType,
         uuid,
         creatingUser.uuid,
-        inactiveUser
       );
       await updateUserProgramAreasQuery(trx, createdUuid, programs);
       return createdUuid;
@@ -169,8 +167,7 @@ export const createInitialAdminUser = audit(
 
     try {
       const uuid = randomUUID();
-      const inactiveUser = await checkDupeEmail(trx, email, uuid);
-      return await createUserQuery(trx, email, "admin", uuid, uuid, inactiveUser);
+      return await createUserQuery(trx, email, "admin", uuid, uuid);
     } catch (error: unknown) {
       const message = "Failed to create initial admin user";
       console.error({ message, error });
@@ -185,11 +182,15 @@ const createUserQuery = async (
   user_type: "admin" | "standard",
   uuid: string,
   author_uuid: string,
-  inactiveUser: boolean = false,
 ) => {
-  if (inactiveUser) {
-    await updateUserQuery(db, uuid, { status: "active", user_type });
-    return uuid;
+  const user = await getUserByEmail(email);
+  if (!!user) {
+    if (user.status === "active") {
+      throw new UserFacingError("User already exists and is active");
+    } else {
+      await updateUserQuery(db, user.uuid, { status: "active", user_type });
+      return user.uuid;
+    }
   }
 
   const newUser: NewUser = {
