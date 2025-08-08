@@ -31,13 +31,11 @@ export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
 }
 
-export interface FormUser extends ListedUser {}
-
 interface FormValues {
   email?: string;
   userType?: UserType;
   programs: FormProgram[];
-  users: FormUser[];
+  users: ListedUser[];
 }
 
 const sortedIds = (programs: FormProgram[]) => {

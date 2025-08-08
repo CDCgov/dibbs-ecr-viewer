@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 
-import { Transaction } from "kysely";
+import { sql, Transaction } from "kysely";
 
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, User } from "@/app/data/metadataDb/types/core";
@@ -22,7 +22,7 @@ export const getUserByEmail = async (
   return await (trx ?? getDb<Core>())
     .selectFrom("user")
     .selectAll()
-    .where("email", "=", email)
+    .where(sql`LOWER(email)`, "=", email?.toLowerCase())
     .executeTakeFirst();
 };
 

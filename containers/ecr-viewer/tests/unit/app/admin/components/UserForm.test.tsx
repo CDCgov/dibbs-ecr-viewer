@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { FormProgram, FormUser, UserForm } from "@/app/admin/user/UserForm";
+import { FormProgram, UserForm } from "@/app/admin/user/UserForm";
+import { ListedUser } from "@/app/services/userService";
 
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/services/programAreaService");
@@ -57,7 +58,7 @@ const mockPrograms: FormProgram[] = [
   },
 ];
 const TEST_EMAIL = "TestUser@abc.com";
-const mockUsers: FormUser[] = [
+const mockUsers: ListedUser[] = [
   {
     uuid: "XYZ",
     name: "Test",
