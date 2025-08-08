@@ -205,7 +205,7 @@ const createUserQuery = async (
 };
 
 /**
- * 
+ *
  * @param db the database connection
  * @param email email of the user to create or update (case-insensitive)
  * @param uuid uuid of the user to create or update
@@ -224,17 +224,21 @@ const checkDupeEmail = async (
   const user = await db
     .selectFrom("user")
     .selectAll()
-    .where((eb) => eb(eb.fn<string>("LOWER", [eb.ref("email")]), "=", email?.toLowerCase()))
+    .where((eb) =>
+      eb(eb.fn<string>("LOWER", [eb.ref("email")]), "=", email?.toLowerCase()),
+    )
     .where("uuid", "!=", uuid)
     .executeTakeFirst();
-  
+
   // inactive user does not exist
   if (!user) {
     return false;
   }
 
   if (user.status === "active") {
-    throw new UserFacingError("This email already exists. Please add a different email.")
+    throw new UserFacingError(
+      "This email already exists. Please add a different email.",
+    );
   }
 
   // inactive user exists
