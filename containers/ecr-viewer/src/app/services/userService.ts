@@ -16,7 +16,7 @@ import {
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
+import { getLoggedInUser } from "./loggedInUserService";
 
 /**
  * @param user User to check is an admin
@@ -127,17 +127,19 @@ export const createUser = audit(
     trx: Transaction<Core>,
   ): Promise<string> => {
     const creatingUser = await getCheckAdmin("create new users");
-
+    const uuid = randomUUID();
+    const inactiveUser = await checkDupeEmail(trx, email, uuid);
     try {
-      const uuid = await createUserQuery(
+      const createdUuid = await createUserQuery(
         trx,
         email,
         userType,
-        randomUUID(),
+        uuid,
         creatingUser.uuid,
+        inactiveUser
       );
-      await updateUserProgramAreasQuery(trx, uuid, programs);
-      return uuid;
+      await updateUserProgramAreasQuery(trx, createdUuid, programs);
+      return createdUuid;
     } catch (error: unknown) {
       const message = "Failed to create new user";
       console.error({ message, error });
@@ -167,7 +169,8 @@ export const createInitialAdminUser = audit(
 
     try {
       const uuid = randomUUID();
-      return await createUserQuery(trx, email, "admin", uuid, uuid);
+      const inactiveUser = await checkDupeEmail(trx, email, uuid);
+      return await createUserQuery(trx, email, "admin", uuid, uuid, inactiveUser);
     } catch (error: unknown) {
       const message = "Failed to create initial admin user";
       console.error({ message, error });
@@ -177,20 +180,16 @@ export const createInitialAdminUser = audit(
 );
 
 const createUserQuery = async (
-  db: Kysely<Core>,
+  db: Transaction<Core>,
   email: string,
   user_type: "admin" | "standard",
   uuid: string,
   author_uuid: string,
+  inactiveUser: boolean = false,
 ) => {
-  const user = await getUserByEmail(email);
-  if (!!user) {
-    if (user.status === "active") {
-      throw new UserFacingError("User already exists and is active");
-    } else {
-      await updateUserQuery(db, user.uuid, { status: "active", user_type });
-      return user.uuid;
-    }
+  if (inactiveUser) {
+    await updateUserQuery(db, uuid, { status: "active", user_type });
+    return uuid;
   }
 
   const newUser: NewUser = {
@@ -202,6 +201,43 @@ const createUserQuery = async (
 
   await db.insertInto("user").values(newUser).execute();
   return uuid;
+};
+
+/**
+ * 
+ * @param db the database connection
+ * @param email email of the user to create or update (case-insensitive)
+ * @param uuid uuid of the user to create or update
+ * @returns whether an inactive user with the same email exists
+ * @throws UserFacingError when an active user with the same email exists
+ */
+const checkDupeEmail = async (
+  db: Transaction<Core>,
+  email: string | null | undefined,
+  uuid: string,
+): Promise<boolean> => {
+  if (!email) {
+    return false;
+  }
+
+  const user = await db
+    .selectFrom("user")
+    .selectAll()
+    .where((eb) => eb(eb.fn<string>("LOWER", [eb.ref("email")]), "=", email?.toLowerCase()))
+    .where("uuid", "!=", uuid)
+    .executeTakeFirst();
+  
+  // inactive user does not exist
+  if (!user) {
+    return false;
+  }
+
+  if (user.status === "active") {
+    throw new UserFacingError("This email already exists. Please add a different email.")
+  }
+
+  // inactive user exists
+  return true;
 };
 
 /**
@@ -248,6 +284,7 @@ export const updateUser = audit(
     await getCheckAdmin("update users");
 
     try {
+      await checkDupeEmail(trx, updates.email, uuid);
       Object.keys(updates).length > 0 &&
         (await updateUserQuery(trx, uuid, updates));
       await updateUserProgramAreasQuery(trx, uuid, programs);
