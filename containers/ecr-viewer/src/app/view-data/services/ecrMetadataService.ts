@@ -27,13 +27,83 @@ import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
-import { getReportabilitySummaries } from "./reportabilityService";
+import { getReportabilityInfo } from "./reportabilityService";
 
-export interface ReportableConditions {
+// TODO ANGELA: DELETE
+export interface ReportableConditionsOLD {
   [condition: string]: {
     [trigger: string]: Set<string | undefined>;
   };
 }
+
+// {
+//   "Zika Virus Disease": {
+//     "travel history": Set { "State Department of Health Routing Agency" },
+//     "positive lab result": Set { "Local Public Health Agency" }
+//   },
+//   "Measles": {
+//     "rash and fever": Set { "Provider Facility A" },
+//     "positive lab result": Set { "Local Public Health Agency", "Provider Facility B" }
+//   },
+//   "Tuberculosis": {
+//     "positive skin test": Set { "Provider Facility C" }
+//   }
+// }
+
+export interface ReportableConditions {
+  [condition: string]: ReportabilityInfo[];
+}
+
+export interface ReportabilityInfo {
+  participants: Participant[];
+  rules: string[];
+  reasons: string[];
+}
+
+export interface Participant {
+  name: string;
+  role: string;
+}
+
+// {
+//   "Zika Virus Disease": 
+//   [
+//       {
+//         "rules authoring agency": "Agency A",
+//         "routing entity": "Agency B",
+//         "responsible party": "Agency A"
+//         "rule summaries": [
+//           "Rule A", "Rule B"
+//         ]
+//         "reasons": [
+//           "Reason A"
+//         ]
+//       },
+//       {
+//         "rules authoring agency": "Agency C",
+//         "routing entity": "Agency C",
+//         "responsible party": "Agency C"
+//         "rule summaries": [
+//           "Rule A", "Rule B"
+//         ]
+//         "reasons": []
+//       },
+//   ],
+//   "Measles": [
+//     {
+//         "rules authoring agency": "Agency A",
+//         "routing entity": "Agency A",
+//         "responsible party": "Agency A"
+//         "rule summaries": [
+//           "Rule A", "Rule B"
+//         ]
+//         "reasons": [
+//           "Reason A"
+//         ]
+//     }
+//   ]
+// }
+
 
 interface EcrMetadata {
   eicrDetails: CompleteData;
@@ -73,32 +143,18 @@ export const unknownWarning: ERSDInfo = {
  */
 export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
-
   const reportableConditionsList: ReportableConditions = {};
 
   for (const condition of rrConditions) {
     const name =
       formatCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
-    const triggers = getReportabilitySummaries(condition);
+    const rrInfo: ReportabilityInfo[] = getReportabilityInfo(fhirBundle, condition)
 
     if (!reportableConditionsList[name]) {
-      reportableConditionsList[name] = {};
+      reportableConditionsList[name] = [];
     }
-
-    if (!triggers.size) {
-      console.error("No triggers found for reportable condition");
-    }
-
-    triggers.forEach((trigger) => {
-      if (!reportableConditionsList[name][trigger]) {
-        reportableConditionsList[name][trigger] = new Set();
-      }
-
-      condition.performer?.forEach((performer) =>
-        reportableConditionsList[name][trigger].add(performer.display)
-      );
-    });
+    reportableConditionsList[name].push(...rrInfo);
   }
 
   const custodianRef = evaluateOne(
