@@ -25,7 +25,7 @@ export const getReportabilityInfo = (
     const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
     const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
 
-    rrInfoArr.push({participants, rules, reasons})
+    rrInfoArr.push({ participants, rules, reasons });
   });
 
   return rrInfoArr
@@ -36,10 +36,12 @@ export const getReportabilityInfo = (
  * @param observation - FHIR Observation
  * @returns Object of rules and reasons arrays
  */
-const getReportabilityRulesReasons = (observation: Observation | undefined): {rules: string[], reasons: string[]} => {
+export const getReportabilityRulesReasons = (
+  observation: Observation | undefined
+): { rules: Set<string>; reasons: Set<string> } => {
   // TODO ANGELA: should these be a set?
-  const rules: string[] = [];
-  const reasons: string[] = [];
+  const rules = new Set<string>();
+  const reasons = new Set<string>();
 
   observation?.extension?.forEach((extension) => {
     if (
@@ -47,18 +49,17 @@ const getReportabilityRulesReasons = (observation: Observation | undefined): {ru
         "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension" &&
       extension?.valueString?.trim()
     ) {
-      rules.push(extension.valueString.trim());
-    }
-    else if (
+      rules.add(extension.valueString.trim());
+    } else if (
       extension.url ===
         "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-reason-extension" &&
       extension?.valueString?.trim()
     ) {
-      reasons.push(extension.valueString.trim());
+      reasons.add(extension.valueString.trim());
     }
   });
-  return {rules, reasons}
-}
+  return { rules, reasons };
+};
 
 /**
  * Finds all responsible agencies involved with the eCR.

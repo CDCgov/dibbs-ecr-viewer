@@ -56,8 +56,8 @@ export interface ReportableConditions {
 
 export interface ReportabilityInfo {
   participants: Participant[];
-  rules: string[];
-  reasons: string[];
+  rules: Set<string>;
+  reasons: Set<string>;
 }
 
 export interface Participant {
