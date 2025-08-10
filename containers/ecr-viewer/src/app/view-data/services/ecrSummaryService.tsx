@@ -5,6 +5,7 @@ import {
   Condition,
   DomainResource,
   Location,
+  Observation,
   Organization,
 } from "fhir/r4";
 
@@ -23,6 +24,7 @@ import {
   evaluateAll,
   evaluateOne,
   evaluateOneReference,
+  evaluateReference,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
@@ -43,7 +45,7 @@ import {
   calculatePatientAge,
 } from "./evaluateFhirDataService";
 import { evaluateLabInfoData } from "./labsService";
-import { getReportabilitySummaries } from "./reportabilityService";
+import { getReportabilityRulesReasons } from "./reportabilityService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -156,11 +158,11 @@ export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
   snomedCode?: string,
 ): ConditionSummary[] => {
-  const rrArray = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
+  const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const conditionsList: {
     [index: string]: { ruleSummaries: Set<string>; snomedDisplay: string };
   } = {};
-  for (const observation of rrArray) {
+  for (const observation of rrConditions) {
     const coding = observation?.valueCodeableConcept?.coding?.find(
       (coding) => coding.system === "http://snomed.info/sct",
     );
@@ -175,9 +177,15 @@ export const evaluateEcrSummaryConditionSummary = (
         };
       }
 
-      getReportabilitySummaries(observation).forEach((ruleSummary) =>
-        conditionsList[snomed].ruleSummaries.add(ruleSummary),
-      );
+      observation?.hasMember?.forEach((ref) => {
+        const rrInfoObs: Observation | undefined = evaluateReference(
+          fhirBundle,
+          ref.reference
+        );
+        const { rules } = getReportabilityRulesReasons(rrInfoObs);
+    
+        rules.forEach((rule: string) => conditionsList[snomed].ruleSummaries.add(rule));
+      });
     }
   }
 
