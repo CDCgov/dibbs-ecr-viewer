@@ -157,6 +157,7 @@ export type PathTypes = {
   observationOrganismMethod: ValueX;
   observationResultStatus: string;
   organizations: Organization;
+  organizationType: ValueX;
   patientTravelHistory: Observation;
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
@@ -171,6 +172,7 @@ export type PathTypes = {
   effectiveX: TimeX;
   code: CodeableConcept;
   method: CodeableConcept;
+  name: string;
   noteText: string;
   valueX: ValueX;
   occurrenceX: TimeX;
@@ -660,6 +662,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Organization",
     path: "entry.resource.Organization",
   },
+  organizationType: {
+    type: "ValueX",
+    path: "type.coding.display",
+  },
 
   // Travel History
   patientTravelHistory: {
@@ -726,6 +732,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   method: {
     type: "CodeableConcept",
     path: "method",
+  },
+  name: {
+    type: "string",
+    path: "name",
   },
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
