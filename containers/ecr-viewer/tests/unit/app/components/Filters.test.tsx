@@ -14,7 +14,11 @@ jest.mock("next/navigation", () => ({
   useSearchParams: jest.fn(),
 }));
 
-const MOCK_CONDITIONS = ["Condition1", "Condition2"];
+const MOCK_CONDITIONS = [
+  "Condition1",
+  "Condition2",
+  NO_CONDITIONS_REPORTED_OPTION,
+];
 const MOCK_PROPS = {
   allConditions: MOCK_CONDITIONS,
   initConditions: MOCK_CONDITIONS,
@@ -349,6 +353,83 @@ describe.each([
   },
 );
 
+describe("Filter by Condition Search", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    const mockSearchParams = { current: new URLSearchParams("") };
+    (useSearchParams as jest.Mock).mockImplementation(
+      () => mockSearchParams.current,
+    );
+
+    const mockPush = jest.fn().mockImplementation((path: string) => {
+      const url = new URL(path, "https://example.com");
+      mockSearchParams.current = new URLSearchParams(url.search);
+    });
+    (useRouter as jest.Mock).mockImplementation(() => {
+      return { push: mockPush };
+    });
+
+    global.fetch = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(MOCK_CONDITIONS),
+      } as unknown as Response),
+    );
+  });
+
+  it.only("search flow", async () => {
+    const user = userEvent.setup();
+    const mockPush = jest.fn();
+    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+
+    const { container } = renderFilters();
+
+    const toggleFilterButton = await screen.findByRole("button", {
+      name: /Filter by reportable condition/i,
+    });
+    await user.click(toggleFilterButton);
+
+    expect(screen.getByText("Deselect 3 conditions")).toBeVisible();
+
+    const searchInput = screen.getByPlaceholderText(
+      "Search by reportable condition",
+    );
+    await user.type(searchInput, "no");
+
+    const deselectButton = screen.getByRole("button", {
+      name: "Deselect 1 condition",
+    });
+    expect(deselectButton).toBeVisible();
+    expect(container).toMatchSnapshot();
+
+    await user.click(deselectButton);
+    expect(screen.getByText("Select 1 condition")).toBeVisible();
+
+    await user.clear(searchInput);
+    expect(screen.getByText("Deselect 2 conditions")).toBeVisible();
+    expect(screen.getAllByRole("checkbox")).toHaveLength(3);
+
+    await user.type(searchInput, "1");
+    expect(deselectButton).toBeVisible();
+
+    await user.type(searchInput, "not a condition");
+    expect(screen.getByRole("button", { name: "0 conditions" })).toBeDisabled();
+    expect(screen.getByText("No reportable conditions found.")).toBeVisible();
+    expect(screen.queryAllByRole("checkbox")).toHaveLength(0);
+
+    const applyFilterButton = screen.getByRole("button", {
+      name: /Apply filter/i,
+    });
+    await user.click(applyFilterButton);
+
+    // Should have conditions in search param (no conditions deselected earlier)
+    expect(mockPush).toHaveBeenCalledWith(
+      expect.stringContaining(`condition=Condition1%7CCondition2`),
+    );
+  });
+});
+
 describe("Filter by Date Component", () => {
   // NOTE: Tests look for Last Year = local dev default. The prod default is Last 24 hours.
   beforeEach(() => {
@@ -370,7 +451,7 @@ describe("Filter by Date Component", () => {
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(["Condition1", "Condition2"]),
+        json: () => Promise.resolve(MOCK_CONDITIONS),
       } as unknown as Response),
     );
   });

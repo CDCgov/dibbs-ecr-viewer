@@ -385,13 +385,14 @@ export const SelectDeselectAllButton = ({
     <Button
       type="button"
       unstyled={true}
+      disabled={numOptions === 0}
       className={classnames(
         "action-text font-size-xs margin-x-105 margin-bottom-1",
         className,
       )}
       onClick={() => onToggle(!isAnySelected)}
     >
-      {isAnySelected ? "Deselect " : "Select "}
+      {numOptions === 0 ? "" : isAnySelected ? "Deselect " : "Select "}
       {numBulkSelectable} {groupName}
       {makePlural(numBulkSelectable)}
     </Button>

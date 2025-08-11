@@ -132,10 +132,20 @@ $table-border-radius-md: 0.5rem;
   font-weight: 700;
   text-decoration: none;
 
+  &:disabled {
+    text-decoration: none;
+    color: color("disabled");
+  }
+
   &:hover,
   &:active {
     color: color("primary-dark");
     text-decoration: none;
+
+    &:disabled {
+      text-decoration: none;
+      color: color("disabled");
+    }
   }
 }
 
@@ -236,7 +246,9 @@ $table-border-radius-md: 0.5rem;
     "content"
     "apply-button";
 
-  .filter-wrapper {
+  // we forward the wrapper contents to the form's grid due to
+  // limitations around the positioning of <legend> tags
+  > .filter-wrapper {
     display: contents;
 
     > legend {
