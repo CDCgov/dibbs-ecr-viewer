@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Filter by Date Component - custom dates Renders correctly after opening Filter by Date box and clicking Custom date range option 1`] = `
 <div>
@@ -50,19 +50,21 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
               Received date
             </span>
           </button>
-          <div
-            class="usa-combo-box top-full left-0"
+          <form
+            class="usa-combo-box top-full left-0 position-absolute shadow-2 border-0 radius-md padding-0 margin-top-1 bg-white z-top filter-form maxh-6205 minh-30"
           >
-            <form>
-              <fieldset
-                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+            <fieldset
+              class="usa-combo-box filter-wrapper border-0 width-full"
+            >
+              <legend
+                class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-top-1 padding-left-105 padding-right-2 text-no-wrap"
               >
-                <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
-                >
-                  Filter by 
-                  received date
-                </legend>
+                Filter by 
+                received date
+              </legend>
+              <div
+                class="filter-content overflow-y-auto padding-y-1"
+              >
                 <div
                   class="display-flex flex-column"
                 >
@@ -232,6 +234,13 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="filter-apply"
+              >
+                <div
+                  class="border-top-1px border-base-lighter"
+                />
                 <div
                   class="display-flex flex-column flex-stretch padding-x-105"
                 >
@@ -244,9 +253,9 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
                     Apply filter
                   </button>
                 </div>
-              </fieldset>
-            </form>
-          </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
       <div>
@@ -348,19 +357,21 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
               Last year
             </span>
           </button>
-          <div
-            class="usa-combo-box top-full left-0"
+          <form
+            class="usa-combo-box top-full left-0 position-absolute shadow-2 border-0 radius-md padding-0 margin-top-1 bg-white z-top filter-form maxh-6205 minh-30"
           >
-            <form>
-              <fieldset
-                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+            <fieldset
+              class="usa-combo-box filter-wrapper border-0 width-full"
+            >
+              <legend
+                class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-top-1 padding-left-105 padding-right-2 text-no-wrap"
               >
-                <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
-                >
-                  Filter by 
-                  received date
-                </legend>
+                Filter by 
+                received date
+              </legend>
+              <div
+                class="filter-content overflow-y-auto padding-y-1"
+              >
                 <div
                   class="display-flex flex-column"
                 >
@@ -488,6 +499,13 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
                     </label>
                   </div>
                 </div>
+              </div>
+              <div
+                class="filter-apply"
+              >
+                <div
+                  class="border-top-1px border-base-lighter"
+                />
                 <div
                   class="display-flex flex-column flex-stretch padding-x-105"
                 >
@@ -501,9 +519,9 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
                     Apply filter
                   </button>
                 </div>
-              </fieldset>
-            </form>
-          </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
       <div>
@@ -649,99 +667,141 @@ exports[`Filter by Reportable Conditions Component with 'No conditions reported'
               3
             </span>
           </button>
-          <div
-            class="usa-combo-box top-full left-0"
+          <form
+            class="usa-combo-box top-full left-0 position-absolute shadow-2 border-0 radius-md padding-0 margin-top-1 bg-white z-top filter-form maxh-6205 minh-30"
           >
-            <form>
-              <fieldset
-                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+            <fieldset
+              class="usa-combo-box filter-wrapper border-0 width-full"
+            >
+              <legend
+                class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-top-1 padding-left-105 padding-right-2 text-no-wrap"
               >
-                <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
-                >
-                  Filter by 
-                  reportable condition
-                </legend>
+                Filter by 
+                reportable condition
+              </legend>
+              <div
+                class="filter-content overflow-y-auto padding-y-1"
+              >
                 <div
-                  class="display-flex flex-column"
+                  class="display-flex flex-column height-full"
                 >
-                  <button
-                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
-                    data-testid="button"
-                    type="button"
-                  >
-                    Deselect 
-                    3
-                     
-                    condition
-                    s
-                  </button>
                   <div
-                    class="border-top-1px border-base-lighter"
-                  />
-                  <div
-                    class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
+                    class="flex-0"
                   >
                     <div
-                      class="checkbox-color usa-checkbox"
+                      class="live-search margin-x-1"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="condition-No conditions reported"
-                        type="checkbox"
-                        value="No conditions reported"
-                      />
-                      <label
-                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
-                        for="condition-No conditions reported"
+                      <svg
+                        aria-hidden="true"
+                        class="usa-icon square-3 text-base"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        No conditions reported
-                      </label>
+                        <path
+                          d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                        />
+                      </svg>
+                      <input
+                        aria-label="Search by reportable condition"
+                        class="usa-input"
+                        data-testid="textInput"
+                        id="search-by-reportable-condition"
+                        name="search-by-reportable-condition"
+                        placeholder="Search by reportable condition"
+                        type="search"
+                        value=""
+                      />
                     </div>
+                    <button
+                      class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1 margin-top-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Deselect 
+                      3
+                       
+                      condition
+                      s
+                    </button>
+                    <div
+                      class="border-top-1px border-base-lighter margin-bottom-1"
+                    />
                   </div>
                   <div
-                    class="border-top-1px border-base-lighter margin-x-105"
-                  />
-                  <div
-                    class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
+                    class="flex-1 overflow-y-auto"
                   >
                     <div
-                      class="checkbox-color usa-checkbox"
+                      class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-x-105"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="condition-Condition1"
-                        type="checkbox"
-                        value="Condition1"
-                      />
-                      <label
-                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
-                        for="condition-Condition1"
+                      <div
+                        class="checkbox-color usa-checkbox"
                       >
-                        Condition1
-                      </label>
+                        <input
+                          checked=""
+                          class="usa-checkbox__input"
+                          id="condition-No conditions reported"
+                          type="checkbox"
+                          value="No conditions reported"
+                        />
+                        <label
+                          class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+                          for="condition-No conditions reported"
+                        >
+                          No conditions reported
+                        </label>
+                      </div>
                     </div>
                     <div
-                      class="checkbox-color usa-checkbox"
+                      class="border-top-1px border-base-lighter margin-x-105 margin-y-1"
+                    />
+                    <div
+                      class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-x-105"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="condition-Condition2"
-                        type="checkbox"
-                        value="Condition2"
-                      />
-                      <label
-                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
-                        for="condition-Condition2"
+                      <div
+                        class="checkbox-color usa-checkbox"
                       >
-                        Condition2
-                      </label>
+                        <input
+                          checked=""
+                          class="usa-checkbox__input"
+                          id="condition-Condition1"
+                          type="checkbox"
+                          value="Condition1"
+                        />
+                        <label
+                          class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+                          for="condition-Condition1"
+                        >
+                          Condition1
+                        </label>
+                      </div>
+                      <div
+                        class="checkbox-color usa-checkbox"
+                      >
+                        <input
+                          checked=""
+                          class="usa-checkbox__input"
+                          id="condition-Condition2"
+                          type="checkbox"
+                          value="Condition2"
+                        />
+                        <label
+                          class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+                          for="condition-Condition2"
+                        >
+                          Condition2
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="filter-apply"
+              >
                 <div
                   class="border-top-1px border-base-lighter"
                 />
@@ -758,9 +818,9 @@ exports[`Filter by Reportable Conditions Component with 'No conditions reported'
                     Apply filter
                   </button>
                 </div>
-              </fieldset>
-            </form>
-          </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
       <button
@@ -888,34 +948,84 @@ exports[`Filter by Reportable Conditions Component with no filterable conditions
               0
             </span>
           </button>
-          <div
-            class="usa-combo-box top-full left-0"
+          <form
+            class="usa-combo-box top-full left-0 position-absolute shadow-2 border-0 radius-md padding-0 margin-top-1 bg-white z-top filter-form maxh-6205 minh-30"
           >
-            <form>
-              <fieldset
-                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+            <fieldset
+              class="usa-combo-box filter-wrapper border-0 width-full"
+            >
+              <legend
+                class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-top-1 padding-left-105 padding-right-2 text-no-wrap"
               >
-                <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
-                >
-                  Filter by 
-                  reportable condition
-                </legend>
+                Filter by 
+                reportable condition
+              </legend>
+              <div
+                class="filter-content overflow-y-auto padding-y-1"
+              >
                 <div
-                  class="display-flex flex-column"
+                  class="display-flex flex-column height-full"
                 >
-                  <button
-                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
-                    data-testid="button"
-                    type="button"
+                  <div
+                    class="flex-0"
                   >
-                    Select 
-                    0
-                     
-                    condition
-                    s
-                  </button>
+                    <div
+                      class="live-search margin-x-1"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="usa-icon square-3 text-base"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                        />
+                      </svg>
+                      <input
+                        aria-label="Search by reportable condition"
+                        class="usa-input"
+                        data-testid="textInput"
+                        id="search-by-reportable-condition"
+                        name="search-by-reportable-condition"
+                        placeholder="Search by reportable condition"
+                        type="search"
+                        value=""
+                      />
+                    </div>
+                    <button
+                      class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1 margin-top-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Select 
+                      0
+                       
+                      condition
+                      s
+                    </button>
+                    <div
+                      class="border-top-1px border-base-lighter margin-bottom-1"
+                    />
+                  </div>
+                  <div
+                    class="flex-1 overflow-y-auto"
+                  >
+                    <p
+                      class="margin-x-105 text-bold"
+                    >
+                      No reportable conditions found.
+                    </p>
+                  </div>
                 </div>
+              </div>
+              <div
+                class="filter-apply"
+              >
                 <div
                   class="border-top-1px border-base-lighter"
                 />
@@ -932,9 +1042,9 @@ exports[`Filter by Reportable Conditions Component with no filterable conditions
                     Apply filter
                   </button>
                 </div>
-              </fieldset>
-            </form>
-          </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
     </div>
@@ -1036,57 +1146,99 @@ exports[`Filter by Reportable Conditions Component with only 'No conditions repo
               1
             </span>
           </button>
-          <div
-            class="usa-combo-box top-full left-0"
+          <form
+            class="usa-combo-box top-full left-0 position-absolute shadow-2 border-0 radius-md padding-0 margin-top-1 bg-white z-top filter-form maxh-6205 minh-30"
           >
-            <form>
-              <fieldset
-                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+            <fieldset
+              class="usa-combo-box filter-wrapper border-0 width-full"
+            >
+              <legend
+                class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-top-1 padding-left-105 padding-right-2 text-no-wrap"
               >
-                <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
-                >
-                  Filter by 
-                  reportable condition
-                </legend>
+                Filter by 
+                reportable condition
+              </legend>
+              <div
+                class="filter-content overflow-y-auto padding-y-1"
+              >
                 <div
-                  class="display-flex flex-column"
+                  class="display-flex flex-column height-full"
                 >
-                  <button
-                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
-                    data-testid="button"
-                    type="button"
-                  >
-                    Deselect 
-                    1
-                     
-                    condition
-                  </button>
                   <div
-                    class="border-top-1px border-base-lighter"
-                  />
-                  <div
-                    class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
+                    class="flex-0"
                   >
                     <div
-                      class="checkbox-color usa-checkbox"
+                      class="live-search margin-x-1"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="condition-No conditions reported"
-                        type="checkbox"
-                        value="No conditions reported"
-                      />
-                      <label
-                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
-                        for="condition-No conditions reported"
+                      <svg
+                        aria-hidden="true"
+                        class="usa-icon square-3 text-base"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        No conditions reported
-                      </label>
+                        <path
+                          d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                        />
+                      </svg>
+                      <input
+                        aria-label="Search by reportable condition"
+                        class="usa-input"
+                        data-testid="textInput"
+                        id="search-by-reportable-condition"
+                        name="search-by-reportable-condition"
+                        placeholder="Search by reportable condition"
+                        type="search"
+                        value=""
+                      />
+                    </div>
+                    <button
+                      class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1 margin-top-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Deselect 
+                      1
+                       
+                      condition
+                    </button>
+                    <div
+                      class="border-top-1px border-base-lighter margin-bottom-1"
+                    />
+                  </div>
+                  <div
+                    class="flex-1 overflow-y-auto"
+                  >
+                    <div
+                      class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-x-105"
+                    >
+                      <div
+                        class="checkbox-color usa-checkbox"
+                      >
+                        <input
+                          checked=""
+                          class="usa-checkbox__input"
+                          id="condition-No conditions reported"
+                          type="checkbox"
+                          value="No conditions reported"
+                        />
+                        <label
+                          class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+                          for="condition-No conditions reported"
+                        >
+                          No conditions reported
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="filter-apply"
+              >
                 <div
                   class="border-top-1px border-base-lighter"
                 />
@@ -1103,9 +1255,9 @@ exports[`Filter by Reportable Conditions Component with only 'No conditions repo
                     Apply filter
                   </button>
                 </div>
-              </fieldset>
-            </form>
-          </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
       <button
@@ -1233,78 +1385,117 @@ exports[`Filter by Reportable Conditions Component with only regular conditions 
               2
             </span>
           </button>
-          <div
-            class="usa-combo-box top-full left-0"
+          <form
+            class="usa-combo-box top-full left-0 position-absolute shadow-2 border-0 radius-md padding-0 margin-top-1 bg-white z-top filter-form maxh-6205 minh-30"
           >
-            <form>
-              <fieldset
-                class="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full"
+            <fieldset
+              class="usa-combo-box filter-wrapper border-0 width-full"
+            >
+              <legend
+                class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-top-1 padding-left-105 padding-right-2 text-no-wrap"
               >
-                <legend
-                  class="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap"
-                >
-                  Filter by 
-                  reportable condition
-                </legend>
+                Filter by 
+                reportable condition
+              </legend>
+              <div
+                class="filter-content overflow-y-auto padding-y-1"
+              >
                 <div
-                  class="display-flex flex-column"
+                  class="display-flex flex-column height-full"
                 >
-                  <button
-                    class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1"
-                    data-testid="button"
-                    type="button"
-                  >
-                    Deselect 
-                    2
-                     
-                    condition
-                    s
-                  </button>
                   <div
-                    class="border-top-1px border-base-lighter"
-                  />
-                  <div
-                    class="border-top-1px border-base-lighter margin-x-105"
-                  />
-                  <div
-                    class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105"
+                    class="flex-0"
                   >
                     <div
-                      class="checkbox-color usa-checkbox"
+                      class="live-search margin-x-1"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="condition-Condition1"
-                        type="checkbox"
-                        value="Condition1"
-                      />
-                      <label
-                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
-                        for="condition-Condition1"
+                      <svg
+                        aria-hidden="true"
+                        class="usa-icon square-3 text-base"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        Condition1
-                      </label>
+                        <path
+                          d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                        />
+                      </svg>
+                      <input
+                        aria-label="Search by reportable condition"
+                        class="usa-input"
+                        data-testid="textInput"
+                        id="search-by-reportable-condition"
+                        name="search-by-reportable-condition"
+                        placeholder="Search by reportable condition"
+                        type="search"
+                        value=""
+                      />
                     </div>
-                    <div
-                      class="checkbox-color usa-checkbox"
+                    <button
+                      class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1 margin-top-1"
+                      data-testid="button"
+                      type="button"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="condition-Condition2"
-                        type="checkbox"
-                        value="Condition2"
-                      />
-                      <label
-                        class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
-                        for="condition-Condition2"
+                      Deselect 
+                      2
+                       
+                      condition
+                      s
+                    </button>
+                    <div
+                      class="border-top-1px border-base-lighter margin-bottom-1"
+                    />
+                  </div>
+                  <div
+                    class="flex-1 overflow-y-auto"
+                  >
+                    <div
+                      class="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-x-105"
+                    >
+                      <div
+                        class="checkbox-color usa-checkbox"
                       >
-                        Condition2
-                      </label>
+                        <input
+                          checked=""
+                          class="usa-checkbox__input"
+                          id="condition-Condition1"
+                          type="checkbox"
+                          value="Condition1"
+                        />
+                        <label
+                          class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+                          for="condition-Condition1"
+                        >
+                          Condition1
+                        </label>
+                      </div>
+                      <div
+                        class="checkbox-color usa-checkbox"
+                      >
+                        <input
+                          checked=""
+                          class="usa-checkbox__input"
+                          id="condition-Condition2"
+                          type="checkbox"
+                          value="Condition2"
+                        />
+                        <label
+                          class="usa-checkbox__label line-height-sans-6 font-sans-xs margin-y-0 minw-40"
+                          for="condition-Condition2"
+                        >
+                          Condition2
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="filter-apply"
+              >
                 <div
                   class="border-top-1px border-base-lighter"
                 />
@@ -1321,9 +1512,9 @@ exports[`Filter by Reportable Conditions Component with only regular conditions 
                     Apply filter
                   </button>
                 </div>
-              </fieldset>
-            </form>
-          </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
       <button
