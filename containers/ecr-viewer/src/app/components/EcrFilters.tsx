@@ -17,8 +17,8 @@ import {
   RadioDateOption,
   RadioDateOptions,
   CustomDateInput,
-  SelectDeselectAllCheckbox,
   CheckboxOptions,
+  SelectDeselectAllButton,
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
 import { Coronavirus, Event } from "./Icon";
@@ -90,10 +90,6 @@ const FilterReportableConditions = ({
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
 
-  const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true,
-  );
-
   // Build list of conditions to filter on
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
@@ -103,10 +99,10 @@ const FilterReportableConditions = ({
   };
 
   // Check/Uncheck all boxes based on Select all checkbox
-  const handleSelectAll = () => {
+  const handleSelectAll = (isSelect: boolean) => {
     const updatedConditions = Object.keys(filterConditions).reduce(
       (dict, condition) => {
-        dict[condition] = !isAllSelected;
+        dict[condition] = isSelect;
         return dict;
       },
       {} as { [key: string]: boolean },
@@ -121,6 +117,10 @@ const FilterReportableConditions = ({
   const activeConditions = Object.keys(filterConditions).filter(
     (key) => filterConditions[key] === true,
   );
+
+  const numConditions = allConditions.length;
+  const numSelected = activeConditions.length;
+  const isAllSelected = numSelected === numConditions;
 
   const noConditions = Object.fromEntries(
     Object.entries(filterConditions).filter(
@@ -140,24 +140,28 @@ const FilterReportableConditions = ({
       isActive={!isAllSelected}
       resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
-      tag={activeConditions.length || "0"}
+      tag={`${numSelected}`}
       submitHandler={() => {
         updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
       }}
     >
-      {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <SelectDeselectAllCheckbox
+        {/* Select/Deselect in bulk button */}
+        <SelectDeselectAllButton
           groupName="condition"
           onToggle={handleSelectAll}
-          isAllSelected={isAllSelected}
+          numSelected={numSelected}
+          numOptions={numConditions}
         />
+
+        {numConditions > 0 && (
+          <div className="border-top-1px border-base-lighter"></div>
+        )}
 
         {/* No conditions reported checkbox */}
         {Object.keys(noConditions).length > 0 && (
           <>
-            <div className="border-top-1px border-base-lighter margin-x-105"></div>
             <CheckboxOptions
               groupName="condition"
               filterItems={noConditions}

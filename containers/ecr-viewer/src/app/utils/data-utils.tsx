@@ -117,7 +117,7 @@ export const arrayToElement = (vals: RenderableNode[]) => {
         return typeof item !== "object" ? (
           <Fragment key={key}>{item}</Fragment>
         ) : (
-          { ...item, key }
+          item
         );
       })}
     </>
