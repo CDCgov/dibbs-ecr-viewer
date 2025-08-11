@@ -400,6 +400,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
 
     # Iterate over each parser and make the appropriate path call
     for field, parser in parsers.items():
+        print(field)
         if "secondary_parsers" not in parser:
             value = parser["primary_parser"](message)
             if len(value) == 0:
@@ -447,6 +448,11 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                                     if len(tv_parser(v)) == 0:
                                         tv[tertiary_field] = None
                                     else:
+                                        # ! TODO ANGELA This is where it currently goes through
+                                        print("TEST2")
+                                        print(v, tertiary_field)
+                                        print(tv_parser(v))
+                                        print(tv)
                                         tv[tertiary_field] = ",".join(
                                             map(str, tv_parser(v))
                                         )
@@ -518,6 +524,13 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                             if len(referenced_value) == 0:
                                 value[secondary_field] = None
                             else:
+                                # TODO ANGELA: HERE IS THE PROBLEM
+                                print("TEST5")
+                                print(value)
+                                # {'uuid': 'a054d401-7b23-4b15-bc28-c889c156ba6a', 'condition': 'Zika Virus Disease', 'condition_code': '3928002'}
+                                print(referenced_value)
+                                # [{'url': 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension', 'valueString': 'Rule used in reportability determination'}]
+                                # We didn't hit it before because now the info is on another resource we have to look up/check ref of
                                 value[secondary_field] = ",".join(
                                     map(str, referenced_value)
                                 )
