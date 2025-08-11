@@ -235,7 +235,7 @@ const FilterByUserType = ({
       resetHandler={() => {}}
       icon={Person}
     >
-      <div className="display-flex flex-column margin-bottom-1">
+      <div className="display-flex flex-column">
         <RadioDateOptions
           groupName="user-type"
           optionsMap={USER_TYPE_OPTIONS}
@@ -295,7 +295,7 @@ const FilterByProgramArea = ({
           numSelected={numSelected}
           numOptions={numProgramAreas}
         />
-        <div className="border-top-1px border-base-lighter"></div>
+        <div className="border-top-1px border-base-lighter margin-bottom-1"></div>
 
         {/* Filter by Program Area checkboxes */}
         <CheckboxOptions

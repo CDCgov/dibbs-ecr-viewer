@@ -227,6 +227,32 @@ $table-border-radius-md: 0.5rem;
   }
 }
 
+.filter-form {
+  display: grid;
+  grid-template-rows: max-content 1fr max-content;
+  grid-template-columns: max-content;
+  grid-template-areas:
+    "legend"
+    "content"
+    "apply-button";
+
+  .filter-wrapper {
+    display: contents;
+
+    > legend {
+      grid-area: legend;
+    }
+
+    > .filter-content {
+      grid-area: content;
+    }
+
+    > .filter-apply {
+      grid-area: apply-button;
+    }
+  }
+}
+
 // ==== Wrap overflow text everywhere ===== //
 * {
   overflow-wrap: anywhere;

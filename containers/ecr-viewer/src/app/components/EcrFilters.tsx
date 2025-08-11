@@ -169,7 +169,7 @@ const FilterReportableConditions = ({
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             label="Search by reportable condition"
-            className="margin-x-1 margin-bottom-1"
+            className="margin-x-1"
           />
           {/* Select/Deselect in bulk button */}
           <SelectDeselectAllButton
@@ -177,9 +177,10 @@ const FilterReportableConditions = ({
             onToggle={handleSelectAll}
             numSelected={numFilteredSelected}
             numOptions={numFilteredConditions}
+            className="margin-top-1"
           />
 
-          <div className="border-top-1px border-base-lighter" />
+          <div className="border-top-1px border-base-lighter margin-bottom-1" />
         </div>
         <div className="flex-1 overflow-y-auto">
           {numFilteredConditions === 0 && (
@@ -200,7 +201,7 @@ const FilterReportableConditions = ({
           {/* border line between if both present */}
           {Object.keys(noConditions).length > 0 &&
             Object.keys(regularConditions).length > 0 && (
-              <div className="border-top-1px border-base-lighter margin-x-105"></div>
+              <div className="border-top-1px border-base-lighter margin-x-105 margin-y-1"></div>
             )}
 
           {/* Filter Conditions checkboxes */}
