@@ -10,7 +10,7 @@ test.describe("auth", () => {
     page,
   }) => {
     const logInStartTime = Date.now();
-    await logIn(page);
+    await logIn(page, { useCookies: false });
     const logInEndTime = Date.now();
 
     await page
