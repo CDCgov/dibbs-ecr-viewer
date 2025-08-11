@@ -6,7 +6,7 @@ import { Core } from "@/app/data/metadataDb/types/core";
 import { setupConfigurationVariables } from "@/instrumentation";
 
 test.describe("auth", () => {
-  test("should require a login on main page and allow sign out", async ({
+  test.only("should require a login on main page and allow sign out", async ({
     page,
   }) => {
     const logInStartTime = Date.now();
@@ -36,6 +36,9 @@ test.describe("auth", () => {
     const logOutEndTime = Date.now();
     await expect(page.getByText("You need to sign in")).toBeVisible();
 
+    // sleep for a second to give time for logs to settle
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     setupConfigurationVariables();
     const signinLogs = await getDb<Core>()
       .selectFrom("audit_log")
@@ -49,6 +52,20 @@ test.describe("auth", () => {
       .where("subject", "=", "user")
       .where("action", "=", "signout")
       .execute();
+
+    console.log({
+      logInStartTime,
+      logInEndTime,
+      signinLogs: signinLogs
+        .filter(
+          ({ parameter_json, date }) =>
+            JSON.parse(parameter_json).user.email ===
+              process.env.AUTH_ADMIN_USER &&
+            date.valueOf() >= logInStartTime &&
+            date.valueOf() <= logInEndTime + 5000,
+        )
+        .map(({ date }) => date.valueOf()),
+    });
 
     // Log in and logout for our user within 5 seconds of the recorded time
     expect(
