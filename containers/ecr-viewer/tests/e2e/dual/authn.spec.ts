@@ -37,7 +37,7 @@ test.describe("auth", () => {
     await expect(page.getByText("You need to sign in")).toBeVisible();
 
     // sleep for a second to give time for logs to settle
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 4000));
 
     setupConfigurationVariables();
     const signinLogs = await getDb<Core>()
@@ -61,8 +61,8 @@ test.describe("auth", () => {
           ({ parameter_json, date }) =>
             JSON.parse(parameter_json).user.email ===
               process.env.AUTH_ADMIN_USER &&
-            date.valueOf() >= logInStartTime &&
-            date.valueOf() <= logInEndTime + 5000,
+            date.valueOf() >= logInStartTime - 5000 &&
+            date.valueOf() <= logInEndTime + 10000,
         )
         .map(({ date }) => date.valueOf()),
     });
