@@ -7,7 +7,7 @@ import {
   CheckboxOptions,
   Filter,
   RadioDateOptions,
-  SelectDeselectAllCheckbox,
+  SelectDeselectAllButton,
 } from "@/app/components/BaseFilter";
 import {
   DetailsSidePanel,
@@ -257,16 +257,19 @@ const FilterByProgramArea = ({
   filterProgramAreas: FilterProgramAreasType;
   setFilterProgramAreas: Dispatch<SetStateAction<FilterProgramAreasType>>;
 }) => {
-  const handleSelectDeselectAll = () => {
+  const handleSelectDeselectAll = (isSelect: boolean) => {
     const updatedProgramAreas = Object.keys(filterProgramAreas).reduce(
       (acc, programName) => {
-        acc[programName] = !isAllSelected;
+        acc[programName] = isSelect;
         return acc;
       },
       {} as FilterProgramAreasType,
     );
     setFilterProgramAreas(updatedProgramAreas);
   };
+
+  const numSelected = Object.values(filterProgramAreas).filter(Boolean).length;
+  const numProgramAreas = Object.keys(filterProgramAreas).length;
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
@@ -282,19 +285,18 @@ const FilterByProgramArea = ({
       title="Program area"
       resetHandler={() => {}}
       icon={Folder}
-      tag={
-        Object.values(filterProgramAreas).filter((prog) => prog === true)
-          .length || "0"
-      }
+      tag={`${numSelected}`}
     >
-      {/* Select All checkbox */}
       <div className="display-flex flex-column">
-        <SelectDeselectAllCheckbox
+        {/* Select All button */}
+        <SelectDeselectAllButton
           groupName="program area"
           onToggle={handleSelectDeselectAll}
-          isAllSelected={isAllSelected}
+          numSelected={numSelected}
+          numOptions={numProgramAreas}
         />
-        <div className="border-top-1px border-base-lighter margin-x-105"></div>
+        <div className="border-top-1px border-base-lighter"></div>
+
         {/* Filter by Program Area checkboxes */}
         <CheckboxOptions
           groupName="program area"
