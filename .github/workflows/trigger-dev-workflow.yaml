@@ -18,6 +18,7 @@ on:
         options:
           - aws
           - azure
+          - gcp
         description: "The clould environment to deploy to."
         required: true
   workflow_call:
