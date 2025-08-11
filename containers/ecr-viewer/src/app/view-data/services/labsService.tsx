@@ -27,6 +27,7 @@ import { AccordionItem } from "@/app/types";
 import {
   RenderableNode,
   arrayToElement,
+  evaluateData,
   noData,
   notEmpty,
   safeParse,
@@ -673,16 +674,40 @@ const getLabsContent = (
       title: "Narrative",
       value: returnFieldValueFromLabHtmlString(labReportJson, "Narrative"),
       className: "lab-text-content",
-      dividerLine: false,
     },
   ];
+
+  const { availableData, unavailableData } = evaluateData(rrInfo);
 
   return (
     <>
       {labTableDiagnostic}
       {labTableOrganisms}
-      {rrInfo.map((item) => (
-        <DataDisplay key={`${item.title}-${item.value}`} item={item} />
+      {availableData.length && (
+        <h6
+          // inline styling to overwrite usa-prose nested style
+          style={{ marginTop: "-1rem" }}
+          className="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+        >
+          Available lab information
+        </h6>
+      )}
+      {availableData.map((item, i) => (
+        <DataDisplay
+          key={`${item.title}-${item.value}`}
+          item={{ ...item, dividerLine: i + 1 !== availableData.length }}
+        />
+      ))}
+      {unavailableData.length && (
+        <h6 className="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205">
+          Unavailable lab information
+        </h6>
+      )}
+      {unavailableData.map((item, i) => (
+        <DataDisplay
+          key={`${item.title}-${item.value}`}
+          item={{ ...item, dividerLine: i + 1 !== unavailableData.length }}
+        />
       ))}
     </>
   );
