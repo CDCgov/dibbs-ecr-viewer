@@ -43,6 +43,13 @@ export const LiveSearchField = ({
         placeholder={label}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyDownCapture={(ev) => {
+          if (ev.code === "Escape") {
+            setSearchTerm("");
+            // don't let escape do other things
+            ev.stopPropagation();
+          }
+        }}
       />
     </div>
   );
