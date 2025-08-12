@@ -93,7 +93,13 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
   await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
   await page.getByRole("button", { name: "Next" }).click();
 
-  await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
+  try {
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
+  } catch {
+    // sometimes we get this screen instead of going directly to password entry
+    await page.getByRole("button", { name: /Work or school account/ }).click();
+  }
+
   await page.getByRole("textbox", { name: "password" }).fill(password!);
   await page.getByRole("button", { name: "Sign in" }).click();
   await page.getByRole("button", { name: "No" }).click();
