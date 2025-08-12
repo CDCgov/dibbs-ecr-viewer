@@ -45,9 +45,15 @@ const groupByCategory = (conditions: FormCondition[]) => {
     const category = cur.condition_category || "Unknown";
     acc[category] ||= [] as FormCondition[];
     acc[category].push(cur);
-    acc[category].sort((a, b) =>
-      stringSort(a.condition_name, b.condition_name),
-    );
+    acc[category].sort((a, b) => {
+      const res = stringSort(a.condition_name, b.condition_name);
+      if (res === 0) {
+        // secondary sort on code for consistency
+        return stringSort(a.code, b.code);
+      } else {
+        return res;
+      }
+    });
     return acc;
   }, {} as ConditionCategories);
 };
