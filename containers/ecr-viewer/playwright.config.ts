@@ -61,7 +61,7 @@ export default defineConfig({
 
     {
       name: "teardown",
-      testMatch: /teardown.spec.ts/,
+      testMatch: /teardown.ts/,
     },
 
     {
