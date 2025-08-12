@@ -10,6 +10,7 @@ test.describe("auth", () => {
     page,
   }) => {
     const logInStartTime = Date.now();
+    // make sure we actually log in and don't reuse an old session
     await logIn(page, { useCookies: false });
     const logInEndTime = Date.now();
 
@@ -36,9 +37,6 @@ test.describe("auth", () => {
     const logOutEndTime = Date.now();
     await expect(page.getByText("You need to sign in")).toBeVisible();
 
-    // sleep for a second to give time for logs to settle
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-
     setupConfigurationVariables();
     const signinLogs = await getDb<Core>()
       .selectFrom("audit_log")
@@ -52,20 +50,6 @@ test.describe("auth", () => {
       .where("subject", "=", "user")
       .where("action", "=", "signout")
       .execute();
-
-    console.log({
-      logInStartTime,
-      logInEndTime,
-      signinLogs: signinLogs
-        .filter(
-          ({ parameter_json, date }) =>
-            JSON.parse(parameter_json).user.email ===
-              process.env.AUTH_ADMIN_USER &&
-            date.valueOf() >= logInStartTime - 5000 &&
-            date.valueOf() <= logInEndTime + 10000,
-        )
-        .map(({ date }) => date.valueOf()),
-    });
 
     // Log in and logout for our user within 5 seconds of the recorded time
     expect(
