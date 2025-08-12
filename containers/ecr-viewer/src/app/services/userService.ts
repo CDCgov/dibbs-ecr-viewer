@@ -277,7 +277,10 @@ export const updateUser = audit(
         (await updateUserQuery(trx, uuid, updates));
       await updateUserProgramAreasQuery(trx, uuid, programs);
     } catch (error: unknown) {
-      const message = "Failed to update user";
+      let message = "Failed to update user";
+      if (error instanceof UserFacingError) {
+        message = `${message}. ${error.message}`;
+      }
       console.error({ message, error });
       throw new UserFacingError(message);
     }
