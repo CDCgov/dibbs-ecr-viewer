@@ -461,6 +461,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
                     aria-label="Apply filter for received date"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
+                    disabled=""
                     type="submit"
                   >
                     Apply filter
