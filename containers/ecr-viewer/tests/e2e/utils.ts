@@ -14,6 +14,7 @@ const cookies: { [key in UserType]?: Cookie[] } = {};
  * @param config.url optionally, the url to go to to force login
  * @param config.expectedHeading optionally, the heading text to expect upon successful login
  * @param config.userType optionally, the user type to log in with. Default "ADMIN"
+ * @param config.useCookies optionally, whether to use the pre-saved cookie if available. Default true
  */
 export const logIn = async (
   page: Page,
@@ -21,22 +22,24 @@ export const logIn = async (
     url?: string;
     expectedHeading?: string;
     userType?: UserType;
+    useCookies?: boolean;
   } = {},
 ) => {
   const {
     url = "/ecr-viewer/",
     expectedHeading = "eCR library",
     userType = "ADMIN",
+    useCookies = cookies[userType],
   } = config;
 
-  if (cookies[userType]) {
+  if (useCookies) {
     // set cookies to previously saved ones
     await page.context().addCookies(cookies[userType]!);
   }
 
   await page.goto(url);
 
-  if (!cookies[userType]) {
+  if (!useCookies) {
     // Not using NBS auth, strip out search param token
     let newUrl = url.replace(/&?auth\=[^&]+/, "");
     if (newUrl.endsWith("?")) {
@@ -67,7 +70,7 @@ export const logIn = async (
     page.getByRole("heading", { name: expectedHeading }).first(),
   ).toBeVisible();
 
-  if (!cookies[userType]) {
+  if (!useCookies) {
     // save cookies
     cookies[userType] = await page.context().cookies();
   }
