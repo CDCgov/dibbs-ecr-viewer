@@ -87,21 +87,31 @@ const logInToKeycloak = async (
   await page.getByRole("button", { name: "Sign in" }).click();
 };
 
+const sleep = async (ms: number) => {
+  return await new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 // Helper to log into via Azure AD and go to the viewer page
 const logInToAd = async (page: Page, userName: string, password: string) => {
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
+  await sleep(100);
   await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
+  await sleep(100);
   await page.getByRole("button", { name: "Next" }).click();
+  await sleep(100);
 
   try {
     await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
+    await sleep(100);
   } catch {
     // sometimes we get this screen instead of going directly to password entry
     await page.getByRole("button", { name: /Work or school account/ }).click();
   }
 
   await page.getByRole("textbox", { name: "password" }).fill(password!);
+  await sleep(100);
   await page.getByRole("button", { name: "Sign in" }).click();
+  await sleep(100);
   await page.getByRole("button", { name: "No" }).click();
 };
 
