@@ -55,7 +55,7 @@
     "next-auth": "^4.24.11",
     "node-html-parser": "^7.0.1",
     "pg": "^8.15.6",
-    "postcss-discard-comments": "^7.0.3",
+    "postcss-discard-comments": "^7.0.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^10.2.4",
     "react": "^19.1.1",
