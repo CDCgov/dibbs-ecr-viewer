@@ -10,7 +10,8 @@ test.describe("auth", () => {
     page,
   }) => {
     const logInStartTime = Date.now();
-    await logIn(page);
+    // make sure we actually log in and don't reuse an old session
+    await logIn(page, { useCookies: false });
     const logInEndTime = Date.now();
 
     await page
