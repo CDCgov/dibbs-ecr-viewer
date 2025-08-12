@@ -203,7 +203,7 @@ const createUserQuery = async (
  * @param db the database connection
  * @param email email of the user to update (case-insensitive)
  * @param uuid uuid of the user to update
- * @throws UserFacingError when anothe user with the same email exists
+ * @throws UserFacingError when another user with the same email exists
  */
 const checkDupeEmail = async (
   db: Transaction<Core>,
@@ -221,7 +221,7 @@ const checkDupeEmail = async (
   }
 
   throw new UserFacingError(
-    "This email already exists. Please add a different email.",
+    "Another user with this email already exists.",
   );
 };
 
