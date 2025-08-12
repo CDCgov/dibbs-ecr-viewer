@@ -101,6 +101,29 @@ export const DataDisplay = ({
 };
 
 /**
+ * Render a list of `DataDisplay` items with no trailing divider line
+ * @param props react props
+ * @param props.items list of items to display
+ * @param props.dataDisplayProps properties to pass on to `DataDisplay`
+ * @returns data display list
+ */
+export const DataDisplayList = ({
+  items,
+  ...dataDisplayProps
+}: {
+  items: DisplayDataProps[];
+  dataDisplayProps?: Omit<React.ComponentProps<typeof DataDisplay>, "item">;
+}) => {
+  return items.map((item, i) => (
+    <DataDisplay
+      key={`item-${i}`}
+      item={{ ...item, dividerLine: i + 1 !== items.length }}
+      {...dataDisplayProps}
+    />
+  ));
+};
+
+/**
  * Functional component for displaying (a list of) data tables.
  * @param props - Props containing the item to be displayed.
  * @param props.item - The data item to be displayed.
