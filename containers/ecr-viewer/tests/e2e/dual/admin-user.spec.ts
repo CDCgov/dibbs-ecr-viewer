@@ -298,8 +298,13 @@ const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
   for (const row of rows) {
     const cell = row.getByRole("cell").first();
     const program = (await cell.allInnerTexts()).join(" ");
-    if (!!program && !notThese.includes(program)) {
-      console.log({ program });
+    // avoid program reuse and don't touch the programs from the `admin-program` tests
+    // as those get deleted during testing (vs teardown)
+    if (
+      !!program &&
+      !notThese.includes(program) &&
+      !program.match(/^Program \d+/)
+    ) {
       return program;
     }
   }

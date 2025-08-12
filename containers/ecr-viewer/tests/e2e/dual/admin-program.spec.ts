@@ -49,7 +49,7 @@ test.describe("program management page", () => {
     const conditionName = await checkbox.inputValue();
     await checkbox.scrollIntoViewIfNeeded();
     await checkbox.dispatchEvent("click");
-    const programName = `Test Program ${conditionName}`;
+    const programName = `Program ${conditionName}`;
 
     await page.getByLabel("Program area name").fill(programName);
 

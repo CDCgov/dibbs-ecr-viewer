@@ -5,7 +5,7 @@ import { toSentenceCase } from "@/app/utils/format-utils";
 
 const matcher: Record<string, RegExp> = {
   user: /.*-\d+@test-user.com/,
-  "program area": /Test Program \d+/,
+  "program area": /Program \d+/,
 };
 
 ["user", "program area"].map((item) =>
