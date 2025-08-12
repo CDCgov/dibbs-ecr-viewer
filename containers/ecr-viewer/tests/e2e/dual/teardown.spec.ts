@@ -10,6 +10,11 @@ const matcher: Record<string, RegExp> = {
 
 ["user", "program area"].map((item) =>
   teardown(`delete test ${item}s`, async ({ page }) => {
+    teardown.skip(
+      process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
+        !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
+      "Does not apply to integrated configurations.",
+    );
     await logIn(page);
 
     await page.goto(`/ecr-viewer/admin/${item.split(" ")[0]}`);
