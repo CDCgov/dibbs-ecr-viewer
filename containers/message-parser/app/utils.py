@@ -452,7 +452,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                         continue
                     subfield_value = _parse_values(
                         field_parser["field_configs"], initial_val
-                        )
+                    )
                     subfield_parsed_values.append(subfield_value)
 
                 parsed_values[field] = subfield_parsed_values
