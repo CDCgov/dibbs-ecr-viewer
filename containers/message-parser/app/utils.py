@@ -122,8 +122,10 @@ def get_parsers(extraction_schema: frozendict) -> frozendict:
                     ):
                         tertiary_parser = {}
                         tertiary_parsers = {}
-                        tertiary_parser["base_path"] = secondary_field_definition["fhir_path"]
-                        
+                        tertiary_parser["base_path"] = secondary_field_definition[
+                            "fhir_path"
+                        ]
+
                         for (
                             tertiary_field,
                             tertiary_field_definition,
@@ -150,8 +152,12 @@ def get_parsers(extraction_schema: frozendict) -> frozendict:
                     ):
                         tertiary_parser = {}
                         tertiary_parsers = {}
-                        tertiary_parser["base_path"] = secondary_field_definition["fhir_path"]
-                        tertiary_parser["reference_path"] = secondary_field_definition["reference_lookup"]
+                        tertiary_parser["base_path"] = secondary_field_definition[
+                            "fhir_path"
+                        ]
+                        tertiary_parser["reference_path"] = secondary_field_definition[
+                            "reference_lookup"
+                        ]
 
                         for (
                             tertiary_field,
@@ -169,7 +175,9 @@ def get_parsers(extraction_schema: frozendict) -> frozendict:
                     else:
                         secondary_parsers[secondary_field] = {
                             "base_path": secondary_field_definition["fhir_path"],
-                            "reference_path": secondary_field_definition["reference_lookup"]
+                            "reference_path": secondary_field_definition[
+                                "reference_lookup"
+                            ],
                         }
             parser["field_configs"] = secondary_parsers
         parsers[field] = parser
@@ -401,7 +409,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
     """
     Function used to pull parsing methods for each field out of the
     passed-in schema, resolve any reference dependencies, and apply the
-    result to the input FHIR bundle. 
+    result to the input FHIR bundle.
 
     :param parsing_schema: A dictionary holding the parsing schema send
       to the endpoint.
@@ -416,8 +424,8 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         """
         Recursive parses a FHIR message based on a provided schema of FHIR paths.
 
-        :param parsers: A dictionary of parser configs. Field names are the keys, and 
-            the values are objects that contain the FHIR 'base_path'. They may include 
+        :param parsers: A dictionary of parser configs. Field names are the keys, and
+            the values are objects that contain the FHIR 'base_path'. They may include
             further nested `field_configs` for recursive parsing.
         :param current_message: The FHIR message or sub-section to be evaluated
             by the current set of parsers.
@@ -432,15 +440,19 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                 parsed_values[field] = value
             else:
                 subfield_parsed_values = []
-                initial_values = _evaluate_fhir_path(field_parser, current_message, "list")
-                
+                initial_values = _evaluate_fhir_path(
+                    field_parser, current_message, "list"
+                )
+
                 if not isinstance(initial_values, list):
                     initial_values = [initial_values]
 
                 for initial_val in initial_values:
                     if initial_val is None:
                         continue
-                    subfield_value = _parse_values(field_parser["field_configs"], initial_val)
+                    subfield_value = _parse_values(
+                        field_parser["field_configs"], initial_val
+                        )
                     subfield_parsed_values.append(subfield_value)
 
                 parsed_values[field] = subfield_parsed_values
@@ -450,8 +462,8 @@ def extract_and_apply_parsers(parsing_schema, message, response):
     def _evaluate_fhir_path(field_parser, current_message, return_type="str"):
         """
         Evaluates the FHIR path based on the current message
-        
-        :param field_parser: The parser for a specific field, which must contain a 
+
+        :param field_parser: The parser for a specific field, which must contain a
             `base_path` and may contain a `reference_path` and nested `field_configs`.
         :param current_message: The FHIR message or sub-section to be evaluated
             by the current set of parsers.
@@ -468,7 +480,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                 if not current_message or len(current_message) == 0:
                     return None
                 return current_message
-            
+
             if "base_path" in field_parser:
                 value = fhirpathpy.evaluate(current_message, field_parser["base_path"])
 
@@ -477,9 +489,8 @@ def extract_and_apply_parsers(parsing_schema, message, response):
 
             # Needs to be returned as list if this is an intermediary value
             if return_type == "list":
-                return value    
+                return value
             return ",".join(map(str, value))
-            
 
         # TODO ANGELA: Look at KeyError path?
         except KeyError:
@@ -511,18 +522,18 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         """
         Resolves a FHIR reference and evaluates a new path based on the resolved ID.
 
-        It uses a `reference_path` to find a reference ID in the `current_message`. 
+        It uses a `reference_path` to find a reference ID in the `current_message`.
         If a single reference is found, it uses the reference to replace a placeholder
-        in the `base_path` and evaluates this new path against the FHIR bundle 
-        to return the referenced resource or value. If not, this function will raise 
-        an error if those references cannot be resolved (if the ID of the referenced 
+        in the `base_path` and evaluates this new path against the FHIR bundle
+        to return the referenced resource or value. If not, this function will raise
+        an error if those references cannot be resolved (if the ID of the referenced
         object can't be found, for example).
 
-        :param field_parser: The parser for a specific field, which must contain a 
+        :param field_parser: The parser for a specific field, which must contain a
             `base_path` & a `reference_path`.
         :param current_message: The FHIR message or sub-section at the current level of
             parsing where the reference is located.
-        :return: The result of the FHIRPath evaluation on the base document, or response 
+        :return: The result of the FHIRPath evaluation on the base document, or response
             error message if the reference could not be resolved.
         """
         reference_parser = field_parser["reference_path"]
@@ -543,12 +554,12 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                 "to many referencing identifiers",
                 "parsed_values": {},
             }
-        
+
         reference_value = reference[0].split("/")[-1]
-        reference_path = field_parser[
-            "base_path"
-        ].replace(DIBBS_REFERENCE_SIGNIFIER, reference_value)
-            
+        reference_path = field_parser["base_path"].replace(
+            DIBBS_REFERENCE_SIGNIFIER, reference_value
+        )
+
         return fhirpathpy.evaluate(message, reference_path)
 
     return _parse_values(parsers, message)
