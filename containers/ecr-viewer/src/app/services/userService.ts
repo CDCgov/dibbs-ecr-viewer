@@ -220,9 +220,7 @@ const checkDupeEmail = async (
     return;
   }
 
-  throw new UserFacingError(
-    "Another user with this email already exists.",
-  );
+  throw new UserFacingError("Another user with this email already exists.");
 };
 
 /**
