@@ -398,7 +398,8 @@ def clean_schema(schema: dict):
         del schema[key]
 
 
-def extract_and_apply_parsers2(parsing_schema, message, response):
+# TODO ANGELA: Delete when no longer used
+def OLD_extract_and_apply_parsers_OLD(parsing_schema, message, response):
     """
     Helper function used to pull parsing methods for each field out of the
     passed-in schema, resolve any reference dependencies, and apply the
@@ -573,9 +574,9 @@ def extract_and_apply_parsers2(parsing_schema, message, response):
 def extract_and_apply_parsers(parsing_schema, message, response):
     parsers = get_parsers(parsing_schema)
 
-    return parse_values(parsers, message, response)
+    return parse_values(parsers, message, message, response)
     
-def parse_values(parsers, message, response):
+def parse_values(parsers, message, baseMessage, response):
     parsed_values = {}
 
     # ! ecrId, birthDate, rr,...
@@ -583,24 +584,26 @@ def parse_values(parsers, message, response):
         print("######################")
         print(field, field_parser)
 
-        if "secondary_parsers" not in field_parser:
+        if "field_configs" not in field_parser:
             # ! Item is just primary parser
             # TODO: Evaluate Fhir path on message
             print("Going to evaluate_fhir_path", field)
-            value = evaluate_fhir_path(field_parser, message, response)
+            value = evaluate_fhir_path(field_parser, message, baseMessage, response, "str")
             print("Adding to parsed_values: ", field, ": ", value)
             parsed_values[field] = value
         else:
             subfield_parsed_values = []
-            initial_values = evaluate_fhir_path(field_parser, message, response)
+            print("Going to evaluate_fhir_path for initial values", field)
+            initial_values = evaluate_fhir_path(field_parser, message, baseMessage, response, "list")
             print("INITIAL VALUES: ", initial_values)
             if not isinstance(initial_values, list):
+                print("initial values is not a list, it is a ", type(initial_values))
                 initial_values = [initial_values]
 
             for initial_val in initial_values: #! each rr condition
                 print("INITIAL VALUE: ", initial_val)
-                print("field_parser['secondary_parsers']: ", field_parser["secondary_parsers"])
-                something = parse_values(field_parser["secondary_parsers"], initial_val, response)
+                print("field_parser['field_configs']: ", field_parser["field_configs"])
+                something = parse_values(field_parser["field_configs"], initial_val, baseMessage, response)
                 
                 subfield_parsed_values.append(something)
 
@@ -608,35 +611,42 @@ def parse_values(parsers, message, response):
 
     return parsed_values
 
-def evaluate_fhir_path(field_parser, message, response):
-    print("\n ")
+# TODO ANGELA: Look at KeyError path?
+def evaluate_fhir_path(field_parser, message, baseMessage, response, return_type):
     print("evaluate_fhir_path: field_parser", field_parser)
     print("evaluate_fhir_path: message", message)
     try:
         if "reference_path" in field_parser:
-            message = get_reference(field_parser, message, response)
+            message = get_reference(field_parser, message, baseMessage, response)
 
             if not message or len(message) == 0:
                 return None
+            
+            return message
         
-        if "primary_parser" in field_parser:
-            value = field_parser["primary_parser"](message)
-        elif "secondary_fhir_path" in field_parser: # TODO ANGELA: why not just consolidate primary_parser and secondary_fhirpath in get_parser?
-            value = field_parser["secondary_fhir_path"](message)
-            print("VALUE: ", field_parser["secondary_fhir_path"], value)
+        if "base_path" in field_parser:
+            value = fhirpathpy.evaluate(message, field_parser["base_path"])
+            print("FIELD_PATH[BASE_PATH]", field_parser["base_path"])
+            print("VALUE: ", value)
 
-        if len(value) == 0:
+        if not value or len(value) == 0:
             return None
+
+        # Needs to be returned as list if this is an intermediary value
+        if return_type == "list":
+            print("returning as list bc it's an initial value")
+            return value    
+        
+        print("returning as str bc it's a final value")
         return ",".join(map(str, value))
+        
 
     except KeyError:
         # Fallback property accessor for when fhirpathpy fails to access data types
         try:
             secondary_parser = None
-            if "primary_parser" in field_parser:
-                secondary_parser = field_parser["primary_parser"]
-            elif "secondary_fhir_path" in field_parser:
-                secondary_parser = field_parser["secondary_fhir_path"]
+            if "base_path" in field_parser:
+                secondary_parser = field_parser["base_path"]
             else:
                 return None
 
@@ -656,28 +666,42 @@ def evaluate_fhir_path(field_parser, message, response):
         except Exception:
             return None
 
-def get_reference(field_parser, message, response):
+# !messages are getting confused here
+# !Need the bundle, need the resource
+# TODO ANGELA: Rename vars, they're confusing
+def get_reference(field_parser, message, baseMessage, response):
     reference_parser = field_parser["reference_path"]
-    if len(reference_parser(message)) == 0:
+    print("#### GETTING REFERENCE")
+    print("reference parser", reference_parser)
+    reference = fhirpathpy.evaluate(message, reference_parser)
+    print("reference", reference)
+
+    if len(reference) == 0:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {
             "message": "Provided `reference_lookup` location does "
             "not point to a referencing identifier",
             "parsed_values": {},
         }
+    # Future refactor: be able to take multiple references?
+    elif len(reference) > 1:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "message": "Provided `reference_lookup` location points "
+            "to many referencing identifiers",
+            "parsed_values": {},
+        }
     
-    reference_to_find = ",".join(
-        map(str, reference_parser(message))
-    )
-    reference_to_find = reference_to_find.split("/")[-1]
+    reference_to_find = reference[0].split("/")[-1]
 
     reference_path = field_parser[ # ! THERE's A PROBLEM HERE 
-        "secondary_fhir_path"
+        "base_path"
     ].replace(DIBBS_REFERENCE_SIGNIFIER, reference_to_find)
-    reference_path = fhirpathpy.compile(reference_path)
+    print("final ref path", reference_path)
         
-    referenced_value = reference_path(message)
+    referenced_value = fhirpathpy.evaluate(baseMessage, reference_path)
 
+    print("returning ref value", referenced_value)
     return referenced_value
 
 def transform_to_phdc_input_data(parsed_values: dict) -> PHDCInputData:
