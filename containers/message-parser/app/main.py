@@ -201,7 +201,7 @@ async def get_schema(parsing_schema_name: str, response: Response) -> GetSchemaR
         parsing_schema = load_parsing_schema(parsing_schema_name)
     except FileNotFoundError as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"message": error.__str__(), "parsing_schema": {}}
+        return {"message": error.__str__(), "parsing_schema": {}, "ERROR": "CAN'T FIND PARSING SCHEMA"}
     return {"message": "Schema found!", "parsing_schema": parsing_schema}
 
 
