@@ -609,10 +609,17 @@ describe("Filter by Date Component - custom dates", () => {
     });
     await user.click(radio);
 
+    // Apply button should be disabled if start/end not touched yet
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeDisabled();
+
     const startDateInput = screen.getByTestId("start-date");
     const endDateInput = screen.getByTestId("end-date");
 
     await user.type(startDateInput, "2025-01-01");
+
+    // Apply button should be disabled once start touched
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeEnabled();
+
     await user.type(endDateInput, "2025-01-02");
 
     const applyButton = screen.getByRole("button", { name: /Apply filter/i });

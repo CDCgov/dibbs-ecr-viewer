@@ -212,11 +212,15 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const [endDate, setEndDate] = useState<string>(initEnd);
   const isFilterDateDefault = filterDateOption === DEFAULT_DATE_RANGE;
 
+  console.log({ startDate, endDate });
+
+  // also basic validity in terms of required fields
   const touched =
-    (initDateRange !== filterDateOption &&
+    startDate !== "" &&
+    ((initDateRange !== filterDateOption &&
       filterDateOption !== CustomDateRangeOption) ||
-    initStart !== startDate ||
-    initEnd !== endDate;
+      initStart !== startDate ||
+      initEnd !== endDate);
 
   // Keep state in sync with updated params while maintaining correct focus on submit
   useEffect(() => {
