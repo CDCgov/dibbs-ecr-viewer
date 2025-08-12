@@ -127,7 +127,6 @@ export const createUser = audit(
     trx: Transaction<Core>,
   ): Promise<string> => {
     const creatingUser = await getCheckAdmin("create new users");
-
     try {
       const uuid = await createUserQuery(
         trx,
@@ -177,7 +176,7 @@ export const createInitialAdminUser = audit(
 );
 
 const createUserQuery = async (
-  db: Kysely<Core>,
+  db: Transaction<Core>,
   email: string,
   user_type: "admin" | "standard",
   uuid: string,
@@ -202,6 +201,31 @@ const createUserQuery = async (
 
   await db.insertInto("user").values(newUser).execute();
   return uuid;
+};
+
+/**
+ *
+ * @param db the database connection
+ * @param email email of the user to update (case-insensitive)
+ * @param uuid uuid of the user to update
+ * @throws UserFacingError when another user with the same email exists
+ */
+const checkDupeEmail = async (
+  db: Transaction<Core>,
+  email: string | null | undefined,
+  uuid: string,
+) => {
+  if (!email) {
+    return;
+  }
+
+  const user = await getUserByEmail(email, db);
+  // user does not exist or is this user
+  if (!user || user.uuid === uuid) {
+    return;
+  }
+
+  throw new UserFacingError("Another user with this email already exists.");
 };
 
 /**
@@ -248,11 +272,15 @@ export const updateUser = audit(
     await getCheckAdmin("update users");
 
     try {
+      await checkDupeEmail(trx, updates.email, uuid);
       Object.keys(updates).length > 0 &&
         (await updateUserQuery(trx, uuid, updates));
       await updateUserProgramAreasQuery(trx, uuid, programs);
     } catch (error: unknown) {
-      const message = "Failed to update user";
+      let message = "Failed to update user";
+      if (error instanceof UserFacingError) {
+        message = `${message}. ${error.message}`;
+      }
       console.error({ message, error });
       throw new UserFacingError(message);
     }
