@@ -86,9 +86,11 @@ const logInToKeycloak = async (
 
 // Helper to log into via Azure AD and go to the viewer page
 const logInToAd = async (page: Page, userName: string, password: string) => {
+  await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
   await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
   await page.getByRole("button", { name: "Next" }).click();
 
+  await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
   await page.getByRole("textbox", { name: "password" }).fill(password!);
   await page.getByRole("button", { name: "Sign in" }).click();
   await page.getByRole("button", { name: "No" }).click();
