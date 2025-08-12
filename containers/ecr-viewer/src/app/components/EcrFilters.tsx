@@ -212,13 +212,10 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const [endDate, setEndDate] = useState<string>(initEnd);
   const isFilterDateDefault = filterDateOption === DEFAULT_DATE_RANGE;
 
-  console.log({ startDate, endDate });
-
   // also basic validity in terms of required fields
   const touched =
-    startDate !== "" &&
-    ((initDateRange !== filterDateOption &&
-      filterDateOption !== CustomDateRangeOption) ||
+    (filterDateOption !== CustomDateRangeOption || startDate !== "") &&
+    (initDateRange !== filterDateOption ||
       initStart !== startDate ||
       initEnd !== endDate);
 
