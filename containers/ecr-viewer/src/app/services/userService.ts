@@ -129,15 +129,15 @@ export const createUser = audit(
     const creatingUser = await getCheckAdmin("create new users");
     const uuid = randomUUID();
     try {
-      const createdUuid = await createUserQuery(
+      await createUserQuery(
         trx,
         email,
         userType,
         uuid,
         creatingUser.uuid,
       );
-      await updateUserProgramAreasQuery(trx, createdUuid, programs);
-      return createdUuid;
+      await updateUserProgramAreasQuery(trx, uuid, programs);
+      return uuid;
     } catch (error: unknown) {
       const message = "Failed to create new user";
       console.error({ message, error });
@@ -207,42 +207,28 @@ const createUserQuery = async (
 /**
  *
  * @param db the database connection
- * @param email email of the user to create or update (case-insensitive)
- * @param uuid uuid of the user to create or update
- * @returns whether an inactive user with the same email exists
- * @throws UserFacingError when an active user with the same email exists
+ * @param email email of the user to update (case-insensitive)
+ * @param uuid uuid of the user to update
+ * @throws UserFacingError when anothe user with the same email exists
  */
 const checkDupeEmail = async (
   db: Transaction<Core>,
   email: string | null | undefined,
   uuid: string,
-): Promise<boolean> => {
+) => {
   if (!email) {
-    return false;
+    return;
   }
 
-  const user = await db
-    .selectFrom("user")
-    .selectAll()
-    .where((eb) =>
-      eb(eb.fn<string>("LOWER", [eb.ref("email")]), "=", email?.toLowerCase()),
-    )
-    .where("uuid", "!=", uuid)
-    .executeTakeFirst();
-
-  // inactive user does not exist
-  if (!user) {
-    return false;
+  const user = await getUserByEmail(email, db);
+  // user does not exist or is this user
+  if (!user || user.uuid === uuid) {
+    return;
   }
 
-  if (user.status === "active") {
-    throw new UserFacingError(
-      "This email already exists. Please add a different email.",
-    );
-  }
-
-  // inactive user exists
-  return true;
+  throw new UserFacingError(
+    "This email already exists. Please add a different email.",
+  );
 };
 
 /**
