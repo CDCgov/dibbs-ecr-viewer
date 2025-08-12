@@ -91,21 +91,32 @@ const sleep = async (ms: number) => {
   return await new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-// Helper to log into via Azure AD and go to the viewer page
-const logInToAd = async (page: Page, userName: string, password: string) => {
+const enterEmailHitNext = async (page: Page, userName: string) => {
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
   await sleep(100);
   await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
   await sleep(100);
   await page.getByRole("button", { name: "Next" }).click();
   await sleep(100);
+};
+
+// Helper to log into via Azure AD and go to the viewer page
+const logInToAd = async (page: Page, userName: string, password: string) => {
+  await enterEmailHitNext(page, userName);
 
   try {
     await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
     await sleep(100);
   } catch {
-    // sometimes we get this screen instead of going directly to password entry
-    await page.getByRole("button", { name: /Work or school account/ }).click();
+    try {
+      // try again
+      await enterEmailHitNext(page, userName);
+    } catch {
+      // sometimes we get this screen instead of going directly to password entry
+      await page
+        .getByRole("button", { name: /Work or school account/ })
+        .click();
+    }
   }
 
   await page.getByRole("textbox", { name: "password" }).fill(password!);
