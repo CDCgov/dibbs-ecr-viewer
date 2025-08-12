@@ -23,8 +23,8 @@ export const withNextAuth: MiddlewareFactory = (
 
     const response = await withAuth(request as NextRequestWithAuth, {
       pages: {
-        signIn: `/signin`,
-        error: `/error/auth`,
+        signIn: "/signin",
+        error: "/error/auth",
       },
     });
     if (response instanceof Response) {

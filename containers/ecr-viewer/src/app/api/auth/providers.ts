@@ -36,6 +36,7 @@ const azure = () => {
       // as a fall-back for email if needed and it looks email-like
       async profile(profile) {
         const altEmail = profile.upn?.includes("@") ? profile.upn : null;
+        throw "uh oh";
 
         return {
           id: profile.sub,
