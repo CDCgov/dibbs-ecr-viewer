@@ -22,7 +22,9 @@ export const getUserByEmail = async (
   return await (trx ?? getDb<Core>())
     .selectFrom("user")
     .selectAll()
-    .where("email", "=", email)
+    .where((eb) =>
+      eb(eb.fn<string>("LOWER", [eb.ref("email")]), "=", email?.toLowerCase()),
+    )
     .executeTakeFirst();
 };
 
