@@ -88,6 +88,7 @@ def freeze_parsing_schema_helper(schema: dict) -> frozendict:
 
 
 # TODO ANGELA: Remove comments
+# TODO ANGELA: Add back compile? Do performance tests
 # Using frozendict here to have an immutable that can be hashed for caching purposes.
 # Caching the parsers reduces parsing time by over 60% after the first request for a
 # given schema.
@@ -104,11 +105,9 @@ def get_parsers(extraction_schema: frozendict) -> frozendict:
     """
     parsers = {}
 
-    # FIELD = RR
-    # FIELD DEFINITION = RR { FHIR PATHS AND ETC.}
     for field, field_definition in extraction_schema.items():
         parser = {}
-        parser["primary_parser"] = fhirpathpy.compile(field_definition["fhir_path"])
+        parser["base_path"] = field_definition["fhir_path"]
         if "secondary_schema" in field_definition:
             secondary_parsers = {}
             # SECONDARY FIELDS: UUID, CONDITION, CONDITION_CODE, RULE_SUMMARIES
@@ -123,28 +122,23 @@ def get_parsers(extraction_schema: frozendict) -> frozendict:
                     ):
                         tertiary_parser = {}
                         tertiary_parsers = {}
-                        tertiary_parser["primary_parser"] = fhirpathpy.compile(
-                            secondary_field_definition["fhir_path"]
-                        )
+                        tertiary_parser["base_path"] = secondary_field_definition["fhir_path"]
+                        
                         for (
                             tertiary_field,
                             tertiary_field_definition,
                         ) in secondary_field_definition["secondary_schema"].items():
                             tertiary_parsers[tertiary_field] = {
-                                "secondary_fhir_path": fhirpathpy.compile(
-                                    tertiary_field_definition["fhir_path"]
-                                )
+                                "base_path": tertiary_field_definition["fhir_path"]
                             }
                         secondary_parsers[secondary_field] = {
-                            "primary_parser": tertiary_parser["primary_parser"],
-                            "secondary_parsers": tertiary_parsers,
+                            "base_path": tertiary_parser["base_path"],
+                            "field_configs": tertiary_parsers,
                         }
 
                     else:
                         secondary_parsers[secondary_field] = {
-                            "secondary_fhir_path": fhirpathpy.compile(
-                                secondary_field_definition["fhir_path"]
-                            )
+                            "base_path": secondary_field_definition["fhir_path"]
                         }
                 # Reference case: secondary field is located on a different resource,
                 # so we can't compile the fhir_path proper; instead, compile the
@@ -157,36 +151,28 @@ def get_parsers(extraction_schema: frozendict) -> frozendict:
                     ):
                         tertiary_parser = {}
                         tertiary_parsers = {}
-                        tertiary_parser["primary_parser"] = fhirpathpy.compile(
-                            secondary_field_definition["fhir_path"]
-                        )
-                        tertiary_parser["reference_path"] = fhirpathpy.compile(
-                            secondary_field_definition["reference_lookup"]
-                        )
+                        tertiary_parser["base_path"] = secondary_field_definition["fhir_path"]
+                        tertiary_parser["reference_path"] = secondary_field_definition["reference_lookup"]
 
                         for (
                             tertiary_field,
                             tertiary_field_definition,
                         ) in secondary_field_definition["secondary_schema"].items():
                             tertiary_parsers[tertiary_field] = {
-                                "secondary_fhir_path": fhirpathpy.compile(
-                                    tertiary_field_definition["fhir_path"]
-                                )
+                                "base_path": tertiary_field_definition["fhir_path"]
                             }
                         secondary_parsers[secondary_field] = {
-                            "primary_parser": tertiary_parser["primary_parser"],
+                            "base_path": tertiary_parser["base_path"],
                             "reference_path": tertiary_parser["reference_path"], # TODO ANGELA: Why have tertiary_parser? Fix this up here and 157-163
-                            "secondary_parsers": tertiary_parsers,
+                            "field_configs": tertiary_parsers,
                         }
 
                     else:
                         secondary_parsers[secondary_field] = {
-                            "secondary_fhir_path": secondary_field_definition["fhir_path"],
-                            "reference_path": fhirpathpy.compile(
-                                secondary_field_definition["reference_lookup"]
-                            ),
+                            "base_path": secondary_field_definition["fhir_path"],
+                            "reference_path": secondary_field_definition["reference_lookup"]
                         }
-            parser["secondary_parsers"] = secondary_parsers
+            parser["field_configs"] = secondary_parsers
         parsers[field] = parser
     return frozendict(parsers)
 
