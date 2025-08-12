@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot test 1`] = `
 <div>
@@ -103,6 +103,32 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                 hidden=""
                 id="sars-cov-2-covid-19-rna-presence-in-respiratory-system-specimen-by-naa-with-probe-detection-r:id-0"
               >
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Available lab information
+                </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Result Status
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      final
+                    </div>
+                  </div>
+                </div>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Unavailable lab information
+                </h6>
                 <div>
                   <div
                     class="grid-row"
@@ -327,25 +353,6 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                       >
                         No data
                       </span>
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Result Status
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      final
                     </div>
                   </div>
                   <div
@@ -633,6 +640,11 @@ Mos Eisley, CO 00055
                     </tr>
                   </tbody>
                 </table>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Available lab information
+                </h6>
                 <div>
                   <div
                     class="grid-row"
@@ -754,52 +766,6 @@ Mos Eisley, CO 00055
                     <div
                       class="data-title padding-right-1"
                     >
-                      Collection Method/Volume
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Resulting Agency Comment
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
                       Authorizing Provider
                     </div>
                     <div
@@ -844,6 +810,54 @@ Mos Eisley, CO 00055
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
                       final
+                    </div>
+                  </div>
+                </div>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Unavailable lab information
+                </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
                     </div>
                   </div>
                   <div
@@ -1021,6 +1035,11 @@ Mos Eisley, CO 00055
                     </tr>
                   </tbody>
                 </table>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Available lab information
+                </h6>
                 <div>
                   <div
                     class="grid-row"
@@ -1142,52 +1161,6 @@ Mos Eisley, CO 00055
                     <div
                       class="data-title padding-right-1"
                     >
-                      Collection Method/Volume
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Resulting Agency Comment
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
                       Authorizing Provider
                     </div>
                     <div
@@ -1232,6 +1205,54 @@ Mos Eisley, CO 00055
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
                       final
+                    </div>
+                  </div>
+                </div>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Unavailable lab information
+                </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Method/Volume
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Resulting Agency Comment
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
                     </div>
                   </div>
                   <div
@@ -1669,6 +1690,11 @@ County: Empire
                     </tr>
                   </tbody>
                 </table>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Available lab information
+                </h6>
                 <div>
                   <div
                     class="grid-row"
@@ -1682,29 +1708,6 @@ County: Empire
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
                       05/05/1824 11:58 AM GMT-4:56:02
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Analysis Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
                     </div>
                   </div>
                   <div
@@ -1762,29 +1765,6 @@ County: Empire
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
                       Blood
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Anatomical Location/Laterality
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
                     </div>
                   </div>
                   <div
@@ -1906,6 +1886,54 @@ County: Empire
                       <p>
                          MICROARRAY REPORT NARRATIVE
                       </p>
+                    </div>
+                  </div>
+                </div>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Unavailable lab information
+                </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
                     </div>
                   </div>
                 </div>
