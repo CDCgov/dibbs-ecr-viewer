@@ -257,6 +257,11 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const submitHandler = () => {
     if (filterDateOption === CustomDateRangeOption) {
       const actualEndDate = endDate || today;
+
+      // in case the updated query param ends up being the same so we
+      // don't actually go anywhere - keep state in sync
+      setEndDate(actualEndDate);
+
       const datesParam = `${startDate}|${actualEndDate}`;
       updateQueryParam(
         ParamName.DateRange,
