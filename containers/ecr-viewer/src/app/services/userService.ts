@@ -129,13 +129,7 @@ export const createUser = audit(
     const creatingUser = await getCheckAdmin("create new users");
     const uuid = randomUUID();
     try {
-      await createUserQuery(
-        trx,
-        email,
-        userType,
-        uuid,
-        creatingUser.uuid,
-      );
+      await createUserQuery(trx, email, userType, uuid, creatingUser.uuid);
       await updateUserProgramAreasQuery(trx, uuid, programs);
       return uuid;
     } catch (error: unknown) {
