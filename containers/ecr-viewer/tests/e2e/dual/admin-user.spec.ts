@@ -342,7 +342,7 @@ const createRandomUser = async (
   await page.getByText("Create user").click();
   await page.waitForURL("/ecr-viewer/admin/user/create");
 
-  const random = Math.floor(Math.random() * 1000);
+  const random = Math.floor(Math.random() * 10000);
   const email = `${browserName}-${random}@test-user.com`;
   await page.getByLabel("Email").fill(email);
 
