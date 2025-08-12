@@ -127,9 +127,14 @@ export const createUser = audit(
     trx: Transaction<Core>,
   ): Promise<string> => {
     const creatingUser = await getCheckAdmin("create new users");
-    const uuid = randomUUID();
     try {
-      await createUserQuery(trx, email, userType, uuid, creatingUser.uuid);
+      const uuid = await createUserQuery(
+        trx,
+        email,
+        userType,
+        randomUUID(),
+        creatingUser.uuid,
+      );
       await updateUserProgramAreasQuery(trx, uuid, programs);
       return uuid;
     } catch (error: unknown) {
