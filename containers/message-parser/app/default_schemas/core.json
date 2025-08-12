@@ -15,7 +15,7 @@
     "nullable": true
   },
   "last_name": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').name.first().family",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').name.family",
     "data_type": "string",
     "nullable": true,
     "metadata": {
@@ -23,7 +23,7 @@
     }
   },
   "first_name": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').name.first().given.first()",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').name.given",
     "data_type": "string",
     "nullable": true,
     "metadata": {
