@@ -69,8 +69,8 @@ test.describe("user management page", () => {
     await logIn(page);
 
     // Create programs
-    const program1 = await createRandomProgramArea(page);
-    const program2 = await createRandomProgramArea(page);
+    const program1 = await getRandomProgramArea(page);
+    const program2 = await getRandomProgramArea(page, [program1]);
 
     // Create user & assign to Program 1
     const user = await createRandomUser(browserName, page, "standard", [
@@ -88,8 +88,8 @@ test.describe("user management page", () => {
       has: page.getByText(user),
     });
     await expect(row.getByText("Standard")).toBeVisible();
-    await expect(page.getByText(program1)).toBeVisible();
-    await expect(page.getByText(program2)).not.toBeVisible();
+    await expect(row.getByText(program1)).toBeVisible();
+    await expect(row.getByText(program2)).not.toBeVisible();
 
     // Open side panel to edit user
     await page.getByRole("button", { name: user }).click();
@@ -130,11 +130,14 @@ test.describe("user management page", () => {
     ).toBeVisible();
 
     await expect(page.getByRole("cell", { name: newEmail })).toBeVisible();
+    const newEmailRow = page
+      .getByRole("row")
+      .filter({ has: page.getByRole("cell", { name: newEmail }) });
     await expect(
       page.getByText(`${newEmail} successfully saved`),
     ).toBeVisible();
-    await expect(page.getByText(program1)).not.toBeVisible();
-    await expect(page.getByText(program2)).toBeVisible();
+    await expect(newEmailRow.getByText(program1)).not.toBeVisible();
+    await expect(newEmailRow.getByText(program2)).toBeVisible();
 
     // Delete the user
     await page.getByRole("button", { name: newEmail }).click();
@@ -152,16 +155,14 @@ test.describe("user management page", () => {
     await page.keyboard.press("Escape");
 
     await page.goto("/ecr-viewer/admin/program");
-    await deleteProgramArea(page, program1);
-    await deleteProgramArea(page, program2);
   });
 
   test("filter by user type or program area", async ({ page, browserName }) => {
     await logIn(page);
 
     // Create programs
-    const program1 = await createRandomProgramArea(page);
-    const program2 = await createRandomProgramArea(page);
+    const program1 = await getRandomProgramArea(page);
+    const program2 = await getRandomProgramArea(page, [program1]);
 
     // Create users
     await page.goto("/ecr-viewer/admin/user");
@@ -290,8 +291,19 @@ test.describe("user management page", () => {
   });
 });
 
-const createRandomProgramArea = async (page: Page) => {
+const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
   await page.goto("/ecr-viewer/admin/program");
+
+  const rows = await page.getByRole("row").all();
+  for (const row of rows) {
+    const cell = row.getByRole("cell").first();
+    const program = (await cell.allInnerTexts()).join(" ");
+    if (!!program && !notThese.includes(program)) {
+      console.log({ program });
+      return program;
+    }
+  }
+
   await page.getByText("Create program area").click();
   await page.waitForURL("/ecr-viewer/admin/program/create");
 
@@ -302,13 +314,14 @@ const createRandomProgramArea = async (page: Page) => {
   await checkboxCond.dispatchEvent("click");
 
   const conditionName = await checkboxCond.inputValue();
+  const programName = `Test Program ${conditionName}`;
 
-  await page.getByLabel("Program area name").fill(`Program ${conditionName}`);
+  await page.getByLabel("Program area name").fill(programName);
   await page.getByRole("button", { name: "Save program area" }).first().click();
 
   await page.waitForURL("/ecr-viewer/admin/program");
 
-  return `Program ${conditionName}`;
+  return programName;
 };
 
 const createRandomUser = async (
@@ -325,7 +338,7 @@ const createRandomUser = async (
   await page.waitForURL("/ecr-viewer/admin/user/create");
 
   const random = Math.floor(Math.random() * 1000);
-  const email = `${browserName}-${random}@user.com`;
+  const email = `${browserName}-${random}@test-user.com`;
   await page.getByLabel("Email").fill(email);
 
   if (userType === "admin") {
@@ -353,11 +366,4 @@ const createRandomUser = async (
   await expect(page.getByText(`${email} successfully saved`)).toBeVisible();
 
   return email;
-};
-
-const deleteProgramArea = async (page: Page, program: string) => {
-  await page.getByLabel("Program areas per page").selectOption("100");
-  await page.getByRole("button", { name: program }).click();
-  await page.getByRole("button", { name: "Remove program area" }).click();
-  await page.getByRole("button", { name: "Yes, remove program area" }).click();
 };
