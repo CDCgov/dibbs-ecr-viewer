@@ -213,7 +213,8 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const isFilterDateDefault = filterDateOption === DEFAULT_DATE_RANGE;
 
   const touched =
-    initDateRange !== filterDateOption ||
+    (initDateRange !== filterDateOption &&
+      filterDateOption !== CustomDateRangeOption) ||
     initStart !== startDate ||
     initEnd !== endDate;
 
