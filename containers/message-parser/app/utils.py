@@ -86,6 +86,7 @@ def freeze_parsing_schema_helper(schema: dict) -> frozendict:
                 schema[key] = freeze_parsing_schema_helper(value)
         return frozendict(schema)
 
+
 # Using frozendict here to have an immutable that can be hashed for caching purposes.
 # Caching the parsers reduces parsing time by over 60% after the first request for a
 # given schema.
