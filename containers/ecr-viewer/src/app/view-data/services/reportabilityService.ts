@@ -13,14 +13,14 @@ import { Participant, ReportabilityInfo } from "./ecrMetadataService";
  */
 export const getReportabilityInfo = (
   fhirBundle: Bundle,
-  observation: Observation
+  observation: Observation,
 ): ReportabilityInfo[] => {
   const rrInfoArr: ReportabilityInfo[] = [];
-  
+
   observation?.hasMember?.forEach((ref) => {
     const rrInfoObs: Observation | undefined = evaluateReference(
       fhirBundle,
-      ref.reference
+      ref.reference,
     );
     const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
     const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
@@ -28,7 +28,7 @@ export const getReportabilityInfo = (
     rrInfoArr.push({ participants, rules, reasons });
   });
 
-  return rrInfoArr
+  return rrInfoArr;
 };
 
 /**
@@ -37,7 +37,7 @@ export const getReportabilityInfo = (
  * @returns Object of rules and reasons arrays
  */
 export const getReportabilityRulesReasons = (
-  observation: Observation | undefined
+  observation: Observation | undefined,
 ): { rules: Set<string>; reasons: Set<string> } => {
   // TODO ANGELA: should these be a set?
   const rules = new Set<string>();
@@ -68,15 +68,18 @@ export const getReportabilityRulesReasons = (
  * @param observation - FHIR Observation (RR Info Organizer)
  * @returns Array of objects containing the name & role of each responsible agency
  */
-const getResponsibleAgencies = (fhirBundle: Bundle, observation: Observation | undefined): Participant[] => {
-  const participants: Participant[] = []
+const getResponsibleAgencies = (
+  fhirBundle: Bundle,
+  observation: Observation | undefined,
+): Participant[] => {
+  const participants: Participant[] = [];
 
   observation?.performer?.forEach((perfRef) => {
-    const performer = evaluateReference(fhirBundle, perfRef.reference)
+    const performer = evaluateReference(fhirBundle, perfRef.reference);
     const name = evaluateValue(performer, fhirPathMappings.name);
     const role = evaluateValue(performer, fhirPathMappings.organizationType);
 
-    participants.push({name, role})
+    participants.push({ name, role });
   });
 
   return participants;
@@ -95,7 +98,10 @@ export const getReportabilitySummaries = (
 ): Set<string> => {
   const ruleSummaries = new Set<string>();
   observation?.hasMember?.forEach((ref) => {
-    const rrInfoObs: Observation | undefined = evaluateReference(fhirBundle, ref.reference);
+    const rrInfoObs: Observation | undefined = evaluateReference(
+      fhirBundle,
+      ref.reference,
+    );
     rrInfoObs?.extension?.forEach((extension) => {
       if (
         extension.url ===
@@ -107,8 +113,6 @@ export const getReportabilitySummaries = (
 
       // TODO ANGELA: Add routing entity(s) for each rule
     });
-
-
   });
   return ruleSummaries;
 };

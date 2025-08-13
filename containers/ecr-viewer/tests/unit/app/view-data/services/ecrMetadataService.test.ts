@@ -73,7 +73,7 @@ describe("Evaluate Ecr Metadata", () => {
   });
   it("should have rrConditions, and correctly handle human-readable condition name", () => {
     const actual = evaluateEcrMetadata(
-      BundleWithEcrMetadata as unknown as Bundle
+      BundleWithEcrMetadata as unknown as Bundle,
     );
 
     expect(actual.rrConditions).toEqual({

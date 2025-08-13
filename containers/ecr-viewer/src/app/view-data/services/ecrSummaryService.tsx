@@ -180,11 +180,13 @@ export const evaluateEcrSummaryConditionSummary = (
       observation?.hasMember?.forEach((ref) => {
         const rrInfoObs: Observation | undefined = evaluateReference(
           fhirBundle,
-          ref.reference
+          ref.reference,
         );
         const { rules } = getReportabilityRulesReasons(rrInfoObs);
-    
-        rules.forEach((rule: string) => conditionsList[snomed].ruleSummaries.add(rule));
+
+        rules.forEach((rule: string) =>
+          conditionsList[snomed].ruleSummaries.add(rule),
+        );
       });
     }
   }
