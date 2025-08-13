@@ -86,9 +86,6 @@ def freeze_parsing_schema_helper(schema: dict) -> frozendict:
                 schema[key] = freeze_parsing_schema_helper(value)
         return frozendict(schema)
 
-
-# TODO ANGELA: It works, but simplify and refactor?
-# TODO ANGELA: Add back compile? Do performance tests
 # Using frozendict here to have an immutable that can be hashed for caching purposes.
 # Caching the parsers reduces parsing time by over 60% after the first request for a
 # given schema.
@@ -100,87 +97,23 @@ def get_parsers(extraction_schema: frozendict) -> frozendict:
     associated with.
 
     :param extraction_schema: A dictionary containing an extraction schema.
-    :return: A dictionary containing a FHIRpath parsers for each field in the provided
+    :return: A dictionary containing a FHIR path parsers for each field in the provided
     schema.
     """
     parsers = {}
-
     for field, field_definition in extraction_schema.items():
         parser = {}
         parser["base_path"] = field_definition["fhir_path"]
+
+        if "reference_lookup" in field_definition:
+            parser["reference_path"] = field_definition["reference_lookup"]
+
         if "secondary_schema" in field_definition:
-            secondary_parsers = {}
+            sub_parser = get_parsers(field_definition["secondary_schema"])
+            parser["field_configs"] = sub_parser
 
-            for secondary_field, secondary_field_definition in field_definition[
-                "secondary_schema"
-            ].items():
-                # Base case: secondary field is located on this resource
-                if not secondary_field_definition["fhir_path"].startswith("Bundle"):
-                    if (
-                        "secondary_schema" in secondary_field_definition
-                        and secondary_field_definition["secondary_schema"] is not None
-                    ):
-                        tertiary_parser = {}
-                        tertiary_parsers = {}
-                        tertiary_parser["base_path"] = secondary_field_definition[
-                            "fhir_path"
-                        ]
-
-                        for (
-                            tertiary_field,
-                            tertiary_field_definition,
-                        ) in secondary_field_definition["secondary_schema"].items():
-                            tertiary_parsers[tertiary_field] = {
-                                "base_path": tertiary_field_definition["fhir_path"]
-                            }
-                        secondary_parsers[secondary_field] = {
-                            "base_path": tertiary_parser["base_path"],
-                            "field_configs": tertiary_parsers,
-                        }
-
-                    else:
-                        secondary_parsers[secondary_field] = {
-                            "base_path": secondary_field_definition["fhir_path"]
-                        }
-                # Reference case: secondary field is located on a different resource,
-                # so we can't compile the fhir_path proper; instead, compile the
-                # reference for quick access later
-                else:
-                    if (
-                        "secondary_schema" in secondary_field_definition
-                        and secondary_field_definition["secondary_schema"] is not None
-                    ):
-                        tertiary_parser = {}
-                        tertiary_parsers = {}
-                        tertiary_parser["base_path"] = secondary_field_definition[
-                            "fhir_path"
-                        ]
-                        tertiary_parser["reference_path"] = secondary_field_definition[
-                            "reference_lookup"
-                        ]
-
-                        for (
-                            tertiary_field,
-                            tertiary_field_definition,
-                        ) in secondary_field_definition["secondary_schema"].items():
-                            tertiary_parsers[tertiary_field] = {
-                                "base_path": tertiary_field_definition["fhir_path"]
-                            }
-                        secondary_parsers[secondary_field] = {
-                            "base_path": tertiary_parser["base_path"],
-                            "reference_path": tertiary_parser["reference_path"],
-                            "field_configs": tertiary_parsers,
-                        }
-
-                    else:
-                        secondary_parsers[secondary_field] = {
-                            "base_path": secondary_field_definition["fhir_path"],
-                            "reference_path": secondary_field_definition[
-                                "reference_lookup"
-                            ],
-                        }
-            parser["field_configs"] = secondary_parsers
         parsers[field] = parser
+
     return frozendict(parsers)
 
 
@@ -419,6 +352,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
     :return: A dictionary mapping schema keys to parsed values.
     """
     parsers = get_parsers(parsing_schema)
+    print("FINAL PARSER: ", parsers)
 
     def _parse_values(parsers, current_message):
         """
