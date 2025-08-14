@@ -162,6 +162,7 @@ const FilterReportableConditions = ({
       tag={`${numSelected}`}
       touched={touched}
       submitHandler={() => {
+        setSearchTerm("");
         updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
       }}
