@@ -29,7 +29,7 @@ export const LiveSearchField = ({
 }) => {
   return (
     <div className={`live-search ${className}`}>
-      {searchTerm && numResults && (
+      {searchTerm && numResults !== undefined && (
         <p aria-live="polite" className="result-count">
           {numResults} result{makePlural(numResults)}
         </p>
