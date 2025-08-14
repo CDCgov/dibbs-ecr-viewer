@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Program Admin Page Creating programs should render a create program page 1`] = `
 <div>
@@ -135,7 +135,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
                selected
             </p>
             <div
-              class="live-search"
+              class="live-search undefined"
             >
               <svg
                 aria-hidden="true"
@@ -155,8 +155,8 @@ exports[`Program Admin Page Creating programs should render a create program pag
                 aria-label="Search condition or category"
                 class="usa-input"
                 data-testid="textInput"
-                id="condition-search"
-                name="condition-search"
+                id="search-condition-or-category"
+                name="search-condition-or-category"
                 placeholder="Search condition or category"
                 type="search"
                 value=""

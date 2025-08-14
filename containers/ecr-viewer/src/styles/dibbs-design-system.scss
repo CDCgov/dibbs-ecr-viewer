@@ -136,8 +136,17 @@ h5,
 a,
 a:visited {
   box-shadow: none;
-  color: color("primary");
   background-color: transparent;
+}
+
+.usa-button--unstyled:disabled {
+  box-shadow: none;
+  color: color("disabled");
+  background-color: transparent;
+
+  &:hover {
+    background-color: transparent;
+  }
 }
 
 .usa-button--unstyled:hover,
