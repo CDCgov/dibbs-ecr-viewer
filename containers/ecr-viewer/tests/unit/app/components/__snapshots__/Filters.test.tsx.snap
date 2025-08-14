@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Filter by Date Component - custom dates Renders correctly after opening Filter by Date box and clicking Custom date range option 1`] = `
 <div>
@@ -239,6 +239,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
                     aria-label="Apply filter for received date"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
+                    disabled=""
                     type="submit"
                   >
                     Apply filter
@@ -495,6 +496,7 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
                     aria-label="Apply filter for received date"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
+                    disabled=""
                     type="submit"
                   >
                     Apply filter
@@ -751,6 +753,7 @@ exports[`Filter by Reportable Conditions Component with 'No conditions reported'
                     aria-label="Apply filter for reportable condition"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
+                    disabled=""
                     type="submit"
                   >
                     Apply filter
@@ -924,6 +927,7 @@ exports[`Filter by Reportable Conditions Component with no filterable conditions
                     aria-label="Apply filter for reportable condition"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
+                    disabled=""
                     type="submit"
                   >
                     Apply filter
@@ -1094,6 +1098,7 @@ exports[`Filter by Reportable Conditions Component with only 'No conditions repo
                     aria-label="Apply filter for reportable condition"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
+                    disabled=""
                     type="submit"
                   >
                     Apply filter
@@ -1311,6 +1316,7 @@ exports[`Filter by Reportable Conditions Component with only regular conditions 
                     aria-label="Apply filter for reportable condition"
                     class="usa-button margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
                     data-testid="button"
+                    disabled=""
                     type="submit"
                   >
                     Apply filter
