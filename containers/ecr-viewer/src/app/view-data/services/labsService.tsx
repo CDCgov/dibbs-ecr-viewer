@@ -330,7 +330,7 @@ export const evaluateAbnormalObservationInterpretation = (
  * @param labReportJson Fallback HTML-based lab report data for backwards compatibility
  * @returns React element for the lab tag, or null if no abnormality
  */
-const renderLabAbnormalityTag = (
+export const renderLabAbnormalityTag = (
   observations: Observation[],
   labReportJson?: HtmlTableJson
 ): React.ReactNode => {

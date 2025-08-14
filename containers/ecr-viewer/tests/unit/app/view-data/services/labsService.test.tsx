@@ -29,6 +29,8 @@ import {
   getJsonLab,
   getAllLabJsonObjects,
   getObservations,
+  evaluateAbnormalObservationInterpretation,
+  renderLabAbnormalityTag,
 } from "@/app/view-data/services/labsService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
@@ -173,6 +175,15 @@ const labReportAbnormal = evaluateOneAndCheck<DiagnosticReport>(
   pathLabReportAbnormal,
   "DiagnosticReport",
 );
+
+const pathLabReportAbnormalInterpretation = 
+      "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '68477c03-5689-f9e5-c267-a3c7bdff6fe0')";
+const labReportAbnormalInterpretation = evaluateOneAndCheck<DiagnosticReport>(
+  BundleLab,
+  pathLabReportAbnormalInterpretation,
+  "DiagnosticReport",
+);
+
 const jsonLabs = getAllLabJsonObjects(BundleLab);
 const labReportAbnormalJsonObject = getJsonLab(
   jsonLabs,
@@ -758,6 +769,25 @@ describe("LabsService tests", () => {
       expect(
         findIdenticalOrg(orgMappings, matchedOrg2)?.telecom?.[0].value,
       ).not.toBeDefined();
+    });
+  });
+
+  describe('Abnormal HL7 Observation Interpretations', () => {
+   
+    const observationsAbnormalInterpretation = getObservations(labReportAbnormalInterpretation!, BundleLab);
+
+    describe('evaluateAbnormalObservationInterpretation', () => {
+      it('should return null for observations without abnormal interpretations', () => {
+        const normalObservations = getObservations(labReportNormal!, BundleLab);
+
+        const result = evaluateAbnormalObservationInterpretation(normalObservations);
+        expect(result).toBeNull();
+      });
+
+      it('should detect abnormal interpretation from real FHIR data', () => {
+        const result = evaluateAbnormalObservationInterpretation(observationsAbnormalInterpretation);
+        expect(result).toBeNull();
+      });
     });
   });
 });
