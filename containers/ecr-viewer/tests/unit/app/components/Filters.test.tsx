@@ -220,9 +220,19 @@ describe.each([
         });
         await user.click(toggleFilterButton);
 
+        // Apply button should start disabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeDisabled();
+
         // Click deselect all
         const deselectAll = await screen.findByText(/Deselect \d conditions?/);
         await user.click(deselectAll);
+
+        // Apply button should now be enabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeEnabled();
 
         // All checkboxes should be unchecked after "Deselect" is clicked
         for (const condition of conditions) {
@@ -233,6 +243,11 @@ describe.each([
         // Click select all
         const selectAll = await screen.findByText(/Select \d conditions?/);
         await user.click(selectAll);
+
+        // Apply button should be back to disabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeDisabled();
 
         // All checkboxes should be checked after selecting all
         for (const condition of conditions) {
@@ -404,6 +419,9 @@ describe("Filter by Date Component", () => {
     });
     await user.click(toggleButton);
 
+    // Apply button should start disabled
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeDisabled();
+
     // Check default state is "Last year" (local dev default)
     const defaultRadio = screen.getByRole("radio", {
       name: "Last year",
@@ -419,6 +437,7 @@ describe("Filter by Date Component", () => {
     const applyFilterButton = screen.getByRole("button", {
       name: /Apply filter for received date/i,
     });
+    expect(applyFilterButton).toBeEnabled();
     await user.click(applyFilterButton);
 
     // Only one radio button can be checked at a time.
@@ -590,10 +609,17 @@ describe("Filter by Date Component - custom dates", () => {
     });
     await user.click(radio);
 
+    // Apply button should be disabled if start/end not touched yet
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeDisabled();
+
     const startDateInput = screen.getByTestId("start-date");
     const endDateInput = screen.getByTestId("end-date");
 
     await user.type(startDateInput, "2025-01-01");
+
+    // Apply button should be disabled once start touched
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeEnabled();
+
     await user.type(endDateInput, "2025-01-02");
 
     const applyButton = screen.getByRole("button", { name: /Apply filter/i });

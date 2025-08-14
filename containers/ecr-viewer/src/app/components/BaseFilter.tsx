@@ -32,6 +32,8 @@ import {
  * @param props.title - Title text displayed on the button; defaults to `type`.
  * @param props.icon - Icon component rendered inside the filter button.
  * @param props.tag - Optional tag element displayed next to the title.
+ * @param props.touched - Optional, but should be used when `submitHandler` is passed. Indicates
+ * whether the filter options have been edited by the user
  * @param props.resetHandler - Callback for resetting the filter.
  * @param props.submitHandler - Callback for applying the filter on form submission.
  * @param props.children - The filter form fields and content displayed in the dropdown.
@@ -43,6 +45,7 @@ export const Filter = ({
   title = "",
   icon: IconTag,
   tag = "",
+  touched = true,
   resetHandler,
   submitHandler,
   children,
@@ -52,6 +55,7 @@ export const Filter = ({
   title?: string;
   icon: ComponentType<{ className?: string }>;
   tag?: ReactNode;
+  touched?: boolean;
   resetHandler: () => void;
   submitHandler?: () => void;
   children: ReactNode;
@@ -137,7 +141,9 @@ export const Filter = ({
               <fieldset className="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full">
                 <FilterLegend type={type} />
                 {children}
-                {submitHandler && <ApplyFilterButton type={type} />}
+                {submitHandler && (
+                  <ApplyFilterButton disabled={!touched} type={type} />
+                )}
               </fieldset>
             </form>
           </div>
@@ -165,15 +171,23 @@ const FilterLegend = ({ type }: { type: string }) => {
  * A button component for applying a filter.
  * @param props - React props
  * @param props.type - The type of filter
+ * @param props.disabled - Whether the button is disabled
  * @returns - The rendered button element
  */
-const ApplyFilterButton = ({ type }: { type: string }) => {
+const ApplyFilterButton = ({
+  type,
+  disabled,
+}: {
+  type: string;
+  disabled: boolean;
+}) => {
   return (
     <div className="display-flex flex-column flex-stretch padding-x-105">
       <Button
         type="submit"
         className="margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
         aria-label={`Apply filter for ${type}`}
+        disabled={disabled}
       >
         Apply filter
       </Button>
