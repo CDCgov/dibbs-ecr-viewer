@@ -122,6 +122,10 @@ const FilterReportableConditions = ({
   const numSelected = activeConditions.length;
   const isAllSelected = numSelected === numConditions;
 
+  const touched =
+    numSelected !== initConditions.length ||
+    initConditions.some((c) => !filterConditions[c]);
+
   const noConditions = Object.fromEntries(
     Object.entries(filterConditions).filter(
       ([key]) => key === NO_CONDITIONS_REPORTED_OPTION,
@@ -141,6 +145,7 @@ const FilterReportableConditions = ({
       resetHandler={() => setFilterConditions(initFilterState)}
       icon={Coronavirus}
       tag={`${numSelected}`}
+      touched={touched}
       submitHandler={() => {
         updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
@@ -207,6 +212,13 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const [endDate, setEndDate] = useState<string>(initEnd);
   const isFilterDateDefault = filterDateOption === DEFAULT_DATE_RANGE;
 
+  // also basic validity in terms of required fields
+  const touched =
+    (filterDateOption !== CustomDateRangeOption || startDate !== "") &&
+    (initDateRange !== filterDateOption ||
+      initStart !== startDate ||
+      initEnd !== endDate);
+
   // Keep state in sync with updated params while maintaining correct focus on submit
   useEffect(() => {
     setStartDate(initStart);
@@ -219,6 +231,11 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const submitHandler = () => {
     if (filterDateOption === CustomDateRangeOption) {
       const actualEndDate = endDate || today;
+
+      // in case the updated query param ends up being the same so we
+      // don't actually go anywhere - keep state in sync
+      setEndDate(actualEndDate);
+
       const datesParam = `${startDate}|${actualEndDate}`;
       updateQueryParam(
         ParamName.DateRange,
@@ -242,6 +259,7 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
     <Filter
       type="received date"
       isActive={true}
+      touched={touched}
       resetHandler={() => {
         setStartDate(initStart);
         setEndDate(initEnd);
