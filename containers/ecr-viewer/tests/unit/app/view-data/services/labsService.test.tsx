@@ -176,8 +176,8 @@ const labReportAbnormal = evaluateOneAndCheck<DiagnosticReport>(
   "DiagnosticReport",
 );
 
-const pathLabReportAbnormalInterpretation = 
-      "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '68477c03-5689-f9e5-c267-a3c7bdff6fe0')";
+const pathLabReportAbnormalInterpretation =
+  "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = '68477c03-5689-f9e5-c267-a3c7bdff6fe0')";
 const labReportAbnormalInterpretation = evaluateOneAndCheck<DiagnosticReport>(
   BundleLab,
   pathLabReportAbnormalInterpretation,
@@ -772,20 +772,25 @@ describe("LabsService tests", () => {
     });
   });
 
-  describe('Abnormal HL7 Observation Interpretations', () => {
-   
-    const observationsAbnormalInterpretation = getObservations(labReportAbnormalInterpretation!, BundleLab);
+  describe("Abnormal HL7 Observation Interpretations", () => {
+    const observationsAbnormalInterpretation = getObservations(
+      labReportAbnormalInterpretation!,
+      BundleLab,
+    );
 
-    describe('evaluateAbnormalObservationInterpretation', () => {
-      it('should return null for observations without abnormal interpretations', () => {
+    describe("evaluateAbnormalObservationInterpretation", () => {
+      it("should return null for observations without abnormal interpretations", () => {
         const normalObservations = getObservations(labReportNormal!, BundleLab);
 
-        const result = evaluateAbnormalObservationInterpretation(normalObservations);
+        const result =
+          evaluateAbnormalObservationInterpretation(normalObservations);
         expect(result).toBeNull();
       });
 
-      it('should detect abnormal interpretation from real FHIR data', () => {
-        const result = evaluateAbnormalObservationInterpretation(observationsAbnormalInterpretation);
+      it("should detect abnormal interpretation from real FHIR data", () => {
+        const result = evaluateAbnormalObservationInterpretation(
+          observationsAbnormalInterpretation,
+        );
         expect(result).toBeNull();
       });
     });

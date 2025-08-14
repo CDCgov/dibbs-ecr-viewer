@@ -63,43 +63,46 @@ export interface LabReportElementData {
   organizationDisplayDataProps: DisplayDataProps[];
 }
 export interface AbnormalObservationInterpretation {
-  code: 'AA' | 'HH' | 'LL' | 'HU' | 'LU';
+  code: "AA" | "HH" | "LL" | "HU" | "LU";
   display: string;
   color: string;
   backgroundColor: string;
 }
 
 const ABNORMAL_OBSERVATION_INTERPRETATIONS = {
-  'AA': { 
-    display: 'Critical Abnormal', 
-    color: '#FFFFFF',
-    backgroundColor: '#B50909'
+  AA: {
+    display: "Critical Abnormal",
+    color: "#FFFFFF",
+    backgroundColor: "#B50909",
   },
-  'HH': { 
-    display: 'Critical High', 
-    color: '#FFFFFF',
-    backgroundColor: '#B50909'
+  HH: {
+    display: "Critical High",
+    color: "#FFFFFF",
+    backgroundColor: "#B50909",
   },
-  'LL': { 
-    display: 'Critical Low', 
-    color: '#FFFFFF',
-    backgroundColor: '#B50909'
+  LL: {
+    display: "Critical Low",
+    color: "#FFFFFF",
+    backgroundColor: "#B50909",
   },
-  'HU': { 
-    display: 'Significantly High', 
-    color: '#000000',
-    backgroundColor: '#FFA500'
+  HU: {
+    display: "Significantly High",
+    color: "#000000",
+    backgroundColor: "#FFA500",
   },
-  'LU': { 
-    display: 'Significantly Low', 
-    color: '#000000',
-    backgroundColor: '#FFA500'
-  }
+  LU: {
+    display: "Significantly Low",
+    color: "#000000",
+    backgroundColor: "#FFA500",
+  },
 } as const;
 
-type AbnormalObservationInterpretationCode = keyof typeof ABNORMAL_OBSERVATION_INTERPRETATIONS;
+type AbnormalObservationInterpretationCode =
+  keyof typeof ABNORMAL_OBSERVATION_INTERPRETATIONS;
 
-const isAbnormalObservationInterpretation = (code: string): code is AbnormalObservationInterpretationCode => {
+const isAbnormalObservationInterpretation = (
+  code: string,
+): code is AbnormalObservationInterpretationCode => {
   return code in ABNORMAL_OBSERVATION_INTERPRETATIONS;
 };
 
@@ -283,14 +286,17 @@ export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
  * @returns Abnormal observation interpretation or null if none found
  */
 export const evaluateAbnormalObservationInterpretation = (
-  observations: Observation[]
+  observations: Observation[],
 ): AbnormalObservationInterpretation | null => {
   if (!observations || observations.length === 0) {
     return null;
   }
 
   for (const observation of observations) {
-    if (!observation.interpretation || observation.interpretation.length === 0) {
+    if (
+      !observation.interpretation ||
+      observation.interpretation.length === 0
+    ) {
       continue;
     }
 
@@ -301,7 +307,10 @@ export const evaluateAbnormalObservationInterpretation = (
 
       for (const coding of interpretation.coding) {
         // Verify this is an HL7 observation interpretation code
-        if (coding.system !== 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation') {
+        if (
+          coding.system !==
+          "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+        ) {
           continue;
         }
 
@@ -315,7 +324,7 @@ export const evaluateAbnormalObservationInterpretation = (
           code: code,
           display: coding.display || interpretationConfig.display,
           color: interpretationConfig.color,
-          backgroundColor: interpretationConfig.backgroundColor
+          backgroundColor: interpretationConfig.backgroundColor,
         };
       }
     }
@@ -332,16 +341,17 @@ export const evaluateAbnormalObservationInterpretation = (
  */
 export const renderLabAbnormalityTag = (
   observations: Observation[],
-  labReportJson?: HtmlTableJson
+  labReportJson?: HtmlTableJson,
 ): React.ReactNode => {
-  const abnormalInterpretation = evaluateAbnormalObservationInterpretation(observations);
+  const abnormalInterpretation =
+    evaluateAbnormalObservationInterpretation(observations);
   if (abnormalInterpretation) {
     return (
-      <Tag 
+      <Tag
         style={{
           backgroundColor: abnormalInterpretation.backgroundColor,
           color: abnormalInterpretation.color,
-          fontWeight: 'bold'
+          fontWeight: "bold",
         }}
         className="margin-left-105"
       >
