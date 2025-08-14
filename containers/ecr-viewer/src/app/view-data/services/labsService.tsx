@@ -62,6 +62,46 @@ export interface LabReportElementData {
   diagnosticReportDataItems: AccordionItem[];
   organizationDisplayDataProps: DisplayDataProps[];
 }
+export interface AbnormalObservationInterpretation {
+  code: 'AA' | 'HH' | 'LL' | 'HU' | 'LU';
+  display: string;
+  color: string;
+  backgroundColor: string;
+}
+
+const ABNORMAL_OBSERVATION_INTERPRETATIONS = {
+  'AA': { 
+    display: 'Critical Abnormal', 
+    color: '#FFFFFF',
+    backgroundColor: '#B50909'
+  },
+  'HH': { 
+    display: 'Critical High', 
+    color: '#FFFFFF',
+    backgroundColor: '#B50909'
+  },
+  'LL': { 
+    display: 'Critical Low', 
+    color: '#FFFFFF',
+    backgroundColor: '#B50909'
+  },
+  'HU': { 
+    display: 'Significantly High', 
+    color: '#000000',
+    backgroundColor: '#FFA500'
+  },
+  'LU': { 
+    display: 'Significantly Low', 
+    color: '#000000',
+    backgroundColor: '#FFA500'
+  }
+} as const;
+
+type AbnormalObservationInterpretationCode = keyof typeof ABNORMAL_OBSERVATION_INTERPRETATIONS;
+
+const isAbnormalObservationInterpretation = (code: string): code is AbnormalObservationInterpretationCode => {
+  return code in ABNORMAL_OBSERVATION_INTERPRETATIONS;
+};
 
 /**
  * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
@@ -95,11 +135,7 @@ export const evaluateLabInfoData = (
         <div className="display-flex flex-row flex-justify flex-align-center gap-05">
           <span>
             {title}
-            {checkAbnormalTag(labReportJson) && (
-              <Tag background="#B50909" className="margin-left-105">
-                Abnormal
-              </Tag>
-            )}
+            {renderLabAbnormalityTag(obs, labReportJson)}
           </span>
 
           {/** inline style due to existing css rules on this button text */}
@@ -239,6 +275,91 @@ export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
   const labResultName = labReportJson.resultName;
 
   return labResultName?.toLowerCase().includes("abnormal") ?? false;
+};
+
+/**
+ * Evaluates FHIR observations for abnormal HL7 interpretation codes
+ * @param observations Array of FHIR observations
+ * @returns Abnormal observation interpretation or null if none found
+ */
+export const evaluateAbnormalObservationInterpretation = (
+  observations: Observation[]
+): AbnormalObservationInterpretation | null => {
+  if (!observations || observations.length === 0) {
+    return null;
+  }
+
+  for (const observation of observations) {
+    if (!observation.interpretation || observation.interpretation.length === 0) {
+      continue;
+    }
+
+    for (const interpretation of observation.interpretation) {
+      if (!interpretation.coding || interpretation.coding.length === 0) {
+        continue;
+      }
+
+      for (const coding of interpretation.coding) {
+        // Verify this is an HL7 observation interpretation code
+        if (coding.system !== 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation') {
+          continue;
+        }
+
+        const code = coding.code;
+        if (!code || !isAbnormalObservationInterpretation(code)) {
+          continue;
+        }
+
+        const interpretationConfig = ABNORMAL_OBSERVATION_INTERPRETATIONS[code];
+        return {
+          code: code,
+          display: coding.display || interpretationConfig.display,
+          color: interpretationConfig.color,
+          backgroundColor: interpretationConfig.backgroundColor
+        };
+      }
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Renders a lab tag for abnormal observation interpretations
+ * @param observations Array of FHIR observation resources
+ * @param labReportJson Fallback HTML-based lab report data for backwards compatibility
+ * @returns React element for the lab tag, or null if no abnormality
+ */
+const renderLabAbnormalityTag = (
+  observations: Observation[],
+  labReportJson?: HtmlTableJson
+): React.ReactNode => {
+  const abnormalInterpretation = evaluateAbnormalObservationInterpretation(observations);
+  if (abnormalInterpretation) {
+    return (
+      <Tag 
+        style={{
+          backgroundColor: abnormalInterpretation.backgroundColor,
+          color: abnormalInterpretation.color,
+          fontWeight: 'bold'
+        }}
+        className="margin-left-105"
+      >
+        {abnormalInterpretation.display}
+      </Tag>
+    );
+  }
+
+  // Fall back to existing abnormal detection for backwards compatibility
+  if (checkAbnormalTag(labReportJson)) {
+    return (
+      <Tag background="#B50909" className="margin-left-105">
+        Abnormal
+      </Tag>
+    );
+  }
+
+  return null;
 };
 
 /**
