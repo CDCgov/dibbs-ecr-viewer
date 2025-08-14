@@ -22,6 +22,7 @@ import {
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
 import { Coronavirus, Event } from "./Icon";
+import LiveSearchField from "./forms/LiveSearchField";
 
 enum ParamName {
   Condition = "condition",
@@ -89,6 +90,15 @@ const FilterReportableConditions = ({
   );
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredFilterConditions = searchTerm
+    ? Object.fromEntries(
+        Object.entries(filterConditions).filter(([k]) =>
+          k.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
+      )
+    : filterConditions;
 
   // Build list of conditions to filter on
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,14 +110,10 @@ const FilterReportableConditions = ({
 
   // Check/Uncheck all boxes based on Select all checkbox
   const handleSelectAll = (isSelect: boolean) => {
-    const updatedConditions = Object.keys(filterConditions).reduce(
-      (dict, condition) => {
-        dict[condition] = isSelect;
-        return dict;
-      },
-      {} as { [key: string]: boolean },
-    );
-
+    const updatedConditions = { ...filterConditions };
+    Object.keys(filteredFilterConditions).forEach((condition) => {
+      updatedConditions[condition] = isSelect;
+    });
     setFilterConditions(updatedConditions);
   };
 
@@ -118,8 +124,14 @@ const FilterReportableConditions = ({
     (key) => filterConditions[key] === true,
   );
 
+  const activeFilteredConditions = Object.keys(filteredFilterConditions).filter(
+    (key) => filteredFilterConditions[key] === true,
+  );
+
   const numConditions = allConditions.length;
+  const numFilteredConditions = Object.keys(filteredFilterConditions).length;
   const numSelected = activeConditions.length;
+  const numFilteredSelected = activeFilteredConditions.length;
   const isAllSelected = numSelected === numConditions;
 
   const touched =
@@ -127,13 +139,13 @@ const FilterReportableConditions = ({
     initConditions.some((c) => !filterConditions[c]);
 
   const noConditions = Object.fromEntries(
-    Object.entries(filterConditions).filter(
+    Object.entries(filteredFilterConditions).filter(
       ([key]) => key === NO_CONDITIONS_REPORTED_OPTION,
     ),
   );
 
   const regularConditions = Object.fromEntries(
-    Object.entries(filterConditions).filter(
+    Object.entries(filteredFilterConditions).filter(
       ([key]) => key !== NO_CONDITIONS_REPORTED_OPTION,
     ),
   );
@@ -151,43 +163,57 @@ const FilterReportableConditions = ({
         pushQueryUpdate();
       }}
     >
-      <div className="display-flex flex-column">
-        {/* Select/Deselect in bulk button */}
-        <SelectDeselectAllButton
-          groupName="condition"
-          onToggle={handleSelectAll}
-          numSelected={numSelected}
-          numOptions={numConditions}
-        />
+      <div className="display-flex flex-column height-full">
+        <div className="flex-0">
+          <LiveSearchField
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            label="Search by reportable condition"
+            className="margin-x-1"
+          />
+          {/* Select/Deselect in bulk button */}
+          <SelectDeselectAllButton
+            groupName="condition"
+            onToggle={handleSelectAll}
+            numSelected={numFilteredSelected}
+            numOptions={numFilteredConditions}
+            className="margin-top-1"
+          />
 
-        {numConditions > 0 && (
-          <div className="border-top-1px border-base-lighter"></div>
-        )}
+          <div className="border-top-1px border-base-lighter margin-bottom-1" />
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {numFilteredConditions === 0 && (
+            <p className="margin-x-105 text-bold">
+              No reportable conditions found.
+            </p>
+          )}
 
-        {/* No conditions reported checkbox */}
-        {Object.keys(noConditions).length > 0 && (
-          <>
+          {/* No conditions reported checkbox */}
+          {Object.keys(noConditions).length > 0 && (
             <CheckboxOptions
               groupName="condition"
               filterItems={noConditions}
               onChange={handleCheckboxChange}
             />
-          </>
-        )}
+          )}
 
-        {/* Filter Conditions checkboxes */}
-        {Object.keys(regularConditions).length > 0 && (
-          <>
-            <div className="border-top-1px border-base-lighter margin-x-105"></div>
+          {/* border line between if both present */}
+          {Object.keys(noConditions).length > 0 &&
+            Object.keys(regularConditions).length > 0 && (
+              <div className="border-top-1px border-base-lighter margin-x-105 margin-y-1"></div>
+            )}
+
+          {/* Filter Conditions checkboxes */}
+          {Object.keys(regularConditions).length > 0 && (
             <CheckboxOptions
               groupName="condition"
               filterItems={regularConditions}
               onChange={handleCheckboxChange}
             />
-          </>
-        )}
+          )}
+        </div>
       </div>
-      <div className="border-top-1px border-base-lighter" />
     </Filter>
   );
 };
