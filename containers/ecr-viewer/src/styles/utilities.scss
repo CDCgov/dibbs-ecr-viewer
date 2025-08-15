@@ -15,6 +15,10 @@
 
 // ==== flex ==== //
 
+.flex-0 {
+  flex: 0 0;
+}
+
 .flex-shrink-0 {
   flex-shrink: 0;
 }
@@ -106,6 +110,10 @@
 }
 
 // ==== min[h/w] ==== //
+
+.minh-30 {
+  min-height: 15rem;
+}
 
 .minw-1605 {
   min-width: 8.25rem;

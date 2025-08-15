@@ -132,10 +132,20 @@ $table-border-radius-md: 0.5rem;
   font-weight: 700;
   text-decoration: none;
 
+  &:disabled {
+    text-decoration: none;
+    color: color("disabled");
+  }
+
   &:hover,
   &:active {
     color: color("primary-dark");
     text-decoration: none;
+
+    &:disabled {
+      text-decoration: none;
+      color: color("disabled");
+    }
   }
 }
 
@@ -224,6 +234,34 @@ $table-border-radius-md: 0.5rem;
     position: absolute;
     top: -3rem;
     right: 0;
+  }
+}
+
+.filter-form {
+  display: grid;
+  grid-template-rows: max-content 1fr max-content;
+  grid-template-columns: max-content;
+  grid-template-areas:
+    "legend"
+    "content"
+    "apply-button";
+
+  // we forward the wrapper contents to the form's grid due to
+  // limitations around the positioning of <legend> tags
+  > .filter-wrapper {
+    display: contents;
+
+    > legend {
+      grid-area: legend;
+    }
+
+    > .filter-content {
+      grid-area: content;
+    }
+
+    > .filter-apply {
+      grid-area: apply-button;
+    }
   }
 }
 
