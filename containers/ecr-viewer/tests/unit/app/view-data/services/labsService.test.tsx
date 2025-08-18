@@ -294,116 +294,147 @@ describe("LabsService tests", () => {
 
     describe("isAbnormalObservationInterpretation", () => {
       it("sohuld return true if code is in list of abnormal observation interpretations", () => {
-        const codes = [ "AA", "HH", "LL", "HU", "LU"].forEach(code => {
+        const codes = ["AA", "HH", "LL", "HU", "LU"].forEach((code) => {
           const result = isAbnormalObservationInterpretation(code);
-          expect(result).toBeTrue()
-        })
+          expect(result).toBeTrue();
+        });
       });
-    
+
       it("sohuld return false if code is not in list of abnormal observation interpretations", () => {
         const result = isAbnormalObservationInterpretation("ZZ");
-        expect(result).toBeFalse()
+        expect(result).toBeFalse();
       });
     });
 
     describe("evaluateAbnormalObservationInterpretation", () => {
-      it("should return null if observations is empty",  () => {
+      it("should return null if observations is empty", () => {
         const result = evaluateAbnormalObservationInterpretation([]);
         expect(result).toBeNull();
       });
 
       it("should return null if observation interpretation is undefined", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: undefined,
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: undefined,
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
         expect(result).toBeNull();
-      }); 
+      });
 
       it("should return null if observation interpretation is empty", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: [],
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: [],
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
         expect(result).toBeNull();
       });
 
       it("should return null if observation interpretation coding is undefined", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: [{coding: undefined}],
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: [{ coding: undefined }],
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
         expect(result).toBeNull();
       });
 
       it("should return null if observation interpretation coding is empty", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: [{coding: []}],
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: [{ coding: [] }],
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
         expect(result).toBeNull();
       });
 
       it("should return null if observation interpretation coding is not HL7 observation interpretation code", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: [{coding: [{system: "http://test.com"}]}],
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: [{ coding: [{ system: "http://test.com" }] }],
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
         expect(result).toBeNull();
       });
 
       it("should return null if observation interpretation coding code is undefined", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: [{coding: [
-            {
-              system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-              code: undefined
-            }]
-          }],
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: [
+              {
+                coding: [
+                  {
+                    system:
+                      "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                    code: undefined,
+                  },
+                ],
+              },
+            ],
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
         expect(result).toBeNull();
       });
 
       it("should return null if observation interpretation coding code is not abnormal", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: [{coding: [
-            {
-              system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-              code: "ZZ"
-            }]
-          }],
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: [
+              {
+                coding: [
+                  {
+                    system:
+                      "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                    code: "ZZ",
+                  },
+                ],
+              },
+            ],
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
         expect(result).toBeNull();
       });
-      
+
       it("should return AbnormalObservationInterpretation if code is abnormal", () => {
-        const result  = evaluateAbnormalObservationInterpretation([{
-          interpretation: [{coding: [
-            {
-              system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-              code: "AA"
-            }]
-          }],
-          resourceType: "Observation", 
-          code: {coding: undefined}, 
-          status: "unknown"
-        }]);
+        const result = evaluateAbnormalObservationInterpretation([
+          {
+            interpretation: [
+              {
+                coding: [
+                  {
+                    system:
+                      "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                    code: "AA",
+                  },
+                ],
+              },
+            ],
+            resourceType: "Observation",
+            code: { coding: undefined },
+            status: "unknown",
+          },
+        ]);
 
         expect(result?.code).toBe("AA");
         expect(result?.display).toBe("Critical Abnormal");
@@ -419,7 +450,7 @@ describe("LabsService tests", () => {
         */
       });
 
-      it("should fallback to checkAbnormalTag logic when lab report is abnormal, but not one of the abnormal observation interpretations",  () => {
+      it("should fallback to checkAbnormalTag logic when lab report is abnormal, but not one of the abnormal observation interpretations", () => {
         /*
         // TODO
         const result = renderLabAbnormalityTag(getObservations(labReportAbnormal!, BundleLab), labReportAbnormalJsonObject);
