@@ -110,7 +110,7 @@ test.describe("ecr library page", () => {
       await expect(page.getByText("No eCRs found.")).toBeVisible();
     });
 
-    test.only("Set results per page", async ({ page }) => {
+    test("Set results per page", async ({ page }) => {
       await page.goto("/ecr-viewer?itemsPerPage=1");
       await expect(
         page.getByLabel("Filter by reportable condition"),
