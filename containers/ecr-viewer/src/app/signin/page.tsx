@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect, RedirectType } from "next/navigation";
 
 import bgRedirect from "../../../assets/bg-redirect.svg";
 import { isUsingNextAuth, providerMap } from "@/app/api/auth/providers";
@@ -6,10 +6,23 @@ import { isUsingNextAuth, providerMap } from "@/app/api/auth/providers";
 import { RedirectButton } from "./components/RedirectButton";
 
 /**
+ * @param params react params
+ * @param params.searchParams searchParams for page
  * @returns a sign-in (redirect) page
  */
-const RedirectPage = () => {
+const RedirectPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) => {
   if (!isUsingNextAuth) notFound();
+
+  // next-auth sends some errors to the sign in page
+  const { error } = await searchParams;
+  if (error) {
+    redirect(`/error/auth?error=${error}`, RedirectType.replace);
+  }
+
   return (
     <div
       className="height-viewport-header-footer position-relative text-white"
