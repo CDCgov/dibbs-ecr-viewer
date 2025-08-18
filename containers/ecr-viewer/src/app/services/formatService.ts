@@ -13,6 +13,7 @@ import {
 } from "fhir/r4";
 
 import {
+  ifUnformatted,
   makePlural,
   toSentenceCase,
   toTitleCase,
@@ -45,31 +46,6 @@ export const formatName = (
   ];
 
   return segments.filter(Boolean).join(" ");
-};
-
-// if a string is unformatted, format it, otherwise return it
-const ifUnformatted = (
-  str: string | undefined,
-  formatter: (val: string | undefined) => string | undefined,
-) => {
-  if (!str) return str;
-  return isFormatted(str) ? str : formatter(str);
-};
-
-// strings are considered unformatted if they are all caps or all lowercase
-const isFormatted = (str: string) => {
-  let hasLower = false;
-  let hasUpper = false;
-  for (const c of str) {
-    if (c.match(/[A-Z]/)) {
-      hasUpper = true;
-    }
-    if (c.match(/[a-z]/)) {
-      hasLower = true;
-    }
-  }
-
-  return hasUpper && hasLower;
 };
 
 /**

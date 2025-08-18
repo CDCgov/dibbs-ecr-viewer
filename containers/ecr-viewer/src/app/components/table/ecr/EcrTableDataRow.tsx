@@ -10,7 +10,11 @@ import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import { EcrDisplay, RelatedEcr } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
-import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
+import {
+  ifUnformatted,
+  makePlural,
+  toSentenceCase,
+} from "@/app/utils/format-utils";
 import { saveToSessionStorage } from "@/app/utils/storage-utils";
 
 const transition: Transition = {
@@ -38,9 +42,9 @@ export const EcrTableDataRow = ({
 }) => {
   const [isExpanded, setExpanded] = useState(false);
   const patientName =
-    toSentenceCase(item.patient_first_name) +
+    ifUnformatted(item.patient_first_name, toSentenceCase) +
     " " +
-    toSentenceCase(item.patient_last_name);
+    ifUnformatted(item.patient_last_name, toSentenceCase);
 
   const conditionsList = (
     <ul className="ecr-table-list">

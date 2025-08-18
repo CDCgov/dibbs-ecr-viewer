@@ -26,8 +26,8 @@ describe("EcrTableContent", () => {
   const mockedListEcrData = jest.mocked(listEcrData);
   const mockData: EcrDisplay[] = Array.from({ length: 25 }, (_, i) => ({
     ecrId: `id-${i + 1}`,
-    patient_first_name: `first-${i + 1}`,
-    patient_last_name: `last-${i + 1}`,
+    patient_first_name: `FirsT-${i + 1}`,
+    patient_last_name: `McLast-${i + 1}`,
     dateModified: `2021-01-0${(i % 9) + 1}`,
     patient_date_of_birth: `2000-01-0${(i % 9) + 1}`,
     reportable_conditions: [

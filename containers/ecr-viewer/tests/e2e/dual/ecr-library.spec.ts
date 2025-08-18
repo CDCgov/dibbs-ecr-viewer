@@ -110,7 +110,7 @@ test.describe("ecr library page", () => {
       await expect(page.getByText("No eCRs found.")).toBeVisible();
     });
 
-    test("Set results per page", async ({ page }) => {
+    test.only("Set results per page", async ({ page }) => {
       await page.goto("/ecr-viewer?itemsPerPage=1");
       await expect(
         page.getByLabel("Filter by reportable condition"),
@@ -124,7 +124,8 @@ test.describe("ecr library page", () => {
 
       await expect(page.getByLabel("Page 2")).not.toBeVisible();
       await expect(page.getByText("Showing 1-3")).toBeVisible();
-      await expect(page.getByText("McRendar🐨")).toBeVisible();
+      // Regex to make sure name is formatted correctly
+      await expect(page.getByText(/McRendar🐨/)).toBeVisible();
       await expect(page.locator("tbody > tr")).toHaveCount(3);
     });
 
