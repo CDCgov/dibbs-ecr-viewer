@@ -36,7 +36,8 @@
       <patient>
         <name use="L">
           <given>Dash</given>
-          <family>Rendar</family>
+          <!-- Mc and emoji to ensure in e2e testing that names pass through correctly -->
+          <family>McRendar🐨</family>
         </name>
         <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1"
           displayName="Female" />

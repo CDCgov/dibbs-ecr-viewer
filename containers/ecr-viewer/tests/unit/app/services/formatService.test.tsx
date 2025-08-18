@@ -54,6 +54,45 @@ describe("FormatService tests", () => {
       const result = formatName(emptyHumanName);
       expect(result).toEqual(expectedName);
     });
+
+    it("should not format if mixed case", () => {
+      const mixedHumanName = {
+        given: ["I aM", "A Name"],
+        family: "McName😈",
+        prefix: ["Master"],
+        suffix: ["Jr"],
+      } as HumanName;
+      const expectedName = "Master I aM A Name McName😈 Jr";
+
+      const result = formatName(mixedHumanName);
+      expect(result).toEqual(expectedName);
+    });
+
+    it("should format if all lower case", () => {
+      const lowerHumanName = {
+        given: ["i am", "a name"],
+        family: "mcname😈",
+        prefix: ["master"],
+        suffix: ["jr"],
+      } as HumanName;
+      const expectedName = "Master I Am A Name Mcname😈 jr";
+
+      const result = formatName(lowerHumanName);
+      expect(result).toEqual(expectedName);
+    });
+
+    it("should format if all upper case", () => {
+      const lowerHumanName = {
+        given: ["I AM", "A NAME"],
+        family: "MCNAME😈",
+        prefix: ["MASTER"],
+        suffix: ["JR"],
+      } as HumanName;
+      const expectedName = "Master I Am A Name Mcname😈 JR";
+
+      const result = formatName(lowerHumanName);
+      expect(result).toEqual(expectedName);
+    });
   });
 
   describe("Format age", () => {

@@ -37,14 +37,39 @@ export const formatName = (
   const { use, prefix, given, family, suffix } = humanName;
 
   const segments = [
-    ...(withUse && use ? [`${toSentenceCase(use)}:`] : []),
-    ...(prefix?.map(toTitleCase) ?? []),
-    ...(given?.map(toTitleCase) ?? []),
-    toTitleCase(family ?? ""),
+    ...(withUse && use ? [`${ifUnformatted(use, toSentenceCase)}:`] : []),
+    ...(prefix?.map((p) => ifUnformatted(p, toTitleCase)) ?? []),
+    ...(given?.map((g) => ifUnformatted(g, toTitleCase)) ?? []),
+    ifUnformatted(family, toTitleCase),
     ...(suffix ?? []),
   ];
 
   return segments.filter(Boolean).join(" ");
+};
+
+// if a string is unformatted, format it, otherwise return it
+const ifUnformatted = (
+  str: string | undefined,
+  formatter: (val: string | undefined) => string | undefined,
+) => {
+  if (!str) return str;
+  return isFormatted(str) ? str : formatter(str);
+};
+
+// strings are considered unformatted if they are all caps or all lowercase
+const isFormatted = (str: string) => {
+  let hasLower = false;
+  let hasUpper = false;
+  for (const c of str) {
+    if (c.match(/[A-Z]/)) {
+      hasUpper = true;
+    }
+    if (c.match(/[a-z]/)) {
+      hasLower = true;
+    }
+  }
+
+  return hasUpper && hasLower;
 };
 
 /**

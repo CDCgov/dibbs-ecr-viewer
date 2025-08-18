@@ -124,7 +124,7 @@ test.describe("ecr library page", () => {
 
       await expect(page.getByLabel("Page 2")).not.toBeVisible();
       await expect(page.getByText("Showing 1-3")).toBeVisible();
-      await expect(page.getByText("Yoda")).toBeVisible();
+      await expect(page.getByText("McRendar🐨")).toBeVisible();
       await expect(page.locator("tbody > tr")).toHaveCount(3);
     });
 
