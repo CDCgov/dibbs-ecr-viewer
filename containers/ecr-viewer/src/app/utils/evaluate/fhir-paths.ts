@@ -542,9 +542,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "occurrenceDateTime",
   },
   immunizationsDoseNumber: {
-    // TODO #469: This should strictly speaking be "number", but conversion is buggy
+    // technically a number, but we used to convert as a string, so ValueX is a safer type
     type: "ValueX",
-    path: "protocolApplied.where(doseNumberPositiveInt.exists()).doseNumberPositiveInt",
+    path: "protocolApplied.doseNumberPositiveInt",
   },
   immunizationsManufacturerName: {
     type: "string",
