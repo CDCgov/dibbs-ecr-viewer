@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only ordered meds 1`] = `
 <div>
@@ -1095,25 +1095,6 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                         <div
                           class="data-title padding-right-1"
                         >
-                          Last Menstrual Period
-                        </div>
-                        <div
-                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
-                        >
-                          No data
-                        </div>
-                      </div>
-                      <div
-                        class="section__line_gray"
-                      />
-                    </div>
-                    <div>
-                      <div
-                        class="grid-row"
-                      >
-                        <div
-                          class="data-title padding-right-1"
-                        >
                           Pregnancy Status
                         </div>
                         <div
@@ -1134,6 +1115,70 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                           class="data-title padding-right-1"
                         >
                           Postpartum Status
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                        >
+                          No data
+                        </div>
+                      </div>
+                      <div
+                        class="section__line_gray"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="data-title padding-right-1"
+                        >
+                          <div
+                            class="display-flex flex-align-baseline"
+                          >
+                            Last Menstrual Period
+                            <span
+                              class="usa-tooltip"
+                              data-testid="tooltipWrapper"
+                            >
+                              <div
+                                aria-describedby="tooltip-r:id"
+                                class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                                data-testid="triggerElement"
+                                tabindex="0"
+                                title=""
+                              >
+                                <svg
+                                  aria-label="description"
+                                  class="usa-icon tooltip-icon text-secondary flex-align-center"
+                                  focusable="false"
+                                  height="1em"
+                                  role="img"
+                                  viewBox="0 0 24 24"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0V0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  />
+                                </svg>
+                              </div>
+                              <span
+                                aria-hidden="true"
+                                class="usa-tooltip__body"
+                                data-testid="tooltipBody"
+                                id="tooltip-r:id"
+                                role="tooltip"
+                                title="Last Menstrual Period represents the first day of the last menstrual period of the patient. This section lists multiple periods in collected in chronological order."
+                              >
+                                Last Menstrual Period represents the first day of the last menstrual period of the patient. This section lists multiple periods in collected in chronological order.
+                              </span>
+                            </span>
+                          </div>
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"

@@ -70,7 +70,10 @@ export type PathTypes = {
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
   lastMenstrualPeriod: Observation;
+  pregnancyOutcome: Observation;
+  pregnancyBirthOrder: ValueX;
   pregnancyStatus: Observation;
+  pregnancyDeterminationDate: ValueX;
   postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
@@ -167,6 +170,7 @@ export type PathTypes = {
   conditionOnsetDate: string;
   effectiveX: TimeX;
   code: CodeableConcept;
+  method: CodeableConcept;
   noteText: string;
   valueX: ValueX;
   occurrenceX: TimeX;
@@ -321,9 +325,21 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
   },
+  pregnancyOutcome: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '63893-2'))",
+  },
+  pregnancyBirthOrder: {
+    type: "ValueX",
+    path: "Observation.component.where(code.coding.exists(system = 'http://loinc.org' and code = '73771-8')).value",
+  },
   pregnancyStatus: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3'))",
+  },
+  pregnancyDeterminationDate: {
+    type: "ValueX",
+    path: "extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-date-determined-extension').value",
   },
   postpartumStatus: {
     type: "Observation",
@@ -706,6 +722,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   code: {
     type: "CodeableConcept",
     path: "code",
+  },
+  method: {
+    type: "CodeableConcept",
+    path: "method",
   },
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
