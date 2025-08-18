@@ -100,7 +100,12 @@ const ABNORMAL_OBSERVATION_INTERPRETATIONS = {
 type AbnormalObservationInterpretationCode =
   keyof typeof ABNORMAL_OBSERVATION_INTERPRETATIONS;
 
-const isAbnormalObservationInterpretation = (
+/**
+ *
+ * @param code HL7 observation interptetation code
+ * @returns true if code is in list of abnormal observation interpretation codes
+ */
+export const isAbnormalObservationInterpretation = (
   code: string,
 ): code is AbnormalObservationInterpretationCode => {
   return code in ABNORMAL_OBSERVATION_INTERPRETATIONS;
@@ -321,7 +326,7 @@ export const evaluateAbnormalObservationInterpretation = (
 
         const interpretationConfig = ABNORMAL_OBSERVATION_INTERPRETATIONS[code];
         return {
-          code: code,
+          code,
           display: coding.display || interpretationConfig.display,
           color: interpretationConfig.color,
           backgroundColor: interpretationConfig.backgroundColor,
