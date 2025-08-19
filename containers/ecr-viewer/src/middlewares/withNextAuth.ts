@@ -22,7 +22,10 @@ export const withNextAuth: MiddlewareFactory = (
     }
 
     const response = await withAuth(request as NextRequestWithAuth, {
-      pages: { signIn: `/signin` },
+      pages: {
+        signIn: "/signin",
+        error: "/error/auth",
+      },
     });
     if (response instanceof Response) {
       // Redirect not helpful for api routes, pass on to unauthorized handler

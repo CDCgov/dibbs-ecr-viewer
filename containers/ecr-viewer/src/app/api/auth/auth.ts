@@ -61,6 +61,7 @@ export const handler = NextAuth({
   },
   pages: {
     signIn: `${process.env.BASE_PATH}/signin`,
+    error: `${process.env.BASE_PATH}/error/auth`,
   },
   session: {
     maxAge: (Number(process.env.AUTH_SESSION_DURATION_MIN) || 30) * 60, // default: 30 minutes

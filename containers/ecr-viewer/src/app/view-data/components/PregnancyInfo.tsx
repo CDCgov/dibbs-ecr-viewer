@@ -6,7 +6,7 @@ import {
 import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface PregnancyInfoProps {
-  pregnancyData: DisplayDataProps;
+  pregnancyData: DisplayDataProps[];
 }
 
 /**
@@ -18,8 +18,13 @@ interface PregnancyInfoProps {
 const PregnancyInfo: React.FC<PregnancyInfoProps> = ({ pregnancyData }) => {
   return (
     <AccordionSection>
-      <AccordionSubSection title="Pregnancy Info">
-        <DataDisplay item={pregnancyData} />
+      <AccordionSubSection
+        title="Pregnancy Info"
+        toolTip="Pregnancy info displays the most recent observations at the top. This section may list multiple pregnancies."
+      >
+        {pregnancyData.map((item, i) => (
+          <DataDisplay item={item} key={`pregnancy-info-${i}`} />
+        ))}
       </AccordionSubSection>
     </AccordionSection>
   );
