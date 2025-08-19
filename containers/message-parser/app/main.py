@@ -204,7 +204,6 @@ async def get_schema(parsing_schema_name: str, response: Response) -> GetSchemaR
         return {
             "message": error.__str__(),
             "parsing_schema": {},
-            "ERROR": "CAN'T FIND PARSING SCHEMA",
         }
     return {"message": "Schema found!", "parsing_schema": parsing_schema}
 

@@ -372,60 +372,54 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         for field, field_parser in parsers.items():
             if "field_configs" not in field_parser:
                 value = _evaluate_fhir_path(field_parser, current_message)
-                parsed_values[field] = value
+                parsed_values[field] = ",".join(map(str, value))
             else:
+                base_vals = _evaluate_fhir_path(field_parser, current_message)
+
+                if base_vals is None:
+                    parsed_values[field] = []
+                    continue
+
                 subfield_parsed_values = []
-                initial_values = _evaluate_fhir_path(
-                    field_parser, current_message, "list"
-                )
-
-                if not isinstance(initial_values, list):
-                    initial_values = [initial_values]
-
-                for initial_val in initial_values:
-                    if initial_val is None:
+                for base_val in base_vals:
+                    if base_val is None:
                         continue
                     subfield_value = _parse_values(
-                        field_parser["field_configs"], initial_val
+                        field_parser["field_configs"], base_val
                     )
                     subfield_parsed_values.append(subfield_value)
-
                 parsed_values[field] = subfield_parsed_values
 
         return parsed_values
 
-    def _evaluate_fhir_path(field_parser, current_message, return_type="str"):
+    def _evaluate_fhir_path(field_parser, current_message):
         """
+        TODO ANGELA: FIX THIS
         Evaluates the FHIR path based on the current message
 
         :param field_parser: The parser for a specific field, which must contain a
             `base_path` and may contain a `reference_path` and nested `field_configs`.
         :param current_message: The FHIR message or sub-section to be evaluated
             by the current set of parsers.
-        :param return_type: Str that defines whether we want to return a list of values
-            or a concatenated string of values. If we are evaluating an intermediary
-            value that has further nested fields, we want to return a list.
 
         :return: A concatenated string or a list of values
         """
         try:
             if "reference_path" in field_parser:
-                current_message = _get_reference(field_parser, current_message)
+                reference_path = _get_reference(field_parser, current_message)
+                value = fhirpathpy.evaluate(message, reference_path) # Evaluate on full message, not current
 
-                if not current_message or len(current_message) == 0:
+                if not value or len(value) == 0:
                     return None
-                return current_message
+                return value
 
             if "base_path" in field_parser:
                 value = fhirpathpy.evaluate(current_message, field_parser["base_path"])
 
             if not value or len(value) == 0:
                 return None
-
-            # Needs to be returned as list if this is an intermediary value
-            if return_type == "list":
-                return value
-            return ",".join(map(str, value))
+        
+            return value
 
         # TODO ANGELA: Look at KeyError path?
         except KeyError:
@@ -455,7 +449,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
 
     def _get_reference(field_parser, current_message):
         """
-        Resolves a FHIR reference and evaluates a new path based on the resolved ID.
+        Resolves a FHIR reference and returns a new path based on the resolved ID.
 
         It uses a `reference_path` to find a reference ID in the `current_message`.
         If a single reference is found, it uses the reference to replace a placeholder
@@ -468,7 +462,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
             `base_path` & a `reference_path`.
         :param current_message: The FHIR message or sub-section at the current level of
             parsing where the reference is located.
-        :return: The result of the FHIRPath evaluation on the base document, or response
+        :return: The final reference path to be evaluated, or response
             error message if the reference could not be resolved.
         """
         reference_parser = field_parser["reference_path"]
@@ -491,11 +485,10 @@ def extract_and_apply_parsers(parsing_schema, message, response):
             }
 
         reference_value = reference[0].split("/")[-1]
-        reference_path = field_parser["base_path"].replace(
+
+        return field_parser["base_path"].replace(
             DIBBS_REFERENCE_SIGNIFIER, reference_value
         )
-
-        return fhirpathpy.evaluate(message, reference_path)
 
     return _parse_values(parsers, message)
 
