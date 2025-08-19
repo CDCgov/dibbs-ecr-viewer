@@ -474,7 +474,7 @@
             'identifier': list([
               dict({
                 'system': 'urn:ietf:rfc:3986',
-                'value': 'urn:uuid:2.16.540.1.113883.19.2',
+                'value': 'urn:oid:2.16.540.1.113883.19.2',
               }),
             ]),
             'meta': dict({
@@ -643,6 +643,7 @@
                     'valueCoding': dict({
                       'code': '1966-1',
                       'display': 'Aleut',
+                      'system': 'urn:oid:2.16.840.1.113883.6.238',
                     }),
                   }),
                   dict({
@@ -659,6 +660,7 @@
                     'valueCoding': dict({
                       'code': '2186-5',
                       'display': 'Not Hispanic or Latino',
+                      'system': 'urn:oid:2.16.840.1.113883.6.238',
                     }),
                   }),
                   dict({
