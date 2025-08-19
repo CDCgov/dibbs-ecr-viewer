@@ -20,7 +20,7 @@ from app.phdc.builder import PHDCBuilder
 from app.utils import (
     clean_schema,
     convert_to_fhir,
-    extract_and_apply_parsers,
+    # extract_and_apply_parsers,
     freeze_parsing_schema,
     get_credential_manager,
     get_metadata,
@@ -28,6 +28,7 @@ from app.utils import (
     read_json_from_assets,
     search_for_required_values,
     transform_to_phdc_input_data,
+    FhirParser,
 )
 
 # Read settings immediately to fail fast in case there are invalid values.
@@ -110,7 +111,8 @@ async def parse_message_endpoint(
             }
 
     # 3. Parse the desired values and find metadata, if needed
-    parsed_values = extract_and_apply_parsers(parsing_schema, input.message, response)
+    parser = FhirParser(parsing_schema, input.message, response)
+    parsed_values = parser.extract_and_apply_parsers()
     if input.include_metadata == "true":
         parsed_values = get_metadata(parsed_values, parsing_schema)
     return {"message": "Parsing succeeded!", "parsed_values": parsed_values}

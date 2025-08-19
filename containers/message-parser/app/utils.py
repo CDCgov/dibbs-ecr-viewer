@@ -305,22 +305,21 @@ def clean_schema(schema: dict):
     for key in keys_to_delete:
         del schema[key]
 
-# TODO ANGELA: change to class?
-def extract_and_apply_parsers(parsing_schema, message, response):
-    """
-    Function used to pull parsing methods for each field out of the
-    passed-in schema, resolve any reference dependencies, and apply the
-    result to the input FHIR bundle.
+class FhirParser:
+    def __init__(self, parsing_schema: dict, message: dict, response):
+        """
+        :param parsing_schema: A dictionary of parser configs, defining how to extract values from the message
+        :param message: The FHIR bundle
+        :param response: Response object for setting HTTP errors if needed
+        """
+        self.parsing_schema = parsing_schema
+        self.message = message
+        self.response = response
 
-    :param parsing_schema: A dictionary holding the parsing schema send
-      to the endpoint.
-    :param message: The FHIR bundle to extract values from.
-    :param response: The Response object the endpoint will send back, in
-      case we need to apply error status codes.
-    :return: A dictionary mapping schema keys to parsed values.
-    """
-
-    def _parse_values(parsers, current_message):
+    def extract_and_apply_parsers(self) -> dict:
+        return self._parse_values(self.parsing_schema, self.message) 
+    
+    def _parse_values(self, parsers, current_message):
         """
         Recursive parses a FHIR message based on a provided schema of FHIR paths.
 
@@ -336,13 +335,13 @@ def extract_and_apply_parsers(parsing_schema, message, response):
 
         for field, field_parser in parsers.items():
             if "secondary_schema" not in field_parser:
-                value = _evaluate_fhir_path(field_parser, current_message)
+                value = self._evaluate_fhir_path(field_parser, current_message)
                 if value:
                     parsed_values[field] = ",".join(map(str, value))
                 else:
                     parsed_values[field] = value
             else:
-                base_vals = _evaluate_fhir_path(field_parser, current_message)
+                base_vals = self._evaluate_fhir_path(field_parser, current_message)
 
                 if base_vals is None:
                     parsed_values[field] = []
@@ -352,7 +351,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                 for base_val in base_vals:
                     if base_val is None:
                         continue
-                    subfield_value = _parse_values(
+                    subfield_value = self._parse_values(
                         field_parser["secondary_schema"], base_val
                     )
                     subfield_values.append(subfield_value)
@@ -360,7 +359,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
 
         return parsed_values
 
-    def _evaluate_fhir_path(field_parser, current_message):
+    def _evaluate_fhir_path(self, field_parser, current_message):
         """
         Evaluates the FHIR path based on the current message
 
@@ -373,8 +372,8 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         """
         try:
             if "reference_lookup" in field_parser:
-                reference_path = _get_reference(field_parser, current_message)
-                value = fhirpathpy.evaluate(message, field_parser["fhir_path"], context={"ref": reference_path}) # Evaluate on full message, not current
+                reference_path = self._get_reference(field_parser, current_message)
+                value = fhirpathpy.evaluate(self.message, field_parser["fhir_path"], context={"ref": reference_path}) # Evaluate on full message, not current
                 
                 if not value or len(value) == 0:
                     return None
@@ -414,7 +413,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
             except Exception:
                 return None
 
-    def _get_reference(field_parser, current_message):
+    def _get_reference(self, field_parser, current_message):
         """
         Resolves a FHIR reference and returns a new path based on the resolved ID.
 
@@ -436,7 +435,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         reference = fhirpathpy.evaluate(current_message, reference_parser)
 
         if len(reference) == 0:
-            response.status_code = status.HTTP_400_BAD_REQUEST
+            self.response.status_code = status.HTTP_400_BAD_REQUEST
             return {
                 "message": "Provided `reference_lookup` location does "
                 "not point to a referencing identifier",
@@ -444,7 +443,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
             }
         # Future refactor: be able to take multiple references?
         elif len(reference) > 1:
-            response.status_code = status.HTTP_400_BAD_REQUEST
+            self.response.status_code = status.HTTP_400_BAD_REQUEST
             return {
                 "message": "Provided `reference_lookup` location points "
                 "to many referencing identifiers",
@@ -452,8 +451,6 @@ def extract_and_apply_parsers(parsing_schema, message, response):
             }
 
         return reference[0].split("/")[-1]
-
-    return _parse_values(parsing_schema, message)
 
 
 def transform_to_phdc_input_data(parsed_values: dict) -> PHDCInputData:
