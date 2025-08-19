@@ -85,37 +85,6 @@ def freeze_parsing_schema_helper(schema: dict) -> frozendict:
         return frozendict(schema)
 
 
-# Using frozendict here to have an immutable that can be hashed for caching purposes.
-# Caching the parsers reduces parsing time by over 60% after the first request for a
-# given schema.
-@cache
-def get_parsers(extraction_schema: frozendict) -> frozendict:
-    """
-    Generate a FHIRpath parser for each field in a given schema. Return these parsers as
-    values in a dictionary whose keys indicate the field in the schema the parser is
-    associated with.
-
-    :param extraction_schema: A dictionary containing an extraction schema.
-    :return: A dictionary containing a FHIR path parsers for each field in the provided
-    schema.
-    """
-    parsers = {}
-    for field, field_definition in extraction_schema.items():
-        parser = {}
-        parser["base_path"] = field_definition["fhir_path"]
-
-        if "reference_lookup" in field_definition:
-            parser["reference_path"] = field_definition["reference_lookup"]
-
-        if "secondary_schema" in field_definition:
-            sub_parser = get_parsers(field_definition["secondary_schema"])
-            parser["field_configs"] = sub_parser
-
-        parsers[field] = parser
-
-    return frozendict(parsers)
-
-
 def get_metadata(parsed_values: dict, schema) -> dict:
     """
     Given a dictionary of parsed values and a schema, creates a dictionary containing
@@ -350,15 +319,14 @@ def extract_and_apply_parsers(parsing_schema, message, response):
       case we need to apply error status codes.
     :return: A dictionary mapping schema keys to parsed values.
     """
-    parsers = get_parsers(parsing_schema)
 
     def _parse_values(parsers, current_message):
         """
         Recursive parses a FHIR message based on a provided schema of FHIR paths.
 
         :param parsers: A dictionary of parser configs. Field names are the keys, and
-            the values are objects that contain the FHIR 'base_path'. They may include
-            further nested `field_configs` for recursive parsing.
+            the values are objects that contain the 'fhir_path'. They may include
+            a further nested `secondary_config` for recursive parsing.
         :param current_message: The FHIR message or sub-section to be evaluated
             by the current set of parsers.
 
@@ -367,7 +335,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         parsed_values = {}
 
         for field, field_parser in parsers.items():
-            if "field_configs" not in field_parser:
+            if "secondary_schema" not in field_parser:
                 value = _evaluate_fhir_path(field_parser, current_message)
                 if value:
                     parsed_values[field] = ",".join(map(str, value))
@@ -385,7 +353,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                     if base_val is None:
                         continue
                     subfield_value = _parse_values(
-                        field_parser["field_configs"], base_val
+                        field_parser["secondary_schema"], base_val
                     )
                     subfield_values.append(subfield_value)
                 parsed_values[field] = subfield_values
@@ -397,23 +365,23 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         Evaluates the FHIR path based on the current message
 
         :param field_parser: The parser for a specific field, which must contain a
-            `base_path` and may contain a `reference_path` and nested `field_configs`.
+            `fhir_path` and may contain a `reference_lookup` and a nested `secondary_schema`.
         :param current_message: The FHIR message or sub-section to be evaluated
             by the current set of parsers.
 
         :return: Evaluated FHIR path result(s), or None if no results
         """
         try:
-            if "reference_path" in field_parser:
+            if "reference_lookup" in field_parser:
                 reference_path = _get_reference(field_parser, current_message)
-                value = fhirpathpy.evaluate(message, field_parser["base_path"], context={"ref": reference_path}) # Evaluate on full message, not current
+                value = fhirpathpy.evaluate(message, field_parser["fhir_path"], context={"ref": reference_path}) # Evaluate on full message, not current
                 
                 if not value or len(value) == 0:
                     return None
                 return value
 
-            if "base_path" in field_parser:
-                value = fhirpathpy.evaluate(current_message, field_parser["base_path"])
+            if "fhir_path" in field_parser:
+                value = fhirpathpy.evaluate(current_message, field_parser["fhir_path"])
 
             if not value or len(value) == 0:
                 return None
@@ -425,8 +393,8 @@ def extract_and_apply_parsers(parsing_schema, message, response):
             # Fallback property accessor for when fhirpathpy fails to access data types
             try:
                 secondary_parser = None
-                if "base_path" in field_parser:
-                    secondary_parser = field_parser["base_path"]
+                if "fhir_path" in field_parser:
+                    secondary_parser = field_parser["fhir_path"]
                 else:
                     return None
 
@@ -450,21 +418,21 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         """
         Resolves a FHIR reference and returns a new path based on the resolved ID.
 
-        It uses a `reference_path` to find a reference ID in the `current_message`.
+        It uses a `reference_lookup` to find a reference ID in the `current_message`.
         If a single reference is found, it uses the reference to replace a placeholder
-        in the `base_path` and evaluates this new path against the FHIR bundle
+        in the `fhir_path` and evaluates this new path against the FHIR bundle
         to return the referenced resource or value. If not, this function will raise
         an error if those references cannot be resolved (if the ID of the referenced
         object can't be found, for example).
 
         :param field_parser: The parser for a specific field, which must contain a
-            `base_path` & a `reference_path`.
+            `fhir_path` & a `reference_lookup`.
         :param current_message: The FHIR message or sub-section at the current level of
             parsing where the reference is located.
         :return: The reference to be added as context to the FHIR path, or response
             error message if the reference could not be resolved.
         """
-        reference_parser = field_parser["reference_path"]
+        reference_parser = field_parser["reference_lookup"]
         reference = fhirpathpy.evaluate(current_message, reference_parser)
 
         if len(reference) == 0:
@@ -485,7 +453,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
 
         return reference[0].split("/")[-1]
 
-    return _parse_values(parsers, message)
+    return _parse_values(parsing_schema, message)
 
 
 def transform_to_phdc_input_data(parsed_values: dict) -> PHDCInputData:
