@@ -66,10 +66,7 @@ export const DataDisplay = ({
   className?: string;
   themeColor?: string;
 }): React.JSX.Element => {
-  item.dividerLine =
-    item.dividerLine === null || item.dividerLine === undefined
-      ? true
-      : item.dividerLine;
+  const { dividerLine = true } = item;
   return (
     <div>
       <div
@@ -98,13 +95,32 @@ export const DataDisplay = ({
           <FieldValue>{item.value}</FieldValue>
         </div>
       </div>
-      {item.dividerLine ? (
-        <div className={`section__line_${themeColor}`} />
-      ) : (
-        ""
-      )}
+      {dividerLine ? <div className={`section__line_${themeColor}`} /> : ""}
     </div>
   );
+};
+
+/**
+ * Render a list of `DataDisplay` items with no trailing divider line
+ * @param props react props
+ * @param props.items list of items to display
+ * @param props.dataDisplayProps properties to pass on to `DataDisplay`
+ * @returns data display list
+ */
+export const DataDisplayList = ({
+  items,
+  ...dataDisplayProps
+}: {
+  items: DisplayDataProps[];
+  dataDisplayProps?: Omit<React.ComponentProps<typeof DataDisplay>, "item">;
+}) => {
+  return items.map((item, i) => (
+    <DataDisplay
+      key={`item-${i}`}
+      item={{ ...item, dividerLine: i + 1 !== items.length }}
+      {...dataDisplayProps}
+    />
+  ));
 };
 
 /**

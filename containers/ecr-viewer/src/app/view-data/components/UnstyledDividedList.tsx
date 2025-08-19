@@ -8,7 +8,7 @@ import { ReactNode } from "react";
  */
 export const UnstyledDividedList = ({ items }: { items: ReactNode[] }) => {
   return (
-    <ul className="add-list-reset padding-x-4">
+    <ul className="add-list-reset">
       {items.map((item, i) => (
         <li
           key={`list-item-${i}`}

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 
 import { Button, Label } from "@trussworks/react-uswds";
-import classNames from "classnames";
+import classnames from "classnames";
 
 import {
   makePlural,
@@ -32,6 +32,8 @@ import {
  * @param props.title - Title text displayed on the button; defaults to `type`.
  * @param props.icon - Icon component rendered inside the filter button.
  * @param props.tag - Optional tag element displayed next to the title.
+ * @param props.touched - Optional, but should be used when `submitHandler` is passed. Indicates
+ * whether the filter options have been edited by the user
  * @param props.resetHandler - Callback for resetting the filter.
  * @param props.submitHandler - Callback for applying the filter on form submission.
  * @param props.children - The filter form fields and content displayed in the dropdown.
@@ -43,6 +45,7 @@ export const Filter = ({
   title = "",
   icon: IconTag,
   tag = "",
+  touched = true,
   resetHandler,
   submitHandler,
   children,
@@ -52,6 +55,7 @@ export const Filter = ({
   title?: string;
   icon: ComponentType<{ className?: string }>;
   tag?: ReactNode;
+  touched?: boolean;
   resetHandler: () => void;
   submitHandler?: () => void;
   children: ReactNode;
@@ -113,34 +117,43 @@ export const Filter = ({
         </Button>
 
         {isFilterBoxOpen && (
-          <div className="usa-combo-box top-full left-0">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                submitHandler?.();
-                setFilterBoxOpen(FILTER_SUBMITTED);
-                openBtnRef?.current?.parentElement?.focus();
-              }}
-              onKeyDown={
-                !submitHandler
-                  ? (e) => {
-                      // If no submit button, enter doesn't do anything, so
-                      // add a manual handler to still close out the box on enter
-                      if (e.code === "Enter") {
-                        e.preventDefault();
-                        setIsFilterBoxOpen(false);
-                      }
+          <form
+            className={classnames(
+              "usa-combo-box top-full left-0 position-absolute shadow-2 border-0 radius-md padding-0 margin-top-1 bg-white z-top filter-form maxh-6205",
+              submitHandler && "minh-30",
+            )}
+            onSubmit={(e) => {
+              e.preventDefault();
+              submitHandler?.();
+              setFilterBoxOpen(FILTER_SUBMITTED);
+              openBtnRef?.current?.parentElement?.focus();
+            }}
+            onKeyDown={
+              !submitHandler
+                ? (e) => {
+                    // If no submit button, enter doesn't do anything, so
+                    // add a manual handler to still close out the box on enter
+                    if (e.code === "Enter") {
+                      e.preventDefault();
+                      setIsFilterBoxOpen(false);
                     }
-                  : undefined
-              }
-            >
-              <fieldset className="usa-combo-box border-0 padding-0 margin-top-1 bg-white position-absolute radius-md shadow-2 z-top maxh-6205 width-full">
-                <FilterLegend type={type} />
+                  }
+                : undefined
+            }
+          >
+            <fieldset className="usa-combo-box filter-wrapper border-0 width-full">
+              <FilterLegend type={type} />
+              <div className="filter-content overflow-y-auto padding-y-1">
                 {children}
-                {submitHandler && <ApplyFilterButton type={type} />}
-              </fieldset>
-            </form>
-          </div>
+              </div>
+              {submitHandler && (
+                <div className="filter-apply">
+                  <div className="border-top-1px border-base-lighter" />
+                  <ApplyFilterButton disabled={!touched} type={type} />
+                </div>
+              )}
+            </fieldset>
+          </form>
         )}
       </div>
     </div>
@@ -155,7 +168,7 @@ export const Filter = ({
  */
 const FilterLegend = ({ type }: { type: string }) => {
   return (
-    <legend className="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-y-1 padding-left-105 padding-right-2 text-no-wrap">
+    <legend className="line-height-sans-6 text-bold font-sans-xs bg-white width-full padding-top-1 padding-left-105 padding-right-2 text-no-wrap">
       Filter by {type}
     </legend>
   );
@@ -165,15 +178,23 @@ const FilterLegend = ({ type }: { type: string }) => {
  * A button component for applying a filter.
  * @param props - React props
  * @param props.type - The type of filter
+ * @param props.disabled - Whether the button is disabled
  * @returns - The rendered button element
  */
-const ApplyFilterButton = ({ type }: { type: string }) => {
+const ApplyFilterButton = ({
+  type,
+  disabled,
+}: {
+  type: string;
+  disabled: boolean;
+}) => {
   return (
     <div className="display-flex flex-column flex-stretch padding-x-105">
       <Button
         type="submit"
         className="margin-y-1 margin-x-0 padding-y-1 padding-x-205 flex-fill text-no-wrap"
         aria-label={`Apply filter for ${type}`}
+        disabled={disabled}
       >
         Apply filter
       </Button>
@@ -342,6 +363,7 @@ export const CustomDateInput = ({
  * @param props.onToggle - The callback function to handle the toggle event when the button is clicked.
  * @param props.numSelected - How many any are selected.
  * @param props.numOptions - How many are selectable.
+ * @param props.className - optionally, classnames to pass to the button
  * @returns The rendered Select/Deselect all checkbox component.
  */
 export const SelectDeselectAllButton = ({
@@ -349,11 +371,13 @@ export const SelectDeselectAllButton = ({
   onToggle,
   numSelected,
   numOptions,
+  className = "",
 }: {
   groupName: string;
   onToggle: (isSelect: boolean) => void;
   numSelected: number;
   numOptions: number;
+  className?: string;
 }) => {
   const isAnySelected = numSelected > 0;
   const numBulkSelectable = isAnySelected ? numSelected : numOptions;
@@ -361,10 +385,14 @@ export const SelectDeselectAllButton = ({
     <Button
       type="button"
       unstyled={true}
-      className="action-text font-size-xs margin-x-105 margin-bottom-1"
+      disabled={numOptions === 0}
+      className={classnames(
+        "action-text font-size-xs margin-x-105 margin-bottom-1",
+        className,
+      )}
       onClick={() => onToggle(!isAnySelected)}
     >
-      {isAnySelected ? "Deselect " : "Select "}
+      {numOptions === 0 ? "" : isAnySelected ? "Deselect " : "Select "}
       {numBulkSelectable} {groupName}
       {makePlural(numBulkSelectable)}
     </Button>
@@ -389,7 +417,7 @@ export const CheckboxOptions = ({
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
-    <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-y-1 padding-x-105">
+    <div className="position-relative bg-white overflow-y-auto maxh-38 display-flex flex-column gap-1 padding-x-105">
       {Object.keys(filterItems).map((item) => (
         <CheckboxInput
           key={item}
@@ -427,7 +455,7 @@ const CheckboxInput = ({
 }: CheckboxInputProps) => {
   return (
     <div
-      className={classNames("checkbox-color", "usa-checkbox", classNamesDiv)}
+      className={classnames("checkbox-color", "usa-checkbox", classNamesDiv)}
     >
       <input
         id={id}
@@ -438,7 +466,7 @@ const CheckboxInput = ({
         checked={checked}
       />
       <label
-        className={classNames(
+        className={classnames(
           "usa-checkbox__label",
           "line-height-sans-6",
           "font-sans-xs",

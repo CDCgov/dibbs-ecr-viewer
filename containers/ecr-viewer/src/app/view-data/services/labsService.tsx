@@ -27,6 +27,7 @@ import { AccordionItem } from "@/app/types";
 import {
   RenderableNode,
   arrayToElement,
+  evaluateData,
   noData,
   notEmpty,
   safeParse,
@@ -43,7 +44,7 @@ import {
   toKebabCase,
 } from "@/app/utils/format-utils";
 import {
-  DataDisplay,
+  DataDisplayList,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
@@ -673,17 +674,32 @@ const getLabsContent = (
       title: "Narrative",
       value: returnFieldValueFromLabHtmlString(labReportJson, "Narrative"),
       className: "lab-text-content",
-      dividerLine: false,
     },
   ];
+
+  const { availableData, unavailableData } = evaluateData(rrInfo);
+  const h6ClassName = "bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205";
 
   return (
     <>
       {labTableDiagnostic}
       {labTableOrganisms}
-      {rrInfo.map((item) => (
-        <DataDisplay key={`${item.title}-${item.value}`} item={item} />
-      ))}
+
+      {availableData.length > 0 && (
+        <h6
+          // inline styling to overwrite usa-prose nested style
+          style={{ marginTop: "-1rem" }}
+          className={h6ClassName}
+        >
+          Available lab information
+        </h6>
+      )}
+      <DataDisplayList items={availableData} />
+
+      {unavailableData.length > 0 && (
+        <h6 className={h6ClassName}>Unavailable lab information</h6>
+      )}
+      <DataDisplayList items={unavailableData} />
     </>
   );
 };

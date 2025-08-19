@@ -14,6 +14,7 @@ const cookies: { [key in UserType]?: Cookie[] } = {};
  * @param config.url optionally, the url to go to to force login
  * @param config.expectedHeading optionally, the heading text to expect upon successful login
  * @param config.userType optionally, the user type to log in with. Default "ADMIN"
+ * @param config.useCookies optionally, whether to use the pre-saved cookie if available. Default true
  */
 export const logIn = async (
   page: Page,
@@ -21,22 +22,24 @@ export const logIn = async (
     url?: string;
     expectedHeading?: string;
     userType?: UserType;
+    useCookies?: boolean;
   } = {},
 ) => {
   const {
     url = "/ecr-viewer/",
     expectedHeading = "eCR library",
     userType = "ADMIN",
+    useCookies = cookies[userType],
   } = config;
 
-  if (cookies[userType]) {
+  if (useCookies) {
     // set cookies to previously saved ones
     await page.context().addCookies(cookies[userType]!);
   }
 
   await page.goto(url);
 
-  if (!cookies[userType]) {
+  if (!useCookies) {
     // Not using NBS auth, strip out search param token
     let newUrl = url.replace(/&?auth\=[^&]+/, "");
     if (newUrl.endsWith("?")) {
@@ -67,7 +70,7 @@ export const logIn = async (
     page.getByRole("heading", { name: expectedHeading }).first(),
   ).toBeVisible();
 
-  if (!cookies[userType]) {
+  if (!useCookies) {
     // save cookies
     cookies[userType] = await page.context().cookies();
   }
@@ -84,13 +87,42 @@ const logInToKeycloak = async (
   await page.getByRole("button", { name: "Sign in" }).click();
 };
 
+const sleep = async (ms: number) => {
+  return await new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+const enterEmailHitNext = async (page: Page, userName: string) => {
+  await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
+  await sleep(100);
+  await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
+  await sleep(100);
+  await page.getByRole("button", { name: "Next" }).click();
+  await sleep(100);
+};
+
 // Helper to log into via Azure AD and go to the viewer page
 const logInToAd = async (page: Page, userName: string, password: string) => {
-  await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
-  await page.getByRole("button", { name: "Next" }).click();
+  await enterEmailHitNext(page, userName);
+
+  try {
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
+    await sleep(100);
+  } catch {
+    try {
+      // try again
+      await enterEmailHitNext(page, userName);
+    } catch {
+      // sometimes we get this screen instead of going directly to password entry
+      await page
+        .getByRole("button", { name: /Work or school account/ })
+        .click();
+    }
+  }
 
   await page.getByRole("textbox", { name: "password" }).fill(password!);
+  await sleep(100);
   await page.getByRole("button", { name: "Sign in" }).click();
+  await sleep(100);
   await page.getByRole("button", { name: "No" }).click();
 };
 

@@ -12,9 +12,9 @@ import {
 } from "@trussworks/react-uswds";
 
 import { ExpandCollapseAccordionControlled } from "@/app/components/ExpandCollapseAccordion";
-import { Search } from "@/app/components/Icon";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
+import { LiveSearchField } from "@/app/components/forms/LiveSearchField";
 import ConfirmationFooter from "@/app/components/modal/ConfirmationFooter";
 import Modal from "@/app/components/modal/Modal";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
@@ -45,9 +45,15 @@ const groupByCategory = (conditions: FormCondition[]) => {
     const category = cur.condition_category || "Unknown";
     acc[category] ||= [] as FormCondition[];
     acc[category].push(cur);
-    acc[category].sort((a, b) =>
-      stringSort(a.condition_name, b.condition_name),
-    );
+    acc[category].sort((a, b) => {
+      const res = stringSort(a.condition_name, b.condition_name);
+      if (res === 0) {
+        // secondary sort on code for consistency
+        return stringSort(a.code, b.code);
+      } else {
+        return res;
+      }
+    });
     return acc;
   }, {} as ConditionCategories);
 };
@@ -373,10 +379,11 @@ const ConditionFieldSet = ({
           {numConditionsSelected} condition
           {makePlural(numConditionsSelected)} selected
         </p>
-        <SearchField
+        <LiveSearchField
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           numResults={numResults}
+          label="Search condition or category"
         />
       </div>
       <ExpandCollapseAccordionControlled
@@ -414,36 +421,6 @@ const ConditionFieldSet = ({
         }
       />
     </FieldSet>
-  );
-};
-
-const SearchField = ({
-  searchTerm,
-  setSearchTerm,
-  numResults,
-}: {
-  searchTerm: string;
-  setSearchTerm: (v: string) => void;
-  numResults: number;
-}) => {
-  return (
-    <div className="live-search">
-      {searchTerm && (
-        <p aria-live="polite" className="result-count">
-          {numResults} result{makePlural(numResults)}
-        </p>
-      )}
-      <Search aria-hidden={true} className="square-3 text-base" />
-      <TextInput
-        type="search"
-        aria-label="Search condition or category"
-        id="condition-search"
-        name="condition-search"
-        placeholder="Search condition or category"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-    </div>
   );
 };
 

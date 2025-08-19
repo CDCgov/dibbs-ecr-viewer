@@ -9,7 +9,10 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
-import { DataDisplay } from "@/app/view-data/components/DataDisplay";
+import {
+  DataDisplay,
+  DataDisplayList,
+} from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
@@ -109,12 +112,7 @@ const evaluateTravelHistoryDetails = (
 
   if (content.length === 0) return;
 
-  return content.map(({ title, ...props }, i) => (
-    <DataDisplay
-      key={title}
-      item={{ title, ...props, dividerLine: i < content.length - 1 }}
-    />
-  ));
+  return <DataDisplayList items={content} />;
 };
 
 const TransportationDetails = ({
