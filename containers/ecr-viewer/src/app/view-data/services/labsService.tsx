@@ -65,35 +65,23 @@ export interface LabReportElementData {
 export interface AbnormalObservationInterpretation {
   code: "AA" | "HH" | "LL" | "HU" | "LU";
   display: string;
-  color: string;
-  backgroundColor: string;
 }
 
 const ABNORMAL_OBSERVATION_INTERPRETATIONS = {
   AA: {
     display: "Critical Abnormal",
-    color: "#FFFFFF",
-    backgroundColor: "#B50909",
   },
   HH: {
     display: "Critical High",
-    color: "#FFFFFF",
-    backgroundColor: "#B50909",
   },
   LL: {
     display: "Critical Low",
-    color: "#FFFFFF",
-    backgroundColor: "#B50909",
   },
   HU: {
     display: "Significantly High",
-    color: "#000000",
-    backgroundColor: "#FFA500",
   },
   LU: {
     display: "Significantly Low",
-    color: "#000000",
-    backgroundColor: "#FFA500",
   },
 } as const;
 
@@ -348,18 +336,13 @@ export const renderLabAbnormalityTag = (
   observations: Observation[],
   labReportJson?: HtmlTableJson,
 ): React.ReactNode => {
+  
+
   const abnormalInterpretation =
     evaluateAbnormalObservationInterpretation(observations);
   if (abnormalInterpretation) {
     return (
-      <Tag
-        style={{
-          backgroundColor: abnormalInterpretation.backgroundColor,
-          color: abnormalInterpretation.color,
-          fontWeight: "bold",
-        }}
-        className="margin-left-105"
-      >
+      <Tag background="#B50909" className="margin-left-105">
         {abnormalInterpretation.display}
       </Tag>
     );
