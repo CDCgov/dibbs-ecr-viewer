@@ -64,11 +64,11 @@ export interface LabReportElementData {
 }
 
 const ABNORMAL_OBSERVATION_INTERPRETATIONS = {
-  "AA": "Critical Abnormal",
-  "HH": "Critical High", 
-  "LL": "Critical Low",
-  "HU": "Significantly High",
-  "LU": "Significantly Low",
+  AA: "Critical Abnormal",
+  HH: "Critical High",
+  LL: "Critical Low",
+  HU: "Significantly High",
+  LU: "Significantly Low",
 } as const;
 
 type AbnormalObservationInterpretationCode =
