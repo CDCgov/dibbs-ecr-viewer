@@ -71,7 +71,7 @@ describe("Immunizations Table", () => {
         },
         protocolApplied: [
           {
-            doseNumberPositiveInt: "1",
+            doseNumberPositiveInt: 1,
           },
         ],
       },
