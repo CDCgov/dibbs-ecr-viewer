@@ -369,7 +369,10 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         for field, field_parser in parsers.items():
             if "field_configs" not in field_parser:
                 value = _evaluate_fhir_path(field_parser, current_message)
-                parsed_values[field] = ",".join(map(str, value))
+                if value:
+                    parsed_values[field] = ",".join(map(str, value))
+                else:
+                    parsed_values[field] = value
             else:
                 base_vals = _evaluate_fhir_path(field_parser, current_message)
 
