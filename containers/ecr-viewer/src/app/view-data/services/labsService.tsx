@@ -62,27 +62,13 @@ export interface LabReportElementData {
   diagnosticReportDataItems: AccordionItem[];
   organizationDisplayDataProps: DisplayDataProps[];
 }
-export interface AbnormalObservationInterpretation {
-  code: "AA" | "HH" | "LL" | "HU" | "LU";
-  display: string;
-}
 
 const ABNORMAL_OBSERVATION_INTERPRETATIONS = {
-  AA: {
-    display: "Critical Abnormal",
-  },
-  HH: {
-    display: "Critical High",
-  },
-  LL: {
-    display: "Critical Low",
-  },
-  HU: {
-    display: "Significantly High",
-  },
-  LU: {
-    display: "Significantly Low",
-  },
+  "AA": "Critical Abnormal",
+  "HH": "Critical High", 
+  "LL": "Critical Low",
+  "HU": "Significantly High",
+  "LU": "Significantly Low",
 } as const;
 
 type AbnormalObservationInterpretationCode =
@@ -280,7 +266,7 @@ export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
  */
 export const evaluateAbnormalObservationInterpretation = (
   observations: Observation[],
-): AbnormalObservationInterpretation | null => {
+): { code: string; display: string } | null => {
   if (!observations || observations.length === 0) {
     return null;
   }
@@ -312,12 +298,10 @@ export const evaluateAbnormalObservationInterpretation = (
           continue;
         }
 
-        const interpretationConfig = ABNORMAL_OBSERVATION_INTERPRETATIONS[code];
+        const display = ABNORMAL_OBSERVATION_INTERPRETATIONS[code];
         return {
           code,
-          display: coding.display || interpretationConfig.display,
-          color: interpretationConfig.color,
-          backgroundColor: interpretationConfig.backgroundColor,
+          display,
         };
       }
     }
