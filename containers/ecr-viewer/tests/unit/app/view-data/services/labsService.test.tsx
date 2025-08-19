@@ -443,18 +443,24 @@ describe("LabsService tests", () => {
 
     describe("renderLabAbnormalityTag", () => {
       it("should return null if lab report is not abnormal", () => {
-        const result = renderLabAbnormalityTag(getObservations(labReportNormal!, BundleLab), labReportNormalJsonObject);
+        const result = renderLabAbnormalityTag(
+          getObservations(labReportNormal!, BundleLab),
+          labReportNormalJsonObject,
+        );
         expect(result).toBeNull();
       });
 
-      it("should fallback to checkAbnormalTag logic when lab report is abnormal, but not one of the abnormal observation interpretations",  () => {
-        const result = renderLabAbnormalityTag(getObservations(labReportAbnormal!, BundleLab), labReportAbnormalJsonObject);
-        render(<>{result}</>); 
-        const tagElement = screen.getByText('Abnormal');
+      it("should fallback to checkAbnormalTag logic when lab report is abnormal, but not one of the abnormal observation interpretations", () => {
+        const result = renderLabAbnormalityTag(
+          getObservations(labReportAbnormal!, BundleLab),
+          labReportAbnormalJsonObject,
+        );
+        render(<>{result}</>);
+        const tagElement = screen.getByText("Abnormal");
         expect(tagElement).toBeInTheDocument();
-        expect(tagElement).toHaveStyle({ backgroundColor: '#B50909' });
-        expect(tagElement).toHaveClass('margin-left-105');
-        expect(tagElement).not.toHaveStyle({ fontWeight: 'bold' });
+        expect(tagElement).toHaveStyle({ backgroundColor: "#B50909" });
+        expect(tagElement).toHaveClass("margin-left-105");
+        expect(tagElement).not.toHaveStyle({ fontWeight: "bold" });
       });
 
       it("should render abnormal tag when lab report abnormal observation interpretations has abnormal observation interpretations", () => {
@@ -467,7 +473,8 @@ describe("LabsService tests", () => {
               {
                 coding: [
                   {
-                    system: "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                    system:
+                      "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
                     code: "HH",
                     display: "Critical High",
                   },
@@ -482,9 +489,9 @@ describe("LabsService tests", () => {
 
         const tagElement = screen.getByText("Critical High");
         expect(tagElement).toBeInTheDocument();
-        expect(tagElement).toHaveStyle({ backgroundColor: '#B50909' });
-        expect(tagElement).toHaveClass('margin-left-105');
-        expect(tagElement).not.toHaveStyle({ fontWeight: 'bold' });
+        expect(tagElement).toHaveStyle({ backgroundColor: "#B50909" });
+        expect(tagElement).toHaveClass("margin-left-105");
+        expect(tagElement).not.toHaveStyle({ fontWeight: "bold" });
       });
     });
 

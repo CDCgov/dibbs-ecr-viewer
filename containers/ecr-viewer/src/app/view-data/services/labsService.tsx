@@ -336,8 +336,6 @@ export const renderLabAbnormalityTag = (
   observations: Observation[],
   labReportJson?: HtmlTableJson,
 ): React.ReactNode => {
-  
-
   const abnormalInterpretation =
     evaluateAbnormalObservationInterpretation(observations);
   if (abnormalInterpretation) {
