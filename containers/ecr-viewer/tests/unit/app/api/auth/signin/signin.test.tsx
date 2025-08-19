@@ -28,8 +28,10 @@ describe("Sign-in Page", () => {
   let container: HTMLElement;
 
   const ORIG_BASE_PATH = process.env.BASE_PATH;
-  beforeAll(() => {
-    container = render(<RedirectPage />).container;
+  beforeAll(async () => {
+    container = render(
+      await RedirectPage({ searchParams: Promise.resolve({}) }),
+    ).container;
     process.env.BASE_PATH = "ecr-viewer";
   });
   afterAll(() => {
@@ -51,7 +53,7 @@ describe("Sign-in Page", () => {
       url: MOCK_CALLBACK_URL,
     });
 
-    render(<RedirectPage />);
+    render(await RedirectPage({ searchParams: Promise.resolve({}) }));
 
     const button = screen.getByRole("button", {
       name: /sign in via/i,

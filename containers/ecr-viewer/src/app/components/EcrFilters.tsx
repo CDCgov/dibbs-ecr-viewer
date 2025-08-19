@@ -154,11 +154,15 @@ const FilterReportableConditions = ({
     <Filter
       type="reportable condition"
       isActive={!isAllSelected}
-      resetHandler={() => setFilterConditions(initFilterState)}
+      resetHandler={() => {
+        setSearchTerm("");
+        setFilterConditions(initFilterState);
+      }}
       icon={Coronavirus}
       tag={`${numSelected}`}
       touched={touched}
       submitHandler={() => {
+        setSearchTerm("");
         updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
       }}
