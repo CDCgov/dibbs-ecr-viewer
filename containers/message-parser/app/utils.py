@@ -30,8 +30,6 @@ from app.phdc.models import (
 )
 from app.transport.http import http_request_with_retry
 
-DIBBS_REFERENCE_SIGNIFIER = "#REF#"
-
 
 @cache
 def load_parsing_schema(schema_name: str) -> dict:
@@ -338,7 +336,7 @@ def clean_schema(schema: dict):
     for key in keys_to_delete:
         del schema[key]
 
-
+# TODO ANGELA: change to class?
 def extract_and_apply_parsers(parsing_schema, message, response):
     """
     Function used to pull parsing methods for each field out of the
@@ -353,7 +351,6 @@ def extract_and_apply_parsers(parsing_schema, message, response):
     :return: A dictionary mapping schema keys to parsed values.
     """
     parsers = get_parsers(parsing_schema)
-    print("FINAL PARSER: ", parsers)
 
     def _parse_values(parsers, current_message):
         """
@@ -380,21 +377,20 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                     parsed_values[field] = []
                     continue
 
-                subfield_parsed_values = []
+                subfield_values = []
                 for base_val in base_vals:
                     if base_val is None:
                         continue
                     subfield_value = _parse_values(
                         field_parser["field_configs"], base_val
                     )
-                    subfield_parsed_values.append(subfield_value)
-                parsed_values[field] = subfield_parsed_values
+                    subfield_values.append(subfield_value)
+                parsed_values[field] = subfield_values
 
         return parsed_values
 
     def _evaluate_fhir_path(field_parser, current_message):
         """
-        TODO ANGELA: FIX THIS
         Evaluates the FHIR path based on the current message
 
         :param field_parser: The parser for a specific field, which must contain a
@@ -402,13 +398,13 @@ def extract_and_apply_parsers(parsing_schema, message, response):
         :param current_message: The FHIR message or sub-section to be evaluated
             by the current set of parsers.
 
-        :return: A concatenated string or a list of values
+        :return: Evaluated FHIR path result(s), or None if no results
         """
         try:
             if "reference_path" in field_parser:
                 reference_path = _get_reference(field_parser, current_message)
-                value = fhirpathpy.evaluate(message, reference_path) # Evaluate on full message, not current
-
+                value = fhirpathpy.evaluate(message, field_parser["base_path"], context={"ref": reference_path}) # Evaluate on full message, not current
+                
                 if not value or len(value) == 0:
                     return None
                 return value
@@ -462,7 +458,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
             `base_path` & a `reference_path`.
         :param current_message: The FHIR message or sub-section at the current level of
             parsing where the reference is located.
-        :return: The final reference path to be evaluated, or response
+        :return: The reference to be added as context to the FHIR path, or response
             error message if the reference could not be resolved.
         """
         reference_parser = field_parser["reference_path"]
@@ -484,11 +480,7 @@ def extract_and_apply_parsers(parsing_schema, message, response):
                 "parsed_values": {},
             }
 
-        reference_value = reference[0].split("/")[-1]
-
-        return field_parser["base_path"].replace(
-            DIBBS_REFERENCE_SIGNIFIER, reference_value
-        )
+        return reference[0].split("/")[-1]
 
     return _parse_values(parsers, message)
 

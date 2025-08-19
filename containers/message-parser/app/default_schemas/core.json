@@ -76,7 +76,7 @@
         }
       },
       "rule_summaries": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(id='#REF#').extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(id=%ref).extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
         "data_type": "array",
         "nullable": true,
         "reference_lookup": "Observation.hasMember.reference",
