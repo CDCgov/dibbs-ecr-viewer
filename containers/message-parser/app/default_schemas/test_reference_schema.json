@@ -25,13 +25,13 @@
         "nullable": true
       },
       "ordering_provider": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType='Organization').where(id=%ref).name",
+        "fhir_path": "Bundle.entry.resource.where(resourceType='Organization').where(id = %ref).name",
         "reference_lookup": "Observation.performer.first().reference",
         "data_type": "string",
         "nullable": true
       },
       "requesting_organization_contact_person": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType='Organization').where(id=%ref).contact.name.text",
+        "fhir_path": "Bundle.entry.resource.where(resourceType='Organization').where(id = %ref).contact.name.text",
         "reference_lookup": "Observation.performer.first().reference",
         "data_type": "string",
         "nullable": true
