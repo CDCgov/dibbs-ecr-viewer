@@ -401,9 +401,7 @@ class FhirParser:
         # search.
         except KeyError:
             try:
-                accessors = (
-                    field_parser["fhir_path"].split(".")[1:]
-                )
+                accessors = field_parser["fhir_path"].split(".")[1:]
                 val = current_message
                 for acc in accessors:
                     if "[" not in acc:

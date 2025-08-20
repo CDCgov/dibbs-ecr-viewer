@@ -49,8 +49,8 @@ expected_successful_response = {
                 "condition": "COVID-19 unfortunately",
                 "rule_summaries": [
                     {"rule_summary": "Rule summary #1"},
-                    {"rule_summary": "Rule summary #2"}
-                ]
+                    {"rule_summary": "Rule summary #2"},
+                ],
             }
         ],
     },
@@ -107,14 +107,14 @@ expected_successful_response_with_meta_data = {
             "resource_type": "Observation",
             "value": [
                 {
-                    "uuid": "id-rr-condition", 
-                    "condition_code": "840539006", 
+                    "uuid": "id-rr-condition",
+                    "condition_code": "840539006",
                     "condition": "COVID-19 unfortunately",
                     "rule_summaries": [
                         {"rule_summary": "Rule summary #1"},
-                        {"rule_summary": "Rule summary #2"}
-                    ]
-                 },
+                        {"rule_summary": "Rule summary #2"},
+                    ],
+                },
             ],
         },
     },
@@ -128,15 +128,17 @@ expected_successful_response_floats = {
         "latitude": "34.58002",
         "longitude": "-118.08925",
         "active_problems": [],
-        "rr": [{
-            "uuid": "id-rr-condition",
-            "condition_code": "840539006", 
-            "condition": "COVID-19 unfortunately",
-            "rule_summaries": [
-                {"rule_summary": "Rule summary #1"},
-                {"rule_summary": "Rule summary #2"}
-            ]
-        }],
+        "rr": [
+            {
+                "uuid": "id-rr-condition",
+                "condition_code": "840539006",
+                "condition": "COVID-19 unfortunately",
+                "rule_summaries": [
+                    {"rule_summary": "Rule summary #1"},
+                    {"rule_summary": "Rule summary #2"},
+                ],
+            }
+        ],
     },
 }
 
@@ -196,8 +198,8 @@ expected_successful_response_floats_with_meta_data = {
                     "condition": "COVID-19 unfortunately",
                     "rule_summaries": [
                         {"rule_summary": "Rule summary #1"},
-                        {"rule_summary": "Rule summary #2"}
-                    ]
+                        {"rule_summary": "Rule summary #2"},
+                    ],
                 },
             ],
         },
