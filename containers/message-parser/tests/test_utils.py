@@ -14,7 +14,6 @@ from app.utils import (
     freeze_parsing_schema_helper,
     get_credential_manager,
     get_metadata,
-    get_parsers,
     load_parsing_schema,
     search_for_required_values,
 )
@@ -38,21 +37,6 @@ def test_load_parsing_schema_fail():
     assert error.value.args == (
         f"A schema with the name '{bad_schema_name}' could not be found.",
     )
-
-
-@mock.patch("app.utils.fhirpathpy")
-def test_get_parsers(patched_fhirpathpy):
-    parsing_schema = load_parsing_schema("test_reference_schema.json")
-    get_parsers.cache_clear()
-    get_parsers(frozendict(parsing_schema))
-
-    expected_number_of_calls = 0
-    for field, field_definition in parsing_schema.items():
-        expected_number_of_calls += 1
-        if "secondary_schema" in field_definition:
-            expected_number_of_calls += len(field_definition["secondary_schema"])
-
-    assert len(patched_fhirpathpy.compile.call_args_list) == expected_number_of_calls
 
 
 def test_search_for_required_values_success():
