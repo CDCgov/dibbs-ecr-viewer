@@ -20,7 +20,6 @@ from app.phdc.builder import PHDCBuilder
 from app.utils import (
     clean_schema,
     convert_to_fhir,
-    # extract_and_apply_parsers,
     freeze_parsing_schema,
     get_credential_manager,
     get_metadata,
@@ -155,7 +154,8 @@ async def fhir_to_phdc_endpoint(
             pass
 
     # 2. Extract data from FHIR
-    parsed_values = extract_and_apply_parsers(parsing_schema, input.message, response)
+    parser = FhirParser(parsing_schema, input.message, response)
+    parsed_values = parser.extract_and_apply_parsers()
 
     # 3. Transform to PHDCbuilder data classes
     input_data = transform_to_phdc_input_data(parsed_values)

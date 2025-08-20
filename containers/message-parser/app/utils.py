@@ -336,7 +336,7 @@ class FhirParser:
         for field, field_parser in parsers.items():
             if "secondary_schema" not in field_parser:
                 value = self._evaluate_fhir_path(field_parser, current_message)
-                if value:
+                if value and type(value) is list:
                     parsed_values[field] = ",".join(map(str, value))
                 else:
                     parsed_values[field] = value
@@ -387,20 +387,17 @@ class FhirParser:
         
             return value
 
-        # TODO ANGELA: Look at KeyError path?
+        # By default, fhirpathpy will compile such that *only*
+        # actual resources can be accessed, rather than data types.
+        # This is fine for most cases, but sometimes the actual data
+        # we want is in a list of structs rather than a list of
+        # resources, such as a list of patient addresses. This
+        # exception catches that and allows an ordinary property
+        # search.
         except KeyError:
-            # Fallback property accessor for when fhirpathpy fails to access data types
             try:
-                secondary_parser = None
-                if "fhir_path" in field_parser:
-                    secondary_parser = field_parser["fhir_path"]
-                else:
-                    return None
-
                 accessors = (
-                    secondary_parser.parsedPath.get("children")[0]
-                    .get("text")
-                    .split(".")[1:]
+                    field_parser["fhir_path"].split(".")[1:]
                 )
                 val = current_message
                 for acc in accessors:
