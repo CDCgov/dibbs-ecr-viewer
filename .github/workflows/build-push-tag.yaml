@@ -23,7 +23,7 @@ jobs:
         container-to-build: ${{fromJson(needs.list-containers.outputs.all-containers)}}
     steps:
       - name: Check Out Changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ inputs.tag }}
 
