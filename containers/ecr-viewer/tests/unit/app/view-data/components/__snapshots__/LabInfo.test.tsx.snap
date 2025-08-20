@@ -91,7 +91,7 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                       SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory system specimen by NAA with probe detection
                     </span>
                     <span
-                      class="text-base"
+                      class="text-base flex-shrink-0"
                       style="font-size: 1rem;"
                     />
                   </div>
@@ -507,7 +507,7 @@ Mos Eisley, CO 00055
                       </span>
                     </span>
                     <span
-                      class="text-base"
+                      class="text-base flex-shrink-0"
                       style="font-size: 1rem;"
                     >
                       02/04/2000 3:51 PM EST
@@ -902,7 +902,7 @@ Mos Eisley, CO 00055
                       Stool Pathogens 12 To 25 Targets
                     </span>
                     <span
-                      class="text-base"
+                      class="text-base flex-shrink-0"
                       style="font-size: 1rem;"
                     >
                       02/04/2000 3:51 PM EST
@@ -1405,7 +1405,7 @@ County: Empire
                       Cytogenomic SNP microarray
                     </span>
                     <span
-                      class="text-base"
+                      class="text-base flex-shrink-0"
                       style="font-size: 1rem;"
                     >
                       05/05/1824 11:58 AM GMT-4:56:02
