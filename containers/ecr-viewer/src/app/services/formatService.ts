@@ -13,7 +13,6 @@ import {
 } from "fhir/r4";
 
 import {
-  ifUnformatted,
   makePlural,
   toSentenceCase,
   toTitleCase,
@@ -38,10 +37,10 @@ export const formatName = (
   const { use, prefix, given, family, suffix } = humanName;
 
   const segments = [
-    ...(withUse && use ? [`${ifUnformatted(use, toSentenceCase)}:`] : []),
-    ...(prefix?.map((p) => ifUnformatted(p, toTitleCase)) ?? []),
-    ...(given?.map((g) => ifUnformatted(g, toTitleCase)) ?? []),
-    ifUnformatted(family, toTitleCase),
+    ...(withUse && use ? [`${toSentenceCase(use)}:`] : []),
+    ...(prefix ?? []),
+    ...(given ?? []),
+    family,
     ...(suffix ?? []),
   ];
 

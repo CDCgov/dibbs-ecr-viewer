@@ -50,36 +50,6 @@ export const toTitleCase = (str: string | undefined) => {
 };
 
 /**
- * If a string is unformatted, format it, otherwise return it as is.
- * @param str The string to format
- * @param formatter The formatting function
- * @returns formatted string
- */
-export const ifUnformatted = (
-  str: string | undefined,
-  formatter: (val: string | undefined) => string | undefined,
-) => {
-  if (!str) return str;
-  return isFormatted(str) ? str : formatter(str);
-};
-
-// strings are considered unformatted if they are all caps or all lowercase
-const isFormatted = (str: string) => {
-  let hasLower = false;
-  let hasUpper = false;
-  for (const c of str) {
-    if (c.match(/[A-Z]/)) {
-      hasUpper = true;
-    }
-    if (c.match(/[a-z]/)) {
-      hasLower = true;
-    }
-  }
-
-  return hasUpper && hasLower;
-};
-
-/**
  * Extracts and concatenates all sequences of numbers and periods from each string in the input array,
  * excluding any leading and trailing periods in the first matched sequence of each string.
  * @param inputValues - An array of strings from which numbers and periods will be extracted.
