@@ -305,6 +305,7 @@ def clean_schema(schema: dict):
     for key in keys_to_delete:
         del schema[key]
 
+
 class FhirParser:
     def __init__(self, parsing_schema: dict, message: dict, response):
         """
@@ -317,8 +318,8 @@ class FhirParser:
         self.response = response
 
     def extract_and_apply_parsers(self) -> dict:
-        return self._parse_values(self.parsing_schema, self.message) 
-    
+        return self._parse_values(self.parsing_schema, self.message)
+
     def _parse_values(self, parsers, current_message):
         """
         Recursive parses a FHIR message based on a provided schema of FHIR paths.
@@ -373,8 +374,12 @@ class FhirParser:
         try:
             if "reference_lookup" in field_parser:
                 reference_path = self._get_reference(field_parser, current_message)
-                value = fhirpathpy.evaluate(self.message, field_parser["fhir_path"], context={"ref": reference_path}) # Evaluate on full message, not current
-                
+                value = fhirpathpy.evaluate(
+                    self.message,
+                    field_parser["fhir_path"],
+                    context={"ref": reference_path},
+                )  # Evaluate on full message, not current
+
                 if not value or len(value) == 0:
                     return None
                 return value
@@ -384,7 +389,7 @@ class FhirParser:
 
             if not value or len(value) == 0:
                 return None
-        
+
             return value
 
         # By default, fhirpathpy will compile such that *only*

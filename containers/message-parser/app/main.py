@@ -18,6 +18,7 @@ from app.models import (
 )
 from app.phdc.builder import PHDCBuilder
 from app.utils import (
+    FhirParser,
     clean_schema,
     convert_to_fhir,
     freeze_parsing_schema,
@@ -27,7 +28,6 @@ from app.utils import (
     read_json_from_assets,
     search_for_required_values,
     transform_to_phdc_input_data,
-    FhirParser,
 )
 
 # Read settings immediately to fail fast in case there are invalid values.
