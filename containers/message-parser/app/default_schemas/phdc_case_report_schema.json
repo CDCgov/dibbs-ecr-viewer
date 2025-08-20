@@ -171,31 +171,31 @@
     "nullable": true,
     "secondary_schema": {
       "prefix": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id = %ref).name.first().prefix[0]",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id=%ref).name.first().prefix[0]",
         "reference_lookup": "Composition.author.first().reference",
         "data_type": "string",
         "nullable": true
       },
       "first": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id = %ref).name.first().given[0]",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id=%ref).name.first().given[0]",
         "reference_lookup": "Composition.author.first().reference",
         "data_type": "string",
         "nullable": true
       },
       "middle": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id = %ref).name.first().given[1]",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id=%ref).name.first().given[1]",
         "reference_lookup": "Composition.author.first().reference",
         "data_type": "string",
         "nullable": true
       },
       "family": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id = %ref).name.first().family",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id=%ref).name.first().family",
         "reference_lookup": "Composition.author.first().reference",
         "data_type": "string",
         "nullable": true
       },
       "suffix": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id = %ref).name.first().suffix",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Practitioner').where(id=%ref).name.first().suffix",
         "reference_lookup": "Composition.author.first().reference",
         "data_type": "string",
         "nullable": true
@@ -208,55 +208,55 @@
     "nullable": true,
     "secondary_schema": {
       "name": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).name",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).name",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "phone": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).telecom.where(system = 'phone').value",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).telecom.where(system = 'phone').value",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "street_address_line_1": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).address[0].line[0]",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).address[0].line[0]",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "street_address_line_2": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).address[0].line[1]",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).address[0].line[1]",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "city": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).address[0].city",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).address[0].city",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "state": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).address[0].state",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).address[0].state",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "postal_code": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).address[0].postalCode",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).address[0].postalCode",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "county": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).address[0].district",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).address[0].district",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
       },
       "country": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id = %ref).address[0].country",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Organization').where(id=%ref).address[0].country",
         "reference_lookup": "Composition.custodian.reference",
         "data_type": "string",
         "nullable": true
