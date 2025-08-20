@@ -318,6 +318,9 @@ class FhirParser:
         self.response = response
 
     def extract_and_apply_parsers(self) -> dict:
+        """
+        Extracts values from the FHIR bundle by applying the parsing schema
+        """
         return self._parse_values(self.parsing_schema, self.message)
 
     def _parse_values(self, parsers, current_message):
