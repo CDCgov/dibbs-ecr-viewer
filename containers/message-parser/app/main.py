@@ -111,7 +111,7 @@ async def parse_message_endpoint(
 
     # 3. Parse the desired values and find metadata, if needed
     parser = FhirParser(parsing_schema, input.message, response)
-    parsed_values = parser.extract_and_apply_parsers()
+    parsed_values = parser.parse()
     if input.include_metadata == "true":
         parsed_values = get_metadata(parsed_values, parsing_schema)
     return {"message": "Parsing succeeded!", "parsed_values": parsed_values}
@@ -155,7 +155,7 @@ async def fhir_to_phdc_endpoint(
 
     # 2. Extract data from FHIR
     parser = FhirParser(parsing_schema, input.message, response)
-    parsed_values = parser.extract_and_apply_parsers()
+    parsed_values = parser.parse()
 
     # 3. Transform to PHDCbuilder data classes
     input_data = transform_to_phdc_input_data(parsed_values)
