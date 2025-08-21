@@ -380,7 +380,7 @@ class FhirParser:
                 )  # Evaluate on full message, not current
             elif "fhir_path" in field_parser:
                 value = fhirpathpy.evaluate(current_message, field_parser["fhir_path"])
-            
+
             if not value:
                 return []
             return value
