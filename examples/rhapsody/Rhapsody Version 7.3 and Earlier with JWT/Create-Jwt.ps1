@@ -1,10 +1,10 @@
-param([string]$Key,[int]$Days=30)
+param([string]$Key,[int]$Expiration=30)
 
 Install-Module -Name jwtPS
 Import-Module -Name jwtPS
 
 $payload = @{       
-    exp = ([System.DateTimeOffset]::Now.AddDays($Days)).ToUnixTimeSeconds()
+    exp = ([System.DateTimeOffset]::Now.AddDays($Expiration)).ToUnixTimeSeconds()
 }
 $encryption = [jwtTypes+encryption]::SHA256
 $algorithm = [jwtTypes+algorithm]::RSA
