@@ -66,7 +66,7 @@ export interface Participant {
 }
 
 // {
-//   "Zika Virus Disease": 
+//   "Zika Virus Disease":
 //   [
 //       {
 //         "rules authoring agency": "Agency A",
@@ -103,7 +103,6 @@ export interface Participant {
 //     }
 //   ]
 // }
-
 
 interface EcrMetadata {
   eicrDetails: CompleteData;
@@ -149,7 +148,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     const name =
       formatCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
-    const rrInfo: ReportabilityInfo[] = getReportabilityInfo(fhirBundle, condition)
+    const rrInfo: ReportabilityInfo[] = getReportabilityInfo(
+      fhirBundle,
+      condition,
+    );
 
     if (!reportableConditionsList[name]) {
       reportableConditionsList[name] = [];
