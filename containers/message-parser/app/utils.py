@@ -340,16 +340,12 @@ class FhirParser:
         for field, field_parser in parsers.items():
             if "secondary_schema" not in field_parser:
                 value = self._evaluate_fhir_path(field_parser, current_message)
-                if value and type(value) is list:
+                if value:
                     parsed_values[field] = ",".join(map(str, value))
                 else:
-                    parsed_values[field] = value
+                    parsed_values[field] = None
             else:
                 base_vals = self._evaluate_fhir_path(field_parser, current_message)
-
-                if base_vals is None:
-                    parsed_values[field] = []
-                    continue
 
                 subfield_values = []
                 for base_val in base_vals:
@@ -382,17 +378,11 @@ class FhirParser:
                     field_parser["fhir_path"],
                     context={"ref": reference_path},
                 )  # Evaluate on full message, not current
-
-                if not value or len(value) == 0:
-                    return None
-                return value
-
-            if "fhir_path" in field_parser:
+            elif "fhir_path" in field_parser:
                 value = fhirpathpy.evaluate(current_message, field_parser["fhir_path"])
-
-            if not value or len(value) == 0:
-                return None
-
+            
+            if not value:
+                return []
             return value
 
         # By default, fhirpathpy will compile such that *only*
@@ -412,9 +402,9 @@ class FhirParser:
                     else:
                         sub_acc = acc.split("[")[1].split("]")[0]
                         val = val[acc.split("[")[0].strip()][int(sub_acc)]
-                return str(val)
+                return [str(val)]
             except Exception:
-                return None
+                return []
 
     def _get_reference(self, field_parser, current_message):
         """
