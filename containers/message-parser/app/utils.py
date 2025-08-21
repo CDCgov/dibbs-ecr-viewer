@@ -371,6 +371,7 @@ class FhirParser:
         :return: Evaluated FHIR path result(s), or None if no results
         """
         try:
+            print(field_parser['fhir_path'], current_message)
             if "reference_lookup" in field_parser:
                 reference_path = self._get_reference(field_parser, current_message)
                 value = fhirpathpy.evaluate(
@@ -393,9 +394,12 @@ class FhirParser:
         # exception catches that and allows an ordinary property
         # search.
         except KeyError:
+            # return KeyError
             try:
                 accessors = field_parser["fhir_path"].split(".")[1:]
                 val = current_message
+                print(val)
+                print(accessors)
                 for acc in accessors:
                     if "[" not in acc:
                         val = val[acc]
@@ -429,20 +433,17 @@ class FhirParser:
 
         if len(reference) == 0:
             self.response.status_code = status.HTTP_400_BAD_REQUEST
-            return {
-                "message": "Provided `reference_lookup` location does "
-                "not point to a referencing identifier",
-                "parsed_values": {},
-            }
+            raise ValueError(
+                "Provided `reference_lookup` location does not point to a "
+                "referencing identifier"
+            )
         # Future refactor: be able to take multiple references?
         elif len(reference) > 1:
             self.response.status_code = status.HTTP_400_BAD_REQUEST
-            return {
-                "message": "Provided `reference_lookup` location points "
-                "to many referencing identifiers",
-                "parsed_values": {},
-            }
-
+            raise ValueError(
+                "Provided `reference_lookup` location points "
+                "to many referencing identifiers"
+            )
         return reference[0].split("/")[-1]
 
 
