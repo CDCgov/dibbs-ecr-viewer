@@ -1,4 +1,4 @@
-param([string]$Key,[string[]]$KeyFile,[int]$Expiration=30)
+param([string]$Key,[string]$KeyFile,[int]$Expiration=30)
 
 Install-Module -Name jwtPS
 Import-Module -Name jwtPS
