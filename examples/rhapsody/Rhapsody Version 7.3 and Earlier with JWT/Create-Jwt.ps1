@@ -1,7 +1,9 @@
-param([string]$Key,[int]$Expiration=30)
+param([string]$Key,[string[]]$KeyFile,[int]$Expiration=30)
 
 Install-Module -Name jwtPS
 Import-Module -Name jwtPS
+
+$Key = If ($Key) {$Key} Else {(Get-Content -Path $KeyFile) -join ""}
 
 $payload = @{       
     exp = ([System.DateTimeOffset]::Now.AddDays($Expiration)).ToUnixTimeSeconds()
