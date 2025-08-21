@@ -371,7 +371,6 @@ class FhirParser:
         :return: Evaluated FHIR path result(s), or None if no results
         """
         try:
-            print(field_parser["fhir_path"], current_message)
             if "reference_lookup" in field_parser:
                 reference_path = self._get_reference(field_parser, current_message)
                 value = fhirpathpy.evaluate(
@@ -398,8 +397,6 @@ class FhirParser:
             try:
                 accessors = field_parser["fhir_path"].split(".")[1:]
                 val = current_message
-                print(val)
-                print(accessors)
                 for acc in accessors:
                     if "[" not in acc:
                         val = val[acc]
