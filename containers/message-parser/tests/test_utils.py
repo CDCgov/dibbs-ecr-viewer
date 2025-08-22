@@ -8,6 +8,7 @@ from frozendict import frozendict
 
 from app.config import get_settings
 from app.utils import (
+    FhirParser,
     convert_to_fhir,
     field_metadata,
     freeze_parsing_schema,
@@ -16,7 +17,6 @@ from app.utils import (
     get_metadata,
     load_parsing_schema,
     search_for_required_values,
-    FhirParser
 )
 
 
@@ -44,9 +44,11 @@ def test_fhir_parser_parse_success():
     parsing_schema = load_parsing_schema("test_schema.json")
     with open("../../assets/fhir/patient_bundle.json") as f:
         bundle = json.load(f)
+
     class MockResponse:
         def __init__(self):
             self.status_code = 200
+
     response = MockResponse()
 
     expected_successful_response = {
