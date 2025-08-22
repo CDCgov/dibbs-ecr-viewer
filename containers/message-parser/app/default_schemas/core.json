@@ -47,7 +47,7 @@
     }
   },
   "rr": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.exists(system = 'http://loinc.org' and code = '75323-6'))",
     "data_type": "array",
     "nullable": true,
     "secondary_schema": {
@@ -76,9 +76,10 @@
         }
       },
       "rule_summaries": {
-        "fhir_path": "Observation.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(id = %ref).extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
         "data_type": "array",
         "nullable": true,
+        "reference_lookup": "Observation.hasMember.reference",
         "secondary_schema": {
           "rule_summary": {
             "fhir_path": "valueString",
