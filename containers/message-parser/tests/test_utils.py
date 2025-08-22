@@ -16,6 +16,7 @@ from app.utils import (
     get_metadata,
     load_parsing_schema,
     search_for_required_values,
+    FhirParser
 )
 
 
@@ -37,6 +38,43 @@ def test_load_parsing_schema_fail():
     assert error.value.args == (
         f"A schema with the name '{bad_schema_name}' could not be found.",
     )
+
+
+def test_fhir_parser_parse_success():
+    parsing_schema = load_parsing_schema("test_schema.json")
+    with open("../../assets/fhir/patient_bundle.json") as f:
+        bundle = json.load(f)
+    class MockResponse:
+        def __init__(self):
+            self.status_code = 200
+    response = MockResponse()
+
+    expected_successful_response = {
+        "message": "Parsing succeeded!",
+        "parsed_values": {
+            "first_name": "John ",
+            "last_name": "doe",
+            "latitude": None,
+            "longitude": None,
+            "active_problems": [],
+            "rr": [
+                {
+                    "uuid": "id-rr-condition",
+                    "condition_code": "840539006",
+                    "condition": "COVID-19 unfortunately",
+                    "rule_summaries": [
+                        {"rule_summary": "Rule summary #1"},
+                        {"rule_summary": "Rule summary #2"},
+                    ],
+                }
+            ],
+        },
+    }
+
+    parser = FhirParser(parsing_schema, bundle, response)
+    parsed_values = parser.parse()
+
+    assert parsed_values == expected_successful_response["parsed_values"]
 
 
 def test_search_for_required_values_success():
