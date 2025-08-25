@@ -4,6 +4,7 @@ import { Table } from "@trussworks/react-uswds";
 
 import {
   ERSDInfo,
+  Participant,
   ReportableConditions,
 } from "@/app/view-data/services/ecrMetadataService";
 import {
@@ -13,6 +14,7 @@ import {
 
 import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 import { ToolTipElement } from "./ToolTipElement";
+// import { noData } from "@/app/utils/data-utils";
 
 interface EcrMetadataProps {
   rrConditions: ReportableConditions;
@@ -136,6 +138,7 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   rrConditions,
 }) => {
   const rows = useConvertDictionaryToRows(rrConditions);
+  console.log("ROWS", rows);
 
   if (rows.length === 0) {
     return (
@@ -158,14 +161,9 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
     >
       <thead>
         <tr>
-          <th className="width-25p">
+          <th className="">
             <ToolTipElement toolTip="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.">
               Reportable Condition
-            </ToolTipElement>
-          </th>
-          <th>
-            <ToolTipElement toolTip="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).">
-              RCKMS Rule Summary
             </ToolTipElement>
           </th>
           <th className="width-25p">
@@ -173,18 +171,27 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
               Jurisdiction Sent eCR
             </ToolTipElement>
           </th>
+          <th>
+            <ToolTipElement toolTip="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).">
+              RCKMS Rule Summary
+            </ToolTipElement>
+          </th>
+          <th>
+            <ToolTipElement toolTip="Determination of Reportability Reason">
+              Determination of Reportability Reason
+            </ToolTipElement>
+          </th>
         </tr>
       </thead>
-      <tbody>
-        {rows.map(({ key, condition, trigger, location }) => (
+      <tbody className="text-pre-line">
+        {rows.map(({ key, condition, participant, rrRule, rrReason }) => (
           <tr key={key}>
             {condition ? (
               <td rowSpan={condition.rowSpan}>{condition.value}</td>
             ) : null}
-            {trigger ? (
-              <td rowSpan={trigger.rowSpan}>{trigger.value}</td>
-            ) : null}
-            <td>{location}</td>
+            <td>{participant}</td>
+            <td>{rrRule}</td>
+            <td>{rrReason}</td>
           </tr>
         ))}
       </tbody>
@@ -197,49 +204,66 @@ interface TableCellData {
   rowSpan: number;
 }
 
+// TODO ANGELA: Rename inputs
 interface ReportableConditionRow {
   key: string;
   condition: TableCellData | null;
-  trigger: TableCellData | null;
-  location: string;
+  rrRule: string | null;
+  rrReason: string | null;
+  participant: React.JSX.Element[] | null;
 }
 
-const useConvertDictionaryToRows = (dictionary: ReportableConditions) => {
-  if (!dictionary) return [];
+// ? EXAMPLE: rrConditions
+// {
+//   'COVID-19': [
+//     { participants: [Array], rules: [Set], reasons: Set(0) {} },
+//     { participants: [Array], rules: [Set], reasons: Set(0) {} }
+//   ]
+// }
+
+
+// TODO ANGELA: Edit how we display jurisdictions & rules?
+const useConvertDictionaryToRows = (dictionary: ReportableConditions): ReportableConditionRow[] => {
+  if (!dictionary) {
+    return [];
+  }
+
   const rows: ReportableConditionRow[] = [];
 
-  Object.entries(dictionary).forEach(([condition, triggers], _) => {
-    Object.entries(triggers).forEach(([trigger, locations], triggerIndex) => {
-      const locationsArray = Array.from(locations);
-      locationsArray.forEach((location, locationIndex) => {
-        const isConditionRow = triggerIndex === 0 && locationIndex === 0;
-        const isTriggerRow = locationIndex === 0;
+  Object.entries(dictionary).forEach(([condition, rrInfoArray], _) => {
+    const conditionRowSpan = rrInfoArray.length;
 
-        const conditionRowSpan = Object.keys(triggers).reduce(
-          (acc, key) => acc + Array.from(triggers[key]).length,
-          0,
-        );
-        const triggerRowSpan = locationsArray.length;
+    rrInfoArray.forEach((rrInfo, rrInfoIndex) => {
+      const isConditionRow = rrInfoIndex === 0;
+      
+      const participants = rrInfo.participants.map(
+        (p: Participant, index) => (
+          <div key={index}>
+            <b>{p.role}:</b>
+            <br />
+            {p.name}
+            <br />
+          </div>
+        )
+      );
 
-        const row: ReportableConditionRow = {
-          key: `${condition}-${trigger}-${location}`,
-          condition: isConditionRow
-            ? {
-                value: condition,
-                rowSpan: conditionRowSpan,
-              }
-            : null,
-          trigger: isTriggerRow
-            ? {
-                value: trigger,
-                rowSpan: triggerRowSpan,
-              }
-            : null,
-          location: location ?? "",
-        };
+      const rules = Array.from(rrInfo.rules).join('\n');
+      const reasons = Array.from(rrInfo.reasons).join('\n');
 
-        rows.push(row);
-      });
+      const row: ReportableConditionRow = {
+        key: `${condition}-${rrInfoIndex}`,
+        condition: isConditionRow
+          ? {
+              value: condition,
+              rowSpan: conditionRowSpan,
+            }
+          : null,
+        participant: participants,
+        rrRule: rules,
+        rrReason: reasons,
+      };
+
+      rows.push(row);
     });
   });
 

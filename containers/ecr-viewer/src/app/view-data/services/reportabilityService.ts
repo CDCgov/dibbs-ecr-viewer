@@ -39,7 +39,6 @@ export const getReportabilityInfo = (
 export const getReportabilityRulesReasons = (
   observation: Observation | undefined,
 ): { rules: Set<string>; reasons: Set<string> } => {
-  // TODO ANGELA: should these be a set?
   const rules = new Set<string>();
   const reasons = new Set<string>();
 
@@ -111,7 +110,6 @@ export const getReportabilitySummaries = (
         ruleSummaries.add(extension.valueString.trim());
       }
 
-      // TODO ANGELA: Add routing entity(s) for each rule
     });
   });
   return ruleSummaries;
