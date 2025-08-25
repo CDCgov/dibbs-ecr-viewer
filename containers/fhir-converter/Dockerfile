@@ -9,13 +9,10 @@ WORKDIR /App
 # For sanity checking github actions caching
 RUN git log --pretty=oneline -2
 
-RUN echo test > src/Microsoft.Health.Fhir.TemplateManagement.UnitTests/TestData/DecompressedFiles/VXU_V04.liquid
-RUN if [ -f src/Microsoft.Health.Fhir.TemplateManagement.UnitTests/TestData/DecompressedFiles/.wh.VXU_V04.liquid ]; then rm src/Microsoft.Health.Fhir.TemplateManagement.UnitTests/TestData/DecompressedFiles/.wh.VXU_V04.liquid; fi
-
 # Build Microsoft FHIR Converter
 RUN dotnet restore
 RUN dotnet publish \
-  src/FHIRConverterAPI/FHIRConverterAPI.csproj \
+  src/Dibbs.FhirConverterApi/Dibbs.FhirConverterApi.csproj \
   -c Release \
   -r linux-x64 \
   --self-contained true \
@@ -37,4 +34,4 @@ COPY --from=build /App/data/Templates ./templates
 EXPOSE 8080
 
 ENV TEMPLATES_PATH=./templates/
-ENTRYPOINT ["dotnet", "FHIRConverterAPI.dll"]
+ENTRYPOINT ["dotnet", "Dibbs.FhirConverterApi.dll"]
