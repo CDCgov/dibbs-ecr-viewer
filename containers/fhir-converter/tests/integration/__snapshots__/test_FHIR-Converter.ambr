@@ -1073,6 +1073,13 @@
             'url': str,
           }),
           'resource': dict({
+            'id': str,
+            'identifier': list([
+              dict({
+                'system': 'http://hl7.org/fhir/sid/us-npi',
+                'value': '99999999',
+              }),
+            ]),
             'meta': dict({
               'profile': list([
                 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner',
