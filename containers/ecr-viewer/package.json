@@ -96,7 +96,7 @@
     "concurrently": "^9.1.2",
     "eslint": "8.57.0",
     "eslint-config-next": "^15.4.5",
-    "eslint-config-prettier": "^10.1.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsdoc": "^50.6.6",
     "eslint-plugin-react": "^7.37.4",
