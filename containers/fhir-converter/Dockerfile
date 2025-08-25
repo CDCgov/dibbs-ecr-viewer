@@ -1,14 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Download FHIR-Converter
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-18 --depth 1 /build/FHIR-Converter
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-18 --depth 1 /App
 
 WORKDIR /App
 
-# For sanity checking github actions caching
-RUN git log --pretty=oneline -2
-
-# Build Microsoft FHIR Converter
+COPY . ./
 RUN dotnet restore
 RUN dotnet publish \
   src/Dibbs.FhirConverterApi/Dibbs.FhirConverterApi.csproj \
@@ -25,7 +22,6 @@ RUN curl 'https://rxnav.nlm.nih.gov/REST/allstatus.json?status=active' \
   | jq --raw-output '[["code", "name"]] + [.minConceptGroup.minConcept[] | [.rxcui, .name]] | .[] | @csv' \
   > output/rxnorm.csv
 
-# Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /App
 COPY --from=build /App/output .
