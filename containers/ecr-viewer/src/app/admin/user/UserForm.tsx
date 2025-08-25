@@ -3,6 +3,7 @@ import React, { ReactNode, useState } from "react";
 
 import {
   Button,
+  FormGroup,
   RequiredMarker,
   TextInput,
   Radio,
@@ -14,7 +15,9 @@ import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
+import { ListedUser } from "@/app/services/userService";
 import { AccordionItem } from "@/app/types";
+import { notEmpty } from "@/app/utils/data-utils";
 import {
   makePlural,
   stringSort,
@@ -32,6 +35,7 @@ interface FormValues {
   email?: string;
   userType?: UserType;
   programs: FormProgram[];
+  users: ListedUser[];
 }
 
 const sortedIds = (programs: FormProgram[]) => {
@@ -48,6 +52,7 @@ const sortedIds = (programs: FormProgram[]) => {
  * @param props.action Action of the form (e.g. "Create", "Edit")
  * @param props.submitAction Handler for the submitted data
  * @param props.banner markup to display as a banner above the form title
+ * @param props.formTouchedMsg Warning banner message when a user has touched the form.
  * @returns Program area add/edit form
  */
 export const UserForm = ({
@@ -55,6 +60,7 @@ export const UserForm = ({
   initValues,
   submitAction,
   banner,
+  formTouchedMsg,
 }: {
   action: string;
   initValues: FormValues;
@@ -64,6 +70,7 @@ export const UserForm = ({
     programs: string[],
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
+  formTouchedMsg?: string;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
@@ -80,7 +87,16 @@ export const UserForm = ({
 
   const initSelectedPrograms = sortedIds(initValues.programs);
 
-  const valid = !!email && (userType === "admin" || userType === "standard");
+  const emailIsDupe = initValues.users
+    .map(({ email: existingEmail }) => existingEmail?.toLowerCase())
+    .filter(notEmpty)
+    .filter((e) => e !== initValues.email?.toLowerCase())
+    .includes(email.toLowerCase());
+
+  const valid =
+    !!email &&
+    (userType === "admin" || userType === "standard") &&
+    !emailIsDupe;
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||
@@ -95,6 +111,7 @@ export const UserForm = ({
       formValid={valid}
       formTouched={touched}
       banner={banner}
+      formTouchedMsg={formTouchedMsg}
       submitAction={async () => {
         const res = await submitAction(
           email.trim(),
@@ -106,7 +123,11 @@ export const UserForm = ({
         return res;
       }}
     >
-      <EmailFieldSet email={email} setEmail={setEmail} />
+      <EmailFieldSet
+        email={email}
+        setEmail={setEmail}
+        emailIsDupe={emailIsDupe}
+      />
       <UserTypeFieldSet userType={userType} setUserType={setUserType} />
       <ProgramFieldSet
         programs={programs}
@@ -121,25 +142,34 @@ export const UserForm = ({
 const EmailFieldSet = ({
   email,
   setEmail,
+  emailIsDupe,
 }: {
   email: string;
   setEmail: (n: string) => void;
+  emailIsDupe?: boolean;
 }) => {
   return (
     <FieldSet legend="Email">
       <span>Add the new user by their login email</span>
-      <label className="usa-label">
-        Email
-        <RequiredMarker />
-        <TextInput
-          type="email"
-          required={true}
-          id="email"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
+      <FormGroup error={emailIsDupe}>
+        <label className="usa-label maxw-full">
+          Email
+          <RequiredMarker />
+          {emailIsDupe && (
+            <p className="usa-error-message margin-0">
+              This email already exists. Please add a different email.
+            </p>
+          )}
+          <TextInput
+            type="email"
+            required={true}
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+      </FormGroup>
     </FieldSet>
   );
 };

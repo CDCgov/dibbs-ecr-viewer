@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup python ${{env.TEST_RUNNER_PYTHON_VERSION}}
         uses: actions/setup-python@v5
         with:
@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U pip
-          pip install ruff==0.12.2
+          pip install ruff==0.12.7
       - name: Run linter (ruff)
         run: |
           ruff check --output-format=github .
@@ -61,7 +61,7 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up env vars
         working-directory: ./containers/${{env.CONTAINER}}
         run: ../../setup-env.sh
@@ -93,7 +93,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up env vars
         working-directory: ./containers/${{env.CONTAINER}}
         run: ../../setup-env.sh
@@ -138,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

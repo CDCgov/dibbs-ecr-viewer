@@ -7,6 +7,7 @@ import { updateUserAction } from "@/app/services/serverActionService";
 import {
   getUser,
   listUserProgramAreas,
+  listUsers,
   notFoundUnlessAdmin,
 } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
@@ -20,10 +21,10 @@ import { PageSearchParams } from "@/app/utils/search-param-utils";
 const EditUserPage = async ({
   searchParams,
 }: {
-  searchParams: PageSearchParams;
+  searchParams: Promise<PageSearchParams>;
 }) => {
   await notFoundUnlessAdmin();
-  const { uuid } = searchParams;
+  const { uuid } = await searchParams;
 
   // nothing to edit here
   if (!uuid || typeof uuid !== "string") {
@@ -46,6 +47,9 @@ const EditUserPage = async ({
     return value === "admin" || value === "standard";
   };
 
+  const users = await listUsers();
+  const otherUsers = users.filter(({ uuid: otherUuid }) => uuid !== otherUuid);
+
   return (
     <UserForm
       action="Edit"
@@ -53,6 +57,7 @@ const EditUserPage = async ({
         email: user.email,
         userType: isValidUserType(user.user_type) ? user.user_type : undefined,
         programs: initPrograms,
+        users: otherUsers,
       }}
       submitAction={async (email, userType, programs) => {
         "use server";

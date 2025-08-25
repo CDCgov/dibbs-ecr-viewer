@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 
 import { Button } from "@trussworks/react-uswds";
-import { motion } from "motion/react";
+import { motion, Transition } from "motion/react";
 import Link from "next/link";
 
 import { ExpandMore } from "@/app/components/Icon";
@@ -10,10 +10,10 @@ import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import { EcrDisplay, RelatedEcr } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
-import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
+import { makePlural } from "@/app/utils/format-utils";
 import { saveToSessionStorage } from "@/app/utils/storage-utils";
 
-const transition = {
+const transition: Transition = {
   type: "spring",
   stiffness: 203,
   damping: 25,
@@ -37,10 +37,7 @@ export const EcrTableDataRow = ({
   index: number;
 }) => {
   const [isExpanded, setExpanded] = useState(false);
-  const patientName =
-    toSentenceCase(item.patient_first_name) +
-    " " +
-    toSentenceCase(item.patient_last_name);
+  const patientName = item.patient_first_name + " " + item.patient_last_name;
 
   const conditionsList = (
     <ul className="ecr-table-list">

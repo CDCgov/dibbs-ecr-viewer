@@ -14,7 +14,11 @@ jest.mock("next/navigation", () => ({
   useSearchParams: jest.fn(),
 }));
 
-const MOCK_CONDITIONS = ["Condition1", "Condition2"];
+const MOCK_CONDITIONS = [
+  "Condition1",
+  "Condition2",
+  NO_CONDITIONS_REPORTED_OPTION,
+];
 const MOCK_PROPS = {
   allConditions: MOCK_CONDITIONS,
   initConditions: MOCK_CONDITIONS,
@@ -126,8 +130,8 @@ describe.each([
       await user.click(toggleButton);
 
       // Should have correct number of checkboxes
-      const checkboxes = screen.getAllByRole("checkbox");
-      expect(checkboxes).toHaveLength(conditions.length + 1); // conditions + select all
+      const checkboxes = screen.queryAllByRole("checkbox");
+      expect(checkboxes).toHaveLength(conditions.length);
 
       // Conditions should be listed
       for (const condition of conditions) {
@@ -212,7 +216,7 @@ describe.each([
         );
       });
 
-      it("handles 'Select all' and 'Deselect all' checkbox behavior", async () => {
+      it("handles 'Select' and 'Deselect' button behavior", async () => {
         const user = userEvent.setup();
         renderFilters(conditions);
         const toggleFilterButton = screen.getByRole("button", {
@@ -220,19 +224,34 @@ describe.each([
         });
         await user.click(toggleFilterButton);
 
+        // Apply button should start disabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeDisabled();
+
         // Click deselect all
-        const deselectAll = await screen.findByLabelText("Deselect all");
+        const deselectAll = await screen.findByText(/Deselect \d conditions?/);
         await user.click(deselectAll);
 
-        // All checkboxes should be unchecked after "Deselect all" is clicked
+        // Apply button should now be enabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeEnabled();
+
+        // All checkboxes should be unchecked after "Deselect" is clicked
         for (const condition of conditions) {
           const checkbox = screen.getByLabelText(condition);
           expect(checkbox).not.toBeChecked();
         }
 
         // Click select all
-        const selectAll = await screen.findByLabelText("Select all");
+        const selectAll = await screen.findByText(/Select \d conditions?/);
         await user.click(selectAll);
+
+        // Apply button should be back to disabled
+        expect(
+          screen.getByRole("button", { name: /Apply filter/ }),
+        ).toBeDisabled();
 
         // All checkboxes should be checked after selecting all
         for (const condition of conditions) {
@@ -334,6 +353,83 @@ describe.each([
   },
 );
 
+describe("Filter by Condition Search", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    const mockSearchParams = { current: new URLSearchParams("") };
+    (useSearchParams as jest.Mock).mockImplementation(
+      () => mockSearchParams.current,
+    );
+
+    const mockPush = jest.fn().mockImplementation((path: string) => {
+      const url = new URL(path, "https://example.com");
+      mockSearchParams.current = new URLSearchParams(url.search);
+    });
+    (useRouter as jest.Mock).mockImplementation(() => {
+      return { push: mockPush };
+    });
+
+    global.fetch = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(MOCK_CONDITIONS),
+      } as unknown as Response),
+    );
+  });
+
+  it.only("search flow", async () => {
+    const user = userEvent.setup();
+    const mockPush = jest.fn();
+    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+
+    const { container } = renderFilters();
+
+    const toggleFilterButton = await screen.findByRole("button", {
+      name: /Filter by reportable condition/i,
+    });
+    await user.click(toggleFilterButton);
+
+    expect(screen.getByText("Deselect 3 conditions")).toBeVisible();
+
+    const searchInput = screen.getByPlaceholderText(
+      "Search by reportable condition",
+    );
+    await user.type(searchInput, "no");
+
+    const deselectButton = screen.getByRole("button", {
+      name: "Deselect 1 condition",
+    });
+    expect(deselectButton).toBeVisible();
+    expect(container).toMatchSnapshot();
+
+    await user.click(deselectButton);
+    expect(screen.getByText("Select 1 condition")).toBeVisible();
+
+    await user.clear(searchInput);
+    expect(screen.getByText("Deselect 2 conditions")).toBeVisible();
+    expect(screen.getAllByRole("checkbox")).toHaveLength(3);
+
+    await user.type(searchInput, "1");
+    expect(deselectButton).toBeVisible();
+
+    await user.type(searchInput, "not a condition");
+    expect(screen.getByRole("button", { name: "0 conditions" })).toBeDisabled();
+    expect(screen.getByText("No reportable conditions found.")).toBeVisible();
+    expect(screen.queryAllByRole("checkbox")).toHaveLength(0);
+
+    const applyFilterButton = screen.getByRole("button", {
+      name: /Apply filter/i,
+    });
+    await user.click(applyFilterButton);
+
+    // Should have conditions in search param (no conditions deselected earlier)
+    expect(mockPush).toHaveBeenCalledWith(
+      expect.stringContaining(`condition=Condition1%7CCondition2`),
+    );
+  });
+});
+
 describe("Filter by Date Component", () => {
   // NOTE: Tests look for Last Year = local dev default. The prod default is Last 24 hours.
   beforeEach(() => {
@@ -355,7 +451,7 @@ describe("Filter by Date Component", () => {
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(["Condition1", "Condition2"]),
+        json: () => Promise.resolve(MOCK_CONDITIONS),
       } as unknown as Response),
     );
   });
@@ -404,6 +500,9 @@ describe("Filter by Date Component", () => {
     });
     await user.click(toggleButton);
 
+    // Apply button should start disabled
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeDisabled();
+
     // Check default state is "Last year" (local dev default)
     const defaultRadio = screen.getByRole("radio", {
       name: "Last year",
@@ -419,6 +518,7 @@ describe("Filter by Date Component", () => {
     const applyFilterButton = screen.getByRole("button", {
       name: /Apply filter for received date/i,
     });
+    expect(applyFilterButton).toBeEnabled();
     await user.click(applyFilterButton);
 
     // Only one radio button can be checked at a time.
@@ -590,10 +690,17 @@ describe("Filter by Date Component - custom dates", () => {
     });
     await user.click(radio);
 
+    // Apply button should be disabled if start/end not touched yet
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeDisabled();
+
     const startDateInput = screen.getByTestId("start-date");
     const endDateInput = screen.getByTestId("end-date");
 
     await user.type(startDateInput, "2025-01-01");
+
+    // Apply button should be disabled once start touched
+    expect(screen.getByRole("button", { name: /Apply filter/ })).toBeEnabled();
+
     await user.type(endDateInput, "2025-01-02");
 
     const applyButton = screen.getByRole("button", { name: /Apply filter/i });
@@ -796,7 +903,7 @@ describe("Filter Opening/Closing Controls", () => {
     ).not.toBeChecked();
 
     // condition should be closed
-    expect(screen.queryByText("Select all")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Select/)).not.toBeInTheDocument();
   });
 });
 

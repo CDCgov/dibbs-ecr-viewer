@@ -18,6 +18,7 @@ import { ServerActionResult } from "@/app/services/errorService";
  * @param props.formTouched Whether the form has been touched (edited)
  * @param props.itemType The type of item the form is about (e.g. "user")
  * @param props.itemHomeRoute Route to redirect to upon successful submission or to go back to
+ * @param props.formTouchedMsg Warning banner message when a user has touched the form.
  * @param props.banner markup to display as a banner above the form title
  * @returns form with header and submit buttons
  */
@@ -27,6 +28,7 @@ export const FormPageContent = <T,>({
   formValid,
   formTouched,
   itemHomeRoute,
+  formTouchedMsg,
   banner,
   children,
   submitAction,
@@ -36,6 +38,7 @@ export const FormPageContent = <T,>({
   formValid: boolean;
   formTouched: boolean;
   itemHomeRoute: string;
+  formTouchedMsg?: string;
   banner?: ReactNode;
   children: ReactNode;
   submitAction: () => Promise<ServerActionResult<T>>;
@@ -50,17 +53,17 @@ export const FormPageContent = <T,>({
   const actionPhrase = `${action} ${itemType}`;
 
   return (
-    <main className="main-container">
-      <div className="content-container margin-top-3 position-relative">
-        <Link
-          href={itemHomeRoute}
-          className="action-text display-inline-flex flex-align-center"
-        >
-          <ArrowBack aria-hidden={true} className="square-3" />
-          Back to {itemType} management
-        </Link>
-        <div className="border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container">
-          <div className="minh-5 margin-bottom-1">
+    <main className="main-container display-flex flex-column flex-align-center">
+      <div className="width-full border-bottom border-base-lighter position-sticky top-0 isolate z-500 padding-top-1 bg-container shadow-2 display-flex flex-justify-center">
+        <div className="content-container">
+          <Link
+            href={itemHomeRoute}
+            className="action-text display-inline-flex flex-align-center margin-bottom-1 margin-top-2"
+          >
+            <ArrowBack aria-hidden={true} className="square-3" />
+            Back to {itemType} management
+          </Link>
+          <div className="margin-bottom-1">
             {banner}
 
             {formTouched && !submitting && !error && (
@@ -71,10 +74,9 @@ export const FormPageContent = <T,>({
                 headingLevel="h4"
                 aria-live="polite"
               >
-                You have unsaved changes
+                {formTouchedMsg ?? "You have unsaved changes."}
               </Alert>
             )}
-
             {error && (
               <Alert
                 type="error"
@@ -99,7 +101,9 @@ export const FormPageContent = <T,>({
             </div>
           </div>
         </div>
+      </div>
 
+      <div className="content-container margin-top-3">
         <form
           id={id}
           className="margin-top-3 isolate"

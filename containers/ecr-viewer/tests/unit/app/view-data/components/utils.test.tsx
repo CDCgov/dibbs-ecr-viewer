@@ -5,186 +5,18 @@ import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
 import { Bundle } from "fhir/r4";
 
-import BundleCareTeam from "../../../../../../../test-data/fhir/BundleCareTeam.json";
-import BundleWithMiscNotes from "../../../../../../../test-data/fhir/BundleMiscNotes.json";
-import BundleNoActiveProblems from "../../../../../../../test-data/fhir/BundleNoActiveProblems.json";
-import BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
-import BundleWithPendingResultsOnly from "../../../../../../../test-data/fhir/BundlePendingResultsOnly.json";
-import BundleWithPlannedMedsOnly from "../../../../../../../test-data/fhir/BundlePlannedMedsOnly.json";
-import BundleWithScheduledApptsOnly from "../../../../../../../test-data/fhir/BundleScheduledApptsOnly.json";
-import BundleWithSexualOrientation from "../../../../../../../test-data/fhir/BundleSexualOrientation.json";
-import BundleWithTravelHistory from "../../../../../../../test-data/fhir/BundleTravelHistory.json";
-import BundleWithTravelHistoryEmpty from "../../../../../../../test-data/fhir/BundleTravelHistoryEmpty.json";
+import BundleNoActiveProblems from "@/../../../test-data/fhir/BundleNoActiveProblems.json";
 import { evaluateAll } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
-import {
-  evaluateClinicalData,
-  returnCareTeamTable,
-} from "@/app/view-data/components/EcrDocument/clinical-data";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
 import {
   TooltipDiv,
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-import {
-  evaluateSocialData,
-  evaluatePatientName,
-  evaluatePatientAddress,
-} from "@/app/view-data/services/evaluateFhirDataService";
 
 describe("Utils", () => {
-  describe("Evaluate Social Data", () => {
-    it("should have no available data when there is no data", () => {
-      const actual = evaluateSocialData(undefined as any);
-
-      expect(actual.availableData).toBeEmpty();
-      expect(actual.unavailableData).not.toBeEmpty();
-    });
-    it("should have travel history when there is a travel history observation present", () => {
-      const actual = evaluateSocialData(
-        BundleWithTravelHistory as unknown as Bundle,
-      );
-
-      render(actual.availableData[0].value);
-      expect(screen.getByText("Travel History"));
-    });
-    it("should not have travel history when there is an empty travel history observation present", () => {
-      const actual = evaluateSocialData(
-        BundleWithTravelHistoryEmpty as unknown as Bundle,
-      );
-
-      expect(actual.availableData).toBeEmpty();
-    });
-    it("should have patient sexual orientation when available", () => {
-      const actual = evaluateSocialData(
-        BundleWithSexualOrientation as unknown as Bundle,
-      );
-
-      expect(actual.availableData[0].value).toEqual("Other");
-    });
-    it("should return religion if available", () => {
-      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
-      const ext = actual.availableData.filter(
-        (d) => d.title === "Religious Affiliation",
-      );
-      expect(ext).toHaveLength(1);
-      expect(ext[0].value).toEqual("Baptist");
-    });
-    it("should return marital status if available", () => {
-      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
-      const ext = actual.availableData.filter(
-        (d) => d.title === "Marital Status",
-      );
-      expect(ext).toHaveLength(1);
-      expect(ext[0].value).toEqual("Married");
-    });
-  });
-
-  describe("Evaluate Clinical Info", () => {
-    it("Should return notes", () => {
-      const actual = evaluateClinicalData(
-        BundleWithMiscNotes as unknown as Bundle,
-      );
-      render(actual.clinicalNotes.availableData[0].value as React.JSX.Element);
-      expect(actual.clinicalNotes.availableData[0].title).toEqual(
-        "Miscellaneous Notes",
-      );
-      expect(screen.getByText("Active Problems")).toBeInTheDocument();
-      expect(actual.clinicalNotes.unavailableData).toBeEmpty();
-    });
-    it("Should not include Treatment details if medications is not available", () => {
-      const actual = evaluateClinicalData(
-        BundleWithMiscNotes as unknown as Bundle,
-      );
-      expect(actual.treatmentData.availableData).toBeEmpty();
-    });
-    it("Should return Plan of Treatment when only pending results", () => {
-      const actual = evaluateClinicalData(
-        BundleWithPendingResultsOnly as unknown as Bundle,
-      );
-      expect(actual.treatmentData.availableData[0].title).toEqual(
-        "Plan of Treatment",
-      );
-      const { container } = render(
-        <DataDisplay item={actual.treatmentData.availableData[0]} />,
-      );
-      expect(container).toMatchSnapshot();
-    });
-    it("Should return Plan of Treatment when only scheduled appointments", () => {
-      const actual = evaluateClinicalData(
-        BundleWithScheduledApptsOnly as unknown as Bundle,
-      );
-      expect(actual.treatmentData.availableData[0].title).toEqual(
-        "Plan of Treatment",
-      );
-      const { container } = render(
-        <DataDisplay item={actual.treatmentData.availableData[0]} />,
-      );
-      expect(container).toMatchSnapshot();
-    });
-    it("Should return Plan of Treatment when only ordered meds", () => {
-      const actual = evaluateClinicalData(
-        BundleWithPlannedMedsOnly as unknown as Bundle,
-      );
-      expect(actual.treatmentData.availableData[0].title).toEqual(
-        "Plan of Treatment",
-      );
-      const { container } = render(
-        <DataDisplay item={actual.treatmentData.availableData[0]} />,
-      );
-      expect(container).toMatchSnapshot();
-    });
-  });
-
-  describe("Evaluate Care Team Table", () => {
-    it("should evaluate care team table results", () => {
-      const actual: React.JSX.Element = returnCareTeamTable(
-        BundleCareTeam as unknown as Bundle,
-      ) as React.JSX.Element;
-
-      render(actual);
-
-      expect(screen.getByText("Dr Toob Nix SR")).toBeInTheDocument();
-      expect(screen.getByText("family")).toBeInTheDocument();
-      expect(
-        screen.getByText("Start: 11/16/1884 End: 05/21/1896"),
-      ).toBeInTheDocument();
-    });
-
-    it("the table should not appear when there are no results", () => {
-      const actual = returnCareTeamTable(
-        BundleWithPatient as unknown as Bundle,
-      );
-      expect(actual).toBeUndefined();
-    });
-  });
-
-  describe("Evaluate Patient Name", () => {
-    it("should return name", () => {
-      const actual = evaluatePatientName(
-        BundleWithPatient as unknown as Bundle,
-        false,
-      );
-      expect(actual).toEqual("Han Solo");
-    });
-  });
-  describe("Extract Patient Address", () => {
-    it("should return empty string if no address is available", () => {
-      const actual = evaluatePatientAddress(undefined as any);
-
-      expect(actual).toBeEmpty();
-    });
-    it("should get patient address", () => {
-      const actual = evaluatePatientAddress(
-        BundleWithPatient as unknown as Bundle,
-      );
-
-      expect(actual).toEqual("1 Main St\nCloud City, CA 00000\nUS");
-    });
-  });
-
   describe("Render Active Problem table", () => {
     it("should return empty if active problem name is undefined", () => {
       const actual = returnProblemsTable(

@@ -70,7 +70,10 @@ export type PathTypes = {
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
   lastMenstrualPeriod: Observation;
+  pregnancyOutcome: Observation;
+  pregnancyBirthOrder: ValueX;
   pregnancyStatus: Observation;
+  pregnancyDeterminationDate: ValueX;
   postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
@@ -155,15 +158,19 @@ export type PathTypes = {
   observationResultStatus: string;
   organizations: Organization;
   patientTravelHistory: Observation;
-  travelHistoryStartDate: string;
-  travelHistoryEndDate: string;
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
+  travelHistoryMember: Reference;
+  exposureObservations: Observation;
+  exposureAgent: ValueX;
+  exposureAddress: ValueX;
+  animalSpecies: ValueX;
   stampedImmunizations: Immunization;
   codeableConceptDisplay: string;
   conditionOnsetDate: string;
   effectiveX: TimeX;
   code: CodeableConcept;
+  method: CodeableConcept;
   noteText: string;
   valueX: ValueX;
   occurrenceX: TimeX;
@@ -247,7 +254,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientGuardian: {
     type: "RelatedPerson",
-    path: "entry.resource.RelatedPerson",
+    path: "entry.resource.RelatedPerson.where(relationship.coding.exists(system = 'http://terminology.hl7.org/CodeSystem/v3-RoleCode' and code = 'GUARD'))",
   },
 
   // Social History
@@ -318,9 +325,21 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
   },
+  pregnancyOutcome: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '63893-2'))",
+  },
+  pregnancyBirthOrder: {
+    type: "ValueX",
+    path: "Observation.component.where(code.coding.exists(system = 'http://loinc.org' and code = '73771-8')).value",
+  },
   pregnancyStatus: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '82810-3'))",
+  },
+  pregnancyDeterminationDate: {
+    type: "ValueX",
+    path: "extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-date-determined-extension').value",
   },
   postpartumStatus: {
     type: "Observation",
@@ -523,9 +542,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "occurrenceDateTime",
   },
   immunizationsDoseNumber: {
-    // TODO #469: This should strictly speaking be "number", but conversion is buggy
+    // technically a number, but we used to convert as a string, so ValueX is a safer type
     type: "ValueX",
-    path: "protocolApplied.where(doseNumberPositiveInt.exists()).doseNumberPositiveInt",
+    path: "protocolApplied.doseNumberPositiveInt",
   },
   immunizationsManufacturerName: {
     type: "string",
@@ -647,15 +666,35 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '420008001'))",
   },
-  travelHistoryStartDate: { type: "string", path: "effectivePeriod.start" },
-  travelHistoryEndDate: { type: "string", path: "effectivePeriod.end" },
   travelHistoryLocation: {
-    type: "string",
-    path: "component.where(code.coding.code = 'LOC').valueCodeableConcept.text",
+    type: "ValueX",
+    path: "iif(component.where(code.coding.code = 'LOC').value.exists(), component.where(code.coding.code = 'LOC').value, component.where(code.coding.code = 'LOC').extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-address-extension').value)",
   },
   travelHistoryPurpose: {
     type: "ValueX",
     path: "component.where(code.coding.code = '280147009').value",
+  },
+  travelHistoryMember: {
+    type: "Reference",
+    path: "hasMember",
+  },
+
+  // Exposure Details
+  exposureObservations: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(category.coding.system = 'http://terminology.hl7.org/ValueSet/v3-ActClassExposure')",
+  },
+  exposureAgent: {
+    type: "ValueX",
+    path: "component.where(code.coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' and code.coding.code = 'EXPAGNT').value",
+  },
+  exposureAddress: {
+    type: "ValueX",
+    path: "extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-address-extension').value",
+  },
+  animalSpecies: {
+    type: "ValueX",
+    path: "extension('http://hl7.org/fhir/StructureDefinition/practitioner-animalSpecies').value",
   },
 
   // Stamped
@@ -683,6 +722,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   code: {
     type: "CodeableConcept",
     path: "code",
+  },
+  method: {
+    type: "CodeableConcept",
+    path: "method",
   },
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return

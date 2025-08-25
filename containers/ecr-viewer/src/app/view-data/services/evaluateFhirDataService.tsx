@@ -1,5 +1,6 @@
 import "server-only"; // FHIR evaluation should be done server side
 
+import { Tag } from "@trussworks/react-uswds";
 import {
   Bundle,
   Condition,
@@ -54,14 +55,18 @@ import {
   DataDisplay,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
-import EvaluateTable from "@/app/view-data/components/EvaluateTable";
+import EvaluateTable, {
+  ColumnInfoInput,
+} from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
+import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
 import {
   compareResourcesByDate,
   sortResourcesByDate,
 } from "@/app/view-data/utils/fhir-data-utils";
 
 import {
+  evaluateExposureDetails,
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
 } from "./socialHistoryService";
@@ -302,51 +307,35 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
  * @returns An array of evaluated and formatted pregnancy data.
  */
 export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
+  const data = [
+    ...evaluatePregnancyStatus(fhirBundle),
+    {
+      title: "Last Menstrual Period",
+      value: evaluateLastMenstrualPeriod(fhirBundle),
+      fullWidthContent: true,
+      toolTip:
+        "Last Menstrual Period represents the first day of the last menstrual period of the patient. This section lists multiple periods in collected in chronological order.",
+    },
+  ];
+
+  return evaluateData(data);
+};
+
+const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
   // TODO: Ideally the `unavailableData` list would include all subfields of the different observations.
   // However the unavailable data section will need to be modified to handle nested fields like this (this
   // also applies to the occupational history in social history). This function will likely need to be
   // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
   // section can handle nested sub-fields.
-  const lastMenstrualPeriodObservationEntries = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.lastMenstrualPeriod,
-  ).map((ob) => {
-    return {
-      type: "Last Menstrual Period",
-      observation: ob,
-      data: [
-        {
-          title: "Last Menstrual Period",
-          value: evaluateValue(ob, fhirPathMappings.effectiveX),
-        },
-      ].filter(isDataAvailable),
-    };
-  });
-  const pregnancyStatusObservationEntries = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.pregnancyStatus,
-  ).map((ob) => {
-    return {
-      type: "Pregnancy Status",
-      observation: ob,
-      data: [
-        {
-          title: "Status",
-          value: evaluateValue(ob, "valueCodeableConcept"),
-        },
-        {
-          title: "Effective Date",
-          value: evaluateValue(ob, fhirPathMappings.effectiveX),
-        },
-      ].filter(isDataAvailable),
-    };
-  });
+  const pregnancyStatusObservationEntries =
+    evaluatePregnancyStatusEntries(fhirBundle);
   const postpartumStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.postpartumStatus,
   ).map((ob) => {
     return {
       type: "Postpartum Status",
+      tag: "",
       observation: ob,
       data: [
         {
@@ -354,29 +343,23 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
           value: evaluateValue(ob, "valueCodeableConcept"),
         },
         {
-          title: "Effective Date",
+          title: "Effective Date/Time",
           value: evaluateValue(ob, fhirPathMappings.effectiveX),
         },
       ].filter(isDataAvailable),
     };
   });
 
-  const unavailableData = [];
+  const res: DisplayDataProps[] = [];
 
-  if (lastMenstrualPeriodObservationEntries.length === 0) {
-    unavailableData.push({
-      title: "Last Menstrual Period",
-      value: undefined,
-    });
-  }
   if (pregnancyStatusObservationEntries.length === 0) {
-    unavailableData.push({
+    res.push({
       title: "Pregnancy Status",
       value: undefined,
     });
   }
   if (postpartumStatusObservationEntries.length === 0) {
-    unavailableData.push({
+    res.push({
       title: "Postpartum Status",
       value: undefined,
     });
@@ -384,7 +367,6 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
 
   // Using `compareResourcesByDate` because we want to apply the consistent date ordering we are using elsewhere, but we're not sorting `Observation[]`, but instead an object containing an `Observation`.
   const allPregnancyObservations = [
-    ...lastMenstrualPeriodObservationEntries,
     ...pregnancyStatusObservationEntries,
     ...postpartumStatusObservationEntries,
   ].sort((a, b) =>
@@ -395,42 +377,161 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     ),
   );
 
-  if (allPregnancyObservations.length === 0)
-    return { availableData: [], unavailableData };
+  if (allPregnancyObservations.length > 0) {
+    res.push({
+      fullWidthContent: true,
+      value: (
+        <ExpandCollapseAccordion
+          className="accordion-rr"
+          descriptor="pregnancy info"
+          items={allPregnancyObservations.map((obs) => {
+            const id = obs.observation.id ?? `${Math.random()}`;
+            const content = obs.data.map((d, i) => (
+              <DataDisplay
+                key={`${id}-${i}`}
+                item={{ ...d, dividerLine: i + 1 < obs.data.length }}
+              />
+            ));
+            return {
+              title: (
+                <div className="display-flex flex-row flex-no-wrap flex-justify">
+                  <span>
+                    {obs.type}{" "}
+                    {obs.tag && (
+                      <Tag className="margin-left-105">{obs.tag}</Tag>
+                    )}
+                  </span>
 
-  const pregnancyElement = (
-    <ExpandCollapseAccordion
-      className="accordion-rr"
-      descriptor="pregnancy info"
-      items={allPregnancyObservations.map((obs) => {
-        const id = obs.observation.id ?? `${Math.random()}`;
-        const content = obs.data.map((d, i) => (
-          <DataDisplay key={`${id}-${i}`} item={d} />
-        ));
-        return {
-          title: (
-            <div className="display-flex flex-row flex-no-wrap flex-justify">
-              <span className="text-base">{obs.type}</span>
-            </div>
-          ),
-          expanded: false,
-          content,
-          id,
-          headingLevel: "h5",
-        };
-      })}
-    />
+                  {/** inline style due to existing css rules on this button text */}
+                  <span className="text-base" style={{ fontSize: "1rem" }}>
+                    {evaluateValue(
+                      obs.observation,
+                      fhirPathMappings.effectiveX,
+                    )}
+                  </span>
+                </div>
+              ),
+              expanded: true,
+              content,
+              id,
+              headingLevel: "h5",
+            };
+          })}
+        />
+      ),
+    });
+  }
+
+  return res;
+};
+
+const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
+  const pregnancyOutcomeObservations = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.pregnancyOutcome,
   );
-
-  return {
-    availableData: [
+  return evaluateAll(fhirBundle, fhirPathMappings.pregnancyStatus).map((ob) => {
+    const status = evaluateValue(ob, "valueCodeableConcept");
+    const data: DisplayDataProps[] = [
       {
-        value: pregnancyElement,
-        fullWidthContent: true,
+        title: "Status",
+        value: status,
       },
-    ],
-    unavailableData,
-  };
+      {
+        title: "Effective Date/Time",
+        value: evaluateValue(ob, fhirPathMappings.effectiveX),
+      },
+      {
+        title: "Pregnancy Determination Date/Time",
+        value: evaluateValue(ob, fhirPathMappings.pregnancyDeterminationDate),
+      },
+      {
+        title: "Pregnancy Determination Method",
+        value: evaluateValue(ob, fhirPathMappings.method),
+      },
+    ];
+
+    ob.component?.forEach((component) =>
+      data.push({
+        title: evaluateValue(
+          component,
+          fhirPathMappings.code,
+          "Observation.component",
+        ),
+        value: evaluateValue(
+          component,
+          fhirPathMappings.valueX,
+          "Observation.component",
+        ),
+      }),
+    );
+
+    const fullId = `${ob.resourceType}/${ob.id}`;
+    const outcomes = pregnancyOutcomeObservations
+      .filter((ob) => ob.focus?.some(({ reference }) => reference === fullId))
+      .map((o) => [
+        {
+          title: "Birth Order",
+          value: evaluateValue(o, fhirPathMappings.pregnancyBirthOrder),
+        },
+        {
+          title: "Outcome",
+          value: evaluateValue(o, fhirPathMappings.valueX),
+        },
+        {
+          title: "Date/Time",
+          value: evaluateValue(o, fhirPathMappings.effectiveX),
+        },
+      ]);
+
+    if (outcomes.length > 0) {
+      data.push({
+        title: "Outcomes",
+        fullWidthContent: true,
+        value: (
+          <UnstyledDividedList
+            items={outcomes.map((oItems) =>
+              oItems.map(({ title, value }, i) => (
+                <DataDisplay
+                  item={{ title, value, dividerLine: false, titleNormal: true }}
+                  key={`item-${i}`}
+                />
+              )),
+            )}
+          />
+        ),
+      });
+    }
+
+    return {
+      type: "Pregnancy Status",
+      tag: status,
+      observation: ob,
+      data: data.filter(isDataAvailable),
+    };
+  });
+};
+
+const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
+  const observations = sortResourcesByDate(
+    evaluateAll(fhirBundle, fhirPathMappings.lastMenstrualPeriod),
+    fhirPathMappings.effectiveX,
+  );
+  if (observations.length === 0) return;
+
+  const columns: ColumnInfoInput[] = [
+    {
+      columnName: "First Date of the Last Period",
+      infoPath: "valueX",
+      applyToValue: formatDateTime,
+    },
+    {
+      columnName: "Collection Date/Time",
+      infoPath: "effectiveX",
+    },
+  ];
+
+  return <EvaluateTable resources={observations} columns={columns} />;
 };
 
 /**
@@ -577,13 +678,18 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
 export const evaluateSocialData = (fhirBundle: Bundle) => {
   const socialData: DisplayDataProps[] = [
     {
+      title: "Exposure Contacts",
+      value: evaluateExposureDetails(fhirBundle),
+      fullWidthContent: true,
+    },
+    {
       title: "Tobacco Use",
       value: evaluateValue(fhirBundle, fhirPathMappings.patientTobaccoUse),
     },
     {
       title: "Travel History",
       value: evaluateTravelHistoryTable(fhirBundle),
-      table: true,
+      fullWidthContent: true,
     },
     {
       title: "Homeless Status",

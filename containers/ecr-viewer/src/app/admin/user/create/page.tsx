@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { UserForm } from "@/app/admin/user/UserForm";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { createUserAction } from "@/app/services/serverActionService";
-import { notFoundUnlessAdmin } from "@/app/services/userService";
+import { notFoundUnlessAdmin, listUsers } from "@/app/services/userService";
 
 /**
  * @returns Page to create a new user
@@ -13,11 +13,12 @@ const CreateUserPage = async () => {
   await notFoundUnlessAdmin();
 
   const programs = await listProgramAreas();
+  const users = await listUsers();
 
   return (
     <UserForm
       action="Create"
-      initValues={{ programs }}
+      initValues={{ programs, users }}
       submitAction={async (email, userType, programs) => {
         "use server";
         revalidatePath("/ecr-viewer/admin/user");
@@ -25,6 +26,7 @@ const CreateUserPage = async () => {
         const res = await createUserAction({ email, userType, programs });
         return { error: res.error };
       }}
+      formTouchedMsg="You have unsaved changes. To create a user, you must add an email and select a user type."
       banner={
         programs.length === 0 && (
           <Alert

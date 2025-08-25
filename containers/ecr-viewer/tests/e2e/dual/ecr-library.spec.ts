@@ -26,7 +26,7 @@ test.describe("ecr library page", () => {
 
       await page.getByLabel("Filter by reportable condition").click();
       // Add delay since conditions rerenders shortly after opening
-      await page.getByText("Deselect all").click({ delay: 200 });
+      await page.getByText("Deselect 2 conditions").click({ delay: 200 });
       await page.getByRole("group").getByText("Zika Virus Disease").click();
       await page.getByLabel("Apply filter").click();
       await expect(page.getByText("Showing 1-1")).toBeVisible();
@@ -34,17 +34,13 @@ test.describe("ecr library page", () => {
       await expect(
         page.getByText("Rule used in reportability determination"),
       ).toBeVisible();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(1);
+      await expect(page.locator("tbody > tr")).toHaveCount(1);
 
       // Make sure reset button works
       await page.getByLabel("reset").click();
       await expect(page.getByText("Showing 1-3")).toBeVisible();
       await expect(page.getByText("Zika Virus Disease")).toBeVisible();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(3);
+      await expect(page.locator("tbody > tr")).toHaveCount(3);
     });
 
     test("Search should filter results ", async ({ page }) => {
@@ -59,9 +55,7 @@ test.describe("ecr library page", () => {
       await expect(
         page.getByRole("gridcell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
       ).toBeVisible();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(1);
+      await expect(page.locator("tbody > tr")).toHaveCount(1);
     });
 
     test("Clearing search box text should clear search and show all eCRs", async ({
@@ -79,9 +73,7 @@ test.describe("ecr library page", () => {
       await expect(
         page.getByRole("gridcell", { name: "Minch YodaV1\nDOB: 01/01/1125" }),
       ).toBeVisible();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(1);
+      await expect(page.locator("tbody > tr")).toHaveCount(1);
 
       // This is a workaround to simulate the effect of pressing ESC on the search box which clears it to empty string.
       // Playwright's functions for simulating key presses did not work for this test for some reason
@@ -89,9 +81,10 @@ test.describe("ecr library page", () => {
 
       // Verify all eCRs are visible again
       await expect(page.getByText("Showing 1-3 of 3 eCRs")).toBeVisible();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(3);
+      await expect(
+        page.getByRole("gridcell", { name: /Mon Mothma/ }),
+      ).toBeVisible();
+      await expect(page.locator("tbody > tr")).toHaveCount(3);
     });
 
     test("Search and reportable condition should filter results", async ({
@@ -108,14 +101,12 @@ test.describe("ecr library page", () => {
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
 
       await page.getByLabel("Filter by reportable condition").click();
-      await page.getByText("Deselect all").click();
+      await page.getByText("Deselect 2 conditions").click();
       await page.getByRole("group").getByText("COVID-19").click();
       await page.getByLabel("Apply filter").click();
 
       await expect(page.getByText("Showing 0-0 of 0 eCRs")).toBeVisible();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(1);
+      await expect(page.locator("tbody > tr")).toHaveCount(1);
       await expect(page.getByText("No eCRs found.")).toBeVisible();
     });
 
@@ -133,10 +124,9 @@ test.describe("ecr library page", () => {
 
       await expect(page.getByLabel("Page 2")).not.toBeVisible();
       await expect(page.getByText("Showing 1-3")).toBeVisible();
-      await expect(page.getByText("Yoda")).toBeVisible();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(3);
+      // Regex to make sure name is formatted correctly
+      await expect(page.getByText(/O'Rendar木/)).toBeVisible();
+      await expect(page.locator("tbody > tr")).toHaveCount(3);
     });
 
     test("When visiting a direct url all query parameters should be applied", async ({
@@ -155,9 +145,7 @@ test.describe("ecr library page", () => {
       await expect(
         page.getByRole("group").getByText("COVID-19"),
       ).not.toBeChecked();
-      expect(
-        (await page.locator("tbody > tr").allTextContents()).length,
-      ).toEqual(1);
+      await expect(page.locator("tbody > tr")).toHaveCount(1);
       await expect(page.getByLabel("Last 30 Days")).toBeVisible();
     });
 
@@ -232,15 +220,11 @@ test.describe("ecr library page", () => {
         page.getByRole("button", { name: "View Related eCRs" }),
       ).toBeVisible();
       await page.getByRole("button", { name: "View Related eCRs" }).click();
-      expect((await page.getByRole("row", { level: 2 }).all()).length).toEqual(
-        2,
-      );
+      await expect(page.getByRole("row", { level: 2 })).toHaveCount(2);
 
       // collapse it back down
       await page.getByRole("button", { name: "Hide Related eCRs" }).click();
-      expect((await page.getByRole("row", { level: 2 }).all()).length).toEqual(
-        0,
-      );
+      await expect(page.getByRole("row", { level: 2 })).toHaveCount(0);
     });
   });
 });

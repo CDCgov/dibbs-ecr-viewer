@@ -134,7 +134,12 @@ describe("eCR Metadata", () => {
         eicrAuthorDetails={eicrAuthorDetails}
       />,
     );
-    expect(await axe(container)).toHaveNoViolations();
+    // ignore duplicate ids due to mocking making all useId return the same
+    expect(
+      await axe(container, {
+        rules: { "duplicate-id-aria": { enabled: false } },
+      }),
+    ).toHaveNoViolations();
   });
 
   it("should let the user know that a reportable condition hasn't been found if there is no data available", () => {

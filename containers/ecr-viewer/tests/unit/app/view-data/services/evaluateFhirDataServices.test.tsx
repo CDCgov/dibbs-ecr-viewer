@@ -1,15 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, BundleEntry, Practitioner } from "fhir/r4";
 
-import BundleEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMetadata.json";
-import * as _BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
-import * as _BundleWithDeceasedPatient from "../../../../../../../test-data/fhir/BundlePatientDeceased.json";
-import BundlePatientMultiple from "../../../../../../../test-data/fhir/BundlePatientMultiple.json";
-import * as _BundlePatientWithCovid from "../../../../../../../test-data/fhir/BundlePatientWithCovid.json";
-import BundlePractitionerRole from "../../../../../../../test-data/fhir/BundlePractitionerRole.json";
+import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
+import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
+import * as _BundleWithDeceasedPatient from "@/../../../test-data/fhir/BundlePatientDeceased.json";
+import BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
+import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatientWithCovid.json";
+import BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
+import BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
+import BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
+import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import {
   evaluateEncounterId,
   evaluateFacilityId,
@@ -31,6 +34,7 @@ import {
   evaluateHospitalEncounterData,
   evaluateProviderData,
   evaluatePregnancyData,
+  evaluateSocialData,
 } from "@/app/view-data/services/evaluateFhirDataService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
@@ -43,6 +47,32 @@ describe("evaluateFhirDataServices tests", () => {
       const actual = evaluateValue(BundleWithPatient, mappings.patientIds);
 
       expect(actual).toEqual("1234567890");
+    });
+  });
+
+  describe("Evaluate Patient Name", () => {
+    it("should return name", () => {
+      const actual = evaluatePatientName(
+        BundleWithPatient as unknown as Bundle,
+        false,
+      );
+      expect(actual).toEqual("Han Solo");
+    });
+  });
+
+  describe("Extract Patient Address", () => {
+    it("should return empty string if no address is available", () => {
+      const actual = evaluatePatientAddress(undefined as any);
+
+      expect(actual).toBeEmpty();
+    });
+
+    it("should get patient address", () => {
+      const actual = evaluatePatientAddress(
+        BundleWithPatient as unknown as Bundle,
+      );
+
+      expect(actual).toEqual("1 Main St\nCloud City, CA 00000\nUS");
     });
   });
 
@@ -1520,42 +1550,15 @@ Home: 123-456-6909`,
                 ],
               },
               effectiveDateTime: "2020-01-05T10:15:00",
+              valueDateTime: "2020-01-01",
             },
           },
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      render(actual.availableData[0].value);
-      expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
-    });
-
-    it("should have last menstrual period data when it exists", () => {
-      const pregnancyBundle: Bundle = {
-        resourceType: "Bundle",
-        type: "batch",
-        entry: [
-          {
-            resource: {
-              resourceType: "Observation",
-              id: "test_obs",
-              status: "final",
-              code: {
-                coding: [
-                  {
-                    code: "8665-2",
-                    system: "http://loinc.org",
-                    display: "Last menstrual period start date",
-                  },
-                ],
-              },
-              effectiveDateTime: "2020-01-05T10:15:00",
-            },
-          },
-        ],
-      };
-      const actual = evaluatePregnancyData(pregnancyBundle);
-      render(actual.availableData[0].value);
-      expect(screen.getAllByText("Last Menstrual Period").length).toEqual(2);
+      render(<PregnancyInfo pregnancyData={actual.availableData} />);
+      expect(screen.getByText("Last Menstrual Period")).toBeVisible();
+      expect(screen.getByText("01/01/2020")).toBeVisible();
     });
 
     it("should have pregnancy status data when it exists", () => {
@@ -1624,8 +1627,63 @@ Home: 123-456-6909`,
         ],
       };
       const actual = evaluatePregnancyData(pregnancyBundle);
-      render(actual.availableData[0].value);
+      render(<PregnancyInfo pregnancyData={actual.availableData} />);
       expect(screen.getAllByText("Postpartum Status").length).toEqual(1);
+    });
+  });
+
+  describe("Evaluate Social Data", () => {
+    it("should have no available data when there is no data", () => {
+      const actual = evaluateSocialData(undefined as any);
+
+      expect(actual.availableData).toBeEmpty();
+      expect(actual.unavailableData).not.toBeEmpty();
+    });
+
+    it("should have exposure contact when there is a exposure contact observation present", () => {
+      const actual = evaluateSocialData(
+        BundleWithTravelHistory as unknown as Bundle,
+      );
+
+      render(actual.availableData[0].value);
+      // travel purpose
+      expect(screen.getByText("Wild mink (organism)"));
+    });
+
+    it("should have travel history when there is a travel history observation present", () => {
+      const actual = evaluateSocialData(
+        BundleWithTravelHistory as unknown as Bundle,
+      );
+
+      render(actual.availableData[1].value);
+      // travel purpose
+      expect(screen.getByText("Active duty military (occupation)"));
+    });
+
+    it("should have patient sexual orientation when available", () => {
+      const actual = evaluateSocialData(
+        BundleWithSexualOrientation as unknown as Bundle,
+      );
+
+      expect(actual.availableData[0].value).toEqual("Other");
+    });
+
+    it("should return religion if available", () => {
+      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
+      const ext = actual.availableData.filter(
+        (d) => d.title === "Religious Affiliation",
+      );
+      expect(ext).toHaveLength(1);
+      expect(ext[0].value).toEqual("Baptist");
+    });
+
+    it("should return marital status if available", () => {
+      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
+      const ext = actual.availableData.filter(
+        (d) => d.title === "Marital Status",
+      );
+      expect(ext).toHaveLength(1);
+      expect(ext[0].value).toEqual("Married");
     });
   });
 });

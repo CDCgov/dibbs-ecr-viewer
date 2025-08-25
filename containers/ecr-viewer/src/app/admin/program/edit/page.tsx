@@ -16,10 +16,10 @@ import { PageSearchParams } from "@/app/utils/search-param-utils";
 const EditProgramPage = async ({
   searchParams,
 }: {
-  searchParams: PageSearchParams;
+  searchParams: Promise<PageSearchParams>;
 }) => {
   await notFoundUnlessAdmin();
-  const { uuid } = searchParams;
+  const { uuid } = await searchParams;
 
   // nothing to edit here
   if (!uuid || typeof uuid !== "string") {

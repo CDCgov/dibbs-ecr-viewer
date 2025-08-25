@@ -40,6 +40,7 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
       testDir,
+      teardown: "teardown",
     },
 
     {
@@ -47,6 +48,7 @@ export default defineConfig({
       use: { ...devices["Desktop Firefox"] },
       testIgnore: [/lighthouse.spec.ts/],
       testDir,
+      teardown: "teardown",
     },
 
     {
@@ -54,6 +56,12 @@ export default defineConfig({
       use: { ...devices["Desktop Safari"] },
       testIgnore: [/lighthouse.spec.ts/],
       testDir,
+      teardown: "teardown",
+    },
+
+    {
+      name: "teardown",
+      testMatch: /teardown.ts/,
     },
 
     {

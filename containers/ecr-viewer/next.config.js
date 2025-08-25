@@ -11,9 +11,9 @@ const nextConfig = {
     includePaths: [
       path.join(__dirname, "node_modules", "@uswds", "uswds", "packages"),
     ],
+    quietDeps: true,
   },
   experimental: {
-    instrumentationHook: true,
     // Because of our deployment set up, the same-origin policy does not work
     // in production. Server actions are protected like any other route, so we
     // allow any origin to hit them
@@ -29,6 +29,9 @@ const nextConfig = {
 
   // next auth useSession doesn't double mount nicely
   reactStrictMode: false,
+
+  // avoid jest error about multiple package-lock.json
+  outputFileTracingRoot: __dirname,
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

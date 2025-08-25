@@ -17,11 +17,12 @@ import {
   RadioDateOption,
   RadioDateOptions,
   CustomDateInput,
-  SelectDeselectAllCheckbox,
   CheckboxOptions,
+  SelectDeselectAllButton,
 } from "./BaseFilter";
 import FilterGroup from "./FilterGroup";
 import { Coronavirus, Event } from "./Icon";
+import LiveSearchField from "./forms/LiveSearchField";
 
 enum ParamName {
   Condition = "condition",
@@ -89,10 +90,15 @@ const FilterReportableConditions = ({
   );
 
   const [filterConditions, setFilterConditions] = useState(initFilterState);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const isAllSelected = Object.values(filterConditions).every(
-    (val) => val === true,
-  );
+  const filteredFilterConditions = searchTerm
+    ? Object.fromEntries(
+        Object.entries(filterConditions).filter(([k]) =>
+          k.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
+      )
+    : filterConditions;
 
   // Build list of conditions to filter on
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,15 +109,11 @@ const FilterReportableConditions = ({
   };
 
   // Check/Uncheck all boxes based on Select all checkbox
-  const handleSelectAll = () => {
-    const updatedConditions = Object.keys(filterConditions).reduce(
-      (dict, condition) => {
-        dict[condition] = !isAllSelected;
-        return dict;
-      },
-      {} as { [key: string]: boolean },
-    );
-
+  const handleSelectAll = (isSelect: boolean) => {
+    const updatedConditions = { ...filterConditions };
+    Object.keys(filteredFilterConditions).forEach((condition) => {
+      updatedConditions[condition] = isSelect;
+    });
     setFilterConditions(updatedConditions);
   };
 
@@ -122,14 +124,28 @@ const FilterReportableConditions = ({
     (key) => filterConditions[key] === true,
   );
 
+  const activeFilteredConditions = Object.keys(filteredFilterConditions).filter(
+    (key) => filteredFilterConditions[key] === true,
+  );
+
+  const numConditions = allConditions.length;
+  const numFilteredConditions = Object.keys(filteredFilterConditions).length;
+  const numSelected = activeConditions.length;
+  const numFilteredSelected = activeFilteredConditions.length;
+  const isAllSelected = numSelected === numConditions;
+
+  const touched =
+    numSelected !== initConditions.length ||
+    initConditions.some((c) => !filterConditions[c]);
+
   const noConditions = Object.fromEntries(
-    Object.entries(filterConditions).filter(
+    Object.entries(filteredFilterConditions).filter(
       ([key]) => key === NO_CONDITIONS_REPORTED_OPTION,
     ),
   );
 
   const regularConditions = Object.fromEntries(
-    Object.entries(filterConditions).filter(
+    Object.entries(filteredFilterConditions).filter(
       ([key]) => key !== NO_CONDITIONS_REPORTED_OPTION,
     ),
   );
@@ -138,47 +154,70 @@ const FilterReportableConditions = ({
     <Filter
       type="reportable condition"
       isActive={!isAllSelected}
-      resetHandler={() => setFilterConditions(initFilterState)}
+      resetHandler={() => {
+        setSearchTerm("");
+        setFilterConditions(initFilterState);
+      }}
       icon={Coronavirus}
-      tag={activeConditions.length || "0"}
+      tag={`${numSelected}`}
+      touched={touched}
       submitHandler={() => {
+        setSearchTerm("");
         updateQueryParam(ParamName.Condition, filterConditions, isAllSelected);
         pushQueryUpdate();
       }}
     >
-      {/* Select All checkbox */}
-      <div className="display-flex flex-column">
-        <SelectDeselectAllCheckbox
-          groupName="condition"
-          onToggle={handleSelectAll}
-          isAllSelected={isAllSelected}
-        />
+      <div className="display-flex flex-column height-full">
+        <div className="flex-0">
+          <LiveSearchField
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            label="Search by reportable condition"
+            className="margin-x-1"
+          />
+          {/* Select/Deselect in bulk button */}
+          <SelectDeselectAllButton
+            groupName="condition"
+            onToggle={handleSelectAll}
+            numSelected={numFilteredSelected}
+            numOptions={numFilteredConditions}
+            className="margin-top-1"
+          />
 
-        {/* No conditions reported checkbox */}
-        {Object.keys(noConditions).length > 0 && (
-          <>
-            <div className="border-top-1px border-base-lighter margin-x-105"></div>
+          <div className="border-top-1px border-base-lighter margin-bottom-1" />
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {numFilteredConditions === 0 && (
+            <p className="margin-x-105 text-bold">
+              No reportable conditions found.
+            </p>
+          )}
+
+          {/* No conditions reported checkbox */}
+          {Object.keys(noConditions).length > 0 && (
             <CheckboxOptions
               groupName="condition"
               filterItems={noConditions}
               onChange={handleCheckboxChange}
             />
-          </>
-        )}
+          )}
 
-        {/* Filter Conditions checkboxes */}
-        {Object.keys(regularConditions).length > 0 && (
-          <>
-            <div className="border-top-1px border-base-lighter margin-x-105"></div>
+          {/* border line between if both present */}
+          {Object.keys(noConditions).length > 0 &&
+            Object.keys(regularConditions).length > 0 && (
+              <div className="border-top-1px border-base-lighter margin-x-105 margin-y-1"></div>
+            )}
+
+          {/* Filter Conditions checkboxes */}
+          {Object.keys(regularConditions).length > 0 && (
             <CheckboxOptions
               groupName="condition"
               filterItems={regularConditions}
               onChange={handleCheckboxChange}
             />
-          </>
-        )}
+          )}
+        </div>
       </div>
-      <div className="border-top-1px border-base-lighter" />
     </Filter>
   );
 };
@@ -203,6 +242,13 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const [endDate, setEndDate] = useState<string>(initEnd);
   const isFilterDateDefault = filterDateOption === DEFAULT_DATE_RANGE;
 
+  // also basic validity in terms of required fields
+  const touched =
+    (filterDateOption !== CustomDateRangeOption || startDate !== "") &&
+    (initDateRange !== filterDateOption ||
+      initStart !== startDate ||
+      initEnd !== endDate);
+
   // Keep state in sync with updated params while maintaining correct focus on submit
   useEffect(() => {
     setStartDate(initStart);
@@ -215,6 +261,11 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
   const submitHandler = () => {
     if (filterDateOption === CustomDateRangeOption) {
       const actualEndDate = endDate || today;
+
+      // in case the updated query param ends up being the same so we
+      // don't actually go anywhere - keep state in sync
+      setEndDate(actualEndDate);
+
       const datesParam = `${startDate}|${actualEndDate}`;
       updateQueryParam(
         ParamName.DateRange,
@@ -238,6 +289,7 @@ const FilterByDate = ({ initCustomDate, initDateRange }: FilterProps) => {
     <Filter
       type="received date"
       isActive={true}
+      touched={touched}
       resetHandler={() => {
         setStartDate(initStart);
         setEndDate(initEnd);

@@ -30,7 +30,7 @@ jobs:
   javascript-linting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Lint javascript for ${{env.CONTAINER}}
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -102,7 +102,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Bail out if Dependabot and Azure AD
         if: ${{ matrix.azure_ad && github.actor == 'dependabot[bot]'}}
@@ -162,7 +162,7 @@ jobs:
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
 
       - name: Run Playwright tests - Migrations
         working-directory: ./containers/${{env.CONTAINER}}
@@ -196,7 +196,7 @@ jobs:
 
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check localhost:8071/health/ready
+        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
 
       - name: Seed standard user and COVID program
         working-directory: ./containers/${{env.CONTAINER}}
@@ -264,7 +264,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
         uses: actions/setup-node@v4

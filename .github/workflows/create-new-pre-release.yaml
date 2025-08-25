@@ -34,7 +34,7 @@ jobs:
       version: ${{ steps.meta.outputs.version }}
     steps:
       - name: Check Out Changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -84,4 +84,13 @@ jobs:
     with:
       container_tag: ${{ needs.build-containers-for-release.outputs.version }}
       environment: azure
+    secrets: inherit
+
+  deploy-container-to-gcp-test-env:
+    needs:
+      - build-containers-for-release
+    uses: ./.github/workflows/trigger-dev-workflow.yaml
+    with:
+      container_tag: ${{ needs.build-containers-for-release.outputs.version }}
+      environment: gcp
     secrets: inherit
