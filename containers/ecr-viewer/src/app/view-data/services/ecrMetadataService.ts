@@ -3,7 +3,6 @@ import { Bundle, Observation, Organization } from "fhir/r4";
 import { formatDateTime } from "@/app/services/formatDateService";
 import {
   formatAddress,
-  formatCodeableConcept,
   formatContactPoint,
   formatName,
 } from "@/app/services/formatService";
@@ -27,7 +26,7 @@ import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
-import { getReportabilityInfo } from "./reportabilityService";
+import { evaluateRRInfo, ReportableConditions } from "./reportabilityService";
 
 // TODO ANGELA: DELETE
 export interface ReportableConditionsOLD {
@@ -49,21 +48,6 @@ export interface ReportableConditionsOLD {
 //     "positive skin test": Set { "Provider Facility C" }
 //   }
 // }
-
-export interface ReportableConditions {
-  [condition: string]: ReportabilityInfo[];
-}
-
-export interface ReportabilityInfo {
-  participants: Participant[];
-  rules: Set<string>;
-  reasons: Set<string>;
-}
-
-export interface Participant {
-  name: string;
-  role: string;
-}
 
 // {
 //   "Zika Virus Disease":
@@ -141,27 +125,9 @@ export const unknownWarning: ERSDInfo = {
  * @returns An object containing evaluated and formatted eCR metadata.
  */
 export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
-  const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
-  const reportableConditionsList: ReportableConditions = {};
-
-  for (const condition of rrConditions) {
-    const name =
-      formatCodeableConcept(condition.valueCodeableConcept) ??
-      "Unknown Condition";
-    const rrInfo: ReportabilityInfo[] = getReportabilityInfo(
-      fhirBundle,
-      condition,
-    );
-
-    if (!reportableConditionsList[name]) {
-      reportableConditionsList[name] = [];
-    }
-    reportableConditionsList[name].push(...rrInfo);
-  }
-
   const custodianRef = evaluateOne(
     fhirBundle,
-    fhirPathMappings.eicrCustodianRef,
+    fhirPathMappings.eicrCustodianRef
   );
   const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
@@ -174,7 +140,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
     const releaseVersion: string = evaluateValue(
       fhirBundle,
-      fhirPathMappings.eicrReleaseVersion,
+      fhirPathMappings.eicrReleaseVersion
     );
 
     return releaseVersionMap[releaseVersion] || releaseVersion;
@@ -182,16 +148,16 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
   const fhirEICRProcessingStatus = evaluateValue(
     fhirBundle,
-    fhirPathMappings.eICRProcessingStatus,
+    fhirPathMappings.eICRProcessingStatus
   );
   const fhirEICRProcessingStatusReasonObs = evaluateOne(
     fhirBundle,
-    fhirPathMappings.eICRProcessingStatusReason,
+    fhirPathMappings.eICRProcessingStatusReason
   );
 
   function geteRSDInfo(
     processingStatus: string | undefined,
-    reasonObs: Observation | undefined,
+    reasonObs: Observation | undefined
   ): ERSDInfo | undefined {
     if (processingStatus === "RRVS19") {
       return { success: true };
@@ -240,7 +206,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
   const eRSDProcessingInfo: ERSDInfo | undefined = geteRSDInfo(
     fhirEICRProcessingStatus,
-    fhirEICRProcessingStatusReasonObs,
+    fhirEICRProcessingStatusReasonObs
   );
 
   const eicrDetails: DisplayDataProps[] = [
@@ -253,7 +219,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     {
       title: "Date/Time eCR Created",
       value: formatDateTime(
-        evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
+        evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated)
       ),
     },
     {
@@ -294,7 +260,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   return {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
-    rrConditions: reportableConditionsList,
+    rrConditions: evaluateRRInfo(fhirBundle),
     eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
       evaluateData(details)
@@ -305,7 +271,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
   const authorRefs = evaluateAll(
     fhirBundle,
-    fhirPathMappings.compositionAuthorRefs,
+    fhirPathMappings.compositionAuthorRefs
   );
 
   const authorDetails: DisplayDataProps[][] = [];
@@ -314,7 +280,7 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
       const practitionerRoleRef = ref?.reference;
       const { practitioner, organization } = evaluatePractitionerRoleReference(
         fhirBundle,
-        practitionerRoleRef,
+        practitionerRoleRef
       );
 
       authorDetails.push([
@@ -325,7 +291,7 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
         {
           title: "Author Address",
           value: practitioner?.address?.map((address) =>
-            formatAddress(address),
+            formatAddress(address)
           ),
         },
         {
@@ -339,7 +305,7 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
         {
           title: "Author Facility Address",
           value: organization?.address?.map((address) =>
-            formatAddress(address),
+            formatAddress(address)
           ),
         },
         {

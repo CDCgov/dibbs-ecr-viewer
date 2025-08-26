@@ -1,9 +1,51 @@
 import { Bundle, Observation } from "fhir/r4";
 
-import { evaluateReference, evaluateValue } from "@/app/utils/evaluate";
+import { formatCodeableConcept } from "@/app/services/formatService";
+import {
+  evaluateAll,
+  evaluateReference,
+  evaluateValue,
+} from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 
-import { Participant, ReportabilityInfo } from "./ecrMetadataService";
+export interface ReportableConditions {
+  [condition: string]: ReportabilityInfo[];
+}
+
+export interface ReportabilityInfo {
+  participants: Participant[];
+  rules: Set<string>;
+  reasons: Set<string>;
+}
+
+export interface Participant {
+  name: string;
+  role: string;
+}
+
+// TODO ANGELA: Add JSDoc
+export const evaluateRRInfo = (
+  fhirBundle: Bundle
+): ReportableConditions => {
+  const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
+  const reportableConditionsList: ReportableConditions = {};
+
+  for (const condition of rrConditions) {
+    const name =
+      formatCodeableConcept(condition.valueCodeableConcept) ??
+      "Unknown Condition";
+    const rrInfo: ReportabilityInfo[] = evaluateReportabilityInfo(
+      fhirBundle,
+      condition
+    );
+
+    if (!reportableConditionsList[name]) {
+      reportableConditionsList[name] = [];
+    }
+    reportableConditionsList[name].push(...rrInfo);
+  }
+  return reportableConditionsList;
+};
 
 /**
  * Finds all unique RCKMS rule summaries in an observation
@@ -11,16 +53,16 @@ import { Participant, ReportabilityInfo } from "./ecrMetadataService";
  * @param observation - FHIR Observation of an RR Condition
  * @returns Set of rule summaries
  */
-export const getReportabilityInfo = (
+export const evaluateReportabilityInfo = (
   fhirBundle: Bundle,
-  observation: Observation,
+  observation: Observation
 ): ReportabilityInfo[] => {
   const rrInfoArr: ReportabilityInfo[] = [];
 
   observation?.hasMember?.forEach((ref) => {
     const rrInfoObs: Observation | undefined = evaluateReference(
       fhirBundle,
-      ref.reference,
+      ref.reference
     );
     const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
     const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
@@ -37,7 +79,7 @@ export const getReportabilityInfo = (
  * @returns Object of rules and reasons arrays
  */
 export const getReportabilityRulesReasons = (
-  observation: Observation | undefined,
+  observation: Observation | undefined
 ): { rules: Set<string>; reasons: Set<string> } => {
   const rules = new Set<string>();
   const reasons = new Set<string>();
@@ -69,7 +111,7 @@ export const getReportabilityRulesReasons = (
  */
 const getResponsibleAgencies = (
   fhirBundle: Bundle,
-  observation: Observation | undefined,
+  observation: Observation | undefined
 ): Participant[] => {
   const participants: Participant[] = [];
 
@@ -93,13 +135,13 @@ const getResponsibleAgencies = (
  */
 export const getReportabilitySummaries = (
   fhirBundle: Bundle,
-  observation: Observation,
+  observation: Observation
 ): Set<string> => {
   const ruleSummaries = new Set<string>();
   observation?.hasMember?.forEach((ref) => {
     const rrInfoObs: Observation | undefined = evaluateReference(
       fhirBundle,
-      ref.reference,
+      ref.reference
     );
     rrInfoObs?.extension?.forEach((extension) => {
       if (
@@ -109,7 +151,6 @@ export const getReportabilitySummaries = (
       ) {
         ruleSummaries.add(extension.valueString.trim());
       }
-
     });
   });
   return ruleSummaries;

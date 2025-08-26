@@ -2,11 +2,10 @@ import React from "react";
 
 import { Table } from "@trussworks/react-uswds";
 
+import { ERSDInfo } from "@/app/view-data/services/ecrMetadataService";
 import {
-  ERSDInfo,
   Participant,
-  ReportableConditions,
-} from "@/app/view-data/services/ecrMetadataService";
+  ReportableConditions} from "@/app/view-data/services/reportabilityService"
 import {
   AccordionSection,
   AccordionSubSection,
@@ -47,6 +46,7 @@ const EcrMetadata = ({
   eCRCustodianDetails,
   eicrAuthorDetails,
 }: EcrMetadataProps) => {
+  console.log("RR conditiions", rrConditions);
   return (
     <AccordionSection>
       <AccordionSubSection title="RR Details">
@@ -176,10 +176,8 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
               RCKMS Rule Summary
             </ToolTipElement>
           </th>
-          <th>
-            <ToolTipElement toolTip="Determination of Reportability Reason">
-              Determination of Reportability Reason
-            </ToolTipElement>
+          <th className="width-10p">
+              Details
           </th>
         </tr>
       </thead>
