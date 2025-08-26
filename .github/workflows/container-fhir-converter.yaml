@@ -1,17 +1,17 @@
 name: Test fhir-converter Container
 
 on:
-  pull_request:
-    branches:
-      - "**"
-    paths:
-      - containers/fhir-converter/**
-  merge_group:
-    types:
-      - checks_requested
+  # pull_request:
+  #   branches:
+  #     - "**"
+  #   paths:
+  #     - containers/fhir-converter/**
+  # merge_group:
+  #   types:
+  #     - checks_requested
   push:
     branches:
-      - main
+      # - main
       - austin/update-fhir-converter
   workflow_dispatch:
 
