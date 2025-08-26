@@ -70,7 +70,8 @@ export const saveToAzure = async (
     return SAVE_MISCONFIGURED;
   }
 
-  try {
+  // TODO: UNCOMMENT THIS
+  // try {
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
 
     const response = await blockBlobClient.upload(body, body.length, {
@@ -82,14 +83,14 @@ export const saveToAzure = async (
     }
 
     return SAVE_SUCCESS;
-  } catch (error: unknown) {
-    console.error({
-      message: "Failed to save blob to Azure Blob Storage.",
-      error,
-      objectKey,
-    });
-    return SAVE_FAILURE;
-  }
+  // } catch (error: unknown) {
+  //   console.error({
+  //     message: "Failed to save blob to Azure Blob Storage.",
+  //     error,
+  //     objectKey,
+  //   });
+  //   return SAVE_FAILURE;
+  // }
 };
 
 /**

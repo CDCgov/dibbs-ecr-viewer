@@ -167,17 +167,19 @@ export const saveFhirMetadata = async (
         };
       });
   } catch (error: unknown) {
-    const message = "Failed to insert metadata to database.";
-    console.error({ message, error, ecrId });
+    // TODO: UNCOMMENT THIS
+    // const message = "Failed to insert metadata to database.";
+    // console.error({ message, error, ecrId });
 
     if (rollBackFhirData) {
       await rollbackFhirDataFn();
     }
 
-    return {
-      message,
-      status: 500,
-    };
+    throw error;
+    // return {
+    //   message,
+    //   status: 500,
+    // };
   }
 };
 
