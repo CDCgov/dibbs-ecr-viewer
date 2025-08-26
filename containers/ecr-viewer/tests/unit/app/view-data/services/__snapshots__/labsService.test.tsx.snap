@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`LabsService tests Labs Utils returnFieldValueFromLabHtmlString extracts correct field value from within a lab report 1`] = `
+exports[`LabsService tests returnFieldValueFromLabHtmlString extracts correct field value from within a lab report 1`] = `
 <React.Fragment>
   <p>
     <span>
