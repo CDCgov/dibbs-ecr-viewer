@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - main
+      - austin/update-fhir-converter
   workflow_dispatch:
 
 concurrency:
