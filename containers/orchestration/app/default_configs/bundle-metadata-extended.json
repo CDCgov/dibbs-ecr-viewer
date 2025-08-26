@@ -6,10 +6,6 @@
     },
     {
       "service": "ingestion",
-      "endpoint": "/fhir/harmonization/standardization/standardize_names"
-    },
-    {
-      "service": "ingestion",
       "endpoint": "/fhir/harmonization/standardization/standardize_dob",
       "params": {
         "dob_format": ""
