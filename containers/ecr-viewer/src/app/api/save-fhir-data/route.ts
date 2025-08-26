@@ -56,23 +56,26 @@ export async function POST(request: NextRequest) {
 
   // TODO: REMOVE THIS
   try {
-  if (requestBody.metadata) {
-    const { message, status } = await saveWithMetadata(
-      fhirBundle,
-      ecrId,
-      saveSource,
-      requestBody.metadata,
-    );
-    return NextResponse.json({ message }, { status });
-  } else {
-    const { message, status } = await saveFhirData(
-      fhirBundle,
-      ecrId,
-      saveSource,
-    );
-    return NextResponse.json({ message }, { status });
-  }
+    if (requestBody.metadata) {
+      const { message, status } = await saveWithMetadata(
+        fhirBundle,
+        ecrId,
+        saveSource,
+        requestBody.metadata,
+      );
+      return NextResponse.json({ message }, { status });
+    } else {
+      const { message, status } = await saveFhirData(
+        fhirBundle,
+        ecrId,
+        saveSource,
+      );
+      return NextResponse.json({ message }, { status });
+    }
   } catch (e: unknown) {
-    return NextResponse.json({ message: (e as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { message: (e as Error).message },
+      { status: 500 },
+    );
   }
 }
