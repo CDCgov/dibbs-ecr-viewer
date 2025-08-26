@@ -54,6 +54,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Invalid source" }, { status: 500 });
   }
 
+  // TODO: REMOVE THIS
+  try {
   if (requestBody.metadata) {
     const { message, status } = await saveWithMetadata(
       fhirBundle,
@@ -69,5 +71,8 @@ export async function POST(request: NextRequest) {
       saveSource,
     );
     return NextResponse.json({ message }, { status });
+  }
+  } catch (e: unknown) {
+    return NextResponse.json({ message: (e as Error).message }, { status: 500 });
   }
 }
