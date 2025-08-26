@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{env.TEST_RUNNER_DOTNET_VERSION}}
-        run: dotnet test src/Dibbs.FhirConverterApi.FunctionalTests/Dibbs.FhirConverterApi.FunctionalTests.csproj
+      - run: dotnet test src/Dibbs.FhirConverterApi.FunctionalTests/Dibbs.FhirConverterApi.FunctionalTests.csproj
   build-container:
     runs-on: ubuntu-latest
     steps:
