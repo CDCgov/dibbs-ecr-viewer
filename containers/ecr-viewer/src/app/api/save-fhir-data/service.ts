@@ -356,10 +356,12 @@ export const saveWithMetadata = async (
   } catch (error: unknown) {
     const message = "Failed to save FHIR data with metadata.";
     console.error({ message, error, ecrId });
-    return {
-      message,
-      status: 500,
-    };
+    throw error;
+    // TODO: UNCOMMENT
+    // return {
+    //   message,
+    //   status: 500,
+    // };
   }
 };
 
