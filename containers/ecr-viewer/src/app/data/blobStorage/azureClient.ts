@@ -72,17 +72,17 @@ export const saveToAzure = async (
 
   // TODO: UNCOMMENT THIS
   // try {
-    const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
+  const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
 
-    const response = await blockBlobClient.upload(body, body.length, {
-      blobHTTPHeaders: { blobContentType: "application/json" },
-    });
+  const response = await blockBlobClient.upload(body, body.length, {
+    blobHTTPHeaders: { blobContentType: "application/json" },
+  });
 
-    if (response._response.status !== 201) {
-      throw new Error(`HTTP Status Code: ${response._response.status}`);
-    }
+  if (response._response.status !== 201) {
+    throw new Error(`HTTP Status Code: ${response._response.status}`);
+  }
 
-    return SAVE_SUCCESS;
+  return SAVE_SUCCESS;
   // } catch (error: unknown) {
   //   console.error({
   //     message: "Failed to save blob to Azure Blob Storage.",
