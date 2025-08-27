@@ -52,11 +52,8 @@ def setup(request):
             os.getenv("ecr_viewer_url") + "/api/health-check"
         ).json()
 
-        print(health_check_response)
-
-        viewer_dependencies_ready = (
-            health_check_response["dependencies"]["azureBlobStorage"] == "UP"
-        )
+        dependencies = health_check_response["dependencies"]
+        viewer_dependencies_ready = dependencies.get("azureBlobStorage", "DOWN") == "UP"
 
     assert viewer_dependencies_ready
 
