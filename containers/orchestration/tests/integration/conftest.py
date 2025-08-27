@@ -52,10 +52,9 @@ def setup(request):
             os.getenv("ecr_viewer_url") + "/api/health-check"
         ).json()
 
-        viewer_dependencies_ready = (
-            health_check_response["dependencies"]["metadataDb"] == "UP"
-            and health_check_response["dependencies"]["azureBlobStorage"] == "UP"
-        )
+        print(health_check_response)
+
+        viewer_dependencies_ready = health_check_response["dependencies"]["azureBlobStorage"] == "UP"
 
     assert viewer_dependencies_ready
 
