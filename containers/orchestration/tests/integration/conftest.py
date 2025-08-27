@@ -54,7 +54,9 @@ def setup(request):
 
         print(health_check_response)
 
-        viewer_dependencies_ready = health_check_response["dependencies"]["azureBlobStorage"] == "UP"
+        viewer_dependencies_ready = (
+            health_check_response["dependencies"]["azureBlobStorage"] == "UP"
+        )
 
     assert viewer_dependencies_ready
 
