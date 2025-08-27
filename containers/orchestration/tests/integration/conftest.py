@@ -53,7 +53,8 @@ def setup(request):
         ).json()
 
         dependencies = health_check_response["dependencies"]
-        viewer_dependencies_ready = dependencies.get("azureBlobStorage", "DOWN") == "UP"
+        viewer_dependencies_ready = (dependencies.get("azureBlobStorage", "DOWN") == "UP"
+                                     and dependencies.get("metadataDb", "DOWN") == "UP")
 
     assert viewer_dependencies_ready
 
