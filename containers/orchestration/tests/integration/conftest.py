@@ -1,9 +1,9 @@
 import os
+import time
 from pathlib import Path
 
 import httpx
 import pytest
-import time
 from dotenv import load_dotenv
 from testcontainers.compose import DockerCompose
 
@@ -42,8 +42,10 @@ def setup(request):
             os.getenv("ecr_viewer_url") + "/api/health-check"
         ).json()
 
-        viewer_dependencies_ready = (health_check_response["dependencies"]["metadataDb"] == "UP"
-                                     and health_check_response["dependencies"]["azureBlobStorage"] == "UP")
+        viewer_dependencies_ready = (
+            health_check_response["dependencies"]["metadataDb"] == "UP"
+            and health_check_response["dependencies"]["azureBlobStorage"] == "UP"
+        )
 
     assert viewer_dependencies_ready
 
