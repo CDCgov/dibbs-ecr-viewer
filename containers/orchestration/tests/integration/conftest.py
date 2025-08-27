@@ -3,6 +3,7 @@ from pathlib import Path
 
 import httpx
 import pytest
+import time
 from dotenv import load_dotenv
 from testcontainers.compose import DockerCompose
 
@@ -30,6 +31,21 @@ def setup(request):
     for port_number in port_number_strings:
         port = os.getenv(port_number)
         orchestration_service.wait_for(f"http://0.0.0.0:{port}")
+
+    viewer_dependencies_ready = False
+    retries = 0
+    while not viewer_dependencies_ready and retries < 3:
+        time.sleep(1)
+        retries += 1
+
+        health_check_response = httpx.get(
+            os.getenv("ecr_viewer_url") + "/api/health-check"
+        ).json()
+
+        viewer_dependencies_ready = (health_check_response["dependencies"]["metadataDb"] == "UP"
+                                     and health_check_response["dependencies"]["azureBlobStorage"] == "UP")
+
+    assert viewer_dependencies_ready
 
     # migrate db
     rs = httpx.post(

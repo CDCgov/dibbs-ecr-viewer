@@ -19,10 +19,6 @@ services:
       file: ../ecr-viewer/docker-compose.yaml
       service: azure-storage
     profiles: ["", "azure"]
-    healthcheck:
-      test: nc 127.0.0.1 10000 -z
-      interval: 1s
-      retries: 30
   ecr-viewer:
     extends:
       file: ../ecr-viewer/docker-compose.yaml
