@@ -297,7 +297,7 @@ const useConvertDictionaryToRows = (dictionary: ReportableConditions): Reportabl
       // Extra participants, Determination of Reportability Reason
       let hiddenRow: React.ReactNode = undefined;
 
-      if (false || reasons) {
+      if (participants || reasons) {
         hiddenRow = (
           <>
             {participants && (
