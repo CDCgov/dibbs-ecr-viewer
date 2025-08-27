@@ -1,7 +1,10 @@
+"use client"
+
 import React from "react";
 
-import { Table } from "@trussworks/react-uswds";
+import { Button, Table } from "@trussworks/react-uswds";
 
+import { noData } from "@/app/utils/data-utils";
 import { ERSDInfo } from "@/app/view-data/services/ecrMetadataService";
 import {
   Participant,
@@ -13,7 +16,6 @@ import {
 
 import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 import { ToolTipElement } from "./ToolTipElement";
-// import { noData } from "@/app/utils/data-utils";
 
 interface EcrMetadataProps {
   rrConditions: ReportableConditions;
@@ -46,7 +48,6 @@ const EcrMetadata = ({
   eCRCustodianDetails,
   eicrAuthorDetails,
 }: EcrMetadataProps) => {
-  console.log("RR conditiions", rrConditions);
   return (
     <AccordionSection>
       <AccordionSubSection title="RR Details">
@@ -138,7 +139,6 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   rrConditions,
 }) => {
   const rows = useConvertDictionaryToRows(rrConditions);
-  console.log("ROWS", rows);
 
   if (rows.length === 0) {
     return (
@@ -176,22 +176,52 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
               RCKMS Rule Summary
             </ToolTipElement>
           </th>
-          <th className="width-10p">
-              Details
-          </th>
+          <th className="width-10p">Details</th>
         </tr>
       </thead>
       <tbody className="text-pre-line">
-        {rows.map(({ key, condition, participant, rrRule, rrReason }) => (
-          <tr key={key}>
-            {condition ? (
-              <td rowSpan={condition.rowSpan}>{condition.value}</td>
-            ) : null}
-            <td>{participant}</td>
-            <td>{rrRule}</td>
-            <td>{rrReason}</td>
-          </tr>
-        ))}
+        {rows.map(
+          ({
+            key,
+            condition,
+            participant,
+            rrRule,
+            hiddenRow,
+            expandedHidden,
+            toggle,
+          }) => (
+            <React.Fragment key={key}>
+              <tr>
+                {condition ? (
+                  <td rowSpan={condition.rowSpan}>{condition.value}</td>
+                ) : null}
+                <td>{participant}</td>
+                <td>{rrRule}</td>
+                <td>
+                  {hiddenRow ? (
+                    <Button
+                      unstyled={true}
+                      type="button"
+                      onClick={toggle}
+                      aria-controls={`hidden-comment-${key}`}
+                      aria-expanded={expandedHidden}
+                      data-test-id="comment-button"
+                    >
+                      {!expandedHidden ? "View" : "Hide"}
+                    </Button>
+                  ) : (
+                    noData
+                  )}
+                </td>
+              </tr>
+              {hiddenRow && expandedHidden && (
+                <tr id={`hidden-comment-${key}`} className="hidden-row">
+                  <td colSpan={4}>{hiddenRow}</td>
+                </tr>
+              )}
+            </React.Fragment>
+          )
+        )}
       </tbody>
     </Table>
   );
@@ -209,22 +239,27 @@ interface ReportableConditionRow {
   rrRule: string | null;
   rrReason: string | null;
   participant: React.JSX.Element[] | null;
+  hiddenRow?: React.ReactNode;
+  expandedHidden: boolean;
+  toggle: () => void;
 }
 
-// ? EXAMPLE: rrConditions
-// {
-//   'COVID-19': [
-//     { participants: [Array], rules: [Set], reasons: Set(0) {} },
-//     { participants: [Array], rules: [Set], reasons: Set(0) {} }
-//   ]
-// }
-
-
-// TODO ANGELA: Edit how we display jurisdictions & rules?
+// TODO ANGELA: Rename
 const useConvertDictionaryToRows = (dictionary: ReportableConditions): ReportableConditionRow[] => {
+  const [expandedRows, setExpandedRows] = React.useState<
+    Record<string, boolean>
+  >({});
+
   if (!dictionary) {
     return [];
   }
+
+  const toggleRow = (key: string) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
   const rows: ReportableConditionRow[] = [];
 
@@ -233,32 +268,70 @@ const useConvertDictionaryToRows = (dictionary: ReportableConditions): Reportabl
 
     rrInfoArray.forEach((rrInfo, rrInfoIndex) => {
       const isConditionRow = rrInfoIndex === 0;
+      const routingEntity: React.JSX.Element[] = [];
+      const participants: React.JSX.Element[] = [];
       
-      const participants = rrInfo.participants.map(
-        (p: Participant, index) => (
-          <div key={index}>
-            <b>{p.role}:</b>
-            <br />
-            {p.name}
-            <br />
-          </div>
-        )
-      );
+      rrInfo.participants.forEach((p: Participant, index) => {
+        if (p.role === "Routing Entity") {
+          routingEntity.push(
+            <div key={index}>
+              {p.name}
+              <br />
+            </div>
+          );
+        } else {
+          participants.push(
+            <div key={index}>
+              <b>{p.role}:</b>
+              <br />
+              {p.name}
+              <br />
+            </div>
+          );
+        }
+      });
 
       const rules = Array.from(rrInfo.rules).join('\n');
       const reasons = Array.from(rrInfo.reasons).join('\n');
+      
+      // Extra participants, Determination of Reportability Reason
+      let hiddenRow: React.ReactNode = undefined;
 
+      if (false || reasons) {
+        hiddenRow = (
+          <>
+            {participants && (
+              <div>
+                <strong>Details</strong>
+                {participants}
+              </div>
+            )}
+            {reasons && (
+              <div>
+                <strong>Determination of Reportability Reason</strong>
+                <br />
+                {reasons}
+              </div>
+            )}
+          </>
+        );
+      }
+
+      const key = `${condition}-${rrInfoIndex}`
       const row: ReportableConditionRow = {
-        key: `${condition}-${rrInfoIndex}`,
+        key,
         condition: isConditionRow
           ? {
               value: condition,
               rowSpan: conditionRowSpan,
             }
           : null,
-        participant: participants,
+        participant: routingEntity,
         rrRule: rules,
         rrReason: reasons,
+        hiddenRow,
+        expandedHidden: !!expandedRows[key],
+        toggle: () => toggleRow(key),
       };
 
       rows.push(row);

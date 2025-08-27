@@ -53,7 +53,7 @@ export const evaluateRRInfo = (
  * @param observation - FHIR Observation of an RR Condition
  * @returns Set of rule summaries
  */
-export const evaluateReportabilityInfo = (
+const evaluateReportabilityInfo = (
   fhirBundle: Bundle,
   observation: Observation
 ): ReportabilityInfo[] => {
