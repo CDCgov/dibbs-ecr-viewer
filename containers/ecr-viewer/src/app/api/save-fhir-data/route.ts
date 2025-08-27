@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
   } catch (e: unknown) {
     return NextResponse.json(
-      { message: (e as Error).message },
+      { message: `Error saving to container ${process.env.AZURE_CONTAINER_NAME || process.env.ECR_BUCKET_NAME}: ${(e as Error).message}` },
       { status: 500 },
     );
   }
