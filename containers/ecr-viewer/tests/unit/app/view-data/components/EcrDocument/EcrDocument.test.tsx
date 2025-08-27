@@ -131,7 +131,7 @@ describe("Snapshot test for eCR Document", () => {
 
       render(actual);
 
-      expect(screen.getByText("Dr Toob Nix SR")).toBeInTheDocument();
+      expect(screen.getByText("DR Toob Nix SR")).toBeInTheDocument();
       expect(screen.getByText("family")).toBeInTheDocument();
       expect(
         screen.getByText("Start: 11/16/1884 End: 05/21/1896"),

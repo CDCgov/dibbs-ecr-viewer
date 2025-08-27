@@ -36,7 +36,8 @@
       <patient>
         <name use="L">
           <given>Dash</given>
-          <family>Rendar</family>
+          <!-- O' and 木 to ensure in e2e testing that names pass through correctly -->
+          <family>O'Rendar木</family>
         </name>
         <administrativeGenderCode code="F" codeSystem="2.16.840.1.113883.5.1"
           displayName="Female" />

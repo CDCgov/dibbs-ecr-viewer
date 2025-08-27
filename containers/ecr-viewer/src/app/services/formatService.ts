@@ -38,9 +38,9 @@ export const formatName = (
 
   const segments = [
     ...(withUse && use ? [`${toSentenceCase(use)}:`] : []),
-    ...(prefix?.map(toTitleCase) ?? []),
-    ...(given?.map(toTitleCase) ?? []),
-    toTitleCase(family ?? ""),
+    ...(prefix ?? []),
+    ...(given ?? []),
+    family,
     ...(suffix ?? []),
   ];
 

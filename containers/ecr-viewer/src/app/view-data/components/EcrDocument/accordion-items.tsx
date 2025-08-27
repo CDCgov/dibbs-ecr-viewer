@@ -84,16 +84,10 @@ export const getEcrDocumentAccordionItems = (
             <>
               <Demographics demographicsData={demographicsData.availableData} />
               {socialData.availableData.length > 0 && (
-                <div>
-                  <SocialHistory socialData={socialData.availableData} />
-                </div>
+                <SocialHistory socialData={socialData.availableData} />
               )}
               {pregnancyData.availableData.length > 0 && (
-                <div>
-                  <PregnancyInfo
-                    pregnancyData={pregnancyData.availableData[0]}
-                  />
-                </div>
+                <PregnancyInfo pregnancyData={pregnancyData.availableData} />
               )}
             </>
           ) : (

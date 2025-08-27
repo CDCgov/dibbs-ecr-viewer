@@ -1,5 +1,5 @@
 import "server-only";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { HeadingLevel, Tag } from "@trussworks/react-uswds";
 import {
@@ -41,6 +41,7 @@ import {
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import {
   extractNumbersAndPeriods,
+  stringSort,
   toKebabCase,
 } from "@/app/utils/format-utils";
 import {
@@ -62,6 +63,15 @@ export interface LabReportElementData {
   diagnosticReportDataItems: AccordionItem[];
   organizationDisplayDataProps: DisplayDataProps[];
 }
+
+const ABNORMAL_OBSERVATION_INTERPRETATIONS: Record<string, string> = {
+  A: "Abnormal",
+  AA: "Critical Abnormal",
+  HH: "Critical High",
+  LL: "Critical Low",
+  HU: "Significantly High",
+  LU: "Significantly Low",
+};
 
 /**
  * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
@@ -95,15 +105,17 @@ export const evaluateLabInfoData = (
         <div className="display-flex flex-row flex-justify flex-align-center gap-05">
           <span>
             {title}
-            {checkAbnormalTag(labReportJson) && (
-              <Tag background="#B50909" className="margin-left-105">
-                Abnormal
-              </Tag>
-            )}
+            <LabInterpretationTag
+              observations={obs}
+              labReportJson={labReportJson}
+            />
           </span>
 
           {/** inline style due to existing css rules on this button text */}
-          <span className="text-base" style={{ fontSize: "1rem" }}>
+          <span
+            className="text-base flex-shrink-0"
+            style={{ fontSize: "1rem" }}
+          >
             {evaluateValue(report, fhirPathMappings.effectiveX)}
           </span>
         </div>
@@ -227,6 +239,12 @@ export const getAllLabJsonObjects = (fhirBundle: Bundle): HtmlTableJson[] => {
   return formatTablesToJSON(labsString);
 };
 
+const isAbnormal = (interpretation: string) => {
+  return Object.values(ABNORMAL_OBSERVATION_INTERPRETATIONS).some((v) =>
+    interpretation.toLowerCase().includes(v.toLowerCase()),
+  );
+};
+
 /**
  * Checks whether the result name of a lab report includes the term "abnormal"
  * @param labReportJson - A JSON object representing the lab report HTML string
@@ -238,7 +256,87 @@ export const checkAbnormalTag = (labReportJson?: HtmlTableJson): boolean => {
   }
   const labResultName = labReportJson.resultName;
 
-  return labResultName?.toLowerCase().includes("abnormal") ?? false;
+  return !!labResultName && isAbnormal(labResultName);
+};
+
+/**
+ * Evaluates FHIR observations for abnormal HL7 interpretation codes
+ * @param observations Array of FHIR observations
+ * @returns Abnormal observation interpretation or null if none found
+ */
+const evaluateAbnormalInterpretation = (
+  observations: Observation[],
+): string[] => {
+  const abnormalInterpretations = evaluateAll(
+    observations,
+    fhirPathMappings.observationInterpretation,
+  )
+    .filter(
+      ({ code }) =>
+        !!code && ABNORMAL_OBSERVATION_INTERPRETATIONS.hasOwnProperty(code),
+    )
+    .map(({ code }) => ABNORMAL_OBSERVATION_INTERPRETATIONS[code!]);
+
+  // unique-ify and sort
+  return [...new Set(abnormalInterpretations)].sort(stringSort);
+};
+
+const InterpretationTag = ({
+  isAbnormal,
+  children,
+}: {
+  isAbnormal: boolean;
+  children: ReactNode;
+}) => (
+  <Tag
+    background={isAbnormal ? "#B50909" : "#adadad"}
+    className="margin-left-105"
+  >
+    {children}
+  </Tag>
+);
+
+/**
+ * Renders a lab tag for abnormal observation interpretations
+ * @param props react props
+ * @param props.observations Array of FHIR observation resources
+ * @param props.labReportJson Fallback HTML-based lab report data for backwards compatibility
+ * @returns React element for the lab tag, or null if no abnormality
+ */
+export const LabInterpretationTag = ({
+  observations,
+  labReportJson,
+}: {
+  observations: Observation[];
+  labReportJson?: HtmlTableJson;
+}): React.ReactNode => {
+  const reportInterpretation = evaluateValue(
+    observations,
+    fhirPathMappings.labReportInterpretation,
+  );
+  if (reportInterpretation) {
+    return (
+      <InterpretationTag isAbnormal={isAbnormal(reportInterpretation)}>
+        {reportInterpretation}
+      </InterpretationTag>
+    );
+  }
+
+  const abnormalInterpretations = evaluateAbnormalInterpretation(observations);
+  if (abnormalInterpretations.length > 0) {
+    return abnormalInterpretations.map((interpretation) => (
+      <InterpretationTag key={interpretation} isAbnormal={true}>
+        {interpretation}
+      </InterpretationTag>
+    ));
+  }
+
+  // Fall back to existing abnormal detection for backwards compatibility
+  if (checkAbnormalTag(labReportJson)) {
+    return <InterpretationTag isAbnormal={true}>Abnormal</InterpretationTag>;
+  }
+
+  return null;
 };
 
 /**
