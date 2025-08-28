@@ -167,19 +167,17 @@ export const saveFhirMetadata = async (
         };
       });
   } catch (error: unknown) {
-    // TODO: UNCOMMENT THIS
-    // const message = "Failed to insert metadata to database.";
-    // console.error({ message, error, ecrId });
+    const message = "Failed to insert metadata to database.";
+    console.error({ message, error, ecrId });
 
     if (rollBackFhirData) {
       await rollbackFhirDataFn();
     }
 
-    throw error;
-    // return {
-    //   message,
-    //   status: 500,
-    // };
+    return {
+      message,
+      status: 500,
+    };
   }
 };
 
@@ -356,12 +354,10 @@ export const saveWithMetadata = async (
   } catch (error: unknown) {
     const message = "Failed to save FHIR data with metadata.";
     console.error({ message, error, ecrId });
-    throw error;
-    // TODO: UNCOMMENT
-    // return {
-    //   message,
-    //   status: 500,
-    // };
+    return {
+      message,
+      status: 500,
+    };
   }
 };
 

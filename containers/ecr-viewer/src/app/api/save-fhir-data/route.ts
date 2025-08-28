@@ -54,30 +54,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Invalid source" }, { status: 500 });
   }
 
-  // TODO: REMOVE THIS
-  try {
-    if (requestBody.metadata) {
-      const { message, status } = await saveWithMetadata(
-        fhirBundle,
-        ecrId,
-        saveSource,
-        requestBody.metadata,
-      );
-      return NextResponse.json({ message }, { status });
-    } else {
-      const { message, status } = await saveFhirData(
-        fhirBundle,
-        ecrId,
-        saveSource,
-      );
-      return NextResponse.json({ message }, { status });
-    }
-  } catch (e: unknown) {
-    return NextResponse.json(
-      {
-        message: `Error saving to container ${process.env.AZURE_CONTAINER_NAME || process.env.ECR_BUCKET_NAME}: ${(e as Error).message}`,
-      },
-      { status: 500 },
+  if (requestBody.metadata) {
+    const { message, status } = await saveWithMetadata(
+      fhirBundle,
+      ecrId,
+      saveSource,
+      requestBody.metadata,
     );
+    return NextResponse.json({ message }, { status });
+  } else {
+    const { message, status } = await saveFhirData(
+      fhirBundle,
+      ecrId,
+      saveSource,
+    );
+    return NextResponse.json({ message }, { status });
   }
 }

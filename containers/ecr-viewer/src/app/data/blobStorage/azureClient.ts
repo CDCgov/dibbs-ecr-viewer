@@ -6,7 +6,7 @@ import {
   DELETE_FAILURE,
   DELETE_MISCONFIGURED,
   DELETE_SUCCESS,
-  // SAVE_FAILURE,
+  SAVE_FAILURE,
   SAVE_MISCONFIGURED,
   SAVE_SUCCESS,
 } from "./utils";
@@ -70,27 +70,26 @@ export const saveToAzure = async (
     return SAVE_MISCONFIGURED;
   }
 
-  // TODO: UNCOMMENT THIS
-  // try {
-  const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
+  try {
+    const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
 
-  const response = await blockBlobClient.upload(body, body.length, {
-    blobHTTPHeaders: { blobContentType: "application/json" },
-  });
+    const response = await blockBlobClient.upload(body, body.length, {
+      blobHTTPHeaders: { blobContentType: "application/json" },
+    });
 
-  if (response._response.status !== 201) {
-    throw new Error(`HTTP Status Code: ${response._response.status}`);
+    if (response._response.status !== 201) {
+      throw new Error(`HTTP Status Code: ${response._response.status}`);
+    }
+
+    return SAVE_SUCCESS;
+  } catch (error: unknown) {
+    console.error({
+      message: "Failed to save blob to Azure Blob Storage.",
+      error,
+      objectKey,
+    });
+    return SAVE_FAILURE;
   }
-
-  return SAVE_SUCCESS;
-  // } catch (error: unknown) {
-  //   console.error({
-  //     message: "Failed to save blob to Azure Blob Storage.",
-  //     error,
-  //     objectKey,
-  //   });
-  //   return SAVE_FAILURE;
-  // }
 };
 
 /**
