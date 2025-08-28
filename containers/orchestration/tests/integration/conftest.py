@@ -44,7 +44,7 @@ def setup(request):
 
     viewer_dependencies_ready = False
     retries = 0
-    while not viewer_dependencies_ready and retries < 60:
+    while not viewer_dependencies_ready and retries < 30:
         time.sleep(1)
         retries += 1
 
