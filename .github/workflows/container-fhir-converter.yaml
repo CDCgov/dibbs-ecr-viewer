@@ -52,7 +52,7 @@ jobs:
       - name: Run integration tests for containers
         working-directory: ./containers/${{env.CONTAINER}}/tests/integration
         run: |
-          python -m pytest -m "integration"
+          python -m pytest
   build-container:
     runs-on: ubuntu-latest
     steps:
