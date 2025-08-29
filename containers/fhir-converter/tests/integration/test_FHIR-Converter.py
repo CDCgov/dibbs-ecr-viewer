@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import httpx
-import pytest
 from syrupy.matchers import path_type
 
 CONVERTER_URL = "http://localhost:8080"
