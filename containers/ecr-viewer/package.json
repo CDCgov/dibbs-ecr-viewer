@@ -116,7 +116,7 @@
     "sass": "^1.69.5",
     "typedoc": "^0.28.1",
     "typedoc-plugin-mermaid": "^1.12.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "overrides": {
     "@trussworks/react-uswds": {
