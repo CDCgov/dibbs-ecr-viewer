@@ -8,6 +8,7 @@ import { noData } from "@/app/utils/data-utils";
 import { ERSDInfo } from "@/app/view-data/services/ecrMetadataService";
 import {
   Participant,
+  ReportabilityInfo,
   ReportableConditions} from "@/app/view-data/services/reportabilityService"
 import {
   AccordionSection,
@@ -138,7 +139,7 @@ type ReportabilitySummaryProps = Pick<EcrMetadataProps, "rrConditions">;
 const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   rrConditions,
 }) => {
-  const rows = useConvertDictionaryToRows(rrConditions);
+  const rows = ReportableConditionSection(rrConditions);
 
   if (rows.length === 0) {
     return (
@@ -180,48 +181,7 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
         </tr>
       </thead>
       <tbody className="text-pre-line">
-        {rows.map(
-          ({
-            key,
-            condition,
-            participant,
-            rrRule,
-            hiddenRow,
-            expandedHidden,
-            toggle,
-          }) => (
-            <React.Fragment key={key}>
-              <tr>
-                {condition ? (
-                  <td rowSpan={condition.rowSpan}>{condition.value}</td>
-                ) : null}
-                <td>{participant}</td>
-                <td>{rrRule}</td>
-                <td>
-                  {hiddenRow ? (
-                    <Button
-                      unstyled={true}
-                      type="button"
-                      onClick={toggle}
-                      aria-controls={`hidden-comment-${key}`}
-                      aria-expanded={expandedHidden}
-                      data-test-id="comment-button"
-                    >
-                      {!expandedHidden ? "View" : "Hide"}
-                    </Button>
-                  ) : (
-                    noData
-                  )}
-                </td>
-              </tr>
-              {hiddenRow && expandedHidden && (
-                <tr id={`hidden-comment-${key}`} className="hidden-row">
-                  <td colSpan={4}>{hiddenRow}</td>
-                </tr>
-              )}
-            </React.Fragment>
-          )
-        )}
+        {rows}
       </tbody>
     </Table>
   );
@@ -232,113 +192,141 @@ interface TableCellData {
   rowSpan: number;
 }
 
-// TODO ANGELA: Rename inputs
 interface ReportableConditionRow {
   key: string;
   condition: TableCellData | null;
+  routingEntity: React.JSX.Element[] | null;
   rrRule: string | null;
-  rrReason: string | null;
-  participant: React.JSX.Element[] | null;
   hiddenRow?: React.ReactNode;
   expandedHidden: boolean;
-  toggle: () => void;
+  toggleHidden: () => void;
 }
 
-// TODO ANGELA: Rename
-const useConvertDictionaryToRows = (dictionary: ReportableConditions): ReportableConditionRow[] => {
-  const [expandedRows, setExpandedRows] = React.useState<
-    Record<string, boolean>
-  >({});
-
+const ReportableConditionSection = (dictionary: ReportableConditions): React.ReactNode[] => {
   if (!dictionary) {
     return [];
   }
 
-  const toggleRow = (key: string) => {
+  const rows: React.ReactNode[] = Object.entries(dictionary).flatMap(
+    ([condition, rrInfoArray]) => ReportableConditionRows(condition, rrInfoArray)
+  );
+
+  return rows
+}
+
+const ReportableConditionRows = (condition: string, rrInfoArray: ReportabilityInfo[]): React.ReactNode[] => {
+  const [expandedRows, setExpandedRows] = React.useState<
+    Record<string, boolean>
+  >({});
+  const numExpandedRows = Object.values(expandedRows).filter(Boolean).length;
+  const numRowsPerCondition = rrInfoArray?.length;
+  console.log("num Expandedrows + num rows per condition", numExpandedRows, numRowsPerCondition)
+  const dynamicRowSpan = numRowsPerCondition + numExpandedRows;
+
+  const toggleHiddenRow = (key: string) => {
     setExpandedRows((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
+    console.log(key);
   };
 
-  const rows: ReportableConditionRow[] = [];
+  const rows: React.ReactNode[] = [];
 
-  Object.entries(dictionary).forEach(([condition, rrInfoArray], _) => {
-    const conditionRowSpan = rrInfoArray.length;
+  rrInfoArray.forEach((rrInfo, rrInfoIndex) => {
+    const row = ReportableConditionRow(
+      condition,
+      rrInfo,
+      rrInfoIndex,
+      dynamicRowSpan, 
+      expandedRows,
+      toggleHiddenRow
+    );
+    rows.push(row)
+  })
 
-    rrInfoArray.forEach((rrInfo, rrInfoIndex) => {
-      const isConditionRow = rrInfoIndex === 0;
-      const routingEntity: React.JSX.Element[] = [];
-      const participants: React.JSX.Element[] = [];
-      
-      rrInfo.participants.forEach((p: Participant, index) => {
-        if (p.role === "Routing Entity") {
-          routingEntity.push(
-            <div key={index}>
-              {p.name}
-              <br />
-            </div>
-          );
-        } else {
-          participants.push(
-            <div key={index}>
-              <b>{p.role}:</b>
-              <br />
-              {p.name}
-              <br />
-            </div>
-          );
-        }
-      });
+  return rows
+}
 
-      const rules = Array.from(rrInfo.rules).join('\n');
-      const reasons = Array.from(rrInfo.reasons).join('\n');
-      
-      // Extra participants, Determination of Reportability Reason
-      let hiddenRow: React.ReactNode = undefined;
+const ReportableConditionRow = (condition: string, rrInfo: ReportabilityInfo, rrInfoIndex: number, dynamicRowSpan: number, expandedRows: Record<string, boolean>, toggleHiddenRow: (key: string) => void): React.ReactNode[] => {
+  console.log("###########")
+  console.log(condition, rrInfo, "rrInfoIndex", rrInfoIndex, "dynamicRowSpan", dynamicRowSpan)
 
-      if (participants || reasons) {
-        hiddenRow = (
-          <>
-            {participants && (
-              <div>
-                <strong>Details</strong>
-                {participants}
-              </div>
-            )}
-            {reasons && (
-              <div>
-                <strong>Determination of Reportability Reason</strong>
-                <br />
-                {reasons}
-              </div>
-            )}
-          </>
-        );
-      }
+  const isConditionCell = rrInfoIndex === 0;
+  const key = `${condition}-${rrInfoIndex}`;
 
-      const key = `${condition}-${rrInfoIndex}`
-      const row: ReportableConditionRow = {
-        key,
-        condition: isConditionRow
-          ? {
-              value: condition,
-              rowSpan: conditionRowSpan,
-            }
-          : null,
-        participant: routingEntity,
-        rrRule: rules,
-        rrReason: reasons,
-        hiddenRow,
-        expandedHidden: !!expandedRows[key],
-        toggle: () => toggleRow(key),
-      };
+  // Build out participants, rules, reasons
+  const routingEntity: React.ReactNode[] = [];
+  const participants: React.ReactNode[] = [];
 
-      rows.push(row);
-    });
+  rrInfo.participants.forEach((p: Participant, index) => {
+    if (p.role === "Routing Entity") {
+      routingEntity.push(
+        <div key={index}>
+          {p.name}
+          <br />
+        </div>
+      );
+    } else {
+      participants.push(
+        <div key={index}>
+          <b>{p.role}</b>
+          <br />
+          {p.name}
+          <br />
+        </div>
+      );
+    }
   });
 
-  return rows;
-};
+  if (routingEntity.length === 0) {
+    routingEntity.push(noData);
+  }
+  const rules = Array.from(rrInfo.rules).join("\n");
+  const reasons = Array.from(rrInfo.reasons).join("\n");
+
+  const rowSet = []
+
+  rowSet.push(
+    <tr key={key}>
+      {isConditionCell && <td rowSpan={dynamicRowSpan}>{condition}</td>}
+      <td>{routingEntity}</td>
+      <td>{rules || noData}</td>
+      <td>
+        {(participants.length > 0 || reasons) && (
+          <Button
+            unstyled={true}
+            type="button"
+            onClick={() => toggleHiddenRow(key)}
+            aria-controls={`hidden-details-${key}`}
+            aria-expanded={expandedRows[key]}
+            data-test-id="hidden-details-button"
+          >
+            {!expandedRows[key] ? "View" : "Hide"}
+          </Button>
+        )}
+      </td>
+    </tr>
+  );
+
+  if (expandedRows[key] && (participants.length > 0 || reasons)) {
+    rowSet.push(
+      <tr key={`${key}-hidden`}>
+        <td colSpan={3}>
+          {participants.length > 0 && <div>{participants}</div>}
+          {reasons && (
+            <div>
+              <strong>Determination of Reportability Reason</strong>
+              <br />
+              {reasons}
+            </div>
+          )}
+        </td>
+      </tr>
+    );
+  }
+
+  return rowSet
+}
 
 export default EcrMetadata;
