@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`eCR Metadata should match snapshot 1`] = `
 <div>
@@ -33,7 +33,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
               <thead>
                 <tr>
                   <th
-                    class="width-25p"
+                    class=""
                   >
                     <div
                       class="display-flex flex-align-baseline"
@@ -78,54 +78,6 @@ exports[`eCR Metadata should match snapshot 1`] = `
                           title="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR."
                         >
                           List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.
-                        </span>
-                      </span>
-                    </div>
-                  </th>
-                  <th>
-                    <div
-                      class="display-flex flex-align-baseline"
-                    >
-                      RCKMS Rule Summary
-                      <span
-                        class="usa-tooltip"
-                        data-testid="tooltipWrapper"
-                      >
-                        <div
-                          aria-describedby="tooltip-r:id"
-                          class="usa-tooltip__trigger margin-left-05 usa-tooltip"
-                          data-testid="triggerElement"
-                          tabindex="0"
-                          title=""
-                        >
-                          <svg
-                            aria-label="description"
-                            class="usa-icon tooltip-icon text-secondary flex-align-center"
-                            focusable="false"
-                            height="1em"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0V0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                            />
-                          </svg>
-                        </div>
-                        <span
-                          aria-hidden="true"
-                          class="usa-tooltip__body"
-                          data-testid="tooltipBody"
-                          id="tooltip-r:id"
-                          role="tooltip"
-                          title="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System)."
-                        >
-                          Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).
                         </span>
                       </span>
                     </div>
@@ -180,48 +132,130 @@ exports[`eCR Metadata should match snapshot 1`] = `
                       </span>
                     </div>
                   </th>
+                  <th>
+                    <div
+                      class="display-flex flex-align-baseline"
+                    >
+                      RCKMS Rule Summary
+                      <span
+                        class="usa-tooltip"
+                        data-testid="tooltipWrapper"
+                      >
+                        <div
+                          aria-describedby="tooltip-r:id"
+                          class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                          data-testid="triggerElement"
+                          tabindex="0"
+                          title=""
+                        >
+                          <svg
+                            aria-label="description"
+                            class="usa-icon tooltip-icon text-secondary flex-align-center"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </div>
+                        <span
+                          aria-hidden="true"
+                          class="usa-tooltip__body"
+                          data-testid="tooltipBody"
+                          id="tooltip-r:id"
+                          role="tooltip"
+                          title="Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System)."
+                        >
+                          Reason(s) that this eCR was sent for this condition. Corresponds to your jurisdiction's rules for routing eCRs in RCKMS (Reportable Condition Knowledge Management System).
+                        </span>
+                      </span>
+                    </div>
+                  </th>
+                  <th
+                    class="width-10p"
+                  >
+                    Details
+                  </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody
+                class="text-pre-line"
+              >
                 <tr>
-                  <td
-                    rowspan="4"
-                  >
-                    Disease caused by severe acute respiratory syndrome coronavirus 2(disorder)
-                  </td>
                   <td
                     rowspan="2"
                   >
+                    Disease caused by severe acute respiratory syndrome coronavirus 2(disorder)
+                  </td>
+                  <td>
+                    <div>
+                      Coruscant Department of Public Health
+                      <br />
+                    </div>
+                  </td>
+                  <td>
                     Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method
                   </td>
                   <td>
-                    Coruscant Department of Public Health
+                    <button
+                      aria-controls="hidden-details-disease-caused-by-severe-acute-respiratory-syndrome-coronavirus-2disorder-0"
+                      class="usa-button usa-button--unstyled"
+                      data-test-id="hidden-details-button"
+                      data-testid="button"
+                      type="button"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    Coruscant City Department of Public Health
-                  </td>
-                </tr>
-                <tr>
+                <tr
+                  hidden=""
+                  id="hidden-details-disease-caused-by-severe-acute-respiratory-syndrome-coronavirus-2disorder-0"
+                >
                   <td
-                    rowspan="1"
+                    colspan="3"
                   >
-                    Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)
-                  </td>
-                  <td>
-                    Coruscant City Department of Public Health
+                    <div>
+                      <div>
+                        <b>
+                          Rules Authoring Agency
+                        </b>
+                        <br />
+                        Coruscant Department of Public Health
+                        <br />
+                      </div>
+                    </div>
+                    <div>
+                      <strong>
+                        Determination of Reportability Reason
+                      </strong>
+                      <br />
+                      Reason 1
+                    </div>
                   </td>
                 </tr>
                 <tr>
-                  <td
-                    rowspan="1"
-                  >
-                    COVID-19 (as a diagnosis or active problem)
+                  <td>
+                    <div>
+                      Coruscant City Department of Public Health
+                      <br />
+                    </div>
                   </td>
                   <td>
-                    Coruscant City Department of Public Health
+                    Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method
+Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)
+COVID-19 (as a diagnosis or active problem)
                   </td>
+                  <td />
                 </tr>
               </tbody>
             </table>

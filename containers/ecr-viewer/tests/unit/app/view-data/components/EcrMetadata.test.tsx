@@ -5,26 +5,45 @@ import { axe } from "jest-axe";
 
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
-import {
-  ERSDInfo,
-  ReportableConditions,
-} from "@/app/view-data/services/ecrMetadataService";
+import { ERSDInfo } from "@/app/view-data/services/ecrMetadataService";
+import { ReportableConditions } from "@/app/view-data/services/reportabilityService";
 
 const rrConditionsList: ReportableConditions = {
   "Disease caused by severe acute respiratory syndrome coronavirus 2(disorder)":
-    {
-      "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method":
-        new Set([
-          "Coruscant Department of Public Health",
-          "Coruscant City Department of Public Health",
+    [
+      {
+        participants: [
+          {
+            name: "Coruscant Department of Public Health",
+            role: "Routing Entity",
+          },
+          {
+            name: "Coruscant Department of Public Health",
+            role: "Rules Authoring Agency",
+          },
+        ],
+        rules: new Set([
+          "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
         ]),
-      "Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)":
-        new Set(["Coruscant City Department of Public Health"]),
-      "COVID-19 (as a diagnosis or active problem)": new Set([
-        "Coruscant City Department of Public Health",
-      ]),
-    },
+        reasons: new Set(["Reason 1"]),
+      },
+      {
+        participants: [
+          {
+            name: "Coruscant City Department of Public Health",
+            role: "Routing Entity",
+          },
+        ],
+        rules: new Set([
+          "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
+          "Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)",
+          "COVID-19 (as a diagnosis or active problem)",
+        ]),
+        reasons: new Set([]),
+      },
+    ],
 };
+
 const eicrDetails: DisplayDataProps[] = [
   {
     title: "eICR Identifier",

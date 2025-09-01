@@ -5,6 +5,7 @@ import React from "react";
 import { Button, Table } from "@trussworks/react-uswds";
 
 import { noData } from "@/app/utils/data-utils";
+import { toKebabCase } from "@/app/utils/format-utils";
 import { ERSDInfo } from "@/app/view-data/services/ecrMetadataService";
 import {
   Participant,
@@ -153,6 +154,7 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   }
 
   return (
+    // TODO ANGELA: Update Widths
     <Table
       bordered={true}
       caption="Reportability Summary"
@@ -224,7 +226,6 @@ const ReportableConditionRows = (condition: string, rrInfoArray: ReportabilityIn
   >({});
   const numExpandedRows = Object.values(expandedRows).filter(Boolean).length;
   const numRowsPerCondition = rrInfoArray?.length;
-  console.log("num Expandedrows + num rows per condition", numExpandedRows, numRowsPerCondition)
   const dynamicRowSpan = numRowsPerCondition + numExpandedRows;
 
   const toggleHiddenRow = (key: string) => {
@@ -232,7 +233,6 @@ const ReportableConditionRows = (condition: string, rrInfoArray: ReportabilityIn
       ...prev,
       [key]: !prev[key],
     }));
-    console.log(key);
   };
 
   const rows: React.ReactNode[] = [];
@@ -253,11 +253,8 @@ const ReportableConditionRows = (condition: string, rrInfoArray: ReportabilityIn
 }
 
 const ReportableConditionRow = (condition: string, rrInfo: ReportabilityInfo, rrInfoIndex: number, dynamicRowSpan: number, expandedRows: Record<string, boolean>, toggleHiddenRow: (key: string) => void): React.ReactNode[] => {
-  console.log("###########")
-  console.log(condition, rrInfo, "rrInfoIndex", rrInfoIndex, "dynamicRowSpan", dynamicRowSpan)
-
   const isConditionCell = rrInfoIndex === 0;
-  const key = `${condition}-${rrInfoIndex}`;
+  const key = `${toKebabCase(condition)}-${rrInfoIndex}`;
 
   // Build out participants, rules, reasons
   const routingEntity: React.ReactNode[] = [];
@@ -289,7 +286,7 @@ const ReportableConditionRow = (condition: string, rrInfo: ReportabilityInfo, rr
   const rules = Array.from(rrInfo.rules).join("\n");
   const reasons = Array.from(rrInfo.reasons).join("\n");
 
-  const rowSet = []
+  const rowSet = [];
 
   rowSet.push(
     <tr key={key}>
@@ -313,9 +310,14 @@ const ReportableConditionRow = (condition: string, rrInfo: ReportabilityInfo, rr
     </tr>
   );
 
-  if (expandedRows[key] && (participants.length > 0 || reasons)) {
+  // TODO ANGELA: Change styling of details row
+  if (participants.length > 0 || reasons) {
     rowSet.push(
-      <tr key={`${key}-hidden`}>
+      <tr
+        key={`hidden-details-${key}`}
+        id={`hidden-details-${key}`}
+        hidden={!expandedRows[key]}
+      >
         <td colSpan={3}>
           {participants.length > 0 && <div>{participants}</div>}
           {reasons && (
@@ -330,7 +332,7 @@ const ReportableConditionRow = (condition: string, rrInfo: ReportabilityInfo, rr
     );
   }
 
-  return rowSet
+  return rowSet;
 }
 
 export default EcrMetadata;

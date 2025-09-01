@@ -24,6 +24,7 @@ export interface Participant {
 }
 
 // TODO ANGELA: Add JSDoc
+// TODO ANGELA: Combine this const and below?
 export const evaluateRRInfo = (
   fhirBundle: Bundle
 ): ReportableConditions => {
