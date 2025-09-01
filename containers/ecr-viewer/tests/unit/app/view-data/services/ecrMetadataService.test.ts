@@ -1,5 +1,7 @@
 import { Bundle } from "fhir/r4";
 
+// TODO ANGELA: Confirm Bundles are all correct information
+// includes: BundleEcrSummary, BundleEcrMetadata, etc. etc. etc.
 import BundleWithEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundleErsdWarningNoDetail from "../../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
 import BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
@@ -78,17 +80,35 @@ describe("Evaluate Ecr Metadata", () => {
 
     expect(actual.rrConditions).toEqual({
       "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)":
+        [
+          {
+            participants: [
+              {
+                name: "Mos Espa Department of Health",
+                role: "Routing Entity",
+              },
+            ],
+            reasons: new Set(),
+            rules: new Set([
+              "COVID-19 (as a diagnosis or active problem)",
+              "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
+            ]),
+          },
+        ],
+      "Hepatitis C": [
         {
-          "COVID-19 (as a diagnosis or active problem)": new Set([
-            "Mos Espa Department of Health",
+          participants: [
+            {
+              name: "Anchorhead Department of Public Health",
+              role: "Routing Entity",
+            },
+          ],
+          reasons: new Set(),
+          rules: new Set([
+            "Detection of Hepatitis C virus antibody in a clinical specimen by any method",
           ]),
-          "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method":
-            new Set(["Mos Espa Department of Health"]),
         },
-      "Hepatitis C": {
-        "Detection of Hepatitis C virus antibody in a clinical specimen by any method":
-          new Set(["Anchorhead Department of Public Health"]),
-      },
+      ],
     });
   });
   it("should have an eRSD Warning", () => {

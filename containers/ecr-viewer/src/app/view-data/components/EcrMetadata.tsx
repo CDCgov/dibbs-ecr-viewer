@@ -202,6 +202,10 @@ interface ReportableConditionRow {
   toggleHidden: () => void;
 }
 
+// TODO ANGELA: Add tests
+// TODO ANGELA: Move building of table to ReportabilitySummary Component
+// TODO ANGELA: Add JSDocs
+// TODO ANGELA: Remove all log statements.
 const ReportableConditionSection = (dictionary: ReportableConditions): React.ReactNode[] => {
   if (!dictionary) {
     return [];

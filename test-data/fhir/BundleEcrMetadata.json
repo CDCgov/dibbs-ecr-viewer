@@ -680,6 +680,36 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-routing-entity-organization"
+          ],
+          "source": ["ecr"]
+        },
+        "active": true,
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+                "code": "RR7",
+                "display": "Routing Entity"
+              }
+            ]
+          }
+        ],
+        "name": "Anchorhead Department of Public Health"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/1b6cfb7e-4f61-a8e0-2267-FAKE3de49935"
+      }
+    },
+    {
       "fullUrl": "urn:uuid:7048630f-26bb-f67c-d446-FAKEa3573257",
       "resource": {
         "resourceType": "Location",

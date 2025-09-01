@@ -29,11 +29,11 @@ import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { evaluateRRInfo, ReportableConditions } from "./reportabilityService";
 
 // TODO ANGELA: DELETE
-export interface ReportableConditionsOLD {
-  [condition: string]: {
-    [trigger: string]: Set<string | undefined>;
-  };
-}
+// export interface ReportableConditionsOLD {
+//   [condition: string]: {
+//     [trigger: string]: Set<string | undefined>;
+//   };
+// }
 
 // {
 //   "Zika Virus Disease": {
