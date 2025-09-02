@@ -181,7 +181,7 @@ describe("eCR Metadata", () => {
         eRSDProcessingInfo={undefined}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     expect(screen.queryByText("Warning")).not.toBeInTheDocument();
   });
@@ -216,16 +216,16 @@ describe("eCR Metadata", () => {
           eRSDProcessingInfo={eRSDProcessingInfo}
           eCRCustodianDetails={ecrCustodianDetails}
           eicrAuthorDetails={eicrAuthorDetails}
-        />
+        />,
       );
       expect(screen.getByText(conditionName)).toHaveAttribute("rowSpan", "2");
 
       await user.click(screen.getAllByText("View")[0]);
-      
+
       // Note should be visible & 'View' should be replaced with 'Hide'
       expect(screen.getAllByText("Hide")).toHaveLength(1);
       expect(screen.getByText("Rules Authoring Agency")).toBeVisible();
-      
+
       // Should have only opened one hidden row
       expect(screen.getAllByText("View")).toHaveLength(1);
       expect(screen.getByText("Reason 1")).not.toBeVisible();
