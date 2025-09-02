@@ -54,6 +54,19 @@ describe("FormatService tests", () => {
       const result = formatName(emptyHumanName);
       expect(result).toEqual(expectedName);
     });
+
+    it("should not format", () => {
+      const mixedHumanName = {
+        given: ["I aM", "A Name"],
+        family: "McName😈",
+        prefix: ["master"],
+        suffix: ["JR"],
+      } as HumanName;
+      const expectedName = "master I aM A Name McName😈 JR";
+
+      const result = formatName(mixedHumanName);
+      expect(result).toEqual(expectedName);
+    });
   });
 
   describe("Format age", () => {

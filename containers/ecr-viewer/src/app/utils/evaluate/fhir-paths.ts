@@ -156,6 +156,8 @@ export type PathTypes = {
   observationDeviceReference: Reference;
   observationOrganismMethod: ValueX;
   observationResultStatus: string;
+  labReportInterpretation: ValueX;
+  observationInterpretation: Coding;
   organizations: Organization;
   organizationType: ValueX;
   patientTravelHistory: Observation;
@@ -655,6 +657,14 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   observationResultStatus: {
     type: "string",
     path: "iif(extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display.exists(), extension('http://terminology.hl7.org/ValueSet/v2-0085').valueCodeableConcept.coding.display, status)",
+  },
+  labReportInterpretation: {
+    type: "ValueX",
+    path: "Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '56850-1')).value",
+  },
+  observationInterpretation: {
+    type: "Coding",
+    path: "Observation.interpretation.coding.where(system = 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation')",
   },
 
   // Organization
