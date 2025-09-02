@@ -1450,19 +1450,10 @@ Home: 123-456-6909`,
     it("should use the eCR created date if the start date does not exist and the end date is in the future.", () => {
       const patientBundleWithEncounter: Bundle = {
         resourceType: "Bundle",
-        type: "batch",
+        type: "document",
+        timestamp: "1924-03-12T09:01:22-05:00",
         entry: [
           ...BundleWithPatient.entry!,
-          {
-            resource: {
-              resourceType: "Composition",
-              author: [{}],
-              date: "1924-03-12",
-              status: "final",
-              title: "test",
-              type: {},
-            },
-          },
           {
             resource: {
               class: {
@@ -1494,20 +1485,9 @@ Home: 123-456-6909`,
     it("should use the eCR created date if there is no encounter date.", () => {
       const patientBundleWithCreatedDate: Bundle = {
         resourceType: "Bundle",
-        type: "batch",
-        entry: [
-          ...BundleWithPatient.entry!,
-          {
-            resource: {
-              resourceType: "Composition",
-              author: [{}],
-              date: "1924-03-12",
-              status: "final",
-              title: "test",
-              type: {},
-            },
-          },
-        ],
+        type: "document",
+        timestamp: "1924-03-12T09:01:22-05:00",
+        entry: [...BundleWithPatient.entry!],
       };
       const patientAgeProp = createPatientAgeDataProp(
         patientBundleWithCreatedDate,

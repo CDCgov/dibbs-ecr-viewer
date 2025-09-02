@@ -1,6 +1,12 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
+  "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548"
+  },
+  "timestamp": "2000-02-04T09:01:22-05:00",
   "entry": [
     {
       "fullUrl": "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
