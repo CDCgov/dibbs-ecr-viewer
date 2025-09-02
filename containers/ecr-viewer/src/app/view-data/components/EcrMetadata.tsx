@@ -154,7 +154,6 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   }
 
   return (
-    // TODO ANGELA: Update Widths
     <Table
       bordered={true}
       caption="Reportability Summary"
@@ -207,7 +206,6 @@ interface ReportableConditionRow {
 // TODO ANGELA: Add tests
 // TODO ANGELA: Move building of table to ReportabilitySummary Component
 // TODO ANGELA: Add JSDocs
-// TODO ANGELA: Remove all log statements.
 const ReportableConditionSection = (dictionary: ReportableConditions): React.ReactNode[] => {
   if (!dictionary) {
     return [];
