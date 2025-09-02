@@ -29,6 +29,7 @@ import {
   getJsonLab,
   getAllLabJsonObjects,
   getObservations,
+  LabInterpretationTag,
 } from "@/app/view-data/services/labsService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
@@ -289,188 +290,392 @@ describe("LabsService tests", () => {
       });
     });
 
-    describe("searchResultRecord", () => {
-      const labHTMLJson = labReportNormalJsonObject.tables;
-
-      it("extracts string of all results of a search for specified lab report", () => {
-        const searchKey = "Collection Time";
-        const expectedResult = "09/28/2000 4:51\u00A0PM\u00A0EDT";
-
-        const result = searchResultRecord(labHTMLJson, searchKey);
-
-        expect(result).toStrictEqual(expectedResult);
+    describe("LabInterpretationTag", () => {
+      it("should return null if no observations", () => {
+        const { container } = render(
+          <LabInterpretationTag observations={[]} />,
+        );
+        expect(container).toBeEmptyDOMElement();
       });
 
-      it("returns an empty string of results if none are found for search key", () => {
-        const invalidSearchKey = "foobar";
-        const expectedResult = "";
+      it("should return null if observation interpretation is undefined", () => {
+        const { container } = render(
+          <LabInterpretationTag
+            observations={[
+              {
+                interpretation: undefined,
+                resourceType: "Observation",
+                code: { coding: undefined },
+                status: "unknown",
+              },
+            ]}
+          />,
+        );
+        expect(container).toBeEmptyDOMElement();
+      });
 
-        const result = searchResultRecord(labHTMLJson, invalidSearchKey);
+      it("should return null if observation interpretation is empty", () => {
+        const { container } = render(
+          <LabInterpretationTag
+            observations={[
+              {
+                interpretation: [],
+                resourceType: "Observation",
+                code: { coding: undefined },
+                status: "unknown",
+              },
+            ]}
+          />,
+        );
+        expect(container).toBeEmptyDOMElement();
+      });
 
-        expect(result).toEqual(expectedResult);
+      it("should return null if observation interpretation coding is not HL7 observation interpretation code", () => {
+        const { container } = render(
+          <LabInterpretationTag
+            observations={[
+              {
+                interpretation: [{ coding: [{ system: "http://test.com" }] }],
+                resourceType: "Observation",
+                code: { coding: undefined },
+                status: "unknown",
+              },
+            ]}
+          />,
+        );
+        expect(container).toBeEmptyDOMElement();
+      });
+
+      it("should return null if observation interpretation coding code is not abnormal", () => {
+        const { container } = render(
+          <LabInterpretationTag
+            observations={[
+              {
+                interpretation: [
+                  {
+                    coding: [
+                      {
+                        system:
+                          "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                        code: "ZZ",
+                      },
+                    ],
+                  },
+                ],
+                resourceType: "Observation",
+                code: { coding: undefined },
+                status: "unknown",
+              },
+            ]}
+          />,
+        );
+        expect(container).toBeEmptyDOMElement();
+      });
+
+      it("should return AbnormalObservationInterpretation if code is abnormal", () => {
+        render(
+          <LabInterpretationTag
+            observations={[
+              {
+                interpretation: [
+                  {
+                    coding: [
+                      {
+                        system:
+                          "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                        code: "AA",
+                      },
+                    ],
+                  },
+                ],
+                resourceType: "Observation",
+                code: { coding: undefined },
+                status: "unknown",
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText("Critical Abnormal")).toBeVisible();
+      });
+
+      it("should return all AbnormalObservationInterpretation if code is abnormal", () => {
+        render(
+          <LabInterpretationTag
+            observations={[
+              {
+                interpretation: [
+                  {
+                    coding: [
+                      {
+                        system:
+                          "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                        code: "AA",
+                      },
+                    ],
+                  },
+                  {
+                    coding: [
+                      {
+                        system:
+                          "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                        code: "LL",
+                      },
+                    ],
+                  },
+                ],
+                resourceType: "Observation",
+                code: { coding: undefined },
+                status: "unknown",
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText("Critical Abnormal")).toBeVisible();
+        expect(screen.getByText("Critical Low")).toBeVisible();
+      });
+
+      it("should favor diagnostic report interpretation if available", () => {
+        render(
+          <LabInterpretationTag
+            observations={[
+              {
+                interpretation: [
+                  {
+                    coding: [
+                      {
+                        system:
+                          "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                        code: "AA",
+                      },
+                    ],
+                  },
+                  {
+                    coding: [
+                      {
+                        system:
+                          "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                        code: "LL",
+                      },
+                    ],
+                  },
+                ],
+                resourceType: "Observation",
+                code: { coding: undefined },
+                status: "unknown",
+              },
+              {
+                interpretation: [],
+                resourceType: "Observation",
+                code: {
+                  coding: [{ code: "56850-1", system: "http://loinc.org" }],
+                },
+                valueString: "Super weird",
+                status: "unknown",
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText("Super weird")).toBeVisible();
+        expect(screen.queryByText("Critical Abnormal")).toBeNull();
+        expect(screen.queryByText("Critical Low")).toBeNull();
+      });
+
+      it("should fallback to checkAbnormalTag logic when lab report is abnormal, but not one of the abnormal observation interpretations", () => {
+        render(
+          <LabInterpretationTag
+            observations={getObservations(labReportAbnormal!, BundleLab)}
+            labReportJson={labReportAbnormalJsonObject}
+          />,
+        );
+        const tagElement = screen.getByText("Abnormal");
+        expect(tagElement).toBeInTheDocument();
+        expect(tagElement).toHaveStyle({ backgroundColor: "#B50909" });
+        expect(tagElement).toHaveClass("margin-left-105");
       });
     });
+  });
 
-    describe("returnAnalysisTime", () => {
-      it("extracts and formats correct field value from within a lab report", () => {
-        const fieldName = "Analysis Time";
+  describe("searchResultRecord", () => {
+    const labHTMLJson = labReportNormalJsonObject.tables;
 
-        const result = returnAnalysisTime(labReportNormalJsonObject, fieldName);
+    it("extracts string of all results of a search for specified lab report", () => {
+      const searchKey = "Collection Time";
+      const expectedResult = "09/28/2000 4:51\u00A0PM\u00A0EDT";
 
-        expect(result).toEqual("09/28/2000 4:59\u00A0PM\u00A0EDT");
-      });
+      const result = searchResultRecord(labHTMLJson, searchKey);
 
-      it("extracts returns noData if unavailable", () => {
-        const fieldName = "Analysis Time";
-
-        const result = returnAnalysisTime({}, fieldName);
-
-        expect(result).toEqual(noData);
-      });
-
-      it("Concats date times if multiple passed", () => {
-        const fieldName = "Analysis Time";
-
-        const result = returnAnalysisTime(
-          {
-            resultId: "Result.1.2.3.4.5",
-            resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
-            tables: [
-              [
-                {
-                  "Analysis Time": {
-                    value: (
-                      <p>
-                        <span>
-                          <i>09/28/2000 1:59:00 PM PDT</i>
-                        </span>
-                        <span>
-                          <i>09/28/2000 2:59:00 PM PDT</i>
-                        </span>
-                      </p>
-                    ),
-                    metadata: {},
-                  },
-                },
-              ],
-            ],
-          },
-          fieldName,
-        );
-
-        expect(result).toEqual(
-          "09/28/2000 4:59\u00A0PM\u00A0EDT, 09/28/2000 5:59\u00A0PM\u00A0EDT",
-        );
-      });
-
-      it("Returns concated date times if deeply nested", () => {
-        const fieldName = "Analysis Time";
-
-        const result = returnAnalysisTime(
-          {
-            resultId: "Result.1.2.3.4.5",
-            resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
-            tables: [
-              [
-                {
-                  "Analysis Time": {
-                    value: (
-                      <p>
-                        <span>
-                          <i>09/28/2000 1:59:00 PM PDT</i>
-                          <i>09/28/2000 2:59:00 PM PDT</i>
-                        </span>
-                      </p>
-                    ),
-                    metadata: {},
-                  },
-                },
-              ],
-            ],
-          },
-          fieldName,
-        );
-
-        expect(result).toEqual(
-          "09/28/2000 4:59\u00A0PM\u00A0EDT, 09/28/2000 5:59\u00A0PM\u00A0EDT",
-        );
-      });
-
-      it("Returns noData if emptiness is nested", () => {
-        const fieldName = "Analysis Time";
-
-        const result = returnAnalysisTime(
-          {
-            resultId: "Result.1.2.3.4.5",
-            resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
-            tables: [
-              [
-                {
-                  "Analysis Time": {
-                    value: (
-                      <p>
-                        <span>
-                          <i></i>
-                        </span>
-                      </p>
-                    ),
-                    metadata: {},
-                  },
-                },
-              ],
-            ],
-          },
-          fieldName,
-        );
-
-        expect(result).toEqual(noData);
-      });
+      expect(result).toStrictEqual(expectedResult);
     });
 
-    describe("returnFieldValueFromLabHtmlString", () => {
-      it("extracts correct field value from within a lab report", () => {
-        const fieldName = "Analysis Time";
+    it("returns an empty string of results if none are found for search key", () => {
+      const invalidSearchKey = "foobar";
+      const expectedResult = "";
 
-        const result = returnFieldValueFromLabHtmlString(
-          labReportNormalJsonObject,
-          fieldName,
-        );
+      const result = searchResultRecord(labHTMLJson, invalidSearchKey);
 
-        expect(result).toMatchSnapshot();
-      });
+      expect(result).toEqual(expectedResult);
+    });
+  });
 
-      it("returns NoData if none are found for field name", () => {
-        const invalidFieldName = "foobar";
+  describe("returnAnalysisTime", () => {
+    it("extracts and formats correct field value from within a lab report", () => {
+      const fieldName = "Analysis Time";
 
-        const result = returnFieldValueFromLabHtmlString(
-          labReportNormalJsonObject,
-          invalidFieldName,
-        );
+      const result = returnAnalysisTime(labReportNormalJsonObject, fieldName);
 
-        expect(result).toStrictEqual(noData);
-      });
+      expect(result).toEqual("09/28/2000 4:59\u00A0PM\u00A0EDT");
     });
 
-    describe("evaluateOrganismsReportData", () => {
-      it("should return the correct organisms table when the data exists for a lab report", () => {
-        const result = evaluateOrganismsReportData(
-          getObservations(labOrganismsTableAndNarr!, BundleLab),
-        )!;
-        render(result);
+    it("extracts returns noData if unavailable", () => {
+      const fieldName = "Analysis Time";
 
-        expect(
-          screen.getByText("Avycaz (Ceftazidime/Avibactam)"),
-        ).toBeInTheDocument();
-        expect(screen.getByText("0.25: Susceptible")).toBeInTheDocument();
-        expect(screen.getAllByText("MIC")).toHaveLength(3);
-      });
-      it("should return undefined if lab organisms data does not exist for a lab report", () => {
-        const result = evaluateOrganismsReportData(
-          getObservations(labReportNormal!, BundleLab),
-        );
+      const result = returnAnalysisTime({}, fieldName);
 
-        expect(result).toBeUndefined();
-      });
+      expect(result).toEqual(noData);
+    });
+
+    it("Concats date times if multiple passed", () => {
+      const fieldName = "Analysis Time";
+
+      const result = returnAnalysisTime(
+        {
+          resultId: "Result.1.2.3.4.5",
+          resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
+          tables: [
+            [
+              {
+                "Analysis Time": {
+                  value: (
+                    <p>
+                      <span>
+                        <i>09/28/2000 1:59:00 PM PDT</i>
+                      </span>
+                      <span>
+                        <i>09/28/2000 2:59:00 PM PDT</i>
+                      </span>
+                    </p>
+                  ),
+                  metadata: {},
+                },
+              },
+            ],
+          ],
+        },
+        fieldName,
+      );
+
+      expect(result).toEqual(
+        "09/28/2000 4:59\u00A0PM\u00A0EDT, 09/28/2000 5:59\u00A0PM\u00A0EDT",
+      );
+    });
+
+    it("Returns concated date times if deeply nested", () => {
+      const fieldName = "Analysis Time";
+
+      const result = returnAnalysisTime(
+        {
+          resultId: "Result.1.2.3.4.5",
+          resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
+          tables: [
+            [
+              {
+                "Analysis Time": {
+                  value: (
+                    <p>
+                      <span>
+                        <i>09/28/2000 1:59:00 PM PDT</i>
+                        <i>09/28/2000 2:59:00 PM PDT</i>
+                      </span>
+                    </p>
+                  ),
+                  metadata: {},
+                },
+              },
+            ],
+          ],
+        },
+        fieldName,
+      );
+
+      expect(result).toEqual(
+        "09/28/2000 4:59\u00A0PM\u00A0EDT, 09/28/2000 5:59\u00A0PM\u00A0EDT",
+      );
+    });
+
+    it("Returns noData if emptiness is nested", () => {
+      const fieldName = "Analysis Time";
+
+      const result = returnAnalysisTime(
+        {
+          resultId: "Result.1.2.3.4.5",
+          resultName: "Stool Pathogens, NAAT, 12 to 25 Targets",
+          tables: [
+            [
+              {
+                "Analysis Time": {
+                  value: (
+                    <p>
+                      <span>
+                        <i></i>
+                      </span>
+                    </p>
+                  ),
+                  metadata: {},
+                },
+              },
+            ],
+          ],
+        },
+        fieldName,
+      );
+
+      expect(result).toEqual(noData);
+    });
+  });
+
+  describe("returnFieldValueFromLabHtmlString", () => {
+    it("extracts correct field value from within a lab report", () => {
+      const fieldName = "Analysis Time";
+
+      const result = returnFieldValueFromLabHtmlString(
+        labReportNormalJsonObject,
+        fieldName,
+      );
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it("returns NoData if none are found for field name", () => {
+      const invalidFieldName = "foobar";
+
+      const result = returnFieldValueFromLabHtmlString(
+        labReportNormalJsonObject,
+        invalidFieldName,
+      );
+
+      expect(result).toStrictEqual(noData);
+    });
+  });
+
+  describe("evaluateOrganismsReportData", () => {
+    it("should return the correct organisms table when the data exists for a lab report", () => {
+      const result = evaluateOrganismsReportData(
+        getObservations(labOrganismsTableAndNarr!, BundleLab),
+      )!;
+      render(result);
+
+      expect(
+        screen.getByText("Avycaz (Ceftazidime/Avibactam)"),
+      ).toBeInTheDocument();
+      expect(screen.getByText("0.25: Susceptible")).toBeInTheDocument();
+      expect(screen.getAllByText("MIC")).toHaveLength(3);
+    });
+    it("should return undefined if lab organisms data does not exist for a lab report", () => {
+      const result = evaluateOrganismsReportData(
+        getObservations(labReportNormal!, BundleLab),
+      );
+
+      expect(result).toBeUndefined();
     });
   });
 
