@@ -139,7 +139,7 @@ describe("eCR Metadata", () => {
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     expect(container).toMatchSnapshot();
   });
@@ -151,7 +151,7 @@ describe("eCR Metadata", () => {
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     // ignore duplicate ids due to mocking making all useId return the same
     expect(
@@ -170,7 +170,7 @@ describe("eCR Metadata", () => {
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     expect(
       screen.getByText("Reportability Summary", { selector: "h5" }),
@@ -187,7 +187,7 @@ describe("eCR Metadata", () => {
         eRSDProcessingInfo={undefined}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
-      />
+      />,
     );
     expect(screen.queryByText("Warning")).not.toBeInTheDocument();
   });

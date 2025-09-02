@@ -67,7 +67,7 @@ export const unknownWarning: ERSDInfo = {
 export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   const custodianRef = evaluateOne(
     fhirBundle,
-    fhirPathMappings.eicrCustodianRef
+    fhirPathMappings.eicrCustodianRef,
   );
   const custodian = evaluateReference<Organization>(fhirBundle, custodianRef);
 
@@ -80,7 +80,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
     const releaseVersion: string = evaluateValue(
       fhirBundle,
-      fhirPathMappings.eicrReleaseVersion
+      fhirPathMappings.eicrReleaseVersion,
     );
 
     return releaseVersionMap[releaseVersion] || releaseVersion;
@@ -88,16 +88,16 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
   const fhirEICRProcessingStatus = evaluateValue(
     fhirBundle,
-    fhirPathMappings.eICRProcessingStatus
+    fhirPathMappings.eICRProcessingStatus,
   );
   const fhirEICRProcessingStatusReasonObs = evaluateOne(
     fhirBundle,
-    fhirPathMappings.eICRProcessingStatusReason
+    fhirPathMappings.eICRProcessingStatusReason,
   );
 
   function geteRSDInfo(
     processingStatus: string | undefined,
-    reasonObs: Observation | undefined
+    reasonObs: Observation | undefined,
   ): ERSDInfo | undefined {
     if (processingStatus === "RRVS19") {
       return { success: true };
@@ -146,7 +146,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 
   const eRSDProcessingInfo: ERSDInfo | undefined = geteRSDInfo(
     fhirEICRProcessingStatus,
-    fhirEICRProcessingStatusReasonObs
+    fhirEICRProcessingStatusReasonObs,
   );
 
   const eicrDetails: DisplayDataProps[] = [
@@ -159,7 +159,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     {
       title: "Date/Time eCR Created",
       value: formatDateTime(
-        evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated)
+        evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
       ),
     },
     {
@@ -203,7 +203,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     rrConditions: evaluateRRInfo(fhirBundle),
     eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
-      evaluateData(details)
+      evaluateData(details),
     ),
   };
 };
@@ -211,7 +211,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
 const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
   const authorRefs = evaluateAll(
     fhirBundle,
-    fhirPathMappings.compositionAuthorRefs
+    fhirPathMappings.compositionAuthorRefs,
   );
 
   const authorDetails: DisplayDataProps[][] = [];
@@ -220,7 +220,7 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
       const practitionerRoleRef = ref?.reference;
       const { practitioner, organization } = evaluatePractitionerRoleReference(
         fhirBundle,
-        practitionerRoleRef
+        practitionerRoleRef,
       );
 
       authorDetails.push([
@@ -231,7 +231,7 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
         {
           title: "Author Address",
           value: practitioner?.address?.map((address) =>
-            formatAddress(address)
+            formatAddress(address),
           ),
         },
         {
@@ -245,7 +245,7 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
         {
           title: "Author Facility Address",
           value: organization?.address?.map((address) =>
-            formatAddress(address)
+            formatAddress(address),
           ),
         },
         {

@@ -1,8 +1,12 @@
 import { Bundle, Observation } from "fhir/r4";
 
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
-import { evaluateRRInfo, getReportabilityRulesReasons, getResponsibleAgencies, Participant } from "@/app/view-data/services/reportabilityService";
-
+import {
+  evaluateRRInfo,
+  getReportabilityRulesReasons,
+  getResponsibleAgencies,
+  Participant,
+} from "@/app/view-data/services/reportabilityService";
 
 describe("ReportabilityService", () => {
   it("getReportabilityRulesReasons should return the unique set of rule and reasons", () => {
@@ -54,9 +58,9 @@ describe("ReportabilityService", () => {
     const observation: Observation = {
       performer: [
         {
-          "reference": "Organization/1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
-          "display": "Anchorhead Department of Public Health"
-        }
+          reference: "Organization/1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+          display: "Anchorhead Department of Public Health",
+        },
       ],
       resourceType: "Observation",
       code: {},
@@ -65,7 +69,7 @@ describe("ReportabilityService", () => {
 
     const result = getResponsibleAgencies(
       BundleEcrMetadata as unknown as Bundle,
-      observation
+      observation,
     );
 
     expect(result).toEqual(expected);
