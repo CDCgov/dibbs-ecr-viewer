@@ -24,16 +24,14 @@ export interface Participant {
 }
 
 /**
- * Evaluates all reportable conditions and retrieves its associated 
- * reportability information. Includes: Determination of reportability 
+ * Evaluates all reportable conditions and retrieves its associated
+ * reportability information. Includes: Determination of reportability
  * rules and reasons, participants (name and role)
  * @param fhirBundle - FHIR Bundle
  * @returns An object mapping condition names to an array of
  * their associated reportability information.
  */
-export const evaluateRRInfo = (
-  fhirBundle: Bundle
-): ReportableConditions => {
+export const evaluateRRInfo = (fhirBundle: Bundle): ReportableConditions => {
   const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const reportableConditionsList: ReportableConditions = {};
 
@@ -41,22 +39,20 @@ export const evaluateRRInfo = (
     const name =
       formatCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
-    const rrInfo: ReportabilityInfo[] = []
-    
-    condition?.hasMember?.forEach(
-      (ref) => {
-        const rrInfoObs: Observation | undefined = evaluateReference(
-          fhirBundle,
-          ref.reference
-        );
-        console.log(rrInfoObs)
-        const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
-        const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
+    const rrInfo: ReportabilityInfo[] = [];
 
-        rrInfo.push({ participants, rules, reasons });
-      }
-    );
-    
+    condition?.hasMember?.forEach((ref) => {
+      const rrInfoObs: Observation | undefined = evaluateReference(
+        fhirBundle,
+        ref.reference,
+      );
+      console.log(rrInfoObs);
+      const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
+      const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
+
+      rrInfo.push({ participants, rules, reasons });
+    });
+
     if (!reportableConditionsList[name]) {
       reportableConditionsList[name] = [];
     }
@@ -71,7 +67,7 @@ export const evaluateRRInfo = (
  * @returns Object of rules and reasons arrays
  */
 export const getReportabilityRulesReasons = (
-  observation: Observation | undefined
+  observation: Observation | undefined,
 ): { rules: Set<string>; reasons: Set<string> } => {
   const rules = new Set<string>();
   const reasons = new Set<string>();
@@ -103,7 +99,7 @@ export const getReportabilityRulesReasons = (
  */
 export const getResponsibleAgencies = (
   fhirBundle: Bundle,
-  observation: Observation | undefined
+  observation: Observation | undefined,
 ): Participant[] => {
   const participants: Participant[] = [];
 
