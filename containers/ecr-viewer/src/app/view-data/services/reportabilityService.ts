@@ -23,8 +23,14 @@ export interface Participant {
   role: string;
 }
 
-// TODO ANGELA: Add JSDoc
-// TODO ANGELA: Combine this const and below?
+/**
+ * Evaluates all reportable conditions and retrieves its associated 
+ * reportability information. Includes: Determination of reportability 
+ * rules and reasons, participants (name and role)
+ * @param fhirBundle - FHIR Bundle
+ * @returns An object mapping condition names to an array of
+ * their associated reportability information.
+ */
 export const evaluateRRInfo = (
   fhirBundle: Bundle
 ): ReportableConditions => {
@@ -35,43 +41,28 @@ export const evaluateRRInfo = (
     const name =
       formatCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
-    const rrInfo: ReportabilityInfo[] = evaluateReportabilityInfo(
-      fhirBundle,
-      condition
-    );
+    const rrInfo: ReportabilityInfo[] = []
+    
+    condition?.hasMember?.forEach(
+      (ref) => {
+        const rrInfoObs: Observation | undefined = evaluateReference(
+          fhirBundle,
+          ref.reference
+        );
+        console.log(rrInfoObs)
+        const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
+        const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
 
+        rrInfo.push({ participants, rules, reasons });
+      }
+    );
+    
     if (!reportableConditionsList[name]) {
       reportableConditionsList[name] = [];
     }
     reportableConditionsList[name].push(...rrInfo);
   }
   return reportableConditionsList;
-};
-
-/**
- * Finds all unique RCKMS rule summaries in an observation
- * @param fhirBundle - FHIR Bundle
- * @param observation - FHIR Observation of an RR Condition
- * @returns Set of rule summaries
- */
-const evaluateReportabilityInfo = (
-  fhirBundle: Bundle,
-  observation: Observation
-): ReportabilityInfo[] => {
-  const rrInfoArr: ReportabilityInfo[] = [];
-
-  observation?.hasMember?.forEach((ref) => {
-    const rrInfoObs: Observation | undefined = evaluateReference(
-      fhirBundle,
-      ref.reference
-    );
-    const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
-    const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
-
-    rrInfoArr.push({ participants, rules, reasons });
-  });
-
-  return rrInfoArr;
 };
 
 /**
@@ -110,7 +101,7 @@ export const getReportabilityRulesReasons = (
  * @param observation - FHIR Observation (RR Info Organizer)
  * @returns Array of objects containing the name & role of each responsible agency
  */
-const getResponsibleAgencies = (
+export const getResponsibleAgencies = (
   fhirBundle: Bundle,
   observation: Observation | undefined
 ): Participant[] => {
@@ -125,34 +116,4 @@ const getResponsibleAgencies = (
   });
 
   return participants;
-};
-
-// TODO ANGELA: DELETE
-/**
- * Finds all unique RCKMS rule summaries in an observation
- * @param fhirBundle - FHIR Bundle
- * @param observation - FHIR Observation
- * @returns Set of rule summaries
- */
-export const getReportabilitySummaries = (
-  fhirBundle: Bundle,
-  observation: Observation
-): Set<string> => {
-  const ruleSummaries = new Set<string>();
-  observation?.hasMember?.forEach((ref) => {
-    const rrInfoObs: Observation | undefined = evaluateReference(
-      fhirBundle,
-      ref.reference
-    );
-    rrInfoObs?.extension?.forEach((extension) => {
-      if (
-        extension.url ===
-          "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension" &&
-        extension?.valueString?.trim()
-      ) {
-        ruleSummaries.add(extension.valueString.trim());
-      }
-    });
-  });
-  return ruleSummaries;
 };

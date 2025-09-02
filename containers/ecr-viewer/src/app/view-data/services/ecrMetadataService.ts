@@ -28,66 +28,6 @@ import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
 import { evaluateRRInfo, ReportableConditions } from "./reportabilityService";
 
-// TODO ANGELA: DELETE
-// export interface ReportableConditionsOLD {
-//   [condition: string]: {
-//     [trigger: string]: Set<string | undefined>;
-//   };
-// }
-
-// {
-//   "Zika Virus Disease": {
-//     "travel history": Set { "State Department of Health Routing Agency" },
-//     "positive lab result": Set { "Local Public Health Agency" }
-//   },
-//   "Measles": {
-//     "rash and fever": Set { "Provider Facility A" },
-//     "positive lab result": Set { "Local Public Health Agency", "Provider Facility B" }
-//   },
-//   "Tuberculosis": {
-//     "positive skin test": Set { "Provider Facility C" }
-//   }
-// }
-
-// {
-//   "Zika Virus Disease":
-//   [
-//       {
-//         "rules authoring agency": "Agency A",
-//         "routing entity": "Agency B",
-//         "responsible party": "Agency A"
-//         "rule summaries": [
-//           "Rule A", "Rule B"
-//         ]
-//         "reasons": [
-//           "Reason A"
-//         ]
-//       },
-//       {
-//         "rules authoring agency": "Agency C",
-//         "routing entity": "Agency C",
-//         "responsible party": "Agency C"
-//         "rule summaries": [
-//           "Rule A", "Rule B"
-//         ]
-//         "reasons": []
-//       },
-//   ],
-//   "Measles": [
-//     {
-//         "rules authoring agency": "Agency A",
-//         "routing entity": "Agency A",
-//         "responsible party": "Agency A"
-//         "rule summaries": [
-//           "Rule A", "Rule B"
-//         ]
-//         "reasons": [
-//           "Reason A"
-//         ]
-//     }
-//   ]
-// }
-
 interface EcrMetadata {
   eicrDetails: CompleteData;
   ecrCustodianDetails: CompleteData;
