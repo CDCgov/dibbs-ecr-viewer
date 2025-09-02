@@ -363,7 +363,7 @@ const ReportableConditionRow = (
             </>
           )}
         </td>
-      </tr>
+      </tr>,
     );
   }
 

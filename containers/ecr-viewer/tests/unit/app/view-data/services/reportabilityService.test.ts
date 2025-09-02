@@ -120,36 +120,36 @@ describe("ReportabilityService", () => {
       type: "batch",
       entry: [
         {
-          "resource": {
-            "resourceType": "Observation",
-            "meta": {
-              "profile": [
-                "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
+          resource: {
+            resourceType: "Observation",
+            meta: {
+              profile: [
+                "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation",
               ],
-              "source": "ecr"
+              source: "ecr",
             },
-            "status": "final",
-            "code": {
-              "coding": [
+            status: "final",
+            code: {
+              coding: [
                 {
-                  "code": "64572001",
-                  "display": "Condition",
-                  "system": "http://snomed.info/sct"
+                  code: "64572001",
+                  display: "Condition",
+                  system: "http://snomed.info/sct",
                 },
                 {
-                  "code": "75323-6",
-                  "display": "Condition",
-                  "system": "http://loinc.org"
-                }
-              ]
+                  code: "75323-6",
+                  display: "Condition",
+                  system: "http://loinc.org",
+                },
+              ],
             },
-            "valueCodeableConcept": {},
+            valueCodeableConcept: {},
           },
         },
-      ]
+      ],
     };
 
-    const result = evaluateRRInfo(bundle)
-    expect(result).toEqual(expected)
+    const result = evaluateRRInfo(bundle);
+    expect(result).toEqual(expected);
   });
 });
