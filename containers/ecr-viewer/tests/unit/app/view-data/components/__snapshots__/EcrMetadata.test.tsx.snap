@@ -33,7 +33,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
               <thead>
                 <tr>
                   <th
-                    class=""
+                    class="width-20p"
                   >
                     <div
                       class="display-flex flex-align-baseline"
@@ -83,7 +83,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                     </div>
                   </th>
                   <th
-                    class="width-25p"
+                    class="width-20p"
                   >
                     <div
                       class="display-flex flex-align-baseline"
@@ -225,21 +225,36 @@ exports[`eCR Metadata should match snapshot 1`] = `
                     colspan="3"
                   >
                     <div>
-                      <div>
-                        <b>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
                           Rules Authoring Agency
-                        </b>
-                        <br />
-                        Coruscant Department of Public Health
-                        <br />
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Coruscant Department of Public Health
+                        </div>
                       </div>
                     </div>
                     <div>
-                      <strong>
-                        Determination of Reportability Reason
-                      </strong>
-                      <br />
-                      Reason 1
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Determination of Reportability Reason
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Reason 1
+                        </div>
+                      </div>
                     </div>
                   </td>
                 </tr>

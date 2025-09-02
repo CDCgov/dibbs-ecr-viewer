@@ -47,7 +47,6 @@ export const evaluateRRInfo = (fhirBundle: Bundle): ReportableConditions => {
         fhirBundle,
         ref.reference,
       );
-      console.log(rrInfoObs);
       const participants = getResponsibleAgencies(fhirBundle, rrInfoObs);
       const { rules, reasons } = getReportabilityRulesReasons(rrInfoObs);
 

@@ -174,12 +174,12 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
     >
       <thead>
         <tr>
-          <th className="">
+          <th className="width-20p">
             <ToolTipElement toolTip="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.">
               Reportable Condition
             </ToolTipElement>
           </th>
-          <th className="width-25p">
+          <th className="width-20p">
             <ToolTipElement toolTip="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR.">
               Jurisdiction Sent eCR
             </ToolTipElement>
@@ -282,7 +282,7 @@ const ReportableConditionRow = (
 
   // Build out participants, rules, reasons
   const routingEntity: React.ReactNode[] = [];
-  const participants: React.ReactNode[] = [];
+  const participants: Participant[] = [];
 
   rrInfo.participants.forEach((p: Participant, index) => {
     if (p.role === "Routing Entity") {
@@ -293,14 +293,7 @@ const ReportableConditionRow = (
         </div>,
       );
     } else {
-      participants.push(
-        <div key={index}>
-          <b>{p.role}</b>
-          <br />
-          {p.name}
-          <br />
-        </div>,
-      );
+      participants.push(p);
     }
   });
 
@@ -334,7 +327,6 @@ const ReportableConditionRow = (
     </tr>,
   );
 
-  // TODO ANGELA: Change styling of details row
   if (participants.length > 0 || reasons) {
     rowSet.push(
       <tr
@@ -343,16 +335,36 @@ const ReportableConditionRow = (
         hidden={!expandedRows[key]}
       >
         <td colSpan={3}>
-          {participants.length > 0 && <div>{participants}</div>}
+          {participants.length > 0 && (
+            <>
+              {participants.map((p, i) => (
+                <DataDisplay
+                  key={`participant-${i}`}
+                  item={{
+                    title: p.role,
+                    value: p.name,
+                    dividerLine: false,
+                    titleNormal: true,
+                  }}
+                />
+              ))}
+            </>
+          )}
           {reasons && (
-            <div>
-              <strong>Determination of Reportability Reason</strong>
-              <br />
-              {reasons}
-            </div>
+            <>
+              <DataDisplay
+                key="reportability-reason"
+                item={{
+                  title: "Determination of Reportability Reason",
+                  value: reasons,
+                  dividerLine: false,
+                  titleNormal: true,
+                }}
+              />
+            </>
           )}
         </td>
-      </tr>,
+      </tr>
     );
   }
 
