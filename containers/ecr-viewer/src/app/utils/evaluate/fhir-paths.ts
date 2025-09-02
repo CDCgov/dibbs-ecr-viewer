@@ -351,7 +351,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // eCR Metadata
   eicrIdentifier: {
     type: "string",
-    path: "entry.resource.Composition.id",
+    path: "Bundle.id",
   },
   eicrReleaseVersion: {
     type: "ValueX",
@@ -363,7 +363,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   dateTimeEcrCreated: {
     type: "string",
-    path: "entry.resource.Composition.date",
+    path: "Bundle.timestamp",
   },
   ehrSoftware: {
     type: "ValueX",

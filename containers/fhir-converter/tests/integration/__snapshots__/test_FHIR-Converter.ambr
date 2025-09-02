@@ -5,10 +5,6 @@
       'entry': list([
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'author': list([
               dict({
@@ -423,10 +419,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'class': dict({
               'code': '99213',
@@ -444,7 +436,6 @@
               dict({
                 'id': str,
                 'location': dict({
-                  'display': 'None',
                   'reference': str,
                 }),
               }),
@@ -465,10 +456,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'id': str,
             'identifier': list([
@@ -485,10 +472,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'address': list([
               dict({
@@ -525,10 +508,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'address': list([
               dict({
@@ -587,10 +566,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'address': list([
               dict({
@@ -757,10 +732,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'address': list([
               dict({
@@ -821,10 +792,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'category': list([
               dict({
@@ -876,10 +843,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'category': list([
               dict({
@@ -924,10 +887,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'code': dict({
               'coding': list([
@@ -956,10 +915,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'code': dict({
               'coding': list([
@@ -1007,10 +962,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'activity': list([
               dict({
@@ -1031,10 +982,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'authoredOn': '2005-03-29T22:44:11-05:00',
             'code': dict({
@@ -1069,10 +1016,6 @@
         }),
         dict({
           'fullUrl': str,
-          'request': dict({
-            'method': 'PUT',
-            'url': str,
-          }),
           'resource': dict({
             'id': str,
             'identifier': list([
@@ -1091,8 +1034,19 @@
           }),
         }),
       ]),
+      'id': str,
+      'identifier': dict({
+        'system': 'urn:oid:2.16.840.1.113883.19.5.99999.1',
+        'value': 'TT988',
+      }),
+      'meta': dict({
+        'profile': list([
+          'http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-document-bundle',
+        ]),
+      }),
       'resourceType': 'Bundle',
-      'type': 'batch',
+      'timestamp': '2012-09-16T19:11:00-04:00',
+      'type': 'document',
     }),
     'Status': 'OK',
   })
