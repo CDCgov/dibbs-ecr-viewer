@@ -212,7 +212,6 @@ interface ReportableConditionRow {
   toggleHidden: () => void;
 }
 
-// TODO ANGELA: Add test for hidden/expanding row
 /**
  * Helper component for buidling the rows for each condition in
  * the Reportability Summary table.
