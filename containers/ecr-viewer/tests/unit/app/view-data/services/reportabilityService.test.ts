@@ -112,4 +112,44 @@ describe("ReportabilityService", () => {
     const result = evaluateRRInfo(BundleEcrMetadata as unknown as Bundle);
     expect(result).toEqual(expected);
   });
+
+  it("evaluateRRInfo should return Unknown Condition cannot evaluate RR condition name ", () => {
+    const expected = { "Unknown Condition": [] };
+    const bundle: Bundle = {
+      resourceType: "Bundle",
+      type: "batch",
+      entry: [
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "meta": {
+              "profile": [
+                "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
+              ],
+              "source": "ecr"
+            },
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "code": "64572001",
+                  "display": "Condition",
+                  "system": "http://snomed.info/sct"
+                },
+                {
+                  "code": "75323-6",
+                  "display": "Condition",
+                  "system": "http://loinc.org"
+                }
+              ]
+            },
+            "valueCodeableConcept": {},
+          },
+        },
+      ]
+    };
+
+    const result = evaluateRRInfo(bundle)
+    expect(result).toEqual(expected)
+  });
 });

@@ -160,7 +160,6 @@ describe("eCR Metadata", () => {
       }),
     ).toHaveNoViolations();
   });
-
   it("should let the user know that a reportable condition hasn't been found if there is no data available", () => {
     const emptyRrConditions: ReportableConditions = {};
     render(

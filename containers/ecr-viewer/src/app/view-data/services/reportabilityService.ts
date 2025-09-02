@@ -36,7 +36,6 @@ export const evaluateRRInfo = (fhirBundle: Bundle): ReportableConditions => {
   const reportableConditionsList: ReportableConditions = {};
 
   for (const condition of rrConditions) {
-    // TODO ANGELA: Add test to cover "Unknown Condition";
     const name =
       formatCodeableConcept(condition.valueCodeableConcept) ??
       "Unknown Condition";
