@@ -137,10 +137,20 @@ const EcrMetadata = ({
 
 type ReportabilitySummaryProps = Pick<EcrMetadataProps, "rrConditions">;
 
+/**
+ * Functional component for the Reportability Summary table.
+ * @param props - Props containing RR information.
+ * @param props.rrConditions - The reportable conditions and details.
+ * @returns The JSX element representing the Reportability Summary table.
+ */
 const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
   rrConditions,
 }) => {
-  const rows = ReportableConditionSection(rrConditions);
+  let rows: React.ReactNode[] = [];
+
+  rows = Object.entries(rrConditions).flatMap(
+    ([condition, rrInfoArray]) => ReportableConditionRows(condition, rrInfoArray)
+  );
 
   if (rows.length === 0) {
     return (
@@ -203,21 +213,14 @@ interface ReportableConditionRow {
   toggleHidden: () => void;
 }
 
-// TODO ANGELA: Add tests
 // TODO ANGELA: Move building of table to ReportabilitySummary Component
-// TODO ANGELA: Add JSDocs
-const ReportableConditionSection = (dictionary: ReportableConditions): React.ReactNode[] => {
-  if (!dictionary) {
-    return [];
-  }
-
-  const rows: React.ReactNode[] = Object.entries(dictionary).flatMap(
-    ([condition, rrInfoArray]) => ReportableConditionRows(condition, rrInfoArray)
-  );
-
-  return rows
-}
-
+/**
+ * Helper component for buidling the rows for each condition in
+ * the Reportability Summary table.
+ * @param condition - The reportable condition (string).
+ * @param rrInfoArray - Array of the associated information to the reportable condition.
+ * @returns The JSX element representing the rows for that condition in the table.
+ */
 const ReportableConditionRows = (condition: string, rrInfoArray: ReportabilityInfo[]): React.ReactNode[] => {
   const [expandedRows, setExpandedRows] = React.useState<
     Record<string, boolean>
@@ -250,7 +253,27 @@ const ReportableConditionRows = (condition: string, rrInfoArray: ReportabilityIn
   return rows
 }
 
-const ReportableConditionRow = (condition: string, rrInfo: ReportabilityInfo, rrInfoIndex: number, dynamicRowSpan: number, expandedRows: Record<string, boolean>, toggleHiddenRow: (key: string) => void): React.ReactNode[] => {
+/**
+ * Renders a row for a reportable condition, including the condition name, routing 
+ * entity, and determination of reportability rule(s).
+ * If applicable, also renders a expandable row for more details. Will contain info
+ * about other participants and the determination of reportability reason(s).
+ * @param condition - The reportable condition (string).
+ * @param rrInfo - Object containing RR info (rules, reasons, participants).
+ * @param rrInfoIndex - Index of the RR info obj, used to make a unique key value.
+ * @param dynamicRowSpan - The `rowSpan` value for the condition cell.
+ * @param expandedRows - Map indicating whether the row should be expanded or collapsed.
+ * @param toggleHiddenRow - Function to toggle visibility of a hidden details row.
+ * @returns An array of React nodes, one for the main row and possibly a second for the collapsible details row.
+ */
+const ReportableConditionRow = (
+  condition: string,
+  rrInfo: ReportabilityInfo,
+  rrInfoIndex: number,
+  dynamicRowSpan: number,
+  expandedRows: Record<string, boolean>,
+  toggleHiddenRow: (key: string) => void
+): React.ReactNode[] => {
   const isConditionCell = rrInfoIndex === 0;
   const key = `${toKebabCase(condition)}-${rrInfoIndex}`;
 
@@ -331,6 +354,6 @@ const ReportableConditionRow = (condition: string, rrInfo: ReportabilityInfo, rr
   }
 
   return rowSet;
-}
+};
 
 export default EcrMetadata;

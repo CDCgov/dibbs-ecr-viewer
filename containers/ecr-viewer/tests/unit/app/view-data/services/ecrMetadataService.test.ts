@@ -1,7 +1,5 @@
 import { Bundle } from "fhir/r4";
 
-// TODO ANGELA: Confirm Bundles are all correct information
-// includes: BundleEcrSummary, BundleEcrMetadata, etc. etc. etc.
 import BundleWithEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundleErsdWarningNoDetail from "../../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
 import BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
