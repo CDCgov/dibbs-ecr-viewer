@@ -240,6 +240,39 @@ exports[`eCR Metadata should match snapshot 1`] = `
                         </div>
                       </div>
                     </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div>
+                      Coruscant City Department of Public Health
+                      <br />
+                    </div>
+                  </td>
+                  <td>
+                    Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method
+Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)
+COVID-19 (as a diagnosis or active problem)
+                  </td>
+                  <td>
+                    <button
+                      aria-controls="hidden-details-disease-caused-by-severe-acute-respiratory-syndrome-coronavirus-2disorder-1"
+                      class="usa-button usa-button--unstyled"
+                      data-test-id="hidden-details-button"
+                      data-testid="button"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+                <tr
+                  hidden=""
+                  id="hidden-details-disease-caused-by-severe-acute-respiratory-syndrome-coronavirus-2disorder-1"
+                >
+                  <td
+                    colspan="3"
+                  >
                     <div>
                       <div
                         class="grid-row"
@@ -257,20 +290,6 @@ exports[`eCR Metadata should match snapshot 1`] = `
                       </div>
                     </div>
                   </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div>
-                      Coruscant City Department of Public Health
-                      <br />
-                    </div>
-                  </td>
-                  <td>
-                    Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method
-Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)
-COVID-19 (as a diagnosis or active problem)
-                  </td>
-                  <td />
                 </tr>
               </tbody>
             </table>
