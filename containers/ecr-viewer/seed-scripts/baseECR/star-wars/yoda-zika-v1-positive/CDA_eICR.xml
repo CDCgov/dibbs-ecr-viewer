@@ -200,6 +200,8 @@
           nullFlaovr in this case -->
           <code nullFlavor="NA" />
           <location>
+            <!-- Facility Name -->
+             <name>Grand Republic Medical Facility Clinic</name>
             <!-- Facility Address -->
             <addr>
               <streetAddressLine nullFlavor="NA" />
@@ -275,7 +277,7 @@
               <!-- [eICR R2 STU1.1] Initial Case Report Trigger Code Lab Test Order -->
               <templateId root="2.16.840.1.113883.10.20.15.2.3.4" extension="2016-12-01" />
               <id root="b52bee94-c34b-4e2c-8c15-5ad9d6def205" />
-              <!-- This code is from the trigger codes for laboratory test order 
+              <!-- This code is from the trigger codes for laboratory test order
                    value set (2.16.840.1.113762.1.4.1146.166) -->
               <code code="80825-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                 displayName="Zika virus envelope (E) gene [Presence] in Serum by Probe and target amplification method"
