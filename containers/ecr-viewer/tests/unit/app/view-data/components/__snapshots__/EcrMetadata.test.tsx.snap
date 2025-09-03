@@ -24,7 +24,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
             class="usa-summary-box__text"
           >
             <table
-              class="usa-table width-full _fixed_1khz6_1 rrTable"
+              class="usa-table usa-table--borderless width-full _fixed_1khz6_1 border-top border-left border-right"
               data-testid="table"
             >
               <caption>
@@ -213,7 +213,7 @@ exports[`eCR Metadata should match snapshot 1`] = `
                       data-testid="button"
                       type="button"
                     >
-                      View
+                      View details
                     </button>
                   </td>
                 </tr>
@@ -224,6 +224,12 @@ exports[`eCR Metadata should match snapshot 1`] = `
                   <td
                     colspan="3"
                   >
+                    <div
+                      class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                    />
+                    <strong>
+                      Reportability Details
+                    </strong>
                     <div>
                       <div
                         class="grid-row"
@@ -262,7 +268,7 @@ COVID-19 (as a diagnosis or active problem)
                       data-testid="button"
                       type="button"
                     >
-                      View
+                      View details
                     </button>
                   </td>
                 </tr>
@@ -273,6 +279,12 @@ COVID-19 (as a diagnosis or active problem)
                   <td
                     colspan="3"
                   >
+                    <div
+                      class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+                    />
+                    <strong>
+                      Reportability Details
+                    </strong>
                     <div>
                       <div
                         class="grid-row"

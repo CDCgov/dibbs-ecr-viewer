@@ -220,14 +220,14 @@ describe("eCR Metadata", () => {
       );
       expect(screen.getByText(conditionName)).toHaveAttribute("rowSpan", "2");
 
-      await user.click(screen.getAllByText("View")[0]);
+      await user.click(screen.getAllByText("View details")[0]);
 
       // Note should be visible & 'View' should be replaced with 'Hide'
-      expect(screen.getAllByText("Hide")).toHaveLength(1);
+      expect(screen.getAllByText("Hide details")).toHaveLength(1);
       expect(screen.getByText("Rules Authoring Agency")).toBeVisible();
 
       // Should have only opened one hidden row
-      expect(screen.getAllByText("View")).toHaveLength(1);
+      expect(screen.getAllByText("View details")).toHaveLength(1);
       expect(screen.getByText("Reason 1")).not.toBeVisible();
 
       // Row span of condition cell should have +1 with expanded hidden row
