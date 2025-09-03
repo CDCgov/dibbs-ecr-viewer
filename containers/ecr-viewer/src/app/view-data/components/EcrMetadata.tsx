@@ -166,9 +166,9 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
 
   return (
     <Table
-      bordered={true}
+      bordered={false}
       caption="Reportability Summary"
-      className="rrTable"
+      className="border-top border-left border-right"
       fixed={true}
       fullWidth={true}
     >
@@ -302,13 +302,14 @@ const ReportableConditionRow = (
   const reasons = Array.from(rrInfo.reasons).join("\n");
 
   const rowSet = [];
+  const styleHidden = expandedRows[key] ? { borderBottom: "none" } : undefined;
 
   rowSet.push(
     <tr key={key}>
       {isConditionCell && <td rowSpan={dynamicRowSpan}>{condition}</td>}
-      <td>{routingEntity}</td>
-      <td>{rules || noData}</td>
-      <td>
+      <td style={styleHidden}>{routingEntity}</td>
+      <td style={styleHidden}>{rules || noData}</td>
+      <td style={styleHidden}>
         {(participants.length > 0 || reasons) && (
           <Button
             unstyled={true}
@@ -318,11 +319,11 @@ const ReportableConditionRow = (
             aria-expanded={expandedRows[key]}
             data-test-id="hidden-details-button"
           >
-            {!expandedRows[key] ? "View" : "Hide"}
+            {!expandedRows[key] ? "View details" : "Hide details"}
           </Button>
         )}
       </td>
-    </tr>,
+    </tr>
   );
 
   if (participants.length > 0 || reasons) {
@@ -332,7 +333,9 @@ const ReportableConditionRow = (
         id={`hidden-details-${key}`}
         hidden={!expandedRows[key]}
       >
-        <td colSpan={3}>
+        <td colSpan={3} style={{ borderTop: "none" }}>
+          <div className="border-top border-base-lighter margin-top-neg-105 margin-bottom-1" />
+          <strong>Reportability Details</strong>
           {participants.length > 0 && (
             <>
               {participants.map((p, i) => (
@@ -362,7 +365,7 @@ const ReportableConditionRow = (
             </>
           )}
         </td>
-      </tr>,
+      </tr>
     );
   }
 
