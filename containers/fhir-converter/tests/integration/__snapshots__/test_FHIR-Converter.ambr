@@ -444,6 +444,7 @@
               dict({
                 'id': str,
                 'location': dict({
+                  'display': 'None',
                   'reference': str,
                 }),
               }),
