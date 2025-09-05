@@ -1,12 +1,14 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
+  "timestamp": "2000-02-04T09:01:22-05:00",
+  "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
   "entry": [
     {
       "fullUrl": "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
       "resource": {
         "resourceType": "Composition",
-        "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+        "id": "2ebcb371-1234-fe8f-88d8-FAKEa8dae548",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
@@ -97,10 +99,6 @@
             "reference": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548"
       }
     },
     {
@@ -149,10 +147,6 @@
             "reference": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a"
       }
     },
     {
@@ -216,10 +210,6 @@
             "valueString": "The expected eRSD (RCTC) version should be one of the following: [\"2024-06-28\",\"1.2.4.0\",\"3.x.x\",\"2024-04-05\"] "
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
       }
     },
     {
@@ -255,10 +245,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/94c87b29-3ecb-ffe9-98ea-FAKE96e81ef7"
       }
     },
     {
@@ -284,10 +270,6 @@
             "given": ["Lab"]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/7aee4d8e-792b-5e0a-c275-FAKEfa3982b1"
       }
     },
     {
@@ -326,10 +308,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
       }
     },
     {
@@ -356,10 +334,6 @@
           }
         ],
         "name": "Mos Espa Department of Health"
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d"
       }
     },
     {
@@ -419,10 +393,6 @@
             "display": "Mos Espa Department of Health"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/61e55448-662c-9a22-3920-FAKE00ba36f9"
       }
     },
     {
@@ -479,10 +449,6 @@
             "display": "Anchorhead Department of Public Health"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/aeb90e50-767d-98a4-ce21-FAKE614cc7a8"
       }
     },
     {
@@ -526,10 +492,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Location/7048630f-26bb-f67c-d446-FAKEa3573257"
       }
     },
     {
@@ -594,10 +556,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Encounter/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
       }
     }
   ]

@@ -1450,7 +1450,9 @@ Home: 123-456-6909`,
     it("should use the eCR created date if the start date does not exist and the end date is in the future.", () => {
       const patientBundleWithEncounter: Bundle = {
         resourceType: "Bundle",
-        type: "batch",
+        type: "document",
+        timestamp: "1924-03-12T09:00:00-05:00",
+        id: "99999999-4p89-4b96-b6ab-c46406839cea",
         entry: [
           ...BundleWithPatient.entry!,
           {
@@ -1494,7 +1496,9 @@ Home: 123-456-6909`,
     it("should use the eCR created date if there is no encounter date.", () => {
       const patientBundleWithCreatedDate: Bundle = {
         resourceType: "Bundle",
-        type: "batch",
+        type: "document",
+        timestamp: "1924-03-12T09:00:00-05:00",
+        id: "99999999-4p89-4b96-b6ab-c46406839cea",
         entry: [
           ...BundleWithPatient.entry!,
           {
