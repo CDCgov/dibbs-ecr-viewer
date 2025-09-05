@@ -102,7 +102,7 @@
     "nullable": true
   },
   "eicr_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').id",
+    "fhir_path": "Bundle.id",
     "data_type": "string",
     "nullable": false
   },
@@ -122,7 +122,7 @@
     "nullable": true
   },
   "authoring_date": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Composition').date",
+    "fhir_path": "Bundle.timestamp",
     "data_type": "datetime",
     "nullable": true
   },
