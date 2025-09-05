@@ -323,7 +323,7 @@ const ReportableConditionRow = (
           </Button>
         )}
       </td>
-    </tr>
+    </tr>,
   );
 
   if (participants.length > 0 || reasons) {
@@ -365,7 +365,7 @@ const ReportableConditionRow = (
             </>
           )}
         </td>
-      </tr>
+      </tr>,
     );
   }
 
