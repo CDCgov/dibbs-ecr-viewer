@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:2468",
@@ -45,10 +45,6 @@
             "mode": "snapshot"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/2468"
       }
     }
   ]

@@ -9,7 +9,7 @@
               "Status": "OK",
               "FhirResource": {
                 "resourceType": "Bundle",
-                "type": "batch",
+                "type": "document",
                 "timestamp": "2020-05-14T01:00:00-04:00",
                 "identifier": {
                   "value": "2020051411020600"
@@ -63,10 +63,6 @@
                       "sender": {
                         "reference": "Organization/b727354b-9ca6-74fd-6b6b-ae0851c7998a"
                       }
-                    },
-                    "request": {
-                      "method": "PUT",
-                      "url": "MessageHeader/53d0ea89-a281-523f-f0fb-02e3ee1ef0a2"
                     }
                   },
                   {
@@ -107,10 +103,6 @@
                           "reference": "Bundle/945561fc-cf00-ebd7-5f1c-865ab4abfcb5"
                         }
                       ]
-                    },
-                    "request": {
-                      "method": "PUT",
-                      "url": "Provenance/d24c7a73-ebcf-8f4f-51bc-e95f47452e80"
                     }
                   },
                   {
@@ -124,10 +116,6 @@
                           "system": "http://example.com/v2-to-fhir-converter/Identifier/WIR"
                         }
                       ]
-                    },
-                    "request": {
-                      "method": "PUT",
-                      "url": "Organization/b727354b-9ca6-74fd-6b6b-ae0851c7998a"
                     }
                   },
                   {
@@ -141,10 +129,6 @@
                           "system": "http://example.com/v2-to-fhir-converter/Identifier/WIRPH"
                         }
                       ]
-                    },
-                    "request": {
-                      "method": "PUT",
-                      "url": "Organization/f51a22ef-628f-d014-5a33-da96b68ae53d"
                     }
                   },
                   {
@@ -200,10 +184,6 @@
                           }
                         }
                       ]
-                    },
-                    "request": {
-                      "method": "PUT",
-                      "url": "Patient/3f8fc2a0-1d50-42de-bfed-9c01a071c6b6"
                     }
                   },
                   {
@@ -224,10 +204,6 @@
                       "subject": {
                         "reference": "Patient/3f8fc2a0-1d50-42de-bfed-9c01a071c6b6"
                       }
-                    },
-                    "request": {
-                      "method": "PUT",
-                      "url": "Encounter/caeb94a6-281c-4bd0-1dad-4998a2f80c35"
                     }
                   },
                   {
@@ -255,10 +231,6 @@
                       "patient": {
                         "reference": "Patient/3f8fc2a0-1d50-42de-bfed-9c01a071c6b6"
                       }
-                    },
-                    "request": {
-                      "method": "PUT",
-                      "url": "RelatedPerson/1b3b6f92-c3c9-7440-d08b-3023cd94c569"
                     }
                   }
                 ]

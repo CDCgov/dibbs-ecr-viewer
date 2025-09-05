@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:5f309332-9f4a-405f-bc7c-9d9bb2fccd52",
@@ -49,10 +49,6 @@
             "use": "work"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/5f309332-9f4a-405f-bc7c-9d9bb2fccd52"
       }
     },
     {
@@ -103,10 +99,6 @@
             "use": "work"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/5f309332-9f4a-405f-bc7c-9d9bb2fccd52"
       }
     },
     {

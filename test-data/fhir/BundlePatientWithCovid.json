@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:999-86a8-4a9a-aec6-b615921178df",
@@ -286,10 +286,6 @@
             "reference": "Device/01d8e93e-a96e-a79e-2d65-41842d9a2515"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/999-86a8-4a9a-aec6-b615921178df"
       }
     },
     {
@@ -362,10 +358,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Encounter/be03f31c-a6b4-e27e-0373-26e08c54c232"
       }
     },
     {
@@ -409,10 +401,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Location/28393170-2e3d-f2c9-1417-e8af74097d3e"
       }
     },
     {
@@ -441,10 +429,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/568309c0-dd6f-53e3-2efe-543c00cbdf89"
       }
     },
     {
@@ -495,10 +479,6 @@
             "use": "work"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/bfac23db-1743-b679-f23e-0fe21c335c9b"
       }
     },
     {
@@ -548,10 +528,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/94617b3c-14f9-eee5-a239-7233ba1b5d84"
       }
     },
     {
@@ -614,10 +590,6 @@
             "reference": "Organization/"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/17f6392f-9340-45d3-a1c8-bc0a30d09f53"
       }
     },
     {
@@ -652,10 +624,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Device/01d8e93e-a96e-a79e-2d65-41842d9a2515"
       }
     },
     {
@@ -812,10 +780,6 @@
             ]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28"
       }
     },
     {
@@ -842,10 +806,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "CarePlan/"
       }
     },
     {
@@ -895,10 +855,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Condition/d42c4a1f-f700-61bf-62a0-c034257d6a79"
       }
     },
     {
@@ -946,10 +902,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "DiagnosticReport/e6aa3537-cb1d-9e2e-9060-08828602339a"
       }
     },
     {
@@ -1020,10 +972,6 @@
         "subject": {
           "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/ef84511f-a88a-0a84-2353-d44f641673b0"
       }
     },
     {
@@ -1081,10 +1029,6 @@
         "subject": {
           "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/e1fe955d-a39b-14da-901e-a21a1b9c0ec0"
       }
     },
     {
@@ -1142,10 +1086,6 @@
         "subject": {
           "reference": "Patient/b43c2096-4da1-40a5-ba09-db73e169af28"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/6dc07146-a186-9f88-5cc8-af0aef7d7cd2"
       }
     },
     {
@@ -1158,10 +1098,6 @@
           ],
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/"
       }
     },
     {
@@ -1206,10 +1142,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Immunization/427d703c-b43c-53c7-e966-97ee5f217d03"
       }
     },
     {
@@ -1221,10 +1153,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/7d2ad2db-a128-1b97-1d07-0f38227f142a"
       }
     }
   ]

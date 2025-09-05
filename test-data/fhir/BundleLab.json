@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:2468",
@@ -57,10 +57,6 @@
             ]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/2468"
       }
     },
     {
@@ -115,10 +111,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "DiagnosticReport/68477c03-5689-f9e5-c267-a3c7bdff6fe0"
       }
     },
     {
@@ -148,10 +140,6 @@
             }
           ]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Specimen/ab1ecbe4-6de0-4f78-cea6-a880a15e88bc"
       }
     },
     {
@@ -212,10 +200,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "DiagnosticReport/c090d379-9aea-f26e-4ddc-378223841e3b"
       }
     },
     {
@@ -245,10 +229,6 @@
             }
           ]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Specimen/ab1ecbf4-6de0-4f78-cea6-a880a15e88bd"
       }
     },
     {
@@ -317,10 +297,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "DiagnosticReport/b0f590a6-4bf5-7add-9716-2bd3ba6defb2"
       }
     },
     {
@@ -350,10 +326,6 @@
             }
           ]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Specimen/ab1ecb14-6de0-4f78-cea6-a880a15e88be"
       }
     },
     {
@@ -398,10 +370,6 @@
         "subject": {
           "reference": "Patient/8a8c8170-7c0d-0db7-96d8-FAKE6d7c121a"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/e9c8e4b3-3fec-4f29-a5c5-e45f96680a4c"
       }
     },
     {
@@ -488,10 +456,6 @@
             "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/1c0f3367-0588-c90e-fed0-0d8c15c5ac1b"
       }
     },
     {
@@ -556,10 +520,6 @@
             "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/ab1ecbd4-6de0-4f78-cea6-a880a15e88bb"
       }
     },
     {
@@ -624,10 +584,6 @@
             "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/6643fc2a-cbf7-28e9-1331-66a180a09c14"
       }
     },
     {
@@ -692,10 +648,6 @@
             "reference": "Organization/88e344ad-5524-27dc-5803-c49647c531bd"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/75bf8f82-8b28-b1bd-e366-cf55b2de0ad9"
       }
     },
     {
@@ -776,10 +728,6 @@
             "reference": "Organization/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/2a4f8fb5-f957-3c30-1353-a30aa441a12b"
       }
     },
     {
@@ -948,10 +896,6 @@
         "device": {
           "reference": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/e2c3a705-9129-e79b-a79f-61281fa74db6"
       }
     },
     {
@@ -964,10 +908,6 @@
             "name": "LAB DEVICE: BIOFIRE\u00ae FILMARRAY\u00ae 2.0 SYSTEM"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Device/5e841917-fd80-47ab-88c3-95d7b9a7c47f"
       }
     },
     {
@@ -988,10 +928,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/14394818-a1e9-4882-ca8b-FAKE793bb5cc"
       }
     },
     {
@@ -1014,10 +950,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
       }
     }
   ]

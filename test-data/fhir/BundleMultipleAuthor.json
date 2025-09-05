@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:77976f40-ec8a-4ade-8480-64158487fcef",
@@ -36,10 +36,6 @@
             "reference": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/77976f40-ec8a-4ade-8480-64158487fcef"
       }
     },
     {
@@ -98,10 +94,6 @@
             "given": ["Ahsoka"]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/550b9626-bc9e-7d6b-c5d8-1234512312"
       }
     },
     {
@@ -152,10 +144,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/d319a926-0eb3-5847-3b21-db8b778b4f07"
       }
     },
     {
@@ -181,10 +169,6 @@
             "given": ["Lab"]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/550b9626-bc9e-7d6b-c5d8-e41c2000ab85"
       }
     },
     {
@@ -223,10 +207,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
       }
     }
   ]
