@@ -5,7 +5,6 @@ import {
   Bundle,
   Condition,
   Encounter,
-  EncounterLocation,
   Location,
   Organization,
   Practitioner,
@@ -923,21 +922,32 @@ const evaluateEncounterDiagnosisData = (
 };
 
 /**
- * Get an encounters location name by first looking for the `display` of the `location.location`. If. that does not exist, then evaluate each location reference and return the `name` of the first location with a `name`.
- * @param encounterLocations EncounterLocation[]
+ * Get an encounter's location name by first looking for the `display` of the `location.location`. If that does not exist, then evaluate each location reference and return the `name` of the first location with a `name`.
+ * @param bundle - The FHIR Bundle.
+ * @param encounter The relevant Encounter.
  * @returns string or undefined
  */
 export const getLocationName = (
-  encounterLocations: EncounterLocation[] | undefined,
+  bundle: Bundle,
+  encounter: Encounter | undefined,
 ) => {
-  return (
-    encounterLocations?.filter((location) => location.location.display)[0]
-      ?.location.display ??
-    evaluateAllReferences<Location>(
-      encounterLocations,
-      fhirPathMappings.facilityLocationRef,
-    ).filter((location) => location.name)[0]?.name
-  );
+  const encounterLocationDisplay = encounter?.location?.filter(
+    (location) => location.location.display,
+  )[0]?.location.display;
+
+  if (encounterLocationDisplay) {
+    return encounterLocationDisplay;
+  }
+
+  const references = encounter?.location
+    ?.filter((location) => location.location.reference)
+    .map((location) => location.location.reference);
+  const locations = references
+    ?.map((reference) => evaluateReference<Location>(bundle, reference))
+    ?.filter((location) => location?.name);
+  const locationName = locations?.at(0)?.name;
+
+  return locationName;
 };
 
 /**
@@ -962,7 +972,7 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
   const facilityData = [
     {
       title: "Facility Name",
-      value: getLocationName(encounter?.location),
+      value: getLocationName(fhirBundle, encounter),
     },
     {
       title: "Facility Address",

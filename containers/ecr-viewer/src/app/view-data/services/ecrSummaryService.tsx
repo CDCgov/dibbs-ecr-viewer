@@ -134,7 +134,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Name",
-      value: getLocationName(encounter?.location),
+      value: getLocationName(fhirBundle, encounter),
     },
     {
       title: "Facility Contact",
