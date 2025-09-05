@@ -3,6 +3,7 @@ import "server-only"; // FHIR evaluation/formatting should be done server side
 import {
   Address,
   CodeableConcept,
+  Coding,
   ContactPoint,
   HumanName,
   PatientContact,
@@ -439,4 +440,21 @@ const getFormattedMonths = (months: number): string => {
   if (months < 1) return "";
 
   return `${months} month${makePlural(months)}, `;
+};
+
+/**
+ * Format a `Coding` by first attempting to get the `display`. If that is not available, then use the `code`.
+ * @param coding Coding
+ * @returns string or undefined
+ */
+export const formatCoding = (coding: Coding | undefined) => {
+  if (!coding) {
+    return undefined;
+  } else if (coding.display) {
+    return coding.display;
+  } else if (coding.code) {
+    return coding.display;
+  } else {
+    return undefined;
+  }
 };

@@ -14,8 +14,6 @@ import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import {
-  evaluateEncounterId,
-  evaluateFacilityId,
   evaluatePatientRace,
   evaluatePatientEthnicity,
   evaluatePractitionerRoleReference,
@@ -121,24 +119,6 @@ Sometown, OR 94949
 US
 Home: 123-456-6909`,
     );
-  });
-
-  describe("Evaluate Facility Id", () => {
-    it("should return the facility id", () => {
-      const actual = evaluateFacilityId(BundleEcrMetadata as unknown as Bundle);
-
-      expect(actual).toEqual("112233445566778899");
-    });
-  });
-
-  describe("Evaluate Encounter ID", () => {
-    it("should return the correct Encounter ID", () => {
-      const actual = evaluateEncounterId(
-        BundleEcrMetadata as unknown as Bundle,
-      );
-
-      expect(actual).toEqual("123456789");
-    });
   });
 
   describe("Evaluate Encounter Care Team", () => {
@@ -1388,6 +1368,19 @@ Home: 123-456-6909`,
           ...BundleWithPatient.entry!,
           {
             resource: {
+              resourceType: "Composition",
+              author: [],
+              date: "1924-03-01",
+              status: "preliminary",
+              title: "Test eICR",
+              type: {},
+              encounter: {
+                reference: "Encounter/123456789",
+              },
+            },
+          },
+          {
+            resource: {
               class: {
                 code: "testValue",
               },
@@ -1419,6 +1412,19 @@ Home: 123-456-6909`,
         type: "batch",
         entry: [
           ...BundleWithPatient.entry!,
+          {
+            resource: {
+              resourceType: "Composition",
+              author: [],
+              date: "1924-03-01",
+              status: "preliminary",
+              title: "Test eICR",
+              type: {},
+              encounter: {
+                reference: "Encounter/123456789",
+              },
+            },
+          },
           {
             resource: {
               class: {
@@ -1456,11 +1462,14 @@ Home: 123-456-6909`,
           {
             resource: {
               resourceType: "Composition",
-              author: [{}],
-              date: "1924-03-12",
-              status: "final",
-              title: "test",
+              author: [],
+              date: "1924-03-01",
+              status: "preliminary",
+              title: "Test eICR",
               type: {},
+              encounter: {
+                reference: "Encounter/123456789",
+              },
             },
           },
           {
