@@ -448,12 +448,10 @@ const getFormattedMonths = (months: number): string => {
  * @returns string or undefined
  */
 export const formatCoding = (coding: Coding | undefined) => {
-  if (!coding) {
-    return undefined;
-  } else if (coding.display) {
+  if (coding?.display) {
     return coding.display;
-  } else if (coding.code) {
-    return coding.display;
+  } else if (coding?.code) {
+    return coding.code;
   } else {
     return undefined;
   }
