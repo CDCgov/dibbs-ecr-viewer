@@ -692,7 +692,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Exposure Details
   exposureObservations: {
     type: "Observation",
-    path: "entry.resource.Observation.where(category.coding.system = 'http://terminology.hl7.org/ValueSet/v3-ActClassExposure')",
+    path: "entry.resource.Observation.where(category.coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ActClass')",
   },
   exposureAgent: {
     type: "ValueX",
