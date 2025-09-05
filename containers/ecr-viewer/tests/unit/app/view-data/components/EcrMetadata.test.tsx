@@ -43,18 +43,6 @@ const rrConditionsList: ReportableConditions = {
         reasons: new Set(["Reason 1"]),
       },
     ],
-  // "Hep C": [
-  //   {
-  //     participants: [
-  //       {
-  //         name: "Hep C Routing Entity",
-  //         role: "Routing Entity",
-  //       },
-  //     ],
-  //     rules: new Set(["Hep C Rule"]),
-  //     reasons: new Set([]),
-  //   },
-  // ],
 };
 
 const eicrDetails: DisplayDataProps[] = [
