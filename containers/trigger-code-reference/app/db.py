@@ -101,18 +101,13 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
     if not resource.get("code"):
         return resource
 
-    try:
-        # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]
-        has_condition = any(
-            x.get("system") == "http://snomed.info/sct" and x.get("code") == "64572001"
-            for x in resource["code"].get("coding", [])
-        )
-        if not has_condition:
-            return resource
-    except:
-        print(resource)
-        print('\n----------\n')
-        raise
+    # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]
+    has_condition = any(
+        x.get("system") == "http://snomed.info/sct" and x.get("code") == "64572001"
+        for x in resource["code"].get("coding", [])
+    )
+    if not has_condition:
+        return resource
 
     # Get the first SNOMED coding from resource["valueCodeableConcept"]["coding"], if any
     condition_code = next(

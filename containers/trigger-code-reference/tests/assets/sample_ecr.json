@@ -382,7 +382,9 @@
         "name": "Grand Republic Medical Facility Clinic",
         "address": {
           "use": "work",
-          "line": ["500 Republica Medical Plaza, Suite 1000 Drive"],
+          "line": [
+            "500 Republica Medical Plaza, Suite 1000 Drive"
+          ],
           "city": "Senate District",
           "state": "Galactic City",
           "country": "Coruscant",
@@ -448,6 +450,43 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:ab1791b0-5c71-11db-b0de-0800200c9a54"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "text": "Employee desk distance from mail sorter"
+        },
+        "valueQuantity": {
+          "value": 2,
+          "unit": "m"
+        },
+        "effectivePeriod": {
+          "start": "2020-11-01"
+        },
+        "subject": {
+          "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/26d05bcc-1b0f-fc8a-a85e-4c6c6512478f"
+      }
+    },
+    {
       "fullUrl": "urn:uuid:568309c0-dd6f-53e3-2efe-543c00cbdf89",
       "resource": {
         "resourceType": "Organization",
@@ -456,7 +495,9 @@
         "address": [
           {
             "use": "work",
-            "line": ["500 Republica Medical Plaza, Suite 1000 Drive"],
+            "line": [
+              "500 Republica Medical Plaza, Suite 1000 Drive"
+            ],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -505,15 +546,23 @@
         "name": [
           {
             "family": "Hemlock",
-            "given": ["Royce"],
-            "prefix": ["Dr."],
-            "suffix": ["MD, GCS"]
+            "given": [
+              "Royce"
+            ],
+            "prefix": [
+              "Dr."
+            ],
+            "suffix": [
+              "MD, GCS"
+            ]
           }
         ],
         "address": [
           {
             "use": "work",
-            "line": ["200 Corusca Street"],
+            "line": [
+              "200 Corusca Street"
+            ],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -563,7 +612,9 @@
         "address": [
           {
             "use": "work",
-            "line": ["500 Republica Medical Plaza, Suite 1000 Drive"],
+            "line": [
+              "500 Republica Medical Plaza, Suite 1000 Drive"
+            ],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -711,8 +762,12 @@
           {
             "use": "official",
             "family": "Mothma",
-            "given": ["Mon"],
-            "prefix": ["Senator"]
+            "given": [
+              "Mon"
+            ],
+            "prefix": [
+              "Senator"
+            ]
           }
         ],
         "birthDate": "1955-10-01",
@@ -755,7 +810,9 @@
         "address": [
           {
             "use": "home",
-            "line": ["500 Republica, Suite 456"],
+            "line": [
+              "500 Republica, Suite 456"
+            ],
             "city": "Senate District",
             "state": "Galactic City",
             "country": "Coruscant",
@@ -788,8 +845,12 @@
             "name": {
               "use": "official",
               "family": "Fertha",
-              "given": ["Perrin"],
-              "prefix": ["Mr"]
+              "given": [
+                "Perrin"
+              ],
+              "prefix": [
+                "Mr"
+              ]
             },
             "telecom": [
               {
@@ -800,7 +861,9 @@
             ],
             "address": {
               "use": "home",
-              "line": ["500 Republica, Suite 460"],
+              "line": [
+                "500 Republica, Suite 460"
+              ],
               "city": "Senate District",
               "state": "Galactic City",
               "country": "Coruscant",

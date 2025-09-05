@@ -1,13 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Download FHIR-Converter
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --depth 5 /build/FHIR-Converter
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-21 --depth 1 /build/FHIR-Converter
 
 WORKDIR /build/FHIR-Converter
 
 # For sanity checking github actions caching
 RUN git log --pretty=oneline -2
-RUN git checkout 760ad1e96a9515a56633b7a8169cb346aeed4e85
 
 RUN echo test > src/Microsoft.Health.Fhir.TemplateManagement.UnitTests/TestData/DecompressedFiles/VXU_V04.liquid
 RUN if [ -f src/Microsoft.Health.Fhir.TemplateManagement.UnitTests/TestData/DecompressedFiles/.wh.VXU_V04.liquid ]; then rm src/Microsoft.Health.Fhir.TemplateManagement.UnitTests/TestData/DecompressedFiles/.wh.VXU_V04.liquid; fi
