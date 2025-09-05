@@ -823,23 +823,6 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
 };
 
 /**
- * Evaluate an encounters diagnosis by returning a comma delimited list of formatted codeable concepts from each condition
- * @param encounter Encounter
- * @returns delimited list of formatted codeable concepts from each condition in the encounters diagnosis
- */
-export const evaluateEncounterDiagnosis = (
-  encounter: Encounter | undefined,
-) => {
-  return evaluateAllReferences<Condition>(
-    encounter,
-    fhirPathMappings.encounterDiagnosisRef,
-  )
-    .map((condition) => formatCodeableConcept(condition?.code))
-    .filter(Boolean)
-    .join(", ");
-};
-
-/**
  * Evaluates encounter data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing encounter data.
  * @returns An array of evaluated and formatted encounter data.
@@ -1142,6 +1125,23 @@ export const evaluatePractitionerRoleReference = (
   );
 
   return { practitioner, organization };
+};
+
+/**
+ * Evaluate an encounters diagnosis by returning a comma delimited list of formatted codeable concepts from each condition
+ * @param encounter Encounter
+ * @returns delimited list of formatted codeable concepts from each condition in the encounters diagnosis
+ */
+export const evaluateEncounterDiagnosis = (
+  encounter: Encounter | undefined,
+) => {
+  return evaluateAllReferences<Condition>(
+    encounter,
+    fhirPathMappings.encounterDiagnosisRef,
+  )
+    .map((condition) => formatCodeableConcept(condition?.code))
+    .filter(Boolean)
+    .join(", ");
 };
 
 /**
