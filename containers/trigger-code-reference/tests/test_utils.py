@@ -256,3 +256,32 @@ def test_add_human_readable_reportable_condition_name(mock_get_condition_name):
     result = add_human_readable_reportable_condition_name_tes(observation_resource)
 
     assert result["valueCodeableConcept"]["text"] == expected_condition_name
+
+# Tests case where code has no coding to make sure it doesn't error
+@patch("app.db._get_condition_name_from_snomed_code_tes")
+def test_add_human_readable_reportable_condition_name_does_not_error_with_no_coding(mock_get_condition_name):
+    observation_resource = {
+        "resourceType": "Observation",
+        "id": "26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
+        "meta": {
+            "profile": [
+                "http: //hl7.org/fhir/us/ecr/StructureDefinition/us-ph-emergency-outbreak-information"
+            ],
+            "source": "ecr",
+        },
+        "identifier": [
+            {
+                "system": "urn:ietf:rfc:3986",
+                "value": "urn:uuid:ab1791b0-5c71-11db-b0de-0800200c9a54",
+            }
+        ],
+        "status": "final",
+        "code": {"text": "Employee desk distance from mail sorter"},
+        "valueQuantity": {"value": 2, "unit": "m"},
+        "effectivePeriod": {"start": "2020-11-01"},
+        "subject": {"reference": "Patient/ea876854-18e5-4058-9e7b-e1a0073950bf"},
+    }
+
+    result = add_human_readable_reportable_condition_name_tes(observation_resource)
+
+    assert result
