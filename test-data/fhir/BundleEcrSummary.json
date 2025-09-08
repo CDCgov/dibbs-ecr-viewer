@@ -34,7 +34,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
       "resource": {
         "resourceType": "Observation",
         "id": "e384c999-311f-fca8-5814-FAKE791a520b",
@@ -96,7 +96,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:48370b55-9f5a-c83a-503c-FAKEfe73a374",
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
       "resource": {
         "resourceType": "Observation",
         "id": "48370b55-9f5a-c83a-503c-FAKEfe73a374",
@@ -153,7 +153,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
       "resource": {
         "resourceType": "Organization",
         "id": "1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
@@ -183,7 +183,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
       "resource": {
         "resourceType": "Observation",
         "id": "65474f7c-d1d7-4ef8-004a-FAKE6ec42c97",
@@ -244,7 +244,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f",
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
       "resource": {
         "resourceType": "Observation",
         "id": "b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f",
