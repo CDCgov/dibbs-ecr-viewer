@@ -257,9 +257,12 @@ def test_add_human_readable_reportable_condition_name(mock_get_condition_name):
 
     assert result["valueCodeableConcept"]["text"] == expected_condition_name
 
+
 # Tests case where code has no coding to make sure it doesn't error
 @patch("app.db._get_condition_name_from_snomed_code_tes")
-def test_add_human_readable_reportable_condition_name_does_not_error_with_no_coding(mock_get_condition_name):
+def test_add_human_readable_reportable_condition_name_does_not_error_with_no_coding(
+    mock_get_condition_name,
+):
     observation_resource = {
         "resourceType": "Observation",
         "id": "26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
