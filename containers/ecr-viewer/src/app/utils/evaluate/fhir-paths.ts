@@ -10,7 +10,6 @@ import {
   EncounterParticipant,
   Extension,
   HumanName,
-  Identifier,
   Immunization,
   Observation,
   ObservationReferenceRange,
@@ -87,15 +86,10 @@ export type PathTypes = {
   eICRProcessingStatus: string;
   eICRProcessingStatusReason: Observation;
   compositionAuthorRefs: Reference;
-  encounterPeriod: Period;
   encounterDiagnosisRef: Reference;
-  encounterType: string;
-  encounterID: Identifier;
   hospitalEncounterDiagnosisRef: Reference;
   facilityOrgRef: string;
   facilityLocationRef: string;
-  facilityName: string;
-  facilityType: ValueX;
   compositionEncounterRef: string;
   encounterAttendingRefs: EncounterParticipant;
   encounterParticipants: EncounterParticipant;
@@ -388,22 +382,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Composition.author",
   },
 
-  // Encounter Info
-  encounterPeriod: {
-    type: "Period",
-    path: "entry.resource.Encounter.period",
-  },
   encounterDiagnosisRef: {
     type: "Reference",
-    path: "entry.resource.Encounter.diagnosis.condition",
-  },
-  encounterType: {
-    type: "string",
-    path: "entry.resource.Encounter.class.display",
-  },
-  encounterID: {
-    type: "Identifier",
-    path: "entry.resource.Encounter.identifier",
+    path: "diagnosis.condition",
   },
 
   hospitalEncounterDiagnosisRef: {
@@ -413,19 +394,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   facilityOrgRef: {
     type: "string",
-    path: "entry.resource.Encounter.serviceProvider.reference",
+    path: "serviceProvider.reference",
   },
   facilityLocationRef: {
     type: "string",
-    path: "entry.resource.Encounter.location.location.reference",
-  },
-  facilityName: {
-    type: "string",
-    path: "entry.resource.Encounter.location.location.display",
-  },
-  facilityType: {
-    type: "ValueX",
-    path: "entry.resource.Encounter.location.extension('http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html//Location.type').value",
+    path: "location.location.reference",
   },
   compositionEncounterRef: {
     type: "string",

@@ -1,9 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Download FHIR-Converter
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch angela/1023-reportability-info-organizer --depth 1 /build/FHIR-Converter
-# v7.0-16
-# angela/1023-reportability-info-organizer
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch angela/1023-reportability-info-organizer --depth 1 /App
 
 WORKDIR /App
 
