@@ -24,6 +24,9 @@ services:
       file: ../ecr-viewer/docker-compose.yaml
       service: ecr-viewer
     profiles: ["", "azure", "aws", "sqlserver"]
+    depends_on:
+      azure-storage:
+        condition: service_healthy
     environment:
       - CONFIG_NAME=AZURE_PG_DUAL
       - METADATA_DATABASE_SCHEMA=core
