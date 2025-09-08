@@ -36,7 +36,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       - name: Setup python ${{env.TEST_RUNNER_PYTHON_VERSION}}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{env.TEST_RUNNER_PYTHON_VERSION}}
           cache: pip
@@ -65,7 +65,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       - name: Setup python ${{env.TEST_RUNNER_PYTHON_VERSION}}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{env.TEST_RUNNER_PYTHON_VERSION}}
           cache: pip
