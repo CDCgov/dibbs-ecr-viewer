@@ -93,7 +93,7 @@ export type PathTypes = {
   compositionEncounterRef: string;
   encounterAttendingRefs: EncounterParticipant;
   encounterParticipants: EncounterParticipant;
-  rrDetails: Observation;
+  rrConditions: Observation;
   clinicalReasonForVisit: ValueX;
   patientVitalSigns: Observation;
   resolve: unknown;
@@ -153,6 +153,7 @@ export type PathTypes = {
   labReportInterpretation: ValueX;
   observationInterpretation: Coding;
   organizations: Organization;
+  organizationType: ValueX;
   patientTravelHistory: Observation;
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
@@ -167,6 +168,7 @@ export type PathTypes = {
   effectiveX: TimeX;
   code: CodeableConcept;
   method: CodeableConcept;
+  name: string;
   noteText: string;
   valueX: ValueX;
   occurrenceX: TimeX;
@@ -412,9 +414,9 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "participant",
   },
 
-  rrDetails: {
+  rrConditions: {
     type: "Observation",
-    path: "entry.resource.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+    path: "entry.resource.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation')",
   },
 
   // Vitals
@@ -644,6 +646,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Organization",
     path: "entry.resource.Organization",
   },
+  organizationType: {
+    type: "ValueX",
+    path: "type.coding.display",
+  },
 
   // Travel History
   patientTravelHistory: {
@@ -710,6 +716,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   method: {
     type: "CodeableConcept",
     path: "method",
+  },
+  name: {
+    type: "string",
+    path: "name",
   },
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return

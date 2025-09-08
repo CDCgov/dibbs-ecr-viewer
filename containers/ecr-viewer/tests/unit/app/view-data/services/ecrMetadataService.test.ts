@@ -19,7 +19,7 @@ describe("Evaluate Ecr Metadata", () => {
     expect(actual.eicrDetails.availableData).toBeEmpty();
     expect(actual.eicrDetails.unavailableData).not.toBeEmpty();
 
-    expect(actual.rrDetails.availableData).toBeUndefined();
+    expect(actual.rrConditions.availableData).toBeUndefined();
   });
   it("should have eicrDetails", () => {
     const actual = evaluateEcrMetadata(
@@ -71,24 +71,42 @@ describe("Evaluate Ecr Metadata", () => {
     ]);
     expect(actual.ecrCustodianDetails.unavailableData).toBeEmpty();
   });
-  it("should have rrDetails, and correctly handle human-readable condition name", () => {
+  it("should have rrConditions, and correctly handle human-readable condition name", () => {
     const actual = evaluateEcrMetadata(
       BundleWithEcrMetadata as unknown as Bundle,
     );
 
-    expect(actual.rrDetails).toEqual({
+    expect(actual.rrConditions).toEqual({
       "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)":
+        [
+          {
+            participants: [
+              {
+                name: "Mos Espa Department of Health",
+                role: "Routing Entity",
+              },
+            ],
+            reasons: new Set(),
+            rules: new Set([
+              "COVID-19 (as a diagnosis or active problem)",
+              "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
+            ]),
+          },
+        ],
+      "Hepatitis C": [
         {
-          "COVID-19 (as a diagnosis or active problem)": new Set([
-            "Mos Espa Department of Health",
+          participants: [
+            {
+              name: "Anchorhead Department of Public Health",
+              role: "Routing Entity",
+            },
+          ],
+          reasons: new Set(),
+          rules: new Set([
+            "Detection of Hepatitis C virus antibody in a clinical specimen by any method",
           ]),
-          "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method":
-            new Set(["Mos Espa Department of Health"]),
         },
-      "Hepatitis C": {
-        "Detection of Hepatitis C virus antibody in a clinical specimen by any method":
-          new Set(["Anchorhead Department of Public Health"]),
-      },
+      ],
     });
   });
   it("should have an eRSD Warning", () => {

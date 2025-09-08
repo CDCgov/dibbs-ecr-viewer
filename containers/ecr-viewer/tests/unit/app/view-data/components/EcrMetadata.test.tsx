@@ -1,30 +1,50 @@
 import React from "react";
 
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
-import {
-  ERSDInfo,
-  ReportableConditions,
-} from "@/app/view-data/services/ecrMetadataService";
+import { ERSDInfo } from "@/app/view-data/services/ecrMetadataService";
+import { ReportableConditions } from "@/app/view-data/services/reportabilityService";
 
 const rrConditionsList: ReportableConditions = {
   "Disease caused by severe acute respiratory syndrome coronavirus 2(disorder)":
-    {
-      "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method":
-        new Set([
-          "Coruscant Department of Public Health",
-          "Coruscant City Department of Public Health",
+    [
+      {
+        participants: [
+          {
+            name: "Coruscant Department of Public Health",
+            role: "Routing Entity",
+          },
+          {
+            name: "Coruscant Department of Public Health",
+            role: "Rules Authoring Agency",
+          },
+        ],
+        rules: new Set([
+          "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
         ]),
-      "Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)":
-        new Set(["Coruscant City Department of Public Health"]),
-      "COVID-19 (as a diagnosis or active problem)": new Set([
-        "Coruscant City Department of Public Health",
-      ]),
-    },
+        reasons: new Set([]),
+      },
+      {
+        participants: [
+          {
+            name: "Coruscant City Department of Public Health",
+            role: "Routing Entity",
+          },
+        ],
+        rules: new Set([
+          "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
+          "Close contact in the 14 days prior to onset of symptoms with a confirmed or probable case of COVID-19 (Partially implemented as exposure with no timeframe parameters)",
+          "COVID-19 (as a diagnosis or active problem)",
+        ]),
+        reasons: new Set(["Reason 1"]),
+      },
+    ],
 };
+
 const eicrDetails: DisplayDataProps[] = [
   {
     title: "eICR Identifier",
@@ -116,7 +136,7 @@ describe("eCR Metadata", () => {
     const { container } = render(
       <EcrMetadata
         eicrDetails={eicrDetails}
-        rrDetails={rrConditionsList}
+        rrConditions={rrConditionsList}
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
@@ -128,7 +148,7 @@ describe("eCR Metadata", () => {
     const { container } = render(
       <EcrMetadata
         eicrDetails={eicrDetails}
-        rrDetails={rrConditionsList}
+        rrConditions={rrConditionsList}
         eRSDProcessingInfo={eRSDProcessingInfo}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
@@ -141,35 +161,65 @@ describe("eCR Metadata", () => {
       }),
     ).toHaveNoViolations();
   });
-
-  it("should let the user know that a reportable condition hasn't been found if there is no data available", () => {
-    const emptyRrDetails: ReportableConditions = {};
-    render(
-      <EcrMetadata
-        eicrDetails={eicrDetails}
-        rrDetails={emptyRrDetails}
-        eRSDProcessingInfo={eRSDProcessingInfo}
-        eCRCustodianDetails={ecrCustodianDetails}
-        eicrAuthorDetails={eicrAuthorDetails}
-      />,
-    );
-    expect(
-      screen.getByText("Reportability Summary", { selector: "h5" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("No reportable condition found"),
-    ).toBeInTheDocument();
-  });
   it("should not render eRSD Processing Info section if no eRSD Processing Info is available", () => {
     render(
       <EcrMetadata
         eicrDetails={eicrDetails}
-        rrDetails={rrConditionsList}
+        rrConditions={rrConditionsList}
         eRSDProcessingInfo={undefined}
         eCRCustodianDetails={ecrCustodianDetails}
         eicrAuthorDetails={eicrAuthorDetails}
       />,
     );
     expect(screen.queryByText("Warning")).not.toBeInTheDocument();
+  });
+
+  describe("eCR Metadata: Reportability Summary Table", () => {
+    it("should let the user know that a reportable condition hasn't been found if there is no data available", () => {
+      const emptyRrConditions: ReportableConditions = {};
+      render(
+        <EcrMetadata
+          eicrDetails={eicrDetails}
+          rrConditions={emptyRrConditions}
+          eRSDProcessingInfo={eRSDProcessingInfo}
+          eCRCustodianDetails={ecrCustodianDetails}
+          eicrAuthorDetails={eicrAuthorDetails}
+        />,
+      );
+      expect(
+        screen.getByText("Reportability Summary", { selector: "h5" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("No reportable condition found"),
+      ).toBeInTheDocument();
+    });
+    it("should open correct hidden details", async () => {
+      const user = userEvent.setup();
+      const conditionName =
+        "Disease caused by severe acute respiratory syndrome coronavirus 2(disorder)";
+      render(
+        <EcrMetadata
+          eicrDetails={eicrDetails}
+          rrConditions={rrConditionsList}
+          eRSDProcessingInfo={eRSDProcessingInfo}
+          eCRCustodianDetails={ecrCustodianDetails}
+          eicrAuthorDetails={eicrAuthorDetails}
+        />,
+      );
+      expect(screen.getByText(conditionName)).toHaveAttribute("rowSpan", "2");
+
+      await user.click(screen.getAllByText("View details")[0]);
+
+      // Note should be visible & 'View' should be replaced with 'Hide'
+      expect(screen.getAllByText("Hide details")).toHaveLength(1);
+      expect(screen.getByText("Rules Authoring Agency")).toBeVisible();
+
+      // Should have only opened one hidden row
+      expect(screen.getAllByText("View details")).toHaveLength(1);
+      expect(screen.getByText("Reason 1")).not.toBeVisible();
+
+      // Row span of condition cell should have +1 with expanded hidden row
+      expect(screen.getByText(conditionName)).toHaveAttribute("rowSpan", "3");
+    });
   });
 });
