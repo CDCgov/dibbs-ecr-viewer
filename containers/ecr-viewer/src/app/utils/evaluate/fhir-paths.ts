@@ -400,7 +400,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "location.location.reference",
   },
-
   compositionEncounterRef: {
     type: "string",
     path: "entry.resource.Composition.encounter.reference",
