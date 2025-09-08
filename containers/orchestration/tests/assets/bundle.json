@@ -1,0 +1,723 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:9408ddce-4dcb-416c-a153-82cce01839e2",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "9408ddce-4dcb-416c-a153-82cce01839e2",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
+          ]
+        },
+        "identifier": {
+          "use": "official",
+          "type": {
+            "coding": [
+              {
+                "code": "55751-2",
+                "system": "http://loinc.org",
+                "display": "Public Health Case Report"
+              }
+            ]
+          },
+          "value": "8d86218e-0fea-11eb-8216-a80388425cfb"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber",
+            "valueString": "1"
+          },
+          {
+            "url": "https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436",
+            "valueString": "2016-12-01"
+          }
+        ],
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "code": "55751-2",
+              "system": "http://loinc.org",
+              "display": "Public Health Case Report"
+            }
+          ]
+        },
+        "date": "2020-05-05T15:00:45-04:00",
+        "title": "Initial Public Health Case Report",
+        "confidentiality": "N",
+        "section": [
+          {
+            "id": "5409be16-bf1e-9b7d-41e2-40096c7b9d2b",
+            "title": "Encounters",
+            "text": {
+              "status": "generated",
+              "div": "<table xmlns=\"urn:hl7-org:v3\"><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><thead><tr><th>Encounter</th><th>Date(s)</th><th>Location</th></tr></thead><tbody><tr ID=\"id_8c69827d-fc6e-4580-a1af-17f03078bbf0_ref\"><td>Office outpatient visit 15 minutes</td><td>05/13/2020</td><td>New York City Outpatient Clinic</td></tr><tr><td><list styleCode=\"none\"><item><table><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><thead><tr><th /></tr></thead><tbody><tr><td /></tr></tbody></table></item></list></td></tr></tbody></table>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "46240-8",
+                  "system": "http://loinc.org",
+                  "display": "History of encounters"
+                }
+              ]
+            },
+            "mode": "snapshot"
+          },
+          {
+            "id": "29529bb4-83ec-de2b-315a-94dc880c3006",
+            "title": "History of Present Illness",
+            "text": {
+              "status": "generated",
+              "div": "<paragraph xmlns=\"urn:hl7-org:v3\">fever, cough, exposure to COVID-19 hot zone; </paragraph>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "10164-2",
+                  "system": "http://loinc.org",
+                  "display": "History of Present Illness"
+                }
+              ]
+            },
+            "mode": "snapshot"
+          },
+          {
+            "id": "518da2e7-d81d-2ecd-fc36-b1eec62a6491",
+            "title": "Medications Administered",
+            "text": {
+              "status": "generated",
+              "div": "No medications administered"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "29549-3",
+                  "system": "http://loinc.org",
+                  "display": "Medications Administered"
+                }
+              ]
+            },
+            "mode": "snapshot"
+          },
+          {
+            "id": "ac267b0b-c6f4-4b81-0f27-29680193aab1",
+            "title": "Problem List",
+            "text": {
+              "status": "generated",
+              "div": "<table xmlns=\"urn:hl7-org:v3\"><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><thead><tr><th>Concern</th><th>Concern Status</th><th>Date(s)</th></tr></thead><tbody><tr ID=\"id_420ffc00-7bd3-4191-82cd-1ebd4367f6a6_ref\"><td>Problem</td><td>active</td><td>05/13/2020</td></tr><tr><td><list styleCode=\"none\"><item><paragraph>*** In the table below, row entries with values under RCTC columns triggered this Electronic Initial Case Report (eICR)</paragraph><table><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><thead><tr><th>Problem Type</th><th>Problem</th><th>Date(s)</th><th>Code</th><th>Code System</th><th>RCTC OID ***</th><th>RCTC Version ***</th></tr></thead><tbody><tr><td>symptom</td><td>Difficulty Breathing )finding)</td><td>05/13/2020</td><td>230145002</td><td>SNOMED-CT</td><td /><td /></tr><tr><td>symptom</td><td /><td /><td /><td /><td /><td /></tr></tbody></table></item></list></td></tr></tbody></table>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "11450-4",
+                  "system": "http://loinc.org",
+                  "display": "Problem List"
+                }
+              ]
+            },
+            "mode": "snapshot",
+            "entry": [
+              {
+                "display": "Problem - Difficulty Breathing )finding)",
+                "reference": "Condition/78f39666-0145-0e4e-6b21-57670c3914ee"
+              }
+            ]
+          },
+          {
+            "id": "85d332eb-85f4-b6e6-57c9-49f7c6bf763d",
+            "title": "Reason for visit",
+            "text": {
+              "status": "generated",
+              "div": "<paragraph xmlns=\"urn:hl7-org:v3\">fever, cough, exposure to COVID-19 hot zone </paragraph>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "29299-5",
+                  "system": "http://loinc.org",
+                  "display": "Reason for visit"
+                }
+              ]
+            },
+            "mode": "snapshot",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12",
+                "valueString": "fever, cough, exposure to COVID-19 hot zone                                    "
+              }
+            ]
+          },
+          {
+            "id": "f8d93e13-2242-c9db-0932-10141ce5a965",
+            "title": "Results",
+            "text": {
+              "status": "generated",
+              "div": "No Lab Results"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "30954-2",
+                  "system": "http://loinc.org",
+                  "display": "Relevant diagnostic tests and/or laboratory data"
+                }
+              ]
+            },
+            "mode": "snapshot"
+          },
+          {
+            "id": "8fd4a2d8-400b-da7d-8905-7da6c103512e",
+            "title": "Plan of Treatment",
+            "text": {
+              "status": "generated",
+              "div": "<paragraph xmlns=\"urn:hl7-org:v3\">*** In the table below, row entries with values under RCTC columns triggered this Electronic Initial Case Report (eICR)</paragraph><table xmlns=\"urn:hl7-org:v3\"><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><col width=\"15%\" /><thead><tr><th>Lab Test Order</th><th>Code</th><th>CodeSystem</th><th>RCTC OID ***</th><th>RCTC Version ***</th><th>Ordered Date</th></tr></thead><tbody><tr ID=\"id_f2a3031b-f71a-4296-9bcd-fdf30031f68f_ref\"><td>SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection</td><td>94310-0 </td><td>LOINC</td><td>2.16.840.1.114222.4.11.7508</td><td>20200429</td><td>05/13/2020</td></tr></tbody></table>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "18776-5",
+                  "system": "http://loinc.org",
+                  "display": "Plan of Treatment"
+                }
+              ]
+            },
+            "mode": "snapshot"
+          },
+          {
+            "id": "a9b6e3c6-2546-4f0b-0dda-5711acaaa790",
+            "title": "Social History",
+            "text": {
+              "status": "generated",
+              "div": "<table xmlns=\"urn:hl7-org:v3\"><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><thead><tr><th>Birth Sex</th><th>Value</th><th>Date</th></tr></thead><tbody><tr><td>Sex Assigned At Birth</td><td>Female</td><td /></tr></tbody></table><table xmlns=\"urn:hl7-org:v3\"><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><thead><tr><th>Social History Observation Type</th><th>Value</th><th>Dates(s)</th></tr></thead><tbody><tr ID=\"id_db524287-4744-4ff8-a496-d775755a1ef2_ref\"><td>Occupation / Employment details</td><td>Sales</td><td /></tr><tr><td>Pregnancy Status</td><td>No</td><td /></tr></tbody></table><table xmlns=\"urn:hl7-org:v3\"><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><col width=\"10%\" /><thead><tr><th>Travel History: Date(s)</th><th>Notes</th><th>Location</th></tr></thead><tbody><tr ID=\"id_2ebe259e-2561-4362-8964-17f68ea95582_ref\"><td>04/20/2020 - 05/10/2020</td><td>Recent travel to China</td><td /></tr></tbody></table>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "29762-2",
+                  "system": "http://loinc.org",
+                  "display": "Social History"
+                }
+              ]
+            },
+            "mode": "snapshot",
+            "entry": [
+              {
+                "reference": "Observation/a91e1639-0e0f-adfc-5120-6dcf70c538e7"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/d74261a2-75d5-5ba8-67c9-895ad463e49d"
+        },
+        "encounter": {
+          "reference": "Encounter/c255531b-30ae-0c77-685a-7a0e9f8e96ae"
+        },
+        "custodian": {
+          "reference": "Organization/daf02ea4-2048-a2c3-e24f-7313a37bd19b"
+        },
+        "author": [
+          {
+            "reference": "Device/7ca153bc-2d17-5f99-f81a-f9b538a48559"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Composition/9408ddce-4dcb-416c-a153-82cce01839e2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c255531b-30ae-0c77-685a-7a0e9f8e96ae",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "c255531b-30ae-0c77-685a-7a0e9f8e96ae",
+        "status": "unknown",
+        "class": {
+          "code": "AMB",
+          "system": "urn:oid:2.16.840.1.113883.5.4",
+          "display": "Ambulatory"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:2.16.840.1.113883.19",
+            "value": "9937013"
+          }
+        ],
+        "period": {
+          "start": "2020-05-13",
+          "end": "2020-05-13"
+        },
+        "subject": {
+          "reference": "Patient/d74261a2-75d5-5ba8-67c9-895ad463e49d"
+        },
+        "location": [
+          {
+            "id": "2.16.840.1.113883.4.6",
+            "location": {
+              "reference": "Location/8d782fb2-9277-2b42-48a2-d3f3054c3c4a",
+              "display": "New York City Outpatient                                          Clinic"
+            },
+            "extension": [
+              {
+                "url": "http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "code": "OF",
+                      "system": "urn:oid:2.16.840.1.113883.5.111",
+                      "display": "Outpatient Facility"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "serviceProvider": {
+          "reference": "Organization/1651090f-e61e-b802-7fe1-0b21a18115f7"
+        },
+        "participant": [
+          {
+            "type": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                    "code": "ATND"
+                  }
+                ]
+              }
+            ],
+            "individual": {
+              "reference": "PractitionerRole/de0f4989-b7ac-6e7b-9a24-2709608dec0b"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/c255531b-30ae-0c77-685a-7a0e9f8e96ae"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:8d782fb2-9277-2b42-48a2-d3f3054c3c4a",
+      "resource": {
+        "resourceType": "Location",
+        "id": "8d782fb2-9277-2b42-48a2-d3f3054c3c4a",
+        "identifier": [
+          {
+            "system": "http://hl7.org/fhir/sid/us-npi",
+            "value": "9554"
+          }
+        ],
+        "name": "New York City Outpatient                                          Clinic",
+        "address": {
+          "use": "work",
+          "line": ["0987 Facility Drive"],
+          "city": "New York City",
+          "state": "NY",
+          "postalCode": "10012"
+        },
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "555-234-5678",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "555-333-1234",
+            "use": "work"
+          }
+        ],
+        "type": [
+          {
+            "coding": [
+              {
+                "code": "OF",
+                "system": "urn:oid:2.16.840.1.113883.5.111",
+                "display": "Outpatient Facility"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Location/8d782fb2-9277-2b42-48a2-d3f3054c3c4a"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1651090f-e61e-b802-7fe1-0b21a18115f7",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "1651090f-e61e-b802-7fe1-0b21a18115f7",
+        "name": "New York City Outpatient                                          Clinic",
+        "address": [
+          {
+            "use": "work",
+            "line": ["0987 Facility Drive"],
+            "city": "New York City",
+            "state": "NY",
+            "postalCode": "10012"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "555-234-5678",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "555-333-1234",
+            "use": "work"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/1651090f-e61e-b802-7fe1-0b21a18115f7"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:4581f291-448a-04ad-0508-e348f799a4b0",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "4581f291-448a-04ad-0508-e348f799a4b0",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/_datatype",
+            "valueString": "Responsible Party"
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://hl7.org/fhir/sid/us-npi",
+            "value": "66666666666"
+          }
+        ],
+        "name": [
+          {
+            "family": "Assigned",
+            "given": ["Amanda"],
+            "suffix": ["MD"]
+          }
+        ],
+        "address": [
+          {
+            "use": "home",
+            "line": ["1234 Provider Street"],
+            "city": "New York City",
+            "state": "NY",
+            "country": "US",
+            "postalCode": "10012",
+            "district": "New York County"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "555-777-0123",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "555-777-0987",
+            "use": "work"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Practitioner/4581f291-448a-04ad-0508-e348f799a4b0"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "id": "de0f4989-b7ac-6e7b-9a24-2709608dec0b",
+        "practitioner": {
+          "reference": "Practitioner/4581f291-448a-04ad-0508-e348f799a4b0"
+        },
+        "organization": {
+          "reference": "Organization/daf02ea4-2048-a2c3-e24f-7313a37bd19b"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:daf02ea4-2048-a2c3-e24f-7313a37bd19b",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "daf02ea4-2048-a2c3-e24f-7313a37bd19b",
+        "identifier": [
+          {
+            "system": "http://hl7.org/fhir/sid/us-npi",
+            "value": "TBDFacility#"
+          }
+        ],
+        "name": "New York City Outpatient Clinic",
+        "address": [
+          {
+            "use": "work",
+            "line": ["0987 Facility Drive"],
+            "city": "New York City",
+            "state": "NY",
+            "postalCode": "10012"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "555-555-5678",
+            "use": "work"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/daf02ea4-2048-a2c3-e24f-7313a37bd19b"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7ca153bc-2d17-5f99-f81a-f9b538a48559",
+      "resource": {
+        "resourceType": "Device",
+        "id": "7ca153bc-2d17-5f99-f81a-f9b538a48559",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.3.72.5.20"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/device-category",
+                  "code": "software",
+                  "display": "software"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Device/7ca153bc-2d17-5f99-f81a-f9b538a48559"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d74261a2-75d5-5ba8-67c9-895ad463e49d",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "d74261a2-75d5-5ba8-67c9-895ad463e49d",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:2.16.840.1.113883.19.5",
+            "value": "PT-470124"
+          },
+          {
+            "system": "http://hl7.org/fhir/sid/us-ssn",
+            "value": "111-11-1111"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Everywoman",
+            "given": ["Eve"]
+          }
+        ],
+        "birthDate": "1995-12-12",
+        "deceasedBoolean": false,
+        "gender": "female",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+            "extension": [
+              {
+                "url": "ombCategory",
+                "valueCoding": {
+                  "code": "2106-3",
+                  "system": "urn:oid:2.16.840.1.113883.6.238",
+                  "display": "WHITE"
+                }
+              },
+              {
+                "url": "text",
+                "valueString": "WHITE"
+              }
+            ]
+          },
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
+            "extension": [
+              {
+                "url": "ombCategory",
+                "valueCoding": {
+                  "code": "2135-2",
+                  "system": "urn:oid:2.16.840.1.113883.6.238",
+                  "display": "Hispanic or Latino"
+                }
+              },
+              {
+                "url": "text",
+                "valueString": "Hispanic or Latino"
+              }
+            ]
+          },
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+            "extension": [
+              {
+                "url": "value",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "code": "F",
+                      "system": "urn:oid:2.16.840.1.113883.5.1",
+                      "display": "Female"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "address": [
+          {
+            "use": "home",
+            "line": ["1234 Patient Street"],
+            "city": "New York City",
+            "state": "NY",
+            "country": "US",
+            "postalCode": "10012",
+            "district": "New York County"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "555-555-2003",
+            "use": "home"
+          },
+          {
+            "system": "email",
+            "value": "eeeverywoman@email.com",
+            "use": "home"
+          }
+        ],
+        "contact": [
+          {
+            "name": {
+              "use": "official",
+              "family": "Contact",
+              "given": ["Emer"],
+              "prefix": ["Mr"]
+            },
+            "telecom": [
+              {
+                "system": "phone",
+                "value": "+1-555-555-0987",
+                "use": "mobile"
+              }
+            ]
+          }
+        ],
+        "communication": [
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:ietf:bcp:47",
+                  "code": "en",
+                  "display": "English"
+                }
+              ]
+            },
+            "preferred": true
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/d74261a2-75d5-5ba8-67c9-895ad463e49d"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a91e1639-0e0f-adfc-5120-6dcf70c538e7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "a91e1639-0e0f-adfc-5120-6dcf70c538e7",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"]
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:db524287-4744-4ff8-a496-d775755a1ef2"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "364703007",
+              "system": "http://snomed.info/sct",
+              "display": "Employment detail"
+            },
+            {
+              "code": "11295-3",
+              "system": "http://loinc.org",
+              "display": "Current employment - Reported"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "159606005",
+              "system": "http://snomed.info/sct",
+              "display": "Sales"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/d74261a2-75d5-5ba8-67c9-895ad463e49d"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/a91e1639-0e0f-adfc-5120-6dcf70c538e7"
+      }
+    }
+  ]
+}
