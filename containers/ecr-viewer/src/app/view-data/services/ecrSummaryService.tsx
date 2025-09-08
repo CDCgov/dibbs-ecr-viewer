@@ -5,7 +5,6 @@ import {
   Condition,
   DomainResource,
   Encounter,
-  Location,
   Observation,
   Organization,
 } from "fhir/r4";

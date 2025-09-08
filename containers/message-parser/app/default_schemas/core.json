@@ -39,9 +39,10 @@
     }
   },
   "encounter_start_date": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).period.start",
     "data_type": "date",
     "nullable": true,
+    "reference_lookup": "entry.resource.Composition.encounter.reference",
     "metadata": {
       "category": "RR Reportability Information"
     }
