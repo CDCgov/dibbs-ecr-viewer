@@ -8,13 +8,13 @@ from frozendict import frozendict
 
 from app.config import get_settings
 from app.utils import (
+    FhirParser,
     convert_to_fhir,
     field_metadata,
     freeze_parsing_schema,
     freeze_parsing_schema_helper,
     get_credential_manager,
     get_metadata,
-    get_parsers,
     load_parsing_schema,
     search_for_required_values,
 )
@@ -40,19 +40,43 @@ def test_load_parsing_schema_fail():
     )
 
 
-@mock.patch("app.utils.fhirpathpy")
-def test_get_parsers(patched_fhirpathpy):
-    parsing_schema = load_parsing_schema("test_reference_schema.json")
-    get_parsers.cache_clear()
-    get_parsers(frozendict(parsing_schema))
+def test_fhir_parser_parse_success():
+    parsing_schema = load_parsing_schema("test_schema.json")
+    with open("../../assets/fhir/patient_bundle.json") as f:
+        bundle = json.load(f)
 
-    expected_number_of_calls = 0
-    for field, field_definition in parsing_schema.items():
-        expected_number_of_calls += 1
-        if "secondary_schema" in field_definition:
-            expected_number_of_calls += len(field_definition["secondary_schema"])
+    class MockResponse:
+        def __init__(self):
+            self.status_code = 200
 
-    assert len(patched_fhirpathpy.compile.call_args_list) == expected_number_of_calls
+    response = MockResponse()
+
+    expected_successful_response = {
+        "message": "Parsing succeeded!",
+        "parsed_values": {
+            "first_name": "John ",
+            "last_name": "doe",
+            "latitude": None,
+            "longitude": None,
+            "active_problems": [],
+            "rr": [
+                {
+                    "uuid": "id-rr-condition",
+                    "condition_code": "840539006",
+                    "condition": "COVID-19 unfortunately",
+                    "rule_summaries": [
+                        {"rule_summary": "Rule summary #1"},
+                        {"rule_summary": "Rule summary #2"},
+                    ],
+                }
+            ],
+        },
+    }
+
+    parser = FhirParser(parsing_schema, bundle, response)
+    parsed_values = parser.parse()
+
+    assert parsed_values == expected_successful_response["parsed_values"]
 
 
 def test_search_for_required_values_success():

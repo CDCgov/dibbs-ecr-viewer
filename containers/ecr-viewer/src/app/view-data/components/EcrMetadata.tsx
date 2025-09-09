@@ -1,11 +1,17 @@
+"use client";
+
 import React from "react";
 
-import { Table } from "@trussworks/react-uswds";
+import { Button, Table } from "@trussworks/react-uswds";
 
+import { noData } from "@/app/utils/data-utils";
+import { toKebabCase } from "@/app/utils/format-utils";
+import { ERSDInfo } from "@/app/view-data/services/ecrMetadataService";
 import {
-  ERSDInfo,
+  Participant,
+  ReportabilityInfo,
   ReportableConditions,
-} from "@/app/view-data/services/ecrMetadataService";
+} from "@/app/view-data/services/reportabilityService";
 import {
   AccordionSection,
   AccordionSubSection,
@@ -15,7 +21,7 @@ import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 import { ToolTipElement } from "./ToolTipElement";
 
 interface EcrMetadataProps {
-  rrDetails: ReportableConditions;
+  rrConditions: ReportableConditions;
   eicrDetails: DisplayDataProps[];
   eRSDProcessingInfo: ERSDInfo | undefined;
   eCRCustodianDetails: DisplayDataProps[];
@@ -31,7 +37,7 @@ const eRSDWarningTooltip = (
 /**
  * Functional component for displaying eCR metadata.
  * @param props - Props containing eCR metadata.
- * @param props.rrDetails - The reportable conditions details.
+ * @param props.rrConditions - The reportable conditions details.
  * @param props.eicrDetails - The eICR details.
  * @param props.eRSDProcessingInfo - The eICR processing success status & eRSD warning.
  * @param props.eCRCustodianDetails - The eCR custodian details.
@@ -39,7 +45,7 @@ const eRSDWarningTooltip = (
  * @returns The JSX element representing the eCR metadata.
  */
 const EcrMetadata = ({
-  rrDetails,
+  rrConditions,
   eicrDetails,
   eRSDProcessingInfo,
   eCRCustodianDetails,
@@ -48,7 +54,7 @@ const EcrMetadata = ({
   return (
     <AccordionSection>
       <AccordionSubSection title="RR Details">
-        <ReportabilitySummary rrDetails={rrDetails} />
+        <ReportabilitySummary rrConditions={rrConditions} />
         <div className="section__line_gray" />
         {eRSDProcessingInfo?.success ? (
           <div>
@@ -130,12 +136,22 @@ const EcrMetadata = ({
   );
 };
 
-type ReportabilitySummaryProps = Pick<EcrMetadataProps, "rrDetails">;
+type ReportabilitySummaryProps = Pick<EcrMetadataProps, "rrConditions">;
 
+/**
+ * Functional component for the Reportability Summary table.
+ * @param props - Props containing RR information.
+ * @param props.rrConditions - The reportable conditions and details.
+ * @returns The JSX element representing the Reportability Summary table.
+ */
 const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
-  rrDetails,
+  rrConditions,
 }) => {
-  const rows = useConvertDictionaryToRows(rrDetails);
+  let rows: React.ReactNode[] = [];
+
+  rows = Object.entries(rrConditions).flatMap(([condition, rrInfoArray]) =>
+    ReportableConditionRows(condition, rrInfoArray),
+  );
 
   if (rows.length === 0) {
     return (
@@ -150,17 +166,22 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
 
   return (
     <Table
-      bordered={true}
+      bordered={false}
       caption="Reportability Summary"
-      className="rrTable"
+      className="border-top border-left border-right"
       fixed={true}
       fullWidth={true}
     >
       <thead>
         <tr>
-          <th className="width-25p">
+          <th className="width-20p">
             <ToolTipElement toolTip="List of conditions that caused this eCR to be sent to your jurisdiction based on the rules set up for routing eCRs by your jurisdiction in RCKMS (Reportable Condition Knowledge Management System). Can include multiple Reportable Conditions for one eCR.">
               Reportable Condition
+            </ToolTipElement>
+          </th>
+          <th className="width-20p">
+            <ToolTipElement toolTip="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR.">
+              Jurisdiction Sent eCR
             </ToolTipElement>
           </th>
           <th>
@@ -168,26 +189,10 @@ const ReportabilitySummary: React.FC<ReportabilitySummaryProps> = ({
               RCKMS Rule Summary
             </ToolTipElement>
           </th>
-          <th className="width-25p">
-            <ToolTipElement toolTip="List of jurisdictions this eCR was sent to. Can include multiple jurisdictions depending on provider location, patient address, and jurisdictions onboarded to eCR.">
-              Jurisdiction Sent eCR
-            </ToolTipElement>
-          </th>
+          <th className="width-10p">Details</th>
         </tr>
       </thead>
-      <tbody>
-        {rows.map(({ key, condition, trigger, location }) => (
-          <tr key={key}>
-            {condition ? (
-              <td rowSpan={condition.rowSpan}>{condition.value}</td>
-            ) : null}
-            {trigger ? (
-              <td rowSpan={trigger.rowSpan}>{trigger.value}</td>
-            ) : null}
-            <td>{location}</td>
-          </tr>
-        ))}
-      </tbody>
+      <tbody className="text-pre-line">{rows}</tbody>
     </Table>
   );
 };
@@ -200,50 +205,171 @@ interface TableCellData {
 interface ReportableConditionRow {
   key: string;
   condition: TableCellData | null;
-  trigger: TableCellData | null;
-  location: string;
+  routingEntity: React.JSX.Element[] | null;
+  rrRule: string | null;
+  hiddenRow?: React.ReactNode;
+  expandedHidden: boolean;
+  toggleHidden: () => void;
 }
 
-const useConvertDictionaryToRows = (dictionary: ReportableConditions) => {
-  if (!dictionary) return [];
-  const rows: ReportableConditionRow[] = [];
+/**
+ * Helper component for buidling the rows for each condition in
+ * the Reportability Summary table.
+ * @param condition - The reportable condition (string).
+ * @param rrInfoArray - Array of the associated information to the reportable condition.
+ * @returns The JSX element representing the rows for that condition in the table.
+ */
+const ReportableConditionRows = (
+  condition: string,
+  rrInfoArray: ReportabilityInfo[],
+): React.ReactNode[] => {
+  const [expandedRows, setExpandedRows] = React.useState<
+    Record<string, boolean>
+  >({});
+  const numExpandedRows = Object.values(expandedRows).filter(Boolean).length;
+  const numRowsPerCondition = rrInfoArray?.length;
+  const dynamicRowSpan = numRowsPerCondition + numExpandedRows;
 
-  Object.entries(dictionary).forEach(([condition, triggers], _) => {
-    Object.entries(triggers).forEach(([trigger, locations], triggerIndex) => {
-      const locationsArray = Array.from(locations);
-      locationsArray.forEach((location, locationIndex) => {
-        const isConditionRow = triggerIndex === 0 && locationIndex === 0;
-        const isTriggerRow = locationIndex === 0;
+  const toggleHiddenRow = (key: string) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
-        const conditionRowSpan = Object.keys(triggers).reduce(
-          (acc, key) => acc + Array.from(triggers[key]).length,
-          0,
-        );
-        const triggerRowSpan = locationsArray.length;
+  const rows: React.ReactNode[] = [];
 
-        const row: ReportableConditionRow = {
-          key: `${condition}-${trigger}-${location}`,
-          condition: isConditionRow
-            ? {
-                value: condition,
-                rowSpan: conditionRowSpan,
-              }
-            : null,
-          trigger: isTriggerRow
-            ? {
-                value: trigger,
-                rowSpan: triggerRowSpan,
-              }
-            : null,
-          location: location ?? "",
-        };
-
-        rows.push(row);
-      });
-    });
+  rrInfoArray.forEach((rrInfo, rrInfoIndex) => {
+    const row = ReportableConditionRow(
+      condition,
+      rrInfo,
+      rrInfoIndex,
+      dynamicRowSpan,
+      expandedRows,
+      toggleHiddenRow,
+    );
+    rows.push(row);
   });
 
   return rows;
+};
+
+/**
+ * Renders a row for a reportable condition, including the condition name, routing
+ * entity, and determination of reportability rule(s).
+ * If applicable, also renders a expandable row for more details. Will contain info
+ * about other participants and the determination of reportability reason(s).
+ * @param condition - The reportable condition (string).
+ * @param rrInfo - Object containing RR info (rules, reasons, participants).
+ * @param rrInfoIndex - Index of the RR info obj, used to make a unique key value.
+ * @param dynamicRowSpan - The `rowSpan` value for the condition cell.
+ * @param expandedRows - Map indicating whether the row should be expanded or collapsed.
+ * @param toggleHiddenRow - Function to toggle visibility of a hidden details row.
+ * @returns An array of React nodes, one for the main row and possibly a second for the collapsible details row.
+ */
+const ReportableConditionRow = (
+  condition: string,
+  rrInfo: ReportabilityInfo,
+  rrInfoIndex: number,
+  dynamicRowSpan: number,
+  expandedRows: Record<string, boolean>,
+  toggleHiddenRow: (key: string) => void,
+): React.ReactNode[] => {
+  const isConditionCell = rrInfoIndex === 0;
+  const key = `${toKebabCase(condition)}-${rrInfoIndex}`;
+
+  // Build out participants, rules, reasons
+  const routingEntity: React.ReactNode[] = [];
+  const participants: Participant[] = [];
+
+  rrInfo.participants.forEach((p: Participant, index) => {
+    if (p.role === "Routing Entity") {
+      routingEntity.push(
+        <div key={index}>
+          {p.name}
+          <br />
+        </div>,
+      );
+    } else {
+      participants.push(p);
+    }
+  });
+
+  if (routingEntity.length === 0) {
+    routingEntity.push(noData);
+  }
+  const rules = Array.from(rrInfo.rules).join("\n");
+  const reasons = Array.from(rrInfo.reasons).join("\n");
+
+  const rowSet = [];
+  const styleHidden = expandedRows[key] ? { borderBottom: "none" } : undefined;
+
+  rowSet.push(
+    <tr key={key}>
+      {isConditionCell && <td rowSpan={dynamicRowSpan}>{condition}</td>}
+      <td style={styleHidden}>{routingEntity}</td>
+      <td style={styleHidden}>{rules || noData}</td>
+      <td style={styleHidden}>
+        {(participants.length > 0 || reasons) && (
+          <Button
+            unstyled={true}
+            type="button"
+            onClick={() => toggleHiddenRow(key)}
+            aria-controls={`hidden-details-${key}`}
+            aria-expanded={expandedRows[key]}
+            data-test-id="hidden-details-button"
+          >
+            {!expandedRows[key] ? "View details" : "Hide details"}
+          </Button>
+        )}
+      </td>
+    </tr>,
+  );
+
+  if (participants.length > 0 || reasons) {
+    rowSet.push(
+      <tr
+        key={`hidden-details-${key}`}
+        id={`hidden-details-${key}`}
+        hidden={!expandedRows[key]}
+      >
+        <td colSpan={3} style={{ borderTop: "none" }}>
+          <div className="border-top border-base-lighter margin-top-neg-105 margin-bottom-1" />
+          <strong>Reportability Details</strong>
+          {participants.length > 0 && (
+            <>
+              {participants.map((p, i) => (
+                <DataDisplay
+                  key={`participant-${i}`}
+                  item={{
+                    title: p.role,
+                    value: p.name,
+                    dividerLine: false,
+                    titleNormal: true,
+                  }}
+                />
+              ))}
+            </>
+          )}
+          {reasons && (
+            <>
+              <DataDisplay
+                key="reportability-reason"
+                item={{
+                  title: "Determination of Reportability Reason",
+                  value: reasons,
+                  dividerLine: false,
+                  titleNormal: true,
+                }}
+              />
+            </>
+          )}
+        </td>
+      </tr>,
+    );
+  }
+
+  return rowSet;
 };
 
 export default EcrMetadata;

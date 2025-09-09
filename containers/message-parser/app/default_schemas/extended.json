@@ -132,34 +132,40 @@
     "nullable": true
   },
   "facility_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].id",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].id",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "facility_name": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].location.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].location.display",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "facility_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').valueCodeableConcept.coding[0].display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').valueCodeableConcept.coding[0].display",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "encounter_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter')[0].class.where(system = 'urn:oid:2.16.840.1.113883.5.4').display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter' and id = %ref).class.where(system = 'urn:oid:2.16.840.1.113883.5.4').display",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "encounter_start_date": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).period.start",
     "data_type": "datetime",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "encounter_end_date": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter').period.end",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).period.end",
     "data_type": "datetime",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "reason_for_visit": {
     "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition' ).section.where(code.coding.code='29299-5').extension.where(url='http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12').valueString",
@@ -242,22 +248,22 @@
         "nullable": true
       },
       "test_result_reference_range_low_value": {
-        "fhir_path": "Observation.refereneceRange.low.value",
+        "fhir_path": "Observation.referenceRange.low.value",
         "data_type": "float",
         "nullable": true
       },
       "test_result_reference_range_low_units": {
-        "fhir_path": "Observation.refereneceRange.low.unit",
+        "fhir_path": "Observation.referenceRange.low.unit",
         "data_type": "string",
         "nullable": true
       },
       "test_result_reference_range_high_value": {
-        "fhir_path": "Observation.refereneceRange.high.value",
+        "fhir_path": "Observation.referenceRange.high.value",
         "data_type": "float",
         "nullable": true
       },
       "test_result_reference_range_high_units": {
-        "fhir_path": "Observation.refereneceRange.high.unit",
+        "fhir_path": "Observation.referenceRange.high.unit",
         "data_type": "string",
         "nullable": true
       },
@@ -368,7 +374,7 @@
     }
   },
   "rr": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(code.coding.exists(system = 'http://loinc.org' and code = '75323-6'))",
     "data_type": "array",
     "nullable": true,
     "secondary_schema": {
@@ -397,9 +403,10 @@
         }
       },
       "rule_summaries": {
-        "fhir_path": "Observation.extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(id = %ref).extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension')",
         "data_type": "array",
         "nullable": true,
+        "reference_lookup": "Observation.hasMember.reference",
         "secondary_schema": {
           "rule_summary": {
             "fhir_path": "valueString",

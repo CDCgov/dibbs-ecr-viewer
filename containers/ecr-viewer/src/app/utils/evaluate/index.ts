@@ -308,12 +308,12 @@ const isAddress = (v: object, p: string): v is Address => p === "Address";
  * Expects a single element to be returned from the reference. If more than one is evaluated, the
  * first will be returned and an error will be logged to the console with information
  * on the evaluation.
- * @param fhirBundle - The FHIR bundle containing resources.
+ * @param fhirData - The FHIR resource.
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
  */
 export const evaluateReference = <T extends Resource>(
-  fhirBundle: Bundle,
+  fhirData: FhirData,
   ref?: string | Reference,
 ): T | undefined => {
   if (typeof ref !== "string") {
@@ -323,7 +323,7 @@ export const evaluateReference = <T extends Resource>(
 
   const [resourceType, id] = ref.split("/");
   const result = evaluateOneAndCheck<T>(
-    fhirBundle,
+    fhirData,
     fhirPathMappings.resolve.path,
     resourceType,
     {
@@ -349,34 +349,34 @@ type RefPathTypes = {
 
 /**
  * Evaluates a reference and then fetches the referred to resource
- * @param fhirBundle - The FHIR bundle containing resources.
+ * @param fhirData - The FHIR resource.
  * @param pathToRef - A fhir path mapping that returns a string reference
  * @param context - Optional context to evaluate the reference with
  * @returns The referred to resource or undefined
  */
 export const evaluateOneReference = <T extends Resource>(
-  fhirBundle: Bundle,
+  fhirData: FhirData,
   pathToRef: FhirPath<RefPathTypes>,
   context?: Context,
 ): T | undefined => {
-  const ref = evaluateOne(fhirBundle, pathToRef, context);
-  return evaluateReference<T>(fhirBundle, ref);
+  const ref = evaluateOne(fhirData, pathToRef, context);
+  return evaluateReference<T>(fhirData, ref);
 };
 
 /**
  * Evaluates all references and then fetches the referred to resources
- * @param fhirBundle - The FHIR bundle containing resources.
+ * @param fhirData - The FHIR resource.
  * @param pathToRef - A fhir path mapping that returns a string reference
  * @param context - Optional context to evaluate the reference with
  * @returns The referred to resource or undefined
  */
 export const evaluateAllReferences = <T extends Resource>(
-  fhirBundle: Bundle,
+  fhirData: FhirData,
   pathToRef: FhirPath<RefPathTypes>,
   context?: Context,
 ): T[] => {
-  const refs = evaluateAll(fhirBundle, pathToRef, context);
+  const refs = evaluateAll(fhirData, pathToRef, context);
   return refs
-    .map((ref) => evaluateReference<T>(fhirBundle, ref))
+    .map((ref) => evaluateReference<T>(fhirData, ref))
     .filter(notEmpty);
 };

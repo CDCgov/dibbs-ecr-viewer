@@ -104,7 +104,7 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
     # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]
     has_condition = any(
         x.get("system") == "http://snomed.info/sct" and x.get("code") == "64572001"
-        for x in resource["code"]["coding"]
+        for x in resource["code"].get("coding", [])
     )
     if not has_condition:
         return resource
