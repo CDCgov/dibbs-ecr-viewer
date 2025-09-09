@@ -4,7 +4,8 @@ import {
   Bundle,
   Condition,
   DomainResource,
-  Location,
+  Encounter,
+  Observation,
   Organization,
 } from "fhir/r4";
 
@@ -14,6 +15,7 @@ import {
 } from "@/app/services/formatDateService";
 import {
   formatCodeableConcept,
+  formatCoding,
   formatContactPoint,
   formatCurrentAddress,
   formatPatientContactList,
@@ -23,6 +25,7 @@ import {
   evaluateAll,
   evaluateOne,
   evaluateOneReference,
+  evaluateReference,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
@@ -38,12 +41,13 @@ import {
   evaluatePatientName,
   evaluatePatientRace,
   evaluatePatientEthnicity,
-  evaluateEncounterDiagnosis,
   censorGender,
   calculatePatientAge,
+  evaluateEncounterDiagnosis,
+  getLocationName,
 } from "./evaluateFhirDataService";
 import { evaluateLabInfoData } from "./labsService";
-import { getReportabilitySummaries } from "./reportabilityService";
+import { getReportabilityRulesReasons } from "./reportabilityService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -112,33 +116,33 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
  * @returns An array of encounter details objects containing title and value pairs.
  */
 export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
+  const encounter = evaluateOneReference<Encounter>(
+    fhirBundle,
+    fhirPathMappings.compositionEncounterRef,
+  );
+
   return evaluateData([
     {
       title: "Encounter Date/Time",
-      value: evaluateEncounterDate(fhirBundle),
+      value: formatStartEndDateTime(encounter?.period),
     },
     {
       title: "Encounter Type",
-      value: evaluateOne(fhirBundle, fhirPathMappings.encounterType),
+      value: formatCoding(encounter?.class),
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle),
+      value: evaluateEncounterDiagnosis(encounter),
     },
     {
       title: "Facility Name",
-      value:
-        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
-        evaluateOneReference<Location>(
-          fhirBundle,
-          fhirPathMappings.facilityLocationRef,
-        )?.name,
+      value: getLocationName(fhirBundle, encounter),
     },
     {
       title: "Facility Contact",
       value: formatContactPoint(
         evaluateOneReference<Organization>(
-          fhirBundle,
+          encounter,
           fhirPathMappings.facilityOrgRef,
         )?.telecom,
       ),
@@ -156,11 +160,11 @@ export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
   snomedCode?: string,
 ): ConditionSummary[] => {
-  const rrArray = evaluateAll(fhirBundle, fhirPathMappings.rrDetails);
+  const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const conditionsList: {
     [index: string]: { ruleSummaries: Set<string>; snomedDisplay: string };
   } = {};
-  for (const observation of rrArray) {
+  for (const observation of rrConditions) {
     const coding = observation?.valueCodeableConcept?.coding?.find(
       (coding) => coding.system === "http://snomed.info/sct",
     );
@@ -175,9 +179,17 @@ export const evaluateEcrSummaryConditionSummary = (
         };
       }
 
-      getReportabilitySummaries(observation).forEach((ruleSummary) =>
-        conditionsList[snomed].ruleSummaries.add(ruleSummary),
-      );
+      observation?.hasMember?.forEach((ref) => {
+        const rrInfoObs: Observation | undefined = evaluateReference(
+          fhirBundle,
+          ref.reference,
+        );
+        const { rules } = getReportabilityRulesReasons(rrInfoObs);
+
+        rules.forEach((rule: string) =>
+          conditionsList[snomed].ruleSummaries.add(rule),
+        );
+      });
     }
   }
 
@@ -339,17 +351,6 @@ export const evaluateEcrSummaryRelevantLabResults = (
     resultsArray.push({ dividerLine: true });
   }
   return resultsArray;
-};
-
-/**
- * Evaluates encounter date from the FHIR bundle and formats it into structured data for display.
- * @param fhirBundle - The FHIR bundle containing encounter date.
- * @returns A string of start date - end date.
- */
-const evaluateEncounterDate = (fhirBundle: Bundle) => {
-  return formatStartEndDateTime(
-    evaluateOne(fhirBundle, fhirPathMappings.encounterPeriod),
-  );
 };
 
 const evaluateEcrSummaryRelevantImmunizations = (
