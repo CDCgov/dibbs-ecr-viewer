@@ -188,34 +188,40 @@
     "nullable": true
   },
   "facility_id_number": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].id",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].id",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "facility_name": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].location.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].location.display",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "facility_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter')[0].location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').valueCodeableConcept.coding[0].display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').valueCodeableConcept.coding[0].display",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "encounter_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter')[0].class.where(system = 'urn:oid:2.16.840.1.113883.5.4').display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter' and id = %ref).class.where(system = 'urn:oid:2.16.840.1.113883.5.4').display",
     "data_type": "string",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "encounter_start_date": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter').period.start",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).period.start",
     "data_type": "datetime",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "encounter_end_date": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter').period.end",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).period.end",
     "data_type": "datetime",
-    "nullable": true
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "reason_for_visit": {
     "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition' ).section.where(code.coding.code='29299-5').extension.where(url='http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12').valueString",

@@ -36,10 +36,16 @@
         "id": "e384c999-311f-fca8-5814-FAKE791a520b",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
           ],
           "source": ["ecr"]
         },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:e384c999-311f-fca8-5814-FAKE791a520b"
+          }
+        ],
         "status": "final",
         "code": {
           "coding": [
@@ -65,11 +71,12 @@
           ],
           "text": "Hepatitis C"
         },
-        "extension": [
+        "hasMember": [
           {
-            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
-            "valueString": "Detection of Hepatitis C virus antibody in a clinical specimen by any method"
-          },
+            "reference": "Observation/48370b55-9f5a-c83a-503c-FAKEfe73a374"
+          }
+        ],
+        "extension": [
           {
             "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
             "valueCoding": {
@@ -84,13 +91,106 @@
       "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
       "resource": {
         "resourceType": "Observation",
-        "id": "65474f7c-d1d7-4ef8-004a-FAKE6ec42c97",
+        "id": "48370b55-9f5a-c83a-503c-FAKEfe73a374",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
           ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f4ea9439-0626-4b65-b6de-6e64554bd427"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Detection of Hepatitis C virus antibody in a clinical specimen by any method"
+          }
+        ],
+        "performer": [
+          {
+            "reference": "Organization/1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+            "display": "Anchorhead Department of Public Health"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/48370b55-9f5a-c83a-503c-FAKEfe73a374"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-routing-entity-organization"
+          ],
           "source": ["ecr"]
         },
+        "active": true,
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+                "code": "RR7",
+                "display": "Routing Entity"
+              }
+            ]
+          }
+        ],
+        "name": "Anchorhead Department of Public Health"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/1b6cfb7e-4f61-a8e0-2267-FAKE3de49935"
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "65474f7c-d1d7-4ef8-004a-FAKE6ec42c97",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:65474f7c-d1d7-4ef8-004a-FAKE6ec42c97"
+          }
+        ],
         "status": "final",
         "code": {
           "coding": [
@@ -115,7 +215,62 @@
             }
           ]
         },
+        "hasMember": [
+          {
+            "reference": "Observation/b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f"
+          }
+        ],
         "extension": [
+          {
+            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+            "valueCoding": {
+              "code": "840539006",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:b0bd7770-283f-44b1-9dda-5590707d29fe"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
           {
             "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
             "valueString": "COVID-19 (as a diagnosis or active problem)"
@@ -125,13 +280,39 @@
             "valueString": "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method"
           },
           {
-            "url": "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
-            "valueCoding": {
-              "code": "840539006",
-              "system": "http://snomed.info/sct"
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-external-resource-extension",
+            "valueReference": {
+              "reference": "DocumentReference/2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c"
             }
           }
+        ],
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "RR4",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.232",
+                  "display": "Timeframe to report (urgency)"
+                }
+              ]
+            },
+            "valueQuantity": {
+              "value": 1,
+              "unit": "hr"
+            }
+          }
+        ],
+        "performer": [
+          {
+            "reference": "Organization/00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d",
+            "display": "Mos Espa Department of Health"
+          }
         ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f"
       }
     },
     {

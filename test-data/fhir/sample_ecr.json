@@ -565,9 +565,9 @@
         "id": "17f6392f-9340-45d3-a1c8-bc0a30d09f53",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
           ],
-          "source": "ecr"
+          "source": ["ecr"]
         },
         "identifier": [
           {
@@ -594,22 +594,73 @@
           "coding": [
             {
               "code": "840539006",
-              "system": "http://snomed.info/sct",
-              "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+              "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+              "system": "http://snomed.info/sct"
+            }
+          ]
+        },
+        "hasMember": [
+          {
+            "reference": "Observation/c4f0611d-654e-4f7f-8c38-3f8c8789e92d"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c4f0611d-654e-4f7f-8c38-3f8c8789e92d",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c4f0611d-654e-4f7f-8c38-3f8c8789e92d",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:b0bd7770-283f-44b1-9dda-5590707d29fe"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
             }
           ]
         },
         "extension": [
           {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
+          {
             "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
-            "valueString": "All results of tests for detection of SARS-CoV-2                                nucleic acid in a clinical specimen by any method"
+            "valueString": "All results of tests for detection of SARS-CoV-2 nucleic acid in a clinical specimen by any method"
           }
         ],
         "performer": [
           {
-            "reference": "Organization/"
+            "reference": "Organization/",
+            "display": "Mos Espa Department of Health"
           }
         ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/c4f0611d-654e-4f7f-8c38-3f8c8789e92d"
       }
     },
     {

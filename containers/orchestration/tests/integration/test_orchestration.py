@@ -198,11 +198,7 @@ def test_process_message_fhir(setup):
     Integration test of a different workflow and data type, a FHIR bundle
     passed through standardization.
     """
-    message = json.load(
-        open(
-            Path(__file__).parent.parent / "assets" / "demo_phdc_conversion_bundle.json"
-        )
-    )
+    message = json.load(open(Path(__file__).parent.parent / "assets" / "bundle.json"))
     request = {
         "message_type": "fhir",
         "data_type": "fhir",
