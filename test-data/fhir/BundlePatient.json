@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:99999999-4p89-4b96-b6ab-c46406839cea",
@@ -198,10 +198,6 @@
             ]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
       }
     },
     {
@@ -240,10 +236,6 @@
         "subject": {
           "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/88888888-b0a0-1a27-79ec-aaa9c8ea795a"
       }
     },
     {
@@ -290,10 +282,6 @@
         "subject": {
           "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/11111111-9da2-9999-bc49-a60c634860d1"
       }
     },
     {
@@ -345,10 +333,6 @@
         "subject": {
           "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/b467f663-f4f5-78af-a677-05b5545d8716"
       }
     },
     {
@@ -400,10 +384,6 @@
         "subject": {
           "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/c241ed7b-dc3d-7055-5d3e-a307f8494b07"
       }
     },
     {
@@ -455,10 +435,6 @@
         "subject": {
           "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/962570d9-01a7-db34-f8c9-57168e44510d"
       }
     },
     {
@@ -503,10 +479,6 @@
         "subject": {
           "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/7bdd3e8f-3ec3-05e6-907b-980211b39b3a"
       }
     },
     {
@@ -551,10 +523,6 @@
         "subject": {
           "reference": "Patient/99999999-4p89-4b96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/e4c7d1a2-91f0-47cb-8a6b-bfba298df60a"
       }
     },
     {
@@ -619,10 +587,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "RelatedPerson/6e01fadc-40b4-5b8a-62b7-0bb2634dfbd3"
       }
     }
   ]

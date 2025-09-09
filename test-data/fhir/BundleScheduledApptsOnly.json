@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:19afc0ed-2b2f-446c-9715-5ec9646442ea",
@@ -91,10 +91,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "CarePlan/49200334-0c15-5a04-bf2c-b96a087ec490"
       }
     }
   ]

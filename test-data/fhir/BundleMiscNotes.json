@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:1bfc4252-663e-4163-88cf-8340c65b76ed",

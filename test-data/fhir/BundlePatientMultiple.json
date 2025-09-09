@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:6b6b3c4c-4884-4a96-b6ab-c46406839cea",
@@ -148,10 +148,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Patient/6b6b3c4c-4884-4a96-b6ab-c46406839cea"
       }
     }
   ]

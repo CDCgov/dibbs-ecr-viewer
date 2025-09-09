@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
@@ -27,10 +27,6 @@
             "mode": "snapshot"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/0.0.000.000000.0.00.000.0.0.0.000000.000"
       }
     },
     {
@@ -89,10 +85,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/e384c999-311f-fca8-5814-FAKE791a520b"
       }
     },
     {
@@ -237,10 +229,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/65474f7c-d1d7-4ef8-004a-FAKE6ec42c97"
       }
     },
     {
@@ -368,10 +356,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "DiagnosticReport/5511c790-c926-ebf4-ddf6-d7399b240627"
       }
     },
     {
@@ -461,10 +445,6 @@
             "reference": "Organization/e3ece69c-0968-59c9-47dd-f16db731621a"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/7036bbf6-d303-461b-6d62-FAKE9ab4d144"
       }
     },
     {
@@ -538,10 +518,6 @@
             "reference": "Organization/e3ece69c-0968-59c9-47dd-f16db731621a"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/c54054d5-eff8-6b25-af46-FAKE7e0927cc"
       }
     },
     {
@@ -600,10 +576,6 @@
             ]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/8f05dff1-b082-a20f-20e8-FAKE04a37a14"
       }
     },
     {
@@ -650,10 +622,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Condition/0.0.000.000000.0.00.000.0.0.0.000000.000"
       }
     },
     {
@@ -689,10 +657,6 @@
             ]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Immunization/0.0.000.000000.0.00.000.0.0.0.000000.000"
       }
     }
   ]

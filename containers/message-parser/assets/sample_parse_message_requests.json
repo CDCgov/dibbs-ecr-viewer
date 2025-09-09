@@ -51,7 +51,7 @@
       "message_format": "fhir",
       "message": {
         "resourceType": "Bundle",
-        "type": "batch",
+        "type": "document",
         "timestamp": "2021-08-18T09:11:00Z",
         "identifier": {
           "value": "MSG00001"
@@ -614,10 +614,6 @@
                   "gender": "female"
                 }
               ]
-            },
-            "request": {
-              "method": "PUT",
-              "url": "Patient/987d9cdd-9f99-4fac-a50d-2fe6b2f0c369"
             }
           }
         ]
