@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:bb410dc7-007f-c649-1bed-2c00e676edfb",
@@ -33,10 +33,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Condition/bb410dc7-007f-c649-1bed-2c00e676edfb"
       }
     }
   ]

@@ -4,7 +4,7 @@
   "meta": {
     "lastUpdated": "2022-06-07T14:13:02.511737+00:00"
   },
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "https://phdi-pilot.azurehealthcareapis.com/Composition/40234gi0-16h5-ffdf-n18d-d93jbn19dajj",
