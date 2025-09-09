@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:00194802-85e5-4b5a-9da5-ef8bf5735a67",
@@ -26,10 +26,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/00194802-85e5-4b5a-9da5-ef8bf5735a67"
       }
     },
     {
@@ -62,10 +58,6 @@
             }
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "DiagnosticReport/97d3b36a-f833-2f3c-b456-abeb1fd342e4"
       }
     }
   ]

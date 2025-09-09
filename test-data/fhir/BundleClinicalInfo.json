@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:1dd10047-2207-4eac-a993-0f706c88be5d",
@@ -91,10 +91,6 @@
             "reference": "Practitioner/79842b6e-724b-8d57-dd2a-8d4b915f0558"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/1dd10047-2207-4eac-a993-0f706c88be5d"
       }
     },
     {
@@ -117,10 +113,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Immunization/50fc36a0-b859-c4a4-de8f-53c149080081"
       }
     },
     {
@@ -168,10 +160,6 @@
         "subject": {
           "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/96d9c86d-44a7-468f-54a0-7967b4a9d74e"
       }
     },
     {
@@ -219,10 +207,6 @@
         "subject": {
           "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/b56ecbc3-d9d6-9ee0-72a2-d593a1319384"
       }
     },
     {
@@ -272,10 +256,6 @@
         "subject": {
           "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/f6629e93-53d1-acc9-e012-d3828d3bb525"
       }
     },
     {
@@ -323,10 +303,6 @@
         "subject": {
           "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/a7520460-214e-886f-3b3f-7b32d672a5f2"
       }
     },
     {
@@ -374,10 +350,6 @@
         "subject": {
           "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/dcd0af93-2eca-0d28-f1fe-5f2b65c7d182"
       }
     },
     {
@@ -436,10 +408,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Condition/fb4c40a4-602f-9cf0-11c0-903b1f3d9e94"
       }
     },
     {
@@ -483,10 +451,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Condition/a9d3f2b7-1c8a-4bd2-93e0-74f6217bbdfa"
       }
     },
     {
@@ -526,10 +490,6 @@
         "subject": {
           "reference": "Patient/107642c3-a9dd-ef8b-a8b5-FAKE766ecf0f"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Procedure/b40f0081-4052-4971-3f3b-e3d9f5e1e44d"
       }
     },
     {
@@ -580,10 +540,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "CarePlan/360f0f52-0434-58ee-1e51-e093e4cf4847"
       }
     },
     {
@@ -626,10 +582,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "MedicationAdministration/367be6b3-75f2-2053-63e4-f0a6f1d6bff1"
       }
     },
     {
@@ -667,10 +619,6 @@
         "effectivePeriod": {
           "start": "2020-11-01"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/26d05bcc-1b0f-fc8a-a85e-4c6c6512478f"
       }
     }
   ]

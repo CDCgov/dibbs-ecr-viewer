@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:3bd09111-ae6b-0357-cbda-526c275da43b",
@@ -28,10 +28,6 @@
         "subject": {
           "reference": "Patient/6b6b3c4c-4884-4a96-b6ab-c46406839cea"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/3bd09111-ae6b-0357-cbda-526c275da43b"
       }
     }
   ]
