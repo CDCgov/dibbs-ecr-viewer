@@ -469,6 +469,7 @@
             "display": "Mos Espa Department of Health"
           }
         ]
+      }
     },
     {
       "fullUrl": "urn:uuid:2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c",
@@ -529,7 +530,7 @@
         "subject": {
           "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
         }
-      },
+      }
     },
     {
       "fullUrl": "urn:uuid:aeb90e50-767d-98a4-ce21-FAKE614cc7a8",
@@ -638,6 +639,8 @@
             "display": "Anchorhead Department of Public Health"
           }
         ]
+      }
+    },
     {
       "fullUrl": "urn:uuid:1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
       "resource": {
