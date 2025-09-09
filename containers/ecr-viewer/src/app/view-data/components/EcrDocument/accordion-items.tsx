@@ -161,7 +161,7 @@ export const getEcrDocumentAccordionItems = (
       title: "eCR Metadata",
       content: (
         <>
-          {Object.keys(ecrMetadata.rrDetails).length > 0 ||
+          {Object.keys(ecrMetadata.rrConditions).length > 0 ||
           ecrMetadata.eRSDProcessingInfo ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
@@ -173,7 +173,7 @@ export const getEcrDocumentAccordionItems = (
               eCRCustodianDetails={
                 ecrMetadata.ecrCustodianDetails.availableData
               }
-              rrDetails={ecrMetadata.rrDetails}
+              rrConditions={ecrMetadata.rrConditions}
               eRSDProcessingInfo={ecrMetadata.eRSDProcessingInfo}
               eicrAuthorDetails={ecrMetadata.eicrAuthorDetails
                 .filter((details) => details.availableData.length > 0)

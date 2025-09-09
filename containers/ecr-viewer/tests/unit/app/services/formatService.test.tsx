@@ -1,5 +1,6 @@
 import {
   CodeableConcept,
+  Coding,
   ContactPoint,
   HumanName,
   PatientContact,
@@ -16,6 +17,7 @@ import {
   formatQuantity,
   formatRange,
   findCurrentAddress,
+  formatCoding,
 } from "@/app/services/formatService";
 
 describe("FormatService tests", () => {
@@ -728,6 +730,53 @@ describe("FormatService tests", () => {
 
     it("should high only", () => {
       expect(formatRange({ high: { value: 1.234 } })).toBe("<=1.234");
+    });
+  });
+
+  describe("formatCoding", () => {
+    it("should return display if available", () => {
+      const expected = "The Display";
+      const coding: Coding = {
+        code: "1234",
+        system: "test",
+        display: expected,
+      };
+
+      const actual = formatCoding(coding);
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should return undefined if undefined", () => {
+      const coding = undefined;
+
+      const actual = formatCoding(coding);
+
+      expect(actual).toBeUndefined();
+    });
+
+    it("should return code if no display", () => {
+      const expected = "1234";
+      const coding: Coding = {
+        code: expected,
+        system: "test",
+      };
+
+      const actual = formatCoding(coding);
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should return code if no display", () => {
+      const expected = "1234";
+      const coding: Coding = {
+        code: expected,
+        system: "test",
+      };
+
+      const actual = formatCoding(coding);
+
+      expect(actual).toEqual(expected);
     });
   });
 });

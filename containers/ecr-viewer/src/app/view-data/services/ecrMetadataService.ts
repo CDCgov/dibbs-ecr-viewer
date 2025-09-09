@@ -3,7 +3,6 @@ import { Bundle, Observation, Organization } from "fhir/r4";
 import { formatDateTime } from "@/app/services/formatDateService";
 import {
   formatAddress,
-  formatCodeableConcept,
   formatContactPoint,
   formatName,
 } from "@/app/services/formatService";
@@ -27,18 +26,12 @@ import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
 import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
-import { getReportabilitySummaries } from "./reportabilityService";
-
-export interface ReportableConditions {
-  [condition: string]: {
-    [trigger: string]: Set<string | undefined>;
-  };
-}
+import { evaluateRRInfo, ReportableConditions } from "./reportabilityService";
 
 interface EcrMetadata {
   eicrDetails: CompleteData;
   ecrCustodianDetails: CompleteData;
-  rrDetails: ReportableConditions;
+  rrConditions: ReportableConditions;
   eicrAuthorDetails: CompleteData[];
   eRSDProcessingInfo: ERSDInfo | undefined;
 }
@@ -72,35 +65,6 @@ export const unknownWarning: ERSDInfo = {
  * @returns An object containing evaluated and formatted eCR metadata.
  */
 export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
-  const rrDetails = evaluateAll(fhirBundle, fhirPathMappings.rrDetails);
-
-  const reportableConditionsList: ReportableConditions = {};
-
-  for (const condition of rrDetails) {
-    const name =
-      formatCodeableConcept(condition.valueCodeableConcept) ??
-      "Unknown Condition";
-    const triggers = getReportabilitySummaries(condition);
-
-    if (!reportableConditionsList[name]) {
-      reportableConditionsList[name] = {};
-    }
-
-    if (!triggers.size) {
-      console.error("No triggers found for reportable condition");
-    }
-
-    triggers.forEach((trigger) => {
-      if (!reportableConditionsList[name][trigger]) {
-        reportableConditionsList[name][trigger] = new Set();
-      }
-
-      condition.performer?.forEach((performer) =>
-        reportableConditionsList[name][trigger].add(performer.display),
-      );
-    });
-  }
-
   const custodianRef = evaluateOne(
     fhirBundle,
     fhirPathMappings.eicrCustodianRef,
@@ -236,7 +200,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
   return {
     eicrDetails: evaluateData(eicrDetails),
     ecrCustodianDetails: evaluateData(ecrCustodianDetails),
-    rrDetails: reportableConditionsList,
+    rrConditions: evaluateRRInfo(fhirBundle),
     eRSDProcessingInfo,
     eicrAuthorDetails: eicrAuthorDetails.map((details) =>
       evaluateData(details),
