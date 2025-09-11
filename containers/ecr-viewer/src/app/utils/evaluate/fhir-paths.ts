@@ -125,10 +125,10 @@ export type PathTypes = {
 
   admissionMedicationRefs: Reference;
   medicationAdministrationStatus: string;
-  medicationAdministrationMedicationRef: Reference
+  medicationAdministrationMedicationRef: Reference;
   medicationDose: ValueX;
-  medicationAdministrationPerformerRef: Reference
-  medicationAdministrationReactionRef: Reference
+  medicationAdministrationPerformerRef: Reference;
+  medicationAdministrationReactionRef: Reference;
 
   procedures: Procedure;
   procedureHistoryRefs: Reference;
@@ -537,7 +537,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   immunizationsLotNumber: { type: "unknown", path: "lotNumber" },
 
-
   // === Admission Medications ===
   admissionMedicationRefs: {
     type: "Reference",
@@ -546,7 +545,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   medicationAdministrationMedicationRef: {
     type: "Reference",
     path: "MedicationAdministration.medicationReference",
-   },
+  },
   medicationAdministrationPerformerRef: {
     type: "Reference",
     path: "MedicationAdministration.performer.actor",
