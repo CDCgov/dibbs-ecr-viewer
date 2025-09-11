@@ -16,12 +16,9 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const schemaExists = await schemaExistsByName(db, schema);
 
-  try {
-    if (!schemaExists) {
-      await db.schema.createSchema(schema).execute(); // first instance of schema mutation
-    }
-  } catch (error) {
-    throw new Error("Failed to create schema or already exists: " + error);
+
+  if (!schemaExists) {
+    throw new Error(`Schema ${schema} does not exist`);
   }
 
   if (dbDialect() === "postgres") {
@@ -79,5 +76,4 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
   await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
   await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
   await _db.schema.dropTable("ecr_data").ifExists().execute();
-  await _db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }
