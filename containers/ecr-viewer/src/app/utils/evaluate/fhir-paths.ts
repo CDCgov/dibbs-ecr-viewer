@@ -128,6 +128,14 @@ export type PathTypes = {
   immunizationsDoseNumber: ValueX;
   immunizationsManufacturerName: string;
   immunizationsLotNumber: unknown;
+
+  admissionMedicationRefs: Reference;
+  medicationAdministrationStatus: string;
+  medicationAdministrationMedicationRef: Reference
+  medicationDose: ValueX;
+  medicationAdministrationPerformerRef: Reference
+  medicationAdministrationReactionRef: Reference
+
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
@@ -553,6 +561,27 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "manufacturer.name",
   },
   immunizationsLotNumber: { type: "unknown", path: "lotNumber" },
+
+
+  // === Admission Medications ===
+  admissionMedicationRefs: {
+    type: "Reference",
+    path: "entry.resource.section.where(code.coding.code = '42346-7').entry.where(reference.startsWith('MedicationAdministration/'))",
+  },
+  medicationAdministrationMedicationRef: {
+    type: "Reference",
+    path: "MedicationAdministration.medicationReference",
+   },
+  medicationAdministrationPerformerRef: {
+    type: "Reference",
+    path: "MedicationAdministration.performer.actor",
+  },
+  medicationAdministrationReactionRef: {
+    type: "Reference",
+    path: "MedicationAdministration.supportingInformation.first()",
+  },
+  medicationAdministrationStatus: { type: "string", path: "status" },
+  medicationDose: { type: "ValueX", path: "dosage.dose.value" },
 
   // === Procedure ===
   procedures: {
