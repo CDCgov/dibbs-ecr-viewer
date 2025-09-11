@@ -35,6 +35,7 @@ import {
   findCurrentAddress,
   formatCurrentAddress,
   Age,
+  formatCoding,
 } from "@/app/services/formatService";
 import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import {
@@ -146,20 +147,6 @@ export const evaluatePatientAddress = (fhirBundle: Bundle) => {
   );
 
   return formatAddressList(addresses);
-};
-
-/**
- * Finds correct encounter ID
- * @param fhirBundle - The FHIR bundle containing encounter resources.
- * @returns Encounter ID or empty string if not available.
- */
-export const evaluateEncounterId = (fhirBundle: Bundle) => {
-  const encounterIDs = evaluateAll(fhirBundle, fhirPathMappings.encounterID);
-  const filteredIds = encounterIDs
-    .filter((id) => typeof id.value === "string" && /^\d+$/.test(id.value))
-    .map((id) => id.value);
-
-  return filteredIds[0] ?? "";
 };
 
 /**
@@ -842,24 +829,26 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
  * @returns An array of evaluated and formatted encounter data.
  */
 export const evaluateEncounterData = (fhirBundle: Bundle) => {
+  const encounter = evaluateOneReference<Encounter>(
+    fhirBundle,
+    fhirPathMappings.compositionEncounterRef,
+  );
   const encounterData = [
     {
       title: "Encounter Date/Time",
-      value: formatStartEndDateTime(
-        evaluateOne(fhirBundle, fhirPathMappings.encounterPeriod),
-      ),
+      value: formatStartEndDateTime(encounter?.period),
     },
     {
       title: "Encounter Type",
-      value: evaluateOne(fhirBundle, fhirPathMappings.encounterType),
+      value: formatCoding(encounter?.class),
     },
     {
       title: "Encounter ID",
-      value: evaluateEncounterId(fhirBundle),
+      value: encounter?.identifier?.filter((id) => id.value)[0]?.value,
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle),
+      value: evaluateEncounterDiagnosis(encounter),
     },
     {
       title: "Encounter Care Team",
@@ -1106,13 +1095,46 @@ const evaluateEncounterDiagnosisData = (
 };
 
 /**
+ * Get an encounter's location name by first looking for the `display` of the `location.location`. If that does not exist, then evaluate each location reference and return the `name` of the first location with a `name`.
+ * @param bundle - The FHIR Bundle.
+ * @param encounter The relevant Encounter.
+ * @returns string or undefined
+ */
+export const getLocationName = (
+  bundle: Bundle,
+  encounter: Encounter | undefined,
+) => {
+  const encounterLocationDisplay = encounter?.location?.filter(
+    (location) => location.location.display,
+  )[0]?.location.display;
+
+  if (encounterLocationDisplay) {
+    return encounterLocationDisplay;
+  }
+
+  const references = encounter?.location
+    ?.filter((location) => location.location.reference)
+    .map((location) => location.location.reference);
+  const locations = references
+    ?.map((reference) => evaluateReference<Location>(bundle, reference))
+    ?.filter((location) => location?.name);
+  const locationName = locations?.at(0)?.name;
+
+  return locationName;
+};
+
+/**
  * Evaluates facility data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing facility data.
  * @returns An array of evaluated and formatted facility data.
  */
 export const evaluateFacilityData = (fhirBundle: Bundle) => {
-  const location = evaluateOneReference<Location>(
+  const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
+    fhirPathMappings.compositionEncounterRef,
+  );
+  const location = evaluateOneReference<Location>(
+    encounter,
     fhirPathMappings.facilityLocationRef,
   );
   const org = evaluateOneReference<Organization>(
@@ -1123,9 +1145,7 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
   const facilityData = [
     {
       title: "Facility Name",
-      value:
-        evaluateOne(fhirBundle, fhirPathMappings.facilityName) ||
-        location?.name,
+      value: getLocationName(fhirBundle, encounter),
     },
     {
       title: "Facility Address",
@@ -1145,7 +1165,7 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility ID",
-      value: evaluateFacilityId(fhirBundle),
+      value: location?.identifier?.filter((id) => id.value)[0]?.value,
     },
   ];
   return evaluateData(facilityData);
@@ -1263,20 +1283,6 @@ export const evaluateEncounterCareTeamTable = (fhirBundle: Bundle) => {
 };
 
 /**
- * Find facility ID based on the first encounter's location
- * @param fhirBundle - The FHIR bundle containing resources.
- * @returns Facility id
- */
-export const evaluateFacilityId = (fhirBundle: Bundle) => {
-  const location = evaluateOneReference<Location>(
-    fhirBundle,
-    fhirPathMappings.facilityLocationRef,
-  );
-
-  return location?.identifier?.[0].value;
-};
-
-/**
  * Evaluate practitioner role reference
  * @param fhirBundle - The FHIR bundle containing resources.
  * @param practitionerRoleRef - practitioner role reference to be searched.
@@ -1305,13 +1311,15 @@ export const evaluatePractitionerRoleReference = (
 };
 
 /**
- * Find encounter diagnoses
- * @param fhirBundle - The FHIR bundle containing resources.
- * @returns Comma delimited list of encounter diagnoses
+ * Evaluate an encounters diagnosis by returning a comma delimited list of formatted codeable concepts from each condition
+ * @param encounter Encounter
+ * @returns delimited list of formatted codeable concepts from each condition in the encounters diagnosis
  */
-export const evaluateEncounterDiagnosis = (fhirBundle: Bundle) => {
+export const evaluateEncounterDiagnosis = (
+  encounter: Encounter | undefined,
+) => {
   return evaluateAllReferences<Condition>(
-    fhirBundle,
+    encounter,
     fhirPathMappings.encounterDiagnosisRef,
   )
     .map((condition) => formatCodeableConcept(condition?.code))
@@ -1383,9 +1391,9 @@ export const censorGender = (gender: string | undefined) => {
 export const createPatientAgeDataProp = (
   fhirBundle: Bundle,
 ): DisplayDataProps => {
-  const encounterPeriod = evaluateOne(
+  const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
-    fhirPathMappings.encounterPeriod,
+    fhirPathMappings.compositionEncounterRef,
   );
   const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
 
@@ -1412,19 +1420,19 @@ export const createPatientAgeDataProp = (
   }
 
   // Handle encounter start date
-  if (encounterPeriod?.start) {
-    value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.start));
+  if (encounter?.period?.start) {
+    value = formatAge(calculatePatientAge(fhirBundle, encounter.period.start));
     return { title, toolTip, value };
   }
 
   // Handle encounter end date
-  if (encounterPeriod?.end) {
-    const encounterEnd = DateTime.fromJSDate(new Date(encounterPeriod.end));
+  if (encounter?.period?.end) {
+    const encounterEnd = DateTime.fromJSDate(new Date(encounter.period.end));
 
     if (encounterEnd <= DateTime.now()) {
       toolTip =
         "Age at end date of encounter. Start date of encounter is not available.";
-      value = formatAge(calculatePatientAge(fhirBundle, encounterPeriod.end));
+      value = formatAge(calculatePatientAge(fhirBundle, encounter.period.end));
     } else {
       value = formatAge(
         calculatePatientAge(

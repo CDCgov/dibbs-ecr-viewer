@@ -30,8 +30,6 @@ from app.phdc.models import (
 )
 from app.transport.http import http_request_with_retry
 
-DIBBS_REFERENCE_SIGNIFIER = "#REF#"
-
 
 @cache
 def load_parsing_schema(schema_name: str) -> dict:
@@ -85,76 +83,6 @@ def freeze_parsing_schema_helper(schema: dict) -> frozendict:
             if isinstance(value, dict):
                 schema[key] = freeze_parsing_schema_helper(value)
         return frozendict(schema)
-
-
-# Using frozendict here to have an immutable that can be hashed for caching purposes.
-# Caching the parsers reduces parsing time by over 60% after the first request for a
-# given schema.
-@cache
-def get_parsers(extraction_schema: frozendict) -> frozendict:
-    """
-    Generate a FHIRpath parser for each field in a given schema. Return these parsers as
-    values in a dictionary whose keys indicate the field in the schema the parser is
-    associated with.
-
-    :param extraction_schema: A dictionary containing an extraction schema.
-    :return: A dictionary containing a FHIRpath parsers for each field in the provided
-    schema.
-    """
-    parsers = {}
-
-    for field, field_definition in extraction_schema.items():
-        parser = {}
-        parser["primary_parser"] = fhirpathpy.compile(field_definition["fhir_path"])
-        if "secondary_schema" in field_definition:
-            secondary_parsers = {}
-            for secondary_field, secondary_field_definition in field_definition[
-                "secondary_schema"
-            ].items():
-                # Base case: secondary field is located on this resource
-                if not secondary_field_definition["fhir_path"].startswith("Bundle"):
-                    if (
-                        "secondary_schema" in secondary_field_definition
-                        and secondary_field_definition["secondary_schema"] is not None
-                    ):
-                        tertiary_parser = {}
-                        tertiary_parsers = {}
-                        tertiary_parser["primary_parser"] = fhirpathpy.compile(
-                            secondary_field_definition["fhir_path"]
-                        )
-                        for (
-                            tertiary_field,
-                            tertiary_field_definition,
-                        ) in secondary_field_definition["secondary_schema"].items():
-                            tertiary_parsers[tertiary_field] = {
-                                "secondary_fhir_path": fhirpathpy.compile(
-                                    tertiary_field_definition["fhir_path"]
-                                )
-                            }
-                        secondary_parsers[secondary_field] = {
-                            "primary_parser": tertiary_parser["primary_parser"],
-                            "secondary_parsers": tertiary_parsers,
-                        }
-
-                    else:
-                        secondary_parsers[secondary_field] = {
-                            "secondary_fhir_path": fhirpathpy.compile(
-                                secondary_field_definition["fhir_path"]
-                            )
-                        }
-                # Reference case: secondary field is located on a different resource,
-                # so we can't compile the fhir_path proper; instead, compile the
-                # reference for quick access later
-                else:
-                    secondary_parsers[secondary_field] = {
-                        "secondary_fhir_path": secondary_field_definition["fhir_path"],
-                        "reference_path": fhirpathpy.compile(
-                            secondary_field_definition["reference_lookup"]
-                        ),
-                    }
-            parser["secondary_parsers"] = secondary_parsers
-        parsers[field] = parser
-    return frozendict(parsers)
 
 
 def get_metadata(parsed_values: dict, schema) -> dict:
@@ -378,153 +306,142 @@ def clean_schema(schema: dict):
         del schema[key]
 
 
-def extract_and_apply_parsers(parsing_schema, message, response):
-    """
-    Helper function used to pull parsing methods for each field out of the
-    passed-in schema, resolve any reference dependencies, and apply the
-    result to the input FHIR bundle. If reference dependencies are present
-    (e.g. an Observation resource that references an ordering provider
-    Organization), this function will raise an error if those references
-    cannot be resolved (if the ID of the referenced object can't be found,
-    for example).
+class FhirParser:
+    def __init__(self, parsing_schema: dict, message: dict, response):
+        """
+        :param parsing_schema: A dictionary of parser configs, defining how to extract values from the message
+        :param message: The FHIR bundle
+        :param response: Response object for setting HTTP errors if needed
+        """
+        self.parsing_schema = parsing_schema
+        self.message = message
+        self.response = response
 
-    :param parsing_schema: A dictionary holding the parsing schema send
-      to the endpoint.
-    :param message: The FHIR bundle to extract values from.
-    :param response: The Response object the endpoint will send back, in
-      case we need to apply error status codes.
-    :return: A dictionary mapping schema keys to parsed values.
-    """
-    parsers = get_parsers(parsing_schema)
-    parsed_values = {}
+    def parse(self) -> dict:
+        """
+        Extracts values from the FHIR bundle by applying the parsing schema
+        """
+        return self._parse_values(self.parsing_schema, self.message)
 
-    # Iterate over each parser and make the appropriate path call
-    for field, parser in parsers.items():
-        if "secondary_parsers" not in parser:
-            value = parser["primary_parser"](message)
-            if len(value) == 0:
-                value = None
+    def _parse_values(self, parsers, current_message):
+        """
+        Recursive parses a FHIR message based on a provided schema of FHIR paths.
+
+        :param parsers: A dictionary of parser configs. Field names are the keys, and
+            the values are objects that contain the 'fhir_path'. They may include
+            a further nested `secondary_config` for recursive parsing.
+        :param current_message: The FHIR message or sub-section to be evaluated
+            by the current set of parsers.
+
+        :return: A dictionary mapping schema keys to parsed values.
+        """
+        parsed_values = {}
+
+        for field, field_parser in parsers.items():
+            if "secondary_schema" not in field_parser:
+                value = self._evaluate_fhir_path(field_parser, current_message)
+                if value:
+                    parsed_values[field] = ",".join(map(str, value))
+                else:
+                    parsed_values[field] = None
             else:
-                value = ",".join(map(str, value))
-            parsed_values[field] = value
+                base_vals = self._evaluate_fhir_path(field_parser, current_message)
 
-        # Use the secondary field data structure, remembering that some
-        # fhir paths might not be compiled yet
-        else:
-            initial_values = parser["primary_parser"](message)
-            values = []
+                subfield_values = []
+                for base_val in base_vals:
+                    if base_val is None:
+                        continue
+                    subfield_value = self._parse_values(
+                        field_parser["secondary_schema"], base_val
+                    )
+                    subfield_values.append(subfield_value)
+                parsed_values[field] = subfield_values
 
-            # This check allows us to use secondary schemas on fields that
-            # are just datatype structs, rather than full arrays. This is
-            # useful when we want multiple fields of information from a
-            # referenced resource, but there's only one instance of the
-            # resource type referencing another resource in the bundle
-            # (e.g. we want multiple values about the Bundle's Custodian:
-            # bundle.custodian is a dict with a reference, so we only need
-            # to find that reference once)
-            if not isinstance(initial_values, list):
-                initial_values = [initial_values]
+        return parsed_values
 
-            for initial_value in initial_values:
-                value = {}
-                for secondary_field, secondary_path_struct in parser[
-                    "secondary_parsers"
-                ].items():
-                    if "reference_path" not in secondary_path_struct:
-                        # Check for tertiary values
-                        if "secondary_parsers" in secondary_path_struct:
-                            tertiary_parser = secondary_path_struct["primary_parser"]
-                            tertiary_values = []
-                            for v in tertiary_parser(initial_value):
-                                tv = {}
-                                for (
-                                    tertiary_field,
-                                    tertiary_path_struct,
-                                ) in secondary_path_struct["secondary_parsers"].items():
-                                    tv_parser = tertiary_path_struct[
-                                        "secondary_fhir_path"
-                                    ]
-                                    if len(tv_parser(v)) == 0:
-                                        tv[tertiary_field] = None
-                                    else:
-                                        tv[tertiary_field] = ",".join(
-                                            map(str, tv_parser(v))
-                                        )
-                                tertiary_values.append(tv)
-                            value[secondary_field] = tertiary_values
-                        else:
-                            try:
-                                secondary_parser = secondary_path_struct[
-                                    "secondary_fhir_path"
-                                ]
-                                if len(secondary_parser(initial_value)) == 0:
-                                    value[secondary_field] = None
-                                else:
-                                    value[secondary_field] = ",".join(
-                                        map(str, secondary_parser(initial_value))
-                                    )
-                            # By default, fhirpathpy will compile such that *only*
-                            # actual resources can be accessed, rather than data types.
-                            # This is fine for most cases, but sometimes the actual data
-                            # we want is in a list of structs rather than a list of
-                            # resources, such as a list of patient addresses. This
-                            # exception catches that and allows an ordinary property
-                            # search.
-                            except KeyError:
-                                try:
-                                    accessors = (
-                                        secondary_parser.parsedPath.get("children")[0]
-                                        .get("text")
-                                        .split(".")[1:]
-                                    )
-                                    val = initial_value
-                                    for acc in accessors:
-                                        if "[" not in acc:
-                                            val = val[acc]
-                                        else:
-                                            sub_acc = acc.split("[")[1].split("]")[0]
-                                            val = val[acc.split("[")[0].strip()][
-                                                int(sub_acc)
-                                            ]
-                                    value[secondary_field] = str(val)
-                                except:  # noqa
-                                    value[secondary_field] = None
+    def _evaluate_fhir_path(self, field_parser, current_message):
+        """
+        Evaluates the FHIR path based on the current message
 
-                    # Reference case: information is contained on another
-                    # resource that we have to look up
+        :param field_parser: The parser for a specific field, which must contain a
+            `fhir_path` and may contain a `reference_lookup` and a nested `secondary_schema`.
+        :param current_message: The FHIR message or sub-section to be evaluated
+            by the current set of parsers.
+
+        :return: Evaluated FHIR path result(s), or None if no results
+        """
+        try:
+            if "reference_lookup" in field_parser:
+                reference_path = self._get_reference(field_parser, current_message)
+                value = fhirpathpy.evaluate(
+                    self.message,
+                    field_parser["fhir_path"],
+                    context={"ref": reference_path},
+                )  # Evaluate on full message, not current
+            elif "fhir_path" in field_parser:
+                value = fhirpathpy.evaluate(current_message, field_parser["fhir_path"])
+
+            if not value:
+                return []
+            return value
+
+        # By default, fhirpathpy will compile such that *only*
+        # actual resources can be accessed, rather than data types.
+        # This is fine for most cases, but sometimes the actual data
+        # we want is in a list of structs rather than a list of
+        # resources, such as a list of patient addresses. This
+        # exception catches that and allows an ordinary property
+        # search.
+        except KeyError:
+            # return KeyError
+            try:
+                accessors = field_parser["fhir_path"].split(".")[1:]
+                val = current_message
+                for acc in accessors:
+                    if "[" not in acc:
+                        val = val[acc]
                     else:
-                        reference_parser = secondary_path_struct["reference_path"]
-                        if len(reference_parser(initial_value)) == 0:
-                            response.status_code = status.HTTP_400_BAD_REQUEST
-                            return {
-                                "message": "Provided `reference_lookup` location does "
-                                "not point to a referencing identifier",
-                                "parsed_values": {},
-                            }
-                        else:
-                            reference_to_find = ",".join(
-                                map(str, reference_parser(initial_value))
-                            )
+                        sub_acc = acc.split("[")[1].split("]")[0]
+                        val = val[acc.split("[")[0].strip()][int(sub_acc)]
+                return [str(val)]
+            except Exception:
+                return []
 
-                            # FHIR references are prefixed with resource type
-                            reference_to_find = reference_to_find.split("/")[-1]
+    def _get_reference(self, field_parser, current_message):
+        """
+        Resolves a FHIR reference and returns a new path based on the resolved ID.
 
-                            # Build the resultant concatenated reference path
-                            reference_path = secondary_path_struct[
-                                "secondary_fhir_path"
-                            ].replace(DIBBS_REFERENCE_SIGNIFIER, reference_to_find)
-                            reference_path = fhirpathpy.compile(reference_path)
-                            referenced_value = reference_path(message)
-                            if len(referenced_value) == 0:
-                                value[secondary_field] = None
-                            else:
-                                value[secondary_field] = ",".join(
-                                    map(str, referenced_value)
-                                )
+        It uses a `reference_lookup` to find a reference ID in the `current_message`.
+        If a single reference is found, it uses the reference to replace a placeholder
+        in the `fhir_path` and evaluates this new path against the FHIR bundle
+        to return the referenced resource or value. If not, this function will raise
+        an error if those references cannot be resolved (if the ID of the referenced
+        object can't be found, for example).
 
-                values.append(value)
-            parsed_values[field] = values
-    return parsed_values
+        :param field_parser: The parser for a specific field, which must contain a
+            `fhir_path` & a `reference_lookup`.
+        :param current_message: The FHIR message or sub-section at the current level of
+            parsing where the reference is located.
+        :return: The reference to be added as context to the FHIR path, or response
+            error message if the reference could not be resolved.
+        """
+        reference_parser = field_parser["reference_lookup"]
+        reference = fhirpathpy.evaluate(current_message, reference_parser)
+
+        if len(reference) == 0:
+            self.response.status_code = status.HTTP_400_BAD_REQUEST
+            raise ValueError(
+                "Provided `reference_lookup` location does not point to a "
+                "referencing identifier"
+            )
+        # Future refactor: be able to take multiple references?
+        elif len(reference) > 1:
+            self.response.status_code = status.HTTP_400_BAD_REQUEST
+            raise ValueError(
+                "Provided `reference_lookup` location points "
+                "to many referencing identifiers"
+            )
+        return reference[0].split("/")[-1]
 
 
 def transform_to_phdc_input_data(parsed_values: dict) -> PHDCInputData:

@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:10c13861-86a8-4a9a-aec6-b615921178df",
@@ -264,10 +264,6 @@
             "reference": "Device/4838911e-2cd4-280a-d907-47dcfcd0ca92"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/10c13861-86a8-4a9a-aec6-b615921178df"
       }
     },
     {
@@ -340,10 +336,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Encounter/74349de7-8460-0535-1a63-32a884da7953"
       }
     },
     {
@@ -388,10 +380,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Location/6f413a19-36e7-8bb5-087b-1cc791fd46e8"
       }
     },
     {
@@ -420,10 +408,6 @@
             }
           ]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/17d188a8-6578-a7b1-9d22-2c28435682ed"
       }
     },
     {
@@ -453,10 +437,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/79bdfaa0-ce22-d988-0414-9478c38f3bdf"
       }
     },
     {
@@ -507,10 +487,6 @@
             "use": "work"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/4581f291-448a-04ad-0508-e348f799a4b0"
       }
     },
     {
@@ -561,10 +537,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/daf02ea4-2048-a2c3-e24f-7313a37bd19b"
       }
     },
     {
@@ -602,10 +574,6 @@
             "postalCode": "77054"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/f4556c30-6c86-2995-e2df-f45c8cb572c9"
       }
     },
     {
@@ -615,9 +583,9 @@
         "id": "17f6392f-9340-45d3-a1c8-bc0a30d09f53",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
           ],
-          "source": "ecr"
+          "source": ["ecr"]
         },
         "identifier": [
           {
@@ -649,7 +617,57 @@
             }
           ]
         },
+        "hasMember": [
+          {
+            "reference": "Observation/c4f0611d-654e-4f7f-8c38-3f8c8789e92d"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/17f6392f-9340-45d3-a1c8-bc0a30d09f53"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c4f0611d-654e-4f7f-8c38-3f8c8789e92d",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c4f0611d-654e-4f7f-8c38-3f8c8789e92d",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:b0bd7770-283f-44b1-9dda-5590707d29fe"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
+            }
+          ]
+        },
         "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
           {
             "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
             "valueString": "All results of tests for                                                  detection of SARS-CoV-2 nucleic acid in a clinical                                                  specimen by any method "
@@ -669,10 +687,6 @@
             "display": "Houston Health Department"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/17f6392f-9340-45d3-a1c8-bc0a30d09f53"
       }
     },
     {
@@ -702,10 +716,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Device/4838911e-2cd4-280a-d907-47dcfcd0ca92"
       }
     },
     {
@@ -828,10 +838,6 @@
             "preferred": true
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Patient/ea5bde5d-7b26-47c9-84f5-6aef4a3b16a7"
       }
     },
     {
@@ -858,10 +864,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "CarePlan/"
       }
     },
     {
@@ -900,10 +902,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "DiagnosticReport/a40cd786-e08d-a4ea-e5fc-07c6757d822c"
       }
     },
     {
@@ -956,10 +954,6 @@
         "subject": {
           "reference": "Patient/ea5bde5d-7b26-47c9-84f5-6aef4a3b16a7"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/062a8097-9fac-01f5-ca15-216e690f5d6f"
       }
     },
     {
@@ -1006,10 +1000,6 @@
         "subject": {
           "reference": "Patient/ea5bde5d-7b26-47c9-84f5-6aef4a3b16a7"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/d9ee89be-d99e-55c9-e255-c6b71f9f9a88"
       }
     },
     {
@@ -1061,10 +1051,6 @@
         "subject": {
           "reference": "Patient/ea5bde5d-7b26-47c9-84f5-6aef4a3b16a7"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/ccd25b34-cab0-f669-b4e9-217f70ea81bb"
       }
     },
     {
@@ -1077,10 +1063,6 @@
           ],
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/"
       }
     }
   ]

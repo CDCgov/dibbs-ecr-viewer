@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { Bundle, BundleEntry, Practitioner } from "fhir/r4";
+import { Bundle, BundleEntry, Encounter, Practitioner } from "fhir/r4";
 
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
@@ -14,8 +14,6 @@ import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import {
-  evaluateEncounterId,
-  evaluateFacilityId,
   evaluatePatientRace,
   evaluatePatientEthnicity,
   evaluatePractitionerRoleReference,
@@ -35,6 +33,7 @@ import {
   evaluateProviderData,
   evaluatePregnancyData,
   evaluateSocialData,
+  getLocationName,
 } from "@/app/view-data/services/evaluateFhirDataService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
@@ -121,24 +120,6 @@ Sometown, OR 94949
 US
 Home: 123-456-6909`,
     );
-  });
-
-  describe("Evaluate Facility Id", () => {
-    it("should return the facility id", () => {
-      const actual = evaluateFacilityId(BundleEcrMetadata as unknown as Bundle);
-
-      expect(actual).toEqual("112233445566778899");
-    });
-  });
-
-  describe("Evaluate Encounter ID", () => {
-    it("should return the correct Encounter ID", () => {
-      const actual = evaluateEncounterId(
-        BundleEcrMetadata as unknown as Bundle,
-      );
-
-      expect(actual).toEqual("123456789");
-    });
   });
 
   describe("Evaluate Encounter Care Team", () => {
@@ -1388,6 +1369,19 @@ Home: 123-456-6909`,
           ...BundleWithPatient.entry!,
           {
             resource: {
+              resourceType: "Composition",
+              author: [],
+              date: "1924-03-01",
+              status: "preliminary",
+              title: "Test eICR",
+              type: {},
+              encounter: {
+                reference: "Encounter/123456789",
+              },
+            },
+          },
+          {
+            resource: {
               class: {
                 code: "testValue",
               },
@@ -1421,6 +1415,19 @@ Home: 123-456-6909`,
           ...BundleWithPatient.entry!,
           {
             resource: {
+              resourceType: "Composition",
+              author: [],
+              date: "1924-03-01",
+              status: "preliminary",
+              title: "Test eICR",
+              type: {},
+              encounter: {
+                reference: "Encounter/123456789",
+              },
+            },
+          },
+          {
+            resource: {
               class: {
                 code: "testValue",
               },
@@ -1450,17 +1457,22 @@ Home: 123-456-6909`,
     it("should use the eCR created date if the start date does not exist and the end date is in the future.", () => {
       const patientBundleWithEncounter: Bundle = {
         resourceType: "Bundle",
-        type: "batch",
+        type: "document",
+        timestamp: "1924-03-12T09:00:00-05:00",
+        id: "99999999-4p89-4b96-b6ab-c46406839cea",
         entry: [
           ...BundleWithPatient.entry!,
           {
             resource: {
               resourceType: "Composition",
-              author: [{}],
-              date: "1924-03-12",
-              status: "final",
-              title: "test",
+              author: [],
+              date: "1924-03-01",
+              status: "preliminary",
+              title: "Test eICR",
               type: {},
+              encounter: {
+                reference: "Encounter/123456789",
+              },
             },
           },
           {
@@ -1494,7 +1506,9 @@ Home: 123-456-6909`,
     it("should use the eCR created date if there is no encounter date.", () => {
       const patientBundleWithCreatedDate: Bundle = {
         resourceType: "Bundle",
-        type: "batch",
+        type: "document",
+        timestamp: "1924-03-12T09:00:00-05:00",
+        id: "99999999-4p89-4b96-b6ab-c46406839cea",
         entry: [
           ...BundleWithPatient.entry!,
           {
@@ -1684,6 +1698,112 @@ Home: 123-456-6909`,
       );
       expect(ext).toHaveLength(1);
       expect(ext[0].value).toEqual("Married");
+    });
+  });
+
+  describe("getLocationName", () => {
+    it("should return the reference's display if available", () => {
+      const expected = "Location Name";
+      const encounter: Encounter = {
+        resourceType: "Encounter",
+        class: {},
+        status: "arrived",
+        location: [
+          {
+            location: {
+              display: expected,
+            },
+          },
+        ],
+      };
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [encounter],
+      };
+
+      const actual = getLocationName(bundle, encounter);
+
+      expect(actual).toBe(expected);
+    });
+
+    it("should return the locations name if there is not a reference display", () => {
+      const expected = "Location Name";
+      const encounter: Encounter = {
+        resourceType: "Encounter",
+        id: "3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
+        identifier: [
+          {
+            system: "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            value: "123456789",
+          },
+        ],
+        class: {},
+        status: "arrived",
+        period: {
+          start: "2000-02-03",
+          end: "2000-02-04",
+        },
+        location: [
+          {
+            id: "f39281a4-c8bf-a15b-e2ed-FAKEf4cd1adc",
+            location: {
+              reference: "Location/7048630f-26bb-f67c-d446-FAKEa3573257",
+            },
+          },
+        ],
+      };
+
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Location",
+              id: "7048630f-26bb-f67c-d446-FAKEa3573257",
+              identifier: [
+                {
+                  system: "7048630f-26bb-f67c-d446-FAKEa3573257",
+                  value: "112233445566778899",
+                },
+              ],
+              name: expected,
+              address: {
+                use: "work",
+                line: ["1111 Mos Eisley Dr"],
+                city: "Mos Eisley",
+                state: "IA",
+                postalCode: "00044",
+                district: "Mos Eisley",
+              },
+              telecom: [
+                {
+                  system: "phone",
+                  value: "+1-555-555-5555",
+                  use: "work",
+                },
+              ],
+              type: [
+                {
+                  coding: [
+                    {
+                      code: "257622000",
+                      display: "Healthcare Facility",
+                      system: "http://snomed.info/sct",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          encounter,
+        ],
+      };
+
+      const actual = getLocationName(bundle, encounter);
+
+      expect(actual).toBe(expected);
     });
   });
 });

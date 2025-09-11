@@ -44,8 +44,13 @@ expected_successful_response = {
         "active_problems": [],
         "rr": [
             {
-                "code": "840539006",
+                "uuid": "id-rr-condition",
+                "condition_code": "840539006",
                 "condition": "COVID-19 unfortunately",
+                "rule_summaries": [
+                    {"rule_summary": "Rule summary #1"},
+                    {"rule_summary": "Rule summary #2"},
+                ],
             }
         ],
     },
@@ -96,12 +101,20 @@ expected_successful_response_with_meta_data = {
         },
         "rr": {
             "data_type": "array",
-            "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
-            "= "
-            "'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+            "fhir_path": "Bundle.entry.resource.where(resourceType = "
+            "'Observation').where(code.coding.exists(system = "
+            "'http://loinc.org' and code = '75323-6'))",
             "resource_type": "Observation",
             "value": [
-                {"code": "840539006", "condition": "COVID-19 unfortunately"},
+                {
+                    "uuid": "id-rr-condition",
+                    "condition_code": "840539006",
+                    "condition": "COVID-19 unfortunately",
+                    "rule_summaries": [
+                        {"rule_summary": "Rule summary #1"},
+                        {"rule_summary": "Rule summary #2"},
+                    ],
+                },
             ],
         },
     },
@@ -115,7 +128,17 @@ expected_successful_response_floats = {
         "latitude": "34.58002",
         "longitude": "-118.08925",
         "active_problems": [],
-        "rr": [{"code": "840539006", "condition": "COVID-19 unfortunately"}],
+        "rr": [
+            {
+                "uuid": "id-rr-condition",
+                "condition_code": "840539006",
+                "condition": "COVID-19 unfortunately",
+                "rule_summaries": [
+                    {"rule_summary": "Rule summary #1"},
+                    {"rule_summary": "Rule summary #2"},
+                ],
+            }
+        ],
     },
 }
 
@@ -164,20 +187,24 @@ expected_successful_response_floats_with_meta_data = {
         },
         "rr": {
             "data_type": "array",
-            "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile "
-            "= "
-            "'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation')",
+            "fhir_path": "Bundle.entry.resource.where(resourceType = "
+            "'Observation').where(code.coding.exists(system = "
+            "'http://loinc.org' and code = '75323-6'))",
             "resource_type": "Observation",
             "value": [
                 {
-                    "code": "840539006",
+                    "uuid": "id-rr-condition",
+                    "condition_code": "840539006",
                     "condition": "COVID-19 unfortunately",
+                    "rule_summaries": [
+                        {"rule_summary": "Rule summary #1"},
+                        {"rule_summary": "Rule summary #2"},
+                    ],
                 },
             ],
         },
     },
 }
-
 
 expected_reference_response = {
     "message": "Parsing succeeded!",

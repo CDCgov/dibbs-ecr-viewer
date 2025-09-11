@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
@@ -97,10 +97,6 @@
             "reference": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548"
       }
     },
     {
@@ -134,10 +130,6 @@
             "reference": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a"
       }
     },
     {
@@ -176,10 +168,6 @@
           ]
         },
         "component": []
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
       }
     }
   ]

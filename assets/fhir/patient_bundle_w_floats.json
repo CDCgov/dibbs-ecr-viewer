@@ -86,9 +86,24 @@
         "resourceType": "Observation",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
           ],
           "source": "ecr"
+        },
+        "id": "id-rr-condition",
+        "code": {
+          "coding": [
+            {
+              "code": "64572001",
+              "display": "Condition",
+              "system": "http://snomed.info/sct"
+            },
+            {
+              "code": "75323-6",
+              "display": "Condition",
+              "system": "http://loinc.org"
+            }
+          ]
         },
         "valueCodeableConcept": {
           "text": "COVID-19 unfortunately",
@@ -99,7 +114,64 @@
               "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
             }
           ]
-        }
+        },
+        "subject": {
+          "reference": "Patient/some-uuid"
+        },
+        "hasMember": [
+          {
+            "reference": "Observation/id-rr-info"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:id-rr-info",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "id-rr-info",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS7",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Both patient home address and provider facility address"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Rule summary #1"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Rule summary #2"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/id-rr-info"
       }
     }
   ]

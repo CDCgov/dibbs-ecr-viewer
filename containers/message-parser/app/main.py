@@ -18,9 +18,9 @@ from app.models import (
 )
 from app.phdc.builder import PHDCBuilder
 from app.utils import (
+    FhirParser,
     clean_schema,
     convert_to_fhir,
-    extract_and_apply_parsers,
     freeze_parsing_schema,
     get_credential_manager,
     get_metadata,
@@ -110,7 +110,8 @@ async def parse_message_endpoint(
             }
 
     # 3. Parse the desired values and find metadata, if needed
-    parsed_values = extract_and_apply_parsers(parsing_schema, input.message, response)
+    parser = FhirParser(parsing_schema, input.message, response)
+    parsed_values = parser.parse()
     if input.include_metadata == "true":
         parsed_values = get_metadata(parsed_values, parsing_schema)
     return {"message": "Parsing succeeded!", "parsed_values": parsed_values}
@@ -153,7 +154,8 @@ async def fhir_to_phdc_endpoint(
             pass
 
     # 2. Extract data from FHIR
-    parsed_values = extract_and_apply_parsers(parsing_schema, input.message, response)
+    parser = FhirParser(parsing_schema, input.message, response)
+    parsed_values = parser.parse()
 
     # 3. Transform to PHDCbuilder data classes
     input_data = transform_to_phdc_input_data(parsed_values)
@@ -201,7 +203,10 @@ async def get_schema(parsing_schema_name: str, response: Response) -> GetSchemaR
         parsing_schema = load_parsing_schema(parsing_schema_name)
     except FileNotFoundError as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"message": error.__str__(), "parsing_schema": {}}
+        return {
+            "message": error.__str__(),
+            "parsing_schema": {},
+        }
     return {"message": "Schema found!", "parsing_schema": parsing_schema}
 
 

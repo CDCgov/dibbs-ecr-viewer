@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
   "entry": [
     {
       "fullUrl": "urn:uuid:367be6b3-75f2-2053-63e4-f0a6f1d6bff1",
@@ -33,10 +33,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "MedicationAdministration/367be6b3-75f2-2053-63e4-f0a6f1d6bff1"
       }
     },
     {
@@ -64,10 +60,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Medication/be901c69-c202-4d67-105a-b728c2618183"
       }
     }
   ]

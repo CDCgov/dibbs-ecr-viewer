@@ -1,12 +1,14 @@
 {
   "resourceType": "Bundle",
-  "type": "batch",
+  "type": "document",
+  "timestamp": "2000-02-04T09:01:22-05:00",
+  "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
   "entry": [
     {
       "fullUrl": "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
       "resource": {
         "resourceType": "Composition",
-        "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+        "id": "2ebcb371-1234-fe8f-88d8-FAKEa8dae548",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
@@ -97,10 +99,6 @@
             "reference": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Composition/2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548"
       }
     },
     {
@@ -149,10 +147,6 @@
             "reference": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a"
       }
     },
     {
@@ -216,10 +210,6 @@
             "valueString": "The expected eRSD (RCTC) version should be one of the following: [\"2024-06-28\",\"1.2.4.0\",\"3.x.x\",\"2024-04-05\"] "
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
       }
     },
     {
@@ -255,10 +245,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/94c87b29-3ecb-ffe9-98ea-FAKE96e81ef7"
       }
     },
     {
@@ -284,10 +270,6 @@
             "given": ["Lab"]
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Practitioner/7aee4d8e-792b-5e0a-c275-FAKEfa3982b1"
       }
     },
     {
@@ -326,10 +308,6 @@
         "meta": {
           "source": "ecr"
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
       }
     },
     {
@@ -356,10 +334,6 @@
           }
         ],
         "name": "Mos Espa Department of Health"
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Organization/00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d"
       }
     },
     {
@@ -369,7 +343,7 @@
         "id": "61e55448-662c-9a22-3920-FAKE00ba36f9",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
           ],
           "source": ["ecr"]
         },
@@ -403,20 +377,12 @@
             }
           ]
         },
-        "extension": [
+        "subject": {
+          "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
+        },
+        "hasMember": [
           {
-            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
-            "valueString": "COVID-19 (as a diagnosis or active problem)"
-          },
-          {
-            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
-            "valueString": "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method"
-          }
-        ],
-        "performer": [
-          {
-            "reference": "Organization/00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d",
-            "display": "Mos Espa Department of Health"
+            "reference": "Observation/b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f"
           }
         ]
       },
@@ -426,13 +392,154 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:b0bd7770-283f-44b1-9dda-5590707d29fe"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "COVID-19 (as a diagnosis or active problem)"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-external-resource-extension",
+            "valueReference": {
+              "reference": "DocumentReference/2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c"
+            }
+          }
+        ],
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "RR4",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.232",
+                  "display": "Timeframe to report (urgency)"
+                }
+              ]
+            },
+            "valueQuantity": {
+              "value": 1,
+              "unit": "hr"
+            }
+          }
+        ],
+        "performer": [
+          {
+            "reference": "Organization/00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d",
+            "display": "Mos Espa Department of Health"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c",
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-documentreference"
+          ],
+          "source": "ecr"
+        },
+        "status": "current",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "83910-0",
+              "display": "Public health Note"
+            }
+          ],
+          "text": "Public health information"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "RRVS13",
+                "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                "display": "Outbreak- or Cluster related"
+              }
+            ]
+          }
+        ],
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/html",
+              "url": "https://www.cdc.gov/coronavirus/2019-ncov/index.html"
+            }
+          }
+        ],
+        "description": "CDC COVID-19 webpage",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-priority-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS15",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Information only"
+                }
+              ]
+            }
+          }
+        ],
+        "subject": {
+          "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
+        }
+      }
+    },
+    {
       "fullUrl": "urn:uuid:aeb90e50-767d-98a4-ce21-FAKE614cc7a8",
       "resource": {
         "resourceType": "Observation",
         "id": "aeb90e50-767d-98a4-ce21-FAKE614cc7a8",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
           ],
           "source": ["ecr"]
         },
@@ -467,7 +574,60 @@
           ],
           "text": "Hepatitis C"
         },
+        "subject": {
+          "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
+        },
+        "hasMember": [
+          {
+            "reference": "Observation/48370b55-9f5a-c83a-503c-FAKEfe73a374"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/aeb90e50-767d-98a4-ce21-FAKE614cc7a8"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:48370b55-9f5a-c83a-503c-FAKEfe73a374",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "48370b55-9f5a-c83a-503c-FAKEfe73a374",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f4ea9439-0626-4b65-b6de-6e64554bd427"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
+            }
+          ]
+        },
         "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
           {
             "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
             "valueString": "Detection of Hepatitis C virus antibody in a clinical specimen by any method"
@@ -479,10 +639,32 @@
             "display": "Anchorhead Department of Public Health"
           }
         ]
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Observation/aeb90e50-767d-98a4-ce21-FAKE614cc7a8"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-routing-entity-organization"
+          ],
+          "source": ["ecr"]
+        },
+        "active": true,
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+                "code": "RR7",
+                "display": "Routing Entity"
+              }
+            ]
+          }
+        ],
+        "name": "Anchorhead Department of Public Health"
       }
     },
     {
@@ -526,10 +708,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Location/7048630f-26bb-f67c-d446-FAKEa3573257"
       }
     },
     {
@@ -594,10 +772,6 @@
         "meta": {
           "source": ["ecr"]
         }
-      },
-      "request": {
-        "method": "PUT",
-        "url": "Encounter/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
       }
     }
   ]
