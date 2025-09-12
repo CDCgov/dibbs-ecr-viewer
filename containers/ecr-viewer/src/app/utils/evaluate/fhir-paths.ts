@@ -122,18 +122,15 @@ export type PathTypes = {
   immunizationsDoseNumber: ValueX;
   immunizationsManufacturerName: string;
   immunizationsLotNumber: unknown;
-
   admissionMedicationRefs: Reference;
-  medicationAdministrationStatus: string;
   medicationAdministrationMedicationRef: Reference;
   medicationDose: ValueX;
   medicationAdministrationPerformerRef: Reference;
   medicationAdministrationReactionRef: Reference;
-
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
-  procedureStatus: string;
+  status: string;
   procedureReason: CodeableConcept;
   procedureLocationRef: Reference;
   procedureOrgRef: Reference;
@@ -554,7 +551,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Reference",
     path: "MedicationAdministration.supportingInformation.first()",
   },
-  medicationAdministrationStatus: { type: "string", path: "status" },
   medicationDose: { type: "ValueX", path: "dosage.dose.value" },
 
   // === Procedure ===
@@ -572,7 +568,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "TimeX",
     path: "performed | effective",
   },
-  procedureStatus: { type: "string", path: "status" },
+  status: { type: "string", path: "status" },
 
   // extra details
   procedureReason: { type: "CodeableConcept", path: "reasonCode" },

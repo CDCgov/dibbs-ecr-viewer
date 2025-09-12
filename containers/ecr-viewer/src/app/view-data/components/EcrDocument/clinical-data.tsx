@@ -419,7 +419,7 @@ export const returnProceduresTable = (
         return bDate.valueOf() - aDate.valueOf();
       },
     },
-    { columnName: "Status", infoPath: "procedureStatus" },
+    { columnName: "Status", infoPath: "status" },
     {
       columnName: "Details",
       hiddenBaseText: "details",

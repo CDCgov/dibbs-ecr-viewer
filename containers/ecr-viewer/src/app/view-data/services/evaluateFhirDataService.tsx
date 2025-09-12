@@ -892,7 +892,7 @@ export const returnAdmissionMedicationsTable = (
     },
     { columnName: "Dose Quantity", infoPath: "medicationDose" },
     { columnName: "Start Date", infoPath: "effectiveX" },
-    { columnName: "Status", infoPath: "medicationAdministrationStatus" },
+    { columnName: "Status", infoPath: "status" },
     {
       columnName: "Details",
       hiddenBaseText: "details",
