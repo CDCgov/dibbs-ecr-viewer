@@ -25,6 +25,7 @@ const getMigrator = () => {
     provider: new EcrViewerMigrationProvider({
       schema: dbSchema()!,
     }),
+    migrationTableSchema: dbNamespace(),
   });
 };
 
