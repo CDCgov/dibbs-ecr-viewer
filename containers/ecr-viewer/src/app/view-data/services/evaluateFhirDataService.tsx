@@ -42,8 +42,7 @@ import {
   CompleteData,
   evaluateData,
   isDataAvailable,
-  noData,
-  notEmpty,
+  noData, notEmpty,
 } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -56,8 +55,7 @@ import {
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import {
-  DataDisplay,
-  DataDisplayList,
+  DataDisplay, DataDisplayList,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
@@ -867,48 +865,38 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
  * @returns - A formatted table React element representing the list of Admission Medications, or undefined if the array is empty.
  */
 export const returnAdmissionMedicationsTable = (
-  fhirBundle: Bundle,
+    fhirBundle: Bundle,
 ): React.JSX.Element | undefined => {
-  const admissionMedications = evaluateAllReferences(
-    fhirBundle,
-    fhirPathMappings.admissionMedicationRefs,
-  );
+
+  const admissionMedications = evaluateAllReferences(fhirBundle, fhirPathMappings.admissionMedicationRefs);
 
   if (admissionMedications.length === 0) {
     return undefined;
   }
 
   const columnInfo: ColumnInfoInput[] = [
-    {
-      columnName: "Medication Name",
-      evaluateEntry: (el) => {
-        const medRef = evaluateOne(
-          el,
-          fhirPathMappings.medicationAdministrationMedicationRef,
-        );
-        const medication = evaluateReference(fhirBundle, medRef);
-        return evaluateValue(medication, fhirPathMappings.code);
-      },
-    },
+    { columnName: "Medication Name", evaluateEntry: (el) => {
+      const medRef = evaluateOne(el, fhirPathMappings.medicationAdministrationMedicationRef)
+      const medication =   evaluateReference(fhirBundle, medRef)
+      return evaluateValue(medication, fhirPathMappings.code)
+    } },
     { columnName: "Dose Quantity", infoPath: "medicationDose" },
     { columnName: "Start Date", infoPath: "effectiveX" },
     { columnName: "Status", infoPath: "medicationAdministrationStatus" },
     {
       columnName: "Details",
       hiddenBaseText: "details",
-      evaluateEntry: (el) => evaluateAdmissionMedicationDetails(fhirBundle, el),
+      evaluateEntry: (el) => evaluateAdmissionMedicationDetails(fhirBundle, el)
     },
   ];
 
-  console.log("Column info: ", columnInfo);
-
   return (
-    <EvaluateTable
-      resources={admissionMedications}
-      columns={columnInfo}
-      caption="Admission Medications"
-      className="margin-y-0"
-    />
+      <EvaluateTable
+          resources={admissionMedications}
+          columns={columnInfo}
+          caption="Admission Medications"
+          className="margin-y-0"
+      />
   );
 };
 
@@ -919,48 +907,28 @@ export const returnAdmissionMedicationsTable = (
  * @returns - A details element for the current row of the of Admission Medications table, or undefined if there's no data
  */
 const evaluateAdmissionMedicationDetails = (
-  fhirBundle: Bundle,
-  element: Element,
+    fhirBundle: Bundle,
+    element: Element,
 ) => {
-  const performerRefs = evaluateAll(
-    element,
-    fhirPathMappings.medicationAdministrationPerformerRef,
-  );
-  const authors = performerRefs
-    .map((r) => evaluateReference<Practitioner>(fhirBundle, r.reference))
-    .filter(notEmpty);
+  const performerRefs = evaluateAll(element, fhirPathMappings.medicationAdministrationPerformerRef)
+  const authors =  performerRefs.map((r) => evaluateReference<Practitioner>(fhirBundle, r.reference)).filter(notEmpty);
 
-  const reactionRefs = evaluateAll(
-    element,
-    fhirPathMappings.medicationAdministrationReactionRef,
-  );
-  const adverseEvents = reactionRefs
-    .map((r) => evaluateReference<AdverseEvent>(fhirBundle, r.reference))
-    .filter(notEmpty);
-  console.log("Reactions: ", adverseEvents);
-
-  const authorItems = authors.map((p, i) => (
-    <AuthorDetails practitioner={p} key={`transport-obs-${i}`} />
-  ));
-
-  // const reactionItems =
+  const reactionRefs = evaluateAll(element, fhirPathMappings.medicationAdministrationReactionRef)
+  const adverseEvents = reactionRefs.map((r) => evaluateReference<AdverseEvent>(fhirBundle, r.reference)).filter(notEmpty);
 
   const content = [
     {
       title: "Medication Details",
-      value: authors.length && <UnstyledDividedList items={authorItems} />,
-      fullWidthContent: true,
-    },
-    {
-      value: adverseEvents.length && (
-        <UnstyledDividedList
-          items={adverseEvents.map((a, i) => (
-            <ReactionDetails adverseEvent={a} key={`transport-obs-${i}`} />
-          ))}
-        />
+      value: authors.length > 0 && (
+          <UnstyledDividedList
+              items={[<MedicationDetails
+                  practitioners={authors}
+                  reactions={adverseEvents}
+              />]}
+          />
       ),
       fullWidthContent: true,
-    },
+    }
   ].filter(({ value }) => !!value);
 
   if (content.length === 0) return;
@@ -968,45 +936,43 @@ const evaluateAdmissionMedicationDetails = (
   return <DataDisplayList items={content} />;
 };
 
-const AuthorDetails = ({ practitioner }: { practitioner: Practitioner }) => {
+type MedicationDetailsProps = {
+  practitioners: Practitioner[];
+  reactions: AdverseEvent[];
+};
+
+const MedicationDetails: React.FC<MedicationDetailsProps> = ({practitioners, reactions}) => {
   const baseInfo = [
     {
       title: "Author",
-      value: formatName(practitioner.name?.[0]),
+      value: practitioners
+          .map((p: Practitioner) => formatName(p.name?.[0]))
+          .join("\n"),
     },
-  ];
-
-  return baseInfo.map(({ title, value }, i) => (
-    <DataDisplay
-      key={`wi-${i}`}
-      item={{
-        title,
-        value,
-        dividerLine: false,
-        titleNormal: true,
-      }}
-    />
-  ));
-};
-
-const ReactionDetails = ({ adverseEvent }: { adverseEvent: AdverseEvent }) => {
-  const baseInfo = [
     {
       title: "Reaction",
-      value: formatCodeableConcept(adverseEvent.event?.coding?.[0]),
+      value: Array.from(
+          new Set(
+              reactions.flatMap(
+                  (r: AdverseEvent) => r.event?.coding?.map((c) => c.display || c.code || "") ?? []
+              )
+          )
+      )
+          .filter(Boolean)
+          .join("\n"),
     },
   ];
 
   return baseInfo.map(({ title, value }, i) => (
-    <DataDisplay
-      key={`wi-${i}`}
-      item={{
-        title,
-        value,
-        dividerLine: false,
-        titleNormal: true,
-      }}
-    />
+      <DataDisplay
+          key={`wi-${i}`}
+          item={{
+            title,
+            value,
+            dividerLine: false,
+            titleNormal: true,
+          }}
+      />
   ));
 };
 
@@ -1016,8 +982,6 @@ const ReactionDetails = ({ adverseEvent }: { adverseEvent: AdverseEvent }) => {
  * @returns An array of evaluated and formatted hospital encounter data.
  */
 export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
-  const stuffTable = returnAdmissionMedicationsTable(fhirBundle);
-  console.log("TOTAL RETURN = ", stuffTable);
 
   const hospitalEncounterData = [
     {
@@ -1031,7 +995,9 @@ export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
     },
     {
       title: "Admission Medications",
-      value: returnAdmissionMedicationsTable(fhirBundle),
+      value: returnAdmissionMedicationsTable(
+          fhirBundle
+      ),
       table: true,
     },
     {
