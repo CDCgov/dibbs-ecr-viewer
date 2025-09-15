@@ -123,6 +123,253 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
 }
 `;
 
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Admission Medication data when present and match snapshot 1`] = `
+{
+  "availableData": [
+    {
+      "table": true,
+      "title": "Admission Medications",
+      "value": <EvaluateTable
+        caption="Admission Medications"
+        className="margin-y-0"
+        columns={
+          [
+            {
+              "columnName": "Medication Name",
+              "evaluateEntry": [Function],
+            },
+            {
+              "columnName": "Dose Quantity",
+              "infoPath": "medicationDose",
+            },
+            {
+              "columnName": "Start Date",
+              "evaluateEntry": [Function],
+            },
+            {
+              "columnName": "Status",
+              "infoPath": "status",
+            },
+            {
+              "columnName": "Details",
+              "evaluateEntry": [Function],
+              "hiddenBaseText": "details",
+            },
+          ]
+        }
+        resources={
+          [
+            {
+              "dosage": {
+                "dose": {
+                  "value": 12,
+                },
+                "rateQuantity": {
+                  "unit": "h",
+                  "value": 24,
+                },
+                "route": {
+                  "coding": [
+                    {
+                      "code": "C38288",
+                      "display": "ORAL",
+                      "system": "urn:oid:2.16.840.1.113883.3.26.1.1",
+                    },
+                  ],
+                },
+              },
+              "effectivePeriod": {
+                "start": "2012-03-18",
+              },
+              "id": "068be591-bf2d-03d4-6c67-23e8fd05c490",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:6c844c75-aa34-411c-b7bd-5e4a9f206e29",
+                },
+              ],
+              "medicationReference": {
+                "reference": "Medication/9afc88b7-cb49-3871-955b-abcf1d5d211a",
+              },
+              "meta": {
+                "source": "ecr",
+              },
+              "partOf": [
+                {
+                  "reference": "MedicationDispense/c68c4e1d-73da-6344-f9ce-000197912f5d",
+                },
+                {
+                  "reference": "MedicationDispense/eb3f12ff-c102-c447-422d-9698f0b27e25",
+                },
+              ],
+              "reasonReference": [
+                {
+                  "reference": "Condition/d744cf5d-4e8a-503c-84d9-3843de241f4f",
+                },
+              ],
+              "resourceType": "MedicationAdministration",
+              "status": "in-progress",
+              "subject": {
+                "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
+              },
+              "supportingInformation": [
+                {
+                  "reference": "AdverseEvent/006ee19c-8e8c-5d46-07fb-66effdc15d69",
+                },
+                {
+                  "reference": "AdverseEvent/f259a79b-8195-e5e2-0431-e8aeb96f2da9",
+                },
+                {
+                  "reference": "AdverseEvent/075cef1c-9dd0-0d27-3f3c-c7daddbeec15",
+                },
+              ],
+            },
+            {
+              "dosage": {
+                "dose": {
+                  "value": 1,
+                },
+                "rateQuantity": {
+                  "unit": "h",
+                  "value": 12,
+                },
+                "route": {
+                  "coding": [
+                    {
+                      "code": "C38288",
+                      "display": "ORAL",
+                      "system": "urn:oid:2.16.840.1.113883.3.26.1.1",
+                    },
+                  ],
+                },
+              },
+              "effectivePeriod": {
+                "start": "2012-03-18",
+              },
+              "id": "4151cb09-ad12-7ad3-ecd8-993e87d95b72",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:6c844c75-aa34-411c-b7bd-5e4a9f206e29",
+                },
+              ],
+              "medicationReference": {
+                "reference": "Medication/c08fbd5d-7eeb-2beb-4d8c-f56b7e3ca3da",
+              },
+              "meta": {
+                "source": "ecr",
+              },
+              "partOf": [
+                {
+                  "reference": "MedicationDispense/04dc2b51-ca49-764b-cc16-e4c41a0f37a1",
+                },
+              ],
+              "performer": [
+                {
+                  "actor": {
+                    "reference": "Practitioner/69062607-c892-fa70-b750-a67446046070",
+                  },
+                },
+              ],
+              "reasonReference": [
+                {
+                  "reference": "Condition/d744cf5d-4e8a-503c-84d9-3843de241f4f",
+                },
+              ],
+              "resourceType": "MedicationAdministration",
+              "status": "in-progress",
+              "subject": {
+                "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
+              },
+              "supportingInformation": [
+                {
+                  "reference": "AdverseEvent/006ee19c-8e8c-5d46-07fb-66effdc15d69",
+                },
+              ],
+            },
+            {
+              "dosage": {
+                "dose": {
+                  "value": 1,
+                },
+                "rateQuantity": {
+                  "unit": "h",
+                  "value": 12,
+                },
+                "route": {
+                  "coding": [
+                    {
+                      "code": "C38288",
+                      "display": "ORAL",
+                      "system": "urn:oid:2.16.840.1.113883.3.26.1.1",
+                    },
+                  ],
+                },
+              },
+              "effectivePeriod": {
+                "start": "2012-03-18",
+              },
+              "id": "fa8e7481-d6b3-862f-40a6-6b9777b25f29",
+              "identifier": [
+                {
+                  "system": "urn:ietf:rfc:3986",
+                  "value": "urn:uuid:6c844c75-aa34-411c-b7bd-5e4a9f206e29",
+                },
+              ],
+              "medicationReference": {
+                "reference": "Medication/4361c210-6a33-4124-2863-0853046ef9a9",
+              },
+              "meta": {
+                "source": "ecr",
+              },
+              "partOf": [
+                {
+                  "reference": "MedicationDispense/c68c4e1d-73da-6344-f9ce-000197912f5d",
+                },
+              ],
+              "performer": [
+                {
+                  "actor": {
+                    "reference": "Practitioner/69062607-c892-fa70-b750-a67446046070",
+                  },
+                },
+              ],
+              "reasonReference": [
+                {
+                  "reference": "Condition/d744cf5d-4e8a-503c-84d9-3843de241f4f",
+                },
+              ],
+              "resourceType": "MedicationAdministration",
+              "status": "in-progress",
+              "subject": {
+                "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
+              },
+              "supportingInformation": [
+                {
+                  "reference": "AdverseEvent/006ee19c-8e8c-5d46-07fb-66effdc15d69",
+                },
+              ],
+            },
+          ]
+        }
+      />,
+    },
+  ],
+  "unavailableData": [
+    {
+      "table": true,
+      "title": "Hospital Admission Diagnosis",
+      "value": undefined,
+    },
+    {
+      "table": true,
+      "title": "Hospital Discharge Diagnosis",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot 1`] = `
 {
   "availableData": [
