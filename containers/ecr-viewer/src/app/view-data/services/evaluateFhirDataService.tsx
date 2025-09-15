@@ -891,9 +891,15 @@ export const returnAdmissionMedicationsTable = (
       },
     },
     { columnName: "Dose Quantity", infoPath: "medicationDose" },
-    { columnName: "Start Date", evaluateEntry: (el) => {
-        return evaluateValue(el, fhirPathMappings.effectiveX).replace("Start: ", "");
-      }},
+    {
+      columnName: "Start Date",
+      evaluateEntry: (el) => {
+        return evaluateValue(el, fhirPathMappings.effectiveX).replace(
+          "Start: ",
+          "",
+        );
+      },
+    },
     { columnName: "Status", infoPath: "status" },
     {
       columnName: "Details",
@@ -939,7 +945,6 @@ const evaluateAdmissionMedicationDetails = (
     .map((r) => evaluateReference<AdverseEvent>(fhirBundle, r.reference))
     .filter(notEmpty);
 
-
   if (authors.length === 0 && adverseEvents.length === 0) {
     return;
   }
@@ -947,7 +952,8 @@ const evaluateAdmissionMedicationDetails = (
   const content = [
     {
       title: "Medication Details",
-      value: <UnstyledDividedList
+      value: (
+        <UnstyledDividedList
           items={[
             <MedicationDetails
               practitioners={authors}
@@ -955,7 +961,7 @@ const evaluateAdmissionMedicationDetails = (
             />,
           ]}
         />
-      ,
+      ),
       fullWidthContent: true,
     },
   ];
@@ -974,26 +980,25 @@ const MedicationDetails: React.FC<MedicationDetailsProps> = ({
   practitioners,
   reactions,
 }) => {
-
   const authorsStr = practitioners
-      .map((p: Practitioner) => formatName(p.name?.[0]))
-      .filter(Boolean)
-      .join("\n");
+    .map((p: Practitioner) => formatName(p.name?.[0]))
+    .filter(Boolean)
+    .join("\n");
 
   const reactionsStr = Array.from(
-      new Set(
-          reactions.flatMap(
-              (r: AdverseEvent) =>
-                  r.event?.coding?.map((c) => c.display || c.code || "") ?? [],
-          ),
+    new Set(
+      reactions.flatMap(
+        (r: AdverseEvent) =>
+          r.event?.coding?.map((c) => c.display || c.code || "") ?? [],
       ),
+    ),
   )
-      .filter(Boolean)
-      .join("\n");
+    .filter(Boolean)
+    .join("\n");
 
   const baseInfo = [
     authorsStr && { title: "Author", value: authorsStr },
-    reactionsStr && { title: "Reaction", value: reactionsStr }
+    reactionsStr && { title: "Reaction", value: reactionsStr },
   ].filter(Boolean) as { title: string; value: string }[];
 
   return baseInfo.map(({ title, value }, i) => (
