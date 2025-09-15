@@ -114,11 +114,16 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
       "title": "Hospital Admission Diagnosis",
       "value": undefined,
     },
+    {
+      "table": true,
+      "title": "Admission Medications",
+      "value": undefined,
+    },
   ],
 }
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data when present and match snapshot 1`] = `
+exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot 1`] = `
 {
   "availableData": [
     {
@@ -262,7 +267,13 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
       />,
     },
   ],
-  "unavailableData": [],
+  "unavailableData": [
+    {
+      "table": true,
+      "title": "Admission Medications",
+      "value": undefined,
+    },
+  ],
 }
 `;
 

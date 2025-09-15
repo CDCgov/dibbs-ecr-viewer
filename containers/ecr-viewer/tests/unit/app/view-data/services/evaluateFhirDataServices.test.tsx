@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, BundleEntry, Encounter, Practitioner } from "fhir/r4";
 
+import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "@/../../../test-data/fhir/BundlePatientDeceased.json";
@@ -37,6 +38,7 @@ import {
 } from "@/app/view-data/services/evaluateFhirDataService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
+const BundleWithAdmissionMedications = _BundleAdmissionMedications as Bundle;
 const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;
 const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
 
@@ -577,6 +579,11 @@ Home: 123-456-6909`,
           },
           {
             table: true,
+            title: "Admission Medications",
+            value: undefined,
+          },
+          {
+            table: true,
             title: "Hospital Discharge Diagnosis",
             value: undefined,
           },
@@ -584,7 +591,7 @@ Home: 123-456-6909`,
       });
     });
 
-    it("should return Hospital Encounter Data when present and match snapshot", () => {
+    it("should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot", () => {
       // Create a bundle with Admission and Discharge Dx
       const bundleWithHospitalEncounterData = addSectionsToBundle(
         [admissionDiagnosis, dischargeDiagnosis],
@@ -598,7 +605,9 @@ Home: 123-456-6909`,
       expect(actual).toMatchSnapshot();
 
       expect(actual.availableData.length).toEqual(2);
-      expect(actual.unavailableData.length).toEqual(0);
+
+      // This unavailable data is for the Admission Medication, tested elsewhere
+      expect(actual.unavailableData.length).toEqual(1);
 
       render(
         <>
@@ -637,7 +646,7 @@ Home: 123-456-6909`,
       );
 
       expect(actual.availableData.length).toEqual(1);
-      expect(actual.unavailableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(2);
 
       render(actual.availableData[0].value);
       expect(screen.getByRole("table")).toBeInTheDocument();
@@ -666,7 +675,7 @@ Home: 123-456-6909`,
       expect(actual).toMatchSnapshot();
 
       expect(actual.availableData.length).toEqual(1);
-      expect(actual.unavailableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(2);
 
       render(actual.availableData[0].value);
       expect(screen.getByRole("table")).toBeInTheDocument();
