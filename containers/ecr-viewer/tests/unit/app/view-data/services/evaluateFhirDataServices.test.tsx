@@ -694,9 +694,8 @@ Home: 123-456-6909`,
     });
 
     it("should return Admission Medication data when present and match snapshot", () => {
-
       const actual = evaluateHospitalEncounterData(
-          BundleWithAdmissionMedications
+        BundleWithAdmissionMedications,
       );
 
       expect(actual).toMatchSnapshot();
@@ -706,48 +705,43 @@ Home: 123-456-6909`,
       // This unavailable data is for the Admission and Discharge Diagnoses
       expect(actual.unavailableData.length).toEqual(2);
 
-      render(
-          <>
-            {actual.availableData[0].value}
-          </>,
-      );
+      render(<>{actual.availableData[0].value}</>);
 
       const tables = screen.getAllByRole("table");
       expect(tables.length).toEqual(1);
 
-      expect(screen.getByText(
-          "Acetaminophen 500 MG Oral Tablet",
-      )).toBeInTheDocument();
-      expect(screen.getByText(
-          "Ibuprofen 200 MG Oral Tablet",
-      )).toBeInTheDocument();
-      expect(screen.getByText(
-          "Atenolol 25 MG Oral Tablet",
-      )).toBeInTheDocument();
+      expect(
+        screen.getByText("Acetaminophen 500 MG Oral Tablet"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Ibuprofen 200 MG Oral Tablet"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Atenolol 25 MG Oral Tablet"),
+      ).toBeInTheDocument();
 
-      const nauseaReaction = screen.getAllByText("Nausea")
-      expect(nauseaReaction.length).toEqual(2)
+      const nauseaReaction = screen.getAllByText("Nausea");
+      expect(nauseaReaction.length).toEqual(2);
 
-      const multipleReactions = screen.getAllByText(/Nausea\s+Super sick\s+Headache/);
+      const multipleReactions = screen.getAllByText(
+        /Nausea\s+Super sick\s+Headache/,
+      );
       expect(multipleReactions).toHaveLength(1);
 
-      const authors = screen.getAllByText("Nurse Nightingale RN")
-      expect(authors.length).toEqual(2)
+      const authors = screen.getAllByText("Nurse Nightingale RN");
+      expect(authors.length).toEqual(2);
 
       const times = screen.getAllByText("03/18/2012");
       expect(times.length).toEqual(3);
 
+      expect(screen.queryByText("Admission Medications")).toBeInTheDocument();
       expect(
-          screen.queryByText("Admission Medications"),
-      ).toBeInTheDocument();
-      expect(
-          screen.queryByText("Hospital Discharge Diagnosis"),
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).not.toBeInTheDocument();
       expect(
-          screen.queryByText("Hospital Admission Diagnosis"),
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).not.toBeInTheDocument();
     });
-
   });
 
   describe("Evaluate Occupation History", () => {
