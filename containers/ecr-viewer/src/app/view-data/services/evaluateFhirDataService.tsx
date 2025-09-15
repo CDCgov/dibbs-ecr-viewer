@@ -891,7 +891,9 @@ export const returnAdmissionMedicationsTable = (
       },
     },
     { columnName: "Dose Quantity", infoPath: "medicationDose" },
-    { columnName: "Start Date", infoPath: "effectiveX" },
+    { columnName: "Start Date", evaluateEntry: (el) => {
+        return evaluateValue(el, fhirPathMappings.effectiveX).replace("Start: ", "");
+      }},
     { columnName: "Status", infoPath: "status" },
     {
       columnName: "Details",
@@ -932,15 +934,20 @@ const evaluateAdmissionMedicationDetails = (
     element,
     fhirPathMappings.medicationAdministrationReactionRef,
   );
+
   const adverseEvents = reactionRefs
     .map((r) => evaluateReference<AdverseEvent>(fhirBundle, r.reference))
     .filter(notEmpty);
 
+
+  if (authors.length === 0 && adverseEvents.length === 0) {
+    return;
+  }
+
   const content = [
     {
       title: "Medication Details",
-      value: authors.length > 0 && (
-        <UnstyledDividedList
+      value: <UnstyledDividedList
           items={[
             <MedicationDetails
               practitioners={authors}
@@ -948,10 +955,10 @@ const evaluateAdmissionMedicationDetails = (
             />,
           ]}
         />
-      ),
+      ,
       fullWidthContent: true,
     },
-  ].filter(({ value }) => !!value);
+  ];
 
   if (content.length === 0) return;
 
@@ -967,27 +974,27 @@ const MedicationDetails: React.FC<MedicationDetailsProps> = ({
   practitioners,
   reactions,
 }) => {
-  const baseInfo = [
-    {
-      title: "Author",
-      value: practitioners
-        .map((p: Practitioner) => formatName(p.name?.[0]))
-        .join("\n"),
-    },
-    {
-      title: "Reaction",
-      value: Array.from(
-        new Set(
+
+  const authorsStr = practitioners
+      .map((p: Practitioner) => formatName(p.name?.[0]))
+      .filter(Boolean)
+      .join("\n");
+
+  const reactionsStr = Array.from(
+      new Set(
           reactions.flatMap(
-            (r: AdverseEvent) =>
-              r.event?.coding?.map((c) => c.display || c.code || "") ?? [],
+              (r: AdverseEvent) =>
+                  r.event?.coding?.map((c) => c.display || c.code || "") ?? [],
           ),
-        ),
-      )
-        .filter(Boolean)
-        .join("\n"),
-    },
-  ];
+      ),
+  )
+      .filter(Boolean)
+      .join("\n");
+
+  const baseInfo = [
+    authorsStr && { title: "Author", value: authorsStr },
+    reactionsStr && { title: "Reaction", value: reactionsStr }
+  ].filter(Boolean) as { title: string; value: string }[];
 
   return baseInfo.map(({ title, value }, i) => (
     <DataDisplay

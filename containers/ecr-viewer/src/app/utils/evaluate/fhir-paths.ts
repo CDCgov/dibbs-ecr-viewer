@@ -549,7 +549,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   medicationAdministrationReactionRef: {
     type: "Reference",
-    path: "MedicationAdministration.supportingInformation.first()",
+    path: "MedicationAdministration.supportingInformation",
   },
   medicationDose: { type: "ValueX", path: "dosage.dose.value" },
 
