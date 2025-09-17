@@ -20,8 +20,8 @@ const getMigrator = () => {
   const db = getDbRaw();
   return new Migrator({
     db,
-    migrationTableName: `${dbNamespace()}.${dbNamespace()}_schema_migration`,
-    migrationLockTableName: `${dbNamespace()}.${dbNamespace()}_schema_migration_lock`,
+    migrationTableName: `${dbNamespace()}.schema_migration`,
+    migrationLockTableName: `${dbNamespace()}.schema_migration_lock`,
     provider: new EcrViewerMigrationProvider({
       schema: dbSchema()!,
     }),
