@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { Bundle, BundleEntry, Encounter, Practitioner } from "fhir/r4";
 
+import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "@/../../../test-data/fhir/BundlePatientDeceased.json";
@@ -37,6 +38,7 @@ import {
 } from "@/app/view-data/services/evaluateFhirDataService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
+const BundleWithAdmissionMedications = _BundleAdmissionMedications as Bundle;
 const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;
 const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
 
@@ -560,7 +562,7 @@ Home: 123-456-6909`,
       };
     };
 
-    it("should return unavailable data when no Admission Diagnosis or Discharge diagnosis are found", () => {
+    it("should return unavailable data when no Admission Diagnosis, Admission Medication, or Discharge diagnosis are found", () => {
       const bundle: Bundle = {
         resourceType: "Bundle",
         type: "document",
@@ -577,6 +579,11 @@ Home: 123-456-6909`,
           },
           {
             table: true,
+            title: "Admission Medications",
+            value: undefined,
+          },
+          {
+            table: true,
             title: "Hospital Discharge Diagnosis",
             value: undefined,
           },
@@ -584,7 +591,7 @@ Home: 123-456-6909`,
       });
     });
 
-    it("should return Hospital Encounter Data when present and match snapshot", () => {
+    it("should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot", () => {
       // Create a bundle with Admission and Discharge Dx
       const bundleWithHospitalEncounterData = addSectionsToBundle(
         [admissionDiagnosis, dischargeDiagnosis],
@@ -598,7 +605,9 @@ Home: 123-456-6909`,
       expect(actual).toMatchSnapshot();
 
       expect(actual.availableData.length).toEqual(2);
-      expect(actual.unavailableData.length).toEqual(0);
+
+      // This unavailable data is for the Admission Medication, tested elsewhere
+      expect(actual.unavailableData.length).toEqual(1);
 
       render(
         <>
@@ -637,7 +646,7 @@ Home: 123-456-6909`,
       );
 
       expect(actual.availableData.length).toEqual(1);
-      expect(actual.unavailableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(2);
 
       render(actual.availableData[0].value);
       expect(screen.getByRole("table")).toBeInTheDocument();
@@ -666,7 +675,7 @@ Home: 123-456-6909`,
       expect(actual).toMatchSnapshot();
 
       expect(actual.availableData.length).toEqual(1);
-      expect(actual.unavailableData.length).toEqual(1);
+      expect(actual.unavailableData.length).toEqual(2);
 
       render(actual.availableData[0].value);
       expect(screen.getByRole("table")).toBeInTheDocument();
@@ -679,6 +688,56 @@ Home: 123-456-6909`,
       expect(
         screen.queryByText("Hospital Discharge Diagnosis"),
       ).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Admission Diagnosis"),
+      ).not.toBeInTheDocument();
+    });
+
+    it("should return Admission Medication data when present and match snapshot", () => {
+      const actual = evaluateHospitalEncounterData(
+        BundleWithAdmissionMedications,
+      );
+
+      expect(actual).toMatchSnapshot();
+
+      expect(actual.availableData.length).toEqual(1);
+
+      // This unavailable data is for the Admission and Discharge Diagnoses
+      expect(actual.unavailableData.length).toEqual(2);
+
+      render(<>{actual.availableData[0].value}</>);
+
+      const tables = screen.getAllByRole("table");
+      expect(tables.length).toEqual(1);
+
+      expect(
+        screen.getByText("Acetaminophen 500 MG Oral Tablet"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Ibuprofen 200 MG Oral Tablet"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Atenolol 25 MG Oral Tablet"),
+      ).toBeInTheDocument();
+
+      const nauseaReaction = screen.getAllByText("Nausea");
+      expect(nauseaReaction.length).toEqual(2);
+
+      const multipleReactions = screen.getAllByText(
+        /Nausea\s+Super sick\s+Headache/,
+      );
+      expect(multipleReactions).toHaveLength(1);
+
+      const authors = screen.getAllByText("Nurse Nightingale RN");
+      expect(authors.length).toEqual(2);
+
+      const times = screen.getAllByText("03/18/2012");
+      expect(times.length).toEqual(3);
+
+      expect(screen.queryByText("Admission Medications")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Hospital Discharge Diagnosis"),
+      ).not.toBeInTheDocument();
       expect(
         screen.queryByText("Hospital Admission Diagnosis"),
       ).not.toBeInTheDocument();
