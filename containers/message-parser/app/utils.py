@@ -440,7 +440,7 @@ class FhirParser:
                     self.message,
                     ref_parser,
                     context={"ref": reference},
-                ) 
+                )
             else:
                 curr_ref = fhirpathpy.evaluate(message, ref_parser)
 
@@ -456,8 +456,8 @@ class FhirParser:
                 raise ValueError(
                     "Provided `reference_lookup` location points "
                     "to many referencing identifiers"
-                    )
-            
+                )
+
             reference = curr_ref[0].split("/")[-1]
 
         return reference
