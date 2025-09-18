@@ -74,7 +74,7 @@ const evaluateTravelHistoryDetails = (
     o.category?.some(
       (c) =>
         c.coding?.[0]?.system ===
-        "http://terminology.hl7.org/ValueSet/v3-ActClassExposure",
+        "http://terminology.hl7.org/CodeSystem/v3-ActClass",
     ),
   );
 

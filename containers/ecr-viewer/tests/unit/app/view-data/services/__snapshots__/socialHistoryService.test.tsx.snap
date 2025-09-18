@@ -334,6 +334,112 @@ End: 01/20/1888
                         <div
                           class="grid-col maxw7 text-pre-line p-list"
                         >
+                          Transportation details
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Specific Exposure
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Ocean liner, device (physical object)
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Dates
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Start: 01/01/1888
+End: 01/10/1888
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    class="padding-y-2 border-top border-base-lightest"
+                  >
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Exposure Type
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Transportation details
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Specific Exposure
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Ocean liner, device (physical object)
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Dates
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
+                          Start: 01/10/1888
+End: 01/20/1888
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    class="padding-y-2 border-top border-base-lightest"
+                  >
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="text-normal data-title padding-right-1"
+                        >
+                          Exposure Type
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list"
+                        >
                           Lightsaber demo
                         </div>
                       </div>
