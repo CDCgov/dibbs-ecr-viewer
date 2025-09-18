@@ -10,7 +10,7 @@
     "nullable": true
   },
   "eicr_version_number": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition' ).extension.where(url='http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber').valueString",
+    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').extension.where(url='http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber').valueString",
     "data_type": "string",
     "nullable": true
   },

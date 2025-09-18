@@ -354,6 +354,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Bundle.id",
   },
+  dateTimeEcrCreated: {
+    type: "string",
+    path: "Bundle.timestamp",
+  },
   eicrReleaseVersion: {
     type: "ValueX",
     path: "entry.resource.Composition.extension('https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').value",
@@ -361,10 +365,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   eicrCustodianRef: {
     type: "string",
     path: "entry.resource.Composition.custodian.reference",
-  },
-  dateTimeEcrCreated: {
-    type: "string",
-    path: "Bundle.timestamp",
   },
   ehrSoftware: {
     type: "ValueX",
@@ -695,7 +695,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Exposure Details
   exposureObservations: {
     type: "Observation",
-    path: "entry.resource.Observation.where(category.coding.system = 'http://terminology.hl7.org/ValueSet/v3-ActClassExposure')",
+    path: "entry.resource.Observation.where(category.coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ActClass')",
   },
   exposureAgent: {
     type: "ValueX",
