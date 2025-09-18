@@ -345,7 +345,7 @@
     "nullable": true
   },
   "ecr_id": {
-    "fhir_path": "Bundle.entry.resource.id[0]",
+    "fhir_path": "Bundle.id",
     "data_type": "string",
     "nullable": false
   },
