@@ -5,12 +5,17 @@
     "value": {
       "resourceType": "Bundle",
       "type": "document",
+      "id": "10c13861-86a8-4a9a-aec6-b615921178df",
+      "identifier": {
+        "value": "10c13861-86a8-4a9a-aec6-b615921178df"
+      },
+      "timestamp": "2025-02-05T08:43:39Z",
       "entry": [
         {
-          "fullUrl": "urn:uuid:10c13861-86a8-4a9a-aec6-b615921178df",
+          "fullUrl": "urn:uuid:10c13861-1234-1234-aec6-b615921178df",
           "resource": {
             "resourceType": "Composition",
-            "id": "10c13861-86a8-4a9a-aec6-b615921178df",
+            "id": "10c13861-1234-1234-aec6-b615921178df",
             "meta": {
               "profile": [
                 "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
