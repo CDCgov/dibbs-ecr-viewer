@@ -10,7 +10,7 @@ import { saveFhirData, saveWithMetadata } from "./service";
 
 /**
  * Handles POST requests and saves the FHIR Bundle to the database.
- * @param request - The incoming request object. Expected to have a JSON body in the format `{"fhirBundle":{}, "saveSource": "s3|azure""}`. FHIR bundle must include the ecr ID under entry[0].resource.id.
+ * @param request - The incoming request object. Expected to have a JSON body in the format `{"fhirBundle":{}, "saveSource": "s3|azure""}`. FHIR bundle must include the ecr ID under Bundle.id.
  * @returns A `NextResponse` object with a JSON payload indicating the success message. The response content type is set to `application/json`.
  */
 export async function POST(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   try {
     requestBody = await request.json();
     fhirBundle = requestBody.fhirBundle;
-    ecrId = requestBody.fhirBundle.entry[0].resource.id;
+    ecrId = requestBody.fhirBundle.id;
   } catch (error: unknown) {
     console.error("Error reading request body:", error);
 
