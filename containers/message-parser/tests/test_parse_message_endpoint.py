@@ -211,6 +211,7 @@ expected_reference_response = {
     "parsed_values": {
         "first_name": "John ",
         "last_name": "doe",
+        "facility_type": "Outpatient Facility",
         "labs": [
             {
                 "test_type": "Blood culture",
