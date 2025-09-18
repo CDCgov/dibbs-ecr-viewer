@@ -16,6 +16,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
   const schemaExists = await schemaExistsByName(db, schema);
 
+  // TODO: check if this is even needed
   if (!schemaExists) {
     throw new Error(`Schema ${schema} does not exist`);
   }
