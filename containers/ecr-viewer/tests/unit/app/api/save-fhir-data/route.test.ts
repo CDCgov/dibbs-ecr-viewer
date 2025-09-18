@@ -36,13 +36,18 @@ jest.mock("@/app/data/metadataDb/database");
 const fakeData = (source: string) => ({
   fhirBundle: {
     resourceType: "Bundle",
-    type: "batch",
+    type: "document",
+    identifier: {
+      value: "12345",
+    },
+    timestamp: "2000-02-04T09:01:22-05:00",
+    id: "12345",
     entry: [
       {
-        fullUrl: "urn:uuid:12345",
+        fullUrl: "urn:uuid:99999",
         resource: {
           resourceType: "Composition",
-          id: "12345",
+          id: "99999",
         },
       },
     ],
@@ -137,13 +142,18 @@ describe("POST Save FHIR Data API Route", () => {
     const reqBody = {
       fhirBundle: {
         resourceType: "Bundle",
-        type: "batch",
+        type: "document",
+        identifier: {
+          value: "12345",
+        },
+        timestamp: "2000-02-04T09:01:22-05:00",
+        id: "12345",
         entry: [
           {
-            fullUrl: "urn:uuid:12345",
+            fullUrl: "urn:uuid:99999",
             resource: {
               resourceType: "Composition",
-              id: "12345",
+              id: "99999",
             },
           },
         ],
@@ -238,7 +248,7 @@ describe("POST Save FHIR Data API Route - Azure", () => {
     expect(mockBlockBlobClient.upload).toHaveBeenCalledOnce();
     expect(mockBlockBlobClient.upload).toHaveBeenCalledWith(
       JSON.stringify(fakeData("azure").fhirBundle),
-      134,
+      221,
       {
         blobHTTPHeaders: { blobContentType: "application/json" },
       },
@@ -267,7 +277,7 @@ describe("POST Save FHIR Data API Route - Azure", () => {
     expect(mockBlockBlobClient.upload).toHaveBeenCalledOnce();
     expect(mockBlockBlobClient.upload).toHaveBeenCalledWith(
       JSON.stringify(fakeData("azure").fhirBundle),
-      134,
+      221,
       {
         blobHTTPHeaders: { blobContentType: "application/json" },
       },

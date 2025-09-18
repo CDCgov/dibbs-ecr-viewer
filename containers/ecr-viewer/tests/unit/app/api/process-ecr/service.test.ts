@@ -19,7 +19,7 @@ describe("orchestrationRequest", () => {
   const mockFile = new File(["content"], "test.zip", {
     type: "application/zip",
   });
-  const mockEcr = { entry: [{ resource: { id: "123" } }] };
+  const mockEcr = { id: "123" };
   const mockMetadata = { key: "value" };
 
   beforeEach(() => {
