@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 # Download FHIR-Converter
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-24 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch dependabot/docker/containers/fhir-converter/dotnet/aspnet-9.0 --depth 1 /App
 
 WORKDIR /App
 
