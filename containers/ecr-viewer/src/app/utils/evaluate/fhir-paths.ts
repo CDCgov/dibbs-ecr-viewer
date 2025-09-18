@@ -349,6 +349,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "Bundle.id",
   },
+  dateTimeEcrCreated: {
+    type: "string",
+    path: "Bundle.timestamp",
+  },
   eicrReleaseVersion: {
     type: "ValueX",
     path: "entry.resource.Composition.extension('https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436').value",
@@ -356,10 +360,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   eicrCustodianRef: {
     type: "string",
     path: "entry.resource.Composition.custodian.reference",
-  },
-  dateTimeEcrCreated: {
-    type: "string",
-    path: "Bundle.timestamp",
   },
   ehrSoftware: {
     type: "ValueX",
