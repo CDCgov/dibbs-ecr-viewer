@@ -1,12 +1,17 @@
 {
   "resourceType": "Bundle",
   "type": "document",
+  "id": "1dd10047-2207-4eac-a993-0f706c88be5d",
+  "identifier": {
+    "value": "1dd10047-2207-4eac-a993-0f706c88be5d"
+  },
+  "timestamp": "2025-02-04T12:56:38Z",
   "entry": [
     {
-      "fullUrl": "urn:uuid:1dd10047-2207-4eac-a993-0f706c88be5d",
+      "fullUrl": "urn:uuid:1dd10047-1234-4eac-a993-0f706c88be5d",
       "resource": {
         "resourceType": "Composition",
-        "id": "1dd10047-2207-4eac-a993-0f706c88be5d",
+        "id": "1dd10047-1234-4eac-a993-0f706c88be5d",
         "status": "final",
         "type": {
           "coding": [
