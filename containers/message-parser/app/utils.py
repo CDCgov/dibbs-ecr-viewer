@@ -417,8 +417,8 @@ class FhirParser:
         strings, it will evaluate each reference in order, passing along each lookup until
         it resolves a single final reference.
 
-        If a single reference is found, its ID is returned. If none or multiple 
-        references are found, this function will raise an error if those references 
+        If a single reference is found, its ID is returned. If none or multiple
+        references are found, this function will raise an error if those references
         cannot be resolved (if the ID of the referenced object can't be found, for example).
 
         :param field_parser: The parser for a specific field, which must contain a
