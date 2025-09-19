@@ -409,14 +409,17 @@ class FhirParser:
 
     def _get_reference(self, field_parser, current_message):
         """
-        Resolves a FHIR reference and returns a new path based on the resolved ID.
+        Resolves a FHIR reference(s) and returns the final reference to replace a placeholder
+        for the field's `fhir_path`.
 
         It uses a `reference_lookup` to find a reference ID in the `current_message`.
-        If a single reference is found, it uses the reference to replace a placeholder
-        in the `fhir_path` and evaluates this new path against the FHIR bundle
-        to return the referenced resource or value. If not, this function will raise
-        an error if those references cannot be resolved (if the ID of the referenced
-        object can't be found, for example).
+        `reference_lookup` may be a string or a list of strings. If it is a list of
+        strings, it will evaluate each reference in order, passing along each lookup until
+        it resolves a single final reference.
+
+        If a single reference is found, its ID is returned. If none or multiple
+        references are found, this function will raise an error if those references
+        cannot be resolved (if the ID of the referenced object can't be found, for example).
 
         :param field_parser: The parser for a specific field, which must contain a
             `fhir_path` & a `reference_lookup`.
@@ -426,22 +429,39 @@ class FhirParser:
             error message if the reference could not be resolved.
         """
         reference_parser = field_parser["reference_lookup"]
-        reference = fhirpathpy.evaluate(current_message, reference_parser)
+        reference = None
+        message = current_message
 
-        if len(reference) == 0:
-            self.response.status_code = status.HTTP_400_BAD_REQUEST
-            raise ValueError(
-                "Provided `reference_lookup` location does not point to a "
-                "referencing identifier"
-            )
-        # Future refactor: be able to take multiple references?
-        elif len(reference) > 1:
-            self.response.status_code = status.HTTP_400_BAD_REQUEST
-            raise ValueError(
-                "Provided `reference_lookup` location points "
-                "to many referencing identifiers"
-            )
-        return reference[0].split("/")[-1]
+        if isinstance(reference_parser, str):
+            reference_parser = [reference_parser]
+
+        for ref_parser in reference_parser:
+            if reference:
+                curr_ref = fhirpathpy.evaluate(
+                    self.message,
+                    ref_parser,
+                    context={"ref": reference},
+                )
+            else:
+                curr_ref = fhirpathpy.evaluate(message, ref_parser)
+
+            if len(curr_ref) == 0:
+                self.response.status_code = status.HTTP_400_BAD_REQUEST
+                raise ValueError(
+                    "Provided `reference_lookup` location does not point to a "
+                    "referencing identifier"
+                )
+            # Future refactor: Each reference_parser can only refer to one reference
+            elif len(curr_ref) > 1:
+                self.response.status_code = status.HTTP_400_BAD_REQUEST
+                raise ValueError(
+                    "Provided `reference_lookup` location points "
+                    "to many referencing identifiers"
+                )
+
+            reference = curr_ref[0].split("/")[-1]
+
+        return reference
 
 
 def transform_to_phdc_input_data(parsed_values: dict) -> PHDCInputData:
