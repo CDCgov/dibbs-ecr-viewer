@@ -2,8 +2,10 @@ import "server-only"; // FHIR evaluation should be done server side
 
 import { Tag } from "@trussworks/react-uswds";
 import {
+  AdverseEvent,
   Bundle,
   Condition,
+  Element,
   Encounter,
   Location,
   Organization,
@@ -41,6 +43,7 @@ import {
   evaluateData,
   isDataAvailable,
   noData,
+  notEmpty,
 } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -54,6 +57,7 @@ import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase, toTitleCase } from "@/app/utils/format-utils";
 import {
   DataDisplay,
+  DataDisplayList,
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
@@ -858,7 +862,160 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
 };
 
 /**
- * Evaluates Hospital Encounter Admission and Discharge diagnosis data from the FHIR bundle and formats it into structured data for display.
+ * Generates a formatted table representing the list of Admission Medications based on the provided array of Admission Medications and mappings.
+ * @param fhirBundle - The fhir bundle
+ * @returns - A formatted table React element representing the list of Admission Medications, or undefined if the array is empty.
+ */
+export const returnAdmissionMedicationsTable = (
+  fhirBundle: Bundle,
+): React.JSX.Element | undefined => {
+  const admissionMedications = evaluateAllReferences(
+    fhirBundle,
+    fhirPathMappings.admissionMedicationRefs,
+  );
+
+  if (admissionMedications.length === 0) {
+    return undefined;
+  }
+
+  const columnInfo: ColumnInfoInput[] = [
+    {
+      columnName: "Medication Name",
+      evaluateEntry: (el) => {
+        const medRef = evaluateOne(
+          el,
+          fhirPathMappings.medicationAdministrationMedicationRef,
+        );
+        const medication = evaluateReference(fhirBundle, medRef);
+        return evaluateValue(medication, fhirPathMappings.code);
+      },
+    },
+    { columnName: "Dose Quantity", infoPath: "medicationDose" },
+    {
+      columnName: "Start Date",
+      evaluateEntry: (el) => {
+        return evaluateValue(el, fhirPathMappings.effectiveX).replace(
+          "Start: ",
+          "",
+        );
+      },
+    },
+    { columnName: "Status", infoPath: "status" },
+    {
+      columnName: "Details",
+      hiddenBaseText: "details",
+      evaluateEntry: (el) => evaluateAdmissionMedicationDetails(fhirBundle, el),
+    },
+  ];
+
+  return (
+    <EvaluateTable
+      resources={admissionMedications}
+      columns={columnInfo}
+      caption="Admission Medications"
+      className="margin-y-0"
+    />
+  );
+};
+
+/**
+ * Generates details sections for the Admission Medications table rows.
+ * @param fhirBundle - The fhir bundle
+ * @param element - The current row being processed
+ * @returns - A details element for the current row of the of Admission Medications table, or undefined if there's no data
+ */
+const evaluateAdmissionMedicationDetails = (
+  fhirBundle: Bundle,
+  element: Element,
+) => {
+  const performerRefs = evaluateAll(
+    element,
+    fhirPathMappings.medicationAdministrationPerformerRef,
+  );
+  const authors = performerRefs
+    .map((r) => evaluateReference<Practitioner>(fhirBundle, r.reference))
+    .filter(notEmpty);
+
+  const reactionRefs = evaluateAll(
+    element,
+    fhirPathMappings.medicationAdministrationReactionRef,
+  );
+
+  const adverseEvents = reactionRefs
+    .map((r) => evaluateReference<AdverseEvent>(fhirBundle, r.reference))
+    .filter(notEmpty);
+
+  if (authors.length === 0 && adverseEvents.length === 0) {
+    return;
+  }
+
+  const content = [
+    {
+      title: "Medication Details",
+      value: (
+        <UnstyledDividedList
+          items={[
+            <MedicationDetails
+              practitioners={authors}
+              reactions={adverseEvents}
+            />,
+          ]}
+        />
+      ),
+      fullWidthContent: true,
+    },
+  ];
+
+  if (content.length === 0) return;
+
+  return <DataDisplayList items={content} />;
+};
+
+type MedicationDetailsProps = {
+  practitioners: Practitioner[];
+  reactions: AdverseEvent[];
+};
+
+const MedicationDetails: React.FC<MedicationDetailsProps> = ({
+  practitioners,
+  reactions,
+}) => {
+  const authorsStr = practitioners
+    .map((p: Practitioner) => formatName(p.name?.[0]))
+    .filter(Boolean)
+    .join("\n");
+
+  const reactionsStr = Array.from(
+    new Set(
+      reactions.flatMap(
+        (r: AdverseEvent) =>
+          r.event?.coding?.map((c) => c.display || c.code || "") ?? [],
+      ),
+    ),
+  )
+    .filter(Boolean)
+    .join("\n");
+
+  const baseInfo = [
+    authorsStr && { title: "Author", value: authorsStr },
+    reactionsStr && { title: "Reaction", value: reactionsStr },
+  ].filter(Boolean) as { title: string; value: string }[];
+
+  return baseInfo.map(({ title, value }, i) => (
+    <DataDisplay
+      key={`wi-${i}`}
+      item={{
+        title,
+        value,
+        dividerLine: false,
+        titleNormal: true,
+      }}
+    />
+  ));
+};
+
+/**
+ * Evaluates Hospital Encounter Admission Diagnosis, Admission Medications, and Discharge diagnosis data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing hospital encounter data.
  * @returns An array of evaluated and formatted hospital encounter data.
  */
@@ -871,6 +1028,11 @@ export const evaluateHospitalEncounterData = (fhirBundle: Bundle) => {
         "46241-6",
         "Hospital Admission Diagnosis",
       ),
+      table: true,
+    },
+    {
+      title: "Admission Medications",
+      value: returnAdmissionMedicationsTable(fhirBundle),
       table: true,
     },
     {

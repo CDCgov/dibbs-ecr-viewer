@@ -1,12 +1,17 @@
 {
   "resourceType": "Bundle",
   "type": "document",
+  "identifier": {
+    "value": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548"
+  },
+  "timestamp": "2000-02-04T09:01:22-05:00",
+  "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
   "entry": [
     {
-      "fullUrl": "urn:uuid:2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+      "fullUrl": "urn:uuid:2ebcb371-1234-fe8f-88d8-FAKEa8dae548",
       "resource": {
         "resourceType": "Composition",
-        "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+        "id": "2ebcb371-1234-fe8f-88d8-FAKEa8dae548",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
