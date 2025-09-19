@@ -407,18 +407,19 @@ class FhirParser:
             except Exception:
                 return []
 
-    # TODO ANGELA: Update doc
-    # TODO ANGELA: Update tests
     def _get_reference(self, field_parser, current_message):
         """
-        Resolves a FHIR reference and returns a new path based on the resolved ID.
+        Resolves a FHIR reference(s) and returns the final reference to replace a placeholder
+        for the field's `fhir_path`.
 
         It uses a `reference_lookup` to find a reference ID in the `current_message`.
-        If a single reference is found, it uses the reference to replace a placeholder
-        in the `fhir_path` and evaluates this new path against the FHIR bundle
-        to return the referenced resource or value. If not, this function will raise
-        an error if those references cannot be resolved (if the ID of the referenced
-        object can't be found, for example).
+        `reference_lookup` may be a string or a list of strings. If it is a list of
+        strings, it will evaluate each reference in order, passing along each lookup until
+        it resolves a single final reference.
+
+        If a single reference is found, its ID is returned. If none or multiple 
+        references are found, this function will raise an error if those references 
+        cannot be resolved (if the ID of the referenced object can't be found, for example).
 
         :param field_parser: The parser for a specific field, which must contain a
             `fhir_path` & a `reference_lookup`.
