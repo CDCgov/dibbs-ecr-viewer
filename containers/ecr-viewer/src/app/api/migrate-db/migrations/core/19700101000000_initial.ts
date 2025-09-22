@@ -3,10 +3,7 @@ import { Kysely, sql } from "kysely";
 import { AnyDb } from "@/app/data/metadataDb/database";
 import { getSql } from "@/app/data/metadataDb/dialects/common";
 import { dbDialect, dbNamespace } from "@/app/data/metadataDb/utils/db-config";
-import {
-  schemaExistsByName,
-  getTables,
-} from "@/app/data/metadataDb/utils/db-metadata";
+import { getTables } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
  * Core schema initialization.
@@ -14,12 +11,6 @@ import {
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
-  const schemaExists = await schemaExistsByName(db, schema);
-
-  // TODO: check if this is even needed
-  if (!schemaExists) {
-    throw new Error(`Schema ${schema} does not exist`);
-  }
 
   if (dbDialect() === "postgres") {
     // Install uuid-ossp extension (Postgres-specific)
