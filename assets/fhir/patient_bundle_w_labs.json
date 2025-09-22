@@ -6,6 +6,44 @@
   "entry": [
     {
       "resource": {
+        "resourceType": "Composition",
+        "encounter": {
+          "reference": "Encounter/test-encounter-id"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "test-encounter-id",
+        "location": [
+          {
+            "location": {
+              "reference": "Location/test-location-id"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Location",
+        "id": "test-location-id",
+        "type": [
+          {
+            "coding": [
+              {
+                "code": "OF",
+                "system": "urn:oid:2.16.840.1.113883.5.111",
+                "display": "Outpatient Facility"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
         "resourceType": "Organization",
         "id": "idu2-jd81-lqpp-172j-nx82",
         "active": true,
