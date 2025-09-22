@@ -127,7 +127,7 @@ const saveToSource = (
   bundle: Bundle,
   metadata: BundleMetadata | BundleExtendedMetadata | undefined,
 ) => {
-  const ecrId = bundle.entry?.[0].resource?.id as string;
+  const ecrId = bundle.id!;
   if (metadata) {
     return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
   } else {

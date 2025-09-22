@@ -4,12 +4,17 @@
     "FhirResource": {
       "resourceType": "Bundle",
       "type": "document",
+      "id": "5beb0e40-3ddb-2164-0ac7-8e86b8f5b386",
+      "timestamp": "2020-11-07T09:44:21-05:00",
+      "identifier": {
+        "value": "5beb0e40-3ddb-2164-0ac7-8e86b8f5b386"
+      },
       "entry": [
         {
-          "fullUrl": "urn:uuid:5beb0e40-3ddb-2164-0ac7-8e86b8f5b386",
+          "fullUrl": "urn:uuid:5beb0e40-1234-2164-0ac7-8e86b8f5b386",
           "resource": {
             "resourceType": "Composition",
-            "id": "5beb0e40-3ddb-2164-0ac7-8e86b8f5b386",
+            "id": "5beb0e40-3ddb-1234-0ac7-8e86b8f5b386",
             "identifier": {
               "use": "official",
               "value": "2.16.840.1.113883.9.9.9.9.9"

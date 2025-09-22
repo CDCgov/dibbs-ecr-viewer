@@ -144,10 +144,13 @@
     "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "facility_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').valueCodeableConcept.coding[0].display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Location' and id = %ref).type.coding.display",
     "data_type": "string",
     "nullable": true,
-    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
+    "reference_lookup": [
+      "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
+      "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location.location.reference"
+    ]
   },
   "encounter_type": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter' and id = %ref).class.where(system = 'urn:oid:2.16.840.1.113883.5.4').display",
@@ -345,7 +348,7 @@
     "nullable": true
   },
   "ecr_id": {
-    "fhir_path": "Bundle.entry.resource.id[0]",
+    "fhir_path": "Bundle.id",
     "data_type": "string",
     "nullable": false
   },

@@ -1,6 +1,11 @@
 {
   "resourceType": "Bundle",
   "type": "document",
+  "id": "10c13861-9999-4a9a-aec6-b615921178df",
+  "identifier": {
+    "value": "10c13861-9999-4a9a-aec6-b615921178df"
+  },
+  "timestamp": "2025-02-05T08:43:39Z",
   "entry": [
     {
       "fullUrl": "urn:uuid:5f309332-9f4a-405f-bc7c-9d9bb2fccd52",
