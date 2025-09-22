@@ -53,6 +53,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./seed-scripts/sql/01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
       - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass # Keep if needed
       - db:/var/lib/postgresql/data
     environment:
