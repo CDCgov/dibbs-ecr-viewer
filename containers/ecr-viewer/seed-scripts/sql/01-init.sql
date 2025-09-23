@@ -1,1 +1,0 @@
-CREATE SCHEMA ecr_viewer;
