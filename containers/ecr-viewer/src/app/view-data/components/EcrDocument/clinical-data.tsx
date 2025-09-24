@@ -75,7 +75,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       clinicalNotesTooltip
     ),
   ];
-  const reasonForVisitData: DisplayDataProps[] = [evaluateNotes(fhirBundle, fhirPathMappings.clinicalReasonForVisit2, "Reason for Visit")];
+  const reasonForVisitData: DisplayDataProps[] = [evaluateNotes(fhirBundle, fhirPathMappings.clinicalReasonForVisit, "Reason for Visit")];
 
   const activeProblemsTableData: DisplayDataProps[] = [
     {
@@ -269,11 +269,12 @@ export const returnCareTeamTable = (
 };
 
 /**
- * Helper to evaluate the misc notes which can be either a string or a table.
+ * Helper to evaluate notes which can be either a string or a table.
+ * Used by Miscellaneous Notes and Reason for Visit details
  * @param fhirBundle - The FHIR bundle containing clinical data.
- * @param fhirPath - xyz
- * @param title - xyz
- * @param toolTip - xyz
+ * @param fhirPath - The FHIR path for the field
+ * @param title - The title to appear for the field
+ * @param toolTip - The tooltip to appear for the field
  * @returns data display props with the appropriate values
  */
 export const evaluateNotes = (
