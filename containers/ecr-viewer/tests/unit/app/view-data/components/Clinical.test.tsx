@@ -4,12 +4,14 @@ import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 import { axe } from "jest-axe";
 
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import {
   evaluateClinicalData,
-  evaluateMiscNotes,
+  evaluateNotes,
   returnProceduresTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
+
 
 describe("Snapshot test for Procedures (Treatment Details)", () => {
   let container: HTMLElement;
@@ -523,6 +525,8 @@ describe("Snapshot test for Clinical Notes", () => {
         childMethod: mockChildMethod,
       },
     });
+    const clinicalNotesTooltip =
+      "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
     const testData = `<table>
           <thead>
             <tr>
@@ -541,13 +545,11 @@ describe("Snapshot test for Clinical Notes", () => {
             </tr>
           </tbody>
         </table>`;
-    const clinicalNotes = [
-      evaluateMiscNotes({
+    const bundle = {
         resourceType: "Bundle",
         type: "batch",
         entry: [
           {
-            // @ts-expect-error
             resource: {
               resourceType: "Composition",
               section: [
@@ -569,7 +571,9 @@ describe("Snapshot test for Clinical Notes", () => {
             },
           },
         ],
-      }),
+      } as unknown as Bundle;
+    const clinicalNotes = [
+      evaluateNotes(bundle, fhirPathMappings.historyOfPresentIllness, "Miscellaneous Notes", clinicalNotesTooltip),
     ];
     const { container } = render(
       <ClinicalInfo
@@ -710,6 +714,8 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     const expectedReasonForVisitElement =
       clinicalInfo.getByTestId("reason-for-visit");
     expect(expectedReasonForVisitElement).toBeInTheDocument();
+    expect(
+      expectedReasonForVisitElement).toHaveTextContent("Abdominal Cramping");
   });
 
   it("eCR Viewer renders treatment data given FHIR bundle with treatment data info", () => {
