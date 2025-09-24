@@ -12,7 +12,6 @@ import {
   returnProceduresTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
 
-
 describe("Snapshot test for Procedures (Treatment Details)", () => {
   let container: HTMLElement;
 
@@ -546,34 +545,39 @@ describe("Snapshot test for Clinical Notes", () => {
           </tbody>
         </table>`;
     const bundle = {
-        resourceType: "Bundle",
-        type: "batch",
-        entry: [
-          {
-            resource: {
-              resourceType: "Composition",
-              section: [
-                {
-                  code: {
-                    coding: [
-                      {
-                        code: "10164-2",
-                        system: "http://loinc.org",
-                      },
-                    ],
-                  },
-                  text: {
-                    status: "generated",
-                    div: testData,
-                  },
+      resourceType: "Bundle",
+      type: "batch",
+      entry: [
+        {
+          resource: {
+            resourceType: "Composition",
+            section: [
+              {
+                code: {
+                  coding: [
+                    {
+                      code: "10164-2",
+                      system: "http://loinc.org",
+                    },
+                  ],
                 },
-              ],
-            },
+                text: {
+                  status: "generated",
+                  div: testData,
+                },
+              },
+            ],
           },
-        ],
-      } as unknown as Bundle;
+        },
+      ],
+    } as unknown as Bundle;
     const clinicalNotes = [
-      evaluateNotes(bundle, fhirPathMappings.historyOfPresentIllness, "Miscellaneous Notes", clinicalNotesTooltip),
+      evaluateNotes(
+        bundle,
+        fhirPathMappings.historyOfPresentIllness,
+        "Miscellaneous Notes",
+        clinicalNotesTooltip,
+      ),
     ];
     const { container } = render(
       <ClinicalInfo
@@ -714,8 +718,9 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     const expectedReasonForVisitElement =
       clinicalInfo.getByTestId("reason-for-visit");
     expect(expectedReasonForVisitElement).toBeInTheDocument();
-    expect(
-      expectedReasonForVisitElement).toHaveTextContent("Abdominal Cramping");
+    expect(expectedReasonForVisitElement).toHaveTextContent(
+      "Abdominal Cramping",
+    );
   });
 
   it("eCR Viewer renders treatment data given FHIR bundle with treatment data info", () => {
