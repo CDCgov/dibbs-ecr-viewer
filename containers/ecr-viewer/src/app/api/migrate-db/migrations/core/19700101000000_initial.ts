@@ -3,9 +3,9 @@ import { Kysely, sql } from "kysely";
 import { AnyDb } from "@/app/data/metadataDb/database";
 import { getSql } from "@/app/data/metadataDb/dialects/common";
 import { dbDialect, dbNamespace } from "@/app/data/metadataDb/utils/db-config";
-import { 
-  schemaExistsByName, 
-  getTables 
+import {
+  schemaExistsByName,
+  getTables,
 } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
@@ -19,15 +19,15 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
     // Install uuid-ossp extension (Postgres-specific)
     await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
   } else {
-      const schemaExists = await schemaExistsByName(db, schema);
+    const schemaExists = await schemaExistsByName(db, schema);
 
-      try {
-        if (!schemaExists) {
-          await db.schema.createSchema(schema).execute(); // first instance of schema mutation
-        }
-      } catch (error) {
-        throw new Error("Failed to create schema or already exists: " + error);
+    try {
+      if (!schemaExists) {
+        await db.schema.createSchema(schema).execute(); // first instance of schema mutation
       }
+    } catch (error) {
+      throw new Error("Failed to create schema or already exists: " + error);
+    }
   }
 
   const tables = await getTables(db, schema);

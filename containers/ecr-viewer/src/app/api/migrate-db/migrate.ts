@@ -20,9 +20,16 @@ const getMigrator = () => {
   const db = getDbRaw();
   return new Migrator({
     db,
-    migrationTableName: dbDialect() === "postgres" ? `schema_migration` : `${dbNamespace()}_schema_migration`,
-    migrationLockTableName: dbDialect() === "postgres" ? `schema_migration_lock` : `${dbNamespace()}_schema_migration_lock`,
-    migrationTableSchema: dbDialect() === "postgres" ? dbNamespace() : undefined,
+    migrationTableName:
+      dbDialect() === "postgres"
+        ? `schema_migration`
+        : `${dbNamespace()}_schema_migration`,
+    migrationLockTableName:
+      dbDialect() === "postgres"
+        ? `schema_migration_lock`
+        : `${dbNamespace()}_schema_migration_lock`,
+    migrationTableSchema:
+      dbDialect() === "postgres" ? dbNamespace() : undefined,
     provider: new EcrViewerMigrationProvider({
       schema: dbSchema()!,
     }),
