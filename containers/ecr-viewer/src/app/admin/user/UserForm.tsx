@@ -271,7 +271,6 @@ export const ProgramFieldSet = ({
         {isStandardUser ? (
           <>
             Select one or more program areas
-            <RequiredMarker />
           </>
         ) : (
           <>Admins will be able to see all program areas and conditions</>
