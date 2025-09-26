@@ -1,0 +1,342 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Setup Guide | eCR Viewer</title><meta name="description" content="Documentation for eCR Viewer"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script>
+<style>
+:root.mermaid-enabled .mermaid-block > pre {
+  display: none;
+}
+:root:not(.mermaid-enabled) .mermaid-block > .mermaid {
+  display: none !important;
+}
+
+.mermaid-block > .mermaid[data-inserted].dark {
+  display: var(--mermaid-dark-display);
+}
+.mermaid-block > .mermaid[data-inserted].light {
+  display: var(--mermaid-light-display);
+}
+
+:root {
+  --mermaid-dark-display: none;
+  --mermaid-light-display: block;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --mermaid-dark-display: none;
+    --mermaid-light-display: block;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mermaid-dark-display: block;
+    --mermaid-light-display: none;
+  }
+}
+body.light, :root[data-theme="light"] {
+  --mermaid-dark-display: none;
+  --mermaid-light-display: block;
+}
+body.dark, :root[data-theme="dark"] {
+  --mermaid-dark-display: block;
+  --mermaid-light-display: none;
+}
+</style>
+</head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">eCR Viewer</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="" aria-current="page">Setup Guide</a></li></ul></div><div class="tsd-panel tsd-typography"><h1 id="ecr-viewer-setup-guide" class="tsd-anchor-link">eCR Viewer Setup Guide<a href="#ecr-viewer-setup-guide" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1><h2 id="general-background" class="tsd-anchor-link">General Background<a href="#general-background" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The eCR Viewer can be run in three modes.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Features Available</th>
+<th>Metadata Support</th>
+<th>Authentication Supported</th>
+<th>Environment Variables Needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INTEGRATED</code></td>
+<td>Viewer</td>
+<td>None</td>
+<td>NBS</td>
+<td><a href="#base-required">Base</a>, <a href="#ecr-fhir-storage">eCR FHIR Storage</a>, <a href="#integrated-authentication">Integrated Authentication</a></td>
+</tr>
+<tr>
+<td><code>NON_INTEGRATED</code></td>
+<td>Viewer, Library</td>
+<td>SQL Server or Postgres</td>
+<td>External authentication provider</td>
+<td><a href="#base-required">Base</a>, <a href="#ecr-fhir-storage">eCR FHIR Storage</a>, <a href="#non-integrated-authentication">Non-Integrated Authentication</a>, <a href="#ecr-metadata-storage">Metadata Database</a></td>
+</tr>
+<tr>
+<td><code>DUAL</code></td>
+<td>Viewer, Library</td>
+<td>SQL Server or Postgres</td>
+<td>Both NBS and external authentication provider</td>
+<td><a href="#base-required">Base</a>, <a href="#ecr-fhir-storage">eCR FHIR Storage</a>, <a href="#integrated-authentication">Integrated Authentication</a>, <a href="#non-integrated-authentication">Non-Integrated Authentication</a>, <a href="#ecr-metadata-storage">Metadata Database</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="integrated-architecture-diagram" class="tsd-anchor-link">Integrated Architecture Diagram<a href="#integrated-architecture-diagram" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="mermaid-block"><div class="mermaid dark">%%{init:{"theme":"dark"}}%%
+flowchart LR
+  user
+  nbs[&quot;NBS - View eICR&quot;]
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+  end
+  user --&gt; nbs
+  nbs --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by NBS| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</div><div class="mermaid light">%%{init:{"theme":"default"}}%%
+flowchart LR
+  user
+  nbs[&quot;NBS - View eICR&quot;]
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+  end
+  user --&gt; nbs
+  nbs --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by NBS| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</div><pre><code class="language-mermaid">flowchart LR
+  user
+  nbs[&quot;NBS - View eICR&quot;]
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+  end
+  user --&gt; nbs
+  nbs --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by NBS| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</code></pre></div>
+<h3 id="non-integrated-architecture-diagram" class="tsd-anchor-link">Non-Integrated Architecture Diagram<a href="#non-integrated-architecture-diagram" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="mermaid-block"><div class="mermaid dark">%%{init:{"theme":"dark"}}%%
+flowchart LR
+  user
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+    metadata[&quot;fab:fa-database Database&quot;]
+    identityProvider[&quot;Identity Provider&lt;br&gt;(e.g. Keycloak/Azure Ad)&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+	container &lt;--&gt; |eCR Metadata| metadata
+    container --&gt;|Validates User| identityProvider
+  end
+  user --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by identity provider| container
+  user --&gt;|&lt;code&gt;/&lt;/code&gt;&lt;br&gt;eCR Library&lt;br&gt;Authenticated By identity provider| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</div><div class="mermaid light">%%{init:{"theme":"default"}}%%
+flowchart LR
+  user
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+    metadata[&quot;fab:fa-database Database&quot;]
+    identityProvider[&quot;Identity Provider&lt;br&gt;(e.g. Keycloak/Azure Ad)&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+	container &lt;--&gt; |eCR Metadata| metadata
+    container --&gt;|Validates User| identityProvider
+  end
+  user --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by identity provider| container
+  user --&gt;|&lt;code&gt;/&lt;/code&gt;&lt;br&gt;eCR Library&lt;br&gt;Authenticated By identity provider| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</div><pre><code class="language-mermaid">flowchart LR
+  user
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+    metadata[&quot;fab:fa-database Database&quot;]
+    identityProvider[&quot;Identity Provider&lt;br&gt;(e.g. Keycloak/Azure Ad)&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+	container &lt;--&gt; |eCR Metadata| metadata
+    container --&gt;|Validates User| identityProvider
+  end
+  user --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by identity provider| container
+  user --&gt;|&lt;code&gt;/&lt;/code&gt;&lt;br&gt;eCR Library&lt;br&gt;Authenticated By identity provider| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</code></pre></div>
+<h3 id="dual-architecture-diagram" class="tsd-anchor-link">Dual Architecture Diagram<a href="#dual-architecture-diagram" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="mermaid-block"><div class="mermaid dark">%%{init:{"theme":"dark"}}%%
+flowchart LR
+  user
+  nbs[&quot;NBS - View eICR&quot;]
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+    metadata[&quot;fab:fa-database Database&quot;]
+    identityProvider[&quot;Identity Provider&lt;br&gt;(e.g. Keycloak/Azure Ad)&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+	container &lt;--&gt; |eCR Metadata| metadata
+    container --&gt;|Validates User| identityProvider
+  end
+  user --&gt; nbs
+  nbs --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by NBS| container
+  user --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by identity provider| container
+  user --&gt;|&lt;code&gt;/&lt;/code&gt;&lt;br&gt;eCR Library&lt;br&gt;Authenticated By identity provider| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</div><div class="mermaid light">%%{init:{"theme":"default"}}%%
+flowchart LR
+  user
+  nbs[&quot;NBS - View eICR&quot;]
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+    metadata[&quot;fab:fa-database Database&quot;]
+    identityProvider[&quot;Identity Provider&lt;br&gt;(e.g. Keycloak/Azure Ad)&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+	container &lt;--&gt; |eCR Metadata| metadata
+    container --&gt;|Validates User| identityProvider
+  end
+  user --&gt; nbs
+  nbs --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by NBS| container
+  user --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by identity provider| container
+  user --&gt;|&lt;code&gt;/&lt;/code&gt;&lt;br&gt;eCR Library&lt;br&gt;Authenticated By identity provider| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</div><pre><code class="language-mermaid">flowchart LR
+  user
+  nbs[&quot;NBS - View eICR&quot;]
+  ingestion[&quot;Ingestion Service&lt;br&gt;(e.g. Rhapsody)&quot;]
+  subgraph service[Cloud]
+    direction TB
+    subgraph container[&quot;fab:fa-docker container&quot;]
+      viewer[&quot;fab:fa-node fab:fa-react &lt;code&gt;ecr-viewer&lt;br&gt;HTTP:3000/&lt;/code&gt;&quot;]
+    end
+    blobStorage[&quot;fab:fa-file Blob Storage&quot;]
+    metadata[&quot;fab:fa-database Database&quot;]
+    identityProvider[&quot;Identity Provider&lt;br&gt;(e.g. Keycloak/Azure Ad)&quot;]
+	container &lt;--&gt; |eCR FHIR Data| blobStorage
+	container &lt;--&gt; |eCR Metadata| metadata
+    container --&gt;|Validates User| identityProvider
+  end
+  user --&gt; nbs
+  nbs --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by NBS| container
+  user --&gt;|&lt;code&gt;/view-data&lt;/code&gt;&lt;br&gt;eCR Viewer&lt;br&gt;Authenticated by identity provider| container
+  user --&gt;|&lt;code&gt;/&lt;/code&gt;&lt;br&gt;eCR Library&lt;br&gt;Authenticated By identity provider| container
+  ingestion --&gt;|&lt;code&gt;/api/process-ecr&lt;/code&gt;| container</code></pre></div>
+<h2 id="environment-variable-setup" class="tsd-anchor-link">Environment Variable Setup<a href="#environment-variable-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The full list of environment variables can be found in <a href="../interfaces/environment.NodeJS.ProcessEnv.html" class="tsd-kind-interface"> NodeJS.ProcessEnv</a>. Below, you'll find more information about the groups of environment variables supported by the Viewer.</p>
+<h3 id="base-required" class="tsd-anchor-link">Base Required<a href="#base-required" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Base required variables are ones required for all deployments regardless of mode or cloud environment. If variables are not set, this may cause issues starting the app. The variables can be found in <a href="../interfaces/environment.EnvironmentVariables.BaseRequired.html" class="tsd-kind-interface"> EnvironmentVariables.BaseRequired</a>.</p>
+<h3 id="ecr-fhir-storage" class="tsd-anchor-link">eCR Fhir Storage<a href="#ecr-fhir-storage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>A storage container for the eCRs must be created for all deployments. Depending on the storage container used additional variables may be required. The variables can be found in <a href="../interfaces/environment.EnvironmentVariables.EcrStorage.html" class="tsd-kind-interface"> EnvironmentVariables.EcrStorage</a>.</p>
+<h3 id="authentication-setup" class="tsd-anchor-link">Authentication Setup<a href="#authentication-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Authentication is required when running any mode of the application.</p>
+<h4 id="integrated-authentication" class="tsd-anchor-link">Integrated Authentication<a href="#integrated-authentication" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Integrated eCR Viewer will rely on NBS to authenticate the user. The variables can be found in <a href="../interfaces/environment.EnvironmentVariables.Authentication.html" class="tsd-kind-interface"> EnvironmentVariables.Authentication</a>.</p>
+<h4 id="non-integrated-authentication" class="tsd-anchor-link">Non-Integrated Authentication<a href="#non-integrated-authentication" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Non-Integrated/Dual rely on an external authentication provider, like Azure AD, Entra, or Keycloak. The variables can be found in <a href="../interfaces/environment.EnvironmentVariables.Authentication.html" class="tsd-kind-interface"> EnvironmentVariables.Authentication</a>.</p>
+<h4 id="token-authentication-for-api-routes" class="tsd-anchor-link">Token Authentication for <code>api</code> routes<a href="#token-authentication-for-api-routes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Most <code>/ecr-viewer/api/</code> routes require authentication to be used. The exceptions are pubic routes such as the health check and authentication routes. If a user has a logged in browser session (non-integrated auth only), they can use the developer console of that browser to emit authenticated post routes. More often, a machine will be making the post requests to upload data to the viewer. To enable this, we allow tokens to be sent on the <code>Authorization</code> header of request and used to authenticate the request.</p>
+<p>For integrated auth, the token will be generated via a key pair, similar to how it is done for authentication to the <code>/view-data</code> page, but using a different private/public key pair. See <a href="../interfaces/environment.EnvironmentVariables.Authentication.html" class="tsd-kind-interface"> EnvironmentVariables.Authentication</a> for where to set the public key.</p>
+<p>For non-integrated auth, the token must be generated by the IDP service, typically using a service principal. The token will be validated using the authentication provider set up in <a href="../interfaces/environment.EnvironmentVariables.Authentication.html" class="tsd-kind-interface"> EnvironmentVariables.Authentication</a>.</p>
+<h3 id="ecr-metadata-storage" class="tsd-anchor-link">eCR Metadata Storage<a href="#ecr-metadata-storage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Non-Integrated/Dual require a database to store eCR metadata. The variables can be found in <a href="../interfaces/environment.EnvironmentVariables.EcrMetadataStorage.html" class="tsd-kind-interface"> EnvironmentVariables.EcrMetadataStorage</a>.</p>
+<h3 id="removed-environment-variables" class="tsd-anchor-link">Removed Environment Variables<a href="#removed-environment-variables" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>These are variables that have been retired and no longer have a use in the app. These can be safely removed when installing the current version.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Version Removed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SQL_SERVER_HOST</code></td>
+<td>Replaced with <code>DATABASE_URL</code></td>
+<td>3.1</td>
+</tr>
+<tr>
+<td><code>SQL_SERVER_PASSWORD</code></td>
+<td>Replaced with <code>DATABASE_URL</code></td>
+<td>3.1</td>
+</tr>
+<tr>
+<td><code>SQL_SERVER_USER</code></td>
+<td>Replaced with <code>DATABASE_URL</code></td>
+<td>3.1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="database-setup" class="tsd-anchor-link">Database Setup<a href="#database-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>A database user must be created and the credentials set in the corresponding environment variables described here <a href="../interfaces/environment.EnvironmentVariables.EcrMetadataStorage.html" class="tsd-kind-interface"> EnvironmentVariables.EcrMetadataStorage</a>. This user must have standard privileges (select, update, delete) as well as the ability to create and alter schemas and tables. All database setup after that point is handled via migrations performed by <a href="https://kysely.dev/docs/migrations">Kysely</a>. If the latest migration has not been run the eCR Viewer will log an error and display an error page to the user. Migrations only need to be run once to bring the database up to date, even if there have been multiple updates added since your most recently installed version. They must be triggered manually by calling the <code>/migrate-db</code> endpoint. The migration secret required for this step may be set via the <code>METADATA_DATABASE_MIGRATION_SECRET</code> environment variable, but if it is not set then the eCR Viewer will generate a secret and output it to the server logs both at startup and when a request is made to the API without a valid secret included.</p>
+<p>Additionally, the optional field <code>init_admin_email</code> should be included when initializing the database in order to add an admin user for the first time. Please see the &quot;User and Program Area Setup&quot; section for more details.</p>
+<pre><code class="bash"><span class="hl-3">curl</span><span class="hl-0"> </span><span class="hl-4">--location</span><span class="hl-0"> </span><span class="hl-5">&#39;&lt;DIBBS_URL&gt;/ecr-viewer/api/migrate-db&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--header </span><span class="hl-5">&#39;Authorization: Bearer &lt;TOKEN&gt;&#39;</span><br/><span class="hl-3">--form</span><span class="hl-0"> </span><span class="hl-5">&#39;migration_secret=&lt;your migration secret&gt;&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--form </span><span class="hl-5">&#39;init_admin_email=&lt;email&gt;&#39;</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="inserting-data" class="tsd-anchor-link">Inserting data<a href="#inserting-data" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="from-rhapsody" class="tsd-anchor-link">From Rhapsody<a href="#from-rhapsody" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Data can be added to the eCR Viewer as a step in Rhapsody.</p>
+<p>See our <a href="https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/examples/rhapsody">Rhapsody examples</a> for more information on using Rhapsody to load data with different configurations of the eCR viewer.</p>
+<h3 id="from-api" class="tsd-anchor-link">From API<a href="#from-api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Data can be added directly via API request to eCR Viewer's <code>/process-ecr</code> endpoint. See the <a href="API_Reference_Documentation.html">API documentation</a> for more details.</p>
+<pre><code class="bash"><span class="hl-7"># zip file</span><br/><span class="hl-3">curl</span><span class="hl-0"> </span><span class="hl-4">--location</span><span class="hl-0"> </span><span class="hl-5">&#39;{URL}/ecr-viewer/api/process-ecr&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--form </span><span class="hl-5">&#39;ecr=@&quot;/path/to/eicr.zip&quot;;type=application/zip&#39;</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="sh"><span class="hl-7"># string contents</span><br/><span class="hl-3">curl</span><span class="hl-0"> </span><span class="hl-4">--location</span><span class="hl-0"> </span><span class="hl-5">&#39;&lt;DIBBS_URL&gt;/ecr-viewer/api/process-ecr&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--form </span><span class="hl-5">&#39;ecr=&lt;&quot;&lt;PATH_TO_ECR_FILE&gt;&quot;&#39;</span><span class="hl-0"> </span><span class="hl-6">\</span><br/><span class="hl-0">--form </span><span class="hl-5">&#39;rr=&lt;&quot;&lt;PATH_TO_RR_FILE&gt;&quot;&#39;</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="user-and-program-area-setup" class="tsd-anchor-link">User and Program Area Setup<a href="#user-and-program-area-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="initialization" class="tsd-anchor-link">Initialization<a href="#initialization" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Before using the app, you must initialize the database with an admin account. When making a <code>POST</code> request to the <code>/migrate-db</code> endpoint (see above), include the <code>init_admin_email</code> field in the form to designate which user (by email) should be granted admin access. This email must correspond to a real user in your IDP (e.g., Keycloak).</p>
+<p>Once initialized, your IDP handles authentication. The user with the email provided in <code>init_admin_email</code> will have admin privileges and can log in to the app set up further users.</p>
+<h3 id="roles-and-privileges" class="tsd-anchor-link">Roles and Privileges<a href="#roles-and-privileges" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>Admins</strong>: Have full access to manage program areas, user accounts, and to view all eCRs in the eCR Library.</p>
+<ol>
+<li><strong>Program Area Management</strong></li>
+</ol>
+<ul>
+<li>Can create, edit, and delete program areas.</li>
+<li>Each program area must have at least one condition, and each program area name must be unique.</li>
+<li>A condition cannot belong to more than one program area.</li>
+</ul>
+<ol start="2">
+<li><strong>User Management</strong></li>
+</ol>
+<ul>
+<li>Can create, edit, and delete users.</li>
+<li>Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.</li>
+<li>Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as <code>&quot;deleted&quot;</code>.</li>
+</ul>
+<ol start="3">
+<li><strong>Access</strong></li>
+</ol>
+<ul>
+<li>Can access both the User Management and Program Management pages.</li>
+<li>Can access all eCRs in the eCR Library.</li>
+</ul>
+<p><strong>Standard users</strong>: Have limited access to eCRs based on their assigned program areas.</p>
+<ul>
+<li>Can view eCRs whose reportable conditions are included in their list of assigned program areas</li>
+</ul>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#ecr-viewer-setup-guide"><span>eCR <wbr/>Viewer <wbr/>Setup <wbr/>Guide</span></a><ul><li><a href="#general-background"><span>General <wbr/>Background</span></a></li><li><ul><li><a href="#integrated-architecture-diagram"><span>Integrated <wbr/>Architecture <wbr/>Diagram</span></a></li><li><a href="#non-integrated-architecture-diagram"><span>Non-<wbr/>Integrated <wbr/>Architecture <wbr/>Diagram</span></a></li><li><a href="#dual-architecture-diagram"><span>Dual <wbr/>Architecture <wbr/>Diagram</span></a></li></ul></li><li><a href="#environment-variable-setup"><span>Environment <wbr/>Variable <wbr/>Setup</span></a></li><li><ul><li><a href="#base-required"><span>Base <wbr/>Required</span></a></li><li><a href="#ecr-fhir-storage"><span>eCR <wbr/>Fhir <wbr/>Storage</span></a></li><li><a href="#authentication-setup"><span>Authentication <wbr/>Setup</span></a></li><li><ul><li><a href="#integrated-authentication"><span>Integrated <wbr/>Authentication</span></a></li><li><a href="#non-integrated-authentication"><span>Non-<wbr/>Integrated <wbr/>Authentication</span></a></li><li><a href="#token-authentication-for-api-routes"><span>Token <wbr/>Authentication for api routes</span></a></li></ul></li><li><a href="#ecr-metadata-storage"><span>eCR <wbr/>Metadata <wbr/>Storage</span></a></li><li><a href="#removed-environment-variables"><span>Removed <wbr/>Environment <wbr/>Variables</span></a></li></ul></li><li><a href="#database-setup"><span>Database <wbr/>Setup</span></a></li><li><a href="#inserting-data"><span>Inserting data</span></a></li><li><ul><li><a href="#from-rhapsody"><span>From <wbr/>Rhapsody</span></a></li><li><a href="#from-api"><span>From API</span></a></li></ul></li><li><a href="#user-and-program-area-setup"><span>User and <wbr/>Program <wbr/>Area <wbr/>Setup</span></a></li><li><ul><li><a href="#initialization"><span>Initialization</span></a></li><li><a href="#roles-and-privileges"><span>Roles and <wbr/>Privileges</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">eCR Viewer</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div>
+<script type="module">
+import mermaid from "https://unpkg.com/mermaid@latest/dist/mermaid.esm.min.mjs";
+
+document.documentElement.classList.add("mermaid-enabled");
+
+mermaid.initialize({startOnLoad:true});
+
+requestAnimationFrame(function check() {
+  let some = false;
+  document.querySelectorAll("div.mermaid:not([data-inserted])").forEach(div => {
+    some = true;
+    if (div.querySelector("svg")) {
+      div.dataset.inserted = true;
+    }
+  });
+
+  if (some) {
+    requestAnimationFrame(check);
+  }
+});
+</script>
+</body></html>
