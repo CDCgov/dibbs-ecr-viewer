@@ -242,13 +242,7 @@
                 }
               ]
             },
-            "mode": "snapshot",
-            "extension": [
-              {
-                "url": "http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12",
-                "valueString": "Reason for Visit (as documented by provider): Headache, rash, and                            fever"
-              }
-            ]
+            "mode": "snapshot"
           },
           {
             "id": "f1cd3d12-56aa-80b7-f5df-4b4e2e11c689",

@@ -71,7 +71,7 @@
             "title": "Reason for Visit",
             "text": {
               "status": "generated",
-              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Reason for Visit</div>"
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Abdominal Cramping</div>"
             },
             "code": {
               "coding": [
@@ -82,13 +82,7 @@
                 }
               ]
             },
-            "mode": "snapshot",
-            "extension": [
-              {
-                "url": "http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12",
-                "valueString": "Abdominal Cramping"
-              }
-            ]
+            "mode": "snapshot"
           }
         ],
         "author": [
