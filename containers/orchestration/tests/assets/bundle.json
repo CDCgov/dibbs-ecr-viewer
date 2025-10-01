@@ -143,13 +143,7 @@
                 }
               ]
             },
-            "mode": "snapshot",
-            "extension": [
-              {
-                "url": "http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12",
-                "valueString": "fever, cough, exposure to COVID-19 hot zone                                    "
-              }
-            ]
+            "mode": "snapshot"
           },
           {
             "id": "f8d93e13-2242-c9db-0932-10141ce5a965",

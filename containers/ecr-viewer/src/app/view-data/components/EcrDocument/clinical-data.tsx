@@ -35,7 +35,7 @@ import {
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   AdministeredMedication,
@@ -66,13 +66,22 @@ import {
  * @property {DisplayDataProps[]} immunizationsDetails - Immunization details.
  */
 export const evaluateClinicalData = (fhirBundle: Bundle) => {
-  const clinicalNotes: DisplayDataProps[] = [evaluateMiscNotes(fhirBundle)];
-
+  const clinicalNotesTooltip =
+    "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
+  const clinicalNotes: DisplayDataProps[] = [
+    evaluateNotes(
+      fhirBundle,
+      fhirPathMappings.historyOfPresentIllness,
+      "Miscellaneous Notes",
+      clinicalNotesTooltip,
+    ),
+  ];
   const reasonForVisitData: DisplayDataProps[] = [
-    {
-      title: "Reason for Visit",
-      value: evaluateValue(fhirBundle, fhirPathMappings.clinicalReasonForVisit),
-    },
+    evaluateNotes(
+      fhirBundle,
+      fhirPathMappings.clinicalReasonForVisit,
+      "Reason for Visit",
+    ),
   ];
 
   const activeProblemsTableData: DisplayDataProps[] = [
@@ -267,19 +276,21 @@ export const returnCareTeamTable = (
 };
 
 /**
- * Helper to evaluate the misc notes which can be either a string or a table.
+ * Helper to evaluate notes which can be either a string or a table.
+ * Used by Miscellaneous Notes and Reason for Visit details
  * @param fhirBundle - The FHIR bundle containing clinical data.
+ * @param fhirPath - The FHIR path for the field
+ * @param title - The title to appear for the field
+ * @param toolTip - The tooltip to appear for the field
  * @returns data display props with the appropriate values
  */
-export const evaluateMiscNotes = (fhirBundle: Bundle): DisplayDataProps => {
-  const title = "Miscellaneous Notes";
-  const toolTip =
-    "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
-
-  const content = evaluateValue(
-    fhirBundle,
-    fhirPathMappings.historyOfPresentIllness,
-  );
+export const evaluateNotes = (
+  fhirBundle: Bundle,
+  fhirPath: FhirPath<string>,
+  title: string,
+  toolTip?: string,
+): DisplayDataProps => {
+  const content = evaluateValue(fhirBundle, fhirPath);
   const tables = formatTablesToJSON(content);
 
   // Not a table, safe parse the string content
