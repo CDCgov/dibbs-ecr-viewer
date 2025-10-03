@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 # Download FHIR-Converter
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-30 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch gordon/patient-missing-fields --depth 1 /App
 
 WORKDIR /App
 
