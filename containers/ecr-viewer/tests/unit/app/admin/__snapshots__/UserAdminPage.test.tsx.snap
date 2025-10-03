@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`User Admin Page Creating users should render a create user page 1`] = `
 <div>
@@ -174,12 +174,6 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
           </legend>
           <span>
             Select one or more program areas
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
-            >
-              *
-            </abbr>
           </span>
           <p
             class="text-bold font-size-md"
@@ -578,12 +572,6 @@ exports[`User Admin Page Creating users should render a create user page with no
           </legend>
           <span>
             Select one or more program areas
-            <abbr
-              class="usa-hint usa-hint--required"
-              title="required"
-            >
-              *
-            </abbr>
           </span>
           <p
             class="text-bold font-size-md"
