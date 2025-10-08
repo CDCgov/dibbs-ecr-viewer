@@ -7,6 +7,8 @@ namespace EnvironmentVariables {
    * @categoryDescription Authentication - Non-Integrated
    * These variables are used to configure authentication for the eCR Library & Viewer.
    * All values are required when running a `NON_INTEGRATED` or `DUAL` configuration.
+   * @categoryDescription Authentication - Additional Configuration
+   * These variables are optional and offer additional customization to either Integrated or Non-Integrated configurations
    */
   interface Authentication {
     //#region auth_non_integrated
@@ -62,6 +64,15 @@ namespace EnvironmentVariables {
      */
     NBS_API_PUB_KEY?: string;
     //#endregion auth_integrated
+
+    //#region auth_additional_config
+    /**
+     * @category Authentication - Additional Configuration
+     * @description The duration, in minutes, before auth auto sign out \n
+     * If this value is not set the app will default to a 30-minute auto sign out time
+     */
+    AUTH_SESSION_DURATION_MIN?: number;
+    //#endregion auth_additional_config
   }
   /**
    * @categoryDescription eCR Storage - AWS
