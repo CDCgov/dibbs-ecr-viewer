@@ -71,7 +71,7 @@ services:
     command: >
       sh -c " echo 'Running migrations' && curl -v -X POST http://host.docker.internal:3000/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"    
     environment:
-      - DUMMY_NBS_JWT
+      - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -88,6 +88,9 @@ services:
       -f /home/locust/locustfile.py
       --web-host 0.0.0.0
       --host http://host.docker.internal:3000/ecr-viewer/
+    environment:
+      - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
+
     depends_on:
       migrator:
         condition: service_completed_successfully

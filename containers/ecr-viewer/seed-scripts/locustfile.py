@@ -9,76 +9,38 @@ from locust import HttpUser, between, task
 class EcrViewer(HttpUser):
     wait_time = between(1, 5)
 
-    # ? ANGELA: Does this mean that User will pick one of the declared tasks at random & execute?
-        # ? Don't We want these things to happen sequentially?
-    # @task
-    # def ecr_viewer(self):
-    #     """get the ecr viewer library page"""
-    #     self.client.get("/ecr-viewer")
-
-    # ? Delete right?
-    # @task
-    # def orchestration(self):
-    #     """get the orchestration endpoint"""
-    #     self.client.get("/orchestration")
+    def on_start(self):
+        """zip all files in baceECR folder at start"""
+        self.files = get_zipped_files()
+        self.len_files = len(self.files)
 
     @task
     def process_ecr(self): 
-        # TODO ANGELA: Remove hard-coding
-        token = "eyJhbGciOiJSUzI1NiIsImlkIjoiYmxhaCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.hXmX6wu9ThiSqNEl6Y3pBETppiIt0j4RKSVPO_AAYZJZsngSFiu8GuGDtA13kJ-texfUHshqcy4euoVwfmN-naDi2Ly6p6lPjY6xzmTuQ1DtiKLZDNBsDupjoLAuIJQ3K8uWRnCdRGG1ZlTkZa-SG8b4jfDLRrl1fPiJCWM62XV7_gIvqCvRAPdP9kMrOV1LtLEuXgoXZGifVNnPQhtT7fQ7kDmbM-HDG4MquZy89CIRy2q22xIclePOAoe0Ifz6q7-NG3I9CzKOAa_Vx6Oy5ZYBYphfV1n46gp4OC0Cb_w-wFLfRDuDPJZvcS5ed2HxdyZrU_GeD4WSN5IQpEn_45CZifBzmv9-jweEUD2or3sp1DReORLZG2CvBqtixC0p3gIeGnY4HROduafmDfyI0gcv7pDM-fcreMCBG-7uqUPkk9rqhCPw9n6fhWvNMSGrtW9tx6hAPNxjKJ2AsyTh7cJyR0teVpijhXZz0dGJOtYY1-nlR7_BnJH2lC9tLiIJcVl1JKfGRu18MV1bHs7y25Wp1HxVDUXllShXa7_oD7ljnE3stmpO5GPMbxvWC_RKO_bu_e2mAgJ3yiPImFpLVYZZgBqClctciZMQeV1lZTAy-7Xlzgdx-IvFc9VuigKw6hfk4on98BxMUENeh20KIgVv8cMr4ZjAGV3MjnFnHWw"
+        token = os.getenv("DUMMY_NBS_JWT")
 
         """upload a zip file to the orchestration endpoint"""
-        # TODO ANGELA: Pull out zipping files logic to on start
-        # TODO ANGELA: Each task should upload only one file, not all files
-        for file in get_zipped_files():
-            with open(file, "rb") as opened_file:
-                # ! THIS NEEDS THE HOST
-                data = {
-                    "return_fhir_bundle": "true"
-                }
-                print(f"Uploading {file}")
-                file_tuple = {
-                    "ecr": (file, opened_file.read(), "application/zip")
-                }
-                headers = {
-                    "Authorization": f"Bearer {token}"
-                }
-                response = self.client.post(
-                    "api/process-ecr", data=data, files=file_tuple, headers=headers
-                )
+        file = self.files[random.randint(0, self.len_files - 1)]
 
-                try:
-                    result = response.json()
-                    print(result)
-                except ValueError:
-                    print(f"❌ Non-JSON response ({response.status_code}): {response.text[:200]}")
-                    continue
+        with open(file, "rb") as opened_file:
+            data = {
+                "return_fhir_bundle": "true"
+            }
+            print(f"Uploading {file}")
+            file_tuple = {
+                "ecr": (file, opened_file.read(), "application/zip")
+            }
+            headers = {
+                "Authorization": f"Bearer {token}"
+            }
 
-                # self.tasks.append(check_ecr(self, file, response.json()))
-
-    # ! Need db migration to occur (getting eCR viewer setup incomplete error)
-    # don't care to test Azure AD, just use JWT
-    # TODO ANGELA: hit the migration endpoint on start?
-    # def on_start(self):
-    #     """on start, run migrations"""
-    #     print("Running migrations...")
-    #     print(f"Host: {self.host}")
-    #     token = "eyJhbGciOiJSUzI1NiIsImlkIjoiYmxhaCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.hXmX6wu9ThiSqNEl6Y3pBETppiIt0j4RKSVPO_AAYZJZsngSFiu8GuGDtA13kJ-texfUHshqcy4euoVwfmN-naDi2Ly6p6lPjY6xzmTuQ1DtiKLZDNBsDupjoLAuIJQ3K8uWRnCdRGG1ZlTkZa-SG8b4jfDLRrl1fPiJCWM62XV7_gIvqCvRAPdP9kMrOV1LtLEuXgoXZGifVNnPQhtT7fQ7kDmbM-HDG4MquZy89CIRy2q22xIclePOAoe0Ifz6q7-NG3I9CzKOAa_Vx6Oy5ZYBYphfV1n46gp4OC0Cb_w-wFLfRDuDPJZvcS5ed2HxdyZrU_GeD4WSN5IQpEn_45CZifBzmv9-jweEUD2or3sp1DReORLZG2CvBqtixC0p3gIeGnY4HROduafmDfyI0gcv7pDM-fcreMCBG-7uqUPkk9rqhCPw9n6fhWvNMSGrtW9tx6hAPNxjKJ2AsyTh7cJyR0teVpijhXZz0dGJOtYY1-nlR7_BnJH2lC9tLiIJcVl1JKfGRu18MV1bHs7y25Wp1HxVDUXllShXa7_oD7ljnE3stmpO5GPMbxvWC_RKO_bu_e2mAgJ3yiPImFpLVYZZgBqClctciZMQeV1lZTAy-7Xlzgdx-IvFc9VuigKw6hfk4on98BxMUENeh20KIgVv8cMr4ZjAGV3MjnFnHWw"
-    #     headers = {
-    #         "Authorization": f"Bearer {token}"
-    #     }
-    #     form_data = {
-    #         "migration_secret": "test",
-    #         "init_admin_email": "ecr-viewer@admin.com"
-    #     }
-    #     response = self.client.post("api/migrate-db", files=form_data, headers=headers, verify=False)
-    #     if response.status_code == 200:
-    #         print("Migrations ran successfully.")
-    #     else:
-    #         print(f"Failed to run migrations. Status code: {response.status_code}, Response: {response.text}")
-
-    #     """install the requirements"""
-    #     subprocess.run(["pip", "install", "-r", "requirements.txt"])
+            with self.client.post(
+                "api/process-ecr", data=data, files=file_tuple, headers=headers, catch_response=True
+            ) as response:
+                if response.status_code in [200, 409]: # eCR already loaded is 409
+                    response.success()
+                    print("Success", response.status_code)
+                else:
+                    response.failure(f"Failed with status code {response.status_code}")
 
 
 def check_ecr(self, file, response):
@@ -107,7 +69,7 @@ def get_zipped_files():
     """Get all the zipped files in the baseECR folder"""
     files = []
     BASEDIR = os.path.dirname(os.path.abspath(__file__))
-    subfolders = ["star-wars"] # TODO ANGELA - update directory
+    subfolders = ["star-wars"]
     for subfolder in subfolders:
         subfolder_path = os.path.join(BASEDIR, "baseECR", subfolder)
 
