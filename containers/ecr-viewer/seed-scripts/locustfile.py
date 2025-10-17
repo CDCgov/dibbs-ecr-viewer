@@ -4,12 +4,14 @@ import shutil
 
 from locust import HttpUser, between, task
 
+
 class ProcessEcrUser(HttpUser):
     """
     Load testing the /process-ecr endpoint
     On start: Zips all files in baseECR/star-wars
     Task: Chooses random zip file to send through /process-ecr. Expects a 200 or 409
     """
+
     wait_time = between(1, 5)
 
     def on_start(self):
@@ -50,6 +52,7 @@ class ViewEcrUser(HttpUser):
     On start: Zips all files in baseECR/star-wars & sends through /process-ecr
     Task: Chooses random eCR to view at the /view-data endpoint. Expects a 200
     """
+
     wait_time = between(1, 5)
 
     def on_start(self):
