@@ -19,9 +19,10 @@ class ProcessEcrUser(HttpUser):
 
     @task
     def process_ecr(self):
+        """
+        Upload a zip file to the /process-ecr endpoint
+        """
         token = os.getenv("DUMMY_NBS_JWT")
-
-        """upload a zip file to the orchestration endpoint"""
         file = self.files[random.randint(0, self.len_files - 1)]
 
         with open(file, "rb") as opened_file:
@@ -81,6 +82,9 @@ class ViewEcrUser(HttpUser):
 
     @task
     def view_ecr(self):
+        """
+        View eCR at /view-data endpoint
+        """
         # Future improvement: Remove hardcoding of star-wars eCRs
         # Currently: eCRs processed with a 409 don't have the ecr_id in the response body
         eicr_ids = [
