@@ -1,4 +1,5 @@
 import { Bundle } from "fhir/r4";
+import { fetch, Agent, FormData } from "undici";
 
 import {
   saveFhirData,
@@ -97,6 +98,8 @@ export const getOrchestrationResponse = async ({
     method: "post",
     body,
     headers,
+    // 1 hour timeout should allow any eCR to process
+    dispatcher: new Agent({ headersTimeout: 3600000 })
   });
 
   if (response.status !== 200) {
@@ -108,7 +111,7 @@ export const getOrchestrationResponse = async ({
     });
     throw new Error(message);
   } else {
-    const resp: OrchestrationRawResponse = await response.json();
+    const resp = await response.json() as OrchestrationRawResponse;
     return {
       ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
       metadata:
