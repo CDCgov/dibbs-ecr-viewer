@@ -6,12 +6,12 @@ import subprocess
 from locust import HttpUser, between, task
 
 
-"""
-Load testing the /process-ecr endpoint
-On start: Zips all files in baseECR/star-wars
-Task: Chooses random zip file to send through /process-ecr. Expects a 200 or 409
-"""
 class ProcessEcrUser(HttpUser):
+    """
+    Load testing the /process-ecr endpoint
+    On start: Zips all files in baseECR/star-wars
+    Task: Chooses random zip file to send through /process-ecr. Expects a 200 or 409
+    """
     wait_time = between(1, 5)
 
     def on_start(self):
@@ -47,12 +47,13 @@ class ProcessEcrUser(HttpUser):
                 else:
                     response.failure(f"Failed with status code {response.status_code}")
 
-"""
-Load testing the /view-data endpoint
-On start: Zips all files in baseECR/star-wars & sends through /process-ecr
-Task: Chooses random eCR to view at the /view-data endpoint. Expects a 200
-"""
+
 class ViewEcrUser(HttpUser):
+    """
+    Load testing the /view-data endpoint
+    On start: Zips all files in baseECR/star-wars & sends through /process-ecr
+    Task: Chooses random eCR to view at the /view-data endpoint. Expects a 200
+    """
     wait_time = between(1, 5)
 
     def on_start(self):
