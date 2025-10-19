@@ -110,7 +110,7 @@
     "lighthouse": "^12.5.1",
     "next-router-mock": "^1.0.2",
     "playwright-lighthouse": "^4.0.0",
-    "postcss": "^8.4.38",
+    "postcss": "^8.5.6",
     "prettier": "3.6.2",
     "react-is": "^19.0.0",
     "sass": "^1.69.5",
