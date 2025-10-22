@@ -850,7 +850,7 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(encounter),
+      value: evaluateEncounterDiagnosis(fhirBundle, encounter),
     },
     {
       title: "Encounter Care Team",
@@ -1301,15 +1301,18 @@ export const evaluatePractitionerRoleReference = (
 
 /**
  * Evaluate an encounters diagnosis by returning a comma delimited list of formatted codeable concepts from each condition
+ * @param fhirBundle FHIR bundle
  * @param encounter Encounter
  * @returns delimited list of formatted codeable concepts from each condition in the encounters diagnosis
  */
 export const evaluateEncounterDiagnosis = (
+  fhirBundle: Bundle,
   encounter: Encounter | undefined,
 ) => {
   return evaluateAllReferences<Condition>(
-    encounter,
+    fhirBundle,
     fhirPathMappings.encounterDiagnosisRef,
+    { id: encounter?.id }
   )
     .map((condition) => formatCodeableConcept(condition?.code))
     .filter(Boolean)
