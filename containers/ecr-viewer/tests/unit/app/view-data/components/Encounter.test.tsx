@@ -46,6 +46,10 @@ describe("Encounter", () => {
           </table>
         ),
       },
+      {
+        title: "Encounter Diagnosis",
+        value: "diagnosis 1, diagnosis 2"
+      }
     ];
 
     const hospitalEncounterData = [

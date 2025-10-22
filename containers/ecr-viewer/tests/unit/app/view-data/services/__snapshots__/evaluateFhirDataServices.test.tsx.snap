@@ -34,6 +34,42 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
 />
 `;
 
+exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
+<JsonTable
+  className="caption-data-title margin-y-0"
+  jsonTableData={
+    {
+      "resultName": "Encounter Care Team",
+      "tables": [
+        [
+          {
+            "Dates": {
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
+            },
+            "Name": {
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
+            },
+            "Role": {
+              "value": "attender",
+            },
+          },
+        ],
+      ],
+    }
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Diagnoses should return the correct diagnoses given an Encounter 1`] = `"OTHER MUSCLE SPASM"`;
+
 exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
 {
   "availableData": [
