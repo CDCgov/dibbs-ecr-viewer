@@ -131,7 +131,7 @@ Home: 123-456-6909`,
         const actual = evaluateEncounterCareTeamTable(
           BundleEcrMetadata as unknown as Bundle,
         );
-  
+
         expect(actual).toMatchSnapshot();
       });
     });
@@ -144,7 +144,7 @@ Home: 123-456-6909`,
         };
         const actual = evaluateEncounterDiagnosis(
           BundleEcrMetadata as unknown as Bundle,
-          encounter as unknown as Encounter
+          encounter as unknown as Encounter,
         );
         expect(actual).toMatchSnapshot();
       });

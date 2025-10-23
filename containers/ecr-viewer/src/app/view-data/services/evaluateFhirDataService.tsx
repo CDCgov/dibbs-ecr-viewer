@@ -1312,7 +1312,7 @@ export const evaluateEncounterDiagnosis = (
   return evaluateAllReferences<Condition>(
     fhirBundle,
     fhirPathMappings.encounterDiagnosisRef,
-    { id: encounter?.id }
+    { id: encounter?.id },
   )
     .map((condition) => formatCodeableConcept(condition?.code))
     .filter(Boolean)
