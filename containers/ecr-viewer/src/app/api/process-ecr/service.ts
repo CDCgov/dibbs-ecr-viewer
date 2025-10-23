@@ -62,11 +62,10 @@ const asString = async (v: string | File | undefined) =>
  * @param fetchAgent - the Undici agent that dispatches the request
  * @returns orchestration response
  */
-export const getOrchestrationResponse = async ({
-    ecr,
-    rr,
-  }: RequestBody,
-  fetchAgent: Agent): Promise<BundleInfo> => {
+export const getOrchestrationResponse = async (
+  { ecr, rr }: RequestBody,
+  fetchAgent: Agent,
+): Promise<BundleInfo> => {
   const bodyObj: Record<string, string | File | undefined> = {
     message_type: "ecr",
     include_error_types: "[errors]",
@@ -150,7 +149,7 @@ const saveToSource = (
 export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
-  fetchAgent = new Agent({ headersTimeout: 3600000 })
+  fetchAgent = new Agent({ headersTimeout: 3600000 }),
 ) => {
   let orchestrationResp: BundleInfo;
   try {
