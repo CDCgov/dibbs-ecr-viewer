@@ -1,39 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
-<JsonTable
-  className="caption-data-title margin-y-0"
-  jsonTableData={
-    {
-      "resultName": "Encounter Care Team",
-      "tables": [
-        [
-          {
-            "Dates": {
-              "value": <span
-                className="text-italic text-base"
-              >
-                No data
-              </span>,
-            },
-            "Name": {
-              "value": <span
-                className="text-italic text-base"
-              >
-                No data
-              </span>,
-            },
-            "Role": {
-              "value": "attender",
-            },
-          },
-        ],
-      ],
-    }
-  }
-/>
-`;
-
 exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <JsonTable
   className="caption-data-title margin-y-0"
