@@ -79,7 +79,7 @@ services:
       sh -c " echo 'Running migrations' && curl -v -X POST https://dev42.dibbs.cloud/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
     environment:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
-  
+
   migrator-local:
     profiles: ["local"]
     image: curlimages/curl

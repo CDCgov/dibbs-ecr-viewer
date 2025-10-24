@@ -99,7 +99,8 @@ class ViewEcrUser(HttpUser):
         ]
         for eicr_id in eicr_ids:
             with self.client.get(
-                f"/view-data?id={eicr_id}&auth={os.getenv('DUMMY_NBS_JWT')}", catch_response=True
+                f"/view-data?id={eicr_id}&auth={os.getenv('DUMMY_NBS_JWT')}",
+                catch_response=True,
             ) as response:
                 if response.status_code == 200:
                     response.success()
