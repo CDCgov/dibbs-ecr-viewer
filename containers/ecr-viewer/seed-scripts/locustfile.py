@@ -34,7 +34,7 @@ class ProcessEcrUser(HttpUser):
             headers = {"Authorization": f"Bearer {token}"}
 
             with self.client.post(
-                "api/process-ecr",
+                "/api/process-ecr",
                 data=data,
                 files=file_tuple,
                 headers=headers,
@@ -69,7 +69,7 @@ class ViewEcrUser(HttpUser):
                 headers = {"Authorization": f"Bearer {token}"}
 
                 with self.client.post(
-                    "api/process-ecr",
+                    "/api/process-ecr",
                     data=data,
                     files=file_tuple,
                     headers=headers,
@@ -99,7 +99,7 @@ class ViewEcrUser(HttpUser):
         ]
         for eicr_id in eicr_ids:
             with self.client.get(
-                f"/view-data?id={eicr_id}", catch_response=True
+                f"/view-data?id={eicr_id}&auth={os.getenv('DUMMY_NBS_JWT')}", catch_response=True
             ) as response:
                 if response.status_code == 200:
                     response.success()

@@ -103,7 +103,7 @@ services:
     command: >
       -f /home/locust/locustfile.py
       --web-host 0.0.0.0
-      --host https://dev42.dibbs.cloud/ecr-viewer/
+      --host https://dev42.dibbs.cloud/ecr-viewer
     environment:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
     depends_on:
@@ -122,7 +122,7 @@ services:
     command: >
       -f /home/locust/locustfile.py
       --web-host 0.0.0.0
-      --host http://host.docker.internal:3000/ecr-viewer/
+      --host http://host.docker.internal:3000/ecr-viewer
     environment:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
     depends_on:
