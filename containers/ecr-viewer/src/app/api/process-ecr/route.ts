@@ -2,7 +2,7 @@ import { Bundle, FhirResource } from "fhir/r4";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { orchestrationRequest } from "./service";
+import {orchestrationRequest, saveXmlToStorage} from "./service";
 
 interface ProcessEcrResponse {
   message: string;
@@ -69,6 +69,13 @@ export const POST = async (
 
   try {
     const { return_fhir_bundle, ...body } = routeSchema.parse(rawBody);
+    console.log("Env var: ", process.env.SAVE_XML)
+    if(process.env.SAVE_XML){
+      console.log("Inside 09")
+
+      await saveXmlToStorage(body)
+    }
+
     const { status, ...payload } = await orchestrationRequest(
       body,
       return_fhir_bundle === "true",

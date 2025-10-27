@@ -131,7 +131,7 @@ const saveToSource = (
   if (metadata) {
     return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
   } else {
-    return saveFhirData(bundle, ecrId, process.env.SOURCE);
+    return saveFhirData(bundle, ecrId, process.env.SOURCE, "fhir");
   }
 };
 
@@ -166,4 +166,14 @@ export const orchestrationRequest = async (
   } else {
     return res;
   }
+};
+
+/**
+ * Save the original uploaded XML to storage
+ * @param body - Parsed body of the request
+ */
+export const saveXmlToStorage = async (
+    body: RequestBody,
+) => {
+console.log("BODY TIME", body)
 };
