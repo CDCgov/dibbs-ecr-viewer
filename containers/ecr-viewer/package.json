@@ -37,7 +37,7 @@
     "@aws-sdk/client-s3": "^3.842.0",
     "@azure/storage-blob": "^12.28.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
-    "@google-cloud/storage": "^7.16.0",
+    "@google-cloud/storage": "^7.17.2",
     "@next/bundle-analyzer": "^15.3.1",
     "@trussworks/react-uswds": "^10.0.2",
     "@uswds/uswds": "^3.13.0",
