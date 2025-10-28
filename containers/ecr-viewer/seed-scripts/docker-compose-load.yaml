@@ -1,6 +1,3 @@
-include:
-  - ../docker-compose.yaml
-
 services:
   fhir-converter-service:
     profiles: ["local"]
@@ -86,9 +83,9 @@ services:
     environment:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
     command: >
-      sh -c " echo 'Running migrations' && curl -v -X POST http://host.docker.internal:3000/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
+      sh -c "echo 'Running migrations' && curl -v -X POST http://host.docker.internal:3000/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
     depends_on:
-      sqlserver:
+      ecr-viewer:
         condition: service_healthy
 
   locust:

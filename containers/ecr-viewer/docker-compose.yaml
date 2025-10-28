@@ -5,7 +5,7 @@ services:
     ports:
       - "3000:3000"
     build:
-      context: ./
+      context: ${PWD}
       dockerfile: Dockerfile
       args:
         - APP_VERSION=1.0
@@ -45,8 +45,33 @@ services:
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-ecr-viewer}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
       - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "echo -e \"GET /ecr-viewer/api/health-check HTTP/1.1\r\nHost: host.docker.internal\r\nConnection: close\r\n\r\n\" \  | nc host.docker.internal 3000 \  | grep -q '\"status\":\"UP\"'",
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 15
     profiles:
       - ecr-viewer
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+        required: false
+      postgres:
+        condition: service_healthy
+        required: false
+      azure-storage:
+        condition: service_healthy
+        required: false
+      aws-storage:
+        condition: service_healthy
+        required: false
+      gcp-storage:
+        condition: service_started
+        required: false
 
   postgres:
     image: "postgres:alpine"
@@ -114,7 +139,7 @@ services:
 
   azure-storage:
     build:
-      context: ./seed-scripts
+      context: ${PWD}/seed-scripts
       dockerfile: azurite.Dockerfile
     hostname: azurite
     restart: always
