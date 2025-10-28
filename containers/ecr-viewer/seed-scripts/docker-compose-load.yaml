@@ -1,95 +1,12 @@
 services:
-  fhir-converter-service:
-    profiles: ["local"]
-    platform: linux/amd64
-    build:
-      context: ../../fhir-converter/
-    ports:
-      - "8082:8080"
-    environment:
-      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
-
-  ingestion-service:
-    profiles: ["local"]
-    platform: linux/amd64
-    build:
-      context: ../../ingestion
-    ports:
-      - "8083:8080"
-    logging:
-      driver: "json-file"
-    environment:
-      SMARTY_AUTH_ID: ${SMARTY_AUTH_ID}
-      SMARTY_AUTH_TOKEN: ${SMARTY_AUTH_TOKEN}
-      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-3}
-
-  message-parser-service:
-    profiles: ["local"]
-    platform: linux/amd64
-    build:
-      context: ../../message-parser
-    ports:
-      - "8085:8080"
-    environment:
-      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
-    logging:
-      driver: "json-file"
-
-  trigger-code-reference-service:
-    profiles: ["local"]
-    platform: linux/amd64
-    build:
-      context: ../../trigger-code-reference
-    ports:
-      - "8086:8080"
-    environment:
-      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
-    logging:
-      driver: "json-file"
-
-  orchestration-service:
-    profiles: ["local"]
-    platform: linux/amd64
-    build:
-      context: ../../orchestration/
-    ports:
-      - "8080:8080"
-    logging:
-      driver: "json-file"
-    env_file:
-      - ../../orchestration/.env
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    environment:
-      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
-      - ECR_VIEWER_URL=http://host.docker.internal:3000/ecr-viewer
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://orchestration-service:8080/"]
-      interval: 10s
-      timeout: 20s
-      retries: 5
-
   migrator:
-    profiles: ["prod"]
     image: curlimages/curl
     command: >
       sh -c " echo 'Running migrations' && curl -v -X POST https://dev42.dibbs.cloud/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
     environment:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
 
-  migrator-local:
-    profiles: ["local"]
-    image: curlimages/curl
-    environment:
-      - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
-    command: >
-      sh -c "echo 'Running migrations' && curl -v -X POST http://host.docker.internal:3000/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
-    depends_on:
-      ecr-viewer:
-        condition: service_healthy
-
   locust:
-    profiles: ["prod"]
     image: locustio/locust
     ports:
       - "8089:8089"
@@ -105,23 +22,4 @@ services:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
     depends_on:
       migrator:
-        condition: service_completed_successfully
-
-  locust-local:
-    profiles: ["local"]
-    image: locustio/locust
-    ports:
-      - "8089:8089"
-    volumes:
-      - ./locustfile.py:/home/locust/locustfile.py
-      - ./requirements.txt:/home/locust/requirements.txt
-      - ./baseECR/star-wars:/home/locust/baseECR/star-wars
-    command: >
-      -f /home/locust/locustfile.py
-      --web-host 0.0.0.0
-      --host http://host.docker.internal:3000/ecr-viewer
-    environment:
-      - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
-    depends_on:
-      migrator-local:
         condition: service_completed_successfully
