@@ -112,3 +112,4 @@ volumes:
   db:
   azure-data:
   aws-data:
+  gcp-data:
