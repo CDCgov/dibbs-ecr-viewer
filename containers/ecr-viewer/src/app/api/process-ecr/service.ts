@@ -99,7 +99,6 @@ export const getOrchestrationResponse = async (
     method: "post",
     body,
     headers,
-    // 1 hour timeout should allow any eCR to process
     dispatcher: fetchAgent,
   });
 
@@ -149,6 +148,7 @@ const saveToSource = (
 export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
+  // 1 hour timeout should allow any eCR to process
   fetchAgent = new Agent({ headersTimeout: 3600000 }),
 ) => {
   let orchestrationResp: BundleInfo;
