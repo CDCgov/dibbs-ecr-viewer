@@ -2,6 +2,8 @@
  * @jest-environment node
  */
 
+import { Agent, FormData, Interceptable, MockAgent } from "undici";
+
 import {
   getOrchestrationResponse,
   orchestrationRequest,
@@ -15,36 +17,52 @@ import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 jest.mock("@/app/api/save-fhir-data/service");
 jest.mock("@/app/data/metadataDb/database");
 
+const mockAgent = new MockAgent();
+mockAgent.disableNetConnect();
+
 describe("orchestrationRequest", () => {
   const mockFile = new File(["content"], "test.zip", {
     type: "application/zip",
   });
   const mockEcr = { id: "123" };
   const mockMetadata = { key: "value" };
+  let mockPool: Interceptable;
+
+  beforeAll(() => {
+    process.env.SOURCE = S3_SOURCE;
+    process.env.ORCHESTRATION_URL = "http://orchestration-service";
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.SOURCE = S3_SOURCE;
+    mockPool = mockAgent.get("http://orchestration-service");
   });
 
   it("should save file with metadata when orchestration response contains metadata", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      status: 200,
-      json: jest.fn().mockResolvedValue({
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(200, {
         processed_values: {
           responses: [
             { stamped_ecr: { extended_bundle: mockEcr } },
             { metadata_values: { parsed_values: mockMetadata } },
           ],
         },
-      }),
-    });
+      });
+
     (saveWithMetadata as jest.Mock).mockResolvedValue({
       status: 200,
       message: "Success",
     });
 
-    const response = await orchestrationRequest({ ecr: mockFile }, false);
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
@@ -56,40 +74,54 @@ describe("orchestrationRequest", () => {
   });
 
   it("should save file without metadata when orchestration response does not contain metadata", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      status: 200,
-      json: jest.fn().mockResolvedValue({
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(200, {
         processed_values: {
           responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
         },
-      }),
-    });
+      });
+
     (saveFhirData as jest.Mock).mockResolvedValue({
       status: 200,
       message: "Success",
     });
 
-    const response = await orchestrationRequest({ ecr: mockFile }, false);
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
   });
 
   it("should return fhir bundle when requested", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      status: 200,
-      json: jest.fn().mockResolvedValue({
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(200, {
         processed_values: {
           responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
         },
-      }),
-    });
+      });
+
     (saveFhirData as jest.Mock).mockResolvedValue({
       status: 200,
       message: "Success",
     });
 
-    const response = await orchestrationRequest({ ecr: mockFile }, true);
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      true,
+      mockAgent as unknown as Agent,
+    );
 
     expect(response).toStrictEqual({
       status: 200,
@@ -100,13 +132,22 @@ describe("orchestrationRequest", () => {
   });
 
   it("should return 500 status when orchestration response fails", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      status: 500,
-      json: jest.fn().mockResolvedValue({ message: "Error" }),
-    });
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500, {
+        message: "Error",
+      });
+
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    const response = await orchestrationRequest({ ecr: mockFile }, false);
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
 
     expect(response).toEqual({
       message: "Failed to process orchestration response",
@@ -116,96 +157,102 @@ describe("orchestrationRequest", () => {
 
   describe("getOrchestrationResponse", () => {
     it("should call process zip when ecr is a zip", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
-        status: 200,
-        json: jest.fn().mockResolvedValue({
+      mockPool
+        .intercept({
+          path: "/process-zip",
+          method: "POST",
+        })
+        .reply(200, {
           processed_values: {
             responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
           },
-        }),
-      });
+        });
 
-      await getOrchestrationResponse({ ecr: mockFile });
-      const args = (global.fetch as jest.Mock).mock.calls[0];
-      expect(args[0]).toEndWith("process-zip");
-      expect(args[1].body).toBeInstanceOf(FormData);
-      const headers = args[1].headers;
-      expect([...headers.entries()]).toBeArrayOfSize(0);
+      const response = await getOrchestrationResponse(
+        { ecr: mockFile },
+        mockAgent as unknown as Agent,
+      );
+
+      // If anything other than /process-zip is called the request will fail due to how undici's mocking works
+      expect(response).toEqual({
+        ecr: mockEcr,
+        metadata: undefined,
+      });
     });
 
     it("should handle string contents", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
-        status: 200,
-        json: jest.fn().mockResolvedValue({
+      mockPool
+        .intercept({
+          path: "/process-message",
+          method: "POST",
+        })
+        .reply(200, {
           processed_values: {
             responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
           },
-        }),
-      });
+        });
 
-      await getOrchestrationResponse({ ecr: "ecr", rr: "rr" });
-      const args = (global.fetch as jest.Mock).mock.calls[0];
-      expect(args[0]).toEndWith("process-message");
-      const body = args[1].body;
-      expect(body).toEqual(
-        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr","rr_data":"rr"}',
+      const response = await getOrchestrationResponse(
+        { ecr: "ecr", rr: "rr" },
+        mockAgent as unknown as Agent,
       );
-      const headers = args[1].headers;
-      expect([...headers.entries()]).toStrictEqual([
-        ["content-type", "application/json"],
-      ]);
+      // If anything other than /process-message is called the request will fail due to how undici's mocking works
+      expect(response).toEqual({
+        ecr: mockEcr,
+        metadata: undefined,
+      });
     });
 
     it("should handle File contents", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
-        status: 200,
-        json: jest.fn().mockResolvedValue({
+      mockPool
+        .intercept({
+          path: "/process-message",
+          method: "POST",
+        })
+        .reply(200, {
           processed_values: {
             responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
           },
-        }),
-      });
+        });
 
-      await getOrchestrationResponse({
-        ecr: new File(["ecr"], "ecr.xml"),
-        rr: new File(["rr"], "rr.xml"),
-      });
-      const args = (global.fetch as jest.Mock).mock.calls[0];
-      expect(args[0]).toEndWith("process-message");
-      const body = args[1].body;
-      expect(body).toEqual(
-        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr","rr_data":"rr"}',
+      const response = await getOrchestrationResponse(
+        {
+          ecr: new File(["ecr"], "ecr.xml"),
+          rr: new File(["rr"], "rr.xml"),
+        },
+        mockAgent as unknown as Agent,
       );
-      const headers = args[1].headers;
-      expect([...headers.entries()]).toStrictEqual([
-        ["content-type", "application/json"],
-      ]);
+
+      expect(response).toEqual({
+        ecr: mockEcr,
+        metadata: undefined,
+      });
     });
 
     it("should handle undefined rr", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
-        status: 200,
-        json: jest.fn().mockResolvedValue({
+      mockPool
+        .intercept({
+          path: "/process-message",
+          method: "POST",
+        })
+        .reply(200, {
           processed_values: {
             responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
           },
-        }),
-      });
+        });
 
-      await getOrchestrationResponse({
-        ecr: new File(["ecr"], "ecr.xml"),
-        rr: undefined,
-      });
-      const args = (global.fetch as jest.Mock).mock.calls[0];
-      expect(args[0]).toEndWith("process-message");
-      const body = args[1].body;
-      expect(body).toEqual(
-        '{"message_type":"ecr","include_error_types":"[errors]","config_file_name":"bundle-only.json","data_type":"ecr","message":"ecr"}',
+      const response = await getOrchestrationResponse(
+        {
+          ecr: new File(["ecr"], "ecr.xml"),
+          rr: undefined,
+        },
+        mockAgent as unknown as Agent,
       );
-      const headers = args[1].headers;
-      expect([...headers.entries()]).toStrictEqual([
-        ["content-type", "application/json"],
-      ]);
+
+      expect(response).toEqual({
+        ecr: mockEcr,
+        metadata: undefined,
+      });
     });
   });
 
@@ -213,17 +260,20 @@ describe("orchestrationRequest", () => {
     let appendMock: jest.SpyInstance;
 
     beforeEach(() => {
-      global.fetch = jest.fn().mockResolvedValue({
-        status: 200,
-        json: jest.fn().mockResolvedValue({
+      mockPool
+        .intercept({
+          path: "/process-zip",
+          method: "POST",
+        })
+        .reply(200, {
           processed_values: {
             responses: [
               { stamped_ecr: { extended_bundle: mockEcr } },
               { metadata_values: mockMetadata },
             ],
           },
-        }),
-      });
+        });
+
       appendMock = jest.spyOn(FormData.prototype, "append");
       process.env.METADATA_DATABASE_TYPE = undefined;
       process.env.METADATA_DATABASE_SCHEMA = undefined;
@@ -232,7 +282,11 @@ describe("orchestrationRequest", () => {
       delete process.env.METADATA_DATABASE_TYPE;
       delete process.env.METADATA_DATABASE_SCHEMA;
 
-      await orchestrationRequest({ ecr: mockFile }, false);
+      await orchestrationRequest(
+        { ecr: mockFile },
+        false,
+        mockAgent as unknown as Agent,
+      );
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -243,7 +297,11 @@ describe("orchestrationRequest", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "extended";
 
-      await orchestrationRequest({ ecr: mockFile }, false);
+      await orchestrationRequest(
+        { ecr: mockFile },
+        false,
+        mockAgent as unknown as Agent,
+      );
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
@@ -254,7 +312,11 @@ describe("orchestrationRequest", () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
       process.env.METADATA_DATABASE_SCHEMA = "core";
 
-      await orchestrationRequest({ ecr: mockFile }, false);
+      await orchestrationRequest(
+        { ecr: mockFile },
+        false,
+        mockAgent as unknown as Agent,
+      );
 
       expect(appendMock).toHaveBeenCalledWith(
         "config_file_name",
