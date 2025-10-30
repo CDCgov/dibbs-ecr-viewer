@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -18,7 +19,12 @@ def setup(request):
         path, compose_file_name=compose_file_name, build=True
     )
 
-    orchestration_service.start()
+    try:
+        orchestration_service.start()
+    except Exception as e:
+        print("Service logs...\n")
+        print(orchestration_service.get_logs())
+        sys.exit(1)
 
     port_number_strings = [
         "ORCHESTRATION_PORT_NUMBER",
