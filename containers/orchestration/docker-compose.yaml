@@ -19,6 +19,11 @@ services:
       file: ../ecr-viewer/docker-compose.yaml
       service: azure-storage
     profiles: ["", "azure"]
+  gcp-storage:
+    extends:
+      file: ../ecr-viewer/docker-compose.yaml
+      service: gcp-storage
+    profiles: ["gcp"]
   ecr-viewer:
     extends:
       file: ../ecr-viewer/docker-compose.yaml
@@ -52,13 +57,17 @@ services:
     build:
       context: .
     depends_on:
-      [
-        fhir-converter-service,
-        ingestion-service,
-        trigger-code-reference-service,
-        message-parser-service,
-        ecr-viewer,
-      ]
+      fhir-converter-service:
+        condition: service_started
+      ingestion-service:
+        condition: service_started
+      trigger-code-reference-service:
+        condition: service_started
+      message-parser-service:
+        condition: service_started
+        required: false
+      ecr-viewer:
+        condition: service_healthy
     ports:
       - "${ORCHESTRATION_PORT_NUMBER}:8080"
     logging:
