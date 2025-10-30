@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
+exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <JsonTable
   className="caption-data-title margin-y-0"
   jsonTableData={
@@ -33,6 +33,8 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter Care Team should retu
   }
 />
 `;
+
+exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Diagnoses should return the correct diagnoses given an Encounter 1`] = `"OTHER MUSCLE SPASM"`;
 
 exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
 {

@@ -149,7 +149,7 @@
     "nullable": true,
     "reference_lookup": [
       "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
-      "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location.location.reference"
+      "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].location.reference"
     ]
   },
   "encounter_type": {

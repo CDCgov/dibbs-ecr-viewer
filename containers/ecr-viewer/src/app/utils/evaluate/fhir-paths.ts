@@ -389,7 +389,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   encounterDiagnosisRef: {
     type: "Reference",
-    path: "diagnosis.condition",
+    path: "entry.resource.Encounter.where(id = %id).diagnosis.condition",
   },
 
   hospitalEncounterDiagnosisRef: {
@@ -403,7 +403,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   facilityLocationRef: {
     type: "string",
-    path: "location.location.reference",
+    path: "location[0].location.reference",
   },
   compositionEncounterRef: {
     type: "string",

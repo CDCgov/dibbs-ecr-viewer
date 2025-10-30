@@ -772,8 +772,48 @@
             }
           }
         ],
+        "diagnosis": [
+          {
+            "condition": {
+              "reference": "Condition/test-encounter-diagnosis-condition"
+            }
+          }
+        ],
         "meta": {
           "source": ["ecr"]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:test-encounter-diagnosis-condition",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "test-encounter-diagnosis-condition",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f56593a9-11b8-4185-b16b-583d43837021"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-item-list",
+                "display": "Problem List Item",
+                "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "M62.838",
+              "system": "urn:oid:2.16.840.1.113883.6.90",
+              "display": "OTHER MUSCLE SPASM"
+            }
+          ]
         }
       }
     }
