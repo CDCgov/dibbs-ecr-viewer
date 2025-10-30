@@ -21,7 +21,7 @@ def setup(request):
 
     try:
         orchestration_service.start()
-    except Exception as e:
+    except Exception:
         print("Service logs...\n")
         print(orchestration_service.get_logs())
         sys.exit(1)
