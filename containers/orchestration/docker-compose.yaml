@@ -67,7 +67,7 @@ services:
         condition: service_started
         required: false
       ecr-viewer:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "${ORCHESTRATION_PORT_NUMBER}:8080"
     logging:
