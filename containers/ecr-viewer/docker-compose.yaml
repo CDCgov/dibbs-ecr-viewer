@@ -9,13 +9,13 @@ services:
       dockerfile: Dockerfile
       args:
         - APP_VERSION=1.0
-    network_mode: host
+    # network_mode: host
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY
       - NBS_API_PUB_KEY
       # METADATA DATABASE
-      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@postgres:5432/ecr_viewer_db}
       - METADATA_DATABASE_SCHEMA
       - METADATA_DATABASE_MIGRATION_SECRET
       # SQL Server - backwards compat
@@ -24,36 +24,37 @@ services:
       - SQL_SERVER_HOST
 
       # AWS
-      - AWS_CUSTOM_ENDPOINT=http://localhost:4566
+      - AWS_CUSTOM_ENDPOINT=http://aws-storage:4566
       - AWS_REGION=${AWS_REGION:-us-east-1}
       - ECR_BUCKET_NAME=${ECR_BUCKET_NAME:-ecr-viewer-files}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-123}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-xyz}
       # Azure
-      - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
+      - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azure-storage:10000/devstoreaccount1;
       - AZURE_CONTAINER_NAME=${AZURE_CONTAINER_NAME:-ecr-viewer-files}
       # GCP
       - 'GCP_CREDENTIALS=${GCP_CREDENTIALS:-{ "client_email": "ecr@example.com", "private_key": "1234" }}'
       - GCP_PROJECT_ID=${GCP_PROJECT_ID:-proj}
-      - GCP_API_ENDPOINT=${GCP_API_ENDPOINT:-http://localhost:10001/}
+      - GCP_API_ENDPOINT=${GCP_API_ENDPOINT:-http://gcp-storage:10001/}
       # Orchestration
-      - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://localhost:8080/}
+      - ORCHESTRATION_URL=${ORCHESTRATION_URL:-http://orchestration:8080/}
       # Auth
       - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000/ecr-viewer/api/auth/}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-EjHXcPcFD17f5nYRaQeN9ncNpOoU80HTA6x4UBUk5pM=}
       - AUTH_PROVIDER=${AUTH_PROVIDER:-keycloak}
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-ecr-viewer}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
-      - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
+      - AUTH_ISSUER=${AUTH_ISSUER:-http://keycloak:8070/realms/master}
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          'wget -qO- http://ecr-viewer:3000/ecr-viewer/api/health-check | grep -q ''"status":"UP"''',
+          'wget -qO- http://0.0.0.0:3000/ecr-viewer/api/health-check | grep -q ''"status":"UP"''',
         ]
       interval: 5s
       timeout: 300s
       retries: 10
+      start_period: 30s
     profiles:
       - ecr-viewer
     depends_on:
@@ -154,7 +155,7 @@ services:
     volumes:
       - azure-data:/opt/azurite/data
     environment:
-      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azure-storage:10000/devstoreaccount1;
     healthcheck:
       test: nc 127.0.0.1 10000 -z
       interval: 1s
