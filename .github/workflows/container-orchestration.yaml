@@ -102,6 +102,10 @@ jobs:
         with:
           python-version: ${{env.TEST_RUNNER_PYTHON_VERSION}}
           cache: pip
+      - name: Docker compose
+        working-directory: ./containers/${{env.CONTAINER}}/tests/integration
+        run: |
+          docker compose -f ../../docker-compose.yaml up --build --wait
       - name: Install pytest
         run: pip install pytest
       - name: Install dependencies

@@ -52,8 +52,8 @@ services:
           "echo -e \"GET /ecr-viewer/api/health-check HTTP/1.1\r\nHost: host.docker.internal\r\nConnection: close\r\n\r\n\" | nc host.docker.internal 3000 | grep -q '\"status\":\"UP\"'",
         ]
       interval: 5s
-      timeout: 30s
-      retries: 100
+      timeout: 300s
+      retries: 10
     profiles:
       - ecr-viewer
     depends_on:

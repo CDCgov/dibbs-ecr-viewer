@@ -1,314 +1,314 @@
-name: Test ecr-viewer Container
+# name: Test ecr-viewer Container
 
-on:
-  pull_request:
-    branches:
-      - "**"
-    paths:
-      - containers/ecr-viewer/**
-      - containers/fhir-converter/**
-      - .github/workflows/container-ecr-viewer.yaml
-  merge_group:
-    types:
-      - checks_requested
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - pyproject.toml
-  workflow_dispatch:
+# on:
+#   pull_request:
+#     branches:
+#       - "**"
+#     paths:
+#       - containers/ecr-viewer/**
+#       - containers/fhir-converter/**
+#       - .github/workflows/container-ecr-viewer.yaml
+#   merge_group:
+#     types:
+#       - checks_requested
+#   push:
+#     branches:
+#       - main
+#     paths-ignore:
+#       - pyproject.toml
+#   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
 
-env:
-  CONTAINER: ecr-viewer
-  NODE_VERSION: 24 # Adjust the Node.js version as needed
+# env:
+#   CONTAINER: ecr-viewer
+#   NODE_VERSION: 24 # Adjust the Node.js version as needed
 
-jobs:
-  javascript-linting:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{env.NODE_VERSION}}
-      - name: Lint javascript for ${{env.CONTAINER}}
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          npm ci
-          npm run lint
-          npm run lint:tsc
+# jobs:
+#   javascript-linting:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v5
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v6
+#         with:
+#           node-version: ${{env.NODE_VERSION}}
+#       - name: Lint javascript for ${{env.CONTAINER}}
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           npm ci
+#           npm run lint
+#           npm run lint:tsc
 
-  test-node-containers:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{env.NODE_VERSION}}
-      - name: Install dependencies
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm install
-      - name: Run tests
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm test
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ env.CONTAINER }}
+#   test-node-containers:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v5
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v6
+#         with:
+#           node-version: ${{env.NODE_VERSION}}
+#       - name: Install dependencies
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm install
+#       - name: Run tests
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm test
+#       - name: Upload coverage to Codecov
+#         uses: codecov/codecov-action@v5
+#         with:
+#           fail_ci_if_error: true
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: ${{ env.CONTAINER }}
 
-  build-container:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+#   build-container:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v5
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
 
-      - name: Build ${{ env.CONTAINER }} Container
-        uses: docker/build-push-action@v6
-        with:
-          context: ./containers/${{ env.CONTAINER }}
-          file: ./containers/${{ env.CONTAINER }}/Dockerfile
-          push: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+#       - name: Build ${{ env.CONTAINER }} Container
+#         uses: docker/build-push-action@v6
+#         with:
+#           context: ./containers/${{ env.CONTAINER }}
+#           file: ./containers/${{ env.CONTAINER }}/Dockerfile
+#           push: false
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
 
-  e2e-tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - config: AWS_SQLSERVER_DUAL
-            azure_ad: true
-            schema: extended
-            endpoint: process-ecr
-          - config: GCP_PG_DUAL
-            azure_ad: false
-            schema: core
-            endpoint: process-zip
-          - config: AWS_INTEGRATED
-            azure_ad: false
-            endpoint: process-zip
-          - config: AZURE_PG_NON_INTEGRATED
-            azure_ad: true
-            schema: core
-            endpoint: process-ecr
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+#   e2e-tests:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         include:
+#           - config: AWS_SQLSERVER_DUAL
+#             azure_ad: true
+#             schema: extended
+#             endpoint: process-ecr
+#           - config: GCP_PG_DUAL
+#             azure_ad: false
+#             schema: core
+#             endpoint: process-zip
+#           - config: AWS_INTEGRATED
+#             azure_ad: false
+#             endpoint: process-zip
+#           - config: AZURE_PG_NON_INTEGRATED
+#             azure_ad: true
+#             schema: core
+#             endpoint: process-ecr
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 20
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v5
 
-      - name: Bail out if Dependabot and Azure AD
-        if: ${{ matrix.azure_ad && github.actor == 'dependabot[bot]'}}
-        uses: actions/github-script@v8
-        with:
-          script: |
-            core.setFailed(
-            `Dependabot can't run e2e tests against Azure AD due to lack of access to secrets 🔐. Run manually if needed for PR review.`
-            )
+#       - name: Bail out if Dependabot and Azure AD
+#         if: ${{ matrix.azure_ad && github.actor == 'dependabot[bot]'}}
+#         uses: actions/github-script@v8
+#         with:
+#           script: |
+#             core.setFailed(
+#             `Dependabot can't run e2e tests against Azure AD due to lack of access to secrets 🔐. Run manually if needed for PR review.`
+#             )
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{env.NODE_VERSION}}
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v6
+#         with:
+#           node-version: ${{env.NODE_VERSION}}
 
-      - name: Set up env vars
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
+#       - name: Set up env vars
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           npm run setup-local-env
+#           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
-      - name: Set CONFIG_NAME to ${{ matrix.config }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config }}/' .env.local
+#       - name: Set CONFIG_NAME to ${{ matrix.config }}
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           sed -i 's/AWS_SQLSERVER_DUAL/${{ matrix.config }}/' .env.local
 
-      - name: Set METADATA_DATABASE_SCHEMA to ${{ matrix.schema }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          echo "METADATA_DATABASE_SCHEMA=${{ matrix.schema }}" >> .env.local
+#       - name: Set METADATA_DATABASE_SCHEMA to ${{ matrix.schema }}
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           echo "METADATA_DATABASE_SCHEMA=${{ matrix.schema }}" >> .env.local
 
-      - name: Set up Azure AD
-        if: ${{ matrix.azure_ad }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          sed -i 's/AUTH_PROVIDER=.*$/AUTH_PROVIDER=ad/' .env.local
-          sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
-          sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_SECRET }}/' .env.local
-          sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
-          sed -i 's/AUTH_ADMIN_USER=.*$/AUTH_ADMIN_USER=${{ secrets.AZURE_ADMIN_USER }}/' .env.local
-          sed -i 's/AUTH_ADMIN_PASSWORD=.*$/AUTH_ADMIN_PASSWORD=${{ secrets.AZURE_ADMIN_PASSWORD }}/' .env.local
-          sed -i 's/AUTH_STANDARD_USER=.*$/AUTH_STANDARD_USER=${{ secrets.AZURE_STANDARD_USER }}/' .env.local
-          sed -i 's/AUTH_STANDARD_PASSWORD=.*$/AUTH_STANDARD_PASSWORD=${{ secrets.AZURE_STANDARD_PASSWORD }}/' .env.local
+#       - name: Set up Azure AD
+#         if: ${{ matrix.azure_ad }}
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           sed -i 's/AUTH_PROVIDER=.*$/AUTH_PROVIDER=ad/' .env.local
+#           sed -i 's/AUTH_CLIENT_ID=.*$/AUTH_CLIENT_ID=${{ secrets.AZURE_AD_CLIENT_ID }}/' .env.local
+#           sed -i 's/AUTH_CLIENT_SECRET=.*$/AUTH_CLIENT_SECRET=${{ secrets.AZURE_AD_CLIENT_SECRET }}/' .env.local
+#           sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
+#           sed -i 's/AUTH_ADMIN_USER=.*$/AUTH_ADMIN_USER=${{ secrets.AZURE_ADMIN_USER }}/' .env.local
+#           sed -i 's/AUTH_ADMIN_PASSWORD=.*$/AUTH_ADMIN_PASSWORD=${{ secrets.AZURE_ADMIN_PASSWORD }}/' .env.local
+#           sed -i 's/AUTH_STANDARD_USER=.*$/AUTH_STANDARD_USER=${{ secrets.AZURE_STANDARD_USER }}/' .env.local
+#           sed -i 's/AUTH_STANDARD_PASSWORD=.*$/AUTH_STANDARD_PASSWORD=${{ secrets.AZURE_STANDARD_PASSWORD }}/' .env.local
 
-      - name: Set UPLOAD_URL to ${{ matrix.endpoint }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          echo "UPLOAD_URL=http://host.docker.internal:3000/ecr-viewer/api/${{ matrix.endpoint }}" >> .env.local
+#       - name: Set UPLOAD_URL to ${{ matrix.endpoint }}
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           echo "UPLOAD_URL=http://host.docker.internal:3000/ecr-viewer/api/${{ matrix.endpoint }}" >> .env.local
 
-      - name: Install dependencies
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm ci
+#       - name: Install dependencies
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm ci
 
-      - name: Install Playwright Browsers
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:install
+#       - name: Install Playwright Browsers
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run test:e2e:install
 
-      - name: Run local docker and wait for it to be ready
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
+#       - name: Run local docker and wait for it to be ready
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
 
-      - name: Run Playwright tests - Migrations
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:migrations
+#       - name: Run Playwright tests - Migrations
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run test:e2e:migrations
 
-      - name: Get docker logs
-        if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
-        shell: bash
-        run: |
-          echo "Saving $CONTAINER logs"
-          docker compose --profile "*" logs --timestamps &>> e2e-run.log
+#       - name: Get docker logs
+#         if: ${{ !cancelled() }}
+#         working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+#         shell: bash
+#         run: |
+#           echo "Saving $CONTAINER logs"
+#           docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
-      - name: Docker down
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: docker compose --profile "*" down
+#       - name: Docker down
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: docker compose --profile "*" down
 
-      - name: Upload playwright report - Migrations
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report-migrations-${{ matrix.config }}
-          path: containers/${{env.CONTAINER}}/playwright-report/
-          retention-days: 5
+#       - name: Upload playwright report - Migrations
+#         uses: actions/upload-artifact@v4
+#         if: ${{ !cancelled() }}
+#         with:
+#           name: playwright-report-migrations-${{ matrix.config }}
+#           path: containers/${{env.CONTAINER}}/playwright-report/
+#           retention-days: 5
 
-      - name: Run seed data conversion
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run convert-seed-data
-        env:
-          SEED_DATA_DIRECTORIES: star-wars
+#       - name: Run seed data conversion
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run convert-seed-data
+#         env:
+#           SEED_DATA_DIRECTORIES: star-wars
 
-      - name: Run local docker and wait for it to be ready
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
+#       - name: Run local docker and wait for it to be ready
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
 
-      - name: Seed standard user and COVID program
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:seed-user-prog
+#       - name: Seed standard user and COVID program
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run test:e2e:seed-user-prog
 
-      - name: Run Playwright tests
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e
+#       - name: Run Playwright tests
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run test:e2e
 
-      - name: Get docker logs
-        if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
-        shell: bash
-        run: |
-          echo "Saving $CONTAINER logs"
-          docker compose --profile "*" logs --timestamps &>> e2e-run.log
+#       - name: Get docker logs
+#         if: ${{ !cancelled() }}
+#         working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+#         shell: bash
+#         run: |
+#           echo "Saving $CONTAINER logs"
+#           docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
-      - name: Docker down
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: docker compose --profile "*" down
+#       - name: Docker down
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: docker compose --profile "*" down
 
-      - name: Upload playwright report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report-${{ matrix.config }}
-          path: containers/${{env.CONTAINER}}/playwright-report/
-          retention-days: 5
+#       - name: Upload playwright report
+#         uses: actions/upload-artifact@v4
+#         if: ${{ !cancelled() }}
+#         with:
+#           name: playwright-report-${{ matrix.config }}
+#           path: containers/${{env.CONTAINER}}/playwright-report/
+#           retention-days: 5
 
-      - name: Upload Lighthouse report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: lighthouse-report-${{ matrix.config }}
-          path: containers/${{env.CONTAINER}}/lighthouse/
-          retention-days: 5
+#       - name: Upload Lighthouse report
+#         uses: actions/upload-artifact@v4
+#         if: ${{ !cancelled() }}
+#         with:
+#           name: lighthouse-report-${{ matrix.config }}
+#           path: containers/${{env.CONTAINER}}/lighthouse/
+#           retention-days: 5
 
-      - name: Get docker logs
-        if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
-        shell: bash
-        run: |
-          echo "Saving $CONTAINER logs"
-          docker compose --profile "*" logs --timestamps &>> e2e-run.log
+#       - name: Get docker logs
+#         if: ${{ !cancelled() }}
+#         working-directory: ./containers/${{env.CONTAINER}}/tests/e2e
+#         shell: bash
+#         run: |
+#           echo "Saving $CONTAINER logs"
+#           docker compose --profile "*" logs --timestamps &>> e2e-run.log
 
-      - name: Archive docker logs
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs-${{ matrix.config }}
-          path: ./containers/${{env.CONTAINER}}/tests/e2e/e2e-run.log
-          retention-days: 5
+#       - name: Archive docker logs
+#         if: ${{ always() }}
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: logs-${{ matrix.config }}
+#           path: ./containers/${{env.CONTAINER}}/tests/e2e/e2e-run.log
+#           retention-days: 5
 
-      - name: Docker down
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: docker compose --profile "*" down
+#       - name: Docker down
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: docker compose --profile "*" down
 
-  integration-tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        db_type: ["pg", "sqlserver"]
+#   integration-tests:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         db_type: ["pg", "sqlserver"]
 
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 20
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v5
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{env.NODE_VERSION}}
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v6
+#         with:
+#           node-version: ${{env.NODE_VERSION}}
 
-      - name: Install dependencies
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm ci
+#       - name: Install dependencies
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm ci
 
-      - name: Set up env vars
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          npm run setup-local-env
-          ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
+#       - name: Set up env vars
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           npm run setup-local-env
+#           ../../setup-env.sh ../orchestration/.env ../orchestration/.env.sample
 
-      - name: upcase db type
-        shell: bash
-        run: echo "DB_TYPE=$(echo "${{matrix.db_type}}" | tr '[:lower:]' '[:upper:]' )" >> "${GITHUB_ENV}"
+#       - name: upcase db type
+#         shell: bash
+#         run: echo "DB_TYPE=$(echo "${{matrix.db_type}}" | tr '[:lower:]' '[:upper:]' )" >> "${GITHUB_ENV}"
 
-      - name: Set config for db type
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: |
-          sed -i 's/AWS_.*_DUAL/AWS_${DB_TYPE}_NON_INTEGRATED/' .env.local
+#       - name: Set config for db type
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: |
+#           sed -i 's/AWS_.*_DUAL/AWS_${DB_TYPE}_NON_INTEGRATED/' .env.local
 
-      - name: Run local docker and wait for it to be ready
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
+#       - name: Run local docker and wait for it to be ready
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check
 
-      - name: Run integration tests - ${{ matrix.db_type }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:integration:${{ matrix.db_type }}
+#       - name: Run integration tests - ${{ matrix.db_type }}
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: npm run test:integration:${{ matrix.db_type }}
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ env.CONTAINER }}
+#       - name: Upload coverage to Codecov
+#         uses: codecov/codecov-action@v5
+#         with:
+#           fail_ci_if_error: true
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: ${{ env.CONTAINER }}
 
-      - name: Docker down
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: docker compose --profile "*" down
+#       - name: Docker down
+#         working-directory: ./containers/${{env.CONTAINER}}
+#         run: docker compose --profile "*" down

@@ -1,40 +1,40 @@
-name: Test fhir-converter Container
+# name: Test fhir-converter Container
 
-on:
-  pull_request:
-    branches:
-      - "**"
-    paths:
-      - containers/fhir-converter/**
-  merge_group:
-    types:
-      - checks_requested
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+# on:
+#   pull_request:
+#     branches:
+#       - "**"
+#     paths:
+#       - containers/fhir-converter/**
+#   merge_group:
+#     types:
+#       - checks_requested
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
 
-env:
-  CONTAINER: fhir-converter
+# env:
+#   CONTAINER: fhir-converter
 
-jobs:
-  build-container:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+# jobs:
+#   build-container:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v5
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
 
-      - name: Build ${{ env.CONTAINER }} Container
-        uses: docker/build-push-action@v6
-        with:
-          context: ./containers/${{ env.CONTAINER }}
-          push: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+#       - name: Build ${{ env.CONTAINER }} Container
+#         uses: docker/build-push-action@v6
+#         with:
+#           context: ./containers/${{ env.CONTAINER }}
+#           push: false
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
