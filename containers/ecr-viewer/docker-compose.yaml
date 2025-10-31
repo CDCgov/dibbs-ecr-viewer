@@ -49,11 +49,11 @@ services:
       test:
         [
           "CMD-SHELL",
-          'wget -qO- http://ecr-viewer:3000/ecr-viewer/api/health-check | grep -q ''"status":"UP"''',
+          'wget -qO- http://0.0.0.0:3000/ecr-viewer/api/health-check | grep -q ''"status":"UP"''',
         ]
       interval: 5s
-      timeout: 300s
-      retries: 10
+      timeout: 15s
+      retries: 3
     profiles:
       - ecr-viewer
     depends_on:

@@ -107,16 +107,11 @@ jobs:
         run: |
           docker compose -f ../../docker-compose.yaml --verbose up --build --wait
           docker inspect orchestration-ecr-viewer-1 --format='{{json .State.Health}}' | jq
-          wget -qO- http://host.docker.internal:3000/ecr-viewer/api/health-check | grep '\"status\":\"UP\"'
         continue-on-error: true
       - name: inspect ecr viewer container
         working-directory: ./containers/${{env.CONTAINER}}/tests/integration
         run: |
           docker inspect orchestration-ecr-viewer-1 --format='{{json .State.Health}}' | jq
-      - name: docker events
-        working-directory: ./containers/${{env.CONTAINER}}/tests/integration
-        run: |
-          docker events --filter event=health_status --filter container=orchestration-ecr-viewer-1
       - name: Install pytest
         run: pip install pytest
       - name: Install dependencies
