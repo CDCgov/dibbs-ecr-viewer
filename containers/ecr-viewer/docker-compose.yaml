@@ -49,7 +49,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "echo -e \"GET /ecr-viewer/api/health-check HTTP/1.1\r\nHost: host.docker.internal\r\nConnection: close\r\n\r\n\" | nc host.docker.internal 3000 | grep -q '\"status\":\"UP\"'",
+          "wget -qO- http://host.docker.internal:3000/ecr-viewer/api/health-check | grep -q '\"status\":\"UP\"'",
         ]
       interval: 5s
       timeout: 300s
