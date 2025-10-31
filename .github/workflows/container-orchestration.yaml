@@ -105,7 +105,7 @@ jobs:
       - name: health check test
         working-directory: ./containers/${{env.CONTAINER}}/tests/integration
         run: |
-          docker compose -f ../../docker-compose.yaml up --build --wait
+          docker compose -f ../../docker-compose.yaml --verbose up --build --wait
           wget -qO- http://host.docker.internal:3000/ecr-viewer/api/health-check | grep '\"status\":\"UP\"'
       - name: Install pytest
         run: pip install pytest
