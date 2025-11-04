@@ -6,7 +6,7 @@ import {
   GCP_SOURCE,
 } from "@/app/data/blobStorage/utils";
 
-import { saveFhirData, saveWithMetadata } from "./service";
+import { saveToStorage, saveWithMetadata } from "./service";
 
 /**
  * Handles POST requests and saves the FHIR Bundle to the database.
@@ -63,10 +63,11 @@ export async function POST(request: NextRequest) {
     );
     return NextResponse.json({ message }, { status });
   } else {
-    const { message, status } = await saveFhirData(
+    const { message, status } = await saveToStorage(
       fhirBundle,
       ecrId,
       saveSource,
+      "fhir"
     );
     return NextResponse.json({ message }, { status });
   }

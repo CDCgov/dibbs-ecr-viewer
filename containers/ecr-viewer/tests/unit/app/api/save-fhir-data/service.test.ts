@@ -3,7 +3,7 @@
  */
 import { Bundle } from "fhir/r4";
 
-import { saveFhirData } from "@/app/api/save-fhir-data/service";
+import { saveToStorage } from "@/app/api/save-fhir-data/service";
 import { saveToAzure } from "@/app/data/blobStorage/azureClient";
 import { saveToGCP } from "@/app/data/blobStorage/gcpClient";
 import { saveToS3 } from "@/app/data/blobStorage/s3Client";
@@ -28,26 +28,26 @@ describe("saveFhirData", () => {
   it("should call s3", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
-    await saveFhirData(fhirBundle, ecrId, "s3");
+    await saveToStorage(fhirBundle, ecrId, "s3");
     expect(saveToS3).toHaveBeenCalledOnce();
   });
 
   it("should call azure", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
-    await saveFhirData(fhirBundle, ecrId, "azure");
+    await saveToStorage(fhirBundle, ecrId, "azure");
     expect(saveToAzure).toHaveBeenCalledOnce();
   });
 
   it("should call gcp", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
-    await saveFhirData(fhirBundle, ecrId, "gcp");
+    await saveToStorage(fhirBundle, ecrId, "gcp");
     expect(saveToGCP).toHaveBeenCalledOnce();
   });
 
   it("should return an error for an invalid save source", async () => {
-    const result = await saveFhirData(fhirBundle, ecrId, "invalid-source");
+    const result = await saveToStorage(fhirBundle, ecrId, "invalid-source");
 
     expect(result).toEqual({
       message:

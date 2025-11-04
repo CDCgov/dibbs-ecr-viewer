@@ -47,23 +47,33 @@ export const s3HealthCheck = async () => {
 
 /**
  * Saves a FHIR bundle to an AWS S3 bucket.
- * @param body - The string content to be saved.
+ * @param body - The string or buffer (zip file) content to be saved.
  * @param objectKey - The name of the blob.
+ * @param prefix - Prefix for saving to bucket.
  * @returns An object containing the status and message.
  */
 export const saveToS3 = async (
-  body: string,
+  body: string | Buffer,
   objectKey: string,
+  prefix: string
 ): Promise<BlobResponse> => {
   const bucketName = process.env.ECR_BUCKET_NAME;
-
   try {
+
+    const isBuffer = Buffer.isBuffer(body);
+
+    const contentType = isBuffer
+        ? "application/zip"
+        : "application/json";
+
     const input = {
       Body: body,
       Bucket: bucketName,
       Key: objectKey,
-      ContentType: "application/json",
+      ContentType: contentType,
+      Prefix: prefix
     };
+
     const command = new PutObjectCommand(input);
     const response: PutObjectCommandOutput = await s3Client.send(command);
     const httpStatusCode = response?.$metadata?.httpStatusCode;

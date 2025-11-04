@@ -7,7 +7,7 @@ import {
   orchestrationRequest,
 } from "@/app/api/process-ecr/service";
 import {
-  saveFhirData,
+  saveToStorage,
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
 import { S3_SOURCE } from "@/app/data/blobStorage/utils";
@@ -64,7 +64,7 @@ describe("orchestrationRequest", () => {
         },
       }),
     });
-    (saveFhirData as jest.Mock).mockResolvedValue({
+    (saveToStorage as jest.Mock).mockResolvedValue({
       status: 200,
       message: "Success",
     });
@@ -72,7 +72,7 @@ describe("orchestrationRequest", () => {
     const response = await orchestrationRequest({ ecr: mockFile }, false);
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
-    expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
+    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
   });
 
   it("should return fhir bundle when requested", async () => {
@@ -84,7 +84,7 @@ describe("orchestrationRequest", () => {
         },
       }),
     });
-    (saveFhirData as jest.Mock).mockResolvedValue({
+    (saveToStorage as jest.Mock).mockResolvedValue({
       status: 200,
       message: "Success",
     });
@@ -96,7 +96,7 @@ describe("orchestrationRequest", () => {
       message: "Success",
       bundle: mockEcr,
     });
-    expect(saveFhirData).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
+    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
   });
 
   it("should return 500 status when orchestration response fails", async () => {

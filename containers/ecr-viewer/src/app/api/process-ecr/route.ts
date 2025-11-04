@@ -2,7 +2,9 @@ import { Bundle, FhirResource } from "fhir/r4";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import {orchestrationRequest, saveXmlToStorage} from "./service";
+import {deleteFromStorage} from "@/app/api/save-fhir-data/service";
+
+import {orchestrationRequest, getEcrIdFromXml, zipAndSaveXml} from "./service";
 
 interface ProcessEcrResponse {
   message: string;
@@ -28,7 +30,7 @@ const processZipSchema = z
   .object({
     upload_file: z
       .instanceof(File)
-      .refine((file) => file.type === "application/zip", {
+      .refine((file) => file.type === "application/zip" || file.type === "application/octet-stream", {
         message: "File must be a zip",
       }),
     ...returnBundle,
@@ -45,9 +47,12 @@ const processZipSchema = z
  */
 export const POST = async (
   request: NextRequest,
-): Promise<NextResponse<ProcessEcrResponse>> => {
+): Promise<NextResponse> => {
+
+    // Promise<NextResponse<ProcessEcrResponse>> => {
   // Parse out the form from the request
   let rawBody: object;
+  let ecrId: string | undefined = undefined
   try {
     const contentType = request.headers.get("content-type");
     if (contentType?.includes("form-")) {
@@ -62,6 +67,7 @@ export const POST = async (
     );
   }
 
+
   // Got here via the withProcessZipRewrite middleware
   const routeSchema = request.url.endsWith("process-zip")
     ? processZipSchema
@@ -69,19 +75,25 @@ export const POST = async (
 
   try {
     const { return_fhir_bundle, ...body } = routeSchema.parse(rawBody);
-    console.log("Env var: ", process.env.SAVE_XML)
     if(process.env.SAVE_XML){
-      console.log("Inside 09")
-
-      await saveXmlToStorage(body)
+      ecrId = await getEcrIdFromXml(body)
+      await zipAndSaveXml(body, ecrId)
     }
 
-    const { status, ...payload } = await orchestrationRequest(
-      body,
-      return_fhir_bundle === "true",
-    );
-    return NextResponse.json(payload, { status });
+    // const { status, ...payload } = await orchestrationRequest(
+    //   body,
+    //   return_fhir_bundle === "true",
+    // );
+    // return NextResponse.json(payload, { status });
+    // TODO Delete line below
+    return NextResponse.json({});
   } catch (error: unknown) {
+
+    if(process.env.SAVE_XML && ecrId){
+      // Delete saved XML if eCR processing fails
+      await deleteFromStorage(ecrId, process.env.SOURCE, "xml")
+    }
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
