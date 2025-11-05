@@ -146,13 +146,7 @@
                 }
               ]
             },
-            "mode": "snapshot",
-            "extension": [
-              {
-                "url": "http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12",
-                "valueString": "COVID-19 screening due to potential exposure"
-              }
-            ]
+            "mode": "snapshot"
           },
           {
             "id": "f2d48b52-5a31-4bf7-9cd8-912e3f678d45",

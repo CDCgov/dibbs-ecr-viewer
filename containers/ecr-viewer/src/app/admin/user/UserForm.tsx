@@ -269,10 +269,7 @@ export const ProgramFieldSet = ({
     <FieldSet legend="Program area access">
       <span>
         {isStandardUser ? (
-          <>
-            Select one or more program areas
-            <RequiredMarker />
-          </>
+          <>Select one or more program areas</>
         ) : (
           <>Admins will be able to see all program areas and conditions</>
         )}

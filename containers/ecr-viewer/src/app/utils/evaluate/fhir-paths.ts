@@ -94,7 +94,7 @@ export type PathTypes = {
   encounterAttendingRefs: EncounterParticipant;
   encounterParticipants: EncounterParticipant;
   rrConditions: Observation;
-  clinicalReasonForVisit: ValueX;
+  clinicalReasonForVisit: string;
   patientVitalSigns: Observation;
   resolve: unknown;
   activeProblems: Condition;
@@ -389,7 +389,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   encounterDiagnosisRef: {
     type: "Reference",
-    path: "diagnosis.condition",
+    path: "entry.resource.Encounter.where(id = %id).diagnosis.condition",
   },
 
   hospitalEncounterDiagnosisRef: {
@@ -403,7 +403,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   facilityLocationRef: {
     type: "string",
-    path: "location.location.reference",
+    path: "location[0].location.reference",
   },
   compositionEncounterRef: {
     type: "string",
@@ -436,8 +436,8 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   // Clinical Info
   clinicalReasonForVisit: {
-    type: "ValueX",
-    path: "entry.resource.Composition.section.where(code.coding.exists(system = 'http://loinc.org' and code = '29299-5')).extension('http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12').value",
+    type: "string",
+    path: "entry.resource.Composition.section.where(code.coding.exists(system = 'http://loinc.org' and code = '29299-5')).text.`div`",
   },
   activeProblems: {
     type: "Condition",
