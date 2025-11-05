@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import { Bundle } from "fhir/r4";
+import { fetch, Agent, FormData } from "undici";
 
 import {
   saveToStorage,
@@ -60,12 +61,13 @@ const asString = async (v: string | File | undefined) =>
  * @param rawBodyEntries - raw body entries
  * @param rawBodyEntries.ecr - ecr data
  * @param rawBodyEntries.rr - rr data
+ * @param fetchAgent - the Undici agent that dispatches the request
  * @returns orchestration response
  */
-export const getOrchestrationResponse = async ({
-  ecr,
-  rr,
-}: RequestBody): Promise<BundleInfo> => {
+export const getOrchestrationResponse = async (
+  { ecr, rr }: RequestBody,
+  fetchAgent: Agent,
+): Promise<BundleInfo> => {
   const bodyObj: Record<string, string | File | undefined> = {
     message_type: "ecr",
     include_error_types: "[errors]",
@@ -99,6 +101,7 @@ export const getOrchestrationResponse = async ({
     method: "post",
     body,
     headers,
+    dispatcher: fetchAgent,
   });
 
   if (response.status !== 200) {
@@ -110,7 +113,7 @@ export const getOrchestrationResponse = async ({
     });
     throw new Error(message);
   } else {
-    const resp: OrchestrationRawResponse = await response.json();
+    const resp = (await response.json()) as OrchestrationRawResponse;
     return {
       ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
       metadata:
@@ -141,15 +144,18 @@ const saveToSource = (
  * Save the zip via orchestration
  * @param body - Parsed body of the request
  * @param returnBundle - whether to return the fhir bundle (default false)
+ * @param fetchAgent - the Undici agent that dispatches the request
  * @returns An object containing the status and message.
  */
 export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
+  // 1 hour timeout should allow any eCR to process
+  fetchAgent = new Agent({ headersTimeout: 3600000 }),
 ) => {
   let orchestrationResp: BundleInfo;
   try {
-    orchestrationResp = await getOrchestrationResponse(body);
+    orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
   } catch (error: unknown) {
     const message = "Failed to process orchestration response";
     console.error({ message, error });
