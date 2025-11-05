@@ -121,7 +121,6 @@ export const deleteFromAzure = async (
     if (!response.succeeded) {
       throw new Error(`HTTP Status Code: ${response._response.status}`);
     }
-
     return DELETE_SUCCESS;
   } catch (error: unknown) {
     console.error({

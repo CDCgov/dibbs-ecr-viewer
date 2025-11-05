@@ -231,7 +231,6 @@ export const zipAndSaveXml = async (
   } else if (typeof body.ecr === "string") {
     // XML String path
     const zip = new JSZip();
-
     zip.file(`${ecrId}-CDA_eICR.xml`, body.ecr);
 
     // add RR if exists and is string

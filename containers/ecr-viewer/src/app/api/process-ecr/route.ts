@@ -75,20 +75,24 @@ export const POST = async (
 
   try {
     const { return_fhir_bundle, ...body } = routeSchema.parse(rawBody);
+
     if(process.env.SAVE_XML){
       ecrId = await getEcrIdFromXml(body)
       await zipAndSaveXml(body, ecrId)
     }
 
-    // const { status, ...payload } = await orchestrationRequest(
-    //   body,
-    //   return_fhir_bundle === "true",
-    // );
-    // return NextResponse.json(payload, { status });
-    // TODO Delete line below
-    return NextResponse.json({});
-  } catch (error: unknown) {
+    const { status, ...payload } = await orchestrationRequest(
+      body,
+      return_fhir_bundle === "true",
+    );
 
+    if (status >= 500) {
+      throw new Error(`Orchestration returned ${status}`);
+    }
+
+    return NextResponse.json(payload, { status });
+
+  } catch (error: unknown) {
     if(process.env.SAVE_XML && ecrId){
       // Delete saved XML if eCR processing fails
       await deleteFromStorage(ecrId, process.env.SOURCE, "xml")

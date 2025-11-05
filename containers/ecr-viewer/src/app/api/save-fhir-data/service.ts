@@ -52,11 +52,10 @@ export const saveToStorage = async (
   } else if(fileType === "xml" && contents instanceof Buffer){
       body = contents;
       objectKey = `${ecrId}.zip`;
-      prefix = fileType
   }
 
   if (saveSource === S3_SOURCE) {
-    return await saveToS3(body, objectKey, prefix);
+    return await saveToS3(body, objectKey);
   }
   else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(body, objectKey);
@@ -89,8 +88,9 @@ export const deleteFromStorage = async (
     if(fileType === "fhir") {
         objectKey = `${ecrId}.json`;
     } else if(fileType === "xml"){
-        objectKey = `xml/${ecrId}.json`;
+        objectKey = `${ecrId}.zip`;
     }
+    console.log("About to delete")
   if (saveSource === S3_SOURCE) {
     return await deleteFromS3(objectKey);
   } else if (saveSource === AZURE_SOURCE) {
