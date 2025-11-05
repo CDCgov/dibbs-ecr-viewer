@@ -61,12 +61,7 @@ export const saveToStorage = async (
   else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(body, objectKey);
   } else if (saveSource === GCP_SOURCE) {
-      return {
-          message:
-              'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
-          status: 400,
-      };
-    // return await saveToGCP(body, objectKey);
+    return await saveToGCP(body, objectKey);
   } else {
     return {
       message:
