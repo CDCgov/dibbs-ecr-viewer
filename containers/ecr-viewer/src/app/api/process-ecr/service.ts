@@ -1,7 +1,8 @@
 import { XMLParser } from "fast-xml-parser";
 import { Bundle } from "fhir/r4";
-import { fetch, Agent, FormData } from "undici";
+import JSZip from "jszip";
 
+import { fetch, Agent, FormData } from "undici";
 import {
   saveToStorage,
   saveWithMetadata,
@@ -11,7 +12,6 @@ import {
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
-import JSZip from "jszip";
 
 interface OrchestrationRawResponse {
   message: string;

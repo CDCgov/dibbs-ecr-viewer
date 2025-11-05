@@ -42,9 +42,8 @@ export const saveToStorage = async (
   saveSource: string,
   fileType: string,
 ): Promise<SaveResponse> => {
-  let body: string | Buffer = "";
-  let objectKey = "";
-  let prefix = "";
+  let body: string | Buffer = ""
+  let objectKey = ""
 
   if (fileType === "fhir") {
     body = JSON.stringify(contents);

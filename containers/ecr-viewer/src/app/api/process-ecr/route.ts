@@ -54,8 +54,10 @@ const processZipSchema = z
  * @param request - The incoming request object.
  * @returns A `NextResponse` object with a JSON payload indicating the success message.
  */
-export const POST = async (request: NextRequest): Promise<NextResponse> => {
-  // Promise<NextResponse<ProcessEcrResponse>> => {
+export const POST = async (
+  request: NextRequest,
+): Promise<NextResponse<ProcessEcrResponse>> => {
+
   // Parse out the form from the request
   let rawBody: object;
   let ecrId: string | undefined = undefined;
@@ -72,6 +74,7 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
       { status: 400 },
     );
   }
+
 
   // Got here via the withProcessZipRewrite middleware
   const routeSchema = request.url.endsWith("process-zip")
@@ -96,6 +99,7 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
     }
 
     return NextResponse.json(payload, { status });
+
   } catch (error: unknown) {
     if (process.env.SAVE_XML && ecrId) {
       // Delete saved XML if eCR processing fails
