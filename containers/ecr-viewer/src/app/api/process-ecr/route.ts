@@ -2,9 +2,13 @@ import { Bundle, FhirResource } from "fhir/r4";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import {deleteFromStorage} from "@/app/api/save-fhir-data/service";
+import { deleteFromStorage } from "@/app/api/save-fhir-data/service";
 
-import {orchestrationRequest, getEcrIdFromXml, zipAndSaveXml} from "./service";
+import {
+  orchestrationRequest,
+  getEcrIdFromXml,
+  zipAndSaveXml,
+} from "./service";
 
 interface ProcessEcrResponse {
   message: string;
@@ -30,9 +34,14 @@ const processZipSchema = z
   .object({
     upload_file: z
       .instanceof(File)
-      .refine((file) => file.type === "application/zip" || file.type === "application/octet-stream", {
-        message: "File must be a zip",
-      }),
+      .refine(
+        (file) =>
+          file.type === "application/zip" ||
+          file.type === "application/octet-stream",
+        {
+          message: "File must be a zip",
+        },
+      ),
     ...returnBundle,
   })
   .transform((input) => ({
@@ -45,14 +54,11 @@ const processZipSchema = z
  * @param request - The incoming request object.
  * @returns A `NextResponse` object with a JSON payload indicating the success message.
  */
-export const POST = async (
-  request: NextRequest,
-): Promise<NextResponse> => {
-
-    // Promise<NextResponse<ProcessEcrResponse>> => {
+export const POST = async (request: NextRequest): Promise<NextResponse> => {
+  // Promise<NextResponse<ProcessEcrResponse>> => {
   // Parse out the form from the request
   let rawBody: object;
-  let ecrId: string | undefined = undefined
+  let ecrId: string | undefined = undefined;
   try {
     const contentType = request.headers.get("content-type");
     if (contentType?.includes("form-")) {
@@ -67,7 +73,6 @@ export const POST = async (
     );
   }
 
-
   // Got here via the withProcessZipRewrite middleware
   const routeSchema = request.url.endsWith("process-zip")
     ? processZipSchema
@@ -76,9 +81,9 @@ export const POST = async (
   try {
     const { return_fhir_bundle, ...body } = routeSchema.parse(rawBody);
 
-    if(process.env.SAVE_XML){
-      ecrId = await getEcrIdFromXml(body)
-      await zipAndSaveXml(body, ecrId)
+    if (process.env.SAVE_XML) {
+      ecrId = await getEcrIdFromXml(body);
+      await zipAndSaveXml(body, ecrId);
     }
 
     const { status, ...payload } = await orchestrationRequest(
@@ -91,11 +96,10 @@ export const POST = async (
     }
 
     return NextResponse.json(payload, { status });
-
   } catch (error: unknown) {
-    if(process.env.SAVE_XML && ecrId){
+    if (process.env.SAVE_XML && ecrId) {
       // Delete saved XML if eCR processing fails
-      await deleteFromStorage(ecrId, process.env.SOURCE, "xml")
+      await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
     }
 
     if (error instanceof z.ZodError) {

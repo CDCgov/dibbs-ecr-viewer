@@ -53,23 +53,22 @@ export const s3HealthCheck = async () => {
  */
 export const saveToS3 = async (
   body: string | Buffer,
-  objectKey: string
+  objectKey: string,
 ): Promise<BlobResponse> => {
   const bucketName = process.env.ECR_BUCKET_NAME;
   try {
-
     const isBuffer = Buffer.isBuffer(body);
 
-    const contentType = isBuffer
-        ? "application/zip"
-        : "application/json";
+    const contentType = isBuffer ? "application/zip" : "application/json";
 
     const input = {
       Body: body,
       Bucket: bucketName,
       Key: objectKey,
       ContentType: contentType,
-      ContentLength: Buffer.isBuffer(body) ? body.length : Buffer.byteLength(body),
+      ContentLength: Buffer.isBuffer(body)
+        ? body.length
+        : Buffer.byteLength(body),
     };
 
     const command = new PutObjectCommand(input);

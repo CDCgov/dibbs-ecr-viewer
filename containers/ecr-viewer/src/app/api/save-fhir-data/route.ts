@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       fhirBundle,
       ecrId,
       saveSource,
-      "fhir"
+      "fhir",
     );
     return NextResponse.json({ message }, { status });
   }

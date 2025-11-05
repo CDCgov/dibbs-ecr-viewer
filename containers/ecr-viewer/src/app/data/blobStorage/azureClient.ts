@@ -71,12 +71,9 @@ export const saveToAzure = async (
   }
 
   try {
-
     const isBuffer = Buffer.isBuffer(body);
 
-    const contentType = isBuffer
-        ? "application/zip"
-        : "application/json";
+    const contentType = isBuffer ? "application/zip" : "application/json";
 
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
 

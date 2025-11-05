@@ -40,24 +40,23 @@ export const saveToStorage = async (
   contents: Bundle | Buffer,
   ecrId: string,
   saveSource: string,
-  fileType: string
+  fileType: string,
 ): Promise<SaveResponse> => {
-  let body: string | Buffer = ""
-  let objectKey = ""
-  let prefix = ""
+  let body: string | Buffer = "";
+  let objectKey = "";
+  let prefix = "";
 
-  if(fileType === "fhir") {
-      body = JSON.stringify(contents);
-      objectKey = `${ecrId}.json`;
-  } else if(fileType === "xml" && contents instanceof Buffer){
-      body = contents;
-      objectKey = `${ecrId}.zip`;
+  if (fileType === "fhir") {
+    body = JSON.stringify(contents);
+    objectKey = `${ecrId}.json`;
+  } else if (fileType === "xml" && contents instanceof Buffer) {
+    body = contents;
+    objectKey = `${ecrId}.zip`;
   }
 
   if (saveSource === S3_SOURCE) {
     return await saveToS3(body, objectKey);
-  }
-  else if (saveSource === AZURE_SOURCE) {
+  } else if (saveSource === AZURE_SOURCE) {
     return await saveToAzure(body, objectKey);
   } else if (saveSource === GCP_SOURCE) {
     return await saveToGCP(body, objectKey);
@@ -81,16 +80,16 @@ export const saveToStorage = async (
 export const deleteFromStorage = async (
   ecrId: string,
   saveSource: string,
-  fileType: string
+  fileType: string,
 ): Promise<SaveResponse> => {
-    let objectKey = ""
+  let objectKey = "";
 
-    if(fileType === "fhir") {
-        objectKey = `${ecrId}.json`;
-    } else if(fileType === "xml"){
-        objectKey = `${ecrId}.zip`;
-    }
-    console.log("About to delete")
+  if (fileType === "fhir") {
+    objectKey = `${ecrId}.json`;
+  } else if (fileType === "xml") {
+    objectKey = `${ecrId}.zip`;
+  }
+  console.log("About to delete");
   if (saveSource === S3_SOURCE) {
     return await deleteFromS3(objectKey);
   } else if (saveSource === AZURE_SOURCE) {

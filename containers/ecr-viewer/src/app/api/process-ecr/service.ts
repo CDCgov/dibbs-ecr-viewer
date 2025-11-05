@@ -181,25 +181,25 @@ export const orchestrationRequest = async (
  * @param body - Parsed body of the request
  * @returns The eCR ID as a string
  */
-export const getEcrIdFromXml = async (
-    body: RequestBody,
-): Promise<string> => {
-
+export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   if (typeof body.ecr === "string") {
-    const output = xmlToJson(body.ecr)
-    return output.ClinicalDocument.id["@_root"]
-
+    const output = xmlToJson(body.ecr);
+    return output.ClinicalDocument.id["@_root"];
   } else if (body.ecr instanceof File && body.ecr.type === "application/xml") {
-    const output = xmlToJson(await body.ecr.text())
-    return output.ClinicalDocument.id["@_root"]
-
-  } else if (body.ecr instanceof File && (body.ecr.type === "application/zip" || body.ecr.type === "application/octet-stream")) {
-
-    const unzipped = await unzipXml(body.ecr)
-    const output = xmlToJson(unzipped)
-    return output.ClinicalDocument.id["@_root"]
+    const output = xmlToJson(await body.ecr.text());
+    return output.ClinicalDocument.id["@_root"];
+  } else if (
+    body.ecr instanceof File &&
+    (body.ecr.type === "application/zip" ||
+      body.ecr.type === "application/octet-stream")
+  ) {
+    const unzipped = await unzipXml(body.ecr);
+    const output = xmlToJson(unzipped);
+    return output.ClinicalDocument.id["@_root"];
   } else {
-    throw new Error("Unsupported upload type. eCRs must be an xml string, XML file, or zipped XML file");
+    throw new Error(
+      "Unsupported upload type. eCRs must be an xml string, XML file, or zipped XML file",
+    );
   }
 };
 
@@ -215,25 +215,24 @@ export const xmlToJson = (xmlString: string) => {
     trimValues: true,
   });
   return parser.parse(xmlString);
-}
-
+};
 
 /**
  * Zip an xml if needed then save to storage
  * @param body - Body of the upload containing the XML file(s) to be saved
  * @param ecrId - ID of the uploaded eCR for naming saved files
  */
-export const zipAndSaveXml = async (
-    body: RequestBody,
-    ecrId: string
-) => {
-  if (body.ecr instanceof File && (body.ecr.type === "application/zip" || body.ecr.type === "application/octet-stream")) {
+export const zipAndSaveXml = async (body: RequestBody, ecrId: string) => {
+  if (
+    body.ecr instanceof File &&
+    (body.ecr.type === "application/zip" ||
+      body.ecr.type === "application/octet-stream")
+  ) {
     // Already Zipped
     const arrayBuffer = await body.ecr.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     await saveToStorage(buffer, ecrId, process.env.SOURCE, "xml");
-
   } else if (typeof body.ecr === "string") {
     // XML String path
     const zip = new JSZip();
@@ -261,8 +260,7 @@ export const zipAndSaveXml = async (
     const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
     await saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
   }
-}
-
+};
 
 /**
  * Unzip and clean up a zipped XML
@@ -275,10 +273,11 @@ export const unzipXml = async (file: File) => {
 
   // Looping through the files in the zip and ignoring junk files added by Mac zipping utils
   for (const [name, entry] of Object.entries(zip.files)) {
-    if (entry.dir || name.startsWith("__MACOSX/") || name.startsWith("._")) continue;
+    if (entry.dir || name.startsWith("__MACOSX/") || name.startsWith("._"))
+      continue;
     if (name.endsWith(".xml")) {
       return await entry.async("string");
     }
   }
   throw new Error("No XML file found in the provided zip.");
-}
+};
