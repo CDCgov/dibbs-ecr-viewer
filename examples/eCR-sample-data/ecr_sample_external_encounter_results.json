@@ -541,7 +541,7 @@
               "coding": [
                 {
                   "code": "35064005",
-                  "display": "Dark stools (finding)",
+                  "display": "Dark stools",
                   "system": "http://snomed.info/sct"
                 }
               ]
@@ -567,7 +567,7 @@
               "coding": [
                 {
                   "code": "43025008",
-                  "display": "Paroxysmal cough (finding)",
+                  "display": "Paroxysmal cough",
                   "system": "http://snomed.info/sct"
                 }
               ]
@@ -1081,7 +1081,7 @@
               "coding": [
                 {
                   "code": "407377005",
-                  "display": "Female-to-male transsexual (finding)",
+                  "display": "Female-to-male transsexual",
                   "system": "http://snomed.info/sct"
                 }
               ]
@@ -1132,7 +1132,7 @@
               "coding": [
                 {
                   "code": "32911000",
-                  "display": "Homeless (finding)",
+                  "display": "Homeless",
                   "system": "http://snomed.info/sct"
                 }
               ]

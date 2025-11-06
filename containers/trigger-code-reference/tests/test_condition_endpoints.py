@@ -131,7 +131,7 @@ def test_stamp_conditions_no_resources_to_stamp(patched_get_services_list):
     ]
     input = {
         "bundle": message,
-        # 276197005 = SNOMED CT code for "Diphtheria contact (finding)"
+        # 276197005 = SNOMED CT code for "Diphtheria contact"
         # This code represents exposure to or contact with someone who has Diphtheria
         "conditions": ["276197005"],
     }

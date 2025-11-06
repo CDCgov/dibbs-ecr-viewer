@@ -1459,7 +1459,7 @@
                     {
                       "code": "407377005",
                       "system": "http://snomed.info/sct",
-                      "display": "Female-to-male transsexual (finding)"
+                      "display": "Female-to-male transsexual"
                     }
                   ]
                 }
@@ -1589,7 +1589,7 @@
                 {
                   "code": "268910001",
                   "system": "http://snomed.info/sct",
-                  "display": "Patient's condition improved (finding)"
+                  "display": "Patient's condition improved"
                 }
               ]
             }
@@ -1834,7 +1834,7 @@
             {
               "code": "237364002",
               "system": "http://snomed.info/sct",
-              "display": "Stillbirth (finding)"
+              "display": "Stillbirth"
             }
           ]
         },
@@ -1949,7 +1949,7 @@
             {
               "code": "42814007",
               "system": "http://snomed.info/sct",
-              "display": "Mid postpartum state (finding)"
+              "display": "Mid postpartum state"
             }
           ]
         },
@@ -2509,7 +2509,7 @@
             {
               "code": "32911000",
               "system": "http://snomed.info/sct",
-              "display": "Homeless (finding)"
+              "display": "Homeless"
             }
           ]
         },
