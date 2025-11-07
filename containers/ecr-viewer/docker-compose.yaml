@@ -14,7 +14,7 @@ services:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY
       - NBS_API_PUB_KEY
-      - SAVE_XML=true
+      - SAVE_XML=false
       # METADATA DATABASE
       - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
       - METADATA_DATABASE_SCHEMA
