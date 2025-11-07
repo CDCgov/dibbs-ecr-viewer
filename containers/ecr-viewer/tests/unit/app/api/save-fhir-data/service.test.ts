@@ -3,6 +3,7 @@
  */
 import { Bundle } from "fhir/r4";
 
+import {createFakeZip} from "../../../helpers";
 import { saveToStorage } from "@/app/api/save-fhir-data/service";
 import { saveToAzure } from "@/app/data/blobStorage/azureClient";
 import { saveToGCP } from "@/app/data/blobStorage/gcpClient";
@@ -14,8 +15,10 @@ jest.mock("@/app/data/blobStorage/s3Client");
 jest.mock("@/app/data/metadataDb/database");
 
 describe("saveFhirData", () => {
-  const fhirBundle: Bundle = { resourceType: "Bundle", type: "batch" };
+  const fhirBundle: Bundle = {resourceType: "Bundle", type: "batch"};
   const ecrId = "1234";
+
+  const mockZip = createFakeZip()
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -25,24 +28,45 @@ describe("saveFhirData", () => {
     process.env.ECR_BUCKET_NAME = "";
   });
 
-  it("should call s3", async () => {
+  it("should call s3 when given a fhir bundle", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
     await saveToStorage(fhirBundle, ecrId, "s3", "fhir");
     expect(saveToS3).toHaveBeenCalledOnce();
   });
 
-  it("should call azure", async () => {
+  it("should call azure when given a fhir bundle", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
     await saveToStorage(fhirBundle, ecrId, "azure", "fhir");
     expect(saveToAzure).toHaveBeenCalledOnce();
   });
 
-  it("should call gcp", async () => {
+  it("should call gcp when given a fhir bundle", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
     await saveToStorage(fhirBundle, ecrId, "gcp", "fhir");
+    expect(saveToGCP).toHaveBeenCalledOnce();
+  });
+
+  it("should call s3 when given a zip", async () => {
+    process.env.ECR_BUCKET_NAME = "bucket";
+
+    await saveToStorage(mockZip, ecrId, "s3", "xml");
+    expect(saveToS3).toHaveBeenCalledOnce();
+  });
+
+  it("should call azure when given a zip", async () => {
+    process.env.ECR_BUCKET_NAME = "bucket";
+
+    await saveToStorage(mockZip, ecrId, "azure", "xml");
+    expect(saveToAzure).toHaveBeenCalledOnce();
+  });
+
+  it("should call gcp when given a zip", async () => {
+    process.env.ECR_BUCKET_NAME = "bucket";
+
+    await saveToStorage(mockZip, ecrId, "gcp", "xml");
     expect(saveToGCP).toHaveBeenCalledOnce();
   });
 
@@ -56,7 +80,7 @@ describe("saveFhirData", () => {
 
     expect(result).toEqual({
       message:
-        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
+          'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
       status: 400,
     });
   });

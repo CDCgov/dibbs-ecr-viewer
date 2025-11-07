@@ -26,6 +26,7 @@ describe("orchestrationRequest", () => {
   });
   const mockEcr = { id: "123" };
   const mockMetadata = { key: "value" };
+
   let mockPool: Interceptable;
 
   beforeAll(() => {
@@ -97,7 +98,7 @@ describe("orchestrationRequest", () => {
     );
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
-    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
+    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE, "fhir");
   });
 
   it("should return fhir bundle when requested", async () => {
@@ -128,7 +129,7 @@ describe("orchestrationRequest", () => {
       message: "Success",
       bundle: mockEcr,
     });
-    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE);
+    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE, "fhir");
   });
 
   it("should return 500 status when orchestration response fails", async () => {
