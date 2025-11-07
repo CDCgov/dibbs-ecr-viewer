@@ -28,26 +28,26 @@ describe("saveFhirData", () => {
   it("should call s3", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
-    await saveToStorage(fhirBundle, ecrId, "s3");
+    await saveToStorage(fhirBundle, ecrId, "s3", "fhir");
     expect(saveToS3).toHaveBeenCalledOnce();
   });
 
   it("should call azure", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
-    await saveToStorage(fhirBundle, ecrId, "azure");
+    await saveToStorage(fhirBundle, ecrId, "azure", "fhir");
     expect(saveToAzure).toHaveBeenCalledOnce();
   });
 
   it("should call gcp", async () => {
     process.env.ECR_BUCKET_NAME = "bucket";
 
-    await saveToStorage(fhirBundle, ecrId, "gcp");
+    await saveToStorage(fhirBundle, ecrId, "gcp", "fhir");
     expect(saveToGCP).toHaveBeenCalledOnce();
   });
 
   it("should return an error for an invalid save source", async () => {
-    const result = await saveToStorage(fhirBundle, ecrId, "invalid-source");
+    const result = await saveToStorage(fhirBundle, ecrId, "invalid-source", "fhir");
 
     expect(result).toEqual({
       message:
