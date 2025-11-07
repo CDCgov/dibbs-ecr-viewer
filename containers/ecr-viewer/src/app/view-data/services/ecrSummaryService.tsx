@@ -132,7 +132,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(encounter),
+      value: evaluateEncounterDiagnosis(fhirBundle, encounter),
     },
     {
       title: "Facility Name",
