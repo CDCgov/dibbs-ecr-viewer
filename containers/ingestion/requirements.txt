@@ -9,7 +9,6 @@ fhirpathpy
 google-auth
 google-cloud-storage
 httpx>=0.28.1
-packaging
 phonenumbers
 polling
 pycountry>=24.6.1
