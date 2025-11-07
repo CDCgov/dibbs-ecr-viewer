@@ -2,11 +2,14 @@
  * @jest-environment node
  */
 
+import JSZip from "jszip";
 import { Agent, FormData, Interceptable, MockAgent } from "undici";
 
+import {createFakeZip} from "../../../helpers";
 import {
+  getEcrIdFromXml,
   getOrchestrationResponse,
-  orchestrationRequest,
+  orchestrationRequest, unzipXml, xmlToJson, zipAndSaveXml,
 } from "@/app/api/process-ecr/service";
 import {
   saveToStorage,
@@ -335,4 +338,223 @@ describe("orchestrationRequest", () => {
       );
     });
   });
+
+  describe("XML saving functions", ()=>{
+    const ecrId = "test-ecr-id";
+    const xmlContent = "<ClinicalDocument>Inside ZIP</ClinicalDocument>";
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      process.env.SOURCE = S3_SOURCE;
+    });
+
+    describe("zipAndSaveXml", () => {
+      it("zipAndSaveXml should take in an xml string then call saveToStorage with a zipBuffer", async () => {
+        const body = { ecr: "<ClinicalDocument>Fake XML</ClinicalDocument>" };
+
+        await zipAndSaveXml(body, ecrId);
+
+        expect(saveToStorage).toHaveBeenCalledTimes(1);
+
+        const [zipBuffer, passedId, source, type] =
+            (saveToStorage as jest.Mock).mock.calls[0];
+
+        expect(passedId).toBe(ecrId);
+        expect(source).toBe(S3_SOURCE);
+        expect(type).toBe("xml");
+
+        expect(Buffer.isBuffer(zipBuffer)).toBe(true);
+        // Confirm it's a zip
+        expect(zipBuffer.slice(0, 2).toString("hex")).toBe("504b");
+
+        const zip = await JSZip.loadAsync(zipBuffer);
+        expect(Object.keys(zip.files)).toContain(`${ecrId}-CDA_eICR.xml`);
+      });
+
+      it("zipAndSaveXml should take in a zip then call saveToStorage with a zipBuffer", async () => {
+        const fakeZipBuffer = createFakeZip("<xml/>");
+        const mockZip = new File([fakeZipBuffer], "test.zip", {
+          type: "application/zip",
+        });
+
+        const body = { ecr: mockZip };
+
+        await zipAndSaveXml(body, ecrId);
+
+        expect(saveToStorage).toHaveBeenCalledTimes(1);
+
+        const [bufferArg, passedId, source, type] =
+            (saveToStorage as jest.Mock).mock.calls[0];
+
+        expect(passedId).toBe(ecrId);
+        expect(source).toBe(S3_SOURCE);
+        expect(type).toBe("xml");
+
+        expect(Buffer.isBuffer(bufferArg)).toBe(true);
+        // Confirm it's a zip
+        expect(bufferArg.slice(0, 2).toString("hex")).toBe("504b");
+      });
+
+      it("zipAndSaveXml should take in a file then call saveToStorage with a zipBuffer", async () => {
+        const mockFile = new File(
+            ["<ClinicalDocument>From File</ClinicalDocument>"],
+            "ecr.xml",
+            { type: "application/xml" },
+        );
+
+        const body = { ecr: mockFile };
+
+        await zipAndSaveXml(body, ecrId);
+
+        expect(saveToStorage).toHaveBeenCalledTimes(1);
+
+        const [zipBuffer, passedId, source, type] =
+            (saveToStorage as jest.Mock).mock.calls[0];
+
+        expect(passedId).toBe(ecrId);
+        expect(source).toBe(S3_SOURCE);
+        expect(type).toBe("xml");
+
+        expect(Buffer.isBuffer(zipBuffer)).toBe(true);
+        // Confirm it's a zip
+        expect(zipBuffer.slice(0, 2).toString("hex")).toBe("504b");
+
+        const zip = await JSZip.loadAsync(zipBuffer);
+        expect(Object.keys(zip.files)).toContain(`${ecrId}-CDA_eICR.xml`);
+      });
+    });
+
+    describe("unzipXml", () => {
+      it("should extract the xml string from a valid zip", async () => {
+        const fakeZipBuffer = createFakeZip(xmlContent);
+        const mockFile = new File([fakeZipBuffer], "test.zip", {
+          type: "application/zip",
+        });
+
+        const loadSpy = jest
+            .spyOn(JSZip, "loadAsync")
+            .mockResolvedValue({
+              files: {
+                "CDA_eICR.xml": {
+                  dir: false,
+                  async: jest.fn().mockResolvedValue(xmlContent),
+                },
+              },
+            } as any);
+
+        const result = await unzipXml(mockFile);
+
+        expect(loadSpy).toHaveBeenCalledTimes(1);
+        expect(result).toBe(xmlContent);
+      });
+
+      it("should throw when no XML file is found", async () => {
+        const fakeZipBuffer = createFakeZip("junk");
+        const mockFile = new File([fakeZipBuffer], "test.zip", {
+          type: "application/zip",
+        });
+
+        jest.spyOn(JSZip, "loadAsync").mockResolvedValue({
+          files: {
+            "junk.txt": { dir: false, async: jest.fn() },
+          },
+        } as any);
+
+        await expect(unzipXml(mockFile)).rejects.toThrow(
+            "No XML file found in the provided zip.",
+        );
+      });
+    });
+
+    describe("xmlToJson", () => {
+      it("should correctly parse a simple XML string into JSON", () => {
+        const xml = `
+      <ClinicalDocument>
+        <patient>
+          <name>Lando Calrissian</name>
+          <age>42</age>
+        </patient>
+      </ClinicalDocument>
+    `;
+
+        const result = xmlToJson(xml);
+
+        expect(result).toEqual({
+          ClinicalDocument: {
+            patient: {
+              name: "Lando Calrissian",
+              age: 42,
+            },
+          },
+        });
+      });
+
+      it("should include attributes with prefix @_ and trim values", () => {
+        const xml = `
+      <root id="123" type="test">
+        <child>  value with spaces  </child>
+      </root>
+    `;
+
+        const result = xmlToJson(xml);
+
+        expect(result).toEqual({
+          root: {
+            "@_id": "123",
+            "@_type": "test",
+            child: "value with spaces", // trimmed
+          },
+        });
+      });
+
+      it("should handle empty XML elements gracefully", () => {
+        const xml = `<root><emptyElement/></root>`;
+
+        const result = xmlToJson(xml);
+
+        expect(result).toEqual({
+          root: {
+            emptyElement: "",
+          },
+        });
+      });
+    });
+
+    describe("getEcrIdFromXml", () => {
+      const xmlString = `
+    <ClinicalDocument>
+      <id root="1234-uuid" />
+    </ClinicalDocument>
+  `;
+
+      it("extracts ID when ecr is a string", async () => {
+        const result = await getEcrIdFromXml({ ecr: xmlString } as any);
+        expect(result).toBe("1234-uuid");
+      });
+
+      it("extracts ID when ecr is an XML file", async () => {
+        const xmlFile = new File([xmlString], "test.xml", { type: "application/xml" });
+        const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
+        expect(result).toBe("1234-uuid");
+      });
+
+      it("extracts ID when ecr is a zipped XML file", async () => {
+        const zip = new JSZip();
+        zip.file("whatever.xml", xmlString);
+        const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+
+        const zipFile = new File([zipBuffer], "test.zip", { type: "application/zip" });
+
+        const result = await getEcrIdFromXml({ ecr: zipFile } as any);
+        expect(result).toBe("1234-uuid");
+      });
+
+      it("throws for unsupported upload types", async () => {
+        const invalidFile = new File(["data"], "test.txt", { type: "text/plain" });
+        await expect(getEcrIdFromXml({ ecr: invalidFile } as any)).rejects.toThrow(
+            "Unsupported upload type. eCRs must be an xml string, XML file, or zipped XML file",
+        );
+      });
+    });
+  })
 });

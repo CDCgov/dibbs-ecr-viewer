@@ -17,8 +17,9 @@ jest.mock("@/app/data/metadataDb/database");
 describe("saveFhirData", () => {
   const fhirBundle: Bundle = { resourceType: "Bundle", type: "batch" };
   const ecrId = "1234";
+  const xmlString = "<ClinicalDocument>Fake ECR XML</ClinicalDocument>";
 
-  const mockZip = createFakeZip();
+  const mockZip = createFakeZip(xmlString)
 
   beforeEach(() => {
     jest.clearAllMocks();
