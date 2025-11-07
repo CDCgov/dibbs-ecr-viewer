@@ -400,9 +400,9 @@ describe("orchestrationRequest", () => {
 
       it("zipAndSaveXml should take in a file then call saveToStorage with a zipBuffer", async () => {
         const mockFile = new File(
-          ["<ClinicalDocument>From File</ClinicalDocument>"],
-          "ecr.xml",
-          { type: "application/xml" },
+            ["<ClinicalDocument>From File</ClinicalDocument>"],
+            "ecr.xml",
+            { type: "application/xml" },
         );
 
         const body = { ecr: mockFile };
@@ -465,6 +465,10 @@ describe("orchestrationRequest", () => {
           "No XML file found in the provided zip.",
         );
       });
+
+      afterEach(() => {
+            jest.restoreAllMocks(); // restore JSZip.loadAsync for following tests
+          });
     });
 
     describe("xmlToJson", () => {
