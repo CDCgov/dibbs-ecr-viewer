@@ -5,11 +5,14 @@
 import JSZip from "jszip";
 import { Agent, FormData, Interceptable, MockAgent } from "undici";
 
-import {createFakeZip} from "../../../helpers";
+import { createFakeZip } from "../../../helpers";
 import {
   getEcrIdFromXml,
   getOrchestrationResponse,
-  orchestrationRequest, unzipXml, xmlToJson, zipAndSaveXml,
+  orchestrationRequest,
+  unzipXml,
+  xmlToJson,
+  zipAndSaveXml,
 } from "@/app/api/process-ecr/service";
 import {
   saveToStorage,
@@ -339,7 +342,7 @@ describe("orchestrationRequest", () => {
     });
   });
 
-  describe("XML saving functions", ()=>{
+  describe("XML saving functions", () => {
     const ecrId = "test-ecr-id";
     const xmlContent = "<ClinicalDocument>Inside ZIP</ClinicalDocument>";
 
@@ -356,8 +359,8 @@ describe("orchestrationRequest", () => {
 
         expect(saveToStorage).toHaveBeenCalledTimes(1);
 
-        const [zipBuffer, passedId, source, type] =
-            (saveToStorage as jest.Mock).mock.calls[0];
+        const [zipBuffer, passedId, source, type] = (saveToStorage as jest.Mock)
+          .mock.calls[0];
 
         expect(passedId).toBe(ecrId);
         expect(source).toBe(S3_SOURCE);
@@ -383,8 +386,8 @@ describe("orchestrationRequest", () => {
 
         expect(saveToStorage).toHaveBeenCalledTimes(1);
 
-        const [bufferArg, passedId, source, type] =
-            (saveToStorage as jest.Mock).mock.calls[0];
+        const [bufferArg, passedId, source, type] = (saveToStorage as jest.Mock)
+          .mock.calls[0];
 
         expect(passedId).toBe(ecrId);
         expect(source).toBe(S3_SOURCE);
@@ -397,9 +400,9 @@ describe("orchestrationRequest", () => {
 
       it("zipAndSaveXml should take in a file then call saveToStorage with a zipBuffer", async () => {
         const mockFile = new File(
-            ["<ClinicalDocument>From File</ClinicalDocument>"],
-            "ecr.xml",
-            { type: "application/xml" },
+          ["<ClinicalDocument>From File</ClinicalDocument>"],
+          "ecr.xml",
+          { type: "application/xml" },
         );
 
         const body = { ecr: mockFile };
@@ -408,8 +411,8 @@ describe("orchestrationRequest", () => {
 
         expect(saveToStorage).toHaveBeenCalledTimes(1);
 
-        const [zipBuffer, passedId, source, type] =
-            (saveToStorage as jest.Mock).mock.calls[0];
+        const [zipBuffer, passedId, source, type] = (saveToStorage as jest.Mock)
+          .mock.calls[0];
 
         expect(passedId).toBe(ecrId);
         expect(source).toBe(S3_SOURCE);
@@ -431,16 +434,14 @@ describe("orchestrationRequest", () => {
           type: "application/zip",
         });
 
-        const loadSpy = jest
-            .spyOn(JSZip, "loadAsync")
-            .mockResolvedValue({
-              files: {
-                "CDA_eICR.xml": {
-                  dir: false,
-                  async: jest.fn().mockResolvedValue(xmlContent),
-                },
-              },
-            } as any);
+        const loadSpy = jest.spyOn(JSZip, "loadAsync").mockResolvedValue({
+          files: {
+            "CDA_eICR.xml": {
+              dir: false,
+              async: jest.fn().mockResolvedValue(xmlContent),
+            },
+          },
+        } as any);
 
         const result = await unzipXml(mockFile);
 
@@ -461,7 +462,7 @@ describe("orchestrationRequest", () => {
         } as any);
 
         await expect(unzipXml(mockFile)).rejects.toThrow(
-            "No XML file found in the provided zip.",
+          "No XML file found in the provided zip.",
         );
       });
     });
@@ -533,7 +534,9 @@ describe("orchestrationRequest", () => {
       });
 
       it("extracts ID when ecr is an XML file", async () => {
-        const xmlFile = new File([xmlString], "test.xml", { type: "application/xml" });
+        const xmlFile = new File([xmlString], "test.xml", {
+          type: "application/xml",
+        });
         const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
         expect(result).toBe("1234-uuid");
       });
@@ -543,18 +546,24 @@ describe("orchestrationRequest", () => {
         zip.file("whatever.xml", xmlString);
         const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
 
-        const zipFile = new File([zipBuffer], "test.zip", { type: "application/zip" });
+        const zipFile = new File([zipBuffer], "test.zip", {
+          type: "application/zip",
+        });
 
         const result = await getEcrIdFromXml({ ecr: zipFile } as any);
         expect(result).toBe("1234-uuid");
       });
 
       it("throws for unsupported upload types", async () => {
-        const invalidFile = new File(["data"], "test.txt", { type: "text/plain" });
-        await expect(getEcrIdFromXml({ ecr: invalidFile } as any)).rejects.toThrow(
-            "Unsupported upload type. eCRs must be an xml string, XML file, or zipped XML file",
+        const invalidFile = new File(["data"], "test.txt", {
+          type: "text/plain",
+        });
+        await expect(
+          getEcrIdFromXml({ ecr: invalidFile } as any),
+        ).rejects.toThrow(
+          "Unsupported upload type. eCRs must be an xml string, XML file, or zipped XML file",
         );
       });
     });
-  })
+  });
 });

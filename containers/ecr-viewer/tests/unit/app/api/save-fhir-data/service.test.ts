@@ -19,7 +19,7 @@ describe("saveFhirData", () => {
   const ecrId = "1234";
   const xmlString = "<ClinicalDocument>Fake ECR XML</ClinicalDocument>";
 
-  const mockZip = createFakeZip(xmlString)
+  const mockZip = createFakeZip(xmlString);
 
   beforeEach(() => {
     jest.clearAllMocks();
