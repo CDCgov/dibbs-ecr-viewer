@@ -98,7 +98,12 @@ describe("orchestrationRequest", () => {
     );
 
     expect(response).toStrictEqual({ status: 200, message: "Success" });
-    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE, "fhir");
+    expect(saveToStorage).toHaveBeenCalledWith(
+      mockEcr,
+      "123",
+      S3_SOURCE,
+      "fhir",
+    );
   });
 
   it("should return fhir bundle when requested", async () => {
@@ -129,7 +134,12 @@ describe("orchestrationRequest", () => {
       message: "Success",
       bundle: mockEcr,
     });
-    expect(saveToStorage).toHaveBeenCalledWith(mockEcr, "123", S3_SOURCE, "fhir");
+    expect(saveToStorage).toHaveBeenCalledWith(
+      mockEcr,
+      "123",
+      S3_SOURCE,
+      "fhir",
+    );
   });
 
   it("should return 500 status when orchestration response fails", async () => {

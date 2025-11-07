@@ -3,7 +3,7 @@
  */
 import { Bundle } from "fhir/r4";
 
-import {createFakeZip} from "../../../helpers";
+import { createFakeZip } from "../../../helpers";
 import { saveToStorage } from "@/app/api/save-fhir-data/service";
 import { saveToAzure } from "@/app/data/blobStorage/azureClient";
 import { saveToGCP } from "@/app/data/blobStorage/gcpClient";
@@ -15,10 +15,10 @@ jest.mock("@/app/data/blobStorage/s3Client");
 jest.mock("@/app/data/metadataDb/database");
 
 describe("saveFhirData", () => {
-  const fhirBundle: Bundle = {resourceType: "Bundle", type: "batch"};
+  const fhirBundle: Bundle = { resourceType: "Bundle", type: "batch" };
   const ecrId = "1234";
 
-  const mockZip = createFakeZip()
+  const mockZip = createFakeZip();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -80,7 +80,7 @@ describe("saveFhirData", () => {
 
     expect(result).toEqual({
       message:
-          'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
+        'Invalid save source. Please provide a valid value for \'saveSource\' ("s3", "azure", or "gcp").',
       status: 400,
     });
   });
