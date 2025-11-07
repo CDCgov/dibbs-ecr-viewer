@@ -278,7 +278,7 @@ Home: 123-456-6909`,
     it("should return the use, intake comment", () => {
       const actual = evaluateAlcoholUse(BundleWithPatient);
       expect(actual).toEqual(
-        "Use: Current drinker of alcohol (finding)\n" +
+        "Use: Current drinker of alcohol\n" +
           "Intake (standard drinks/week): .29/d\n" +
           "Comment: 1-2 drinks 2 to 4 times a month",
       );
