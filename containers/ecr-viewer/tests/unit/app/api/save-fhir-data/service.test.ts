@@ -47,7 +47,12 @@ describe("saveFhirData", () => {
   });
 
   it("should return an error for an invalid save source", async () => {
-    const result = await saveToStorage(fhirBundle, ecrId, "invalid-source", "fhir");
+    const result = await saveToStorage(
+      fhirBundle,
+      ecrId,
+      "invalid-source",
+      "fhir",
+    );
 
     expect(result).toEqual({
       message:
