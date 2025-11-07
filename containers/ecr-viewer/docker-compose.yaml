@@ -46,8 +46,33 @@ services:
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-ecr-viewer}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-P7e6LOwZXhJq1MCo0GSRAQFqBOYDuaBx}
       - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8070/realms/master}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "echo -e \"GET /ecr-viewer/api/health-check HTTP/1.1\r\nHost: 0.0.0.0\r\nConnection: close\r\n\r\n\" \  | nc 0.0.0.0 3000 \  | grep -q '\"status\":\"UP\"'",
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 15
     profiles:
       - ecr-viewer
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+        required: false
+      postgres:
+        condition: service_healthy
+        required: false
+      azure-storage:
+        condition: service_healthy
+        required: false
+      aws-storage:
+        condition: service_healthy
+        required: false
+      gcp-storage:
+        condition: service_started
+        required: false
 
   postgres:
     image: "postgres:alpine"
