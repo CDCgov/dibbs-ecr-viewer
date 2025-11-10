@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Encounter should match snapshot 1`] = `
 <div>
@@ -100,6 +100,25 @@ exports[`Encounter should match snapshot 1`] = `
             <div
               class="section__line_gray"
             />
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Encounter Diagnosis
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list"
+                >
+                  diagnosis 1, diagnosis 2
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
           </div>
         </div>
         <div

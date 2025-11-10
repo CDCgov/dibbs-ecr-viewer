@@ -1,0 +1,25 @@
+services:
+  migrator:
+    image: curlimages/curl
+    command: >
+      sh -c " echo 'Running migrations' && curl -v -X POST https://dev42.dibbs.cloud/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
+    environment:
+      - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
+
+  locust:
+    image: locustio/locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./locustfile.py:/home/locust/locustfile.py
+      - ./requirements.txt:/home/locust/requirements.txt
+      - ./baseECR/star-wars:/home/locust/baseECR/star-wars
+    command: >
+      -f /home/locust/locustfile.py
+      --web-host 0.0.0.0
+      --host https://dev42.dibbs.cloud/ecr-viewer
+    environment:
+      - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
