@@ -93,11 +93,11 @@ const sleep = async (ms: number) => {
 
 const enterEmailHitNext = async (page: Page, userName: string) => {
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
-  await sleep(100);
+  await sleep(200);
   await page.getByLabel("Enter your email, phone, or Skype.").fill(userName!);
-  await sleep(100);
+  await sleep(200);
   await page.getByRole("button", { name: "Next" }).click();
-  await sleep(100);
+  await sleep(200);
 };
 
 // Helper to log into via Azure AD and go to the viewer page
