@@ -106,7 +106,7 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
 
   try {
     await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
-    await sleep(100);
+    await sleep(200);
   } catch {
     try {
       // try again
@@ -120,9 +120,9 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
   }
 
   await page.getByRole("textbox", { name: "password" }).fill(password!);
-  await sleep(100);
+  await sleep(200);
   await page.getByRole("button", { name: "Sign in" }).click();
-  await sleep(100);
+  await sleep(200);
   await page.getByRole("button", { name: "No" }).click();
 };
 
