@@ -1,77 +1,121 @@
 import os
 import random
 import shutil
-import subprocess
 
 from locust import HttpUser, between, task
 
 
-class EcrViewer(HttpUser):
+class ProcessEcrUser(HttpUser):
+    """
+    Load testing the /process-ecr endpoint
+    On start: Zips all files in baseECR/star-wars
+    Task: Chooses random zip file to send through /process-ecr. Expects a 200 or 409
+    """
+
     wait_time = between(1, 5)
 
-    @task
-    def ecr_viewer(self):
-        """get the ecr viewer library page"""
-        self.client.get("/ecr-viewer")
+    def on_start(self):
+        """zip all files in baseECR/star-wars folder at start"""
+        self.files = get_zipped_files()
+        self.len_files = len(self.files)
 
     @task
-    def orchestration(self):
-        """get the orchestration endpoint"""
-        self.client.get("/orchestration")
+    def process_ecr(self):
+        """
+        Upload a zip file to the /process-ecr endpoint
+        """
+        token = os.getenv("DUMMY_NBS_JWT")
+        file = self.files[random.randint(0, self.len_files - 1)]
 
-    @task
-    def upload_zip(self):
-        """upload a zip file to the orchestration endpoint"""
-        for file in get_zipped_files():
-            with open(file, "rb") as opened_file:
-                data = {
-                    "content_type": "application/zip",
-                    "config_file_name": "sample-orchestration-s3-config.json",
-                    "data_type": "zip",
-                    "message_type": "ecr",
-                }
-                # print(f"Uploading {file}")
-                file_tuple = {
-                    "upload_file": (file, opened_file.read(), "application/zip")
-                }
-                response = self.client.post(
-                    "/orchestration/process-zip", data=data, files=file_tuple
-                )
-                self.tasks.append(check_ecr(self, file, response.json()))
+        with open(file, "rb") as opened_file:
+            data = {"return_fhir_bundle": "true"}
+            print(f"Uploading {file}")
+            file_tuple = {"ecr": (file, opened_file.read(), "application/zip")}
+            headers = {"Authorization": f"Bearer {token}"}
+
+            with self.client.post(
+                "/api/process-ecr",
+                data=data,
+                files=file_tuple,
+                headers=headers,
+                catch_response=True,
+            ) as response:
+                if response.status_code in [200, 409]:  # eCR already loaded is 409
+                    response.success()
+                    print("Success", response.status_code)
+                else:
+                    response.failure(f"Failed with status code {response.status_code}")
+
+
+class ViewEcrUser(HttpUser):
+    """
+    Load testing the /view-data endpoint
+    On start: Zips all files in baseECR/star-wars & sends through /process-ecr
+    Task: Chooses random eCR to view at the /view-data endpoint. Expects a 200
+    """
+
+    wait_time = between(1, 5)
 
     def on_start(self):
-        """install the requirements"""
-        subprocess.run(["pip", "install", "-r", "requirements.txt"])
-        pass
+        """zip all files and process all eCRs in baseECR/star-wars"""
+        token = os.getenv("DUMMY_NBS_JWT")
 
+        self.files = get_zipped_files()
+        for file in self.files:
+            with open(file, "rb") as opened_file:
+                data = {"return_fhir_bundle": "true"}
+                print(f"Uploading {file}")
+                file_tuple = {"ecr": (file, opened_file.read(), "application/zip")}
+                headers = {"Authorization": f"Bearer {token}"}
 
-def check_ecr(self, file, response):
-    """Check the ecr viewer response for eicr_id and view the ecr"""
-    if "detail" in response:
-        print(f"{file}", response["detail"])
-    if "message" in response:
-        print(f"{file}", response["message"])
-    if "processed_values" not in response:
-        print("No processed_values found in response")
-        return
-    if "parsed_values" not in response["processed_values"]:
-        print("No parsed_values found in response")
-        return
-    if "eicr_id" in response["processed_values"]["parsed_values"]:
-        print(response["processed_values"]["parsed_values"]["eicr_id"])
-        eicr_id = response["processed_values"]["parsed_values"]["eicr_id"]
-        print(f"/ecr-viewer/view-data?id={eicr_id}")
-        response = self.client.get(f"/ecr-viewer/view-data?id={eicr_id}")
-        print(response)
-    else:
-        print("No eicr_id found in response")
+                with self.client.post(
+                    "/api/process-ecr",
+                    data=data,
+                    files=file_tuple,
+                    headers=headers,
+                    catch_response=True,
+                ) as response:
+                    if response.status_code in [200, 409]:  # eCR already loaded is 409
+                        response.success()
+                        print("Success", response.status_code)
+                    else:
+                        response.failure(
+                            f"Failed with status code {response.status_code}"
+                        )
+
+    @task
+    def view_ecr(self):
+        """
+        View eCR at /view-data endpoint
+        """
+        # Future improvement: Remove hardcoding of star-wars eCRs
+        # Currently: eCRs processed with a 409 don't have the ecr_id in the response body
+        eicr_ids = [
+            "999-86a8-4a9a-aec6-b615921178df",
+            "e91bc1e8-2523-4047-a663-1e3e07812948",
+            "9408ddce-4dcb-416c-a153-82cce01839e2",
+            "10c13861-86a8-4a9a-aec6-b615921178df",
+            "db734647-fc99-424c-a864-7e3cda82e703",
+        ]
+        for eicr_id in eicr_ids:
+            with self.client.get(
+                f"/view-data?id={eicr_id}&auth={os.getenv('DUMMY_NBS_JWT')}",
+                catch_response=True,
+            ) as response:
+                if response.status_code == 200:
+                    response.success()
+                    print(f"Successfully viewed {eicr_id}")
+                else:
+                    response.failure(
+                        f"Failed to view {eicr_id}: Status {response.status_code}"
+                    )
 
 
 def get_zipped_files():
     """Get all the zipped files in the baseECR folder"""
     files = []
     BASEDIR = os.path.dirname(os.path.abspath(__file__))
-    subfolders = ["LA"]
+    subfolders = ["star-wars"]  # Only processing star-wars eCRs
     for subfolder in subfolders:
         subfolder_path = os.path.join(BASEDIR, "baseECR", subfolder)
 

@@ -35,6 +35,7 @@ import {
   evaluatePregnancyData,
   evaluateSocialData,
   getLocationName,
+  evaluateEncounterDiagnosis,
 } from "@/app/view-data/services/evaluateFhirDataService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
@@ -124,13 +125,29 @@ Home: 123-456-6909`,
     );
   });
 
-  describe("Evaluate Encounter Care Team", () => {
-    it("should return the correct Encounter care team", () => {
-      const actual = evaluateEncounterCareTeamTable(
-        BundleEcrMetadata as unknown as Bundle,
-      );
+  describe("Evaluate Encounter details", () => {
+    describe("Evaluate Encounter Care Team", () => {
+      it("should return the correct Encounter care team", () => {
+        const actual = evaluateEncounterCareTeamTable(
+          BundleEcrMetadata as unknown as Bundle,
+        );
 
-      expect(actual).toMatchSnapshot();
+        expect(actual).toMatchSnapshot();
+      });
+    });
+
+    describe("Evaluate Encounter Diagnoses", () => {
+      it("should return the correct diagnoses given an Encounter", () => {
+        const encounter = {
+          resourceType: "Encounter",
+          id: "3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
+        };
+        const actual = evaluateEncounterDiagnosis(
+          BundleEcrMetadata as unknown as Bundle,
+          encounter as unknown as Encounter,
+        );
+        expect(actual).toMatchSnapshot();
+      });
     });
   });
 
@@ -261,7 +278,7 @@ Home: 123-456-6909`,
     it("should return the use, intake comment", () => {
       const actual = evaluateAlcoholUse(BundleWithPatient);
       expect(actual).toEqual(
-        "Use: Current drinker of alcohol (finding)\n" +
+        "Use: Current drinker of alcohol\n" +
           "Intake (standard drinks/week): .29/d\n" +
           "Comment: 1-2 drinks 2 to 4 times a month",
       );
