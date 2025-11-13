@@ -1,7 +1,8 @@
-import { XMLParser } from "fast-xml-parser";
+import { DOMParser } from "@xmldom/xmldom";
 import { Bundle } from "fhir/r4";
 import JSZip from "jszip";
 import { fetch, Agent, FormData } from "undici";
+import xpath from "xpath";
 
 import {
   saveToStorage,
@@ -182,39 +183,47 @@ export const orchestrationRequest = async (
  * @returns The eCR ID as a string
  */
 export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
+  // Normalize to an XML string (accepts xml string, application/xml, or zipped)
+  let xmlString: string;
+
   if (typeof body.ecr === "string") {
-    const output = xmlToJson(body.ecr);
-    return output.ClinicalDocument.id["@_root"];
-  } else if (body.ecr instanceof File && body.ecr.type === "application/xml") {
-    const output = xmlToJson(await body.ecr.text());
-    return output.ClinicalDocument.id["@_root"];
+    xmlString = body.ecr;
   } else if (
-    body.ecr instanceof File &&
-    (body.ecr.type === "application/zip" ||
-      body.ecr.type === "application/octet-stream")
+      body.ecr instanceof File &&
+      (body.ecr.type === "application/xml" || body.ecr.type === "text/xml")
   ) {
-    const unzipped = await unzipXml(body.ecr);
-    const output = xmlToJson(unzipped);
-    return output.ClinicalDocument.id["@_root"];
+    xmlString = await body.ecr.text();
+  } else if (
+      body.ecr instanceof File &&
+      (body.ecr.type === "application/zip" || body.ecr.type === "application/octet-stream")
+  ) {
+    xmlString = await unzipXml(body.ecr);
   } else {
     throw new Error(
-      "Unsupported upload type. eCRs must be an xml string, XML file, or zipped XML file",
+        "Unsupported upload type. eCRs must be an XML string, XML file, or zipped XML file",
     );
   }
-};
 
-/**
- * Parse an XML string into JSON
- * @param xmlString - The string to be parsed
- * @returns A JSON object containing the data from the XML string
- */
-export const xmlToJson = (xmlString: string) => {
-  const parser = new XMLParser({
-    ignoreAttributes: false,
-    attributeNamePrefix: "@_",
-    trimValues: true,
-  });
-  return parser.parse(xmlString);
+  const doc = new DOMParser().parseFromString(xmlString, "text/xml");
+
+  // Namespace-aware selector for CDA
+  const select = xpath.useNamespaces({ cda: "urn:hl7-org:v3" });
+
+  let id =
+      (select('string(/cda:ClinicalDocument/cda:id/@extension)', doc) as string) ||
+      (select('string(/cda:ClinicalDocument/cda:id/@root)', doc) as string);
+
+  // Fallback if the document lacks the CDA namespace declaration
+  if (!id) {
+    id =
+        (xpath.select('string(/ClinicalDocument/id/@extension)', doc) as string) ||
+        (xpath.select('string(/ClinicalDocument/id/@root)', doc) as string);
+  }
+
+  if (!id) {
+    throw new Error("Missing ClinicalDocument id (@extension or @root).");
+  }
+  return id;
 };
 
 /**

@@ -11,7 +11,6 @@ import {
   getOrchestrationResponse,
   orchestrationRequest,
   unzipXml,
-  xmlToJson,
   zipAndSaveXml,
 } from "@/app/api/process-ecr/service";
 import {
@@ -471,60 +470,6 @@ describe("orchestrationRequest", () => {
       });
     });
 
-    describe("xmlToJson", () => {
-      it("should correctly parse a simple XML string into JSON", () => {
-        const xml = `
-      <ClinicalDocument>
-        <patient>
-          <name>Lando Calrissian</name>
-          <age>42</age>
-        </patient>
-      </ClinicalDocument>
-    `;
-
-        const result = xmlToJson(xml);
-
-        expect(result).toEqual({
-          ClinicalDocument: {
-            patient: {
-              name: "Lando Calrissian",
-              age: 42,
-            },
-          },
-        });
-      });
-
-      it("should include attributes with prefix @_ and trim values", () => {
-        const xml = `
-      <root id="123" type="test">
-        <child>  value with spaces  </child>
-      </root>
-    `;
-
-        const result = xmlToJson(xml);
-
-        expect(result).toEqual({
-          root: {
-            "@_id": "123",
-            "@_type": "test",
-            child: "value with spaces", // trimmed
-          },
-        });
-      });
-
-      it("should handle empty XML elements gracefully", () => {
-        const xml = `<root><emptyElement/></root>`;
-
-        const result = xmlToJson(xml);
-
-        expect(result).toEqual({
-          root: {
-            emptyElement: "",
-          },
-        });
-      });
-    });
-
     describe("getEcrIdFromXml", () => {
       const xmlString = `
     <ClinicalDocument>
@@ -565,7 +510,7 @@ describe("orchestrationRequest", () => {
         await expect(
           getEcrIdFromXml({ ecr: invalidFile } as any),
         ).rejects.toThrow(
-          "Unsupported upload type. eCRs must be an xml string, XML file, or zipped XML file",
+          "Unsupported upload type. eCRs must be an XML string, XML file, or zipped XML file",
         );
       });
     });

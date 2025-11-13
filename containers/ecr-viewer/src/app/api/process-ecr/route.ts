@@ -109,7 +109,7 @@ export const POST = async (
       return NextResponse.json(payload, { status });
     }
 
-    // No SAVE_XML → just orchestration
+    // Regular path without SAVE_XML set to true
     const { status, ...payload } = await orchestrationRequest(
       body,
       return_fhir_bundle === "true",
