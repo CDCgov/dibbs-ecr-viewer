@@ -66,9 +66,7 @@ export const saveToS3 = async (
       Bucket: bucketName,
       Key: objectKey,
       ContentType: contentType,
-      ContentLength: isBuffer
-        ? body.length
-        : Buffer.byteLength(body),
+      ContentLength: isBuffer ? body.length : Buffer.byteLength(body),
     };
 
     const command = new PutObjectCommand(input);
