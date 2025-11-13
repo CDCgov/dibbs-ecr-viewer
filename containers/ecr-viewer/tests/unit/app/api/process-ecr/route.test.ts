@@ -5,8 +5,12 @@ import { Bundle } from "fhir/r4";
 import { NextRequest } from "next/server";
 
 import { POST } from "@/app/api/process-ecr/route";
-import {getEcrIdFromXml, orchestrationRequest, zipAndSaveXml} from "@/app/api/process-ecr/service";
-import {deleteFromStorage} from "@/app/api/save-fhir-data/service";
+import {
+  getEcrIdFromXml,
+  orchestrationRequest,
+  zipAndSaveXml,
+} from "@/app/api/process-ecr/service";
+import { deleteFromStorage } from "@/app/api/save-fhir-data/service";
 
 jest.mock("@/app/api/process-ecr/service");
 jest.mock("@/app/api/save-fhir-data/service");
@@ -245,17 +249,15 @@ describe("POST Process ecr", () => {
     });
   });
 
-  describe("Saving XML features", ()=>{
-
-
+  describe("Saving XML features", () => {
     const mockDeleteFromStorage = deleteFromStorage as jest.Mock;
 
     const makeRequest = (body: any, url = "http://localhost/api/process-ecr") =>
-        new NextRequest(url, {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(body),
-        });
+      new NextRequest(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
     beforeEach(() => {
       jest.resetAllMocks();
@@ -306,7 +308,9 @@ describe("POST Process ecr", () => {
       (zipAndSaveXml as jest.Mock).mockResolvedValue(undefined);
       (orchestrationRequest as jest.Mock).mockRejectedValue(new Error("fail"));
 
-      const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const errorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       const req = makeRequest({ ecr: "<xml />" });
       const res = await POST(req);
@@ -315,7 +319,5 @@ describe("POST Process ecr", () => {
 
       expect(res.status).toBe(500);
     });
-  })
-
-
+  });
 });
