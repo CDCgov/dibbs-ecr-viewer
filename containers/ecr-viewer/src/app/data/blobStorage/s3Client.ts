@@ -66,7 +66,7 @@ export const saveToS3 = async (
       Bucket: bucketName,
       Key: objectKey,
       ContentType: contentType,
-      ContentLength: Buffer.isBuffer(body)
+      ContentLength: isBuffer
         ? body.length
         : Buffer.byteLength(body),
     };
