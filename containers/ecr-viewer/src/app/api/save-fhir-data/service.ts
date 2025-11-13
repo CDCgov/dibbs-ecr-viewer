@@ -88,7 +88,6 @@ export const deleteFromStorage = async (
   } else if (fileType === "xml") {
     objectKey = `${ecrId}.zip`;
   }
-  console.log("About to delete");
   if (saveSource === S3_SOURCE) {
     return await deleteFromS3(objectKey);
   } else if (saveSource === AZURE_SOURCE) {
