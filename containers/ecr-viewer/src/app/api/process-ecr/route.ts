@@ -84,12 +84,35 @@ export const POST = async (
 
     if (process.env.SAVE_XML) {
       ecrId = await getEcrIdFromXml(body);
-      await zipAndSaveXml(body, ecrId);
+
+      const [saveResult, orchestrationResult] = await Promise.allSettled([
+        zipAndSaveXml(body, ecrId),
+        orchestrationRequest(body, return_fhir_bundle === "true"),
+      ]);
+
+      if (
+          orchestrationResult.status === "rejected" ||
+          orchestrationResult.value.status >= 500
+      ) {
+        if (ecrId && saveResult.status === "fulfilled") {
+          await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
+        }
+
+        const errMsg =
+            orchestrationResult.status === "rejected"
+                ? String(orchestrationResult.reason)
+                : `Orchestration returned ${orchestrationResult.value.status}`;
+        throw new Error(errMsg);
+      }
+
+      const { status, ...payload } = orchestrationResult.value;
+      return NextResponse.json(payload, { status });
     }
 
+    // No SAVE_XML → just orchestration
     const { status, ...payload } = await orchestrationRequest(
-      body,
-      return_fhir_bundle === "true",
+        body,
+        return_fhir_bundle === "true",
     );
 
     if (status >= 500) {
@@ -98,23 +121,17 @@ export const POST = async (
 
     return NextResponse.json(payload, { status });
   } catch (error: unknown) {
-    if (process.env.SAVE_XML && ecrId) {
-      // Delete saved XML if eCR processing fails
-      await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
-    }
-
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        {
-          message: "Validation error",
-          errors: error.errors,
-        },
-        { status: 400 },
+          {
+            message: "Validation error",
+            errors: error.errors,
+          },
+          { status: 400 },
       );
     }
 
-    const message = "Internal Server Error";
-    console.error({ message, error });
-    return NextResponse.json({ message }, { status: 500 });
+    console.error("Internal Server Error:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 };
