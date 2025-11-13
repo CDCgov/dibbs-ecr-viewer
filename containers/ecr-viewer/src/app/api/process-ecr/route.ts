@@ -115,10 +115,6 @@ export const POST = async (
       return_fhir_bundle === "true",
     );
 
-    if (status >= 500) {
-      throw new Error(`Orchestration returned ${status}`);
-    }
-
     return NextResponse.json(payload, { status });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
