@@ -189,18 +189,19 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   if (typeof body.ecr === "string") {
     xmlString = body.ecr;
   } else if (
-      body.ecr instanceof File &&
-      (body.ecr.type === "application/xml" || body.ecr.type === "text/xml")
+    body.ecr instanceof File &&
+    (body.ecr.type === "application/xml" || body.ecr.type === "text/xml")
   ) {
     xmlString = await body.ecr.text();
   } else if (
-      body.ecr instanceof File &&
-      (body.ecr.type === "application/zip" || body.ecr.type === "application/octet-stream")
+    body.ecr instanceof File &&
+    (body.ecr.type === "application/zip" ||
+      body.ecr.type === "application/octet-stream")
   ) {
     xmlString = await unzipXml(body.ecr);
   } else {
     throw new Error(
-        "Unsupported upload type. eCRs must be an XML string, XML file, or zipped XML file",
+      "Unsupported upload type. eCRs must be an XML string, XML file, or zipped XML file",
     );
   }
 
@@ -210,14 +211,20 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   const select = xpath.useNamespaces({ cda: "urn:hl7-org:v3" });
 
   let id =
-      (select('string(/cda:ClinicalDocument/cda:id/@extension)', doc) as string) ||
-      (select('string(/cda:ClinicalDocument/cda:id/@root)', doc) as string);
+    (select(
+      "string(/cda:ClinicalDocument/cda:id/@extension)",
+      doc,
+    ) as string) ||
+    (select("string(/cda:ClinicalDocument/cda:id/@root)", doc) as string);
 
   // Fallback if the document lacks the CDA namespace declaration
   if (!id) {
     id =
-        (xpath.select('string(/ClinicalDocument/id/@extension)', doc) as string) ||
-        (xpath.select('string(/ClinicalDocument/id/@root)', doc) as string);
+      (xpath.select(
+        "string(/ClinicalDocument/id/@extension)",
+        doc,
+      ) as string) ||
+      (xpath.select("string(/ClinicalDocument/id/@root)", doc) as string);
   }
 
   if (!id) {
