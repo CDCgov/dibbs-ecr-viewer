@@ -91,17 +91,17 @@ export const POST = async (
       ]);
 
       if (
-          orchestrationResult.status === "rejected" ||
-          orchestrationResult.value.status >= 500
+        orchestrationResult.status === "rejected" ||
+        orchestrationResult.value.status >= 500
       ) {
         if (ecrId && saveResult.status === "fulfilled") {
           await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
         }
 
         const errMsg =
-            orchestrationResult.status === "rejected"
-                ? String(orchestrationResult.reason)
-                : `Orchestration returned ${orchestrationResult.value.status}`;
+          orchestrationResult.status === "rejected"
+            ? String(orchestrationResult.reason)
+            : `Orchestration returned ${orchestrationResult.value.status}`;
         throw new Error(errMsg);
       }
 
@@ -111,8 +111,8 @@ export const POST = async (
 
     // No SAVE_XML → just orchestration
     const { status, ...payload } = await orchestrationRequest(
-        body,
-        return_fhir_bundle === "true",
+      body,
+      return_fhir_bundle === "true",
     );
 
     if (status >= 500) {
@@ -123,15 +123,18 @@ export const POST = async (
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-          {
-            message: "Validation error",
-            errors: error.errors,
-          },
-          { status: 400 },
+        {
+          message: "Validation error",
+          errors: error.errors,
+        },
+        { status: 400 },
       );
     }
 
     console.error("Internal Server Error:", error);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 };
