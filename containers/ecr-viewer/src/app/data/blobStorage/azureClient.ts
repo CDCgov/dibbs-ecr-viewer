@@ -56,12 +56,12 @@ export const azureBlobStorageHealthCheck = async () => {
 
 /**
  * Saves a blob to Azure Blob Storage.
- * @param body - The string content to save as a blob.
+ * @param body - The string or buffer(zip) content to save as a blob.
  * @param objectKey - The name of the blob.
  * @returns An object containing the status and message.
  */
 export const saveToAzure = async (
-  body: string,
+  body: string | Buffer,
   objectKey: string,
 ): Promise<BlobResponse> => {
   const containerClient = azureBlobContainerClient();
@@ -71,10 +71,14 @@ export const saveToAzure = async (
   }
 
   try {
+    const isBuffer = Buffer.isBuffer(body);
+
+    const contentType = isBuffer ? "application/zip" : "application/json";
+
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
 
     const response = await blockBlobClient.upload(body, body.length, {
-      blobHTTPHeaders: { blobContentType: "application/json" },
+      blobHTTPHeaders: { blobContentType: contentType },
     });
 
     if (response._response.status !== 201) {
@@ -114,7 +118,6 @@ export const deleteFromAzure = async (
     if (!response.succeeded) {
       throw new Error(`HTTP Status Code: ${response._response.status}`);
     }
-
     return DELETE_SUCCESS;
   } catch (error: unknown) {
     console.error({

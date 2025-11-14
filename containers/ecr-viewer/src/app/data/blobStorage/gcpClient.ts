@@ -57,7 +57,7 @@ export const gcpHealthCheck = async () => {
  * @returns An object containing the status and message.
  */
 export const saveToGCP = async (
-  body: string,
+  body: string | Buffer,
   objectKey: string,
 ): Promise<BlobResponse> => {
   const containerClient = gcpClient();

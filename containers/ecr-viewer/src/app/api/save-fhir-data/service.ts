@@ -29,19 +29,30 @@ interface SaveResponse {
 
 /**
  * @async
- * @function saveFhirData
- * @param fhirBundle - The FHIR bundle to be saved.
+ * @function saveToStorage
+ * @param contents - The FHIR bundle or XML zip to be saved.
  * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @param saveSource - The location to save the FHIR bundle.
+ * @param fileType - The kind of file being saved, acceptable values are "xml" or "fhir"
  * @returns An object containing the status and message.
  */
-export const saveFhirData = async (
-  fhirBundle: Bundle,
+export const saveToStorage = async (
+  contents: Bundle | Buffer,
   ecrId: string,
   saveSource: string,
+  fileType: string,
 ): Promise<SaveResponse> => {
-  const body = JSON.stringify(fhirBundle);
-  const objectKey = `${ecrId}.json`;
+  let body: string | Buffer = "";
+  let objectKey = "";
+
+  if (fileType === "fhir") {
+    body = JSON.stringify(contents);
+    objectKey = `${ecrId}.json`;
+  } else if (fileType === "xml" && contents instanceof Buffer) {
+    body = contents;
+    objectKey = `${ecrId}.zip`;
+  }
+
   if (saveSource === S3_SOURCE) {
     return await saveToS3(body, objectKey);
   } else if (saveSource === AZURE_SOURCE) {
@@ -59,16 +70,24 @@ export const saveFhirData = async (
 
 /**
  * @async
- * @function deleteFhirData
+ * @function deleteFromStorage
  * @param ecrId - The unique identifier for the Electronic Case Reporting (eCR) associated with the FHIR bundle.
  * @param saveSource - The location to save the FHIR bundle.
+ * @param fileType - The kind of file being deleted, acceptable values are "xml" or "fhir"
  * @returns An object containing the status and message.
  */
-export const deleteFhirData = async (
+export const deleteFromStorage = async (
   ecrId: string,
   saveSource: string,
+  fileType: string,
 ): Promise<SaveResponse> => {
-  const objectKey = `${ecrId}.json`;
+  let objectKey = "";
+
+  if (fileType === "fhir") {
+    objectKey = `${ecrId}.json`;
+  } else if (fileType === "xml") {
+    objectKey = `${ecrId}.zip`;
+  }
   if (saveSource === S3_SOURCE) {
     return await deleteFromS3(objectKey);
   } else if (saveSource === AZURE_SOURCE) {
@@ -348,8 +367,8 @@ export const saveWithMetadata = async (
       ecrId,
       dbSchema(),
       metadata as BundleMetadata | BundleExtendedMetadata,
-      saveFhirData(fhirBundle, ecrId, saveSource),
-      () => deleteFhirData(ecrId, saveSource),
+      saveToStorage(fhirBundle, ecrId, saveSource, "fhir"),
+      () => deleteFromStorage(ecrId, saveSource, "fhir"),
     );
   } catch (error: unknown) {
     const message = "Failed to save FHIR data with metadata.";
