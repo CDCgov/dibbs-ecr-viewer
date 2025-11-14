@@ -57,7 +57,7 @@
     "motion": "^12.23.22",
     "mssql": "^11.0.1",
     "next": "^15.4.5",
-    "next-auth": "^4.24.11",
+    "next-auth": "^4.24.12",
     "node-html-parser": "^7.0.1",
     "pg": "^8.15.6",
     "postcss-discard-comments": "^7.0.4",
