@@ -81,6 +81,8 @@ namespace EnvironmentVariables {
    * These variables are used to configure the storage of FHIR data. These may be required based on DefaultAzureCredential setup.
    * @categoryDescription eCR Storage - GCP
    * These variables are used to configure the storage of FHIR data. These may not be required if using Application Default Credentials
+   * @categoryDescription eCR Storage - XML
+   * This variable is used to configure the storage of uploaded XML data. This is not required
    */
   interface EcrStorage {
     /**
@@ -143,6 +145,12 @@ namespace EnvironmentVariables {
      * @description Google Cloud project ID where resources are located.
      */
     GCP_PROJECT_ID?: string;
+
+    /**
+     * @category eCR Storage - XML
+     * @description If true, saves a copy of each original uploaded eCR xml to storage
+     */
+    SAVE_XML?: boolean;
 
     /**
      * @ignore
