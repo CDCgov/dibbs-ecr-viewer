@@ -47,23 +47,28 @@ export const s3HealthCheck = async () => {
 
 /**
  * Saves a FHIR bundle to an AWS S3 bucket.
- * @param body - The string content to be saved.
+ * @param body - The string or buffer (zip file) content to be saved.
  * @param objectKey - The name of the blob.
  * @returns An object containing the status and message.
  */
 export const saveToS3 = async (
-  body: string,
+  body: string | Buffer,
   objectKey: string,
 ): Promise<BlobResponse> => {
   const bucketName = process.env.ECR_BUCKET_NAME;
-
   try {
+    const isBuffer = Buffer.isBuffer(body);
+
+    const contentType = isBuffer ? "application/zip" : "application/json";
+
     const input = {
       Body: body,
       Bucket: bucketName,
       Key: objectKey,
-      ContentType: "application/json",
+      ContentType: contentType,
+      ContentLength: isBuffer ? body.length : Buffer.byteLength(body),
     };
+
     const command = new PutObjectCommand(input);
     const response: PutObjectCommandOutput = await s3Client.send(command);
     const httpStatusCode = response?.$metadata?.httpStatusCode;
@@ -102,14 +107,15 @@ export const deleteFromS3 = async (
     const response: DeleteObjectCommandOutput = await s3Client.send(command);
     const httpStatusCode = response?.$metadata?.httpStatusCode;
 
-    if (httpStatusCode !== 200) {
+    // S3 can return 204 on successful deletion
+    if (httpStatusCode !== 204 && httpStatusCode !== 200) {
       throw new Error(`HTTP Status Code: ${httpStatusCode}`);
     }
 
     return DELETE_SUCCESS;
   } catch (error: unknown) {
     console.error({
-      message: "Failed to delete blob to S3.",
+      message: "Failed to delete blob from S3.",
       error,
       objectKey,
     });

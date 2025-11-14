@@ -14,6 +14,7 @@ services:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY
       - NBS_API_PUB_KEY
+      - SAVE_XML=false
       # METADATA DATABASE
       - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
       - METADATA_DATABASE_SCHEMA
@@ -128,8 +129,12 @@ services:
     ports:
       - "4566:4566"
     volumes:
-      - aws-data:/persisted-data
+      - aws-data:/var/lib/localstack
       - ./seed-scripts/aws:/etc/localstack/init/ready.d
+    environment:
+      - SERVICES=s3
+      - PROVIDER_OVERRIDE_S3=asf
+      - DEBUG=1
     profiles:
       - AWS_INTEGRATED
       - AWS_PG_NON_INTEGRATED
