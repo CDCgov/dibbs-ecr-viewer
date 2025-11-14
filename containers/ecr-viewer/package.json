@@ -41,6 +41,7 @@
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "@google-cloud/storage": "^7.17.2",
     "@next/bundle-analyzer": "^15.3.1",
+    "@parcel/watcher": "^2.5.0",
     "@trussworks/react-uswds": "^10.0.2",
     "@uswds/uswds": "^3.13.0",
     "classnames": "^2.5.1",
