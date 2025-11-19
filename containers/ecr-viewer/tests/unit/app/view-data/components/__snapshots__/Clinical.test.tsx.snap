@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Snapshot test for Clinical Notes should match snapshot for non table notes 1`] = `
 <div>
@@ -282,47 +282,11 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                           <td
                             class="text-top text-pre-line"
                           >
-                            <button
-                              aria-controls="hidden-comment-r:id"
-                              aria-expanded="false"
-                              class="usa-button usa-button--unstyled"
-                              data-test-id="comment-button"
-                              data-testid="button"
-                              type="button"
+                            <span
+                              class="text-italic text-base"
                             >
-                              View
-                               
-                              details
-                            </button>
-                          </td>
-                        </tr>
-                        <tr
-                          hidden=""
-                          id="hidden-comment-r:id"
-                        >
-                          <td
-                            class="p-list"
-                            colspan="4"
-                          >
-                            <div
-                              class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
-                            />
-                            <div>
-                              <div
-                                class="grid-row"
-                              >
-                                <div
-                                  class="data-title padding-right-1"
-                                >
-                                  Reason
-                                </div>
-                                <div
-                                  class="grid-col maxw7 text-pre-line p-list"
-                                >
-                                  Struck by nonvenomous lizards, sequela
-                                </div>
-                              </div>
-                            </div>
+                              No data
+                            </span>
                           </td>
                         </tr>
                         <tr>
@@ -432,25 +396,6 @@ End: 11/02/2016 2:43 AM
                             <div
                               class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
                             />
-                            <div>
-                              <div
-                                class="grid-row"
-                              >
-                                <div
-                                  class="data-title padding-right-1"
-                                >
-                                  Reason
-                                </div>
-                                <div
-                                  class="grid-col maxw7 text-pre-line p-list"
-                                >
-                                  Routine general medical examination at a health care facility
-                                </div>
-                              </div>
-                              <div
-                                class="section__line_gray"
-                              />
-                            </div>
                             <div>
                               <div
                                 class="grid-row"
