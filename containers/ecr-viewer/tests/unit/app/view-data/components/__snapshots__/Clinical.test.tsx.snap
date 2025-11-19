@@ -439,6 +439,25 @@ End: 11/02/2016 2:43 AM
                                 <div
                                   class="data-title padding-right-1"
                                 >
+                                  Reason
+                                </div>
+                                <div
+                                  class="grid-col maxw7 text-pre-line p-list"
+                                >
+                                  Routine general medical examination at a health care facility
+                                </div>
+                              </div>
+                              <div
+                                class="section__line_gray"
+                              />
+                            </div>
+                            <div>
+                              <div
+                                class="grid-row"
+                              >
+                                <div
+                                  class="data-title padding-right-1"
+                                >
                                   Method
                                 </div>
                                 <div

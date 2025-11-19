@@ -193,9 +193,9 @@ describe("Snapshot test for Procedures (Treatment Details)", () => {
                 {
                   display:
                     "Routine general medical examination at a health care facility",
-                  text: "Routine general medical examination at a health care facility",
                 },
               ],
+              text:"Routine general medical examination at a health care facility"
             },
             status: "completed",
             subject: {
