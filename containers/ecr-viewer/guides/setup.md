@@ -169,6 +169,8 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-ecr' \
 --form 'rr=<"<PATH_TO_RR_FILE>"'
 ```
 
+When using the curl command to send zip files to ecr-viewer, the user has to use the flag type=application/zip. If not, they will receive this response message {"message":"Failed to process orchestration response"} and will see the error in the screenshot in their ecr-viewer logs.
+
 ## User and Program Area Setup
 
 ### Initialization
