@@ -454,7 +454,6 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
     {
       title: "Reason",
       value: evaluateAll(procedure, fhirPathMappings.procedureReason)
-        .map((v) => formatCodeableConcept(v))
         .join("\n"),
     },
     {
