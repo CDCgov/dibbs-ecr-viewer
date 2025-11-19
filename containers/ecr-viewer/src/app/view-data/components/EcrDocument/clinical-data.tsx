@@ -453,8 +453,9 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
   const content = [
     {
       title: "Reason",
-      value: evaluateAll(procedure, fhirPathMappings.procedureReason)
-        .join("\n"),
+      value: evaluateAll(procedure, fhirPathMappings.procedureReason).join(
+        "\n",
+      ),
     },
     {
       title: "Body Site",
