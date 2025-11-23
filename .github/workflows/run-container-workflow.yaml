@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       # Since gh workflow run does not return an ID, there is a very small chance that this may return an incorrect RUN_ID
       # This functionality should be released by Q2 2025: https://github.com/cli/cli/issues/4001#issuecomment-2558116235
