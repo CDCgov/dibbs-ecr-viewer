@@ -190,7 +190,7 @@ describe("orchestrationRequest", () => {
     );
 
     expect(response).toEqual({
-      message: "{\"somethingElse\":\"Error\"}",
+      message: '{"somethingElse":"Error"}',
       status: 500,
     });
   });

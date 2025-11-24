@@ -81,20 +81,22 @@ export const POST = async (
 
   try {
     const { return_fhir_bundle, ...body } = routeSchema.parse(rawBody);
-    const promises: [Promise<{
+    const promises: [
+      Promise<{
         message: string;
         status: number;
         bundle?: Bundle<FhirResource>;
-    }>, Promise<void>?] = [
-        orchestrationRequest(body, return_fhir_bundle === "true"),
-    ];
+      }>,
+      Promise<void>?,
+    ] = [orchestrationRequest(body, return_fhir_bundle === "true")];
 
     if (process.env.SAVE_XML) {
       ecrId = await getEcrIdFromXml(body);
       promises.push(zipAndSaveXml(body, ecrId));
     }
 
-    const [orchestrationResult, saveResult] = await Promise.allSettled(promises);
+    const [orchestrationResult, saveResult] =
+      await Promise.allSettled(promises);
 
     if (
       orchestrationResult.status === "rejected" ||
@@ -108,10 +110,7 @@ export const POST = async (
         orchestrationResult.status === "rejected"
           ? String(orchestrationResult.reason)
           : orchestrationResult.value.message;
-      return NextResponse.json(
-        { message: errMsg },
-        { status: 500 },
-      );
+      return NextResponse.json({ message: errMsg }, { status: 500 });
     }
 
     const { status, ...payload } = orchestrationResult.value;

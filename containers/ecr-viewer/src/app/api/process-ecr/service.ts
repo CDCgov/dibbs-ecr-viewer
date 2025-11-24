@@ -172,7 +172,8 @@ export const orchestrationRequest = async (
     console.error({ message, error });
 
     return {
-      message: error instanceof Error && error.message ? error.message : message,
+      message:
+        error instanceof Error && error.message ? error.message : message,
       status: 500,
     };
   }
