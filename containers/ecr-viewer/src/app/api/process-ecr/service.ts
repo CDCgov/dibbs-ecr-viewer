@@ -119,7 +119,7 @@ export const getOrchestrationResponse = async (
       const json = JSON.parse(text);
       message = json?.detail || text;
     } catch {
-      // this is just here in case the response text isn't json
+      message = text;
     }
 
     throw new Error(message);
