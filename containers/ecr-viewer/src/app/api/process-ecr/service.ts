@@ -106,12 +106,22 @@ export const getOrchestrationResponse = async (
   });
 
   if (response.status !== 200) {
-    const message = "Error thrown from orchestration";
+    let message = "";
+    const text = await response.text();
+
     console.error({
-      message,
+      message: "Error thrown from orchestration",
       status: response.status,
-      body: await response.text(),
+      body: text,
     });
+
+    try {
+      const json = JSON.parse(text);
+      message = json?.detail || text;
+    } catch {
+      // this is just here in case the response text isn't json
+    }
+
     throw new Error(message);
   } else {
     const resp = (await response.json()) as OrchestrationRawResponse;
@@ -160,8 +170,9 @@ export const orchestrationRequest = async (
   } catch (error: unknown) {
     const message = "Failed to process orchestration response";
     console.error({ message, error });
+
     return {
-      message,
+      message: error instanceof Error && error.message ? error.message : message,
       status: 500,
     };
   }
