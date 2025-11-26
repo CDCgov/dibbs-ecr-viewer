@@ -26,7 +26,10 @@ const NavLinks = async () => {
           <NavLink href="/admin/program">Program management</NavLink>
         </>
       )}
-      <UserMenu user={dbUser || sessionUser} version={process.env.APP_VERSION} />
+      <UserMenu
+        user={dbUser || sessionUser}
+        version={process.env.APP_VERSION}
+      />
     </div>
   );
 };
