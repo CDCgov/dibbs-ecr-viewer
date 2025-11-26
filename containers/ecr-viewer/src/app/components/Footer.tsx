@@ -20,6 +20,7 @@ const Footer: React.FC = () => (
       <p className="margin-left-2">
         For more information about this solution, send us an email at{" "}
         <a href="mailto:dibbs@cdc.gov">dibbs@cdc.gov</a>
+        {" "} | version {process.env.APP_VERSION}
       </p>
     </div>
   </footer>
