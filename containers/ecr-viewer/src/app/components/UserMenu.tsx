@@ -20,7 +20,7 @@ import { SignOutButton } from "./SignOutButton";
  */
 const UserMenu = ({
   user,
-  version
+  version,
 }: {
   user: Partial<Pick<User, "email" | "user_type">>;
   version: string;
