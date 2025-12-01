@@ -131,7 +131,7 @@ describe("evaluate", () => {
         } as Resource,
         fhirPathMappings.procedureReason,
       );
-      expect(res?.text).toEqual("first");
+      expect(res).toEqual("first");
     });
 
     it("should return first value and log error if multiple results", () => {
@@ -153,7 +153,7 @@ describe("evaluate", () => {
         } as Resource,
         fhirPathMappings.procedureReason,
       );
-      expect(res?.text).toEqual("first");
+      expect(res).toEqual("first");
     });
   });
 });

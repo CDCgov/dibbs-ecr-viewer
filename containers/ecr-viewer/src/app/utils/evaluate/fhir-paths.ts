@@ -131,7 +131,7 @@ export type PathTypes = {
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
   status: string;
-  procedureReason: CodeableConcept;
+  procedureReason: string;
   procedureLocationRef: Reference;
   procedureOrgRef: Reference;
   procedureBodySite: CodeableConcept;
@@ -571,7 +571,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   status: { type: "string", path: "status" },
 
   // extra details
-  procedureReason: { type: "CodeableConcept", path: "reasonCode" },
+  procedureReason: { type: "string", path: "reasonCode.text" },
   procedureLocationRef: { type: "Reference", path: "location" },
   procedureOrgRef: { type: "Reference", path: "performer.actor" },
   procedureBodySite: { type: "CodeableConcept", path: "bodySite" },
