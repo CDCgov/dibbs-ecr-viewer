@@ -81,40 +81,39 @@ export const POST = async (
 
   try {
     const { return_fhir_bundle, ...body } = routeSchema.parse(rawBody);
+    const promises: [
+      Promise<{
+        message: string;
+        status: number;
+        bundle?: Bundle<FhirResource>;
+      }>,
+      Promise<void>?,
+    ] = [orchestrationRequest(body, return_fhir_bundle === "true")];
 
     if (process.env.SAVE_XML) {
       ecrId = await getEcrIdFromXml(body);
-
-      const [saveResult, orchestrationResult] = await Promise.allSettled([
-        zipAndSaveXml(body, ecrId),
-        orchestrationRequest(body, return_fhir_bundle === "true"),
-      ]);
-
-      if (
-        orchestrationResult.status === "rejected" ||
-        orchestrationResult.value.status >= 500
-      ) {
-        if (ecrId && saveResult.status === "fulfilled") {
-          await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
-        }
-
-        const errMsg =
-          orchestrationResult.status === "rejected"
-            ? String(orchestrationResult.reason)
-            : `Orchestration returned ${orchestrationResult.value.status}`;
-        throw new Error(errMsg);
-      }
-
-      const { status, ...payload } = orchestrationResult.value;
-      return NextResponse.json(payload, { status });
+      promises.push(zipAndSaveXml(body, ecrId));
     }
 
-    // Regular path without SAVE_XML set to true
-    const { status, ...payload } = await orchestrationRequest(
-      body,
-      return_fhir_bundle === "true",
-    );
+    const [orchestrationResult, saveResult] =
+      await Promise.allSettled(promises);
 
+    if (
+      orchestrationResult.status === "rejected" ||
+      orchestrationResult.value.status >= 500
+    ) {
+      if (process.env.SAVE_XML && ecrId && saveResult!.status === "fulfilled") {
+        await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
+      }
+
+      const errMsg =
+        orchestrationResult.status === "rejected"
+          ? String(orchestrationResult.reason)
+          : orchestrationResult.value.message;
+      return NextResponse.json({ message: errMsg }, { status: 500 });
+    }
+
+    const { status, ...payload } = orchestrationResult.value;
     return NextResponse.json(payload, { status });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
