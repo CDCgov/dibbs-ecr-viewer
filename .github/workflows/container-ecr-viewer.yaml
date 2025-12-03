@@ -30,7 +30,7 @@ jobs:
   javascript-linting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -106,7 +106,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Bail out if Dependabot and Azure AD
         if: ${{ matrix.azure_ad && github.actor == 'dependabot[bot]'}}
@@ -167,6 +167,8 @@ jobs:
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
+        env:
+          APP_VERSION: vTest
 
       - name: Run Playwright tests - Migrations
         working-directory: ./containers/${{env.CONTAINER}}
@@ -185,7 +187,7 @@ jobs:
         run: docker compose --profile "*" down
 
       - name: Upload playwright report - Migrations
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-migrations-${{ matrix.config }}
@@ -223,7 +225,7 @@ jobs:
         run: docker compose --profile "*" down
 
       - name: Upload playwright report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ matrix.config }}
@@ -231,7 +233,7 @@ jobs:
           retention-days: 5
 
       - name: Upload Lighthouse report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
           name: lighthouse-report-${{ matrix.config }}
@@ -248,7 +250,7 @@ jobs:
 
       - name: Archive docker logs
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: logs-${{ matrix.config }}
           path: ./containers/${{env.CONTAINER}}/tests/e2e/e2e-run.log
@@ -268,7 +270,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
         uses: actions/setup-node@v6

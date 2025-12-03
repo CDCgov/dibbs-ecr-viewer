@@ -20,7 +20,7 @@ jobs:
       version: ${{ steps.meta.outputs.version }}
     steps:
       - name: Check Out Changes
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -83,7 +83,7 @@ jobs:
       matrix:
         container: ${{fromJson(needs.list-containers.outputs.python-containers)}}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: "0"
 
@@ -104,7 +104,7 @@ jobs:
           python make_openapi_json.py
           redoc-cli build -o $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/$CONTAINER.html openapi.json
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: container-docs-${{ matrix.container }}
           path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
@@ -116,7 +116,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: "0"
       - name: Update Container Documentation
@@ -126,7 +126,7 @@ jobs:
           cd $GITHUB_WORKSPACE/containers/ecr-viewer
           npm ci
           npm run docs -- --out $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/ecr-viewer
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: container-docs-ecr-viewer
           path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
@@ -140,7 +140,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: docs
 
