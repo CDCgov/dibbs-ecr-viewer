@@ -147,15 +147,83 @@ describe("orchestrationRequest", () => {
     );
   });
 
-  it("should return 500 status when orchestration response fails", async () => {
+  it("should return 500 status with received error details when orchestration response fails", async () => {
     mockPool
       .intercept({
         path: "/process-zip",
         method: "POST",
       })
       .reply(500, {
-        message: "Error",
+        detail: "Error",
       });
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: "Error",
+      status: 500,
+    });
+  });
+
+  it("should return 500 status with received response text when orchestration response fails with unexpected response format", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500, {
+        somethingElse: "Error",
+      });
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: '{"somethingElse":"Error"}',
+      status: 500,
+    });
+  });
+
+  it("should return 500 status with received response text when orchestration response fails with non-json response text", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500, "error");
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: "error",
+      status: 500,
+    });
+  });
+
+  it("should return 500 status with default error details when orchestration response fails without error details", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500);
 
     jest.spyOn(console, "error").mockImplementation(() => {});
 

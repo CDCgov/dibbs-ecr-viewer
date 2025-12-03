@@ -130,7 +130,7 @@ describe("POST Process ecr", () => {
 
       expect(response.status).toEqual(500);
       expect(await response.json()).toEqual({
-        message: "Internal Server Error",
+        message: "Error: oh no!",
       });
     });
   }
