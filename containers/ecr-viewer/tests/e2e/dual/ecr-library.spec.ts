@@ -11,6 +11,14 @@ test.describe("ecr library page", () => {
       await expect(page).toHaveTitle(/DIBBs eCR Viewer/);
     });
 
+    test("displays version number", async ({ page }) => {
+      await expect(page.getByText(/vTest/)).toBeVisible();
+
+      await page.getByTestId("user-menu-button").click();
+      const version = page.locator(".user-menu .version-number");
+      await expect(version).toHaveText(/vTest/);
+    });
+
     test("should pass accessibility", async ({ page }) => {
       const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
       expect(accessibilityScanResults.violations).toEqual([]);

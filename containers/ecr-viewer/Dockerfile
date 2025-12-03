@@ -2,6 +2,7 @@
 FROM node:24-alpine AS base
 
 ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -50,7 +51,6 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV APP_VERSION=$APP_VERSION
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
