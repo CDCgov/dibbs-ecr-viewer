@@ -167,6 +167,8 @@ jobs:
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
+        env:
+          APP_VERSION: vTest
 
       - name: Run Playwright tests - Migrations
         working-directory: ./containers/${{env.CONTAINER}}
