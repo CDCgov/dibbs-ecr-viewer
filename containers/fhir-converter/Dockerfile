@@ -1,7 +1,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 # Download FHIR-Converter
+
 RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch gordon/immunization-name-fix --depth 1 /App
+
 WORKDIR /App
 
 RUN dotnet restore
