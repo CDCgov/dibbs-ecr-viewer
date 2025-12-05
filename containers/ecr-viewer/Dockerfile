@@ -14,8 +14,6 @@ RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
-ARG APP_VERSION
-ENV APP_VERSION=$APP_VERSION
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY --exclude=./seed-scripts . .
@@ -28,6 +26,8 @@ RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
 WORKDIR /app
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
