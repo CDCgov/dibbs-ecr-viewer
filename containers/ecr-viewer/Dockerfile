@@ -1,5 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1.7-labs
 FROM node:24-alpine AS base
+ARG APP_VERSION
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -26,8 +27,11 @@ RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+
+# Inherits APP_VERSION from base
 ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
+
 WORKDIR /app
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
