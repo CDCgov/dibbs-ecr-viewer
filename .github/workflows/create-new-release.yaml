@@ -53,7 +53,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            APP_VERSION: ${{ steps.meta.outputs.version }}
+            APP_VERSION=${{ steps.meta.outputs.version }}
 
   # Create updated container docs for the latest release
   generate-and-update-python-container-docs:
