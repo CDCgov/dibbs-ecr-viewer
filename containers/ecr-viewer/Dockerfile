@@ -36,7 +36,6 @@ WORKDIR /app
 # Inherits APP_VERSION from base
 ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
-RUN echo "$APP_VERSION" > /app/version.txt
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
