@@ -19,6 +19,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY --exclude=./seed-scripts . .
 
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
+
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
@@ -28,11 +31,11 @@ RUN npm run build
 # Production image, copy all the files and run next
 FROM base AS runner
 
+WORKDIR /app
+
 # Inherits APP_VERSION from base
 ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
-
-WORKDIR /app
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
