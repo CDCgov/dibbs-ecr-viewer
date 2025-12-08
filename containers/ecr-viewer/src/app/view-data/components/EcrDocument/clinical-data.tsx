@@ -193,6 +193,8 @@ const evaluateAdministeredMedication = (
         medicationAdministration?.effectiveDateTime ??
         medicationAdministration?.effectivePeriod?.start,
       name: formatCodeableConcept(medication?.code),
+      dose: `${medicationAdministration.dosage?.dose?.value} ${medicationAdministration.dosage?.dose?.unit}`,
+      route: formatCodeableConcept(medicationAdministration?.dosage?.route),
       therapeuticResponse: therapeuticResponseText,
     };
   });
