@@ -16,19 +16,29 @@ describe("AdminMedTable", () => {
       <AdministeredMedication
         medicationData={[
           {
-            name: "aspirin tablet 325 mg",
+            name: "aspirin tablet",
             date: "09/29/2022",
+            dose: "325 mg",
+            route: "Intravenous",
             therapeuticResponse: "Improved condition",
           },
-          { name: "aleve tablet 325 mg", date: "09/29/2022 4:53" },
+          {
+            name: "aleve tablet",
+            date: "09/29/2022 4:53",
+            dose: "250 mg"
+          },
         ]}
       />,
     );
 
-    expect(screen.getByText("aspirin tablet 325 mg")).toBeVisible();
+    expect(screen.getByText("aspirin tablet")).toBeVisible();
+    expect(screen.getByText("325 mg")).toBeVisible();
     expect(screen.getByText("09/29/2022")).toBeVisible();
-    expect(screen.getByText("09/29/2022 4:53 AM")).toBeVisible();
     expect(screen.getByText("Improved condition")).toBeVisible();
-    expect(screen.getByText("No data")).toBeVisible();
+
+    expect(screen.getByText("aleve tablet")).toBeVisible();
+    expect(screen.getByText("250 mg")).toBeVisible();
+    expect(screen.getByText("09/29/2022 4:53 AM")).toBeVisible();
+    expect(screen.getAllByText("No data")).toBeArrayOfSize(2);
   });
 });
