@@ -25,7 +25,7 @@ describe("AdminMedTable", () => {
           {
             name: "aleve tablet",
             date: "09/29/2022 4:53",
-            dose: "250 mg"
+            dose: "250 mg",
           },
         ]}
       />,
