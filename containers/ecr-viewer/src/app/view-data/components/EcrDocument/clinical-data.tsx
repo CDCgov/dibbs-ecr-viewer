@@ -188,12 +188,16 @@ const evaluateAdministeredMedication = (
         ? therapeuticResponses.join("\n")
         : undefined;
 
+    const doseValue = medicationAdministration?.dosage?.dose?.value && medicationAdministration?.dosage?.dose?.unit ?
+        `${medicationAdministration?.dosage?.dose?.value} ${medicationAdministration?.dosage?.dose?.unit}`
+        : undefined
+
     return {
       date:
         medicationAdministration?.effectiveDateTime ??
         medicationAdministration?.effectivePeriod?.start,
       name: formatCodeableConcept(medication?.code),
-      dose: `${medicationAdministration?.dosage?.dose?.value} ${medicationAdministration?.dosage?.dose?.unit}`,
+      dose: doseValue,
       route: formatCodeableConcept(medicationAdministration?.dosage?.route),
       therapeuticResponse: therapeuticResponseText,
     };
