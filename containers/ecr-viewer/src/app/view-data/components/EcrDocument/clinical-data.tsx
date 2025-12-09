@@ -188,9 +188,11 @@ const evaluateAdministeredMedication = (
         ? therapeuticResponses.join("\n")
         : undefined;
 
-    const doseValue = medicationAdministration?.dosage?.dose?.value && medicationAdministration?.dosage?.dose?.unit ?
-        `${medicationAdministration?.dosage?.dose?.value} ${medicationAdministration?.dosage?.dose?.unit}`
-        : undefined
+    const doseValue =
+      medicationAdministration?.dosage?.dose?.value &&
+      medicationAdministration?.dosage?.dose?.unit
+        ? `${medicationAdministration?.dosage?.dose?.value} ${medicationAdministration?.dosage?.dose?.unit}`
+        : undefined;
 
     return {
       date:
