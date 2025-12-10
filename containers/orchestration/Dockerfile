@@ -4,7 +4,7 @@ ARG TRIGGER_CODE_REFERENCE_URL
 ARG SMARTY_AUTH_ID
 ARG SMARTY_AUTH_TOKEN
 
-FROM python:3.13.7-alpine
+FROM python:3.14.1-alpine
 
 RUN apk update && \
     apk upgrade --no-cache
