@@ -161,8 +161,10 @@ const saveToSource = (
 export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
-  // 1 hour timeout should allow any eCR to process
-  fetchAgent = new Agent({ headersTimeout: 3600000 }),
+  // Timeout now set by env var, defaulting to 15 mins (900000ms)
+  fetchAgent = new Agent({
+    headersTimeout: process.env.PROCESSING_TIMEOUT ? Number(process.env.PROCESSING_TIMEOUT) : 900_000,
+  }),
 ) => {
   let orchestrationResp: BundleInfo;
   try {

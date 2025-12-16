@@ -272,6 +272,18 @@ namespace EnvironmentVariables {
     SQL_SERVER_USER?: string;
     //#endregion metadata
   }
+
+  /**
+   * @categoryDescription Miscellaneous
+   * These variables are used to configure misc features of the app
+   */
+interface Miscellaneous {
+     /**
+      * @category Miscellaneous
+      * @description Set a timeout in milliseconds for eCr processing. Defaults to 900000 (15 minutes) in the app if not set
+      */
+     PROCESSING_TIMEOUT?: string;
+   }
 }
 
 /* eslint-disable unused-imports/no-unused-vars */
@@ -280,7 +292,9 @@ namespace NodeJS {
     extends EnvironmentVariables.Authentication,
       EnvironmentVariables.BaseRequired,
       EnvironmentVariables.EcrMetadataStorage,
-      EnvironmentVariables.EcrStorage {
+      EnvironmentVariables.EcrStorage,
+      EnvironmentVariables.Miscellaneous
+  {
     /**
      * @ignore
      * @description The version of the eCR Viewer. This value is set at build time.
