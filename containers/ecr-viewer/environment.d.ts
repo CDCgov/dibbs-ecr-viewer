@@ -282,7 +282,7 @@ interface Miscellaneous {
       * @category Miscellaneous
       * @description Set a timeout in milliseconds for eCr processing. Defaults to 900000 (15 minutes) in the app if not set
       */
-     PROCESSING_TIMEOUT?: string;
+     ECR_PROCESSING_TIMEOUT?: string;
    }
 }
 
