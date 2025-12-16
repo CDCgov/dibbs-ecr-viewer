@@ -151,7 +151,6 @@ const saveToSource = (
   }
 };
 
-
 /**
  * Set up the orchestration request fetch agent and timeout
  * @returns a fetch agent with configured timeout from env var or defaults to 15 minutes
@@ -159,10 +158,10 @@ const saveToSource = (
 export const createOrchestrationAgent = () => {
   return new Agent({
     headersTimeout: process.env.ECR_PROCESSING_TIMEOUT
-        ? Number(process.env.ECR_PROCESSING_TIMEOUT)
-        : 900_000,
+      ? Number(process.env.ECR_PROCESSING_TIMEOUT)
+      : 900_000,
   });
-}
+};
 
 /**
  * Save the zip via orchestration

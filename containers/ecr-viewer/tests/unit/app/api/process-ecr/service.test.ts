@@ -247,7 +247,7 @@ describe("orchestrationRequest", () => {
       const agent = createOrchestrationAgent();
 
       const optsSym = Object.getOwnPropertySymbols(agent).find(
-          (s) => s.toString() === "Symbol(options)",
+        (s) => s.toString() === "Symbol(options)",
       )!;
       const opts = (agent as any)[optsSym];
 
