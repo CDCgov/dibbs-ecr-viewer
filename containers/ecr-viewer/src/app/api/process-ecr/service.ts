@@ -163,7 +163,9 @@ export const orchestrationRequest = async (
   returnBundle: boolean = false,
   // Timeout now set by env var, defaulting to 15 mins (900000ms)
   fetchAgent = new Agent({
-    headersTimeout: process.env.ECR_PROCESSING_TIMEOUT ? Number(process.env.ECR_PROCESSING_TIMEOUT) : 900_000,
+    headersTimeout: process.env.ECR_PROCESSING_TIMEOUT
+      ? Number(process.env.ECR_PROCESSING_TIMEOUT)
+      : 900_000,
   }),
 ) => {
   let orchestrationResp: BundleInfo;
