@@ -7,6 +7,7 @@ import { Agent, FormData, Interceptable, MockAgent } from "undici";
 
 import { createFakeZip } from "../../../helpers";
 import {
+  createOrchestrationAgent,
   getEcrIdFromXml,
   getOrchestrationResponse,
   orchestrationRequest,
@@ -236,6 +237,41 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: "Failed to process orchestration response",
       status: 500,
+    });
+  });
+
+  describe("createOrchestrationAgent", () => {
+    describe("Default timeout path", () => {
+      it("If ECR_PROCESSING_TIMEOUT is not set, defaults to 900000ms timeout when creating the orchestration Agent", () => {
+        const agent = createOrchestrationAgent();
+
+        const optsSym = Object.getOwnPropertySymbols(agent).find(
+          (s) => s.toString() === "Symbol(options)",
+        )!;
+        const opts = (agent as any)[optsSym];
+
+        expect(agent).toBeInstanceOf(Agent);
+        expect(opts.headersTimeout).toBe(900000);
+      });
+    });
+
+    describe("Env var timeout path", () => {
+      afterEach(() => {
+        delete process.env.ECR_PROCESSING_TIMEOUT;
+      });
+      it("uses ECR_PROCESSING_TIMEOUT when creating the orchestration Agent", () => {
+        process.env.ECR_PROCESSING_TIMEOUT = "12345";
+
+        const agent = createOrchestrationAgent();
+
+        const optsSym = Object.getOwnPropertySymbols(agent).find(
+          (s) => s.toString() === "Symbol(options)",
+        )!;
+        const opts = (agent as any)[optsSym];
+
+        expect(agent).toBeInstanceOf(Agent);
+        expect(opts.headersTimeout).toBe(12345);
+      });
     });
   });
 

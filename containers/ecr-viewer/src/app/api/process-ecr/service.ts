@@ -152,6 +152,18 @@ const saveToSource = (
 };
 
 /**
+ * Set up the orchestration request fetch agent and timeout
+ * @returns a fetch agent with configured timeout from env var or defaults to 15 minutes
+ */
+export const createOrchestrationAgent = () => {
+  return new Agent({
+    headersTimeout: process.env.ECR_PROCESSING_TIMEOUT
+      ? Number(process.env.ECR_PROCESSING_TIMEOUT)
+      : 900_000,
+  });
+};
+
+/**
  * Save the zip via orchestration
  * @param body - Parsed body of the request
  * @param returnBundle - whether to return the fhir bundle (default false)
@@ -161,8 +173,7 @@ const saveToSource = (
 export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
-  // 1 hour timeout should allow any eCR to process
-  fetchAgent = new Agent({ headersTimeout: 3600000 }),
+  fetchAgent = createOrchestrationAgent(),
 ) => {
   let orchestrationResp: BundleInfo;
   try {
