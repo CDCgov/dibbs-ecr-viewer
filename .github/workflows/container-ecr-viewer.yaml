@@ -187,7 +187,7 @@ jobs:
         run: docker compose --profile "*" down
 
       - name: Upload playwright report - Migrations
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-migrations-${{ matrix.config }}
@@ -225,7 +225,7 @@ jobs:
         run: docker compose --profile "*" down
 
       - name: Upload playwright report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ matrix.config }}
@@ -233,7 +233,7 @@ jobs:
           retention-days: 5
 
       - name: Upload Lighthouse report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
           name: lighthouse-report-${{ matrix.config }}
@@ -250,7 +250,7 @@ jobs:
 
       - name: Archive docker logs
         if: ${{ always() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: logs-${{ matrix.config }}
           path: ./containers/${{env.CONTAINER}}/tests/e2e/e2e-run.log
