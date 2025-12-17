@@ -24,7 +24,7 @@ import {
   formatAddressList,
   formatCodeableConcept,
   formatContactPoint,
-  formatName,
+  formatName, formatQuantity,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
@@ -191,7 +191,7 @@ const evaluateAdministeredMedication = (
     const doseValue =
       medicationAdministration?.dosage?.dose?.value &&
       medicationAdministration?.dosage?.dose?.unit
-        ? `${medicationAdministration?.dosage?.dose?.value} ${medicationAdministration?.dosage?.dose?.unit}`
+        ? formatQuantity(medicationAdministration.dosage.dose)
         : undefined;
 
     return {
