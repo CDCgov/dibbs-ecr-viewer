@@ -24,7 +24,8 @@ import {
   formatAddressList,
   formatCodeableConcept,
   formatContactPoint,
-  formatName, formatQuantity,
+  formatName,
+  formatQuantity,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
