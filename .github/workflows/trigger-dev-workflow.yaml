@@ -1,5 +1,5 @@
-name: Trigger Deploy to Dev Environment
-run-name: "Trigger Deploy - Container Tag: ${{ inputs.container_tag }}, Environment: ${{ inputs.environment }}, Terraform Branch: ${{ inputs.tf_branch }} by @${{ github.actor }}"
+name: Trigger Dev Deployment Workflow
+run-name: "Trigger ${{ inputs.event_type }} on ${{ inputs.tf_branch }} - Container Tag: ${{ inputs.container_tag }}, Environment: ${{ inputs.environment }}, Terraform Branch: ${{ inputs.tf_branch }} by @${{ github.actor }}"
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
           - aws
           - azure
           - gcp
-        description: "The clould environment to deploy to."
+        description: "The service provider to deploy to."
         required: true
       event_type:
         type: choice
@@ -41,7 +41,7 @@ on:
         default: main
       environment:
         type: string
-        description: 'The clould environment to deploy to ("aws" or "azure").'
+        description: 'The service provider to deploy to ("aws" or "azure").'
         required: true
       event_type:
         type: string
