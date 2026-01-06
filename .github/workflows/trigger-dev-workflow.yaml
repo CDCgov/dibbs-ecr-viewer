@@ -31,7 +31,7 @@ on:
     inputs:
       container_tag:
         type: string
-        description: "The container tag to deploy. Example: `5.0.0`"
+        description: "The container tag to deploy. Example: `8.4.0`"
         required: true
       tf_branch:
         type: string
