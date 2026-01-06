@@ -80,5 +80,7 @@ jobs:
           echo "Successfully triggered the workflow."
           echo "Service: $service"
           echo "Repository: $repo_owner/$repo_name"
+          echo "TF Branch: $tf_branch"
+          echo "Event Type: $event_type"
           echo "Container Tag: $container_tag"
           echo "Terraform Branch: $tf_branch"
