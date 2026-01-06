@@ -1,5 +1,5 @@
 name: Trigger Dev Deployment Workflow
-run-name: "Trigger ${{ inputs.event_type }} on ${{ inputs.tf_branch }} - Container Tag: ${{ inputs.container_tag }}, Environment: ${{ inputs.environment }}, Terraform Branch: ${{ inputs.tf_branch }} by @${{ github.actor }}"
+run-name: "Trigger Dev ${{ inputs.event_type }} on ${{ inputs.tf_branch }} - Container Tag: ${{ inputs.container_tag }}, Environment: ${{ inputs.environment }}, Terraform Branch: ${{ inputs.tf_branch }} by @${{ github.actor }}"
 
 on:
   workflow_dispatch:

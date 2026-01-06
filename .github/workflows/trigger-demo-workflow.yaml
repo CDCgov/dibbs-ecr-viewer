@@ -1,12 +1,12 @@
 name: Trigger Demo Deployment Workflow
-run-name: "Trigger ${{ inputs.event_type }} - Container Tag: ${{ inputs.container_tag }} by @${{ github.actor }}"
+run-name: "Trigger Demo ${{ inputs.event_type }} - Container Tag: ${{ inputs.container_tag }} by @${{ github.actor }}"
 
 on:
   workflow_dispatch:
     inputs:
       container_tag:
         type: string
-        description: "The version to deploy. Example: v2.6.0 or main"
+        description: "The container tag to deploy. Example: `5.0.0`"
         required: true
         default: main
       event_type:
