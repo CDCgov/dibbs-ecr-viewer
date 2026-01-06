@@ -10,7 +10,7 @@ on:
         required: true
       tf_branch:
         type: string
-        description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
+        description: "The branch for Terraform checkout. Default is main."
         required: false
         default: main
       environment:
@@ -21,6 +21,13 @@ on:
           - gcp
         description: "The clould environment to deploy to."
         required: true
+      event_type:
+        type: choice
+        options:
+          - plans
+          - deploys
+        description: "The event type to trigger the workflow."
+        required: true
   workflow_call:
     inputs:
       container_tag:
@@ -29,13 +36,17 @@ on:
         required: true
       tf_branch:
         type: string
-        description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
+        description: "The branch for Terraform checkout. Default is main."
         required: false
         default: main
       environment:
         type: string
         description: 'The clould environment to deploy to ("aws" or "azure").'
         required: true
+      event_type:
+        type: string
+        description: "The event type to trigger the workflow."
+        default: deploys
 
 jobs:
   trigger_dev_workflow:
@@ -46,12 +57,13 @@ jobs:
           TF_BRANCH: ${{ inputs.tf_branch }}
           ENVIRONMENT: ${{ inputs.environment }}
           CONTAINER_TAG: ${{ inputs.container_tag }}
+          EVENT_TYPE: ${{ inputs.event_type }}
         run: |
           service="dibbs-ecr-viewer"
           repo_owner="skylight-hq"
           repo_name="dibbs-tf-envs"
           tf_branch="$TF_BRANCH"
-          event_type="trigger-dibbs-ecr-viewer-$ENVIRONMENT-dev-deploys"
+          event_type="trigger-dibbs-ecr-viewer-$ENVIRONMENT-dev-$EVENT_TYPE"
           container_tag="$CONTAINER_TAG"
           response="$(curl -L -w '%{http_code}\n' -o /dev/null \
             -X POST \
