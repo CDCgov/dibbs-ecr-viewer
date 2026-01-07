@@ -1149,9 +1149,9 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
       title: "Facility Contact",
       value: formatContactPoint(org?.telecom),
     },
-    { // TODO this doesn't exist?
+    {
       title: "Facility Type",
-      value: evaluateValue(fhirBundle, "facilityType"),
+      value: location?.type && formatCodeableConcept(location?.type[0]),
     },
     {
       title: "Facility ID",
