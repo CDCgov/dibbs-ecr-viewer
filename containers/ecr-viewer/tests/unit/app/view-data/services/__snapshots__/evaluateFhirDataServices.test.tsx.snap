@@ -1064,3 +1064,41 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
   }
 />
 `;
+
+exports[`evaluateFhirDataServices tests Evaluate facility data should return the correct Facility data 1`] = `
+{
+  "availableData": [
+    {
+      "title": "Facility Name",
+      "value": "Location Name",
+    },
+    {
+      "title": "Facility Address",
+      "value": "37 Test Cir
+Suite Test
+Test City, TT 0000
+US",
+    },
+    {
+      "title": "Facility Contact Address",
+      "value": "37 Test Cir
+Suite Test
+Test City, TT 0000
+US",
+    },
+    {
+      "title": "Facility Contact",
+      "value": "Work: 615-322-5000",
+    },
+    {
+      "title": "Facility Type",
+      "value": "Healthcare facility",
+    },
+    {
+      "title": "Facility ID",
+      "value": "test-id-value",
+    },
+  ],
+  "unavailableData": [],
+}
+`;
