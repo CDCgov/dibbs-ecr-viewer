@@ -1125,7 +1125,7 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
 
   const locationRef = evaluateOne(
     encounter,
-    fhirPathMappings.facilityLocationRef
+    fhirPathMappings.facilityLocationRef,
   );
   const location = evaluateReference<Location>(fhirBundle, locationRef);
 

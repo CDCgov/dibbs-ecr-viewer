@@ -1,5 +1,14 @@
 import { render, screen } from "@testing-library/react";
-import { Bundle, BundleEntry, Encounter, Practitioner, Location, Organization, Address, Composition } from "fhir/r4";
+import {
+  Bundle,
+  BundleEntry,
+  Encounter,
+  Practitioner,
+  Location,
+  Organization,
+  Address,
+  Composition,
+} from "fhir/r4";
 
 import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
@@ -1887,12 +1896,12 @@ Home: 123-456-6909`,
   describe("Evaluate facility data", () => {
     it("should return the correct Facility data", () => {
       const address: Address = {
-          use: "work",
-          line: ["37 Test Cir", "Suite Test"],
-          city: "Test City",
-          state: "TT",
-          country: "US",
-          postalCode: "0000",
+        use: "work",
+        line: ["37 Test Cir", "Suite Test"],
+        city: "Test City",
+        state: "TT",
+        country: "US",
+        postalCode: "0000",
       };
       const location: Location = {
         resourceType: "Location",
@@ -1948,11 +1957,11 @@ Home: 123-456-6909`,
       };
       const composition: Composition = {
         resourceType: "Composition",
-        author:[],
-        date:"",
+        author: [],
+        date: "",
         status: "final",
         title: "",
-        type:{},
+        type: {},
         encounter: {
           reference: "Encounter/encounter-id",
         },
@@ -1960,7 +1969,12 @@ Home: 123-456-6909`,
       const bundle: Bundle = {
         resourceType: "Bundle",
         type: "document",
-        entry: [{resource: composition}, {resource: encounter}, {resource: location}, {resource: organization}],
+        entry: [
+          { resource: composition },
+          { resource: encounter },
+          { resource: location },
+          { resource: organization },
+        ],
       };
 
       const actual = evaluateFacilityData(bundle);
