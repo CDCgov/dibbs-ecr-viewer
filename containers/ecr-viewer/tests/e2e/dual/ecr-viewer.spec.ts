@@ -65,9 +65,9 @@ test.describe("viewer page", () => {
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
-      await expect(navLinksLoc).toHaveCount(20);
+      await expect(navLinksLoc).toHaveCount(21);
       const navLinks = await navLinksLoc.all();
-      expect(navLinks.length).toBe(20); // sanity check
+      expect(navLinks.length).toBe(21); // sanity check
 
       // Make sure after collapsing and reopening, nav links still work
       await page.getByText("Collapse all sections").click();
@@ -100,7 +100,7 @@ test.describe("viewer page", () => {
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
-      await expect(navLinksLoc).toHaveCount(20);
+      await expect(navLinksLoc).toHaveCount(21);
       const numLinks = (await navLinksLoc.all()).length;
       let navIndex = 0;
       while (navIndex < numLinks) {
