@@ -1122,14 +1122,15 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
     fhirBundle,
     fhirPathMappings.compositionEncounterRef,
   );
-  const location = evaluateOneReference<Location>(
+
+  const locationRef = evaluateOne(
     encounter,
     fhirPathMappings.facilityLocationRef,
   );
-  const org = evaluateOneReference<Organization>(
-    fhirBundle,
-    fhirPathMappings.facilityOrgRef,
-  );
+  const location = evaluateReference<Location>(fhirBundle, locationRef);
+
+  const orgRef = evaluateOne(encounter, fhirPathMappings.facilityOrgRef);
+  const org = evaluateReference<Organization>(fhirBundle, orgRef);
 
   const facilityData = [
     {
@@ -1150,7 +1151,7 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Type",
-      value: evaluateValue(fhirBundle, "facilityType"),
+      value: location?.type && formatCodeableConcept(location?.type[0]),
     },
     {
       title: "Facility ID",
