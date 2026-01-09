@@ -1,5 +1,14 @@
 import { render, screen } from "@testing-library/react";
-import { Bundle, BundleEntry, Encounter, Practitioner } from "fhir/r4";
+import {
+  Bundle,
+  BundleEntry,
+  Encounter,
+  Practitioner,
+  Location,
+  Organization,
+  Address,
+  Composition,
+} from "fhir/r4";
 
 import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
@@ -36,6 +45,7 @@ import {
   evaluateSocialData,
   getLocationName,
   evaluateEncounterDiagnosis,
+  evaluateFacilityData,
 } from "@/app/view-data/services/evaluateFhirDataService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
@@ -1880,6 +1890,95 @@ Home: 123-456-6909`,
       const actual = getLocationName(bundle, encounter);
 
       expect(actual).toBe(expected);
+    });
+  });
+
+  describe("Evaluate facility data", () => {
+    it("should return the correct Facility data", () => {
+      const address: Address = {
+        use: "work",
+        line: ["37 Test Cir", "Suite Test"],
+        city: "Test City",
+        state: "TT",
+        country: "US",
+        postalCode: "0000",
+      };
+      const location: Location = {
+        resourceType: "Location",
+        name: "Location Name",
+        id: "location-id",
+        identifier: [
+          {
+            system: "urn:oid:1.2.840.114350.1.13.478.2.7.2.686980",
+            value: "test-id-value",
+          },
+        ],
+        address,
+        type: [
+          {
+            coding: [
+              {
+                code: "257622000",
+                system: "http://snomed.info/sct",
+                display: "Healthcare facility",
+              },
+            ],
+          },
+        ],
+      };
+      const organization: Organization = {
+        resourceType: "Organization",
+        id: "organization-id",
+        address: [address],
+        telecom: [
+          {
+            system: "phone",
+            value: "+1-615-322-5000",
+            use: "work",
+          },
+        ],
+      };
+      const encounter: Encounter = {
+        resourceType: "Encounter",
+        id: "encounter-id",
+        class: {},
+        status: "arrived",
+        location: [
+          {
+            location: {
+              reference: "Location/location-id",
+              display: "Location Name",
+            },
+          },
+        ],
+        serviceProvider: {
+          reference: "Organization/organization-id",
+        },
+      };
+      const composition: Composition = {
+        resourceType: "Composition",
+        author: [],
+        date: "",
+        status: "final",
+        title: "",
+        type: {},
+        encounter: {
+          reference: "Encounter/encounter-id",
+        },
+      };
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          { resource: composition },
+          { resource: encounter },
+          { resource: location },
+          { resource: organization },
+        ],
+      };
+
+      const actual = evaluateFacilityData(bundle);
+      expect(actual).toMatchSnapshot();
     });
   });
 });
