@@ -15,7 +15,7 @@ Display an eCR
 **URL Parameters** :
 
 - `id=[string]` where `id` is the ID of the eCR.
-- `snomed-code=[string]` Optional. The SNOMED code for the condition being viewed. If the eCR contains multiple conditions, this parameter ensures the matching condition is displayed first and expanded by default.
+- `snomed-code=[string]` Optional. If the eCR contains multiple conditions, this parameter ensures the matching condition is displayed first and expanded by default in the eCR Summary.
 - `auth=[string]` where `auth` is the authentication token for the user. Only required if NBS_PUB_KEY is set and other auth not enabled.
 
 **Method** : `GET`
