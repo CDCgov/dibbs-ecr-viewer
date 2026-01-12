@@ -8,14 +8,13 @@ services:
       context: ./
       dockerfile: Dockerfile
       args:
-        - APP_VERSION=1.0
+        - APP_VERSION=vTest
     network_mode: host
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
       - NBS_PUB_KEY
       - NBS_API_PUB_KEY
       - SAVE_XML=false
-      - APP_VERSION=vTest
       # METADATA DATABASE
       - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
       - METADATA_DATABASE_SCHEMA

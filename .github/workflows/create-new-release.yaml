@@ -53,7 +53,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            APP_VERSION: ${{ steps.meta.outputs.version }}
+            APP_VERSION=${{ steps.meta.outputs.version }}
 
   # Create updated container docs for the latest release
   generate-and-update-python-container-docs:
@@ -104,7 +104,7 @@ jobs:
           python make_openapi_json.py
           redoc-cli build -o $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/$CONTAINER.html openapi.json
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: container-docs-${{ matrix.container }}
           path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
@@ -126,7 +126,7 @@ jobs:
           cd $GITHUB_WORKSPACE/containers/ecr-viewer
           npm ci
           npm run docs -- --out $GITHUB_WORKSPACE/docs/${{ needs.tag-containers-for-release.outputs.version }}/containers/ecr-viewer
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: container-docs-ecr-viewer
           path: ./docs/${{ needs.tag-containers-for-release.outputs.version }}/containers
@@ -145,7 +145,7 @@ jobs:
           ref: docs
 
       - name: Download container docs from artifacts
-        uses: actions/download-artifact@v6.0.0
+        uses: actions/download-artifact@v7.0.0
         with:
           pattern: container-docs-*
           merge-multiple: true
