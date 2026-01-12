@@ -76,7 +76,6 @@ import {
   returnDisabilityStatusTable,
 } from "./socialHistoryService";
 
-
 // =============================================================================
 // Patient Info: Demographics
 // =============================================================================
@@ -316,7 +315,6 @@ export const evaluatePatientEthnicity = (fhirBundle: Bundle) => {
 
   return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
 };
-
 
 /**
  * Evaluate patient's preferred language

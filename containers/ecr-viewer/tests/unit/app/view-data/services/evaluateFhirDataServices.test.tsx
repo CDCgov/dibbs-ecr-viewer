@@ -63,16 +63,16 @@ describe("evaluateFhirDataService tests", () => {
       it("should return all 2 of the names", () => {
         const actual = evaluatePatientName(
           BundlePatientMultiple as unknown as Bundle,
-          false
+          false,
         );
         expect(actual).toEqual(
-          "Official: Anakin Skywalker\n" + "Nickname: Darth Vader"
+          "Official: Anakin Skywalker\n" + "Nickname: Darth Vader",
         );
       });
       it("should only return the official name for the banner", () => {
         const actual = evaluatePatientName(
           BundlePatientMultiple as unknown as Bundle,
-          true
+          true,
         );
         expect(actual).toEqual("Anakin Skywalker");
       });
@@ -140,14 +140,14 @@ describe("evaluateFhirDataService tests", () => {
 
       it("should return `Alive` when `deceasedBoolean` is `false`", () => {
         const actual = evaluatePatientVitalStatus(
-          getPatientBundle(false) as unknown as Bundle
+          getPatientBundle(false) as unknown as Bundle,
         );
         expect(actual).toEqual("Alive");
       });
 
       it("should return `Deceased` when `deceasedBoolean` is `true`", () => {
         const actual = evaluatePatientVitalStatus(
-          getPatientBundle(true) as unknown as Bundle
+          getPatientBundle(true) as unknown as Bundle,
         );
         expect(actual).toEqual("Deceased");
       });
@@ -170,7 +170,7 @@ describe("evaluateFhirDataService tests", () => {
     describe("Create Patient Age Data Prop", () => {
       it("should return Age at Death if there is a date of death", () => {
         const patientAgeProp = createPatientAgeDataProp(
-          BundleWithDeceasedPatient
+          BundleWithDeceasedPatient,
         );
         expect(patientAgeProp).toEqual({
           title: "Age at Death",
@@ -217,7 +217,7 @@ describe("evaluateFhirDataService tests", () => {
         };
 
         const patientAgeProp = createPatientAgeDataProp(
-          patientBundleWithEncounter
+          patientBundleWithEncounter,
         );
 
         expect(patientAgeProp).toEqual({
@@ -262,7 +262,7 @@ describe("evaluateFhirDataService tests", () => {
         };
 
         const patientAgeProp = createPatientAgeDataProp(
-          patientBundleWithEncounter
+          patientBundleWithEncounter,
         );
 
         expect(patientAgeProp).toEqual({
@@ -311,7 +311,7 @@ describe("evaluateFhirDataService tests", () => {
         };
 
         const patientAgeProp = createPatientAgeDataProp(
-          patientBundleWithEncounter
+          patientBundleWithEncounter,
         );
 
         expect(patientAgeProp).toEqual({
@@ -343,7 +343,7 @@ describe("evaluateFhirDataService tests", () => {
           ],
         };
         const patientAgeProp = createPatientAgeDataProp(
-          patientBundleWithCreatedDate
+          patientBundleWithCreatedDate,
         );
 
         expect(patientAgeProp).toEqual({
@@ -368,11 +368,11 @@ describe("evaluateFhirDataService tests", () => {
     it("should return Tribal Affiliation if available", () => {
       const actual = evaluateDemographicsData(BundleWithPatient);
       const ext = actual.availableData.filter(
-        (d) => d.title === "Tribal Affiliation"
+        (d) => d.title === "Tribal Affiliation",
       );
       expect(ext).toHaveLength(1);
       expect(ext[0].value).toEqual(
-        "Fort Mojave Indian Tribe of Arizona, California"
+        "Fort Mojave Indian Tribe of Arizona, California",
       );
     });
 
@@ -490,7 +490,7 @@ describe("evaluateFhirDataService tests", () => {
       });
       it("should return all 3 of the addresses", () => {
         const actual = evaluatePatientAddress(
-          BundlePatientMultiple as unknown as Bundle
+          BundlePatientMultiple as unknown as Bundle,
         );
         expect(actual).toEqual(
           "Home:\n" +
@@ -506,7 +506,7 @@ describe("evaluateFhirDataService tests", () => {
             "Work:\n" +
             "1 Main St\n" +
             "Death Star, AZ 00001\n" +
-            "USA"
+            "USA",
         );
       });
     });
@@ -514,7 +514,7 @@ describe("evaluateFhirDataService tests", () => {
     it("should return Parent/Guardian if available", () => {
       const actual = evaluateDemographicsData(BundleWithPatient);
       const ext = actual.availableData.filter(
-        (d) => d.title === "Parent/Guardian"
+        (d) => d.title === "Parent/Guardian",
       );
       expect(ext).toHaveLength(1);
       expect(ext[0].value).toEqual(
@@ -529,7 +529,7 @@ Work:
 123 Galactic Drive
 Sometown, OR 94949
 US
-Home: 123-456-6909`
+Home: 123-456-6909`,
       );
     });
 
@@ -550,7 +550,7 @@ Home: 123-456-6909`
 
     it("should have exposure contact when there is a exposure contact observation present", () => {
       const actual = evaluateSocialData(
-        BundleWithTravelHistory as unknown as Bundle
+        BundleWithTravelHistory as unknown as Bundle,
       );
 
       render(actual.availableData[0].value);
@@ -560,7 +560,7 @@ Home: 123-456-6909`
 
     it("should have travel history when there is a travel history observation present", () => {
       const actual = evaluateSocialData(
-        BundleWithTravelHistory as unknown as Bundle
+        BundleWithTravelHistory as unknown as Bundle,
       );
 
       render(actual.availableData[1].value);
@@ -574,12 +574,12 @@ Home: 123-456-6909`
         expect(actual).toEqual(
           "Use: Current drinker of alcohol\n" +
             "Intake (standard drinks/week): .29/d\n" +
-            "Comment: 1-2 drinks 2 to 4 times a month"
+            "Comment: 1-2 drinks 2 to 4 times a month",
         );
       });
       it("should empty string because there is no use, intake, or comment", () => {
         const actual = evaluateAlcoholUse(
-          BundlePatientMultiple as unknown as Bundle
+          BundlePatientMultiple as unknown as Bundle,
         );
         expect(actual).toEqual("");
       });
@@ -587,7 +587,7 @@ Home: 123-456-6909`
 
     it("should have patient sexual orientation when available", () => {
       const actual = evaluateSocialData(
-        BundleWithSexualOrientation as unknown as Bundle
+        BundleWithSexualOrientation as unknown as Bundle,
       );
 
       expect(actual.availableData[0].value).toEqual("Other");
@@ -735,7 +735,9 @@ Home: 123-456-6909`
           ],
         };
 
-        expect(evaluateOccupation(bundle)).toEqual("Dates: 01/04/2020 - Present");
+        expect(evaluateOccupation(bundle)).toEqual(
+          "Dates: 01/04/2020 - Present",
+        );
       });
 
       it("should all together now", () => {
@@ -799,7 +801,7 @@ Home: 123-456-6909`
         };
 
         expect(evaluateOccupation(bundle)).toEqual(
-          "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present"
+          "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present",
         );
       });
     });
@@ -1281,22 +1283,18 @@ Home: 123-456-6909`
     });
 
     it("should return religion if available", () => {
-      const actual = evaluateSocialData(
-        BundleWithPatient as unknown as Bundle
-      );
+      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
       const ext = actual.availableData.filter(
-        (d) => d.title === "Religious Affiliation"
+        (d) => d.title === "Religious Affiliation",
       );
       expect(ext).toHaveLength(1);
       expect(ext[0].value).toEqual("Baptist");
     });
 
     it("should return marital status if available", () => {
-      const actual = evaluateSocialData(
-        BundleWithPatient as unknown as Bundle
-      );
+      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
       const ext = actual.availableData.filter(
-        (d) => d.title === "Marital Status"
+        (d) => d.title === "Marital Status",
       );
       expect(ext).toHaveLength(1);
       expect(ext[0].value).toEqual("Married");
@@ -1417,7 +1415,7 @@ Home: 123-456-6909`
     describe("Evaluate Encounter Care Team", () => {
       it("should return the correct Encounter care team", () => {
         const actual = evaluateEncounterCareTeamTable(
-          BundleEcrMetadata as unknown as Bundle
+          BundleEcrMetadata as unknown as Bundle,
         );
 
         expect(actual).toMatchSnapshot();
@@ -1432,7 +1430,7 @@ Home: 123-456-6909`
         };
         const actual = evaluateEncounterDiagnosis(
           BundleEcrMetadata as unknown as Bundle,
-          encounter as unknown as Encounter
+          encounter as unknown as Encounter,
         );
         expect(actual).toMatchSnapshot();
       });
@@ -1494,7 +1492,7 @@ Home: 123-456-6909`
 
     const addSectionsToBundle = (
       newSections: object[],
-      bundle: Bundle
+      bundle: Bundle,
     ): Bundle => {
       return {
         ...bundle,
@@ -1549,11 +1547,11 @@ Home: 123-456-6909`
       // Create a bundle with Admission and Discharge Dx
       const bundleWithHospitalEncounterData = addSectionsToBundle(
         [admissionDiagnosis, dischargeDiagnosis],
-        BundlePatientWithCovid
+        BundlePatientWithCovid,
       );
 
       const actual = evaluateHospitalEncounterData(
-        bundleWithHospitalEncounterData
+        bundleWithHospitalEncounterData,
       );
 
       expect(actual).toMatchSnapshot();
@@ -1567,14 +1565,14 @@ Home: 123-456-6909`
         <>
           {actual.availableData[0].value}
           {actual.availableData[1].value}
-        </>
+        </>,
       );
 
       const tables = screen.getAllByRole("table");
       expect(tables.length).toEqual(2);
 
       const problems = screen.getAllByText(
-        "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
+        "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
       );
       expect(problems.length).toEqual(2);
 
@@ -1582,21 +1580,21 @@ Home: 123-456-6909`
       expect(times.length).toEqual(2);
 
       expect(
-        screen.queryByText("Hospital Admission Diagnosis")
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText("Hospital Discharge Diagnosis")
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).toBeInTheDocument();
     });
 
     it("A bundle with only Admission Diagnosis returns that data and matches snapshot", () => {
       const bundleWithAdmissionDxDataOnly = addSectionsToBundle(
         [admissionDiagnosis],
-        BundlePatientWithCovid
+        BundlePatientWithCovid,
       );
 
       const actual = evaluateHospitalEncounterData(
-        bundleWithAdmissionDxDataOnly
+        bundleWithAdmissionDxDataOnly,
       );
 
       expect(actual.availableData.length).toEqual(1);
@@ -1606,22 +1604,22 @@ Home: 123-456-6909`
       expect(screen.getByRole("table")).toBeInTheDocument();
       expect(
         screen.getByText(
-          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
-        )
+          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText("02/05/2025")).toBeInTheDocument();
       expect(
-        screen.queryByText("Hospital Admission Diagnosis")
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText("Hospital Discharge Diagnosis")
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).not.toBeInTheDocument();
     });
 
     it("A bundle with only Discharge Diagnosis returns that data and matches snapshot", () => {
       const bundleWithDischargeDxOnly = addSectionsToBundle(
         [dischargeDiagnosis],
-        BundlePatientWithCovid
+        BundlePatientWithCovid,
       );
 
       const actual = evaluateHospitalEncounterData(bundleWithDischargeDxOnly);
@@ -1635,21 +1633,21 @@ Home: 123-456-6909`
       expect(screen.getByRole("table")).toBeInTheDocument();
       expect(
         screen.getByText(
-          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)"
-        )
+          "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText("02/05/2025")).toBeInTheDocument();
       expect(
-        screen.queryByText("Hospital Discharge Diagnosis")
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText("Hospital Admission Diagnosis")
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).not.toBeInTheDocument();
     });
 
     it("should return Admission Medication data when present and match snapshot", () => {
       const actual = evaluateHospitalEncounterData(
-        BundleWithAdmissionMedications
+        BundleWithAdmissionMedications,
       );
 
       expect(actual).toMatchSnapshot();
@@ -1665,20 +1663,20 @@ Home: 123-456-6909`
       expect(tables.length).toEqual(1);
 
       expect(
-        screen.getByText("Acetaminophen 500 MG Oral Tablet")
+        screen.getByText("Acetaminophen 500 MG Oral Tablet"),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("Ibuprofen 200 MG Oral Tablet")
+        screen.getByText("Ibuprofen 200 MG Oral Tablet"),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("Atenolol 25 MG Oral Tablet")
+        screen.getByText("Atenolol 25 MG Oral Tablet"),
       ).toBeInTheDocument();
 
       const nauseaReaction = screen.getAllByText("Nausea");
       expect(nauseaReaction.length).toEqual(2);
 
       const multipleReactions = screen.getAllByText(
-        /Nausea\s+Super sick\s+Headache/
+        /Nausea\s+Super sick\s+Headache/,
       );
       expect(multipleReactions).toHaveLength(1);
 
@@ -1690,10 +1688,10 @@ Home: 123-456-6909`
 
       expect(screen.queryByText("Admission Medications")).toBeInTheDocument();
       expect(
-        screen.queryByText("Hospital Discharge Diagnosis")
+        screen.queryByText("Hospital Discharge Diagnosis"),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByText("Hospital Admission Diagnosis")
+        screen.queryByText("Hospital Admission Diagnosis"),
       ).not.toBeInTheDocument();
     });
   });
@@ -1898,19 +1896,19 @@ Home: 123-456-6909`
       it("should return the responsible party", () => {
         const actual = evaluateProviderData(BundlePatientWithCovid);
         expect(actual.availableData[0].value).toStrictEqual(
-          "Dr. Royce Hemlock MD, GCS"
+          "Dr. Royce Hemlock MD, GCS",
         );
       });
       it("should return unavailable if no responsible party", () => {
         const practitionerUrl = "urn:uuid:bfac23db-1743-b679-f23e-0fe21c335c9b";
         const practitioner = BundlePatientWithCovid?.entry?.find(
-          (e) => e.fullUrl === practitionerUrl
+          (e) => e.fullUrl === practitionerUrl,
         ) as BundleEntry<Practitioner>;
         const bundle: Bundle = {
           ...BundlePatientWithCovid,
           entry: [
             ...(BundlePatientWithCovid?.entry?.filter(
-              (e) => e.fullUrl !== practitionerUrl
+              (e) => e.fullUrl !== practitionerUrl,
             ) || []),
             {
               ...practitioner,
@@ -1931,7 +1929,7 @@ Home: 123-456-6909`
       it("should return the organization and practitioner when practitioner role is found ", () => {
         const actual = evaluatePractitionerRoleReference(
           BundlePractitionerRole as unknown as Bundle,
-          "PractitionerRole/b18c20c1-123b-fd12-71cf-9dd0abae8ced"
+          "PractitionerRole/b18c20c1-123b-fd12-71cf-9dd0abae8ced",
         );
 
         expect(actual.organization).toEqual({
@@ -1953,7 +1951,7 @@ Home: 123-456-6909`
       it("should return undefined organization and practitioner when practitioner role is not found", () => {
         const actual = evaluatePractitionerRoleReference(
           BundlePractitionerRole as unknown as Bundle,
-          "unknown"
+          "unknown",
         );
 
         expect(actual.organization).toBeUndefined();
