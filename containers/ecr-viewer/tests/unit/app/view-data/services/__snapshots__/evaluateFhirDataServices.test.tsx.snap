@@ -1,5 +1,41 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`evaluateFhirDataServices tests Evaluate Encounter Info Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
+<JsonTable
+  className="caption-data-title margin-y-0"
+  jsonTableData={
+    {
+      "resultName": "Encounter Care Team",
+      "tables": [
+        [
+          {
+            "Dates": {
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
+            },
+            "Name": {
+              "value": <span
+                className="text-italic text-base"
+              >
+                No data
+              </span>,
+            },
+            "Role": {
+              "value": "attender",
+            },
+          },
+        ],
+      ],
+    }
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Encounter Info Evaluate Encounter Diagnoses should return the correct diagnoses given an Encounter 1`] = `"OTHER MUSCLE SPASM"`;
+
 exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <JsonTable
   className="caption-data-title margin-y-0"
@@ -908,6 +944,545 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
 `;
 
 exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when partial info 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": true,
+                "title": "Workplace Information",
+                "value": [
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Address",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Schedule",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Hours",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Days",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Duties",
+                        "titleNormal": true,
+                        "value": <span
+                          className="text-italic text-base"
+                        >
+                          No data
+                        </span>,
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Pay Grade",
+                        "titleNormal": true,
+                        "value": "~pay grade~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Employment Type",
+                        "titleNormal": true,
+                        "value": "~employment type~",
+                      }
+                    }
+                  />,
+                ],
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when all fields present 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": true,
+                "title": "Workplace Information",
+                "value": [
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Address",
+                        "titleNormal": true,
+                        "value": "123 Test St
+Nowhereville, KS",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Schedule",
+                        "titleNormal": true,
+                        "value": "~schedule~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Hours",
+                        "titleNormal": true,
+                        "value": "~hours~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Days",
+                        "titleNormal": true,
+                        "value": "~days~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Duties",
+                        "titleNormal": true,
+                        "value": "~duties~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Pay Grade",
+                        "titleNormal": true,
+                        "value": "~pay grade~",
+                      }
+                    }
+                  />,
+                  <DataDisplay
+                    item={
+                      {
+                        "dividerLine": false,
+                        "title": "Employment Type",
+                        "titleNormal": true,
+                        "value": "~employment type~",
+                      }
+                    }
+                  />,
+                ],
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when multiple jobs and sort correctly 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12346",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2015 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12347",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2018 - 01/04/2022",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Past
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when no workplace info 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2020 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": "~industry~",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": "~hazard~",
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span />
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`evaluateFhirDataServices tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when partial info 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"
   descriptor="employment details"
