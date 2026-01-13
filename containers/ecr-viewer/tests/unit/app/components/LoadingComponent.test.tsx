@@ -15,8 +15,11 @@ jest.mock("next/navigation", () => ({
 describe("Snapshot test for EcrLoadingSkeleton", () => {
   let container: HTMLElement;
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    jest.resetModules();
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
+    process.env.DISPLAY_LINKS = "true";
+
     const mockIntersectionObserver = jest.fn();
     mockIntersectionObserver.mockReturnValue({
       observe: () => null,
@@ -30,10 +33,13 @@ describe("Snapshot test for EcrLoadingSkeleton", () => {
 
   afterAll(() => {
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "false";
+    process.env.DISPLAY_LINKS = "false";
   });
+
   it("should match snapshot", () => {
     expect(container).toMatchSnapshot();
   });
+
   it("should pass accessibility test", async () => {
     expect(await axe(container)).toHaveNoViolations();
   });

@@ -6,11 +6,14 @@ import Footer from "@/app/components/Footer";
 
 describe("Footer", () => {
   const ORIG_APP_VERSION = process.env.APP_VERSION;
+  const ORIG_DISPLAY_LINKS = process.env.DISPLAY_LINKS;
+
   beforeAll(() => {
     process.env.APP_VERSION = "vTest";
   });
   afterAll(() => {
     process.env.APP_VERSION = ORIG_APP_VERSION;
+    process.env.DISPLAY_LINKS = ORIG_DISPLAY_LINKS;
   });
 
   it("displays the CDC logo image", () => {
@@ -22,7 +25,18 @@ describe("Footer", () => {
     expect(logo.getAttribute("src")).toContain("cdc-logo.png");
   });
 
-  it("contains a mailto link to dibbs@cdc.gov", () => {
+  it("by default, does not display mailto email link", () => {
+    render(<Footer />);
+    expect(
+      screen.queryByText(
+        /For more information about this solution, send us an email at/i
+      )
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "dibbs@cdc.gov" })).not.toBeInTheDocument();
+  });
+
+  it("when DISPLAY_LINKS=true, contains a mailto link to dibbs@cdc.gov", () => {
+    (process.env as any).DISPLAY_LINKS = true;
     render(<Footer />);
     expect(
       screen.getByText(
