@@ -49,6 +49,19 @@ describe("Footer", () => {
     expect(link).toHaveAttribute("href", "mailto:dibbs@cdc.gov");
   });
 
+  it("when DISPLAY_LINKS is not set, does not display mailto link", () => {
+    delete (process.env as any).DISPLAY_LINKS;
+    render(<Footer />);
+    expect(
+      screen.queryByText(
+        /For more information about this solution, send us an email at/i
+      )
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "dibbs@cdc.gov" })
+    ).not.toBeInTheDocument();
+  });
+
   it("displays the version number", () => {
     render(<Footer />);
     expect(screen.getByText(/vTest/i)).toBeInTheDocument();
