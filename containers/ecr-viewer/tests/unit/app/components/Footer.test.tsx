@@ -29,10 +29,12 @@ describe("Footer", () => {
     render(<Footer />);
     expect(
       screen.queryByText(
-        /For more information about this solution, send us an email at/i
-      )
+        /For more information about this solution, send us an email at/i,
+      ),
     ).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "dibbs@cdc.gov" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "dibbs@cdc.gov" }),
+    ).not.toBeInTheDocument();
   });
 
   it("when DISPLAY_LINKS=true, contains a mailto link to dibbs@cdc.gov", () => {
