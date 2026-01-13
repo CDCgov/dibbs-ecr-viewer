@@ -283,6 +283,12 @@ namespace EnvironmentVariables {
      * @description Set a timeout in milliseconds for eCr processing. Defaults to 900000 (15 minutes) in the app if not set
      */
     ECR_PROCESSING_TIMEOUT?: string;
+
+    /**
+     * @category Miscellaneous
+     * @description If set to 'true', the eCR Library will display the DIBBs email, and the Viewer will display the touchpoints survey. Default is false.
+     */
+    DISPLAY_LINKS?: "true" | "false";
   }
 }
 
