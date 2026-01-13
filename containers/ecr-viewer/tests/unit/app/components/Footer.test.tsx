@@ -54,11 +54,11 @@ describe("Footer", () => {
     render(<Footer />);
     expect(
       screen.queryByText(
-        /For more information about this solution, send us an email at/i
-      )
+        /For more information about this solution, send us an email at/i,
+      ),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("link", { name: "dibbs@cdc.gov" })
+      screen.queryByRole("link", { name: "dibbs@cdc.gov" }),
     ).not.toBeInTheDocument();
   });
 
