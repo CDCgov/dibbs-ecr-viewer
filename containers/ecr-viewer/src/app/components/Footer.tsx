@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+const shouldDisplayLinks = process.env.DISPLAY_LINKS === "true";
+
 /**
  * Footer component for the eCR Viewer.
  * This component renders the footer section of the application. It uses USWDS (U.S. Web Design System)
@@ -18,9 +20,13 @@ const Footer: React.FC = () => (
         />
       </div>
       <p className="margin-left-2">
-        For more information about this solution, send us an email at{" "}
-        <a href="mailto:dibbs@cdc.gov">dibbs@cdc.gov</a> | version{" "}
-        {process.env.APP_VERSION}
+        {shouldDisplayLinks && (
+          <>
+            For more information about this solution, send us an email at{" "}
+            <a href="mailto:dibbs@cdc.gov">dibbs@cdc.gov</a> |{" "}
+          </>
+        )}
+        version {process.env.APP_VERSION}
       </p>
     </div>
   </footer>
