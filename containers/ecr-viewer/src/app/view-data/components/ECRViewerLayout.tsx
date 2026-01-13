@@ -2,8 +2,6 @@ import React from "react";
 
 import PatientBanner from "./PatientBanner";
 
-const shouldDisplayLinks = process.env.DISPLAY_LINKS === "true";
-
 /**
  * Layout component for the ecr viewer page.
  * @param props react props
@@ -21,6 +19,8 @@ export const ECRViewerLayout = ({
   patientDOB?: string;
   children: React.ReactNode;
 }) => {
+  const shouldDisplayLinks = process.env.DISPLAY_LINKS === "true";
+
   return (
     <main className="width-full minw-main">
       <PatientBanner name={patientName} dob={patientDOB} />

@@ -1,14 +1,15 @@
 import Image from "next/image";
 
-const shouldDisplayLinks = process.env.DISPLAY_LINKS === "true";
-
 /**
  * Footer component for the eCR Viewer.
  * This component renders the footer section of the application. It uses USWDS (U.S. Web Design System)
  * classes for styling with some customization.
  * @returns The footer section of the application.
  */
-const Footer: React.FC = () => (
+const Footer: React.FC = () => {
+  const shouldDisplayLinks = process.env.DISPLAY_LINKS === "true";
+
+  return (
   <footer className="usa-footer usa-footer--slim">
     <div className="footer-content display-flex flex-justify flex-align-center">
       <div className="flex-shrink-0">
@@ -30,6 +31,6 @@ const Footer: React.FC = () => (
       </p>
     </div>
   </footer>
-);
+)};
 
 export default Footer;
