@@ -58,6 +58,7 @@ export const POST = async (
   request: NextRequest,
 ): Promise<NextResponse<ProcessEcrResponse>> => {
   // Parse out the form from the request
+  const shouldSaveXml = process.env.SAVE_XML === "true";
   let rawBody: object;
   let ecrId: string | undefined = undefined;
   try {
@@ -90,7 +91,7 @@ export const POST = async (
       Promise<void>?,
     ] = [orchestrationRequest(body, return_fhir_bundle === "true")];
 
-    if (process.env.SAVE_XML) {
+    if (shouldSaveXml) {
       ecrId = await getEcrIdFromXml(body);
       promises.push(zipAndSaveXml(body, ecrId));
     }
@@ -102,7 +103,7 @@ export const POST = async (
       orchestrationResult.status === "rejected" ||
       orchestrationResult.value.status >= 500
     ) {
-      if (process.env.SAVE_XML && ecrId && saveResult!.status === "fulfilled") {
+      if (shouldSaveXml && ecrId && saveResult!.status === "fulfilled") {
         await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
       }
 
