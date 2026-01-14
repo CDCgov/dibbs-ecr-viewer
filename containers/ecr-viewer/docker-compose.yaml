@@ -148,11 +148,13 @@ services:
       dockerfile: azurite.Dockerfile
     hostname: azurite
     restart: always
+    # Temporary: --skipApiVersionCheck is needed until Azurite supports the latest Azure Storage API version.
+    # See: https://github.com/Azure/Azurite/issues/2623
     command:
       - /bin/sh
       - -c
       - |
-        azurite --blobHost 0.0.0.0 --blobPort 10000 -l data --debug /data/debug.log &
+        azurite --skipApiVersionCheck --blobHost 0.0.0.0 --blobPort 10000 -l data --debug /data/debug.log &
         sleep 5
         az storage container create --name ecr-viewer-files
         tail -f /dev/null
