@@ -1,16 +1,16 @@
-name: Trigger Deploy to Dev Environment
-run-name: "Trigger Deploy - Container Tag: ${{ inputs.container_tag }}, Environment: ${{ inputs.environment }}, Terraform Branch: ${{ inputs.tf_branch }} by @${{ github.actor }}"
+name: Trigger Dev Deployment Workflow
+run-name: "Trigger Dev ${{ inputs.event_type }} on ${{ inputs.tf_branch }} - Container Tag: ${{ inputs.container_tag }}, Environment: ${{ inputs.environment }}, Terraform Branch: ${{ inputs.tf_branch }} by @${{ github.actor }}"
 
 on:
   workflow_dispatch:
     inputs:
       container_tag:
         type: string
-        description: "The container tag to deploy. Example: `5.0.0`"
+        description: "The container tag to deploy. Example: `8.4.0`"
         required: true
       tf_branch:
         type: string
-        description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
+        description: "The branch for Terraform checkout. Default is main."
         required: false
         default: main
       environment:
@@ -18,24 +18,34 @@ on:
         options:
           - aws
           - azure
-          - gcp
-        description: "The clould environment to deploy to."
+        description: "The service provider to deploy to."
+        required: true
+      event_type:
+        type: choice
+        options:
+          - plans
+          - deploys
+        description: "The event type to trigger the workflow."
         required: true
   workflow_call:
     inputs:
       container_tag:
         type: string
-        description: "The container tag to deploy. Example: `5.0.0`"
+        description: "The container tag to deploy. Example: `8.4.0`"
         required: true
       tf_branch:
         type: string
-        description: "The branch to use for the Terraform code. Default is main. (experimental, may be removed)"
+        description: "The branch for Terraform checkout. Default is main."
         required: false
         default: main
       environment:
         type: string
-        description: 'The clould environment to deploy to ("aws" or "azure").'
+        description: 'The service provider to deploy to ("aws" or "azure").'
         required: true
+      event_type:
+        type: string
+        description: "The event type to trigger the workflow."
+        default: deploys
 
 jobs:
   trigger_dev_workflow:
@@ -46,12 +56,13 @@ jobs:
           TF_BRANCH: ${{ inputs.tf_branch }}
           ENVIRONMENT: ${{ inputs.environment }}
           CONTAINER_TAG: ${{ inputs.container_tag }}
+          EVENT_TYPE: ${{ inputs.event_type }}
         run: |
           service="dibbs-ecr-viewer"
           repo_owner="skylight-hq"
           repo_name="dibbs-tf-envs"
           tf_branch="$TF_BRANCH"
-          event_type="trigger-dibbs-ecr-viewer-$ENVIRONMENT-dev-deploys"
+          event_type="trigger-dibbs-ecr-viewer-$ENVIRONMENT-dev-$EVENT_TYPE"
           container_tag="$CONTAINER_TAG"
           response="$(curl -L -w '%{http_code}\n' -o /dev/null \
             -X POST \
@@ -68,5 +79,7 @@ jobs:
           echo "Successfully triggered the workflow."
           echo "Service: $service"
           echo "Repository: $repo_owner/$repo_name"
+          echo "TF Branch: $tf_branch"
+          echo "Event Type: $event_type"
           echo "Container Tag: $container_tag"
           echo "Terraform Branch: $tf_branch"
