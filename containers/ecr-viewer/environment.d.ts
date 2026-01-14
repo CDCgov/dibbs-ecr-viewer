@@ -148,9 +148,9 @@ namespace EnvironmentVariables {
 
     /**
      * @category eCR Storage - XML
-     * @description If true, saves a copy of each original uploaded eCR xml to storage
+     * @description If "true", saves a copy of each original uploaded eCR xml to storage
      */
-    SAVE_XML?: boolean;
+    SAVE_XML?: "true" | "false";
 
     /**
      * @ignore
