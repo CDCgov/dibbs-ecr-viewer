@@ -265,6 +265,12 @@ describe("POST Process ecr", () => {
     });
 
     it("returns orchestration payload when SAVE_XML is not set", async () => {
+      (getEcrIdFromXml as jest.Mock).mockImplementation(() => {
+        throw new Error("getEcrIdFromXml should not be called");
+      });
+      (zipAndSaveXml as jest.Mock).mockImplementation(() => {
+        throw new Error("zipAndSaveXml should not be called");
+      });
       (orchestrationRequest as jest.Mock).mockResolvedValue({
         message: "ok",
         status: 200,
@@ -279,8 +285,33 @@ describe("POST Process ecr", () => {
       expect(orchestrationRequest).toHaveBeenCalledTimes(1);
     });
 
-    it("runs zipAndSaveXml and orchestration request when SAVE_XML=true", async () => {
-      (process.env as any).SAVE_XML = true;
+    it("returns orchestration payload when SAVE_XML is 'false'", async () => {
+      (process.env as any).SAVE_XML = "false";
+
+      (getEcrIdFromXml as jest.Mock).mockImplementation(() => {
+        throw new Error("getEcrIdFromXml should not be called");
+      });
+      (zipAndSaveXml as jest.Mock).mockImplementation(() => {
+        throw new Error("zipAndSaveXml should not be called");
+      });
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "done",
+      });
+
+      const req = makeRequest({ ecr: "<xml />" });
+      const res = await POST(req);
+      const json = await res.json();
+
+      expect(getEcrIdFromXml).not.toHaveBeenCalled();
+      expect(zipAndSaveXml).not.toHaveBeenCalled();
+      expect(orchestrationRequest).toHaveBeenCalledTimes(1);
+      expect(res.status).toBe(200);
+      expect(json.message).toBe("done");
+    });
+
+    it("runs zipAndSaveXml and orchestration request when SAVE_XML is 'true'", async () => {
+      (process.env as any).SAVE_XML = "true";
 
       (getEcrIdFromXml as jest.Mock).mockResolvedValue("abc-123");
       (zipAndSaveXml as jest.Mock).mockResolvedValue(undefined);
@@ -301,7 +332,7 @@ describe("POST Process ecr", () => {
     });
 
     it("deletes XML if orchestration rejects", async () => {
-      (process.env as any).SAVE_XML = true;
+      (process.env as any).SAVE_XML = "true";
       (process.env as any).SOURCE = "aws";
 
       (getEcrIdFromXml as jest.Mock).mockResolvedValue("abc");
