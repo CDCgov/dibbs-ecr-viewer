@@ -289,6 +289,7 @@ def test_add_human_readable_reportable_condition_name_does_not_error_with_no_cod
 
     assert result
 
+
 # Tests case where code has no valueCodeableConcept to make sure it doesn't error
 @patch("app.db._get_condition_name_from_snomed_code_tes")
 def test_add_human_readable_reportable_condition_name_does_not_error_with_no_valueCodeableConcept(
@@ -312,13 +313,13 @@ def test_add_human_readable_reportable_condition_name_does_not_error_with_no_val
         "status": "final",
         "code": {
             "coding": [
-            {
-            "code": "64572001",
-            "system": "http://snomed.info/sct",
-            "display": "Condition"
-            }
+                {
+                    "code": "64572001",
+                    "system": "http://snomed.info/sct",
+                    "display": "Condition",
+                }
             ],
-            "text": "Condition"
+            "text": "Condition",
         },
         "valueQuantity": {"value": 2, "unit": "m"},
         "effectivePeriod": {"start": "2020-11-01"},

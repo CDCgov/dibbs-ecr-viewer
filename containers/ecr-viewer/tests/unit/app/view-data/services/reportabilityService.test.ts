@@ -116,25 +116,26 @@ describe("ReportabilityService", () => {
 
   it("evaluateRRInfo should try to get condition name from valueString if observation has no valueCodeableConcept", () => {
     const expected = {
-      "COVID":
-        [
-          {
-            participants: [
-              {
-                name: "Mos Espa Department of Health",
-                role: "Routing Entity",
-              },
-            ],
-            reasons: new Set(),
-            rules: new Set([
-              "COVID-19 (as a diagnosis or active problem)",
-              "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
-            ]),
-          },
-        ],
+      COVID: [
+        {
+          participants: [
+            {
+              name: "Mos Espa Department of Health",
+              role: "Routing Entity",
+            },
+          ],
+          reasons: new Set(),
+          rules: new Set([
+            "COVID-19 (as a diagnosis or active problem)",
+            "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
+          ]),
+        },
+      ],
     };
 
-    const result = evaluateRRInfo(BundleRRConditionValueString as unknown as Bundle);
+    const result = evaluateRRInfo(
+      BundleRRConditionValueString as unknown as Bundle,
+    );
     expect(result).toEqual(expected);
   });
 

@@ -169,15 +169,16 @@ export const evaluateEcrSummaryConditionSummary = (
       (coding) => coding.system === "http://snomed.info/sct",
     );
 
-    const displayText = formatCodeableConcept(observation?.valueCodeableConcept) ??
-            observation?.valueString ??
-            "Unknown Condition";
+    const displayText =
+      formatCodeableConcept(observation?.valueCodeableConcept) ??
+      observation?.valueString ??
+      "Unknown Condition";
 
     const conditionListKey = coding?.code ?? displayText;
     if (!conditionsList[conditionListKey]) {
       conditionsList[conditionListKey] = {
         ruleSummaries: new Set(),
-        displayText
+        displayText,
       };
     }
 
