@@ -162,41 +162,42 @@ export const evaluateEcrSummaryConditionSummary = (
 ): ConditionSummary[] => {
   const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const conditionsList: {
-    [index: string]: { ruleSummaries: Set<string>; snomedDisplay: string };
+    [index: string]: { ruleSummaries: Set<string>; displayText: string };
   } = {};
   for (const observation of rrConditions) {
     const coding = observation?.valueCodeableConcept?.coding?.find(
       (coding) => coding.system === "http://snomed.info/sct",
     );
-    if (coding?.code) {
-      const snomed = coding.code;
-      if (!conditionsList[snomed]) {
-        conditionsList[snomed] = {
-          ruleSummaries: new Set(),
-          snomedDisplay:
-            formatCodeableConcept(observation?.valueCodeableConcept) ??
-            "Unknown Condition",
-        };
-      }
 
-      observation?.hasMember?.forEach((ref) => {
-        const rrInfoObs: Observation | undefined = evaluateReference(
-          fhirBundle,
-          ref.reference,
-        );
-        const { rules } = getReportabilityRulesReasons(rrInfoObs);
+    const displayText = formatCodeableConcept(observation?.valueCodeableConcept) ??
+            observation?.valueString ??
+            "Unknown Condition";
 
-        rules.forEach((rule: string) =>
-          conditionsList[snomed].ruleSummaries.add(rule),
-        );
-      });
+    const conditionListKey = coding?.code ?? displayText;
+    if (!conditionsList[conditionListKey]) {
+      conditionsList[conditionListKey] = {
+        ruleSummaries: new Set(),
+        displayText
+      };
     }
+
+    observation?.hasMember?.forEach((ref) => {
+      const rrInfoObs: Observation | undefined = evaluateReference(
+        fhirBundle,
+        ref.reference,
+      );
+      const { rules } = getReportabilityRulesReasons(rrInfoObs);
+
+      rules.forEach((rule: string) =>
+        conditionsList[conditionListKey].ruleSummaries.add(rule),
+      );
+    });
   }
 
   const conditionSummaries: ConditionSummary[] = [];
   for (const conditionsListKey in conditionsList) {
     const conditionSummary: ConditionSummary = {
-      title: conditionsList[conditionsListKey].snomedDisplay,
+      title: conditionsList[conditionsListKey].displayText,
       snomed: conditionsListKey,
       conditionDetails: [
         {
