@@ -20,7 +20,7 @@ const nextConfig = {
     serverActions: {
       allowedOrigins: ["**.cloudapp.azure.com", "**.azurecontainerapps.io"],
     },
-    middlewareClientMaxBodySize: '50mb',
+    middlewareClientMaxBodySize: "50mb",
   },
   output: "standalone",
   basePath,
