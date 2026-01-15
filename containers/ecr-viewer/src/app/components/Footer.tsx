@@ -7,7 +7,7 @@ import Image from "next/image";
  * @returns The footer section of the application.
  */
 const Footer: React.FC = () => {
-  const shouldDisplayLinks = process.env.DISPLAY_LINKS === "true";
+  const shouldDisplayLinks = process.env.DISPLAY_FEEDBACK_LINKS === "true";
 
   return (
     <footer className="usa-footer usa-footer--slim">

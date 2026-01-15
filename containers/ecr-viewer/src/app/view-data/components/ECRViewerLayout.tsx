@@ -19,7 +19,7 @@ export const ECRViewerLayout = ({
   patientDOB?: string;
   children: React.ReactNode;
 }) => {
-  const shouldDisplayLinks = process.env.DISPLAY_LINKS === "true";
+  const shouldDisplayLinks = process.env.DISPLAY_FEEDBACK_LINKS === "true";
 
   return (
     <main className="width-full minw-main">

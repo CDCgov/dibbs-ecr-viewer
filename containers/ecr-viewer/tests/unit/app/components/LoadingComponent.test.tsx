@@ -18,7 +18,7 @@ describe("Snapshot test for EcrLoadingSkeleton", () => {
   beforeAll(async () => {
     jest.resetModules();
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "true";
-    process.env.DISPLAY_LINKS = "true";
+    process.env.DISPLAY_FEEDBACK_LINKS = "true";
 
     const mockIntersectionObserver = jest.fn();
     mockIntersectionObserver.mockReturnValue({
@@ -33,7 +33,7 @@ describe("Snapshot test for EcrLoadingSkeleton", () => {
 
   afterAll(() => {
     process.env.NEXT_PUBLIC_NON_INTEGRATED_VIEWER = "false";
-    process.env.DISPLAY_LINKS = "false";
+    process.env.DISPLAY_FEEDBACK_LINKS = "false";
   });
 
   it("should match snapshot", () => {

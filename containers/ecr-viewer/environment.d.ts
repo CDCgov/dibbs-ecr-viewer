@@ -288,7 +288,7 @@ namespace EnvironmentVariables {
      * @category Miscellaneous
      * @description If set to 'true', the eCR Library will display the DIBBs email, and the Viewer will display the touchpoints survey. Default is false.
      */
-    DISPLAY_LINKS?: "true" | "false";
+    DISPLAY_FEEDBACK_LINKS?: "true" | "false";
   }
 }
 
