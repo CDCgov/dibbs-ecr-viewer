@@ -25,6 +25,7 @@ import {
   formatCodeableConcept,
   formatContactPoint,
   formatName,
+  formatQuantity,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
 import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
@@ -188,11 +189,19 @@ const evaluateAdministeredMedication = (
         ? therapeuticResponses.join("\n")
         : undefined;
 
+    const doseValue =
+      medicationAdministration?.dosage?.dose?.value &&
+      medicationAdministration?.dosage?.dose?.unit
+        ? formatQuantity(medicationAdministration.dosage.dose)
+        : undefined;
+
     return {
       date:
         medicationAdministration?.effectiveDateTime ??
         medicationAdministration?.effectivePeriod?.start,
       name: formatCodeableConcept(medication?.code),
+      dose: doseValue,
+      route: formatCodeableConcept(medicationAdministration?.dosage?.route),
       therapeuticResponse: therapeuticResponseText,
     };
   });
