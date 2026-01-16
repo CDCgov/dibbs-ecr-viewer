@@ -1,0 +1,757 @@
+{
+  "resourceType": "Bundle",
+  "type": "document",
+  "identifier": {
+    "value": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548"
+  },
+  "timestamp": "2000-02-04T09:01:22-05:00",
+  "id": "2ebcb371-ec1e-fe8f-88d8-FAKEa8dae548",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:2ebcb371-1234-fe8f-88d8-FAKEa8dae548",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "2ebcb371-1234-fe8f-88d8-FAKEa8dae548",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-composition"
+          ],
+          "source": ["ecr"]
+        },
+        "extension": [
+          {
+            "url": "https://www.hl7.org/implement/standards/product_brief.cfm?product_id=436",
+            "valueString": "2016-12-12"
+          }
+        ],
+        "date": "2000-02-04T09:01:22-05:00",
+        "section": [
+          {
+            "id": "c9501d42-59f2-05ae-ed10-9e943ef910d1",
+            "title": "Reportability Response Information Section",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Reportability Response Information Section</div>"
+            },
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-composition",
+                "valueIdentifier": {
+                  "use": "official",
+                  "type": {
+                    "coding": [
+                      {
+                        "code": "88085-6",
+                        "display": "Reportability response report Document Public health",
+                        "system": "http://loinc.org"
+                      }
+                    ]
+                  },
+                  "value": "abf3ed7a-034b-44d6-a7e0-4c8aad440e1a"
+                }
+              },
+              {
+                "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-extension",
+                "extension": [
+                  {
+                    "url": "eICRProcessingStatus",
+                    "valueReference": {
+                      "reference": "Observation/1f41508f-a752-fb3a-9091-7473d7d3b40a",
+                      "display": "eICR was processed - with a warning"
+                    }
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "code": "88085-6",
+                  "display": "Reportability response report Document Public health",
+                  "system": "http://loinc.org"
+                }
+              ]
+            }
+          }
+        ],
+        "relatesTo": [
+          {
+            "code": "replaces",
+            "targetReference": {
+              "reference": "Composition/1.2.840.114350.1.13.478.3.7.8.688883.212673"
+            },
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber",
+                "valueString": "1"
+              }
+            ]
+          }
+        ],
+        "encounter": {
+          "reference": "Encounter/3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
+        },
+        "custodian": {
+          "reference": "Organization/94c87b29-3ecb-ffe9-98ea-FAKE96e81ef7"
+        },
+        "author": [
+          {
+            "reference": "PractitionerRole/b18c20c1-123b-fd12-71cf-9dd0abae8ced"
+          },
+          {
+            "reference": "Device/a57ef88d-1c60-d952-e7ca-5e9e16c7ef05"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "id": "b18c20c1-123b-fd12-71cf-9dd0abae8ced",
+        "organization": {
+          "reference": "Organization/94c87b29-3ecb-ffe9-98ea-FAKE96e81ef7"
+        },
+        "practitioner": {
+          "reference": "Practitioner/7aee4d8e-792b-5e0a-c275-FAKEfa3982b1"
+        },
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1f41508f-a752-fb3a-9091-7473d7d3b40a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "1f41508f-a752-fb3a-9091-7473d7d3b40a",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:39d966b9-8a3a-4024-93d8-138e97d5898a"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS20",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "eICR was processed - with a warning"
+            }
+          ]
+        },
+        "hasMember": [
+          {
+            "reference": "Observation/c53c48e6-db9a-3523-7d00-c52fbbd3f7ea"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c53c48e6-db9a-3523-7d00-c52fbbd3f7ea",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c53c48e6-db9a-3523-7d00-c52fbbd3f7ea",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-reason-observation"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:e39d6ae2-8c6e-4638-9b33-412996586f42"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RR6",
+              "system": "urn:oid:2.16.840.1.114222.4.5.232",
+              "display": "eICR processing status reason"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "RRVS29",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "The eICR was processed with the warning of: outdated eRSD (RCTC) version."
+            }
+          ]
+        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "RRVS31",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Outdated eRSD (RCTC) Version Detail"
+                }
+              ]
+            },
+            "valueString": "3/29/2022"
+          },
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "RRVS33",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Expected eRSD (RCTC) Version Detail"
+                }
+              ]
+            },
+            "valueString": "The expected eRSD (RCTC) version should be one of the following: [\"2024-06-28\",\"1.2.4.0\",\"3.x.x\",\"2024-04-05\"] "
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:94c87b29-3ecb-ffe9-98ea-FAKE96e81ef7",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "94c87b29-3ecb-ffe9-98ea-FAKE96e81ef7",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "11223344556677"
+          }
+        ],
+        "name": "Mos Eisley Med Center",
+        "address": [
+          {
+            "use": "work",
+            "line": ["2222 Sandy Sand Lane"],
+            "city": "Mos Eisley",
+            "state": "TN",
+            "country": "USA",
+            "postalCode": "00044",
+            "district": "Sand"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+1-555-555-5555",
+            "use": "work"
+          }
+        ],
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7aee4d8e-792b-5e0a-c275-FAKEfa3982b1",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "7aee4d8e-792b-5e0a-c275-FAKEfa3982b1",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "Blarg"
+          }
+        ],
+        "name": [
+          {
+            "family": "Interface",
+            "given": ["Lab"]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a57ef88d-1c60-d952-e7ca-5e9e16c7ef05",
+      "resource": {
+        "resourceType": "Device",
+        "id": "a57ef88d-1c60-d952-e7ca-5e9e16c7ef05",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "10.1"
+          }
+        ],
+        "manufacturer": "Epic - Version 10.1",
+        "version": [
+          {
+            "value": "Epic - Version 10.1"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/device-category",
+                  "code": "software",
+                  "display": "software"
+                }
+              ]
+            }
+          }
+        ],
+        "owner": {
+          "reference": "Organization/94c87b29-3ecb-ffe9-98ea-FAKE96e81ef7"
+        },
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-routing-entity-organization"
+          ],
+          "source": ["ecr"]
+        },
+        "active": true,
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+                "code": "RR7",
+                "display": "Routing Entity"
+              }
+            ]
+          }
+        ],
+        "name": "Mos Espa Department of Health"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:61e55448-662c-9a22-3920-FAKE00ba36f9",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "61e55448-662c-9a22-3920-FAKE00ba36f9",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-relevant-reportable-condition-observation"
+          ],
+          "source": ["ecr"]
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:61e55448-662c-9a22-3920-FAKE00ba36f9"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "64572001",
+              "display": "Condition",
+              "system": "http://snomed.info/sct"
+            },
+            {
+              "code": "75323-6",
+              "display": "Condition",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "valueString": "COVID",
+        "subject": {
+          "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
+        },
+        "hasMember": [
+          {
+            "reference": "Observation/b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/61e55448-662c-9a22-3920-FAKE00ba36f9"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b7268c9f-1a2d-4f8e-b932-FAKE6d94d28f",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:b0bd7770-283f-44b1-9dda-5590707d29fe"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "COVID-19 (as a diagnosis or active problem)"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-external-resource-extension",
+            "valueReference": {
+              "reference": "DocumentReference/2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c"
+            }
+          }
+        ],
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "RR4",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.232",
+                  "display": "Timeframe to report (urgency)"
+                }
+              ]
+            },
+            "valueQuantity": {
+              "value": 1,
+              "unit": "hr"
+            }
+          }
+        ],
+        "performer": [
+          {
+            "reference": "Organization/00a4f533-ec89-baf4-f1fd-FAKE9be5aa1d",
+            "display": "Mos Espa Department of Health"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c",
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "2a4d3e5c-0f9b-4e1a-8c7d-FAKE4f3e2d1c",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-documentreference"
+          ],
+          "source": "ecr"
+        },
+        "status": "current",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "83910-0",
+              "display": "Public health Note"
+            }
+          ],
+          "text": "Public health information"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "RRVS13",
+                "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                "display": "Outbreak- or Cluster related"
+              }
+            ]
+          }
+        ],
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/html",
+              "url": "https://www.cdc.gov/coronavirus/2019-ncov/index.html"
+            }
+          }
+        ],
+        "description": "CDC COVID-19 webpage",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-priority-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS15",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Information only"
+                }
+              ]
+            }
+          }
+        ],
+        "subject": {
+          "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:48370b55-9f5a-c83a-503c-FAKEfe73a374",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "48370b55-9f5a-c83a-503c-FAKEfe73a374",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-reportability-information-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f4ea9439-0626-4b65-b6de-6e64554bd427"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "RRVS5",
+              "system": "urn:oid:2.16.840.1.114222.4.5.274",
+              "display": "Patient home address"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-extension",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "code": "RRVS1",
+                  "system": "urn:oid:2.16.840.1.114222.4.5.274",
+                  "display": "Reportable"
+                }
+              ]
+            }
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-determination-of-reportability-rule-extension",
+            "valueString": "Detection of Hepatitis C virus antibody in a clinical specimen by any method"
+          }
+        ],
+        "performer": [
+          {
+            "reference": "Organization/1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+            "display": "Anchorhead Department of Public Health"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "1b6cfb7e-4f61-a8e0-2267-FAKE3de49935",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/rr-routing-entity-organization"
+          ],
+          "source": ["ecr"]
+        },
+        "active": true,
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+                "code": "RR7",
+                "display": "Routing Entity"
+              }
+            ]
+          }
+        ],
+        "name": "Anchorhead Department of Public Health"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7048630f-26bb-f67c-d446-FAKEa3573257",
+      "resource": {
+        "resourceType": "Location",
+        "id": "7048630f-26bb-f67c-d446-FAKEa3573257",
+        "identifier": [
+          {
+            "system": "7048630f-26bb-f67c-d446-FAKEa3573257",
+            "value": "112233445566778899"
+          }
+        ],
+        "name": "Mos Eisley Med Center",
+        "address": {
+          "use": "work",
+          "line": ["1111 Mos Eisley Dr"],
+          "city": "Mos Eisley",
+          "state": "IA",
+          "postalCode": "00044",
+          "district": "Mos Eisley"
+        },
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+1-555-555-5555",
+            "use": "work"
+          }
+        ],
+        "type": [
+          {
+            "coding": [
+              {
+                "code": "257622000",
+                "display": "Healthcare Facility",
+                "system": "http://snomed.info/sct"
+              }
+            ]
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
+        "identifier": [
+          {
+            "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+            "value": "123456789"
+          }
+        ],
+        "period": {
+          "start": "2000-02-03",
+          "end": "2000-02-04"
+        },
+        "subject": {
+          "reference": "Patient/87329c51-53e5-47f1-5932-FAKE1f153d93"
+        },
+        "location": [
+          {
+            "id": "f39281a4-c8bf-a15b-e2ed-FAKEf4cd1adc",
+            "location": {
+              "reference": "Location/7048630f-26bb-f67c-d446-FAKEa3573257",
+              "display": "Mos Eisley Med Center"
+            },
+            "extension": [
+              {
+                "url": "http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "code": "257622000",
+                      "display": "Healthcare Facility",
+                      "system": "http://snomed.info/sct"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "participant": [
+          {
+            "type": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                    "code": "ATND",
+                    "display": "attender"
+                  }
+                ]
+              }
+            ],
+            "individual": {
+              "reference": "Practitioner/79842b6e-724b-8d57-dd2a-8d4b915f0558"
+            }
+          }
+        ],
+        "diagnosis": [
+          {
+            "condition": {
+              "reference": "Condition/test-encounter-diagnosis-condition"
+            }
+          }
+        ],
+        "meta": {
+          "source": ["ecr"]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:test-encounter-diagnosis-condition",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "test-encounter-diagnosis-condition",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f56593a9-11b8-4185-b16b-583d43837021"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-item-list",
+                "display": "Problem List Item",
+                "system": "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "M62.838",
+              "system": "urn:oid:2.16.840.1.113883.6.90",
+              "display": "OTHER MUSCLE SPASM"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

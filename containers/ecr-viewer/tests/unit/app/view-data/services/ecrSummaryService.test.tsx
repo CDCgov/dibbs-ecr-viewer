@@ -7,6 +7,7 @@ import BundleWithClinicalInfo from "../../../../../../../test-data/fhir/BundleCl
 import BundleEcrSummary from "../../../../../../../test-data/fhir/BundleEcrSummary.json";
 import BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
+import BundleRRConditionValueString from "../../../../../../../test-data/fhir/BundleRRConditionValueString.json";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryPatientDetails,
@@ -113,6 +114,13 @@ describe("ecrSummaryService Tests", () => {
       expect(actual[1].title).toEqual(
         "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
       );
+    });
+    it("should return human-readable name if available", () => {
+      const actual = evaluateEcrSummaryConditionSummary(
+        BundleRRConditionValueString as unknown as Bundle,
+      );
+
+      expect(actual[0].title).toEqual("COVID");
     });
     it("should return summaries based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(

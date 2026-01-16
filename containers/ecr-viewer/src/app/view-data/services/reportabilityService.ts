@@ -38,6 +38,7 @@ export const evaluateRRInfo = (fhirBundle: Bundle): ReportableConditions => {
   for (const condition of rrConditions) {
     const name =
       formatCodeableConcept(condition.valueCodeableConcept) ??
+      condition.valueString ??
       "Unknown Condition";
     const rrInfo: ReportabilityInfo[] = [];
 
