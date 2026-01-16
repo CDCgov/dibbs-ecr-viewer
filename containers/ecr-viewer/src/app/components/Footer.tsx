@@ -6,24 +6,32 @@ import Image from "next/image";
  * classes for styling with some customization.
  * @returns The footer section of the application.
  */
-const Footer: React.FC = () => (
-  <footer className="usa-footer usa-footer--slim">
-    <div className="footer-content display-flex flex-justify flex-align-center">
-      <div className="flex-shrink-0">
-        <Image
-          src="/ecr-viewer/img/cdc-logo.png"
-          alt="Centers for Disease Control and Prevention Logo"
-          width={206}
-          height={48}
-        />
+const Footer: React.FC = () => {
+  const shouldDisplayLinks = process.env.DISPLAY_FEEDBACK_LINKS === "true";
+
+  return (
+    <footer className="usa-footer usa-footer--slim">
+      <div className="footer-content display-flex flex-justify flex-align-center">
+        <div className="flex-shrink-0">
+          <Image
+            src="/ecr-viewer/img/cdc-logo.png"
+            alt="Centers for Disease Control and Prevention Logo"
+            width={206}
+            height={48}
+          />
+        </div>
+        <p className="margin-left-2">
+          {shouldDisplayLinks && (
+            <>
+              For more information about this solution, send us an email at{" "}
+              <a href="mailto:dibbs@cdc.gov">dibbs@cdc.gov</a> |{" "}
+            </>
+          )}
+          version {process.env.APP_VERSION}
+        </p>
       </div>
-      <p className="margin-left-2">
-        For more information about this solution, send us an email at{" "}
-        <a href="mailto:dibbs@cdc.gov">dibbs@cdc.gov</a> | version{" "}
-        {process.env.APP_VERSION}
-      </p>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 export default Footer;
