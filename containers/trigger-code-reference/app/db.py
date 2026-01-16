@@ -110,36 +110,37 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
         return resource
 
     # Get the first SNOMED coding from resource["valueCodeableConcept"]["coding"], if any
-    condition_code = next(
-        (
-            x
-            for x in resource["valueCodeableConcept"]["coding"]
-            if x["system"] == "http://snomed.info/sct"
-        ),
-        None,
-    )
-
-    if condition_code:
-        human_readable_condition_name = _get_condition_name_from_snomed_code_tes(
-            condition_code["code"]
-        )
-
-        if human_readable_condition_name:
-            resource["valueCodeableConcept"]["text"] = human_readable_condition_name
-        elif "display" in condition_code:
-            resource["valueCodeableConcept"]["text"] = condition_code["display"]
-    else:
-        # Fallback to the first available display text if condition_code is absent
-        fallback_display = next(
+    if "valueCodeableConcept" in resource:
+        condition_code = next(
             (
-                x["display"]
-                for x in resource["valueCodeableConcept"]["coding"]
-                if "display" in x
+                x
+                for x in resource["valueCodeableConcept"].get("coding", [])
+                if x.get("system", "") == "http://snomed.info/sct"
             ),
             None,
         )
-        if fallback_display:
-            resource["valueCodeableConcept"]["text"] = fallback_display
+
+        if condition_code:
+            human_readable_condition_name = _get_condition_name_from_snomed_code_tes(
+                condition_code.get("code", "")
+            )
+
+            if human_readable_condition_name:
+                resource["valueCodeableConcept"]["text"] = human_readable_condition_name
+            elif "display" in condition_code:
+                resource["valueCodeableConcept"]["text"] = condition_code["display"]
+        else:
+            # Fallback to the first available display text if condition_code is absent
+            fallback_display = next(
+                (
+                    x["display"]
+                    for x in resource["valueCodeableConcept"].get("coding", [])
+                    if "display" in x
+                ),
+                None,
+            )
+            if fallback_display:
+                resource["valueCodeableConcept"]["text"] = fallback_display
 
     return resource
 
