@@ -82,7 +82,7 @@ async def post_request(client: httpx.AsyncClient, url: str, payload: dict) -> Re
     :param payload: The body of the Request object, as a dictionary.
     :return: A Response object from the posted endpoint.
     """
-    return await client.post(url, json=payload, headers={"x-orchestration": "true"})
+    return await client.post(url, json=payload, headers={"x-orchestration": "true", "Connection": "close"})
 
 
 async def _send_websocket_dump(
