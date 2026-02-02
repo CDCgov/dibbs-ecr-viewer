@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Encounter Info: Encounter Details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <JsonTable
   className="caption-data-title margin-y-0"
   jsonTableData={
@@ -34,9 +34,47 @@ exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Enco
 />
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Encounter details Evaluate Encounter Diagnoses should return the correct diagnoses given an Encounter 1`] = `"OTHER MUSCLE SPASM"`;
+exports[`evaluateFhirDataService tests Evaluate Encounter Info: Encounter Details Evaluate Encounter Diagnoses should return the correct diagnoses given an Encounter 1`] = `"OTHER MUSCLE SPASM"`;
 
-exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Encounter Info: Facility Details should return the correct Facility data 1`] = `
+{
+  "availableData": [
+    {
+      "title": "Facility Name",
+      "value": "Location Name",
+    },
+    {
+      "title": "Facility Address",
+      "value": "37 Test Cir
+Suite Test
+Test City, TT 0000
+US",
+    },
+    {
+      "title": "Facility Contact Address",
+      "value": "37 Test Cir
+Suite Test
+Test City, TT 0000
+US",
+    },
+    {
+      "title": "Facility Contact",
+      "value": "Work: 615-322-5000",
+    },
+    {
+      "title": "Facility Type",
+      "value": "Healthcare facility",
+    },
+    {
+      "title": "Facility ID",
+      "value": "test-id-value",
+    },
+  ],
+  "unavailableData": [],
+}
+`;
+
+exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encounter Details A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
 {
   "availableData": [
     {
@@ -125,7 +163,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data A bundl
 }
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Admission Medication data when present and match snapshot 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encounter Details should return Admission Medication data when present and match snapshot 1`] = `
 {
   "availableData": [
     {
@@ -372,7 +410,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
 }
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encounter Details should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot 1`] = `
 {
   "availableData": [
     {
@@ -526,7 +564,7 @@ exports[`evaluateFhirDataServices tests Evaluate Hospital Encounter Data should 
 }
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when all fields present 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when all fields present 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"
   descriptor="employment details"
@@ -661,7 +699,7 @@ Nowhereville, KS",
 />
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when multiple jobs and sort correctly 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when multiple jobs and sort correctly 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"
   descriptor="employment details"
@@ -840,7 +878,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
 />
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when no workplace info 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when no workplace info 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"
   descriptor="employment details"
@@ -907,7 +945,7 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
 />
 `;
 
-exports[`evaluateFhirDataServices tests Evaluate Occupation History should match snapshot when partial info 1`] = `
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when partial info 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"
   descriptor="employment details"
@@ -1063,42 +1101,4 @@ exports[`evaluateFhirDataServices tests Evaluate Occupation History should match
     ]
   }
 />
-`;
-
-exports[`evaluateFhirDataServices tests Evaluate facility data should return the correct Facility data 1`] = `
-{
-  "availableData": [
-    {
-      "title": "Facility Name",
-      "value": "Location Name",
-    },
-    {
-      "title": "Facility Address",
-      "value": "37 Test Cir
-Suite Test
-Test City, TT 0000
-US",
-    },
-    {
-      "title": "Facility Contact Address",
-      "value": "37 Test Cir
-Suite Test
-Test City, TT 0000
-US",
-    },
-    {
-      "title": "Facility Contact",
-      "value": "Work: 615-322-5000",
-    },
-    {
-      "title": "Facility Type",
-      "value": "Healthcare facility",
-    },
-    {
-      "title": "Facility ID",
-      "value": "test-id-value",
-    },
-  ],
-  "unavailableData": [],
-}
 `;
