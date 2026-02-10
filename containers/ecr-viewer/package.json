@@ -36,10 +36,10 @@
     "convert-seed-data:build": "CONVERT_FLAGS=--build npm run convert-seed-data"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.842.0",
+    "@aws-sdk/client-s3": "^3.982.0",
     "@azure/storage-blob": "^12.28.0",
     "@fullhuman/postcss-purgecss": "^6.0.0",
-    "@google-cloud/storage": "^7.17.2",
+    "@google-cloud/storage": "^7.18.0",
     "@next/bundle-analyzer": "^15.3.1",
     "@parcel/watcher": "^2.5.0",
     "@trussworks/react-uswds": "^10.0.2",
@@ -131,6 +131,9 @@
     },
     "pretty-format": {
       "react-is": "$react-is"
+    },
+    "@google-cloud/storage": {
+      "fast-xml-parser": "5.3.4"
     }
   }
 }
