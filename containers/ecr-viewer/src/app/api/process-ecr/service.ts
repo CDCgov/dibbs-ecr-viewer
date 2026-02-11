@@ -13,6 +13,7 @@ import {
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
+import { resolveEcrId } from "@/app/utils/ecrid-utils";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -233,27 +234,16 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   // Namespace-aware selector for CDA
   const select = xpath.useNamespaces({ cda: "urn:hl7-org:v3" });
 
-  let id =
-    (select(
-      "string(/cda:ClinicalDocument/cda:id/@extension)",
-      doc,
-    ) as string) ||
-    (select("string(/cda:ClinicalDocument/cda:id/@root)", doc) as string);
+  const root = select(
+    "string(/cda:ClinicalDocument/cda:id/@root)",
+    doc,
+  ) as string;
+  const extension = select(
+    "string(/cda:ClinicalDocument/cda:id/@extension)",
+    doc,
+  ) as string;
 
-  // Fallback if the document lacks the CDA namespace declaration
-  if (!id) {
-    id =
-      (xpath.select(
-        "string(/ClinicalDocument/id/@extension)",
-        doc,
-      ) as string) ||
-      (xpath.select("string(/ClinicalDocument/id/@root)", doc) as string);
-  }
-
-  if (!id) {
-    throw new Error("Missing ClinicalDocument id (@extension or @root).");
-  }
-  return id;
+  return resolveEcrId(root, extension);
 };
 
 /**

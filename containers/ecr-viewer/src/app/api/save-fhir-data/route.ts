@@ -5,6 +5,7 @@ import {
   AZURE_SOURCE,
   GCP_SOURCE,
 } from "@/app/data/blobStorage/utils";
+import { getEcrIdFromIdentifier } from "@/app/utils/ecrid-utils";
 
 import { saveToStorage, saveWithMetadata } from "./service";
 
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
   try {
     requestBody = await request.json();
     fhirBundle = requestBody.fhirBundle;
-    ecrId = requestBody.fhirBundle.id;
+    ecrId = getEcrIdFromIdentifier(requestBody.fhirBundle.identifier);
   } catch (error: unknown) {
     console.error("Error reading request body:", error);
 
