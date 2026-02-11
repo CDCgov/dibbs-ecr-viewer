@@ -699,6 +699,83 @@ Nowhereville, KS",
 />
 `;
 
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when job comes from social history Obs 1`] = `
+<ExpandCollapseAccordion
+  className="accordion-rr"
+  descriptor="employment details"
+  items={
+    [
+      {
+        "content": <React.Fragment>
+          <DataDisplay
+            item={
+              {
+                "title": "Dates",
+                "value": "01/04/2018 - Present",
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "title": "Industry",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "fullWidthContent": false,
+                "title": "Workplace Information",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+          <DataDisplay
+            item={
+              {
+                "dividerLine": false,
+                "title": "Hazard",
+                "value": <span
+                  className="text-italic text-base"
+                >
+                  No data
+                </span>,
+              }
+            }
+          />
+        </React.Fragment>,
+        "expanded": false,
+        "headingLevel": "h5",
+        "id": "12345",
+        "title": <div
+          className="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Construction
+          </span>
+          <span
+            className="font-size-xs text-base"
+          >
+            Current
+             Employment
+          </span>
+        </div>,
+      },
+    ]
+  }
+/>
+`;
+
 exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when multiple jobs and sort correctly 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"
@@ -1259,83 +1336,6 @@ exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Eva
           className="display-flex flex-row flex-no-wrap flex-justify"
         >
           <span />
-          <span
-            className="font-size-xs text-base"
-          >
-            Current
-             Employment
-          </span>
-        </div>,
-      },
-    ]
-  }
-/>
-`;
-
-exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when occ comes from social history Obs 1`] = `
-<ExpandCollapseAccordion
-  className="accordion-rr"
-  descriptor="employment details"
-  items={
-    [
-      {
-        "content": <React.Fragment>
-          <DataDisplay
-            item={
-              {
-                "title": "Dates",
-                "value": "01/04/2018 - Present",
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "title": "Industry",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "fullWidthContent": false,
-                "title": "Workplace Information",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-          <DataDisplay
-            item={
-              {
-                "dividerLine": false,
-                "title": "Hazard",
-                "value": <span
-                  className="text-italic text-base"
-                >
-                  No data
-                </span>,
-              }
-            }
-          />
-        </React.Fragment>,
-        "expanded": false,
-        "headingLevel": "h5",
-        "id": "12345",
-        "title": <div
-          className="display-flex flex-row flex-no-wrap flex-justify"
-        >
-          <span>
-            Construction
-          </span>
           <span
             className="font-size-xs text-base"
           >
