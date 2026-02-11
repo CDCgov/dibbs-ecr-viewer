@@ -1280,6 +1280,140 @@ Home: 123-456-6909`,
 
         expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
       });
+
+      it("should match snapshot when job comes from social history Obs", () => {
+        // Employment details can also come from Social History Obs
+        // not just Past or Present Occupation Obs
+        const bundle: Bundle = {
+          resourceType: "Bundle",
+          type: "document",
+          entry: [
+            {
+              resource: {
+                resourceType: "Observation",
+                id: "12345",
+                status: "final",
+                meta: {
+                  profile: [
+                    "http://hl7.org/fhir/StructureDefinition/Observation",
+                  ],
+                },
+                code: {
+                  coding: [
+                    {
+                      code: "364703007",
+                      system: "http://snomed.info/sct",
+                      display: "Employment detail"
+                    },
+                    {
+                      code: "11295-3",
+                      system: "http://loinc.org",
+                      display: "Current employment - Reported"
+                    }
+                  ]
+                },
+                effectivePeriod: {
+                  start: "2018-01-04",
+                },
+                "valueString": "Construction",
+              },
+            }
+          ],
+        };
+        expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+      });
+
+      it("should match snapshot when multiple jobs come from both social history and PastOrPresent Obs", () => {
+        const bundle: Bundle = {
+          resourceType: "Bundle",
+          type: "document",
+          entry: [
+            {
+              resource: {
+                resourceType: "Observation",
+                id: "12345",
+                status: "final",
+                meta: {
+                  profile: [
+                    "http://hl7.org/fhir/StructureDefinition/Observation",
+                  ],
+                },
+                code: {
+                  coding: [
+                    {
+                      code: "364703007",
+                      system: "http://snomed.info/sct",
+                      display: "Employment detail",
+                    },
+                    {
+                      code: "11295-3",
+                      system: "http://loinc.org",
+                      display: "Current employment - Reported",
+                    },
+                  ],
+                },
+                effectivePeriod: {
+                  start: "2018-01-04",
+                },
+                valueString: "Construction",
+              },
+            },
+            {
+              resource: {
+                resourceType: "Observation",
+                id: "12345",
+                status: "final",
+                meta: {
+                  profile: [
+                    "http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob",
+                  ],
+                },
+                code: {
+                  coding: [
+                    {
+                      code: "11341-5",
+                      system: "http://loinc.org",
+                    },
+                  ],
+                },
+                extension: [
+                  {
+                    url: "http://hl7.org/fhir/us/odh/StructureDefinition/odh-Employer-extension",
+                    valueReference: { reference: "Organization/1234" },
+                  },
+                ],
+                effectivePeriod: {
+                  start: "2020-01-04",
+                },
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      code: "3600",
+                      system: "urn:oid:2.16.840.1.113883.6.240",
+                      display: "Nursing, psychiatric, and home health aides",
+                    }
+                  ],
+                },
+              },
+            },
+            {
+              resource: {
+                resourceType: "Organization",
+                id: "1234",
+                address: [
+                  {
+                    line: ["123 test st"],
+                    city: "Nowhereville",
+                    state: "KS",
+                  },
+                ],
+              },
+            },
+          ],
+        };
+        expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
+      });
+
     });
 
     it("should return religion if available", () => {
