@@ -241,11 +241,7 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
 
   // Fallback if the document lacks the CDA namespace declaration
   if (!root) {
-    root =
-        (xpath.select(
-            "string(/ClinicalDocument/id/@root)",
-            doc,
-        ) as string)
+    root = xpath.select("string(/ClinicalDocument/id/@root)", doc) as string;
   }
 
   let extension = select(
@@ -255,11 +251,10 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
 
   // Fallback if the document lacks the CDA namespace declaration
   if (!extension) {
-    extension =
-        (xpath.select(
-            "string(/ClinicalDocument/id/@extension)",
-            doc,
-        ) as string)
+    extension = xpath.select(
+      "string(/ClinicalDocument/id/@extension)",
+      doc,
+    ) as string;
   }
 
   return resolveEcrId(root, extension);
