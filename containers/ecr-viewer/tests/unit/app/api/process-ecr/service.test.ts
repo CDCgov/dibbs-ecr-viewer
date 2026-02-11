@@ -577,13 +577,13 @@ describe("orchestrationRequest", () => {
     describe("getEcrIdFromXml", () => {
       const xmlString = `
     <ClinicalDocument>
-      <id root="1234-uuid" />
+      <id root="1234-uuid" extension="bananas" />
     </ClinicalDocument>
   `;
 
       it("extracts ID when ecr is a string", async () => {
         const result = await getEcrIdFromXml({ ecr: xmlString } as any);
-        expect(result).toBe("1234-uuid");
+        expect(result).toBe("1234-uuid^bananas");
       });
 
       it("extracts ID when ecr is an XML file", async () => {
@@ -591,7 +591,7 @@ describe("orchestrationRequest", () => {
           type: "application/xml",
         });
         const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
-        expect(result).toBe("1234-uuid");
+        expect(result).toBe("1234-uuid^bananas");
       });
 
       it("extracts ID when ecr is a zipped XML file", async () => {
@@ -604,7 +604,7 @@ describe("orchestrationRequest", () => {
         });
 
         const result = await getEcrIdFromXml({ ecr: zipFile } as any);
-        expect(result).toBe("1234-uuid");
+        expect(result).toBe("1234-uuid^bananas");
       });
 
       it("throws for unsupported upload types", async () => {

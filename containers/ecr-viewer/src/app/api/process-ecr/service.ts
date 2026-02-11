@@ -234,14 +234,33 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   // Namespace-aware selector for CDA
   const select = xpath.useNamespaces({ cda: "urn:hl7-org:v3" });
 
-  const root = select(
+  let root = select(
     "string(/cda:ClinicalDocument/cda:id/@root)",
     doc,
   ) as string;
-  const extension = select(
+
+  // Fallback if the document lacks the CDA namespace declaration
+  if (!root) {
+    root =
+        (xpath.select(
+            "string(/ClinicalDocument/id/@root)",
+            doc,
+        ) as string)
+  }
+
+  let extension = select(
     "string(/cda:ClinicalDocument/cda:id/@extension)",
     doc,
   ) as string;
+
+  // Fallback if the document lacks the CDA namespace declaration
+  if (!extension) {
+    extension =
+        (xpath.select(
+            "string(/ClinicalDocument/id/@extension)",
+            doc,
+        ) as string)
+  }
 
   return resolveEcrId(root, extension);
 };
