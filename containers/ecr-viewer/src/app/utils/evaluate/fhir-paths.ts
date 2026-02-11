@@ -58,6 +58,7 @@ export type PathTypes = {
   patientGuardian: RelatedPerson;
   patientOccupation: Observation;
   patientOccupationHistory: Observation;
+  patientOccupationHistory2: Observation;
   patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
@@ -268,6 +269,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientOccupationHistory: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '11341-5'))",
+  },
+  patientOccupationHistory2: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(code = '11295-3' or code = '36473007'))",
   },
   patientEmploymentStatus: {
     type: "Observation",

@@ -547,10 +547,12 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
  * @returns An array of evaluated and formatted occupation history data.
  */
 export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
-  const jobObs = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.patientOccupationHistory,
-  );
+  const jobObs = [
+    // Employment detail(s) may come from a Past or Present Occupation Obs
+    ...evaluateAll(fhirBundle, fhirPathMappings.patientOccupationHistory),
+    // or a Social History Obs
+    ...evaluateAll(fhirBundle, fhirPathMappings.patientOccupationHistory2),
+  ];
   if (jobObs.length === 0) return;
 
   sortResourcesByDate(jobObs, fhirPathMappings.effectiveX);
@@ -632,7 +634,9 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
             <DataDisplay
               item={{
                 title: "Dates",
-                value: formatPeriodDate(obs.effectivePeriod),
+                value:
+                  obs.effectivePeriod ? formatPeriodDate(obs.effectivePeriod) :
+                  formatDateTime(obs.effectiveDateTime),
               }}
             />
             <DataDisplay
@@ -661,7 +665,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
         return {
           title: (
             <div className="display-flex flex-row flex-no-wrap flex-justify">
-              <span>{formatCodeableConcept(obs.valueCodeableConcept)}</span>
+              <span>{formatCodeableConcept(obs.valueCodeableConcept) ?? obs.valueString}</span>
               <span className="font-size-xs text-base">
                 {!!obs.effectivePeriod?.end ? "Past" : "Current"} Employment
               </span>
