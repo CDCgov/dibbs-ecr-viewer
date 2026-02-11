@@ -634,9 +634,9 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
             <DataDisplay
               item={{
                 title: "Dates",
-                value:
-                  obs.effectivePeriod ? formatPeriodDate(obs.effectivePeriod) :
-                  formatDateTime(obs.effectiveDateTime),
+                value: obs.effectivePeriod
+                  ? formatPeriodDate(obs.effectivePeriod)
+                  : formatDateTime(obs.effectiveDateTime),
               }}
             />
             <DataDisplay
@@ -665,7 +665,10 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
         return {
           title: (
             <div className="display-flex flex-row flex-no-wrap flex-justify">
-              <span>{formatCodeableConcept(obs.valueCodeableConcept) ?? obs.valueString}</span>
+              <span>
+                {formatCodeableConcept(obs.valueCodeableConcept) ??
+                  obs.valueString}
+              </span>
               <span className="font-size-xs text-base">
                 {!!obs.effectivePeriod?.end ? "Past" : "Current"} Employment
               </span>
