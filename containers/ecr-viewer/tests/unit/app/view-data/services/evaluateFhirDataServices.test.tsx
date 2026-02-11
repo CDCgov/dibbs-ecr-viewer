@@ -1303,21 +1303,21 @@ Home: 123-456-6909`,
                     {
                       code: "364703007",
                       system: "http://snomed.info/sct",
-                      display: "Employment detail"
+                      display: "Employment detail",
                     },
                     {
                       code: "11295-3",
                       system: "http://loinc.org",
-                      display: "Current employment - Reported"
-                    }
-                  ]
+                      display: "Current employment - Reported",
+                    },
+                  ],
                 },
                 effectivePeriod: {
                   start: "2018-01-04",
                 },
-                "valueString": "Construction",
+                valueString: "Construction",
               },
-            }
+            },
           ],
         };
         expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
@@ -1391,7 +1391,7 @@ Home: 123-456-6909`,
                       code: "3600",
                       system: "urn:oid:2.16.840.1.113883.6.240",
                       display: "Nursing, psychiatric, and home health aides",
-                    }
+                    },
                   ],
                 },
               },
@@ -1413,7 +1413,6 @@ Home: 123-456-6909`,
         };
         expect(evaluateOccupationHistory(bundle)).toMatchSnapshot();
       });
-
     });
 
     it("should return religion if available", () => {
