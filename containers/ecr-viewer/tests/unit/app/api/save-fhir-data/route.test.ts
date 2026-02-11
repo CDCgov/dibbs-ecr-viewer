@@ -38,6 +38,7 @@ const fakeData = (source: string) => ({
     resourceType: "Bundle",
     type: "document",
     identifier: {
+      system: "abcdef",
       value: "12345",
     },
     timestamp: "2000-02-04T09:01:22-05:00",
@@ -85,7 +86,7 @@ describe("POST Save FHIR Data API Route", () => {
     s3Mock
       .on(PutObjectCommand, {
         Bucket: process.env.ECR_BUCKET_NAME,
-        Key: "12345.json",
+        Key: "abcdef^12345.json",
         Body: JSON.stringify(fakeData("s3").fhirBundle),
         ContentType: "application/json",
       })
@@ -144,6 +145,7 @@ describe("POST Save FHIR Data API Route", () => {
         resourceType: "Bundle",
         type: "document",
         identifier: {
+          system: "abcdef",
           value: "12345",
         },
         timestamp: "2000-02-04T09:01:22-05:00",
@@ -184,7 +186,7 @@ describe("POST Save FHIR Data API Route", () => {
     s3Mock
       .on(PutObjectCommand, {
         Bucket: process.env.ECR_BUCKET_NAME,
-        Key: "12345.json",
+        Key: "abcdef^12345.json",
         Body: JSON.stringify(reqBody.fhirBundle),
         ContentType: "application/json",
       })
@@ -248,7 +250,7 @@ describe("POST Save FHIR Data API Route - Azure", () => {
     expect(mockBlockBlobClient.upload).toHaveBeenCalledOnce();
     expect(mockBlockBlobClient.upload).toHaveBeenCalledWith(
       JSON.stringify(fakeData("azure").fhirBundle),
-      221,
+      239,
       {
         blobHTTPHeaders: { blobContentType: "application/json" },
       },
@@ -277,7 +279,7 @@ describe("POST Save FHIR Data API Route - Azure", () => {
     expect(mockBlockBlobClient.upload).toHaveBeenCalledOnce();
     expect(mockBlockBlobClient.upload).toHaveBeenCalledWith(
       JSON.stringify(fakeData("azure").fhirBundle),
-      221,
+      239,
       {
         blobHTTPHeaders: { blobContentType: "application/json" },
       },
