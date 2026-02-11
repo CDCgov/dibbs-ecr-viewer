@@ -711,7 +711,7 @@ exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Eva
             item={
               {
                 "title": "Dates",
-                "value": "01/04/2018 - Present",
+                "value": "01/04/2025 3:00 AM EST",
               }
             }
           />
