@@ -508,7 +508,7 @@ export const evaluateAlcoholUse = (fhirBundle: Bundle) => {
 export const evaluateOccupation = (fhirBundle: Bundle) => {
   const occupationObs = evaluateOne(
     fhirBundle,
-    fhirPathMappings.patientOccupationUsual
+    fhirPathMappings.patientOccupationUsual,
   );
   const employmentObs = evaluateAll(
     fhirBundle,
@@ -551,12 +551,12 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
     // Employment detail(s) may come from a Past or Present Occupation Obs
     ...evaluateAll(
       fhirBundle,
-      fhirPathMappings.patientOccupationFromPastOrPresent
+      fhirPathMappings.patientOccupationFromPastOrPresent,
     ),
     // or a Social History Obs
     ...evaluateAll(
       fhirBundle,
-      fhirPathMappings.patientOccupationFromSocialHistory
+      fhirPathMappings.patientOccupationFromSocialHistory,
     ),
   ];
   if (jobObs.length === 0) return;
