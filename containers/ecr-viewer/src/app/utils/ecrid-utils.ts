@@ -3,7 +3,9 @@
  * @param identifier Identifier from FHIR Bundle
  * @returns ECR ID
  */
-export const getEcrIdFromIdentifier = (identifier: fhir4.Identifier): string => {
+export const getEcrIdFromIdentifier = (
+  identifier: fhir4.Identifier,
+): string => {
   let root = "";
   let extension = "";
 
@@ -30,7 +32,6 @@ export const getEcrIdFromIdentifier = (identifier: fhir4.Identifier): string => 
 export const resolveEcrId = (root: string, extension: string): string => {
   console.log("Root: ", root);
   console.log("Extension: ", extension);
-
 
   if (!root && !extension) {
     throw new Error("Missing ECR identifier root and extension.");
