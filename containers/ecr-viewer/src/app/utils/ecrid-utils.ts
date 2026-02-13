@@ -1,7 +1,8 @@
 /**
- * Get ECR ID from Identifier object
+ * Get ECR ID from FHIR bundle Identifier. Pulls Root and Extension ID values from the FHIR Bundle Identifier and passes
+ * them to resolveEcrId to return a proper ID string.
  * @param identifier Identifier from FHIR Bundle
- * @returns ECR ID
+ * @returns ECR ID string
  */
 export const getEcrIdFromIdentifier = (
   identifier: fhir4.Identifier,
@@ -25,9 +26,10 @@ export const getEcrIdFromIdentifier = (
 
 /**
  * Function to resolve proper ECR ID from root and extension values
- * @param root Value originating from the /ClinicalDocument/id/@root path - id.system in the FHIR Bundle
- * @param extension Value from the /ClinicalDocument/id/@extension path - id.value in the FHIR Bundle
- * @returns The ECR ID string composed of root and extenstion values if present
+ * @param root Value originating from the /ClinicalDocument/id/@root path in the original CDA XML
+ * @param extension Value from the /ClinicalDocument/id/@extension path in the original CDA XML
+ * @returns The ECR ID string composed of root and extension values if present, otherwise just root or
+ * extension if only one is present
  */
 export const resolveEcrId = (root: string, extension: string): string => {
   if (!root && !extension) {
