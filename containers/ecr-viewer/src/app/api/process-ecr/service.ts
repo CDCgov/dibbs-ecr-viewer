@@ -13,7 +13,7 @@ import {
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
-import { resolveEcrId } from "@/app/utils/ecrid-utils";
+import {getEcrIdFromIdentifier, resolveEcrId} from "@/app/utils/ecrid-utils";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -144,11 +144,17 @@ const saveToSource = (
   bundle: Bundle,
   metadata: BundleMetadata | BundleExtendedMetadata | undefined,
 ) => {
-  const ecrId = bundle.id!;
-  if (metadata) {
-    return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
+  const identifier = bundle.identifier
+
+  if(identifier) {
+    const ecrId = getEcrIdFromIdentifier(identifier);
+    if (metadata) {
+      return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
+    } else {
+      return saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
+    }
   } else {
-    return saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
+    throw new Error("eCR bundle contains no identifier.")
   }
 };
 
@@ -189,6 +195,7 @@ export const orchestrationRequest = async (
       status: 500,
     };
   }
+
   const res = await saveToSource(
     orchestrationResp.ecr,
     orchestrationResp.metadata,

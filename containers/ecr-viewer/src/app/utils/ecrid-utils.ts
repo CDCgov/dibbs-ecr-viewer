@@ -1,26 +1,21 @@
-interface Identifier {
-  system: string;
-  value: string;
-}
-
 /**
  * Get ECR ID from Identifier object
  * @param identifier Identifier from FHIR Bundle
  * @returns ECR ID
  */
-export const getEcrIdFromIdentifier = (identifier: Identifier): string => {
+export const getEcrIdFromIdentifier = (identifier: fhir4.Identifier): string => {
   let root = "";
   let extension = "";
 
   if (identifier.system === "urn:ietf:rfc:3986") {
-    root = identifier.value;
+    root = identifier.value ?? "";
   } else if (
     identifier.system === "http://terminology.hl7.org/CodeSystem/v3-NullFlavor"
   ) {
-    extension = identifier.value;
+    extension = identifier.value ?? "";
   } else {
-    root = identifier.system;
-    extension = identifier.value;
+    root = identifier.system ?? "";
+    extension = identifier.value ?? "";
   }
 
   return resolveEcrId(root, extension);
@@ -33,6 +28,10 @@ export const getEcrIdFromIdentifier = (identifier: Identifier): string => {
  * @returns The ECR ID string composed of root and extenstion values if present
  */
 export const resolveEcrId = (root: string, extension: string): string => {
+  console.log("Root: ", root);
+  console.log("Extension: ", extension);
+
+
   if (!root && !extension) {
     throw new Error("Missing ECR identifier root and extension.");
   }
