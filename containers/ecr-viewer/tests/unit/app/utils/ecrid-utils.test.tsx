@@ -2,7 +2,7 @@ import { getEcrIdFromIdentifier, resolveEcrId } from "@/app/utils/ecrid-utils";
 
 describe("ECR ID Utils", () => {
   describe("getEcrIdFromIdentifier", () => {
-    it("should return root (from value with no prefix) if system is urn:ietf:rfc:3986", () => {
+    it("should return root (from OID value with no prefix) if system is urn:ietf:rfc:3986", () => {
       const identifier = {
         system: "urn:ietf:rfc:3986",
         value: "urn:oid:2.16.840.1.113883.9.9.9.9.9",
@@ -10,6 +10,17 @@ describe("ECR ID Utils", () => {
 
       const result = getEcrIdFromIdentifier(identifier);
       const expectedEcrId = "2.16.840.1.113883.9.9.9.9.9";
+      expect(result).toBe(expectedEcrId);
+    });
+
+    it("should return root (from UUID value with no prefix) if system is urn:ietf:rfc:3986", () => {
+      const identifier = {
+        system: "urn:ietf:rfc:3986",
+        value: "urn:uuid:db734647-fc99-424c-a864-7e3cda82e703",
+      };
+
+      const result = getEcrIdFromIdentifier(identifier);
+      const expectedEcrId = "db734647-fc99-424c-a864-7e3cda82e703";
       expect(result).toBe(expectedEcrId);
     });
 

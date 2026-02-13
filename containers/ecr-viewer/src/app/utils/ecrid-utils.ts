@@ -37,9 +37,12 @@ export const resolveEcrId = (root: string, extension: string): string => {
   }
 
   // trim off prefix
-  const prefix = "urn:oid:";
-  if (root.includes(prefix)) {
-    root = root.slice(prefix.length);
+  const oidPrefix = "urn:oid:";
+  const uuidPrefix = "urn:uuid:";
+  if (root.includes(oidPrefix)) {
+    root = root.slice(oidPrefix.length);
+  } else if (root.includes(uuidPrefix)) {
+    root = root.slice(uuidPrefix.length)
   }
 
   if (root && extension) {
