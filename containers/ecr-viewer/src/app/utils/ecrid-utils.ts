@@ -30,9 +30,12 @@ export const getEcrIdFromIdentifier = (
  * @returns The ECR ID string composed of root and extenstion values if present
  */
 export const resolveEcrId = (root: string, extension: string): string => {
+<<<<<<< Updated upstream
   console.log("Root: ", root);
   console.log("Extension: ", extension);
 
+=======
+>>>>>>> Stashed changes
   if (!root && !extension) {
     throw new Error("Missing ECR identifier root and extension.");
   }

@@ -30,7 +30,7 @@ describe("orchestrationRequest", () => {
   const mockFile = new File(["content"], "test.zip", {
     type: "application/zip",
   });
-  const mockEcr = { id: "123" };
+  const mockEcr = { id: "123", identifier: {system: "hello", value: "world"} };
   const mockMetadata = { key: "value" };
 
   let mockPool: Interceptable;
@@ -74,7 +74,7 @@ describe("orchestrationRequest", () => {
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
       mockEcr,
-      "123",
+      "hello^world",
       S3_SOURCE,
       mockMetadata,
     );
@@ -106,7 +106,7 @@ describe("orchestrationRequest", () => {
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
-      "123",
+      "hello^world",
       S3_SOURCE,
       "fhir",
     );
@@ -142,7 +142,7 @@ describe("orchestrationRequest", () => {
     });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
-      "123",
+      "hello^world",
       S3_SOURCE,
       "fhir",
     );
