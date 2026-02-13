@@ -42,7 +42,7 @@ export const resolveEcrId = (root: string, extension: string): string => {
   if (root.includes(oidPrefix)) {
     root = root.slice(oidPrefix.length);
   } else if (root.includes(uuidPrefix)) {
-    root = root.slice(uuidPrefix.length)
+    root = root.slice(uuidPrefix.length);
   }
 
   if (root && extension) {
