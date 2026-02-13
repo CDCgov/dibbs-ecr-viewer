@@ -30,7 +30,10 @@ describe("orchestrationRequest", () => {
   const mockFile = new File(["content"], "test.zip", {
     type: "application/zip",
   });
-  const mockEcr = { id: "123", identifier: {system: "hello", value: "world"} };
+  const mockEcr = {
+    id: "123",
+    identifier: { system: "hello", value: "world" },
+  };
   const mockMetadata = { key: "value" };
 
   let mockPool: Interceptable;
