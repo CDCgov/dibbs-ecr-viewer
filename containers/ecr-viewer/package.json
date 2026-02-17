@@ -17,7 +17,7 @@
     "build": "next build",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "lint:tsc": "tsc --noEmit",
     "format": "prettier --write '**/*.{js,json,md,ts,tsx,scss,yaml,yml}'",
     "format:check": "prettier --check '**/*.{js,json,md,ts,tsx,scss,yaml,yml}'",
