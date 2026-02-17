@@ -56,8 +56,9 @@ export type PathTypes = {
   patientTribalAffiliation: ValueX;
   patientEmergencyContact: PatientContact;
   patientGuardian: RelatedPerson;
-  patientOccupation: Observation;
-  patientOccupationHistory: Observation;
+  patientOccupationUsual: Observation;
+  patientOccupationFromPastOrPresent: Observation;
+  patientOccupationFromSocialHistory: Observation;
   patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
@@ -261,13 +262,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Social History
-  patientOccupation: {
+  patientOccupationUsual: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '21843-8'))",
   },
-  patientOccupationHistory: {
+  patientOccupationFromPastOrPresent: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '11341-5'))",
+  },
+  patientOccupationFromSocialHistory: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(code = '11295-3' or code = '36473007'))",
   },
   patientEmploymentStatus: {
     type: "Observation",
