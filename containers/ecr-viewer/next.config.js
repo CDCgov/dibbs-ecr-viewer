@@ -8,9 +8,10 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 const nextConfig = {
   sassOptions: {
-    includePaths: [
+    loadPaths: [
       path.join(__dirname, "node_modules", "@uswds", "uswds", "packages"),
     ],
+    api: 'legacy',
     quietDeps: true,
   },
   experimental: {
@@ -27,7 +28,6 @@ const nextConfig = {
   env: {
     BASE_PATH: basePath,
   },
-  turbopack: {},
 
   // next auth useSession doesn't double mount nicely
   reactStrictMode: false,
