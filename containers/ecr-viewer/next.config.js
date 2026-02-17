@@ -11,7 +11,7 @@ const nextConfig = {
     loadPaths: [
       path.join(__dirname, "node_modules", "@uswds", "uswds", "packages"),
     ],
-    api: 'legacy',
+    api: "legacy",
     quietDeps: true,
   },
   experimental: {
