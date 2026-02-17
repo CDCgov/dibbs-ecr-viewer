@@ -14,7 +14,7 @@
     "local-docker:build": "FLAGS=--build npm run local-docker",
     "local-docker:silent": "FLAGS=-d npm run local-docker",
     "setup-local-env": "../../setup-env.sh .env.local",
-    "build": "next build",
+    "build": "next build --webpack",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint .",
