@@ -27,6 +27,7 @@ const nextConfig = {
   env: {
     BASE_PATH: basePath,
   },
+  turbopack: {},
 
   // next auth useSession doesn't double mount nicely
   reactStrictMode: false,
