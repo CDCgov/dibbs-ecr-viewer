@@ -209,7 +209,7 @@ export const orchestrationRequest = async (
 };
 
 /**
- * Save the original uploaded XML to storage
+ * Reaches into the eCR xml to grab root and extension ID values and returns an eCR ID string
  * @param body - Parsed body of the request
  * @returns The eCR ID as a string
  */

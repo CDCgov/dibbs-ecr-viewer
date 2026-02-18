@@ -10,13 +10,17 @@ export const getEcrIdFromIdentifier = (
   let root = "";
   let extension = "";
 
+  // This string as system indicates that the value field is the ID root
   if (identifier.system === "urn:ietf:rfc:3986") {
     root = identifier.value ?? "";
   } else if (
+    //   A null flavor system string indicates that the eCR had no root, so value = extension
+    //   An eCR SHOULD always have a root value, but just in case we get one with extension but no root
     identifier.system === "http://terminology.hl7.org/CodeSystem/v3-NullFlavor"
   ) {
     extension = identifier.value ?? "";
   } else {
+    // Otherwise, system is root and value is extension so set those from the identifier system and value fields
     root = identifier.system ?? "";
     extension = identifier.value ?? "";
   }
