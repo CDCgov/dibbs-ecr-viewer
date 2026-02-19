@@ -1,4 +1,4 @@
-azure-identity
+azure-identity>=1.16.1
 grequests
-requests
+requests>=2.32.4
 gevent>=23.9
