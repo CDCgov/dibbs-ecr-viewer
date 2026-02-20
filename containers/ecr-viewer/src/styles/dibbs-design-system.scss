@@ -2,7 +2,7 @@
 // pagination styles removed as in the viewer we want link-y buttons vs button-y buttons
 
 @use "variables" as *;
-@use "uswds-core" as *;
+@use "../../node_modules/@uswds/uswds/packages/uswds-core" as *;
 @use "uswds-settings" as *;
 
 html,
