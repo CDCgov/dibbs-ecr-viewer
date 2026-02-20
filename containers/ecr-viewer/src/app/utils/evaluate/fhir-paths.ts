@@ -11,6 +11,7 @@ import {
   Extension,
   HumanName,
   Immunization,
+  MedicationStatement,
   Observation,
   ObservationReferenceRange,
   Organization,
@@ -128,6 +129,8 @@ export type PathTypes = {
   medicationDose: ValueX;
   medicationAdministrationPerformerRef: Reference;
   medicationAdministrationReactionRef: Reference;
+  prescriptionMedications: MedicationStatement;
+  prescriptionMedicationRef: Reference;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
@@ -557,6 +560,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "MedicationAdministration.supportingInformation",
   },
   medicationDose: { type: "ValueX", path: "dosage.dose.value" },
+
+  // === Prescription Medications ===
+  prescriptionMedications: {
+    type: "MedicationStatement",
+    path: "entry.resource.MedicationStatement",
+  },
+
+  prescriptionMedicationRef: {
+    type: "Reference",
+    path: "MedicationStatement.medicationReference",
+  },
 
   // === Procedure ===
   procedures: {
