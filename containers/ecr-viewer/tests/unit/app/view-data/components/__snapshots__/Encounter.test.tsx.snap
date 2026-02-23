@@ -222,7 +222,6 @@ exports[`Encounter should match snapshot 1`] = `
                 class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
                 data-testid="triggerElement"
                 tabindex="0"
-                title=""
               >
                 <svg
                   aria-label="description"
@@ -378,7 +377,6 @@ Echo Base, MA 00123
                 class="usa-tooltip__trigger margin-left-05 usa-tooltip short-tooltip"
                 data-testid="triggerElement"
                 tabindex="0"
-                title=""
               >
                 <svg
                   aria-label="description"
