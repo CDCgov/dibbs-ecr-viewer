@@ -1,7 +1,7 @@
 // This file contains customizations of USWDS classes without a modifier
 // which scopes it to a specific component.
 
-@use "uswds-core" as *;
+@use "../../node_modules/@uswds/uswds/packages/uswds-core" as *;
 
 .usa-accordion__button {
   &:active {
