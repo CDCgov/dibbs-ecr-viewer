@@ -1,7 +1,7 @@
 // Most variables sourced from https://github.com/CDCgov/dibbs-design-system/blob/main/sass/_uswds-theme.scss
 
 /* https://designsystem.digital.gov/documentation/settings/ */
-@use "uswds-core" with (
+@use "../../node_modules/@uswds/uswds/packages/uswds-core" with (
   // General
   $theme-show-compile-warnings: true,
   $theme-show-notifications: false,
