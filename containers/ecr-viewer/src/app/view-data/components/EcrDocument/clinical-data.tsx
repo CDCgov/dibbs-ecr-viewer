@@ -50,11 +50,11 @@ import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
-import { PrescriptionMedications } from "@/app/view-data/components/PrescriptionMedications";
 import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
+import { evaluateMedicationsTable } from "../../services/evaluateFhirDataService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
@@ -148,17 +148,10 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     },
   ];
 
-  const evaluatedPrescriptionMedications =
-    evaluatePrescriptionMedications(fhirBundle);
-  const prescriptionMedications: DisplayDataProps[] = [
+  const medications = [
     {
-      title: "Prescription Medications", // Subtitle
-      fullWidthContent: true,
-      value: evaluatedPrescriptionMedications?.length && (
-        <PrescriptionMedications
-          prescriptionMedications={evaluatedPrescriptionMedications}
-        />
-      ),
+      title: "Medications",
+      value: evaluateMedicationsTable(fhirBundle),
     },
   ];
 
@@ -170,7 +163,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     treatmentData: evaluateData(treatmentData),
     vitalData: evaluateData(vitalData),
     immunizationsDetails: evaluateData(immunizationsData),
-    prescriptionMedications: evaluateData(prescriptionMedications),
+    medications: evaluateData(medications),
   };
 };
 
@@ -188,9 +181,6 @@ const evaluateAdministeredMedication = (
       fhirPathMappings.adminMedicationsRefs,
     );
 
-  console.log("administeredMedications:");
-  console.log(administeredMedications);
-
   return administeredMedications.map((medicationAdministration) => {
     let medication: Medication | undefined;
     if (medicationAdministration?.medicationReference?.reference) {
@@ -199,9 +189,6 @@ const evaluateAdministeredMedication = (
         medicationAdministration.medicationReference.reference,
       );
     }
-
-    console.log("medication");
-    console.log(medication);
 
     const therapeuticResponses = evaluateAll(
       medicationAdministration,
@@ -662,33 +649,4 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
       return lines.join("\n");
     })
     .join("\n\n");
-};
-
-export const evaluatePrescriptionMedications = (fhirBundle: Bundle) => {
-  const prescriptionMedications = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.prescriptionMedications,
-  );
-
-  if (prescriptionMedications.length === 0) return;
-
-  console.log("Prescription Medications: ");
-  console.log(prescriptionMedications);
-
-  return prescriptionMedications.map((prescriptionMedication) => {
-    let medication: Medication | undefined;
-    if (prescriptionMedication?.medicationReference?.reference) {
-      medication = evaluateReference(
-        fhirBundle,
-        prescriptionMedication.medicationReference.reference,
-      );
-    }
-
-    console.log("prescription medication ref:");
-    console.log(medication);
-
-    return {
-      name: formatCodeableConcept(medication?.code),
-    };
-  });
 };

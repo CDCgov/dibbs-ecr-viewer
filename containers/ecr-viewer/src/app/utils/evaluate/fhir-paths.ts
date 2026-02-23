@@ -129,8 +129,12 @@ export type PathTypes = {
   medicationDose: ValueX;
   medicationAdministrationPerformerRef: Reference;
   medicationAdministrationReactionRef: Reference;
-  prescriptionMedications: MedicationStatement;
-  prescriptionMedicationRef: Reference;
+  medications: MedicationStatement;
+  medicationRef: Reference;
+  dosageRoute: CodeableConcept;
+  doseQuantity: Quantity;
+  rateQuantity: Quantity;
+  informationSource: Reference;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
@@ -561,15 +565,35 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   medicationDose: { type: "ValueX", path: "dosage.dose.value" },
 
-  // === Prescription Medications ===
-  prescriptionMedications: {
+  // === Medications ===
+  medications: {
     type: "MedicationStatement",
     path: "entry.resource.MedicationStatement",
   },
 
-  prescriptionMedicationRef: {
+  medicationRef: {
     type: "Reference",
     path: "MedicationStatement.medicationReference",
+  },
+
+  dosageRoute: {
+    type: "CodeableConcept",
+    path: "dosage.route",
+  },
+
+  doseQuantity: {
+    type: "Quantity",
+    path: "dosage.doseAndRate.doseQuantity",
+  },
+
+  rateQuantity: {
+    type: "CodeableConcept",
+    path: "dosage.doseAndRate.rateQuantity",
+  },
+
+  informationSource: {
+    type: "Reference",
+    path: "informationSource",
   },
 
   // === Procedure ===
