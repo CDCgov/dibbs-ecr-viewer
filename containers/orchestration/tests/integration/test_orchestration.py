@@ -254,27 +254,3 @@ def test_process_message_fhir_phdc(setup):
             assert parsed_xml.tag == "root"  # Confirm correct root element
         except etree.XMLSyntaxError as e:
             pytest.fail(f"XML parsing error: {e}")
-
-
-@pytest.mark.integration
-def test_process_message_hl7(setup):
-    """
-    Full orchestrated test of validating, converting to FHIR, and geocoding
-    an eLR HL7v2 message.
-    """
-    message = open(
-        Path(__file__).parent.parent / "assets" / "hl7_with_msh_3_set.hl7"
-    ).read()
-    request = {
-        "message_type": "elr",
-        "data_type": "hl7",
-        "config_file_name": "sample-hl7-test-config.json",
-        "message": message,
-    }
-    orchestration_response = httpx.post(
-        PROCESS_MESSAGE_ENDPOINT, json=request, timeout=30
-    )
-    assert orchestration_response.status_code == 200, (
-        f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
-    )
-    assert orchestration_response.json()["message"] == "Processing succeeded!"

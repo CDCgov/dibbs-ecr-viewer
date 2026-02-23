@@ -49,10 +49,10 @@ manifests on real data in each step.
 # /process-message tests
 @mock.patch("app.services.post_request")
 def test_process_message_success(patched_post_request, client):
-    message = open(Path(__file__).parent / "assets" / "hl7_with_msh_3_set.hl7").read()
+    message = open(Path(__file__).parent / "assets" / "CDA_eICR.xml").read()
     request = {
-        "message_type": "elr",
-        "data_type": "hl7",
+        "message_type": "ecr",
+        "data_type": "ecr",
         "config_file_name": "non-integrated-core.json",
         "message": message,
     }
@@ -126,10 +126,10 @@ def test_process_message_success(patched_post_request, client):
 
 @mock.patch("app.main.call_apis", side_effect=Exception("Fake Exception"))
 def test_process_message_orchestration_error(patched_call_apis, client):
-    message = open(Path(__file__).parent / "assets" / "hl7_with_msh_3_set.hl7").read()
+    message = open(Path(__file__).parent / "assets" / "CDA_eICR.xml").read()
     request = {
-        "message_type": "elr",
-        "data_type": "hl7",
+        "message_type": "ecr",
+        "data_type": "ecr",
         "config_file_name": "integrated.json",
         "message": message,
     }
@@ -144,10 +144,10 @@ def test_process_message_orchestration_error(patched_call_apis, client):
 
 @mock.patch("app.services.post_request")
 def test_process_message_orchestration_bad_config(patched_call_apis, client):
-    message = open(Path(__file__).parent / "assets" / "hl7_with_msh_3_set.hl7").read()
+    message = open(Path(__file__).parent / "assets" / "CDA_eICR.xml").read()
     request = {
-        "message_type": "elr",
-        "data_type": "hl7",
+        "message_type": "ecr",
+        "data_type": "ecr",
         "config_file_name": "integrated-i-do-not-exist.json",
         "message": message,
     }
@@ -266,9 +266,9 @@ def test_process_message_invalid_fhir(client):
 def test_process_message_input_validation_with_rr_data(client):
     request = {
         "message": "foo",
-        "data_type": "elr",
+        "data_type": "ecr",
         "config_file_name": "integrated.json",
-        "message_type": "elr",
+        "message_type": "ecr",
         "rr_data": "bar",
     }
 
