@@ -479,7 +479,7 @@ describe("orchestrationRequest", () => {
 
       it("zipAndSaveXml should take in a zip then call saveToStorage with a zipBuffer", async () => {
         const fakeZipBuffer = createFakeZip("<xml/>");
-        const mockZip = new File([fakeZipBuffer], "test.zip", {
+        const mockZip = new File([fakeZipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
@@ -533,7 +533,7 @@ describe("orchestrationRequest", () => {
     describe("unzipXml", () => {
       it("should extract the xml string from a valid zip", async () => {
         const fakeZipBuffer = createFakeZip(xmlContent);
-        const mockFile = new File([fakeZipBuffer], "test.zip", {
+        const mockFile = new File([fakeZipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
@@ -554,7 +554,7 @@ describe("orchestrationRequest", () => {
 
       it("should throw when no XML file is found", async () => {
         const fakeZipBuffer = createFakeZip("junk");
-        const mockFile = new File([fakeZipBuffer], "test.zip", {
+        const mockFile = new File([fakeZipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
@@ -599,7 +599,7 @@ describe("orchestrationRequest", () => {
         zip.file("whatever.xml", xmlString);
         const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
 
-        const zipFile = new File([zipBuffer], "test.zip", {
+        const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
