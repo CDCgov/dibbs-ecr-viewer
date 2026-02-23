@@ -1,8 +1,8 @@
 httpx>=0.28.1
 lxml>=5.2.2
-pytest
+pytest>=9.0.2
 python-dotenv
-testcontainers[compose]
+testcontainers[compose]>=4.14.1
 tqdm
-fhir.resources
+fhir.resources>=8.2.0
 sqlmodel

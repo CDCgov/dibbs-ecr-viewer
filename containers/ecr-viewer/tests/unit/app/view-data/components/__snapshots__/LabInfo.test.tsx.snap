@@ -105,6 +105,7 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
               >
                 <h6
                   class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                  style="margin-top: -1rem;"
                 >
                   Available lab information
                 </h6>
@@ -642,6 +643,7 @@ Mos Eisley, CO 00055
                 </table>
                 <h6
                   class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                  style="margin-top: -1rem;"
                 >
                   Available lab information
                 </h6>
@@ -1037,6 +1039,7 @@ Mos Eisley, CO 00055
                 </table>
                 <h6
                   class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                  style="margin-top: -1rem;"
                 >
                   Available lab information
                 </h6>
@@ -1692,6 +1695,7 @@ County: Empire
                 </table>
                 <h6
                   class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                  style="margin-top: -1rem;"
                 >
                   Available lab information
                 </h6>
