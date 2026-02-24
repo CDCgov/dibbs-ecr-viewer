@@ -769,7 +769,6 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                                 class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                                 data-testid="triggerElement"
                                 tabindex="0"
-                                title=""
                               >
                                 <svg
                                   aria-label="description"
@@ -1146,7 +1145,6 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                                 class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                                 data-testid="triggerElement"
                                 tabindex="0"
-                                title=""
                               >
                                 <svg
                                   aria-label="description"
@@ -1532,7 +1530,6 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                                 class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                                 data-testid="triggerElement"
                                 tabindex="0"
-                                title=""
                               >
                                 <svg
                                   aria-label="description"
@@ -1946,7 +1943,6 @@ exports[`Snapshot test for eCR Document Given no data, info message for empty se
                                 class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                                 data-testid="triggerElement"
                                 tabindex="0"
-                                title=""
                               >
                                 <svg
                                   aria-label="description"

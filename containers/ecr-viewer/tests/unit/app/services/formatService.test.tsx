@@ -233,11 +233,12 @@ describe("FormatService tests", () => {
       expect(formatPhoneNumber(" ")).toBe(undefined);
     });
 
-    it("should return 'Invalid Number' when junk things passed", () => {
-      expect(formatPhoneNumber("+11111111")).toBe("Invalid Number: +11111111");
+    it("should return original unformatted number", () => {
+      expect(formatPhoneNumber("+11111111")).toBe("+11111111");
       expect(formatPhoneNumber("+11111111111111111")).toBe(
-        "Invalid Number: +11111111111111111",
+        "+11111111111111111",
       );
+      expect(formatPhoneNumber("+81234567890")).toBe("+81234567890");
     });
 
     it("should format a valid phone number", () => {

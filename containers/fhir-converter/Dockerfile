@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch v7.0-39 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.0.0 --depth 1 /App
 
 WORKDIR /App
 
@@ -22,11 +22,11 @@ RUN curl 'https://rxnav.nlm.nih.gov/REST/allstatus.json?status=active' \
   | jq --raw-output '[["code", "name"]] + [.minConceptGroup.minConcept[] | [.rxcui, .name]] | .[] | @csv' \
   > output/rxnorm.csv
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
 COPY --from=build /App/output .
 COPY --from=build /App/data/Templates ./templates
 EXPOSE 8080
 
-ENV TEMPLATES_PATH=./templates/
+ENV TEMPLATES_PATH=./templates/eCR
 ENTRYPOINT ["dotnet", "Dibbs.FhirConverterApi.dll"]

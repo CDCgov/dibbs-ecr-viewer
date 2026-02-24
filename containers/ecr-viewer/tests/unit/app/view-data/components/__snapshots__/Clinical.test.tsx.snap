@@ -109,7 +109,6 @@ exports[`Snapshot test for Clinical Notes should match snapshot for table notes 
                             class="usa-tooltip__trigger margin-left-05 usa-tooltip"
                             data-testid="triggerElement"
                             tabindex="0"
-                            title=""
                           >
                             <svg
                               aria-label="description"

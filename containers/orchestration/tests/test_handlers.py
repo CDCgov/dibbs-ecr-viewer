@@ -33,20 +33,6 @@ from app.handlers.response_builders.trigger_code_reference import (
 
 
 def test_build_fhir_converter_request():
-    # Test case for an HL7 message
-    message = open(Path(__file__).parent / "assets" / "hl7_with_msh_3_set.hl7").read()
-    orchestration_request = {
-        "message_type": "elr",
-        "data_type": "hl7",
-        "config_file_name": "sample-hl7-test-config.json",
-        "message": message,
-    }
-    result = build_fhir_converter_request(message, orchestration_request)
-    assert result["input_type"] == "elr"
-    assert result["root_template"] == "ORU_R01"
-    assert result["input_data"] == message
-
-    # Test case for an eCR message
     message = open(Path(__file__).parent / "assets" / "ccda_sample.xml").read()
     orchestration_request = {
         "message_type": "ecr",
