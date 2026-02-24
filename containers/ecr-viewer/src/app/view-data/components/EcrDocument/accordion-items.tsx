@@ -65,7 +65,6 @@ export const getEcrDocumentAccordionItems = (
       clinicalData.immunizationsDetails.unavailableData,
       clinicalData.treatmentData.unavailableData,
       clinicalData.clinicalNotes.unavailableData,
-      clinicalData.medications.unavailableData,
       ...ecrMetadata.eicrDetails.unavailableData,
       ...ecrMetadata.ecrCustodianDetails.unavailableData,
       ecrMetadata.eicrAuthorDetails.map((details) => details.unavailableData),
@@ -140,7 +139,6 @@ export const getEcrDocumentAccordionItems = (
           vitalData={clinicalData.vitalData.availableData}
           immunizationsDetails={clinicalData.immunizationsDetails.availableData}
           treatmentData={clinicalData.treatmentData.availableData}
-          medications={clinicalData.medications.availableData}
         />
       ) : (
         <p className="text-italic padding-bottom-05">
@@ -211,9 +209,6 @@ export const getEcrDocumentAccordionItems = (
               vitalUnavailableData={clinicalData.vitalData.unavailableData}
               immunizationsUnavailableData={
                 clinicalData.immunizationsDetails.unavailableData
-              }
-              medicationsUnavailableData={
-                clinicalData.medications.unavailableData
               }
               treatmentData={clinicalData.treatmentData.unavailableData}
               clinicalNotesData={clinicalData.clinicalNotes.unavailableData}

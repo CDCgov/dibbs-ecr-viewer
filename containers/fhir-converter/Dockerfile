@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.0.0 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch angela-laura/1231-bug-medications --depth 1 /App
 
 WORKDIR /App
 

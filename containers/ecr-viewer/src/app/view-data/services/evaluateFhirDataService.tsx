@@ -1208,7 +1208,7 @@ export const returnAdmissionMedicationsTable = (
  * Generates details sections for the Admission Medications table rows.
  * @param fhirBundle - The fhir bundle
  * @param element - The current row being processed
- * @returns - A details element for the current row of the of Admission Medications table, or undefined if there's no data
+ * @returns - A details element for the current row of the Admission Medications table, or undefined if there's no data
  */
 const evaluateAdmissionMedicationDetails = (
   fhirBundle: Bundle,
@@ -1298,82 +1298,6 @@ const MedicationDetails: React.FC<MedicationDetailsProps> = ({
       }}
     />
   ));
-};
-
-export const evaluateMedicationsTable = (fhirBundle: Bundle) => {
-  const medications = evaluateAll(fhirBundle, fhirPathMappings.medications);
-
-  if (medications.length === 0) return;
-
-  const columns: ColumnInfoInput[] = [
-    {
-      columnName: "Medication Name",
-      evaluateEntry: (el) => {
-        const medRef = evaluateOne(el, fhirPathMappings.medicationRef);
-        const medication = evaluateReference(fhirBundle, medRef);
-        return evaluateValue(medication, fhirPathMappings.code);
-      },
-    },
-    {
-      columnName: "Effective Period",
-      infoPath: "effectiveX",
-    },
-    {
-      columnName: "Status",
-      infoPath: "status",
-    },
-    {
-      columnName: "Details",
-      hiddenBaseText: "details",
-      evaluateEntry: (el) => {
-        const content = [
-          {
-            title: "Dosage Route",
-            value: evaluateValue(el, fhirPathMappings.dosageRoute),
-          },
-          {
-            title: "Dose Quantity",
-            value: evaluateValue(el, fhirPathMappings.doseQuantity),
-          },
-          {
-            title: "Rate Quantity",
-            value: evaluateValue(el, fhirPathMappings.rateQuantity),
-          },
-          {
-            title: "Note",
-            value: evaluateValue(el, fhirPathMappings.noteText),
-          },
-          {
-            title: "Information Source",
-            evaluateEntry: (informationSource: Element) => {
-              const ref = evaluateOne(
-                informationSource,
-                fhirPathMappings.informationSource,
-              );
-              const evaluatedInformationSource = evaluateReference(
-                fhirBundle,
-                ref,
-              );
-              return "TBD"; // TODO: Fogure this out!
-            },
-          },
-        ];
-
-        return content.map(({ title, value }, i) => (
-          <DataDisplay
-            key={`wi-${i}`}
-            item={{
-              title,
-              value,
-              dividerLine: false,
-            }}
-          />
-        ));
-      },
-    },
-  ];
-
-  return <EvaluateTable resources={medications} columns={columns} />;
 };
 
 /**

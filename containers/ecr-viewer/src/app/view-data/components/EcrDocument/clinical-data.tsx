@@ -2,11 +2,13 @@ import {
   Bundle,
   CareTeamParticipant,
   Device,
+  Dosage,
   Element,
   Location,
   Medication,
   MedicationAdministration,
   MedicationRequest,
+  MedicationStatement,
   Observation,
   Organization,
   Period,
@@ -54,7 +56,6 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import { evaluateMedicationsTable } from "../../services/evaluateFhirDataService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
@@ -124,6 +125,11 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       ),
     },
     {
+      title: "Medications",
+      fullWidthContent: true,
+      value: returnMedicationsTable(fhirBundle),
+    },
+    {
       title: "Care Team",
       fullWidthContent: true,
       value: returnCareTeamTable(fhirBundle),
@@ -148,13 +154,6 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     },
   ];
 
-  const medications = [
-    {
-      title: "Medications",
-      value: evaluateMedicationsTable(fhirBundle),
-    },
-  ];
-
   return {
     clinicalNotes: evaluateData(clinicalNotes),
     reasonForVisitDetails: evaluateData(reasonForVisitData),
@@ -163,7 +162,6 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
     treatmentData: evaluateData(treatmentData),
     vitalData: evaluateData(vitalData),
     immunizationsDetails: evaluateData(immunizationsData),
-    medications: evaluateData(medications),
   };
 };
 
@@ -215,6 +213,88 @@ const evaluateAdministeredMedication = (
       therapeuticResponse: therapeuticResponseText,
     };
   });
+};
+
+/**
+ * Generates a formatted table representing the (History of) Medications.
+ * @param fhirBundle - The FHIR bundle
+ * @returns - A formatted table React element representing the list of Medications, or undefined if the array is empty.
+ */
+// TODO: This needs to reflect the accordion style (similar to social history)
+export const returnMedicationsTable = (fhirBundle: Bundle) => {
+  const medicationStatements =
+    evaluateAllReferences<MedicationStatement>(
+      fhirBundle,
+      fhirPathMappings.medicationStatementRefs
+    );
+  if (medicationStatements.length === 0) return;
+
+  const columns: ColumnInfoInput[] = [
+    {
+      columnName: "Medication Name",
+      evaluateEntry: (el) => {
+        const medRef = evaluateOne(
+          el,
+          fhirPathMappings.medicationStatementMedicationRef
+        );
+        const medication = evaluateReference(fhirBundle, medRef);
+        return evaluateValue(medication, fhirPathMappings.code);
+      },
+    },
+    {
+      columnName: "Date/Time",
+      infoPath: "effectiveX",
+      applyToValue: formatDateTime,
+    },
+    {
+      columnName: "Status",
+      infoPath: "status",
+      applyToValue: toSentenceCase,
+    },
+    {
+      columnName: "Details",
+      hiddenBaseText: "details",
+      evaluateEntry: (el) => {
+        const medDosage = evaluateOne(el, fhirPathMappings.dosage)
+        if (!medDosage){ return };
+        const content = [
+          {
+            title: "Timing",
+            value: evaluateValue(medDosage, "timing"),
+          },
+          {
+            title: "Dosage Route",
+            value: evaluateValue(medDosage, "route"),
+          },
+          {
+            title: "Dose Quantity",
+            value: evaluateValue(medDosage, "doseAndRate.doseQuantity"),
+          },
+          {
+            title: "Rate Quantity",
+            value: evaluateValue(medDosage, "doseAndRate.doseQuantity"),
+          },
+          {
+            title: "Instructions",
+            value: evaluateValue(medDosage, "text"),
+          },
+        ];
+
+        return content.map(({ title, value }, i) => (
+          <DataDisplay
+            key={`wi-${i}`}
+            item={{
+              title,
+              value,
+              dividerLine: false,
+            }}
+          />
+        ));
+      },
+    },
+  ];
+
+  return <EvaluateTable resources={medicationStatements} columns={columns} />;
 };
 
 type ModifiedCareTeamParticipant = Omit<

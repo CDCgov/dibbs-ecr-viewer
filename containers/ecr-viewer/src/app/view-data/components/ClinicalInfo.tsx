@@ -17,7 +17,6 @@ interface ClinicalProps {
   immunizationsDetails: DisplayDataProps[];
   treatmentData: DisplayDataProps[];
   clinicalNotes: DisplayDataProps[];
-  medications: DisplayDataProps[];
 }
 
 const TableDetails = ({
@@ -132,20 +131,6 @@ const ImmunizationsDetails = ({ details }: { details: DisplayDataProps[] }) => {
   return <></>;
 };
 
-const Medications = ({ details }: { details: DisplayDataProps[] }) => {
-  if (details.length > 0) {
-    return (
-      <AccordionSubSection title="Medications">
-        <div data-testid="medications">
-          <TableDetails details={details} />
-        </div>
-      </AccordionSubSection>
-    );
-  }
-
-  return <></>;
-};
-
 const VitalDetails = ({ details }: { details: DisplayDataProps[] }) => {
   if (details.length > 0) {
     return (
@@ -170,7 +155,6 @@ const VitalDetails = ({ details }: { details: DisplayDataProps[] }) => {
  * @param props.vitalData - The vital signs data.
  * @param props.treatmentData - The details of treatments.
  * @param props.clinicalNotes - The clinical notes data.
- * @param props.medications - The list of medications for this patient.
  * @returns The JSX element representing the clinical information.
  */
 export const ClinicalInfo = ({
@@ -181,7 +165,6 @@ export const ClinicalInfo = ({
   vitalData,
   treatmentData,
   clinicalNotes,
-  medications,
 }: ClinicalProps) => {
   return (
     <AccordionSection>
@@ -193,7 +176,6 @@ export const ClinicalInfo = ({
       />
       <TreatmentDetails details={treatmentData} />
       <ImmunizationsDetails details={immunizationsDetails} />
-      <Medications details={medications} />
       <VitalDetails details={vitalData} />
     </AccordionSection>
   );

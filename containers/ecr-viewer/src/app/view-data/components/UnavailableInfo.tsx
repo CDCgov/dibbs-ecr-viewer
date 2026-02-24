@@ -20,7 +20,6 @@ interface UnavailableInfoProps {
   treatmentData: DisplayDataProps[];
   clinicalNotesData: DisplayDataProps[];
   immunizationsUnavailableData: DisplayDataProps[];
-  medicationsUnavailableData: DisplayDataProps[];
   ecrMetadataUnavailableData: DisplayDataProps[];
   eicrAuthorDetails: DisplayDataProps[][];
 }
@@ -58,7 +57,6 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
   vitalUnavailableData,
   treatmentData,
   clinicalNotesData,
-  medicationsUnavailableData,
   ecrMetadataUnavailableData,
   eicrAuthorDetails,
 }) => {
@@ -101,10 +99,6 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
       <UnavailableSection
         title="Immunizations"
         data={immunizationsUnavailableData}
-      />
-      <UnavailableSection
-        title="Medications"
-        data={medicationsUnavailableData}
       />
       <UnavailableSection title="Treatment Details" data={treatmentData} />
       <UnavailableSection

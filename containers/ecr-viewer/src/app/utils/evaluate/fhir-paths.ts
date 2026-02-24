@@ -7,6 +7,7 @@ import {
   Condition,
   ContactPoint,
   DiagnosticReport,
+  Dosage,
   EncounterParticipant,
   Extension,
   HumanName,
@@ -129,12 +130,8 @@ export type PathTypes = {
   medicationDose: ValueX;
   medicationAdministrationPerformerRef: Reference;
   medicationAdministrationReactionRef: Reference;
-  medications: MedicationStatement;
-  medicationRef: Reference;
-  dosageRoute: CodeableConcept;
-  doseQuantity: Quantity;
-  rateQuantity: Quantity;
-  informationSource: Reference;
+  medicationStatementRefs: Reference;
+  medicationStatementMedicationRef: Reference;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
@@ -183,6 +180,7 @@ export type PathTypes = {
   method: CodeableConcept;
   name: string;
   noteText: string;
+  dosage: Dosage;
   valueX: ValueX;
   occurrenceX: TimeX;
 };
@@ -566,34 +564,14 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   medicationDose: { type: "ValueX", path: "dosage.dose.value" },
 
   // === Medications ===
-  medications: {
-    type: "MedicationStatement",
-    path: "entry.resource.MedicationStatement",
+  medicationStatementRefs: {
+    type: "Reference",
+    path: "entry.resource.section.where(code.coding.code = '10160-0').entry.where(reference.startsWith('MedicationStatement/'))",
   },
 
-  medicationRef: {
+  medicationStatementMedicationRef: {
     type: "Reference",
     path: "MedicationStatement.medicationReference",
-  },
-
-  dosageRoute: {
-    type: "CodeableConcept",
-    path: "dosage.route",
-  },
-
-  doseQuantity: {
-    type: "Quantity",
-    path: "dosage.doseAndRate.doseQuantity",
-  },
-
-  rateQuantity: {
-    type: "CodeableConcept",
-    path: "dosage.doseAndRate.rateQuantity",
-  },
-
-  informationSource: {
-    type: "Reference",
-    path: "informationSource",
   },
 
   // === Procedure ===
@@ -787,6 +765,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "name",
   },
+  dosage: {
+    type: "Dosage",
+    path: "dosage",
+  },
+
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
    * the value of the choice element if it is on a resource, e.g. `Observation`. Otherwise it will return an empty
