@@ -266,7 +266,7 @@ def test_process_message_invalid_fhir(client):
 def test_process_message_input_validation_with_rr_data(client):
     request = {
         "message": "foo",
-        "data_type": "ecr",
+        "data_type": "eicr",
         "config_file_name": "integrated.json",
         "message_type": "ecr",
         "rr_data": "bar",
