@@ -168,9 +168,7 @@ jobs:
       - name: Run Playwright tests - Migrations
         uses: docker://mcr.microsoft.com/playwright:v1.58.2-noble
         with:
-          args: |
-            cd containers/${{env.CONTAINER}}
-            npm run test:e2e:migrations
+          args: sh -c "cd containers/${{env.CONTAINER}} && npm run test:e2e:migrations"
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
