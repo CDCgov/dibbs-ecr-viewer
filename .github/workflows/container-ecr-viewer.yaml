@@ -159,6 +159,10 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm ci
 
+      - name: Install Playwright Browsers
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:e2e:install
+
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
@@ -166,9 +170,8 @@ jobs:
           APP_VERSION: vTest
 
       - name: Run Playwright tests - Migrations
-        uses: docker://mcr.microsoft.com/playwright:v1.58.2-noble
-        with:
-          args: sh -c "cd containers/${{env.CONTAINER}} && npm run test:e2e:migrations"
+        working-directory: ./containers/${{env.CONTAINER}}
+        run: npm run test:e2e:migrations
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
