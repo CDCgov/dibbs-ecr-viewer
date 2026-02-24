@@ -132,6 +132,7 @@ export type PathTypes = {
   medicationAdministrationReactionRef: Reference;
   medicationStatementRefs: Reference;
   medicationStatementMedicationRef: Reference;
+  medicationStatementMedicationRequestRef: Reference;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
@@ -572,6 +573,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   medicationStatementMedicationRef: {
     type: "Reference",
     path: "MedicationStatement.medicationReference",
+  },
+
+  medicationStatementMedicationRequestRef: {
+    type: "Reference",
+    path: "MedicationStatement.basedOn",
   },
 
   // === Procedure ===

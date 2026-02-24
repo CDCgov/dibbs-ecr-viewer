@@ -242,6 +242,11 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           fhirPathMappings.medicationStatementMedicationRef
         );
         const medication = evaluateReference(fhirBundle, medRef);
+        const medRequestRef = evaluateOne(
+          medicationStatement,
+          fhirPathMappings.medicationStatementMedicationRequestRef
+        );
+        const medicationRequest = evaluateReference(fhirBundle, medRequestRef);
         const medDosage = evaluateOne(medicationStatement, fhirPathMappings.dosage);
 
         const medicationName = toSentenceCase(evaluateValue(medication, fhirPathMappings.code));
@@ -252,9 +257,10 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
         const content = [
           {
             title: "Date/Time",
-            value: formatDateTime(
-              evaluateValue(medicationStatement, fhirPathMappings.effectiveX)
-            ) || noData,
+            value:
+              formatDateTime(
+                evaluateValue(medicationStatement, fhirPathMappings.effectiveX)
+              ) || noData,
           },
           {
             title: "Timing",
@@ -266,15 +272,25 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           },
           {
             title: "Dose Quantity",
-            value: evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
+            value:
+              evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
           },
           {
             title: "Rate Quantity",
-            value: evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
+            value:
+              evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
           },
           {
-            title: "Instructions",
-            value: evaluateValue(medDosage, "text") || noData,
+            title: "Number of refills",
+            value:
+              evaluateValue(
+                medicationRequest,
+                "dispenseRequest.numberOfRepeatsAllowed"
+              ) || noData,
+          },
+          {
+            title: "Amount of medication to supply per dispense",
+            value: evaluateValue(medicationRequest, "dispenseRequest.quantity") || noData,
           },
         ];
 
