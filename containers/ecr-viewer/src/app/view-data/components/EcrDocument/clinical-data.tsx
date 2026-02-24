@@ -30,7 +30,7 @@ import {
   formatQuantity,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
+import { evaluateData, noData, notEmpty, safeParse } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateAllReferences,
@@ -56,6 +56,8 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
+import { sortResourcesByDate } from "../../utils/fhir-data-utils";
+import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
@@ -220,7 +222,6 @@ const evaluateAdministeredMedication = (
  * @param fhirBundle - The FHIR bundle
  * @returns - A formatted table React element representing the list of Medications, or undefined if the array is empty.
  */
-// TODO: This needs to reflect the accordion style (similar to social history)
 export const returnMedicationsTable = (fhirBundle: Bundle) => {
   const medicationStatements =
     evaluateAllReferences<MedicationStatement>(
@@ -229,58 +230,55 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
     );
   if (medicationStatements.length === 0) return;
 
-  const columns: ColumnInfoInput[] = [
-    {
-      columnName: "Medication Name",
-      evaluateEntry: (el) => {
+  sortResourcesByDate(medicationStatements, fhirPathMappings.effectiveX);
+
+  return (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="medications"
+      items={medicationStatements.map((medicationStatement) => {
         const medRef = evaluateOne(
-          el,
+          medicationStatement,
           fhirPathMappings.medicationStatementMedicationRef
         );
         const medication = evaluateReference(fhirBundle, medRef);
-        return evaluateValue(medication, fhirPathMappings.code);
-      },
-    },
-    {
-      columnName: "Date/Time",
-      infoPath: "effectiveX",
-      applyToValue: formatDateTime,
-    },
-    {
-      columnName: "Status",
-      infoPath: "status",
-      applyToValue: toSentenceCase,
-    },
-    {
-      columnName: "Details",
-      hiddenBaseText: "details",
-      evaluateEntry: (el) => {
-        const medDosage = evaluateOne(el, fhirPathMappings.dosage)
-        if (!medDosage){ return };
+        const medDosage = evaluateOne(medicationStatement, fhirPathMappings.dosage);
+
+        const medicationName = toSentenceCase(evaluateValue(medication, fhirPathMappings.code));
+        const medicationStatus = toSentenceCase(
+          evaluateValue(medicationStatement, "status")
+        );
+
         const content = [
           {
+            title: "Date/Time",
+            value: formatDateTime(
+              evaluateValue(medicationStatement, fhirPathMappings.effectiveX)
+            ) || noData,
+          },
+          {
             title: "Timing",
-            value: evaluateValue(medDosage, "timing"),
+            value: evaluateValue(medDosage, "timing") || noData,
           },
           {
             title: "Dosage Route",
-            value: evaluateValue(medDosage, "route"),
+            value: toSentenceCase(evaluateValue(medDosage, "route")) || noData,
           },
           {
             title: "Dose Quantity",
-            value: evaluateValue(medDosage, "doseAndRate.doseQuantity"),
+            value: evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
           },
           {
             title: "Rate Quantity",
-            value: evaluateValue(medDosage, "doseAndRate.doseQuantity"),
+            value: evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
           },
           {
             title: "Instructions",
-            value: evaluateValue(medDosage, "text"),
+            value: evaluateValue(medDosage, "text") || noData,
           },
         ];
 
-        return content.map(({ title, value }, i) => (
+        const contentDataDisplay = content.map(({ title, value }, i) => (
           <DataDisplay
             key={`wi-${i}`}
             item={{
@@ -290,11 +288,24 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
             }}
           />
         ));
-      },
-    },
-  ];
 
-  return <EvaluateTable resources={medicationStatements} columns={columns} />;
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span>{medicationName}</span>
+              <span className="font-size-xs text-base">
+                {medicationStatus}
+              </span>
+            </div>
+          ),
+          expanded: false,
+          content: contentDataDisplay,
+          id: medicationStatement.id || `${Math.random()}`,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
 };
 
 type ModifiedCareTeamParticipant = Omit<

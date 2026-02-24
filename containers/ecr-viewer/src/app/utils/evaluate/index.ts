@@ -12,6 +12,8 @@ import {
   Quantity,
   Reference,
   Resource,
+  Timing,
+  TimingRepeat,
 } from "fhir/r4";
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
@@ -278,6 +280,15 @@ export const evaluateValue = (
     // Note: there are two period formatters, start/end is more commonly used, but
     // we may need to think in the future about making this more flexible
     value = formatStartEndDateTime(originalValue);
+  } else if (isTiming(originalValue, originalValuePath)) {
+    const timing = originalValue as TimingRepeat;
+    if (timing.period && timing.periodUnit) {
+      value =
+        formatQuantity({
+          value: timing.period,
+          unit: timing.periodUnit,
+        }) ?? "";
+    }
   } else if (isAddress(originalValue, originalValuePath)) {
     value = formatAddress(originalValue);
   } else if (typeof originalValue === "object") {
@@ -298,6 +309,7 @@ const isObservationReferenceRange = (
 ): v is ObservationReferenceRange => p === "Observation.referenceRange";
 const isReference = (v: object, p: string): v is Reference => p === "Reference";
 const isPeriod = (v: object, p: string): v is Period => p === "Period";
+const isTiming = (v: object, p: string): v is TimingRepeat => p === "Timing";
 const isAddress = (v: object, p: string): v is Address => p === "Address";
 
 /**
