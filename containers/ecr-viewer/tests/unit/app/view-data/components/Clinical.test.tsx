@@ -38,7 +38,7 @@ describe("Snapshot tests", () => {
           reasonForVisitDetails={testReasonForVisitData}
           immunizationsDetails={testImmunizationsData}
           treatmentData={testTreatmentData}
-        />
+        />,
       );
       expect(container).toMatchSnapshot();
       expect(await axe(container)).toHaveNoViolations();
@@ -517,7 +517,7 @@ describe("Snapshot tests", () => {
           reasonForVisitDetails={[]}
           immunizationsDetails={[]}
           treatmentData={treatmentData}
-        />
+        />,
       ).container;
     });
     it("should match snapshot", () => {
@@ -550,7 +550,7 @@ describe("Snapshot tests", () => {
           reasonForVisitDetails={[]}
           immunizationsDetails={[]}
           treatmentData={[]}
-        />
+        />,
       );
       expect(container).toMatchSnapshot();
       expect(await axe(container)).toHaveNoViolations();
@@ -614,7 +614,7 @@ describe("Snapshot tests", () => {
           bundle,
           fhirPathMappings.historyOfPresentIllness,
           "Miscellaneous Notes",
-          clinicalNotesTooltip
+          clinicalNotesTooltip,
         ),
       ];
       const { container } = render(
@@ -626,16 +626,15 @@ describe("Snapshot tests", () => {
           reasonForVisitDetails={[]}
           immunizationsDetails={[]}
           treatmentData={[]}
-        />
+        />,
       );
       expect(container).toMatchSnapshot();
       expect(await axe(container)).toHaveNoViolations();
     });
   });
-})
+});
 
 describe("Check that Clinical Info components render given FHIR bundle", () => {
-
   it("eCR Viewer renders immunization table given FHIR bundle with immunization info", () => {
     const clinicalInfo = render(
       <ClinicalInfo
