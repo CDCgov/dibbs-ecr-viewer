@@ -13,6 +13,7 @@ import {
   Organization,
   Period,
   Practitioner,
+  Quantity,
   Reference,
   ServiceRequest,
 } from "fhir/r4";
@@ -253,6 +254,11 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
         const medicationStatus = toSentenceCase(
           evaluateValue(medicationStatement, "status")
         );
+        const medDosageTimingVal = evaluateOne(
+          medDosage,
+          fhirPathMappings.medicationStatementDosageTimingPeriod
+        );
+        const medDosageTimingUnit = evaluateValue(medDosage, "timing.repeat.periodUnit");
 
         const content = [
           {
@@ -264,7 +270,17 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           },
           {
             title: "Timing",
-            value: evaluateValue(medDosage, "timing") || noData,
+            value:
+              formatQuantity({
+                value: medDosageTimingVal,
+                unit: medDosageTimingUnit,
+              }) || noData,
+          },
+          {
+            title: "Medication Instructions",
+            value:
+              evaluateValue(medDosage, "text") ||
+              noData,
           },
           {
             title: "Dosage Route",
@@ -290,7 +306,15 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           },
           {
             title: "Amount of medication to supply per dispense",
-            value: evaluateValue(medicationRequest, "dispenseRequest.quantity") || noData,
+            value:
+              evaluateValue(medicationRequest, "dispenseRequest.quantity") ||
+              noData,
+          },
+          {
+            title: "Text",
+            value:
+              evaluateValue(medicationStatement, fhirPathMappings.noteText) ||
+              noData,
           },
         ];
 

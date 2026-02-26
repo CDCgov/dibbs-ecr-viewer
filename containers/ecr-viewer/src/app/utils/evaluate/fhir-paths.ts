@@ -133,6 +133,7 @@ export type PathTypes = {
   medicationStatementRefs: Reference;
   medicationStatementMedicationRef: Reference;
   medicationStatementMedicationRequestRef: Reference;
+  medicationStatementDosageTimingPeriod: number;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
@@ -569,15 +570,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Reference",
     path: "entry.resource.section.where(code.coding.code = '10160-0').entry.where(reference.startsWith('MedicationStatement/'))",
   },
-
   medicationStatementMedicationRef: {
     type: "Reference",
     path: "MedicationStatement.medicationReference",
   },
-
   medicationStatementMedicationRequestRef: {
     type: "Reference",
     path: "MedicationStatement.basedOn",
+  },
+  medicationStatementDosageTimingPeriod: {
+    type: "number",
+    path: "timing.repeat.period",
   },
 
   // === Procedure ===
